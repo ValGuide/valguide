@@ -1,0 +1,9 @@
+{
+  "name": "@valguide/logger",
+  "private": true,
+  "version": "1.0.0",
+  "sideEffects": false,
+  "devDependencies": {
+    "@valguide/typescript-config": "workspace:*"
+  }
+}

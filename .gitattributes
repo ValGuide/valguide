@@ -1,0 +1,6 @@
+docs/reference/**/*.png filter=lfs diff=lfs merge=lfs -text
+docs/reference/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+docs/reference/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+docs/reference/**/*.gif filter=lfs diff=lfs merge=lfs -text
+docs/reference/**/*.webp filter=lfs diff=lfs merge=lfs -text
+docs/reference/**/*.md filter=lfs diff=lfs merge=lfs -text

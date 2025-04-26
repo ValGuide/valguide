@@ -1,0 +1,63 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "lint": {
+      "cache": false
+    },
+    "type-check": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "serve": {
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    },
+    "test": {
+      "cache": false
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "icons:build": {
+      "cache": false,
+      "outputs": [
+        "dist/**"
+      ]
+    },
+    "db:studio": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
+    }
+  },
+  "globalEnv": [
+    "DATABASE_URL",
+    "DATABASE_URL_UNPOOLED",
+    "OPENAI_API_KEY",
+    "AUTH_RESEND_KEY",
+    "AUTH_SECRET",
+    "DRIIZLE_LOG_ENABLED",
+    "SLACK_TOKEN",
+    "VERCEL_URL",
+    "VERCEL_ENV",
+    "AUTH_ENABLED"
+  ]
+}

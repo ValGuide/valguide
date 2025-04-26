@@ -1,0 +1,10 @@
+{
+  "extends": "@valguide/typescript-config/base.json",
+  "include": [
+    ".scripts/**/*.ts"
+  ],
+  "compilerOptions": {
+    "moduleResolution": "Bundler"
+  }
+}
+

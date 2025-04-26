@@ -1,0 +1,7 @@
+import '@fontsource/geist-mono/latin.css'
+import '@fontsource/geist-mono/latin-ext.css'
+import '@fontsource/geist-sans/latin.css'
+import '@fontsource/geist-sans/latin-100.css'
+import '@fontsource/noto-sans/latin.css'
+import '@fontsource/noto-sans/latin-ext.css'
+import '@fontsource/noto-sans/latin-italic.css'

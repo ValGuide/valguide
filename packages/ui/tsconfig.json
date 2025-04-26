@@ -1,0 +1,14 @@
+{
+  "extends": "@valguide/typescript-config/react-library.json",
+  "compilerOptions": {
+    //"outDir": "dist"
+    "baseUrl": ".",
+    "paths": {
+      "@valguide/ui/*": ["./src/*"],
+      "@valguide/icons/*": ["../icons/dist/*"],
+    },
+    "moduleResolution": "Bundler"
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "dist"]
+}

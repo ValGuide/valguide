@@ -1,0 +1,36 @@
+{
+  "extends": "@valguide/typescript-config/nextjs.json",
+  "include": [
+    "src",
+    ".storybook/**/*.tsx",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.css"
+  ],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@valguide/web/*": [
+        "../apps/web/*"
+      ],
+      "@valguide/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@valguide/logger/*": [
+        "../../packages/logger/src/*"
+      ],
+      "@valguide/logger": [
+        "../../packages/logger"
+      ],
+      "@valguide/core/*": [
+        "../../packages/core/src/*"
+      ]
+    }
+  }
+}

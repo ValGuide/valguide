@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "src/styles/globals.css",
+    "baseColor": "zinc",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@valguide/ui/components",
+    "utils": "@valguide/ui/lib/utils",
+    "hooks": "@valguide/ui/hooks",
+    "lib": "@valguide/ui/lib",
+    "ui": "@valguide/ui/components"
+  }
+}
