@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "title": "Demo",
+    "description": "Be a curator! Your all-in-one platform for designing engaging, multimedia-rich todos for any purpose."
+  },
+  "comingSoon": {
+    "title": "Coming Soon",
+    "description": "Please stay tuned. We will launch soon \uD83D\uDE80"
+  },
+  "login": {
+    "submit": "Submit",
+    "serverError": "Failed to log in. Please try again",
+    "email": {
+      "message": "Must be a valid email",
+      "placeholder": "Email"
+    }
+  },
+  "notFound": {
+    "title": "404 – Lost Your Way?",
+    "description": "Looks like this trail doesn’t lead anywhere! Let's get you back to where the adventure is."
+  }
+}

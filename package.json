@@ -16,6 +16,8 @@
     "secrets:show": "sh .scripts/secrets-show.sh",
     "web:dev": "pnpm env:load turbo run dev --filter ./apps/web --",
     "web:build": "pnpm env:load turbo run build --filter ./apps/web --",
+    "studio:dev": "pnpm env:load turbo run dev --filter ./apps/studio --",
+    "studio:build": "pnpm env:load turbo run build --filter ./apps/studio --",
     "db:generate": "turbo run db:generate --",
     "db:migrate": "turbo run db:migrate --",
     "db:studio": "turbo run db:studio --",
@@ -57,8 +59,5 @@
   },
   "wallaby": {
     "trace": true
-  },
-  "dependencies": {
-    "age": "^0.2.1"
   }
 }
