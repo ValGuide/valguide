@@ -8,11 +8,9 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf src dist node_modules .turbo",
-    "prebuild": "pnpm clean",
     "build": "svgr --icon --title-prop --typescript --no-dimensions --filename-case kebab --no-index -d dist -- assets"
   },
-  "devDependencies": {
-    "@svgr/cli": "^8.1.0",
-    "rimraf": "^6.0.1"
+  "dependencies": {
+    "@svgr/cli": "^8.1.0"
   }
 }
