@@ -1,5 +1,5 @@
 {
-  "name": "@valguide/docs",
+  "name": "@valguide/storybook",
   "version": "0.0.1",
   "type": "module",
   "private": true,
