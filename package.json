@@ -22,10 +22,10 @@
     "db:migrate": "turbo run db:migrate --",
     "db:studio": "turbo run db:studio --",
     "madge:circular": "pnpm dlx madge -c --extensions ts,tsx,js,jsx .",
-    "sb:clean": "turbo run clean --filter apps/storybook",
-    "sb:build": "turbo run build --filter apps/storybook",
-    "sb:serve": "turbo run serve --filter apps/storybook",
-    "sb:dev": "turbo run dev --filter apps/storybook",
+    "sb:clean": "turbo run clean --filter ./apps/storybook",
+    "sb:build": "turbo run build --filter ./apps/storybook",
+    "sb:serve": "turbo run serve --filter ./apps/storybook",
+    "sb:dev": "turbo run dev --filter ./apps/storybook",
     "icons:build": "turbo run build --filter ./packages/icons"
   },
   "devDependencies": {
