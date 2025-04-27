@@ -118,19 +118,21 @@ const Player = React.forwardRef<HTMLDivElement, PlayerProps & DataTestIdProps>(
               duration={duration}
             />
 
-            <div className="flex items-center justify-between">
-              <PlayerControls
-                isPlaying={isPlaying}
-                onPlayPause={onPlayPause}
-                onSkipNext={onSkipNext}
-                onSkipPrevious={onSkipPrevious}
-                onToggleShuffle={onToggleShuffle}
-                onToggleRepeat={onToggleRepeat}
-                shuffleActive={shuffleActive}
-                repeatActive={repeatActive}
-                variant={variant === 'compact' ? 'compact' : 'default'}
-                size={variant === 'compact' ? 'sm' : 'default'}
-              />
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center justify-center w-full">
+                <PlayerControls
+                  isPlaying={isPlaying}
+                  onPlayPause={onPlayPause}
+                  onSkipNext={onSkipNext}
+                  onSkipPrevious={onSkipPrevious}
+                  onToggleShuffle={onToggleShuffle}
+                  onToggleRepeat={onToggleRepeat}
+                  shuffleActive={shuffleActive}
+                  repeatActive={repeatActive}
+                  variant={variant === 'compact' ? 'compact' : 'default'}
+                  size={variant === 'compact' ? 'sm' : 'default'}
+                />
+              </div>
 
               {showVolumeControl && (
                 <VolumeControl
