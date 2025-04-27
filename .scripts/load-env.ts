@@ -22,13 +22,14 @@ const dbOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
   },
 }
 
-const webOptions: EnvOptions<'local' | 'prod'> = {
-  name: 'api',
-  prefix: '--api:',
-  values: ['local', 'prod'] as const,
+const webOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
+  name: 'web',
+  prefix: '--web:',
+  values: ['local', 'dev', 'prod'] as const,
   defaultValue: 'local' as const,
   envFiles: {
     local: '.env.web.local',
+    dev: '.env.web.dev',
     prod: '.env.web.prod',
   },
 }
@@ -65,9 +66,9 @@ const extractEnv = <T extends string>({
 }
 
 const dbEnv = extractEnv(dbOptions)
-const apiEnv = extractEnv(webOptions)
+const webEnv = extractEnv(webOptions)
 const defaultEnv = extractEnv(defaulOptions)
-const envs = [dbEnv, apiEnv, defaultEnv]
+const envs = [dbEnv, webEnv, defaultEnv]
 
 const logEnvs = (...envs: EnvAndFile<any>[]): string[] =>
   envs.map((env) => `${env.name.toUpperCase()}: ${env.env} [${env.file}]`)

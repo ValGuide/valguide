@@ -57,10 +57,15 @@ export default async function RootLayout({
 
   setRequestLocale(locale)
 
+  // Load messages for the current locale
+  const messages = (await import(`../../messages/${locale}.json`)).default
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}>
-        <Providers locale={locale}>{children}</Providers>
+        <Providers locale={locale} messages={messages}>
+          {children}
+        </Providers>
       </body>
     </html>
   )

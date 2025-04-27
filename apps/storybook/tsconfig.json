@@ -6,7 +6,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.css"
+    "**/*.css",
+    "next.config.mjs"
   ],
   "exclude": [
     "dist",
