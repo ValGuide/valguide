@@ -1,11 +1,13 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AuthLayout } from './auth-layout'
 import { LoginForm } from './login-form'
 import { MessageAlert } from './message-alert'
 import { SocialLoginButtons } from './social-login-buttons'
 
 const LoginPageExample = () => {
+  const t = useTranslations('login')
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
@@ -19,9 +21,9 @@ const LoginPageExample = () => {
     setTimeout(() => {
       setLoading(false)
       if (email.includes('@')) {
-        setMessage({ type: 'success', text: 'Check your email for the login code' })
+        setMessage({ type: 'success', text: t('otpSent') })
       } else {
-        setMessage({ type: 'error', text: 'Please enter a valid email address' })
+        setMessage({ type: 'error', text: t('email.message') })
       }
     }, 1000)
   }
@@ -37,8 +39,8 @@ const LoginPageExample = () => {
   return (
     <AuthLayout>
       <div className="text-center">
-        <h2 className="mt-6 text-3xl font-bold tracking-tight">Welcome</h2>
-        <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
+        <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
+        <p className="mt-2 text-sm text-gray-600">{t('loginPrompt')}</p>
       </div>
 
       {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
@@ -48,17 +50,17 @@ const LoginPageExample = () => {
         onEmailChange={(e) => setEmail(e.target.value)}
         onSubmit={handleSubmit}
         loading={loading}
-        submitText="Send login code"
-        loadingText="Sending..."
-        emailLabel="Email address"
-        emailPlaceholder="Enter your email"
+        submitText={t('sendCode')}
+        loadingText={t('sending')}
+        emailLabel={t('emailLabel')}
+        emailPlaceholder={t('emailPlaceholder')}
       />
 
       <SocialLoginButtons
         onGoogleClick={handleGoogleLogin}
         onAppleClick={handleAppleLogin}
         loading={loading}
-        dividerText="Or continue with"
+        dividerText={t('orContinueWith')}
       />
     </AuthLayout>
   )

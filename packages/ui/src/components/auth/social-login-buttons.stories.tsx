@@ -1,10 +1,19 @@
 import { Meta, StoryObj } from '@storybook/react'
+import { useTranslations } from 'next-intl'
 import { SocialLoginButtons } from './social-login-buttons'
 
 const meta: Meta<typeof SocialLoginButtons> = {
   title: 'Auth/SocialLoginButtons',
   component: SocialLoginButtons,
-  tags: ['autodocs'],
+  render: (args) => {
+    const t = useTranslations('login')
+    return (
+      <SocialLoginButtons
+        {...args}
+        dividerText={args.dividerText || t('orContinueWith')}
+      />
+    )
+  },
 }
 
 export default meta
@@ -19,7 +28,6 @@ export const Default: Story = {
       alert('Apple login clicked')
     },
     loading: false,
-    dividerText: 'Or continue with',
   },
 }
 
@@ -28,7 +36,6 @@ export const Loading: Story = {
     onGoogleClick: () => {},
     onAppleClick: () => {},
     loading: true,
-    dividerText: 'Or continue with',
   },
 }
 

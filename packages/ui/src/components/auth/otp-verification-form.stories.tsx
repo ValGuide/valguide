@@ -1,10 +1,23 @@
 import { Meta, StoryObj } from '@storybook/react'
+import { useTranslations } from 'next-intl'
 import { OtpVerificationForm } from './otp-verification-form'
 
 const meta: Meta<typeof OtpVerificationForm> = {
   title: 'Auth/OtpVerificationForm',
   component: OtpVerificationForm,
-  tags: ['autodocs'],
+  render: (args) => {
+    const t = useTranslations('login')
+    return (
+      <OtpVerificationForm
+        {...args}
+        submitText={t('verifyCode')}
+        loadingText={t('verifying')}
+        otpLabel={t('otpLabel')}
+        otpPlaceholder={t('otpPlaceholder')}
+        resendText={t('resendCode')}
+      />
+    )
+  },
 }
 
 export default meta
@@ -22,11 +35,6 @@ export const Default: Story = {
       alert('Resend OTP clicked')
     },
     loading: false,
-    submitText: 'Verify code',
-    loadingText: 'Verifying...',
-    otpLabel: 'Verification code',
-    otpPlaceholder: 'Enter the 6-digit code',
-    resendText: "Didn't receive a code? Send again",
   },
 }
 
@@ -42,11 +50,6 @@ export const WithOtp: Story = {
       alert('Resend OTP clicked')
     },
     loading: false,
-    submitText: 'Verify code',
-    loadingText: 'Verifying...',
-    otpLabel: 'Verification code',
-    otpPlaceholder: 'Enter the 6-digit code',
-    resendText: "Didn't receive a code? Send again",
   },
 }
 
@@ -59,10 +62,5 @@ export const Loading: Story = {
     },
     onResendClick: () => {},
     loading: true,
-    submitText: 'Verify code',
-    loadingText: 'Verifying...',
-    otpLabel: 'Verification code',
-    otpPlaceholder: 'Enter the 6-digit code',
-    resendText: "Didn't receive a code? Send again",
   },
 }

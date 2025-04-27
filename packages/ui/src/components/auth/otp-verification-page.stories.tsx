@@ -1,10 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AuthLayout } from './auth-layout'
 import { OtpVerificationForm } from './otp-verification-form'
 import { MessageAlert } from './message-alert'
 
 const OtpVerificationPageExample = () => {
+  const t = useTranslations('login')
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
@@ -19,9 +21,9 @@ const OtpVerificationPageExample = () => {
     setTimeout(() => {
       setLoading(false)
       if (otp.length === 6) {
-        setMessage({ type: 'success', text: 'OTP verified successfully!' })
+        setMessage({ type: 'success', text: t('otpSent') })
       } else {
-        setMessage({ type: 'error', text: 'Please enter a valid 6-digit code' })
+        setMessage({ type: 'error', text: t('otpError') })
       }
     }, 1000)
   }
@@ -33,15 +35,15 @@ const OtpVerificationPageExample = () => {
     // Simulate API call
     setTimeout(() => {
       setLoading(false)
-      setMessage({ type: 'success', text: 'A new code has been sent to your email' })
+      setMessage({ type: 'success', text: t('otpSent') })
     }, 1000)
   }
 
   return (
     <AuthLayout>
       <div className="text-center">
-        <h2 className="mt-6 text-3xl font-bold tracking-tight">Welcome</h2>
-        <p className="mt-2 text-sm text-gray-600">{`Verify your email: ${email}`}</p>
+        <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
+        <p className="mt-2 text-sm text-gray-600">{`${t('verifyEmail')} ${email}`}</p>
       </div>
 
       {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
@@ -52,11 +54,11 @@ const OtpVerificationPageExample = () => {
         onSubmit={handleSubmit}
         onResendClick={handleResendOtp}
         loading={loading}
-        submitText="Verify code"
-        loadingText="Verifying..."
-        otpLabel="Verification code"
-        otpPlaceholder="Enter the 6-digit code"
-        resendText="Didn't receive a code? Send again"
+        submitText={t('verifyCode')}
+        loadingText={t('verifying')}
+        otpLabel={t('otpLabel')}
+        otpPlaceholder={t('otpPlaceholder')}
+        resendText={t('resendCode')}
       />
     </AuthLayout>
   )

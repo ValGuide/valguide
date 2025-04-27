@@ -1,10 +1,22 @@
 import { Meta, StoryObj } from '@storybook/react'
+import { useTranslations } from 'next-intl'
 import { LoginForm } from './login-form'
 
 const meta: Meta<typeof LoginForm> = {
   title: 'Auth/LoginForm',
   component: LoginForm,
-  tags: ['autodocs'],
+  render: (args) => {
+    const t = useTranslations('login')
+    return (
+      <LoginForm
+        {...args}
+        submitText={t('sendCode')}
+        loadingText={t('sending')}
+        emailLabel={t('emailLabel')}
+        emailPlaceholder={t('emailPlaceholder')}
+      />
+    )
+  },
 }
 
 export default meta
@@ -19,10 +31,6 @@ export const Default: Story = {
       alert('Form submitted')
     },
     loading: false,
-    submitText: 'Send login code',
-    loadingText: 'Sending...',
-    emailLabel: 'Email address',
-    emailPlaceholder: 'Enter your email',
   },
 }
 
@@ -35,10 +43,6 @@ export const WithEmail: Story = {
       alert('Form submitted')
     },
     loading: false,
-    submitText: 'Send login code',
-    loadingText: 'Sending...',
-    emailLabel: 'Email address',
-    emailPlaceholder: 'Enter your email',
   },
 }
 
@@ -50,9 +54,5 @@ export const Loading: Story = {
       e.preventDefault()
     },
     loading: true,
-    submitText: 'Send login code',
-    loadingText: 'Sending...',
-    emailLabel: 'Email address',
-    emailPlaceholder: 'Enter your email',
   },
 }

@@ -1,10 +1,18 @@
 import { Meta, StoryObj } from '@storybook/react'
+import { useTranslations } from 'next-intl'
 import { MessageAlert } from './message-alert'
 
 const meta: Meta<typeof MessageAlert> = {
   title: 'Auth/MessageAlert',
   component: MessageAlert,
-  tags: ['autodocs'],
+  render: (args) => {
+    const t = useTranslations('login')
+    return (
+      <MessageAlert {...args}>
+        {args.children || (args.type === 'success' ? t('otpSent') : t('otpError'))}
+      </MessageAlert>
+    )
+  },
 }
 
 export default meta
@@ -13,14 +21,12 @@ type Story = StoryObj<typeof MessageAlert>
 export const Success: Story = {
   args: {
     type: 'success',
-    children: 'Your email has been verified successfully!',
   },
 }
 
 export const Error: Story = {
   args: {
     type: 'error',
-    children: 'Failed to send login code. Please try again.',
   },
 }
 

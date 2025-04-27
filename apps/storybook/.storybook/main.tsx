@@ -12,11 +12,22 @@ const config: StorybookConfig = {
 
   addons: [
     getAbsolutePath('@storybook/addon-links'),
-    getAbsolutePath('@storybook/addon-essentials'),
+    {
+      name: getAbsolutePath('@storybook/addon-essentials'),
+      options: {
+        docs: false,
+      },
+    },
     getAbsolutePath('@storybook/addon-themes'),
     getAbsolutePath('storybook-dark-mode'),
     getAbsolutePath('@storybook/addon-interactions'),
     getAbsolutePath('storybook-react-i18next'),
+    {
+      name: 'storybook-addon-next',
+      options: {
+        nextConfigPath: '../next.config.js'
+      }
+    }
   ],
 
   typescript: {
