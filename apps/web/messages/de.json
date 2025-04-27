@@ -28,6 +28,7 @@
     "verifyCode": "Code bestätigen",
     "verifying": "Wird überprüft...",
     "resendCode": "Keinen Code erhalten? Erneut senden",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
     "email": {
       "message": "Email-Adresse ist ungültig",
       "placeholder": "Email"

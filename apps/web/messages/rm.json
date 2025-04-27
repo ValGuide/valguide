@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "title": "Demo",
+    "description": "Tia plattafurma cumpletta per crear guids multimedials ed interactivas per mintga intent."
+  },
+  "comingSoon": {
+    "title": "Prest disponibel",
+    "description": "Restei attents. Nus lantschein prest \uD83D\uDE80"
+  },
+  "login": {
+    "submit": "Trametter",
+    "serverError": "Annunzia fallida. Empruvei per plascher aunc inagada",
+    "welcome": "Beinvegni",
+    "loginPrompt": "S'annunziar en vies conto",
+    "emailLabel": "Adressa d'e-mail",
+    "emailPlaceholder": "Endatei vies e-mail",
+    "sendCode": "Trametter code d'annunzia",
+    "sending": "Tramettend...",
+    "otpSent": "Controllei vies e-mail per il code d'annunzia",
+    "otpError": "Errur cun trametter il code d'annunzia. Empruvei per plascher aunc inagada",
+    "googleError": "Annunzia cun Google fallida. Empruvei per plascher aunc inagada",
+    "appleError": "Annunzia cun Apple fallida. Empruvei per plascher aunc inagada",
+    "orContinueWith": "Ni cuntinuei cun",
+    "verifyEmail": "Verifichei vies e-mail:",
+    "checkEmail": "Controllei vies e-mail per il code da verificaziun",
+    "otpLabel": "Code da verificaziun",
+    "otpPlaceholder": "Endatei il code da 6 cefras",
+    "verifyCode": "Verificar code",
+    "verifying": "Verifichend...",
+    "resendCode": "Buca retschiert in code? Trametter aunc inagada",
+    "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+    "email": {
+      "message": "Sto esser in e-mail valid",
+      "placeholder": "E-mail"
+    }
+  },
+  "notFound": {
+    "title": "404 – Eis vus sepiars?",
+    "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga."
+  }
+}
