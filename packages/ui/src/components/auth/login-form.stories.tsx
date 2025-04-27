@@ -25,10 +25,11 @@ type Story = StoryObj<typeof LoginForm>
 export const Default: Story = {
   args: {
     email: '',
-    onEmailChange: () => {},
-    onSubmit: (e) => {
-      e.preventDefault()
-      alert('Form submitted')
+    onEmailChange: (email) => {
+      console.log('Email changed:', email)
+    },
+    onSubmit: (email) => {
+      alert(`Form submitted with email: ${email}`)
     },
     loading: false,
   },
@@ -37,10 +38,11 @@ export const Default: Story = {
 export const WithEmail: Story = {
   args: {
     email: 'user@example.com',
-    onEmailChange: () => {},
-    onSubmit: (e) => {
-      e.preventDefault()
-      alert('Form submitted')
+    onEmailChange: (email) => {
+      console.log('Email changed:', email)
+    },
+    onSubmit: (email) => {
+      alert(`Form submitted with email: ${email}`)
     },
     loading: false,
   },
@@ -49,9 +51,11 @@ export const WithEmail: Story = {
 export const Loading: Story = {
   args: {
     email: 'user@example.com',
-    onEmailChange: () => {},
-    onSubmit: (e) => {
-      e.preventDefault()
+    onEmailChange: (email) => {
+      console.log('Email changed:', email)
+    },
+    onSubmit: (email) => {
+      console.log('Form submitted with email:', email)
     },
     loading: true,
   },

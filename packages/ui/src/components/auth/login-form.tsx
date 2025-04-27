@@ -1,5 +1,21 @@
-import { ChangeEvent, FormEvent } from 'react'
+'use client'
+
+import { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { useTranslations } from 'next-intl'
+import * as z from 'zod'
+
 import { Button } from '../button'
+import { Input } from '@valguide/ui/components/input'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@valguide/ui/components/form'
 
 export interface LoginFormProps {
   /**
@@ -9,11 +25,11 @@ export interface LoginFormProps {
   /**
    * Callback when email changes
    */
-  onEmailChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onEmailChange: (email: string) => void
   /**
    * Callback when form is submitted
    */
-  onSubmit: (e: FormEvent) => void
+  onSubmit: (email: string) => void
   /**
    * Whether the form is in loading state
    */
@@ -40,7 +56,7 @@ export interface LoginFormProps {
  * A form component for email login
  */
 export function LoginForm({
-  email,
+  email: initialEmail,
   onEmailChange,
   onSubmit,
   loading = false,
@@ -49,32 +65,56 @@ export function LoginForm({
   emailLabel,
   emailPlaceholder,
 }: LoginFormProps) {
-  return (
-    <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          {emailLabel}
-        </label>
-        <div className="mt-1">
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={onEmailChange}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            placeholder={emailPlaceholder}
-          />
-        </div>
-      </div>
+  // Get translations
+  const t = useTranslations('login')
 
-      <div>
+  // Define form schema with zod
+  const formSchema = z.object({
+    email: z.string().email({ message: t('invalidEmail') }),
+  })
+  // Initialize form with react-hook-form
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: initialEmail,
+    },
+  })
+
+  // Handle form submission
+  function handleSubmit(values: z.infer<typeof formSchema>) {
+    onSubmit(values.email)
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{emailLabel}</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={emailPlaceholder}
+                  type="email"
+                  autoComplete="email"
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e)
+                    onEmailChange(e.target.value)
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? loadingText : submitText}
         </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   )
 }

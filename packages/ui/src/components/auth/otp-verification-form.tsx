@@ -67,11 +67,12 @@ export function OtpVerificationForm({
             {otpLabel}
           </label>
           <div className="mt-1">
+
+            {/* TODO: replace with InputOTP */}
             <input
               id="otp"
               name="otp"
               type="text"
-              required
               value={otp}
               onChange={onOtpChange}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
