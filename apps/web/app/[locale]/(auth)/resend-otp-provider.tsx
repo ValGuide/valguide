@@ -1,4 +1,3 @@
-import type { EmailConfig } from 'next-auth/providers'
 import { otpLoginEmailHtml, otpLoginEmailText } from '@valguide/transactional/emails/otp-login-email.html'
 import * as uuid from 'uuid'
 import { createLogger } from '@valguide/logger'
@@ -14,7 +13,7 @@ const baseUrl = process.env.NEXT_PUBLIC_DEMO_URL ?? 'https://demo.com'
 
 const logoUrl = `${baseUrl}/static/demo-logo.png`
 
-export const ResendOtpProvider = (): EmailConfig => {
+export const ResendOtpProvider = () => {
   return {
     id: 'email-otp',
     type: 'email',
@@ -25,7 +24,7 @@ export const ResendOtpProvider = (): EmailConfig => {
     generateVerificationToken() {
       return gernerateOTP().toString()
     },
-    async sendVerificationRequest(params) {
+    async sendVerificationRequest(params: any) {
       const { identifier: to, token: code, provider } = params
 
       // TODO auth: test what happens if this fails. should show error in frontend

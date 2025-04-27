@@ -27,12 +27,9 @@
     "jest": "^29.7.0"
   },
   "peerDependencies": {
-    "next-auth": "beta",
-    "@auth/core": "^0.37.4",
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@auth/pg-adapter": "^1.7.0",
     "@valguide/logger": "workspace:*",
     "@faker-js/faker": "^9.2.0",
     "@neondatabase/serverless": "^0.9.5",
