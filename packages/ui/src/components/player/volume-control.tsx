@@ -20,7 +20,7 @@ const volumeControlVariants = cva('flex items-center gap-2', {
 })
 
 export interface VolumeControlProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>, 'value' | 'defaultValue'>,
+  extends Omit<React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>, 'value' | 'defaultValue' | 'onValueChange'>,
     VariantProps<typeof volumeControlVariants> {
   value?: number
   defaultValue?: number
@@ -28,7 +28,7 @@ export interface VolumeControlProps
 }
 
 const VolumeControl = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
+  React.ComponentRef<typeof SliderPrimitive.Root>,
   VolumeControlProps & DataTestIdProps
 >(({ className, variant, value = 50, onValueChange, ...props }, ref) => {
   const [volume, setVolume] = React.useState(value)
@@ -40,7 +40,7 @@ const VolumeControl = React.forwardRef<
   }, [value])
 
   const handleVolumeChange = (newValue: number[]) => {
-    const vol = newValue[0]
+    const vol = newValue[0] ?? 0
     setVolume(vol)
     setIsMuted(vol === 0)
     if (onValueChange) {
@@ -133,13 +133,14 @@ const VolumeControl = React.forwardRef<
         </div>
       </motion.button>
       <SliderPrimitive.Root
+        {...props}
         ref={ref}
         className="relative flex h-5 w-32 touch-none select-none items-center"
         value={[volume]}
         max={100}
         step={1}
         onValueChange={handleVolumeChange}
-        {...props}
+        defaultValue={[props.defaultValue ?? 0]}
       >
         <SliderPrimitive.Track className="relative h-1 w-full grow overflow-hidden rounded-full bg-secondary">
           <motion.div

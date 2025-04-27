@@ -113,15 +113,13 @@ const PlayerView = React.forwardRef<HTMLDivElement, PlayerViewProps & DataTestId
         onTouchEnd={handleInteractionEnd}
         {...props}
       >
-        <motion.div
-          className={cn('relative overflow-hidden', variant === 'fullscreen' ? 'flex-1 flex flex-col' : 'flex-1')}
-          whileTap={{ scale: 0.98 }}
-        >
+        {/* Image container - fills available space */}
+        <div className="flex-1 overflow-hidden" style={{ height: 'calc(100% - 72px)' }}>
           {variant === 'fullscreen' ? (
-            <div className="absolute inset-0 flex items-center justify-center overflow-hidden pb-[72px]">
+            <div className="h-full w-full flex items-center justify-center">
               {imageRatio === 'square' ? (
-                <div className="w-full h-full max-h-full flex items-center justify-center">
-                  <div className="aspect-square w-full max-h-full">
+                <div className="h-full w-full flex items-center justify-center">
+                  <div className="aspect-square h-full max-w-full">
                     <motion.img
                       src={image}
                       alt={`${title} by ${artist}`}
@@ -136,8 +134,8 @@ const PlayerView = React.forwardRef<HTMLDivElement, PlayerViewProps & DataTestId
                   </div>
                 </div>
               ) : (
-                <div className="w-full h-full max-h-full flex items-center justify-center">
-                  <div className="w-full h-auto" style={{ aspectRatio }}>
+                <div className="h-full w-full flex items-center justify-center">
+                  <div className="h-full max-w-full" style={{ aspectRatio }}>
                     <motion.img
                       src={image}
                       alt={`${title} by ${artist}`}
@@ -154,59 +152,62 @@ const PlayerView = React.forwardRef<HTMLDivElement, PlayerViewProps & DataTestId
               )}
             </div>
           ) : (
-            <AspectRatio ratio={imageRatio === 'square' ? 1 : aspectRatio}>
-              <motion.img
-                src={image}
-                alt={`${title} by ${artist}`}
-                className="h-full w-full object-cover"
-                initial={{ scale: 1 }}
-                animate={{
-                  scale: isPlaying ? 1.05 : 1,
-                  transition: { duration: 0.7, ease: 'easeInOut' },
-                }}
-                whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
-              />
-            </AspectRatio>
+            <div className="h-full w-full flex items-center justify-center">
+              <div
+                className={cn('h-full max-w-full', imageRatio === 'square' ? 'aspect-square' : '')}
+                style={imageRatio === 'original' ? { aspectRatio } : {}}
+              >
+                <motion.img
+                  src={image}
+                  alt={`${title} by ${artist}`}
+                  className="h-full w-full object-cover"
+                  initial={{ scale: 1 }}
+                  animate={{
+                    scale: isPlaying ? 1.05 : 1,
+                    transition: { duration: 0.7, ease: 'easeInOut' },
+                  }}
+                  whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+                />
+              </div>
+            </div>
           )}
-        </motion.div>
+        </div>
 
-        <AnimatePresence>
-          {controlsVisible && (
-            <motion.div
-              className={cn(
-                'w-full bg-card/80 backdrop-blur-md p-4',
-                variant === 'fullscreen' ? 'absolute bottom-0 left-0 right-0' : 'sticky bottom-0',
-              )}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Player
-                title={title}
-                artist={artist}
-                albumArt={albumArt}
-                isPlaying={isPlaying}
-                currentTime={currentTime}
-                duration={duration}
-                progress={progress}
-                volume={volume}
-                shuffleActive={shuffleActive}
-                repeatActive={repeatActive}
-                onPlayPause={onPlayPause}
-                onSkipNext={onSkipNext}
-                onSkipPrevious={onSkipPrevious}
-                onToggleShuffle={onToggleShuffle}
-                onToggleRepeat={onToggleRepeat}
-                onSeek={onSeek}
-                onVolumeChange={onVolumeChange}
-                showVolumeControl={showVolumeControl}
-                variant="default"
-                className="border-none shadow-none p-0"
-              />
-            </motion.div>
+        {/* Controls - always at bottom */}
+        <motion.div
+          className={cn(
+            'w-full bg-card/80 backdrop-blur-md p-4 h-[72px]',
+            variant === 'fullscreen' ? 'absolute bottom-0 left-0 right-0' : 'sticky bottom-0',
           )}
-        </AnimatePresence>
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: controlsVisible ? 1 : 0.3,
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          <Player
+            title={title}
+            artist={artist}
+            albumArt={albumArt}
+            isPlaying={isPlaying}
+            currentTime={currentTime}
+            duration={duration}
+            progress={progress}
+            volume={volume}
+            shuffleActive={shuffleActive}
+            repeatActive={repeatActive}
+            onPlayPause={onPlayPause}
+            onSkipNext={onSkipNext}
+            onSkipPrevious={onSkipPrevious}
+            onToggleShuffle={onToggleShuffle}
+            onToggleRepeat={onToggleRepeat}
+            onSeek={onSeek}
+            onVolumeChange={onVolumeChange}
+            showVolumeControl={showVolumeControl}
+            variant="default"
+            className="border-none shadow-none p-0"
+          />
+        </motion.div>
       </div>
     )
   },

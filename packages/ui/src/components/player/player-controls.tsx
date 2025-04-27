@@ -25,9 +25,9 @@ const playerControlsVariants = cva('flex items-center gap-2', {
   },
 })
 
-export interface PlayerControlsProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof playerControlsVariants> {
+import { HTMLMotionProps } from 'framer-motion'
+
+export interface PlayerControlsProps extends VariantProps<typeof playerControlsVariants> {
   isPlaying?: boolean
   onPlayPause?: () => void
   onSkipNext?: () => void
@@ -39,9 +39,13 @@ export interface PlayerControlsProps
   showSkipControls?: boolean
   showShuffleButton?: boolean
   showRepeatButton?: boolean
+  className?: string
 }
 
-const PlayerControls = React.forwardRef<HTMLDivElement, PlayerControlsProps & DataTestIdProps>(
+const PlayerControls = React.forwardRef<
+  HTMLDivElement,
+  PlayerControlsProps & DataTestIdProps & Omit<HTMLMotionProps<'div'>, 'ref'>
+>(
   (
     {
       className,
@@ -71,7 +75,7 @@ const PlayerControls = React.forwardRef<HTMLDivElement, PlayerControlsProps & Da
         scale: [1, 1.05, 1],
         transition: {
           repeat: Infinity,
-          repeatType: 'reverse',
+          repeatType: 'reverse' as const,
           duration: 1.5,
         },
       },

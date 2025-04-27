@@ -25,7 +25,9 @@ const playerVariants = cva('flex flex-col gap-2 rounded-lg border bg-card p-4 sh
   },
 })
 
-export interface PlayerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof playerVariants> {
+export interface PlayerProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, keyof VariantProps<typeof playerVariants> | 'onVolumeChange'>,
+    VariantProps<typeof playerVariants> {
   title: string
   artist: string
   albumArt?: string

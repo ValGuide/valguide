@@ -116,6 +116,7 @@ export const FullscreenSquare: StoryObj<typeof PlayerView> = {
   render: (args) => (
     <div className="relative w-screen h-screen overflow-hidden">
       <PlayerView
+        {...args}
         title="Bohemian Rhapsody"
         artist="Queen"
         image={sampleImage}
@@ -127,7 +128,6 @@ export const FullscreenSquare: StoryObj<typeof PlayerView> = {
         volume={50}
         variant="fullscreen"
         imageRatio="square"
-        {...args}
       />
     </div>
   ),
@@ -140,6 +140,7 @@ export const FullscreenOriginal: StoryObj<typeof PlayerView> = {
   render: (args) => (
     <div className="relative w-screen h-screen overflow-hidden">
       <PlayerView
+        {...args}
         title="Bohemian Rhapsody"
         artist="Queen"
         image={landscapeImage}
@@ -152,7 +153,6 @@ export const FullscreenOriginal: StoryObj<typeof PlayerView> = {
         variant="fullscreen"
         imageRatio="original"
         aspectRatio={16 / 9}
-        {...args}
       />
     </div>
   ),
