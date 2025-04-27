@@ -2,6 +2,7 @@ import * as path from 'path'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import type { StorybookConfig } from '@storybook/react-vite'
+import { fileURLToPath } from 'url'
 
 const config: StorybookConfig = {
   stories: [
@@ -22,12 +23,6 @@ const config: StorybookConfig = {
     getAbsolutePath('storybook-dark-mode'),
     getAbsolutePath('@storybook/addon-interactions'),
     getAbsolutePath('storybook-react-i18next'),
-    {
-      name: 'storybook-addon-next',
-      options: {
-        nextConfigPath: '../next.config.js'
-      }
-    }
   ],
 
   typescript: {
@@ -49,6 +44,15 @@ const config: StorybookConfig = {
         ],
       }),
     )
+
+
+    config.resolve = {
+      ...(config.resolve || {}),
+      alias: {
+        ...(config.resolve?.alias || {}),
+        'next/image': path.resolve(__dirname, './__mocks__/NextImageMock.tsx'),
+      },
+    }
     return mergeConfig(config, {
       define: { 'process.env': '{}' },
       optimizeDeps: {
