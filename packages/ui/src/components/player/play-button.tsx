@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Play, Pause } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import { cn } from '@valguide/ui/lib/utils'
 import { DataTestIdProps } from '@valguide/ui/lib/types'
@@ -37,10 +38,67 @@ export interface PlayButtonProps
 
 const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps & DataTestIdProps>(
   ({ className, variant, size, asChild = false, isPlaying = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button'
+    const Comp = asChild ? Slot : motion.button
+
+    // Animation variants for the button
+    const buttonVariants = {
+      initial: { scale: 1 },
+      hover: { scale: 1.05, transition: { duration: 0.2 } },
+      tap: { scale: 0.95, transition: { duration: 0.1 } },
+      playing: {
+        scale: [1, 1.05, 1],
+        transition: {
+          repeat: Infinity,
+          repeatType: 'reverse',
+          duration: 1.5,
+        },
+      },
+    }
+
+    // Animation variants for the icons
+    const iconVariants = {
+      hidden: { opacity: 0, scale: 0.5, transition: { duration: 0.2 } },
+      visible: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
+    }
+
     return (
-      <Comp className={cn(playButtonVariants({ variant, size, className }))} ref={ref} {...props}>
-        {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+      <Comp
+        className={cn(playButtonVariants({ variant, size, className }))}
+        ref={ref}
+        initial="initial"
+        whileHover="hover"
+        whileTap="tap"
+        animate={isPlaying ? 'playing' : 'initial'}
+        variants={buttonVariants}
+        {...props}
+      >
+        <div className="relative w-4 h-4 flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            {isPlaying ? (
+              <motion.div
+                key="pause"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={iconVariants}
+                className="absolute"
+              >
+                <Pause className="h-4 w-4" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="play"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={iconVariants}
+                className="absolute"
+              >
+                <Play className="h-4 w-4" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </Comp>
     )
   },
