@@ -8,11 +8,11 @@ import { AspectRatio } from '@valguide/ui/components/aspect-ratio'
 import { Player, PlayerProps } from './player'
 import { useHover } from 'usehooks-ts'
 
-const playerViewVariants = cva('relative flex flex-col overflow-hidden rounded-lg', {
+const playerViewVariants = cva('relative flex flex-col overflow-hidden', {
   variants: {
     variant: {
-      default: 'w-full max-w-3xl mx-auto',
-      fullscreen: 'w-full h-full',
+      default: 'w-full max-w-3xl mx-auto rounded-lg',
+      fullscreen: 'w-full h-full absolute inset-0',
     },
     imageRatio: {
       square: '', // Will use 1/1 aspect ratio
@@ -96,7 +96,10 @@ const PlayerView = React.forwardRef<HTMLDivElement, PlayerViewProps & DataTestId
 
     return (
       <div
-        className={cn(playerViewVariants({ variant, imageRatio, className }))}
+        className={cn(
+          playerViewVariants({ variant, imageRatio, className }),
+          variant === 'fullscreen' ? 'flex flex-col justify-between' : '',
+        )}
         ref={(node) => {
           // Assign the ref to both our local ref and the forwarded ref
           playerRef.current = node
@@ -110,26 +113,70 @@ const PlayerView = React.forwardRef<HTMLDivElement, PlayerViewProps & DataTestId
         onTouchEnd={handleInteractionEnd}
         {...props}
       >
-        <motion.div className="relative flex-1 overflow-hidden" whileTap={{ scale: 0.98 }}>
-          <AspectRatio ratio={imageRatio === 'square' ? 1 : aspectRatio}>
-            <motion.img
-              src={image}
-              alt={`${title} by ${artist}`}
-              className="h-full w-full object-cover"
-              initial={{ scale: 1 }}
-              animate={{
-                scale: isPlaying ? 1.05 : 1,
-                transition: { duration: 0.7, ease: 'easeInOut' },
-              }}
-              whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
-            />
-          </AspectRatio>
+        <motion.div
+          className={cn('relative overflow-hidden', variant === 'fullscreen' ? 'flex-1 flex flex-col' : 'flex-1')}
+          whileTap={{ scale: 0.98 }}
+        >
+          {variant === 'fullscreen' ? (
+            <div className="absolute inset-0 flex items-center justify-center overflow-hidden pb-[72px]">
+              {imageRatio === 'square' ? (
+                <div className="w-full h-full max-h-full flex items-center justify-center">
+                  <div className="aspect-square w-full max-h-full">
+                    <motion.img
+                      src={image}
+                      alt={`${title} by ${artist}`}
+                      className="h-full w-full object-cover"
+                      initial={{ scale: 1 }}
+                      animate={{
+                        scale: isPlaying ? 1.05 : 1,
+                        transition: { duration: 0.7, ease: 'easeInOut' },
+                      }}
+                      whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-full max-h-full flex items-center justify-center">
+                  <div className="w-full h-auto" style={{ aspectRatio }}>
+                    <motion.img
+                      src={image}
+                      alt={`${title} by ${artist}`}
+                      className="h-full w-full object-cover"
+                      initial={{ scale: 1 }}
+                      animate={{
+                        scale: isPlaying ? 1.05 : 1,
+                        transition: { duration: 0.7, ease: 'easeInOut' },
+                      }}
+                      whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <AspectRatio ratio={imageRatio === 'square' ? 1 : aspectRatio}>
+              <motion.img
+                src={image}
+                alt={`${title} by ${artist}`}
+                className="h-full w-full object-cover"
+                initial={{ scale: 1 }}
+                animate={{
+                  scale: isPlaying ? 1.05 : 1,
+                  transition: { duration: 0.7, ease: 'easeInOut' },
+                }}
+                whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+              />
+            </AspectRatio>
+          )}
         </motion.div>
 
         <AnimatePresence>
           {controlsVisible && (
             <motion.div
-              className="sticky bottom-0 w-full bg-card/80 backdrop-blur-md p-4"
+              className={cn(
+                'w-full bg-card/80 backdrop-blur-md p-4',
+                variant === 'fullscreen' ? 'absolute bottom-0 left-0 right-0' : 'sticky bottom-0',
+              )}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}

@@ -50,11 +50,11 @@ export const All: StoryObj = {
                 progress={30}
                 volume={50}
                 imageRatio="original"
-                aspectRatio={16/9}
+                aspectRatio={16 / 9}
               />
             </div>
             <div>
-              <h2 className="mb-2 text-lg font-medium">Fullscreen Variant</h2>
+              <h2 className="mb-2 text-lg font-medium">Fullscreen Variant (Preview)</h2>
               <div className="h-[600px] border border-border">
                 <PlayerView
                   title="Bohemian Rhapsody"
@@ -70,6 +70,9 @@ export const All: StoryObj = {
                   imageRatio="square"
                 />
               </div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Note: For true fullscreen experience, see the "FullscreenSquare" and "FullscreenOriginal" stories.
+              </p>
             </div>
           </div>
         </div>
@@ -105,24 +108,54 @@ export const OriginalRatio: StoryObj<typeof PlayerView> = {
     progress: 30,
     volume: 50,
     imageRatio: 'original',
-    aspectRatio: 16/9,
+    aspectRatio: 16 / 9,
   },
 }
 
-export const Fullscreen: StoryObj<typeof PlayerView> = {
-  args: {
-    title: 'Bohemian Rhapsody',
-    artist: 'Queen',
-    image: sampleImage,
-    albumArt: sampleImage,
-    isPlaying: false,
-    currentTime: '1:45',
-    duration: '5:55',
-    progress: 30,
-    volume: 50,
-    variant: 'fullscreen',
-    imageRatio: 'square',
+export const FullscreenSquare: StoryObj<typeof PlayerView> = {
+  render: (args) => (
+    <div className="relative w-screen h-screen overflow-hidden">
+      <PlayerView
+        title="Bohemian Rhapsody"
+        artist="Queen"
+        image={sampleImage}
+        albumArt={sampleImage}
+        isPlaying={false}
+        currentTime="1:45"
+        duration="5:55"
+        progress={30}
+        volume={50}
+        variant="fullscreen"
+        imageRatio="square"
+        {...args}
+      />
+    </div>
+  ),
+  parameters: {
+    layout: 'fullscreen',
   },
+}
+
+export const FullscreenOriginal: StoryObj<typeof PlayerView> = {
+  render: (args) => (
+    <div className="relative w-screen h-screen overflow-hidden">
+      <PlayerView
+        title="Bohemian Rhapsody"
+        artist="Queen"
+        image={landscapeImage}
+        albumArt={sampleImage}
+        isPlaying={false}
+        currentTime="1:45"
+        duration="5:55"
+        progress={30}
+        volume={50}
+        variant="fullscreen"
+        imageRatio="original"
+        aspectRatio={16 / 9}
+        {...args}
+      />
+    </div>
+  ),
   parameters: {
     layout: 'fullscreen',
   },
@@ -160,7 +193,7 @@ export const TabletView: StoryObj<typeof PlayerView> = {
     progress: 30,
     volume: 50,
     imageRatio: 'original',
-    aspectRatio: 16/9,
+    aspectRatio: 16 / 9,
   },
   parameters: {
     viewport: {
