@@ -58,5 +58,6 @@
     "VERCEL_URL",
     "VERCEL_ENV",
     "AUTH_ENABLED",
+    "SUPABASE_PROJECT_ID"
   ]
 }

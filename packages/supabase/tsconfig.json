@@ -1,0 +1,13 @@
+{
+  "extends": "@valguide/typescript-config/nextjs.json",
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules"
+  ]
+}

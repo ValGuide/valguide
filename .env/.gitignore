@@ -1,9 +1,0 @@
-.env.defaults
-
-.env.db.local
-.env.db.dev
-.env.db.prod
-
-.env.web.local
-.env.web.dev
-.env.web.prod

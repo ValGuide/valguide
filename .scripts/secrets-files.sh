@@ -2,11 +2,11 @@
 
 # Array of files to encrypt
 files=(
-  ".env/.env.defaults"
-  ".env/.env.db.dev"
-  ".env/.env.db.local"
-  ".env/.env.db.prod"
-  ".env/.env.web.local"
-  ".env/.env.web.prod"
-  ".env/.env.web.dev"
+  ".secrets/.env.defaults"
+  ".secrets/.env.db.dev"
+  ".secrets/.env.db.local"
+  ".secrets/.env.db.prod"
+  ".secrets/.env.web.local"
+  ".secrets/.env.web.prod"
+  ".secrets/.env.web.dev"
 )

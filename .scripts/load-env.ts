@@ -73,7 +73,7 @@ const logEnvs = (...envs: EnvAndFile<any>[]): string[] =>
   envs.map((env) => `${env.name.toUpperCase()}: ${env.env} [${env.file}]`)
 console.info(`\n${borderBox(...logEnvs(...envs))}\n`)
 
-const envCommand = `dotenvx run ${envs.map(({ file }) => `--env-file=${__dirname}/../.env/${file}`).join(' ')} -- `
+const envCommand = `dotenvx run ${envs.map(({ file }) => `--env-file=${__dirname}/../.secrets/${file}`).join(' ')} -- `
 const runCommand = args
   .filter((arg) => ![dbOptions.prefix, webOptions.prefix].some((prefix) => arg.startsWith(prefix)))
   .join(' ')
