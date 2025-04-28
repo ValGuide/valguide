@@ -1,5 +1,6 @@
-import { ChangeEvent, FormEvent } from 'react'
+import { ChangeEvent, FormEvent, useCallback } from 'react'
 import { Button } from '../button'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '../input-otp'
 
 export interface OtpVerificationFormProps {
   /**
@@ -31,6 +32,10 @@ export interface OtpVerificationFormProps {
    */
   loadingText: string
   /**
+   * Title for the form
+   */
+  title?: string
+  /**
    * Label for the OTP input
    */
   otpLabel: string
@@ -55,29 +60,51 @@ export function OtpVerificationForm({
   loading = false,
   submitText,
   loadingText,
+  title,
   otpLabel,
   otpPlaceholder,
   resendText,
 }: OtpVerificationFormProps) {
   return (
     <>
+      {title && <h2 className="text-center text-2xl font-bold text-gray-900 mb-4">{title}</h2>}
       <form className="mt-8 space-y-6" onSubmit={onSubmit}>
         <div>
-          <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="otp" className="block text-sm font-medium text-gray-700 text-center">
             {otpLabel}
           </label>
-          <div className="mt-1">
-
-            {/* TODO: replace with InputOTP */}
-            <input
-              id="otp"
-              name="otp"
-              type="text"
-              value={otp}
-              onChange={onOtpChange}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder={otpPlaceholder}
-            />
+          <div className="mt-1 flex justify-center">
+            <InputOTP
+              maxLength={6}
+              disabled={loading}
+              onComplete={(value) => {
+                // Create a synthetic event to maintain compatibility with the existing API
+                const syntheticEvent = {
+                  target: {
+                    value,
+                  },
+                } as unknown as ChangeEvent<HTMLInputElement>
+                onOtpChange(syntheticEvent)
+              }}
+              onChange={(value) => {
+                // Also handle partial OTP entries
+                const syntheticEvent = {
+                  target: {
+                    value,
+                  },
+                } as unknown as ChangeEvent<HTMLInputElement>
+                onOtpChange(syntheticEvent)
+              }}
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
           </div>
         </div>
 
