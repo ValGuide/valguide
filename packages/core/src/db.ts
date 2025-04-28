@@ -1,8 +1,10 @@
-import { drizzle } from 'drizzle-orm/neon-http'
-import { neon } from '@neondatabase/serverless'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 import * as schema from './schema'
 
-const sql = neon(process.env.DATABASE_URL!)
+// Create a PostgreSQL client that connects to Supabase
+const connectionString = process.env.DATABASE_URL!
+const sql = postgres(connectionString, { max: 1 })
 
 export const db = drizzle(sql, {
   schema,
