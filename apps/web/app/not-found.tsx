@@ -18,11 +18,13 @@ const fontMono = Geist_Mono({
 // This page renders when a route like `/unknown.txt` is requested
 // that is not matched by the middlware.
 export default async function GlobalNotFound() {
-  const en = await import('../messages/en.json')
+  // TODO: localise the global not-found page
+  const enModule = await import('../messages/en.json')
+  const en = enModule.default || enModule
   return (
     <html lang={defaultLocale} suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}>
-        <Providers locale={defaultLocale}>
+        <Providers locale={defaultLocale} messages={en}>
           <NotFoundPage
             i18n={{
               title: en.notFound.title,

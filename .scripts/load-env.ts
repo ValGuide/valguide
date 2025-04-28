@@ -26,7 +26,7 @@ const webOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
   name: 'web',
   prefix: '--web:',
   values: ['local', 'dev', 'prod'] as const,
-  defaultValue: 'local' as const,
+  defaultValue: 'dev' as const,
   envFiles: {
     local: '.env.web.local',
     dev: '.env.web.dev',

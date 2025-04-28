@@ -15,8 +15,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleEmailLogin = async (email: string) => {
     setLoading(true)
     setMessage(null)
 
@@ -95,7 +94,7 @@ export default function LoginPage() {
 
       <LoginForm
         email={email}
-        onEmailChange={(e) => setEmail(e.target.value)}
+        onEmailChange={setEmail}
         onSubmit={handleEmailLogin}
         loading={loading}
         submitText={t('sendCode')}
