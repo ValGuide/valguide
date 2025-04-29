@@ -48,3 +48,5 @@ key.txt
 !.idea/scopes
 !.idea/runConfigurations
 *storybook.log
+
+.vercel
