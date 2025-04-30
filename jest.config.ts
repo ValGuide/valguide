@@ -12,11 +12,13 @@ const config: Config = {
   },
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/apps/web/$1',
-    'demo/core/(.*)': '<rootDir>/packages/core/src/$1',
-    'demo/logger': '<rootDir>/packages/logger/index.ts',
-    'demo/logger/(.*)': '<rootDir>/packages/logger/src/$1',
-    'demo/icons/(.*)': '<rootDir>/packages/icons/dist/$1',
-    'demo/ui/(.*)': '<rootDir>/packages/ui/src/$1',
+    '@valguide/core/(.*)': '<rootDir>/packages/core/$1',
+    '@valguide/features/(.*)': '<rootDir>/packages/core/features/$1',
+    '@valguide/ui/(.*)': '<rootDir>/packages/core/ui/$1',
+    '@valguide/i18n/(.*)': '<rootDir>/packages/core/i18n/$1',
+    '@valguide/logger': '<rootDir>/packages/logger/index.ts',
+    '@valguide/logger/(.*)': '<rootDir>/packages/logger/src/$1',
+    '@valguide/icons/(.*)': '<rootDir>/packages/icons/dist/$1',
   },
 }
 

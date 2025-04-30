@@ -27,6 +27,9 @@
       "@valguide/ui/*": [
         "../../packages/core/ui/*"
       ],
+      "@valguide/i18n/*": [
+        "../../packages/core/i18n/*"
+      ],
       "@valguide/core/*": [
         "../../packages/core/*"
       ],

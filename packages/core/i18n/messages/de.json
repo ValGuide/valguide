@@ -37,5 +37,19 @@
   "notFound": {
     "title": "404 – Verirrt?",
     "description": "Sieht so aus, als würde dieser Pfad ins Nichts führen"
+  },
+  "guide": {
+    "previewCard": {
+      "viewDetails": "Details anzeigen",
+      "author": "Autor",
+      "created": "Erstellt",
+      "updated": "Aktualisiert",
+      "authorInfo": "Autorinformationen",
+      "difficulty": {
+        "beginner": "Anfänger",
+        "intermediate": "Fortgeschritten",
+        "advanced": "Experte"
+      }
+    }
   }
 }

@@ -37,5 +37,19 @@
   "notFound": {
     "title": "404 – Eis vus sepiars?",
     "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga."
+  },
+  "guide": {
+    "previewCard": {
+      "viewDetails": "Mussar detagls",
+      "author": "Autur",
+      "created": "Creà",
+      "updated": "Actualisà",
+      "authorInfo": "Infurmaziuns davart l'autur",
+      "difficulty": {
+        "beginner": "Principiant",
+        "intermediate": "Intermediar",
+        "advanced": "Avanzà"
+      }
+    }
   }
 }

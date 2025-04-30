@@ -1,0 +1,38 @@
+import '@valguide/ui/styles/globals.css'
+
+import { Providers } from '@/components/providers'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { defaultLocale } from '@/i18n/i18n.config'
+import NotFoundPage from '@/app/[locale]/[...notFound]/not-found-page'
+
+const fontSans = Geist({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
+
+const fontMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+})
+
+// This page renders when a route like `/unknown.txt` is requested
+// that is not matched by the middlware.
+export default async function GlobalNotFound() {
+  // TODO: localise the global not-found page
+  const enModule = await import('../messages/en.json')
+  const en = enModule.default || enModule
+  return (
+    <html lang={defaultLocale} suppressHydrationWarning>
+      <body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}>
+        <Providers locale={defaultLocale} messages={en}>
+          <NotFoundPage
+            i18n={{
+              title: en.notFound.title,
+              description: en.notFound.description,
+            }}
+          />
+        </Providers>
+      </body>
+    </html>
+  )
+}

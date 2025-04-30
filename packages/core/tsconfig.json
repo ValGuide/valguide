@@ -10,6 +10,9 @@
       "@valguide/ui/*": [
         "./ui/*"
       ],
+      "@valguide/i18n/*": [
+        "./i18n/*"
+      ],
       "@valguide/features/*": [
         "./features/src/*"
       ],

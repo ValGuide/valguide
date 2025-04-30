@@ -36,6 +36,20 @@
   },
   "notFound": {
     "title": "404 – Lost Your Way?",
-    "description": "Looks like this trail doesn’t lead anywhere! Let's get you back to where the adventure is."
+    "description": "Looks like this trail doesn't lead anywhere! Let's get you back to where the adventure is."
+  },
+  "guide": {
+    "previewCard": {
+      "viewDetails": "View Details",
+      "author": "Author",
+      "created": "Created",
+      "updated": "Updated",
+      "authorInfo": "Author Information",
+      "difficulty": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      }
+    }
   }
 }
