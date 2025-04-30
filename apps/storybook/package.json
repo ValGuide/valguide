@@ -10,8 +10,8 @@
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml storybook-static .turbo"
   },
   "dependencies": {
-    "@valguide/ui": "workspace:*",
     "@valguide/web": "workspace:*",
+    "@valguide/core": "workspace:*",
     "next": "^15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

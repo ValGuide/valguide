@@ -1,4 +1,4 @@
-import { Button } from '../button'
+import { Button } from '@valguide/ui/components/button'
 
 export interface SocialLoginButtonsProps {
   /**

@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/utils/supabase'
 import { useTranslations } from 'next-intl'
-import { AuthLayout, MessageAlert, OtpVerificationForm } from '@valguide/ui/components/auth'
+import { AuthLayout } from '@valguide/features/auth/common/auth-layout'
+import { MessageAlert } from '@valguide/features/auth/common/message-alert'
+import { OtpVerificationForm } from '@valguide/features/auth/login/otp-verification-form'
 
 export default function EmailLoginPage() {
   const t = useTranslations('login')

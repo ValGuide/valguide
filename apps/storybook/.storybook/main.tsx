@@ -8,7 +8,7 @@ const config: StorybookConfig = {
   stories: [
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
     '../../web/**/*.stories.@(js|jsx|ts|tsx)',
-    '../../../packages/ui/src/**/*.stories.@(js|jsx|ts|tsx)',
+    '../../../packages/core/**/*.stories.@(js|jsx|ts|tsx)',
   ],
 
   addons: [
@@ -40,11 +40,9 @@ const config: StorybookConfig = {
           path.resolve(path.dirname(__dirname), 'tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../web/tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../../packages/core/tsconfig.json'),
-          path.resolve(path.dirname(__dirname), '../../packages/ui/tsconfig.json'),
         ],
       }),
     )
-
 
     config.resolve = {
       ...(config.resolve || {}),

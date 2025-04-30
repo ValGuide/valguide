@@ -6,18 +6,22 @@ import { NextIntlClientProvider } from 'next-intl'
 
 import en from '@valguide/web/messages/en.json' with { type: 'json' }
 import de from '@valguide/web/messages/de.json' with { type: 'json' }
+import rm from '@valguide/web/messages/rm.json' with { type: 'json' }
+
 import type { SupportedLocale } from '@valguide/web/i18n/i18n.config'
 import { themes } from '@valguide/ui/theme/themes'
 
-const messages: Record<SupportedLocale, any> = { en, de }
+const messages: Record<SupportedLocale, any> = { en, de, rm }
+const locales: Record<SupportedLocale, String> = {
+  en: 'English 🇺🇸',
+  de: 'Deutsch 🇩🇪',
+  rm: 'Romansh ',
+}
 
 const preview: Preview = {
   initialGlobals: {
     locale: 'en',
-    locales: {
-      en: 'English 🇺🇸',
-      de: 'Deutsch 🇩🇪',
-    },
+    locales,
   },
   parameters: {
     controls: {

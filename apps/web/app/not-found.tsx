@@ -1,4 +1,4 @@
-import '@valguide/ui/globals.css'
+import '@valguide/ui/styles/globals.css'
 
 import { Providers } from '@/components/providers'
 import { Geist, Geist_Mono } from 'next/font/google'

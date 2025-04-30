@@ -8,9 +8,7 @@ const meta: Meta<typeof MessageAlert> = {
   render: (args) => {
     const t = useTranslations('login')
     return (
-      <MessageAlert {...args}>
-        {args.children || (args.type === 'success' ? t('otpSent') : t('otpError'))}
-      </MessageAlert>
+      <MessageAlert {...args}>{args.children || (args.type === 'success' ? t('otpSent') : t('otpError'))}</MessageAlert>
     )
   },
 }

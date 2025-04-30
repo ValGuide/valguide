@@ -1,6 +1,7 @@
 'use client'
 
-import { AuthLayout, AuthLoader } from '@valguide/ui/components/auth'
+import { AuthLayout } from '@valguide/features/auth/common/auth-layout'
+import { AuthLoader } from '@valguide/features/auth/common/auth-loader'
 
 export default function EmailLoginLoading() {
   return (

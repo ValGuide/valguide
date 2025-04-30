@@ -10,11 +10,14 @@
       "@/*": [
         "./*"
       ],
+      "@valguide/features/*": [
+        "../../packages/core/features/*"
+      ],
       "@valguide/ui/*": [
-        "../../packages/ui/src/*"
+        "../../packages/core/ui/*"
       ],
       "@valguide/core/*": [
-        "../../packages/core/src/*"
+        "../../packages/core/*"
       ],
       "@valguide/icons/*": [
         "../../packages/icons/dist/*"

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import * as z from 'zod'
 
-import { Button } from '../button'
+import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@valguide/ui/components/form'
 

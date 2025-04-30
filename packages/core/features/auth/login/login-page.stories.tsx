@@ -1,16 +1,16 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { AuthLayout } from './auth-layout'
-import { OtpVerificationForm } from './otp-verification-form'
-import { MessageAlert } from './message-alert'
+import { AuthLayout } from '../common/auth-layout'
+import { LoginForm } from './login-form'
+import { MessageAlert } from '../common/message-alert'
+import { SocialLoginButtons } from './social-login-buttons'
 
-const OtpVerificationPageExample = () => {
+const LoginPageExample = () => {
   const t = useTranslations('login')
-  const [otp, setOtp] = useState('')
+  const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const email = 'user@example.com'
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,53 +20,55 @@ const OtpVerificationPageExample = () => {
     // Simulate API call
     setTimeout(() => {
       setLoading(false)
-      if (otp.length === 6) {
+      if (email.includes('@')) {
         setMessage({ type: 'success', text: t('otpSent') })
       } else {
-        setMessage({ type: 'error', text: t('otpError') })
+        setMessage({ type: 'error', text: t('email.message') })
       }
     }, 1000)
   }
 
-  const handleResendOtp = () => {
-    setLoading(true)
-    setMessage(null)
+  const handleGoogleLogin = () => {
+    alert('Google login clicked')
+  }
 
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false)
-      setMessage({ type: 'success', text: t('otpSent') })
-    }, 1000)
+  const handleAppleLogin = () => {
+    alert('Apple login clicked')
   }
 
   return (
     <AuthLayout>
       <div className="text-center">
         <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
-        <p className="mt-2 text-sm text-gray-600">{`${t('verifyEmail')} ${email}`}</p>
+        <p className="mt-2 text-sm text-gray-600">{t('loginPrompt')}</p>
       </div>
 
       {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
 
-      <OtpVerificationForm
-        otp={otp}
-        onOtpChange={(e) => setOtp(e.target.value)}
+      <LoginForm
+        email={email}
+        onEmailChange={(e) => setEmail(e.target.value)}
         onSubmit={handleSubmit}
-        onResendClick={handleResendOtp}
         loading={loading}
-        submitText={t('verifyCode')}
-        loadingText={t('verifying')}
-        otpLabel={t('otpLabel')}
-        otpPlaceholder={t('otpPlaceholder')}
-        resendText={t('resendCode')}
+        submitText={t('sendCode')}
+        loadingText={t('sending')}
+        emailLabel={t('emailLabel')}
+        emailPlaceholder={t('emailPlaceholder')}
+      />
+
+      <SocialLoginButtons
+        onGoogleClick={handleGoogleLogin}
+        onAppleClick={handleAppleLogin}
+        loading={loading}
+        dividerText={t('orContinueWith')}
       />
     </AuthLayout>
   )
 }
 
 const meta: Meta = {
-  title: 'Auth/OtpVerificationPage',
-  component: OtpVerificationPageExample,
+  title: 'Auth/LoginPage',
+  component: LoginPageExample,
   parameters: {
     layout: 'fullscreen',
   },

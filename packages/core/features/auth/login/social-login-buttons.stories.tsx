@@ -7,12 +7,7 @@ const meta: Meta<typeof SocialLoginButtons> = {
   component: SocialLoginButtons,
   render: (args) => {
     const t = useTranslations('login')
-    return (
-      <SocialLoginButtons
-        {...args}
-        dividerText={args.dividerText || t('orContinueWith')}
-      />
-    )
+    return <SocialLoginButtons {...args} dividerText={args.dividerText || t('orContinueWith')} />
   },
 }
 

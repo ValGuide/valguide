@@ -4,7 +4,10 @@ import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/utils/supabase'
 import { useTranslations } from 'next-intl'
-import { AuthLayout, MessageAlert, LoginForm, SocialLoginButtons } from '@valguide/ui/components/auth'
+import { AuthLayout } from '@valguide/features/auth/common/auth-layout'
+import { MessageAlert } from '@valguide/features/auth/common/message-alert'
+import { LoginForm } from '@valguide/features/auth/login/login-form'
+import { SocialLoginButtons } from '@valguide/features/auth/login/social-login-buttons'
 
 export default function LoginPage() {
   const t = useTranslations('login')

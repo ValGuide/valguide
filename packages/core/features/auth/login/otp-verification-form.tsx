@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useCallback } from 'react'
-import { Button } from '../button'
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '../input-otp'
+import { Button } from '@valguide/ui/components/button'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@valguide/ui/components/input-otp'
 
 export interface OtpVerificationFormProps {
   /**

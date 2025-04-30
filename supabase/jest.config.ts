@@ -1,9 +1,9 @@
-import baseConfig from '../../jest.config'
+import baseConfig from '../jest.config'
 
 const config = {
   ...baseConfig,
   rootDir: `${__dirname}/../../`,
-  displayName: 'ui',
+  displayName: 'supabase',
 }
 
 export default config

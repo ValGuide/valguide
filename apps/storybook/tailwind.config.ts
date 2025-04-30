@@ -1,11 +1,12 @@
 // tailwind config is required for editor support
 
 import type { Config } from 'tailwindcss'
-import sharedConfig from '@valguide/ui/tailwind.config'
+import sharedConfig from '@valguide/core/ui/tailwind.config'
 
 const config: Pick<Config, 'content' | 'presets'> = {
   content: [
-    '../../packages/**/src/**/*.{js,ts,jsx,tsx}',
+    '../../packages/**/*.{js,ts,jsx,tsx}',
+    '!../../packages/**/node_modules/**/*',
     '../../apps/web/**/*.{js,ts,jsx,tsx}',
     '!../../apps/web/node_modules/**/*',
   ],

@@ -15,22 +15,29 @@
     "node_modules"
   ],
   "compilerOptions": {
+    "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
       "@valguide/web/*": [
         "../apps/web/*"
       ],
+      "@valguide/features/*": [
+        "../../packages/core/features/*"
+      ],
       "@valguide/ui/*": [
-        "../../packages/ui/src/*"
+        "../../packages/core/ui/*"
+      ],
+      "@valguide/core/*": [
+        "../../packages/core/*"
+      ],
+      "@valguide/icons/*": [
+        "../../packages/icons/dist/*"
       ],
       "@valguide/logger/*": [
         "../../packages/logger/src/*"
       ],
       "@valguide/logger": [
         "../../packages/logger"
-      ],
-      "@valguide/core/*": [
-        "../../packages/core/src/*"
       ]
     }
   }

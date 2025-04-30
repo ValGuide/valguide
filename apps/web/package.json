@@ -16,7 +16,6 @@
   "dependencies": {
     "@valguide/core": "workspace:*",
     "@valguide/transactional": "workspace:*",
-    "@valguide/ui": "workspace:*",
     "@faker-js/faker": "^9.2.0",
     "@formatjs/intl-localematcher": "^0.5.10",
     "@hookform/resolvers": "^3.9.0",

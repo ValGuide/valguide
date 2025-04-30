@@ -1,5 +1,5 @@
-import type { User } from '@valguide/core/user/user'
-import type { Nullish } from '@valguide/core/types'
+import type { User } from '../../../../packages/core/features/user/user'
+import type { Nullish } from '../../../../packages/core/utils/types'
 import type { SlackMessage } from '@/slack/send-slack-message'
 
 export const newUserSignedUpMessage: (user: Nullish<User>) => SlackMessage = (user) => ({

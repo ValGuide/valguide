@@ -1,4 +1,4 @@
-import '@valguide/ui/globals.css'
+import '@valguide/ui/styles/globals.css'
 
 import { Bricolage_Grotesque as BricolageGrotesque, Geist, Geist_Mono } from 'next/font/google'
 import { Providers } from '@/components/providers'

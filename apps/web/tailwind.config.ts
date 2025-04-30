@@ -1,1 +1,1 @@
-export * from '@valguide/ui/tailwind.config'
+export * from '@valguide/core/ui/tailwind.config'
