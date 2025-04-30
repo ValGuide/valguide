@@ -6,9 +6,10 @@ import { Metadata, Viewport } from 'next'
 import { PageParamsWithLocale } from '@/utils/types'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { ReactNode } from 'react'
-import { i18nStaticParams } from '@/i18n/i18n.config'
+import { i18nStaticParams, SupportedLocale } from '@/i18n/i18n.config'
 import { routing } from '@/i18n/routing'
 import { notFound } from 'next/navigation'
+import { getMessages } from '@valguide/i18n/messages'
 
 const fontSans = Geist({
   subsets: ['latin'],
@@ -58,7 +59,7 @@ export default async function RootLayout({
   setRequestLocale(locale)
 
   // Load messages for the current locale
-  const messages = (await import(`../../messages/${locale}.json`)).default
+  const messages = await getMessages(locale as SupportedLocale)
 
   return (
     <html lang={locale} suppressHydrationWarning>
