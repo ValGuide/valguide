@@ -1,6 +1,6 @@
 {
-  "name": "@valguide/web",
-  "version": "0.0.1",
+  "name": "@valguide/landing",
+  "version": "1.0.0",
   "type": "module",
   "private": true,
   "scripts": {

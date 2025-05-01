@@ -55,7 +55,7 @@ importers:
         version: link:../../packages/core
       '@valguide/web':
         specifier: workspace:*
-        version: link:../web
+        version: link:../app
       next:
         specifier: ^15.1.6
         version: 15.3.1(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)

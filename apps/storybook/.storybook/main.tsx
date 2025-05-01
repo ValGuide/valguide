@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 const config: StorybookConfig = {
   stories: [
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
-    '../../web/**/*.stories.@(js|jsx|ts|tsx)',
+    '../../app/**/*.stories.@(js|jsx|ts|tsx)',
     '../../../packages/core/**/*.stories.@(js|jsx|ts|tsx)',
   ],
 
@@ -38,7 +38,7 @@ const config: StorybookConfig = {
         loose: true,
         projects: [
           path.resolve(path.dirname(__dirname), 'tsconfig.json'),
-          path.resolve(path.dirname(__dirname), '../web/tsconfig.json'),
+          path.resolve(path.dirname(__dirname), '../app/tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../../packages/core/tsconfig.json'),
         ],
       }),
