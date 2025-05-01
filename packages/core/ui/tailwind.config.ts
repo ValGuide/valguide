@@ -11,6 +11,7 @@ const config = {
     'site/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
     '../../packages/core/**/*.{ts,tsx}',
+    '!../../packages/core/**/node_modules/**/*',
   ],
   theme: {
     extend: {
