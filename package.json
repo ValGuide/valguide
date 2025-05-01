@@ -20,6 +20,8 @@
     "studio:build": "pnpm env:load turbo run build --filter apps/studio --",
     "site:dev": "pnpm env:load turbo run dev --filter apps/site --",
     "site:build": "pnpm env:load turbo run build --filter apps/site --",
+    "links:build": "pnpm env:load turbo run build --filter apps/links --",
+    "links:build": "pnpm env:load turbo run build --filter apps/links --",
     "db:generate": "turbo run db:generate --",
     "db:migrate": "turbo run db:migrate --",
     "db:studio": "turbo run db:studio --",
