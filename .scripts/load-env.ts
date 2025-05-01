@@ -24,13 +24,13 @@ const dbOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
 
 const webOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
   name: 'web',
-  prefix: '--app:',
+  prefix: '--web:',
   values: ['local', 'dev', 'prod'] as const,
   defaultValue: 'dev' as const,
   envFiles: {
-    local: '.env.app.local',
-    dev: '.env.app.dev',
-    prod: '.env.app.prod',
+    local: '.env.web.local',
+    dev: '.env.web.dev',
+    prod: '.env.web.prod',
   },
 }
 

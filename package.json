@@ -1,5 +1,5 @@
 {
-  "name": "@valguide/vt-boilerplate",
+  "name": "@valguide/mono",
   "private": true,
   "scripts": {
     "env:load": "pnpm dlx tsx ./.scripts/load-env.ts",
@@ -14,8 +14,12 @@
     "format": "prettier --write \"**/*.{html,js,jsx,ts,tsx}\"",
     "secrets:hide": "sh .scripts/secrets-hide.sh",
     "secrets:show": "sh .scripts/secrets-show.sh",
-    "web:dev": "pnpm env:load turbo run dev --filter apps/app --",
-    "web:build": "pnpm env:load turbo run build --filter apps/app --",
+    "guide:dev": "pnpm env:load turbo run dev --filter apps/guide --",
+    "guide:build": "pnpm env:load turbo run build --filter apps/guide --",
+    "studio:dev": "pnpm env:load turbo run dev --filter apps/studio --",
+    "studio:build": "pnpm env:load turbo run build --filter apps/studio --",
+    "home:dev": "pnpm env:load turbo run dev --filter apps/home --",
+    "home:build": "pnpm env:load turbo run build --filter apps/home --",
     "db:generate": "turbo run db:generate --",
     "db:migrate": "turbo run db:migrate --",
     "db:studio": "turbo run db:studio --",

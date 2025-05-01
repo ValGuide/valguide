@@ -8,7 +8,7 @@ import en from '@valguide/i18n/messages/en.json' with { type: 'json' }
 import de from '@valguide/i18n/messages/de.json' with { type: 'json' }
 import rm from '@valguide/i18n/messages/rm.json' with { type: 'json' }
 
-import type { SupportedLocale } from '@valguide/web/i18n/i18n.config'
+import type { SupportedLocale } from '@valguide/guide/i18n/i18n.config'
 import { themes } from '@valguide/ui/theme/themes'
 
 const messages: Record<SupportedLocale, any> = { en, de, rm }

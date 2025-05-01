@@ -11,7 +11,7 @@ const config: Config = {
     ],
   },
   moduleNameMapper: {
-    '@/(.*)': '<rootDir>/apps/app/$1',
+    '@/(.*)': '<rootDir>/apps/guide/$1',
     '@valguide/core/(.*)': '<rootDir>/packages/core/$1',
     '@valguide/features/(.*)': '<rootDir>/packages/core/features/$1',
     '@valguide/ui/(.*)': '<rootDir>/packages/core/ui/$1',
