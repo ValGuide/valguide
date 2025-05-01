@@ -18,13 +18,13 @@
     "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
-      "@valguide/guide/*": [
+      "@valguide/visit/*": [
         "../apps/guide/*"
       ],
       "@valguide/studio/*": [
         "../apps/studio/*"
       ],
-      "@valguide/home/*": [
+      "@valguide/landing/*": [
         "../apps/home/*"
       ],
       "@valguide/features/*": [

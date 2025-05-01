@@ -48,122 +48,7 @@ importers:
         specifier: ^2.2.3
         version: 2.5.2
 
-  apps/guide:
-    dependencies:
-      '@faker-js/faker':
-        specifier: ^9.2.0
-        version: 9.7.0
-      '@formatjs/intl-localematcher':
-        specifier: ^0.5.10
-        version: 0.5.10
-      '@hookform/resolvers':
-        specifier: ^3.9.0
-        version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
-      '@slack/web-api':
-        specifier: ^7.7.0
-        version: 7.9.1
-      '@storybook/test':
-        specifier: ^8.6.2
-        version: 8.6.12(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3))
-      '@supabase/supabase-js':
-        specifier: ^2.39.8
-        version: 2.49.4(bufferutil@4.0.9)
-      '@valguide/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@valguide/transactional':
-        specifier: workspace:*
-        version: link:../../packages/transactional
-      '@vercel/functions':
-        specifier: ^1.5.0
-        version: 1.6.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.17.32)(ts-node@10.9.2(@types/node@20.17.32)(typescript@5.8.3))
-      leaflet:
-        specifier: ^1.9.4
-        version: 1.9.4
-      leaflet-defaulticon-compatibility:
-        specifier: ^0.1.2
-        version: 0.1.2
-      lucide-react:
-        specifier: 0.456.0
-        version: 0.456.0(react@19.1.0)
-      negotiator:
-        specifier: ^1.0.0
-        version: 1.0.0
-      next:
-        specifier: ^15.1.6
-        version: 15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      next-intl:
-        specifier: ^4.1.0
-        version: 4.1.0(next@15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
-      next-themes:
-        specifier: ^0.4.4
-        version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      react:
-        specifier: ^19.0.0
-        version: 19.1.0
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.1.0(react@19.1.0)
-      react-hook-form:
-        specifier: ^7.53.0
-        version: 7.56.1(react@19.1.0)
-      react-leaflet:
-        specifier: ^5.0.0
-        version: 5.0.0(leaflet@1.9.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      usehooks-ts:
-        specifier: ^3.1.0
-        version: 3.1.1(react@19.1.0)
-      uuid:
-        specifier: ^11.0.5
-        version: 11.1.0
-      zod:
-        specifier: ^3.24.1
-        version: 3.24.3
-    devDependencies:
-      '@storybook/react':
-        specifier: ^8.6.2
-        version: 8.6.12(@storybook/test@8.6.12(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3))(typescript@5.8.3)
-      '@types/jest':
-        specifier: ^27.0.3
-        version: 27.5.2
-      '@types/leaflet':
-        specifier: ^1.9.16
-        version: 1.9.17
-      '@types/negotiator':
-        specifier: ^0.6.3
-        version: 0.6.3
-      '@types/node':
-        specifier: ^20.17.17
-        version: 20.17.32
-      '@types/react':
-        specifier: 19.0.8
-        version: 19.0.8
-      '@types/react-dom':
-        specifier: 19.0.3
-        version: 19.0.3(@types/react@19.0.8)
-      '@valguide/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/configs/eslint
-      '@valguide/test-config':
-        specifier: workspace:*
-        version: link:../../packages/configs/test
-      '@valguide/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/configs/typescript
-      postcss:
-        specifier: ^8.5.1
-        version: 8.5.3
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.17(ts-node@10.9.2(@types/node@20.17.32)(typescript@5.8.3))
-      typescript:
-        specifier: ^5.7.3
-        version: 5.8.3
-
-  apps/home:
+  apps/landing:
     dependencies:
       '@faker-js/faker':
         specifier: ^9.2.0
@@ -283,15 +168,15 @@ importers:
       '@valguide/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@valguide/guide':
+      '@valguide/landing':
         specifier: workspace:*
-        version: link:../guide
-      '@valguide/home':
-        specifier: workspace:*
-        version: link:../home
+        version: link:../landing
       '@valguide/studio':
         specifier: workspace:*
         version: link:../studio
+      '@valguide/visit':
+        specifier: workspace:*
+        version: link:../visit
       next:
         specifier: ^15.1.6
         version: 15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -367,6 +252,121 @@ importers:
         version: 4.3.2(typescript@5.8.3)(vite@5.4.19(@types/node@22.15.3))
 
   apps/studio:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^9.2.0
+        version: 9.7.0
+      '@formatjs/intl-localematcher':
+        specifier: ^0.5.10
+        version: 0.5.10
+      '@hookform/resolvers':
+        specifier: ^3.9.0
+        version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
+      '@slack/web-api':
+        specifier: ^7.7.0
+        version: 7.9.1
+      '@storybook/test':
+        specifier: ^8.6.2
+        version: 8.6.12(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3))
+      '@supabase/supabase-js':
+        specifier: ^2.39.8
+        version: 2.49.4(bufferutil@4.0.9)
+      '@valguide/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@valguide/transactional':
+        specifier: workspace:*
+        version: link:../../packages/transactional
+      '@vercel/functions':
+        specifier: ^1.5.0
+        version: 1.6.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.17.32)(ts-node@10.9.2(@types/node@20.17.32)(typescript@5.8.3))
+      leaflet:
+        specifier: ^1.9.4
+        version: 1.9.4
+      leaflet-defaulticon-compatibility:
+        specifier: ^0.1.2
+        version: 0.1.2
+      lucide-react:
+        specifier: 0.456.0
+        version: 0.456.0(react@19.1.0)
+      negotiator:
+        specifier: ^1.0.0
+        version: 1.0.0
+      next:
+        specifier: ^15.1.6
+        version: 15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      next-intl:
+        specifier: ^4.1.0
+        version: 4.1.0(next@15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+      next-themes:
+        specifier: ^0.4.4
+        version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react:
+        specifier: ^19.0.0
+        version: 19.1.0
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.1.0(react@19.1.0)
+      react-hook-form:
+        specifier: ^7.53.0
+        version: 7.56.1(react@19.1.0)
+      react-leaflet:
+        specifier: ^5.0.0
+        version: 5.0.0(leaflet@1.9.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.1(react@19.1.0)
+      uuid:
+        specifier: ^11.0.5
+        version: 11.1.0
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.3
+    devDependencies:
+      '@storybook/react':
+        specifier: ^8.6.2
+        version: 8.6.12(@storybook/test@8.6.12(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3))(typescript@5.8.3)
+      '@types/jest':
+        specifier: ^27.0.3
+        version: 27.5.2
+      '@types/leaflet':
+        specifier: ^1.9.16
+        version: 1.9.17
+      '@types/negotiator':
+        specifier: ^0.6.3
+        version: 0.6.3
+      '@types/node':
+        specifier: ^20.17.17
+        version: 20.17.32
+      '@types/react':
+        specifier: 19.0.8
+        version: 19.0.8
+      '@types/react-dom':
+        specifier: 19.0.3
+        version: 19.0.3(@types/react@19.0.8)
+      '@valguide/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/configs/eslint
+      '@valguide/test-config':
+        specifier: workspace:*
+        version: link:../../packages/configs/test
+      '@valguide/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/configs/typescript
+      postcss:
+        specifier: ^8.5.1
+        version: 8.5.3
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.17(ts-node@10.9.2(@types/node@20.17.32)(typescript@5.8.3))
+      typescript:
+        specifier: ^5.7.3
+        version: 5.8.3
+
+  apps/visit:
     dependencies:
       '@faker-js/faker':
         specifier: ^9.2.0
@@ -8396,7 +8396,7 @@ snapshots:
   '@jest/console@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -8409,14 +8409,14 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.9.0
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.17.32)(ts-node@10.9.2(@types/node@20.17.32)(typescript@5.8.3))
+      jest-config: 29.7.0(@types/node@22.15.3)(ts-node@10.9.2(@types/node@20.17.32)(typescript@5.8.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -8444,14 +8444,14 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.9.0
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.17.32)(ts-node@10.9.2(@types/node@22.15.3)(typescript@5.8.3))
+      jest-config: 29.7.0(@types/node@22.15.3)(ts-node@10.9.2(@types/node@22.15.3)(typescript@5.8.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -8516,7 +8516,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.25
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
       exit: 0.1.2
@@ -8586,7 +8586,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -9381,7 +9381,7 @@ snapshots:
 
   '@slack/logger@4.0.0':
     dependencies:
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
 
   '@slack/types@2.14.0': {}
 
@@ -9389,7 +9389,7 @@ snapshots:
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/types': 2.14.0
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       '@types/retry': 0.12.0
       axios: 1.9.0
       eventemitter3: 5.0.1
@@ -9916,7 +9916,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
 
   '@types/inquirer@6.5.0':
     dependencies:
@@ -12245,7 +12245,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.5.3
@@ -12334,7 +12334,7 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-config@29.7.0(@types/node@20.17.32)(ts-node@10.9.2(@types/node@22.15.3)(typescript@5.8.3)):
+  jest-config@29.7.0(@types/node@22.15.3)(ts-node@10.9.2(@types/node@20.17.32)(typescript@5.8.3)):
     dependencies:
       '@babel/core': 7.27.1
       '@jest/test-sequencer': 29.7.0
@@ -12359,8 +12359,8 @@ snapshots:
       slash: 3.0.0
       strip-json-comments: 3.1.1
     optionalDependencies:
-      '@types/node': 20.17.32
-      ts-node: 10.9.2(@types/node@22.15.3)(typescript@5.8.3)
+      '@types/node': 22.15.3
+      ts-node: 10.9.2(@types/node@20.17.32)(typescript@5.8.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -12442,7 +12442,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -12454,7 +12454,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.9
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -12535,7 +12535,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.11
@@ -12563,7 +12563,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       chalk: 4.1.2
       cjs-module-lexer: 1.4.3
       collect-v8-coverage: 1.0.2
@@ -12628,7 +12628,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -12637,7 +12637,7 @@ snapshots:
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 20.17.32
+      '@types/node': 22.15.3
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1

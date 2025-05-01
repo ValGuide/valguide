@@ -18,7 +18,7 @@ export const Default: Story = {
     guide: {
       id: '1',
       title: 'Getting Started with ValGuide',
-      description: 'Learn the basics of ValGuide and how to create your first guide.',
+      description: 'Learn the basics of ValGuide and how to create your first visit.',
       imageUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop',
       author: 'ValGuide Team',
       createdAt: new Date('2023-10-15'),
@@ -66,7 +66,7 @@ export const NoImage: Story = {
     guide: {
       id: '4',
       title: 'Guide Without Image',
-      description: 'This guide does not have an image.',
+      description: 'This visit does not have an image.',
       author: 'ValGuide User',
       createdAt: new Date('2023-12-20'),
       tags: ['simple', 'no-image'],

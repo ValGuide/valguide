@@ -6,9 +6,9 @@ const config = {
   // data-mode is used as an example, next-themes supports using any data attribute
   darkMode: ['selector', '[data-theme="dark"]'],
   content: [
-    'guide/**/*.{ts,tsx}',
+    'visit/**/*.{ts,tsx}',
     'studio/**/*.{ts,tsx}',
-    'home/**/*.{ts,tsx}',
+    'landing/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
     '../../packages/core/**/*.{ts,tsx}',
   ],
