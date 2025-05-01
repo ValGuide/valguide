@@ -8,7 +8,7 @@ const config = {
   content: [
     'visit/**/*.{ts,tsx}',
     'studio/**/*.{ts,tsx}',
-    'landing/**/*.{ts,tsx}',
+    'site/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
     '../../packages/core/**/*.{ts,tsx}',
   ],

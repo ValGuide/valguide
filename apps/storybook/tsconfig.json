@@ -24,7 +24,7 @@
       "@valguide/studio/*": [
         "../apps/studio/*"
       ],
-      "@valguide/landing/*": [
+      "@valguide/site/*": [
         "../apps/home/*"
       ],
       "@valguide/features/*": [

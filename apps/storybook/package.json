@@ -12,7 +12,7 @@
   "dependencies": {
     "@valguide/visit": "workspace:*",
     "@valguide/studio": "workspace:*",
-    "@valguide/landing": "workspace:*",
+    "@valguide/site": "workspace:*",
     "@valguide/core": "workspace:*",
     "next": "^15.1.6",
     "react": "^19.0.0",
