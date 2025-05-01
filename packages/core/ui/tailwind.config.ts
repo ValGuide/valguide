@@ -5,14 +5,7 @@ import { fontFamily } from 'tailwindcss/defaultTheme'
 const config = {
   // data-mode is used as an example, next-themes supports using any data attribute
   darkMode: ['selector', '[data-theme="dark"]'],
-  content: [
-    'visit/**/*.{ts,tsx}',
-    'studio/**/*.{ts,tsx}',
-    'site/**/*.{ts,tsx}',
-    'components/**/*.{ts,tsx}',
-    '../../packages/core/**/*.{ts,tsx}',
-    '!../../packages/core/**/node_modules/**/*',
-  ],
+  content: ['../../../apps/**/*.{ts,tsx}', './../**/*.{ts,tsx}', './**/*.{ts,tsx}', '!./**/node_modules/**/*'],
   theme: {
     extend: {
       fontFamily: {
