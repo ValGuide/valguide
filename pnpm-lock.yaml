@@ -53,9 +53,6 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.7.0
-      '@formatjs/intl-localematcher':
-        specifier: ^0.5.10
-        version: 0.5.10
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
@@ -89,9 +86,6 @@ importers:
       lucide-react:
         specifier: 0.456.0
         version: 0.456.0(react@19.1.0)
-      negotiator:
-        specifier: ^1.0.0
-        version: 1.0.0
       next:
         specifier: ^15.1.6
         version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -132,9 +126,6 @@ importers:
       '@types/leaflet':
         specifier: ^1.9.16
         version: 1.9.17
-      '@types/negotiator':
-        specifier: ^0.6.3
-        version: 0.6.3
       '@types/node':
         specifier: ^20.17.17
         version: 20.17.32
@@ -168,9 +159,6 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.7.0
-      '@formatjs/intl-localematcher':
-        specifier: ^0.5.10
-        version: 0.5.10
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
@@ -204,9 +192,6 @@ importers:
       lucide-react:
         specifier: 0.456.0
         version: 0.456.0(react@19.1.0)
-      negotiator:
-        specifier: ^1.0.0
-        version: 1.0.0
       next:
         specifier: ^15.1.6
         version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -247,9 +232,6 @@ importers:
       '@types/leaflet':
         specifier: ^1.9.16
         version: 1.9.17
-      '@types/negotiator':
-        specifier: ^0.6.3
-        version: 0.6.3
       '@types/node':
         specifier: ^20.17.17
         version: 20.17.32
@@ -371,9 +353,6 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.7.0
-      '@formatjs/intl-localematcher':
-        specifier: ^0.5.10
-        version: 0.5.10
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
@@ -407,15 +386,12 @@ importers:
       lucide-react:
         specifier: 0.456.0
         version: 0.456.0(react@19.1.0)
-      negotiator:
-        specifier: ^1.0.0
-        version: 1.0.0
       next:
         specifier: ^15.1.6
-        version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-intl:
         specifier: ^4.1.0
-        version: 4.1.0(next@15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        version: 4.1.0(next@15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       next-themes:
         specifier: ^0.4.4
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -450,9 +426,6 @@ importers:
       '@types/leaflet':
         specifier: ^1.9.16
         version: 1.9.17
-      '@types/negotiator':
-        specifier: ^0.6.3
-        version: 0.6.3
       '@types/node':
         specifier: ^20.17.17
         version: 20.17.32
@@ -486,9 +459,6 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.7.0
-      '@formatjs/intl-localematcher':
-        specifier: ^0.5.10
-        version: 0.5.10
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
@@ -522,9 +492,6 @@ importers:
       lucide-react:
         specifier: 0.456.0
         version: 0.456.0(react@19.1.0)
-      negotiator:
-        specifier: ^1.0.0
-        version: 1.0.0
       next:
         specifier: ^15.1.6
         version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -565,9 +532,6 @@ importers:
       '@types/leaflet':
         specifier: ^1.9.16
         version: 1.9.17
-      '@types/negotiator':
-        specifier: ^0.6.3
-        version: 0.6.3
       '@types/node':
         specifier: ^20.17.17
         version: 20.17.32
@@ -674,6 +638,9 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.7.0
+      '@formatjs/intl-localematcher':
+        specifier: ^0.5.10
+        version: 0.5.10
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
@@ -764,12 +731,15 @@ importers:
       nanoid:
         specifier: ^5.0.7
         version: 5.1.5
+      negotiator:
+        specifier: ^1.0.0
+        version: 1.0.0
       next:
         specifier: ^15.3.1
-        version: 15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-intl:
         specifier: ^4.1.0
-        version: 4.1.0(next@15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        version: 4.1.0(next@15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       next-themes:
         specifier: ^0.4.4
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -825,6 +795,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
+      '@types/negotiator':
+        specifier: ^0.6.3
+        version: 0.6.3
       '@types/node':
         specifier: ^22.13.1
         version: 22.15.3

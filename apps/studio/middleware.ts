@@ -2,15 +2,14 @@ import type { NextMiddleware, NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { createLogger } from '@valguide/logger'
 
-import { hasPathnameLocale, resolveLocale, setLocaleCookie } from '@/i18n/resolve-locale'
-import { auth as authMiddleware } from '@/app/[locale]/(auth)/auth'
+import { hasPathnameLocale, resolveLocale, setLocaleCookie } from '@valguide/i18n/resolve-locale'
 import { isInternalRoute, isLoginRoute, isProtectedRoute, routes, unlocalizedPathname } from '@/routes/routes'
+import { updateSession } from '@valguide/core/supabase/middleware'
 
 const log = createLogger('middleware')
 
 const authEnabled = process.env.AUTH_ENABLED !== 'false'
 
-export type AuthMiddlware = typeof authMiddleware
 
 const redirectLocalizedIfRequired = (req: NextRequest, locale: string) => {
   if (!hasPathnameLocale(req)) {
@@ -26,8 +25,12 @@ const redirectLocalizedIfRequired = (req: NextRequest, locale: string) => {
 
 // TODO: add auth and tests for it
 export const middlewareFn =
-  (auth: AuthMiddlware): NextMiddleware =>
+  (): NextMiddleware =>
   async (req) => {
+
+    const a =  await updateSession(req)
+
+
     const { pathname } = req.nextUrl
     const locale = resolveLocale(req)
 

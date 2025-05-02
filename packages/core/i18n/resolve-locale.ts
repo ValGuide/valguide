@@ -1,7 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server'
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
-import { defaultLocale, SupportedLocale, supportedLocales } from './i18n.config'
+import {defaultLocale, SupportedLocale, supportedLocales} from '@valguide/i18n/messages'
 
 export const hasPathnameLocale = (req: NextRequest) => {
   // Check if there is any supported locale in the pathname

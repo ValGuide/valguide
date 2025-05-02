@@ -2,7 +2,7 @@ import type { NextMiddleware, NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { createLogger } from '@valguide/logger'
 
-import { hasPathnameLocale, resolveLocale, setLocaleCookie } from '@/i18n/resolve-locale'
+import { hasPathnameLocale, resolveLocale, setLocaleCookie } from '@valguide/i18n/resolve-locale'
 import { auth as authMiddleware } from '@/app/[locale]/(auth)/auth'
 import { isInternalRoute, isLoginRoute, isProtectedRoute, routes, unlocalizedPathname } from '@/routes/routes'
 
