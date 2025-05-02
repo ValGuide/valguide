@@ -6,7 +6,6 @@ export const runtime = 'edge'
 
 export default async function CatchAllPage({ params }: PageParamsWithLocale) {
   const { locale } = await params
-  console.info('Local not found', locale)
   setRequestLocale(locale)
   const t = await getTranslations({ locale, namespace: 'notFound' })
   return (

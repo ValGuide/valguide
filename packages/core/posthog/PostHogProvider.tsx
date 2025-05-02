@@ -1,13 +1,26 @@
 'use client'
 
 import { usePathname, useSearchParams } from 'next/navigation'
-import React, { useEffect, Suspense } from 'react'
-import { usePostHog } from 'posthog-js/react'
+import React, { Suspense, useEffect } from 'react'
+import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
 
 import posthog from 'posthog-js'
-import { PostHogProvider as PHProvider } from 'posthog-js/react'
+import { createLogger } from '@valguide/logger'
+
+const log = createLogger('PostHog')
+
+const isPostHogEnabled = process.env.NEXT_PUBLIC_POSTHOG_ENABLED === 'true'
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    if (!isPostHogEnabled) {
+      log.warn('PostHogProvider is disabled')
+    }
+  }, [isPostHogEnabled])
+  return isPostHogEnabled ? <Provider>{children}</Provider> : children
+}
+
+function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
       // we rewrite the host using Vercel's rewrites in vercel.json
