@@ -19,12 +19,8 @@ const withLocale = (fn: (req: NextRequest, locale: string) => Promise<NextRespon
   return res
 }
 
-export const supabaseMiddlewareFn = (
-  options: {
-    routes: RouteConfig[]
-  } = { routes: [] },
-) => {
-  const { routes } = options
+export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; defaultNextUrl?: string }) => {
+  const { routes = [], defaultNextUrl = '' } = options ?? {}
   const getConfig = (pathname: string): RouteConfig | undefined => routes.find((config) => config.route == pathname)
 
   return withLocale(async (req, locale) => {
@@ -63,7 +59,12 @@ export const supabaseMiddlewareFn = (
       },
     )
 
-    if (config?.type == 'protected' || config?.type == 'internal') {
+    if (
+      config?.type == 'protected' ||
+      config?.type == 'internal' ||
+      pathname.startsWith('/auth') ||
+      pathname.startsWith('/login')
+    ) {
       // Do not run code between createServerClient and
       // supabase.auth.getUser(). A simple mistake could make it very hard to debug
       // issues with users being randomly logged out.
@@ -81,6 +82,15 @@ export const supabaseMiddlewareFn = (
         // no user, potentially respond by redirecting the user to the login page
         const url = req.nextUrl.clone()
         url.pathname = `/${locale}/login`
+        return NextResponse.redirect(url)
+      }
+
+      if (user && pathname.startsWith('/login')) {
+        // no user, potentially respond by redirecting the user to the login page
+        const next = `/${locale}/${unlocalizedPathname(req.nextUrl.searchParams.get('next') ?? defaultNextUrl)}`
+        req.nextUrl.searchParams.delete('next')
+        const url = req.nextUrl.clone()
+        url.pathname = next
         return NextResponse.redirect(url)
       }
     }
