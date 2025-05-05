@@ -1,5 +1,5 @@
 import { convertToDotNotation, revertFromDotNotation } from './dot-notation'
-import type { Dictionary, FlatDictionary } from '@/utils/types'
+import { Dictionary, FlatDictionary } from './types'
 
 describe('dot-notation', () => {
   const testData: {

@@ -1,5 +1,5 @@
 import NotFoundPage from '@/app/[locale]/[...notFound]/not-found-page'
-import { PageParamsWithLocale } from '@/utils/types'
+import { PageParamsWithLocale } from '@valguide/core/utils/types'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 export const runtime = 'edge'

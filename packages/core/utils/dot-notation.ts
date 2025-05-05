@@ -1,4 +1,4 @@
-import type { Dictionary, FlatDictionary } from './types'
+import { Dictionary, FlatDictionary } from './types'
 
 export const convertToDotNotation = (json: Dictionary, parentKey = ''): FlatDictionary =>
   Object.keys(json).reduce((result, key) => {

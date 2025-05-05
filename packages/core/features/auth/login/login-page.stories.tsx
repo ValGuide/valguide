@@ -12,8 +12,7 @@ const LoginPageExample = () => {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = (email: string) => {
     setLoading(true)
     setMessage(null)
 
@@ -47,7 +46,7 @@ const LoginPageExample = () => {
 
       <LoginForm
         email={email}
-        onEmailChange={(e) => setEmail(e.target.value)}
+        onEmailChange={(email) => setEmail(email)}
         onSubmit={handleSubmit}
         loading={loading}
         submitText={t('sendCode')}

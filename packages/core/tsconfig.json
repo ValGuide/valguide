@@ -10,6 +10,9 @@
       "@valguide/ui/*": [
         "./ui/*"
       ],
+      "@valguide/supabase/*": [
+        "./supabase/*"
+      ],
       "@valguide/i18n/*": [
         "./i18n/*"
       ],

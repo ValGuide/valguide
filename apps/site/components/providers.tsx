@@ -3,7 +3,7 @@
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { PropsWithChildren } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
-import { PropsWithLocale } from '@/utils/types'
+import { PropsWithLocale } from '@valguide/core/utils/types'
 import { themes } from '@valguide/ui/theme/themes'
 
 interface ProvidersProps extends PropsWithLocale {
