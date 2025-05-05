@@ -1,7 +1,7 @@
 import createNextIntlPlugin from 'next-intl/plugin'
 import vercelJson from './vercel.json' with { type: 'json' }
 
-const proxyPostHog = process.env.NEXT_CONFIG_POSTHOG_PROXY === 'true'
+const proxyPostHog = process.env.NEXT_CONFIG_POSTHOG_PROXY === 'true' && process.env.NEXT_PUBLIC_POSTHOG_ENABLED === 'true'
 
 if (proxyPostHog) {
   console.warn('Proxying PostHog', proxyPostHog)

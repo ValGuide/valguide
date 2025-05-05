@@ -1,4 +1,4 @@
-import { i18nStaticParams } from '@/i18n/i18n.config'
+import { i18nStaticParams } from '@valguide/i18n/i18n.config'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { PageParamsWithLocale } from '@/utils/types'
 

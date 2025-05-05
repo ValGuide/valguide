@@ -1,4 +1,4 @@
-import { unlocalizedPathname } from '@/routes/routes'
+import { unlocalizedPathname } from './route.utils'
 
 describe('routes', () => {
   const data: { given: string; expected: string }[] = [

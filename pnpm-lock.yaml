@@ -388,10 +388,10 @@ importers:
         version: 0.456.0(react@19.1.0)
       next:
         specifier: ^15.1.6
-        version: 15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-intl:
         specifier: ^4.1.0
-        version: 4.1.0(next@15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        version: 4.1.0(next@15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       next-themes:
         specifier: ^0.4.4
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -686,6 +686,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.8
         version: 1.2.4(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@supabase/ssr':
+        specifier: ^0.6.1
+        version: 0.6.1(@supabase/supabase-js@2.49.4(bufferutil@4.0.9))
       '@upstash/qstash':
         specifier: ^2.7.23
         version: 2.7.23
@@ -715,7 +718,7 @@ importers:
         version: 4.1.0
       drizzle-orm:
         specifier: ^0.35.1
-        version: 0.35.3(@libsql/client-wasm@0.15.4)(@types/react@19.0.8)(bun-types@1.2.11)(postgres@3.4.5)(react@19.1.0)
+        version: 0.35.3(@libsql/client-wasm@0.15.4)(@types/react@19.0.8)(bun-types@1.2.12)(postgres@3.4.5)(react@19.1.0)
       embla-carousel-react:
         specifier: ^8.5.2
         version: 8.6.0(react@19.1.0)
@@ -736,10 +739,10 @@ importers:
         version: 1.0.0
       next:
         specifier: ^15.3.1
-        version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-intl:
         specifier: ^4.1.0
-        version: 4.1.0(next@15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        version: 4.1.0(next@15.3.1(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       next-themes:
         specifier: ^0.4.4
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -824,7 +827,7 @@ importers:
         version: 4.0.9
       bun-types:
         specifier: latest
-        version: 1.2.11
+        version: 1.2.12
       drizzle-kit:
         specifier: ^0.26.2
         version: 0.26.2
@@ -3298,6 +3301,11 @@ packages:
   '@supabase/realtime-js@2.11.2':
     resolution: {integrity: sha512-u/XeuL2Y0QEhXSoIPZZwR6wMXgB+RQbJzG9VErA3VghVt7uRfSVsjeqd7m5GhX3JR6dM/WRmLbVR8URpDWG4+w==}
 
+  '@supabase/ssr@0.6.1':
+    resolution: {integrity: sha512-QtQgEMvaDzr77Mk3vZ3jWg2/y+D8tExYF7vcJT+wQ8ysuvOeGGjYbZlvj5bHYsj/SpC0bihcisnwPrM4Gp5G4g==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.43.4
+
   '@supabase/storage-js@2.7.1':
     resolution: {integrity: sha512-asYHcyDR1fKqrMpytAS1zjyEfvxuOIp1CIXX7ji4lHHcJKqyk+sLl/Vxgm4sN6u8zvuUtae9e4kDxQP2qrwWBA==}
 
@@ -3950,8 +3958,8 @@ packages:
     resolution: {integrity: sha512-WDtdLmJvAuNNPzByAYpRo2rF1Mmradw6gvWsQKf63476DDXmomT9zUiGypLcG4ibIM67vhAj8jJRdbmEws2Aqw==}
     engines: {node: '>=6.14.2'}
 
-  bun-types@1.2.11:
-    resolution: {integrity: sha512-dbkp5Lo8HDrXkLrONm6bk+yiiYQSntvFUzQp0v3pzTAsXk6FtgVMjdQ+lzFNVAmQFUkPQZ3WMZqH5tTo+Dp/IA==}
+  bun-types@1.2.12:
+    resolution: {integrity: sha512-tvWMx5vPqbRXgE8WUZI94iS1xAYs8bkqESR9cxBB1Wi+urvfTrF1uzuDgBHFAdO0+d2lmsbG3HmeKMvUyj6pWA==}
 
   busboy@1.6.0:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
@@ -4205,6 +4213,10 @@ packages:
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
+
+  cookie@1.0.2:
+    resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
+    engines: {node: '>=18'}
 
   core-js-pure@3.42.0:
     resolution: {integrity: sha512-007bM04u91fF4kMgwom2I5cQxAFIy8jVulgr9eozILl/SZE53QOqnW/+vviC+wQWLv+AunBG+8Q0TLoeSsSxRQ==}
@@ -9799,6 +9811,11 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@supabase/ssr@0.6.1(@supabase/supabase-js@2.49.4(bufferutil@4.0.9))':
+    dependencies:
+      '@supabase/supabase-js': 2.49.4(bufferutil@4.0.9)
+      cookie: 1.0.2
+
   '@supabase/storage-js@2.7.1':
     dependencies:
       '@supabase/node-fetch': 2.6.15
@@ -10632,7 +10649,7 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
-  bun-types@1.2.11:
+  bun-types@1.2.12:
     dependencies:
       '@types/node': 22.15.3
 
@@ -10910,6 +10927,8 @@ snapshots:
 
   cookie@0.7.2: {}
 
+  cookie@1.0.2: {}
+
   core-js-pure@3.42.0: {}
 
   core-js@3.42.0: {}
@@ -11186,12 +11205,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.35.3(@libsql/client-wasm@0.15.4)(@types/react@19.0.8)(bun-types@1.2.11)(postgres@3.4.5)(react@19.1.0):
+  drizzle-orm@0.35.3(@libsql/client-wasm@0.15.4)(@types/react@19.0.8)(bun-types@1.2.12)(postgres@3.4.5)(react@19.1.0):
     dependencies:
       '@libsql/client-wasm': 0.15.4
     optionalDependencies:
       '@types/react': 19.0.8
-      bun-types: 1.2.11
+      bun-types: 1.2.12
       postgres: 3.4.5
       react: 19.1.0
 

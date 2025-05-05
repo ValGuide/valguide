@@ -1,5 +1,4 @@
 import type { MetadataRoute } from 'next'
-import { internalRoutes, protectedRoutes } from '@/routes/routes'
 
 export default function robots(): MetadataRoute.Robots {
   const env = process.env.VERCEL_ENV || 'development'
@@ -9,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       rules: {
         userAgent: '*',
         allow: '/',
-        disallow: [...internalRoutes, ...protectedRoutes],
+        disallow: ['/internal'],
       },
     }
   }

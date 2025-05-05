@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from '@/i18n/routing'
+import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 
 export type NotFoundPageProps = {
