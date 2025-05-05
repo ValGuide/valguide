@@ -16,6 +16,9 @@
       "@valguide/ui/*": [
         "../../packages/core/ui/*"
       ],
+      "@valguide/supabase/*": [
+        "../../packages/core/supabase/*"
+      ],
       "@valguide/i18n/*": [
         "../../packages/core/i18n/*"
       ],

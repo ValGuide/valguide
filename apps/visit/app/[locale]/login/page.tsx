@@ -1,1 +1,1 @@
-export { default } from '@valguide/features/auth/login/container/login-container'
+export { default } from '@valguide/features/auth/login/login-container'
