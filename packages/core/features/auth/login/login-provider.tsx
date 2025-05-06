@@ -5,6 +5,10 @@ import { useRouter } from '@valguide/i18n/routing'
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import type { SignInWithOAuthAction, SignInWithOtpAction, VerifyOtpAction } from '../actions'
+import { createLogger } from '@valguide/logger'
+import { withLeadingSlash } from '@valguide/i18n/route.utils'
+
+const log = createLogger('login-provider')
 
 export type LoginMessage = { type: 'success' | 'error'; text: string }
 
@@ -52,7 +56,7 @@ export const LoginProvider = ({
   const router = useRouter()
 
   const searchParams = useSearchParams()
-  const next = searchParams.get('next') ?? defaultNextPath
+  const next = withLeadingSlash(searchParams.get('next') ?? defaultNextPath)
 
   const [loading, setLoading] = useState<boolean>(false)
   const [verifyingOtp, setValidatingOpt] = useState<boolean>(false)
@@ -63,21 +67,17 @@ export const LoginProvider = ({
   const handleOAuthLogin = async (provider: 'google' | 'apple') => {
     setLoading(true)
     try {
-      const { error } = await signInWithOAuthAction({
+      await signInWithOAuthAction({
         provider,
         options: {
-          redirectTo: `${window.location.origin}${next}`,
+          redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
         },
       })
-      if (error) {
-        setMessage({ type: 'error', text: error.message })
-      } else {
-        router.push(next)
-      }
-    } catch (error) {
-      console.error('Error with Google login:', error)
+    } catch (error: any) {
+      // TODO auth: translate error codes
+      alert(`Error with ${provider} login: ${error.message}`)
+      console.error(`Error with ${provider} login:`, error)
       setMessage({ type: 'error', text: t(`${provider}Error`) })
-    } finally {
       setLoading(false)
     }
   }

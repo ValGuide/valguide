@@ -75,8 +75,6 @@ export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; default
         data: { user },
       } = await supabase.auth.getUser()
 
-      console.info('User is authenticated', user)
-
       if (config?.type == 'internal' && (!user?.email || !internalUsers.includes(user.email))) {
         const notFound = new URL(`/${locale}/404`, req.url)
         return NextResponse.rewrite(notFound)
