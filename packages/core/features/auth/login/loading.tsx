@@ -1,5 +1,3 @@
-'use client'
-
 import { AuthLayout } from '../common/auth-layout'
 import { AuthLoader } from '../common/auth-loader'
 

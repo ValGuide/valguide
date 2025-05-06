@@ -1,1 +1,1 @@
-export { LoginProvider as default } from '@valguide/features/auth/login/login-provider'
+export { default } from '@valguide/features/auth/login/layout'
