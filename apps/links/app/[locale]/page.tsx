@@ -10,6 +10,7 @@ export const generateStaticParams = () => i18nStaticParams
 
 export default async function Page({ params }: PageParamsWithLocale) {
   const locale = (await params).locale
+  console.info('generating [locale] page for', locale)
   setRequestLocale(locale)
 
   const t = await getTranslations({ locale, namespace: 'comingSoon' })
