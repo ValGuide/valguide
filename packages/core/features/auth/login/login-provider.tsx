@@ -1,10 +1,10 @@
 'use client'
 
 import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
-import { createClient } from '@valguide/supabase/client'
 import { useRouter } from '@valguide/i18n/routing'
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import type { SignInWithOAuthAction, SignInWithOtpAction, VerifyOtpAction } from '../actions'
 
 export type LoginMessage = { type: 'success' | 'error'; text: string }
 
@@ -36,8 +36,18 @@ const Context = createContext<{
 
 const defaultNextPath = '/'
 
-export const LoginProvider = ({ children }: PropsWithChildren) => {
-  const supabase = createClient()
+type LoginProviderProps = PropsWithChildren<{
+  signInWithOAuthAction: SignInWithOAuthAction
+  signInWithOtpAction: SignInWithOtpAction
+  verifyOtpAction: VerifyOtpAction
+}>
+
+export const LoginProvider = ({
+  children,
+  signInWithOAuthAction,
+  signInWithOtpAction,
+  verifyOtpAction,
+}: LoginProviderProps) => {
   const t = useTranslations('login')
   const router = useRouter()
 
@@ -53,7 +63,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
   const handleOAuthLogin = async (provider: 'google' | 'apple') => {
     setLoading(true)
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await signInWithOAuthAction({
         provider,
         options: {
           redirectTo: `${window.location.origin}${next}`,
@@ -77,7 +87,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     setMessage(null)
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await signInWithOtpAction({
         email,
         options: {
           emailRedirectTo: `${window.location.origin}${next}`,
@@ -111,7 +121,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     setMessage(null)
 
     try {
-      const { error } = await supabase.auth.verifyOtp({
+      const { error } = await verifyOtpAction({
         email,
         token: otp,
         type: 'email',
@@ -141,7 +151,7 @@ export const LoginProvider = ({ children }: PropsWithChildren) => {
     setMessage(null)
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await signInWithOtpAction({
         email,
         options: {
           emailRedirectTo: `${window.location.origin}${next}`,

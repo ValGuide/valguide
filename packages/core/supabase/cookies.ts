@@ -5,7 +5,7 @@ export const cookieOptions: CookieOptionsWithName = {
   domain: process.env.NEXT_PUBLIC_SUPABASE_COOKIE_DOMAIN,
   path: '/',
   sameSite: 'lax',
-  secure: process.env.NEXT_PUBLIC_SUPABASE_COOKIE_SECURE !== 'false',
+  secure: true,
   httpOnly: true,
-  maxAge: 60 * 60 * 24 * 7, // optional: 1 week
+  maxAge: 60 * 60 * 24 * 7, // 1 week (notice: doesn't seem to work)
 }
