@@ -22,18 +22,6 @@ const supabaseOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
   },
 }
 
-const webOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
-  name: 'web',
-  prefix: '--web:',
-  values: ['local', 'dev', 'prod'] as const,
-  defaultValue: 'dev' as const,
-  envFiles: {
-    local: '.env.web.local',
-    dev: '.env.web.dev',
-    prod: '.env.web.prod',
-  },
-}
-
 const defaultOptions: EnvOptions<'all'> = {
   name: 'openai',
   prefix: '--defaults:',
@@ -66,9 +54,9 @@ const extractEnv = <T extends string>({
 }
 
 const supabaseEnv = extractEnv(supabaseOptions)
-const webEnv = extractEnv(webOptions)
 const defaultEnv = extractEnv(defaultOptions)
-const envs = [supabaseEnv, webEnv, defaultEnv]
+const envs = [supabaseEnv, defaultEnv]
+const options = [supabaseOptions, defaultOptions]
 
 const logEnvs = (...envs: EnvAndFile<any>[]): string[] =>
   envs.map((env) => `${env.name.toUpperCase()}: ${env.env} [${env.file}]`)
@@ -76,7 +64,7 @@ console.info(`\n${borderBox(...logEnvs(...envs))}\n`)
 
 const envCommand = `dotenvx run ${envs.map(({ file }) => `--env-file=${__dirname}/../.secrets/${file}`).join(' ')} -- `
 const runCommand = args
-  .filter((arg) => ![supabaseOptions.prefix, webOptions.prefix].some((prefix) => arg.startsWith(prefix)))
+  .filter((arg) => !options.map((option) => option.prefix).some((prefix) => arg.startsWith(prefix)))
   .join(' ')
 
 if (!runCommand) {
