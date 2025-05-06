@@ -1,13 +1,7 @@
 import { supabaseMiddlewareFn } from '@valguide/core/supabase/middleware'
 
 export const middleware = supabaseMiddlewareFn({
-  routes: [
-    {
-      route: '/login',
-      type: 'public',
-      localized: true,
-    },
-  ],
+  routes: [],
 })
 
 // Read more: https://next-auth.js.org/tutorials/securing-pages-and-api-routes

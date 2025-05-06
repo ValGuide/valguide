@@ -20,8 +20,8 @@ export default function NotFoundPage({ i18n }: NotFoundPageProps) {
 }
 
 const HomeButton = () => (
-  <Link href="/">
-    <Button size="default">
+  <Button asChild={true}>
+    <Link href="/">
       <svg
         className="size-6"
         fill="none"
@@ -37,6 +37,6 @@ const HomeButton = () => (
         />
       </svg>
       Home
-    </Button>
-  </Link>
+    </Link>
+  </Button>
 )
