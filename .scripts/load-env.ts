@@ -10,15 +10,15 @@ type EnvOptions<T extends string> = {
   envFiles: Record<T, string>
 }
 
-const dbOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
-  name: 'db',
-  prefix: '--db:',
-  values: ['dev', 'prod'] as const,
+const supabaseOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
+  name: 'supabase',
+  prefix: '--sb:',
+  values: ['dev', 'local', 'prod'] as const,
   defaultValue: 'dev' as const,
   envFiles: {
-    local: '.env.db.local',
-    dev: '.env.db.dev',
-    prod: '.env.db.prod',
+    local: '.env.supabase.local',
+    dev: '.env.supabase.dev',
+    prod: '.env.supabase.prod',
   },
 }
 
@@ -34,7 +34,7 @@ const webOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
   },
 }
 
-const defaulOptions: EnvOptions<'all'> = {
+const defaultOptions: EnvOptions<'all'> = {
   name: 'openai',
   prefix: '--defaults:',
   values: ['all'] as const,
@@ -65,10 +65,10 @@ const extractEnv = <T extends string>({
   return { name, env, file }
 }
 
-const dbEnv = extractEnv(dbOptions)
+const supabaseEnv = extractEnv(supabaseOptions)
 const webEnv = extractEnv(webOptions)
-const defaultEnv = extractEnv(defaulOptions)
-const envs = [dbEnv, webEnv, defaultEnv]
+const defaultEnv = extractEnv(defaultOptions)
+const envs = [supabaseEnv, webEnv, defaultEnv]
 
 const logEnvs = (...envs: EnvAndFile<any>[]): string[] =>
   envs.map((env) => `${env.name.toUpperCase()}: ${env.env} [${env.file}]`)
@@ -76,7 +76,7 @@ console.info(`\n${borderBox(...logEnvs(...envs))}\n`)
 
 const envCommand = `dotenvx run ${envs.map(({ file }) => `--env-file=${__dirname}/../.secrets/${file}`).join(' ')} -- `
 const runCommand = args
-  .filter((arg) => ![dbOptions.prefix, webOptions.prefix].some((prefix) => arg.startsWith(prefix)))
+  .filter((arg) => ![supabaseOptions.prefix, webOptions.prefix].some((prefix) => arg.startsWith(prefix)))
   .join(' ')
 
 if (!runCommand) {
