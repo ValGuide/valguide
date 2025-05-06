@@ -5,6 +5,7 @@ export const middleware = supabaseMiddlewareFn({
     {
       route: '/login',
       type: 'public',
+      localized: true,
     },
   ],
 })
