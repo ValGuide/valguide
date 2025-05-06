@@ -4,7 +4,7 @@ import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useC
 import { useRouter } from '@valguide/i18n/routing'
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import type { SignInWithOAuthAction, SignInWithOtpAction, VerifyOtpAction } from '../actions'
+import type { SignInWithOtpAction, VerifyOtpAction } from '../actions'
 import { createLogger } from '@valguide/logger'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
 
@@ -15,7 +15,6 @@ export type LoginMessage = { type: 'success' | 'error'; text: string }
 const Context = createContext<{
   loading: boolean
   message: LoginMessage | null
-  handleOAuthLogin: (provider: 'google' | 'apple') => Promise<void>
   handleEmailLogin: (email: string) => Promise<void>
   handleVerifyOtp: (e: React.FormEvent) => Promise<void>
   handleResendOtp: () => Promise<void>
@@ -27,7 +26,6 @@ const Context = createContext<{
 }>({
   loading: false,
   message: null,
-  handleOAuthLogin: async () => {},
   handleEmailLogin: async () => {},
   handleResendOtp: async () => {},
   handleVerifyOtp: async () => {},
@@ -41,17 +39,11 @@ const Context = createContext<{
 const defaultNextPath = '/'
 
 type LoginProviderProps = PropsWithChildren<{
-  signInWithOAuthAction: SignInWithOAuthAction
   signInWithOtpAction: SignInWithOtpAction
   verifyOtpAction: VerifyOtpAction
 }>
 
-export const LoginProvider = ({
-  children,
-  signInWithOAuthAction,
-  signInWithOtpAction,
-  verifyOtpAction,
-}: LoginProviderProps) => {
+export const LoginProvider = ({ children, signInWithOtpAction, verifyOtpAction }: LoginProviderProps) => {
   const t = useTranslations('login')
   const router = useRouter()
 
@@ -63,24 +55,6 @@ export const LoginProvider = ({
   const [email, setEmail] = useState<string>('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [otp, setOtp] = useState('')
-
-  const handleOAuthLogin = async (provider: 'google' | 'apple') => {
-    setLoading(true)
-    try {
-      await signInWithOAuthAction({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
-        },
-      })
-    } catch (error: any) {
-      // TODO auth: translate error codes
-      alert(`Error with ${provider} login: ${error.message}`)
-      console.error(`Error with ${provider} login:`, error)
-      setMessage({ type: 'error', text: t(`${provider}Error`) })
-      setLoading(false)
-    }
-  }
 
   const handleEmailLogin = async (email: string) => {
     setLoading(true)
@@ -176,7 +150,6 @@ export const LoginProvider = ({
       value={{
         loading,
         message,
-        handleOAuthLogin,
         handleResendOtp,
         handleEmailLogin,
         handleVerifyOtp,

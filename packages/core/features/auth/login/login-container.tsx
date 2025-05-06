@@ -4,7 +4,6 @@ import { useTranslations } from 'next-intl'
 import { MessageAlert } from '../common/message-alert'
 import { AuthLayout } from '../common/auth-layout'
 import { useLogin } from './login-provider'
-import { SocialLoginButtons } from './social-login-buttons'
 import { OtpVerificationForm } from './otp-verification-form'
 import { LoginForm } from './login-form'
 
@@ -61,14 +60,6 @@ export default function LoginContainer() {
           loadingText={t('sending')}
           emailLabel={t('emailLabel')}
           emailPlaceholder={t('emailPlaceholder')}
-        />
-      )}
-      {!verifyingOtp && (
-        <SocialLoginButtons
-          onGoogleClick={() => handleOAuthLogin('google')}
-          onAppleClick={() => handleOAuthLogin('apple')}
-          loading={loading}
-          dividerText={t('orContinueWith')}
         />
       )}
     </AuthLayout>

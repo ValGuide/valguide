@@ -4,7 +4,6 @@ import { useTranslations } from 'next-intl'
 import { AuthLayout } from '../common/auth-layout'
 import { LoginForm } from './login-form'
 import { MessageAlert } from '../common/message-alert'
-import { SocialLoginButtons } from './social-login-buttons'
 
 const LoginPageExample = () => {
   const t = useTranslations('login')
@@ -27,14 +26,6 @@ const LoginPageExample = () => {
     }, 1000)
   }
 
-  const handleGoogleLogin = () => {
-    alert('Google login clicked')
-  }
-
-  const handleAppleLogin = () => {
-    alert('Apple login clicked')
-  }
-
   return (
     <AuthLayout>
       <div className="text-center">
@@ -53,13 +44,6 @@ const LoginPageExample = () => {
         loadingText={t('sending')}
         emailLabel={t('emailLabel')}
         emailPlaceholder={t('emailPlaceholder')}
-      />
-
-      <SocialLoginButtons
-        onGoogleClick={handleGoogleLogin}
-        onAppleClick={handleAppleLogin}
-        loading={loading}
-        dividerText={t('orContinueWith')}
       />
     </AuthLayout>
   )
