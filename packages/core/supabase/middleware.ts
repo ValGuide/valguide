@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { unlocalizedPathname } from '@valguide/i18n/route.utils'
 import { hasPathnameLocale, resolveLocale, setLocaleCookie } from '@valguide/i18n/resolve-locale'
 import { createLogger } from '@valguide/logger'
+import { cookieOptions } from '@valguide/supabase/cookies'
 
 const internalUsers = ['valerius@valguide.com']
 
@@ -56,6 +57,7 @@ export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; default
             cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
           },
         },
+        cookieOptions,
       },
     )
 
