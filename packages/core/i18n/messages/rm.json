@@ -3,6 +3,9 @@
     "title": "Demo",
     "description": "Tia plattafurma cumpletta per crear guids multimedials ed interactivas per mintga intent."
   },
+  "common": {
+    "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink> e da retscheiver e-mails periodics cun actualisaziuns."
+  },
   "comingSoon": {
     "title": "Prest disponibel",
     "description": "Restei attents. Nus lantschein prest \uD83D\uDE80"
@@ -26,6 +29,36 @@
     "verifying": "Verifichend...",
     "resendCode": "Buca retschiert in code? Trametter aunc inagada",
     "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+    "noAccount": "Nagin conto?",
+    "signupLink": "Registrar",
+    "email": {
+      "message": "Sto esser in e-mail valid",
+      "placeholder": "E-mail"
+    }
+  },
+  "signup": {
+    "submit": "Trametter",
+    "serverError": "Registraziun fallida. Empruvei per plascher aunc inagada",
+    "welcome": "Beinvegni",
+    "signupPrompt": "Creei vies conto",
+    "emailLabel": "Adressa d'e-mail",
+    "emailPlaceholder": "Endatei vies e-mail",
+    "sendCode": "Trametter code da verificaziun",
+    "sending": "Tramettend...",
+    "otpSent": "Controllei vies e-mail per il code da verificaziun",
+    "otpError": "Errur cun trametter il code da verificaziun. Empruvei per plascher aunc inagada",
+    "verifyEmail": "Verifichei vies e-mail:",
+    "checkEmail": "Controllei vies e-mail per il code da verificaziun",
+    "otpLabel": "Code da verificaziun",
+    "otpPlaceholder": "Endatei il code da 6 cefras",
+    "verifyCode": "Verificar code",
+    "verifying": "Verifichend...",
+    "resendCode": "Buca retschiert in code? Trametter aunc inagada",
+    "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+    "termsRequired": "Vus stueis acceptar las cundiziuns d'utilisaziun",
+    "termsText": "Jeu acceptel las",
+    "haveAccount": "Gia in conto?",
+    "loginLink": "S'annunziar",
     "email": {
       "message": "Sto esser in e-mail valid",
       "placeholder": "E-mail"

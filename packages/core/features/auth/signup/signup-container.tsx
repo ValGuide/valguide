@@ -3,14 +3,14 @@
 import { useTranslations } from 'next-intl'
 import { MessageAlert } from '../common/message-alert'
 import { AuthLayout } from '../common/auth-layout'
-import { useLogin } from './login-provider'
-import { OtpVerificationForm } from './otp-verification-form'
-import { LoginForm } from './login-form'
+import { useSignup } from './signup-provider'
+import { OtpVerificationForm } from '../login/otp-verification-form'
+import { SignupForm } from './signup-form'
 
-export default function LoginContainer() {
-  const t = useTranslations('login')
+export default function SignupContainer() {
+  const t = useTranslations('signup')
   const {
-    handleEmailLogin,
+    handleEmailSignup,
     handleVerifyOtp,
     otp,
     setOtp,
@@ -20,7 +20,7 @@ export default function LoginContainer() {
     verifyingOtp,
     email,
     setEmail,
-  } = useLogin()
+  } = useSignup()
 
   return (
     <AuthLayout>
@@ -32,7 +32,7 @@ export default function LoginContainer() {
       ) : (
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
-          <p className="mt-2 text-sm text-gray-600">{t('loginPrompt')}</p>
+          <p className="mt-2 text-sm text-gray-600">{t('signupPrompt')}</p>
         </div>
       )}
       {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
@@ -50,10 +50,10 @@ export default function LoginContainer() {
           resendText={t('resendCode')}
         />
       ) : (
-        <LoginForm
+        <SignupForm
           email={email}
           onEmailChange={setEmail}
-          onSubmit={handleEmailLogin}
+          onSubmit={handleEmailSignup}
           loading={loading}
           submitText={t('sendCode')}
           loadingText={t('sending')}

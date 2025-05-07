@@ -4,13 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import * as z from 'zod'
-import Link from 'next/link'
 
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@valguide/ui/components/form'
+import { Checkbox } from '@valguide/ui/components/checkbox'
+import Link from 'next/link'
 
-export interface LoginFormProps {
+export interface SignupFormProps {
   /**
    * The email value
    */
@@ -46,9 +47,9 @@ export interface LoginFormProps {
 }
 
 /**
- * A form component for email login
+ * A form component for email signup
  */
-export function LoginForm({
+export function SignupForm({
   email: initialEmail,
   onEmailChange,
   onSubmit,
@@ -57,9 +58,9 @@ export function LoginForm({
   loadingText,
   emailLabel,
   emailPlaceholder,
-}: LoginFormProps) {
+}: SignupFormProps) {
   // Get translations
-  const t = useTranslations('login')
+  const t = useTranslations('signup')
   const commonT = useTranslations('common')
 
   // Define form schema with zod
@@ -126,9 +127,9 @@ export function LoginForm({
 
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
-            {t('noAccount')}{' '}
-            <Link href="/signup" className="text-blue-600 hover:underline">
-              {t('signupLink')}
+            {t('haveAccount')}{' '}
+            <Link href="/login" className="text-blue-600 hover:underline">
+              {t('loginLink')}
             </Link>
           </p>
         </div>

@@ -3,6 +3,9 @@
     "title": "Demo",
     "description": "Deine ultimative Plattform zum Gestalten fesselnder, multimedialer Guides – für jeden Zweck, jederzeit."
   },
+  "common": {
+    "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu und erklären sich damit einverstanden, regelmäßige E-Mails mit Updates zu erhalten."
+  },
   "comingSoon": {
     "title": "Bald verfügbar",
     "description": "Bleib gespannt! Wir starten bald \uD83D\uDE80"
@@ -26,6 +29,36 @@
     "verifying": "Wird überprüft...",
     "resendCode": "Keinen Code erhalten? Erneut senden",
     "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "noAccount": "Kein Konto?",
+    "signupLink": "Registrieren",
+    "email": {
+      "message": "Email-Adresse ist ungültig",
+      "placeholder": "Email"
+    }
+  },
+  "signup": {
+    "submit": "Absenden",
+    "serverError": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut",
+    "welcome": "Willkommen",
+    "signupPrompt": "Erstellen Sie Ihr Konto",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "sendCode": "Bestätigungscode senden",
+    "sending": "Wird gesendet...",
+    "otpSent": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
+    "otpError": "Fehler beim Senden des Bestätigungscodes. Bitte versuchen Sie es erneut",
+    "verifyEmail": "Bestätigen Sie Ihre E-Mail:",
+    "checkEmail": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
+    "otpLabel": "Bestätigungscode",
+    "otpPlaceholder": "Geben Sie den 6-stelligen Code ein",
+    "verifyCode": "Code bestätigen",
+    "verifying": "Wird überprüft...",
+    "resendCode": "Keinen Code erhalten? Erneut senden",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "termsRequired": "Sie müssen den Nutzungsbedingungen zustimmen",
+    "termsText": "Ich stimme den",
+    "haveAccount": "Haben Sie bereits ein Konto?",
+    "loginLink": "Anmelden",
     "email": {
       "message": "Email-Adresse ist ungültig",
       "placeholder": "Email"
