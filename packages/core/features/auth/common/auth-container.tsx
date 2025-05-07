@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode } from 'react'
+import { useTranslations } from 'next-intl'
 import { MessageAlert } from './message-alert'
 import { AuthLayout } from './auth-layout'
 import { OtpVerificationForm } from '../login/otp-verification-form'
@@ -8,21 +9,6 @@ import { AuthForm } from '../auth-form'
 import { Consent } from '../consent'
 
 export interface AuthContainerProps {
-  // Translation strings
-  welcomeText: string
-  promptText: string
-  verifyEmailText: string
-  checkEmailText: string
-  sendCodeText: string
-  sendingText: string
-  verifyCodeText: string
-  verifyingText: string
-  otpLabelText: string
-  otpPlaceholderText: string
-  resendCodeText: string
-  emailLabelText: string
-  emailPlaceholderText: string
-
   // Auth state and handlers
   email: string
   setEmail: (email: string) => void
@@ -38,21 +24,6 @@ export interface AuthContainerProps {
 }
 
 export function AuthContainer({
-  // Translation strings
-  welcomeText,
-  promptText,
-  verifyEmailText,
-  checkEmailText,
-  sendCodeText,
-  sendingText,
-  verifyCodeText,
-  verifyingText,
-  otpLabelText,
-  otpPlaceholderText,
-  resendCodeText,
-  emailLabelText,
-  emailPlaceholderText,
-
   // Auth state and handlers
   email,
   setEmail,
@@ -66,18 +37,20 @@ export function AuthContainer({
   verifyingOtp,
   isLogin,
 }: AuthContainerProps) {
+  const t = useTranslations(isLogin ? 'login' : 'signup')
+
   return (
     <AuthLayout>
       <div className="flex flex-1 flex-col justify-center">
         {verifyingOtp ? (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold tracking-tight">{welcomeText}</h2>
-            <p className="mt-2 text-sm text-gray-600">{email ? `${verifyEmailText} ${email}` : checkEmailText}</p>
+            <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
+            <p className="mt-2 text-sm text-gray-600">{email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}</p>
           </div>
         ) : (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold tracking-tight">{welcomeText}</h2>
-            <p className="mt-2 text-sm text-gray-600">{promptText}</p>
+            <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
+            <p className="mt-2 text-sm text-gray-600">{t(isLogin ? 'loginPrompt' : 'signupPrompt')}</p>
           </div>
         )}
         {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
@@ -88,11 +61,11 @@ export function AuthContainer({
             onSubmit={handleVerifyOtp}
             onResendClick={handleResendOtp}
             loading={loading}
-            submitText={verifyCodeText}
-            loadingText={verifyingText}
-            otpLabel={otpLabelText}
-            otpPlaceholder={otpPlaceholderText}
-            resendText={resendCodeText}
+            submitText={t('verifyCode')}
+            loadingText={t('verifying')}
+            otpLabel={t('otpLabel')}
+            otpPlaceholder={t('otpPlaceholder')}
+            resendText={t('resendCode')}
           />
         ) : (
           <AuthForm
@@ -100,10 +73,10 @@ export function AuthContainer({
             onEmailChange={setEmail}
             onSubmit={handleEmailAuth}
             loading={loading}
-            submitText={sendCodeText}
-            loadingText={sendingText}
-            emailLabel={emailLabelText}
-            emailPlaceholder={emailPlaceholderText}
+            submitText={t('sendCode')}
+            loadingText={t('sending')}
+            emailLabel={t('emailLabel')}
+            emailPlaceholder={t('emailPlaceholder')}
             isLogin={isLogin}
           />
         )}

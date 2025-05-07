@@ -56,21 +56,6 @@ const SignupPageExample = () => {
 
   return (
     <AuthContainer
-      // Translation strings
-      welcomeText={t('welcome')}
-      promptText={t('signupPrompt')}
-      verifyEmailText={t('verifyEmail')}
-      checkEmailText={t('checkEmail')}
-      sendCodeText={t('sendCode')}
-      sendingText={t('sending')}
-      verifyCodeText={t('verifyCode')}
-      verifyingText={t('verifying')}
-      otpLabelText={t('otpLabel')}
-      otpPlaceholderText={t('otpPlaceholder')}
-      resendCodeText={t('resendCode')}
-      emailLabelText={t('emailLabel')}
-      emailPlaceholderText={t('emailPlaceholder')}
-      // Auth state and handlers
       email={email}
       setEmail={setEmail}
       otp={otp}

@@ -1,11 +1,9 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
 import { useAuth } from '../auth-provider'
 import { AuthContainer } from '../common/auth-container'
 
 export default function SignupContainer() {
-  const t = useTranslations('signup')
   const {
     handleEmailAuth,
     handleVerifyOtp,
@@ -21,21 +19,6 @@ export default function SignupContainer() {
 
   return (
     <AuthContainer
-      // Translation strings
-      welcomeText={t('welcome')}
-      promptText={t('signupPrompt')}
-      verifyEmailText={t('verifyEmail')}
-      checkEmailText={t('checkEmail')}
-      sendCodeText={t('sendCode')}
-      sendingText={t('sending')}
-      verifyCodeText={t('verifyCode')}
-      verifyingText={t('verifying')}
-      otpLabelText={t('otpLabel')}
-      otpPlaceholderText={t('otpPlaceholder')}
-      resendCodeText={t('resendCode')}
-      emailLabelText={t('emailLabel')}
-      emailPlaceholderText={t('emailPlaceholder')}
-      // Auth state and handlers
       email={email}
       setEmail={setEmail}
       otp={otp}

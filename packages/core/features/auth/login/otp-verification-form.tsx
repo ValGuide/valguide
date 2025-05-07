@@ -116,14 +116,17 @@ export function OtpVerificationForm({
       </form>
 
       <div className="text-center mt-4">
-        <button
-          type="button"
-          onClick={onResendClick}
-          disabled={loading}
-          className="text-sm text-indigo-600 hover:text-indigo-500"
-        >
-          {resendText}
-        </button>
+        <span className="text-sm text-gray-600">
+          Didn't receive the email? Check your SPAM folder or{' '}
+          <button
+            type="button"
+            onClick={onResendClick}
+            disabled={loading}
+            className="text-indigo-600 hover:text-indigo-500 inline"
+          >
+            {resendText}
+          </button>
+        </span>
       </div>
     </>
   )
