@@ -69,13 +69,14 @@ export const LoginProvider = ({ children, signInWithOtpAction, verifyOtpAction }
       })
 
       if (error) {
+        log.error('Error sending OTP:', error)
         setMessage({ type: 'error', text: error.message })
         setValidatingOpt(false)
       } else {
         setValidatingOpt(true)
       }
     } catch (error) {
-      console.error('Error sending OTP:', error)
+      log.error('Error sending OTP:', error)
       setMessage({ type: 'error', text: t('otpError') })
       setValidatingOpt(false)
     } finally {
@@ -102,13 +103,14 @@ export const LoginProvider = ({ children, signInWithOtpAction, verifyOtpAction }
       })
 
       if (error) {
+        log.error('Error verifying OTP:', error)
         setMessage({ type: 'error', text: error.message })
       } else {
         // Successfully verified OTP, redirect to the next page
         router.push(next)
       }
     } catch (error) {
-      console.error('Error verifying OTP:', error)
+      log.error('Error verifying OTP:', error)
       setMessage({ type: 'error', text: t('otpError') })
     } finally {
       setLoading(false)
@@ -133,12 +135,13 @@ export const LoginProvider = ({ children, signInWithOtpAction, verifyOtpAction }
       })
 
       if (error) {
+        log.error('Error resending OTP:', error)
         setMessage({ type: 'error', text: error.message })
       } else {
         setMessage({ type: 'success', text: t('otpSent') })
       }
     } catch (error) {
-      console.error('Error resending OTP:', error)
+      log.error('Error resending OTP:', error)
       setMessage({ type: 'error', text: t('otpError') })
     } finally {
       setLoading(false)
