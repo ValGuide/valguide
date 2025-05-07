@@ -6,6 +6,8 @@ files=(
   ".secrets/.env.supabase.dev"
   ".secrets/.env.supabase.local"
   ".secrets/.env.supabase.prod"
+  ".secrets/.env.resend.dev"
+  ".secrets/.env.resend.prod"
   ".secrets/client_secret_dev.apps.googleusercontent.com.json"
   ".secrets/client_secret_prod.apps.googleusercontent.com.json"
   "apps/links/certificates/localhost.pem"

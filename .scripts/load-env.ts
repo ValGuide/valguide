@@ -22,8 +22,19 @@ const supabaseOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
   },
 }
 
+const resendOptions: EnvOptions<'dev' | 'prod'> = {
+  name: 'resend',
+  prefix: '--rs:',
+  values: ['dev', 'prod'] as const,
+  defaultValue: 'dev' as const,
+  envFiles: {
+    dev: '.env.resend.dev',
+    prod: '.env.resend.prod',
+  },
+}
+
 const defaultOptions: EnvOptions<'all'> = {
-  name: 'openai',
+  name: 'defaults',
   prefix: '--defaults:',
   values: ['all'] as const,
   defaultValue: 'all' as const,
@@ -31,6 +42,8 @@ const defaultOptions: EnvOptions<'all'> = {
     all: '.env.defaults',
   },
 }
+
+const options: EnvOptions<string>[] = [supabaseOptions, resendOptions, defaultOptions]
 
 type EnvAndFile<T> = {
   name: string
@@ -53,10 +66,7 @@ const extractEnv = <T extends string>({
   return { name, env, file }
 }
 
-const supabaseEnv = extractEnv(supabaseOptions)
-const defaultEnv = extractEnv(defaultOptions)
-const envs = [supabaseEnv, defaultEnv]
-const options = [supabaseOptions, defaultOptions]
+const envs = options.map((option) => extractEnv(option))
 
 const logEnvs = (...envs: EnvAndFile<any>[]): string[] =>
   envs.map((env) => `${env.name.toUpperCase()}: ${env.env} [${env.file}]`)
