@@ -1,18 +1,17 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { AuthLayout } from '../common/auth-layout'
-import { AuthForm } from '../auth-form'
-import { MessageAlert } from '../common/message-alert'
-import { Consent } from '../consent'
+import { AuthContainer } from '../common/auth-container'
 
 const LoginPageExample = () => {
   const t = useTranslations('login')
   const [email, setEmail] = useState('')
+  const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
+  const [verifyingOtp, setVerifyingOtp] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
-  const handleSubmit = (email: string) => {
+  const handleEmailAuth = (email: string) => {
     setLoading(true)
     setMessage(null)
 
@@ -20,6 +19,7 @@ const LoginPageExample = () => {
     setTimeout(() => {
       setLoading(false)
       if (email.includes('@')) {
+        setVerifyingOtp(true)
         setMessage({ type: 'success', text: t('otpSent') })
       } else {
         setMessage({ type: 'error', text: t('email.message') })
@@ -27,28 +27,62 @@ const LoginPageExample = () => {
     }, 1000)
   }
 
+  const handleVerifyOtp = (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false)
+      if (otp.length === 6) {
+        setMessage({ type: 'success', text: 'Successfully verified! Redirecting...' })
+      } else {
+        setMessage({ type: 'error', text: 'Invalid verification code' })
+      }
+    }, 1000)
+  }
+
+  const handleResendOtp = () => {
+    setLoading(true)
+    setMessage(null)
+
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false)
+      setMessage({ type: 'success', text: t('otpSent') })
+    }, 1000)
+  }
+
   return (
-    <AuthLayout>
-      <div className="text-center">
-        <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
-        <p className="mt-2 text-sm text-gray-600">{t('loginPrompt')}</p>
-      </div>
-
-      {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
-
-      <AuthForm
-        email={email}
-        onEmailChange={(email) => setEmail(email)}
-        onSubmit={handleSubmit}
-        loading={loading}
-        submitText={t('sendCode')}
-        loadingText={t('sending')}
-        emailLabel={t('emailLabel')}
-        emailPlaceholder={t('emailPlaceholder')}
-        isLogin={true}
-      />
-      <Consent />
-    </AuthLayout>
+    <AuthContainer
+      // Translation strings
+      welcomeText={t('welcome')}
+      promptText={t('loginPrompt')}
+      verifyEmailText={t('verifyEmail')}
+      checkEmailText={t('checkEmail')}
+      sendCodeText={t('sendCode')}
+      sendingText={t('sending')}
+      verifyCodeText={t('verifyCode')}
+      verifyingText={t('verifying')}
+      otpLabelText={t('otpLabel')}
+      otpPlaceholderText={t('otpPlaceholder')}
+      resendCodeText={t('resendCode')}
+      emailLabelText={t('emailLabel')}
+      emailPlaceholderText={t('emailPlaceholder')}
+      // Auth state and handlers
+      email={email}
+      setEmail={setEmail}
+      otp={otp}
+      setOtp={setOtp}
+      handleEmailAuth={handleEmailAuth}
+      handleVerifyOtp={handleVerifyOtp}
+      handleResendOtp={handleResendOtp}
+      loading={loading}
+      message={message}
+      verifyingOtp={verifyingOtp}
+      isLogin={true}
+    />
   )
 }
 
