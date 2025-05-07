@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 export const Consent = () => {
   const commonT = useTranslations('common')
   return (
-    <div className="sticky bottom-0 w-full py-4 border-t mt-auto">
+    <div className="w-full py-4 border-t mt-auto">
       <div className="text-sm text-gray-600 text-center max-w-md mx-auto">
         {commonT.rich('consentMessage', {
           termsLink: (chunks) => (

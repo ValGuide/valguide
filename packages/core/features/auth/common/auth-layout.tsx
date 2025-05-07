@@ -27,7 +27,7 @@ export function AuthLayout({
   imageAlt = 'Authentication background',
 }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="min-h-screen flex flex-row">
       {/* Left side - Content */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <div className="w-full h-full max-w-md space-y-8 flex justify-center flex-col">{children}</div>
