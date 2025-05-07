@@ -38,8 +38,6 @@ export interface PlayButtonProps
 
 const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps & DataTestIdProps>(
   ({ className, variant, size, asChild = false, isPlaying = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : motion.button
-
     // Animation variants for the button
     const buttonVariants = {
       initial: { scale: 1 },
@@ -49,7 +47,7 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps & DataTes
         scale: [1, 1.05, 1],
         transition: {
           repeat: Infinity,
-          repeatType: 'reverse',
+          repeatType: 'reverse' as const,
           duration: 1.5,
         },
       },
@@ -61,8 +59,47 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps & DataTes
       visible: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
     }
 
+    const buttonContent = (
+      <div className="relative w-4 h-4 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {isPlaying ? (
+            <motion.div
+              key="pause"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={iconVariants}
+              className="absolute"
+            >
+              <Pause className="h-4 w-4" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="play"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={iconVariants}
+              className="absolute"
+            >
+              <Play className="h-4 w-4" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    )
+
+    if (asChild) {
+      return (
+        <Slot className={cn(playButtonVariants({ variant, size, className }))} ref={ref} {...props}>
+          {buttonContent}
+        </Slot>
+      )
+    }
+
+    // Use type assertion to avoid type conflicts with onDrag
     return (
-      <Comp
+      <motion.button
         className={cn(playButtonVariants({ variant, size, className }))}
         ref={ref}
         initial="initial"
@@ -70,36 +107,10 @@ const PlayButton = React.forwardRef<HTMLButtonElement, PlayButtonProps & DataTes
         whileTap="tap"
         animate={isPlaying ? 'playing' : 'initial'}
         variants={buttonVariants}
-        {...props}
+        {...(props as any)}
       >
-        <div className="relative w-4 h-4 flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            {isPlaying ? (
-              <motion.div
-                key="pause"
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                variants={iconVariants}
-                className="absolute"
-              >
-                <Pause className="h-4 w-4" />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="play"
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                variants={iconVariants}
-                className="absolute"
-              >
-                <Play className="h-4 w-4" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </Comp>
+        {buttonContent}
+      </motion.button>
     )
   },
 )

@@ -42,7 +42,7 @@ export interface PlayerProps extends React.HTMLAttributes<HTMLDivElement>, Varia
   onToggleShuffle?: () => void
   onToggleRepeat?: () => void
   onSeek?: (value: number[]) => void
-  onVolumeChange?: (value: number) => void
+  onVolumeChangeValue?: (value: number) => void
   showVolumeControl?: boolean
 }
 
@@ -68,7 +68,7 @@ const Player = React.forwardRef<HTMLDivElement, PlayerProps & DataTestIdProps>(
       onToggleShuffle,
       onToggleRepeat,
       onSeek,
-      onVolumeChange,
+      onVolumeChangeValue,
       showVolumeControl = true,
       ...props
     },
@@ -99,7 +99,7 @@ const Player = React.forwardRef<HTMLDivElement, PlayerProps & DataTestIdProps>(
               {showVolumeControl && (
                 <VolumeControl
                   value={volume}
-                  onValueChange={onVolumeChange}
+                  onValueChange={onVolumeChangeValue}
                   variant={variant === 'compact' ? 'compact' : 'default'}
                 />
               )}
@@ -137,7 +137,7 @@ const Player = React.forwardRef<HTMLDivElement, PlayerProps & DataTestIdProps>(
               {showVolumeControl && (
                 <VolumeControl
                   value={volume}
-                  onValueChange={onVolumeChange}
+                  onValueChange={onVolumeChangeValue}
                   variant={variant === 'compact' ? 'compact' : 'default'}
                 />
               )}
