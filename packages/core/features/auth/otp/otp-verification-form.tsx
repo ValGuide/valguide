@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@valguide/ui/components/button'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@valguide/ui/components/input-otp'
 
@@ -24,29 +25,13 @@ export interface OtpVerificationFormProps {
    */
   loading?: boolean
   /**
-   * Text for the submit button
-   */
-  submitText: string
-  /**
-   * Text for the submit button when loading
-   */
-  loadingText: string
-  /**
    * Title for the form
    */
   title?: string
   /**
-   * Label for the OTP input
+   * Whether this is a login form (true) or signup form (false)
    */
-  otpLabel: string
-  /**
-   * Placeholder for the OTP input
-   */
-  otpPlaceholder: string
-  /**
-   * Text for the resend button
-   */
-  resendText: string
+  isLogin?: boolean
 }
 
 /**
@@ -58,20 +43,18 @@ export function OtpVerificationForm({
   onSubmit,
   onResendClick,
   loading = false,
-  submitText,
-  loadingText,
   title,
-  otpLabel,
-  otpPlaceholder,
-  resendText,
+  isLogin = false,
 }: OtpVerificationFormProps) {
+  // Get translations based on isLogin prop
+  const t = useTranslations(isLogin ? 'login' : 'signup')
   return (
     <>
       {title && <h2 className="text-center text-2xl font-bold text-gray-900 mb-4">{title}</h2>}
       <form className="mt-8 space-y-6" onSubmit={onSubmit}>
         <div>
           <label htmlFor="otp" className="block text-sm font-medium text-gray-700 text-center">
-            {otpLabel}
+            {t('otpLabel')}
           </label>
           <div className="mt-1 flex justify-center">
             <InputOTP
@@ -110,13 +93,14 @@ export function OtpVerificationForm({
 
         <div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? loadingText : submitText}
+            {loading ? t('verifying') : t('verifyCode')}
           </Button>
         </div>
       </form>
 
       <div className="text-center mt-4">
         <span className="text-sm text-gray-600">
+          {/* TODO: Add translation key for this text */}
           Didn't receive the email? Check your SPAM folder or{' '}
           <button
             type="button"
@@ -124,7 +108,7 @@ export function OtpVerificationForm({
             disabled={loading}
             className="text-indigo-600 hover:text-indigo-500 inline"
           >
-            {resendText}
+            {t('resendCode')}
           </button>
         </span>
       </div>

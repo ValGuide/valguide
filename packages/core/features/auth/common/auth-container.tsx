@@ -61,11 +61,7 @@ export function AuthContainer({
             onSubmit={handleVerifyOtp}
             onResendClick={handleResendOtp}
             loading={loading}
-            submitText={t('verifyCode')}
-            loadingText={t('verifying')}
-            otpLabel={t('otpLabel')}
-            otpPlaceholder={t('otpPlaceholder')}
-            resendText={t('resendCode')}
+            isLogin={isLogin}
           />
         ) : (
           <AuthForm

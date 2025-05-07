@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AuthLayout } from '../common/auth-layout'
 import { OtpVerificationForm } from './otp-verification-form'
@@ -54,11 +54,7 @@ const OtpVerificationPageExample = () => {
         onSubmit={handleSubmit}
         onResendClick={handleResendOtp}
         loading={loading}
-        submitText={t('verifyCode')}
-        loadingText={t('verifying')}
-        otpLabel={t('otpLabel')}
-        otpPlaceholder={t('otpPlaceholder')}
-        resendText={t('resendCode')}
+        isLogin={true}
       />
     </AuthLayout>
   )
