@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
+    "qr-code-styling": "^1.6.0-rc.1",
     "@formatjs/intl-localematcher": "^0.5.10",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -98,6 +99,7 @@
     "./ui/tailwind.config": "./ui/tailwind.config.ts",
     "./ui/lib/*": "./ui/lib/*.ts",
     "./ui/components/*": "./ui/components/*.tsx",
-    "./ui/hooks/*": "./ui/hooks/*.ts"
+    "./ui/hooks/*": "./ui/hooks/*.ts",
+    "./features/qrcode": "./features/qrcode/index.ts"
   }
 }
