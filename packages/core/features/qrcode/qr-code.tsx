@@ -84,6 +84,7 @@ export function QRCode({
       type: 'svg',
       data: value,
       image: logoUrl,
+      margin: 0,
       dotsOptions: {
         color: fgColor,
         type: 'rounded',
@@ -98,9 +99,11 @@ export function QRCode({
       },
       cornersSquareOptions: {
         type: 'extra-rounded',
+        color: fgColor,
       },
       cornersDotOptions: {
         type: 'dot',
+        color: fgColor,
       },
       qrOptions: {
         errorCorrectionLevel,
@@ -118,6 +121,15 @@ export function QRCode({
   const [customBgColor, setCustomBgColor] = useState(bgColor)
   const [customFgColor, setCustomFgColor] = useState(fgColor)
   const [customErrorLevel, setCustomErrorLevel] = useState(errorCorrectionLevel)
+  const [customDotsType, setCustomDotsType] = useState<'square' | 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'extra-rounded'>('rounded')
+  const [customCornersSquareType, setCustomCornersSquareType] = useState<'square' | 'dot' | 'extra-rounded'>('extra-rounded')
+  const [customCornersDotType, setCustomCornersDotType] = useState<'square' | 'dot'>('dot')
+  const [customImageMargin, setCustomImageMargin] = useState(5)
+  const [customImageSize, setCustomImageSize] = useState(0.2)
+  const [customType, setCustomType] = useState<'svg' | 'canvas'>('svg')
+  const [customMargin, setCustomMargin] = useState(0)
+  const [customCornersSquareColor, setCustomCornersSquareColor] = useState(fgColor)
+  const [customCornersDotColor, setCustomCornersDotColor] = useState(fgColor)
 
   // Update QR code when props change
   React.useEffect(() => {
@@ -129,19 +141,31 @@ export function QRCode({
   // Update QR code options when customization changes
   React.useEffect(() => {
     qrCode.update({
+      type: showControls ? customType : 'svg',
       data: showControls ? customValue : value,
       width: showControls ? customWidth : width,
       height: showControls ? customHeight : height,
+      margin: showControls ? customMargin : 0,
       image: showControls ? customLogoUrl || undefined : logoUrl,
       dotsOptions: {
         color: showControls ? customFgColor : fgColor,
+        type: showControls ? customDotsType : 'rounded',
       },
       backgroundOptions: {
         color: showControls ? customBgColor : bgColor,
       },
       imageOptions: {
-        width: showControls ? customLogoWidth : logoWidth,
-        height: showControls ? customLogoHeight : logoHeight,
+        crossOrigin: 'anonymous',
+        margin: showControls ? customImageMargin : 5,
+        imageSize: showControls ? customImageSize : 0.2,
+      },
+      cornersSquareOptions: {
+        type: showControls ? customCornersSquareType : 'extra-rounded',
+        color: showControls ? customCornersSquareColor : fgColor,
+      },
+      cornersDotOptions: {
+        type: showControls ? customCornersDotType : 'dot',
+        color: showControls ? customCornersDotColor : fgColor,
       },
       qrOptions: {
         errorCorrectionLevel: showControls ? customErrorLevel : errorCorrectionLevel,
@@ -168,6 +192,15 @@ export function QRCode({
     customBgColor,
     customFgColor,
     customErrorLevel,
+    customDotsType,
+    customCornersSquareType,
+    customCornersDotType,
+    customImageMargin,
+    customImageSize,
+    customType,
+    customMargin,
+    customCornersSquareColor,
+    customCornersDotColor,
   ])
 
   // Download QR code as SVG
@@ -236,7 +269,7 @@ export function QRCode({
                   max={500}
                   step={10}
                   value={[customWidth]}
-                  onValueChange={(value) => setCustomWidth(value[0])}
+                  onValueChange={(value) => setCustomWidth(value[0] || customWidth)}
                 />
               </div>
               <div className="w-1/2">
@@ -249,7 +282,7 @@ export function QRCode({
                   max={500}
                   step={10}
                   value={[customHeight]}
-                  onValueChange={(value) => setCustomHeight(value[0])}
+                  onValueChange={(value) => setCustomHeight(value[0] || customHeight)}
                 />
               </div>
             </div>
@@ -268,7 +301,7 @@ export function QRCode({
                   max={150}
                   step={5}
                   value={[customLogoWidth]}
-                  onValueChange={(value) => setCustomLogoWidth(value[0])}
+                  onValueChange={(value) => setCustomLogoWidth(value[0] || customLogoWidth)}
                 />
               </div>
               <div className="w-1/2">
@@ -281,7 +314,7 @@ export function QRCode({
                   max={150}
                   step={5}
                   value={[customLogoHeight]}
-                  onValueChange={(value) => setCustomLogoHeight(value[0])}
+                  onValueChange={(value) => setCustomLogoHeight(value[0] || customLogoHeight)}
                 />
               </div>
             </div>
@@ -339,6 +372,158 @@ export function QRCode({
                 <SelectItem value="H">High (30%)</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="qr-type">QR Code Type</Label>
+            <Select value={customType} onValueChange={(value) => setCustomType(value as 'svg' | 'canvas')}>
+              <SelectTrigger id="qr-type">
+                <SelectValue placeholder="Select QR code type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="svg">SVG</SelectItem>
+                <SelectItem value="canvas">Canvas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="dots-type">Dots Style</Label>
+            <Select 
+              value={customDotsType} 
+              onValueChange={(value) => setCustomDotsType(value as "square" | "dots" | "rounded" | "classy" | "classy-rounded" | "extra-rounded")}
+            >
+              <SelectTrigger id="dots-type">
+                <SelectValue placeholder="Select dots style" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="dots">Dots</SelectItem>
+                <SelectItem value="rounded">Rounded</SelectItem>
+                <SelectItem value="classy">Classy</SelectItem>
+                <SelectItem value="classy-rounded">Classy Rounded</SelectItem>
+                <SelectItem value="extra-rounded">Extra Rounded</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="corners-square-type">Corners Square Style</Label>
+            <Select 
+              value={customCornersSquareType} 
+              onValueChange={(value) => setCustomCornersSquareType(value as "square" | "dot" | "extra-rounded")}
+            >
+              <SelectTrigger id="corners-square-type">
+                <SelectValue placeholder="Select corners square style" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="dot">Dot</SelectItem>
+                <SelectItem value="extra-rounded">Extra Rounded</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="corners-dot-type">Corners Dot Style</Label>
+            <Select 
+              value={customCornersDotType} 
+              onValueChange={(value) => setCustomCornersDotType(value as "square" | "dot")}
+            >
+              <SelectTrigger id="corners-dot-type">
+                <SelectValue placeholder="Select corners dot style" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="dot">Dot</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="image-margin" className="text-xs">
+              Logo Margin: {customImageMargin}
+            </Label>
+            <Slider
+              id="image-margin"
+              min={0}
+              max={20}
+              step={1}
+              value={[customImageMargin]}
+              onValueChange={(value) => setCustomImageMargin(value[0] || customImageMargin)}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="image-size" className="text-xs">
+              Logo Size Ratio: {customImageSize}
+            </Label>
+            <Slider
+              id="image-size"
+              min={0.1}
+              max={0.5}
+              step={0.01}
+              value={[customImageSize]}
+              onValueChange={(value) => setCustomImageSize(value[0] || customImageSize)}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="qr-margin" className="text-xs">
+              QR Code Margin: {customMargin}px
+            </Label>
+            <Slider
+              id="qr-margin"
+              min={0}
+              max={50}
+              step={1}
+              value={[customMargin]}
+              onValueChange={(value) => setCustomMargin(value[0] || customMargin)}
+            />
+          </div>
+
+          <div>
+            <Label>Corner Colors</Label>
+            <div className="flex space-x-4">
+              <div className="w-1/2">
+                <Label htmlFor="corners-square-color" className="text-xs">
+                  Corners Square
+                </Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="corners-square-color"
+                    type="color"
+                    value={customCornersSquareColor}
+                    onChange={(e) => setCustomCornersSquareColor(e.target.value)}
+                    className="w-12 h-8 p-0"
+                  />
+                  <Input
+                    value={customCornersSquareColor}
+                    onChange={(e) => setCustomCornersSquareColor(e.target.value)}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+              <div className="w-1/2">
+                <Label htmlFor="corners-dot-color" className="text-xs">
+                  Corners Dot
+                </Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="corners-dot-color"
+                    type="color"
+                    value={customCornersDotColor}
+                    onChange={(e) => setCustomCornersDotColor(e.target.value)}
+                    className="w-12 h-8 p-0"
+                  />
+                  <Input
+                    value={customCornersDotColor}
+                    onChange={(e) => setCustomCornersDotColor(e.target.value)}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

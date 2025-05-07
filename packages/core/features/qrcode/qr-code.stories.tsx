@@ -1,14 +1,14 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { QRCode } from './qr-code'
-import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
+import { faker } from '@faker-js/faker'
 
 const QRCodeExample = () => {
   const [activeTab, setActiveTab] = useState('basic')
   const defaultValue = 'https://valguide.com'
-  const logoUrl = 'https://github.com/shadcn.png' // Example logo URL
+  const logoUrl = faker.image.avatar() // Fake avatar image from faker
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -82,7 +82,7 @@ export const SimpleQRCode: StoryObj = {
 export const WithLogo: StoryObj = {
   render: () => (
     <div className="p-4">
-      <QRCode value="https://valguide.com" logoUrl="https://github.com/shadcn.png" errorCorrectionLevel="H" />
+      <QRCode value="https://valguide.com" logoUrl={faker.image.avatar()} errorCorrectionLevel="H" />
     </div>
   ),
 }
@@ -112,7 +112,8 @@ export const FullyCustomizable: StoryObj = {
     <div className="p-4">
       <QRCode
         value="https://valguide.com"
-        logoUrl="https://github.com/shadcn.png"
+        logoUrl={faker.image.avatar()}
+        errorCorrectionLevel="H"
         showDownloadButtons={true}
         showControls={true}
         onDownload={(format) => console.log(`Downloaded as ${format}`)}

@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { GuidePreviewCard } from './preview-card'
+import { faker } from '@faker-js/faker'
 
 const meta: Meta<typeof GuidePreviewCard> = {
-  title: 'Features/Guide/PreviewCard',
+  title: 'Guide/PreviewCard',
   component: GuidePreviewCard,
   parameters: {
     layout: 'centered',
@@ -19,7 +20,7 @@ export const Default: Story = {
       id: '1',
       title: 'Getting Started with ValGuide',
       description: 'Learn the basics of ValGuide and how to create your first visit.',
-      imageUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop',
+      imageUrl: faker.image.url({ width: 2070, height: 1380 }),
       author: 'ValGuide Team',
       createdAt: new Date('2023-10-15'),
       updatedAt: new Date('2023-11-20'),
@@ -35,7 +36,7 @@ export const Intermediate: Story = {
       id: '2',
       title: 'Advanced Techniques',
       description: 'Discover advanced techniques to create engaging guides.',
-      imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop',
+      imageUrl: faker.image.url({ width: 2070, height: 1380 }),
       author: 'ValGuide Pro',
       createdAt: new Date('2023-09-10'),
       updatedAt: new Date('2023-12-05'),
@@ -51,7 +52,7 @@ export const Advanced: Story = {
       id: '3',
       title: 'Expert Guide Creation',
       description: 'Master the art of creating professional guides with advanced features.',
-      imageUrl: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop',
+      imageUrl: faker.image.url({ width: 2070, height: 1380 }),
       author: 'ValGuide Expert',
       createdAt: new Date('2023-08-05'),
       updatedAt: new Date('2024-01-15'),

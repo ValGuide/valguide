@@ -14,6 +14,7 @@
     "format": "prettier --write \"**/*.{html,js,jsx,ts,tsx}\"",
     "secrets:hide": "sh .scripts/secrets-hide.sh",
     "secrets:show": "sh .scripts/secrets-show.sh",
+    "core:type-check": "pnpm turbo run type-check --filter ./packages/core",
     "visit:dev": "pnpm env:load turbo run dev --filter ./apps/visit -- --port 3001 --hostname visit.local.dev --experimental-https",
     "visit:start": "pnpm env:load turbo run start --filter ./apps/visit -- --port 3001 --hostname visit.local.dev --experimental-https",
     "visit:build": "pnpm env:load turbo run build --filter ./apps/visit --",
