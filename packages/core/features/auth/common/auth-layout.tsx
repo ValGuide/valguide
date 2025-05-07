@@ -29,12 +29,12 @@ export function AuthLayout({
   return (
     <main className="min-h-svh flex flex-row">
       {/* Left side - Content */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full h-full max-w-md space-y-8 flex justify-center flex-col">{children}</div>
       </div>
 
       {/* Right side - Image */}
-      <div className="hidden md:block md:w-1/2 bg-gray-100">
+      <div className="hidden lg:block lg:w-1/2 bg-gray-100">
         <div className="h-full w-full relative">
           <Image src={imageUrl} alt={imageAlt} fill style={{ objectFit: 'cover' }} />
         </div>
