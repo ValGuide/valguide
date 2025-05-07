@@ -3,14 +3,14 @@
 import { useTranslations } from 'next-intl'
 import { MessageAlert } from '../common/message-alert'
 import { AuthLayout } from '../common/auth-layout'
-import { useLogin } from './login-provider'
+import { useAuth } from '../auth-provider'
 import { OtpVerificationForm } from './otp-verification-form'
-import { LoginForm } from './login-form'
+import { AuthForm } from '../auth-form'
 
 export default function LoginContainer() {
   const t = useTranslations('login')
   const {
-    handleEmailLogin,
+    handleEmailAuth,
     handleVerifyOtp,
     otp,
     setOtp,
@@ -20,7 +20,7 @@ export default function LoginContainer() {
     verifyingOtp,
     email,
     setEmail,
-  } = useLogin()
+  } = useAuth()
 
   return (
     <AuthLayout>
@@ -50,15 +50,16 @@ export default function LoginContainer() {
           resendText={t('resendCode')}
         />
       ) : (
-        <LoginForm
+        <AuthForm
           email={email}
           onEmailChange={setEmail}
-          onSubmit={handleEmailLogin}
+          onSubmit={handleEmailAuth}
           loading={loading}
           submitText={t('sendCode')}
           loadingText={t('sending')}
           emailLabel={t('emailLabel')}
           emailPlaceholder={t('emailPlaceholder')}
+          isLogin={true}
         />
       )}
     </AuthLayout>

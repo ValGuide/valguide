@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AuthLayout } from '../common/auth-layout'
-import { SignupForm } from './signup-form'
+import { AuthForm } from '../auth-form'
 import { OtpVerificationForm } from '../login/otp-verification-form'
 import { MessageAlert } from '../common/message-alert'
 
@@ -87,7 +87,7 @@ const SignupPageExample = () => {
           resendText={t('resendCode')}
         />
       ) : (
-        <SignupForm
+        <AuthForm
           email={email}
           onEmailChange={setEmail}
           onSubmit={handleEmailSignup}
@@ -96,6 +96,7 @@ const SignupPageExample = () => {
           loadingText={t('sending')}
           emailLabel={t('emailLabel')}
           emailPlaceholder={t('emailPlaceholder')}
+          isLogin={false}
         />
       )}
     </AuthLayout>

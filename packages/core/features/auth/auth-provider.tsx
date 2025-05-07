@@ -4,18 +4,18 @@ import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useC
 import { useRouter } from '@valguide/i18n/routing'
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import type { SignInWithOtpAction, VerifyOtpAction } from '../actions'
+import type { SignInWithOtpAction, VerifyOtpAction } from './actions'
 import { createLogger } from '@valguide/logger'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
 
-const log = createLogger('signup-provider')
+const log = createLogger('auth-provider')
 
-export type SignupMessage = { type: 'success' | 'error'; text: string }
+export type AuthMessage = { type: 'success' | 'error'; text: string }
 
 const Context = createContext<{
   loading: boolean
-  message: SignupMessage | null
-  handleEmailSignup: (email: string) => Promise<void>
+  message: AuthMessage | null
+  handleEmailAuth: (email: string) => Promise<void>
   handleVerifyOtp: (e: React.FormEvent) => Promise<void>
   handleResendOtp: () => Promise<void>
   otp: string
@@ -23,10 +23,11 @@ const Context = createContext<{
   verifyingOtp: boolean
   email: string
   setEmail: Dispatch<SetStateAction<string>>
+  isLogin: boolean
 }>({
   loading: false,
   message: null,
-  handleEmailSignup: async () => {},
+  handleEmailAuth: async () => {},
   handleResendOtp: async () => {},
   handleVerifyOtp: async () => {},
   otp: '',
@@ -34,17 +35,24 @@ const Context = createContext<{
   setEmail: () => {},
   setOtp: () => {},
   verifyingOtp: false,
+  isLogin: false,
 })
 
 const defaultNextPath = '/'
 
-type SignupProviderProps = PropsWithChildren<{
+type AuthProviderProps = PropsWithChildren<{
   signInWithOtpAction: SignInWithOtpAction
   verifyOtpAction: VerifyOtpAction
+  isLogin?: boolean
 }>
 
-export const SignupProvider = ({ children, signInWithOtpAction, verifyOtpAction }: SignupProviderProps) => {
-  const t = useTranslations('signup')
+export const AuthProvider = ({
+  children,
+  signInWithOtpAction,
+  verifyOtpAction,
+  isLogin = false,
+}: AuthProviderProps) => {
+  const t = useTranslations(isLogin ? 'login' : 'signup')
   const router = useRouter()
 
   const searchParams = useSearchParams()
@@ -56,7 +64,7 @@ export const SignupProvider = ({ children, signInWithOtpAction, verifyOtpAction 
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [otp, setOtp] = useState('')
 
-  const handleEmailSignup = async (email: string) => {
+  const handleEmailAuth = async (email: string) => {
     setLoading(true)
     setMessage(null)
 
@@ -154,13 +162,14 @@ export const SignupProvider = ({ children, signInWithOtpAction, verifyOtpAction 
         loading,
         message,
         handleResendOtp,
-        handleEmailSignup,
+        handleEmailAuth,
         handleVerifyOtp,
         setOtp,
         otp,
         verifyingOtp,
         email,
         setEmail,
+        isLogin,
       }}
     >
       {children}
@@ -168,4 +177,4 @@ export const SignupProvider = ({ children, signInWithOtpAction, verifyOtpAction 
   )
 }
 
-export const useSignup = () => useContext(Context)
+export const useAuth = () => useContext(Context)

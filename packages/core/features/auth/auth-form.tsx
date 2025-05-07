@@ -4,14 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import * as z from 'zod'
+import Link from 'next/link'
 
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@valguide/ui/components/form'
-import { Checkbox } from '@valguide/ui/components/checkbox'
-import Link from 'next/link'
 
-export interface SignupFormProps {
+export interface AuthFormProps {
   /**
    * The email value
    */
@@ -44,12 +43,16 @@ export interface SignupFormProps {
    * Placeholder for the email input
    */
   emailPlaceholder: string
+  /**
+   * Whether this is a login form (true) or signup form (false)
+   */
+  isLogin?: boolean
 }
 
 /**
- * A form component for email signup
+ * A form component for email authentication (login or signup)
  */
-export function SignupForm({
+export function AuthForm({
   email: initialEmail,
   onEmailChange,
   onSubmit,
@@ -58,9 +61,10 @@ export function SignupForm({
   loadingText,
   emailLabel,
   emailPlaceholder,
-}: SignupFormProps) {
+  isLogin = false,
+}: AuthFormProps) {
   // Get translations
-  const t = useTranslations('signup')
+  const t = useTranslations(isLogin ? 'login' : 'signup')
   const commonT = useTranslations('common')
 
   // Define form schema with zod
@@ -81,32 +85,50 @@ export function SignupForm({
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{emailLabel}</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={emailPlaceholder}
-                  type="email"
-                  autoComplete="email"
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e)
-                    onEmailChange(e.target.value)
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="flex flex-col min-h-[calc(100vh-200px)] relative">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6 flex-grow">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{emailLabel}</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={emailPlaceholder}
+                    type="email"
+                    autoComplete="email"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e)
+                      onEmailChange(e.target.value)
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="text-sm text-gray-600 mt-4">
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? loadingText : submitText}
+          </Button>
+
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-600">
+              {isLogin ? t('noAccount') : t('haveAccount')}{' '}
+              <Link href={isLogin ? '/signup' : '/login'} className="text-blue-600 hover:underline">
+                {isLogin ? t('signupLink') : t('loginLink')}
+              </Link>
+            </p>
+          </div>
+        </form>
+      </Form>
+
+      {/* Consent message - sticky to the bottom and centered */}
+      <div className="sticky bottom-0 w-full py-4 bg-white border-t mt-auto">
+        <div className="text-sm text-gray-600 text-center max-w-md mx-auto">
           {commonT.rich('consentMessage', {
             termsLink: (chunks) => (
               <Link href="/terms-of-service" className="text-blue-600 hover:underline">
@@ -120,20 +142,7 @@ export function SignupForm({
             ),
           })}
         </div>
-
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? loadingText : submitText}
-        </Button>
-
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-600">
-            {t('haveAccount')}{' '}
-            <Link href="/login" className="text-blue-600 hover:underline">
-              {t('loginLink')}
-            </Link>
-          </p>
-        </div>
-      </form>
-    </Form>
+      </div>
+    </div>
   )
 }

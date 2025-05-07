@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AuthLayout } from '../common/auth-layout'
-import { LoginForm } from './login-form'
+import { AuthForm } from '../auth-form'
 import { MessageAlert } from '../common/message-alert'
 
 const LoginPageExample = () => {
@@ -35,7 +35,7 @@ const LoginPageExample = () => {
 
       {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
 
-      <LoginForm
+      <AuthForm
         email={email}
         onEmailChange={(email) => setEmail(email)}
         onSubmit={handleSubmit}
@@ -44,6 +44,7 @@ const LoginPageExample = () => {
         loadingText={t('sending')}
         emailLabel={t('emailLabel')}
         emailPlaceholder={t('emailPlaceholder')}
+        isLogin={true}
       />
     </AuthLayout>
   )
