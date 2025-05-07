@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { OtpVerificationForm } from '../login/otp-verification-form'
+import { OtpVerificationForm } from '../otp/otp-verification-form'
 
 const OtpVerificationExample = () => {
   const [otp, setOtp] = useState('')

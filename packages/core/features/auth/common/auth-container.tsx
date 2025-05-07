@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import { MessageAlert } from './message-alert'
 import { AuthLayout } from './auth-layout'
-import { OtpVerificationForm } from '../login/otp-verification-form'
+import { OtpVerificationForm } from '../otp/otp-verification-form'
 import { AuthForm } from '../auth-form'
 import { Consent } from '../consent'
 
