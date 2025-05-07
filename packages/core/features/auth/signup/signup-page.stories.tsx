@@ -5,6 +5,7 @@ import { AuthLayout } from '../common/auth-layout'
 import { AuthForm } from '../auth-form'
 import { OtpVerificationForm } from '../login/otp-verification-form'
 import { MessageAlert } from '../common/message-alert'
+import { Consent } from '../consent'
 
 const SignupPageExample = () => {
   const t = useTranslations('signup')
@@ -99,6 +100,7 @@ const SignupPageExample = () => {
           isLogin={false}
         />
       )}
+      <Consent />
     </AuthLayout>
   )
 }

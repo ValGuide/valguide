@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { AuthLayout } from '../common/auth-layout'
 import { AuthForm } from '../auth-form'
 import { MessageAlert } from '../common/message-alert'
+import { Consent } from '../consent'
 
 const LoginPageExample = () => {
   const t = useTranslations('login')
@@ -46,6 +47,7 @@ const LoginPageExample = () => {
         emailPlaceholder={t('emailPlaceholder')}
         isLogin={true}
       />
+      <Consent />
     </AuthLayout>
   )
 }

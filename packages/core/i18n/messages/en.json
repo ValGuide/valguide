@@ -4,7 +4,7 @@
     "description": "Your all-in-one platform for designing engaging, multimedia-rich guides for any purpose."
   },
   "common": {
-    "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>, and to receive periodic emails with updates."
+    "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>."
   },
   "comingSoon": {
     "title": "Coming Soon",

@@ -64,7 +64,7 @@ export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; default
     if (
       config?.type == 'protected' ||
       config?.type == 'internal' ||
-      pathname.startsWith('/auth') ||
+      pathname.startsWith('/signup') ||
       pathname.startsWith('/login')
     ) {
       // Do not run code between createServerClient and
@@ -80,15 +80,14 @@ export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; default
         return NextResponse.rewrite(notFound)
       }
 
-      if (!user && !pathname.startsWith('/login') && !pathname.startsWith('/auth')) {
-        // no user, potentially respond by redirecting the user to the login page
+      if (!user && !pathname.startsWith('/login') && !pathname.startsWith('/signup')) {
+        console.info('boooom')
         const url = req.nextUrl.clone()
         url.pathname = `/${locale}/login`
         return NextResponse.redirect(url)
       }
 
-      if (user && pathname.startsWith('/login')) {
-        // no user, potentially respond by redirecting the user to the login page
+      if (user && (pathname.startsWith('/login') || pathname.startsWith('/signup'))) {
         const next = `/${locale}/${unlocalizedPathname(req.nextUrl.searchParams.get('next') ?? defaultNextUrl)}`
         req.nextUrl.searchParams.delete('next')
         const url = req.nextUrl.clone()

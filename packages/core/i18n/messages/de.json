@@ -4,7 +4,7 @@
     "description": "Deine ultimative Plattform zum Gestalten fesselnder, multimedialer Guides – für jeden Zweck, jederzeit."
   },
   "common": {
-    "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu und erklären sich damit einverstanden, regelmäßige E-Mails mit Updates zu erhalten."
+    "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu."
   },
   "comingSoon": {
     "title": "Bald verfügbar",

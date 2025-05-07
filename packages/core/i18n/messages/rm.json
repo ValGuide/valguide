@@ -4,7 +4,7 @@
     "description": "Tia plattafurma cumpletta per crear guids multimedials ed interactivas per mintga intent."
   },
   "common": {
-    "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink> e da retscheiver e-mails periodics cun actualisaziuns."
+    "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>."
   },
   "comingSoon": {
     "title": "Prest disponibel",

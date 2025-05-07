@@ -65,7 +65,6 @@ export function AuthForm({
 }: AuthFormProps) {
   // Get translations
   const t = useTranslations(isLogin ? 'login' : 'signup')
-  const commonT = useTranslations('common')
 
   // Define form schema with zod
   const formSchema = z.object({
@@ -85,9 +84,9 @@ export function AuthForm({
   }
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-200px)] relative">
+    <div className="flex flex-col justify-center  relative">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6 flex-grow">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6">
           <FormField
             control={form.control}
             name="email"
@@ -125,24 +124,6 @@ export function AuthForm({
           </div>
         </form>
       </Form>
-
-      {/* Consent message - sticky to the bottom and centered */}
-      <div className="sticky bottom-0 w-full py-4 bg-white border-t mt-auto">
-        <div className="text-sm text-gray-600 text-center max-w-md mx-auto">
-          {commonT.rich('consentMessage', {
-            termsLink: (chunks) => (
-              <Link href="/terms-of-service" className="text-blue-600 hover:underline">
-                {chunks}
-              </Link>
-            ),
-            privacyLink: (chunks) => (
-              <Link href="/privacy-policy" className="text-blue-600 hover:underline">
-                {chunks}
-              </Link>
-            ),
-          })}
-        </div>
-      </div>
     </div>
   )
 }
