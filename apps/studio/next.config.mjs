@@ -1,5 +1,5 @@
 import createNextIntlPlugin from 'next-intl/plugin'
-import { rewrites as posthotRewrites } from '../../packages/core/posthog/rewrites.js'
+import { rewrites as posthotRewrites } from '@valguide/core/posthog/rewrites.js'
 
 const withNextIntl = createNextIntlPlugin()
 
