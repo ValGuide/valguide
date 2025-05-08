@@ -6,14 +6,11 @@ import Tus from '@uppy/tus'
 import Dashboard from '@uppy/dashboard'
 import '@uppy/core/dist/style.min.css'
 import '@uppy/dashboard/dist/style.min.css'
-import type { GetTokenAction } from '../actions'
+import { GetUploadUrlAction } from '../actions'
 
-const projectURL = process.env.VG_SUPABASE_URL!!
-const anonKey = process.env.VG_SUPABASE_ANON_KEY!!
-
-export function UppyExample({ getTokenAction }: { getTokenAction: GetTokenAction }) {
+export function UppyExample({ getUploadUrlAction }: { getUploadUrlAction: GetUploadUrlAction }) {
   // Initialize Uppy instance with the 'sample' bucket specified for uploads
-  const uppy = useUppyWithSupabase({ bucketName: 'sample', getTokenAction })
+  const uppy = useUppyWithSupabase({ bucketName: 'assets', getUploadUrlAction })
 
   useEffect(() => {
     // Set up Uppy Dashboard to display as an inline component within a specified target
@@ -30,25 +27,25 @@ export function UppyExample({ getTokenAction }: { getTokenAction: GetTokenAction
 
 export const useUppyWithSupabase = ({
   bucketName,
-  getTokenAction,
+  getUploadUrlAction,
 }: {
   bucketName: string
-  getTokenAction: GetTokenAction
+  getUploadUrlAction: GetUploadUrlAction
 }) => {
   // Initialize Uppy instance only once
   const [uppy] = useState(() => new Uppy())
 
   useEffect(() => {
     const initializeUppy = async () => {
-      const token = await getTokenAction()
+      const { token, url, apiKey } = await getUploadUrlAction()
 
       uppy
         .use(Tus, {
-          endpoint: `${projectURL}/storage/v1/upload/resumable`, // Supabase TUS endpoint
+          endpoint: url,
           retryDelays: [0, 3000, 5000, 10000, 20000], // Retry delays for resumable uploads
           headers: {
             authorization: `Bearer ${token}`, // User session access token
-            apikey: anonKey, // API key for Supabase
+            apikey: apiKey, // API key for Supabase
           },
           uploadDataDuringCreation: true, // Send metadata with file chunks
           removeFingerprintOnSuccess: true, // Remove fingerprint after successful upload
@@ -64,6 +61,8 @@ export const useUppyWithSupabase = ({
             objectName: file.name, // Use file name as object name
             contentType: file.type, // Set content type based on file MIME type
           }
+
+          console.info('metadata', file.meta)
         })
     }
 

@@ -2,9 +2,9 @@
 
 import { createClient } from '@valguide/supabase/server'
 
-export type GetTokenAction = () => Promise<{ token: string }>
+export type GetUploadUrlAction = () => Promise<{ token: string; url: string; apiKey: string }>
 
-export const getTokenAction: GetTokenAction = async () => {
+export const getUploadUrlAction: GetUploadUrlAction = async () => {
   const supabase = await createClient()
   const {
     data: { session },
@@ -14,5 +14,8 @@ export const getTokenAction: GetTokenAction = async () => {
   if (!token) {
     throw Error('Token is null')
   }
-  return { token }
+  const url = `${process.env.VG_SUPABASE_URL}/storage/v1/upload/resumable` // Supabase TUS endpoint
+
+  const apiKey = process.env.VG_SUPABASE_ANON_KEY!!
+  return { token, url, apiKey }
 }

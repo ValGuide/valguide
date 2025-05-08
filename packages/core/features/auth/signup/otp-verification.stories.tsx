@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { OtpVerificationForm } from '../otp/otp-verification-form'
 
@@ -60,11 +60,8 @@ const OtpVerificationExample = () => {
             onSubmit={handleSubmit}
             onResendClick={handleResend}
             loading={loading}
-            submitText="Verify Code"
-            loadingText="Verifying..."
-            otpLabel="Verification Code"
-            otpPlaceholder="Enter 6-digit code"
-            resendText="Resend Code"
+            isLogin={false}
+            title="Verify Your Email"
           />
         </>
       )}
@@ -72,16 +69,16 @@ const OtpVerificationExample = () => {
   )
 }
 
-const meta: Meta = {
+const meta = {
   title: 'Auth/OtpVerification',
   component: OtpVerificationExample,
   parameters: {
     layout: 'centered',
   },
-}
+} satisfies Meta<typeof OtpVerificationExample>
 
 export default meta
-type Story = StoryObj
+type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
@@ -114,11 +111,8 @@ export const WithPrefilledOtp: Story = {
           onSubmit={handleSubmit}
           onResendClick={() => alert('Code resent')}
           loading={loading}
-          submitText="Verify Code"
-          loadingText="Verifying..."
-          otpLabel="Verification Code"
-          otpPlaceholder="Enter 6-digit code"
-          resendText="Resend Code"
+          isLogin={false}
+          title="Verify Your Email"
         />
       </div>
     )
@@ -140,11 +134,8 @@ export const Loading: Story = {
           onSubmit={(e) => e.preventDefault()}
           onResendClick={() => {}}
           loading={true}
-          submitText="Verify Code"
-          loadingText="Verifying..."
-          otpLabel="Verification Code"
-          otpPlaceholder="Enter 6-digit code"
-          resendText="Resend Code"
+          isLogin={false}
+          title="Verify Your Email"
         />
       </div>
     )

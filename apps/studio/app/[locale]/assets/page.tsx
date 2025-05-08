@@ -1,10 +1,10 @@
 import { UppyExample } from '@valguide/features/assets/file-upload/uppy-example'
-import { getTokenAction } from '@valguide/features/assets/actions'
+import { getUploadUrlAction } from '@valguide/features/assets/actions'
 
 export default function AssetsPage() {
   return (
     <div className="flex flex-1 items-center">
-      <UppyExample getTokenAction={getTokenAction} />
+      <UppyExample getUploadUrlAction={getUploadUrlAction} />
     </div>
   )
 }
