@@ -3,7 +3,7 @@ import { createLogger } from '@valguide/logger'
 
 const log = createLogger('slack')
 
-const token = process.env.SLACK_TOKEN
+const token = process.env.VG_SLACK_TOKEN
 
 export type SlackMessage = ChatPostMessageArguments
 

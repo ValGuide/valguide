@@ -2,8 +2,8 @@ import { Redis } from '@upstash/redis'
 
 // Create Redis client using environment variables
 export const redis = new Redis({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
+  url: process.env.VG_KV_REST_API_URL,
+  token: process.env.VG_KV_REST_API_TOKEN,
 })
 
 // Cache TTL in seconds (default: 24 hours)

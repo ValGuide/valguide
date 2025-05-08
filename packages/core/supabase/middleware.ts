@@ -41,25 +41,21 @@ export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; default
     let supabaseResponse = NextResponse.next({
       request: req,
     })
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return req.cookies.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value))
-            supabaseResponse = NextResponse.next({
-              request: req,
-            })
-            cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
-          },
+    const supabase = createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_ANON_KEY!, {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll()
         },
-        cookieOptions,
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request: req,
+          })
+          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
+        },
       },
-    )
+      cookieOptions,
+    })
 
     if (
       config?.type == 'protected' ||

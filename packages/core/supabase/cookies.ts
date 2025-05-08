@@ -2,7 +2,7 @@ import type { CookieOptionsWithName } from '@supabase/ssr'
 
 export const cookieOptions: CookieOptionsWithName = {
   name: 'sb-auth-token',
-  domain: process.env.NEXT_PUBLIC_SUPABASE_COOKIE_DOMAIN,
+  domain: process.env.VG_SUPABASE_COOKIE_DOMAIN,
   path: '/',
   sameSite: 'lax',
   secure: true,

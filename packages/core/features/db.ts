@@ -3,12 +3,12 @@ import postgres from 'postgres'
 import * as schema from './schema'
 
 // Create a PostgreSQL client that connects to Supabase
-const connectionString = process.env.DATABASE_URL!
+const connectionString = process.env.VG_DATABASE_URL!
 const sql = postgres(connectionString, { max: 1 })
 
 export const db = drizzle(sql, {
   schema,
-  logger: process.env.DRIIZLE_LOG_ENABLED === 'true',
+  logger: process.env.VG_DRIIZLE_LOG_ENABLED === 'true',
 })
 
 export type DB = typeof db
