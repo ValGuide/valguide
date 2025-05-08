@@ -6,13 +6,14 @@ import Tus from '@uppy/tus'
 import Dashboard from '@uppy/dashboard'
 import '@uppy/core/dist/style.min.css'
 import '@uppy/dashboard/dist/style.min.css'
+import type { GetTokenAction } from '../actions'
 
 const projectURL = process.env.VG_SUPABASE_URL!!
 const anonKey = process.env.VG_SUPABASE_ANON_KEY!!
 
-export function UppyExample() {
+export function UppyExample({ getTokenAction }: { getTokenAction: GetTokenAction }) {
   // Initialize Uppy instance with the 'sample' bucket specified for uploads
-  const uppy = useUppyWithSupabase({ bucketName: 'sample' })
+  const uppy = useUppyWithSupabase({ bucketName: 'sample', getTokenAction })
 
   useEffect(() => {
     // Set up Uppy Dashboard to display as an inline component within a specified target
@@ -27,33 +28,26 @@ export function UppyExample() {
   return <div id="drag-drop-area"></div>
 }
 
-/**
- * Custom hook for configuring Uppy with Supabase authentication and TUS resumable uploads
- * @param {Object} options - Configuration options for the Uppy instance.
- * @param {string} options.bucketName - The bucket name in Supabase where files are stored.
- * @returns {Object} uppy - Uppy instance with configured upload settings.
- */
-export const useUppyWithSupabase = ({ bucketName }: { bucketName: string }) => {
+export const useUppyWithSupabase = ({
+  bucketName,
+  getTokenAction,
+}: {
+  bucketName: string
+  getTokenAction: GetTokenAction
+}) => {
   // Initialize Uppy instance only once
   const [uppy] = useState(() => new Uppy())
-  // Initialize Supabase client with project URL and anon key
-  const supabase = createClient()
 
   useEffect(() => {
     const initializeUppy = async () => {
-      // Retrieve the current user's session for authentication
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      console.info('JWT', session)
+      const token = await getTokenAction()
 
       uppy
         .use(Tus, {
           endpoint: `${projectURL}/storage/v1/upload/resumable`, // Supabase TUS endpoint
           retryDelays: [0, 3000, 5000, 10000, 20000], // Retry delays for resumable uploads
           headers: {
-            authorization: `Bearer ${session?.access_token}`, // User session access token
+            authorization: `Bearer ${token}`, // User session access token
             apikey: anonKey, // API key for Supabase
           },
           uploadDataDuringCreation: true, // Send metadata with file chunks
