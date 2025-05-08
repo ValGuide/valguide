@@ -1,13 +1,11 @@
-import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core'
+import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 
-export const link = pgTable('link', {
+export const short_links = pgTable('short_links', {
   id: serial('id').primaryKey(),
-  shortCode: varchar('short_code', { length: 10 }).notNull().unique('unique_link_short_code'),
+  shortCode: text('code').notNull().unique('unique_link_short_code'),
   url: text('url').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
     .defaultNow()
     .$onUpdate(() => new Date()),
-  expiresAt: timestamp('expires_at'),
-  clicks: serial('clicks').default(0),
 })

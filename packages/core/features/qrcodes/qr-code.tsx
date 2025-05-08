@@ -121,8 +121,12 @@ export function QRCode({
   const [customBgColor, setCustomBgColor] = useState(bgColor)
   const [customFgColor, setCustomFgColor] = useState(fgColor)
   const [customErrorLevel, setCustomErrorLevel] = useState(errorCorrectionLevel)
-  const [customDotsType, setCustomDotsType] = useState<'square' | 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'extra-rounded'>('rounded')
-  const [customCornersSquareType, setCustomCornersSquareType] = useState<'square' | 'dot' | 'extra-rounded'>('extra-rounded')
+  const [customDotsType, setCustomDotsType] = useState<
+    'square' | 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'extra-rounded'
+  >('rounded')
+  const [customCornersSquareType, setCustomCornersSquareType] = useState<'square' | 'dot' | 'extra-rounded'>(
+    'extra-rounded',
+  )
   const [customCornersDotType, setCustomCornersDotType] = useState<'square' | 'dot'>('dot')
   const [customImageMargin, setCustomImageMargin] = useState(5)
   const [customImageSize, setCustomImageSize] = useState(0.2)
@@ -389,9 +393,13 @@ export function QRCode({
 
           <div>
             <Label htmlFor="dots-type">Dots Style</Label>
-            <Select 
-              value={customDotsType} 
-              onValueChange={(value) => setCustomDotsType(value as "square" | "dots" | "rounded" | "classy" | "classy-rounded" | "extra-rounded")}
+            <Select
+              value={customDotsType}
+              onValueChange={(value) =>
+                setCustomDotsType(
+                  value as 'square' | 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'extra-rounded',
+                )
+              }
             >
               <SelectTrigger id="dots-type">
                 <SelectValue placeholder="Select dots style" />
@@ -409,9 +417,9 @@ export function QRCode({
 
           <div>
             <Label htmlFor="corners-square-type">Corners Square Style</Label>
-            <Select 
-              value={customCornersSquareType} 
-              onValueChange={(value) => setCustomCornersSquareType(value as "square" | "dot" | "extra-rounded")}
+            <Select
+              value={customCornersSquareType}
+              onValueChange={(value) => setCustomCornersSquareType(value as 'square' | 'dot' | 'extra-rounded')}
             >
               <SelectTrigger id="corners-square-type">
                 <SelectValue placeholder="Select corners square style" />
@@ -426,9 +434,9 @@ export function QRCode({
 
           <div>
             <Label htmlFor="corners-dot-type">Corners Dot Style</Label>
-            <Select 
-              value={customCornersDotType} 
-              onValueChange={(value) => setCustomCornersDotType(value as "square" | "dot")}
+            <Select
+              value={customCornersDotType}
+              onValueChange={(value) => setCustomCornersDotType(value as 'square' | 'dot')}
             >
               <SelectTrigger id="corners-dot-type">
                 <SelectValue placeholder="Select corners dot style" />
