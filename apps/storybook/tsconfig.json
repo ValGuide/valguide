@@ -30,6 +30,9 @@
       "@valguide/features/*": [
         "../../packages/core/features/*"
       ],
+      "@valguide/slack/*": [
+        "../../packages/core/slack/*"
+      ],
       "@valguide/ui/*": [
         "../../packages/core/ui/*"
       ],
