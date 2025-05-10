@@ -86,7 +86,7 @@ export function AuthForm({
   return (
     <div className="flex flex-col justify-center  relative">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6" noValidate>
           <FormField
             control={form.control}
             name="email"
@@ -96,7 +96,7 @@ export function AuthForm({
                 <FormControl>
                   <Input
                     placeholder={emailPlaceholder}
-                    type="email"
+                    type="text"
                     autoComplete="email"
                     {...field}
                     onChange={(e) => {

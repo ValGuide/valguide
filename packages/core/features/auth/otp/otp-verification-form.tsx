@@ -100,8 +100,7 @@ export function OtpVerificationForm({
 
       <div className="text-center mt-4">
         <span className="text-sm text-gray-600">
-          {/* TODO: Add translation key for this text */}
-          Didn't receive the email? Check your SPAM folder or{' '}
+          {t('didntReceiveEmail')}{' '}
           <button
             type="button"
             onClick={onResendClick}

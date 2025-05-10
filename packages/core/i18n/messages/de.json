@@ -29,6 +29,8 @@
     "verifying": "Wird überprüft...",
     "resendCode": "Erneut senden",
     "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "emailRequired": "E-Mail-Adresse ist erforderlich",
+    "didntReceiveEmail": "Keine E-Mail erhalten? Überprüfen Sie Ihren SPAM-Ordner oder",
     "noAccount": "Kein Konto?",
     "signupLink": "Registrieren",
     "email": {
@@ -55,6 +57,8 @@
     "verifying": "Wird überprüft...",
     "resendCode": "Erneut senden",
     "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "emailRequired": "E-Mail-Adresse ist erforderlich",
+    "didntReceiveEmail": "Keine E-Mail erhalten? Überprüfen Sie Ihren SPAM-Ordner oder",
     "termsRequired": "Sie müssen den Nutzungsbedingungen zustimmen",
     "termsText": "Ich stimme den",
     "haveAccount": "Haben Sie bereits ein Konto?",

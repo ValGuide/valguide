@@ -29,6 +29,8 @@
     "verifying": "Verifying...",
     "resendCode": "Send again",
     "invalidEmail": "Please enter a valid email address",
+    "emailRequired": "Email is required",
+    "didntReceiveEmail": "Didn't receive the email? Check your SPAM folder or",
     "noAccount": "No account?",
     "signupLink": "Sign up",
     "email": {
@@ -55,6 +57,8 @@
     "verifying": "Verifying...",
     "resendCode": "Send again",
     "invalidEmail": "Please enter a valid email address",
+    "emailRequired": "Email is required",
+    "didntReceiveEmail": "Didn't receive the email? Check your SPAM folder or",
     "termsRequired": "You must agree to the terms and conditions",
     "termsText": "I agree to the",
     "haveAccount": "Have an account?",

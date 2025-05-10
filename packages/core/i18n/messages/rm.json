@@ -29,6 +29,8 @@
     "verifying": "Verifichend...",
     "resendCode": "Trametter aunc inagada",
     "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+    "emailRequired": "Adressa d'e-mail è necessaria",
+    "didntReceiveEmail": "Betg retschavì l'e-mail? Controllescha tia chascha da SPAM u",
     "noAccount": "Nagin conto?",
     "signupLink": "Registrar",
     "email": {
@@ -55,6 +57,8 @@
     "verifying": "Verifichend...",
     "resendCode": "Trametter aunc inagada",
     "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+    "emailRequired": "Adressa d'e-mail è necessaria",
+    "didntReceiveEmail": "Betg retschavì l'e-mail? Controllescha tia chascha da SPAM u",
     "termsRequired": "Vus stueis acceptar las cundiziuns d'utilisaziun",
     "termsText": "Jeu acceptel las",
     "haveAccount": "Gia in conto?",

@@ -96,7 +96,7 @@ export const AuthProvider = ({
     e.preventDefault()
 
     if (!email) {
-      setMessage({ type: 'error', text: 'Email is required' })
+      setMessage({ type: 'error', text: t('emailRequired') })
       return
     }
 
@@ -127,7 +127,7 @@ export const AuthProvider = ({
 
   const handleResendOtp = async () => {
     if (!email) {
-      setMessage({ type: 'error', text: 'Email is required' })
+      setMessage({ type: 'error', text: t('emailRequired') })
       return
     }
 
