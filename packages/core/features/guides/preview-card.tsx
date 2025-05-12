@@ -24,7 +24,7 @@ export interface GuidePreviewCardProps extends React.HTMLAttributes<HTMLDivEleme
 }
 
 export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: GuidePreviewCardProps) {
-  const t = useTranslations('visit.previewCard')
+  const t = useTranslations('guide.previewCard')
 
   const handleViewDetails = React.useCallback(() => {
     onViewDetails?.(guide)
