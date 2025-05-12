@@ -27,6 +27,7 @@ const QRCodeExample = () => {
           <TabsContent value="basic" className="flex justify-center">
             <QRCode
               value={defaultValue}
+              shape="square"
               showDownloadButtons={true}
               onDownload={(format) => console.log(`Downloaded as ${format}`)}
             />
@@ -36,6 +37,7 @@ const QRCodeExample = () => {
             <QRCode
               value={defaultValue}
               logoUrl={logoUrl}
+              shape="square"
               errorCorrectionLevel="H"
               showDownloadButtons={true}
               onDownload={(format) => console.log(`Downloaded as ${format}`)}
@@ -47,6 +49,7 @@ const QRCodeExample = () => {
               value={defaultValue}
               logoUrl={logoUrl}
               errorCorrectionLevel="H"
+              shape="circle"
               showDownloadButtons={true}
               showControls={true}
               onDownload={(format) => console.log(`Downloaded as ${format}`)}
@@ -74,7 +77,7 @@ export const Default: Story = {}
 export const SimpleQRCode: StoryObj = {
   render: () => (
     <div className="p-4">
-      <QRCode value="https://valguide.com" />
+      <QRCode value="https://valguide.com" shape="square" />
     </div>
   ),
 }
@@ -82,7 +85,7 @@ export const SimpleQRCode: StoryObj = {
 export const WithLogo: StoryObj = {
   render: () => (
     <div className="p-4">
-      <QRCode value="https://valguide.com" logoUrl={faker.image.avatar()} errorCorrectionLevel="H" />
+      <QRCode value="https://valguide.com" logoUrl={faker.image.avatar()} shape="square" errorCorrectionLevel="H" />
     </div>
   ),
 }
@@ -90,7 +93,7 @@ export const WithLogo: StoryObj = {
 export const CustomColors: StoryObj = {
   render: () => (
     <div className="p-4">
-      <QRCode value="https://valguide.com" fgColor="#4f46e5" bgColor="#f3f4f6" />
+      <QRCode value="https://valguide.com" shape="square" fgColor="#4f46e5" bgColor="#f3f4f6" />
     </div>
   ),
 }
@@ -100,6 +103,22 @@ export const WithDownloadButtons: StoryObj = {
     <div className="p-4">
       <QRCode
         value="https://valguide.com"
+        shape="square"
+        showDownloadButtons={true}
+        onDownload={(format) => console.log(`Downloaded as ${format}`)}
+      />
+    </div>
+  ),
+}
+
+export const CircleShape: StoryObj = {
+  render: () => (
+    <div className="p-4">
+      <QRCode
+        value="https://valguide.com"
+        shape="circle"
+        fgColor="#4f46e5"
+        bgColor="#f3f4f6"
         showDownloadButtons={true}
         onDownload={(format) => console.log(`Downloaded as ${format}`)}
       />
@@ -114,6 +133,7 @@ export const FullyCustomizable: StoryObj = {
         value="https://valguide.com"
         logoUrl={faker.image.avatar()}
         errorCorrectionLevel="H"
+        shape="square"
         showDownloadButtons={true}
         showControls={true}
         onDownload={(format) => console.log(`Downloaded as ${format}`)}

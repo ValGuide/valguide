@@ -26,13 +26,9 @@ export interface QRCodeProps {
    */
   logoUrl?: string
   /**
-   * Width of the logo in pixels
+   * Width of the logo in pixels (used to calculate imageSize)
    */
   logoWidth?: number
-  /**
-   * Height of the logo in pixels
-   */
-  logoHeight?: number
   /**
    * Background color of the QR code
    */
@@ -45,6 +41,10 @@ export interface QRCodeProps {
    * QR code error correction level
    */
   errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
+  /**
+   * Shape of the QR code
+   */
+  shape?: 'square' | 'circle'
   /**
    * Whether to show download buttons
    */
@@ -68,10 +68,10 @@ export function QRCode({
   height = 300,
   logoUrl,
   logoWidth = 60,
-  logoHeight = 60,
   bgColor = '#FFFFFF',
   fgColor = '#000000',
   errorCorrectionLevel = 'H',
+  shape = 'square',
   showDownloadButtons = false,
   showControls = false,
   onDownload,
@@ -95,7 +95,7 @@ export function QRCode({
       imageOptions: {
         crossOrigin: 'anonymous',
         margin: 5,
-        imageSize: 0.2,
+        imageSize: logoWidth ? logoWidth / width : 0.2,
       },
       cornersSquareOptions: {
         type: 'extra-rounded',
@@ -108,6 +108,7 @@ export function QRCode({
       qrOptions: {
         errorCorrectionLevel,
       },
+      shape,
     }),
   )
 
@@ -117,10 +118,10 @@ export function QRCode({
   const [customHeight, setCustomHeight] = useState(height)
   const [customLogoUrl, setCustomLogoUrl] = useState(logoUrl || '')
   const [customLogoWidth, setCustomLogoWidth] = useState(logoWidth)
-  const [customLogoHeight, setCustomLogoHeight] = useState(logoHeight)
   const [customBgColor, setCustomBgColor] = useState(bgColor)
   const [customFgColor, setCustomFgColor] = useState(fgColor)
   const [customErrorLevel, setCustomErrorLevel] = useState(errorCorrectionLevel)
+  const [customShape, setCustomShape] = useState<'square' | 'circle'>(shape)
   const [customDotsType, setCustomDotsType] = useState<
     'square' | 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'extra-rounded'
   >('rounded')
@@ -161,7 +162,13 @@ export function QRCode({
       imageOptions: {
         crossOrigin: 'anonymous',
         margin: showControls ? customImageMargin : 5,
-        imageSize: showControls ? customImageSize : 0.2,
+        imageSize: showControls
+          ? customLogoWidth
+            ? customLogoWidth / customWidth
+            : customImageSize
+          : logoWidth
+            ? logoWidth / width
+            : 0.2,
       },
       cornersSquareOptions: {
         type: showControls ? customCornersSquareType : 'extra-rounded',
@@ -174,6 +181,7 @@ export function QRCode({
       qrOptions: {
         errorCorrectionLevel: showControls ? customErrorLevel : errorCorrectionLevel,
       },
+      shape: showControls ? customShape : shape,
     })
   }, [
     qrCode,
@@ -182,20 +190,20 @@ export function QRCode({
     height,
     logoUrl,
     logoWidth,
-    logoHeight,
     bgColor,
     fgColor,
     errorCorrectionLevel,
+    shape,
     showControls,
     customValue,
     customWidth,
     customHeight,
     customLogoUrl,
     customLogoWidth,
-    customLogoHeight,
     customBgColor,
     customFgColor,
     customErrorLevel,
+    customShape,
     customDotsType,
     customCornersSquareType,
     customCornersDotType,
@@ -294,33 +302,18 @@ export function QRCode({
 
           <div>
             <Label>Logo Size</Label>
-            <div className="flex space-x-4">
-              <div className="w-1/2">
-                <Label htmlFor="logo-width" className="text-xs">
-                  Width: {customLogoWidth}px
-                </Label>
-                <Slider
-                  id="logo-width"
-                  min={20}
-                  max={150}
-                  step={5}
-                  value={[customLogoWidth]}
-                  onValueChange={(value) => setCustomLogoWidth(value[0] || customLogoWidth)}
-                />
-              </div>
-              <div className="w-1/2">
-                <Label htmlFor="logo-height" className="text-xs">
-                  Height: {customLogoHeight}px
-                </Label>
-                <Slider
-                  id="logo-height"
-                  min={20}
-                  max={150}
-                  step={5}
-                  value={[customLogoHeight]}
-                  onValueChange={(value) => setCustomLogoHeight(value[0] || customLogoHeight)}
-                />
-              </div>
+            <div>
+              <Label htmlFor="logo-width" className="text-xs">
+                Width: {customLogoWidth}px
+              </Label>
+              <Slider
+                id="logo-width"
+                min={20}
+                max={150}
+                step={5}
+                value={[customLogoWidth]}
+                onValueChange={(value) => setCustomLogoWidth(value[0] || customLogoWidth)}
+              />
             </div>
           </div>
 
@@ -387,6 +380,19 @@ export function QRCode({
               <SelectContent>
                 <SelectItem value="svg">SVG</SelectItem>
                 <SelectItem value="canvas">Canvas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="qr-shape">QR Code Shape</Label>
+            <Select value={customShape} onValueChange={(value) => setCustomShape(value as 'square' | 'circle')}>
+              <SelectTrigger id="qr-shape">
+                <SelectValue placeholder="Select QR code shape" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="circle">Circle</SelectItem>
               </SelectContent>
             </Select>
           </div>

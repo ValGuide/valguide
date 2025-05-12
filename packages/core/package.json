@@ -107,7 +107,7 @@
     "./ui/lib/*": "./ui/lib/*.ts",
     "./ui/components/*": "./ui/components/*.tsx",
     "./ui/hooks/*": "./ui/hooks/*.ts",
-    "./features/qrcode": "./features/qrcode/index.ts",
+    "./features/qrcodes": "./features/qrcodes/index.ts",
     "./posthog/rewrites.js": "./posthog/rewrites.js"
   }
 }

@@ -77,8 +77,7 @@ import { QRCode } from '@valguide/core/features/qrcodes'
 | `width` | number | 300 | Width of the QR code in pixels |
 | `height` | number | 300 | Height of the QR code in pixels |
 | `logoUrl` | string | undefined | URL of the logo to display in the center of the QR code |
-| `logoWidth` | number | 60 | Width of the logo in pixels |
-| `logoHeight` | number | 60 | Height of the logo in pixels |
+| `logoWidth` | number | 60 | Width of the logo in pixels (used to calculate logo size ratio) |
 | `bgColor` | string | '#FFFFFF' | Background color of the QR code |
 | `fgColor` | string | '#000000' | Foreground color of the QR code (the dots) |
 | `errorCorrectionLevel` | 'L' \| 'M' \| 'Q' \| 'H' | 'H' | QR code error correction level |
