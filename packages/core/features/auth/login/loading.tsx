@@ -1,10 +1,10 @@
 import { AuthLayout } from '../common/auth-layout'
-import { AuthLoader } from '../common/auth-loader'
+import { AuthSkeletonContainer } from '../common/auth-skeleton-container'
 
 export default function LoginLoading() {
   return (
     <AuthLayout>
-      <AuthLoader />
+      <AuthSkeletonContainer />
     </AuthLayout>
   )
 }

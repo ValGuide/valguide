@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { AuthLayout } from '../common/auth-layout'
 import { OtpVerificationForm } from './otp-verification-form'
 import { MessageAlert } from '../common/message-alert'
+import { AuthSkeletonContainer } from '../common/auth-skeleton-container'
 
 const OtpVerificationPageExample = () => {
   const t = useTranslations('login')
@@ -72,3 +73,11 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {}
+
+export const Loading: Story = {
+  render: () => (
+    <AuthLayout>
+      <AuthSkeletonContainer showOtp={true} />
+    </AuthLayout>
+  ),
+}

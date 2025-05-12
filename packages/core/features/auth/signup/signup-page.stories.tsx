@@ -2,6 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AuthContainer } from '../common/auth-container'
+import SignupLoading from './loading'
 
 const SignupPageExample = () => {
   const t = useTranslations('signup')
@@ -83,3 +84,7 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {}
+
+export const Loading: Story = {
+  render: () => <SignupLoading />,
+}
