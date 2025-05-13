@@ -1,0 +1,26 @@
+{
+  "name": "@valguide/api",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "pnpm env:run tsx watch src/index.ts",
+    "env:copy-example": "shx -- cp -n .env.example .env",
+    "env:remove": "shx -- rm -f .env",
+    "env:run": "dotenv --",
+    "lint": "eslint",
+    "start": "NODE_ENV=production pnpm env:run node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "@hono/trpc-server": "^0.3.4",
+    "hono": "^4.7.9"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3"
+  }
+}
