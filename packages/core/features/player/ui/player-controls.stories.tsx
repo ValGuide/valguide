@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import { PlayerControls } from './player-controls'
 import { themes } from '@valguide/ui/theme/themes'
 

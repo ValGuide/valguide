@@ -13,16 +13,12 @@ const config: StorybookConfig = {
 
   addons: [
     getAbsolutePath('@storybook/addon-links'),
-    {
-      name: getAbsolutePath('@storybook/addon-essentials'),
-      options: {
-        docs: false,
-      },
-    },
     getAbsolutePath('@storybook/addon-themes'),
-    getAbsolutePath('storybook-dark-mode'),
-    getAbsolutePath('@storybook/addon-interactions'),
     getAbsolutePath('storybook-react-i18next'),
+
+
+    // TODO Storybook: enable dark mode (broke in v9)
+    // getAbsolutePath('storybook-dark-mode'),
   ],
 
   typescript: {
@@ -54,7 +50,10 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       define: { 'process.env': '{}' },
       optimizeDeps: {
+
+        // TODO Storybook: enable dark mode (broke in v9)
         include: ['storybook-dark-mode'],
+
         exclude: ['@storybook/builder-vite'],
       },
     })

@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import { ProgressBar } from './progress-bar'
 import { themes } from '@valguide/ui/theme/themes'
 

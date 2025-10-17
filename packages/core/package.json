@@ -80,8 +80,6 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@storybook/react": "^8.6.2",
-    "@storybook/test": "^8.6.2",
     "@turbo/gen": "^2.4.0",
     "@types/jest": "^29.5.14",
     "@types/negotiator": "^0.6.3",
