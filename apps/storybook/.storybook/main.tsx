@@ -1,7 +1,7 @@
 import * as path from 'path'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import type { StorybookConfig } from '@storybook/react-vite'
+import type { StorybookConfig } from '@storybook/nextjs-vite'
 import { fileURLToPath } from 'url'
 
 const config: StorybookConfig = {
@@ -25,7 +25,7 @@ const config: StorybookConfig = {
     reactDocgen: false,
   },
 
-  framework: getAbsolutePath('@storybook/react-vite'),
+  framework: getAbsolutePath('@storybook/nextjs-vite'),
 
   async viteFinal(config) {
     config.plugins?.push(

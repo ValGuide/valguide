@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { GuidePreviewCard } from './preview-card'
 import { faker } from '@faker-js/faker'
 

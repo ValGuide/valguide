@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { OtpVerificationForm } from './otp-verification-form'
 
 const meta: Meta<typeof OtpVerificationForm> = {

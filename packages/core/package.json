@@ -41,9 +41,9 @@
     "@slack/web-api": "^7.7.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
+    "@uppy/core": "^4.4.4",
     "@uppy/dashboard": "^4.3.3",
     "@uppy/tus": "^4.2.2",
-    "@uppy/core": "^4.4.4",
     "@upstash/qstash": "^2.7.23",
     "@upstash/redis": "^1.34.8",
     "@valguide/icons": "workspace:*",
@@ -80,6 +80,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@storybook/nextjs-vite": "^9.1.12",
     "@turbo/gen": "^2.4.0",
     "@types/jest": "^29.5.14",
     "@types/negotiator": "^0.6.3",

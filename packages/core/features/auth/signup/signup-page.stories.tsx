@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react-vite'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AuthContainer } from '../common/auth-container'
