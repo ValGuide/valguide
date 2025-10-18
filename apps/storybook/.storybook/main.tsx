@@ -7,7 +7,12 @@ const config: StorybookConfig = {
   stories: [
     // '../src/**/*.stories.@(js|jsx|ts|tsx)',
     // '../../visit/**/*.stories.@(js|jsx|ts|tsx)',
-    '../../../packages/core/**/*.stories.@(ts|tsx)',
+
+    // "../../**!(node_modules)/**!(node_modules)/*.mdx",
+    // "../../**!(node_modules)/**!(node_modules)/*.stories.@(js|jsx|ts|tsx)",
+
+    // TODO storybook: figure out how to exclude stories in node_modules
+    '../../../packages/core/features/**/*.stories.@(ts|tsx)',
   ],
 
   addons: [
