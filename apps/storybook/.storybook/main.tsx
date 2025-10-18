@@ -2,20 +2,18 @@ import * as path from 'path'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import type { StorybookConfig } from '@storybook/nextjs-vite'
-import { fileURLToPath } from 'url'
 
 const config: StorybookConfig = {
   stories: [
-    '../src/**/*.stories.@(js|jsx|ts|tsx)',
-    '../../visit/**/*.stories.@(js|jsx|ts|tsx)',
-    '../../../packages/core/**/*.stories.@(js|jsx|ts|tsx)',
+    // '../src/**/*.stories.@(js|jsx|ts|tsx)',
+    // '../../visit/**/*.stories.@(js|jsx|ts|tsx)',
+    '../../../packages/core/**/*.stories.@(ts|tsx)',
   ],
 
   addons: [
     getAbsolutePath('@storybook/addon-links'),
     getAbsolutePath('@storybook/addon-themes'),
     getAbsolutePath('storybook-react-i18next'),
-
 
     // TODO Storybook: enable dark mode (broke in v9)
     // getAbsolutePath('storybook-dark-mode'),
@@ -50,7 +48,6 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       define: { 'process.env': '{}' },
       optimizeDeps: {
-
         // TODO Storybook: enable dark mode (broke in v9)
         include: ['storybook-dark-mode'],
 
