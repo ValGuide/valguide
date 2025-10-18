@@ -13,7 +13,7 @@ const config: StorybookConfig = {
   addons: [
     getAbsolutePath('@storybook/addon-links'),
     getAbsolutePath('@storybook/addon-themes'),
-    getAbsolutePath('storybook-react-i18next'),
+    getAbsolutePath('i'),
 
     // TODO Storybook: enable dark mode (broke in v9)
     // getAbsolutePath('storybook-dark-mode'),
@@ -49,8 +49,7 @@ const config: StorybookConfig = {
       define: { 'process.env': '{}' },
       optimizeDeps: {
         // TODO Storybook: enable dark mode (broke in v9)
-        include: ['storybook-dark-mode'],
-
+        include: ['storybook-dark-mode', 'storybook-react-i18next'],
         exclude: ['@storybook/builder-vite'],
       },
     })
