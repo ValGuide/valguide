@@ -3,6 +3,7 @@
   "include": [
     "src",
     ".storybook/**/*.tsx",
+    ".storybook/**/*.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",

@@ -4,14 +4,10 @@ import { Preview } from '@storybook/nextjs-vite'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { NextIntlClientProvider } from 'next-intl'
 
-import en from '@valguide/i18n/messages/en.json' with { type: 'json' }
-import de from '@valguide/i18n/messages/de.json' with { type: 'json' }
-import rm from '@valguide/i18n/messages/rm.json' with { type: 'json' }
-
 import { themes } from '@valguide/ui/theme/themes'
 import { SupportedLocale } from '@valguide/i18n/i18n.config'
+import nextIntl from './next-intl';
 
-const messages: Record<SupportedLocale, any> = { en, de, rm }
 const locales: Record<SupportedLocale, String> = {
   en: 'English 🇺🇸',
   de: 'Deutsch 🇩🇪',
@@ -24,6 +20,7 @@ const preview: Preview = {
     locales,
   },
   parameters: {
+    nextIntl,
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -36,7 +33,7 @@ const preview: Preview = {
   },
   decorators: [
     (Story, { globals: { locale } }) => (
-      <NextIntlClientProvider locale={locale} messages={messages[locale as SupportedLocale]}>
+      <NextIntlClientProvider locale={locale} messages={nextIntl.messagesByLocale[locale as SupportedLocale]}>
         <main className="font-noto">
           <Story />
         </main>
