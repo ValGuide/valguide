@@ -5,14 +5,8 @@ import type { StorybookConfig } from '@storybook/nextjs-vite'
 
 const config: StorybookConfig = {
   stories: [
-    // '../src/**/*.stories.@(js|jsx|ts|tsx)',
-    // '../../visit/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // "../../**!(node_modules)/**!(node_modules)/*.mdx",
-    // "../../**!(node_modules)/**!(node_modules)/*.stories.@(js|jsx|ts|tsx)",
-
-    // TODO storybook: figure out how to exclude stories in node_modules
-    '../../../packages/core/features/**/*.stories.@(ts|tsx)',
+    '../../../apps/!(storybook)/!(node_modules)/**/*.stories.@(ts|tsx)',
+    '../../../packages/**/!(node_modules)/**/*.stories.@(ts|tsx)',
   ],
 
   addons: [
