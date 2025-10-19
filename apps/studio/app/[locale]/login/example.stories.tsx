@@ -1,6 +1,6 @@
 import { AuthLayout } from '@valguide/features/auth/common/auth-layout'
 import { useTranslations } from 'next-intl'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 const meta: Meta<typeof AuthLayout> = {
   title: 'Studio/Story',

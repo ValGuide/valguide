@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { ProgressBar } from './progress-bar'
 import { themes } from '@valguide/ui/theme/themes'
 

@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useTranslations } from 'next-intl'
 import { MessageAlert } from './message-alert'
 

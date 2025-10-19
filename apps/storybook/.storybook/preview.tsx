@@ -1,6 +1,6 @@
 import '@valguide/ui/styles/globals.css'
 
-import { Preview } from '@storybook/nextjs-vite'
+import type { Preview } from '@storybook/nextjs-vite'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { NextIntlClientProvider } from 'next-intl'
 

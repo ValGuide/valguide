@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { ThemePicker } from './theme-picker'
 
 const meta: Meta<typeof ThemePicker> = {
-  title: 'UI/ThemePicker',
+  title: 'Common/ThemePicker',
   component: ThemePicker,
   parameters: {
     layout: 'centered',
