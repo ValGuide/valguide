@@ -1,0 +1,12 @@
+import { ReactNode } from 'react'
+import { PostHogProvider } from '@valguide/core/posthog/PostHogProvider'
+
+type Props = {
+  children: ReactNode
+}
+
+// Since we have a `not-found-page.tsx` page on the root, a layout file
+// is required, even if it's just passing children through.
+export default function RootLayout({ children }: Props) {
+  return <PostHogProvider>{children}</PostHogProvider>
+}

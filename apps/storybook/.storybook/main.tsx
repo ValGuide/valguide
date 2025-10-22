@@ -31,7 +31,7 @@ const config: StorybookConfig = {
         loose: true,
         projects: [
           path.resolve(path.dirname(__dirname), 'tsconfig.json'),
-          path.resolve(path.dirname(__dirname), '../visit/tsconfig.json'),
+          path.resolve(path.dirname(__dirname), '../app/tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../../packages/core/tsconfig.json'),
         ],
       }),
