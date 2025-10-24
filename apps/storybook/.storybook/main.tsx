@@ -24,6 +24,10 @@ const config: StorybookConfig = {
 
   framework: getAbsolutePath('@storybook/nextjs-vite'),
 
+  core: {
+    disableTelemetry: true,
+  },
+
   async viteFinal(config) {
     config.plugins?.push(
       /** @see https://github.com/aleclarson/vite-tsconfig-paths */

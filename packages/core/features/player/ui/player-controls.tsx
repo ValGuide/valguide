@@ -42,132 +42,127 @@ export interface PlayerControlsProps extends VariantProps<typeof playerControlsV
   className?: string
 }
 
-const PlayerControls = React.forwardRef<
-  HTMLDivElement,
-  PlayerControlsProps & DataTestIdProps & Omit<HTMLMotionProps<'div'>, 'ref'>
->(
-  (
-    {
-      className,
-      variant,
-      size,
-      isPlaying = false,
-      onPlayPause,
-      onSkipNext,
-      onSkipPrevious,
-      onToggleShuffle,
-      onToggleRepeat,
-      shuffleActive = false,
-      repeatActive = false,
-      showSkipControls = true,
-      showShuffleButton = true,
-      showRepeatButton = true,
-      ...props
-    },
+const PlayerControls = (
+  {
     ref,
-  ) => {
-    // Animation variants for control buttons
-    const buttonVariants = {
-      initial: { scale: 1 },
-      hover: { scale: 1.1, transition: { duration: 0.2 } },
-      tap: { scale: 0.95, transition: { duration: 0.1 } },
-      active: {
-        scale: [1, 1.05, 1],
-        transition: {
-          repeat: Infinity,
-          repeatType: 'reverse' as const,
-          duration: 1.5,
-        },
+    className,
+    variant,
+    size,
+    isPlaying = false,
+    onPlayPause,
+    onSkipNext,
+    onSkipPrevious,
+    onToggleShuffle,
+    onToggleRepeat,
+    shuffleActive = false,
+    repeatActive = false,
+    showSkipControls = true,
+    showShuffleButton = true,
+    showRepeatButton = true,
+    ...props
+  }
+) => {
+  // Animation variants for control buttons
+  const buttonVariants = {
+    initial: { scale: 1 },
+    hover: { scale: 1.1, transition: { duration: 0.2 } },
+    tap: { scale: 0.95, transition: { duration: 0.1 } },
+    active: {
+      scale: [1, 1.05, 1],
+      transition: {
+        repeat: Infinity,
+        repeatType: 'reverse' as const,
+        duration: 1.5,
       },
-    }
+    },
+  }
 
-    return (
-      <motion.div
-        className={cn(playerControlsVariants({ variant, size, className }))}
-        ref={ref}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-        {...props}
-      >
-        {showShuffleButton && (
-          <motion.button
-            type="button"
-            onClick={onToggleShuffle}
-            className={cn(
-              'text-muted-foreground hover:text-foreground',
-              shuffleActive && 'text-primary hover:text-primary/80',
-            )}
-            aria-label="Shuffle"
-            initial="initial"
-            whileHover="hover"
-            whileTap="tap"
-            animate={shuffleActive ? 'active' : 'initial'}
-            variants={buttonVariants}
-          >
-            <Shuffle className="h-4 w-4" />
-          </motion.button>
-        )}
+  return (
+    <motion.div
+      className={cn(playerControlsVariants({ variant, size, className }))}
+      ref={ref}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.1 }}
+      {...props}
+    >
+      {showShuffleButton && (
+        <motion.button
+          type="button"
+          onClick={onToggleShuffle}
+          className={cn(
+            'text-muted-foreground hover:text-foreground',
+            shuffleActive && 'text-primary hover:text-primary/80',
+          )}
+          aria-label="Shuffle"
+          initial="initial"
+          whileHover="hover"
+          whileTap="tap"
+          animate={shuffleActive ? 'active' : 'initial'}
+          variants={buttonVariants}
+        >
+          <Shuffle className="h-4 w-4" />
+        </motion.button>
+      )}
 
-        {showSkipControls && (
-          <motion.button
-            type="button"
-            onClick={onSkipPrevious}
-            className="text-muted-foreground hover:text-foreground"
-            aria-label="Previous track"
-            initial="initial"
-            whileHover="hover"
-            whileTap="tap"
-            variants={buttonVariants}
-          >
-            <SkipBack className="h-4 w-4" />
-          </motion.button>
-        )}
+      {showSkipControls && (
+        <motion.button
+          type="button"
+          onClick={onSkipPrevious}
+          className="text-muted-foreground hover:text-foreground"
+          aria-label="Previous track"
+          initial="initial"
+          whileHover="hover"
+          whileTap="tap"
+          variants={buttonVariants}
+        >
+          <SkipBack className="h-4 w-4" />
+        </motion.button>
+      )}
 
-        <PlayButton
-          isPlaying={isPlaying}
-          onClick={onPlayPause}
-          variant="default"
-          size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'default'}
-        />
+      <PlayButton
+        isPlaying={isPlaying}
+        onClick={onPlayPause}
+        variant="default"
+        size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'default'}
+      />
 
-        {showSkipControls && (
-          <motion.button
-            type="button"
-            onClick={onSkipNext}
-            className="text-muted-foreground hover:text-foreground"
-            aria-label="Next track"
-            initial="initial"
-            whileHover="hover"
-            whileTap="tap"
-            variants={buttonVariants}
-          >
-            <SkipForward className="h-4 w-4" />
-          </motion.button>
-        )}
+      {showSkipControls && (
+        <motion.button
+          type="button"
+          onClick={onSkipNext}
+          className="text-muted-foreground hover:text-foreground"
+          aria-label="Next track"
+          initial="initial"
+          whileHover="hover"
+          whileTap="tap"
+          variants={buttonVariants}
+        >
+          <SkipForward className="h-4 w-4" />
+        </motion.button>
+      )}
 
-        {showRepeatButton && (
-          <motion.button
-            type="button"
-            onClick={onToggleRepeat}
-            className={cn(
-              'text-muted-foreground hover:text-foreground',
-              repeatActive && 'text-primary hover:text-primary/80',
-            )}
-            aria-label="Repeat"
-            initial="initial"
-            whileHover="hover"
-            whileTap="tap"
-            animate={repeatActive ? 'active' : 'initial'}
-            variants={buttonVariants}
-          >
-            <Repeat className="h-4 w-4" />
-          </motion.button>
-        )}
-      </motion.div>
-    )
-  },
-)
+      {showRepeatButton && (
+        <motion.button
+          type="button"
+          onClick={onToggleRepeat}
+          className={cn(
+            'text-muted-foreground hover:text-foreground',
+            repeatActive && 'text-primary hover:text-primary/80',
+          )}
+          aria-label="Repeat"
+          initial="initial"
+          whileHover="hover"
+          whileTap="tap"
+          animate={repeatActive ? 'active' : 'initial'}
+          variants={buttonVariants}
+        >
+          <Repeat className="h-4 w-4" />
+        </motion.button>
+      )}
+    </motion.div>
+  )
+}
 PlayerControls.displayName = 'PlayerControls'
 
 export { PlayerControls }

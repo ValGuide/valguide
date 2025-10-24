@@ -18,5 +18,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: localeMessages,
+    timeZone: 'Europe/Zurich',
   }
 })

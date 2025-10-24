@@ -27,10 +27,16 @@ export interface VolumeControlProps
   onValueChange?: (value: number) => void
 }
 
-const VolumeControl = React.forwardRef<
-  React.ComponentRef<typeof SliderPrimitive.Root>,
-  VolumeControlProps & DataTestIdProps
->(({ className, variant, value = 50, onValueChange, ...props }, ref) => {
+const VolumeControl = (
+  {
+    ref,
+    className,
+    variant,
+    value = 50,
+    onValueChange,
+    ...props
+  }
+) => {
   const [volume, setVolume] = React.useState(value)
   const [isMuted, setIsMuted] = React.useState(false)
   const previousVolume = React.useRef(volume)
@@ -79,22 +85,27 @@ const VolumeControl = React.forwardRef<
   }
 
   // Custom component to add Framer Motion to the Thumb
-  const MotionThumb = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb>>(
-    (thumbProps, thumbRef) => {
-      return (
-        <SliderPrimitive.Thumb ref={thumbRef} {...thumbProps} asChild>
-          <motion.span
-            className="block h-3 w-3 rounded-full border border-primary/50 bg-background shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-            initial={{ scale: 1 }}
-            whileHover={{ scale: 1.2 }}
-            whileFocus={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-          />
-        </SliderPrimitive.Thumb>
-      )
-    },
-  )
+  const MotionThumb = (
+    {
+      ref: thumbRef,
+      ...thumbProps
+    }: React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb> & {
+      ref: React.RefObject<HTMLSpanElement>;
+    }
+  ) => {
+    return (
+      <SliderPrimitive.Thumb ref={thumbRef} {...thumbProps} asChild>
+        <motion.span
+          className="block h-3 w-3 rounded-full border border-primary/50 bg-background shadow-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          initial={{ scale: 1 }}
+          whileHover={{ scale: 1.2 }}
+          whileFocus={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+        />
+      </SliderPrimitive.Thumb>
+    )
+  }
   MotionThumb.displayName = 'MotionThumb'
 
   // Get the appropriate volume icon based on current volume
@@ -154,7 +165,7 @@ const VolumeControl = React.forwardRef<
       </SliderPrimitive.Root>
     </motion.div>
   )
-})
+}
 VolumeControl.displayName = 'VolumeControl'
 
 export { VolumeControl }

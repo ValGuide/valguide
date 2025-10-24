@@ -28,7 +28,7 @@ export function MessageAlert({ type, children, show = true }: MessageAlertProps)
       }`}
       role="alert"
     >
-      <div className="flex-shrink-0 mr-3">
+      <div className="shrink-0 mr-3">
         {type === 'success' ? (
           <svg className="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
             <path

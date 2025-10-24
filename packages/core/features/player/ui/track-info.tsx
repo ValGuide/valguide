@@ -22,23 +22,31 @@ export interface TrackInfoProps extends React.HTMLAttributes<HTMLDivElement>, Va
   albumArt?: string
 }
 
-const TrackInfo = React.forwardRef<HTMLDivElement, TrackInfoProps & DataTestIdProps>(
-  ({ className, variant, title, artist, albumArt, ...props }, ref) => {
-    return (
-      <div className={cn(trackInfoVariants({ variant, className }))} ref={ref} {...props}>
-        {albumArt && (
-          <div className="h-10 w-10 overflow-hidden rounded-md">
-            <img src={albumArt} alt={`${title} by ${artist}`} className="h-full w-full object-cover" />
-          </div>
-        )}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium">{title}</span>
-          <span className="text-xs text-muted-foreground">{artist}</span>
+const TrackInfo = (
+  {
+    ref,
+    className,
+    variant,
+    title,
+    artist,
+    albumArt,
+    ...props
+  }
+) => {
+  return (
+    <div className={cn(trackInfoVariants({ variant, className }))} ref={ref} {...props}>
+      {albumArt && (
+        <div className="h-10 w-10 overflow-hidden rounded-md">
+          <img src={albumArt} alt={`${title} by ${artist}`} className="h-full w-full object-cover" />
         </div>
+      )}
+      <div className="flex flex-col">
+        <span className="text-sm font-medium">{title}</span>
+        <span className="text-xs text-muted-foreground">{artist}</span>
       </div>
-    )
-  },
-)
+    </div>
+  )
+}
 TrackInfo.displayName = 'TrackInfo'
 
 export { TrackInfo, trackInfoVariants }

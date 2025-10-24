@@ -34,7 +34,7 @@ const preview: Preview = {
   decorators: [
     (Story, { globals: { locale } }) => (
       <NextIntlClientProvider locale={locale} messages={nextIntl.messagesByLocale[locale as SupportedLocale]}>
-        <main className="font-noto">
+        <main className="font-geist">
           <Story />
         </main>
       </NextIntlClientProvider>
