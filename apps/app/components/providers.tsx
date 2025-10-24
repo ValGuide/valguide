@@ -12,7 +12,7 @@ interface ProvidersProps extends PropsWithLocale {
 
 export function Providers({ children, locale, messages }: PropsWithChildren<ProvidersProps>) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Zurich">
       <NextThemesProvider
         attribute="data-theme"
         defaultTheme="system"

@@ -33,7 +33,7 @@ const preview: Preview = {
   },
   decorators: [
     (Story, { globals: { locale } }) => (
-      <NextIntlClientProvider locale={locale} messages={nextIntl.messagesByLocale[locale as SupportedLocale]}>
+      <NextIntlClientProvider locale={locale} messages={nextIntl.messagesByLocale[locale as SupportedLocale]} timeZone="Europe/Zurich">
         <main className="font-geist">
           <Story />
         </main>

@@ -72,6 +72,12 @@
     "printWidth": 120
   },
   "packageManager": "pnpm@10.10.0",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.2",
+      "@types/react-dom": "19.2.2"
+    }
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
