@@ -7,6 +7,11 @@ export const proxy = supabaseMiddlewareFn({
       type: 'public',
       localized: true,
     },
+    {
+      route: '/',
+      type: 'protected',
+      localized: true,
+    },
   ],
 })
 

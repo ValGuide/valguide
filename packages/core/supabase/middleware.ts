@@ -77,7 +77,6 @@ export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; default
       }
 
       if (!user && !pathname.startsWith('/login') && !pathname.startsWith('/signup')) {
-        console.info('boooom')
         const url = req.nextUrl.clone()
         url.pathname = `/${locale}/login`
         return NextResponse.redirect(url)
