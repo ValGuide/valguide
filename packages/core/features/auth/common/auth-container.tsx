@@ -45,12 +45,12 @@ export function AuthContainer({
         {verifyingOtp ? (
           <div className="text-center">
             <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
-            <p className="mt-2 text-sm text-gray-600">{email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}</p>
+            <p className="mt-2 text-sm ">{email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}</p>
           </div>
         ) : (
           <div className="text-center">
             <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
-            <p className="mt-2 text-sm text-gray-600">{t(isLogin ? 'loginPrompt' : 'signupPrompt')}</p>
+            <p className="mt-2 text-sm">{t(isLogin ? 'loginPrompt' : 'signupPrompt')}</p>
           </div>
         )}
         {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}

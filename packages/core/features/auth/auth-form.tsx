@@ -115,9 +115,9 @@ export function AuthForm({
           </Button>
 
           <div className="text-center mt-4">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm">
               {isLogin ? t('noAccount') : t('haveAccount')}{' '}
-              <Link href={isLogin ? '/signup' : '/login'} className="text-blue-600 hover:underline">
+              <Link href={isLogin ? '/signup' : '/login'} className="text-secondary-foreground hover:underline">
                 {isLogin ? t('signupLink') : t('loginLink')}
               </Link>
             </p>
