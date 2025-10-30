@@ -24,7 +24,9 @@ export function MessageAlert({ type, children, show = true }: MessageAlertProps)
   return (
     <div
       className={`mt-4 p-4 rounded-md flex items-start ${
-        type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+        type === 'success'
+          ? 'bg-green-50 text-green-800 border border-green-200'
+          : 'bg-red-50 text-red-800 border border-red-200'
       }`}
       role="alert"
     >

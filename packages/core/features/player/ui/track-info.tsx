@@ -22,17 +22,7 @@ export interface TrackInfoProps extends React.HTMLAttributes<HTMLDivElement>, Va
   albumArt?: string
 }
 
-const TrackInfo = (
-  {
-    ref,
-    className,
-    variant,
-    title,
-    artist,
-    albumArt,
-    ...props
-  }
-) => {
+const TrackInfo = ({ ref, className, variant, title, artist, albumArt, ...props }) => {
   return (
     <div className={cn(trackInfoVariants({ variant, className }))} ref={ref} {...props}>
       {albumArt && (

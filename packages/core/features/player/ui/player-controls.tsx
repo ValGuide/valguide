@@ -42,26 +42,24 @@ export interface PlayerControlsProps extends VariantProps<typeof playerControlsV
   className?: string
 }
 
-const PlayerControls = (
-  {
-    ref,
-    className,
-    variant,
-    size,
-    isPlaying = false,
-    onPlayPause,
-    onSkipNext,
-    onSkipPrevious,
-    onToggleShuffle,
-    onToggleRepeat,
-    shuffleActive = false,
-    repeatActive = false,
-    showSkipControls = true,
-    showShuffleButton = true,
-    showRepeatButton = true,
-    ...props
-  }
-) => {
+const PlayerControls = ({
+  ref,
+  className,
+  variant,
+  size,
+  isPlaying = false,
+  onPlayPause,
+  onSkipNext,
+  onSkipPrevious,
+  onToggleShuffle,
+  onToggleRepeat,
+  shuffleActive = false,
+  repeatActive = false,
+  showSkipControls = true,
+  showShuffleButton = true,
+  showRepeatButton = true,
+  ...props
+}) => {
   // Animation variants for control buttons
   const buttonVariants = {
     initial: { scale: 1 },

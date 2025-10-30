@@ -6,7 +6,7 @@ import { NextIntlClientProvider } from 'next-intl'
 
 import { themes } from '@valguide/ui/theme/themes'
 import { SupportedLocale } from '@valguide/i18n/i18n.config'
-import nextIntl from './next-intl';
+import nextIntl from './next-intl'
 
 const locales: Record<SupportedLocale, String> = {
   en: 'English 🇺🇸',
@@ -33,7 +33,11 @@ const preview: Preview = {
   },
   decorators: [
     (Story, { globals: { locale } }) => (
-      <NextIntlClientProvider locale={locale} messages={nextIntl.messagesByLocale[locale as SupportedLocale]} timeZone="Europe/Zurich">
+      <NextIntlClientProvider
+        locale={locale}
+        messages={nextIntl.messagesByLocale[locale as SupportedLocale]}
+        timeZone="Europe/Zurich"
+      >
         <main className="font-geist">
           <Story />
         </main>

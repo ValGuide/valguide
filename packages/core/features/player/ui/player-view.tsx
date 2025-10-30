@@ -32,38 +32,36 @@ export interface PlayerViewProps
   aspectRatio?: number // Only used when imageRatio is 'original'
 }
 
-const PlayerView = (
-  {
-    ref,
-    className,
-    variant,
-    imageRatio,
-    image,
+const PlayerView = ({
+  ref,
+  className,
+  variant,
+  imageRatio,
+  image,
 
-    // Default aspect ratio if not specified
-    aspectRatio = 16 / 9,
+  // Default aspect ratio if not specified
+  aspectRatio = 16 / 9,
 
-    title,
-    artist,
-    albumArt,
-    isPlaying = false,
-    currentTime,
-    duration,
-    progress = 0,
-    volume = 50,
-    shuffleActive = false,
-    repeatActive = false,
-    onPlayPause,
-    onSkipNext,
-    onSkipPrevious,
-    onToggleShuffle,
-    onToggleRepeat,
-    onSeek,
-    onVolumeChange,
-    showVolumeControl = true,
-    ...props
-  }
-) => {
+  title,
+  artist,
+  albumArt,
+  isPlaying = false,
+  currentTime,
+  duration,
+  progress = 0,
+  volume = 50,
+  shuffleActive = false,
+  repeatActive = false,
+  onPlayPause,
+  onSkipNext,
+  onSkipPrevious,
+  onToggleShuffle,
+  onToggleRepeat,
+  onSeek,
+  onVolumeChange,
+  showVolumeControl = true,
+  ...props
+}) => {
   const playerRef = React.useRef<HTMLDivElement>(null)
   // Use a type assertion to satisfy the useHover hook's type requirements
   const isHovering = useHover(playerRef as React.RefObject<HTMLElement>)

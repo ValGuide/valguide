@@ -46,33 +46,31 @@ export interface PlayerProps extends React.HTMLAttributes<HTMLDivElement>, Varia
   showVolumeControl?: boolean
 }
 
-const Player = (
-  {
-    ref,
-    className,
-    variant,
-    layout,
-    title,
-    artist,
-    albumArt,
-    isPlaying = false,
-    currentTime,
-    duration,
-    progress = 0,
-    volume = 50,
-    shuffleActive = false,
-    repeatActive = false,
-    onPlayPause,
-    onSkipNext,
-    onSkipPrevious,
-    onToggleShuffle,
-    onToggleRepeat,
-    onSeek,
-    onVolumeChangeValue,
-    showVolumeControl = true,
-    ...props
-  }
-) => {
+const Player = ({
+  ref,
+  className,
+  variant,
+  layout,
+  title,
+  artist,
+  albumArt,
+  isPlaying = false,
+  currentTime,
+  duration,
+  progress = 0,
+  volume = 50,
+  shuffleActive = false,
+  repeatActive = false,
+  onPlayPause,
+  onSkipNext,
+  onSkipPrevious,
+  onToggleShuffle,
+  onToggleRepeat,
+  onSeek,
+  onVolumeChangeValue,
+  showVolumeControl = true,
+  ...props
+}) => {
   const isInline = layout === 'inline'
 
   return (

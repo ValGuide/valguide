@@ -27,16 +27,7 @@ export interface VolumeControlProps
   onValueChange?: (value: number) => void
 }
 
-const VolumeControl = (
-  {
-    ref,
-    className,
-    variant,
-    value = 50,
-    onValueChange,
-    ...props
-  }
-) => {
+const VolumeControl = ({ ref, className, variant, value = 50, onValueChange, ...props }) => {
   const [volume, setVolume] = React.useState(value)
   const [isMuted, setIsMuted] = React.useState(false)
   const previousVolume = React.useRef(volume)
@@ -85,14 +76,12 @@ const VolumeControl = (
   }
 
   // Custom component to add Framer Motion to the Thumb
-  const MotionThumb = (
-    {
-      ref: thumbRef,
-      ...thumbProps
-    }: React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb> & {
-      ref: React.RefObject<HTMLSpanElement>;
-    }
-  ) => {
+  const MotionThumb = ({
+    ref: thumbRef,
+    ...thumbProps
+  }: React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb> & {
+    ref: React.RefObject<HTMLSpanElement>
+  }) => {
     return (
       <SliderPrimitive.Thumb ref={thumbRef} {...thumbProps} asChild>
         <motion.span
