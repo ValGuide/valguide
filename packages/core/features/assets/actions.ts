@@ -16,6 +16,6 @@ export const getUploadUrlAction: GetUploadUrlAction = async () => {
   }
   const url = `${process.env.VG_SUPABASE_URL}/storage/v1/upload/resumable` // Supabase TUS endpoint
 
-  const apiKey = process.env.VG_SUPABASE_ANON_KEY!!
+  const apiKey = process.env.VG_SUPABASE_PUBLISHABLE_KEY!!
   return { token, url, apiKey }
 }

@@ -4,7 +4,7 @@ import { cookieOptions } from '@valguide/supabase/cookies'
 
 export async function createClient() {
   const cookieStore = await cookies()
-  return createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_ANON_KEY!, {
+  return createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_PUBLISHABLE_KEY!, {
     cookies: {
       getAll() {
         return cookieStore.getAll()

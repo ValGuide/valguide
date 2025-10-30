@@ -1,6 +1,8 @@
-import { pgTable, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
+import { pgSchema, pgTable, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 
-export const todo = pgTable('todo', {
+const privateSchema = pgSchema('private')
+
+export const todo = privateSchema.table('todo', {
   id: serial('id').primaryKey(),
   key: text('key').notNull().unique('unique_todo_key'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -9,7 +11,7 @@ export const todo = pgTable('todo', {
     .$onUpdate(() => new Date()),
 })
 
-export const todoTranslation = pgTable(
+export const todoTranslation = privateSchema.table(
   'todo_translation',
   {
     id: serial('id').primaryKey(),

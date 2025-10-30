@@ -41,7 +41,7 @@ export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; default
     let supabaseResponse = NextResponse.next({
       request: req,
     })
-    const supabase = createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_ANON_KEY!, {
+    const supabase = createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_PUBLISHABLE_KEY!, {
       cookies: {
         getAll() {
           return req.cookies.getAll()
