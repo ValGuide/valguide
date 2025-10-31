@@ -7,7 +7,7 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from '@valguide/ui/components/input-otp'
-import { Field, FieldDescription, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
+import { Field, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 
 export interface OtpVerificationFormProps {
   /**
@@ -57,13 +57,14 @@ export function OtpVerificationForm({
   return (
     <form onSubmit={onSubmit}>
       <FieldGroup>
-        <div className="flex flex-col items-center gap-2 text-center">
-          {title && <h1 className="text-xl font-bold">{title}</h1>}
-          <FieldDescription>{t('otpLabel')}</FieldDescription>
-        </div>
+        {title && (
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h1 className="text-xl font-bold">{title}</h1>
+          </div>
+        )}
         <Field>
           <FieldLabel htmlFor="otp" className="sr-only">
-            {t('otpLabel')}
+            {t('otpPlaceholder')}
           </FieldLabel>
           <InputOTP
             maxLength={6}
@@ -101,24 +102,25 @@ export function OtpVerificationForm({
               <InputOTPSlot index={5} />
             </InputOTPGroup>
           </InputOTP>
-          <FieldDescription className="text-center">
-            {t('didntReceiveEmail')}{' '}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                onResendClick()
-              }}
-            >
-              {t('resendCode')}
-            </a>
-          </FieldDescription>
         </Field>
         <Field>
           <Button type="submit" disabled={loading}>
             {loading ? t('verifying') : t('verifyCode')}
           </Button>
         </Field>
+        <div className="text-center text-sm">
+          {t('didntReceiveEmail')}{' '}
+          <a
+            href="#"
+            className="font-medium hover:underline"
+            onClick={(e) => {
+              e.preventDefault()
+              onResendClick()
+            }}
+          >
+            {t('resendCode')}
+          </a>
+        </div>
       </FieldGroup>
     </form>
   )

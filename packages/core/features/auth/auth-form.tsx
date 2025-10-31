@@ -84,9 +84,9 @@ export function AuthForm({
   }
 
   return (
-    <div className="flex flex-col justify-center  relative">
+    <div className="flex flex-col justify-center">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-8 space-y-6" noValidate>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6" noValidate>
           <FormField
             control={form.control}
             name="email"

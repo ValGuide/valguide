@@ -37,9 +37,9 @@ const LoginPageExample = () => {
     setTimeout(() => {
       setLoading(false)
       if (otp.length === 6) {
-        setMessage({ type: 'success', text: 'Successfully verified! Redirecting...' })
+        setMessage({ type: 'success', text: t('verificationSuccess') })
       } else {
-        setMessage({ type: 'error', text: 'Invalid verification code' })
+        setMessage({ type: 'error', text: t('verificationError') })
       }
     }, 1000)
   }

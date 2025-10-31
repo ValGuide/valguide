@@ -1,6 +1,5 @@
 'use client'
 
-import { ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import { MessageAlert } from './message-alert'
 import { AuthLayout } from './auth-layout'
@@ -41,10 +40,10 @@ export function AuthContainer({
 
   return (
     <AuthLayout>
-      <div className="flex flex-1 flex-col justify-center">
+      <div className="flex flex-1 flex-col justify-center gap-6">
         {verifyingOtp ? (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
+            <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('otpTitle')}</h2>
             <p className="mt-2 text-sm ">{email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}</p>
           </div>
         ) : (
