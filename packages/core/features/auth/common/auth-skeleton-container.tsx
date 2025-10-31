@@ -22,7 +22,7 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
       {/* Consent message skeleton */}
       <div className="w-full pt-10">
         <div className="text-center max-w-md mx-auto">
-          <Skeleton className="h-4 w-96 mx-auto" />{' '}
+          <Skeleton className="h-4 w-96 mx-auto" />
           {/* Single line for "By continuing, you agree to our Terms of Service and Privacy Policy." */}
         </div>
       </div>
