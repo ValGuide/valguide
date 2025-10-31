@@ -1,7 +1,13 @@
-import { ChangeEvent, FormEvent, useCallback } from 'react'
+import { ChangeEvent, FormEvent } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@valguide/ui/components/button'
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@valguide/ui/components/input-otp'
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from '@valguide/ui/components/input-otp'
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 
 export interface OtpVerificationFormProps {
   /**
@@ -49,68 +55,71 @@ export function OtpVerificationForm({
   // Get translations based on isLogin prop
   const t = useTranslations(isLogin ? 'login' : 'signup')
   return (
-    <>
-      {title && <h2 className="text-center text-2xl font-bold text-gray-900 mb-4">{title}</h2>}
-      <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-        <div>
-          <label htmlFor="otp" className="block text-sm font-medium text-gray-700 text-center">
+    <form onSubmit={onSubmit}>
+      <FieldGroup>
+        <div className="flex flex-col items-center gap-2 text-center">
+          {title && <h1 className="text-xl font-bold">{title}</h1>}
+          <FieldDescription>{t('otpLabel')}</FieldDescription>
+        </div>
+        <Field>
+          <FieldLabel htmlFor="otp" className="sr-only">
             {t('otpLabel')}
-          </label>
-          <div className="mt-1 flex justify-center">
-            <InputOTP
-              maxLength={6}
-              disabled={loading}
-              onComplete={(value) => {
-                // Create a synthetic event to maintain compatibility with the existing API
-                const syntheticEvent = {
-                  target: {
-                    value,
-                  },
-                } as unknown as ChangeEvent<HTMLInputElement>
-                onOtpChange(syntheticEvent)
-              }}
-              onChange={(value) => {
-                // Also handle partial OTP entries
-                const syntheticEvent = {
-                  target: {
-                    value,
-                  },
-                } as unknown as ChangeEvent<HTMLInputElement>
-                onOtpChange(syntheticEvent)
+          </FieldLabel>
+          <InputOTP
+            maxLength={6}
+            id="otp"
+            disabled={loading}
+            containerClassName="gap-4"
+            onComplete={(value) => {
+              // Create a synthetic event to maintain compatibility with the existing API
+              const syntheticEvent = {
+                target: {
+                  value,
+                },
+              } as unknown as ChangeEvent<HTMLInputElement>
+              onOtpChange(syntheticEvent)
+            }}
+            onChange={(value) => {
+              // Also handle partial OTP entries
+              const syntheticEvent = {
+                target: {
+                  value,
+                },
+              } as unknown as ChangeEvent<HTMLInputElement>
+              onOtpChange(syntheticEvent)
+            }}
+          >
+            <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:h-16 *:data-[slot=input-otp-slot]:w-12 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:text-xl">
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:h-16 *:data-[slot=input-otp-slot]:w-12 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:text-xl">
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
+          <FieldDescription className="text-center">
+            {t('didntReceiveEmail')}{' '}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                onResendClick()
               }}
             >
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
-              </InputOTPGroup>
-            </InputOTP>
-          </div>
-        </div>
-
-        <div>
-          <Button type="submit" className="w-full" disabled={loading}>
+              {t('resendCode')}
+            </a>
+          </FieldDescription>
+        </Field>
+        <Field>
+          <Button type="submit" disabled={loading}>
             {loading ? t('verifying') : t('verifyCode')}
           </Button>
-        </div>
-      </form>
-
-      <div className="text-center mt-4">
-        <span className="text-sm text-gray-600">
-          {t('didntReceiveEmail')}{' '}
-          <button
-            type="button"
-            onClick={onResendClick}
-            disabled={loading}
-            className="text-indigo-600 hover:text-indigo-500 inline"
-          >
-            {t('resendCode')}
-          </button>
-        </span>
-      </div>
-    </>
+        </Field>
+      </FieldGroup>
+    </form>
   )
 }

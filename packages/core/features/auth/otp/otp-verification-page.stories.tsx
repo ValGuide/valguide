@@ -1,19 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { AuthLayout } from '../common/auth-layout'
-import { OtpVerificationForm } from './otp-verification-form'
-import { MessageAlert } from '../common/message-alert'
+import { AuthContainer } from '../common/auth-container'
 import { AuthSkeletonContainer } from '../common/auth-skeleton-container'
+import { AuthLayout } from '../common/auth-layout'
 
 const OtpVerificationPageExample = () => {
   const t = useTranslations('login')
+  const [email, setEmail] = useState('user@example.com')
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const email = 'user@example.com'
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEmailAuth = (_email: string) => {
+    // Not used in this story since we're showing OTP verification
+  }
+
+  const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setMessage(null)
@@ -22,9 +25,9 @@ const OtpVerificationPageExample = () => {
     setTimeout(() => {
       setLoading(false)
       if (otp.length === 6) {
-        setMessage({ type: 'success', text: t('otpSent') })
+        setMessage({ type: 'success', text: 'Successfully verified! Redirecting...' })
       } else {
-        setMessage({ type: 'error', text: t('otpError') })
+        setMessage({ type: 'error', text: 'Invalid verification code' })
       }
     }, 1000)
   }
@@ -41,23 +44,19 @@ const OtpVerificationPageExample = () => {
   }
 
   return (
-    <AuthLayout>
-      <div className="text-center">
-        <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
-        <p className="mt-2 text-sm text-gray-600">{`${t('verifyEmail')} ${email}`}</p>
-      </div>
-
-      {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
-
-      <OtpVerificationForm
-        otp={otp}
-        onOtpChange={(e) => setOtp(e.target.value)}
-        onSubmit={handleSubmit}
-        onResendClick={handleResendOtp}
-        loading={loading}
-        isLogin={true}
-      />
-    </AuthLayout>
+    <AuthContainer
+      email={email}
+      setEmail={setEmail}
+      otp={otp}
+      setOtp={setOtp}
+      handleEmailAuth={handleEmailAuth}
+      handleVerifyOtp={handleVerifyOtp}
+      handleResendOtp={handleResendOtp}
+      loading={loading}
+      message={message}
+      verifyingOtp={true}
+      isLogin={true}
+    />
   )
 }
 
