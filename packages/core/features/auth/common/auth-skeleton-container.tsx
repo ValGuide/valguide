@@ -16,17 +16,14 @@ export interface AuthSkeletonContainerProps extends React.HTMLAttributes<HTMLDiv
 export function AuthSkeletonContainer({ className, showOtp = false, ...props }: AuthSkeletonContainerProps) {
   return (
     <>
-      <div className={cn('flex flex-1 flex-col justify-center', className)} {...props}>
+      <div className={cn('flex flex-1 flex-col justify-center mt-16 mb-8', className)} {...props}>
         {showOtp ? <OtpSkeleton /> : <AuthSkeleton />}
       </div>
       {/* Consent message skeleton */}
-      <div className="w-full py-4 border-t">
-        <div className="text-center max-w-md mx-auto flex flex-wrap justify-center gap-1.5">
-          <Skeleton className="h-5 w-24" /> {/* "By continuing, you agree to our" */}
-          <Skeleton className="h-5 w-32" /> {/* "Terms of Service" */}
-          <Skeleton className="h-5 w-10" /> {/* "and" */}
-          <Skeleton className="h-5 w-28" /> {/* "Privacy Policy" */}
-          <Skeleton className="h-5 w-3" /> {/* "." */}
+      <div className="w-full pt-10">
+        <div className="text-center max-w-md mx-auto">
+          <Skeleton className="h-4 w-96 mx-auto" />{' '}
+          {/* Single line for "By continuing, you agree to our Terms of Service and Privacy Policy." */}
         </div>
       </div>
     </>
