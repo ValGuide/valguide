@@ -1,14 +1,17 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useState, FormEvent } from 'react'
 import { useTranslations } from 'next-intl'
-import * as z from 'zod'
 import Link from 'next/link'
 
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@valguide/ui/components/form'
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldDescription,
+} from '@valguide/ui/components/field'
 
 export interface AuthFormProps {
   /**
@@ -66,55 +69,60 @@ export function AuthForm({
   // Get translations
   const t = useTranslations(isLogin ? 'login' : 'signup')
 
-  // Define form schema with zod
-  const formSchema = z.object({
-    email: z.string().email({ message: t('invalidEmail') }),
-  })
-  // Initialize form with react-hook-form
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: initialEmail,
-    },
-  })
+  // Local state for validation
+  const [error, setError] = useState<string | null>(null)
 
   // Handle form submission
-  function handleSubmit(values: z.infer<typeof formSchema>) {
-    onSubmit(values.email)
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!initialEmail) {
+      setError(t('emailRequired'))
+      return
+    }
+    if (!emailRegex.test(initialEmail)) {
+      setError(t('invalidEmail'))
+      return
+    }
+
+    setError(null)
+    onSubmit(initialEmail)
   }
 
   return (
     <div className="flex flex-col justify-center">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6" noValidate>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{emailLabel}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={emailPlaceholder}
-                    type="text"
-                    autoComplete="email"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e)
-                      onEmailChange(e.target.value)
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+        <FieldGroup>
+          <Field>
+            <FieldLabel htmlFor="email">{emailLabel}</FieldLabel>
+            <Input
+              id="email"
+              placeholder={emailPlaceholder}
+              type="email"
+              autoComplete="email"
+              value={initialEmail}
+              onChange={(e) => {
+                onEmailChange(e.target.value)
+                setError(null) // Clear error on change
+              }}
+              required
+            />
+            {error && (
+              <FieldDescription className="text-destructive">
+                {error}
+              </FieldDescription>
             )}
-          />
+          </Field>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? loadingText : submitText}
-          </Button>
+          <Field>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? loadingText : submitText}
+            </Button>
+          </Field>
 
-          <div className="text-center mt-4">
+          <div className="text-center">
             <p className="text-sm">
               {isLogin ? t('noAccount') : t('haveAccount')}{' '}
               <Link href={isLogin ? '/signup' : '/login'} className="text-secondary-foreground hover:underline">
@@ -122,8 +130,8 @@ export function AuthForm({
               </Link>
             </p>
           </div>
-        </form>
-      </Form>
+        </FieldGroup>
+      </form>
     </div>
   )
 }
