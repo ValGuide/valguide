@@ -7,11 +7,18 @@ const meta: Meta<typeof AppSidebar> = {
   component: AppSidebar,
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'The main dashboard sidebar with top-level navigation for Guides, Analytics, Team & Members, Settings, Team Switcher, My Profile, and Logout.',
+      },
+    },
   },
   decorators: [
     (Story) => (
       <SidebarProvider>
-        <Story />
+        <div className="flex h-screen">
+          <Story />
+        </div>
       </SidebarProvider>
     ),
   ],
@@ -23,6 +30,13 @@ type Story = StoryObj<typeof AppSidebar>
 
 export const Default: Story = {
   args: {},
+  parameters: {
+    docs: {
+      description: {
+        story: 'Default sidebar with top-level navigation items: Guides (home), Analytics, Team & Members, Settings, Team Switcher in header, and user menu with My Profile and Logout in footer.',
+      },
+    },
+  },
 }
 
 export const Expanded: Story = {
@@ -30,10 +44,19 @@ export const Expanded: Story = {
   decorators: [
     (Story) => (
       <SidebarProvider defaultOpen={true}>
-        <Story />
+        <div className="flex h-screen">
+          <Story />
+        </div>
       </SidebarProvider>
     ),
   ],
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar in expanded state showing all menu items and labels.',
+      },
+    },
+  },
 }
 
 export const Collapsed: Story = {
@@ -41,20 +64,56 @@ export const Collapsed: Story = {
   decorators: [
     (Story) => (
       <SidebarProvider defaultOpen={false}>
-        <Story />
+        <div className="flex h-screen">
+          <Story />
+        </div>
       </SidebarProvider>
     ),
   ],
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar in collapsed icon-only mode. Hover over icons to see tooltips.',
+      },
+    },
+  },
 }
 
-export const WithCustomVariant: Story = {
+export const FloatingVariant: Story = {
   args: {
     variant: 'floating',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar with floating variant style.',
+      },
+    },
+  },
+}
+
+export const InsetVariant: Story = {
+  args: {
+    variant: 'inset',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar with inset variant style.',
+      },
+    },
   },
 }
 
 export const NonCollapsible: Story = {
   args: {
     collapsible: 'none',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar that cannot be collapsed.',
+      },
+    },
   },
 }

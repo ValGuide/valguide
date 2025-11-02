@@ -74,7 +74,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                Account
+                My Profile
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
