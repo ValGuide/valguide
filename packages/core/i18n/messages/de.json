@@ -140,5 +140,20 @@
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System"
+  },
+  "fileDropzone": {
+    "dragAndDrop": "Ziehe Dateien hierher",
+    "orClickToBrowse": "oder klicke zum Durchsuchen",
+    "dropFilesHere": "Dateien hier ablegen",
+    "maxFileSize": "Max. Dateigröße",
+    "upTo": "Bis zu",
+    "files": "Dateien",
+    "file": "Datei",
+    "filesSelected": "ausgewählt",
+    "clearAll": "Alle löschen",
+    "complete": "Abgeschlossen",
+    "fileSizeExceeds": "Dateigröße überschreitet",
+    "limit": "Limit",
+    "fileTypeNotAccepted": "Dateityp nicht akzeptiert"
   }
 }

@@ -140,5 +140,20 @@
     "light": "Cler",
     "dark": "Stgir",
     "system": "System"
+  },
+  "fileDropzone": {
+    "dragAndDrop": "Tira datotecas qua",
+    "orClickToBrowse": "u clicca per tschertgar",
+    "dropFilesHere": "Depona datotecas qua",
+    "maxFileSize": "Grondezza max. da datoteca",
+    "upTo": "Fin a",
+    "files": "datotecas",
+    "file": "datoteca",
+    "filesSelected": "tschernidas",
+    "clearAll": "Stizzar tut",
+    "complete": "Terminà",
+    "fileSizeExceeds": "Grondezza da datoteca surpassa",
+    "limit": "limit",
+    "fileTypeNotAccepted": "Tip da datoteca betg acceptà"
   }
 }

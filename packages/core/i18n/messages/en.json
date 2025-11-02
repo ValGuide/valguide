@@ -140,5 +140,20 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "fileDropzone": {
+    "dragAndDrop": "Drag and drop files here",
+    "orClickToBrowse": "or click to browse",
+    "dropFilesHere": "Drop files here",
+    "maxFileSize": "Max file size",
+    "upTo": "Up to",
+    "files": "files",
+    "file": "file",
+    "filesSelected": "selected",
+    "clearAll": "Clear all",
+    "complete": "Complete",
+    "fileSizeExceeds": "File size exceeds",
+    "limit": "limit",
+    "fileTypeNotAccepted": "File type not accepted"
   }
 }
