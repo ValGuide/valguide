@@ -1,18 +1,11 @@
 import { supabaseMiddlewareFn } from '@valguide/core/supabase/middleware'
 
 export const proxy = supabaseMiddlewareFn({
-  routes: [
-    {
-      route: '/login',
-      type: 'public',
-      localized: true,
-    },
-    {
-      route: '/',
-      type: 'protected',
-      localized: true,
-    },
-  ],
+  defaultConfig: {
+    type: 'protected',
+    localized: true,
+  },
+  defaultNextUrl: '/guides',
 })
 
 // Read more: https://next-auth.js.org/tutorials/securing-pages-and-api-routes

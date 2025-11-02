@@ -20,9 +20,14 @@ const withLocale = (fn: (req: NextRequest, locale: string) => Promise<NextRespon
   return res
 }
 
-export const supabaseMiddlewareFn = (options?: { routes?: RouteConfig[]; defaultNextUrl?: string }) => {
+export const supabaseMiddlewareFn = (options?: {
+  routes?: RouteConfig[]
+  defaultNextUrl?: string
+  defaultConfig?: Omit<RouteConfig, 'route'>
+}) => {
   const { routes = [], defaultNextUrl = '' } = options ?? {}
-  const getConfig = (pathname: string): RouteConfig | undefined => routes.find((config) => config.route == pathname)
+  const getConfig = (pathname: string): RouteConfig | Omit<RouteConfig, 'route'> | undefined =>
+    routes.find((config) => config.route == pathname) ?? options?.defaultConfig
 
   return withLocale(async (req, locale) => {
     const pathname = unlocalizedPathname(req.nextUrl.pathname)

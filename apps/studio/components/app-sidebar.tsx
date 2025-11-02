@@ -7,8 +7,8 @@ import {
   BarChart3,
   Command,
   GalleryVerticalEnd,
-  LifeBuoy,
   Headphones,
+  LifeBuoy,
   Palette,
   Send,
   Settings2,
@@ -20,6 +20,8 @@ import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher } from '@/components/team-switcher'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@valguide/ui/components/sidebar'
+import { usePathname } from 'next/navigation'
+import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 
 // This is sample data.
 const data = {
@@ -49,48 +51,57 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const t = useTranslations('sidebar.nav')
+  const pathname = usePathname()
+
+  // Remove locale prefix from pathname (e.g., /de/analytics -> /analytics, /de -> /)
+  const pathnameWithoutLocale = unlocalizedPathname(pathname)
 
   const navMain = [
     {
       title: t('guides'),
-      url: '#',
+      url: '/',
       icon: Headphones,
-      isActive: true,
     },
     {
       title: t('design'),
-      url: '#',
+      url: '/design',
       icon: Palette,
     },
     {
       title: t('analytics'),
-      url: '#',
+      url: '/analytics',
       icon: BarChart3,
     },
     {
       title: t('teamAndMembers'),
-      url: '#',
+      url: '/team',
       icon: Users,
     },
     {
       title: t('settings'),
-      url: '#',
+      url: '/settings',
       icon: Settings2,
     },
-  ]
+  ].map((item) => ({
+    ...item,
+    isActive: item.url === '' ? pathnameWithoutLocale === '/' : pathnameWithoutLocale === item.url,
+  }))
 
   const navSecondary = [
     {
       title: t('support'),
-      url: '#',
+      url: 'support',
       icon: LifeBuoy,
     },
     {
       title: t('feedback'),
-      url: '#',
+      url: 'feedback',
       icon: Send,
     },
-  ]
+  ].map((item) => ({
+    ...item,
+    isActive: pathnameWithoutLocale === `/${item.url}`,
+  }))
 
   return (
     <Sidebar collapsible="icon" {...props}>
