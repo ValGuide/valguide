@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useTranslations } from 'next-intl'
 import { FileDropzone } from './file-dropzone'
 import { themes } from '@valguide/ui/theme/themes'
 
@@ -32,103 +33,142 @@ export default meta
 
 type Story = StoryObj<typeof FileDropzone>
 
+// Helper component to use translations in stories
+function FileDropzoneWithTranslations(props: React.ComponentProps<typeof FileDropzone>) {
+  const t = useTranslations('fileDropzone')
+
+  return (
+    <FileDropzone
+      {...props}
+      translations={{
+        dragAndDrop: t('dragAndDrop'),
+        orClickToBrowse: t('orClickToBrowse'),
+        dropFilesHere: t('dropFilesHere'),
+        maxFileSize: t('maxFileSize'),
+        upTo: t('upTo'),
+        files: t('files'),
+        filesSelected: t('filesSelected'),
+        clearAll: t('clearAll'),
+        complete: t('complete'),
+        fileSizeExceeds: t('fileSizeExceeds'),
+        limit: t('limit'),
+        fileTypeNotAccepted: t('fileTypeNotAccepted'),
+      }}
+    />
+  )
+}
+
 export const Default: Story = {
-  args: {
-    onFilesSelected: (files) => {
-      console.log('Files selected:', files)
-    },
-  },
+  render: (args) => (
+    <FileDropzoneWithTranslations
+      {...args}
+      onFilesSelected={(files) => {
+        console.log('Files selected:', files)
+      }}
+    />
+  ),
 }
 
 export const ImagesOnly: Story = {
-  args: {
-    acceptedFileTypes: ['image/*'],
-    maxFiles: 5,
-    maxFileSize: 10 * 1024 * 1024, // 10MB
-    onFilesSelected: (files) => {
-      console.log('Images selected:', files)
-    },
-  },
+  render: (args) => (
+    <FileDropzoneWithTranslations
+      {...args}
+      acceptedFileTypes={['image/*']}
+      maxFiles={5}
+      maxFileSize={10 * 1024 * 1024}
+      onFilesSelected={(files) => {
+        console.log('Images selected:', files)
+      }}
+    />
+  ),
 }
 
 export const PDFOnly: Story = {
-  args: {
-    acceptedFileTypes: ['application/pdf'],
-    maxFiles: 3,
-    maxFileSize: 20 * 1024 * 1024, // 20MB
-    onFilesSelected: (files) => {
-      console.log('PDFs selected:', files)
-    },
-  },
+  render: (args) => (
+    <FileDropzoneWithTranslations
+      {...args}
+      acceptedFileTypes={['application/pdf']}
+      maxFiles={3}
+      maxFileSize={20 * 1024 * 1024}
+      onFilesSelected={(files) => {
+        console.log('PDFs selected:', files)
+      }}
+    />
+  ),
 }
 
 export const SingleFile: Story = {
-  args: {
-    maxFiles: 1,
-    maxFileSize: 5 * 1024 * 1024, // 5MB
-    onFilesSelected: (files) => {
-      console.log('File selected:', files)
-    },
-  },
+  render: (args) => (
+    <FileDropzoneWithTranslations
+      {...args}
+      maxFiles={1}
+      maxFileSize={5 * 1024 * 1024}
+      onFilesSelected={(files) => {
+        console.log('File selected:', files)
+      }}
+    />
+  ),
 }
 
 export const SmallFilesOnly: Story = {
-  args: {
-    maxFileSize: 1 * 1024 * 1024, // 1MB
-    maxFiles: 10,
-    onFilesSelected: (files) => {
-      console.log('Small files selected:', files)
-    },
-  },
+  render: (args) => (
+    <FileDropzoneWithTranslations
+      {...args}
+      maxFileSize={1024 * 1024}
+      maxFiles={10}
+      onFilesSelected={(files) => {
+        console.log('Small files selected:', files)
+      }}
+    />
+  ),
 }
 
 export const Disabled: Story = {
-  args: {
-    disabled: true,
-    onFilesSelected: (files) => {
-      console.log('Files selected:', files)
-    },
-  },
-}
-
-export const CustomTranslations: Story = {
-  args: {
-    translations: {
-      dragAndDrop: "Ziehe Dateien hierher",
-      orClickToBrowse: "oder klicke zum Durchsuchen",
-      dropFilesHere: "Dateien hier ablegen",
-      maxFileSize: "Max. Dateigröße",
-      upTo: "Bis zu",
-      files: "Dateien",
-      filesSelected: "ausgewählt",
-      clearAll: "Alle löschen",
-      complete: "Abgeschlossen",
-      fileSizeExceeds: "Dateigröße überschreitet",
-      limit: "Limit",
-      fileTypeNotAccepted: "Dateityp nicht akzeptiert",
-    },
-    onFilesSelected: (files) => {
-      console.log('Files selected:', files)
-    },
-  },
+  render: (args) => (
+    <FileDropzoneWithTranslations
+      {...args}
+      disabled={true}
+      onFilesSelected={(files) => {
+        console.log('Files selected:', files)
+      }}
+    />
+  ),
 }
 
 export const AllThemes: Story = {
-  render: () => (
-    <div className="flex flex-col gap-8">
-      {themes.map((theme) => (
-        <div className="flex flex-col gap-4 p-6 border rounded-lg" data-theme={theme} key={theme}>
-          <h2 className="text-xl font-bold capitalize">{theme}</h2>
-          <FileDropzone
-            maxFiles={5}
-            maxFileSize={5 * 1024 * 1024}
-            onFilesSelected={(files) => {
-              console.log(`[${theme}] Files selected:`, files)
-            }}
-          />
-        </div>
-      ))}
-    </div>
-  ),
+  render: () => {
+    const t = useTranslations('fileDropzone')
+
+    return (
+      <div className="flex flex-col gap-8">
+        {themes.map((theme) => (
+          <div className="flex flex-col gap-4 p-6 border rounded-lg" data-theme={theme} key={theme}>
+            <h2 className="text-xl font-bold capitalize">{theme}</h2>
+            <FileDropzone
+              maxFiles={5}
+              maxFileSize={5 * 1024 * 1024}
+              onFilesSelected={(files) => {
+                console.log(`[${theme}] Files selected:`, files)
+              }}
+              translations={{
+                dragAndDrop: t('dragAndDrop'),
+                orClickToBrowse: t('orClickToBrowse'),
+                dropFilesHere: t('dropFilesHere'),
+                maxFileSize: t('maxFileSize'),
+                upTo: t('upTo'),
+                files: t('files'),
+                filesSelected: t('filesSelected'),
+                clearAll: t('clearAll'),
+                complete: t('complete'),
+                fileSizeExceeds: t('fileSizeExceeds'),
+                limit: t('limit'),
+                fileTypeNotAccepted: t('fileTypeNotAccepted'),
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    )
+  },
 }
 
