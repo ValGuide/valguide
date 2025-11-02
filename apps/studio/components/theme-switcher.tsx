@@ -1,8 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { Moon, Sun } from 'lucide-react'
+import { Computer, Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { useTranslations } from 'next-intl'
 
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -13,7 +14,8 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 
 export function ThemeSwitcher() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme } = useTheme()
+  const t = useTranslations('theme')
 
   return (
     <DropdownMenu>
@@ -21,24 +23,23 @@ export function ThemeSwitcher() {
         <Button variant="ghost" size="icon" className="h-9 w-9">
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">{t('toggleTheme')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme('light')}>
           <Sun className="mr-2 h-4 w-4" />
-          <span>Light</span>
+          <span>{t('light')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('dark')}>
           <Moon className="mr-2 h-4 w-4" />
-          <span>Dark</span>
+          <span>{t('dark')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('system')}>
-          <span className="mr-2 h-4 w-4">💻</span>
-          <span>System</span>
+          <Computer className="mr-2 h-4 w-4" />
+          <span>{t('system')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
 }
-

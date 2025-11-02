@@ -96,7 +96,9 @@
       "design": "Design",
       "analytics": "Analytics",
       "teamAndMembers": "Team & Commembers",
-      "settings": "Parameters"
+      "settings": "Parameters",
+      "support": "Support",
+      "feedback": "Feedback"
     },
     "user": {
       "myProfile": "Mes profil",
@@ -109,5 +111,11 @@
       "teams": "Teams",
       "addTeam": "Agiuntar team"
     }
+  },
+  "theme": {
+    "toggleTheme": "Midar tema",
+    "light": "Cler",
+    "dark": "Stgir",
+    "system": "System"
   }
 }

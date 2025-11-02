@@ -2,9 +2,21 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
-import { AudioWaveform, BarChart3, Command, GalleryVerticalEnd, Map, Palette, Settings2, Users } from 'lucide-react'
+import {
+  AudioWaveform,
+  BarChart3,
+  Command,
+  GalleryVerticalEnd,
+  LifeBuoy,
+  Headphones,
+  Palette,
+  Send,
+  Settings2,
+  Users,
+} from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
+import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher } from '@/components/team-switcher'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@valguide/ui/components/sidebar'
@@ -42,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     {
       title: t('guides'),
       url: '#',
-      icon: Map,
+      icon: Headphones,
       isActive: true,
     },
     {
@@ -67,6 +79,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
   ]
 
+  const navSecondary = [
+    {
+      title: t('support'),
+      url: '#',
+      icon: LifeBuoy,
+    },
+    {
+      title: t('feedback'),
+      url: '#',
+      icon: Send,
+    },
+  ]
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -74,6 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

@@ -96,7 +96,9 @@
       "design": "Design",
       "analytics": "Analytics",
       "teamAndMembers": "Team & Members",
-      "settings": "Settings"
+      "settings": "Settings",
+      "support": "Support",
+      "feedback": "Feedback"
     },
     "user": {
       "myProfile": "My Profile",
@@ -109,5 +111,11 @@
       "teams": "Teams",
       "addTeam": "Add team"
     }
+  },
+  "theme": {
+    "toggleTheme": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }
