@@ -36,6 +36,7 @@ const config: StorybookConfig = {
         projects: [
           path.resolve(path.dirname(__dirname), 'tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../app/tsconfig.json'),
+          path.resolve(path.dirname(__dirname), '../studio/tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../../packages/core/tsconfig.json'),
         ],
       }),
@@ -46,6 +47,7 @@ const config: StorybookConfig = {
       alias: {
         ...(config.resolve?.alias || {}),
         'next/image': path.resolve(__dirname, './__mocks__/NextImageMock.tsx'),
+        '@': path.resolve(path.dirname(__dirname), '../studio'),
       },
     }
     return mergeConfig(config, {
