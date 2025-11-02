@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { NextIntlClientProvider } from 'next-intl'
 import { AppSidebar } from './app-sidebar'
-import { SidebarProvider } from '@valguide/ui/components/sidebar'
+import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 
 // Import messages for the story
 import enMessages from '@valguide/i18n/messages/en.json'
@@ -13,6 +13,12 @@ const meta: Meta<typeof AppSidebar> = {
   component: AppSidebar,
   parameters: {
     layout: 'fullscreen',
+    viewport: {
+      defaultViewport: 'responsive',
+    },
+    chromatic: {
+      viewports: [1280],
+    },
     docs: {
       description: {
         component:
@@ -25,9 +31,13 @@ const meta: Meta<typeof AppSidebar> = {
       const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
       return (
         <NextIntlClientProvider locale={locale || 'en'} messages={messages} timeZone="Europe/Zurich">
-          <SidebarProvider>
-            <div className="flex h-screen">
+          <SidebarProvider defaultOpen={true}>
+            <div style={{ minWidth: '768px', width: '100%', height: '100vh', display: 'flex' }}>
               <Story />
+              <main className="flex-1 p-4">
+                <SidebarTrigger className="mb-4" />
+                <div className="text-muted-foreground text-sm">Click the button above to toggle the sidebar</div>
+              </main>
             </div>
           </SidebarProvider>
         </NextIntlClientProvider>
@@ -41,62 +51,92 @@ export default meta
 type Story = StoryObj<typeof AppSidebar>
 
 export const Default: Story = {
-  args: {},
+  args: {
+    pathname: '/en',
+  },
   parameters: {
     docs: {
       description: {
         story:
-          'Default sidebar with top-level navigation items: Guides (home), Analytics, Team & Members, Settings, Team Switcher in header, and user menu with My Profile and Logout in footer.',
+          'Default sidebar with Guides (home) active. Top-level navigation items: Guides, Analytics, Team & Members, Settings, Team Switcher in header, and user menu with My Profile and Logout in footer.',
       },
     },
   },
 }
 
-export const Expanded: Story = {
-  args: {},
-  decorators: [
-    (Story, { globals: { locale } }) => {
-      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
-      return (
-        <NextIntlClientProvider locale={locale || 'en'} messages={messages} timeZone="Europe/Zurich">
-          <SidebarProvider defaultOpen={true}>
-            <div className="flex h-screen">
-              <Story />
-            </div>
-          </SidebarProvider>
-        </NextIntlClientProvider>
-      )
-    },
-  ],
+export const AnalyticsActive: Story = {
+  args: {
+    pathname: '/en/analytics',
+  },
   parameters: {
     docs: {
       description: {
-        story: 'Sidebar in expanded state showing all menu items and labels.',
+        story: 'Sidebar with Analytics page active.',
       },
     },
   },
 }
 
-export const Collapsed: Story = {
-  args: {},
-  decorators: [
-    (Story, { globals: { locale } }) => {
-      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
-      return (
-        <NextIntlClientProvider locale={locale || 'en'} messages={messages} timeZone="Europe/Zurich">
-          <SidebarProvider defaultOpen={false}>
-            <div className="flex h-screen">
-              <Story />
-            </div>
-          </SidebarProvider>
-        </NextIntlClientProvider>
-      )
-    },
-  ],
+export const DesignActive: Story = {
+  args: {
+    pathname: '/de/design',
+  },
   parameters: {
     docs: {
       description: {
-        story: 'Sidebar in collapsed icon-only mode. Hover over icons to see tooltips.',
+        story: 'Sidebar with Design page active (German locale).',
+      },
+    },
+  },
+}
+
+export const TeamActive: Story = {
+  args: {
+    pathname: '/rm/team',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar with Team & Members page active (Romansh locale).',
+      },
+    },
+  },
+}
+
+export const SettingsActive: Story = {
+  args: {
+    pathname: '/en/settings',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar with Settings page active.',
+      },
+    },
+  },
+}
+
+export const SupportActive: Story = {
+  args: {
+    pathname: '/en/support',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar with Support page active (secondary navigation).',
+      },
+    },
+  },
+}
+
+export const FeedbackActive: Story = {
+  args: {
+    pathname: '/en/feedback',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar with Feedback page active (secondary navigation).',
       },
     },
   },
@@ -104,9 +144,13 @@ export const Collapsed: Story = {
 
 export const FloatingVariant: Story = {
   args: {
+    pathname: '/en',
     variant: 'floating',
   },
   parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+    },
     docs: {
       description: {
         story: 'Sidebar with floating variant style.',
@@ -117,9 +161,13 @@ export const FloatingVariant: Story = {
 
 export const InsetVariant: Story = {
   args: {
+    pathname: '/en',
     variant: 'inset',
   },
   parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+    },
     docs: {
       description: {
         story: 'Sidebar with inset variant style.',
@@ -130,9 +178,13 @@ export const InsetVariant: Story = {
 
 export const NonCollapsible: Story = {
   args: {
+    pathname: '/en',
     collapsible: 'none',
   },
   parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+    },
     docs: {
       description: {
         story: 'Sidebar that cannot be collapsed.',

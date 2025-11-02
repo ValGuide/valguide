@@ -49,9 +49,17 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  pathname: pathnameProp,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  pathname?: string
+}) {
   const t = useTranslations('sidebar.nav')
-  const pathname = usePathname()
+  const pathnameFromRouter = usePathname()
+
+  // Use prop if provided (e.g., in Storybook), otherwise use router pathname
+  const pathname = pathnameProp ?? pathnameFromRouter ?? '/'
 
   // Remove locale prefix from pathname (e.g., /de/analytics -> /analytics, /de -> /)
   const pathnameWithoutLocale = unlocalizedPathname(pathname)
