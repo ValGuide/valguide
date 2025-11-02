@@ -70,7 +70,7 @@ export function OtpVerificationForm({
             maxLength={6}
             id="otp"
             disabled={loading}
-            containerClassName="gap-4"
+            containerClassName="gap-4 justify-center"
             onComplete={(value) => {
               // Create a synthetic event to maintain compatibility with the existing API
               const syntheticEvent = {
@@ -95,7 +95,6 @@ export function OtpVerificationForm({
               <InputOTPSlot index={1} />
               <InputOTPSlot index={2} />
             </InputOTPGroup>
-            <InputOTPSeparator />
             <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:h-16 *:data-[slot=input-otp-slot]:w-12 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:text-xl">
               <InputOTPSlot index={3} />
               <InputOTPSlot index={4} />

@@ -25,8 +25,6 @@ export function OtpSkeleton({ className, ...props }: OtpSkeletonProps) {
             <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 2 */}
             <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 3 */}
           </div>
-          {/* Separator */}
-          <div className="w-2 h-0.5 bg-border" />
           {/* Second group of 3 slots */}
           <div className="flex gap-2.5">
             <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 4 */}
