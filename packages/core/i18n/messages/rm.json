@@ -100,6 +100,29 @@
       "support": "Support",
       "feedback": "Feedback"
     },
+    "pages": {
+      "guides": {
+        "description": "Crear e administrar vossas guidas interactivas."
+      },
+      "design": {
+        "description": "Persunalisar l'apparientscha da vossas guidas."
+      },
+      "analytics": {
+        "description": "Vesair ed analisar las metrickas da prestaziun da vossas guidas."
+      },
+      "teamAndMembers": {
+        "description": "Administrar voss commembers da team e lur permissiuns."
+      },
+      "settings": {
+        "description": "Configurar vossas preferenzas ed parameters da l'applicaziun."
+      },
+      "support": {
+        "description": "Survegnir agid e support per vossas dumondas."
+      },
+      "feedback": {
+        "description": "Cundivider voss feedback e vossas propostas cun nus."
+      }
+    },
     "user": {
       "myProfile": "Mes profil",
       "billing": "Facturaziun",

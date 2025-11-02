@@ -100,6 +100,29 @@
       "support": "Support",
       "feedback": "Feedback"
     },
+    "pages": {
+      "guides": {
+        "description": "Create and manage your interactive guides."
+      },
+      "design": {
+        "description": "Customize the look and feel of your guides."
+      },
+      "analytics": {
+        "description": "View and analyze your guide performance metrics."
+      },
+      "teamAndMembers": {
+        "description": "Manage your team members and their permissions."
+      },
+      "settings": {
+        "description": "Configure your application preferences and settings."
+      },
+      "support": {
+        "description": "Get help and support for your questions."
+      },
+      "feedback": {
+        "description": "Share your feedback and suggestions with us."
+      }
+    },
     "user": {
       "myProfile": "My Profile",
       "billing": "Billing",

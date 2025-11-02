@@ -100,6 +100,29 @@
       "support": "Support",
       "feedback": "Feedback"
     },
+    "pages": {
+      "guides": {
+        "description": "Erstellen und verwalten Sie Ihre interaktiven Anleitungen."
+      },
+      "design": {
+        "description": "Passen Sie das Aussehen Ihrer Anleitungen an."
+      },
+      "analytics": {
+        "description": "Zeigen Sie die Leistungsmetriken Ihrer Anleitungen an und analysieren Sie diese."
+      },
+      "teamAndMembers": {
+        "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen."
+      },
+      "settings": {
+        "description": "Konfigurieren Sie Ihre Anwendungseinstellungen."
+      },
+      "support": {
+        "description": "Erhalten Sie Hilfe und Unterstützung für Ihre Fragen."
+      },
+      "feedback": {
+        "description": "Teilen Sie uns Ihr Feedback und Ihre Vorschläge mit."
+      }
+    },
     "user": {
       "myProfile": "Mein Profil",
       "billing": "Abrechnung",

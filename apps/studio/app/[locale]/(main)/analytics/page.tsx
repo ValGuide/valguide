@@ -12,14 +12,13 @@ export default async function AnalyticsPage({ params }: PageParamsWithLocale) {
   const locale = (await params).locale
   setRequestLocale(locale)
 
-  const t = await getTranslations({ locale, namespace: 'comingSoon' })
+  const t = await getTranslations({ locale, namespace: 'sidebar' })
   return (
     <main className="min-h-svh flex flex-col flex-1 items-center justify-center px-8">
       <article className="max-w-2xl items-center flex flex-col gap-4 text-center">
-        <h1 className="text-6xl font-bold">{t('title')}</h1>
-        <p>{t('description')}</p>
+        <h1 className="text-6xl font-bold">{t('nav.analytics')}</h1>
+        <p>{t('pages.analytics.description')}</p>
       </article>
     </main>
   )
 }
-
