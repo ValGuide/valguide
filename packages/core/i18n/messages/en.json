@@ -89,5 +89,25 @@
         "advanced": "Advanced"
       }
     }
+  },
+  "sidebar": {
+    "nav": {
+      "guides": "Guides",
+      "design": "Design",
+      "analytics": "Analytics",
+      "teamAndMembers": "Team & Members",
+      "settings": "Settings"
+    },
+    "user": {
+      "myProfile": "My Profile",
+      "billing": "Billing",
+      "notifications": "Notifications",
+      "logout": "Log out",
+      "upgradeToPro": "Upgrade to Pro"
+    },
+    "team": {
+      "teams": "Teams",
+      "addTeam": "Add team"
+    }
   }
 }

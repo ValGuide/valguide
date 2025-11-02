@@ -1,16 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import {
-  AudioWaveform,
-  BarChart3,
-  Command,
-  GalleryVerticalEnd,
-  Home,
-  Palette,
-  Settings2,
-  Users,
-} from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { AudioWaveform, BarChart3, Command, GalleryVerticalEnd, Map, Palette, Settings2, Users } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
 import { NavUser } from '@/components/nav-user'
@@ -41,44 +33,47 @@ const data = {
       plan: 'Free',
     },
   ],
-  navMain: [
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const t = useTranslations('sidebar.nav')
+
+  const navMain = [
     {
-      title: 'Guides',
+      title: t('guides'),
       url: '#',
-      icon: Home,
+      icon: Map,
       isActive: true,
     },
     {
-      title: 'Design',
+      title: t('design'),
       url: '#',
       icon: Palette,
     },
     {
-      title: 'Analytics',
+      title: t('analytics'),
       url: '#',
       icon: BarChart3,
     },
     {
-      title: 'Team & Members',
+      title: t('teamAndMembers'),
       url: '#',
       icon: Users,
     },
     {
-      title: 'Settings',
+      title: t('settings'),
       url: '#',
       icon: Settings2,
     },
-  ],
-}
+  ]
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

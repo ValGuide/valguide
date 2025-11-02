@@ -11,7 +11,7 @@ import nextIntl from './next-intl'
 const locales: Record<SupportedLocale, String> = {
   en: 'English 🇺🇸',
   de: 'Deutsch 🇩🇪',
-  rm: 'Romansh ',
+  rm: 'Romontsch 🇨🇭',
 }
 
 const preview: Preview = {

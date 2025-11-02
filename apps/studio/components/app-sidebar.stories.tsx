@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { NextIntlClientProvider } from 'next-intl'
 import { AppSidebar } from './app-sidebar'
 import { SidebarProvider } from '@valguide/ui/components/sidebar'
+
+// Import messages for the story
+import enMessages from '@valguide/i18n/messages/en.json'
+import deMessages from '@valguide/i18n/messages/de.json'
+import rmMessages from '@valguide/i18n/messages/rm.json'
 
 const meta: Meta<typeof AppSidebar> = {
   title: 'Studio/Dashboard/Sidebar',
@@ -9,18 +15,24 @@ const meta: Meta<typeof AppSidebar> = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'The main dashboard sidebar with top-level navigation for Guides, Analytics, Team & Members, Settings, Team Switcher, My Profile, and Logout.',
+        component:
+          'The main dashboard sidebar with top-level navigation for Guides, Analytics, Team & Members, Settings, Team Switcher, My Profile, and Logout. Fully internationalized with support for multiple languages.',
       },
     },
   },
   decorators: [
-    (Story) => (
-      <SidebarProvider>
-        <div className="flex h-screen">
-          <Story />
-        </div>
-      </SidebarProvider>
-    ),
+    (Story, { globals: { locale } }) => {
+      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
+      return (
+        <NextIntlClientProvider locale={locale || 'en'} messages={messages} timeZone="Europe/Zurich">
+          <SidebarProvider>
+            <div className="flex h-screen">
+              <Story />
+            </div>
+          </SidebarProvider>
+        </NextIntlClientProvider>
+      )
+    },
   ],
 }
 
@@ -33,7 +45,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Default sidebar with top-level navigation items: Guides (home), Analytics, Team & Members, Settings, Team Switcher in header, and user menu with My Profile and Logout in footer.',
+        story:
+          'Default sidebar with top-level navigation items: Guides (home), Analytics, Team & Members, Settings, Team Switcher in header, and user menu with My Profile and Logout in footer.',
       },
     },
   },
@@ -42,13 +55,18 @@ export const Default: Story = {
 export const Expanded: Story = {
   args: {},
   decorators: [
-    (Story) => (
-      <SidebarProvider defaultOpen={true}>
-        <div className="flex h-screen">
-          <Story />
-        </div>
-      </SidebarProvider>
-    ),
+    (Story, { globals: { locale } }) => {
+      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
+      return (
+        <NextIntlClientProvider locale={locale || 'en'} messages={messages} timeZone="Europe/Zurich">
+          <SidebarProvider defaultOpen={true}>
+            <div className="flex h-screen">
+              <Story />
+            </div>
+          </SidebarProvider>
+        </NextIntlClientProvider>
+      )
+    },
   ],
   parameters: {
     docs: {
@@ -62,13 +80,18 @@ export const Expanded: Story = {
 export const Collapsed: Story = {
   args: {},
   decorators: [
-    (Story) => (
-      <SidebarProvider defaultOpen={false}>
-        <div className="flex h-screen">
-          <Story />
-        </div>
-      </SidebarProvider>
-    ),
+    (Story, { globals: { locale } }) => {
+      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
+      return (
+        <NextIntlClientProvider locale={locale || 'en'} messages={messages} timeZone="Europe/Zurich">
+          <SidebarProvider defaultOpen={false}>
+            <div className="flex h-screen">
+              <Story />
+            </div>
+          </SidebarProvider>
+        </NextIntlClientProvider>
+      )
+    },
   ],
   parameters: {
     docs: {

@@ -89,5 +89,25 @@
         "advanced": "Avanzà"
       }
     }
+  },
+  "sidebar": {
+    "nav": {
+      "guides": "Guids",
+      "design": "Design",
+      "analytics": "Analytics",
+      "teamAndMembers": "Team & Commembers",
+      "settings": "Parameters"
+    },
+    "user": {
+      "myProfile": "Mes profil",
+      "billing": "Facturaziun",
+      "notifications": "Notificaziuns",
+      "logout": "S'annunziar ora",
+      "upgradeToPro": "Actualisar a Pro"
+    },
+    "team": {
+      "teams": "Teams",
+      "addTeam": "Agiuntar team"
+    }
   }
 }

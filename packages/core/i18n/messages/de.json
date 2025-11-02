@@ -89,5 +89,25 @@
         "advanced": "Experte"
       }
     }
+  },
+  "sidebar": {
+    "nav": {
+      "guides": "Guides",
+      "design": "Design",
+      "analytics": "Analytics",
+      "teamAndMembers": "Team & Mitglieder",
+      "settings": "Einstellungen"
+    },
+    "user": {
+      "myProfile": "Mein Profil",
+      "billing": "Abrechnung",
+      "notifications": "Benachrichtigungen",
+      "logout": "Abmelden",
+      "upgradeToPro": "Auf Pro upgraden"
+    },
+    "team": {
+      "teams": "Teams",
+      "addTeam": "Team hinzufügen"
+    }
   }
 }
