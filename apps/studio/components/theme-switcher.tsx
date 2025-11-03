@@ -41,16 +41,16 @@ export function ThemeSwitcher() {
       onClick={toggleTheme}
       aria-label={t('toggleTheme')}
     >
-      <Sun
+      <Moon
         className="h-[1.2rem] w-[1.2rem] transition-all duration-500 ease-in-out"
         style={{
-          transform: isDark ? 'rotate(-90deg) scale(0)' : 'rotate(0deg) scale(1)',
+          transform: isDark ? 'rotate(90deg) scale(0)' : 'rotate(0deg) scale(1)',
         }}
       />
-      <Moon
+      <Sun
         className="absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ease-in-out"
         style={{
-          transform: isDark ? 'rotate(0deg) scale(1)' : 'rotate(90deg) scale(0)',
+          transform: isDark ? 'rotate(0deg) scale(1)' : 'rotate(-90deg) scale(0)',
         }}
       />
       <span className="sr-only">{t('toggleTheme')}</span>
