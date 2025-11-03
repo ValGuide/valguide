@@ -5,7 +5,7 @@ export const proxy = supabaseMiddlewareFn({
     type: 'protected',
     localized: true,
   },
-  defaultNextUrl: '/guides',
+  defaultNextUrl: '/',
 })
 
 // Read more: https://next-auth.js.org/tutorials/securing-pages-and-api-routes
