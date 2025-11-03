@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import * as React from 'react'
 import { Upload, X, FileIcon, CheckCircle2 } from 'lucide-react'
@@ -31,28 +31,28 @@ interface UploadedFile {
   file: File
   preview: string
   progress: number
-  status: "pending" | "uploading" | "complete" | "error"
+  status: 'pending' | 'uploading' | 'complete' | 'error'
   error?: string
 }
 
 const defaultTranslations = {
-  dragAndDrop: "Drag and drop files here",
-  orClickToBrowse: "or click to browse",
-  dropFilesHere: "Drop files here",
-  maxFileSize: "Max file size",
-  upTo: "Up to",
-  files: "files",
-  filesSelected: "selected",
-  clearAll: "Clear all",
-  complete: "Complete",
-  fileSizeExceeds: "File size exceeds",
-  limit: "limit",
-  fileTypeNotAccepted: "File type not accepted",
+  dragAndDrop: 'Drag and drop files here',
+  orClickToBrowse: 'or click to browse',
+  dropFilesHere: 'Drop files here',
+  maxFileSize: 'Max file size',
+  upTo: 'Up to',
+  files: 'files',
+  filesSelected: 'selected',
+  clearAll: 'Clear all',
+  complete: 'Complete',
+  fileSizeExceeds: 'File size exceeds',
+  limit: 'limit',
+  fileTypeNotAccepted: 'File type not accepted',
 }
 
 export function FileDropzone({
   onFilesSelected,
-  acceptedFileTypes = ["*"],
+  acceptedFileTypes = ['*'],
   maxFileSize = 5 * 1024 * 1024, // 5MB default
   maxFiles = 10,
   className,
@@ -72,13 +72,13 @@ export function FileDropzone({
         return `${t.fileSizeExceeds} ${(maxFileSize / 1024 / 1024).toFixed(2)}MB ${t.limit}`
       }
 
-      if (acceptedFileTypes[0] !== "*") {
+      if (acceptedFileTypes[0] !== '*') {
         const isAccepted = acceptedFileTypes.some((type) => {
-          if (type.endsWith("/*")) {
-            const mimePrefix = type.split("/")[0]
+          if (type.endsWith('/*')) {
+            const mimePrefix = type.split('/')[0]
             return mimePrefix ? file.type.startsWith(mimePrefix) : false
           }
-          if (type.startsWith(".")) {
+          if (type.startsWith('.')) {
             return file.name.endsWith(type)
           }
           return file.type === type
@@ -108,9 +108,9 @@ export function FileDropzone({
         if (error) {
           newFiles.push({
             file,
-            preview: "",
+            preview: '',
             progress: 0,
-            status: "error",
+            status: 'error',
             error,
           })
         } else {
@@ -118,14 +118,14 @@ export function FileDropzone({
             file,
             preview: URL.createObjectURL(file),
             progress: 0,
-            status: "pending",
+            status: 'pending',
           })
         }
       }
 
       setUploadedFiles((prev) => [...prev, ...newFiles])
 
-      const validFiles = newFiles.filter((f) => f.status !== "error").map((f) => f.file)
+      const validFiles = newFiles.filter((f) => f.status !== 'error').map((f) => f.file)
 
       if (validFiles.length > 0) {
         onFilesSelected?.(validFiles)
@@ -139,7 +139,7 @@ export function FileDropzone({
       e.preventDefault()
       e.stopPropagation()
       if (!disabled) {
-        setIsDragActive(e.type === "dragenter" || e.type === "dragover")
+        setIsDragActive(e.type === 'dragenter' || e.type === 'dragover')
       }
     },
     [disabled],
@@ -164,7 +164,7 @@ export function FileDropzone({
       const files = Array.from(e.currentTarget.files || [])
       processFiles(files)
       // Reset input value so the same file can be selected again
-      e.currentTarget.value = ""
+      e.currentTarget.value = ''
     },
     [processFiles],
   )
@@ -189,10 +189,10 @@ export function FileDropzone({
   }, [uploadedFiles])
 
   const getFileIcon = React.useCallback((file: File) => {
-    if (file.type.startsWith("image/")) {
-      return "image"
+    if (file.type.startsWith('image/')) {
+      return 'image'
     }
-    return "document"
+    return 'document'
   }, [])
 
   // Cleanup on unmount
@@ -207,7 +207,7 @@ export function FileDropzone({
   }, [])
 
   return (
-    <div className={cn("w-full space-y-6", className)}>
+    <div className={cn('w-full space-y-6', className)}>
       {/* Dropzone Area */}
       <div
         onDragEnter={handleDrag}
@@ -217,19 +217,17 @@ export function FileDropzone({
         onMouseEnter={() => !disabled && setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className={cn(
-          "relative rounded-lg border-2 border-dashed transition-colors duration-200 p-8 md:p-12 text-center",
-          !disabled && "cursor-pointer",
-          disabled && "opacity-50 cursor-not-allowed",
-          (isDragActive || isHovered) && !disabled
-            ? "border-primary bg-accent"
-            : "border-border bg-background",
+          'relative rounded-lg border-2 border-dashed transition-colors duration-200 p-8 md:p-12 text-center',
+          !disabled && 'cursor-pointer',
+          disabled && 'opacity-50 cursor-not-allowed',
+          (isDragActive || isHovered) && !disabled ? 'border-primary bg-accent' : 'border-border bg-background',
         )}
         onClick={() => !disabled && fileInputRef.current?.click()}
         role="button"
         tabIndex={disabled ? -1 : 0}
         aria-disabled={disabled}
         onKeyDown={(e) => {
-          if (!disabled && (e.key === "Enter" || e.key === " ")) {
+          if (!disabled && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault()
             fileInputRef.current?.click()
           }
@@ -240,7 +238,7 @@ export function FileDropzone({
           type="file"
           multiple={maxFiles > 1}
           onChange={handleChange}
-          accept={acceptedFileTypes.join(",")}
+          accept={acceptedFileTypes.join(',')}
           className="hidden"
           aria-label="File upload input"
           disabled={disabled}
@@ -249,17 +247,13 @@ export function FileDropzone({
         <div className="flex flex-col items-center gap-3">
           <Upload
             className={cn(
-              "w-10 h-10 transition-colors duration-200",
-              (isDragActive || isHovered) && !disabled
-                ? "text-primary"
-                : "text-muted-foreground",
+              'w-10 h-10 transition-colors duration-200',
+              (isDragActive || isHovered) && !disabled ? 'text-primary' : 'text-muted-foreground',
             )}
           />
 
           <div>
-            <p className="text-lg font-semibold text-foreground">
-              {isDragActive ? t.dropFilesHere : t.dragAndDrop}
-            </p>
+            <p className="text-lg font-semibold text-foreground">{isDragActive ? t.dropFilesHere : t.dragAndDrop}</p>
             <p className="text-sm text-muted-foreground mt-1">{t.orClickToBrowse}</p>
           </div>
 
@@ -295,11 +289,11 @@ export function FileDropzone({
               >
                 {/* File Preview/Icon */}
                 <div className="flex-shrink-0">
-                  {uploadedFile.status === "error" ? (
+                  {uploadedFile.status === 'error' ? (
                     <div className="w-10 h-10 rounded bg-destructive/10 flex items-center justify-center">
                       <FileIcon className="w-5 h-5 text-destructive" />
                     </div>
-                  ) : getFileIcon(uploadedFile.file) === "image" ? (
+                  ) : getFileIcon(uploadedFile.file) === 'image' ? (
                     <img
                       src={uploadedFile.preview}
                       alt={uploadedFile.file.name}
@@ -314,23 +308,19 @@ export function FileDropzone({
 
                 {/* File Details */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {uploadedFile.file.name}
-                  </p>
+                  <p className="text-sm font-medium text-foreground truncate">{uploadedFile.file.name}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <p className="text-xs text-muted-foreground">
-                      {(uploadedFile.file.size / 1024).toFixed(1)}KB
-                    </p>
-                    {uploadedFile.status === "error" && uploadedFile.error && (
+                    <p className="text-xs text-muted-foreground">{(uploadedFile.file.size / 1024).toFixed(1)}KB</p>
+                    {uploadedFile.status === 'error' && uploadedFile.error && (
                       <p className="text-xs text-destructive">{uploadedFile.error}</p>
                     )}
-                    {uploadedFile.status === "complete" && (
+                    {uploadedFile.status === 'complete' && (
                       <p className="text-xs text-green-600 dark:text-green-400">{t.complete}</p>
                     )}
                   </div>
 
                   {/* Progress Bar */}
-                  {uploadedFile.status === "uploading" && (
+                  {uploadedFile.status === 'uploading' && (
                     <div className="w-full h-1 bg-muted rounded-full mt-2 overflow-hidden">
                       <div
                         className="h-full bg-primary transition-all duration-300"
@@ -342,9 +332,9 @@ export function FileDropzone({
 
                 {/* Status Icon */}
                 <div className="flex-shrink-0">
-                  {uploadedFile.status === "complete" ? (
+                  {uploadedFile.status === 'complete' ? (
                     <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  ) : uploadedFile.status === "error" ? (
+                  ) : uploadedFile.status === 'error' ? (
                     <X className="w-5 h-5 text-destructive" />
                   ) : null}
                 </div>

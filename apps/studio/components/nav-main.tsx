@@ -2,12 +2,7 @@
 
 import { type LucideIcon } from 'lucide-react'
 
-import {
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from '@valguide/ui/components/sidebar'
+import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@valguide/ui/components/sidebar'
 import Link from 'next/link'
 
 export function NavMain({

@@ -6,12 +6,7 @@ import Link from 'next/link'
 
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldDescription,
-} from '@valguide/ui/components/field'
+import { Field, FieldGroup, FieldLabel, FieldDescription } from '@valguide/ui/components/field'
 
 export interface AuthFormProps {
   /**
@@ -109,11 +104,7 @@ export function AuthForm({
               }}
               required
             />
-            {error && (
-              <FieldDescription className="text-destructive">
-                {error}
-              </FieldDescription>
-            )}
+            {error && <FieldDescription className="text-destructive">{error}</FieldDescription>}
           </Field>
 
           <Field>
