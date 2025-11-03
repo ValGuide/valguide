@@ -4,7 +4,7 @@ import { FileDropzone } from './file-dropzone'
 import { themes } from '@valguide/ui/theme/themes'
 
 const meta: Meta<typeof FileDropzone> = {
-  title: 'Inputs/FileDropzone',
+  title: 'Common/Inputs/FileDropzone',
   component: FileDropzone,
   parameters: {
     layout: 'padded',
