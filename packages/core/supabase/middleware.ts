@@ -69,12 +69,16 @@ export const supabaseMiddlewareFn = (options?: {
       pathname.startsWith('/login')
     ) {
       // Do not run code between createServerClient and
-      // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+      // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
       // issues with users being randomly logged out.
-      // IMPORTANT: DO NOT REMOVE auth.getUser()
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      // IMPORTANT: DO NOT REMOVE auth.getClaims()
+      const { data } = await supabase.auth.getClaims()
+      const user = data?.claims
+
+
+      // TODO: remove after tested
+      console.info('JWT header', data?.header)
+      console.info('JWT claims', user)
 
       if (config?.type == 'internal' && (!user?.email || !internalUsers.includes(user.email))) {
         const notFound = new URL(`/${locale}/404`, req.url)
