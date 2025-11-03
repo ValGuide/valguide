@@ -1,6 +1,6 @@
 "use client"
 
-import { FileDropzone } from '@valguide/ui/inputs/file-upload/file-dropzone'
+import { FileDropzone } from '@valguide/ui/components/file-upload/file-dropzone'
 import { useTranslations } from 'next-intl'
 
 export function FileDropzoneWithI18n() {
