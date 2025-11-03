@@ -1,7 +1,33 @@
 {
-  "metadata": {
-    "title": "Demo",
-    "description": "Deine ultimative Plattform zum Gestalten fesselnder, multimedialer Guides – für jeden Zweck, jederzeit."
+  "admin": {
+    "metadata": {
+      "title": "Admin - ValGuide",
+      "description": "Verwalte die ValGuide-Plattform"
+    }
+  },
+  "studio": {
+    "metadata": {
+      "title": "Studio - ValGuide",
+      "description": "Erstelle und gestalte deine Guides"
+    }
+  },
+  "app": {
+    "metadata": {
+      "title": "ValGuide",
+      "description": "Entdecke interaktive Guides"
+    }
+  },
+  "links": {
+    "metadata": {
+      "title": "Links - ValGuide",
+      "description": "Verwalte deine Guide-Links"
+    }
+  },
+  "www": {
+    "metadata": {
+      "title": "ValGuide",
+      "description": "Erstelle ansprechende Multimedia-Guides"
+    }
   },
   "common": {
     "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu."

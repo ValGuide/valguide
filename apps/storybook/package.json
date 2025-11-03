@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@valguide/core": "workspace:*",
-    "@valguide/site": "workspace:*",
+    "@valguide/www": "workspace:*",
     "@valguide/studio": "workspace:*",
-    "@valguide/visit": "workspace:*",
+    "@valguide/app": "workspace:*",
     "next": "15.5.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

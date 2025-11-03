@@ -1,7 +1,33 @@
 {
-  "metadata": {
-    "title": "Demo",
-    "description": "Tia plattafurma cumpletta per crear guids multimedials ed interactivas per mintga intent."
+  "admin": {
+    "metadata": {
+      "title": "Admin - ValGuide",
+      "description": "Administrescha la plattafurma ValGuide"
+    }
+  },
+  "studio": {
+    "metadata": {
+      "title": "Studio - ValGuide",
+      "description": "Creescha e designescha tes guids"
+    }
+  },
+  "app": {
+    "metadata": {
+      "title": "ValGuide",
+      "description": "Scuvra guids interactivas"
+    }
+  },
+  "links": {
+    "metadata": {
+      "title": "Links - ValGuide",
+      "description": "Administrescha tes links da guids"
+    }
+  },
+  "www": {
+    "metadata": {
+      "title": "ValGuide",
+      "description": "Creescha guids multimedials interactivas"
+    }
   },
   "common": {
     "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>."

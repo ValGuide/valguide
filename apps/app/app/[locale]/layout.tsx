@@ -28,7 +28,7 @@ export const generateStaticParams = () => i18nStaticParams
 
 export const generateMetadata = async (props: PageParamsWithLocale): Promise<Metadata> => {
   const { locale } = await props.params
-  const t = await getTranslations({ locale, namespace: 'metadata' })
+  const t = await getTranslations({ locale, namespace: 'app.metadata' })
   return {
     title: t('title'),
     description: t('description'),
