@@ -163,6 +163,8 @@
   },
   "theme": {
     "toggleTheme": "Toggle theme",
+    "switchToDark": "Dark mode",
+    "switchToLight": "Light mode",
     "light": "Light",
     "dark": "Dark",
     "system": "System"

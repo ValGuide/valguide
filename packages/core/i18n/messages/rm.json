@@ -163,6 +163,8 @@
   },
   "theme": {
     "toggleTheme": "Midar tema",
+    "switchToDark": "Modus stgir",
+    "switchToLight": "Modus cler",
     "light": "Cler",
     "dark": "Stgir",
     "system": "System"

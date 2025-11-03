@@ -163,6 +163,8 @@
   },
   "theme": {
     "toggleTheme": "Theme wechseln",
+    "switchToDark": "Dunkelmodus",
+    "switchToLight": "Hellmodus",
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System"
