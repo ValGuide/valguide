@@ -72,8 +72,13 @@ export const supabaseMiddlewareFn = (options?: {
       // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
       // issues with users being randomly logged out.
       // IMPORTANT: DO NOT REMOVE auth.getClaims()
+
+      const startTime = Date.now()
+
       const { data } = await supabase.auth.getClaims()
       const user = data?.claims
+
+      console.info(`Finished JWT verification in ${Date.now() - startTime}ms`, data?.header)
 
       if (config?.type == 'internal' && (!user?.email || !internalUsers.includes(user.email))) {
         const notFound = new URL(`/${locale}/404`, req.url)
