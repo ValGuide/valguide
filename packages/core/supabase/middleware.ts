@@ -75,11 +75,6 @@ export const supabaseMiddlewareFn = (options?: {
       const { data } = await supabase.auth.getClaims()
       const user = data?.claims
 
-
-      // TODO: remove after tested
-      console.info('JWT header', data?.header)
-      console.info('JWT claims', user)
-
       if (config?.type == 'internal' && (!user?.email || !internalUsers.includes(user.email))) {
         const notFound = new URL(`/${locale}/404`, req.url)
         return NextResponse.rewrite(notFound)
