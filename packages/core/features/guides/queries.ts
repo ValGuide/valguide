@@ -52,6 +52,20 @@ export async function getAllGuides(db: DB): Promise<GuideWithTranslations[]> {
 }
 
 /**
+ * Get all guides created by a specific user with their translations
+ */
+export async function getGuidesByUserId(db: DB, userId: string): Promise<GuideWithTranslations[]> {
+  const result = await db.query.guide.findMany({
+    where: eq(guide.createdBy, userId),
+    with: {
+      translations: true,
+    },
+  })
+
+  return result
+}
+
+/**
  * Get a guide with only a specific locale translation
  */
 export async function getGuideByIdWithLocale(

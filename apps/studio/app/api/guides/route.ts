@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import { Guide } from '@valguide/features/guides/types'
 import { createClient } from '@valguide/supabase/server'
 import { db } from '@valguide/core/features/db'
-import { createGuide } from '@valguide/core/features/guides/queries'
+import { createGuide, getGuidesByUserId } from '@valguide/core/features/guides/queries'
 import { supportedLocales } from '@valguide/i18n/i18n.config'
 
 export const dynamic = 'force-dynamic'
@@ -12,24 +11,21 @@ export async function GET() {
     // Check authentication
     const supabase = await createClient()
     const {
-      data,
+      data: claimsData,
+      error: claimsError,
     } = await supabase.auth.getClaims()
 
-    if (!data) {
+    if (claimsError || !claimsData?.claims?.sub) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    // TODO: Fetch guides from database
-    // Example with Drizzle ORM:
-    // import { db } from '@valguide/core/features/db'
-    // import { guides } from '@valguide/core/features/schema'
-    // const data = await db.select().from(guides).where(eq(guides.userId, session.user.id))
+    const userId = claimsData.claims.sub
 
-    // For now, return empty array
-    const guides: Guide[] = []
+    // Fetch guides from database
+    const guides = await getGuidesByUserId(db, userId)
 
     return NextResponse.json(guides)
   } catch (error) {
