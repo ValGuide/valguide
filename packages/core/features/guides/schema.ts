@@ -9,7 +9,6 @@ export const guideSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
   tags: z.array(z.string()).optional(),
-  difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
 })
 
 export type Guide = z.infer<typeof guideSchema>

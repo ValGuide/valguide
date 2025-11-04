@@ -108,12 +108,17 @@
       "author": "Autor",
       "created": "Erstellt",
       "updated": "Aktualisiert",
-      "authorInfo": "Autorinformationen",
-      "difficulty": {
-        "beginner": "Anfänger",
-        "intermediate": "Fortgeschritten",
-        "advanced": "Experte"
-      }
+      "authorInfo": "Autorinformationen"
+    }
+  },
+  "guides": {
+    "title": "Guides",
+    "description": "Erstellen und verwalten Sie Ihre Multimedia-Guides",
+    "empty": {
+      "title": "Noch keine Guides",
+      "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",
+      "createButton": "Ihren ersten Guide erstellen",
+      "createNewButton": "Neuen Guide erstellen"
     }
   },
   "sidebar": {

@@ -1,6 +1,8 @@
 import { i18nStaticParams } from '@valguide/i18n/i18n.config'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { setRequestLocale } from 'next-intl/server'
 import { PageParamsWithLocale } from '@valguide/core/utils/types'
+import { GuidesList } from '@/components/guides-list'
+import { Guide } from '@valguide/core/features/guides/schema'
 
 export const dynamic = 'error'
 
@@ -12,13 +14,12 @@ export default async function Page({ params }: PageParamsWithLocale) {
   const locale = (await params).locale
   setRequestLocale(locale)
 
-  const t = await getTranslations({ locale, namespace: 'comingSoon' })
+  // TODO: Fetch guides from database
+  const guides: Guide[] = []
+
   return (
-    <main className="min-h-svh flex flex-col flex-1 items-center justify-center px-8">
-      <article className="max-w-2xl items-center flex flex-col gap-4 text-center">
-        <h1 className="text-6xl font-bold">{t('title')}</h1>
-        <p>{t('description')}</p>
-      </article>
+    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <GuidesList guides={guides} />
     </main>
   )
 }

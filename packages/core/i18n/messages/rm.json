@@ -108,12 +108,17 @@
       "author": "Autur",
       "created": "Creà",
       "updated": "Actualisà",
-      "authorInfo": "Infurmaziuns davart l'autur",
-      "difficulty": {
-        "beginner": "Principiant",
-        "intermediate": "Intermediar",
-        "advanced": "Avanzà"
-      }
+      "authorInfo": "Infurmaziuns davart l'autur"
+    }
+  },
+  "guides": {
+    "title": "Guids",
+    "description": "Crear e administrar voss guids multimedials",
+    "empty": {
+      "title": "Anc nagins guids",
+      "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",
+      "createButton": "Crear voss emprim guid",
+      "createNewButton": "Crear nov guid"
     }
   },
   "sidebar": {
