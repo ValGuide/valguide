@@ -7,7 +7,7 @@ import {
   BarChart3,
   Command,
   GalleryVerticalEnd,
-  Headphones,
+  BookOpen,
   LifeBuoy,
   Palette,
   Send,
@@ -81,7 +81,7 @@ export function AppSidebar({
     {
       title: t('guides'),
       url: '/',
-      icon: Headphones,
+      icon: BookOpen,
     },
     {
       title: t('design'),

@@ -74,24 +74,48 @@ const sampleGuides: Guide[] = [
 export const Empty: Story = {
   args: {
     guides: [],
+    isLoading: false,
+    error: null,
+  },
+}
+
+export const Loading: Story = {
+  args: {
+    guides: [],
+    isLoading: true,
+    error: null,
+  },
+}
+
+export const ErrorState: Story = {
+  args: {
+    guides: [],
+    isLoading: false,
+    error: { message: 'Failed to connect to the database. Please check your connection and try again.' } as Error,
   },
 }
 
 export const WithGuides: Story = {
   args: {
     guides: sampleGuides,
+    isLoading: false,
+    error: null,
   },
 }
 
 export const SingleGuide: Story = {
   args: {
     guides: sampleGuides.slice(0, 1),
+    isLoading: false,
+    error: null,
   },
 }
 
 export const WithCreateHandler: Story = {
   args: {
     guides: [],
+    isLoading: false,
+    error: null,
     onCreateGuide: () => {
       console.log('Create guide clicked!')
       alert('Create guide clicked!')
