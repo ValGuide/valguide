@@ -13,6 +13,7 @@ import Link from 'next/link'
 
 export function NavSecondary({
   items,
+  onItemClickAction,
   ...props
 }: {
   items: {
@@ -21,6 +22,7 @@ export function NavSecondary({
     icon: LucideIcon
     isActive?: boolean
   }[]
+  onItemClickAction?: (url: string) => void
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
@@ -29,7 +31,7 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm" isActive={item.isActive}>
-                <Link href={item.url}>
+                <Link href={item.url} onClick={() => onItemClickAction?.(item.url)}>
                   <item.icon />
                   <span>{item.title}</span>
                 </Link>

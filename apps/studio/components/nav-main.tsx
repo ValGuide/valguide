@@ -7,6 +7,7 @@ import Link from 'next/link'
 
 export function NavMain({
   items,
+  onItemClickAction,
 }: {
   items: {
     title: string
@@ -14,6 +15,7 @@ export function NavMain({
     icon?: LucideIcon
     isActive?: boolean
   }[]
+  onItemClickAction?: (url: string) => void
 }) {
   return (
     <SidebarGroup>
@@ -21,7 +23,7 @@ export function NavMain({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-              <Link href={item.url}>
+              <Link href={item.url} onClick={() => onItemClickAction?.(item.url)}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </Link>

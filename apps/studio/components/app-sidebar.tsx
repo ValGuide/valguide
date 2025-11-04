@@ -57,12 +57,25 @@ export function AppSidebar({
 }) {
   const t = useTranslations('sidebar.nav')
   const pathnameFromRouter = usePathname()
+  const [pendingUrl, setPendingUrl] = React.useState<string | null>(null)
 
   // Use prop if provided (e.g., in Storybook), otherwise use router pathname
   const pathname = pathnameProp ?? pathnameFromRouter ?? '/'
 
   // Remove locale prefix from pathname (e.g., /de/analytics -> /analytics, /de -> /)
   const pathnameWithoutLocale = unlocalizedPathname(pathname)
+
+  // Reset pending URL when pathname changes (navigation completed)
+  React.useEffect(() => {
+    setPendingUrl(null)
+  }, [pathnameWithoutLocale])
+
+  const handleNavClick = (url: string) => {
+    setPendingUrl(url)
+  }
+
+  // Helper to determine if a URL is active
+  const isActive = (url: string) => (pendingUrl !== null ? pendingUrl === url : pathnameWithoutLocale === url)
 
   const navMain = [
     {
@@ -92,23 +105,23 @@ export function AppSidebar({
     },
   ].map((item) => ({
     ...item,
-    isActive: item.url === '' ? pathnameWithoutLocale === '/' : pathnameWithoutLocale === item.url,
+    isActive: isActive(item.url),
   }))
 
   const navSecondary = [
     {
       title: t('support'),
-      url: 'support',
+      url: '/support',
       icon: LifeBuoy,
     },
     {
       title: t('feedback'),
-      url: 'feedback',
+      url: '/feedback',
       icon: Send,
     },
   ].map((item) => ({
     ...item,
-    isActive: pathnameWithoutLocale === `/${item.url}`,
+    isActive: isActive(item.url),
   }))
 
   return (
@@ -117,8 +130,8 @@ export function AppSidebar({
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
-        <NavSecondary items={navSecondary} className="mt-auto" />
+        <NavMain items={navMain} onItemClickAction={handleNavClick} />
+        <NavSecondary items={navSecondary} className="mt-auto" onItemClickAction={handleNavClick} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
