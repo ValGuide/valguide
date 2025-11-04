@@ -1,5 +1,34 @@
-import { ReactNode } from 'react'
+'use client'
+
+import { ReactNode, useEffect, useState } from 'react'
 import Image from 'next/image'
+
+const QUOTES = [
+  {
+    text: 'Art is not what you see, but what you make others see.',
+    author: 'Edgar Degas',
+  },
+  {
+    text: 'Every artist was first an amateur.',
+    author: 'Ralph Waldo Emerson',
+  },
+  {
+    text: 'Museums are places where we can explore our past and imagine our future.',
+    author: 'Thomas Campbell',
+  },
+  {
+    text: 'A work of art is the unique result of a unique temperament.',
+    author: 'Oscar Wilde',
+  },
+  {
+    text: 'The purpose of art is washing the dust of daily life off our souls.',
+    author: 'Pablo Picasso',
+  },
+  {
+    text: 'Culture is the widening of the mind and of the spirit.',
+    author: 'Jawaharlal Nehru',
+  },
+]
 
 export interface AuthLayoutProps {
   /**
@@ -23,9 +52,26 @@ export interface AuthLayoutProps {
  */
 export function AuthLayout({
   children,
-  imageUrl = 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-  imageAlt = 'Authentication background',
+  imageUrl = 'https://images.unsplash.com/photo-1554907984-15263bfd63bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+  imageAlt = 'Museum visitor exploring art gallery',
 }: AuthLayoutProps) {
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0)
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsVisible(false)
+      setTimeout(() => {
+        setCurrentQuoteIndex((prev) => (prev + 1) % QUOTES.length)
+        setIsVisible(true)
+      }, 500) // Wait for fade out before changing quote
+    }, 10000) // Change every 10 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const currentQuote = QUOTES[currentQuoteIndex]
+
   return (
     <main className="min-h-svh flex flex-row">
       {/* Left side - Content */}
@@ -37,6 +83,26 @@ export function AuthLayout({
       <div className="hidden lg:block lg:w-1/2 bg-gray-100">
         <div className="h-full w-full relative">
           <Image src={imageUrl} alt={imageAlt} fill style={{ objectFit: 'cover' }} />
+
+          {/* Quote Overlay */}
+          {currentQuote && (
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-12">
+              <div
+                className={`text-center max-w-4xl transition-opacity duration-500 ${
+                  isVisible ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <blockquote className="text-white">
+                  <p className="text-4xl lg:text-5xl font-serif italic mb-6 leading-relaxed drop-shadow-lg">
+                    "{currentQuote.text}"
+                  </p>
+                  <footer className="text-2xl text-white/95 font-medium drop-shadow-md">
+                    — {currentQuote.author}
+                  </footer>
+                </blockquote>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </main>
