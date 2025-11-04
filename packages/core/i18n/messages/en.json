@@ -118,7 +118,14 @@
       "title": "No guides yet",
       "description": "Create engaging multimedia guides with text, images, audio, and video content for your museum or educational institution.",
       "createButton": "Create your first guide",
-      "createNewButton": "Create new guide"
+      "createNewButton": "Create new guide",
+      "creating": "Creating..."
+    },
+    "create": {
+      "success": "Guide created",
+      "successDescription": "Your new guide has been created successfully",
+      "error": "Failed to create guide",
+      "errorDescription": "An error occurred while creating the guide. Please try again."
     }
   },
   "sidebar": {

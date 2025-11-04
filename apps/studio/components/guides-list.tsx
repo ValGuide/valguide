@@ -15,22 +15,72 @@ import {
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Guide } from '@valguide/features/guides/types'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
+import { useToast } from '@valguide/ui/hooks/use-toast'
 
 interface GuidesListProps {
   guides?: Guide[]
   isLoading?: boolean
   error?: Error | null
-  onCreateGuide?: () => void
+  onCreateGuide?: (data: {
+    translations: Array<{ locale: string; title: string; description?: string }>
+    organizationId?: string
+    coverImage?: string
+  }) => Promise<Guide>
 }
 
 export function GuidesList({ guides = [], isLoading = false, error = null, onCreateGuide }: GuidesListProps) {
   const t = useTranslations('guides')
+  const { toast } = useToast()
+  const [isCreating, setIsCreating] = React.useState(false)
 
-  const handleCreateGuide = React.useCallback(() => {
-    onCreateGuide?.()
-    // TODO: Navigate to guide creation page or open modal
-    console.log('Create guide clicked')
-  }, [onCreateGuide])
+  const handleCreateGuide = React.useCallback(async () => {
+    if (!onCreateGuide) {
+      console.error('onCreateGuide handler not provided')
+      return
+    }
+
+    try {
+      setIsCreating(true)
+
+      // Create a new guide with default translations in all supported languages
+      const newGuide = await onCreateGuide({
+        translations: [
+          {
+            locale: 'en',
+            title: 'New Guide',
+            description: 'Start creating your guide content',
+          },
+          {
+            locale: 'de',
+            title: 'Neuer Führer',
+            description: 'Beginnen Sie mit der Erstellung Ihres Guide-Inhalts',
+          },
+          {
+            locale: 'rm',
+            title: 'Nova Guida',
+            description: 'Cumenzai a crear il cuntegn da tia guida',
+          },
+        ],
+      })
+
+      toast({
+        title: t('create.success'),
+        description: t('create.successDescription'),
+      })
+
+      // TODO: Navigate to guide editor
+      console.log('Guide created:', newGuide.id)
+    } catch (err) {
+      console.error('Failed to create guide:', err)
+      toast({
+        title: t('create.error'),
+        description: err instanceof Error ? err.message : t('create.errorDescription'),
+        variant: 'destructive',
+      })
+    } finally {
+      setIsCreating(false)
+    }
+  }, [onCreateGuide, t, toast])
 
   // Loading state
   if (isLoading) {
@@ -89,9 +139,9 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
           <EmptyDescription>{t('empty.description')}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button onClick={handleCreateGuide} size="lg">
+          <Button onClick={handleCreateGuide} size="lg" disabled={isCreating}>
             <Plus />
-            {t('empty.createButton')}
+            {isCreating ? t('empty.creating') : t('empty.createButton')}
           </Button>
         </EmptyContent>
       </Empty>
@@ -106,9 +156,9 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
           <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
           <p className="text-muted-foreground">{t('description')}</p>
         </div>
-        <Button onClick={handleCreateGuide}>
+        <Button onClick={handleCreateGuide} disabled={isCreating}>
           <Plus />
-          {t('empty.createNewButton')}
+          {isCreating ? t('empty.creating') : t('empty.createNewButton')}
         </Button>
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
