@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { Plus, BookOpen, AlertCircle } from 'lucide-react'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -31,7 +32,14 @@ interface GuidesListProps {
 export function GuidesList({ guides = [], isLoading = false, error = null, onCreateGuide }: GuidesListProps) {
   const t = useTranslations('guides')
   const { toast } = useToast()
+  const router = useRouter()
   const [isCreating, setIsCreating] = React.useState(false)
+
+  const handleViewGuide = React.useCallback((guide: Guide) => {
+    if (guide.nanoId) {
+      router.push(`/guides/${guide.nanoId}`)
+    }
+  }, [router])
 
   const handleCreateGuide = React.useCallback(async () => {
     if (!onCreateGuide) {
@@ -68,8 +76,10 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
         description: t('create.successDescription'),
       })
 
-      // TODO: Navigate to guide editor
-      console.log('Guide created:', newGuide.id)
+      // Navigate to guide editor
+      if (newGuide.nanoId) {
+        router.push(`/guides/${newGuide.nanoId}`)
+      }
     } catch (err) {
       console.error('Failed to create guide:', err)
       toast({
@@ -80,7 +90,7 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
     } finally {
       setIsCreating(false)
     }
-  }, [onCreateGuide, t, toast])
+  }, [onCreateGuide, t, toast, router])
 
   // Loading state
   if (isLoading) {
@@ -93,7 +103,7 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
           </div>
           <Skeleton className="h-9 w-40" />
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="space-y-3">
               <Skeleton className="h-48 w-full rounded-xl" />
@@ -161,9 +171,9 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
           {isCreating ? t('empty.creating') : t('empty.createNewButton')}
         </Button>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2">
         {guides.map((guide) => (
-          <GuidePreviewCard key={guide.id} guide={guide} />
+          <GuidePreviewCard key={guide.id} guide={guide} onViewDetails={handleViewGuide} />
         ))}
       </div>
     </div>

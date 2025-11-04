@@ -114,6 +114,7 @@
   "guides": {
     "title": "Guides",
     "description": "Erstellen und verwalten Sie Ihre Multimedia-Guides",
+    "backToGuides": "Zurück zu Guides",
     "empty": {
       "title": "Noch keine Guides",
       "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",

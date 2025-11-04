@@ -114,6 +114,7 @@
   "guides": {
     "title": "Guids",
     "description": "Crear e administrar voss guids multimedials",
+    "backToGuides": "Anavos als guids",
     "empty": {
       "title": "Anc nagins guids",
       "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",

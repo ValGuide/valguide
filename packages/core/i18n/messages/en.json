@@ -114,6 +114,7 @@
   "guides": {
     "title": "Guides",
     "description": "Create and manage your multimedia guides",
+    "backToGuides": "Back to guides",
     "empty": {
       "title": "No guides yet",
       "description": "Create engaging multimedia guides with text, images, audio, and video content for your museum or educational institution.",

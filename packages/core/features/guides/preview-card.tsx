@@ -30,25 +30,30 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
     onViewDetails?.(guide)
   }, [guide, onViewDetails])
 
-  const formatDate = (date?: Date) => {
+  const formatDate = (date?: Date | string) => {
     if (!date) return ''
-    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(date)
+    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(date))
   }
+
+  // Get the title from translations if available, fallback to title prop
+  const displayTitle = guide.translations?.[0]?.title || guide.title || 'Untitled Guide'
+  const displayDescription = guide.translations?.[0]?.description || guide.description || ''
+  const displayImage = guide.coverImage || guide.imageUrl
 
   return (
     <Card className={cn('overflow-hidden transition-all hover:shadow-md', className)} {...props}>
-      {guide.imageUrl && (
+      {displayImage && (
         <div className="relative h-48 w-full overflow-hidden">
           <img
-            src={guide.imageUrl}
-            alt={guide.title}
+            src={displayImage}
+            alt={displayTitle}
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
           />
         </div>
       )}
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>{guide.title}</span>
+          <span>{displayTitle}</span>
           {guide.author && (
             <TooltipProvider>
               <Tooltip>
@@ -72,7 +77,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
             </TooltipProvider>
           )}
         </CardTitle>
-        {guide.description && <CardDescription>{guide.description}</CardDescription>}
+        {displayDescription && <CardDescription>{displayDescription}</CardDescription>}
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
