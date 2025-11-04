@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Guide } from '@valguide/core/features/guides/schema'
+import { Guide } from '@valguide/features/guides/types'
 
 interface UseGuidesReturn {
   guides: Guide[]

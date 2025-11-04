@@ -15,7 +15,7 @@ import { cn } from '@valguide/core/ui/lib/utils'
 import { Button } from '@valguide/core/ui/components/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 
-import { Guide } from './schema'
+import { Guide } from './types'
 
 export interface GuidePreviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
   guide: Guide

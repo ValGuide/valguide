@@ -13,7 +13,7 @@ import {
   EmptyContent,
 } from '@valguide/ui/components/empty'
 import { Skeleton } from '@valguide/ui/components/skeleton'
-import { Guide } from '@valguide/core/features/guides/schema'
+import { Guide } from '@valguide/features/guides/types'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
 
 interface GuidesListProps {
