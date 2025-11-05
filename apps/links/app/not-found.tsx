@@ -1,8 +1,8 @@
 import '@valguide/ui/styles/globals.css'
+
+import { Providers } from '@/components/providers'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { defaultLocale, SupportedLocale } from '@valguide/i18n/i18n.config'
-import { getMessages } from '@valguide/i18n/messages'
-import { setRequestLocale } from 'next-intl/server'
 import { getMessages } from '@valguide/i18n/messages'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 
@@ -22,7 +22,6 @@ const fontMono = Geist_Mono({
 export default async function GlobalNotFound() {
   // TODO: localise the global not-found page
   const locale = 'en'
-  setRequestLocale(locale)
   const messages = await getMessages(locale as SupportedLocale)
   return (
     <html lang={defaultLocale} suppressHydrationWarning>
