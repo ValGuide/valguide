@@ -6,7 +6,6 @@ import { defaultLocale, SupportedLocale } from '@valguide/i18n/i18n.config'
 import { getMessages } from '@valguide/i18n/messages'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 
-export const runtime = 'edge'
 
 const fontSans = Geist({
   subsets: ['latin'],

@@ -1,8 +1,9 @@
 import { PageParamsWithLocale } from '@valguide/core/utils/types'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
+import { i18nStaticParams } from '@valguide/i18n/i18n.config'
 
-export const runtime = 'edge'
+export const generateStaticParams = () => i18nStaticParams
 
 export default async function CatchAllPage({ params }: PageParamsWithLocale) {
   const { locale } = await params
