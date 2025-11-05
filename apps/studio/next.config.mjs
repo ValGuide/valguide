@@ -16,6 +16,10 @@ const nextConfig = {
     ],
   },
 
+  typescript: {
+    tsconfigPath: './tsconfig.next.json',
+  },
+
   rewrites() {
     return {
       beforeFiles: [...posthotRewrites],

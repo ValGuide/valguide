@@ -42,6 +42,7 @@ type Story = StoryObj<typeof meta>
 const sampleGuides: Guide[] = [
   {
     id: '1',
+    nanoId: '1',
     title: 'Ancient Egypt Exhibition',
     description:
       'Explore the wonders of Ancient Egypt with interactive audio guides, historical images, and expert narration.',
