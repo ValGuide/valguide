@@ -105,6 +105,7 @@
   "guide": {
     "previewCard": {
       "viewDetails": "Mussar detagls",
+      "loading": "Avrir...",
       "author": "Autur",
       "created": "Creà",
       "updated": "Actualisà",
@@ -126,6 +127,10 @@
       "successDescription": "Voss nov guid è stà creà cun success",
       "error": "Errur cun crear il guid",
       "errorDescription": "In errur è succedì cun crear il guid. Empruvei per plascher aunc inagada."
+    },
+    "loading": {
+      "opening": "Avrir il guid...",
+      "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
     }
   },
   "sidebar": {

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import { LucideInfo } from 'lucide-react'
+import Link from 'next/link'
 
 import {
   Card,
@@ -39,6 +40,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
   const displayTitle = guide.translations?.[0]?.title || guide.title || 'Untitled Guide'
   const displayDescription = guide.translations?.[0]?.description || guide.description || ''
   const displayImage = guide.coverImage || guide.imageUrl
+  const guideUrl = guide.nanoId ? `/guides/${guide.nanoId}` : '#'
 
   return (
     <Card className={cn('overflow-hidden transition-all hover:shadow-md', className)} {...props}>
@@ -89,8 +91,10 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" onClick={handleViewDetails}>
-          {t('viewDetails')}
+        <Button variant="outline" asChild>
+          <Link href={guideUrl} prefetch={true}>
+            {t('viewDetails')}
+          </Link>
         </Button>
         {guide.updatedAt && (
           <span className="text-xs text-muted-foreground">
