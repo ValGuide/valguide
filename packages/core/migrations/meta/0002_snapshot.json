@@ -1,0 +1,281 @@
+{
+  "id": "0002-enable-rls-guides",
+  "prevId": "3d8a55b9-310d-4228-8a14-24a2f948522f",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "studio.guide": {
+      "name": "guide",
+      "schema": "studio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nano_id": {
+          "name": "nano_id",
+          "type": "varchar(21)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_by": {
+          "name": "updated_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "published": {
+          "name": "published",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cover_image": {
+          "name": "cover_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "guide_created_by_users_id_fk": {
+          "name": "guide_created_by_users_id_fk",
+          "tableFrom": "guide",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guide_updated_by_users_id_fk": {
+          "name": "guide_updated_by_users_id_fk",
+          "tableFrom": "guide",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "updated_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "unique_guide_nano_id": {
+          "name": "unique_guide_nano_id",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nano_id"
+          ]
+        }
+      },
+      "policies": {
+        "Users can view their own guides": {
+          "name": "Users can view their own guides",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": ["authenticated"],
+          "using": "(auth.uid() = created_by OR auth.uid() = updated_by)"
+        },
+        "Users can insert their own guides": {
+          "name": "Users can insert their own guides",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": ["authenticated"],
+          "withCheck": "(auth.uid() = created_by AND auth.uid() = updated_by)"
+        },
+        "Users can update their own guides": {
+          "name": "Users can update their own guides",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": ["authenticated"],
+          "using": "(auth.uid() = created_by OR auth.uid() = updated_by)",
+          "withCheck": "(auth.uid() = updated_by)"
+        },
+        "Users can delete their own guides": {
+          "name": "Users can delete their own guides",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": ["authenticated"],
+          "using": "(auth.uid() = created_by)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "studio.guide_translation": {
+      "name": "guide_translation",
+      "schema": "studio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "guide_id": {
+          "name": "guide_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "locale": {
+          "name": "locale",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "unique_guide_translation": {
+          "name": "unique_guide_translation",
+          "columns": [
+            {
+              "expression": "guide_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guide_translation_guide_id_guide_id_fk": {
+          "name": "guide_translation_guide_id_guide_id_fk",
+          "tableFrom": "guide_translation",
+          "tableTo": "guide",
+          "schemaTo": "studio",
+          "columnsFrom": [
+            "guide_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "Users can view translations for their guides": {
+          "name": "Users can view translations for their guides",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": ["authenticated"],
+          "using": "EXISTS (SELECT 1 FROM studio.guide WHERE studio.guide.id = guide_id AND (auth.uid() = studio.guide.created_by OR auth.uid() = studio.guide.updated_by))"
+        },
+        "Users can insert translations for their guides": {
+          "name": "Users can insert translations for their guides",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": ["authenticated"],
+          "withCheck": "EXISTS (SELECT 1 FROM studio.guide WHERE studio.guide.id = guide_id AND (auth.uid() = studio.guide.created_by OR auth.uid() = studio.guide.updated_by))"
+        },
+        "Users can update translations for their guides": {
+          "name": "Users can update translations for their guides",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": ["authenticated"],
+          "using": "EXISTS (SELECT 1 FROM studio.guide WHERE studio.guide.id = guide_id AND (auth.uid() = studio.guide.created_by OR auth.uid() = studio.guide.updated_by))"
+        },
+        "Users can delete translations for their guides": {
+          "name": "Users can delete translations for their guides",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": ["authenticated"],
+          "using": "EXISTS (SELECT 1 FROM studio.guide WHERE studio.guide.id = guide_id AND auth.uid() = studio.guide.created_by)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
+
