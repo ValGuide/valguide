@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
+import Link from 'next/link'
 
 interface GuidePageParams {
   locale: string
@@ -25,12 +26,12 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="space-y-6">
         <div className="space-y-4">
-          <a
+          <Link
             href="/"
             className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             ← {t('backToGuides')}
-          </a>
+          </Link>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
               {guide.translations.find((t) => t.locale === locale)?.title || guide.translations[0]?.title || 'Untitled Guide'}
