@@ -43,7 +43,8 @@ const sampleGuides: Guide[] = [
   {
     id: '1',
     title: 'Ancient Egypt Exhibition',
-    description: 'Explore the wonders of Ancient Egypt with interactive audio guides, historical images, and expert narration.',
+    description:
+      'Explore the wonders of Ancient Egypt with interactive audio guides, historical images, and expert narration.',
     imageUrl: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop',
     author: 'Dr. Sarah Johnson',
     createdAt: new Date('2024-01-15'),
@@ -52,8 +53,10 @@ const sampleGuides: Guide[] = [
   },
   {
     id: '2',
+    nanoId: '2',
     title: 'Modern Art Gallery Tour',
-    description: 'A comprehensive multimedia guide through our modern art collection featuring artist interviews and detailed analysis.',
+    description:
+      'A comprehensive multimedia guide through our modern art collection featuring artist interviews and detailed analysis.',
     imageUrl: 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&h=600&fit=crop',
     author: 'Michael Chen',
     createdAt: new Date('2024-02-01'),
@@ -62,8 +65,10 @@ const sampleGuides: Guide[] = [
   },
   {
     id: '3',
+    nanoId: '3',
     title: 'Natural History: Dinosaurs',
-    description: 'Journey back in time with interactive videos, 3D models, and audio narration about the age of dinosaurs.',
+    description:
+      'Journey back in time with interactive videos, 3D models, and audio narration about the age of dinosaurs.',
     imageUrl: 'https://images.unsplash.com/photo-1581822261290-991b38693d1b?w=800&h=600&fit=crop',
     author: 'Prof. Alex Rivera',
     createdAt: new Date('2024-02-15'),
@@ -116,10 +121,10 @@ export const WithCreateHandler: Story = {
     guides: [],
     isLoading: false,
     error: null,
-    onCreateGuide: () => {
+    onCreateGuide: async () => {
       console.log('Create guide clicked!')
       alert('Create guide clicked!')
+      return {} as Guide
     },
   },
 }
-

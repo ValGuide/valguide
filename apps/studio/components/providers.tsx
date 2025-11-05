@@ -5,6 +5,7 @@ import { PropsWithChildren } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
 import { PropsWithLocale } from '@valguide/core/utils/types'
 import { themes } from '@valguide/ui/theme/themes'
+import { Toaster } from '@valguide/ui/components/sonner'
 
 interface ProvidersProps extends PropsWithLocale {
   messages: Record<string, any>
@@ -22,6 +23,7 @@ export function Providers({ children, locale, messages }: PropsWithChildren<Prov
         themes={[...themes]}
       >
         {children}
+        <Toaster />
       </NextThemesProvider>
     </NextIntlClientProvider>
   )

@@ -16,7 +16,7 @@ import {
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Guide } from '@valguide/features/guides/types'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
-import { useToast } from '@valguide/ui/hooks/use-toast'
+import { toast } from 'sonner'
 
 interface GuidesListProps {
   guides?: Guide[]
@@ -31,7 +31,6 @@ interface GuidesListProps {
 
 export function GuidesList({ guides = [], isLoading = false, error = null, onCreateGuide }: GuidesListProps) {
   const t = useTranslations('guides')
-  const { toast } = useToast()
   const router = useRouter()
   const [isCreating, setIsCreating] = React.useState(false)
 
@@ -60,7 +59,7 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
           },
           {
             locale: 'de',
-            title: 'Neuer Führer',
+            title: 'Neuer Guide',
             description: 'Beginnen Sie mit der Erstellung Ihres Guide-Inhalts',
           },
           {
@@ -71,8 +70,7 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
         ],
       })
 
-      toast({
-        title: t('create.success'),
+      toast.success(t('create.success'), {
         description: t('create.successDescription'),
       })
 
@@ -82,15 +80,13 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
       }
     } catch (err) {
       console.error('Failed to create guide:', err)
-      toast({
-        title: t('create.error'),
+      toast.error(t('create.error'), {
         description: err instanceof Error ? err.message : t('create.errorDescription'),
-        variant: 'destructive',
       })
     } finally {
       setIsCreating(false)
     }
-  }, [onCreateGuide, t, toast, router])
+  }, [onCreateGuide, t, router])
 
   // Loading state
   if (isLoading) {
