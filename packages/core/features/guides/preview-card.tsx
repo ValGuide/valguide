@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { LucideInfo } from 'lucide-react'
 import Link from 'next/link'
 
@@ -26,6 +26,7 @@ export interface GuidePreviewCardProps extends React.HTMLAttributes<HTMLDivEleme
 
 export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: GuidePreviewCardProps) {
   const t = useTranslations('guide.previewCard')
+  const locale = useLocale()
 
   const handleViewDetails = React.useCallback(() => {
     onViewDetails?.(guide)
@@ -36,9 +37,14 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
     return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(date))
   }
 
-  // Get the title from translations if available, fallback to title prop
-  const displayTitle = guide.translations?.[0]?.title || guide.title || 'Untitled Guide'
-  const displayDescription = guide.translations?.[0]?.description || guide.description || ''
+  // Get the translation in the current locale or fall back to the first available translation
+  const translation = React.useMemo(() => {
+    const localeTranslation = guide.translations?.find(t => t.locale === locale)
+    return localeTranslation || guide.translations?.[0]
+  }, [guide.translations, locale])
+
+  const displayTitle = translation?.title || guide.title || 'Untitled Guide'
+  const displayDescription = translation?.description || guide.description || ''
   const displayImage = guide.coverImage || guide.imageUrl
   const guideUrl = guide.nanoId ? `/guides/${guide.nanoId}` : '#'
 
