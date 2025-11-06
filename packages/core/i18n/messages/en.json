@@ -98,6 +98,34 @@
       "placeholder": "Email"
     }
   },
+  "auth": {
+    "quotes": {
+      "quote1": {
+        "text": "Art is not what you see, but what you make others see.",
+        "author": "Edgar Degas"
+      },
+      "quote2": {
+        "text": "Every artist was first an amateur.",
+        "author": "Ralph Waldo Emerson"
+      },
+      "quote3": {
+        "text": "Museums are places where we can explore our past and imagine our future.",
+        "author": "Thomas Campbell"
+      },
+      "quote4": {
+        "text": "A work of art is the unique result of a unique temperament.",
+        "author": "Oscar Wilde"
+      },
+      "quote5": {
+        "text": "The purpose of art is washing the dust of daily life off our souls.",
+        "author": "Pablo Picasso"
+      },
+      "quote6": {
+        "text": "Culture is the widening of the mind and of the spirit.",
+        "author": "Jawaharlal Nehru"
+      }
+    }
+  },
   "notFound": {
     "title": "404 – Lost Your Way?",
     "description": "Looks like this trail doesn't lead anywhere! Let's get you back to where the adventure is."

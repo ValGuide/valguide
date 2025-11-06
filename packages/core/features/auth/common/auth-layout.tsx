@@ -2,33 +2,9 @@
 
 import { ReactNode, useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 
-const QUOTES = [
-  {
-    text: 'Art is not what you see, but what you make others see.',
-    author: 'Edgar Degas',
-  },
-  {
-    text: 'Every artist was first an amateur.',
-    author: 'Ralph Waldo Emerson',
-  },
-  {
-    text: 'Museums are places where we can explore our past and imagine our future.',
-    author: 'Thomas Campbell',
-  },
-  {
-    text: 'A work of art is the unique result of a unique temperament.',
-    author: 'Oscar Wilde',
-  },
-  {
-    text: 'The purpose of art is washing the dust of daily life off our souls.',
-    author: 'Pablo Picasso',
-  },
-  {
-    text: 'Culture is the widening of the mind and of the spirit.',
-    author: 'Jawaharlal Nehru',
-  },
-]
+const QUOTE_KEYS = ['quote1', 'quote2', 'quote3', 'quote4', 'quote5', 'quote6']
 
 export interface AuthLayoutProps {
   /**
@@ -55,6 +31,7 @@ export function AuthLayout({
   imageUrl = 'https://images.unsplash.com/photo-1554907984-15263bfd63bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
   imageAlt = 'Museum visitor exploring art gallery',
 }: AuthLayoutProps) {
+  const t = useTranslations('auth.quotes')
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0)
   const [isVisible, setIsVisible] = useState(true)
 
@@ -62,7 +39,7 @@ export function AuthLayout({
     const interval = setInterval(() => {
       setIsVisible(false)
       setTimeout(() => {
-        setCurrentQuoteIndex((prev) => (prev + 1) % QUOTES.length)
+        setCurrentQuoteIndex((prev) => (prev + 1) % QUOTE_KEYS.length)
         setIsVisible(true)
       }, 500) // Wait for fade out before changing quote
     }, 10000) // Change every 10 seconds
@@ -70,7 +47,11 @@ export function AuthLayout({
     return () => clearInterval(interval)
   }, [])
 
-  const currentQuote = QUOTES[currentQuoteIndex]
+  const currentQuoteKey = QUOTE_KEYS[currentQuoteIndex]
+  const currentQuote = {
+    text: t(`${currentQuoteKey}.text`),
+    author: t(`${currentQuoteKey}.author`),
+  }
 
   return (
     <main className="min-h-svh flex flex-row">

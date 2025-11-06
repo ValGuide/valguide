@@ -98,6 +98,34 @@
       "placeholder": "Email"
     }
   },
+  "auth": {
+    "quotes": {
+      "quote1": {
+        "text": "Kunst ist nicht das, was du siehst, sondern das, was du andere sehen lässt.",
+        "author": "Edgar Degas"
+      },
+      "quote2": {
+        "text": "Jeder Künstler war zuerst ein Amateur.",
+        "author": "Ralph Waldo Emerson"
+      },
+      "quote3": {
+        "text": "Museen sind Orte, an denen wir unsere Vergangenheit erkunden und unsere Zukunft vorstellen können.",
+        "author": "Thomas Campbell"
+      },
+      "quote4": {
+        "text": "Ein Kunstwerk ist das einzigartige Ergebnis eines einzigartigen Temperaments.",
+        "author": "Oscar Wilde"
+      },
+      "quote5": {
+        "text": "Der Zweck der Kunst ist es, den Staub des Alltags von unseren Seelen zu waschen.",
+        "author": "Pablo Picasso"
+      },
+      "quote6": {
+        "text": "Kultur ist die Erweiterung des Geistes und der Seele.",
+        "author": "Jawaharlal Nehru"
+      }
+    }
+  },
   "notFound": {
     "title": "404 – Verirrt?",
     "description": "Sieht so aus, als würde dieser Pfad ins Nichts führen"

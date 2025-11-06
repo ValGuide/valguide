@@ -39,7 +39,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
 
   // Get the translation in the current locale or fall back to the first available translation
   const translation = React.useMemo(() => {
-    const localeTranslation = guide.translations?.find(t => t.locale === locale)
+    const localeTranslation = guide.translations?.find((t) => t.locale === locale)
     return localeTranslation || guide.translations?.[0]
   }, [guide.translations, locale])
 
