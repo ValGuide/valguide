@@ -148,13 +148,18 @@
       "title": "Anc nagins guids",
       "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",
       "createButton": "Crear voss emprim guid",
-      "createNewButton": "Crear nov guid"
+      "createNewButton": "Crear nov guid",
+      "creating": "Vegn creà..."
     },
     "create": {
       "success": "Guid creà",
       "successDescription": "Voss nov guid è stà creà cun success",
       "error": "Errur cun crear il guid",
       "errorDescription": "In errur è succedì cun crear il guid. Empruvei per plascher aunc inagada."
+    },
+    "defaults": {
+      "newGuideTitle": "Nov Guid",
+      "newGuideDescription": "Cumenzai a crear il cuntegn da tes guid"
     },
     "loading": {
       "opening": "Avrir il guid...",

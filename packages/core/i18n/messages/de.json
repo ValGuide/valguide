@@ -148,13 +148,18 @@
       "title": "Noch keine Guides",
       "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",
       "createButton": "Ihren ersten Guide erstellen",
-      "createNewButton": "Neuen Guide erstellen"
+      "createNewButton": "Neuen Guide erstellen",
+      "creating": "Wird erstellt..."
     },
     "create": {
       "success": "Guide erstellt",
       "successDescription": "Ihr neuer Guide wurde erfolgreich erstellt",
       "error": "Guide konnte nicht erstellt werden",
       "errorDescription": "Beim Erstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "defaults": {
+      "newGuideTitle": "Neuer Guide",
+      "newGuideDescription": "Beginnen Sie mit der Erstellung Ihres Guide-Inhalts"
     },
     "loading": {
       "opening": "Guide wird geöffnet...",
