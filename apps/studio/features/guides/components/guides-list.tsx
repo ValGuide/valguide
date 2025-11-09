@@ -34,11 +34,14 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
   const router = useRouter()
   const [isCreating, setIsCreating] = React.useState(false)
 
-  const handleViewGuide = React.useCallback((guide: Guide) => {
-    if (guide.nanoId) {
-      router.push(`/guides/${guide.nanoId}`)
-    }
-  }, [router])
+  const handleViewGuide = React.useCallback(
+    (guide: Guide) => {
+      if (guide.nanoId) {
+        router.push(`/guides/${guide.nanoId}`)
+      }
+    },
+    [router],
+  )
 
   const handleCreateGuide = React.useCallback(async () => {
     if (!onCreateGuide) {
@@ -175,4 +178,3 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
     </div>
   )
 }
-

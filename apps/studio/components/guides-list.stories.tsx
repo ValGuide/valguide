@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { NextIntlClientProvider } from 'next-intl'
-import { GuidesList } from './guides-list'
+import { GuidesList } from '@/features/guides/components/guides-list'
 import { Guide } from '@valguide/features/guides/types'
 
 // Import messages for the story
