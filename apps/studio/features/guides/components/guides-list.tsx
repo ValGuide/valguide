@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
 import { Plus, BookOpen, AlertCircle } from 'lucide-react'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -27,20 +26,24 @@ interface GuidesListProps {
     organizationId?: string
     coverImage?: string
   }) => Promise<Guide>
+  onViewGuide?: (guide: Guide) => void
 }
 
-export function GuidesList({ guides = [], isLoading = false, error = null, onCreateGuide }: GuidesListProps) {
+export function GuidesList({
+  guides = [],
+  isLoading = false,
+  error = null,
+  onCreateGuide,
+  onViewGuide,
+}: GuidesListProps) {
   const t = useTranslations('guides')
-  const router = useRouter()
   const [isCreating, setIsCreating] = React.useState(false)
 
   const handleViewGuide = React.useCallback(
     (guide: Guide) => {
-      if (guide.nanoId) {
-        router.push(`/guides/${guide.nanoId}`)
-      }
+      onViewGuide?.(guide)
     },
-    [router],
+    [onViewGuide],
   )
 
   const handleCreateGuide = React.useCallback(async () => {
@@ -77,9 +80,9 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
         description: t('create.successDescription'),
       })
 
-      // Navigate to guide editor
-      if (newGuide.nanoId) {
-        router.push(`/guides/${newGuide.nanoId}`)
+      // Navigate to guide editor if handler provided
+      if (onViewGuide && newGuide) {
+        onViewGuide(newGuide)
       }
     } catch (err) {
       console.error('Failed to create guide:', err)
@@ -89,7 +92,7 @@ export function GuidesList({ guides = [], isLoading = false, error = null, onCre
     } finally {
       setIsCreating(false)
     }
-  }, [onCreateGuide, t, router])
+  }, [onCreateGuide, t, onViewGuide])
 
   // Loading state
   if (isLoading) {
