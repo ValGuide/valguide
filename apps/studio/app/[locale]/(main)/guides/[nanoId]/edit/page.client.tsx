@@ -1,203 +1,276 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { Button } from '@valguide/ui/components/button'
-import { Save, ArrowLeft } from 'lucide-react'
+import { Save, ArrowLeft, Check } from 'lucide-react'
 import { LocaleTabs } from '@/features/guides/components/locale-tabs'
 import { GuideMetadataForm } from '@/features/guides/components/guide-metadata-form'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { StopEditor } from '@/features/guides/components/stop-editor'
+import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { AssetPickerModal } from '@/features/assets/components/asset-picker-modal'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
-import type { GuideWithTranslations, StopWithTranslations, Stop } from '@valguide/core/features/guides/schema'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { GuideEditorProvider, useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
+import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { toast } from 'sonner'
+import { formatDistanceToNow } from 'date-fns'
 
 export type GuideEditorClientProps = {
-  guide: GuideWithTranslations
+  guide: GuideWithStops
+  userId: string
 }
 
-export function GuideEditorClient({ guide }: GuideEditorClientProps) {
+function GuideEditorContent() {
   const t = useTranslations('guides')
-  const router = useRouter()
-  const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
-  const [isSaving, setIsSaving] = useState(false)
-  const [translations, setTranslations] = useState(guide.translations)
-  const [coverImage, setCoverImage] = useState(guide.coverImage)
-  const [stops, setStops] = useState<StopWithTranslations[]>([])
-  const [editingStop, setEditingStop] = useState<Stop | null>(null)
-  const [showStopEditor, setShowStopEditor] = useState(false)
+  const {
+    guide,
+    activeLocale,
+    selectedStop,
+    isDirty,
+    isSaving,
+    lastSaved,
+    updateGuideTranslationData,
+    updateCoverImage,
+    selectStop,
+    addStop,
+    deleteStop,
+    reorderStops,
+    updateStopTranslationData,
+    attachAssetToStop,
+    detachAssetFromStop,
+    setActiveLocale,
+    save,
+    publish
+  } = useGuideEditor()
+
   const [showAssetPicker, setShowAssetPicker] = useState(false)
   const [assetPickerType, setAssetPickerType] = useState<'image' | 'audio' | 'video'>('image')
   const [assetPickerMultiple, setAssetPickerMultiple] = useState(false)
+  const [assetPickerCallback, setAssetPickerCallback] = useState<((assets: Asset[]) => void) | null>(null)
   const organizationId = 'org-123' // TODO: Get from user context
 
-  const currentTranslation = translations.find((t) => t.locale === activeLocale)
+  // Auto-save
+  useAutoSave(save, isDirty)
 
-  const handleTranslationChange = (data: { title: string; description: string }) => {
-    setTranslations((prev) => {
-      const existing = prev.find((t) => t.locale === activeLocale)
-      if (existing) {
-        return prev.map((t) => (t.locale === activeLocale ? { ...t, ...data } : t))
-      } else {
-        return [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            guideId: guide.id,
-            locale: activeLocale,
-            title: data.title,
-            description: data.description,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ]
-      }
-    })
-  }
-
-  const handleSave = async () => {
-    try {
-      setIsSaving(true)
-      // TODO: Implement save to API
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      toast.success('Guide saved', {
-        description: 'Your changes have been saved successfully',
-      })
-    } catch (error) {
-      toast.error('Failed to save', {
-        description: error instanceof Error ? error.message : 'An error occurred',
-      })
-    } finally {
-      setIsSaving(false)
-    }
-  }
+  const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
 
   const handleSelectCoverImage = () => {
     setAssetPickerType('image')
     setAssetPickerMultiple(false)
+    setAssetPickerCallback(() => (assets: Asset[]) => {
+      if (assets[0]) {
+        updateCoverImage(assets[0].id)
+        toast.success('Cover image updated')
+      }
+    })
     setShowAssetPicker(true)
   }
 
   const handleAssetSelect = (assets: Asset[]) => {
-    if (assetPickerType === 'image' && !assetPickerMultiple && assets[0]) {
-      setCoverImage(assets[0].publicUrl)
-      toast.success('Cover image updated')
+    if (assetPickerCallback) {
+      assetPickerCallback(assets)
     }
     setShowAssetPicker(false)
-  }
-
-  const handleAddStop = () => {
-    setEditingStop(null)
-    setShowStopEditor(true)
-  }
-
-  const handleEditStop = (stop: Stop) => {
-    setEditingStop(stop)
-    setShowStopEditor(true)
-  }
-
-  const handleDeleteStop = async (stopId: string) => {
-    // TODO: API call to delete stop
-    setStops((prev) => prev.filter((s) => s.id !== stopId))
-    toast.success('Stop deleted')
+    setAssetPickerCallback(null)
   }
 
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
-    // TODO: API call to update order
-    setStops((prev) => {
-      const updated = [...prev]
-      updates.forEach(({ id, order }) => {
-        const stop = updated.find((s) => s.id === id)
-        if (stop) stop.order = order
-      })
-      return updated.sort((a, b) => a.order - b.order)
+    const reordered = [...guide.stops]
+    updates.forEach(({ id, order }) => {
+      const stop = reordered.find((s) => s.id === id)
+      if (stop) stop.order = order
     })
-  }
-
-  const handleSaveStop = (data: { title: string; description: string; transcription: string }) => {
-    // TODO: API call to create/update stop
-    toast.success('Stop saved')
-    setShowStopEditor(false)
+    reorderStops(reordered.sort((a, b) => a.order - b.order))
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <div className="flex h-[calc(100vh-4rem)] flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between border-b px-6 py-4">
         <div className="flex items-center gap-4">
-          <Link href={`/guides/${guide.nanoId}`}>
+          <Link href="/guides">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Edit Guide</h1>
-            <p className="text-sm text-muted-foreground">{guide.nanoId}</p>
+            <h1 className="text-2xl font-bold tracking-tight">
+              {currentTranslation?.title || 'Untitled Guide'}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {lastSaved ? `Saved ${formatDistanceToNow(lastSaved, { addSuffix: true })}` : 'Not saved yet'}
+            </p>
           </div>
         </div>
-        <Button onClick={handleSave} disabled={isSaving}>
-          <Save className="mr-2 h-4 w-4" />
-          {isSaving ? 'Saving...' : 'Save Changes'}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button onClick={save} disabled={isSaving || !isDirty} variant="outline">
+            {isSaving ? (
+              'Saving...'
+            ) : isDirty ? (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Save
+              </>
+            ) : (
+              <>
+                <Check className="mr-2 h-4 w-4" />
+                Saved
+              </>
+            )}
+          </Button>
+          <Button onClick={publish} disabled={isSaving}>
+            Publish
+          </Button>
+        </div>
       </div>
 
       {/* Locale Tabs */}
-      <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
+      <div className="border-b px-6">
+        <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
+      </div>
 
-      {/* Guide Metadata Form */}
-      <GuideMetadataForm
-        locale={activeLocale}
-        translation={currentTranslation}
-        coverImage={coverImage}
-        onTranslationChange={handleTranslationChange}
-        onCoverImageChange={setCoverImage}
-        onSelectCoverImage={handleSelectCoverImage}
-      />
+      {/* Split Panel Layout */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar - Stops List & Progress */}
+        <div className="w-80 border-r bg-muted/20 overflow-y-auto">
+          <div className="p-4 space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Guide Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <GuideProgress guide={guide} locale={activeLocale} />
+              </CardContent>
+            </Card>
 
-      {/* Stops List */}
-      <StopsList
-        stops={stops}
-        locale={activeLocale}
-        onReorder={handleReorderStops}
-        onEdit={handleEditStop}
-        onDelete={handleDeleteStop}
-        onAdd={handleAddStop}
-      />
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Stops</CardTitle>
+                <CardDescription>
+                  {guide.stops.length} {guide.stops.length === 1 ? 'stop' : 'stops'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <StopsList
+                  stops={guide.stops}
+                  locale={activeLocale}
+                  selectedStopId={selectedStop?.id}
+                  onReorder={handleReorderStops}
+                  onEdit={selectStop}
+                  onDelete={deleteStop}
+                  onAdd={addStop}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
-      {/* Stop Editor Dialog */}
-      <Dialog open={showStopEditor} onOpenChange={setShowStopEditor}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingStop ? 'Edit Stop' : 'New Stop'}</DialogTitle>
-          </DialogHeader>
-          <StopEditor
-            stop={editingStop ? (stops.find((s) => s.id === editingStop.id) as StopWithTranslations) : undefined}
-            locale={activeLocale}
-            onSave={handleSaveStop}
-            onCancel={() => setShowStopEditor(false)}
-            onSelectImages={() => {
-              setAssetPickerType('image')
-              setAssetPickerMultiple(true)
-              setShowAssetPicker(true)
-            }}
-            onSelectAudio={() => {
-              setAssetPickerType('audio')
-              setAssetPickerMultiple(false)
-              setShowAssetPicker(true)
-            }}
-            onSelectVideo={() => {
-              setAssetPickerType('video')
-              setAssetPickerMultiple(false)
-              setShowAssetPicker(true)
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+        {/* Main Panel - Guide/Stop Editor */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6 space-y-6">
+            {/* Guide Metadata */}
+            {!selectedStop && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Guide Information</CardTitle>
+                  <CardDescription>
+                    Basic information about your guide
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <GuideMetadataForm
+                    locale={activeLocale}
+                    translation={currentTranslation}
+                    coverImage={guide.coverImage}
+                    onTranslationChange={(data) => {
+                      updateGuideTranslationData(activeLocale, data)
+                    }}
+                    onCoverImageChange={(url) => {
+                      if (url) updateCoverImage(url)
+                    }}
+                    onSelectCoverImage={handleSelectCoverImage}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Stop Editor */}
+            {selectedStop && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {selectedStop.translations.find((t) => t.locale === activeLocale)?.title || 'Untitled Stop'}
+                  </CardTitle>
+                  <CardDescription>
+                    Edit stop content for {activeLocale.toUpperCase()}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <StopEditor
+                    stop={selectedStop}
+                    locale={activeLocale}
+                    onSave={(data) => {
+                      updateStopTranslationData(selectedStop.id, activeLocale, data)
+                    }}
+                    onCancel={() => selectStop(null)}
+                    onSelectImages={() => {
+                      setAssetPickerType('image')
+                      setAssetPickerMultiple(true)
+                      setAssetPickerCallback(() => async (assets: Asset[]) => {
+                        for (const asset of assets) {
+                          await attachAssetToStop(selectedStop.id, asset.id, 'image', activeLocale)
+                        }
+                      })
+                      setShowAssetPicker(true)
+                    }}
+                    onSelectAudio={() => {
+                      setAssetPickerType('audio')
+                      setAssetPickerMultiple(false)
+                      setAssetPickerCallback(() => async (assets: Asset[]) => {
+                        if (assets[0]) {
+                          await attachAssetToStop(selectedStop.id, assets[0].id, 'audio', activeLocale)
+                        }
+                      })
+                      setShowAssetPicker(true)
+                    }}
+                    onSelectVideo={() => {
+                      setAssetPickerType('video')
+                      setAssetPickerMultiple(false)
+                      setAssetPickerCallback(() => async (assets: Asset[]) => {
+                        if (assets[0]) {
+                          await attachAssetToStop(selectedStop.id, assets[0].id, 'video', activeLocale)
+                        }
+                      })
+                      setShowAssetPicker(true)
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Empty state when no stop selected */}
+            {!selectedStop && guide.stops.length === 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Get Started</CardTitle>
+                  <CardDescription>
+                    Add your first stop to begin building your guide
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={addStop} size="lg">
+                    Add First Stop
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Asset Picker Modal */}
       <AssetPickerModal
@@ -210,5 +283,13 @@ export function GuideEditorClient({ guide }: GuideEditorClientProps) {
         onSelect={handleAssetSelect}
       />
     </div>
+  )
+}
+
+export function GuideEditorClient({ guide, userId }: GuideEditorClientProps) {
+  return (
+    <GuideEditorProvider initialGuide={guide} userId={userId}>
+      <GuideEditorContent />
+    </GuideEditorProvider>
   )
 }

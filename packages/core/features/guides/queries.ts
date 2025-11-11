@@ -1,6 +1,6 @@
-import { eq, and } from 'drizzle-orm'
+import { eq, and, asc } from 'drizzle-orm'
 import type { DB } from '../db'
-import { guide, guideTranslation, type GuideWithTranslations } from './schema'
+import { guide, guideTranslation, stop, stopTranslation, type GuideWithTranslations, type GuideWithStops } from './schema'
 import type { SupportedLocale } from '../../i18n/i18n.config'
 import { customAlphabet } from 'nanoid'
 
@@ -25,13 +25,19 @@ export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTr
 }
 
 /**
- * Get a guide by nanoId with all its translations
+ * Get a guide by nanoId with all its translations and stops with assets
  */
-export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithTranslations | null> {
+export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithStops | null> {
   const result = await db.query.guide.findFirst({
     where: eq(guide.nanoId, nanoId),
     with: {
       translations: true,
+      stops: {
+        with: {
+          translations: true,
+        },
+        orderBy: asc(stop.order),
+      },
     },
   })
 

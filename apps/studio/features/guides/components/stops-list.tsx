@@ -37,8 +37,9 @@ import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 export type StopsListProps = {
     stops: StopWithTranslations[]
     locale: SupportedLocale
+    selectedStopId?: string
     onReorder: (updates: Array<{ id: string; order: number }>) => void
-    onEdit: (stop: Stop) => void
+    onEdit: (stop: StopWithTranslations) => void
     onDelete: (stopId: string) => void
     onAdd: () => void
 }
@@ -47,11 +48,12 @@ type SortableStopItemProps = {
     stop: StopWithTranslations
     index: number
     locale: SupportedLocale
-    onEdit: (stop: Stop) => void
+    selected: boolean
+    onEdit: (stop: StopWithTranslations) => void
     onDelete: (stopId: string) => void
 }
 
-function SortableStopItem({ stop, index, locale, onEdit, onDelete }: SortableStopItemProps) {
+function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: SortableStopItemProps) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: stop.id })
 
     const style = {
@@ -67,7 +69,7 @@ function SortableStopItem({ stop, index, locale, onEdit, onDelete }: SortableSto
 
     return (
         <div ref={setNodeRef} style={style} className="group">
-            <Card className="hover:shadow-md transition-shadow">
+            <Card className={`hover:shadow-md transition-shadow ${selected ? 'ring-2 ring-primary' : ''}`}>
                 <CardContent className="flex items-center gap-4 p-4">
                     <button
                         className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors touch-none"
@@ -119,7 +121,7 @@ function SortableStopItem({ stop, index, locale, onEdit, onDelete }: SortableSto
     )
 }
 
-export function StopsList({ stops, locale, onReorder, onEdit, onDelete, onAdd }: StopsListProps) {
+export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, onDelete, onAdd }: StopsListProps) {
     const t = useTranslations('stops')
     const [items, setItems] = React.useState(stops)
 
@@ -202,6 +204,7 @@ export function StopsList({ stops, locale, onReorder, onEdit, onDelete, onAdd }:
                                 stop={stop}
                                 index={index}
                                 locale={locale}
+                                selected={stop.id === selectedStopId}
                                 onEdit={onEdit}
                                 onDelete={onDelete}
                             />
