@@ -164,7 +164,9 @@
     "loading": {
       "opening": "Guide wird geöffnet...",
       "openingDescription": "Bitte warten Sie, während wir Ihren Guide laden"
-    }
+    },
+    "editGuide": "Guide bearbeiten",
+    "backToGuides": "Zurück zu Guides"
   },
   "stops": {
     "title": "Stops",

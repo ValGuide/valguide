@@ -3,6 +3,8 @@ import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
 import Link from 'next/link'
+import { Button } from '@valguide/ui/components/button'
+import { Pencil } from 'lucide-react'
 
 interface GuidePageParams {
   locale: string
@@ -26,18 +28,30 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="space-y-6">
         <div className="space-y-4">
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ← {t('backToGuides')}
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              ← {t('backToGuides')}
+            </Link>
+            <Button asChild>
+              <Link href={`/guides/${nanoId}/edit`}>
+                <Pencil />
+                {t('editGuide')}
+              </Link>
+            </Button>
+          </div>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              {guide.translations.find((t) => t.locale === locale)?.title || guide.translations[0]?.title || 'Untitled Guide'}
+              {guide.translations.find((t) => t.locale === locale)?.title ||
+                guide.translations[0]?.title ||
+                'Untitled Guide'}
             </h1>
             <p className="text-muted-foreground mt-2">
-              {guide.translations.find((t) => t.locale === locale)?.description || guide.translations[0]?.description || ''}
+              {guide.translations.find((t) => t.locale === locale)?.description ||
+                guide.translations[0]?.description ||
+                ''}
             </p>
           </div>
         </div>
@@ -94,4 +108,3 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
     </main>
   )
 }
-

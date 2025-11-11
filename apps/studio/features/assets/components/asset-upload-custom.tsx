@@ -311,7 +311,7 @@ export function CustomAssetUpload({
             {error && (
               <div className="p-4 rounded-md border border-destructive/30 bg-destructive/5">
                 <p className="text-sm font-medium text-destructive">{t('upload.error')}</p>
-                <p className="mt-1 text-sm text-muted-foreground line-clamp-3">{error}</p>
+                <p className="mt-1 text-sm text-muted-foreground break-words overflow-wrap-anywhere">{error}</p>
               </div>
             )}
 

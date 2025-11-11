@@ -164,7 +164,9 @@
     "loading": {
       "opening": "Avrir il guid...",
       "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
-    }
+    },
+    "editGuide": "Modifitgar il guid",
+    "backToGuides": "Turnar als guids"
   },
   "stops": {
     "title": "Stops",

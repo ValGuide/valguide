@@ -8,6 +8,7 @@ import {
   Command,
   GalleryVerticalEnd,
   BookOpen,
+  Image,
   LifeBuoy,
   Palette,
   Send,
@@ -82,6 +83,11 @@ export function AppSidebar({
       title: t('guides'),
       url: '/',
       icon: BookOpen,
+    },
+    {
+      title: t('assets'),
+      url: '/assets',
+      icon: Image,
     },
     {
       title: t('design'),

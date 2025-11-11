@@ -164,7 +164,9 @@
     "loading": {
       "opening": "Opening guide...",
       "openingDescription": "Please wait while we load your guide"
-    }
+    },
+    "editGuide": "Edit Guide",
+    "backToGuides": "Back to Guides"
   },
   "stops": {
     "title": "Stops",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
@@ -31,6 +31,11 @@ export function GuideMetadataForm({
   const t = useTranslations('guides')
   const [title, setTitle] = useState(translation?.title || '')
   const [description, setDescription] = useState(translation?.description || '')
+
+  useEffect(() => {
+    setTitle(translation?.title || '')
+    setDescription(translation?.description || '')
+  }, [locale, translation])
 
   const handleTitleChange = (value: string) => {
     setTitle(value)

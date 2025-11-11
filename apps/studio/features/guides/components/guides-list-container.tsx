@@ -11,7 +11,7 @@ export function GuidesListContainer() {
 
   const handleViewGuide = (guide: Guide) => {
     if (guide.nanoId) {
-      router.push(`/guides/${guide.nanoId}`)
+      router.push(`/guides/${guide.nanoId}/edit`)
     }
   }
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { AssetsList } from './assets-list.storybook'
+import { AssetsList } from './assets-list'
 import type { Asset } from '@valguide/core/features/assets/schema'
 
 const meta = {
@@ -12,7 +12,6 @@ const meta = {
   argTypes: {
     onAssetDeleted: { action: 'asset-deleted' },
     onUploadComplete: { action: 'upload-complete' },
-    onPreview: { action: 'preview-asset' },
   },
 } satisfies Meta<typeof AssetsList>
 

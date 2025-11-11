@@ -44,8 +44,10 @@ function GuideEditorContent() {
     detachAssetFromStop,
     setActiveLocale,
     save,
-    publish
+    publish,
   } = useGuideEditor()
+
+  const backUrl = `/guides/${guide.nanoId}`
 
   const [showAssetPicker, setShowAssetPicker] = useState(false)
   const [assetPickerType, setAssetPickerType] = useState<'image' | 'audio' | 'video'>('image')
@@ -92,15 +94,13 @@ function GuideEditorContent() {
       {/* Header */}
       <div className="flex items-center justify-between border-b px-6 py-4">
         <div className="flex items-center gap-4">
-          <Link href="/guides">
+          <Link href={backUrl}>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">
-              {currentTranslation?.title || 'Untitled Guide'}
-            </h1>
+            <h1 className="text-2xl font-bold tracking-tight">{currentTranslation?.title || 'Untitled Guide'}</h1>
             <p className="text-sm text-muted-foreground">
               {lastSaved ? `Saved ${formatDistanceToNow(lastSaved, { addSuffix: true })}` : 'Not saved yet'}
             </p>
@@ -177,9 +177,7 @@ function GuideEditorContent() {
               <Card>
                 <CardHeader>
                   <CardTitle>Guide Information</CardTitle>
-                  <CardDescription>
-                    Basic information about your guide
-                  </CardDescription>
+                  <CardDescription>Basic information about your guide</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <GuideMetadataForm
@@ -205,9 +203,7 @@ function GuideEditorContent() {
                   <CardTitle>
                     {selectedStop.translations.find((t) => t.locale === activeLocale)?.title || 'Untitled Stop'}
                   </CardTitle>
-                  <CardDescription>
-                    Edit stop content for {activeLocale.toUpperCase()}
-                  </CardDescription>
+                  <CardDescription>Edit stop content for {activeLocale.toUpperCase()}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <StopEditor
@@ -257,9 +253,7 @@ function GuideEditorContent() {
               <Card>
                 <CardHeader>
                   <CardTitle>Get Started</CardTitle>
-                  <CardDescription>
-                    Add your first stop to begin building your guide
-                  </CardDescription>
+                  <CardDescription>Add your first stop to begin building your guide</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button onClick={addStop} size="lg">
