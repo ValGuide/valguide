@@ -58,7 +58,7 @@ export async function getUploadSignedUrl(
   const assetId = nanoid(21)
 
   // Validate file
-  const { sanitizedName } = validateFile(fileName, type)
+  const { sanitizedName } = validateFile(fileName)
 
   // Construct storage path
   const localePrefix = locale ? `${locale}/` : ''

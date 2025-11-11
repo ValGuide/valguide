@@ -3,7 +3,7 @@
 import { db } from '@valguide/core/features/db'
 import { guide, guideTranslation, stop, stopTranslation } from './schema'
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
-import { eq } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import { revalidatePath } from 'next/cache'
 
@@ -48,7 +48,7 @@ export async function updateGuideTranslation(params: UpdateGuideTranslationParam
 
   // Check if translation exists
   const existing = await db.query.guideTranslation.findFirst({
-    where: (fields, { and, eq }) => and(eq(fields.guideId, guideId), eq(fields.locale, locale)),
+    where: and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)),
   })
 
   if (existing) {
@@ -147,7 +147,7 @@ export async function updateStop(params: UpdateStopParams) {
 
   // Check if translation exists
   const existing = await db.query.stopTranslation.findFirst({
-    where: (fields, { and, eq }) => and(eq(fields.stopId, stopId), eq(fields.locale, locale)),
+    where: and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)),
   })
 
   if (existing) {

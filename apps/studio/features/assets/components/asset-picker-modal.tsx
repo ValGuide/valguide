@@ -25,6 +25,9 @@ export type AssetPickerModalProps = {
   multiple?: boolean
   selectedAssetIds?: string[]
   onSelect: (assets: Asset[]) => void
+  assets?: Asset[]
+  isLoading?: boolean
+  onUploadComplete?: (asset: Asset) => void
 }
 
 export function AssetPickerModal({
@@ -36,6 +39,9 @@ export function AssetPickerModal({
   multiple = false,
   selectedAssetIds = [],
   onSelect,
+  assets: assetsProp,
+  isLoading: isLoadingProp,
+  onUploadComplete: onUploadCompleteProp,
 }: AssetPickerModalProps) {
   const t = useTranslations('assets.picker')
   const tTypes = useTranslations('assets.types')
@@ -44,11 +50,13 @@ export function AssetPickerModal({
   const [searchQuery, setSearchQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set(selectedAssetIds))
 
-  const { assets, isLoading, refetch } = useAssets({
-    type,
-    locale,
-    organizationId,
-  })
+  const shouldFetchAssets = !assetsProp
+  const { assets: assetsFromHook, isLoading: isLoadingFromHook, refetch } = shouldFetchAssets
+    ? useAssets({ type, locale, organizationId })
+    : { assets: [], isLoading: false, refetch: () => {} }
+
+  const assets = assetsProp ?? assetsFromHook
+  const isLoading = isLoadingProp ?? isLoadingFromHook
 
   const filteredAssets = useMemo(() => {
     return assets.filter((asset) => {
@@ -79,6 +87,7 @@ export function AssetPickerModal({
   }
 
   const handleUploadComplete = (asset: Asset) => {
+    onUploadCompleteProp?.(asset)
     refetch()
     setActiveTab('library')
     if (!multiple) {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { AssetCard } from './asset-card.storybook'
+import { AssetCard } from './asset-card'
 import type { Asset } from '@valguide/core/features/assets/schema'
 
 const meta = {
@@ -12,6 +12,9 @@ const meta = {
   argTypes: {
     onDelete: { action: 'deleted' },
     onPreview: { action: 'previewed' },
+  },
+  args: {
+    mockDelete: true,
   },
 } satisfies Meta<typeof AssetCard>
 

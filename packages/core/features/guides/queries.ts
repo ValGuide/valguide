@@ -106,7 +106,7 @@ export async function createGuide(
   guideData: Omit<typeof guide.$inferInsert, 'nanoId'> & { nanoId?: string },
   translations: Array<{ locale: string; title: string; description?: string }>
 ) {
-  return await db.transaction(async (tx) => {
+  return await db.transaction(async (tx: DB) => {
     // Insert guide with auto-generated nanoId if not provided
     const [newGuide] = await tx
       .insert(guide)

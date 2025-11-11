@@ -207,7 +207,15 @@ export function AssetUploadInline({
             </>
           ) : file ? (
             <>
-              {getTypeIcon()}
+              {type === 'image' ? (
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={file.name}
+                  className="h-32 w-auto max-w-full rounded object-contain"
+                />
+              ) : (
+                getTypeIcon()
+              )}
               <div className="space-y-2">
                 <p className="text-sm font-medium">{file.name}</p>
                 <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -235,7 +243,7 @@ export function AssetUploadInline({
 
       {/* Error Message */}
       {error && (
-        <div className="p-4 text-sm bg-destructive/10 text-destructive rounded-md border border-destructive/20">
+        <div className="p-4 text-sm bg-destructive/10 text-destructive rounded-md border border-destructive/20 break-words overflow-wrap-anywhere">
           {error}
         </div>
       )}

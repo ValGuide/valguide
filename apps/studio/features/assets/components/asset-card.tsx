@@ -31,9 +31,10 @@ export type AssetCardProps = {
   asset: Asset
   onDelete?: (assetId: string) => void
   onPreview?: (asset: Asset) => void
+  mockDelete?: boolean
 }
 
-export function AssetCard({ asset, onDelete, onPreview }: AssetCardProps) {
+export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: AssetCardProps) {
   const t = useTranslations('assets')
   const [isDeleting, setIsDeleting] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -41,7 +42,11 @@ export function AssetCard({ asset, onDelete, onPreview }: AssetCardProps) {
   const handleDelete = async () => {
     try {
       setIsDeleting(true)
-      await deleteAsset(asset.id)
+      if (mockDelete) {
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      } else {
+        await deleteAsset(asset.id)
+      }
       toast.success(t('card.deleteSuccess'))
       onDelete?.(asset.id)
     } catch (error) {

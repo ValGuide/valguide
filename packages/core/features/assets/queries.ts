@@ -66,7 +66,7 @@ export async function getGuideAssets(guideId: string, locale?: string) {
     .leftJoin(asset, eq(guideAsset.assetId, asset.id))
     .orderBy(guideAsset.order)
 
-  return results.map((r) => ({
+  return results.map((r: typeof results[0]) => ({
     ...r.guide_asset,
     asset: r.asset,
   }))
@@ -86,7 +86,7 @@ export async function getStopAssets(stopId: string, locale?: string) {
     .leftJoin(asset, eq(stopAsset.assetId, asset.id))
     .orderBy(stopAsset.order)
 
-  return results.map((r) => ({
+  return results.map((r: typeof results[0]) => ({
     ...r.stop_asset,
     asset: r.asset,
   }))

@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { Button } from '@valguide/ui/components/button'
-import { AssetPickerModal } from './asset-picker-modal.storybook'
+import { AssetPickerModal } from './asset-picker-modal'
 import type { Asset } from '@valguide/core/features/assets/schema'
 
 const meta = {
