@@ -72,11 +72,11 @@ ALTER TABLE "studio"."stop_asset" ADD CONSTRAINT "stop_asset_stop_id_stop_id_fk"
 ALTER TABLE "studio"."stop_asset" ADD CONSTRAINT "stop_asset_asset_id_asset_id_fk" FOREIGN KEY ("asset_id") REFERENCES "studio"."asset"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "unique_stop_translation" ON "studio"."stop_translation" USING btree ("stop_id","locale");--> statement-breakpoint
 CREATE INDEX "asset_type_org_idx" ON "studio"."asset" USING btree ("type","organization_id");--> statement-breakpoint
-DROP POLICY "Users can view their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
-DROP POLICY "Users can insert their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
-DROP POLICY "Users can update their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
-DROP POLICY "Users can delete their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
-DROP POLICY "Users can view translations for their guides" ON "studio"."guide_translation" CASCADE;--> statement-breakpoint
-DROP POLICY "Users can insert translations for their guides" ON "studio"."guide_translation" CASCADE;--> statement-breakpoint
-DROP POLICY "Users can update translations for their guides" ON "studio"."guide_translation" CASCADE;--> statement-breakpoint
-DROP POLICY "Users can delete translations for their guides" ON "studio"."guide_translation" CASCADE;
+DROP POLICY IF EXISTS "Users can view their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
+DROP POLICY IF EXISTS "Users can insert their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
+DROP POLICY IF EXISTS "Users can update their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
+DROP POLICY IF EXISTS "Users can delete their own guides" ON "studio"."guide" CASCADE;--> statement-breakpoint
+DROP POLICY IF EXISTS "Users can view translations for their guides" ON "studio"."guide_translation" CASCADE;--> statement-breakpoint
+DROP POLICY IF EXISTS "Users can insert translations for their guides" ON "studio"."guide_translation" CASCADE;--> statement-breakpoint
+DROP POLICY IF EXISTS "Users can update translations for their guides" ON "studio"."guide_translation" CASCADE;--> statement-breakpoint
+DROP POLICY IF EXISTS "Users can delete translations for their guides" ON "studio"."guide_translation" CASCADE;
