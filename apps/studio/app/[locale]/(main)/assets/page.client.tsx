@@ -5,7 +5,7 @@ import { useAssets } from '@/features/assets/hooks/use-assets'
 
 export function AssetsPageClient() {
   // TODO: Get organizationId from user context/session
-  const organizationId = 'org-123'
+  const organizationId = '00000000-0000-0000-0000-000000000123' // Mock UUID for development
 
   const { assets, isLoading, error, refetch } = useAssets({ organizationId })
 

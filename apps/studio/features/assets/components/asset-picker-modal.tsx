@@ -13,7 +13,7 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Search, Image as ImageIcon, Music, Video } from 'lucide-react'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { useAssets } from '../hooks/use-assets'
-import { AssetUploadModal } from './asset-upload-modal'
+import { AssetUploadInline } from './asset-upload-inline'
 import { formatDistanceToNow } from 'date-fns'
 
 export type AssetPickerModalProps = {
@@ -38,6 +38,8 @@ export function AssetPickerModal({
     onSelect,
 }: AssetPickerModalProps) {
     const t = useTranslations('assets.picker')
+    const tTypes = useTranslations('assets.types')
+    const tFilter = useTranslations('assets.filter')
     const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
     const [searchQuery, setSearchQuery] = useState('')
     const [selected, setSelected] = useState<Set<string>>(new Set(selectedAssetIds))
@@ -114,7 +116,7 @@ export function AssetPickerModal({
             <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col">
                 <DialogHeader>
                     <DialogTitle>
-                        {t('title', { type: t(`../types.${type}`) })}
+                        {t('title', { type: tTypes(type) })}
                         {locale && <span className="ml-2 text-muted-foreground">({locale.toUpperCase()})</span>}
                     </DialogTitle>
                 </DialogHeader>
@@ -130,7 +132,7 @@ export function AssetPickerModal({
                         <div className="relative mb-4">
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
-                                placeholder={t('../filter.searchPlaceholder')}
+                                placeholder={tFilter('searchPlaceholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="pl-9"
@@ -153,9 +155,9 @@ export function AssetPickerModal({
                                 <Empty>
                                     <EmptyHeader>
                                         <EmptyMedia variant="icon">{getTypeIcon()}</EmptyMedia>
-                                        <EmptyTitle>{t('noAssets', { type: t(`../types.${type}`) })}</EmptyTitle>
+                                        <EmptyTitle>{t('noAssets', { type: tTypes(type) })}</EmptyTitle>
                                         <EmptyDescription>
-                                            {searchQuery ? 'No assets match your search' : 'Upload assets to get started'}
+                                            {searchQuery ? tFilter('noResults') : t('empty.description')}
                                         </EmptyDescription>
                                     </EmptyHeader>
                                 </Empty>
@@ -214,14 +216,12 @@ export function AssetPickerModal({
                     </TabsContent>
 
                     <TabsContent value="upload" className="flex-1 flex flex-col min-h-0 mt-4">
-                        <div className="flex-1 flex items-center justify-center">
-                            <AssetUploadModal
-                                type={type}
-                                locale={locale}
-                                organizationId={organizationId}
-                                onUploadComplete={handleUploadComplete}
-                            />
-                        </div>
+                        <AssetUploadInline
+                            type={type}
+                            locale={locale}
+                            organizationId={organizationId}
+                            onUploadComplete={handleUploadComplete}
+                        />
                     </TabsContent>
                 </Tabs>
 

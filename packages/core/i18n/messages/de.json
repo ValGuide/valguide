@@ -166,9 +166,115 @@
       "openingDescription": "Bitte warten Sie, während wir Ihren Guide laden"
     }
   },
+  "stops": {
+    "title": "Stops",
+    "description": "Inhaltspunkte in Ihrem Guide",
+    "add": "Stop hinzufügen",
+    "empty": {
+      "title": "Noch keine Stops",
+      "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben."
+    },
+    "editor": {
+      "title": "Stop-Details",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Stop-Titel eingeben",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Stop-Beschreibung eingeben",
+      "transcriptionLabel": "Transkription",
+      "transcriptionPlaceholder": "Audio-/Videotranskription",
+      "imagesLabel": "Bilder",
+      "audioLabel": "Audio-Guide",
+      "videoLabel": "Video",
+      "addImage": "Bild hinzufügen",
+      "addAudio": "Audio hinzufügen",
+      "addVideo": "Video hinzufügen",
+      "noImages": "Keine Bilder",
+      "noAudio": "Kein Audio",
+      "noVideo": "Kein Video",
+      "autoTranscribe": "Automatisch aus Audio generieren"
+    },
+    "actions": {
+      "delete": "Stop löschen",
+      "deleteConfirm": "Möchten Sie diesen Stop wirklich löschen?",
+      "deleteSuccess": "Stop gelöscht",
+      "deleteError": "Stop konnte nicht gelöscht werden",
+      "save": "Stop speichern",
+      "saving": "Wird gespeichert...",
+      "cancel": "Abbrechen"
+    }
+  },
+  "assets": {
+    "title": "Assets",
+    "description": "Verwalten Sie Ihre Medienbibliothek",
+    "empty": {
+      "title": "Noch keine Assets",
+      "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Guides zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Guides wiederverwendet werden.",
+      "uploadButton": "Ihr erstes Asset hochladen",
+      "uploadImage": "Bild hochladen",
+      "uploadAudio": "Audio hochladen",
+      "uploadVideo": "Video hochladen"
+    },
+    "picker": {
+      "title": "{type} auswählen",
+      "tabs": {
+        "library": "Bibliothek",
+        "upload": "Hochladen"
+      },
+      "select": "Auswählen",
+      "selected": "{count} ausgewählt",
+      "cancel": "Abbrechen",
+      "noAssets": "Keine {type}-Assets gefunden",
+      "multiSelect": "Mehrere auswählen",
+      "empty": {
+        "description": "Laden Sie Assets hoch, um loszulegen"
+      }
+    },
+    "upload": {
+      "button": "Hochladen",
+      "title": "{type} hochladen",
+      "success": "Upload abgeschlossen",
+      "successDescription": "{fileName} erfolgreich hochgeladen",
+      "error": "Upload fehlgeschlagen",
+      "errorDescription": "Beim Upload ist ein Fehler aufgetreten",
+      "restricted": "Upload eingeschränkt",
+      "restrictedDescription": "Datei erfüllt nicht die Upload-Anforderungen"
+    },
+    "filter": {
+      "all": "Alle Typen",
+      "allLocales": "Alle Sprachen",
+      "image": "Bilder",
+      "audio": "Audio",
+      "video": "Video",
+      "search": "Assets suchen...",
+      "searchPlaceholder": "Nach Dateinamen suchen...",
+      "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen"
+    },
+    "card": {
+      "uploaded": "Hochgeladen",
+      "size": "Größe",
+      "locale": "Sprache",
+      "delete": "Löschen",
+      "deleting": "Wird gelöscht...",
+      "deleteConfirm": "Möchten Sie dieses Asset wirklich löschen?",
+      "deleteSuccess": "Asset gelöscht",
+      "deleteError": "Asset konnte nicht gelöscht werden",
+      "preview": "Vorschau",
+      "download": "Herunterladen"
+    },
+    "types": {
+      "image": "Bild",
+      "audio": "Audio",
+      "video": "Video"
+    },
+    "limits": {
+      "maxSize": "Max. Dateigröße: {size}",
+      "maxFiles": "Bis zu {count} Dateien"
+    }
+  },
   "sidebar": {
     "nav": {
       "guides": "Guides",
+      "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",
       "teamAndMembers": "Team & Mitglieder",
@@ -179,6 +285,9 @@
     "pages": {
       "guides": {
         "description": "Erstellen und verwalten Sie Ihre interaktiven Anleitungen."
+      },
+      "assets": {
+        "description": "Verwalten Sie Ihre Medienbibliothek mit Bildern, Audio und Videos."
       },
       "design": {
         "description": "Passen Sie das Aussehen Ihrer Anleitungen an."

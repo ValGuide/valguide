@@ -55,11 +55,9 @@ export const supbaseProxyFn = (options?: {
     const supabase = createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_PUBLISHABLE_KEY!, {
       cookies: {
         getAll() {
-          console.info('Getting cookies')
           return req.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          console.info('Setting cookies', cookiesToSet)
           cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request: req,

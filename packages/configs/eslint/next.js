@@ -7,6 +7,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 import { config as baseConfig } from './base.js'
+import { noHardcodedStrings } from './rules/no-hardcoded-strings.js'
 
 /**
  * A custom ESLint configuration for libraries that use Next.js.
@@ -46,6 +47,18 @@ export const nextJsConfig = [
       // React scope no longer necessary with new JSX transform.
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+    },
+  },
+  {
+    plugins: {
+      'valguide-i18n': {
+        rules: {
+          'no-hardcoded-strings': noHardcodedStrings,
+        },
+      },
+    },
+    rules: {
+      'valguide-i18n/no-hardcoded-strings': 'warn',
     },
   },
 ]

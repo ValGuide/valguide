@@ -142,15 +142,15 @@ export function AssetsList({
           <div className="flex gap-2">
             <Button onClick={() => handleUploadClick('image')} size="lg">
               <ImageIcon />
-              Upload Image
+              {t('empty.uploadImage')}
             </Button>
             <Button onClick={() => handleUploadClick('audio')} size="lg" variant="outline">
               <Music />
-              Upload Audio
+              {t('empty.uploadAudio')}
             </Button>
             <Button onClick={() => handleUploadClick('video')} size="lg" variant="outline">
               <Video />
-              Upload Video
+              {t('empty.uploadVideo')}
             </Button>
           </div>
         </EmptyContent>
@@ -213,7 +213,7 @@ export function AssetsList({
       {/* Assets Grid */}
       {filteredAssets.length === 0 ? (
         <div className="rounded-lg border border-dashed p-12 text-center">
-          <p className="text-muted-foreground">No assets found matching your filters</p>
+          <p className="text-muted-foreground">{t('filter.noResults')}</p>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

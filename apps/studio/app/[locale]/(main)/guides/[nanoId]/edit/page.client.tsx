@@ -51,7 +51,7 @@ function GuideEditorContent() {
   const [assetPickerType, setAssetPickerType] = useState<'image' | 'audio' | 'video'>('image')
   const [assetPickerMultiple, setAssetPickerMultiple] = useState(false)
   const [assetPickerCallback, setAssetPickerCallback] = useState<((assets: Asset[]) => void) | null>(null)
-  const organizationId = 'org-123' // TODO: Get from user context
+  const organizationId = '00000000-0000-0000-0000-000000000123' // TODO: Get from user context
 
   // Auto-save
   useAutoSave(save, isDirty)

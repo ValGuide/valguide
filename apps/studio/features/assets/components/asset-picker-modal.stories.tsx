@@ -189,7 +189,7 @@ const mockAssets: Asset[] = [
 type PickerWrapperProps = React.ComponentProps<typeof AssetPickerModal>
 
 const PickerWrapper = (args: PickerWrapperProps) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   return (
     <div>

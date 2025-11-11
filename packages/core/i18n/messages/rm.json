@@ -166,9 +166,115 @@
       "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
     }
   },
+  "stops": {
+    "title": "Stops",
+    "description": "Puncts dal cuntegn en voss guid",
+    "add": "Agiuntar stop",
+    "empty": {
+      "title": "Anc nagins stops",
+      "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas."
+    },
+    "editor": {
+      "title": "Detagls dal stop",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Endatar titel dal stop",
+      "descriptionLabel": "Descripziun",
+      "descriptionPlaceholder": "Endatar descripziun dal stop",
+      "transcriptionLabel": "Transcripziun",
+      "transcriptionPlaceholder": "Transcripziun audio/video",
+      "imagesLabel": "Maletgs",
+      "audioLabel": "Audio-Guid",
+      "videoLabel": "Video",
+      "addImage": "Agiuntar maletg",
+      "addAudio": "Agiuntar audio",
+      "addVideo": "Agiuntar video",
+      "noImages": "Nagins maletgs",
+      "noAudio": "Nagin audio",
+      "noVideo": "Nagin video",
+      "autoTranscribe": "Generar automaticamain dall'audio"
+    },
+    "actions": {
+      "delete": "Stizzar stop",
+      "deleteConfirm": "Vulais vus propi stizzar quest stop?",
+      "deleteSuccess": "Stop stizzà",
+      "deleteError": "Errur cun stizzar il stop",
+      "save": "Memorisar stop",
+      "saving": "Vegn memorisà...",
+      "cancel": "Interrumper"
+    }
+  },
+  "assets": {
+    "title": "Assets",
+    "description": "Administrar vossa biblioteca da medias",
+    "empty": {
+      "title": "Anc nagins assets",
+      "description": "Chargiai si maletgs, audio e videos per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
+      "uploadButton": "Chargiar si voss emprim asset",
+      "uploadImage": "Chargiar si maletg",
+      "uploadAudio": "Chargiar si audio",
+      "uploadVideo": "Chargiar si video"
+    },
+    "picker": {
+      "title": "Tscherner {type}",
+      "tabs": {
+        "library": "Biblioteca",
+        "upload": "Chargiar si"
+      },
+      "select": "Tscherner",
+      "selected": "{count} tschernì",
+      "cancel": "Interrumper",
+      "noAssets": "Nagins {type}-assets chattads",
+      "multiSelect": "Tscherner plirs",
+      "empty": {
+        "description": "Chargiai si assets per cumenzar"
+      }
+    },
+    "upload": {
+      "button": "Chargiar si",
+      "title": "Chargiar si {type}",
+      "success": "Chargiada si cumpletta",
+      "successDescription": "{fileName} chargià si cun success",
+      "error": "Errur cun chargiar si",
+      "errorDescription": "In errur è succedì durant la chargiada si",
+      "restricted": "Chargiada si limitada",
+      "restrictedDescription": "La datoteca na cumplescha betg las pretensiuns da chargiada si"
+    },
+    "filter": {
+      "all": "Tut tips",
+      "allLocales": "Tut linguas",
+      "image": "Maletgs",
+      "audio": "Audio",
+      "video": "Video",
+      "search": "Tschertgar assets...",
+      "searchPlaceholder": "Tschertgar tenor num da datoteca...",
+      "noResults": "Nagins assets chattads che correspundan a voss filters"
+    },
+    "card": {
+      "uploaded": "Chargià si",
+      "size": "Grondezza",
+      "locale": "Lingua",
+      "delete": "Stizzar",
+      "deleting": "Vegn stizzà...",
+      "deleteConfirm": "Vulais vus propi stizzar quest asset?",
+      "deleteSuccess": "Asset stizzà",
+      "deleteError": "Errur cun stizzar l'asset",
+      "preview": "Prevista",
+      "download": "Chargiar giu"
+    },
+    "types": {
+      "image": "Maletg",
+      "audio": "Audio",
+      "video": "Video"
+    },
+    "limits": {
+      "maxSize": "Grondezza maximala da datoteca: {size}",
+      "maxFiles": "Fin {count} datotecas"
+    }
+  },
   "sidebar": {
     "nav": {
       "guides": "Guids",
+      "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",
       "teamAndMembers": "Team & Commembers",
@@ -179,6 +285,9 @@
     "pages": {
       "guides": {
         "description": "Crear e administrar vossas guidas interactivas."
+      },
+      "assets": {
+        "description": "Administrar vossa biblioteca da medias cun maletgs, audio e videos."
       },
       "design": {
         "description": "Persunalisar l'apparientscha da vossas guidas."

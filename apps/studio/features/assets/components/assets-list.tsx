@@ -24,7 +24,7 @@ import {
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { AssetCard } from './asset-card'
-import { AssetUploadModal } from './asset-upload-modal'
+import { CustomAssetUpload } from './asset-upload-custom'
 
 export type AssetsListProps = {
   assets?: Asset[]
@@ -118,31 +118,43 @@ export function AssetsList({
   // Empty state when no assets exist
   if (assets.length === 0) {
     return (
-      <Empty className="border">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <ImageIcon />
-          </EmptyMedia>
-          <EmptyTitle>{t('empty.title')}</EmptyTitle>
-          <EmptyDescription>{t('empty.description')}</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <div className="flex gap-2">
-            <Button onClick={() => handleUploadClick('image')} size="lg">
+      <>
+        <Empty className="border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
               <ImageIcon />
-              Upload Image
-            </Button>
-            <Button onClick={() => handleUploadClick('audio')} size="lg" variant="outline">
-              <Music />
-              Upload Audio
-            </Button>
-            <Button onClick={() => handleUploadClick('video')} size="lg" variant="outline">
-              <Video />
-              Upload Video
-            </Button>
-          </div>
-        </EmptyContent>
-      </Empty>
+            </EmptyMedia>
+            <EmptyTitle>{t('empty.title')}</EmptyTitle>
+            <EmptyDescription>{t('empty.description')}</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <div className="flex gap-2">
+              <Button onClick={() => handleUploadClick('image')} size="lg">
+                <ImageIcon />
+                {t('empty.uploadImage')}
+              </Button>
+              <Button onClick={() => handleUploadClick('audio')} size="lg" variant="outline">
+                <Music />
+                {t('empty.uploadAudio')}
+              </Button>
+              <Button onClick={() => handleUploadClick('video')} size="lg" variant="outline">
+                <Video />
+                {t('empty.uploadVideo')}
+              </Button>
+            </div>
+          </EmptyContent>
+        </Empty>
+
+        {/* Upload Modal */}
+        <CustomAssetUpload
+          key={uploadType}
+          type={uploadType}
+          organizationId={organizationId}
+          onUploadComplete={handleUploadComplete}
+          open={uploadModalOpen}
+          onOpenChange={setUploadModalOpen}
+        />
+      </>
     )
   }
 
@@ -201,7 +213,7 @@ export function AssetsList({
       {/* Assets Grid */}
       {filteredAssets.length === 0 ? (
         <div className="rounded-lg border border-dashed p-12 text-center">
-          <p className="text-muted-foreground">No assets found matching your filters</p>
+          <p className="text-muted-foreground">{t('filter.noResults')}</p>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -212,14 +224,14 @@ export function AssetsList({
       )}
 
       {/* Upload Modal */}
-      {uploadModalOpen && (
-        <AssetUploadModal
-          type={uploadType}
-          organizationId={organizationId}
-          onUploadComplete={handleUploadComplete}
-          trigger={null}
-        />
-      )}
+      <CustomAssetUpload
+        key={uploadType}
+        type={uploadType}
+        organizationId={organizationId}
+        onUploadComplete={handleUploadComplete}
+        open={uploadModalOpen}
+        onOpenChange={setUploadModalOpen}
+      />
     </div>
   )
 }

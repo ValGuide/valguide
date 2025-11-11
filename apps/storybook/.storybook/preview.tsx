@@ -1,7 +1,4 @@
 import '@valguide/ui/styles/globals.css'
-// Uppy CSS - conditionally import if available
-// import '@uppy/core/dist/style.css'
-// import '@uppy/dashboard/dist/style.css'
 
 import type { Preview } from '@storybook/nextjs-vite'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'

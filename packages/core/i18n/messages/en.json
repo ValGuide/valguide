@@ -209,7 +209,10 @@
     "empty": {
       "title": "No assets yet",
       "description": "Upload images, audio, and video files to use in your guides. All files are stored securely and can be reused across multiple guides.",
-      "uploadButton": "Upload your first asset"
+      "uploadButton": "Upload your first asset",
+      "uploadImage": "Upload Image",
+      "uploadAudio": "Upload Audio",
+      "uploadVideo": "Upload Video"
     },
     "picker": {
       "title": "Select {type}",
@@ -221,7 +224,10 @@
       "selected": "{count} selected",
       "cancel": "Cancel",
       "noAssets": "No {type} assets found",
-      "multiSelect": "Select multiple"
+      "multiSelect": "Select multiple",
+      "empty": {
+        "description": "Upload assets to get started"
+      }
     },
     "upload": {
       "button": "Upload",
@@ -240,7 +246,8 @@
       "audio": "Audio",
       "video": "Video",
       "search": "Search assets...",
-      "searchPlaceholder": "Search by filename..."
+      "searchPlaceholder": "Search by filename...",
+      "noResults": "No assets found matching your filters"
     },
     "card": {
       "uploaded": "Uploaded",

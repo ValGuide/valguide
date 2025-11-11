@@ -51,7 +51,10 @@ const config: StorybookConfig = {
       },
     }
     return mergeConfig(config, {
-      define: { 'process.env': '{}' },
+      define: { 
+        'process.env': '{}',
+        'process.env.VG_DATABASE_URL': '""',
+      },
       optimizeDeps: {
         // TODO Storybook: enable dark mode (broke in v9)
         include: ['storybook-dark-mode'],
