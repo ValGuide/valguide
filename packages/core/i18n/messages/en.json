@@ -166,9 +166,59 @@
       "openingDescription": "Please wait while we load your guide"
     }
   },
+  "assets": {
+    "title": "Assets",
+    "description": "Manage your media library",
+    "empty": {
+      "title": "No assets yet",
+      "description": "Upload images, audio, and video files to use in your guides. All files are stored securely and can be reused across multiple guides.",
+      "uploadButton": "Upload your first asset"
+    },
+    "upload": {
+      "button": "Upload",
+      "title": "Upload {type}",
+      "success": "Upload complete",
+      "successDescription": "{fileName} uploaded successfully",
+      "error": "Upload failed",
+      "errorDescription": "An error occurred during upload",
+      "restricted": "Upload restricted",
+      "restrictedDescription": "File does not meet upload requirements"
+    },
+    "filter": {
+      "all": "All Types",
+      "allLocales": "All Languages",
+      "image": "Images",
+      "audio": "Audio",
+      "video": "Video",
+      "search": "Search assets...",
+      "searchPlaceholder": "Search by filename..."
+    },
+    "card": {
+      "uploaded": "Uploaded",
+      "size": "Size",
+      "locale": "Language",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "deleteConfirm": "Are you sure you want to delete this asset?",
+      "deleteSuccess": "Asset deleted",
+      "deleteError": "Failed to delete asset",
+      "preview": "Preview",
+      "download": "Download"
+    },
+    "types": {
+      "image": "Image",
+      "audio": "Audio",
+      "video": "Video"
+    },
+    "limits": {
+      "maxSize": "Max file size: {size}",
+      "maxFiles": "Up to {count} files"
+    }
+  },
   "sidebar": {
     "nav": {
       "guides": "Guides",
+      "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",
       "teamAndMembers": "Team & Members",
@@ -179,6 +229,9 @@
     "pages": {
       "guides": {
         "description": "Create and manage your interactive guides."
+      },
+      "assets": {
+        "description": "Manage your media library of images, audio, and video."
       },
       "design": {
         "description": "Customize the look and feel of your guides."

@@ -57,6 +57,18 @@ const config: StorybookConfig = {
         include: ['storybook-dark-mode'],
         exclude: ['@storybook/builder-vite'],
       },
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve?.alias,
+          // Mock server-side modules for browser compatibility
+          'postgres': path.resolve(__dirname, './__mocks__/postgres.ts'),
+          '@valguide/supabase/server': path.resolve(__dirname, './__mocks__/supabase-server.ts'),
+          '@valguide/core/features/assets/actions': path.resolve(__dirname, './__mocks__/asset-actions.ts'),
+          '@valguide/core/features/assets/queries': path.resolve(__dirname, './__mocks__/asset-queries.ts'),
+          '@valguide/core/features/db': path.resolve(__dirname, './__mocks__/db.ts'),
+        },
+      },
     })
   },
 }

@@ -69,7 +69,7 @@
     "framer-motion": "^12.9.2",
     "input-otp": "^1.4.2",
     "lucide-react": "0.546.0",
-    "nanoid": "^5.0.7",
+    "nanoid": "^5.1.6",
     "negotiator": "^1.0.0",
     "next": "^16.0.0",
     "next-intl": "^4.4.0",

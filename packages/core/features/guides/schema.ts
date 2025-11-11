@@ -1,4 +1,4 @@
-import { pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { pgSchema, text, timestamp, uniqueIndex, uuid, varchar, integer, index } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { relations } from 'drizzle-orm'
 import type { SupportedLocale } from '../../i18n/i18n.config'
@@ -45,9 +45,50 @@ export const guideTranslation = studioSchema.table(
   }),
 )
 
+// Stop table (content points within a guide)
+export const stop = studioSchema.table('stop', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  guideId: uuid('guide_id')
+    .notNull()
+    .references(() => guide.id, { onDelete: 'cascade' }),
+  nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_stop_nano_id'),
+  order: integer('order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+  createdBy: uuid('created_by')
+    .notNull()
+    .references(() => authUsers.id, { onDelete: 'cascade' }),
+})
+
+export const stopTranslation = studioSchema.table(
+  'stop_translation',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    locale: varchar('locale', { length: 10 }).notNull(),
+    title: varchar('title', { length: 500 }).notNull(),
+    description: text('description'),
+    transcription: text('transcription'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => ({
+    uniqueStopTranslation: uniqueIndex('unique_stop_translation').on(t.stopId, t.locale),
+  }),
+)
+
 // Relations
 export const guideRelations = relations(guide, ({ many, one }) => ({
   translations: many(guideTranslation),
+  stops: many(stop),
   creator: one(authUsers, {
     fields: [guide.createdBy],
     references: [authUsers.id],
@@ -67,15 +108,48 @@ export const guideTranslationRelations = relations(guideTranslation, ({ one }) =
   }),
 }))
 
+export const stopRelations = relations(stop, ({ many, one }) => ({
+  guide: one(guide, {
+    fields: [stop.guideId],
+    references: [guide.id],
+  }),
+  translations: many(stopTranslation),
+  creator: one(authUsers, {
+    fields: [stop.createdBy],
+    references: [authUsers.id],
+  }),
+}))
+
+export const stopTranslationRelations = relations(stopTranslation, ({ one }) => ({
+  stop: one(stop, {
+    fields: [stopTranslation.stopId],
+    references: [stop.id],
+  }),
+}))
+
 // TypeScript types
 export type Guide = typeof guide.$inferSelect
 export type NewGuide = typeof guide.$inferInsert
 export type GuideTranslation = typeof guideTranslation.$inferSelect
 export type NewGuideTranslation = typeof guideTranslation.$inferInsert
 
+export type Stop = typeof stop.$inferSelect
+export type NewStop = typeof stop.$inferInsert
+export type StopTranslation = typeof stopTranslation.$inferSelect
+export type NewStopTranslation = typeof stopTranslation.$inferInsert
+
 // Helper type for a guide with its translations
 export type GuideWithTranslations = Guide & {
   translations: GuideTranslation[]
+}
+
+export type StopWithTranslations = Stop & {
+  translations: StopTranslation[]
+}
+
+export type GuideWithStops = Guide & {
+  translations: GuideTranslation[]
+  stops: StopWithTranslations[]
 }
 
 // Helper function to get localized text with fallback
