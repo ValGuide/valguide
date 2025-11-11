@@ -206,6 +206,11 @@
   "assets": {
     "title": "Assets",
     "description": "Administrar vossa biblioteca da medias",
+    "types": {
+      "image": "maletg",
+      "audio": "audio",
+      "video": "video"
+    },
     "empty": {
       "title": "Anc nagins assets",
       "description": "Chargiai si maletgs, audio e videos per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
@@ -237,7 +242,14 @@
       "error": "Errur cun chargiar si",
       "errorDescription": "In errur è succedì durant la chargiada si",
       "restricted": "Chargiada si limitada",
-      "restrictedDescription": "La datoteca na cumplescha betg las pretensiuns da chargiada si"
+      "restrictedDescription": "La datoteca na cumplescha betg las pretensiuns da chargiada si",
+      "dropzone": "Metter {type} qua u cliccar per tschertgar",
+      "maxSize": "Grondezza maximala: {size}MB",
+      "uploadComplete": "Chargiada si cumpletta!",
+      "uploading": "{progress}% chargià si",
+      "uploadButton": "Chargiar si {type}",
+      "invalidFileType": "Tip da datoteca nunvalid. Tscherna per plaschair ina datoteca {type}.",
+      "fileSizeExceeded": "La grondezza da la datoteca surpassa il limit da {size}MB"
     },
     "filter": {
       "all": "Tut tips",

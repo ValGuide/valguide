@@ -206,6 +206,11 @@
   "assets": {
     "title": "Assets",
     "description": "Verwalten Sie Ihre Medienbibliothek",
+    "types": {
+      "image": "Bild",
+      "audio": "Audio",
+      "video": "Video"
+    },
     "empty": {
       "title": "Noch keine Assets",
       "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Guides zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Guides wiederverwendet werden.",
@@ -237,7 +242,14 @@
       "error": "Upload fehlgeschlagen",
       "errorDescription": "Beim Upload ist ein Fehler aufgetreten",
       "restricted": "Upload eingeschränkt",
-      "restrictedDescription": "Datei erfüllt nicht die Upload-Anforderungen"
+      "restrictedDescription": "Datei erfüllt nicht die Upload-Anforderungen",
+      "dropzone": "{type} hier ablegen oder klicken zum Durchsuchen",
+      "maxSize": "Maximale Größe: {size}MB",
+      "uploadComplete": "Upload abgeschlossen!",
+      "uploading": "{progress}% hochgeladen",
+      "uploadButton": "{type} hochladen",
+      "invalidFileType": "Ungültiger Dateityp. Bitte wählen Sie eine {type}-Datei.",
+      "fileSizeExceeded": "Dateigröße überschreitet {size}MB-Limit"
     },
     "filter": {
       "all": "Alle Typen",

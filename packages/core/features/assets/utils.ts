@@ -12,7 +12,7 @@ export function validateFileSize(fileSize: number, type: AssetType): boolean {
 
 export function getAllowedMimeTypes(type: AssetType): string[] {
   const allowedMimeTypes = {
-    image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+    image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'],
     audio: ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg'],
     video: ['video/mp4', 'video/webm', 'video/quicktime'],
   }

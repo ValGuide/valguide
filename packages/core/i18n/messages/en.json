@@ -206,6 +206,11 @@
   "assets": {
     "title": "Assets",
     "description": "Manage your media library",
+    "types": {
+      "image": "image",
+      "audio": "audio",
+      "video": "video"
+    },
     "empty": {
       "title": "No assets yet",
       "description": "Upload images, audio, and video files to use in your guides. All files are stored securely and can be reused across multiple guides.",
@@ -237,7 +242,14 @@
       "error": "Upload failed",
       "errorDescription": "An error occurred during upload",
       "restricted": "Upload restricted",
-      "restrictedDescription": "File does not meet upload requirements"
+      "restrictedDescription": "File does not meet upload requirements",
+      "dropzone": "Drop {type} here or click to browse",
+      "maxSize": "Maximum size: {size}MB",
+      "uploadComplete": "Upload Complete!",
+      "uploading": "{progress}% uploaded",
+      "uploadButton": "Upload {type}",
+      "invalidFileType": "Invalid file type. Please select a {type} file.",
+      "fileSizeExceeded": "File size exceeds {size}MB limit"
     },
     "filter": {
       "all": "All Types",

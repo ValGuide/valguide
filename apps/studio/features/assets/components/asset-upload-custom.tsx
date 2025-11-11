@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'
@@ -38,6 +38,7 @@ export function CustomAssetUpload({
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [uploadComplete, setUploadComplete] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
@@ -45,6 +46,14 @@ export function CustomAssetUpload({
 
   const maxSizeMB = type === 'video' ? 500 : type === 'audio' ? 50 : 10
   const allowedTypes = getAllowedMimeTypes(type)
+  const translatedType = t(`types.${type}`)
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024 * 1024) {
+      return `${(bytes / 1024).toFixed(2)} KB`
+    }
+    return `${(bytes / 1024 / 1024).toFixed(2)} MB`
+  }
 
   const getTypeIcon = () => {
     switch (type) {
@@ -66,21 +75,27 @@ export function CustomAssetUpload({
 
       // Validate file type
       if (!allowedTypes.includes(selectedFile.type)) {
-        setError(`Invalid file type. Please select a ${type} file.`)
+        setError(t('upload.invalidFileType', { type: translatedType }))
         return
       }
 
       // Validate file size
       if (!validateFileSize(selectedFile.size, type)) {
-        setError(`File size exceeds ${maxSizeMB}MB limit`)
+        setError(t('upload.fileSizeExceeded', { size: maxSizeMB }))
         return
       }
 
       setFile(selectedFile)
       setError(null)
       setUploadComplete(false)
+
+      // Create preview for images
+      if (type === 'image' && selectedFile.type.startsWith('image/')) {
+        const url = URL.createObjectURL(selectedFile)
+        setPreviewUrl(url)
+      }
     },
-    [allowedTypes, maxSizeMB, type]
+    [allowedTypes, maxSizeMB, type],
   )
 
   const handleDrop = useCallback(
@@ -91,21 +106,27 @@ export function CustomAssetUpload({
 
       // Validate file type
       if (!allowedTypes.includes(droppedFile.type)) {
-        setError(`Invalid file type. Please select a ${type} file.`)
+        setError(t('upload.invalidFileType', { type: translatedType }))
         return
       }
 
       // Validate file size
       if (!validateFileSize(droppedFile.size, type)) {
-        setError(`File size exceeds ${maxSizeMB}MB limit`)
+        setError(t('upload.fileSizeExceeded', { size: maxSizeMB }))
         return
       }
 
       setFile(droppedFile)
       setError(null)
       setUploadComplete(false)
+
+      // Create preview for images
+      if (type === 'image' && droppedFile.type.startsWith('image/')) {
+        const url = URL.createObjectURL(droppedFile)
+        setPreviewUrl(url)
+      }
     },
-    [allowedTypes, maxSizeMB, type]
+    [allowedTypes, maxSizeMB, type],
   )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -176,10 +197,23 @@ export function CustomAssetUpload({
     setProgress(0)
     setError(null)
     setUploadComplete(false)
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
+    }
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
   }
+
+  // Cleanup preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl)
+      }
+    }
+  }, [previewUrl])
 
   return (
     <>
@@ -194,7 +228,7 @@ export function CustomAssetUpload({
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-base sm:text-lg">
-              Upload {type} {locale && `(${locale.toUpperCase()})`}
+              {t('upload.title', { type: translatedType })} {locale && `(${locale.toUpperCase()})`}
             </DialogTitle>
           </DialogHeader>
 
@@ -210,7 +244,7 @@ export function CustomAssetUpload({
                   : file
                     ? 'border-primary bg-primary/5'
                     : 'border-border hover:border-primary/50 hover:bg-accent/50',
-                uploading && 'pointer-events-none opacity-60'
+                uploading && 'pointer-events-none opacity-60',
               )}
             >
               <input
@@ -228,7 +262,7 @@ export function CustomAssetUpload({
                     <CheckCircle2 className="h-12 w-12 sm:h-16 sm:w-16 text-green-600" />
                     <div className="space-y-1 sm:space-y-2">
                       <p className="text-base sm:text-lg font-semibold text-green-700 dark:text-green-400">
-                        Upload Complete!
+                        {t('upload.uploadComplete')}
                       </p>
                       <p className="text-xs sm:text-sm text-muted-foreground truncate max-w-[250px] sm:max-w-none">
                         {file?.name}
@@ -237,22 +271,26 @@ export function CustomAssetUpload({
                   </>
                 ) : file ? (
                   <>
-                    {getTypeIcon()}
+                    {previewUrl ? (
+                      <img src={previewUrl} alt={file.name} className="max-h-48 max-w-full rounded-lg object-contain" />
+                    ) : (
+                      getTypeIcon()
+                    )}
                     <div className="space-y-1 sm:space-y-2">
-                      <p className="text-xs sm:text-sm font-medium truncate max-w-[250px] sm:max-w-none">
-                        {file.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {(file.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
+                      <p className="text-xs sm:text-sm font-medium truncate max-w-[250px] sm:max-w-none">{file.name}</p>
+                      <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
                     </div>
                   </>
                 ) : (
                   <>
                     {getTypeIcon()}
                     <div className="space-y-1 sm:space-y-2">
-                      <p className="text-sm sm:text-base font-medium">Drop {type} here or click to browse</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Maximum size: {maxSizeMB}MB</p>
+                      <p className="text-sm sm:text-base font-medium">
+                        {t('upload.dropzone', { type: translatedType })}
+                      </p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">
+                        {t('upload.maxSize', { size: maxSizeMB })}
+                      </p>
                     </div>
                   </>
                 )}
@@ -264,7 +302,7 @@ export function CustomAssetUpload({
               <div className="space-y-2">
                 <Progress value={progress} className="h-2" />
                 <p className="text-sm text-center text-muted-foreground">
-                  {progress.toFixed(1)}% uploaded
+                  {t('upload.uploading', { progress: progress.toFixed(1) })}
                 </p>
               </div>
             )}
@@ -272,21 +310,20 @@ export function CustomAssetUpload({
             {/* Error Message */}
             {error && (
               <div className="p-4 rounded-md border border-destructive/30 bg-destructive/5">
-                <p className="text-sm font-medium text-destructive">Upload failed</p>
+                <p className="text-sm font-medium text-destructive">{t('upload.error')}</p>
                 <p className="mt-1 text-sm text-muted-foreground line-clamp-3">{error}</p>
               </div>
             )}
 
             {/* Actions */}
             {file && !uploading && !uploadComplete && (
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex gap-2">
                 <Button onClick={handleUpload} className="flex-1" size="lg">
-                  <Upload className="mr-2 h-4 w-4" />
-                  <span className="hidden sm:inline">Upload {type}</span>
-                  <span className="sm:hidden">Upload</span>
+                  <Upload />
+                  {t('upload.uploadButton', { type: translatedType })}
                 </Button>
-                <Button variant="outline" size="lg" onClick={handleReset}>
-                  <X className="h-4 w-4" />
+                <Button variant="outline" size="lg" onClick={handleReset} className="shrink-0">
+                  <X />
                 </Button>
               </div>
             )}
