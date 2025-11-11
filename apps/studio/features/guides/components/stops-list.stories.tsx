@@ -1,3 +1,4 @@
+// @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
 import { StopsList } from './stops-list.storybook'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'

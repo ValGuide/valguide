@@ -1,16 +1,15 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
-import { useUppy, Dashboard } from '@uppy/react'
+import Dashboard from '@uppy/react/dashboard'
 import {
   getUploadSignedUrl,
   confirmAssetUpload,
   type AssetType,
-  validateFileSize,
-  getAllowedMimeTypes,
 } from '@valguide/core/features/assets/actions'
+import { validateFileSize, getAllowedMimeTypes } from '@valguide/core/features/assets/utils'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
 import { Button } from '@valguide/ui/components/button'
@@ -49,7 +48,7 @@ export function AssetUploadModal({
     [onUploadComplete],
   )
 
-  const uppy = useUppy(() => {
+  const uppy = useMemo(() => {
     const maxFileSize = type === 'video' ? 500 * 1024 * 1024 : type === 'audio' ? 50 * 1024 * 1024 : 10 * 1024 * 1024
 
     const uppyInstance = new Uppy({
@@ -63,10 +62,11 @@ export function AssetUploadModal({
 
     uppyInstance.use(Tus, {
       endpoint: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/upload/resumable`,
-      async onBeforeRequest(req, file) {
+      async onBeforeRequest(req: any) {
+        const file = uppyInstance.getFile(req.getURL().split('/').pop() || '')
         try {
           // Validate file size
-          if (!validateFileSize(file.size!, type)) {
+          if (file && !validateFileSize(file.size!, type)) {
             throw new Error(`File size exceeds limit for ${type}`)
           }
 
@@ -80,11 +80,15 @@ export function AssetUploadModal({
           })
 
           // Store metadata for later confirmation
-          file.meta.storagePath = path
-          file.meta.assetId = assetId
+          if (file) {
+            uppyInstance.setFileMeta(file.id, {
+              storagePath: path,
+              assetId: assetId,
+            })
+          }
 
-          // Set upload URL to signed URL
-          req.setEndpoint(signedUrl)
+          // Update endpoint to use signed URL
+          req._opts.endpoint = signedUrl
         } catch (error) {
           console.error('Error getting upload URL:', error)
           toast.error('Upload failed', {
@@ -93,43 +97,42 @@ export function AssetUploadModal({
           throw error
         }
       },
-      async onAfterResponse(req, res, file) {
-        // Upload completed successfully
-        if (res.getStatus() === 200 || res.getStatus() === 201) {
-          try {
-            // Extract metadata (if available)
-            const width = file.meta.width as number | undefined
-            const height = file.meta.height as number | undefined
-            const duration = file.meta.duration as number | undefined
-
-            // Confirm upload and save to DB
-            const asset = await confirmAssetUpload({
-              assetId: file.meta.assetId as string,
-              fileName: file.name,
-              fileSize: file.size!,
-              mimeType: file.type!,
-              type,
-              locale,
-              storagePath: file.meta.storagePath as string,
-              organizationId,
-              width,
-              height,
-              duration,
-            })
-
-            handleUploadComplete(asset)
-          } catch (error) {
-            console.error('Error confirming upload:', error)
-            toast.error('Upload failed', {
-              description: error instanceof Error ? error.message : 'Failed to confirm upload',
-            })
-          }
-        }
-      },
     })
 
     uppyInstance.on('upload-success', (file) => {
       console.log('Upload success:', file?.name)
+      if (file) {
+        // Extract metadata (if available)
+        const width = file.meta.width as number | undefined
+        const height = file.meta.height as number | undefined
+        const duration = file.meta.duration as number | undefined
+
+        // Confirm upload and save to DB
+        confirmAssetUpload({
+          assetId: file.meta.assetId as string,
+          fileName: file.name,
+          fileSize: file.size!,
+          mimeType: file.type!,
+          type,
+          locale,
+          storagePath: file.meta.storagePath as string,
+          organizationId,
+          width,
+          height,
+          duration,
+        })
+          .then((asset) => {
+            if (asset) {
+              handleUploadComplete(asset)
+            }
+          })
+          .catch((error) => {
+            console.error('Error confirming upload:', error)
+            toast.error('Upload failed', {
+              description: error instanceof Error ? error.message : 'Failed to confirm upload',
+            })
+          })
+      }
     })
 
     uppyInstance.on('upload-error', (file, error) => {
@@ -146,7 +149,7 @@ export function AssetUploadModal({
     })
 
     return uppyInstance
-  })
+  }, [type, locale, organizationId, handleUploadComplete])
 
   return (
     <>

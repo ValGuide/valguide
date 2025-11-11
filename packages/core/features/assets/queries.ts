@@ -10,8 +10,6 @@ export type GetAssetsFilters = {
 }
 
 export async function getAssets(filters?: GetAssetsFilters) {
-  let query = db.select().from(asset)
-
   const conditions = []
 
   if (filters?.type) {
@@ -27,8 +25,10 @@ export async function getAssets(filters?: GetAssetsFilters) {
     conditions.push(eq(asset.uploadedBy, filters.uploadedBy))
   }
 
+  const query = db.select().from(asset)
+
   if (conditions.length > 0) {
-    query = query.where(and(...conditions))
+    return await query.where(and(...conditions)).orderBy(desc(asset.createdAt))
   }
 
   return await query.orderBy(desc(asset.createdAt))

@@ -1,3 +1,4 @@
+// @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
 import { LocaleTabs } from './locale-tabs'
 import { useState } from 'react'
@@ -22,6 +23,10 @@ function LocaleTabsWrapper() {
 
 export const Default: Story = {
   render: () => <LocaleTabsWrapper />,
+  args: {
+    value: 'en',
+    onValueChange: () => {},
+  },
 }
 
 export const EnglishSelected: Story = {

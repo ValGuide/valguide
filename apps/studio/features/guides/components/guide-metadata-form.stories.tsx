@@ -1,3 +1,4 @@
+// @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
 import { GuideMetadataForm } from './guide-metadata-form'
 import type { GuideTranslation } from '@valguide/core/features/guides/schema'
@@ -9,6 +10,9 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  args: {
+    onTranslationChange: () => {},
+  },
   argTypes: {
     onTranslationChange: { action: 'translation-changed' },
     onCoverImageChange: { action: 'cover-image-changed' },

@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@storybook/nextjs-vite": "^9.1.13",
+    "@storybook/react": "^9.1.13",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/jest": "^27.0.3",
     "@types/leaflet": "^1.9.16",

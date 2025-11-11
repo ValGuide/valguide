@@ -5,6 +5,7 @@ import { db } from '@valguide/core/features/db'
 import { asset } from './schema'
 import { eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
+import { validateFile } from './utils'
 
 export type GetUploadUrlAction = () => Promise<{ token: string; url: string; apiKey: string }>
 
@@ -57,7 +58,7 @@ export async function getUploadSignedUrl(
   const assetId = nanoid(21)
 
   // Validate file
-  const { sanitizedName } = validateFile(fileName, type)
+  const { sanitizedName } = validateFile(fileName)
 
   // Construct storage path
   const localePrefix = locale ? `${locale}/` : ''
@@ -199,30 +200,4 @@ export async function getDownloadSignedUrl(assetId: string) {
   return {
     signedUrl: data.signedUrl,
   }
-}
-
-// File validation
-function validateFile(fileName: string, type: AssetType) {
-  const sanitizedName = fileName.replace(/[^a-zA-Z0-9._-]/g, '-')
-  return { sanitizedName }
-}
-
-export function validateFileSize(fileSize: number, type: AssetType): boolean {
-  const maxSizes = {
-    image: 10 * 1024 * 1024, // 10MB
-    audio: 50 * 1024 * 1024, // 50MB
-    video: 500 * 1024 * 1024, // 500MB
-  }
-
-  return fileSize <= maxSizes[type]
-}
-
-export function getAllowedMimeTypes(type: AssetType): string[] {
-  const allowedMimeTypes = {
-    image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-    audio: ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg'],
-    video: ['video/mp4', 'video/webm', 'video/quicktime'],
-  }
-
-  return allowedMimeTypes[type]
 }
