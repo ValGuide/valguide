@@ -1,6 +1,6 @@
-import { supabaseMiddlewareFn } from '@valguide/core/supabase/middleware'
+import { supbaseProxyFn } from '@valguide/supabase/proxy'
 
-export const proxy = supabaseMiddlewareFn({
+export const proxy = supbaseProxyFn({
   routes: [
     {
       route: '/login',

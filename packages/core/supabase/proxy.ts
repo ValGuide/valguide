@@ -20,7 +20,7 @@ const withLocale = (fn: (req: NextRequest, locale: string) => Promise<NextRespon
   return res
 }
 
-export const supabaseMiddlewareFn = (options?: {
+export const supbaseProxyFn = (options?: {
   routes?: RouteConfig[]
   defaultNextUrl?: string
   defaultConfig?: Omit<RouteConfig, 'route'>
@@ -29,11 +29,11 @@ export const supabaseMiddlewareFn = (options?: {
   const getConfig = (pathname: string): RouteConfig | Omit<RouteConfig, 'route'> | undefined =>
     routes.find((config) => config.route == pathname) ?? options?.defaultConfig
 
-  return withLocale(async (req, locale) => {
-    const pathname = unlocalizedPathname(req.nextUrl.pathname)
-    const config = getConfig(pathname)
-
-    // early redirect to correct locale
+  const localizedResponse = (
+    req: NextRequest,
+    config: RouteConfig | Omit<RouteConfig, 'route'> | undefined,
+    locale: string,
+  ) => {
     if (config?.localized !== false && !hasPathnameLocale(req)) {
       const localizedPath = `/${locale}${req.nextUrl.pathname}`.replace(/\/$/, '')
       const localizedRoute = `${localizedPath}${req.nextUrl.search}`
@@ -41,17 +41,25 @@ export const supabaseMiddlewareFn = (options?: {
       log.info(`Redirecting to '${url.toString()}'`)
       return NextResponse.redirect(url)
     }
-
-    // supabase auth redirects
-    let supabaseResponse = NextResponse.next({
+    return NextResponse.next({
       request: req,
     })
+  }
+
+  return withLocale(async (req, locale) => {
+    const pathname = unlocalizedPathname(req.nextUrl.pathname)
+    const config = getConfig(pathname)
+
+    let supabaseResponse = localizedResponse(req, config, locale)
+
     const supabase = createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_PUBLISHABLE_KEY!, {
       cookies: {
         getAll() {
+          console.info('Getting cookies')
           return req.cookies.getAll()
         },
         setAll(cookiesToSet) {
+          console.info('Setting cookies', cookiesToSet)
           cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request: req,
@@ -72,9 +80,7 @@ export const supabaseMiddlewareFn = (options?: {
       // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
       // issues with users being randomly logged out.
       // IMPORTANT: DO NOT REMOVE auth.getClaims()
-
       const startTime = Date.now()
-
       const { data } = await supabase.auth.getClaims()
       const user = data?.claims
 
