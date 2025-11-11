@@ -166,6 +166,43 @@
       "openingDescription": "Please wait while we load your guide"
     }
   },
+  "stops": {
+    "title": "Stops",
+    "description": "Content points in your guide",
+    "add": "Add Stop",
+    "empty": {
+      "title": "No stops yet",
+      "description": "Add stops to create the journey through your guide. Each stop can have its own content in multiple languages."
+    },
+    "editor": {
+      "title": "Stop Details",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter stop title",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter stop description",
+      "transcriptionLabel": "Transcription",
+      "transcriptionPlaceholder": "Audio/video transcription",
+      "imagesLabel": "Images",
+      "audioLabel": "Audio Guide",
+      "videoLabel": "Video",
+      "addImage": "Add Image",
+      "addAudio": "Add Audio",
+      "addVideo": "Add Video",
+      "noImages": "No images",
+      "noAudio": "No audio",
+      "noVideo": "No video",
+      "autoTranscribe": "Auto-generate from audio"
+    },
+    "actions": {
+      "delete": "Delete Stop",
+      "deleteConfirm": "Are you sure you want to delete this stop?",
+      "deleteSuccess": "Stop deleted",
+      "deleteError": "Failed to delete stop",
+      "save": "Save Stop",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    }
+  },
   "assets": {
     "title": "Assets",
     "description": "Manage your media library",
@@ -173,6 +210,18 @@
       "title": "No assets yet",
       "description": "Upload images, audio, and video files to use in your guides. All files are stored securely and can be reused across multiple guides.",
       "uploadButton": "Upload your first asset"
+    },
+    "picker": {
+      "title": "Select {type}",
+      "tabs": {
+        "library": "Library",
+        "upload": "Upload"
+      },
+      "select": "Select",
+      "selected": "{count} selected",
+      "cancel": "Cancel",
+      "noAssets": "No {type} assets found",
+      "multiSelect": "Select multiple"
     },
     "upload": {
       "button": "Upload",
