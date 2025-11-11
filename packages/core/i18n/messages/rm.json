@@ -166,7 +166,18 @@
       "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
     },
     "editGuide": "Modifitgar il guid",
-    "backToGuides": "Turnar als guids"
+    "backToGuides": "Turnar als guids",
+    "delete": {
+      "button": "Stizzar il guid",
+      "confirmTitle": "Stizzar il guid",
+      "confirmDescription": "Vulais Vus propi stizzar quest guid? Quest'acziun na po betg vegnir annullada.",
+      "confirmButton": "Stizzar",
+      "cancelButton": "Interrumper",
+      "success": "Guid stizzà",
+      "successDescription": "Il guid è vegnì stizzà cun success",
+      "error": "Errur tar stizzar il guid",
+      "errorDescription": "In errur è succedì tar stizzar il guid. Empruvai per plaschair anc ina giada."
+    }
   },
   "stops": {
     "title": "Stops",

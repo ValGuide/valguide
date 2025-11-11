@@ -22,6 +22,7 @@ export const guide = studioSchema.table('guide', {
   published: timestamp('published', { withTimezone: true }),
   coverImage: text('cover_image'),
   organizationId: uuid('organization_id'),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
 })
 
 export const guideTranslation = studioSchema.table(
@@ -157,7 +158,7 @@ export function getLocalizedGuideText(
   guide: GuideWithTranslations,
   field: 'title' | 'description',
   locale: SupportedLocale,
-  fallbackLocale: SupportedLocale = 'en'
+  fallbackLocale: SupportedLocale = 'en',
 ): string {
   const translation = guide.translations.find((t) => t.locale === locale)
   if (translation?.[field]) {
@@ -177,11 +178,10 @@ export function getLocalizedGuideText(
 // Helper function to create a guide with translations
 export function createGuideWithTranslations(
   guideData: Omit<NewGuide, 'id' | 'createdAt' | 'updatedAt'>,
-  translations: Array<{ locale: string; title: string; description?: string }>
+  translations: Array<{ locale: string; title: string; description?: string }>,
 ): { guide: NewGuide; translations: Omit<NewGuideTranslation, 'guideId' | 'id' | 'createdAt' | 'updatedAt'>[] } {
   return {
     guide: guideData,
     translations,
   }
 }
-

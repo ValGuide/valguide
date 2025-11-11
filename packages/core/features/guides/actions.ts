@@ -116,21 +116,24 @@ export async function createStop(params: CreateStopParams) {
   // Create translations
   const createdTranslations = []
   for (const trans of translations) {
-    const [translation] = await db.insert(stopTranslation).values({
-      stopId: newStop.id,
-      locale: trans.locale,
-      title: trans.title,
-      description: trans.description,
-      transcription: trans.transcription,
-    }).returning()
+    const [translation] = await db
+      .insert(stopTranslation)
+      .values({
+        stopId: newStop.id,
+        locale: trans.locale,
+        title: trans.title,
+        description: trans.description,
+        transcription: trans.transcription,
+      })
+      .returning()
     createdTranslations.push(translation)
   }
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
-  
+
   return {
     ...newStop,
-    translations: createdTranslations
+    translations: createdTranslations,
   }
 }
 
@@ -265,4 +268,26 @@ export async function detachAssetFromStop(stopAssetId: string) {
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
   return { success: true }
+}
+
+export type DeleteGuideParams = {
+  id: string
+  userId: string
+}
+
+export async function deleteGuide(params: DeleteGuideParams) {
+  const { id, userId } = params
+
+  const [deletedGuide] = await db
+    .update(guide)
+    .set({
+      deletedAt: new Date(),
+      updatedBy: userId,
+      updatedAt: new Date(),
+    })
+    .where(eq(guide.id, id))
+    .returning()
+
+  revalidatePath('/', 'page')
+  return deletedGuide
 }

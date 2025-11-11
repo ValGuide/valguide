@@ -166,7 +166,18 @@
       "openingDescription": "Bitte warten Sie, während wir Ihren Guide laden"
     },
     "editGuide": "Guide bearbeiten",
-    "backToGuides": "Zurück zu Guides"
+    "backToGuides": "Zurück zu Guides",
+    "delete": {
+      "button": "Guide löschen",
+      "confirmTitle": "Guide löschen",
+      "confirmDescription": "Möchten Sie diesen Guide wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirmButton": "Löschen",
+      "cancelButton": "Abbrechen",
+      "success": "Guide gelöscht",
+      "successDescription": "Der Guide wurde erfolgreich gelöscht",
+      "error": "Fehler beim Löschen des Guides",
+      "errorDescription": "Beim Löschen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+    }
   },
   "stops": {
     "title": "Stops",

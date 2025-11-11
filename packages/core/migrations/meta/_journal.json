@@ -29,6 +29,13 @@
       "when": 1762883115538,
       "tag": "0003_misty_random",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1762896683266,
+      "tag": "0004_regular_power_man",
+      "breakpoints": true
     }
   ]
 }

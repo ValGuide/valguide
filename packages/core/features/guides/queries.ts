@@ -1,6 +1,13 @@
-import { eq, and, asc } from 'drizzle-orm'
+import { eq, and, asc, isNull } from 'drizzle-orm'
 import type { DB } from '../db'
-import { guide, guideTranslation, stop, stopTranslation, type GuideWithTranslations, type GuideWithStops } from './schema'
+import {
+  guide,
+  guideTranslation,
+  stop,
+  stopTranslation,
+  type GuideWithTranslations,
+  type GuideWithStops,
+} from './schema'
 import type { SupportedLocale } from '../../i18n/i18n.config'
 import { customAlphabet } from 'nanoid'
 
@@ -15,7 +22,7 @@ const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm
  */
 export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTranslations | null> {
   const result = await db.query.guide.findFirst({
-    where: eq(guide.id, guideId),
+    where: and(eq(guide.id, guideId), isNull(guide.deletedAt)),
     with: {
       translations: true,
     },
@@ -29,7 +36,7 @@ export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTr
  */
 export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithStops | null> {
   const result = await db.query.guide.findFirst({
-    where: eq(guide.nanoId, nanoId),
+    where: and(eq(guide.nanoId, nanoId), isNull(guide.deletedAt)),
     with: {
       translations: true,
       stops: {
@@ -49,6 +56,7 @@ export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWit
  */
 export async function getAllGuides(db: DB): Promise<GuideWithTranslations[]> {
   const result = await db.query.guide.findMany({
+    where: isNull(guide.deletedAt),
     with: {
       translations: true,
     },
@@ -62,7 +70,7 @@ export async function getAllGuides(db: DB): Promise<GuideWithTranslations[]> {
  */
 export async function getGuidesByUserId(db: DB, userId: string): Promise<GuideWithTranslations[]> {
   const result = await db.query.guide.findMany({
-    where: eq(guide.createdBy, userId),
+    where: and(eq(guide.createdBy, userId), isNull(guide.deletedAt)),
     with: {
       translations: true,
     },
@@ -77,10 +85,10 @@ export async function getGuidesByUserId(db: DB, userId: string): Promise<GuideWi
 export async function getGuideByIdWithLocale(
   db: DB,
   guideId: string,
-  locale: SupportedLocale
+  locale: SupportedLocale,
 ): Promise<(typeof guide.$inferSelect & { translation?: typeof guideTranslation.$inferSelect }) | null> {
   const result = await db.query.guide.findFirst({
-    where: eq(guide.id, guideId),
+    where: and(eq(guide.id, guideId), isNull(guide.deletedAt)),
     with: {
       translations: {
         where: eq(guideTranslation.locale, locale),
@@ -104,7 +112,7 @@ export async function getGuideByIdWithLocale(
 export async function createGuide(
   db: DB,
   guideData: Omit<typeof guide.$inferInsert, 'nanoId'> & { nanoId?: string },
-  translations: Array<{ locale: string; title: string; description?: string }>
+  translations: Array<{ locale: string; title: string; description?: string }>,
 ) {
   return await db.transaction(async (tx: DB) => {
     // Insert guide with auto-generated nanoId if not provided
@@ -143,7 +151,7 @@ export async function updateGuideTranslation(
   db: DB,
   guideId: string,
   locale: string,
-  data: { title?: string; description?: string }
+  data: { title?: string; description?: string },
 ): Promise<typeof guideTranslation.$inferSelect> {
   const existing = await db.query.guideTranslation.findFirst({
     where: and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)),
@@ -179,4 +187,3 @@ export async function updateGuideTranslation(
     return created
   }
 }
-

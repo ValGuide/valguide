@@ -2,9 +2,11 @@ import { notFound } from 'next/navigation'
 import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
+import { createClient } from '@valguide/supabase/server'
 import Link from 'next/link'
 import { Button } from '@valguide/ui/components/button'
 import { Pencil } from 'lucide-react'
+import { DeleteGuideButton } from './delete-guide-button'
 
 interface GuidePageParams {
   locale: string
@@ -20,7 +22,16 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
   const t = await getTranslations('guides')
   const guide = await getGuideByNanoId(db, nanoId)
 
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   if (!guide) {
+    notFound()
+  }
+
+  if (!user) {
     notFound()
   }
 
@@ -35,12 +46,15 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
             >
               ← {t('backToGuides')}
             </Link>
-            <Button asChild>
-              <Link href={`/guides/${nanoId}/edit`}>
-                <Pencil />
-                {t('editGuide')}
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <DeleteGuideButton guideId={guide.id} userId={user.id} />
+              <Button asChild>
+                <Link href={`/guides/${nanoId}/edit`}>
+                  <Pencil />
+                  {t('editGuide')}
+                </Link>
+              </Button>
+            </div>
           </div>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
