@@ -6,6 +6,7 @@ import { createClient } from '@valguide/supabase/server'
 import Link from 'next/link'
 import { Button } from '@valguide/ui/components/button'
 import { Pencil } from 'lucide-react'
+import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { ArchiveGuideButton } from './archive-guide-button'
 
 interface GuidePageParams {
@@ -62,11 +63,15 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
                 guide.translations[0]?.title ||
                 'Untitled Guide'}
             </h1>
-            <p className="text-muted-foreground mt-2">
-              {guide.translations.find((t) => t.locale === locale)?.description ||
-                guide.translations[0]?.description ||
-                ''}
-            </p>
+            <div className="text-muted-foreground mt-2">
+              <RichTextDisplay
+                content={
+                  guide.translations.find((t) => t.locale === locale)?.description ||
+                  guide.translations[0]?.description ||
+                  ''
+                }
+              />
+            </div>
           </div>
         </div>
 
@@ -112,7 +117,9 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
                 </div>
                 <h3 className="font-medium">{translation.title}</h3>
                 {translation.description && (
-                  <p className="text-sm text-muted-foreground mt-1">{translation.description}</p>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    <RichTextDisplay content={translation.description} />
+                  </div>
                 )}
               </div>
             ))}

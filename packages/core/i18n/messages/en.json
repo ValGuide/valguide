@@ -144,6 +144,17 @@
     "title": "Guides",
     "description": "Create and manage your multimedia guides",
     "backToGuides": "Back to guides",
+    "editor": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "strikethrough": "Strikethrough",
+      "heading": "Heading",
+      "bulletList": "Bullet List",
+      "orderedList": "Numbered List",
+      "blockquote": "Quote",
+      "undo": "Undo",
+      "redo": "Redo"
+    },
     "empty": {
       "title": "No guides yet",
       "description": "Create engaging multimedia guides with text, images, audio, and video content for your museum or educational institution.",

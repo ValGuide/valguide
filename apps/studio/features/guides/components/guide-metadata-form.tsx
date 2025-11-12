@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
-import { Textarea } from '@valguide/ui/components/textarea'
+import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Image as ImageIcon, X } from 'lucide-react'
@@ -73,12 +73,10 @@ export function GuideMetadataForm({
         {/* Description */}
         <div className="space-y-2">
           <Label htmlFor={`description-${locale}`}>Description</Label>
-          <Textarea
-            id={`description-${locale}`}
+          <RichTextEditor
             value={description}
-            onChange={(e) => handleDescriptionChange(e.target.value)}
+            onChange={handleDescriptionChange}
             placeholder="Enter guide description"
-            rows={4}
           />
         </div>
 

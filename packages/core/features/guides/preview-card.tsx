@@ -15,6 +15,7 @@ import { Badge } from '@valguide/core/ui/components/badge'
 import { cn } from '@valguide/core/ui/lib/utils'
 import { Button } from '@valguide/core/ui/components/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
+import { RichTextDisplay } from './rich-text-display'
 
 import { Guide } from './types'
 
@@ -85,7 +86,11 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
             </TooltipProvider>
           )}
         </CardTitle>
-        {displayDescription && <CardDescription>{displayDescription}</CardDescription>}
+        {displayDescription && (
+          <div className="text-sm text-muted-foreground">
+            <RichTextDisplay content={displayDescription} className="line-clamp-3" />
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">

@@ -144,6 +144,17 @@
     "title": "Guides",
     "description": "Erstellen und verwalten Sie Ihre Multimedia-Guides",
     "backToGuides": "Zurück zu Guides",
+    "editor": {
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "strikethrough": "Durchgestrichen",
+      "heading": "Überschrift",
+      "bulletList": "Aufzählungsliste",
+      "orderedList": "Nummerierte Liste",
+      "blockquote": "Zitat",
+      "undo": "Rückgängig",
+      "redo": "Wiederholen"
+    },
     "empty": {
       "title": "Noch keine Guides",
       "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",

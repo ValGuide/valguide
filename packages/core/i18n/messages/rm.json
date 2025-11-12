@@ -144,6 +144,17 @@
     "title": "Guids",
     "description": "Crear e administrar voss guids multimedials",
     "backToGuides": "Anavos als guids",
+    "editor": {
+      "bold": "Grass",
+      "italic": "Cursiv",
+      "strikethrough": "Stritgà tras",
+      "heading": "Titel",
+      "bulletList": "Glista cun puncts",
+      "orderedList": "Glista numerada",
+      "blockquote": "Citaziun",
+      "undo": "Revocar",
+      "redo": "Repeter"
+    },
     "empty": {
       "title": "Anc nagins guids",
       "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",
