@@ -138,7 +138,19 @@
       "created": "Created",
       "updated": "Updated",
       "authorInfo": "Author Information"
-    }
+    },
+    "stops": "Stops",
+    "stop": "Stop",
+    "stopNumber": "Stop {number}",
+    "stopProgress": "{current} of {total}",
+    "transcription": "Transcription",
+    "showTranscription": "Show transcription",
+    "hideTranscription": "Hide transcription",
+    "previous": "Previous",
+    "next": "Next",
+    "backToOverview": "Back to overview",
+    "startTour": "Start tour",
+    "of": "of"
   },
   "guides": {
     "title": "Guides",
@@ -177,6 +189,7 @@
       "openingDescription": "Please wait while we load your guide"
     },
     "editGuide": "Edit Guide",
+    "viewInApp": "View in App",
     "backToGuides": "Back to Guides",
     "delete": {
       "button": "Delete Guide",

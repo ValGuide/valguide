@@ -138,7 +138,19 @@
       "created": "Creà",
       "updated": "Actualisà",
       "authorInfo": "Infurmaziuns davart l'autur"
-    }
+    },
+    "stops": "Staziuns",
+    "stop": "Staziun",
+    "stopNumber": "Staziun {number}",
+    "stopProgress": "{current} da {total}",
+    "transcription": "Transcripziun",
+    "showTranscription": "Mussar transcripziun",
+    "hideTranscription": "Zuppentar transcripziun",
+    "previous": "Enavos",
+    "next": "Vinavant",
+    "backToOverview": "Turnar a la survista",
+    "startTour": "Cumenzar la tura",
+    "of": "da"
   },
   "guides": {
     "title": "Guids",
@@ -177,6 +189,7 @@
       "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
     },
     "editGuide": "Modifitgar il guid",
+    "viewInApp": "Mussar en app",
     "backToGuides": "Turnar als guids",
     "delete": {
       "button": "Stizzar il guid",

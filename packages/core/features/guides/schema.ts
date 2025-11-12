@@ -176,6 +176,28 @@ export function getLocalizedGuideText(
   return firstTranslation?.[field] || ''
 }
 
+// Helper function to get localized stop text with fallback
+export function getLocalizedStopText(
+  stop: StopWithTranslations,
+  field: 'title' | 'description' | 'transcription',
+  locale: SupportedLocale,
+  fallbackLocale: SupportedLocale = 'en',
+): string {
+  const translation = stop.translations.find((t) => t.locale === locale)
+  if (translation?.[field]) {
+    return translation[field] || ''
+  }
+
+  const fallbackTranslation = stop.translations.find((t) => t.locale === fallbackLocale)
+  if (fallbackTranslation?.[field]) {
+    return fallbackTranslation[field] || ''
+  }
+
+  // Return the first available translation
+  const firstTranslation = stop.translations[0]
+  return firstTranslation?.[field] || ''
+}
+
 // Helper function to create a guide with translations
 export function createGuideWithTranslations(
   guideData: Omit<NewGuide, 'id' | 'createdAt' | 'updatedAt'>,

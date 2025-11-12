@@ -138,7 +138,19 @@
       "created": "Erstellt",
       "updated": "Aktualisiert",
       "authorInfo": "Autorinformationen"
-    }
+    },
+    "stops": "Stationen",
+    "stop": "Station",
+    "stopNumber": "Station {number}",
+    "stopProgress": "{current} von {total}",
+    "transcription": "Transkription",
+    "showTranscription": "Transkription anzeigen",
+    "hideTranscription": "Transkription ausblenden",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "backToOverview": "Zurück zur Übersicht",
+    "startTour": "Tour starten",
+    "of": "von"
   },
   "guides": {
     "title": "Guides",
@@ -177,6 +189,7 @@
       "openingDescription": "Bitte warten Sie, während wir Ihren Guide laden"
     },
     "editGuide": "Guide bearbeiten",
+    "viewInApp": "In App anzeigen",
     "backToGuides": "Zurück zu Guides",
     "delete": {
       "button": "Guide löschen",

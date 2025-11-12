@@ -8,6 +8,7 @@ import { Button } from '@valguide/ui/components/button'
 import { Pencil } from 'lucide-react'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { ArchiveGuideButton } from './archive-guide-button'
+import { ViewInAppButton } from './view-in-app-button'
 
 interface GuidePageParams {
   locale: string
@@ -48,6 +49,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
               ← {t('backToGuides')}
             </Link>
             <div className="flex gap-2">
+              <ViewInAppButton nanoId={nanoId} published={!!guide.published} />
               <ArchiveGuideButton guideId={guide.id} userId={user.id} />
               <Button asChild>
                 <Link href={`/guides/${nanoId}/edit`}>
