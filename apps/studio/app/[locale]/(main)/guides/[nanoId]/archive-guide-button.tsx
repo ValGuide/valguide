@@ -14,25 +14,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
-import { Trash2 } from 'lucide-react'
+import { Archive } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteGuide } from '@valguide/core/features/guides/actions'
+import { archiveGuide } from '@valguide/core/features/guides/actions'
 
-interface DeleteGuideButtonProps {
+interface ArchiveGuideButtonProps {
   guideId: string
   userId: string
 }
 
-export function DeleteGuideButton({ guideId, userId }: DeleteGuideButtonProps) {
+export function ArchiveGuideButton({ guideId, userId }: ArchiveGuideButtonProps) {
   const [open, setOpen] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isArchiving, setIsArchiving] = useState(false)
   const router = useRouter()
-  const t = useTranslations('guides.delete')
+  const t = useTranslations('guides.archive')
 
-  const handleDelete = async () => {
-    setIsDeleting(true)
+  const handleArchive = async () => {
+    setIsArchiving(true)
     try {
-      await deleteGuide({ id: guideId, userId })
+      await archiveGuide({ id: guideId, userId })
       toast.success(t('success'), {
         description: t('successDescription'),
       })
@@ -43,15 +43,15 @@ export function DeleteGuideButton({ guideId, userId }: DeleteGuideButtonProps) {
         description: t('errorDescription'),
       })
     } finally {
-      setIsDeleting(false)
+      setIsArchiving(false)
       setOpen(false)
     }
   }
 
   return (
     <>
-      <Button variant="destructive" onClick={() => setOpen(true)}>
-        <Trash2 />
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        <Archive />
         {t('button')}
       </Button>
 
@@ -62,13 +62,9 @@ export function DeleteGuideButton({ guideId, userId }: DeleteGuideButtonProps) {
             <AlertDialogDescription>{t('confirmDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>{t('cancelButton')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeleting ? '...' : t('confirmButton')}
+            <AlertDialogCancel disabled={isArchiving}>{t('cancelButton')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleArchive} disabled={isArchiving}>
+              {isArchiving ? '...' : t('confirmButton')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

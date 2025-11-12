@@ -177,7 +177,42 @@
       "successDescription": "Il guid è vegnì stizzà cun success",
       "error": "Errur tar stizzar il guid",
       "errorDescription": "In errur è succedì tar stizzar il guid. Empruvai per plaschair anc ina giada."
-    }
+    },
+    "archive": {
+      "button": "Archivar la guida",
+      "confirmTitle": "Archivar questa guida?",
+      "confirmDescription": "Questa guida vegn archivada. Ti la pos restaurar pli tard.",
+      "confirmButton": "Archivar",
+      "cancelButton": "Interrumper",
+      "success": "Guida archivada cun success",
+      "successDescription": "La guida è vegnida archivada",
+      "error": "Errur tar archivar la guida",
+      "errorDescription": "In errur è succedì tar archivar la guida. Empruvai per plaschair anc ina giada."
+    },
+    "recover": {
+      "button": "Restaurar la guida",
+      "success": "Guida restaurada cun success",
+      "successDescription": "La guida è vegnida restaurada tar tias guidas activas",
+      "error": "Errur tar restaurar la guida",
+      "errorDescription": "In errur è succedì tar restaurar la guida. Empruvai per plaschair anc ina giada."
+    },
+    "archived": "Archivà",
+    "recover": "Restaurar",
+    "archiveGuide": "Archivar la guida",
+    "recoverGuide": "Restaurar la guida",
+    "permanentlyDelete": "Stizzar definitivamain",
+    "archiveConfirmTitle": "Archivar questa guida?",
+    "archiveConfirmDescription": "Questa guida vegn archivada. Ti la pos restaurar pli tard.",
+    "recoverConfirmTitle": "Restaurar questa guida?",
+    "recoverConfirmDescription": "Questa guida vegn restaurada tar tias guidas activas.",
+    "deleteConfirmTitle": "Stizzar questa guida definitivamain?",
+    "deleteConfirmDescription": "Questa acziun na po betg vegnir revocada. La guida vegn stizzada definitivamain.",
+    "archivedSuccessfully": "Guida archivada cun success",
+    "recoveredSuccessfully": "Guida restaurada cun success",
+    "deletedSuccessfully": "Guida stizzada cun success",
+    "archivedOn": "Archivà ils",
+    "noArchivedGuides": "Naginas guidas archivadas",
+    "noArchivedGuidesDescription": "Guidas archivadas vegnan mussadas qua"
   },
   "stops": {
     "title": "Stops",
@@ -299,6 +334,7 @@
   "sidebar": {
     "nav": {
       "guides": "Guids",
+      "archived": "Archivà",
       "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",

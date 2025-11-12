@@ -177,7 +177,42 @@
       "successDescription": "Der Guide wurde erfolgreich gelöscht",
       "error": "Fehler beim Löschen des Guides",
       "errorDescription": "Beim Löschen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
-    }
+    },
+    "archive": {
+      "button": "Guide archivieren",
+      "confirmTitle": "Diesen Guide archivieren?",
+      "confirmDescription": "Dieser Guide wird archiviert. Sie können ihn später wiederherstellen.",
+      "confirmButton": "Archivieren",
+      "cancelButton": "Abbrechen",
+      "success": "Guide erfolgreich archiviert",
+      "successDescription": "Der Guide wurde archiviert",
+      "error": "Fehler beim Archivieren des Guides",
+      "errorDescription": "Beim Archivieren des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "recover": {
+      "button": "Guide wiederherstellen",
+      "success": "Guide erfolgreich wiederhergestellt",
+      "successDescription": "Der Guide wurde zu Ihren aktiven Guides wiederhergestellt",
+      "error": "Fehler beim Wiederherstellen des Guides",
+      "errorDescription": "Beim Wiederherstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "archived": "Archiviert",
+    "recover": "Wiederherstellen",
+    "archiveGuide": "Guide archivieren",
+    "recoverGuide": "Guide wiederherstellen",
+    "permanentlyDelete": "Endgültig löschen",
+    "archiveConfirmTitle": "Diesen Guide archivieren?",
+    "archiveConfirmDescription": "Dieser Guide wird archiviert. Sie können ihn später wiederherstellen.",
+    "recoverConfirmTitle": "Diesen Guide wiederherstellen?",
+    "recoverConfirmDescription": "Dieser Guide wird zu Ihren aktiven Guides wiederhergestellt.",
+    "deleteConfirmTitle": "Diesen Guide endgültig löschen?",
+    "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Der Guide wird endgültig gelöscht.",
+    "archivedSuccessfully": "Guide erfolgreich archiviert",
+    "recoveredSuccessfully": "Guide erfolgreich wiederhergestellt",
+    "deletedSuccessfully": "Guide erfolgreich gelöscht",
+    "archivedOn": "Archiviert am",
+    "noArchivedGuides": "Keine archivierten Guides",
+    "noArchivedGuidesDescription": "Archivierte Guides werden hier angezeigt"
   },
   "stops": {
     "title": "Stops",
@@ -299,6 +334,7 @@
   "sidebar": {
     "nav": {
       "guides": "Guides",
+      "archived": "Archiviert",
       "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",

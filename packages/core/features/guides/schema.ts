@@ -22,6 +22,7 @@ export const guide = studioSchema.table('guide', {
   published: timestamp('published', { withTimezone: true }),
   coverImage: text('cover_image'),
   organizationId: uuid('organization_id'),
+  archivedAt: timestamp('archived_at', { withTimezone: true }),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
 })
 

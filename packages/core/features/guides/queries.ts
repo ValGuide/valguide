@@ -1,4 +1,4 @@
-import { eq, and, asc, isNull } from 'drizzle-orm'
+import { eq, and, asc, isNull, isNotNull, desc } from 'drizzle-orm'
 import type { DB } from '../db'
 import {
   guide,
@@ -22,7 +22,7 @@ const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm
  */
 export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTranslations | null> {
   const result = await db.query.guide.findFirst({
-    where: and(eq(guide.id, guideId), isNull(guide.deletedAt)),
+    where: and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: true,
     },
@@ -36,7 +36,7 @@ export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTr
  */
 export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithStops | null> {
   const result = await db.query.guide.findFirst({
-    where: and(eq(guide.nanoId, nanoId), isNull(guide.deletedAt)),
+    where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: true,
       stops: {
@@ -56,7 +56,7 @@ export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWit
  */
 export async function getAllGuides(db: DB): Promise<GuideWithTranslations[]> {
   const result = await db.query.guide.findMany({
-    where: isNull(guide.deletedAt),
+    where: and(isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: true,
     },
@@ -70,7 +70,7 @@ export async function getAllGuides(db: DB): Promise<GuideWithTranslations[]> {
  */
 export async function getGuidesByUserId(db: DB, userId: string): Promise<GuideWithTranslations[]> {
   const result = await db.query.guide.findMany({
-    where: and(eq(guide.createdBy, userId), isNull(guide.deletedAt)),
+    where: and(eq(guide.createdBy, userId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: true,
     },
@@ -88,7 +88,7 @@ export async function getGuideByIdWithLocale(
   locale: SupportedLocale,
 ): Promise<(typeof guide.$inferSelect & { translation?: typeof guideTranslation.$inferSelect }) | null> {
   const result = await db.query.guide.findFirst({
-    where: and(eq(guide.id, guideId), isNull(guide.deletedAt)),
+    where: and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: {
         where: eq(guideTranslation.locale, locale),
@@ -140,6 +140,19 @@ export async function createGuide(
       ...newGuide,
       translations: newTranslations,
     }
+  })
+}
+
+/**
+ * Get archived guides for a specific user
+ */
+export async function getArchivedGuides(db: DB, userId: string): Promise<GuideWithTranslations[]> {
+  return db.query.guide.findMany({
+    where: and(eq(guide.createdBy, userId), isNotNull(guide.archivedAt), isNull(guide.deletedAt)),
+    with: {
+      translations: true,
+    },
+    orderBy: [desc(guide.archivedAt)],
   })
 }
 

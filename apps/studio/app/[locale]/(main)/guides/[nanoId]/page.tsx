@@ -6,7 +6,7 @@ import { createClient } from '@valguide/supabase/server'
 import Link from 'next/link'
 import { Button } from '@valguide/ui/components/button'
 import { Pencil } from 'lucide-react'
-import { DeleteGuideButton } from './delete-guide-button'
+import { ArchiveGuideButton } from './archive-guide-button'
 
 interface GuidePageParams {
   locale: string
@@ -47,7 +47,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
               ← {t('backToGuides')}
             </Link>
             <div className="flex gap-2">
-              <DeleteGuideButton guideId={guide.id} userId={user.id} />
+              <ArchiveGuideButton guideId={guide.id} userId={user.id} />
               <Button asChild>
                 <Link href={`/guides/${nanoId}/edit`}>
                   <Pencil />

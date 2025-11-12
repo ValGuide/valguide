@@ -177,7 +177,42 @@
       "successDescription": "The guide has been deleted successfully",
       "error": "Failed to delete guide",
       "errorDescription": "An error occurred while deleting the guide. Please try again."
-    }
+    },
+    "archive": {
+      "button": "Archive Guide",
+      "confirmTitle": "Archive this guide?",
+      "confirmDescription": "This guide will be moved to archived. You can recover it later.",
+      "confirmButton": "Archive",
+      "cancelButton": "Cancel",
+      "success": "Guide archived successfully",
+      "successDescription": "The guide has been moved to archived",
+      "error": "Failed to archive guide",
+      "errorDescription": "An error occurred while archiving the guide. Please try again."
+    },
+    "recover": {
+      "button": "Recover Guide",
+      "success": "Guide recovered successfully",
+      "successDescription": "The guide has been restored to your active guides",
+      "error": "Failed to recover guide",
+      "errorDescription": "An error occurred while recovering the guide. Please try again."
+    },
+    "archived": "Archived",
+    "recover": "Recover",
+    "archiveGuide": "Archive Guide",
+    "recoverGuide": "Recover Guide",
+    "permanentlyDelete": "Permanently Delete",
+    "archiveConfirmTitle": "Archive this guide?",
+    "archiveConfirmDescription": "This guide will be moved to archived. You can recover it later.",
+    "recoverConfirmTitle": "Recover this guide?",
+    "recoverConfirmDescription": "This guide will be restored to your active guides.",
+    "deleteConfirmTitle": "Permanently delete this guide?",
+    "deleteConfirmDescription": "This action cannot be undone. The guide will be permanently deleted.",
+    "archivedSuccessfully": "Guide archived successfully",
+    "recoveredSuccessfully": "Guide recovered successfully",
+    "deletedSuccessfully": "Guide deleted successfully",
+    "archivedOn": "Archived on",
+    "noArchivedGuides": "No archived guides",
+    "noArchivedGuidesDescription": "Archived guides will appear here"
   },
   "stops": {
     "title": "Stops",
@@ -299,6 +334,7 @@
   "sidebar": {
     "nav": {
       "guides": "Guides",
+      "archived": "Archived",
       "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",

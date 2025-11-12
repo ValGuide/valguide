@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import {
+  Archive,
   AudioWaveform,
   BarChart3,
   Command,
@@ -83,6 +84,11 @@ export function AppSidebar({
       title: t('guides'),
       url: '/',
       icon: BookOpen,
+    },
+    {
+      title: t('archived'),
+      url: '/archived',
+      icon: Archive,
     },
     {
       title: t('assets'),

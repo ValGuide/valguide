@@ -3,7 +3,7 @@
 import { db } from '@valguide/core/features/db'
 import { guide, guideTranslation, stop, stopTranslation } from './schema'
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, isNull, isNotNull } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import { revalidatePath } from 'next/cache'
 
@@ -270,6 +270,51 @@ export async function detachAssetFromStop(stopAssetId: string) {
   return { success: true }
 }
 
+export type ArchiveGuideParams = {
+  id: string
+  userId: string
+}
+
+export async function archiveGuide(params: ArchiveGuideParams) {
+  const { id, userId } = params
+
+  const [archivedGuide] = await db
+    .update(guide)
+    .set({
+      archivedAt: new Date(),
+      updatedBy: userId,
+      updatedAt: new Date(),
+    })
+    .where(eq(guide.id, id))
+    .returning()
+
+  revalidatePath('/', 'page')
+  return archivedGuide
+}
+
+export type RecoverGuideParams = {
+  id: string
+  userId: string
+}
+
+export async function recoverGuide(params: RecoverGuideParams) {
+  const { id, userId } = params
+
+  const [recoveredGuide] = await db
+    .update(guide)
+    .set({
+      archivedAt: null,
+      updatedBy: userId,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(guide.id, id), isNotNull(guide.archivedAt), isNull(guide.deletedAt)))
+    .returning()
+
+  revalidatePath('/', 'page')
+  revalidatePath('/archived', 'page')
+  return recoveredGuide
+}
+
 export type DeleteGuideParams = {
   id: string
   userId: string
@@ -285,9 +330,9 @@ export async function deleteGuide(params: DeleteGuideParams) {
       updatedBy: userId,
       updatedAt: new Date(),
     })
-    .where(eq(guide.id, id))
+    .where(and(eq(guide.id, id), isNotNull(guide.archivedAt)))
     .returning()
 
-  revalidatePath('/', 'page')
+  revalidatePath('/archived', 'page')
   return deletedGuide
 }
