@@ -4,8 +4,8 @@ import { createContext, useContext, useState, useCallback, useRef, type ReactNod
 import type {
   GuideWithStops,
   StopWithTranslations,
-  GuideTranslation,
-  StopTranslation,
+  GuideTranslationWithVersion,
+  StopTranslationWithVersion,
 } from '@valguide/core/features/guides/schema'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
@@ -34,7 +34,7 @@ interface GuideEditorContextValue {
   // Guide actions
   updateGuideTranslationData: (
     locale: SupportedLocale,
-    data: Partial<Omit<GuideTranslation, 'id' | 'guideId' | 'createdAt' | 'updatedAt'>>,
+    data: { title: string; description?: string | null },
   ) => void
   updateCoverImage: (assetId: string) => void
 
@@ -46,7 +46,7 @@ interface GuideEditorContextValue {
   updateStopTranslationData: (
     stopId: string,
     locale: SupportedLocale,
-    data: Partial<Omit<StopTranslation, 'id' | 'stopId' | 'createdAt' | 'updatedAt'>>,
+    data: { title: string; description?: string | null; transcription?: string | null },
   ) => void
 
   // Asset actions (placeholder for Week 2)
@@ -94,32 +94,33 @@ export function GuideEditorProvider({
 
   // Update guide translation
   const updateGuideTranslationData = useCallback(
-    (locale: SupportedLocale, data: Partial<Omit<GuideTranslation, 'id' | 'guideId' | 'createdAt' | 'updatedAt'>>) => {
+    (locale: SupportedLocale, data: { title: string; description?: string | null }) => {
       setGuide((prev) => {
         const existingTranslation = prev.translations.find((t) => t.locale === locale)
 
         if (existingTranslation) {
-          // Update existing translation
-          return {
-            ...prev,
-            translations: prev.translations.map((t) => (t.locale === locale ? { ...t, ...data } : t)),
-          }
-        } else {
-          // Create new translation
-          const newTranslation: GuideTranslation = {
-            id: crypto.randomUUID(),
-            guideId: prev.id,
-            locale,
-            title: data.title || '',
-            description: data.description || null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }
-          return {
-            ...prev,
-            translations: [...prev.translations, newTranslation],
+          // Update draft version if it exists, otherwise update current version
+          const versionToUpdate = existingTranslation.draftVersion || existingTranslation.currentVersion
+          if (versionToUpdate) {
+            return {
+              ...prev,
+              translations: prev.translations.map((t) =>
+                t.locale === locale
+                  ? {
+                      ...t,
+                      draftVersion: t.draftVersion
+                        ? { ...t.draftVersion, ...data }
+                        : t.currentVersion
+                          ? { ...t.currentVersion, ...data, status: 'draft' as const }
+                          : undefined,
+                    }
+                  : t
+              ),
+            }
           }
         }
+        // If no translation exists, just mark as modified - server will create it
+        return prev
       })
       modifiedTranslationsRef.current.add(locale)
       setIsDirty(true)
@@ -217,7 +218,7 @@ export function GuideEditorProvider({
     (
       stopId: string,
       locale: SupportedLocale,
-      data: Partial<Omit<StopTranslation, 'id' | 'stopId' | 'createdAt' | 'updatedAt'>>,
+      data: { title: string; description?: string | null; transcription?: string | null },
     ) => {
       setGuide((prev) => ({
         ...prev,
@@ -227,28 +228,27 @@ export function GuideEditorProvider({
           const existingTranslation = stop.translations.find((t) => t.locale === locale)
 
           if (existingTranslation) {
-            // Update existing translation
-            return {
-              ...stop,
-              translations: stop.translations.map((t) => (t.locale === locale ? { ...t, ...data } : t)),
-            }
-          } else {
-            // Create new translation
-            const newTranslation: StopTranslation = {
-              id: crypto.randomUUID(),
-              stopId,
-              locale,
-              title: data.title || '',
-              description: data.description || null,
-              transcription: data.transcription || null,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }
-            return {
-              ...stop,
-              translations: [...stop.translations, newTranslation],
+            // Update draft version if it exists, otherwise update current version
+            const versionToUpdate = existingTranslation.draftVersion || existingTranslation.currentVersion
+            if (versionToUpdate) {
+              return {
+                ...stop,
+                translations: stop.translations.map((t) =>
+                  t.locale === locale
+                    ? {
+                        ...t,
+                        draftVersion: t.draftVersion
+                          ? { ...t.draftVersion, ...data }
+                          : t.currentVersion
+                            ? { ...t.currentVersion, ...data, status: 'draft' as const }
+                            : undefined,
+                      }
+                    : t
+                ),
+              }
             }
           }
+          return stop
         }),
       }))
 
@@ -259,26 +259,26 @@ export function GuideEditorProvider({
         const existingTranslation = prev.translations.find((t) => t.locale === locale)
 
         if (existingTranslation) {
-          return {
-            ...prev,
-            translations: prev.translations.map((t) => (t.locale === locale ? { ...t, ...data } : t)),
-          }
-        } else {
-          const newTranslation: StopTranslation = {
-            id: crypto.randomUUID(),
-            stopId,
-            locale,
-            title: data.title || '',
-            description: data.description || null,
-            transcription: data.transcription || null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }
-          return {
-            ...prev,
-            translations: [...prev.translations, newTranslation],
+          const versionToUpdate = existingTranslation.draftVersion || existingTranslation.currentVersion
+          if (versionToUpdate) {
+            return {
+              ...prev,
+              translations: prev.translations.map((t) =>
+                t.locale === locale
+                  ? {
+                      ...t,
+                      draftVersion: t.draftVersion
+                        ? { ...t.draftVersion, ...data }
+                        : t.currentVersion
+                          ? { ...t.currentVersion, ...data, status: 'draft' as const }
+                          : undefined,
+                    }
+                  : t
+              ),
+            }
           }
         }
+        return prev
       })
 
       modifiedStopsRef.current.add(`${stopId}:${locale}`)
@@ -344,12 +344,16 @@ export function GuideEditorProvider({
       for (const locale of modifiedTranslations) {
         const translation = currentGuide.translations.find((t) => t.locale === locale)
         if (translation) {
-          await updateGuideTranslation({
-            guideId: currentGuide.id,
-            locale: translation.locale,
-            title: translation.title,
-            description: translation.description || '',
-          })
+          // Get content from draft version or current version
+          const version = translation.draftVersion || translation.currentVersion
+          if (version) {
+            await updateGuideTranslation({
+              guideId: currentGuide.id,
+              locale: translation.locale,
+              title: version.title,
+              description: version.description || '',
+            })
+          }
         }
       }
 
@@ -360,13 +364,17 @@ export function GuideEditorProvider({
         if (stop) {
           const translation = stop.translations.find((t) => t.locale === locale)
           if (translation) {
-            await updateStop({
-              stopId: stop.id,
-              locale: translation.locale,
-              title: translation.title,
-              description: translation.description || '',
-              transcription: translation.transcription || '',
-            })
+            // Get content from draft version or current version
+            const version = translation.draftVersion || translation.currentVersion
+            if (version) {
+              await updateStop({
+                stopId: stop.id,
+                locale: translation.locale,
+                title: version.title,
+                description: version.description || '',
+                transcription: version.transcription || '',
+              })
+            }
           }
         }
       }

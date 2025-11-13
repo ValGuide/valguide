@@ -124,6 +124,11 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
 export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, onDelete, onAdd }: StopsListProps) {
     const t = useTranslations('stops')
     const [items, setItems] = React.useState(stops)
+    const [isMounted, setIsMounted] = React.useState(false)
+
+    React.useEffect(() => {
+        setIsMounted(true)
+    }, [])
 
     React.useEffect(() => {
         setItems(stops)
@@ -179,6 +184,57 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
                     </Button>
                 </EmptyContent>
             </Empty>
+        )
+    }
+
+    if (!isMounted) {
+        return (
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-lg font-semibold">{t('title')}</h2>
+                        <p className="text-sm text-muted-foreground">{t('description')}</p>
+                    </div>
+                    <Button onClick={onAdd}>
+                        <Plus />
+                        {t('add')}
+                    </Button>
+                </div>
+                <div className="space-y-2">
+                    {items.map((stop, index) => {
+                        const translation = stop.translations.find((t) => t.locale === locale)
+                        const fallbackTranslation = stop.translations[0]
+                        const displayTitle = translation?.title || fallbackTranslation?.title || 'Untitled Stop'
+                        const displayLocale = translation?.locale || fallbackTranslation?.locale
+                        
+                        return (
+                            <Card key={stop.id} className={`${stop.id === selectedStopId ? 'ring-2 ring-primary' : ''}`}>
+                                <CardContent className="flex items-center gap-4 p-4">
+                                    <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm shrink-0">
+                                        {index + 1}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <h3 className="font-medium truncate">{displayTitle}</h3>
+                                            {displayLocale && (
+                                                <Badge variant="outline" className="text-xs uppercase shrink-0">
+                                                    {displayLocale}
+                                                </Badge>
+                                            )}
+                                        </div>
+                                        {stop.translations.length > 1 && (
+                                            <p className="text-sm text-muted-foreground">
+                                                {stop.translations.length} translations
+                                            </p>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )
+                    })}
+                </div>
+            </div>
         )
     }
 

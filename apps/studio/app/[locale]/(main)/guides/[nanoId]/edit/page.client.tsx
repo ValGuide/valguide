@@ -225,7 +225,11 @@ function GuideEditorContent() {
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    {selectedStop.translations.find((t) => t.locale === activeLocale)?.title || 'Untitled Stop'}
+                    {(() => {
+                      const trans = selectedStop.translations.find((t) => t.locale === activeLocale)
+                      const version = trans?.draftVersion || trans?.currentVersion
+                      return version?.title || 'Untitled Stop'
+                    })()}
                   </CardTitle>
                   <CardDescription>Edit stop content for {activeLocale.toUpperCase()}</CardDescription>
                 </CardHeader>

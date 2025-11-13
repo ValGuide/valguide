@@ -61,17 +61,19 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
           </div>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              {guide.translations.find((t) => t.locale === locale)?.title ||
-                guide.translations[0]?.title ||
-                'Untitled Guide'}
+              {(() => {
+                const trans = guide.translations.find((t) => t.locale === locale) || guide.translations[0]
+                const version = trans?.draftVersion || trans?.currentVersion
+                return version?.title || 'Untitled Guide'
+              })()}
             </h1>
             <div className="text-muted-foreground mt-2">
               <RichTextDisplay
-                content={
-                  guide.translations.find((t) => t.locale === locale)?.description ||
-                  guide.translations[0]?.description ||
-                  ''
-                }
+                content={(() => {
+                  const trans = guide.translations.find((t) => t.locale === locale) || guide.translations[0]
+                  const version = trans?.draftVersion || trans?.currentVersion
+                  return version?.description || ''
+                })()}
               />
             </div>
           </div>
@@ -81,7 +83,11 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
           <div className="relative aspect-video w-full overflow-hidden rounded-lg">
             <img
               src={guide.coverImage}
-              alt={guide.translations[0]?.title || 'Guide cover'}
+              alt={(() => {
+                const trans = guide.translations[0]
+                const version = trans?.draftVersion || trans?.currentVersion
+                return version?.title || 'Guide cover'
+              })()}
               className="h-full w-full object-cover"
             />
           </div>
@@ -112,19 +118,22 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
         <div className="rounded-lg border p-6">
           <h2 className="text-xl font-semibold mb-4">Translations</h2>
           <div className="space-y-4">
-            {guide.translations.map((translation) => (
-              <div key={translation.id} className="border-b pb-4 last:border-b-0 last:pb-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium uppercase">{translation.locale}</span>
-                </div>
-                <h3 className="font-medium">{translation.title}</h3>
-                {translation.description && (
-                  <div className="text-sm text-muted-foreground mt-1">
-                    <RichTextDisplay content={translation.description} />
+            {guide.translations.map((translation) => {
+              const version = translation.draftVersion || translation.currentVersion
+              return (
+                <div key={translation.id} className="border-b pb-4 last:border-b-0 last:pb-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm font-medium uppercase">{translation.locale}</span>
                   </div>
-                )}
-              </div>
-            ))}
+                  <h3 className="font-medium">{version?.title || 'Untitled'}</h3>
+                  {version?.description && (
+                    <div className="text-sm text-muted-foreground mt-1">
+                      <RichTextDisplay content={version.description} />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

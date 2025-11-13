@@ -15,7 +15,7 @@ import { History, RotateCcw } from 'lucide-react'
 import { toast } from 'sonner'
 import { getGuideTranslationHistory, rollbackGuideTranslation } from '../translation-actions'
 import { TranslationStatusBadge } from './translation-status-badge'
-import { useTranslations, useFormatter } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import type { GuideTranslationVersion } from '../schema'
 import {
   AlertDialog,
@@ -36,13 +36,17 @@ interface VersionHistoryDialogProps {
 
 export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHistoryDialogProps) {
   const t = useTranslations('guides.versionHistory')
-  const format = useFormatter()
+  const [isMounted, setIsMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [versions, setVersions] = useState<GuideTranslationVersion[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [selectedVersion, setSelectedVersion] = useState<number | null>(null)
   const [isRollbackOpen, setIsRollbackOpen] = useState(false)
   const [isRollingBack, setIsRollingBack] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   useEffect(() => {
     if (isOpen) {
@@ -93,13 +97,22 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
 
   const formatDate = (date: Date | null) => {
     if (!date) return '-'
-    return format.dateTime(new Date(date), {
+    return new Intl.DateTimeFormat(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    })
+    }).format(new Date(date))
+  }
+
+  if (!isMounted) {
+    return (
+      <Button variant="outline" size="sm" disabled>
+        <History className="mr-2 h-4 w-4" />
+        {t('button')}
+      </Button>
+    )
   }
 
   return (
