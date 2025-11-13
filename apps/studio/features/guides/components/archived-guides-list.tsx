@@ -102,8 +102,10 @@ export function ArchivedGuidesList({ guides, userId }: ArchivedGuidesListProps) 
       <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
         {guides.map((guide) => {
           const translation = guide.translations?.find((t) => t.locale === locale) || guide.translations?.[0]
-          const displayTitle = translation?.title || 'Untitled Guide'
-          const displayDescription = translation?.description || ''
+          const displayTitle =
+            translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? 'Untitled Guide'
+          const displayDescription =
+            translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? ''
           const displayImage = guide.coverImage
 
           return (

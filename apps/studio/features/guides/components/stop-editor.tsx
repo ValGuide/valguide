@@ -41,18 +41,22 @@ export function StopEditor({
   const tActions = useTranslations('stops.actions')
 
   const translation = stop?.translations.find((t) => t.locale === locale)
-  const [title, setTitle] = useState(translation?.title || '')
-  const [description, setDescription] = useState(translation?.description || '')
-  const [transcription, setTranscription] = useState(translation?.transcription || '')
+  const [title, setTitle] = useState(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
+  const [description, setDescription] = useState(
+    translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '',
+  )
+  const [transcription, setTranscription] = useState(
+    translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '',
+  )
 
   const [images, setImages] = useState<MediaItem[]>([])
   const [audio, setAudio] = useState<MediaItem | null>(null)
   const [video, setVideo] = useState<MediaItem | null>(null)
 
   useEffect(() => {
-    setTitle(translation?.title || '')
-    setDescription(translation?.description || '')
-    setTranscription(translation?.transcription || '')
+    setTitle(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
+    setDescription(translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '')
+    setTranscription(translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '')
   }, [locale, translation])
 
   const handleSave = () => {

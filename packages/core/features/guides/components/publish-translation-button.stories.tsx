@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { PublishTranslationButton } from './publish-translation-button'
-import { fn } from '@storybook/test'
 
 // Import messages for the story
 import enMessages from '@valguide/i18n/messages/en.json'
@@ -9,11 +8,11 @@ import deMessages from '@valguide/i18n/messages/de.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
 
 // Mock the server action module
-const mockPublishGuideTranslationDraft = fn(async (guideId: string, locale: string) => {
+const mockPublishGuideTranslationDraft = async (guideId: string, locale: string) => {
   console.log('Publishing draft:', { guideId, locale })
   await new Promise((resolve) => setTimeout(resolve, 1000))
   return { success: true }
-})
+}
 
 // Mock the translation-actions module
 jest.mock('../translation-actions', () => ({

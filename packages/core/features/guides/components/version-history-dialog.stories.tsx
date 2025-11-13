@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { VersionHistoryDialog } from './version-history-dialog'
-import { fn } from '@storybook/test'
+
 import type { GuideTranslationVersion } from '../schema'
 
 // Import messages for the story
@@ -96,17 +96,17 @@ const mockDraftHistory: GuideTranslationVersion[] = [
 ]
 
 // Mock the server action functions
-const mockGetGuideTranslationHistory = fn(async (guideId: string, locale: string) => {
+const mockGetGuideTranslationHistory = async (guideId: string, locale: string) => {
   console.log('Fetching history:', { guideId, locale })
   await new Promise((resolve) => setTimeout(resolve, 500))
   return mockVersionHistory
-})
+}
 
-const mockRollbackGuideTranslation = fn(async (guideId: string, locale: string, targetVersion: number) => {
+const mockRollbackGuideTranslation = async (guideId: string, locale: string, targetVersion: number) => {
   console.log('Rolling back:', { guideId, locale, targetVersion })
   await new Promise((resolve) => setTimeout(resolve, 1000))
   return { success: true }
-})
+}
 
 // Mock the translation-actions module
 jest.mock('../translation-actions', () => ({
@@ -145,7 +145,7 @@ export const Default: Story = {
   args: {
     guideId: 'guide-123',
     locale: 'en',
-    onRollback: fn(),
+    onRollback: () => {},
   },
   play: async ({ canvasElement }) => {
     // Auto-click the button to open the dialog in the story
@@ -167,7 +167,7 @@ export const GermanLocale: Story = {
   args: {
     guideId: 'guide-123',
     locale: 'de',
-    onRollback: fn(),
+    onRollback: () => {},
   },
   globals: {
     locale: 'de',
@@ -178,7 +178,7 @@ export const RomanshLocale: Story = {
   args: {
     guideId: 'guide-123',
     locale: 'rm',
-    onRollback: fn(),
+    onRollback: () => {},
   },
   globals: {
     locale: 'rm',
@@ -190,7 +190,7 @@ export const EmptyHistory: Story = {
   args: {
     guideId: 'guide-empty',
     locale: 'en',
-    onRollback: fn(),
+    onRollback: () => {},
   },
   beforeEach: () => {
     mockGetGuideTranslationHistory.mockImplementation(async () => {
@@ -205,7 +205,7 @@ export const WithDraftVersions: Story = {
   args: {
     guideId: 'guide-draft',
     locale: 'en',
-    onRollback: fn(),
+    onRollback: () => {},
   },
   beforeEach: () => {
     mockGetGuideTranslationHistory.mockImplementation(async () => {
@@ -220,7 +220,7 @@ export const LoadingError: Story = {
   args: {
     guideId: 'guide-error',
     locale: 'en',
-    onRollback: fn(),
+    onRollback: () => {},
   },
   beforeEach: () => {
     mockGetGuideTranslationHistory.mockImplementation(async () => {
@@ -235,7 +235,7 @@ export const RollbackError: Story = {
   args: {
     guideId: 'guide-rollback-error',
     locale: 'en',
-    onRollback: fn(),
+    onRollback: () => {},
   },
   beforeEach: () => {
     mockRollbackGuideTranslation.mockImplementation(async () => {

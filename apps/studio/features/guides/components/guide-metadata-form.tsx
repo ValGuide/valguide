@@ -9,11 +9,11 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Image as ImageIcon, X } from 'lucide-react'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import type { GuideTranslation } from '@valguide/core/features/guides/schema'
+import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
 
 export type GuideMetadataFormProps = {
   locale: SupportedLocale
-  translation?: GuideTranslation
+  translation?: GuideTranslationWithVersion
   coverImage?: string | null
   onTranslationChange: (data: { title: string; description: string }) => void
   onCoverImageChange?: (url: string | null) => void
@@ -29,16 +29,14 @@ export function GuideMetadataForm({
   onSelectCoverImage,
 }: GuideMetadataFormProps) {
   const t = useTranslations('guides')
-  const [title, setTitle] = useState(
-    translation?.draftVersion?.title || translation?.currentVersion?.title || ''
-  )
+  const [title, setTitle] = useState(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
   const [description, setDescription] = useState(
-    translation?.draftVersion?.description || translation?.currentVersion?.description || ''
+    translation?.draftVersion?.description ?? translation?.currentVersion?.description ?? '',
   )
 
   useEffect(() => {
-    setTitle(translation?.draftVersion?.title || translation?.currentVersion?.title || '')
-    setDescription(translation?.draftVersion?.description || translation?.currentVersion?.description || '')
+    setTitle(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
+    setDescription(translation?.draftVersion?.description ?? translation?.currentVersion?.description ?? '')
   }, [locale, translation])
 
   const handleTitleChange = (value: string) => {
