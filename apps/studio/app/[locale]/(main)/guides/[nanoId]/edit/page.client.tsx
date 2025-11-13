@@ -11,6 +11,9 @@ import { StopsList } from '@/features/guides/components/stops-list'
 import { StopEditor } from '@/features/guides/components/stop-editor'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { AssetPickerModal } from '@/features/assets/components/asset-picker-modal'
+import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
+import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
+import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { GuideEditorProvider, useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
@@ -100,13 +103,37 @@ function GuideEditorContent() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{currentTranslation?.title || 'Untitled Guide'}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold tracking-tight">{currentTranslation?.currentVersion?.title || currentTranslation?.draftVersion?.title || 'Untitled Guide'}</h1>
+              <TranslationStatusBadge 
+                status={currentTranslation?.currentVersion?.status}
+                hasDraft={!!currentTranslation?.draftVersion}
+              />
+            </div>
             <p className="text-sm text-muted-foreground">
               {lastSaved ? `Saved ${formatDistanceToNow(lastSaved, { addSuffix: true })}` : 'Not saved yet'}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <VersionHistoryDialog 
+            guideId={guide.id}
+            locale={activeLocale}
+            onRollback={() => {
+              // Reload the page to show rolled back content
+              window.location.reload()
+            }}
+          />
+          <PublishTranslationButton
+            guideId={guide.id}
+            locale={activeLocale}
+            hasDraft={!!currentTranslation?.draftVersion}
+            onPublished={() => {
+              // Reload the page to show published content
+              window.location.reload()
+            }}
+            disabled={isSaving}
+          />
           <Button onClick={save} disabled={isSaving || !isDirty} variant="outline">
             {isSaving ? (
               'Saving...'
@@ -121,9 +148,6 @@ function GuideEditorContent() {
                 Saved
               </>
             )}
-          </Button>
-          <Button onClick={publish} disabled={isSaving}>
-            Publish
           </Button>
         </div>
       </div>

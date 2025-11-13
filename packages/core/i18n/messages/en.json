@@ -236,7 +236,36 @@
     "deletedSuccessfully": "Guide deleted successfully",
     "archivedOn": "Archived on",
     "noArchivedGuides": "No archived guides",
-    "noArchivedGuidesDescription": "Archived guides will appear here"
+    "noArchivedGuidesDescription": "Archived guides will appear here",
+    "publish": {
+      "button": "Publish",
+      "success": "Translation published successfully",
+      "error": "Failed to publish translation",
+      "confirmTitle": "Publish translation?",
+      "confirmDescription": "This will make the draft version visible to users. The current published version will be replaced.",
+      "cancel": "Cancel",
+      "confirm": "Publish",
+      "publishing": "Publishing..."
+    },
+    "versionHistory": {
+      "button": "Version History",
+      "title": "Translation History",
+      "description": "View and manage previous versions of this translation",
+      "loading": "Loading versions...",
+      "noVersions": "No version history available",
+      "versionLabel": "Version",
+      "created": "Created",
+      "published": "Published",
+      "rollback": "Restore",
+      "rollbackSuccess": "Version restored as draft",
+      "rollbackError": "Failed to restore version",
+      "loadError": "Failed to load version history",
+      "rollbackConfirmTitle": "Restore this version?",
+      "rollbackConfirmDescription": "Version {version} will be restored as a new draft. You can then review and publish it.",
+      "cancel": "Cancel",
+      "confirm": "Restore",
+      "rollingBack": "Restoring..."
+    }
   },
   "stops": {
     "title": "Stops",

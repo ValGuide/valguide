@@ -56,10 +56,20 @@ export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWit
   const result = await db.query.guide.findFirst({
     where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
-      translations: true,
+      translations: {
+        with: {
+          currentVersion: true,
+          draftVersion: true,
+        },
+      },
       stops: {
         with: {
-          translations: true,
+          translations: {
+            with: {
+              currentVersion: true,
+              draftVersion: true,
+            },
+          },
         },
         orderBy: asc(stop.order),
       },
@@ -98,19 +108,22 @@ export async function getGuidesByUserId(db: DB, userId: string): Promise<GuideWi
 }
 
 /**
- * Get a guide with only a specific locale translation
+ * Get a guide with only a specific locale translation (with current version)
  */
 export async function getGuideByIdWithLocale(
   db: DB,
   guideId: string,
   locale: SupportedLocale,
-): Promise<(typeof guide.$inferSelect & { translation?: typeof guideTranslation.$inferSelect }) | null> {
+): Promise<(typeof guide.$inferSelect & { translation?: any }) | null> {
   const result = await db.query.guide.findFirst({
     where: and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: {
         where: eq(guideTranslation.locale, locale),
         limit: 1,
+        with: {
+          currentVersion: true,
+        },
       },
     },
   })
@@ -188,35 +201,20 @@ export async function updateGuideTranslation(
     where: and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)),
   })
 
-  if (existing) {
-    // Update existing translation
-    const [updated] = await db
-      .update(guideTranslation)
-      .set(data)
-      .where(and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)))
-      .returning()
-
-    if (!updated) {
-      throw new Error('Failed to update translation')
-    }
-    return updated
-  } else {
-    // Create new translation
-    const [created] = await db
-      .insert(guideTranslation)
-      .values({
-        guideId,
-        locale,
-        title: data.title ?? '',
-        description: data.description,
-      })
-      .returning()
-
-    if (!created) {
-      throw new Error('Failed to create translation')
-    }
-    return created
+  // Use new versioning system - create/update draft
+  const { upsertGuideTranslationDraft } = await import('./translation-mutations')
+  
+  if (!data.title) {
+    throw new Error('Title is required')
   }
+
+  const versionId = await upsertGuideTranslationDraft(
+    guideId,
+    locale,
+    { title: data.title, description: data.description },
+  )
+
+  return { versionId } as any
 }
 
 /**

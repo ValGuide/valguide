@@ -58,7 +58,7 @@ export async function createStop({
   translations: Array<{ locale: string; title: string; description?: string; transcription?: string }>
   order?: number
 }) {
-  return await db.transaction(async (tx) => {
+  return await db.transaction(async (tx: typeof db) => {
     // Create stop
     const [newStop] = await tx
       .insert(stop)
@@ -96,32 +96,24 @@ export async function updateStopTranslation(
   locale: string,
   data: { title?: string; description?: string; transcription?: string },
 ) {
-  const existing = await db.query.stopTranslation.findFirst({
-    where: and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)),
-  })
-
-  if (existing) {
-    // Update existing translation
-    const [updated] = await db
-      .update(stopTranslation)
-      .set(data)
-      .where(eq(stopTranslation.id, existing.id))
-      .returning()
-    return updated
-  } else {
-    // Insert new translation
-    const [created] = await db
-      .insert(stopTranslation)
-      .values({
-        stopId,
-        locale,
-        title: data.title || '',
-        description: data.description || null,
-        transcription: data.transcription || null,
-      })
-      .returning()
-    return created
+  // Use new versioning system - create/update draft
+  const { upsertStopTranslationDraft } = await import('./translation-mutations')
+  
+  if (!data.title) {
+    throw new Error('Title is required')
   }
+
+  const versionId = await upsertStopTranslationDraft(
+    stopId,
+    locale,
+    { 
+      title: data.title, 
+      description: data.description || null,
+      transcription: data.transcription || null,
+    },
+  )
+
+  return { versionId }
 }
 
 export async function updateStopOrder(stopId: string, order: number) {
@@ -130,7 +122,7 @@ export async function updateStopOrder(stopId: string, order: number) {
 }
 
 export async function reorderStops(updates: Array<{ id: string; order: number }>) {
-  return await db.transaction(async (tx) => {
+  return await db.transaction(async (tx: typeof db) => {
     const results = []
     for (const update of updates) {
       const [result] = await tx.update(stop).set({ order: update.order }).where(eq(stop.id, update.id)).returning()
@@ -146,21 +138,22 @@ export async function deleteStop(stopId: string) {
 }
 
 export function getLocalizedStopText(
-  stop: { translations: StopTranslation[] },
+  stop: { translations: any[] },
   field: 'title' | 'description' | 'transcription',
   locale: SupportedLocale,
   fallbackLocale: SupportedLocale = 'en',
 ): string {
+  // Now works with versioned translations
   const translation = stop.translations.find((t) => t.locale === locale)
-  if (translation?.[field]) {
-    return translation[field] || ''
+  if (translation?.currentVersion?.[field]) {
+    return translation.currentVersion[field] || ''
   }
 
   const fallbackTranslation = stop.translations.find((t) => t.locale === fallbackLocale)
-  if (fallbackTranslation?.[field]) {
-    return fallbackTranslation[field] || ''
+  if (fallbackTranslation?.currentVersion?.[field]) {
+    return fallbackTranslation.currentVersion[field] || ''
   }
 
   const firstTranslation = stop.translations[0]
-  return firstTranslation?.[field] || ''
+  return firstTranslation?.currentVersion?.[field] || ''
 }

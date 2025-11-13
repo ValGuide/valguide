@@ -46,38 +46,16 @@ export type UpdateGuideTranslationParams = {
 export async function updateGuideTranslation(params: UpdateGuideTranslationParams) {
   const { guideId, locale, title, description } = params
 
-  // Check if translation exists
-  const existing = await db.query.guideTranslation.findFirst({
-    where: and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)),
-  })
+  // Use the new upsertGuideTranslationDraft function
+  const { upsertGuideTranslationDraft } = await import('./translation-mutations')
+  
+  const versionId = await upsertGuideTranslationDraft(
+    guideId,
+    locale,
+    { title, description },
+  )
 
-  if (existing) {
-    // Update existing translation
-    const [updated] = await db
-      .update(guideTranslation)
-      .set({
-        title,
-        description,
-        updatedAt: new Date(),
-      })
-      .where(eq(guideTranslation.id, existing.id))
-      .returning()
-
-    return updated
-  } else {
-    // Create new translation
-    const [created] = await db
-      .insert(guideTranslation)
-      .values({
-        guideId,
-        locale,
-        title,
-        description,
-      })
-      .returning()
-
-    return created
-  }
+  return { versionId }
 }
 
 // Stop actions
@@ -148,40 +126,16 @@ export type UpdateStopParams = {
 export async function updateStop(params: UpdateStopParams) {
   const { stopId, locale, title, description, transcription } = params
 
-  // Check if translation exists
-  const existing = await db.query.stopTranslation.findFirst({
-    where: and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)),
-  })
+  // Use the new upsertStopTranslationDraft function
+  const { upsertStopTranslationDraft } = await import('./translation-mutations')
+  
+  const versionId = await upsertStopTranslationDraft(
+    stopId,
+    locale,
+    { title, description, transcription },
+  )
 
-  if (existing) {
-    // Update existing translation
-    const [updated] = await db
-      .update(stopTranslation)
-      .set({
-        title,
-        description,
-        transcription,
-        updatedAt: new Date(),
-      })
-      .where(eq(stopTranslation.id, existing.id))
-      .returning()
-
-    return updated
-  } else {
-    // Create new translation
-    const [created] = await db
-      .insert(stopTranslation)
-      .values({
-        stopId,
-        locale,
-        title,
-        description,
-        transcription,
-      })
-      .returning()
-
-    return created
-  }
+  return { versionId }
 }
 
 export async function deleteStop(stopId: string) {
