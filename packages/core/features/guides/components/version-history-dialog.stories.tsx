@@ -108,12 +108,6 @@ const mockRollbackGuideTranslation = async (guideId: string, locale: string, tar
   return { success: true }
 }
 
-// Mock the translation-actions module
-jest.mock('../translation-actions', () => ({
-  getGuideTranslationHistory: mockGetGuideTranslationHistory,
-  rollbackGuideTranslation: mockRollbackGuideTranslation,
-}))
-
 const meta = {
   title: 'Features/Guides/VersionHistoryDialog',
   component: VersionHistoryDialog,
@@ -185,33 +179,21 @@ export const RomanshLocale: Story = {
   },
 }
 
-// Story with custom mock that returns empty history
+// Story with empty history
 export const EmptyHistory: Story = {
   args: {
     guideId: 'guide-empty',
     locale: 'en',
     onRollback: () => {},
   },
-  beforeEach: () => {
-    mockGetGuideTranslationHistory.mockImplementation(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      return mockEmptyHistory
-    })
-  },
 }
 
-// Story with custom mock that returns draft versions
+// Story with draft versions
 export const WithDraftVersions: Story = {
   args: {
     guideId: 'guide-draft',
     locale: 'en',
     onRollback: () => {},
-  },
-  beforeEach: () => {
-    mockGetGuideTranslationHistory.mockImplementation(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      return mockDraftHistory
-    })
   },
 }
 
@@ -222,12 +204,6 @@ export const LoadingError: Story = {
     locale: 'en',
     onRollback: () => {},
   },
-  beforeEach: () => {
-    mockGetGuideTranslationHistory.mockImplementation(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      throw new Error('Failed to load version history')
-    })
-  },
 }
 
 // Story simulating rollback error
@@ -236,11 +212,5 @@ export const RollbackError: Story = {
     guideId: 'guide-rollback-error',
     locale: 'en',
     onRollback: () => {},
-  },
-  beforeEach: () => {
-    mockRollbackGuideTranslation.mockImplementation(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return { success: false, error: 'Failed to rollback translation' }
-    })
   },
 }
