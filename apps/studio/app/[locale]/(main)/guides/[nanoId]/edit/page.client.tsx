@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@valguide/ui/components/button'
 import { Save, ArrowLeft, Check } from 'lucide-react'
 import { LocaleTabs } from '@/features/guides/components/locale-tabs'
@@ -28,6 +29,7 @@ export type GuideEditorClientProps = {
 }
 
 function GuideEditorContent() {
+  const router = useRouter()
   const t = useTranslations('guides')
   const {
     guide,
@@ -120,8 +122,7 @@ function GuideEditorContent() {
             guideId={guide.id}
             locale={activeLocale}
             onRollback={() => {
-              // Reload the page to show rolled back content
-              window.location.reload()
+              router.refresh()
             }}
           />
           <PublishTranslationButton
@@ -129,8 +130,7 @@ function GuideEditorContent() {
             locale={activeLocale}
             hasDraft={!!currentTranslation?.draftVersion}
             onPublished={() => {
-              // Reload the page to show published content
-              window.location.reload()
+              router.refresh()
             }}
             disabled={isSaving}
           />

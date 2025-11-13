@@ -26,6 +26,7 @@ export function AssetsPageClient() {
         organizationId={organizationId}
         onAssetDeleted={handleAssetDeleted}
         onUploadComplete={handleUploadComplete}
+        onRetry={refetch}
       />
     </main>
   )

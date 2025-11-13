@@ -28,7 +28,10 @@ export function useAssets(options?: UseAssetsOptions) {
 
   const url = `/api/assets${params.toString() ? `?${params.toString()}` : ''}`
 
-  const { data, error, isLoading, mutate } = useSWR<AssetsResponse>(url, fetcher)
+  const { data, error, isLoading, isValidating, mutate } = useSWR<AssetsResponse>(url, fetcher, {
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+  })
 
   return {
     assets: data?.assets || [],

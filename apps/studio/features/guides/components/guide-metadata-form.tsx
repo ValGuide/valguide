@@ -29,12 +29,16 @@ export function GuideMetadataForm({
   onSelectCoverImage,
 }: GuideMetadataFormProps) {
   const t = useTranslations('guides')
-  const [title, setTitle] = useState(translation?.title || '')
-  const [description, setDescription] = useState(translation?.description || '')
+  const [title, setTitle] = useState(
+    translation?.draftVersion?.title || translation?.currentVersion?.title || ''
+  )
+  const [description, setDescription] = useState(
+    translation?.draftVersion?.description || translation?.currentVersion?.description || ''
+  )
 
   useEffect(() => {
-    setTitle(translation?.title || '')
-    setDescription(translation?.description || '')
+    setTitle(translation?.draftVersion?.title || translation?.currentVersion?.title || '')
+    setDescription(translation?.draftVersion?.description || translation?.currentVersion?.description || '')
   }, [locale, translation])
 
   const handleTitleChange = (value: string) => {

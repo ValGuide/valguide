@@ -33,6 +33,7 @@ export type AssetsListProps = {
   organizationId: string
   onAssetDeleted?: (assetId: string) => void
   onUploadComplete?: (asset: Asset) => void
+  onRetry?: () => void
 }
 
 export function AssetsList({
@@ -42,6 +43,7 @@ export function AssetsList({
   organizationId,
   onAssetDeleted,
   onUploadComplete,
+  onRetry,
 }: AssetsListProps) {
   const t = useTranslations('assets')
   const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all')
@@ -107,7 +109,7 @@ export function AssetsList({
           <EmptyDescription>{error.message || 'An unexpected error occurred'}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button onClick={() => window.location.reload()} variant="outline">
+          <Button onClick={onRetry} variant="outline">
             Try again
           </Button>
         </EmptyContent>
@@ -117,6 +119,8 @@ export function AssetsList({
 
   // Empty state when no assets exist
   if (assets.length === 0) {
+
+    console.info('hello')
     return (
       <>
         <Empty className="border">

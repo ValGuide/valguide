@@ -27,6 +27,7 @@ interface GuidesListProps {
     coverImage?: string
   }) => Promise<Guide>
   onViewGuide?: (guide: Guide) => void
+  onRetry?: () => void
 }
 
 export function GuidesList({
@@ -35,6 +36,7 @@ export function GuidesList({
   error = null,
   onCreateGuide,
   onViewGuide,
+  onRetry,
 }: GuidesListProps) {
   const t = useTranslations('guides')
   const [isCreating, setIsCreating] = React.useState(false)
@@ -131,7 +133,7 @@ export function GuidesList({
           <EmptyDescription>{error.message || 'An unexpected error occurred'}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button onClick={() => window.location.reload()} variant="outline">
+          <Button onClick={onRetry} variant="outline">
             Try again
           </Button>
         </EmptyContent>

@@ -7,7 +7,7 @@ import { Guide } from '@valguide/features/guides/types'
 
 export function GuidesListContainer() {
   const router = useRouter()
-  const { guides, isLoading, error, createGuide } = useGuides()
+  const { guides, isLoading, error, createGuide, refetch } = useGuides()
 
   const handleViewGuide = (guide: Guide) => {
     if (guide.nanoId) {
@@ -22,6 +22,7 @@ export function GuidesListContainer() {
       error={error}
       onCreateGuide={createGuide}
       onViewGuide={handleViewGuide}
+      onRetry={refetch}
     />
   )
 }
