@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@valguide/core/ui/button'
+import { Button } from '@valguide/ui/components/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,8 +11,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@valguide/core/ui/alert-dialog'
-import { Upload } from '@valguide/icons'
+} from '@valguide/ui/components/alert-dialog'
+import { Upload } from 'lucide-react'
 import { toast } from 'sonner'
 import { publishGuideTranslationDraft } from '../translation-actions'
 import { useTranslations } from 'next-intl'

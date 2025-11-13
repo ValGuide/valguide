@@ -8,14 +8,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@valguide/core/ui/dialog'
-import { Button } from '@valguide/core/ui/button'
-import { ScrollArea } from '@valguide/core/ui/scroll-area'
-import { History, RotateCcw } from '@valguide/icons'
+} from '@valguide/ui/components/dialog'
+import { Button } from '@valguide/ui/components/button'
+import { ScrollArea } from '@valguide/ui/components/scroll-area'
+import { History, RotateCcw } from 'lucide-react'
 import { toast } from 'sonner'
 import { getGuideTranslationHistory, rollbackGuideTranslation } from '../translation-actions'
 import { TranslationStatusBadge } from './translation-status-badge'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useFormatter } from 'next-intl'
 import type { GuideTranslationVersion } from '../schema'
 import {
   AlertDialog,
@@ -26,7 +26,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@valguide/core/ui/alert-dialog'
+} from '@valguide/ui/components/alert-dialog'
 
 interface VersionHistoryDialogProps {
   guideId: string
@@ -36,6 +36,7 @@ interface VersionHistoryDialogProps {
 
 export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHistoryDialogProps) {
   const t = useTranslations('guides.versionHistory')
+  const format = useFormatter()
   const [isOpen, setIsOpen] = useState(false)
   const [versions, setVersions] = useState<GuideTranslationVersion[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -92,7 +93,13 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
 
   const formatDate = (date: Date | null) => {
     if (!date) return '-'
-    return new Date(date).toLocaleString()
+    return format.dateTime(new Date(date), {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
   }
 
   return (
@@ -169,7 +176,7 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
           <AlertDialogHeader>
             <AlertDialogTitle>{t('rollbackConfirmTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('rollbackConfirmDescription', { version: selectedVersion?.toString() })}
+              {t('rollbackConfirmDescription', { version: selectedVersion?.toString() || '' })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

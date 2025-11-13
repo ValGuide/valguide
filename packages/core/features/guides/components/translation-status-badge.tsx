@@ -1,7 +1,7 @@
 'use client'
 
-import { Badge } from '@valguide/core/ui/badge'
-import { CheckCircle2, Edit3, Clock, Archive } from '@valguide/icons'
+import { Badge } from '@valguide/ui/components/badge'
+import { CheckCircle2, Edit3, Clock, Archive } from 'lucide-react'
 
 type TranslationStatus = 'draft' | 'in_review' | 'published' | 'archived'
 
@@ -47,7 +47,7 @@ export function TranslationStatusBadge({ status, hasDraft, className }: Translat
       )
     case 'published':
       return (
-        <Badge variant="success" className={className}>
+        <Badge variant="default" className={className}>
           <CheckCircle2 className="mr-1 h-3 w-3" />
           Published
         </Badge>

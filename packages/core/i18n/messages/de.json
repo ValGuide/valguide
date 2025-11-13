@@ -236,7 +236,36 @@
     "deletedSuccessfully": "Guide erfolgreich gelöscht",
     "archivedOn": "Archiviert am",
     "noArchivedGuides": "Keine archivierten Guides",
-    "noArchivedGuidesDescription": "Archivierte Guides werden hier angezeigt"
+    "noArchivedGuidesDescription": "Archivierte Guides werden hier angezeigt",
+    "publish": {
+      "button": "Veröffentlichen",
+      "success": "Übersetzung erfolgreich veröffentlicht",
+      "error": "Fehler beim Veröffentlichen der Übersetzung",
+      "confirmTitle": "Übersetzung veröffentlichen?",
+      "confirmDescription": "Dies wird die Entwurfsversion für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
+      "cancel": "Abbrechen",
+      "confirm": "Veröffentlichen",
+      "publishing": "Wird veröffentlicht..."
+    },
+    "versionHistory": {
+      "button": "Versionsverlauf",
+      "title": "Übersetzungsverlauf",
+      "description": "Vorherige Versionen dieser Übersetzung anzeigen und verwalten",
+      "loading": "Versionen werden geladen...",
+      "noVersions": "Kein Versionsverlauf verfügbar",
+      "versionLabel": "Version",
+      "created": "Erstellt",
+      "published": "Veröffentlicht",
+      "rollback": "Wiederherstellen",
+      "rollbackSuccess": "Version als Entwurf wiederhergestellt",
+      "rollbackError": "Fehler beim Wiederherstellen der Version",
+      "loadError": "Fehler beim Laden des Versionsverlaufs",
+      "rollbackConfirmTitle": "Diese Version wiederherstellen?",
+      "rollbackConfirmDescription": "Version {version} wird als neuer Entwurf wiederhergestellt. Sie können sie dann überprüfen und veröffentlichen.",
+      "cancel": "Abbrechen",
+      "confirm": "Wiederherstellen",
+      "rollingBack": "Wird wiederhergestellt..."
+    }
   },
   "stops": {
     "title": "Stops",

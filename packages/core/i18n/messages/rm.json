@@ -236,7 +236,36 @@
     "deletedSuccessfully": "Guida stizzada cun success",
     "archivedOn": "Archivà ils",
     "noArchivedGuides": "Naginas guidas archivadas",
-    "noArchivedGuidesDescription": "Guidas archivadas vegnan mussadas qua"
+    "noArchivedGuidesDescription": "Guidas archivadas vegnan mussadas qua",
+    "publish": {
+      "button": "Publitgar",
+      "success": "Translaziun publichada cun success",
+      "error": "Errur tar publitgar la translaziun",
+      "confirmTitle": "Publitgar questa translaziun?",
+      "confirmDescription": "Quai renda la versiun da sboz visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
+      "cancel": "Interrumper",
+      "confirm": "Publitgar",
+      "publishing": "Vegn publichà..."
+    },
+    "versionHistory": {
+      "button": "Cronologia da versiuns",
+      "title": "Cronologia da translaziuns",
+      "description": "Mussar e administrar versiuns pli veglias da questa translaziun",
+      "loading": "Chargiar versiuns...",
+      "noVersions": "Nagina cronologia da versiuns disponibla",
+      "versionLabel": "Versiun",
+      "created": "Creà",
+      "published": "Publichà",
+      "rollback": "Restaurar",
+      "rollbackSuccess": "Versiun restaurada sco sboz",
+      "rollbackError": "Errur tar restaurar la versiun",
+      "loadError": "Errur tar chargiar la cronologia da versiuns",
+      "rollbackConfirmTitle": "Restaurar questa versiun?",
+      "rollbackConfirmDescription": "Versiun {version} vegn restaurada sco nov sboz. Ti la pos lura repassar e publitgar.",
+      "cancel": "Interrumper",
+      "confirm": "Restaurar",
+      "rollingBack": "Vegn restaurà..."
+    }
   },
   "stops": {
     "title": "Stops",
