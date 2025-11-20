@@ -10,20 +10,23 @@
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml storybook-static .turbo"
   },
   "dependencies": {
-    "@valguide/core": "workspace:*",
-    "@valguide/www": "workspace:*",
-    "@valguide/studio": "workspace:*",
     "@valguide/app": "workspace:*",
+    "@valguide/core": "workspace:*",
+    "@valguide/studio": "workspace:*",
+    "@valguide/www": "workspace:*",
     "next": "15.5.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "9.1.0-alpha.5",
     "@storybook/addon-links": "^9.1.13",
     "@storybook/addon-themes": "^9.1.13",
     "@storybook/nextjs-vite": "^9.1.13",
     "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.13.1",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",

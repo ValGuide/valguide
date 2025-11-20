@@ -434,6 +434,47 @@
       "addTeam": "Add team"
     }
   },
+  "orgs": {
+    "teamSwitcher": {
+      "teams": "Teams",
+      "createTeam": "Create team",
+      "teamSettings": "Team settings"
+    },
+    "members": {
+      "member": "Member",
+      "role": "Role",
+      "joined": "Joined",
+      "actions": "Actions",
+      "you": "You",
+      "noMembers": "No members found",
+      "changeRoleTo": "Change to {role}",
+      "resendInvite": "Resend invite",
+      "removeMember": "Remove member"
+    },
+    "inviteDialog": {
+      "inviteMember": "Invite member",
+      "inviteDescription": "Send an invitation to join your team via email.",
+      "email": "Email address",
+      "role": "Role",
+      "cancel": "Cancel",
+      "sendInvite": "Send invite",
+      "sending": "Sending...",
+      "invalidEmail": "Please enter a valid email address",
+      "inviteError": "Failed to send invitation. Please try again."
+    },
+    "pendingInvites": {
+      "title": "Pending invitations",
+      "description": "Invitations that have been sent but not yet accepted.",
+      "email": "Email",
+      "role": "Role",
+      "invitedBy": "Invited by",
+      "status": "Status",
+      "sent": "Sent",
+      "actions": "Actions",
+      "resend": "Resend invitation",
+      "cancel": "Cancel invitation"
+    }
+  },
   "theme": {
     "toggleTheme": "Toggle theme",
     "switchToDark": "Dark mode",

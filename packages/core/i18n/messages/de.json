@@ -434,6 +434,47 @@
       "addTeam": "Team hinzufügen"
     }
   },
+  "orgs": {
+    "teamSwitcher": {
+      "teams": "Teams",
+      "createTeam": "Team erstellen",
+      "teamSettings": "Team-Einstellungen"
+    },
+    "members": {
+      "member": "Mitglied",
+      "role": "Rolle",
+      "joined": "Beigetreten",
+      "actions": "Aktionen",
+      "you": "Du",
+      "noMembers": "Keine Mitglieder gefunden",
+      "changeRoleTo": "Ändern zu {role}",
+      "resendInvite": "Einladung erneut senden",
+      "removeMember": "Mitglied entfernen"
+    },
+    "inviteDialog": {
+      "inviteMember": "Mitglied einladen",
+      "inviteDescription": "Senden Sie eine Einladung zum Beitritt zu Ihrem Team per E-Mail.",
+      "email": "E-Mail-Adresse",
+      "role": "Rolle",
+      "cancel": "Abbrechen",
+      "sendInvite": "Einladung senden",
+      "sending": "Wird gesendet...",
+      "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+      "inviteError": "Fehler beim Senden der Einladung. Bitte versuchen Sie es erneut."
+    },
+    "pendingInvites": {
+      "title": "Ausstehende Einladungen",
+      "description": "Einladungen, die gesendet, aber noch nicht akzeptiert wurden.",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "invitedBy": "Eingeladen von",
+      "status": "Status",
+      "sent": "Gesendet",
+      "actions": "Aktionen",
+      "resend": "Einladung erneut senden",
+      "cancel": "Einladung abbrechen"
+    }
+  },
   "theme": {
     "toggleTheme": "Theme wechseln",
     "switchToDark": "Dunkelmodus",

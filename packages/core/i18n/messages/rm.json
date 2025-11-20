@@ -434,6 +434,47 @@
       "addTeam": "Agiuntar team"
     }
   },
+  "orgs": {
+    "teamSwitcher": {
+      "teams": "Teams",
+      "createTeam": "Crear team",
+      "teamSettings": "Parameters dal team"
+    },
+    "members": {
+      "member": "Commember",
+      "role": "Rolla",
+      "joined": "Uniua",
+      "actions": "Acziuns",
+      "you": "Ti",
+      "noMembers": "Nagins commembers chattads",
+      "changeRoleTo": "Midar a {role}",
+      "resendInvite": "Trametter invitaziun danovamain",
+      "removeMember": "Allontanar commember"
+    },
+    "inviteDialog": {
+      "inviteMember": "Envidar commember",
+      "inviteDescription": "Trametter ina invitaziun per participar a voss team via e-mail.",
+      "email": "Adressa d'e-mail",
+      "role": "Rolla",
+      "cancel": "Interrumper",
+      "sendInvite": "Trametter invitaziun",
+      "sending": "Vegn tramess...",
+      "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+      "inviteError": "Errur tar trametter l'invitaziun. Empruvei per plascher aunc inagada."
+    },
+    "pendingInvites": {
+      "title": "Invitaziuns pendantas",
+      "description": "Invitaziuns che èn vegnidas tramessas ma anc betg acceptadas.",
+      "email": "E-mail",
+      "role": "Rolla",
+      "invitedBy": "Envidà da",
+      "status": "Status",
+      "sent": "Tramess",
+      "actions": "Acziuns",
+      "resend": "Trametter invitaziun danovamain",
+      "cancel": "Annullar invitaziun"
+    }
+  },
   "theme": {
     "toggleTheme": "Midar tema",
     "switchToDark": "Modus stgir",
