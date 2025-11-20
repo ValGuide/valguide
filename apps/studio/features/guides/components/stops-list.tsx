@@ -144,21 +144,18 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
     const { active, over } = event
 
     if (over && active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id)
-        const newIndex = items.findIndex((item) => item.id === over.id)
+      const oldIndex = items.findIndex((item) => item.id === active.id)
+      const newIndex = items.findIndex((item) => item.id === over.id)
 
-        const reorderedItems = arrayMove(items, oldIndex, newIndex)
+      const reorderedItems = arrayMove(items, oldIndex, newIndex)
 
-        const updates = reorderedItems.map((item, index) => ({
-          id: item.id,
-          order: index,
-        }))
+      const updates = reorderedItems.map((item, index) => ({
+        id: item.id,
+        order: index,
+      }))
 
-        onReorder(updates)
-
-        return reorderedItems
-      })
+      setItems(reorderedItems)
+      onReorder(updates)
     }
   }
 
