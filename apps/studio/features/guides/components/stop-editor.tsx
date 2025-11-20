@@ -68,174 +68,145 @@ export function StopEditor({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <CardTitle>
-              {t('title')} <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">({locale})</span>
-            </CardTitle>
-            <CardDescription>Edit the stop content for this language</CardDescription>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Title */}
-        <div className="space-y-2">
-          <Label htmlFor={`stop-title-${locale}`}>{t('titleLabel')} *</Label>
-          <Input
-            id={`stop-title-${locale}`}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={t('titlePlaceholder')}
-            maxLength={500}
-            required
-          />
-          <p className="text-xs text-muted-foreground">{title.length}/500 characters</p>
-        </div>
+    <div className="space-y-6">
+      {/* Title */}
+      <div className="space-y-2">
+        <Label htmlFor={`stop-title-${locale}`} className="text-sm font-medium">
+          Stop Title
+        </Label>
+        <Input
+          id={`stop-title-${locale}`}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder={t('titlePlaceholder')}
+          maxLength={500}
+          required
+          className="bg-gray-100"
+        />
+      </div>
 
-        {/* Description */}
-        <div className="space-y-2">
-          <Label htmlFor={`stop-description-${locale}`}>{t('descriptionLabel')}</Label>
+      {/* Audio */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Audio</Label>
+        {audio ? (
+          <div className="flex items-center justify-between rounded-lg border bg-white p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+                <Music className="h-5 w-5" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Audio file</span>
+                {audio.locale && (
+                  <Badge variant="secondary" className="uppercase">
+                    {audio.locale}
+                  </Badge>
+                )}
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" onClick={() => setAudio(null)}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-white p-12">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+              <Music className="h-6 w-6 text-gray-600" />
+            </div>
+            <p className="mb-1 text-sm font-medium">Click to upload or drag and drop</p>
+            <p className="mb-4 text-xs text-muted-foreground">MP3 files up to 50MB</p>
+          </div>
+        )}
+        <Button variant="link" size="sm" className="px-0 text-sm">
+          Browse Asset Library...
+        </Button>
+      </div>
+
+      {/* Description */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <Label htmlFor={`stop-description-${locale}`} className="text-sm font-medium">
+            Description
+          </Label>
+          <Button variant="ghost" size="sm" className="gap-1">
+            <Mic className="h-4 w-4" />
+            Auto-generate from audio
+          </Button>
+        </div>
+        <div className="rounded-lg border bg-white p-3">
+          <div className="mb-2 flex gap-1">
+            <Button variant="ghost" size="sm" className="h-8 px-2">
+              <span className="font-semibold">B</span>
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 px-2">
+              <span className="italic">I</span>
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 px-2">
+              • List
+            </Button>
+          </div>
           <Textarea
             id={`stop-description-${locale}`}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder={t('descriptionPlaceholder')}
             rows={4}
+            className="border-0 p-0 focus-visible:ring-0"
           />
         </div>
+      </div>
 
-        {/* Images */}
-        <div className="space-y-2">
-          <Label>{t('imagesLabel')}</Label>
-          {images.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-              {images.map((image) => (
-                <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg border">
-                  <img src={image.url} alt="" className="h-full w-full object-cover" />
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    className="absolute right-2 top-2 h-8 w-8"
-                    onClick={() => handleRemoveImage(image.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button variant="outline" onClick={onSelectImages} className="aspect-square h-full w-full">
-                <Plus className="h-6 w-6" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
-              <ImageIcon className="mb-3 h-10 w-10 text-muted-foreground" />
-              <p className="mb-3 text-sm text-muted-foreground">{t('noImages')}</p>
-              <Button variant="outline" onClick={onSelectImages}>
-                <Plus className="mr-2 h-4 w-4" />
-                {t('addImage')}
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Audio */}
-        <div className="space-y-2">
-          <Label>{t('audioLabel')}</Label>
-          {audio ? (
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10">
-                  <Music className="h-5 w-5 text-primary" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Audio file</span>
-                  {audio.locale && (
-                    <Badge variant="secondary" className="uppercase">
-                      {audio.locale}
-                    </Badge>
-                  )}
-                </div>
+      {/* Gallery */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Gallery (Images & Video)</Label>
+        {images.length > 0 || video ? (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {images.map((image) => (
+              <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg border bg-white">
+                <img src={image.url} alt="" className="h-full w-full object-cover" />
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  className="absolute right-2 top-2 h-8 w-8"
+                  onClick={() => handleRemoveImage(image.id)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setAudio(null)}>
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
-              <Music className="mb-3 h-10 w-10 text-muted-foreground" />
-              <p className="mb-3 text-sm text-muted-foreground">{t('noAudio')}</p>
-              <Button variant="outline" onClick={onSelectAudio}>
-                <Plus className="mr-2 h-4 w-4" />
-                {t('addAudio')}
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Video */}
-        <div className="space-y-2">
-          <Label>{t('videoLabel')}</Label>
-          {video ? (
-            <div className="space-y-2">
-              <div className="relative aspect-video overflow-hidden rounded-lg border">
+            ))}
+            {video && (
+              <div className="relative aspect-square overflow-hidden rounded-lg border bg-white">
                 <video src={video.url} className="h-full w-full object-cover" controls />
                 <Button
                   variant="destructive"
                   size="icon"
-                  className="absolute right-2 top-2"
+                  className="absolute right-2 top-2 h-8 w-8"
                   onClick={() => setVideo(null)}
                 >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              {video.locale && (
-                <Badge variant="secondary" className="uppercase">
-                  {video.locale}
-                </Badge>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
-              <Video className="mb-3 h-10 w-10 text-muted-foreground" />
-              <p className="mb-3 text-sm text-muted-foreground">{t('noVideo')}</p>
-              <Button variant="outline" onClick={onSelectVideo}>
-                <Plus className="mr-2 h-4 w-4" />
-                {t('addVideo')}
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Transcription */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor={`stop-transcription-${locale}`}>{t('transcriptionLabel')}</Label>
-            <Button variant="ghost" size="sm" disabled>
-              <Mic className="mr-2 h-4 w-4" />
-              {t('autoTranscribe')}
+            )}
+            <Button
+              variant="outline"
+              onClick={onSelectImages}
+              className="aspect-square h-full w-full border-dashed"
+            >
+              <Plus className="h-6 w-6" />
             </Button>
           </div>
-          <Textarea
-            id={`stop-transcription-${locale}`}
-            value={transcription}
-            onChange={(e) => setTranscription(e.target.value)}
-            placeholder={t('transcriptionPlaceholder')}
-            rows={6}
-          />
-        </div>
-
-        {/* Actions */}
-        <div className="flex justify-end gap-2 pt-4">
-          <Button variant="outline" onClick={onCancel}>
-            {tActions('cancel')}
-          </Button>
-          <Button onClick={handleSave} disabled={!title.trim()}>
-            {tActions('save')}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-white p-12">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+              <ImageIcon className="h-6 w-6 text-gray-600" />
+            </div>
+            <p className="mb-1 text-sm font-medium">Click to upload or drag and drop</p>
+            <p className="mb-4 text-xs text-muted-foreground">Images and videos up to 50MB each</p>
+          </div>
+        )}
+        <Button variant="link" size="sm" className="px-0 text-sm">
+          Browse Asset Library...
+        </Button>
+      </div>
+    </div>
   )
 }

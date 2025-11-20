@@ -77,7 +77,7 @@ export function GuideEditorProvider({
 }) {
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
-  const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(initialGuide.stops?.[0] || null)
+  const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(null)
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
