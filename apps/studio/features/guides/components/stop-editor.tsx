@@ -207,6 +207,14 @@ export function StopEditor({
           Browse Asset Library...
         </Button>
       </div>
+
+      {/* Actions */}
+      <div className="flex justify-end gap-3 border-t pt-6">
+        <Button variant="outline" onClick={onCancel}>
+          {tActions('cancel')}
+        </Button>
+        <Button onClick={handleSave}>{tActions('save')}</Button>
+      </div>
     </div>
   )
 }
