@@ -2,16 +2,48 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { NextIntlClientProvider } from 'next-intl'
 import { AppSidebar } from './app-sidebar'
 import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
+import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
 
 // Import messages for the story
 import enMessages from '@valguide/i18n/messages/en.json'
 import deMessages from '@valguide/i18n/messages/de.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
 
+const mockUser = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  avatar: 'https://github.com/shadcn.png',
+}
+
+const mockTeams: Team[] = [
+  {
+    id: 'team-1',
+    name: 'Acme Corp',
+    slug: 'acme-corp',
+    role: 'owner',
+    logo: 'https://github.com/shadcn.png',
+  },
+  {
+    id: 'team-2',
+    name: 'Valerius Tech',
+    slug: 'valerius-tech',
+    role: 'admin',
+  },
+  {
+    id: 'team-3',
+    name: 'Personal Projects',
+    slug: 'personal',
+    role: 'viewer',
+  },
+]
+
 const meta: Meta<typeof AppSidebar> = {
   title: 'Studio/Dashboard/Sidebar',
   component: AppSidebar,
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'responsive',
@@ -25,6 +57,11 @@ const meta: Meta<typeof AppSidebar> = {
           'The main dashboard sidebar with top-level navigation for Guides, Analytics, Team & Members, Settings, Team Switcher, My Profile, and Logout. Fully internationalized with support for multiple languages.',
       },
     },
+  },
+  args: {
+    user: mockUser,
+    teams: mockTeams,
+    currentTeam: mockTeams[0],
   },
   decorators: [
     (Story, { globals: { locale } }) => {

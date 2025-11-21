@@ -146,6 +146,10 @@ const AllTypesWrapper = () => {
 }
 
 export const AllAssetTypes: Story = {
+  args: {
+    type: 'image',
+    organizationId: 'org_123',
+  },
   render: () => <AllTypesWrapper />,
 }
 
@@ -211,6 +215,10 @@ export const LargeVideoUpload: Story = {
 }
 
 export const MultipleLocales: Story = {
+  args: {
+    type: 'image',
+    organizationId: 'org_123',
+  },
   render: () => {
     const [locale, setLocale] = useState<string>('en')
     const [open, setOpen] = useState(true)
@@ -280,6 +288,10 @@ const ErrorStateDemo = () => {
 }
 
 export const UploadError: Story = {
+  args: {
+    type: 'image',
+    organizationId: 'org_123',
+  },
   render: () => <ErrorStateDemo />,
   parameters: {
     docs: {
@@ -311,6 +323,10 @@ const FileSizeErrorDemo = () => {
 }
 
 export const FileSizeError: Story = {
+  args: {
+    type: 'image',
+    organizationId: 'org_123',
+  },
   render: () => <FileSizeErrorDemo />,
   parameters: {
     docs: {
@@ -344,6 +360,10 @@ const InvalidFileTypeErrorDemo = () => {
 }
 
 export const InvalidFileTypeError: Story = {
+  args: {
+    type: 'image',
+    organizationId: 'org_123',
+  },
   render: () => <InvalidFileTypeErrorDemo />,
   parameters: {
     docs: {

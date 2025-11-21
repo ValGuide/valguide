@@ -1,26 +1,42 @@
-// Mock for next/router to work with Storybook
+// Mock for next/navigation to work with Storybook
+import * as React from 'react'
+
 export const useRouter = () => ({
-  route: '/',
-  pathname: '/',
-  query: {},
-  asPath: '/',
-  push: () => Promise.resolve(true),
-  replace: () => Promise.resolve(true),
-  reload: () => {},
+  push: () => {},
+  replace: () => {},
+  prefetch: () => {},
   back: () => {},
-  prefetch: () => Promise.resolve(),
-  beforePopState: () => {},
-  events: {
-    on: () => {},
-    off: () => {},
-    emit: () => {},
-  },
-  isFallback: false,
-  isLocaleDomain: false,
-  isReady: true,
-  isPreview: false,
+  forward: () => {},
+  refresh: () => {},
 })
+
+export const usePathname = () => '/'
+
+export const useSearchParams = () => new URLSearchParams()
+
+export const useParams = () => ({})
+
+export const useSelectedLayoutSegment = () => null
+
+export const useSelectedLayoutSegments = () => []
+
+export const redirect = (url: string) => {}
+
+export const notFound = () => {}
+
+export const ServerInsertedHTMLContext = React.createContext<any>(null)
+
+export const useServerInsertedHTML = () => {}
 
 export default {
   useRouter,
+  usePathname,
+  useSearchParams,
+  useParams,
+  useSelectedLayoutSegment,
+  useSelectedLayoutSegments,
+  redirect,
+  notFound,
+  ServerInsertedHTMLContext,
+  useServerInsertedHTML,
 }
