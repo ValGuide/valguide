@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
 import { NextIntlClientProvider } from 'next-intl'
 import { PublishTranslationButton } from './publish-translation-button'
 
@@ -27,8 +26,8 @@ const meta = {
       )
     },
   ],
-  argTypes: {
-    onPublished: { action: 'published' },
+  args: {
+    // Action handlers are auto-wired via the Actions addon
   },
 } satisfies Meta<typeof PublishTranslationButton>
 
@@ -41,7 +40,6 @@ export const WithDraft: Story = {
     locale: 'en',
     hasDraft: true,
     disabled: false,
-    onPublished: fn(),
   },
 }
 
@@ -51,7 +49,6 @@ export const WithoutDraft: Story = {
     locale: 'en',
     hasDraft: false,
     disabled: false,
-    onPublished: fn(),
   },
 }
 
@@ -61,7 +58,6 @@ export const Disabled: Story = {
     locale: 'en',
     hasDraft: true,
     disabled: true,
-    onPublished: fn(),
   },
 }
 
@@ -71,9 +67,6 @@ export const WithCallback: Story = {
     locale: 'en',
     hasDraft: true,
     disabled: false,
-    onPublished: () => {
-      console.log('Translation published callback')
-    },
   },
 }
 
@@ -83,7 +76,6 @@ export const GermanLocale: Story = {
     locale: 'de',
     hasDraft: true,
     disabled: false,
-    onPublished: fn(),
   },
   globals: {
     locale: 'de',
@@ -96,7 +88,6 @@ export const RomanshLocale: Story = {
     locale: 'rm',
     hasDraft: true,
     disabled: false,
-    onPublished: fn(),
   },
   globals: {
     locale: 'rm',

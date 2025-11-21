@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { action } from '@storybook/addon-actions'
 import { NextIntlClientProvider } from 'next-intl'
 import { InviteMemberDialog } from './invite-member-dialog'
 import { Button } from '@valguide/ui/components/button'
@@ -119,8 +118,7 @@ export const ControlledOpen: Story = {
 export const WithError: Story = {
   args: {
     currentUserRole: 'owner',
-    onInvite: async (email: string, role: string) => {
-      action('onInvite')(email, role)
+    onInvite: async () => {
       await new Promise((resolve) => setTimeout(resolve, 500))
       throw new Error('This email is already a team member')
     },
@@ -140,8 +138,7 @@ export const WithError: Story = {
 export const SlowSubmission: Story = {
   args: {
     currentUserRole: 'admin',
-    onInvite: async (email: string, role: string) => {
-      action('onInvite')(email, role)
+    onInvite: async () => {
       await new Promise((resolve) => setTimeout(resolve, 3000))
     },
   },
