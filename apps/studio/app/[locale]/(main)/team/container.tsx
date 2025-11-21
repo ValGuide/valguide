@@ -3,12 +3,17 @@
 import { type OrgRole, type TeamMember } from '@valguide/core/features/orgs/components/members-table'
 import { type PendingInvitation } from '@valguide/core/features/orgs/components/pending-invites-list'
 import { getTeamDataAction } from '@valguide/core/features/orgs/data-actions'
+import { getSidebarDataAction } from '@valguide/core/features/orgs/context-actions'
 import { useEffect, useState } from 'react'
 import { TeamMembersClient } from './client'
+import { Button } from '@valguide/ui/components/button'
+import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 
 import { TeamPageSkeleton } from '@valguide/core/features/orgs/components/team-page-skeleton'
+import { useTranslations } from 'next-intl'
 
 export function TeamPageContainer() {
+  const t = useTranslations('orgs.noTeam')
   const [data, setData] = useState<{
     team: any
     members: TeamMember[]
@@ -17,28 +22,44 @@ export function TeamPageContainer() {
     currentUserId: string
   } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isNoTeam, setIsNoTeam] = useState(false)
 
   useEffect(() => {
     getTeamDataAction().then((res) => {
-      console.info('data', res)
-      if (!res) {
-        // Redirect to login or home if no team context
-        // We can't easily know why res is null (unauth vs no team), but safe fallback is redirect
-        // But since we are in a client component, we can do client navigation
-        // However, we don't want to infinite loop.
-        // Layout handles unauth via Sidebar check? No, sidebar check just returns null.
-        // We should probably redirect to login if we can't get data.
-        // For now, just stop loading.
+      if (res) {
+        setData(res)
         setLoading(false)
         return
       }
-      setData(res)
-      setLoading(false)
+
+      // If no team data, check if user is authenticated
+      getSidebarDataAction().then((sidebarRes) => {
+        if (sidebarRes && sidebarRes.user) {
+          setIsNoTeam(true)
+        }
+        setLoading(false)
+      })
     })
   }, [])
 
   if (loading) {
     return <TeamPageSkeleton />
+  }
+
+  if (isNoTeam) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <div className="text-center space-y-2 max-w-md">
+          <h2 className="text-2xl font-bold tracking-tight">{t('welcome')}</h2>
+          <p className="text-muted-foreground">
+            {t('description')}
+          </p>
+        </div>
+        <CreateTeamDialog>
+          <Button size="lg">{t('createButton')}</Button>
+        </CreateTeamDialog>
+      </div>
+    )
   }
 
   if (!data) {

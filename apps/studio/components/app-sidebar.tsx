@@ -24,6 +24,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { switchTeamAction } from '@valguide/core/features/orgs/context-actions'
 import { toast } from 'sonner'
+import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 
 export function AppSidebar({
   pathname: pathnameProp,
@@ -45,6 +46,7 @@ export function AppSidebar({
   const pathnameFromRouter = usePathname()
   const router = useRouter()
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null)
+  const [createTeamOpen, setCreateTeamOpen] = React.useState(false)
 
   // Use prop if provided (e.g., in Storybook), otherwise use router pathname
   const pathname = pathnameProp ?? pathnameFromRouter ?? '/'
@@ -73,8 +75,7 @@ export function AppSidebar({
   }
 
   const handleCreateTeam = () => {
-    // TODO: Open create team dialog
-    console.log('Create team')
+    setCreateTeamOpen(true)
   }
 
   const handleTeamSettings = (teamSlug: string) => {
@@ -169,6 +170,7 @@ export function AppSidebar({
         <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
+      <CreateTeamDialog open={createTeamOpen} onOpenChange={setCreateTeamOpen} />
     </Sidebar>
   )
 }

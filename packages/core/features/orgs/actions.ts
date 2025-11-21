@@ -27,7 +27,7 @@ import {
 import { randomBytes, createHash } from 'crypto'
 import { cookies } from 'next/headers'
 
-export async function createTeamAction(name: string) {
+export async function createTeamAction(name: string, slug?: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -35,7 +35,7 @@ export async function createTeamAction(name: string) {
     throw new Error('Unauthorized')
   }
 
-  const team = await createTeam(db, name, user.id)
+  const team = await createTeam(db, name, user.id, slug)
   
   // Set cookie for new team
   const cookieStore = await cookies()

@@ -473,6 +473,26 @@
       "actions": "Acziuns",
       "resend": "Trametter invitaziun danovamain",
       "cancel": "Annullar invitaziun"
+    },
+    "noTeam": {
+      "welcome": "Beinvegni tar ValGuide",
+      "description": "Vus essas aunc buca en in team. Creei vies emprim team per administrar voss guids e cuntegn.",
+      "createButton": "Crear team"
+    },
+    "createTeam": {
+      "title": "Crear team",
+      "description": "Agiuntei in nov team per administrar voss guids.",
+      "nameLabel": "Num dal team",
+      "namePlaceholder": "Acme Museum",
+      "slugLabel": "Slug (Opziunal)",
+      "slugPlaceholder": "acme-museum",
+      "slugDescription": "Identificatur unic per vossa URL dal team.",
+      "cancel": "Interrumper",
+      "submit": "Crear team",
+      "submitting": "Vegn creà...",
+      "success": "Team creà cun success",
+      "error": "Errur cun crear il team",
+      "triggerButton": "Crear team"
     }
   },
   "theme": {

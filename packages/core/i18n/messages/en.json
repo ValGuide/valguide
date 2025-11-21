@@ -473,6 +473,26 @@
       "actions": "Actions",
       "resend": "Resend invitation",
       "cancel": "Cancel invitation"
+    },
+    "noTeam": {
+      "welcome": "Welcome to ValGuide",
+      "description": "You don't belong to any team yet. Create your first team to start managing your guides and content.",
+      "createButton": "Create Team"
+    },
+    "createTeam": {
+      "title": "Create team",
+      "description": "Add a new team to manage your guides.",
+      "nameLabel": "Team Name",
+      "namePlaceholder": "Acme Museum",
+      "slugLabel": "Slug (Optional)",
+      "slugPlaceholder": "acme-museum",
+      "slugDescription": "Unique identifier for your team URL.",
+      "cancel": "Cancel",
+      "submit": "Create Team",
+      "submitting": "Creating...",
+      "success": "Team created successfully",
+      "error": "Failed to create team",
+      "triggerButton": "Create Team"
     }
   },
   "theme": {

@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { getSidebarDataAction } from '@valguide/core/features/orgs/context-actions'
 import { AppSidebar } from './app-sidebar'
 import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
+import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { 
   Sidebar, 
   SidebarContent, 
@@ -18,6 +19,7 @@ import {
 import { Skeleton } from '@valguide/ui/components/skeleton'
 
 export function AppSidebarContainer() {
+  const pathname = usePathname()
   const router = useRouter()
   const [data, setData] = useState<{
     user: { name: string; email: string; avatar: string }
@@ -50,6 +52,16 @@ export function AppSidebarContainer() {
       setLoading(false)
     })
   }, [])
+
+  useEffect(() => {
+    if (!loading && data && !data.currentTeam) {
+      const currentPath = unlocalizedPathname(pathname)
+      if (currentPath !== '/team') {
+        const locale = pathname.split('/')[1]
+        router.push(`/${locale}/team`)
+      }
+    }
+  }, [loading, data, pathname, router])
 
   if (loading) {
     return <AppSidebarSkeleton />
