@@ -1,7 +1,9 @@
-import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { boolean, pgSchema, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 
-export const profiles = pgTable('profiles', {
+const studioSchema = pgSchema('studio')
+
+export const profiles = studioSchema.table('profiles', {
   id: uuid('id')
     .primaryKey()
     .references(() => authUsers.id),

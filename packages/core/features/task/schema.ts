@@ -1,7 +1,9 @@
-import { integer, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import { integer, pgSchema, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core'
 import { todo } from '../todo/schema'
 
-export const task = pgTable('task', {
+const studioSchema = pgSchema('studio')
+
+export const task = studioSchema.table('task', {
   id: serial('id').primaryKey(),
   key: text('key').notNull().unique('unique_task_key'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -10,7 +12,7 @@ export const task = pgTable('task', {
     .$onUpdate(() => new Date()),
 })
 
-export const taskToTodo = pgTable(
+export const taskToTodo = studioSchema.table(
   'task_to_todo',
   {
     taskId: integer('task_id')

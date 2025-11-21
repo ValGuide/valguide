@@ -41,6 +41,11 @@ export function AppSidebarContainer() {
         setLoading(false)
         return
       }
+      
+      if (res.wasAutoSelected) {
+        router.refresh()
+      }
+
       setData(res)
       setLoading(false)
     })

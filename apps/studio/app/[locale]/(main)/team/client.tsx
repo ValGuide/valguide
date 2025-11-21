@@ -89,7 +89,7 @@ export function TeamMembersClient({
   // Let's leave it undefined for members table for now.
   
   return (
-    <div className="container max-w-5xl py-8 space-y-8">
+    <div className="container mx-auto max-w-5xl py-8 space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Team & Members</h1>

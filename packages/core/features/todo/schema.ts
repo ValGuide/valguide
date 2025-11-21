@@ -1,4 +1,4 @@
-import { pgSchema, pgTable, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
+import { pgSchema, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 
 const privateSchema = pgSchema('private')
 

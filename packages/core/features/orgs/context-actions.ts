@@ -22,20 +22,38 @@ export async function getSidebarDataAction() {
   
   let currentTeam = teams.find((t: any) => t.slug === activeSlug)
   
-  if (!currentTeam && teams.length > 0) {
-    currentTeam = teams[0]
-  }
-
   const sidebarUser = {
     name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
     email: user.email || '',
     avatar: user.user_metadata?.avatar_url || '',
   }
 
+  if (!currentTeam && teams.length > 0) {
+    currentTeam = teams[0]
+
+    const cookieStore = await cookies()
+    cookieStore.set(TEAM_COOKIE_NAME, currentTeam.slug, {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+    })
+    
+    // Flag that we auto-selected so client can refresh if needed
+    return {
+      user: sidebarUser,
+      teams,
+      currentTeam,
+      wasAutoSelected: true
+    }
+  }
+
   return {
     user: sidebarUser,
     teams,
     currentTeam,
+    wasAutoSelected: false
   }
 }
 

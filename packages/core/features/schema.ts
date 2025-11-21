@@ -1,10 +1,11 @@
 // schemas
-// export * from './todo/schema'
-// export * from './task/schema'
+export * from './todo/schema'
+export * from './task/schema'
 export * from './guides/schema'
 export * from './assets/schema'
 export * from './orgs/schema'
-// export * from './links/schema'
+export * from './links/schema'
+export * from './profiles/schema'
 
 // relations
 // export * from './todo/relations'

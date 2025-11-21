@@ -71,6 +71,13 @@
       "when": 1763721845675,
       "tag": "0009_abandoned_thor_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1763732393484,
+      "tag": "0010_gifted_guardian",
+      "breakpoints": true
     }
   ]
 }

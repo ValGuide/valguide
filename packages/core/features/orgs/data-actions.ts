@@ -11,14 +11,24 @@ export async function getTeamDataAction() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
+    console.info('no user')
     return null
   }
 
   const teamSlug = await getActiveTeamSlug()
-  if (!teamSlug) return null
+
+  if (!teamSlug){
+    console.info('no team slug')
+     return null
+  }
 
   const team = await getTeamBySlug(db, teamSlug)
-  if (!team) return null
+
+
+  if (!team) {
+    console.info('no team')
+    return null
+  }
 
   const membersData = await getTeamMembers(db, team.id)
   const pendingInvitesData = await getPendingInvitations(db, team.id)
