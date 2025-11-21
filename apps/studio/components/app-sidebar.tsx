@@ -170,7 +170,7 @@ export function AppSidebar({
         <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
-      <CreateTeamDialog open={createTeamOpen} onOpenChange={setCreateTeamOpen} />
+      <CreateTeamDialog open={createTeamOpen} onOpenChange={setCreateTeamOpen} showTrigger={false} />
     </Sidebar>
   )
 }
