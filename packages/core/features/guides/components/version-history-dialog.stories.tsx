@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import { NextIntlClientProvider } from 'next-intl'
 import { VersionHistoryDialog } from './version-history-dialog'
 
@@ -139,7 +140,7 @@ export const Default: Story = {
   args: {
     guideId: 'guide-123',
     locale: 'en',
-    onRollback: () => {},
+    onRollback: fn(),
   },
   play: async ({ canvasElement }) => {
     // Auto-click the button to open the dialog in the story
@@ -161,7 +162,7 @@ export const GermanLocale: Story = {
   args: {
     guideId: 'guide-123',
     locale: 'de',
-    onRollback: () => {},
+    onRollback: fn(),
   },
   globals: {
     locale: 'de',
@@ -172,7 +173,7 @@ export const RomanshLocale: Story = {
   args: {
     guideId: 'guide-123',
     locale: 'rm',
-    onRollback: () => {},
+    onRollback: fn(),
   },
   globals: {
     locale: 'rm',
@@ -184,7 +185,7 @@ export const EmptyHistory: Story = {
   args: {
     guideId: 'guide-empty',
     locale: 'en',
-    onRollback: () => {},
+    onRollback: fn(),
   },
 }
 
@@ -193,7 +194,7 @@ export const WithDraftVersions: Story = {
   args: {
     guideId: 'guide-draft',
     locale: 'en',
-    onRollback: () => {},
+    onRollback: fn(),
   },
 }
 
@@ -202,7 +203,7 @@ export const LoadingError: Story = {
   args: {
     guideId: 'guide-error',
     locale: 'en',
-    onRollback: () => {},
+    onRollback: fn(),
   },
 }
 
@@ -211,6 +212,6 @@ export const RollbackError: Story = {
   args: {
     guideId: 'guide-rollback-error',
     locale: 'en',
-    onRollback: () => {},
+    onRollback: fn(),
   },
 }

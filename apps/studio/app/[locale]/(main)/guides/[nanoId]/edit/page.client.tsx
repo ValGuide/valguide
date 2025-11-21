@@ -158,7 +158,7 @@ function GuideEditorContent() {
                   <StopsList
                     stops={guide.stops}
                     locale={activeLocale}
-                    selectedStopId={selectedStop?.id}
+                    selectedStopId={undefined}
                     onReorder={handleReorderStops}
                     onEdit={selectStop}
                     onDelete={deleteStop}

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { fn } from '@storybook/test'
 import { OtpVerificationForm } from './otp-verification-form'
 
 const meta: Meta<typeof OtpVerificationForm> = {
@@ -12,7 +13,7 @@ type Story = StoryObj<typeof OtpVerificationForm>
 export const Default: Story = {
   args: {
     otp: '',
-    onOtpChange: () => {},
+    onOtpChange: fn(),
     onSubmit: (e) => {
       e.preventDefault()
       alert('OTP submitted')
@@ -28,7 +29,7 @@ export const Default: Story = {
 export const WithOtp: Story = {
   args: {
     otp: '123456',
-    onOtpChange: () => {},
+    onOtpChange: fn(),
     onSubmit: (e) => {
       e.preventDefault()
       alert('OTP submitted')
@@ -44,11 +45,11 @@ export const WithOtp: Story = {
 export const Loading: Story = {
   args: {
     otp: '123456',
-    onOtpChange: () => {},
+    onOtpChange: fn(),
     onSubmit: (e) => {
       e.preventDefault()
     },
-    onResendClick: () => {},
+    onResendClick: fn(),
     loading: true,
     isLogin: true,
   },
@@ -57,7 +58,7 @@ export const Loading: Story = {
 export const Signup: Story = {
   args: {
     otp: '',
-    onOtpChange: () => {},
+    onOtpChange: fn(),
     onSubmit: (e) => {
       e.preventDefault()
       alert('OTP submitted')
