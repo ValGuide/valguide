@@ -5,8 +5,16 @@ import { getSidebarDataAction } from '@valguide/core/features/orgs/context-actio
 import { AppSidebar } from './app-sidebar'
 import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
 import { useRouter } from 'next/navigation'
-import { useSidebar } from '@valguide/ui/components/sidebar'
-import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@valguide/ui/components/sidebar'
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarFooter, 
+  SidebarHeader, 
+  SidebarRail,
+  SidebarMenu, 
+  SidebarMenuItem, 
+  SidebarMenuButton 
+} from '@valguide/ui/components/sidebar'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 
 export function AppSidebarContainer() {
@@ -55,21 +63,48 @@ export function AppSidebarContainer() {
   )
 }
 
-function AppSidebarSkeleton() {
-  // A simple skeleton matching the sidebar structure roughly
+export function AppSidebarSkeleton() {
   return (
-    <div className="h-full w-[--sidebar-width] bg-sidebar border-r border-sidebar-border flex flex-col">
-        <div className="p-4">
-            <Skeleton className="h-12 w-full rounded-lg" />
-        </div>
-        <div className="flex-1 px-2 space-y-2">
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-full" />
-        </div>
-        <div className="p-4">
-             <Skeleton className="h-12 w-full rounded-lg" />
-        </div>
-    </div>
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg">
+              <Skeleton className="size-8 rounded-lg" />
+              <div className="grid flex-1 text-left text-sm leading-tight gap-1">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-3 w-12" />
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarMenu>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SidebarMenuItem key={i}>
+              <SidebarMenuButton className="gap-2">
+                <Skeleton className="size-4" />
+                <Skeleton className="h-4 w-24" />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg">
+              <Skeleton className="h-8 w-8 rounded-lg" />
+              <div className="grid flex-1 text-left text-sm leading-tight gap-1">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   )
 }

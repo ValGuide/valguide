@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { NextIntlClientProvider } from 'next-intl'
 import { AppSidebar } from './app-sidebar'
+import { AppSidebarSkeleton } from './app-sidebar-container'
 import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
 
@@ -225,6 +226,17 @@ export const NonCollapsible: Story = {
     docs: {
       description: {
         story: 'Sidebar that cannot be collapsed.',
+      },
+    },
+  },
+}
+
+export const Loading: Story = {
+  render: () => <AppSidebarSkeleton />,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Skeleton loader shown while sidebar data (user, teams) is loading.',
       },
     },
   },
