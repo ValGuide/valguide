@@ -18,6 +18,7 @@ interface TeamMembersClientProps {
   pendingInvites: PendingInvitation[]
   currentUserRole: OrgRole
   currentUserId: string
+  onAction?: () => void
 }
 
 export function TeamMembersClient({
@@ -25,7 +26,8 @@ export function TeamMembersClient({
   members,
   pendingInvites,
   currentUserRole,
-  currentUserId
+  currentUserId,
+  onAction
 }: TeamMembersClientProps) {
   const t = useTranslations('orgs.members')
   const tInvite = useTranslations('orgs.inviteDialog')
@@ -34,6 +36,7 @@ export function TeamMembersClient({
     try {
       await inviteMemberAction(team.id, email, role)
       toast.success('Invitation sent')
+      onAction?.()
     } catch (error) {
       console.error(error)
       toast.error(tInvite('inviteError'))
@@ -45,6 +48,7 @@ export function TeamMembersClient({
     try {
       await removeMemberAction(memberId, team.id)
       toast.success('Member removed')
+      onAction?.()
     } catch (error) {
       console.error(error)
       toast.error('Failed to remove member')
@@ -55,6 +59,7 @@ export function TeamMembersClient({
     try {
       await updateMemberRoleAction(memberId, team.id, newRole)
       toast.success('Role updated')
+      onAction?.()
     } catch (error) {
       console.error(error)
       toast.error('Failed to update role')
@@ -65,6 +70,7 @@ export function TeamMembersClient({
     try {
       await resendInviteAction(inviteId, team.id)
       toast.success('Invitation resent')
+      onAction?.()
     } catch (error) {
       console.error(error)
       toast.error('Failed to resend invitation')
@@ -75,6 +81,7 @@ export function TeamMembersClient({
     try {
       await cancelInviteAction(inviteId, team.id)
       toast.success('Invitation cancelled')
+      onAction?.()
     } catch (error) {
       console.error(error)
       toast.error('Failed to cancel invitation')

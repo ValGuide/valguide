@@ -24,22 +24,24 @@ export function TeamPageContainer() {
   const [loading, setLoading] = useState(true)
   const [isNoTeam, setIsNoTeam] = useState(false)
 
-  useEffect(() => {
-    getTeamDataAction().then((res) => {
-      if (res) {
-        setData(res)
-        setLoading(false)
-        return
-      }
+  const loadData = async () => {
+    const res = await getTeamDataAction()
+    if (res) {
+      setData(res)
+      setLoading(false)
+      return
+    }
 
-      // If no team data, check if user is authenticated
-      getSidebarDataAction().then((sidebarRes) => {
-        if (sidebarRes && sidebarRes.user) {
-          setIsNoTeam(true)
-        }
-        setLoading(false)
-      })
-    })
+    // If no team data, check if user is authenticated
+    const sidebarRes = await getSidebarDataAction()
+    if (sidebarRes && sidebarRes.user) {
+      setIsNoTeam(true)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadData()
   }, [])
 
   if (loading) {
@@ -76,6 +78,7 @@ export function TeamPageContainer() {
       pendingInvites={data.pendingInvites}
       currentUserRole={data.currentUserRole}
       currentUserId={data.currentUserId}
+      onAction={loadData}
     />
   )
 }
