@@ -1,0 +1,1 @@
+ALTER TABLE "studio"."guide" ALTER COLUMN "organization_id" SET NOT NULL;

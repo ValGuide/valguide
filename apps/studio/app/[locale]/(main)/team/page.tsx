@@ -1,24 +1,16 @@
 import { i18nStaticParams } from '@valguide/i18n/i18n.config'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { setRequestLocale } from 'next-intl/server'
 import { PageParamsWithLocale } from '@valguide/core/utils/types'
+import { TeamPageContainer } from './container'
 
 export const dynamic = 'error'
-
 export const dynamicParams = false
 
 export const generateStaticParams = () => i18nStaticParams
 
 export default async function TeamPage({ params }: PageParamsWithLocale) {
-  const locale = (await params).locale
+  const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations({ locale, namespace: 'sidebar' })
-  return (
-    <main className="min-h-svh flex flex-col flex-1 items-center justify-center px-8">
-      <article className="max-w-2xl items-center flex flex-col gap-4 text-center">
-        <h1 className="text-6xl font-bold">{t('nav.teamAndMembers')}</h1>
-        <p>{t('pages.teamAndMembers.description')}</p>
-      </article>
-    </main>
-  )
+  return <TeamPageContainer />
 }

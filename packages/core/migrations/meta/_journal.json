@@ -50,6 +50,20 @@
       "when": 1763035675771,
       "tag": "0006_familiar_lady_ursula",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1763717199325,
+      "tag": "0007_breezy_cassandra_nova",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1763717232981,
+      "tag": "0008_clever_albert_cleary",
+      "breakpoints": true
     }
   ]
 }

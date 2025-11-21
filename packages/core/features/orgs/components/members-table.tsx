@@ -76,7 +76,7 @@ function getUserName(member: TeamMember): string {
   }
   if (member.firstName) return member.firstName
   if (member.lastName) return member.lastName
-  return member.email.split('@')[0]
+  return member.email.split('@')[0] || ''
 }
 
 function getUserInitials(member: TeamMember): string {

@@ -3,6 +3,7 @@
 // export * from './task/schema'
 export * from './guides/schema'
 export * from './assets/schema'
+export * from './orgs/schema'
 // export * from './links/schema'
 
 // relations

@@ -1,12 +1,14 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { Separator } from '@valguide/ui/components/separator'
-import { AppSidebar } from '@/components/app-sidebar'
+import { AppSidebarContainer } from '@/components/app-sidebar-container'
 import { ThemeSwitcher } from '@/components/theme-switcher'
+
+export const dynamic = 'error'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-      <AppSidebar />
+    <SidebarProvider defaultOpen={true}>
+      <AppSidebarContainer />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4 flex-1">
@@ -22,3 +24,4 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   )
 }
+

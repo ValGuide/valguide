@@ -2,6 +2,7 @@ import { pgSchema, text, timestamp, uniqueIndex, uuid, varchar, integer, index, 
 import { authUsers } from 'drizzle-orm/supabase'
 import { relations } from 'drizzle-orm'
 import type { SupportedLocale } from '../../i18n/i18n.config'
+import { organization } from '../orgs/schema'
 
 const studioSchema = pgSchema('studio')
 
@@ -23,10 +24,15 @@ export const guide = studioSchema.table('guide', {
     .references(() => authUsers.id, { onDelete: 'cascade' }),
   published: timestamp('published', { withTimezone: true }),
   coverImage: text('cover_image'),
-  organizationId: uuid('organization_id'),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organization.id, { onDelete: 'cascade' }),
   archivedAt: timestamp('archived_at', { withTimezone: true }),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
-})
+}, (t) => ({
+  orgIdx: index('guide_organization_id_idx').on(t.organizationId),
+}))
+
 
 export const guideTranslation = studioSchema.table(
   'guide_translation',
