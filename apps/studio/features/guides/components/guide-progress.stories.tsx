@@ -29,14 +29,14 @@ const baseGuide: GuideWithStops = {
   coverImage: null,
   organizationId: 'org-1',
   translations: [],
-  stops: []
+  stops: [],
 }
 
 export const Empty: Story = {
   args: {
     guide: baseGuide,
-    locale: 'en'
-  }
+    locale: 'en',
+  },
 }
 
 export const TitleOnly: Story = {
@@ -51,12 +51,12 @@ export const TitleOnly: Story = {
           title: 'My Guide',
           description: null,
           createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ]
+          updatedAt: new Date(),
+        },
+      ],
     },
-    locale: 'en'
-  }
+    locale: 'en',
+  },
 }
 
 export const TitleAndDescription: Story = {
@@ -71,12 +71,12 @@ export const TitleAndDescription: Story = {
           title: 'My Guide',
           description: 'An amazing guide to explore',
           createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ]
+          updatedAt: new Date(),
+        },
+      ],
     },
-    locale: 'en'
-  }
+    locale: 'en',
+  },
 }
 
 export const WithCoverImage: Story = {
@@ -92,12 +92,12 @@ export const WithCoverImage: Story = {
           title: 'My Guide',
           description: 'An amazing guide to explore',
           createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ]
+          updatedAt: new Date(),
+        },
+      ],
     },
-    locale: 'en'
-  }
+    locale: 'en',
+  },
 }
 
 export const WithStopsButNoTitles: Story = {
@@ -113,8 +113,8 @@ export const WithStopsButNoTitles: Story = {
           title: 'My Guide',
           description: 'An amazing guide to explore',
           createdAt: new Date(),
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       ],
       stops: [
         {
@@ -125,12 +125,12 @@ export const WithStopsButNoTitles: Story = {
           createdAt: new Date(),
           updatedAt: new Date(),
           createdBy: 'user-1',
-          translations: []
-        }
-      ]
+          translations: [],
+        },
+      ],
     },
-    locale: 'en'
-  }
+    locale: 'en',
+  },
 }
 
 export const Complete: Story = {
@@ -146,8 +146,8 @@ export const Complete: Story = {
           title: 'My Guide',
           description: 'An amazing guide to explore',
           createdAt: new Date(),
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       ],
       stops: [
         {
@@ -167,9 +167,9 @@ export const Complete: Story = {
               description: 'First stop',
               transcription: null,
               createdAt: new Date(),
-              updatedAt: new Date()
-            }
-          ]
+              updatedAt: new Date(),
+            },
+          ],
         },
         {
           id: 'stop-2',
@@ -188,12 +188,12 @@ export const Complete: Story = {
               description: 'Second stop',
               transcription: null,
               createdAt: new Date(),
-              updatedAt: new Date()
-            }
-          ]
-        }
-      ]
+              updatedAt: new Date(),
+            },
+          ],
+        },
+      ],
     },
-    locale: 'en'
-  }
+    locale: 'en',
+  },
 }

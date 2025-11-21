@@ -57,7 +57,7 @@ const config: StorybookConfig = {
       },
     }
     return mergeConfig(config, {
-      define: { 
+      define: {
         'process.env': '{}',
         'process.env.VG_DATABASE_URL': '""',
       },
@@ -71,13 +71,13 @@ const config: StorybookConfig = {
         alias: {
           ...config.resolve?.alias,
           // Mock server-side modules for browser compatibility
-          'postgres': path.resolve(__dirname, './__mocks__/postgres.ts'),
+          postgres: path.resolve(__dirname, './__mocks__/postgres.ts'),
           '@valguide/supabase/server': path.resolve(__dirname, './__mocks__/supabase-server.ts'),
           '@valguide/core/features/assets/actions': path.resolve(__dirname, './__mocks__/asset-actions.ts'),
           '@valguide/core/features/assets/queries': path.resolve(__dirname, './__mocks__/asset-queries.ts'),
           '@valguide/core/features/orgs/actions': path.resolve(__dirname, './__mocks__/org-actions.ts'),
           '@valguide/core/features/db': path.resolve(__dirname, './__mocks__/db.ts'),
-          'crypto': path.resolve(__dirname, './__mocks__/crypto.ts'),
+          crypto: path.resolve(__dirname, './__mocks__/crypto.ts'),
         },
       },
     })
