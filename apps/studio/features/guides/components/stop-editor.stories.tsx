@@ -7,6 +7,9 @@ const meta = {
     title: 'Guides/StopEditor',
     component: StopEditor,
     parameters: {
+        nextjs: {
+            appDirectory: true,
+        },
         layout: 'centered',
     },
     tags: ['autodocs'],

@@ -7,6 +7,9 @@ const meta: Meta<typeof GuideProgress> = {
   title: 'Guides/GuideProgress',
   component: GuideProgress,
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'padded',
   },
   tags: ['autodocs'],

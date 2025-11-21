@@ -503,6 +503,21 @@
     "dark": "Dark",
     "system": "System"
   },
+  "profile": {
+    "title": "Profile",
+    "description": "Manage your public profile information.",
+    "username": "Username",
+    "usernameDescription": "This is your public display name.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "actions": {
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Failed to update profile",
+      "invalidData": "Invalid data provided"
+    }
+  },
   "fileDropzone": {
     "dragAndDrop": "Drag and drop files here",
     "orClickToBrowse": "or click to browse",

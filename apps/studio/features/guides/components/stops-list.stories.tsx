@@ -7,6 +7,9 @@ const meta = {
     title: 'Guides/StopsList',
     component: StopsList,
     parameters: {
+        nextjs: {
+            appDirectory: true,
+        },
         layout: 'padded',
     },
     tags: ['autodocs'],

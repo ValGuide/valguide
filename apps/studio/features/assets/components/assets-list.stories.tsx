@@ -6,6 +6,9 @@ const meta = {
   title: 'Assets/AssetsList',
   component: AssetsList,
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'padded',
   },
   tags: ['autodocs'],

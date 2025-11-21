@@ -12,6 +12,9 @@ const meta: Meta<typeof GuidesList> = {
   title: 'Studio/Guides/GuidesList',
   component: GuidesList,
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'padded',
     docs: {
       description: {

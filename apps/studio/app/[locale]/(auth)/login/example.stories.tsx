@@ -6,6 +6,9 @@ const meta: Meta<typeof AuthLayout> = {
   title: 'Studio/Story',
   component: AuthLayout,
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'fullscreen',
   },
   render: (args) => {

@@ -9,6 +9,9 @@ const meta = {
     title: 'Assets/AssetPickerModal',
     component: AssetPickerModal,
     parameters: {
+        nextjs: {
+            appDirectory: true,
+        },
         layout: 'centered',
     },
     tags: ['autodocs'],

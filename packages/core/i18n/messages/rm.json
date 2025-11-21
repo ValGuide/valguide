@@ -503,6 +503,21 @@
     "dark": "Stgir",
     "system": "System"
   },
+  "profile": {
+    "title": "Profil",
+    "description": "Administrescha tias infurmaziuns da profil publicas.",
+    "username": "Num d'utilisader",
+    "usernameDescription": "Quai è tes num che vegn mussà publicamain.",
+    "firstName": "Prenum",
+    "lastName": "Num da famiglia",
+    "save": "Memorisar midadas",
+    "saving": "Vegn memorisà...",
+    "actions": {
+      "updateSuccess": "Profil actualisà cun success",
+      "updateError": "Errur tar actualisar il profil",
+      "invalidData": "Datas nunvalidas"
+    }
+  },
   "fileDropzone": {
     "dragAndDrop": "Tira datotecas qua",
     "orClickToBrowse": "u clicca per tschertgar",

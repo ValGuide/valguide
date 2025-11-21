@@ -75,7 +75,9 @@ const config: StorybookConfig = {
           '@valguide/supabase/server': path.resolve(__dirname, './__mocks__/supabase-server.ts'),
           '@valguide/core/features/assets/actions': path.resolve(__dirname, './__mocks__/asset-actions.ts'),
           '@valguide/core/features/assets/queries': path.resolve(__dirname, './__mocks__/asset-queries.ts'),
+          '@valguide/core/features/orgs/actions': path.resolve(__dirname, './__mocks__/org-actions.ts'),
           '@valguide/core/features/db': path.resolve(__dirname, './__mocks__/db.ts'),
+          'crypto': path.resolve(__dirname, './__mocks__/crypto.ts'),
         },
       },
     })

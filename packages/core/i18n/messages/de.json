@@ -503,6 +503,21 @@
     "dark": "Dunkel",
     "system": "System"
   },
+  "profile": {
+    "title": "Profil",
+    "description": "Verwalten Sie Ihre öffentlichen Profilinformationen.",
+    "username": "Benutzername",
+    "usernameDescription": "Dies ist Ihr öffentlicher Anzeigename.",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "save": "Änderungen speichern",
+    "saving": "Wird gespeichert...",
+    "actions": {
+      "updateSuccess": "Profil erfolgreich aktualisiert",
+      "updateError": "Fehler beim Aktualisieren des Profils",
+      "invalidData": "Ungültige Daten"
+    }
+  },
   "fileDropzone": {
     "dragAndDrop": "Ziehe Dateien hierher",
     "orClickToBrowse": "oder klicke zum Durchsuchen",

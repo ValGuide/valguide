@@ -6,6 +6,9 @@ const meta = {
   title: 'Assets/AssetCard',
   component: AssetCard,
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'centered',
   },
   tags: ['autodocs'],

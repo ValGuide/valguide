@@ -8,6 +8,9 @@ const meta = {
   title: 'Guides/GuideMetadataForm',
   component: GuideMetadataForm,
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'centered',
   },
   tags: ['autodocs'],
