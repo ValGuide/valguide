@@ -1,11 +1,13 @@
-import { boolean, index, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { boolean, index, pgEnum, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { relations } from 'drizzle-orm'
+
+const studioSchema = pgSchema('studio')
 
 export const orgRole = pgEnum('org_role', ['owner', 'admin', 'curator', 'editor', 'viewer'])
 export type OrgRole = typeof orgRole.enumValues[number]
 
-export const organization = pgTable('organization', {
+export const organization = studioSchema.table('organization', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique('unique_org_slug'),
@@ -21,7 +23,7 @@ export const organizationRelations = relations(organization, ({ many }) => ({
   invitations: many(organizationInvitation),
 }))
 
-export const organizationMember = pgTable('organization_member', {
+export const organizationMember = studioSchema.table('organization_member', {
   id: uuid('id').defaultRandom().primaryKey(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -52,7 +54,7 @@ export const organizationMemberRelations = relations(organizationMember, ({ one 
   }),
 }))
 
-export const organizationInvitation = pgTable('organization_invitation', {
+export const organizationInvitation = studioSchema.table('organization_invitation', {
   id: uuid('id').defaultRandom().primaryKey(),
   organizationId: uuid('organization_id')
     .notNull()

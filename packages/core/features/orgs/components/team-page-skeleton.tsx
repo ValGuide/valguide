@@ -10,7 +10,7 @@ import {
 
 export function TeamPageSkeleton() {
   return (
-    <div className="container max-w-5xl py-8 space-y-8">
+    <div className="container mx-auto max-w-5xl py-8 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
