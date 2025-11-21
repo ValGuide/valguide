@@ -7,6 +7,9 @@
     ],
     "baseUrl": "./",
     "paths": {
+      "@valguide/core/*": [
+        "./*"
+      ],
       "@valguide/ui/*": [
         "./ui/*"
       ],
