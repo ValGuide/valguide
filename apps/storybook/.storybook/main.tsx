@@ -1,7 +1,12 @@
 import * as path from 'path'
+import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import type { StorybookConfig } from '@storybook/nextjs-vite'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const require = createRequire(import.meta.url)
 
 const config: StorybookConfig = {
   stories: [
