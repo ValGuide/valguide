@@ -43,6 +43,7 @@ export function AppSidebar({
   currentTeam: Team
 }) {
   const t = useTranslations('sidebar.nav')
+  const tTeam = useTranslations('orgs.teamSwitcher')
   const pathnameFromRouter = usePathname()
   const router = useRouter()
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null)
@@ -67,10 +68,10 @@ export function AppSidebar({
     try {
       await switchTeamAction(teamSlug)
       // Note: Action will redirect/reload, but we can show feedback
-      toast.success('Switched team')
+      toast.success(tTeam('success'))
     } catch (error) {
       console.error(error)
-      toast.error('Failed to switch team')
+      toast.error(tTeam('error'))
     }
   }
 

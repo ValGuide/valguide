@@ -71,7 +71,7 @@ function GuideEditorContent() {
     setAssetPickerCallback(() => (assets: Asset[]) => {
       if (assets[0]) {
         updateCoverImage(assets[0].id)
-        toast.success('Cover image updated')
+        toast.success(t('editor.coverImageUpdated'))
       }
     })
     setShowAssetPicker(true)

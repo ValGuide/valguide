@@ -30,7 +30,9 @@
     }
   },
   "common": {
-    "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>."
+    "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>.",
+    "saved": "Memorisà",
+    "saveError": "Errur cun memorisar"
   },
   "comingSoon": {
     "title": "Prest disponibel",
@@ -165,7 +167,8 @@
       "orderedList": "Glista numerada",
       "blockquote": "Citaziun",
       "undo": "Revocar",
-      "redo": "Repeter"
+      "redo": "Repeter",
+      "coverImageUpdated": "Cover image updated"
     },
     "empty": {
       "title": "Anc nagins guids",
@@ -245,7 +248,9 @@
       "confirmDescription": "Quai renda la versiun da sboz visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
       "cancel": "Interrumper",
       "confirm": "Publitgar",
-      "publishing": "Vegn publichà..."
+      "publishing": "Vegn publichà...",
+      "guidePublished": "Guid publichà",
+      "guidePublishError": "Errur cun publitgar il guid"
     },
     "versionHistory": {
       "button": "Cronologia da versiuns",
@@ -301,7 +306,17 @@
       "deleteError": "Errur cun stizzar il stop",
       "save": "Memorisar stop",
       "saving": "Vegn memorisà...",
-      "cancel": "Interrumper"
+      "cancel": "Interrumper",
+      "addSuccess": "Stop added",
+      "addError": "Failed to add stop",
+      "reorderSuccess": "Stops reordered",
+      "reorderError": "Failed to reorder stops"
+    },
+    "assets": {
+      "attachSuccess": "Asset attached",
+      "attachError": "Failed to attach asset",
+      "removeSuccess": "Asset removed",
+      "removeError": "Failed to remove asset"
     }
   },
   "assets": {
@@ -438,7 +453,9 @@
     "teamSwitcher": {
       "teams": "Teams",
       "createTeam": "Crear team",
-      "teamSettings": "Parameters dal team"
+      "teamSettings": "Parameters dal team",
+      "success": "Switched team",
+      "error": "Failed to switch team"
     },
     "members": {
       "member": "Commember",
@@ -449,7 +466,11 @@
       "noMembers": "Nagins commembers chattads",
       "changeRoleTo": "Midar a {role}",
       "resendInvite": "Trametter invitaziun danovamain",
-      "removeMember": "Allontanar commember"
+      "removeMember": "Allontanar commember",
+      "removeSuccess": "Member removed",
+      "removeError": "Failed to remove member",
+      "roleUpdateSuccess": "Role updated",
+      "roleUpdateError": "Failed to update role"
     },
     "inviteDialog": {
       "inviteMember": "Envidar commember",
@@ -460,7 +481,8 @@
       "sendInvite": "Trametter invitaziun",
       "sending": "Vegn tramess...",
       "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
-      "inviteError": "Errur tar trametter l'invitaziun. Empruvei per plascher aunc inagada."
+      "inviteError": "Errur tar trametter l'invitaziun. Empruvei per plascher aunc inagada.",
+      "success": "Invitation sent"
     },
     "pendingInvites": {
       "title": "Invitaziuns pendantas",
@@ -472,7 +494,11 @@
       "sent": "Tramess",
       "actions": "Acziuns",
       "resend": "Trametter invitaziun danovamain",
-      "cancel": "Annullar invitaziun"
+      "cancel": "Annullar invitaziun",
+      "resendSuccess": "Invitation resent",
+      "resendError": "Failed to resend invitation",
+      "cancelSuccess": "Invitation cancelled",
+      "cancelError": "Failed to cancel invitation"
     },
     "noTeam": {
       "welcome": "Beinvegni tar ValGuide",

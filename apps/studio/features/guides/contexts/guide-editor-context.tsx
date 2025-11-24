@@ -9,6 +9,7 @@ import type {
 } from '@valguide/core/features/guides/schema'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { useTranslations } from 'next-intl'
 import {
   updateGuide,
   updateGuideTranslation,
@@ -75,6 +76,7 @@ export function GuideEditorProvider({
   initialGuide: GuideWithStops
   userId: string
 }) {
+  const t = useTranslations()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
   const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(null)
@@ -165,10 +167,10 @@ export function GuideEditorProvider({
       }))
 
       setSelectedStop(newStopWithTranslations as StopWithTranslations)
-      toast.success('Stop added')
+      toast.success(t('stops.actions.addSuccess'))
     } catch (error) {
       console.error('Failed to add stop:', error)
-      toast.error('Failed to add stop')
+      toast.error(t('stops.actions.addError'))
     }
   }, [guide.id, guide.stops.length, userId])
 
@@ -187,10 +189,10 @@ export function GuideEditorProvider({
           setSelectedStop(guide.stops[0] || null)
         }
 
-        toast.success('Stop deleted')
+        toast.success(t('stops.actions.deleteSuccess'))
       } catch (error) {
         console.error('Failed to delete stop:', error)
-        toast.error('Failed to delete stop')
+        toast.error(t('stops.actions.deleteError'))
       }
     },
     [guide.stops, selectedStop?.id],
@@ -206,10 +208,10 @@ export function GuideEditorProvider({
         stops,
       }))
 
-      toast.success('Stops reordered')
+      toast.success(t('stops.actions.reorderSuccess'))
     } catch (error) {
       console.error('Failed to reorder stops:', error)
-      toast.error('Failed to reorder stops')
+      toast.error(t('stops.actions.reorderError'))
     }
   }, [])
 
@@ -300,10 +302,10 @@ export function GuideEditorProvider({
 
       // Optimistically update UI - will be replaced by refetch
       setIsDirty(true)
-      toast.success('Asset attached')
+      toast.success(t('stops.assets.attachSuccess'))
     } catch (error) {
       console.error('Failed to attach asset:', error)
-      toast.error('Failed to attach asset')
+      toast.error(t('stops.assets.attachError'))
     }
   }, [])
 
@@ -312,10 +314,10 @@ export function GuideEditorProvider({
       await detachAssetFromStopAction(stopAssetId)
 
       setIsDirty(true)
-      toast.success('Asset removed')
+      toast.success(t('stops.assets.removeSuccess'))
     } catch (error) {
       console.error('Failed to detach asset:', error)
-      toast.error('Failed to remove asset')
+      toast.error(t('stops.assets.removeError'))
     }
   }, [])
 
@@ -388,10 +390,10 @@ export function GuideEditorProvider({
 
       setIsDirty(false)
       setLastSaved(new Date())
-      toast.success('Saved')
+      toast.success(t('common.saved'))
     } catch (error) {
       console.error('Failed to save:', error)
-      toast.error('Failed to save')
+      toast.error(t('common.saveError'))
     } finally {
       setIsSaving(false)
     }
@@ -415,10 +417,10 @@ export function GuideEditorProvider({
         published: new Date(),
       }))
 
-      toast.success('Guide published')
+      toast.success(t('guides.publish.guidePublished'))
     } catch (error) {
       console.error('Failed to publish:', error)
-      toast.error('Failed to publish')
+      toast.error(t('guides.publish.guidePublishError'))
     }
   }, [guide.id, guide.coverImage, guide.organizationId, save, userId])
 

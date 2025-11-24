@@ -31,11 +31,12 @@ export function TeamMembersClient({
 }: TeamMembersClientProps) {
   const t = useTranslations('orgs.members')
   const tInvite = useTranslations('orgs.inviteDialog')
+  const tPending = useTranslations('orgs.pendingInvites')
   
   const handleInvite = async (email: string, role: OrgRole) => {
     try {
       await inviteMemberAction(team.id, email, role)
-      toast.success('Invitation sent')
+      toast.success(tInvite('success'))
       onAction?.()
     } catch (error) {
       console.error(error)
@@ -47,44 +48,44 @@ export function TeamMembersClient({
   const handleRemoveMember = async (memberId: string) => {
     try {
       await removeMemberAction(memberId, team.id)
-      toast.success('Member removed')
+      toast.success(t('removeSuccess'))
       onAction?.()
     } catch (error) {
       console.error(error)
-      toast.error('Failed to remove member')
+      toast.error(t('removeError'))
     }
   }
 
   const handleChangeRole = async (memberId: string, newRole: OrgRole) => {
     try {
       await updateMemberRoleAction(memberId, team.id, newRole)
-      toast.success('Role updated')
+      toast.success(t('roleUpdateSuccess'))
       onAction?.()
     } catch (error) {
       console.error(error)
-      toast.error('Failed to update role')
+      toast.error(t('roleUpdateError'))
     }
   }
 
   const handleResendInvite = async (inviteId: string) => {
     try {
       await resendInviteAction(inviteId, team.id)
-      toast.success('Invitation resent')
+      toast.success(tPending('resendSuccess'))
       onAction?.()
     } catch (error) {
       console.error(error)
-      toast.error('Failed to resend invitation')
+      toast.error(tPending('resendError'))
     }
   }
 
   const handleCancelInvite = async (inviteId: string) => {
     try {
       await cancelInviteAction(inviteId, team.id)
-      toast.success('Invitation cancelled')
+      toast.success(tPending('cancelSuccess'))
       onAction?.()
     } catch (error) {
       console.error(error)
-      toast.error('Failed to cancel invitation')
+      toast.error(tPending('cancelError'))
     }
   }
 

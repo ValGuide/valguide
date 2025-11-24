@@ -30,7 +30,9 @@
     }
   },
   "common": {
-    "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>."
+    "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>.",
+    "saved": "Saved",
+    "saveError": "Failed to save"
   },
   "comingSoon": {
     "title": "Coming Soon",
@@ -165,7 +167,8 @@
       "orderedList": "Numbered List",
       "blockquote": "Quote",
       "undo": "Undo",
-      "redo": "Redo"
+      "redo": "Redo",
+      "coverImageUpdated": "Cover image updated"
     },
     "empty": {
       "title": "No guides yet",
@@ -245,7 +248,9 @@
       "confirmDescription": "This will make the draft version visible to users. The current published version will be replaced.",
       "cancel": "Cancel",
       "confirm": "Publish",
-      "publishing": "Publishing..."
+      "publishing": "Publishing...",
+      "guidePublished": "Guide published",
+      "guidePublishError": "Failed to publish guide"
     },
     "versionHistory": {
       "button": "Version History",
@@ -295,13 +300,23 @@
       "autoTranscribe": "Auto-generate from audio"
     },
     "actions": {
+      "addSuccess": "Stop added",
+      "addError": "Failed to add stop",
       "delete": "Delete Stop",
       "deleteConfirm": "Are you sure you want to delete this stop?",
       "deleteSuccess": "Stop deleted",
       "deleteError": "Failed to delete stop",
       "save": "Save Stop",
       "saving": "Saving...",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "reorderSuccess": "Stops reordered",
+      "reorderError": "Failed to reorder stops"
+    },
+    "assets": {
+      "attachSuccess": "Asset attached",
+      "attachError": "Failed to attach asset",
+      "removeSuccess": "Asset removed",
+      "removeError": "Failed to remove asset"
     }
   },
   "assets": {
@@ -438,7 +453,9 @@
     "teamSwitcher": {
       "teams": "Teams",
       "createTeam": "Create team",
-      "teamSettings": "Team settings"
+      "teamSettings": "Team settings",
+      "success": "Switched team",
+      "error": "Failed to switch team"
     },
     "members": {
       "member": "Member",
@@ -449,7 +466,11 @@
       "noMembers": "No members found",
       "changeRoleTo": "Change to {role}",
       "resendInvite": "Resend invite",
-      "removeMember": "Remove member"
+      "removeMember": "Remove member",
+      "removeSuccess": "Member removed",
+      "removeError": "Failed to remove member",
+      "roleUpdateSuccess": "Role updated",
+      "roleUpdateError": "Failed to update role"
     },
     "inviteDialog": {
       "inviteMember": "Invite member",
@@ -460,7 +481,8 @@
       "sendInvite": "Send invite",
       "sending": "Sending...",
       "invalidEmail": "Please enter a valid email address",
-      "inviteError": "Failed to send invitation. Please try again."
+      "inviteError": "Failed to send invitation. Please try again.",
+      "success": "Invitation sent"
     },
     "pendingInvites": {
       "title": "Pending invitations",
@@ -472,7 +494,11 @@
       "sent": "Sent",
       "actions": "Actions",
       "resend": "Resend invitation",
-      "cancel": "Cancel invitation"
+      "cancel": "Cancel invitation",
+      "resendSuccess": "Invitation resent",
+      "resendError": "Failed to resend invitation",
+      "cancelSuccess": "Invitation cancelled",
+      "cancelError": "Failed to cancel invitation"
     },
     "noTeam": {
       "welcome": "Welcome to ValGuide",

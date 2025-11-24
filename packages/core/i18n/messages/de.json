@@ -30,7 +30,9 @@
     }
   },
   "common": {
-    "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu."
+    "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu.",
+    "saved": "Gespeichert",
+    "saveError": "Speichern fehlgeschlagen"
   },
   "comingSoon": {
     "title": "Bald verfügbar",
@@ -165,7 +167,8 @@
       "orderedList": "Nummerierte Liste",
       "blockquote": "Zitat",
       "undo": "Rückgängig",
-      "redo": "Wiederholen"
+      "redo": "Wiederholen",
+      "coverImageUpdated": "Cover image updated"
     },
     "empty": {
       "title": "Noch keine Guides",
@@ -245,7 +248,9 @@
       "confirmDescription": "Dies wird die Entwurfsversion für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
       "cancel": "Abbrechen",
       "confirm": "Veröffentlichen",
-      "publishing": "Wird veröffentlicht..."
+      "publishing": "Wird veröffentlicht...",
+      "guidePublished": "Guide veröffentlicht",
+      "guidePublishError": "Fehler beim Veröffentlichen des Guides"
     },
     "versionHistory": {
       "button": "Versionsverlauf",
@@ -301,7 +306,17 @@
       "deleteError": "Stop konnte nicht gelöscht werden",
       "save": "Stop speichern",
       "saving": "Wird gespeichert...",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "addSuccess": "Stop added",
+      "addError": "Failed to add stop",
+      "reorderSuccess": "Stops reordered",
+      "reorderError": "Failed to reorder stops"
+    },
+    "assets": {
+      "attachSuccess": "Asset attached",
+      "attachError": "Failed to attach asset",
+      "removeSuccess": "Asset removed",
+      "removeError": "Failed to remove asset"
     }
   },
   "assets": {
@@ -438,7 +453,9 @@
     "teamSwitcher": {
       "teams": "Teams",
       "createTeam": "Team erstellen",
-      "teamSettings": "Team-Einstellungen"
+      "teamSettings": "Team-Einstellungen",
+      "success": "Switched team",
+      "error": "Failed to switch team"
     },
     "members": {
       "member": "Mitglied",
@@ -449,7 +466,11 @@
       "noMembers": "Keine Mitglieder gefunden",
       "changeRoleTo": "Ändern zu {role}",
       "resendInvite": "Einladung erneut senden",
-      "removeMember": "Mitglied entfernen"
+      "removeMember": "Mitglied entfernen",
+      "removeSuccess": "Member removed",
+      "removeError": "Failed to remove member",
+      "roleUpdateSuccess": "Role updated",
+      "roleUpdateError": "Failed to update role"
     },
     "inviteDialog": {
       "inviteMember": "Mitglied einladen",
@@ -460,7 +481,8 @@
       "sendInvite": "Einladung senden",
       "sending": "Wird gesendet...",
       "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-      "inviteError": "Fehler beim Senden der Einladung. Bitte versuchen Sie es erneut."
+      "inviteError": "Fehler beim Senden der Einladung. Bitte versuchen Sie es erneut.",
+      "success": "Invitation sent"
     },
     "pendingInvites": {
       "title": "Ausstehende Einladungen",
@@ -472,7 +494,11 @@
       "sent": "Gesendet",
       "actions": "Aktionen",
       "resend": "Einladung erneut senden",
-      "cancel": "Einladung abbrechen"
+      "cancel": "Einladung abbrechen",
+      "resendSuccess": "Invitation resent",
+      "resendError": "Failed to resend invitation",
+      "cancelSuccess": "Invitation cancelled",
+      "cancelError": "Failed to cancel invitation"
     },
     "noTeam": {
       "welcome": "Willkommen bei ValGuide",
