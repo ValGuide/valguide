@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@valguide/supabase/server'
 import { db } from '@valguide/core/features/db'
 import { createGuide, getGuidesByUserId } from '@valguide/core/features/guides/queries'
+import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/i18n/i18n.config'
 
 export const dynamic = 'force-dynamic'
@@ -57,7 +58,22 @@ export async function POST(request: Request) {
 
     // Parse request body
     const body = await request.json()
-    const { translations, organizationId, coverImage } = body
+    let { translations, organizationId, coverImage } = body
+
+    // If organizationId is not provided, try to find one from the user's memberships
+    if (!organizationId) {
+      const userTeams = await getUserTeams(db, userId)
+      if (userTeams && userTeams.length > 0) {
+        organizationId = userTeams[0].id
+      }
+    }
+
+    if (!organizationId) {
+      return NextResponse.json(
+        { error: 'Organization is required to create a guide. Please create an organization first.' },
+        { status: 400 }
+      )
+    }
 
     // Validate required fields
     if (!translations || !Array.isArray(translations) || translations.length === 0) {
@@ -90,7 +106,7 @@ export async function POST(request: Request) {
       {
         createdBy: userId,
         updatedBy: userId,
-        organizationId: organizationId || null,
+        organizationId,
         coverImage: coverImage || null,
       },
       translations
