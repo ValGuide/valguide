@@ -70,11 +70,9 @@ const GuideEditorContext = createContext<GuideEditorContextValue | null>(null)
 export function GuideEditorProvider({
   children,
   initialGuide,
-  userId,
 }: {
   children: ReactNode
   initialGuide: GuideWithStops
-  userId: string
 }) {
   const t = useTranslations()
   const [guide, setGuide] = useState(initialGuide)
@@ -149,7 +147,6 @@ export function GuideEditorProvider({
     try {
       const newStopWithTranslations = await createStop({
         guideId: guide.id,
-        userId,
         order: guide.stops.length,
         translations: [
           {
@@ -172,7 +169,7 @@ export function GuideEditorProvider({
       console.error('Failed to add stop:', error)
       toast.error(t('stops.actions.addError'))
     }
-  }, [guide.id, guide.stops.length, userId])
+  }, [guide.id, guide.stops.length])
 
   // Delete stop
   const deleteStop = useCallback(
@@ -338,7 +335,6 @@ export function GuideEditorProvider({
           coverImage: currentGuide.coverImage,
           published: currentGuide.published,
           organizationId: currentGuide.organizationId,
-          userId,
         })
       }
 
@@ -397,7 +393,7 @@ export function GuideEditorProvider({
     } finally {
       setIsSaving(false)
     }
-  }, [userId])
+  }, [])
 
   // Publish
   const publish = useCallback(async () => {
@@ -409,7 +405,6 @@ export function GuideEditorProvider({
         published: new Date(),
         coverImage: guide.coverImage,
         organizationId: guide.organizationId,
-        userId,
       })
 
       setGuide((prev) => ({
@@ -422,7 +417,7 @@ export function GuideEditorProvider({
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guide.id, guide.coverImage, guide.organizationId, save, userId])
+  }, [guide.id, guide.coverImage, guide.organizationId, save])
 
   const value: GuideEditorContextValue = {
     guide,

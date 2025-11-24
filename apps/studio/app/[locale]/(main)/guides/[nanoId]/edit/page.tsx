@@ -2,7 +2,6 @@ import { notFound, redirect } from 'next/navigation'
 import { setRequestLocale } from 'next-intl/server'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
-import { createClient } from '@valguide/supabase/server'
 import { GuideEditorClient } from './page.client'
 
 interface GuideEditPageParams {
@@ -10,20 +9,11 @@ interface GuideEditPageParams {
   nanoId: string
 }
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'error'
 
 export default async function GuideEditPage({ params }: { params: Promise<GuideEditPageParams> }) {
   const { locale, nanoId } = await params
   setRequestLocale(locale)
-
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/login')
-  }
 
   const guide = await getGuideByNanoId(db, nanoId)
 
@@ -31,5 +21,5 @@ export default async function GuideEditPage({ params }: { params: Promise<GuideE
     notFound()
   }
 
-  return <GuideEditorClient guide={guide} userId={user.id} />
+  return <GuideEditorClient guide={guide} />
 }

@@ -17,9 +17,10 @@ import {
 } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { updateProfileAction, type ProfileFormData } from '../actions'
-import { useTransition } from 'react'
+import { updateProfileAction, getProfileAction, type ProfileFormData } from '../actions'
+import { useTransition, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Skeleton } from '@valguide/ui/components/skeleton'
 
 const profileSchema = z.object({
   username: z.string().min(3).optional().or(z.literal('')),
@@ -28,7 +29,7 @@ const profileSchema = z.object({
 })
 
 interface ProfileFormProps {
-  initialData: {
+  initialData?: {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
@@ -39,19 +40,41 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const t = useTranslations('profile')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const [data, setData] = useState(initialData)
+  const [isLoading, setIsLoading] = useState(!initialData)
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      username: initialData.username || '',
-      firstName: initialData.firstName || '',
-      lastName: initialData.lastName || '',
+      username: data?.username || '',
+      firstName: data?.firstName || '',
+      lastName: data?.lastName || '',
     },
   })
 
-  function onSubmit(data: ProfileFormData) {
+  useEffect(() => {
+    if (!initialData) {
+      getProfileAction().then((profile) => {
+        if (profile) {
+          setData(profile)
+          form.reset({
+            username: profile.username || '',
+            firstName: profile.firstName || '',
+            lastName: profile.lastName || '',
+          })
+        }
+        setIsLoading(false)
+      })
+    }
+  }, [initialData, form])
+
+  if (isLoading) {
+    return <Skeleton className="h-[400px] w-full" />
+  }
+
+  function onSubmit(formData: ProfileFormData) {
     startTransition(async () => {
-      const result = await updateProfileAction(data)
+      const result = await updateProfileAction(formData)
       if (result.error) {
         toast.error(result.error)
       } else {

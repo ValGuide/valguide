@@ -25,7 +25,6 @@ import { formatDistanceToNow } from 'date-fns'
 
 export type GuideEditorClientProps = {
   guide: GuideWithStops
-  userId: string
 }
 
 function GuideEditorContent() {
@@ -252,9 +251,9 @@ function GuideEditorContent() {
   )
 }
 
-export function GuideEditorClient({ guide, userId }: GuideEditorClientProps) {
+export function GuideEditorClient({ guide }: GuideEditorClientProps) {
   return (
-    <GuideEditorProvider initialGuide={guide} userId={userId}>
+    <GuideEditorProvider initialGuide={guide}>
       <GuideEditorContent />
     </GuideEditorProvider>
   )

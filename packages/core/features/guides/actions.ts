@@ -6,6 +6,16 @@ import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
 import { eq, and, isNull, isNotNull } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import { revalidatePath } from 'next/cache'
+import { createClient } from '@valguide/supabase/server'
+
+async function getUser() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+  return user
+}
 
 // Guide actions
 
@@ -14,11 +24,12 @@ export type UpdateGuideParams = {
   coverImage?: string | null
   published?: Date | null
   organizationId?: string | null
-  userId: string
+  userId?: string // Ignored, used from session
 }
 
 export async function updateGuide(params: UpdateGuideParams) {
-  const { id, coverImage, published, organizationId, userId } = params
+  const { id, coverImage, published, organizationId } = params
+  const user = await getUser()
 
   const [updatedGuide] = await db
     .update(guide)
@@ -26,7 +37,7 @@ export async function updateGuide(params: UpdateGuideParams) {
       coverImage: coverImage ?? undefined,
       published: published ?? undefined,
       organizationId: organizationId ?? undefined,
-      updatedBy: userId,
+      updatedBy: user.id,
       updatedAt: new Date(),
     })
     .where(eq(guide.id, id))
@@ -44,6 +55,7 @@ export type UpdateGuideTranslationParams = {
 }
 
 export async function updateGuideTranslation(params: UpdateGuideTranslationParams) {
+  await getUser()
   const { guideId, locale, title, description } = params
 
   // Use the new upsertGuideTranslationDraft function
@@ -62,7 +74,7 @@ export async function updateGuideTranslation(params: UpdateGuideTranslationParam
 
 export type CreateStopParams = {
   guideId: string
-  userId: string
+  userId?: string
   order: number
   translations: Array<{
     locale: string
@@ -73,7 +85,9 @@ export type CreateStopParams = {
 }
 
 export async function createStop(params: CreateStopParams) {
-  const { guideId, userId, order, translations } = params
+  const { guideId, order, translations } = params
+  const user = await getUser()
+  const userId = user.id
 
   const nanoId = nanoid(21)
 
@@ -124,6 +138,7 @@ export type UpdateStopParams = {
 }
 
 export async function updateStop(params: UpdateStopParams) {
+  await getUser()
   const { stopId, locale, title, description, transcription } = params
 
   // Use the new upsertStopTranslationDraft function
@@ -139,6 +154,7 @@ export async function updateStop(params: UpdateStopParams) {
 }
 
 export async function deleteStop(stopId: string) {
+  await getUser()
   await db.delete(stop).where(eq(stop.id, stopId))
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
@@ -148,6 +164,7 @@ export async function deleteStop(stopId: string) {
 export type ReorderStopsParams = Array<{ id: string; order: number }>
 
 export async function reorderStops(updates: ReorderStopsParams) {
+  await getUser()
   for (const update of updates) {
     await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
   }
@@ -167,6 +184,7 @@ export type AttachAssetToGuideParams = {
 }
 
 export async function attachAssetToGuide(params: AttachAssetToGuideParams) {
+  await getUser()
   const { guideId, assetId, role, locale, order = 0 } = params
 
   const [attachment] = await db
@@ -193,6 +211,7 @@ export type AttachAssetToStopParams = {
 }
 
 export async function attachAssetToStop(params: AttachAssetToStopParams) {
+  await getUser()
   const { stopId, assetId, role, locale, order = 0 } = params
 
   const [attachment] = await db
@@ -211,6 +230,7 @@ export async function attachAssetToStop(params: AttachAssetToStopParams) {
 }
 
 export async function detachAssetFromGuide(guideAssetId: string) {
+  await getUser()
   await db.delete(guideAsset).where(eq(guideAsset.id, guideAssetId))
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
@@ -218,6 +238,7 @@ export async function detachAssetFromGuide(guideAssetId: string) {
 }
 
 export async function detachAssetFromStop(stopAssetId: string) {
+  await getUser()
   await db.delete(stopAsset).where(eq(stopAsset.id, stopAssetId))
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
@@ -226,11 +247,13 @@ export async function detachAssetFromStop(stopAssetId: string) {
 
 export type ArchiveGuideParams = {
   id: string
-  userId: string
+  userId?: string
 }
 
 export async function archiveGuide(params: ArchiveGuideParams) {
-  const { id, userId } = params
+  const { id } = params
+  const user = await getUser()
+  const userId = user.id
 
   const [archivedGuide] = await db
     .update(guide)
@@ -248,11 +271,13 @@ export async function archiveGuide(params: ArchiveGuideParams) {
 
 export type RecoverGuideParams = {
   id: string
-  userId: string
+  userId?: string
 }
 
 export async function recoverGuide(params: RecoverGuideParams) {
-  const { id, userId } = params
+  const { id } = params
+  const user = await getUser()
+  const userId = user.id
 
   const [recoveredGuide] = await db
     .update(guide)
@@ -271,11 +296,13 @@ export async function recoverGuide(params: RecoverGuideParams) {
 
 export type DeleteGuideParams = {
   id: string
-  userId: string
+  userId?: string
 }
 
 export async function deleteGuide(params: DeleteGuideParams) {
-  const { id, userId } = params
+  const { id } = params
+  const user = await getUser()
+  const userId = user.id
 
   const [deletedGuide] = await db
     .update(guide)

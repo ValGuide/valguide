@@ -20,10 +20,9 @@ import { archiveGuide } from '@valguide/core/features/guides/actions'
 
 interface ArchiveGuideButtonProps {
   guideId: string
-  userId: string
 }
 
-export function ArchiveGuideButton({ guideId, userId }: ArchiveGuideButtonProps) {
+export function ArchiveGuideButton({ guideId }: ArchiveGuideButtonProps) {
   const [open, setOpen] = useState(false)
   const [isArchiving, setIsArchiving] = useState(false)
   const router = useRouter()
@@ -32,7 +31,7 @@ export function ArchiveGuideButton({ guideId, userId }: ArchiveGuideButtonProps)
   const handleArchive = async () => {
     setIsArchiving(true)
     try {
-      await archiveGuide({ id: guideId, userId })
+      await archiveGuide({ id: guideId })
       toast.success(t('success'), {
         description: t('successDescription'),
       })

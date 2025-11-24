@@ -18,8 +18,9 @@ interface UseGuidesReturn {
   createGuide: (data: CreateGuideData) => Promise<Guide>
 }
 
-export function useGuides(): UseGuidesReturn {
-  const { data, error, isLoading, mutate } = useSWR<Guide[]>('/api/guides', fetchGuides, {
+export function useGuides(teamSlug?: string): UseGuidesReturn {
+  const key = teamSlug ? ['/api/guides', teamSlug] : '/api/guides'
+  const { data, error, isLoading, mutate } = useSWR<Guide[]>(key, () => fetchGuides(), {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     dedupingInterval: 2000,

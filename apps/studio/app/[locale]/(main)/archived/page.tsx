@@ -4,6 +4,7 @@ import { setRequestLocale } from 'next-intl/server'
 import { PageParamsWithLocale } from '@valguide/core/utils/types'
 
 export const dynamic = 'error'
+
 export const dynamicParams = false
 
 export const generateStaticParams = () => i18nStaticParams

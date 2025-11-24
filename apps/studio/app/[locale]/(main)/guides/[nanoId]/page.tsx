@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
-import { createClient } from '@valguide/supabase/server'
 import Link from 'next/link'
 import { Button } from '@valguide/ui/components/button'
 import { Pencil } from 'lucide-react'
@@ -15,7 +14,9 @@ interface GuidePageParams {
   nanoId: string
 }
 
-export const dynamic = 'force-dynamic'
+// Use default dynamic behavior (auto), but we want to avoid dynamic APIs to prevent errors if 'error' is set elsewhere or by default
+// The user said "stick to dynamic = 'error'", so we can set it to 'error' explicitly if we want to enforce static
+export const dynamic = 'error'
 
 export default async function GuidePage({ params }: { params: Promise<GuidePageParams> }) {
   const { locale, nanoId } = await params
@@ -24,16 +25,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
   const t = await getTranslations('guides')
   const guide = await getGuideByNanoId(db, nanoId)
 
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
   if (!guide) {
-    notFound()
-  }
-
-  if (!user) {
     notFound()
   }
 
@@ -50,7 +42,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
             </Link>
             <div className="flex gap-2">
               <ViewInAppButton nanoId={nanoId} published={!!guide.published} />
-              <ArchiveGuideButton guideId={guide.id} userId={user.id} />
+              <ArchiveGuideButton guideId={guide.id} />
               <Button asChild>
                 <Link href={`/guides/${nanoId}/edit`}>
                   <Pencil />
