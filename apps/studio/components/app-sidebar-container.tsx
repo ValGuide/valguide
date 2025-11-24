@@ -19,6 +19,7 @@ import {
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
+import { mutate } from 'swr'
 
 export function AppSidebarContainer() {
   const pathname = usePathname()
@@ -68,6 +69,8 @@ export function AppSidebarContainer() {
         await loadData()
         // Refresh server components (if any rely on cookie)
         router.refresh()
+        // Invalidate guides cache to force reload
+        await mutate('/api/guides')
         // Show success
         toast.success(t('success'))
       }

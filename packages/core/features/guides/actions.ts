@@ -10,11 +10,12 @@ import { createClient } from '@valguide/supabase/server'
 
 async function getUser() {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
-  return user
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
+
+  if (claimsError || !claimsData?.claims?.sub) {
+    throw new Error('Unauthorized')
+  }
+  return { id: claimsData.claims.sub }
 }
 
 // Guide actions
