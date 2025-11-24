@@ -31,6 +31,7 @@ export function AppSidebar({
   user,
   teams,
   currentTeam,
+  onTeamSwitch,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   pathname?: string
@@ -40,7 +41,8 @@ export function AppSidebar({
     avatar: string
   }
   teams: Team[]
-  currentTeam: Team
+  currentTeam?: Team
+  onTeamSwitch?: (teamSlug: string) => void
 }) {
   const t = useTranslations('sidebar.nav')
   const tTeam = useTranslations('orgs.teamSwitcher')
@@ -65,10 +67,17 @@ export function AppSidebar({
   }
 
   const handleTeamSwitch = async (teamSlug: string) => {
+    if (onTeamSwitch) {
+      onTeamSwitch(teamSlug)
+      return
+    }
+
     try {
-      await switchTeamAction(teamSlug)
-      // Note: Action will redirect/reload, but we can show feedback
-      toast.success(tTeam('success'))
+      const result = await switchTeamAction(teamSlug)
+      if (result?.success) {
+        toast.success(tTeam('success'))
+        router.refresh()
+      }
     } catch (error) {
       console.error(error)
       toast.error(tTeam('error'))
@@ -157,7 +166,7 @@ export function AppSidebar({
       <SidebarHeader>
         <TeamSwitcher 
           teams={teams} 
-          activeTeamSlug={currentTeam.slug}
+          activeTeamSlug={currentTeam?.slug}
           onTeamSwitch={handleTeamSwitch}
           onCreateTeam={handleCreateTeam}
           onTeamSettings={handleTeamSettings}

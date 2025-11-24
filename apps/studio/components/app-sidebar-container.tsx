@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getSidebarDataAction } from '@valguide/core/features/orgs/context-actions'
+import { getSidebarDataAction, switchTeamAction } from '@valguide/core/features/orgs/context-actions'
 import { AppSidebar } from './app-sidebar'
 import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
 import { useRouter, usePathname } from 'next/navigation'
@@ -17,10 +17,13 @@ import {
   SidebarMenuButton 
 } from '@valguide/ui/components/sidebar'
 import { Skeleton } from '@valguide/ui/components/skeleton'
+import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 export function AppSidebarContainer() {
   const pathname = usePathname()
   const router = useRouter()
+  const t = useTranslations('orgs.teamSwitcher')
   const [data, setData] = useState<{
     user: { name: string; email: string; avatar: string }
     teams: Team[]
@@ -28,29 +31,23 @@ export function AppSidebarContainer() {
   } | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    getSidebarDataAction().then((res) => {
-      if (!res) {
-        // Redirect to login or handle unauth
-        // Ideally this component is only rendered in protected pages, 
-        // but if layout is static, we might need to redirect here.
-        // However, layout usually redirects if user is null?
-        // Ah, we removed layout redirect. So we must redirect here.
-        // We can't easily get locale here without params or hook.
-        // But we can use window.location or just redirect to /login
-        // Let's assume middleware handles auth or we just show nothing/redirect.
-        // For now, let's just set loading false.
-        setLoading(false)
-        return
-      }
-      
-      if (res.wasAutoSelected) {
-        router.refresh()
-      }
-
-      setData(res)
+  const loadData = async () => {
+    const res = await getSidebarDataAction()
+    if (!res) {
       setLoading(false)
-    })
+      return
+    }
+    
+    if (res.wasAutoSelected) {
+      router.refresh()
+    }
+
+    setData(res)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadData()
   }, [])
 
   useEffect(() => {
@@ -63,12 +60,29 @@ export function AppSidebarContainer() {
     }
   }, [loading, data, pathname, router])
 
+  const handleTeamSwitch = async (teamSlug: string) => {
+    try {
+      const result = await switchTeamAction(teamSlug)
+      if (result?.success) {
+        // Refresh data locally
+        await loadData()
+        // Refresh server components (if any rely on cookie)
+        router.refresh()
+        // Show success
+        toast.success(t('success'))
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error(t('error'))
+    }
+  }
+
   if (loading) {
     return <AppSidebarSkeleton />
   }
 
-  if (!data || !data.currentTeam) {
-    return null // Or redirect
+  if (!data) {
+    return null 
   }
 
   return (
@@ -76,6 +90,7 @@ export function AppSidebarContainer() {
       user={data.user}
       teams={data.teams}
       currentTeam={data.currentTeam}
+      onTeamSwitch={handleTeamSwitch}
     />
   )
 }

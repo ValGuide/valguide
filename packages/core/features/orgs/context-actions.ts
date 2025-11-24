@@ -89,7 +89,7 @@ export async function switchTeamAction(slug: string) {
 
   // Reload
   revalidatePath('/')
-  redirect('/')
+  return { success: true }
 }
 
 export async function getActiveTeamSlug() {
