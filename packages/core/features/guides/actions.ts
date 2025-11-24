@@ -2,13 +2,14 @@
 
 import { db } from '@valguide/core/features/db'
 import { guide, guideTranslation, stop, stopTranslation } from './schema'
+import { organizationMember } from '../orgs/schema'
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
-import { eq, and, isNull, isNotNull } from 'drizzle-orm'
+import { eq, and, isNull, isNotNull, inArray } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@valguide/supabase/server'
 
-async function getUser() {
+async function requireUser() {
   const supabase = await createClient()
   const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
 
@@ -16,6 +17,53 @@ async function getUser() {
     throw new Error('Unauthorized')
   }
   return { id: claimsData.claims.sub }
+}
+
+async function checkGuideAccess(guideId: string, userId: string) {
+  const [foundGuide] = await db
+    .select({ organizationId: guide.organizationId })
+    .from(guide)
+    .where(eq(guide.id, guideId))
+    .limit(1)
+
+  if (!foundGuide) {
+    throw new Error('Guide not found')
+  }
+
+  const [membership] = await db
+    .select()
+    .from(organizationMember)
+    .where(
+      and(
+        eq(organizationMember.organizationId, foundGuide.organizationId),
+        eq(organizationMember.userId, userId),
+      ),
+    )
+    .limit(1)
+
+  if (!membership) {
+    throw new Error('Unauthorized: You do not have access to this guide')
+  }
+}
+
+async function requireGuideAccess(guideId: string) {
+  const user = await requireUser()
+  await checkGuideAccess(guideId, user.id)
+  return user
+}
+
+async function requireStopAccess(stopId: string) {
+  const [foundStop] = await db
+    .select({ guideId: stop.guideId })
+    .from(stop)
+    .where(eq(stop.id, stopId))
+    .limit(1)
+
+  if (!foundStop) {
+    throw new Error('Stop not found')
+  }
+
+  return requireGuideAccess(foundStop.guideId)
 }
 
 // Guide actions
@@ -30,7 +78,7 @@ export type UpdateGuideParams = {
 
 export async function updateGuide(params: UpdateGuideParams) {
   const { id, coverImage, published, organizationId } = params
-  const user = await getUser()
+  const user = await requireGuideAccess(id)
 
   const [updatedGuide] = await db
     .update(guide)
@@ -56,8 +104,8 @@ export type UpdateGuideTranslationParams = {
 }
 
 export async function updateGuideTranslation(params: UpdateGuideTranslationParams) {
-  await getUser()
   const { guideId, locale, title, description } = params
+  await requireGuideAccess(guideId)
 
   // Use the new upsertGuideTranslationDraft function
   const { upsertGuideTranslationDraft } = await import('./translation-mutations')
@@ -87,7 +135,7 @@ export type CreateStopParams = {
 
 export async function createStop(params: CreateStopParams) {
   const { guideId, order, translations } = params
-  const user = await getUser()
+  const user = await requireGuideAccess(guideId)
   const userId = user.id
 
   const nanoId = nanoid(21)
@@ -139,8 +187,8 @@ export type UpdateStopParams = {
 }
 
 export async function updateStop(params: UpdateStopParams) {
-  await getUser()
   const { stopId, locale, title, description, transcription } = params
+  await requireStopAccess(stopId)
 
   // Use the new upsertStopTranslationDraft function
   const { upsertStopTranslationDraft } = await import('./translation-mutations')
@@ -155,7 +203,7 @@ export async function updateStop(params: UpdateStopParams) {
 }
 
 export async function deleteStop(stopId: string) {
-  await getUser()
+  await requireStopAccess(stopId)
   await db.delete(stop).where(eq(stop.id, stopId))
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
@@ -165,7 +213,21 @@ export async function deleteStop(stopId: string) {
 export type ReorderStopsParams = Array<{ id: string; order: number }>
 
 export async function reorderStops(updates: ReorderStopsParams) {
-  await getUser()
+  const user = await requireUser()
+
+  if (updates.length > 0) {
+    const stopIds = updates.map((u) => u.id)
+    const stopsToCheck = await db
+      .select({ id: stop.id, guideId: stop.guideId })
+      .from(stop)
+      .where(inArray(stop.id, stopIds))
+
+    const guideIds: string[] = Array.from(new Set(stopsToCheck.map((s: { guideId: string }) => s.guideId)))
+    for (const gId of guideIds) {
+      await checkGuideAccess(gId, user.id)
+    }
+  }
+
   for (const update of updates) {
     await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
   }
@@ -185,8 +247,8 @@ export type AttachAssetToGuideParams = {
 }
 
 export async function attachAssetToGuide(params: AttachAssetToGuideParams) {
-  await getUser()
   const { guideId, assetId, role, locale, order = 0 } = params
+  await requireGuideAccess(guideId)
 
   const [attachment] = await db
     .insert(guideAsset)
@@ -212,8 +274,8 @@ export type AttachAssetToStopParams = {
 }
 
 export async function attachAssetToStop(params: AttachAssetToStopParams) {
-  await getUser()
   const { stopId, assetId, role, locale, order = 0 } = params
+  await requireStopAccess(stopId)
 
   const [attachment] = await db
     .insert(stopAsset)
@@ -231,7 +293,17 @@ export async function attachAssetToStop(params: AttachAssetToStopParams) {
 }
 
 export async function detachAssetFromGuide(guideAssetId: string) {
-  await getUser()
+  const [asset] = await db
+    .select({ guideId: guideAsset.guideId })
+    .from(guideAsset)
+    .where(eq(guideAsset.id, guideAssetId))
+    .limit(1)
+
+  if (!asset) {
+    throw new Error('Asset attachment not found')
+  }
+
+  await requireGuideAccess(asset.guideId)
   await db.delete(guideAsset).where(eq(guideAsset.id, guideAssetId))
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
@@ -239,7 +311,17 @@ export async function detachAssetFromGuide(guideAssetId: string) {
 }
 
 export async function detachAssetFromStop(stopAssetId: string) {
-  await getUser()
+  const [asset] = await db
+    .select({ stopId: stopAsset.stopId })
+    .from(stopAsset)
+    .where(eq(stopAsset.id, stopAssetId))
+    .limit(1)
+
+  if (!asset) {
+    throw new Error('Asset attachment not found')
+  }
+
+  await requireStopAccess(asset.stopId)
   await db.delete(stopAsset).where(eq(stopAsset.id, stopAssetId))
 
   revalidatePath(`/guides/[nanoId]/edit`, 'page')
@@ -253,7 +335,7 @@ export type ArchiveGuideParams = {
 
 export async function archiveGuide(params: ArchiveGuideParams) {
   const { id } = params
-  const user = await getUser()
+  const user = await requireGuideAccess(id)
   const userId = user.id
 
   const [archivedGuide] = await db
@@ -277,7 +359,7 @@ export type RecoverGuideParams = {
 
 export async function recoverGuide(params: RecoverGuideParams) {
   const { id } = params
-  const user = await getUser()
+  const user = await requireGuideAccess(id)
   const userId = user.id
 
   const [recoveredGuide] = await db
@@ -302,7 +384,7 @@ export type DeleteGuideParams = {
 
 export async function deleteGuide(params: DeleteGuideParams) {
   const { id } = params
-  const user = await getUser()
+  const user = await requireGuideAccess(id)
   const userId = user.id
 
   const [deletedGuide] = await db
