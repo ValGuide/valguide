@@ -207,7 +207,7 @@ export const ManyTeams: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Team switcher with many teams (keyboard shortcuts shown for first 9).',
+        story: 'Team switcher with many teams.',
       },
     },
   },

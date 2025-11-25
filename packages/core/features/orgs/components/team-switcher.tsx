@@ -4,14 +4,12 @@ import * as React from 'react'
 import { ChevronsUpDown, Plus, Settings } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
-import { Badge } from '@valguide/ui/components/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
@@ -40,14 +38,6 @@ const roleLabels: Record<OrgRole, string> = {
   curator: 'Curator',
   editor: 'Editor',
   viewer: 'Viewer',
-}
-
-const roleVariants: Record<OrgRole, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  owner: 'default',
-  admin: 'secondary',
-  curator: 'secondary',
-  editor: 'outline',
-  viewer: 'outline',
 }
 
 function getTeamInitials(name: string): string {
@@ -103,9 +93,6 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">{activeTeam.name}</span>
-              <Badge variant={roleVariants[activeTeam.role]} className="w-fit text-xs">
-                {roleLabels[activeTeam.role]}
-              </Badge>
             </div>
             <ChevronsUpDown className="ml-auto size-4" />
           </SidebarMenuButton>
@@ -129,9 +116,6 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{activeTeam.name}</span>
-                <Badge variant={roleVariants[activeTeam.role]} className="w-fit text-xs">
-                  {roleLabels[activeTeam.role]}
-                </Badge>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -158,7 +142,6 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
                   <span className="font-medium">{team.name}</span>
                   <span className="text-xs text-muted-foreground">{roleLabels[team.role]}</span>
                 </div>
-                {index < 9 && <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
