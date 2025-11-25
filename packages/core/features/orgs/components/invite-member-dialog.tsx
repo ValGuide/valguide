@@ -134,10 +134,10 @@ export function InviteMemberDialog({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="max-w-[95vw] sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{t('inviteMember')}</DialogTitle>
-          <DialogDescription>{t('inviteDescription')}</DialogDescription>
+          <DialogTitle className="pr-8 text-left">{t('inviteMember')}</DialogTitle>
+          <DialogDescription className="text-left">{t('inviteDescription')}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
@@ -156,10 +156,10 @@ export function InviteMemberDialog({
             <div className="grid gap-2">
               <Label htmlFor="role">{t('role')}</Label>
               <Select value={role} onValueChange={(value) => setRole(value as OrgRole)} disabled={isSubmitting}>
-                <SelectTrigger id="role">
+                <SelectTrigger id="role" className="w-full [&_.role-description]:hidden">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-w-[calc(100vw-2rem)]">
                   {availableRoles.map((roleOption) => {
                     const Icon = roleIcons[roleOption]
                     return (
@@ -168,7 +168,9 @@ export function InviteMemberDialog({
                           <Icon className="mt-0.5 size-4 shrink-0" />
                           <div className="flex flex-col gap-0.5">
                             <span className="font-medium">{roleLabels[roleOption]}</span>
-                            <span className="text-xs text-muted-foreground">{roleDescriptions[roleOption]}</span>
+                            <span className="text-xs text-muted-foreground whitespace-normal text-left leading-snug role-description">
+                              {roleDescriptions[roleOption]}
+                            </span>
                           </div>
                         </div>
                       </SelectItem>
