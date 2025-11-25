@@ -96,7 +96,7 @@ function GuideEditorContent() {
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between border-b bg-white px-6 py-3">
+      <div className="flex items-center justify-between border-b bg-background px-6 py-3">
         <div className="flex items-center gap-3">
           <Link href={backUrl}>
             <Button variant="ghost" size="sm" className="gap-1">
@@ -106,7 +106,7 @@ function GuideEditorContent() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
-          <VersionHistoryDialog 
+          <VersionHistoryDialog
             guideId={guide.id}
             locale={activeLocale}
             onRollback={() => {
@@ -125,14 +125,14 @@ function GuideEditorContent() {
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Center Panel - Guide/Stop Editor */}
-        <div className="flex-1 overflow-y-auto bg-gray-50">
+        <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-background">
           <div className="mx-auto max-w-4xl p-8">
             {!selectedStop ? (
               <div className="space-y-6">
                 {/* Guide Details Header */}
                 <div>
                   <h2 className="mb-4 text-lg font-semibold">Guide Details</h2>
-                  
+
                   {/* Locale Tabs */}
                   <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
                 </div>
@@ -222,7 +222,7 @@ function GuideEditorContent() {
 
         {/* Right Sidebar - Progress */}
         {!selectedStop && (
-          <div className="w-80 border-l bg-white p-6">
+          <div className="w-80 border-l bg-background p-6">
             <h3 className="mb-4 text-base font-semibold">Guide Progress</h3>
             <GuideProgress guide={guide} locale={activeLocale} />
           </div>
@@ -230,7 +230,7 @@ function GuideEditorContent() {
 
         {/* Right Sidebar - Stop Progress */}
         {selectedStop && (
-          <div className="w-80 border-l bg-white p-6">
+          <div className="w-80 border-l bg-background p-6">
             <h3 className="mb-4 text-base font-semibold">Stop Progress</h3>
             {/* TODO: Add stop-specific progress */}
           </div>
