@@ -1,9 +1,18 @@
 'use client'
 
 import { MembersTable, type TeamMember, type OrgRole } from '@valguide/core/features/orgs/components/members-table'
-import { PendingInvitesList, type PendingInvitation } from '@valguide/core/features/orgs/components/pending-invites-list'
+import {
+  PendingInvitesList,
+  type PendingInvitation,
+} from '@valguide/core/features/orgs/components/pending-invites-list'
 import { InviteMemberDialog } from '@valguide/core/features/orgs/components/invite-member-dialog'
-import { inviteMemberAction, removeMemberAction, updateMemberRoleAction, resendInviteAction, cancelInviteAction } from '@valguide/core/features/orgs/actions'
+import {
+  inviteMemberAction,
+  removeMemberAction,
+  updateMemberRoleAction,
+  resendInviteAction,
+  cancelInviteAction,
+} from '@valguide/core/features/orgs/actions'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
@@ -27,12 +36,12 @@ export function TeamMembersClient({
   pendingInvites,
   currentUserRole,
   currentUserId,
-  onAction
+  onAction,
 }: TeamMembersClientProps) {
   const t = useTranslations('orgs.members')
   const tInvite = useTranslations('orgs.inviteDialog')
   const tPending = useTranslations('orgs.pendingInvites')
-  
+
   const handleInvite = async (email: string, role: OrgRole) => {
     try {
       await inviteMemberAction(team.id, email, role)
@@ -93,11 +102,11 @@ export function TeamMembersClient({
   // Ah, MembersTable handles ACTIVE members. PendingInvitesList handles PENDING invites.
   // So onResendInvite in MembersTable might be redundant or for a different purpose (e.g. if they are "invited" but in member table? No, schema separates them).
   // The MembersTable component has onResendInvite prop, maybe I should remove it or implement if I had logic for "re-onboarding".
-  // For now, I'll just pass undefined or handle it if I want to email them again (e.g. "Welcome" email). 
+  // For now, I'll just pass undefined or handle it if I want to email them again (e.g. "Welcome" email).
   // Let's leave it undefined for members table for now.
-  
+
   return (
-    <div className="container mx-auto max-w-5xl py-8 space-y-8">
+    <div className="container mx-auto max-w-5xl py-8 space-y-8 px-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Team & Members</h1>
@@ -120,7 +129,7 @@ export function TeamMembersClient({
 
       {pendingInvites.length > 0 && (
         <div className="space-y-4">
-          <PendingInvitesList 
+          <PendingInvitesList
             invitations={pendingInvites}
             onResendInvite={handleResendInvite}
             onCancelInvite={handleCancelInvite}

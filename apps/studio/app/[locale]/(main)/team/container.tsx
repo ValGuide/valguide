@@ -50,12 +50,10 @@ export function TeamPageContainer() {
 
   if (isNoTeam) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 px-4">
         <div className="text-center space-y-2 max-w-md">
           <h2 className="text-2xl font-bold tracking-tight">{t('welcome')}</h2>
-          <p className="text-muted-foreground">
-            {t('description')}
-          </p>
+          <p className="text-muted-foreground">{t('description')}</p>
         </div>
         <CreateTeamDialog>
           <Button size="lg">{t('createButton')}</Button>
@@ -69,7 +67,6 @@ export function TeamPageContainer() {
     // router.push(`/${locale}/login`)
     return null
   }
-
 
   return (
     <TeamMembersClient
