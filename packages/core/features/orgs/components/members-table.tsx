@@ -133,58 +133,59 @@ export function MembersTable({
   }
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[300px]">{t('member')}</TableHead>
-            <TableHead>{t('role')}</TableHead>
-            <TableHead>{t('joined')}</TableHead>
-            <TableHead className="w-[70px]" />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {members.length === 0 ? (
+    <div className="rounded-md border overflow-hidden">
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                {t('noMembers')}
-              </TableCell>
+              <TableHead className="min-w-[200px]">{t('member')}</TableHead>
+              <TableHead>{t('role')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('joined')}</TableHead>
+              <TableHead className="w-[70px]" />
             </TableRow>
-          ) : (
-            members.map((member) => {
-              const isCurrentUser = member.userId === currentUserId
-              const canManage = canManageMember(currentUserRole, member.role) && !isCurrentUser
-              const RoleIcon = roleIcons[member.role]
-
-              return (
-                <TableRow key={member.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="size-10">
-                        {member.avatar && <AvatarImage src={member.avatar} alt={getUserName(member)} />}
-                        <AvatarFallback>{getUserInitials(member)}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{getUserName(member)}</span>
-                          {isCurrentUser && (
-                            <Badge variant="outline" className="text-xs">
-                              {t('you')}
-                            </Badge>
-                          )}
+          </TableHeader>
+          <TableBody>
+            {members.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  {t('noMembers')}
+                </TableCell>
+              </TableRow>
+            ) : (
+              members.map((member) => {
+                const isCurrentUser = member.userId === currentUserId
+                const canManage = canManageMember(currentUserRole, member.role) && !isCurrentUser
+                const RoleIcon = roleIcons[member.role]
+  
+                return (
+                  <TableRow key={member.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="size-10">
+                          {member.avatar && <AvatarImage src={member.avatar} alt={getUserName(member)} />}
+                          <AvatarFallback>{getUserInitials(member)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{getUserName(member)}</span>
+                            {isCurrentUser && (
+                              <Badge variant="outline" className="text-xs">
+                                {t('you')}
+                              </Badge>
+                            )}
+                          </div>
+                          <span className="text-sm text-muted-foreground">{member.email}</span>
                         </div>
-                        <span className="text-sm text-muted-foreground">{member.email}</span>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={roleVariants[member.role]} className="gap-1.5">
-                      <RoleIcon className="size-3" />
-                      {roleLabels[member.role]}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{formatDate(member.joinedAt)}</TableCell>
-                  <TableCell>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={roleVariants[member.role]} className="gap-1.5">
+                        <RoleIcon className="size-3" />
+                        {roleLabels[member.role]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden md:table-cell">{formatDate(member.joinedAt)}</TableCell>
+                    <TableCell>
                     {canManage && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -236,6 +237,7 @@ export function MembersTable({
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

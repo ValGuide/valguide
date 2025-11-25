@@ -104,75 +104,77 @@ export function PendingInvitesList({ invitations, onResendInvite, onCancelInvite
         <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('email')}</TableHead>
-                <TableHead>{t('role')}</TableHead>
-                <TableHead>{t('invitedBy')}</TableHead>
-                <TableHead>{t('status')}</TableHead>
-                <TableHead className="w-[70px]" />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {invitations.map((invitation) => {
-                const expired = isExpired(invitation.expiresAt)
-                return (
-                  <TableRow key={invitation.id}>
-                    <TableCell className="font-medium">{invitation.email}</TableCell>
-                    <TableCell>
-                      <Badge variant={roleVariants[invitation.role]}>{roleLabels[invitation.role]}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="text-sm">{invitation.invitedBy.name}</span>
-                        <span className="text-xs text-muted-foreground">{invitation.invitedBy.email}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Clock className="size-3 text-muted-foreground" />
-                        <span className={`text-sm ${expired ? 'text-destructive' : 'text-muted-foreground'}`}>
-                          {formatRelativeTime(invitation.expiresAt)}
+        <div className="rounded-md border overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[200px]">{t('email')}</TableHead>
+                  <TableHead>{t('role')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('invitedBy')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
+                  <TableHead className="w-[70px]" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {invitations.map((invitation) => {
+                  const expired = isExpired(invitation.expiresAt)
+                  return (
+                    <TableRow key={invitation.id}>
+                      <TableCell className="font-medium">{invitation.email}</TableCell>
+                      <TableCell>
+                        <Badge variant={roleVariants[invitation.role]}>{roleLabels[invitation.role]}</Badge>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <div className="flex flex-col">
+                          <span className="text-sm">{invitation.invitedBy.name}</span>
+                          <span className="text-xs text-muted-foreground">{invitation.invitedBy.email}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Clock className="size-3 text-muted-foreground" />
+                          <span className={`text-sm ${expired ? 'text-destructive' : 'text-muted-foreground'}`}>
+                            {formatRelativeTime(invitation.expiresAt)}
+                          </span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {t('sent')} {formatDate(invitation.invitedAt)}
                         </span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {t('sent')} {formatDate(invitation.invitedAt)}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8">
-                            <MoreHorizontal className="size-4" />
-                            <span className="sr-only">{t('actions')}</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {onResendInvite && (
-                            <DropdownMenuItem onClick={() => handleResend(invitation.id)}>
-                              <RefreshCw className="mr-2 size-4" />
-                              {t('resend')}
-                            </DropdownMenuItem>
-                          )}
-                          {onCancelInvite && (
-                            <DropdownMenuItem
-                              onClick={() => handleCancel(invitation.id)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <X className="mr-2 size-4" />
-                              {t('cancel')}
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="size-8">
+                              <MoreHorizontal className="size-4" />
+                              <span className="sr-only">{t('actions')}</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {onResendInvite && (
+                              <DropdownMenuItem onClick={() => handleResend(invitation.id)}>
+                                <RefreshCw className="mr-2 size-4" />
+                                {t('resend')}
+                              </DropdownMenuItem>
+                            )}
+                            {onCancelInvite && (
+                              <DropdownMenuItem
+                                onClick={() => handleCancel(invitation.id)}
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <X className="mr-2 size-4" />
+                                {t('cancel')}
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </CardContent>
     </Card>
