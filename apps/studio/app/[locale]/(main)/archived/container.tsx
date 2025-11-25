@@ -6,6 +6,8 @@ import { ArchivedGuidesList } from '@/features/guides/components/archived-guides
 import { useTranslations } from 'next-intl'
 import { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 
+import { ArchivedSkeleton } from './skeleton'
+
 export function ArchivedPageContainer() {
   const t = useTranslations('guides')
   const [data, setData] = useState<{
@@ -24,7 +26,7 @@ export function ArchivedPageContainer() {
   }, [])
 
   if (loading) {
-    return <div className="container mx-auto p-4 sm:p-6 lg:p-8">Loading...</div>
+    return <ArchivedSkeleton />
   }
 
   if (!data) {
