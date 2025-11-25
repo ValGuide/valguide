@@ -6,13 +6,7 @@ import { useTranslations } from 'next-intl'
 import { Plus, Image as ImageIcon, Music, Video, Search } from 'lucide-react'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@valguide/ui/components/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import {
   Empty,
   EmptyHeader,
@@ -55,7 +49,8 @@ export function AssetsList({
   const filteredAssets = useMemo(() => {
     return assets.filter((asset) => {
       const matchesType = typeFilter === 'all' || asset.type === typeFilter
-      const matchesLocale = localeFilter === 'all' || asset.locale === localeFilter || (!asset.locale && localeFilter === 'none')
+      const matchesLocale =
+        localeFilter === 'all' || asset.locale === localeFilter || (!asset.locale && localeFilter === 'none')
       const matchesSearch = !searchQuery || asset.fileName.toLowerCase().includes(searchQuery.toLowerCase())
       return matchesType && matchesLocale && matchesSearch
     })
@@ -119,8 +114,6 @@ export function AssetsList({
 
   // Empty state when no assets exist
   if (assets.length === 0) {
-
-    console.info('hello')
     return (
       <>
         <Empty className="border">
@@ -132,7 +125,7 @@ export function AssetsList({
             <EmptyDescription>{t('empty.description')}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <div className="flex gap-2">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               <Button onClick={() => handleUploadClick('image')} size="lg">
                 <ImageIcon />
                 {t('empty.uploadImage')}
