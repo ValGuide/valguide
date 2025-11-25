@@ -6,16 +6,17 @@ import { getArchivedGuides } from '../guides/queries'
 
 export async function getArchivedGuidesAction() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     return null
   }
 
-  const guides = await getArchivedGuides(db, user.id)
+  const guides = await getArchivedGuides(db, user.sub)
   
   return {
     guides,
-    userId: user.id
+    userId: user.sub
   }
 }

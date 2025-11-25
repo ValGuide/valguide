@@ -29,13 +29,14 @@ import { cookies } from 'next/headers'
 
 export async function createTeamAction(name: string, slug?: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
   }
 
-  const team = await createTeam(db, name, user.id, slug)
+  const team = await createTeam(db, name, user.sub, slug)
   
   // Set cookie for new team
   const cookieStore = await cookies()
@@ -53,13 +54,14 @@ export async function createTeamAction(name: string, slug?: string) {
 
 export async function inviteMemberAction(teamId: string, email: string, role: OrgRole) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
   }
 
-  const currentUserRole = await getUserRole(db, teamId, user.id)
+  const currentUserRole = await getUserRole(db, teamId, user.sub)
   
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
@@ -69,7 +71,7 @@ export async function inviteMemberAction(teamId: string, email: string, role: Or
   const token = randomBytes(32).toString('hex')
   const tokenHash = createHash('sha256').update(token).digest('hex')
 
-  await createInvitation(db, teamId, email, role, user.id, tokenHash)
+  await createInvitation(db, teamId, email, role, user.sub, tokenHash)
 
   // TODO: Send email using Resend
   // await sendEmail({
@@ -89,13 +91,14 @@ export async function inviteMemberAction(teamId: string, email: string, role: Or
 
 export async function resendInviteAction(inviteId: string, teamId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
   }
 
-  const currentUserRole = await getUserRole(db, teamId, user.id)
+  const currentUserRole = await getUserRole(db, teamId, user.sub)
   
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
@@ -108,7 +111,7 @@ export async function resendInviteAction(inviteId: string, teamId: string) {
   const token = randomBytes(32).toString('hex')
   const tokenHash = createHash('sha256').update(token).digest('hex')
 
-  await createInvitation(db, teamId, invite.email, invite.role as OrgRole, user.id, tokenHash)
+  await createInvitation(db, teamId, invite.email, invite.role as OrgRole, user.sub, tokenHash)
 
   // TODO: Send email
   console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
@@ -118,13 +121,14 @@ export async function resendInviteAction(inviteId: string, teamId: string) {
 
 export async function cancelInviteAction(inviteId: string, teamId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
   }
 
-  const currentUserRole = await getUserRole(db, teamId, user.id)
+  const currentUserRole = await getUserRole(db, teamId, user.sub)
   
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
@@ -136,13 +140,14 @@ export async function cancelInviteAction(inviteId: string, teamId: string) {
 
 export async function removeMemberAction(memberId: string, teamId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
   }
 
-  const currentUserRole = await getUserRole(db, teamId, user.id)
+  const currentUserRole = await getUserRole(db, teamId, user.sub)
   
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
@@ -154,13 +159,14 @@ export async function removeMemberAction(memberId: string, teamId: string) {
 
 export async function updateMemberRoleAction(memberId: string, teamId: string, newRole: OrgRole) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
   }
 
-  const currentUserRole = await getUserRole(db, teamId, user.id)
+  const currentUserRole = await getUserRole(db, teamId, user.sub)
   
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
@@ -172,7 +178,8 @@ export async function updateMemberRoleAction(memberId: string, teamId: string, n
 
 export async function joinTeamAction(token: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
@@ -186,12 +193,12 @@ export async function joinTeamAction(token: string) {
   }
 
   // Check if already member
-  const isMember = await isTeamMember(db, invite.organizationId, user.id)
+  const isMember = await isTeamMember(db, invite.organizationId, user.sub)
   if (isMember) {
     return { success: true, slug: invite.organization.slug }
   }
 
-  await acceptInvitation(db, invite.id, user.id)
+  await acceptInvitation(db, invite.id, user.sub)
   
   // Set cookie for new team
   const cookieStore = await cookies()

@@ -15,7 +15,8 @@ export default async function JoinTeamPage({
   const { locale } = await params
   const { token } = await searchParams
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!token) {
     redirect(`/${locale}`)

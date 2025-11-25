@@ -48,9 +48,8 @@ export async function getUploadSignedUrl(
   params: GetUploadSignedUrlParams,
 ): Promise<GetUploadSignedUrlResult> {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims
 
   if (!user) throw new Error('Not authenticated')
 
@@ -62,7 +61,7 @@ export async function getUploadSignedUrl(
 
   // Construct storage path
   const localePrefix = locale ? `${locale}/` : ''
-  const userPrefix = type === 'image' ? `${user.id}/` : ''
+  const userPrefix = type === 'image' ? `${user.sub}/` : ''
   const storagePath = `${organizationId}/${type}s/${userPrefix}${localePrefix}${assetId}-${sanitizedName}`
 
   // Generate signed URL (expires in 1 hour)
@@ -98,9 +97,8 @@ export type ConfirmAssetUploadParams = {
 
 export async function confirmAssetUpload(params: ConfirmAssetUploadParams) {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims
 
   if (!user) throw new Error('Not authenticated')
 
@@ -137,7 +135,7 @@ export async function confirmAssetUpload(params: ConfirmAssetUploadParams) {
       publicUrl,
       locale: locale || null,
       organizationId,
-      uploadedBy: user.id,
+      uploadedBy: user.sub,
       width: width || null,
       height: height || null,
       duration: duration || null,
@@ -149,9 +147,8 @@ export async function confirmAssetUpload(params: ConfirmAssetUploadParams) {
 
 export async function deleteAsset(assetId: string) {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims
 
   if (!user) throw new Error('Not authenticated')
 
@@ -163,7 +160,7 @@ export async function deleteAsset(assetId: string) {
   if (!assetData) throw new Error('Asset not found')
 
   // Verify ownership
-  if (assetData.uploadedBy !== user.id) {
+  if (assetData.uploadedBy !== user.sub) {
     throw new Error('Unauthorized to delete this asset')
   }
 
@@ -180,9 +177,8 @@ export async function deleteAsset(assetId: string) {
 
 export async function getDownloadSignedUrl(assetId: string) {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims
 
   if (!user) throw new Error('Not authenticated')
 

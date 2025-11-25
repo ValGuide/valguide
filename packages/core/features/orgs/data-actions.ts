@@ -8,7 +8,8 @@ import { type OrgRole } from './schema'
 
 export async function getTeamDataAction() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     console.info('no user')
@@ -32,7 +33,7 @@ export async function getTeamDataAction() {
 
   const membersData = await getTeamMembers(db, team.id)
   const pendingInvitesData = await getPendingInvitations(db, team.id)
-  const currentUserRole = await getUserRole(db, team.id, user.id)
+  const currentUserRole = await getUserRole(db, team.id, user.sub)
 
   if (!currentUserRole) {
     return null
@@ -69,6 +70,6 @@ export async function getTeamDataAction() {
     members,
     pendingInvites,
     currentUserRole: currentUserRole as OrgRole,
-    currentUserId: user.id
+    currentUserId: user.sub
   }
 }

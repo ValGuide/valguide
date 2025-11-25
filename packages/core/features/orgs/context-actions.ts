@@ -11,13 +11,14 @@ const TEAM_COOKIE_NAME = 'active-team-slug'
 
 export async function getSidebarDataAction() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     return null
   }
 
-  const teams = await getUserTeams(db, user.id)
+  const teams = await getUserTeams(db, user.sub)
   const activeSlug = await getActiveTeamSlug()
   
   let currentTeam = teams.find((t: any) => t.slug === activeSlug)
@@ -59,7 +60,8 @@ export async function getSidebarDataAction() {
 
 export async function switchTeamAction(slug: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getClaims()
+  const user = data?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
@@ -72,7 +74,7 @@ export async function switchTeamAction(slug: string) {
   }
 
   // Verify membership
-  const isMember = await isTeamMember(db, team.id, user.id)
+  const isMember = await isTeamMember(db, team.id, user.sub)
   if (!isMember) {
     throw new Error('Not a member of this team')
   }

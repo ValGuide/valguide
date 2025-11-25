@@ -17,19 +17,21 @@ export type ProfileFormData = z.infer<typeof profileSchema>
 
 export async function getProfileAction() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims
 
   if (!user) {
     throw new Error('Unauthorized')
   }
 
-  const profile = await getProfile(user.id)
+  const profile = await getProfile(user.sub)
   return profile
 }
 
 export async function updateProfileAction(data: ProfileFormData) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims
   const t = await getTranslations('profile.actions')
 
   if (!user) {
@@ -43,7 +45,7 @@ export async function updateProfileAction(data: ProfileFormData) {
   }
 
   try {
-    await updateProfile(user.id, {
+    await updateProfile(user.sub, {
       username: validated.data.username || null,
       firstName: validated.data.firstName || null,
       lastName: validated.data.lastName || null,
