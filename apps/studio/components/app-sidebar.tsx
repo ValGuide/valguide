@@ -22,8 +22,6 @@ import { TeamSwitcher, type Team } from '@valguide/core/features/orgs/components
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@valguide/ui/components/sidebar'
 import { usePathname, useRouter } from 'next/navigation'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
-import { switchTeamAction } from '@valguide/core/features/orgs/context-actions'
-import { toast } from 'sonner'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 
 export function AppSidebar({
@@ -32,6 +30,7 @@ export function AppSidebar({
   teams,
   currentTeam,
   onTeamSwitch,
+  onLogout,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   pathname?: string
@@ -43,9 +42,9 @@ export function AppSidebar({
   teams: Team[]
   currentTeam?: Team
   onTeamSwitch?: (teamSlug: string) => void
+  onLogout?: () => void
 }) {
   const t = useTranslations('sidebar.nav')
-  const tTeam = useTranslations('orgs.teamSwitcher')
   const pathnameFromRouter = usePathname()
   const router = useRouter()
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null)
@@ -69,18 +68,6 @@ export function AppSidebar({
   const handleTeamSwitch = async (teamSlug: string) => {
     if (onTeamSwitch) {
       onTeamSwitch(teamSlug)
-      return
-    }
-
-    try {
-      const result = await switchTeamAction(teamSlug)
-      if (result?.success) {
-        toast.success(tTeam('success'))
-        router.refresh()
-      }
-    } catch (error) {
-      console.error(error)
-      toast.error(tTeam('error'))
     }
   }
 
@@ -91,6 +78,12 @@ export function AppSidebar({
   const handleTeamSettings = (teamSlug: string) => {
     const locale = pathname.split('/')[1]
     router.push(`/${locale}/settings`)
+  }
+
+  const handleLogout = async () => {
+    if (onLogout) {
+      onLogout()
+    }
   }
 
   // Helper to determine if a URL is active
@@ -177,7 +170,7 @@ export function AppSidebar({
         <NavSecondary items={navSecondary} className="mt-auto" onItemClickAction={handleNavClick} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user} onLogout={handleLogout} />
       </SidebarFooter>
       <SidebarRail />
       <CreateTeamDialog open={createTeamOpen} onOpenChange={setCreateTeamOpen} showTrigger={false} />

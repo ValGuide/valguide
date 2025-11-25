@@ -18,12 +18,14 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@va
 
 export function NavUser({
   user,
+  onLogout,
 }: {
   user: {
     name: string
     email: string
     avatar: string
   }
+  onLogout?: () => void
 }) {
   const { isMobile } = useSidebar()
   const t = useTranslations('sidebar.user')
@@ -91,7 +93,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={onLogout}>
               <LogOut />
               {t('logout')}
             </DropdownMenuItem>

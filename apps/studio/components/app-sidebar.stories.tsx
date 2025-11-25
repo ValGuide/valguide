@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
+import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { NextIntlClientProvider } from 'next-intl'
 import { AppSidebar } from './app-sidebar'
-import { AppSidebarSkeleton } from './app-sidebar-container'
-import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
-import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
+import { AppSidebarSkeleton } from './app-sidebar-skeleton'
 
 // Import messages for the story
-import enMessages from '@valguide/i18n/messages/en.json'
 import deMessages from '@valguide/i18n/messages/de.json'
+import enMessages from '@valguide/i18n/messages/en.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
 
 const mockUser = {
@@ -63,6 +63,8 @@ const meta: Meta<typeof AppSidebar> = {
     user: mockUser,
     teams: mockTeams,
     currentTeam: mockTeams[0],
+    onLogout: () => console.log('Logout clicked'),
+    onTeamSwitch: (teamSlug) => console.log('Team switched to:', teamSlug),
   },
   decorators: [
     (Story, { globals: { locale } }) => {
