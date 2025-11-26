@@ -63,7 +63,32 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   }, [profile, form])
 
   if (isLoading && !initialData) {
-    return <Skeleton className="h-[400px] w-full" />
+    return (
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-7 w-32" />
+          <Skeleton className="h-4 w-64" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </div>
+          <Skeleton className="h-10 w-24" />
+        </CardContent>
+      </Card>
+    )
   }
 
   function onSubmit(formData: ProfileFormData) {
