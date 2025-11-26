@@ -2,7 +2,10 @@ import { Resend } from 'resend'
 import { TeamInviteEmail, TeamInviteEmailProps } from './emails/team-invite-email'
 
 // Initialize Resend with API key from environment
-const resend = new Resend(process.env.VG_RESEND_SENDING_API_KEY)
+// Don't throw if key is missing, we'll handle it in sendEmail
+const resend = process.env.VG_RESEND_SENDING_API_KEY 
+  ? new Resend(process.env.VG_RESEND_SENDING_API_KEY)
+  : null
 
 // Configurable sender
 const FROM_EMAIL = process.env.VG_EMAIL_FROM || 'ValGuide <noreply@valguide.com>'
@@ -17,7 +20,7 @@ export interface SendEmailOptions {
 }
 
 export async function sendEmail({ to, subject, template }: SendEmailOptions) {
-  if (!process.env.VG_RESEND_SENDING_API_KEY) {
+  if (!resend) {
     console.warn('VG_RESEND_SENDING_API_KEY is not set. Email not sent.')
     if (process.env.NODE_ENV !== 'production') {
       console.log('--- SIMULATED EMAIL ---')

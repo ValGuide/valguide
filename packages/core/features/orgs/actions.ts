@@ -76,10 +76,10 @@ export async function inviteMemberAction(teamId: string, email: string, role: Or
     template: {
       name: 'team-invite',
       data: {
-        inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/join-team?token=${token}`,
+        inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
         teamName: team.name,
         inviterName: user.email || 'A colleague',
-        logoUrl: `${process.env.NEXT_PUBLIC_APP_URL}/icon.png`,
+        logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
       },
     },
   })
@@ -120,10 +120,10 @@ export async function resendInviteAction(inviteId: string, teamId: string) {
     template: {
       name: 'team-invite',
       data: {
-        inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/join-team?token=${token}`,
+        inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
         teamName: team.name,
         inviterName: user.email || 'A colleague',
-        logoUrl: `${process.env.NEXT_PUBLIC_APP_URL}/icon.png`,
+        logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
       },
     },
   })
@@ -205,6 +205,11 @@ export async function joinTeamAction(token: string) {
   const isMember = await isTeamMember(db, invite.organizationId, user.sub)
   if (isMember) {
     return { success: true, slug: invite.organization.slug }
+  }
+
+  // Verify email matches
+  if (invite.email.toLowerCase() !== (user.email || '').toLowerCase()) {
+    throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${user.email}`)
   }
 
   await acceptInvitation(db, invite.id, user.sub)

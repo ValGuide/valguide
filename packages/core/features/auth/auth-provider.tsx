@@ -60,7 +60,7 @@ export const AuthProvider = ({
 
   const [loading, setLoading] = useState<boolean>(false)
   const [verifyingOtp, setValidatingOpt] = useState<boolean>(false)
-  const [email, setEmail] = useState<string>('')
+  const [email, setEmail] = useState<string>(searchParams.get('email') ?? '')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [otp, setOtp] = useState('')
 
