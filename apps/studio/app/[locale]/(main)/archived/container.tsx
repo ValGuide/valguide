@@ -1,31 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { getArchivedGuidesAction } from '@valguide/core/features/guides/data-actions'
 import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
 import { useTranslations } from 'next-intl'
-import { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-
 import { ArchivedSkeleton } from './skeleton'
+import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
 
 export function ArchivedPageContainer() {
   const t = useTranslations('guides')
-  const [data, setData] = useState<{
-    guides: GuideWithTranslations[]
-    userId: string
-  } | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { data, isLoading } = useArchivedGuides()
 
-  useEffect(() => {
-    getArchivedGuidesAction().then((res) => {
-      if (res) {
-        setData(res)
-      }
-      setLoading(false)
-    })
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return <ArchivedSkeleton />
   }
 
