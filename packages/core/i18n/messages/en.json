@@ -1,4 +1,18 @@
 {
+  "player": {
+    "play": "Play",
+    "pause": "Pause",
+    "rewind": "Rewind 10 seconds",
+    "forward": "Forward 10 seconds",
+    "transcript": "Transcript",
+    "transcriptAndMore": "Transcript & More",
+    "noTranscript": "No transcript available for this track",
+    "close": "Close",
+    "language": "Language",
+    "save": "Save",
+    "share": "Share",
+    "minimize": "Minimize"
+  },
   "admin": {
     "metadata": {
       "title": "Admin - ValGuide",
