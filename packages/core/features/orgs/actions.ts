@@ -2,7 +2,6 @@
 
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { 
   createTeam, 
@@ -48,7 +47,6 @@ export async function createTeamAction(name: string, slug?: string) {
     maxAge: 60 * 60 * 24 * 365, // 1 year
   })
 
-  revalidatePath('/studio')
   return team
 }
 
@@ -86,7 +84,6 @@ export async function inviteMemberAction(teamId: string, email: string, role: Or
   
   console.log(`Invite link for ${email}: /join-team?token=${token}`)
 
-  revalidatePath('/')
 }
 
 export async function resendInviteAction(inviteId: string, teamId: string) {
@@ -116,7 +113,6 @@ export async function resendInviteAction(inviteId: string, teamId: string) {
   // TODO: Send email
   console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
 
-  revalidatePath('/')
 }
 
 export async function cancelInviteAction(inviteId: string, teamId: string) {
@@ -135,7 +131,6 @@ export async function cancelInviteAction(inviteId: string, teamId: string) {
   }
 
   await deleteInvitation(db, inviteId)
-  revalidatePath('/')
 }
 
 export async function removeMemberAction(memberId: string, teamId: string) {
@@ -154,7 +149,6 @@ export async function removeMemberAction(memberId: string, teamId: string) {
   }
 
   await removeMember(db, memberId)
-  revalidatePath('/')
 }
 
 export async function updateMemberRoleAction(memberId: string, teamId: string, newRole: OrgRole) {
@@ -173,7 +167,6 @@ export async function updateMemberRoleAction(memberId: string, teamId: string, n
   }
 
   await updateMemberRole(db, memberId, newRole)
-  revalidatePath('/')
 }
 
 export async function joinTeamAction(token: string) {

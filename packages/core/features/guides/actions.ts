@@ -6,7 +6,6 @@ import { organizationMember } from '../orgs/schema'
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
 import { eq, and, isNull, isNotNull, inArray } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
-import { revalidatePath } from 'next/cache'
 import { createClient } from '@valguide/supabase/server'
 
 async function requireUser() {
@@ -92,7 +91,6 @@ export async function updateGuide(params: UpdateGuideParams) {
     .where(eq(guide.id, id))
     .returning()
 
-  revalidatePath(`/guides/[nanoId]`, 'page')
   return updatedGuide
 }
 
@@ -170,8 +168,6 @@ export async function createStop(params: CreateStopParams) {
     createdTranslations.push(translation)
   }
 
-  revalidatePath(`/guides/[nanoId]/edit`, 'page')
-
   return {
     ...newStop,
     translations: createdTranslations,
@@ -206,7 +202,6 @@ export async function deleteStop(stopId: string) {
   await requireStopAccess(stopId)
   await db.delete(stop).where(eq(stop.id, stopId))
 
-  revalidatePath(`/guides/[nanoId]/edit`, 'page')
   return { success: true }
 }
 
@@ -232,7 +227,6 @@ export async function reorderStops(updates: ReorderStopsParams) {
     await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
   }
 
-  revalidatePath(`/guides/[nanoId]/edit`, 'page')
   return { success: true }
 }
 
@@ -261,7 +255,6 @@ export async function attachAssetToGuide(params: AttachAssetToGuideParams) {
     })
     .returning()
 
-  revalidatePath(`/guides/[nanoId]/edit`, 'page')
   return attachment
 }
 
@@ -288,7 +281,6 @@ export async function attachAssetToStop(params: AttachAssetToStopParams) {
     })
     .returning()
 
-  revalidatePath(`/guides/[nanoId]/edit`, 'page')
   return attachment
 }
 
@@ -306,7 +298,6 @@ export async function detachAssetFromGuide(guideAssetId: string) {
   await requireGuideAccess(asset.guideId)
   await db.delete(guideAsset).where(eq(guideAsset.id, guideAssetId))
 
-  revalidatePath(`/guides/[nanoId]/edit`, 'page')
   return { success: true }
 }
 
@@ -324,7 +315,6 @@ export async function detachAssetFromStop(stopAssetId: string) {
   await requireStopAccess(asset.stopId)
   await db.delete(stopAsset).where(eq(stopAsset.id, stopAssetId))
 
-  revalidatePath(`/guides/[nanoId]/edit`, 'page')
   return { success: true }
 }
 
@@ -348,7 +338,6 @@ export async function archiveGuide(params: ArchiveGuideParams) {
     .where(eq(guide.id, id))
     .returning()
 
-  revalidatePath('/', 'page')
   return archivedGuide
 }
 
@@ -372,8 +361,6 @@ export async function recoverGuide(params: RecoverGuideParams) {
     .where(and(eq(guide.id, id), isNotNull(guide.archivedAt), isNull(guide.deletedAt)))
     .returning()
 
-  revalidatePath('/', 'page')
-  revalidatePath('/archived', 'page')
   return recoveredGuide
 }
 
@@ -397,6 +384,5 @@ export async function deleteGuide(params: DeleteGuideParams) {
     .where(and(eq(guide.id, id), isNotNull(guide.archivedAt)))
     .returning()
 
-  revalidatePath('/archived', 'page')
   return deletedGuide
 }

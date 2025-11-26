@@ -3,7 +3,6 @@
 import { createClient } from '@valguide/core/supabase/server'
 import { getProfile } from '@valguide/features/profiles/queries'
 import { updateProfile } from '@valguide/features/profiles/mutations'
-import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 import { z } from 'zod'
 
@@ -51,7 +50,6 @@ export async function updateProfileAction(data: ProfileFormData) {
       lastName: validated.data.lastName || null,
     })
     
-    revalidatePath('/profile')
     return { success: true, message: t('updateSuccess') }
   } catch (error) {
     console.error('Profile update error:', error)

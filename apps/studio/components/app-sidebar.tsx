@@ -88,7 +88,7 @@ export function AppSidebar({
 
   // Helper to determine if a URL is active
   const isActive = (url: string) => {
-    const currentPath = pathnameWithoutLocale
+    const currentPath = pendingUrl ?? pathnameWithoutLocale
     if (url === '/') {
       return currentPath === '/'
     }

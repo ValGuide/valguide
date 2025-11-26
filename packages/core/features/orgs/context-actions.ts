@@ -4,7 +4,6 @@ import { cookies } from 'next/headers'
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
 import { isTeamMember, getTeamBySlug } from './queries'
-import { revalidatePath } from 'next/cache'
 import { getSidebarData, TEAM_COOKIE_NAME, getActiveTeamSlug as getActiveTeamSlugInternal } from './sidebar-data'
 
 export async function getSidebarDataAction() {
@@ -43,7 +42,6 @@ export async function switchTeamAction(slug: string) {
   })
 
   // Reload
-  revalidatePath('/')
   return { success: true }
 }
 
