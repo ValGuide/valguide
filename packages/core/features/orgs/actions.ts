@@ -13,7 +13,14 @@ import {
   updateMemberRole,
 } from './mutations'
 import { canManageMembers, OrgRole } from './permissions'
-import { getInvitationById, getInvitationByTokenHash, getUserRole, isTeamMember } from './queries'
+import {
+  getInvitationById,
+  getInvitationByTokenHash,
+  getTeamById,
+  getUserRole,
+  isTeamMember,
+} from './queries'
+import { sendEmail } from '@valguide/transactional'
 
 export async function createTeamAction(name: string, slug?: string) {
   const supabase = await createClient()
@@ -54,22 +61,28 @@ export async function inviteMemberAction(teamId: string, email: string, role: Or
     throw new Error('Insufficient permissions')
   }
 
+  const team = await getTeamById(db, teamId)
+  if (!team) throw new Error('Team not found')
+
   // Generate token
   const token = randomBytes(32).toString('hex')
   const tokenHash = createHash('sha256').update(token).digest('hex')
 
   await createInvitation(db, teamId, email, role, user.sub, tokenHash)
 
-  // TODO: Send email using Resend
-  // await sendEmail({
-  //   to: email,
-  //   template: 'team-invite',
-  //   data: {
-  //     inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/join-team?token=${token}`,
-  //     teamName: team.name,
-  //     inviterName: user.email
-  //   }
-  // })
+  await sendEmail({
+    to: email,
+    subject: `Join ${team.name} on ValGuide`,
+    template: {
+      name: 'team-invite',
+      data: {
+        inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/join-team?token=${token}`,
+        teamName: team.name,
+        inviterName: user.email || 'A colleague',
+        logoUrl: `${process.env.NEXT_PUBLIC_APP_URL}/icon.png`,
+      },
+    },
+  })
 
   console.log(`Invite link for ${email}: /join-team?token=${token}`)
 }
@@ -92,13 +105,29 @@ export async function resendInviteAction(inviteId: string, teamId: string) {
   const invite = await getInvitationById(db, inviteId)
   if (!invite) throw new Error('Invitation not found')
 
+  const team = await getTeamById(db, teamId)
+  if (!team) throw new Error('Team not found')
+
   // Generate token
   const token = randomBytes(32).toString('hex')
   const tokenHash = createHash('sha256').update(token).digest('hex')
 
   await createInvitation(db, teamId, invite.email, invite.role as OrgRole, user.sub, tokenHash)
 
-  // TODO: Send email
+  await sendEmail({
+    to: invite.email,
+    subject: `Join ${team.name} on ValGuide`,
+    template: {
+      name: 'team-invite',
+      data: {
+        inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/join-team?token=${token}`,
+        teamName: team.name,
+        inviterName: user.email || 'A colleague',
+        logoUrl: `${process.env.NEXT_PUBLIC_APP_URL}/icon.png`,
+      },
+    },
+  })
+
   console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
 }
 
