@@ -10,7 +10,7 @@ const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 10)
  */
 export async function createTeam(db: DB, name: string, userId: string, slug?: string) {
   const teamSlug = slug || nanoid()
-  
+
   return await db.transaction(async (tx: DB) => {
     const [newTeam] = await tx
       .insert(organization)
@@ -19,6 +19,10 @@ export async function createTeam(db: DB, name: string, userId: string, slug?: st
         slug: teamSlug,
       })
       .returning()
+
+    if (!newTeam) {
+      throw new Error('Failed to create team')
+    }
 
     // Add creator as owner
     await tx.insert(organizationMember).values({
@@ -41,14 +45,11 @@ export async function createInvitation(
   email: string,
   role: OrgRole,
   invitedBy: string,
-  tokenHash: string
+  tokenHash: string,
 ) {
   // Check if invitation already exists
   const existing = await db.query.organizationInvitation.findFirst({
-    where: and(
-      eq(organizationInvitation.organizationId, organizationId),
-      eq(organizationInvitation.email, email)
-    ),
+    where: and(eq(organizationInvitation.organizationId, organizationId), eq(organizationInvitation.email, email)),
   })
 
   if (existing) {
@@ -108,7 +109,7 @@ export async function acceptInvitation(db: DB, invitationId: string, userId: str
         acceptedAt: new Date(),
       })
       .where(eq(organizationInvitation.id, invitationId))
-      
+
     // We can also delete it to keep table clean, but keeping it for history might be good.
     // However, if we want to allow re-inviting same email if they leave, we should probably soft-delete or just rely on unique constraint being on email+org?
     // schema says: email is varchar. Index on email. No unique constraint on (orgId, email).
@@ -128,17 +129,12 @@ export async function deleteInvitation(db: DB, invitationId: string) {
  * Remove a member
  */
 export async function removeMember(db: DB, memberId: string) {
-  return db
-    .delete(organizationMember)
-    .where(eq(organizationMember.id, memberId))
+  return db.delete(organizationMember).where(eq(organizationMember.id, memberId))
 }
 
 /**
  * Update member role
  */
 export async function updateMemberRole(db: DB, memberId: string, role: OrgRole) {
-  return db
-    .update(organizationMember)
-    .set({ role })
-    .where(eq(organizationMember.id, memberId))
+  return db.update(organizationMember).set({ role }).where(eq(organizationMember.id, memberId))
 }

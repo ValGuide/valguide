@@ -32,12 +32,7 @@ async function checkGuideAccess(guideId: string, userId: string) {
   const [membership] = await db
     .select()
     .from(organizationMember)
-    .where(
-      and(
-        eq(organizationMember.organizationId, foundGuide.organizationId),
-        eq(organizationMember.userId, userId),
-      ),
-    )
+    .where(and(eq(organizationMember.organizationId, foundGuide.organizationId), eq(organizationMember.userId, userId)))
     .limit(1)
 
   if (!membership) {
@@ -52,11 +47,7 @@ async function requireGuideAccess(guideId: string) {
 }
 
 async function requireStopAccess(stopId: string) {
-  const [foundStop] = await db
-    .select({ guideId: stop.guideId })
-    .from(stop)
-    .where(eq(stop.id, stopId))
-    .limit(1)
+  const [foundStop] = await db.select({ guideId: stop.guideId }).from(stop).where(eq(stop.id, stopId)).limit(1)
 
   if (!foundStop) {
     throw new Error('Stop not found')
@@ -107,12 +98,8 @@ export async function updateGuideTranslation(params: UpdateGuideTranslationParam
 
   // Use the new upsertGuideTranslationDraft function
   const { upsertGuideTranslationDraft } = await import('./translation-mutations')
-  
-  const versionId = await upsertGuideTranslationDraft(
-    guideId,
-    locale,
-    { title, description },
-  )
+
+  const versionId = await upsertGuideTranslationDraft(guideId, locale, { title, description })
 
   return { versionId }
 }
@@ -153,25 +140,38 @@ export async function createStop(params: CreateStopParams) {
   }
 
   // Create translations
-  const createdTranslations = []
+  const { upsertStopTranslationDraft } = await import('./translation-mutations')
+
   for (const trans of translations) {
-    const [translation] = await db
-      .insert(stopTranslation)
-      .values({
-        stopId: newStop.id,
-        locale: trans.locale,
+    await upsertStopTranslationDraft(
+      newStop.id,
+      trans.locale,
+      {
         title: trans.title,
         description: trans.description,
         transcription: trans.transcription,
-      })
-      .returning()
-    createdTranslations.push(translation)
+      },
+      userId,
+    )
   }
 
-  return {
-    ...newStop,
-    translations: createdTranslations,
+  const fullStop = await db.query.stop.findFirst({
+    where: eq(stop.id, newStop.id),
+    with: {
+      translations: {
+        with: {
+          draftVersion: true,
+          currentVersion: true,
+        },
+      },
+    },
+  })
+
+  if (!fullStop) {
+    throw new Error('Failed to fetch created stop')
   }
+
+  return fullStop
 }
 
 export type UpdateStopParams = {
@@ -188,12 +188,8 @@ export async function updateStop(params: UpdateStopParams) {
 
   // Use the new upsertStopTranslationDraft function
   const { upsertStopTranslationDraft } = await import('./translation-mutations')
-  
-  const versionId = await upsertStopTranslationDraft(
-    stopId,
-    locale,
-    { title, description, transcription },
-  )
+
+  const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
 
   return { versionId }
 }

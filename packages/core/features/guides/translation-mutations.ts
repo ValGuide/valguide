@@ -41,6 +41,10 @@ export async function upsertGuideTranslationDraft(
         locale,
       })
       .returning()
+
+    if (!newTranslation) {
+      throw new Error('Failed to create guide translation')
+    }
     translationId = newTranslation.id
   } else {
     translationId = translation[0].id
@@ -81,6 +85,10 @@ export async function upsertGuideTranslationDraft(
     })
     .returning()
 
+  if (!newVersion) {
+    throw new Error('Failed to create guide translation version')
+  }
+
   // Update translation to point to new draft
   await db
     .update(guideTranslation)
@@ -106,15 +114,17 @@ export async function publishGuideTranslationDraft(
     .where(and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)))
     .limit(1)
 
-  if (!translation[0]) {
+  const currentTranslation = translation[0]
+
+  if (!currentTranslation) {
     return { success: false, error: 'Translation not found' }
   }
 
-  if (!translation[0].draftVersionId) {
+  if (!currentTranslation.draftVersionId) {
     return { success: false, error: 'No draft to publish' }
   }
 
-  const draftId = translation[0].draftVersionId
+  const draftId = currentTranslation.draftVersionId
 
   await db.transaction(async (tx: typeof db) => {
     // Update draft version to published
@@ -133,7 +143,7 @@ export async function publishGuideTranslationDraft(
         currentVersionId: draftId,
         draftVersionId: null,
       })
-      .where(eq(guideTranslation.id, translation[0].id))
+      .where(eq(guideTranslation.id, currentTranslation.id))
   })
 
   return { success: true, versionId: draftId }
@@ -196,6 +206,10 @@ export async function rollbackGuideTranslation(
     })
     .returning()
 
+  if (!newDraft) {
+    throw new Error('Failed to create new draft version')
+  }
+
   // Update translation to point to new draft
   await db
     .update(guideTranslation)
@@ -217,13 +231,15 @@ export async function deleteGuideTranslationDraft(guideId: string, locale: strin
     .where(and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)))
     .limit(1)
 
-  if (!translation[0] || !translation[0].draftVersionId) {
+  const currentTranslation = translation[0]
+
+  if (!currentTranslation || !currentTranslation.draftVersionId) {
     return false
   }
 
   await db.transaction(async (tx: typeof db) => {
     // Delete draft version
-    await tx.delete(guideTranslationVersion).where(eq(guideTranslationVersion.id, translation[0].draftVersionId!))
+    await tx.delete(guideTranslationVersion).where(eq(guideTranslationVersion.id, currentTranslation.draftVersionId!))
 
     // Clear draft pointer
     await tx
@@ -231,7 +247,7 @@ export async function deleteGuideTranslationDraft(guideId: string, locale: strin
       .set({
         draftVersionId: null,
       })
-      .where(eq(guideTranslation.id, translation[0].id))
+      .where(eq(guideTranslation.id, currentTranslation.id))
   })
 
   return true
@@ -268,6 +284,10 @@ export async function upsertStopTranslationDraft(
         locale,
       })
       .returning()
+
+    if (!newTranslation) {
+      throw new Error('Failed to create stop translation')
+    }
     translationId = newTranslation.id
   } else {
     translationId = translation[0].id
@@ -306,6 +326,10 @@ export async function upsertStopTranslationDraft(
     })
     .returning()
 
+  if (!newVersion) {
+    throw new Error('Failed to create stop translation version')
+  }
+
   await db
     .update(stopTranslation)
     .set({
@@ -329,15 +353,17 @@ export async function publishStopTranslationDraft(
     .where(and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)))
     .limit(1)
 
-  if (!translation[0]) {
+  const currentTranslation = translation[0]
+
+  if (!currentTranslation) {
     return { success: false, error: 'Translation not found' }
   }
 
-  if (!translation[0].draftVersionId) {
+  if (!currentTranslation.draftVersionId) {
     return { success: false, error: 'No draft to publish' }
   }
 
-  const draftId = translation[0].draftVersionId
+  const draftId = currentTranslation.draftVersionId
 
   await db.transaction(async (tx: typeof db) => {
     await tx
@@ -354,7 +380,7 @@ export async function publishStopTranslationDraft(
         currentVersionId: draftId,
         draftVersionId: null,
       })
-      .where(eq(stopTranslation.id, translation[0].id))
+      .where(eq(stopTranslation.id, currentTranslation.id))
   })
 
   return { success: true, versionId: draftId }
@@ -414,6 +440,10 @@ export async function rollbackStopTranslation(
     })
     .returning()
 
+  if (!newDraft) {
+    throw new Error('Failed to create new draft version')
+  }
+
   await db
     .update(stopTranslation)
     .set({
@@ -434,19 +464,21 @@ export async function deleteStopTranslationDraft(stopId: string, locale: string)
     .where(and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)))
     .limit(1)
 
-  if (!translation[0] || !translation[0].draftVersionId) {
+  const currentTranslation = translation[0]
+
+  if (!currentTranslation || !currentTranslation.draftVersionId) {
     return false
   }
 
   await db.transaction(async (tx: typeof db) => {
-    await tx.delete(stopTranslationVersion).where(eq(stopTranslationVersion.id, translation[0].draftVersionId!))
+    await tx.delete(stopTranslationVersion).where(eq(stopTranslationVersion.id, currentTranslation.draftVersionId!))
 
     await tx
       .update(stopTranslation)
       .set({
         draftVersionId: null,
       })
-      .where(eq(stopTranslation.id, translation[0].id))
+      .where(eq(stopTranslation.id, currentTranslation.id))
   })
 
   return true
