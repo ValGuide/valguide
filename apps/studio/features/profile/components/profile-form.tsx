@@ -17,8 +17,9 @@ import {
 } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { updateProfileAction, getProfileAction, type ProfileFormData } from '../actions'
-import { useTransition, useEffect, useState } from 'react'
+import { updateProfileAction, type ProfileFormData } from '../actions'
+import { useProfile } from '../'
+import { useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 
@@ -40,35 +41,28 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const t = useTranslations('profile')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
-  const [data, setData] = useState(initialData)
-  const [isLoading, setIsLoading] = useState(!initialData)
+  const { profile, isLoading, refetch } = useProfile()
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      username: data?.username || '',
-      firstName: data?.firstName || '',
-      lastName: data?.lastName || '',
+      username: initialData?.username || '',
+      firstName: initialData?.firstName || '',
+      lastName: initialData?.lastName || '',
     },
   })
 
   useEffect(() => {
-    if (!initialData) {
-      getProfileAction().then((profile) => {
-        if (profile) {
-          setData(profile)
-          form.reset({
-            username: profile.username || '',
-            firstName: profile.firstName || '',
-            lastName: profile.lastName || '',
-          })
-        }
-        setIsLoading(false)
+    if (profile) {
+      form.reset({
+        username: profile.username || '',
+        firstName: profile.firstName || '',
+        lastName: profile.lastName || '',
       })
     }
-  }, [initialData, form])
+  }, [profile, form])
 
-  if (isLoading) {
+  if (isLoading && !initialData) {
     return <Skeleton className="h-[400px] w-full" />
   }
 
@@ -80,6 +74,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       } else {
         toast.success(result.message)
         router.refresh()
+        await refetch()
       }
     })
   }
@@ -102,9 +97,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                   <FormControl>
                     <Input placeholder="jdoe" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    {t('usernameDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('usernameDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

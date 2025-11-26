@@ -6,11 +6,18 @@ export type UpdateProfileData = Partial<typeof profiles.$inferInsert>
 
 export async function updateProfile(userId: string, data: UpdateProfileData) {
   return db
-    .update(profiles)
-    .set({
+    .insert(profiles)
+    .values({
+      id: userId,
       ...data,
-      updatedAt: new Date(),
     })
-    .where(eq(profiles.id, userId))
+
+    .onConflictDoUpdate({
+      target: profiles.id,
+      set: {
+        ...data,
+        updatedAt: new Date(),
+      },
+    })
     .returning()
 }
