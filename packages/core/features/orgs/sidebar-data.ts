@@ -3,6 +3,7 @@ import { createClient } from '../../supabase/server'
 import { db } from '../db'
 import { getUserTeams } from './queries'
 import { getProfile } from '../profiles/queries'
+import { getUserDisplayName } from '../profiles/utils'
 
 export const TEAM_COOKIE_NAME = 'active-team-slug'
 
@@ -26,17 +27,7 @@ export async function getSidebarData() {
 
   let currentTeam = teams.find((t: any) => t.slug === activeSlug)
 
-  let name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'
-
-  if (profile) {
-    if (profile.firstName && profile.lastName) {
-      name = `${profile.firstName} ${profile.lastName}`
-    } else if (profile.firstName) {
-      name = profile.firstName
-    } else if (profile.username) {
-      name = profile.username
-    }
-  }
+  const name = getUserDisplayName(profile, user.email, user.user_metadata)
 
   const sidebarUser = {
     name,

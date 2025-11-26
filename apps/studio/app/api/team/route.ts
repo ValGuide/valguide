@@ -4,6 +4,7 @@ import { db } from '@valguide/core/features/db'
 import { getTeamBySlug, getTeamMembers, getPendingInvitations, getUserRole } from '@valguide/core/features/orgs/queries'
 import { cookies } from 'next/headers'
 import { type OrgRole } from '@valguide/core/features/orgs/schema'
+import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,7 +54,7 @@ export async function GET(request: Request) {
       lastName: profile?.lastName,
       role: member.role as OrgRole,
       joinedAt: member.createdAt.toISOString(),
-      isOwner: member.isOwner || false
+      isOwner: member.isOwner || false,
     }))
 
     const pendingInvites = pendingInvitesData.map(({ invitation, inviter, inviterProfile }: any) => ({
@@ -61,13 +62,15 @@ export async function GET(request: Request) {
       email: invitation.email,
       role: invitation.role as OrgRole,
       invitedBy: {
-        name: inviterProfile?.firstName && inviterProfile?.lastName 
-              ? `${inviterProfile.firstName} ${inviterProfile.lastName}`
-              : inviter?.email?.split('@')[0] || 'Unknown',
-        email: inviter?.email || ''
+        name: getUserDisplayName(
+          inviterProfile,
+          inviter?.email,
+          inviter?.raw_user_meta_data || inviter?.rawUserMetaData,
+        ),
+        email: inviter?.email || '',
       },
       invitedAt: invitation.createdAt.toISOString(),
-      expiresAt: invitation.expiresAt.toISOString()
+      expiresAt: invitation.expiresAt.toISOString(),
     }))
 
     return NextResponse.json({
@@ -75,7 +78,7 @@ export async function GET(request: Request) {
       members,
       pendingInvites,
       currentUserRole: currentUserRole as OrgRole,
-      currentUserId: user.sub
+      currentUserId: user.sub,
     })
   } catch (error) {
     console.error('Failed to fetch team data:', error)

@@ -1,30 +1,19 @@
 'use server'
 
+import { createHash, randomBytes } from 'crypto'
+import { cookies } from 'next/headers'
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
-import { redirect } from 'next/navigation'
-import { 
-  createTeam, 
-  createInvitation, 
-  deleteInvitation, 
-  removeMember, 
+import {
+  acceptInvitation,
+  createInvitation,
+  createTeam,
+  deleteInvitation,
+  removeMember,
   updateMemberRole,
-  acceptInvitation
 } from './mutations'
-import { 
-  getUserRole, 
-  getInvitationByTokenHash, 
-  getTeamBySlug, 
-  isTeamMember,
-  getPendingInvitations,
-  getInvitationById
-} from './queries'
-import { 
-  canManageMembers, 
-  OrgRole 
-} from './permissions'
-import { randomBytes, createHash } from 'crypto'
-import { cookies } from 'next/headers'
+import { canManageMembers, OrgRole } from './permissions'
+import { getInvitationById, getInvitationByTokenHash, getUserRole, isTeamMember } from './queries'
 
 export async function createTeamAction(name: string, slug?: string) {
   const supabase = await createClient()
@@ -36,7 +25,7 @@ export async function createTeamAction(name: string, slug?: string) {
   }
 
   const team = await createTeam(db, name, user.sub, slug)
-  
+
   // Set cookie for new team
   const cookieStore = await cookies()
   cookieStore.set('active-team-slug', team.slug, {
@@ -60,7 +49,7 @@ export async function inviteMemberAction(teamId: string, email: string, role: Or
   }
 
   const currentUserRole = await getUserRole(db, teamId, user.sub)
-  
+
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
   }
@@ -81,9 +70,8 @@ export async function inviteMemberAction(teamId: string, email: string, role: Or
   //     inviterName: user.email
   //   }
   // })
-  
-  console.log(`Invite link for ${email}: /join-team?token=${token}`)
 
+  console.log(`Invite link for ${email}: /join-team?token=${token}`)
 }
 
 export async function resendInviteAction(inviteId: string, teamId: string) {
@@ -96,11 +84,11 @@ export async function resendInviteAction(inviteId: string, teamId: string) {
   }
 
   const currentUserRole = await getUserRole(db, teamId, user.sub)
-  
+
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
   }
-  
+
   const invite = await getInvitationById(db, inviteId)
   if (!invite) throw new Error('Invitation not found')
 
@@ -112,7 +100,6 @@ export async function resendInviteAction(inviteId: string, teamId: string) {
 
   // TODO: Send email
   console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
-
 }
 
 export async function cancelInviteAction(inviteId: string, teamId: string) {
@@ -125,7 +112,7 @@ export async function cancelInviteAction(inviteId: string, teamId: string) {
   }
 
   const currentUserRole = await getUserRole(db, teamId, user.sub)
-  
+
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
   }
@@ -143,7 +130,7 @@ export async function removeMemberAction(memberId: string, teamId: string) {
   }
 
   const currentUserRole = await getUserRole(db, teamId, user.sub)
-  
+
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
   }
@@ -161,7 +148,7 @@ export async function updateMemberRoleAction(memberId: string, teamId: string, n
   }
 
   const currentUserRole = await getUserRole(db, teamId, user.sub)
-  
+
   if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
     throw new Error('Insufficient permissions')
   }
@@ -192,7 +179,7 @@ export async function joinTeamAction(token: string) {
   }
 
   await acceptInvitation(db, invite.id, user.sub)
-  
+
   // Set cookie for new team
   const cookieStore = await cookies()
   cookieStore.set('active-team-slug', invite.organization.slug, {
@@ -202,6 +189,6 @@ export async function joinTeamAction(token: string) {
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 365, // 1 year
   })
-  
+
   return { success: true, slug: invite.organization.slug }
 }
