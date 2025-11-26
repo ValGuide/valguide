@@ -37,6 +37,8 @@ interface ProfileFormProps {
   }
 }
 
+import { mutate } from 'swr'
+
 export function ProfileForm({ initialData }: ProfileFormProps) {
   const t = useTranslations('profile')
   const [isPending, startTransition] = useTransition()
@@ -100,6 +102,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         toast.success(result.message)
         router.refresh()
         await refetch()
+        await mutate('/api/sidebar')
       }
     })
   }
