@@ -401,6 +401,11 @@
   },
   "sidebar": {
     "nav": {
+      "profile": "Profil",
+      "tours": "Turas",
+      "collections": "Collecziuns",
+      "brandKit": "Brand Kit",
+      "workspace": "Plaz da lavur",
       "guides": "Guids",
       "archived": "Archivà",
       "assets": "Assets",
@@ -410,6 +415,12 @@
       "settings": "Parameters",
       "support": "Support",
       "feedback": "Feedback"
+    },
+    "sections": {
+      "content": "Cuntegn",
+      "performance": "Prestaziun",
+      "library": "Biblioteca",
+      "settings": "Parameters"
     },
     "pages": {
       "guides": {

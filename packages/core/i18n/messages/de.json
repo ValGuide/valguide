@@ -401,6 +401,11 @@
   },
   "sidebar": {
     "nav": {
+      "profile": "Profil",
+      "tours": "Touren",
+      "collections": "Sammlungen",
+      "brandKit": "Brand Kit",
+      "workspace": "Arbeitsbereich",
       "guides": "Guides",
       "archived": "Archiviert",
       "assets": "Assets",
@@ -410,6 +415,12 @@
       "settings": "Einstellungen",
       "support": "Support",
       "feedback": "Feedback"
+    },
+    "sections": {
+      "content": "Inhalt",
+      "performance": "Leistung",
+      "library": "Bibliothek",
+      "settings": "Einstellungen"
     },
     "pages": {
       "guides": {

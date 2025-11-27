@@ -3,23 +3,30 @@
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
 import {
-  Archive,
-  AudioWaveform,
   BarChart3,
   BookOpen,
   Image,
-  LifeBuoy,
-  Palette,
-  Send,
+  LayoutGrid,
   Settings2,
-  Users,
+  SlidersHorizontal,
+  User,
 } from 'lucide-react'
 
-import { NavMain } from '@/components/nav-main'
-import { NavSecondary } from '@/components/nav-secondary'
+import { Link } from '@valguide/i18n/routing'
 import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher, type Team } from '@valguide/core/features/orgs/components/team-switcher'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@valguide/ui/components/sidebar'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from '@valguide/ui/components/sidebar'
 import { usePathname, useRouter } from 'next/navigation'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
@@ -45,6 +52,7 @@ export function AppSidebar({
   onLogout?: () => void
 }) {
   const t = useTranslations('sidebar.nav')
+  const tSections = useTranslations('sidebar.sections')
   const pathnameFromRouter = usePathname()
   const router = useRouter()
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null)
@@ -65,21 +73,6 @@ export function AppSidebar({
     setPendingUrl(url)
   }
 
-  const handleTeamSwitch = async (teamSlug: string) => {
-    if (onTeamSwitch) {
-      onTeamSwitch(teamSlug)
-    }
-  }
-
-  const handleCreateTeam = () => {
-    setCreateTeamOpen(true)
-  }
-
-  const handleTeamSettings = (teamSlug: string) => {
-    const locale = pathname.split('/')[1]
-    router.push(`/${locale}/settings`)
-  }
-
   const handleLogout = async () => {
     if (onLogout) {
       onLogout()
@@ -95,59 +88,59 @@ export function AppSidebar({
     return currentPath.startsWith(url)
   }
 
-  const navMain = [
+  const contentItems = [
     {
-      title: t('guides'),
+      title: t('profile'),
       url: '/',
+      icon: User,
+    },
+    {
+      title: t('tours'),
+      url: '/tours',
       icon: BookOpen,
     },
     {
-      title: t('archived'),
-      url: '/archived',
-      icon: Archive,
+      title: t('collections'),
+      url: '/collections',
+      icon: LayoutGrid,
     },
-    {
-      title: t('assets'),
-      url: '/assets',
-      icon: Image,
-    },
-    {
-      title: t('design'),
-      url: '/design',
-      icon: Palette,
-    },
+  ].map((item) => ({
+    ...item,
+    isActive: isActive(item.url),
+  }))
+
+  const performanceItems = [
     {
       title: t('analytics'),
       url: '/analytics',
       icon: BarChart3,
     },
-    {
-      title: t('teamAndMembers'),
-      url: '/team',
-      icon: Users,
-    },
-    {
-      title: t('settings'),
-      url: '/settings',
-      icon: Settings2,
-    },
   ].map((item) => ({
     ...item,
-    // Update URL to use simple path
-    url: item.url,
     isActive: isActive(item.url),
   }))
 
-  const navSecondary = [
+  const libraryItems = [
     {
-      title: t('support'),
-      url: '/support',
-      icon: LifeBuoy,
+      title: t('assets'),
+      url: '/assets',
+      icon: Image,
+    },
+  ].map((item) => ({
+    ...item,
+    isActive: isActive(item.url),
+  }))
+
+  const settingsItems = [
+    {
+      title: t('brandKit'),
+      url: '/design',
+      icon: SlidersHorizontal,
     },
     {
-      title: t('feedback'),
-      url: '/feedback',
-      icon: Send,
+      title: t('workspace'),
+      url: '/settings',
+      icon: Settings2,
     },
   ].map((item) => ({
     ...item,
@@ -157,17 +150,81 @@ export function AppSidebar({
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher 
-          teams={teams} 
+        <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
+          <h1 className="text-lg font-medium px-2 truncate">Valguide Studio</h1>
+        </div>
+        <TeamSwitcher
+          teams={teams}
           activeTeamSlug={currentTeam?.slug}
-          onTeamSwitch={handleTeamSwitch}
-          onCreateTeam={handleCreateTeam}
-          onTeamSettings={handleTeamSettings}
+          onTeamSwitch={onTeamSwitch}
+          onCreateTeam={() => setCreateTeamOpen(true)}
+          onTeamSettings={() => router.push('/settings')}
         />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} onItemClickAction={handleNavClick} />
-        <NavSecondary items={navSecondary} className="mt-auto" onItemClickAction={handleNavClick} />
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">{tSections('content')}</SidebarGroupLabel>
+          <SidebarMenu>
+            {contentItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                  <Link href={item.url} onClick={() => handleNavClick(item.url)}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">{tSections('performance')}</SidebarGroupLabel>
+          <SidebarMenu>
+            {performanceItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                  <Link href={item.url} onClick={() => handleNavClick(item.url)}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">{tSections('library')}</SidebarGroupLabel>
+          <SidebarMenu>
+            {libraryItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                  <Link href={item.url} onClick={() => handleNavClick(item.url)}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">{tSections('settings')}</SidebarGroupLabel>
+          <SidebarMenu>
+            {settingsItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                  <Link href={item.url} onClick={() => handleNavClick(item.url)}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} onLogout={handleLogout} />
