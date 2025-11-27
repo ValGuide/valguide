@@ -24,6 +24,7 @@ import type { GuideWithTranslations } from '@valguide/core/features/guides/schem
 interface ArchivedGuidesListProps {
   guides: GuideWithTranslations[]
   userId: string
+  onActionComplete?: () => void
 }
 
 type DialogState = {
@@ -31,7 +32,7 @@ type DialogState = {
   guideId: string | null
 }
 
-export function ArchivedGuidesList({ guides, userId }: ArchivedGuidesListProps) {
+export function ArchivedGuidesList({ guides, userId, onActionComplete }: ArchivedGuidesListProps) {
   const t = useTranslations('guides')
   const locale = useLocale()
   const router = useRouter()
@@ -53,6 +54,7 @@ export function ArchivedGuidesList({ guides, userId }: ArchivedGuidesListProps) 
         description: t('recover.successDescription'),
       })
       router.refresh()
+      onActionComplete?.()
     } catch (error) {
       toast.error(t('recover.error'), {
         description: t('recover.errorDescription'),
@@ -73,6 +75,7 @@ export function ArchivedGuidesList({ guides, userId }: ArchivedGuidesListProps) 
         description: t('delete.successDescription'),
       })
       router.refresh()
+      onActionComplete?.()
     } catch (error) {
       toast.error(t('delete.error'), {
         description: t('delete.errorDescription'),
