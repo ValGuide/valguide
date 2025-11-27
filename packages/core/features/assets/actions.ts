@@ -66,7 +66,7 @@ export async function getUploadSignedUrl(
 
   // Generate signed URL (expires in 1 hour)
   const { data, error } = await supabase.storage
-    .from('valguide-assets')
+    .from('assets')
     .createSignedUploadUrl(storagePath, {
       upsert: false,
     })
@@ -119,14 +119,14 @@ export async function confirmAssetUpload(params: ConfirmAssetUploadParams) {
   // Get public URL (will respect RLS policies)
   const {
     data: { publicUrl },
-  } = supabase.storage.from('valguide-assets').getPublicUrl(storagePath)
+  } = supabase.storage.from('assets').getPublicUrl(storagePath)
 
   // Save to database
   const [newAsset] = await db
     .insert(asset)
     .values({
-      id: assetId,
-      nanoId: assetId,
+      // id: auto-generated uuid
+      nanoId: assetId, // assetId from client is actually a nanoid
       fileName,
       fileSize,
       mimeType,
@@ -165,7 +165,7 @@ export async function deleteAsset(assetId: string) {
   }
 
   // Delete from storage
-  const { error: storageError } = await supabase.storage.from('valguide-assets').remove([assetData.storagePath])
+  const { error: storageError } = await supabase.storage.from('assets').remove([assetData.storagePath])
 
   if (storageError) throw storageError
 
@@ -189,7 +189,7 @@ export async function getDownloadSignedUrl(assetId: string) {
   if (!assetData) throw new Error('Asset not found')
 
   // Generate signed download URL (expires in 1 hour)
-  const { data, error } = await supabase.storage.from('valguide-assets').createSignedUrl(assetData.storagePath, 3600)
+  const { data, error } = await supabase.storage.from('assets').createSignedUrl(assetData.storagePath, 3600)
 
   if (error) throw error
 

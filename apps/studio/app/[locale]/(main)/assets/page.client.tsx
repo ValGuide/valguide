@@ -2,12 +2,15 @@
 
 import { AssetsList } from '@/features/assets/components/assets-list'
 import { useAssets } from '@/features/assets/hooks/use-assets'
+import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 export function AssetsPageClient() {
-  // TODO: Get organizationId from user context/session
-  const organizationId = '00000000-0000-0000-0000-000000000123' // Mock UUID for development
+  const { data: sidebarData, isLoading: isSidebarLoading } = useSidebarData()
+  const organizationId = sidebarData?.currentTeam?.id
 
-  const { assets, isLoading, error, refetch } = useAssets({ organizationId })
+  const { assets, isLoading: isAssetsLoading, error, refetch } = useAssets({ 
+    organizationId: organizationId ?? undefined 
+  })
 
   const handleAssetDeleted = (assetId: string) => {
     refetch()
@@ -17,13 +20,15 @@ export function AssetsPageClient() {
     refetch()
   }
 
+  const isLoading = isSidebarLoading || isAssetsLoading || !organizationId
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <AssetsList
         assets={assets}
         isLoading={isLoading}
         error={error}
-        organizationId={organizationId}
+        organizationId={organizationId ?? ''}
         onAssetDeleted={handleAssetDeleted}
         onUploadComplete={handleUploadComplete}
         onRetry={refetch}

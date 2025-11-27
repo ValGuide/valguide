@@ -3,10 +3,11 @@
 import * as React from 'react'
 import { useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
-import { Plus, Image as ImageIcon, Music, Video, Search } from 'lucide-react'
+import { Plus, Image as ImageIcon, Music, Video, Search, Upload } from 'lucide-react'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import {
   Empty,
   EmptyHeader,
@@ -18,7 +19,7 @@ import {
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { AssetCard } from './asset-card'
-import { CustomAssetUpload } from './asset-upload-custom'
+import { AssetUploadInline } from './asset-upload-inline'
 
 export type AssetsListProps = {
   assets?: Asset[]
@@ -40,10 +41,10 @@ export function AssetsList({
   onRetry,
 }: AssetsListProps) {
   const t = useTranslations('assets')
+  const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
   const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all')
   const [localeFilter, setLocaleFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [uploadModalOpen, setUploadModalOpen] = useState(false)
   const [uploadType, setUploadType] = useState<AssetType>('image')
 
   const filteredAssets = useMemo(() => {
@@ -56,14 +57,9 @@ export function AssetsList({
     })
   }, [assets, typeFilter, localeFilter, searchQuery])
 
-  const handleUploadClick = (type: AssetType) => {
-    setUploadType(type)
-    setUploadModalOpen(true)
-  }
-
   const handleUploadComplete = (asset: Asset) => {
-    setUploadModalOpen(false)
     onUploadComplete?.(asset)
+    setActiveTab('library')
   }
 
   // Loading state
@@ -112,123 +108,134 @@ export function AssetsList({
     )
   }
 
-  // Empty state when no assets exist
-  if (assets.length === 0) {
-    return (
-      <>
-        <Empty className="border">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <ImageIcon />
-            </EmptyMedia>
-            <EmptyTitle>{t('empty.title')}</EmptyTitle>
-            <EmptyDescription>{t('empty.description')}</EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-              <Button onClick={() => handleUploadClick('image')} size="lg">
-                <ImageIcon />
-                {t('empty.uploadImage')}
-              </Button>
-              <Button onClick={() => handleUploadClick('audio')} size="lg" variant="outline">
-                <Music />
-                {t('empty.uploadAudio')}
-              </Button>
-              <Button onClick={() => handleUploadClick('video')} size="lg" variant="outline">
-                <Video />
-                {t('empty.uploadVideo')}
-              </Button>
-            </div>
-          </EmptyContent>
-        </Empty>
-
-        {/* Upload Modal */}
-        <CustomAssetUpload
-          key={uploadType}
-          type={uploadType}
-          organizationId={organizationId}
-          onUploadComplete={handleUploadComplete}
-          open={uploadModalOpen}
-          onOpenChange={setUploadModalOpen}
-        />
-      </>
-    )
-  }
-
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
           <p className="text-muted-foreground">{t('description')}</p>
         </div>
-        <Button onClick={() => setUploadModalOpen(true)}>
-          <Plus />
-          {t('upload.button')}
-        </Button>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder={t('filter.searchPlaceholder')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'library' | 'upload')} className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="library" className="gap-2">
+            <ImageIcon className="h-4 w-4" />
+            {t('picker.tabs.library')}
+          </TabsTrigger>
+          <TabsTrigger value="upload" className="gap-2">
+            <Upload className="h-4 w-4" />
+            {t('picker.tabs.upload')}
+          </TabsTrigger>
+        </TabsList>
 
-        <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t('filter.all')}</SelectItem>
-            <SelectItem value="image">{t('filter.image')}</SelectItem>
-            <SelectItem value="audio">{t('filter.audio')}</SelectItem>
-            <SelectItem value="video">{t('filter.video')}</SelectItem>
-          </SelectContent>
-        </Select>
+        <TabsContent value="library" className="space-y-6">
+          {/* Filters */}
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t('filter.searchPlaceholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
 
-        <Select value={localeFilter} onValueChange={setLocaleFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t('filter.allLocales')}</SelectItem>
-            <SelectItem value="en">EN</SelectItem>
-            <SelectItem value="de">DE</SelectItem>
-            <SelectItem value="rm">RM</SelectItem>
-            <SelectItem value="none">No locale</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+            <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('filter.all')}</SelectItem>
+                <SelectItem value="image">{t('filter.image')}</SelectItem>
+                <SelectItem value="audio">{t('filter.audio')}</SelectItem>
+                <SelectItem value="video">{t('filter.video')}</SelectItem>
+              </SelectContent>
+            </Select>
 
-      {/* Assets Grid */}
-      {filteredAssets.length === 0 ? (
-        <div className="rounded-lg border border-dashed p-12 text-center">
-          <p className="text-muted-foreground">{t('filter.noResults')}</p>
-        </div>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredAssets.map((asset) => (
-            <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} />
-          ))}
-        </div>
-      )}
+            <Select value={localeFilter} onValueChange={setLocaleFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('filter.allLocales')}</SelectItem>
+                <SelectItem value="en">EN</SelectItem>
+                <SelectItem value="de">DE</SelectItem>
+                <SelectItem value="rm">RM</SelectItem>
+                <SelectItem value="none">No locale</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-      {/* Upload Modal */}
-      <CustomAssetUpload
-        key={uploadType}
-        type={uploadType}
-        organizationId={organizationId}
-        onUploadComplete={handleUploadComplete}
-        open={uploadModalOpen}
-        onOpenChange={setUploadModalOpen}
-      />
+          {/* Assets Grid */}
+          {filteredAssets.length === 0 ? (
+            <Empty className="border border-dashed">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <ImageIcon />
+                </EmptyMedia>
+                <EmptyTitle>{t('empty.title')}</EmptyTitle>
+                <EmptyDescription>{t('empty.description')}</EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button onClick={() => setActiveTab('upload')} size="lg">
+                  <Upload className="mr-2 h-4 w-4" />
+                  {t('empty.uploadButton')}
+                </Button>
+              </EmptyContent>
+            </Empty>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {filteredAssets.map((asset) => (
+                <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="upload" className="space-y-6">
+          <div className="flex flex-col gap-6">
+            <div className="flex justify-center">
+              <div className="inline-flex items-center rounded-lg border p-1 bg-muted/50">
+                <Button
+                  variant={uploadType === 'image' ? 'secondary' : 'ghost'}
+                  onClick={() => setUploadType('image')}
+                  className="gap-2"
+                >
+                  <ImageIcon className="h-4 w-4" />
+                  {t('types.image')}
+                </Button>
+                <Button
+                  variant={uploadType === 'audio' ? 'secondary' : 'ghost'}
+                  onClick={() => setUploadType('audio')}
+                  className="gap-2"
+                >
+                  <Music className="h-4 w-4" />
+                  {t('types.audio')}
+                </Button>
+                <Button
+                  variant={uploadType === 'video' ? 'secondary' : 'ghost'}
+                  onClick={() => setUploadType('video')}
+                  className="gap-2"
+                >
+                  <Video className="h-4 w-4" />
+                  {t('types.video')}
+                </Button>
+              </div>
+            </div>
+
+            <div className="mx-auto w-full max-w-2xl">
+              <AssetUploadInline
+                key={uploadType}
+                type={uploadType}
+                organizationId={organizationId}
+                onUploadComplete={handleUploadComplete}
+              />
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
