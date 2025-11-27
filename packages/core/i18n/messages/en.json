@@ -1,4 +1,19 @@
 {
+  "emails": {
+    "vercelInviteUser": {
+      "preview": "Join {invitedByUsername} on Vercel",
+      "heading": "Join <strong1>{teamName}</strong1> on <strong2>Vercel</strong2>",
+      "greeting": "Hello {username},",
+      "invitation": "<strong1>{invitedByUsername}</strong1> (<link>{invitedByEmail}</link>) has invited you to the <strong2>{teamName}</strong2> team on <strong3>Vercel</strong3>.",
+      "button": "Join the team",
+      "copyLink": "or copy and paste this URL into your browser:",
+      "footer": {
+        "intendedFor": "This invitation was intended for <span1>{username}</span1>. This invite was sent from <span2>{inviteFromIp}</span2> located in <span3>{inviteFromLocation}</span3>.",
+        "ignore": "If you were not expecting this invitation, you can ignore this email.",
+        "concern": "If you are concerned about your account's safety, please reply to this email to get in touch with us."
+      }
+    }
+  },
   "player": {
     "play": "Play",
     "pause": "Pause",
@@ -533,6 +548,36 @@
       "success": "Team created successfully",
       "error": "Failed to create team",
       "triggerButton": "Create Team"
+    }
+  },
+  "joinTeam": {
+    "invalid": {
+      "title": "Invitation Invalid",
+      "description": "This invitation link is invalid, expired, or has been canceled.",
+      "action": "Please ask the team admin to send you a new invitation.",
+      "homeButton": "Go to Home"
+    },
+    "public": {
+      "title": "Join {teamName}",
+      "description": "You've been invited to join <strong1>{teamName}</strong1> on ValGuide.",
+      "invitationFor": "Invitation for:",
+      "instruction": "To accept this invitation, please sign in or create an account with this email address.",
+      "createAccount": "Create Account",
+      "haveAccount": "I already have an account"
+    },
+    "wrongAccount": {
+      "title": "Wrong Account",
+      "description": "You are currently signed in as <strong>{email}</strong>.",
+      "intendedFor": "This invitation is intended for <strong>{email}</strong>.",
+      "instruction": "Please sign out and sign in with the correct account to accept this invitation.",
+      "signOutButton": "Sign Out & Switch Account",
+      "cancelButton": "Cancel"
+    },
+    "joining": {
+      "title": "Joining Team...",
+      "description": "Accepting invitation for {teamName}",
+      "error": "There was a problem joining the team.",
+      "dashboardButton": "Go to Dashboard"
     }
   },
   "theme": {

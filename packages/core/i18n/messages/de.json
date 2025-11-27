@@ -521,6 +521,36 @@
       "triggerButton": "Team erstellen"
     }
   },
+  "joinTeam": {
+    "invalid": {
+      "title": "Einladung ungültig",
+      "description": "Dieser Einladungslink ist ungültig, abgelaufen oder wurde storniert.",
+      "action": "Bitte bitten Sie den Teamadministrator, Ihnen eine neue Einladung zu senden.",
+      "homeButton": "Zur Startseite"
+    },
+    "public": {
+      "title": "Tritt {teamName} bei",
+      "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",
+      "invitationFor": "Einladung für:",
+      "instruction": "Um diese Einladung anzunehmen, melde dich bitte an oder erstelle ein Konto mit dieser E-Mail-Adresse.",
+      "createAccount": "Konto erstellen",
+      "haveAccount": "Ich habe bereits ein Konto"
+    },
+    "wrongAccount": {
+      "title": "Falsches Konto",
+      "description": "Du bist derzeit als <strong>{email}</strong> angemeldet.",
+      "intendedFor": "Diese Einladung ist für <strong>{email}</strong> bestimmt.",
+      "instruction": "Bitte melde dich ab und mit dem richtigen Konto an, um diese Einladung anzunehmen.",
+      "signOutButton": "Abmelden & Konto wechseln",
+      "cancelButton": "Abbrechen"
+    },
+    "joining": {
+      "title": "Team wird beigetreten...",
+      "description": "Einladung für {teamName} wird angenommen",
+      "error": "Es gab ein Problem beim Beitritt zum Team.",
+      "dashboardButton": "Zum Dashboard"
+    }
+  },
   "theme": {
     "toggleTheme": "Theme wechseln",
     "switchToDark": "Dunkelmodus",
