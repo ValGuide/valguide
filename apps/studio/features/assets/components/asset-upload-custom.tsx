@@ -10,7 +10,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { toast } from 'sonner'
 import { uploadFileWithTUS } from '../lib/tus-upload'
 import { confirmAssetUpload, type AssetType } from '@valguide/core/features/assets/actions'
-import { getAllowedMimeTypes, validateFileSize } from '@valguide/core/features/assets/utils'
+import { getAllowedMimeTypes, validateFileSize, validateFile } from '@valguide/core/features/assets/utils'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { nanoid } from 'nanoid'
 
@@ -142,8 +142,11 @@ export function CustomAssetUpload({
 
     try {
       const assetId = nanoid()
-      const timestamp = Date.now()
-      const fileName = `${organizationId}/${type}/${timestamp}-${file.name}`
+      const { sanitizedName } = validateFile(file.name)
+      const localePrefix = locale ? `${locale}/` : ''
+
+      // Consistent path structure: {orgId}/{type}s/{locale?}/{assetId}-{sanitizedName}
+      const fileName = `${organizationId}/${type}s/${localePrefix}${assetId}-${sanitizedName}`
 
       // Upload file with TUS
       await uploadFileWithTUS({

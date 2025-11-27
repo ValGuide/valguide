@@ -1,6 +1,6 @@
 -- 1. Create the 'assets' bucket (Idempotent)
 INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-VALUES ('assets', 'assets', false, 524288000, null)
+VALUES ('assets', 'assets', true, 524288000, null)
 ON CONFLICT (id) DO UPDATE SET
   public = EXCLUDED.public,
   file_size_limit = EXCLUDED.file_size_limit;
