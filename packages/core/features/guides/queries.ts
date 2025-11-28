@@ -8,6 +8,7 @@ import {
   type GuideWithTranslations,
   guide,
   guideTranslation,
+  guideTranslationVersion,
   type StopWithTranslations,
   stop,
 } from './schema'
