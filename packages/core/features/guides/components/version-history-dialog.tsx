@@ -109,8 +109,8 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
   if (!isMounted) {
     return (
       <Button variant="outline" size="sm" disabled>
-        <History className="mr-2 h-4 w-4" />
-        {t('button')}
+        <History className="h-4 w-4 sm:mr-2" />
+        <span className="hidden sm:inline">{t('button')}</span>
       </Button>
     )
   }
@@ -120,8 +120,8 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
-            <History className="mr-2 h-4 w-4" />
-            {t('button')}
+            <History className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">{t('button')}</span>
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-2xl">

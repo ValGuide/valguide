@@ -6,7 +6,8 @@ import { VersionHistoryDialog } from '@valguide/core/features/guides/components/
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import { Link, useRouter } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
-import { ArrowLeft } from 'lucide-react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
+import { ArrowLeft, ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -91,18 +92,18 @@ function GuideEditorContent() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col bg-background">
+    <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between border-b bg-background px-6 py-3">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between border-b bg-background px-3 py-3 sm:px-6">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link href={backUrl}>
-            <Button variant="ghost" size="sm" className="gap-1">
+            <Button variant="ghost" size="sm" className="gap-1 px-2 sm:px-3">
               <ArrowLeft className="h-4 w-4" />
-              {t('title')}
+              <span className="hidden sm:inline">{t('title')}</span>
             </Button>
           </Link>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <VersionHistoryDialog
             guideId={guide.id}
             locale={activeLocale}
@@ -118,9 +119,28 @@ function GuideEditorContent() {
               router.refresh()
             }}
           />
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" className="hidden sm:flex">
             {t('editor.preview')}
           </Button>
+          {/* Mobile Progress Button */}
+          {!selectedStop && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-1 lg:hidden">
+                  <ListChecks className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('editor.progress')}</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
+                <SheetHeader>
+                  <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6">
+                  <GuideProgress guide={guide} locale={activeLocale} />
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
           <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
             {isSaving ? t('editor.saving') : t('editor.save')}
           </Button>
@@ -128,10 +148,10 @@ function GuideEditorContent() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex min-w-0 flex-1 overflow-hidden">
         {/* Center Panel - Guide/Stop Editor */}
-        <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-background">
-          <div className="mx-auto max-w-4xl p-8">
+        <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
+          <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
             {!selectedStop ? (
               <div className="space-y-6">
                 {/* Guide Details Header */}
@@ -225,17 +245,17 @@ function GuideEditorContent() {
           </div>
         </div>
 
-        {/* Right Sidebar - Progress */}
+        {/* Right Sidebar - Progress (hidden on mobile, visible on lg+) */}
         {!selectedStop && (
-          <div className="w-80 border-l bg-background p-6">
+          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
             <h3 className="mb-4 text-base font-semibold">{t('editor.guideProgress')}</h3>
             <GuideProgress guide={guide} locale={activeLocale} />
           </div>
         )}
 
-        {/* Right Sidebar - Stop Progress */}
+        {/* Right Sidebar - Stop Progress (hidden on mobile, visible on lg+) */}
         {selectedStop && (
-          <div className="w-80 border-l bg-background p-6">
+          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
             <h3 className="mb-4 text-base font-semibold">{t('editor.stopProgress')}</h3>
             {/* TODO: Add stop-specific progress */}
           </div>

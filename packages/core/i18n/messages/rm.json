@@ -197,7 +197,8 @@
       "coverImageAlt": "Maletg da front",
       "selectCoverImage": "Tscherner maletg da front",
       "guideProgress": "Progress dal guid",
-      "stopProgress": "Progress dal stop"
+      "stopProgress": "Progress dal stop",
+      "progress": "Progress"
     },
     "empty": {
       "title": "Anc nagins guids",

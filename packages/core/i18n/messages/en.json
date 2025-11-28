@@ -226,7 +226,8 @@
       "coverImageAlt": "Cover",
       "selectCoverImage": "Select Cover Image",
       "guideProgress": "Guide Progress",
-      "stopProgress": "Stop Progress"
+      "stopProgress": "Stop Progress",
+      "progress": "Progress"
     },
     "empty": {
       "title": "No guides yet",

@@ -197,7 +197,8 @@
       "coverImageAlt": "Titelbild",
       "selectCoverImage": "Titelbild auswählen",
       "guideProgress": "Guide-Fortschritt",
-      "stopProgress": "Stop-Fortschritt"
+      "stopProgress": "Stop-Fortschritt",
+      "progress": "Fortschritt"
     },
     "empty": {
       "title": "Noch keine Guides",
