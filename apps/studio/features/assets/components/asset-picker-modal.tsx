@@ -174,19 +174,28 @@ export function AssetPickerModal({
                   {filteredAssets.map((asset) => {
                     const isSelected = selected.has(asset.id)
                     return (
-                      <button
-                        type="button"
+                      // biome-ignore lint/a11y/useSemanticElements: Cannot use button due to nested Checkbox which renders as button
+                      <div
+                        role="button"
+                        tabIndex={0}
                         key={asset.id}
                         className={`relative rounded-lg border-2 transition-all cursor-pointer hover:shadow-md text-left ${
                           isSelected ? 'border-primary shadow-sm' : 'border-border'
                         }`}
                         onClick={() => handleToggleAsset(asset.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            handleToggleAsset(asset.id)
+                          }
+                        }}
                       >
                         {/* Checkbox */}
                         <div className="absolute top-2 right-2 z-10">
                           <Checkbox
                             checked={isSelected}
                             onCheckedChange={() => handleToggleAsset(asset.id)}
+                            onClick={(e) => e.stopPropagation()}
                             className="h-6 w-6 border-2 shadow-sm bg-background/80 backdrop-blur-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                           />
                         </div>
@@ -220,7 +229,7 @@ export function AssetPickerModal({
                             {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
                           </div>
                         </div>
-                      </button>
+                      </div>
                     )
                   })}
                 </div>
