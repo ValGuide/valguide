@@ -1,6 +1,7 @@
 'use client'
 
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import { Link, useRouter } from '@valguide/i18n/routing'
@@ -106,6 +107,14 @@ function GuideEditorContent() {
             guideId={guide.id}
             locale={activeLocale}
             onRollback={() => {
+              router.refresh()
+            }}
+          />
+          <PublishTranslationButton
+            guideId={guide.id}
+            locale={activeLocale}
+            hasDraft={!!currentTranslation?.draftVersionId}
+            onPublished={() => {
               router.refresh()
             }}
           />

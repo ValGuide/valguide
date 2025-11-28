@@ -10,7 +10,11 @@ import {
   updateGuideTranslation,
   updateStop,
 } from '@valguide/core/features/guides/actions'
-import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type {
+  GuideTranslationWithVersion,
+  GuideWithStops,
+  StopWithTranslations,
+} from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { useTranslations } from 'next-intl'
 import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from 'react'
@@ -101,9 +105,61 @@ export function GuideEditorProvider({ children, initialGuide }: { children: Reac
               ),
             }
           }
+
+          // Translation exists but has no versions - create a draft version in local state
+          const now = new Date()
+          return {
+            ...prev,
+            translations: prev.translations.map((t) =>
+              t.locale === locale
+                ? {
+                    ...t,
+                    draftVersion: {
+                      id: `temp-version-${locale}`,
+                      translationId: t.id,
+                      version: 1,
+                      status: 'draft' as const,
+                      title: data.title,
+                      description: data.description ?? null,
+                      createdBy: null,
+                      createdAt: now,
+                      publishedAt: null,
+                    },
+                  }
+                : t,
+            ),
+          }
         }
-        // If no translation exists, just mark as modified - server will create it
-        return prev
+
+        // No translation exists for this locale - create a placeholder in local state
+        // Server will create the actual translation + version on save
+        const now = new Date()
+        const newTranslation: GuideTranslationWithVersion = {
+          id: `temp-${locale}`, // Temporary ID, will be replaced after save
+          guideId: prev.id,
+          locale,
+          currentVersionId: null,
+          draftVersionId: null,
+          currentVersion: null,
+          draftVersion: {
+            id: `temp-version-${locale}`,
+            translationId: `temp-${locale}`,
+            version: 1,
+            status: 'draft',
+            title: data.title,
+            description: data.description ?? null,
+            createdBy: null,
+            createdAt: now,
+            publishedAt: null,
+          },
+          createdAt: now,
+          updatedAt: now,
+        }
+
+        return {
+          ...prev,
+          translations: [...prev.translations, newTranslation],
+        }
       })
       modifiedTranslationsRef.current.add(locale)
       setIsDirty(true)
@@ -331,18 +387,24 @@ export function GuideEditorProvider({ children, initialGuide }: { children: Reac
       }
 
       // Only save modified translations
+      const savedTranslationVersionIds: Record<string, string> = {}
       for (const locale of modifiedTranslations) {
         const translation = currentGuide.translations.find((t) => t.locale === locale)
+
+        console.info('translation', translation)
         if (translation) {
           // Get content from draft version or current version
           const version = translation.draftVersion || translation.currentVersion
           if (version) {
-            await updateGuideTranslation({
+            const result = await updateGuideTranslation({
               guideId: currentGuide.id,
               locale: translation.locale,
               title: version.title,
               description: version.description || '',
             })
+            if (result.versionId) {
+              savedTranslationVersionIds[locale] = result.versionId
+            }
           }
         }
       }
@@ -372,6 +434,23 @@ export function GuideEditorProvider({ children, initialGuide }: { children: Reac
       // Clear tracking sets
       modifiedTranslationsRef.current.clear()
       modifiedStopsRef.current.clear()
+
+      // Update local state with draft version IDs so publish button appears
+      if (Object.keys(savedTranslationVersionIds).length > 0) {
+        setGuide((prev) => ({
+          ...prev,
+          translations: prev.translations.map((t) => {
+            const versionId = savedTranslationVersionIds[t.locale]
+            if (versionId) {
+              return {
+                ...t,
+                draftVersionId: versionId,
+              }
+            }
+            return t
+          }),
+        }))
+      }
 
       // Update initial guide for next comparison
       initialGuideRef.current = currentGuide

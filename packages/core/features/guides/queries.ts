@@ -178,13 +178,51 @@ export async function createGuide(
       throw new Error('Failed to create guide')
     }
 
-    // Insert translations
-    const translationsWithGuideId = translations.map((t) => ({
-      ...t,
-      guideId: newGuide.id,
-    }))
+    // Insert translations with initial draft versions
+    const newTranslations = []
+    for (const t of translations) {
+      // Create translation pointer
+      const [newTranslation] = await tx
+        .insert(guideTranslation)
+        .values({
+          guideId: newGuide.id,
+          locale: t.locale,
+        })
+        .returning()
 
-    const newTranslations = await tx.insert(guideTranslation).values(translationsWithGuideId).returning()
+      if (!newTranslation) {
+        throw new Error('Failed to create guide translation')
+      }
+
+      // Create initial draft version
+      const [draftVersion] = await tx
+        .insert(guideTranslationVersion)
+        .values({
+          translationId: newTranslation.id,
+          version: 1,
+          status: 'draft',
+          title: t.title,
+          description: t.description ?? null,
+          createdBy: guideData.createdBy,
+        })
+        .returning()
+
+      if (!draftVersion) {
+        throw new Error('Failed to create guide translation version')
+      }
+
+      // Update pointer to draft
+      await tx
+        .update(guideTranslation)
+        .set({ draftVersionId: draftVersion.id })
+        .where(eq(guideTranslation.id, newTranslation.id))
+
+      newTranslations.push({
+        ...newTranslation,
+        draftVersionId: draftVersion.id,
+        draftVersion,
+      })
+    }
 
     return {
       ...newGuide,
