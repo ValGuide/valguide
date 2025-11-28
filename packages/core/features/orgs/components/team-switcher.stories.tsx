@@ -20,7 +20,7 @@ const meta: Meta<typeof TeamSwitcher> = {
     },
   },
   decorators: [
-    (Story, { globals: { locale } }) => {
+    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
       const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
       const currentLocale = locale || 'en'
 
@@ -152,7 +152,7 @@ export const ViewerRole: Story = {
 
 export const SingleTeam: Story = {
   args: {
-    teams: [mockTeams[0]],
+    teams: [mockTeams[0]!],
     activeTeamSlug: 'national-museum-zurich',
   },
   parameters: {

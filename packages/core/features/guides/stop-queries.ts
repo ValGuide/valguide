@@ -9,11 +9,6 @@ export async function getStopById(stopId: string) {
     where: eq(stop.id, stopId),
     with: {
       translations: true,
-      assets: {
-        with: {
-          asset: true,
-        },
-      },
     },
   })
 }
@@ -23,11 +18,6 @@ export async function getStopByNanoId(nanoId: string) {
     where: eq(stop.nanoId, nanoId),
     with: {
       translations: true,
-      assets: {
-        with: {
-          asset: true,
-        },
-      },
     },
   })
 }
@@ -37,11 +27,6 @@ export async function getGuideStops(guideId: string) {
     where: eq(stop.guideId, guideId),
     with: {
       translations: true,
-      assets: {
-        with: {
-          asset: true,
-        },
-      },
     },
     orderBy: [asc(stop.order)],
   })
@@ -70,6 +55,10 @@ export async function createStop({
       })
       .returning()
 
+    if (!newStop) {
+      throw new Error('Failed to create stop')
+    }
+
     // Create translations
     const newTranslations = await tx
       .insert(stopTranslation)
@@ -77,9 +66,6 @@ export async function createStop({
         translations.map((t) => ({
           stopId: newStop.id,
           locale: t.locale,
-          title: t.title,
-          description: t.description || null,
-          transcription: t.transcription || null,
         })),
       )
       .returning()

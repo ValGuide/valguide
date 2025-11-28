@@ -62,11 +62,7 @@ export async function GET(_request: Request) {
       email: invitation.email,
       role: invitation.role as OrgRole,
       invitedBy: {
-        name: getUserDisplayName(
-          inviterProfile,
-          inviter?.email,
-          inviter?.raw_user_meta_data || inviter?.rawUserMetaData,
-        ),
+        name: getUserDisplayName(inviterProfile, inviter?.email),
         email: inviter?.email || '',
       },
       invitedAt: invitation.createdAt.toISOString(),

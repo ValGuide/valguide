@@ -34,7 +34,15 @@ export interface PlayButtonProps
   isPlaying?: boolean
 }
 
-const PlayButton = ({ ref, className, variant, size, asChild = false, isPlaying = false, ...props }) => {
+const PlayButton = ({
+  ref,
+  className,
+  variant,
+  size,
+  asChild = false,
+  isPlaying = false,
+  ...props
+}: PlayButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   // Animation variants for the button
   const buttonVariants = {
     initial: { scale: 1 },

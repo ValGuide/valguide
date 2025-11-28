@@ -59,7 +59,7 @@ const PlayerView = ({
   onVolumeChange,
   showVolumeControl = true,
   ...props
-}) => {
+}: PlayerViewProps & { ref?: React.Ref<HTMLDivElement>; onVolumeChange?: (value: number) => void }) => {
   const playerRef = React.useRef<HTMLDivElement>(null)
   // Use a type assertion to satisfy the useHover hook's type requirements
   const isHovering = useHover(playerRef as React.RefObject<HTMLElement>)
@@ -196,7 +196,7 @@ const PlayerView = ({
               onToggleShuffle={onToggleShuffle}
               onToggleRepeat={onToggleRepeat}
               onSeek={onSeek}
-              onVolumeChange={onVolumeChange}
+              onVolumeChangeValue={onVolumeChange}
               showVolumeControl={showVolumeControl}
               variant="default"
               className="border-none shadow-none p-0"

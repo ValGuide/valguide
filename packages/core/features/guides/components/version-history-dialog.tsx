@@ -22,7 +22,7 @@ import {
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import type { GuideTranslationVersion } from '../schema'
 import { getGuideTranslationHistory, rollbackGuideTranslation } from '../translation-actions'
@@ -48,13 +48,7 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
     setIsMounted(true)
   }, [])
 
-  useEffect(() => {
-    if (isOpen) {
-      loadVersions()
-    }
-  }, [isOpen, loadVersions])
-
-  const loadVersions = async () => {
+  const loadVersions = useCallback(async () => {
     setIsLoading(true)
     try {
       const history = await getGuideTranslationHistory(guideId, locale)
@@ -65,7 +59,13 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [guideId, locale, t])
+
+  useEffect(() => {
+    if (isOpen) {
+      loadVersions()
+    }
+  }, [isOpen, loadVersions])
 
   const handleRollbackClick = (version: number) => {
     setSelectedVersion(version)

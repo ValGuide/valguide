@@ -115,7 +115,7 @@ const meta = {
   },
   tags: ['autodocs'],
   decorators: [
-    (Story, { globals: { locale } }) => {
+    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
       const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
       const currentLocale = locale || 'en'
 
@@ -140,7 +140,7 @@ export const Default: Story = {
     locale: 'en',
     onRollback: fn(),
   },
-  play: async ({ _canvasElement }) => {
+  play: async () => {
     // Auto-click the button to open the dialog in the story
     // This requires user interaction in actual Storybook
   },

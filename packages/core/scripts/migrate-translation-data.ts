@@ -36,23 +36,26 @@ async function migrateGuideTranslations() {
     throw error
   }
 
-  console.log(`Found ${translationsToMigrate.rows?.length || 0} guide translations to migrate`)
+  const guideRows = (translationsToMigrate as unknown as { rows: Record<string, unknown>[] }).rows ?? []
+  console.log(`Found ${guideRows.length} guide translations to migrate`)
 
-  for (const row of translationsToMigrate.rows || []) {
+  for (const row of guideRows) {
     try {
       // Create version 1 with published status
       const [version] = await db
         .insert(guideTranslationVersion)
         .values({
-          translationId: row.id,
+          translationId: row.id as string,
           version: 1,
           status: 'published',
-          title: row.title,
-          description: row.description,
-          createdAt: row.created_at,
-          publishedAt: row.created_at,
+          title: row.title as string,
+          description: row.description as string | null,
+          createdAt: row.created_at as Date,
+          publishedAt: row.created_at as Date,
         })
         .returning()
+
+      if (!version) throw new Error('Failed to create version')
 
       // Update translation to point to this version
       await db.execute(sql`
@@ -100,24 +103,27 @@ async function migrateStopTranslations() {
     throw error
   }
 
-  console.log(`Found ${translationsToMigrate.rows?.length || 0} stop translations to migrate`)
+  const stopRows = (translationsToMigrate as unknown as { rows: Record<string, unknown>[] }).rows ?? []
+  console.log(`Found ${stopRows.length} stop translations to migrate`)
 
-  for (const row of translationsToMigrate.rows || []) {
+  for (const row of stopRows) {
     try {
       // Create version 1 with published status
       const [version] = await db
         .insert(stopTranslationVersion)
         .values({
-          translationId: row.id,
+          translationId: row.id as string,
           version: 1,
           status: 'published',
-          title: row.title,
-          description: row.description,
-          transcription: row.transcription,
-          createdAt: row.created_at,
-          publishedAt: row.created_at,
+          title: row.title as string,
+          description: row.description as string | null,
+          transcription: row.transcription as string | null,
+          createdAt: row.created_at as Date,
+          publishedAt: row.created_at as Date,
         })
         .returning()
+
+      if (!version) throw new Error('Failed to create version')
 
       // Update translation to point to this version
       await db.execute(sql`

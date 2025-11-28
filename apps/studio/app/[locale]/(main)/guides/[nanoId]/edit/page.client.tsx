@@ -32,7 +32,6 @@ function GuideEditorContent() {
     selectedStop,
     isDirty,
     isSaving,
-    _lastSaved,
     updateGuideTranslationData,
     updateCoverImage,
     selectStop,
@@ -41,10 +40,8 @@ function GuideEditorContent() {
     reorderStops,
     updateStopTranslationData,
     attachAssetToStop,
-    _detachAssetFromStop,
     setActiveLocale,
     save,
-    _publish,
   } = useGuideEditor()
 
   const backUrl = `/guides/${guide.nanoId}`

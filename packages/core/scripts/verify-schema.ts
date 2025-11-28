@@ -33,9 +33,9 @@ async function verify() {
     ) as exists
   `
 
-  console.log(`\nguide_translation_version table exists: ${versionTableExists[0].exists ? '✅' : '❌'}`)
+  console.log(`\nguide_translation_version table exists: ${versionTableExists[0]?.exists ? '✅' : '❌'}`)
 
-  if (versionTableExists[0].exists) {
+  if (versionTableExists[0]?.exists) {
     const versionCols = await sql`
       SELECT column_name 
       FROM information_schema.columns
@@ -54,7 +54,7 @@ async function verify() {
     ) as exists
   `
 
-  console.log(`\ntranslation_status enum exists: ${enumExists[0].exists ? '✅' : '❌'}`)
+  console.log(`\ntranslation_status enum exists: ${enumExists[0]?.exists ? '✅' : '❌'}`)
 
   await sql.end()
 }

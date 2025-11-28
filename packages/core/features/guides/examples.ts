@@ -128,6 +128,9 @@ async function exampleEfficientQuery(guideId: string, locale: 'en' | 'de' | 'rm'
       translations: {
         where: (translation, { eq }) => eq(translation.locale, locale),
         limit: 1,
+        with: {
+          currentVersion: true,
+        },
       },
     },
   })
@@ -136,8 +139,8 @@ async function exampleEfficientQuery(guideId: string, locale: 'en' | 'de' | 'rm'
 
   return {
     ...result,
-    title: result.translations[0]?.title,
-    description: result.translations[0]?.description,
+    title: result.translations[0]?.currentVersion?.title,
+    description: result.translations[0]?.currentVersion?.description,
   }
 }
 

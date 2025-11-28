@@ -18,6 +18,7 @@ export const Default: Story = {
   args: {
     guide: {
       id: '1',
+      nanoId: 'getting-started-001',
       title: 'Getting Started with ValGuide',
       description: 'Learn the basics of ValGuide and how to create your first visit.',
       imageUrl: faker.image.url({ width: 2070, height: 1380 }),
@@ -25,7 +26,6 @@ export const Default: Story = {
       createdAt: new Date('2023-10-15'),
       updatedAt: new Date('2023-11-20'),
       tags: ['beginner', 'tutorial', 'basics'],
-      difficulty: 'beginner',
     },
   },
 }
@@ -34,6 +34,7 @@ export const Intermediate: Story = {
   args: {
     guide: {
       id: '2',
+      nanoId: 'advanced-tech-002',
       title: 'Advanced Techniques',
       description: 'Discover advanced techniques to create engaging guides.',
       imageUrl: faker.image.url({ width: 2070, height: 1380 }),
@@ -41,7 +42,6 @@ export const Intermediate: Story = {
       createdAt: new Date('2023-09-10'),
       updatedAt: new Date('2023-12-05'),
       tags: ['advanced', 'techniques', 'engagement'],
-      difficulty: 'intermediate',
     },
   },
 }
@@ -50,6 +50,7 @@ export const Advanced: Story = {
   args: {
     guide: {
       id: '3',
+      nanoId: 'expert-creation-003',
       title: 'Expert Guide Creation',
       description: 'Master the art of creating professional guides with advanced features.',
       imageUrl: faker.image.url({ width: 2070, height: 1380 }),
@@ -57,7 +58,6 @@ export const Advanced: Story = {
       createdAt: new Date('2023-08-05'),
       updatedAt: new Date('2024-01-15'),
       tags: ['expert', 'professional', 'advanced features'],
-      difficulty: 'advanced',
     },
   },
 }
@@ -66,6 +66,7 @@ export const NoImage: Story = {
   args: {
     guide: {
       id: '4',
+      nanoId: 'no-image-004',
       title: 'Guide Without Image',
       description: 'This visit does not have an image.',
       author: 'ValGuide User',
@@ -79,6 +80,7 @@ export const MinimalInfo: Story = {
   args: {
     guide: {
       id: '5',
+      nanoId: 'minimal-005',
       title: 'Minimal Guide',
     },
   },

@@ -14,7 +14,7 @@ async function checkSchema() {
   `)
 
   console.log('Columns in guide_translation:')
-  const rows = Array.isArray(result) ? result : result.rows || []
+  const rows = (result as unknown as { rows: Record<string, unknown>[] }).rows ?? []
   for (const row of rows) {
     console.log(`  - ${row.column_name}: ${row.data_type} (nullable: ${row.is_nullable})`)
   }
@@ -28,9 +28,10 @@ async function checkSchema() {
     ) as exists
   `)
 
-  console.log(`guide_translation_version exists: ${versionTableCheck.rows[0].exists}`)
+  const versionCheckRows = (versionTableCheck as unknown as { rows: Record<string, unknown>[] }).rows ?? []
+  console.log(`guide_translation_version exists: ${versionCheckRows[0]?.exists}`)
 
-  if (versionTableCheck.rows[0].exists) {
+  if (versionCheckRows[0]?.exists) {
     const versionCols = await db.execute(sql`
       SELECT column_name, data_type
       FROM information_schema.columns
@@ -40,7 +41,8 @@ async function checkSchema() {
     `)
 
     console.log('\nColumns in guide_translation_version:')
-    for (const row of versionCols.rows) {
+    const versionColRows = (versionCols as unknown as { rows: Record<string, unknown>[] }).rows ?? []
+    for (const row of versionColRows) {
       console.log(`  - ${row.column_name}: ${row.data_type}`)
     }
   }

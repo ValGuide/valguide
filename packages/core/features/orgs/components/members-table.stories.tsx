@@ -19,7 +19,7 @@ const meta: Meta<typeof MembersTable> = {
     },
   },
   decorators: [
-    (Story, { globals: { locale } }) => {
+    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
       const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
       const currentLocale = locale || 'en'
 
@@ -170,7 +170,7 @@ export const AsViewer: Story = {
 
 export const SmallTeam: Story = {
   args: {
-    members: [mockMembers[0], mockMembers[1]],
+    members: [mockMembers[0]!, mockMembers[1]!],
     currentUserRole: 'owner',
     currentUserId: 'user-1',
   },
@@ -280,10 +280,10 @@ export const MembersWithoutAvatars: Story = {
 export const MembersWithPartialNames: Story = {
   args: {
     members: [
-      { ...mockMembers[0] },
-      { ...mockMembers[1], lastName: null },
-      { ...mockMembers[2], firstName: null },
-      { ...mockMembers[3], firstName: null, lastName: null },
+      { ...mockMembers[0]! },
+      { ...mockMembers[1]!, lastName: null },
+      { ...mockMembers[2]!, firstName: null },
+      { ...mockMembers[3]!, firstName: null, lastName: null },
     ],
     currentUserRole: 'owner',
     currentUserId: 'user-1',

@@ -17,7 +17,7 @@ export default async function JoinTeamPage({
   const { token } = await searchParams
 
   if (!token) {
-    redirect(`/${locale}`)
+    redirect({ href: '/', locale })
   }
 
   // 1. Fetch invitation details (publicly available via token)
@@ -65,7 +65,7 @@ export default async function JoinTeamPage({
   try {
     const result = await joinTeamAction(token)
     if (result.success) {
-      redirect(`/${locale}`)
+      redirect({ href: '/', locale })
     }
   } catch (err) {
     error = err instanceof Error ? err.message : 'Failed to join team'

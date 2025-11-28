@@ -75,7 +75,7 @@ const mockImages = [
 
 export const SingleImage: Story = {
   args: {
-    images: [mockImages[0]],
+    images: [mockImages[0]!],
   },
 }
 

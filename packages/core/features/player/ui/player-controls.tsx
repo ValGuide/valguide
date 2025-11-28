@@ -2,6 +2,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { motion } from 'framer-motion'
 import { Repeat, Shuffle, SkipBack, SkipForward } from 'lucide-react'
+import type * as React from 'react'
 import { PlayButton } from './play-button'
 
 const playerControlsVariants = cva('flex items-center gap-2', {
@@ -54,7 +55,7 @@ const PlayerControls = ({
   showShuffleButton = true,
   showRepeatButton = true,
   ...props
-}) => {
+}: PlayerControlsProps & { ref?: React.Ref<HTMLDivElement> }) => {
   // Animation variants for control buttons
   const buttonVariants = {
     initial: { scale: 1 },

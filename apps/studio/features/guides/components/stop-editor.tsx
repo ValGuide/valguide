@@ -27,15 +27,7 @@ type MediaItem = {
   locale?: SupportedLocale
 }
 
-export function StopEditor({
-  stop,
-  locale,
-  onSave,
-  onCancel,
-  onSelectImages,
-  _onSelectAudio,
-  _onSelectVideo,
-}: StopEditorProps) {
+export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: StopEditorProps) {
   const t = useTranslations('stops.editor')
   const tActions = useTranslations('stops.actions')
 

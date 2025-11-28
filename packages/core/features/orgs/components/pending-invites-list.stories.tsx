@@ -19,7 +19,7 @@ const meta: Meta<typeof PendingInvitesList> = {
     },
   },
   decorators: [
-    (Story, { globals: { locale } }) => {
+    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
       const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
       const currentLocale = locale || 'en'
 
@@ -99,7 +99,7 @@ export const Default: Story = {
 
 export const SingleInvitation: Story = {
   args: {
-    invitations: [mockInvitations[0]],
+    invitations: [mockInvitations[0]!],
   },
   parameters: {
     docs: {

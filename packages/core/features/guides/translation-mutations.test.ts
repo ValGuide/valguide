@@ -1,4 +1,5 @@
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
+// @ts-expect-error - vitest is available at runtime in test environment
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { eq } from 'drizzle-orm'
 import { db } from '../db'
 import { guide } from './schema'
@@ -22,9 +23,10 @@ describe.skip('Translation Versioning', () => {
         nanoId: `test-${Date.now()}`,
         createdBy: testUserId,
         updatedBy: testUserId,
+        organizationId: '00000000-0000-0000-0000-000000000001',
       })
       .returning()
-    testGuideId = testGuide.id
+    testGuideId = testGuide!.id
   })
 
   afterAll(async () => {
@@ -85,7 +87,7 @@ describe.skip('Translation Versioning', () => {
     const history = await getGuideTranslationHistory(testGuideId, 'en')
 
     expect(history.length).toBeGreaterThanOrEqual(2)
-    expect(history[0].version).toBeGreaterThan(history[1].version) // Ordered by version desc
+    expect(history[0]!.version).toBeGreaterThan(history[1]!.version) // Ordered by version desc
   })
 
   it('should rollback to a previous version', async () => {

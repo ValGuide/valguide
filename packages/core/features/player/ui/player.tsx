@@ -68,7 +68,7 @@ const Player = ({
   onVolumeChangeValue,
   showVolumeControl = true,
   ...props
-}) => {
+}: PlayerProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const isInline = layout === 'inline'
 
   return (

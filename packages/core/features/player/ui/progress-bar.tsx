@@ -23,13 +23,20 @@ export interface ProgressBarProps
   duration?: string
 }
 
-const ProgressBar = ({ ref, className, variant, currentTime, duration, ...props }) => {
+const ProgressBar = ({
+  ref,
+  className,
+  variant,
+  currentTime,
+  duration,
+  ...props
+}: ProgressBarProps & { ref?: React.Ref<React.ComponentRef<typeof SliderPrimitive.Root>> }) => {
   // Custom component to add Framer Motion to the Thumb
   const MotionThumb = ({
     ref: thumbRef,
     ...thumbProps
   }: React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb> & {
-    ref: React.RefObject<HTMLSpanElement>
+    ref?: React.RefObject<HTMLSpanElement>
   }) => {
     return (
       <SliderPrimitive.Thumb ref={thumbRef} {...thumbProps} asChild>

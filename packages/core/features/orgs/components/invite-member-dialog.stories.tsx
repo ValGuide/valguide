@@ -21,7 +21,7 @@ const meta: Meta<typeof InviteMemberDialog> = {
     },
   },
   decorators: [
-    (Story, { globals: { locale } }) => {
+    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
       const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
       const currentLocale = locale || 'en'
 
@@ -129,7 +129,7 @@ export const WithError: Story = {
       },
     },
   },
-  play: async ({ _canvasElement }) => {
+  play: async () => {
     // This would auto-trigger the dialog for testing
   },
 }
