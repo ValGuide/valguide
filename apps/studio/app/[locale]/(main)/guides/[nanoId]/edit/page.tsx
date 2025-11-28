@@ -1,7 +1,8 @@
-import { notFound, redirect } from 'next/navigation'
-import { setRequestLocale } from 'next-intl/server'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
+// biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
+import { notFound } from 'next/navigation'
+import { setRequestLocale } from 'next-intl/server'
 import { GuideEditorClient } from './page.client'
 
 interface GuideEditPageParams {

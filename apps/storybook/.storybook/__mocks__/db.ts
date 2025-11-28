@@ -1,2 +1,2 @@
 // Mock database for Storybook
-export const db = {} as any
+export const db = {} as Record<string, unknown>

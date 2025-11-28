@@ -1,14 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
-import { NextIntlClientProvider } from 'next-intl'
-import { VersionHistoryDialog } from './version-history-dialog'
-
-import type { GuideTranslationVersion } from '../schema'
-
+import deMessages from '@valguide/i18n/messages/de.json'
 // Import messages for the story
 import enMessages from '@valguide/i18n/messages/en.json'
-import deMessages from '@valguide/i18n/messages/de.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
+import { NextIntlClientProvider } from 'next-intl'
+import type { GuideTranslationVersion } from '../schema'
+import { VersionHistoryDialog } from './version-history-dialog'
 
 // Mock version history data
 const mockVersionHistory: GuideTranslationVersion[] = [
@@ -69,9 +67,9 @@ const mockVersionHistory: GuideTranslationVersion[] = [
   },
 ]
 
-const mockEmptyHistory: GuideTranslationVersion[] = []
+const _mockEmptyHistory: GuideTranslationVersion[] = []
 
-const mockDraftHistory: GuideTranslationVersion[] = [
+const _mockDraftHistory: GuideTranslationVersion[] = [
   {
     id: 'version-1',
     translationId: 'trans-1',
@@ -97,13 +95,13 @@ const mockDraftHistory: GuideTranslationVersion[] = [
 ]
 
 // Mock the server action functions
-const mockGetGuideTranslationHistory = async (guideId: string, locale: string) => {
+const _mockGetGuideTranslationHistory = async (guideId: string, locale: string) => {
   console.log('Fetching history:', { guideId, locale })
   await new Promise((resolve) => setTimeout(resolve, 500))
   return mockVersionHistory
 }
 
-const mockRollbackGuideTranslation = async (guideId: string, locale: string, targetVersion: number) => {
+const _mockRollbackGuideTranslation = async (guideId: string, locale: string, targetVersion: number) => {
   console.log('Rolling back:', { guideId, locale, targetVersion })
   await new Promise((resolve) => setTimeout(resolve, 1000))
   return { success: true }
@@ -142,7 +140,7 @@ export const Default: Story = {
     locale: 'en',
     onRollback: fn(),
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ _canvasElement }) => {
     // Auto-click the button to open the dialog in the story
     // This requires user interaction in actual Storybook
   },

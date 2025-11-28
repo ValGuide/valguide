@@ -1,8 +1,8 @@
 'use server'
 
 import { createClient } from '@valguide/core/supabase/server'
-import { getProfile } from '@valguide/features/profiles/queries'
 import { updateProfile } from '@valguide/features/profiles/mutations'
+import { getProfile } from '@valguide/features/profiles/queries'
 import { getTranslations } from 'next-intl/server'
 import { z } from 'zod'
 
@@ -49,7 +49,7 @@ export async function updateProfileAction(data: ProfileFormData) {
       firstName: validated.data.firstName || null,
       lastName: validated.data.lastName || null,
     })
-    
+
     return { success: true, message: t('updateSuccess') }
   } catch (error) {
     console.error('Profile update error:', error)

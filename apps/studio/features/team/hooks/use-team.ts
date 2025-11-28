@@ -1,7 +1,7 @@
 'use client'
 
 import useSWR from 'swr'
-import { fetchTeamData, TeamData } from '../api/fetchers'
+import { fetchTeamData, type TeamData } from '../api/fetchers'
 
 interface UseTeamReturn {
   data: TeamData | null
@@ -31,6 +31,6 @@ export function useTeam(): UseTeamReturn {
     isLoading,
     error: error || null,
     refetch,
-    isNoTeam
+    isNoTeam,
   }
 }

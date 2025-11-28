@@ -1,9 +1,9 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import { useState } from 'react'
-import { Button } from '@valguide/ui/components/button'
-import { AssetPickerModal } from './asset-picker-modal'
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { Button } from '@valguide/ui/components/button'
+import { useState } from 'react'
+import { AssetPickerModal } from './asset-picker-modal'
 
 const meta = {
   title: 'Assets/AssetPickerModal',

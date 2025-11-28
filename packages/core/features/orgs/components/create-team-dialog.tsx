@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useRouter } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 import {
   Dialog,
@@ -13,11 +13,11 @@ import {
 } from '@valguide/ui/components/dialog'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
+import { PlusCircle } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
+import * as React from 'react'
 import { toast } from 'sonner'
 import { createTeamAction } from '../actions'
-import { PlusCircle } from 'lucide-react'
-import { useTranslations, useLocale } from 'next-intl'
-import { useRouter } from 'next/navigation'
 
 export interface CreateTeamDialogProps {
   children?: React.ReactNode
@@ -37,7 +37,7 @@ export function CreateTeamDialog({
   const [slug, setSlug] = React.useState('')
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const t = useTranslations('orgs.createTeam')
-  const router = useRouter()
+  const _router = useRouter()
   const locale = useLocale()
 
   const isControlled = controlledOpen !== undefined
@@ -55,7 +55,7 @@ export function CreateTeamDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!name) return
 
     setIsSubmitting(true)
@@ -88,9 +88,7 @@ export function CreateTeamDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
-          <DialogDescription>
-            {t('description')}
-          </DialogDescription>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
@@ -114,9 +112,7 @@ export function CreateTeamDialog({
                 onChange={(e) => setSlug(e.target.value)}
                 disabled={isSubmitting}
               />
-              <p className="text-xs text-muted-foreground">
-                {t('slugDescription')}
-              </p>
+              <p className="text-xs text-muted-foreground">{t('slugDescription')}</p>
             </div>
           </div>
           <DialogFooter>

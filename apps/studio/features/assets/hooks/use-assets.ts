@@ -1,7 +1,7 @@
 'use client'
 
-import useSWR from 'swr'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import useSWR from 'swr'
 
 type UseAssetsOptions = {
   type?: AssetType
@@ -28,7 +28,13 @@ export function useAssets(options?: UseAssetsOptions) {
 
   const url = `/api/assets${params.toString() ? `?${params.toString()}` : ''}`
 
-  const { data, error, isLoading, isValidating, mutate } = useSWR<AssetsResponse>(url, fetcher, {
+  const {
+    data,
+    error,
+    isLoading,
+    isValidating: _isValidating,
+    mutate,
+  } = useSWR<AssetsResponse>(url, fetcher, {
     keepPreviousData: true,
     revalidateOnFocus: false,
   })

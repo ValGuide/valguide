@@ -1,14 +1,14 @@
-import { eq, and, desc } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 import { db } from '../db'
 import {
+  type GuideTranslationVersion,
+  type GuideTranslationWithVersion,
   guideTranslation,
   guideTranslationVersion,
+  type StopTranslationVersion,
+  type StopTranslationWithVersion,
   stopTranslation,
   stopTranslationVersion,
-  type GuideTranslationVersion,
-  type StopTranslationVersion,
-  type GuideTranslationWithVersion,
-  type StopTranslationWithVersion,
 } from './schema'
 
 /**
@@ -23,10 +23,7 @@ export async function getCurrentGuideTranslation(
       version: guideTranslationVersion,
     })
     .from(guideTranslation)
-    .innerJoin(
-      guideTranslationVersion,
-      eq(guideTranslation.currentVersionId, guideTranslationVersion.id),
-    )
+    .innerJoin(guideTranslationVersion, eq(guideTranslation.currentVersionId, guideTranslationVersion.id))
     .where(and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)))
     .limit(1)
 
@@ -55,10 +52,7 @@ export async function getDraftGuideTranslation(
 /**
  * Get all translation versions for a guide locale (for history view)
  */
-export async function getGuideTranslationHistory(
-  guideId: string,
-  locale: string,
-): Promise<GuideTranslationVersion[]> {
+export async function getGuideTranslationHistory(guideId: string, locale: string): Promise<GuideTranslationVersion[]> {
   const translation = await db
     .select()
     .from(guideTranslation)
@@ -136,10 +130,7 @@ export async function getCurrentStopTranslation(
 /**
  * Get draft translation version for a stop
  */
-export async function getDraftStopTranslation(
-  stopId: string,
-  locale: string,
-): Promise<StopTranslationVersion | null> {
+export async function getDraftStopTranslation(stopId: string, locale: string): Promise<StopTranslationVersion | null> {
   const result = await db
     .select({
       version: stopTranslationVersion,
@@ -155,10 +146,7 @@ export async function getDraftStopTranslation(
 /**
  * Get all translation versions for a stop locale (for history view)
  */
-export async function getStopTranslationHistory(
-  stopId: string,
-  locale: string,
-): Promise<StopTranslationVersion[]> {
+export async function getStopTranslationHistory(stopId: string, locale: string): Promise<StopTranslationVersion[]> {
   const translation = await db
     .select()
     .from(stopTranslation)

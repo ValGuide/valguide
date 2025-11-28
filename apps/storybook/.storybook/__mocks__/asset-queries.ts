@@ -1,10 +1,10 @@
 // Mock asset queries for Storybook
-export async function getAssets(...args: any[]) {
+export async function getAssets(..._args: unknown[]) {
   return []
 }
 
-export async function getAssetById(...args: any[]) {
+export async function getAssetById(..._args: unknown[]) {
   return null
 }
 
-export type GetAssetsFilters = any
+export type GetAssetsFilters = Record<string, unknown>

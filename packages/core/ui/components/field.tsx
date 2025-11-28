@@ -1,11 +1,11 @@
 'use client'
 
-import { useMemo } from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
-
-import { cn } from '@valguide/ui/lib/utils'
 import { Label } from '@valguide/ui/components/label'
 import { Separator } from '@valguide/ui/components/separator'
+
+import { cn } from '@valguide/ui/lib/utils'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { useMemo } from 'react'
 
 function FieldSet({ className, ...props }: React.ComponentProps<'fieldset'>) {
   return (
@@ -185,13 +185,14 @@ function FieldError({
 
     const uniqueErrors = [...new Map(errors.map((error) => [error?.message, error])).values()]
 
-    if (uniqueErrors?.length == 1) {
+    if (uniqueErrors?.length === 1) {
       return uniqueErrors[0]?.message
     }
 
     return (
       <ul className="ml-4 flex list-disc flex-col gap-1">
-        {uniqueErrors.map((error, index) => error?.message && <li key={index}>{error.message}</li>)}
+        {/* biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton elements */}
+        {uniqueErrors.map((error, index) => error?.message && <li key={`error-${index}`}>{error.message}</li>)}
       </ul>
     )
   }, [children, errors])

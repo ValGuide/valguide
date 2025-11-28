@@ -1,6 +1,6 @@
-import { defineRouting } from 'next-intl/routing'
-import { createNavigation } from 'next-intl/navigation'
 import { defaultLocale, supportedLocales } from '@valguide/i18n/i18n.config'
+import { createNavigation } from 'next-intl/navigation'
+import { defineRouting } from 'next-intl/routing'
 
 export const routing = defineRouting({
   // A list of all locales that are supported

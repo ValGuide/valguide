@@ -1,20 +1,20 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { useTranslations } from 'next-intl'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
-import { Button } from '@valguide/ui/components/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
-import { Checkbox } from '@valguide/ui/components/checkbox'
-import { Input } from '@valguide/ui/components/input'
-import { Badge } from '@valguide/ui/components/badge'
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@valguide/ui/components/empty'
-import { Skeleton } from '@valguide/ui/components/skeleton'
-import { Search, Image as ImageIcon, Music, Video } from 'lucide-react'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import { Badge } from '@valguide/ui/components/badge'
+import { Button } from '@valguide/ui/components/button'
+import { Checkbox } from '@valguide/ui/components/checkbox'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@valguide/ui/components/empty'
+import { Input } from '@valguide/ui/components/input'
+import { Skeleton } from '@valguide/ui/components/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
+import { formatDistanceToNow } from 'date-fns'
+import { Image as ImageIcon, Music, Search, Video } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useMemo, useState } from 'react'
 import { useAssets } from '../hooks/use-assets'
 import { AssetUploadInline } from './asset-upload-inline'
-import { formatDistanceToNow } from 'date-fns'
 
 export type AssetPickerModalProps = {
   open: boolean
@@ -51,7 +51,11 @@ export function AssetPickerModal({
   const [selected, setSelected] = useState<Set<string>>(new Set(selectedAssetIds))
 
   const shouldFetchAssets = !assetsProp
-  const { assets: assetsFromHook, isLoading: isLoadingFromHook, refetch } = shouldFetchAssets
+  const {
+    assets: assetsFromHook,
+    isLoading: isLoadingFromHook,
+    refetch,
+  } = shouldFetchAssets
     ? useAssets({ type, locale, organizationId })
     : { assets: [], isLoading: false, refetch: () => {} }
 
@@ -117,7 +121,7 @@ export function AssetPickerModal({
     const k = 1024
     const sizes = ['B', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i]
+    return `${Math.round((bytes / k ** i) * 100) / 100} ${sizes[i]}`
   }
 
   return (
@@ -157,6 +161,7 @@ export function AssetPickerModal({
               {isLoading ? (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {[...Array(6)].map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items have no unique ID
                     <div key={i} className="space-y-3">
                       <Skeleton className="h-40 w-full rounded-lg" />
                       <Skeleton className="h-4 w-3/4" />
@@ -196,6 +201,7 @@ export function AssetPickerModal({
                         {/* Preview */}
                         <div className="flex h-40 items-center justify-center overflow-hidden rounded-t-lg bg-muted">
                           {asset.type === 'image' && asset.publicUrl ? (
+                            // biome-ignore lint/performance/noImgElement: Using img for dynamic content
                             <img src={asset.publicUrl} alt={asset.fileName} className="h-full w-full object-cover" />
                           ) : (
                             getTypeIcon()

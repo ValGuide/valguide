@@ -193,7 +193,6 @@
     },
     "editGuide": "Modifitgar il guid",
     "viewInApp": "Mussar en app",
-    "backToGuides": "Turnar als guids",
     "delete": {
       "button": "Stizzar il guid",
       "confirmTitle": "Stizzar il guid",
@@ -224,7 +223,6 @@
       "errorDescription": "In errur è succedì tar restaurar la guida. Empruvai per plaschair anc ina giada."
     },
     "archived": "Archivà",
-    "recover": "Restaurar",
     "archiveGuide": "Archivar la guida",
     "recoverGuide": "Restaurar la guida",
     "permanentlyDelete": "Stizzar definitivamain",
@@ -390,11 +388,6 @@
       "deleteError": "Errur cun stizzar l'asset",
       "preview": "Prevista",
       "download": "Chargiar giu"
-    },
-    "types": {
-      "image": "Maletg",
-      "audio": "Audio",
-      "video": "Video"
     },
     "limits": {
       "maxSize": "Grondezza maximala da datoteca: {size}",

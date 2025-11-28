@@ -1,9 +1,9 @@
-import * as path from 'path'
-import { fileURLToPath } from 'url'
-import { createRequire } from 'module'
+import { createRequire } from 'node:module'
+import * as path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import type { StorybookConfig } from '@storybook/nextjs-vite'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import type { StorybookConfig } from '@storybook/nextjs-vite'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const require = createRequire(import.meta.url)
@@ -85,6 +85,6 @@ const config: StorybookConfig = {
 }
 export default config
 
-function getAbsolutePath(value: string): any {
+function getAbsolutePath(value: string): string {
   return path.dirname(require.resolve(path.join(value, 'package.json')))
 }

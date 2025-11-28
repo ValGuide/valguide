@@ -19,7 +19,12 @@ export async function publishStopTranslationDraft(stopId: string, locale: string
   return publishStopDraft(stopId, locale)
 }
 
-export async function rollbackGuideTranslation(guideId: string, locale: string, targetVersion: number, userId?: string) {
+export async function rollbackGuideTranslation(
+  guideId: string,
+  locale: string,
+  targetVersion: number,
+  userId?: string,
+) {
   return rollbackGuide(guideId, locale, targetVersion, userId)
 }
 

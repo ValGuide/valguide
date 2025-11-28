@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Track } from '../types'
 import { AudioPlayer } from './AudioPlayer'
-import { Track } from '../types'
 
 const meta: Meta<typeof AudioPlayer> = {
   title: 'Player New/AudioPlayer',
@@ -20,11 +20,21 @@ const sampleTrack: Track = {
   audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Example audio
   duration: 372,
   transcript: [
-    { id: '1', startTime: 0, endTime: 10, text: "Welcome to The Starry Night by Vincent van Gogh." },
-    { id: '2', startTime: 10, endTime: 25, text: "Painted in June 1889, it depicts the view from the east-facing window of his asylum room at Saint-Rémy-de-Provence." },
-    { id: '3', startTime: 25, endTime: 40, text: "You can see the swirling sky, which dominates the composition." },
-    { id: '4', startTime: 40, endTime: 60, text: "Notice the cypress tree in the foreground, acting as a dark, flame-like connection between earth and sky." }
-  ]
+    { id: '1', startTime: 0, endTime: 10, text: 'Welcome to The Starry Night by Vincent van Gogh.' },
+    {
+      id: '2',
+      startTime: 10,
+      endTime: 25,
+      text: 'Painted in June 1889, it depicts the view from the east-facing window of his asylum room at Saint-Rémy-de-Provence.',
+    },
+    { id: '3', startTime: 25, endTime: 40, text: 'You can see the swirling sky, which dominates the composition.' },
+    {
+      id: '4',
+      startTime: 40,
+      endTime: 60,
+      text: 'Notice the cypress tree in the foreground, acting as a dark, flame-like connection between earth and sky.',
+    },
+  ],
 }
 
 export const Default: StoryObj<typeof AudioPlayer> = {
@@ -37,7 +47,7 @@ export const WithoutTranscript: StoryObj<typeof AudioPlayer> = {
   args: {
     track: {
       ...sampleTrack,
-      transcript: undefined
+      transcript: undefined,
     },
   },
 }

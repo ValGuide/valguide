@@ -1,36 +1,17 @@
 {
   "extends": "@valguide/typescript-config/nextjs.json",
   "compilerOptions": {
-    "types": [
-      "jest",
-      "node"
-    ],
+    "types": ["jest", "node"],
     "baseUrl": "./",
     "paths": {
-      "@valguide/core/*": [
-        "./*"
-      ],
-      "@valguide/ui/*": [
-        "./ui/*"
-      ],
-      "@valguide/supabase/*": [
-        "./supabase/*"
-      ],
-      "@valguide/i18n/*": [
-        "./i18n/*"
-      ],
-      "@valguide/features/*": [
-        "./features/*"
-      ],
-      "@valguide/slack/*": [
-        "./slack/*"
-      ],
-      "@valguide/icons/*": [
-        "../icons/dist/*"
-      ],
-      "@valguide/logger": [
-        "../logger"
-      ]
+      "@valguide/core/*": ["./*"],
+      "@valguide/ui/*": ["./ui/*"],
+      "@valguide/supabase/*": ["./supabase/*"],
+      "@valguide/i18n/*": ["./i18n/*"],
+      "@valguide/features/*": ["./features/*"],
+      "@valguide/slack/*": ["./slack/*"],
+      "@valguide/icons/*": ["../icons/dist/*"],
+      "@valguide/logger": ["../logger"]
     },
     "plugins": [
       {
@@ -38,14 +19,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "next.config.mjs",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

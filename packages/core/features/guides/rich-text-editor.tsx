@@ -1,7 +1,6 @@
 'use client'
 
-import * as React from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
+import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { EditorToolbar } from './editor-toolbar'
 

@@ -1,8 +1,5 @@
 'use client'
 
-import * as React from 'react'
-import { useTranslations } from 'next-intl'
-import { UserPlus, Crown, Shield, Palette, Edit3, Eye } from 'lucide-react'
 import { Button } from '@valguide/ui/components/button'
 import {
   Dialog,
@@ -16,6 +13,9 @@ import {
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
+import { Crown, Edit3, Eye, Palette, Shield, UserPlus } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import * as React from 'react'
 
 export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
 

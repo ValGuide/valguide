@@ -1,14 +1,14 @@
 'use client'
 
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { getLocalizedStopText } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
-import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { useTranslations } from 'next-intl'
 import { AudioPlayer } from './audio-player'
-import { VideoPlayer } from './video-player'
 import { ImageSwiper } from './image-swiper'
 import { Transcription } from './transcription'
+import { VideoPlayer } from './video-player'
 
 type StopContentProps = {
   stop: StopWithAssets

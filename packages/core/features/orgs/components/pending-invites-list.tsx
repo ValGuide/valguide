@@ -1,10 +1,8 @@
 'use client'
 
-import * as React from 'react'
-import { useTranslations } from 'next-intl'
-import { Mail, MoreHorizontal, RefreshCw, X, Clock } from 'lucide-react'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +10,8 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Clock, Mail, MoreHorizontal, RefreshCw, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
 

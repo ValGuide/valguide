@@ -1,23 +1,18 @@
-export type LoggerMetadata = { [field: string]: any }
+export type LoggerMetadata = { [field: string]: unknown }
 
 export type Logger = {
-  /**
-   * Creates a new logger instance that adds given metadata to each log entry.
-   */
   child: (metadata?: LoggerMetadata) => Logger
-
   defaultMeta: LoggerMetadata
-
-  info: (message?: any, ...optionalParams: any[]) => void
-  warn: (message?: any, ...optionalParams: any[]) => void
-  debug: (message?: any, ...optionalParams: any[]) => void
-  error: (message?: any, ...optionalParams: any[]) => void
+  info: (message?: unknown, ...optionalParams: unknown[]) => void
+  warn: (message?: unknown, ...optionalParams: unknown[]) => void
+  debug: (message?: unknown, ...optionalParams: unknown[]) => void
+  error: (message?: unknown, ...optionalParams: unknown[]) => void
 }
 
 export const createLogger = (name: string): Logger => {
   const logger = console
 
-  const child = (metadata: LoggerMetadata = {}) => {
+  const child = (_metadata: LoggerMetadata = {}) => {
     return createLogger(name)
   }
 

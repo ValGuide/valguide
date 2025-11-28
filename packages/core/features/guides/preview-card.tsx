@@ -1,23 +1,15 @@
-import * as React from 'react'
-import { useTranslations, useLocale } from 'next-intl'
-import { LucideInfo } from 'lucide-react'
-import Link from 'next/link'
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@valguide/core/ui/components/card'
 import { Badge } from '@valguide/core/ui/components/badge'
-import { cn } from '@valguide/core/ui/lib/utils'
 import { Button } from '@valguide/core/ui/components/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
+import { cn } from '@valguide/core/ui/lib/utils'
+import { Link } from '@valguide/i18n/routing'
+import { LucideInfo } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
+import * as React from 'react'
 import { RichTextDisplay } from './rich-text-display'
 
-import { Guide } from './types'
+import type { Guide } from './types'
 
 export interface GuidePreviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
   guide: Guide
@@ -29,7 +21,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
   const t = useTranslations('guide.previewCard')
   const locale = useLocale()
 
-  const handleViewDetails = React.useCallback(() => {
+  const _handleViewDetails = React.useCallback(() => {
     onViewDetails?.(guide)
   }, [guide, onViewDetails])
 
@@ -53,6 +45,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
     <Card className={cn('overflow-hidden transition-all hover:shadow-md', className)} {...props}>
       {displayImage && (
         <div className="relative h-48 w-full overflow-hidden">
+          {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
           <img
             src={displayImage}
             alt={displayTitle}

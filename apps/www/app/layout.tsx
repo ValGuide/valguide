@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
 import { PostHogProvider } from '@valguide/core/posthog/PostHogProvider'
+import type { ReactNode } from 'react'
 
 type Props = {
   children: ReactNode

@@ -1,11 +1,11 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { MessageAlert } from './message-alert'
-import { AuthLayout } from './auth-layout'
-import { OtpVerificationForm } from '../otp/otp-verification-form'
 import { AuthForm } from '../auth-form'
 import { Consent } from '../consent'
+import { OtpVerificationForm } from '../otp/otp-verification-form'
+import { AuthLayout } from './auth-layout'
+import { MessageAlert } from './message-alert'
 
 export interface AuthContainerProps {
   // Auth state and handlers

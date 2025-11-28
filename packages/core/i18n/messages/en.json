@@ -222,7 +222,6 @@
     },
     "editGuide": "Edit Guide",
     "viewInApp": "View in App",
-    "backToGuides": "Back to Guides",
     "delete": {
       "button": "Delete Guide",
       "confirmTitle": "Delete Guide",
@@ -253,7 +252,6 @@
       "errorDescription": "An error occurred while recovering the guide. Please try again."
     },
     "archived": "Archived",
-    "recover": "Recover",
     "archiveGuide": "Archive Guide",
     "recoverGuide": "Recover Guide",
     "permanentlyDelete": "Permanently Delete",
@@ -419,11 +417,6 @@
       "deleteError": "Failed to delete asset",
       "preview": "Preview",
       "download": "Download"
-    },
-    "types": {
-      "image": "Image",
-      "audio": "Audio",
-      "video": "Video"
     },
     "limits": {
       "maxSize": "Max file size: {size}",

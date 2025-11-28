@@ -1,9 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
-import { type NextRequest, NextResponse } from 'next/server'
-import { unlocalizedPathname } from '@valguide/i18n/route.utils'
 import { hasPathnameLocale, resolveLocale, setLocaleCookie } from '@valguide/i18n/resolve-locale'
+import { unlocalizedPathname } from '@valguide/i18n/route.utils'
 import { createLogger } from '@valguide/logger'
 import { cookieOptions } from '@valguide/supabase/cookies'
+import { type NextRequest, NextResponse } from 'next/server'
 
 const internalUsers = ['valerius@valguide.com']
 
@@ -27,7 +27,7 @@ export const supbaseProxyFn = (options?: {
 }) => {
   const { routes = [], defaultNextUrl = '' } = options ?? {}
   const getConfig = (pathname: string): RouteConfig | Omit<RouteConfig, 'route'> | undefined =>
-    routes.find((config) => config.route == pathname) ?? options?.defaultConfig
+    routes.find((config) => config.route === pathname) ?? options?.defaultConfig
 
   const localizedResponse = (
     req: NextRequest,
@@ -58,7 +58,7 @@ export const supbaseProxyFn = (options?: {
           return req.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value, options: _options }) => req.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request: req,
           })
@@ -69,8 +69,8 @@ export const supbaseProxyFn = (options?: {
     })
 
     if (
-      config?.type == 'protected' ||
-      config?.type == 'internal' ||
+      config?.type === 'protected' ||
+      config?.type === 'internal' ||
       pathname.startsWith('/signup') ||
       pathname.startsWith('/login')
     ) {
@@ -84,7 +84,7 @@ export const supbaseProxyFn = (options?: {
 
       console.info(`Finished JWT verification in ${Date.now() - startTime}ms`, data?.header)
 
-      if (config?.type == 'internal' && (!user?.email || !internalUsers.includes(user.email))) {
+      if (config?.type === 'internal' && (!user?.email || !internalUsers.includes(user.email))) {
         const notFound = new URL(`/${locale}/404`, req.url)
         return NextResponse.rewrite(notFound)
       }

@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
-import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-
+import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 import { Input } from '@valguide/ui/components/input'
-import { Field, FieldGroup, FieldLabel, FieldDescription } from '@valguide/ui/components/field'
+import { useTranslations } from 'next-intl'
+import { type FormEvent, useState } from 'react'
 
 export interface AuthFormProps {
   /**

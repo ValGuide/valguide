@@ -1,16 +1,5 @@
 {
   "extends": "@valguide/typescript-config/react-library.json",
-  "include": [
-    "src",
-    ".storybook/**/*.tsx",
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.css"
-  ],
-  "exclude": [
-    "dist",
-    "build",
-    "node_modules"
-  ]
+  "include": ["src", ".storybook/**/*.tsx", "next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.css"],
+  "exclude": ["dist", "build", "node_modules"]
 }

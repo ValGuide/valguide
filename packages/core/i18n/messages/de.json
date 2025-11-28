@@ -193,7 +193,6 @@
     },
     "editGuide": "Guide bearbeiten",
     "viewInApp": "In App anzeigen",
-    "backToGuides": "Zurück zu Guides",
     "delete": {
       "button": "Guide löschen",
       "confirmTitle": "Guide löschen",
@@ -224,7 +223,6 @@
       "errorDescription": "Beim Wiederherstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     },
     "archived": "Archiviert",
-    "recover": "Wiederherstellen",
     "archiveGuide": "Guide archivieren",
     "recoverGuide": "Guide wiederherstellen",
     "permanentlyDelete": "Endgültig löschen",
@@ -390,11 +388,6 @@
       "deleteError": "Asset konnte nicht gelöscht werden",
       "preview": "Vorschau",
       "download": "Herunterladen"
-    },
-    "types": {
-      "image": "Bild",
-      "audio": "Audio",
-      "video": "Video"
     },
     "limits": {
       "maxSize": "Max. Dateigröße: {size}",

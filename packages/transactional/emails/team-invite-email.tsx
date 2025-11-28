@@ -1,5 +1,16 @@
-import { Body, Button, Container, Head, Heading, Html, Img, Preview, Section, Tailwind, Text } from '@react-email/components'
-import * as React from 'react'
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Img,
+  Preview,
+  Section,
+  Tailwind,
+  Text,
+} from '@react-email/components'
 
 export interface TeamInviteEmailProps {
   inviteLink: string
@@ -25,9 +36,7 @@ export const TeamInviteEmail = ({ inviteLink, teamName, inviterName, logoUrl }: 
               Join <strong>{teamName}</strong> on <strong>ValGuide</strong>
             </Heading>
 
-            <Text className="text-black text-[14px] leading-[24px]">
-              Hello,
-            </Text>
+            <Text className="text-black text-[14px] leading-[24px]">Hello,</Text>
 
             <Text className="text-black text-[14px] leading-[24px]">
               <strong>{inviterName}</strong> has invited you to join the <strong>{teamName}</strong> team on ValGuide.

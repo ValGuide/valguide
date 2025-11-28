@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { VolumeControl } from './volume-control'
 import { themes } from '@valguide/ui/theme/themes'
+import { VolumeControl } from './volume-control'
 
 const meta: Meta<typeof VolumeControl> = {
   title: 'Player/VolumeControl',

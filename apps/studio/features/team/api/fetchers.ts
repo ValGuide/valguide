@@ -1,8 +1,9 @@
-import { type OrgRole, type TeamMember } from '@valguide/core/features/orgs/components/members-table'
-import { type PendingInvitation } from '@valguide/core/features/orgs/components/pending-invites-list'
+import type { OrgRole, TeamMember } from '@valguide/core/features/orgs/components/members-table'
+import type { PendingInvitation } from '@valguide/core/features/orgs/components/pending-invites-list'
+import type { organization } from '@valguide/core/features/orgs/schema'
 
 export interface TeamData {
-  team: any
+  team: typeof organization.$inferSelect
   members: TeamMember[]
   pendingInvites: PendingInvitation[]
   currentUserRole: OrgRole

@@ -1,5 +1,5 @@
 import { WebClient } from '@slack/web-api'
-import { SlackMessage } from '@valguide/slack/slack-message'
+import type { SlackMessage } from '@valguide/slack/slack-message'
 
 const token = process.env.VALBOT_SLACK_TOKEN
 

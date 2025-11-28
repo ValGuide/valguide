@@ -1,7 +1,7 @@
-import { PropsWithChildren, Suspense } from 'react'
-import LoginLoading from './loading'
-import { AuthProvider } from '../auth-provider'
+import { type PropsWithChildren, Suspense } from 'react'
 import { signInWithOtpAction, verifyOtpAction } from '../actions'
+import { AuthProvider } from '../auth-provider'
+import LoginLoading from './loading'
 
 export default function Layout({ children }: PropsWithChildren) {
   return (

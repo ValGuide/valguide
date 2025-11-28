@@ -1,5 +1,5 @@
-import { Guide } from '@valguide/features/guides/types'
-import { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { Guide } from '@valguide/features/guides/types'
 
 export async function fetchGuides(): Promise<Guide[]> {
   const res = await fetch('/api/guides')
@@ -15,7 +15,7 @@ export async function fetchGuides(): Promise<Guide[]> {
   const data = await res.json()
 
   // Parse dates from ISO strings
-  return data.map((guide: any) => ({
+  return data.map((guide: Guide & { createdAt?: string; updatedAt?: string }) => ({
     ...guide,
     createdAt: guide.createdAt ? new Date(guide.createdAt) : undefined,
     updatedAt: guide.updatedAt ? new Date(guide.updatedAt) : undefined,
@@ -41,14 +41,24 @@ export async function fetchArchivedGuides(): Promise<ArchivedGuidesResponse> {
   const data = await res.json()
 
   return {
-    guides: data.guides.map((guide: any) => ({
-      ...guide,
-      createdAt: guide.createdAt ? new Date(guide.createdAt) : undefined,
-      updatedAt: guide.updatedAt ? new Date(guide.updatedAt) : undefined,
-      archivedAt: guide.archivedAt ? new Date(guide.archivedAt) : undefined,
-      deletedAt: guide.deletedAt ? new Date(guide.deletedAt) : undefined,
-      published: guide.published ? new Date(guide.published) : undefined,
-    })),
+    guides: data.guides.map(
+      (
+        guide: GuideWithTranslations & {
+          createdAt?: string
+          updatedAt?: string
+          archivedAt?: string
+          deletedAt?: string
+          published?: string
+        },
+      ) => ({
+        ...guide,
+        createdAt: guide.createdAt ? new Date(guide.createdAt) : undefined,
+        updatedAt: guide.updatedAt ? new Date(guide.updatedAt) : undefined,
+        archivedAt: guide.archivedAt ? new Date(guide.archivedAt) : undefined,
+        deletedAt: guide.deletedAt ? new Date(guide.deletedAt) : undefined,
+        published: guide.published ? new Date(guide.published) : undefined,
+      }),
+    ),
     userId: data.userId,
   }
 }

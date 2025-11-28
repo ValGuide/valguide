@@ -1,14 +1,14 @@
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
+import { eq } from 'drizzle-orm'
 import { db } from '../db'
-import { guide, guideTranslation, guideTranslationVersion } from './schema'
+import { guide } from './schema'
 import {
-  upsertGuideTranslationDraft,
+  deleteGuideTranslationDraft,
   publishGuideTranslationDraft,
   rollbackGuideTranslation,
-  deleteGuideTranslationDraft,
+  upsertGuideTranslationDraft,
 } from './translation-mutations'
-import { getGuideTranslationHistory, getDraftGuideTranslation, getCurrentGuideTranslation } from './translation-queries'
-import { eq } from 'drizzle-orm'
+import { getCurrentGuideTranslation, getDraftGuideTranslation, getGuideTranslationHistory } from './translation-queries'
 
 describe.skip('Translation Versioning', () => {
   let testGuideId: string

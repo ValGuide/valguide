@@ -1,10 +1,10 @@
 'use client'
 
-import { type Editor } from '@tiptap/react'
-import { useTranslations } from 'next-intl'
-import { Bold, Italic, List, ListOrdered, Quote, Heading2, Undo, Redo, Strikethrough } from 'lucide-react'
+import type { Editor } from '@tiptap/react'
 import { Button } from '@valguide/core/ui/components/button'
 import { Separator } from '@valguide/core/ui/components/separator'
+import { Bold, Heading2, Italic, List, ListOrdered, Quote, Redo, Strikethrough, Undo } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export interface EditorToolbarProps {
   editor: Editor | null

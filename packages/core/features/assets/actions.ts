@@ -1,10 +1,10 @@
 'use server'
 
-import { createClient } from '@valguide/supabase/server'
 import { db } from '@valguide/core/features/db'
-import { asset } from './schema'
+import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
+import { asset } from './schema'
 import { validateFile } from './utils'
 
 export type GetUploadUrlAction = () => Promise<{ token: string; url: string; apiKey: string }>
@@ -21,7 +21,10 @@ export const getUploadUrlAction: GetUploadUrlAction = async () => {
   }
   const url = `${process.env.VG_SUPABASE_URL}/storage/v1/upload/resumable`
 
-  const apiKey = process.env.VG_SUPABASE_PUBLISHABLE_KEY!!
+  const apiKey = process.env.VG_SUPABASE_PUBLISHABLE_KEY
+  if (!apiKey) {
+    throw Error('VG_SUPABASE_PUBLISHABLE_KEY is not set')
+  }
   return { token, url, apiKey }
 }
 
@@ -44,16 +47,14 @@ export type GetUploadSignedUrlResult = {
   assetId: string
 }
 
-export async function getUploadSignedUrl(
-  params: GetUploadSignedUrlParams,
-): Promise<GetUploadSignedUrlResult> {
+export async function getUploadSignedUrl(params: GetUploadSignedUrlParams): Promise<GetUploadSignedUrlResult> {
   const supabase = await createClient()
   const { data: claimsData } = await supabase.auth.getClaims()
   const user = claimsData?.claims
 
   if (!user) throw new Error('Not authenticated')
 
-  const { fileName, fileType, type, locale, organizationId } = params
+  const { fileName, fileType: _fileType, type, locale, organizationId } = params
   const assetId = nanoid(21)
 
   // Validate file
@@ -65,11 +66,9 @@ export async function getUploadSignedUrl(
   const storagePath = `${organizationId}/${type}s/${userPrefix}${localePrefix}${assetId}-${sanitizedName}`
 
   // Generate signed URL (expires in 1 hour)
-  const { data, error } = await supabase.storage
-    .from('assets')
-    .createSignedUploadUrl(storagePath, {
-      upsert: false,
-    })
+  const { data, error } = await supabase.storage.from('assets').createSignedUploadUrl(storagePath, {
+    upsert: false,
+  })
 
   if (error) throw error
 
@@ -102,19 +101,8 @@ export async function confirmAssetUpload(params: ConfirmAssetUploadParams) {
 
   if (!user) throw new Error('Not authenticated')
 
-  const {
-    assetId,
-    fileName,
-    fileSize,
-    mimeType,
-    type,
-    locale,
-    storagePath,
-    organizationId,
-    width,
-    height,
-    duration,
-  } = params
+  const { assetId, fileName, fileSize, mimeType, type, locale, storagePath, organizationId, width, height, duration } =
+    params
 
   // Get public URL (will respect RLS policies)
   const {

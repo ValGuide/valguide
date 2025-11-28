@@ -1,7 +1,7 @@
 'use client'
 
 import useSWR from 'swr'
-import { fetchArchivedGuides, ArchivedGuidesResponse } from '../api/fetchers'
+import { type ArchivedGuidesResponse, fetchArchivedGuides } from '../api/fetchers'
 
 interface UseArchivedGuidesReturn {
   data: ArchivedGuidesResponse | undefined

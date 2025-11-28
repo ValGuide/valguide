@@ -1,9 +1,9 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { GuidesList } from './guides-list'
+import type { Guide } from '@valguide/features/guides/types'
+import { useRouter } from '@valguide/i18n/routing'
 import { useGuides } from '../hooks/use-guides'
-import { Guide } from '@valguide/features/guides/types'
+import { GuidesList } from './guides-list'
 
 export function GuidesListContainer({ teamSlug }: { teamSlug?: string }) {
   const router = useRouter()

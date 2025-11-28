@@ -1,11 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useTranslations, useLocale } from 'next-intl'
-import { Archive, RotateCcw, Trash2 } from 'lucide-react'
-import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { deleteGuide, recoverGuide } from '@valguide/core/features/guides/actions'
+import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import { useRouter } from '@valguide/i18n/routing'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,10 +13,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@valguide/ui/components/empty'
+import { Button } from '@valguide/ui/components/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@valguide/ui/components/empty'
+import { Archive, RotateCcw, Trash2 } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import { recoverGuide, deleteGuide } from '@valguide/core/features/guides/actions'
-import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 
 interface ArchivedGuidesListProps {
   guides: GuideWithTranslations[]
@@ -55,7 +55,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
       })
       router.refresh()
       onActionComplete?.()
-    } catch (error) {
+    } catch (_error) {
       toast.error(t('recover.error'), {
         description: t('recover.errorDescription'),
       })
@@ -76,7 +76,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
       })
       router.refresh()
       onActionComplete?.()
-    } catch (error) {
+    } catch (_error) {
       toast.error(t('delete.error'), {
         description: t('delete.errorDescription'),
       })
@@ -115,6 +115,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
             <Card key={guide.id} className="flex flex-col">
               {displayImage && (
                 <div className="relative h-32 w-full overflow-hidden sm:h-48">
+                  {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
                   <img src={displayImage} alt={displayTitle} className="h-full w-full object-cover" />
                 </div>
               )}

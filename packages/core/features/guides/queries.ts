@@ -1,17 +1,16 @@
-import { eq, and, asc, isNull, isNotNull, desc, sql, inArray } from 'drizzle-orm'
+import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
+import { customAlphabet } from 'nanoid'
+import type { SupportedLocale } from '../../i18n/i18n.config'
+import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
 import type { DB } from '../db'
 import {
+  type GuideWithStops,
+  type GuideWithTranslations,
   guide,
   guideTranslation,
-  stop,
-  stopTranslation,
-  type GuideWithTranslations,
-  type GuideWithStops,
   type StopWithTranslations,
+  stop,
 } from './schema'
-import { asset, guideAsset, stopAsset, type Asset } from '../assets/schema'
-import type { SupportedLocale } from '../../i18n/i18n.config'
-import { customAlphabet } from 'nanoid'
 
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10)
 
@@ -217,7 +216,7 @@ export async function updateGuideTranslation(
   locale: string,
   data: { title?: string; description?: string },
 ): Promise<typeof guideTranslation.$inferSelect> {
-  const existing = await db.query.guideTranslation.findFirst({
+  const _existing = await db.query.guideTranslation.findFirst({
     where: and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)),
   })
 
@@ -233,7 +232,7 @@ export async function updateGuideTranslation(
     description: data.description,
   })
 
-  return { versionId } as any
+  return { versionId } as unknown as typeof guideTranslation.$inferSelect
 }
 
 /**
@@ -269,7 +268,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
     .orderBy(asc(guideAsset.order))
 
   // Fetch all stop assets
-  const stopIds = result.stops.map((s: any) => s.id)
+  const stopIds = result.stops.map((s) => s.id)
   const stopAssetsData =
     stopIds.length > 0
       ? await db
@@ -288,7 +287,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
 
   // Group stop assets by stop ID
   const stopAssetsMap = new Map<string, AssetWithRole[]>()
-  for (const item of stopAssetsData as any) {
+  for (const item of stopAssetsData) {
     if (!stopAssetsMap.has(item.stopId)) {
       stopAssetsMap.set(item.stopId, [])
     }
@@ -302,15 +301,15 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
 
   return {
     ...result,
-    assets: guideAssets.map((item: any) => ({
+    assets: guideAssets.map((item) => ({
       ...item.asset,
       role: item.role,
       order: item.order,
       locale: item.locale,
     })),
-    stops: result.stops.map((s: any) => ({
+    stops: result.stops.map((s) => ({
       ...s,
-      assets: stopAssetsMap.get(s.id) || [],
+      assets: stopAssetsMap.get(s.id) ?? [],
     })),
   }
 }
@@ -343,7 +342,7 @@ export async function getStopByNanoId(db: DB, stopNanoId: string): Promise<StopW
 
   return {
     ...result,
-    assets: stopAssets.map((item: any) => ({
+    assets: stopAssets.map((item) => ({
       ...item.asset,
       role: item.role,
       order: item.order,

@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import Image from 'next/image'
+import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import type { AssetWithRole } from '@valguide/core/features/guides/queries'
+import Image from 'next/image'
+import { useState } from 'react'
 
 type ImageSwiperProps = {
   images: AssetWithRole[]
@@ -61,6 +61,7 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
           <div className="flex gap-2 overflow-x-auto pb-2">
             {images.map((img, idx) => (
               <button
+                type="button"
                 key={img.id}
                 onClick={() => setCurrentIndex(idx)}
                 className={`relative h-16 w-16 flex-shrink-0 rounded border-2 ${
@@ -68,13 +69,7 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
                 }`}
               >
                 {img.publicUrl && (
-                  <Image
-                    src={img.publicUrl}
-                    alt={img.fileName}
-                    fill
-                    className="object-cover rounded"
-                    sizes="64px"
-                  />
+                  <Image src={img.publicUrl} alt={img.fileName} fill className="object-cover rounded" sizes="64px" />
                 )}
               </button>
             ))}

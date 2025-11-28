@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { TrackInfo } from './track-info'
 import { themes } from '@valguide/ui/theme/themes'
+import { TrackInfo } from './track-info'
 
 const meta: Meta<typeof TrackInfo> = {
   title: 'Player/TrackInfo',

@@ -1,16 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useTranslations } from 'next-intl'
-import { Card, CardContent, CardFooter } from '@valguide/ui/components/card'
-import { Button } from '@valguide/ui/components/button'
-import { Badge } from '@valguide/ui/components/badge'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@valguide/ui/components/dropdown-menu'
+import { deleteAsset } from '@valguide/core/features/assets/actions'
+import type { Asset } from '@valguide/core/features/assets/schema'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,11 +12,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
-import { Image, Music, Video, MoreVertical, Trash2, Download, Eye } from 'lucide-react'
-import type { Asset } from '@valguide/core/features/assets/schema'
-import { deleteAsset } from '@valguide/core/features/assets/actions'
-import { toast } from 'sonner'
+import { Badge } from '@valguide/ui/components/badge'
+import { Button } from '@valguide/ui/components/button'
+import { Card, CardContent } from '@valguide/ui/components/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@valguide/ui/components/dropdown-menu'
 import { formatDistanceToNow } from 'date-fns'
+import { Download, Eye, Image, MoreVertical, Music, Trash2, Video } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export type AssetCardProps = {
   asset: Asset
@@ -82,7 +82,7 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
     const k = 1024
     const sizes = ['B', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+    return `${Math.round((bytes / k ** i) * 100) / 100} ${sizes[i]}`
   }
 
   return (
@@ -95,6 +95,7 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
             onClick={() => onPreview?.(asset)}
           >
             {asset.type === 'image' && asset.publicUrl ? (
+              // biome-ignore lint/performance/noImgElement: Using img for dynamic content
               <img src={asset.publicUrl} alt={asset.fileName} className="h-full w-full object-cover" />
             ) : (
               getIcon()
@@ -169,7 +170,11 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={isDeleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               {isDeleting ? t('card.deleting') : t('card.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>

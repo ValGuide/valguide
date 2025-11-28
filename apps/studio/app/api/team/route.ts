@@ -1,14 +1,14 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@valguide/supabase/server'
 import { db } from '@valguide/core/features/db'
-import { getTeamBySlug, getTeamMembers, getPendingInvitations, getUserRole } from '@valguide/core/features/orgs/queries'
-import { cookies } from 'next/headers'
-import { type OrgRole } from '@valguide/core/features/orgs/schema'
+import { getPendingInvitations, getTeamBySlug, getTeamMembers, getUserRole } from '@valguide/core/features/orgs/queries'
+import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
+import { createClient } from '@valguide/supabase/server'
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   try {
     const supabase = await createClient()
     const { data } = await supabase.auth.getClaims()
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
     const pendingInvitesData = await getPendingInvitations(db, team.id)
 
     // Transform data for client component
-    const members = membersData.map(({ member, profile, user: authUser }: any) => ({
+    const members = membersData.map(({ member, profile, user: authUser }) => ({
       id: member.id,
       userId: member.userId,
       email: authUser?.email || '',
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
       isOwner: member.isOwner || false,
     }))
 
-    const pendingInvites = pendingInvitesData.map(({ invitation, inviter, inviterProfile }: any) => ({
+    const pendingInvites = pendingInvitesData.map(({ invitation, inviter, inviterProfile }) => ({
       id: invitation.id,
       email: invitation.email,
       role: invitation.role as OrgRole,

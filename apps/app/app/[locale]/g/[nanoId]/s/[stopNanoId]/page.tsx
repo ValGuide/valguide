@@ -1,12 +1,11 @@
-import { notFound } from 'next/navigation'
 import { db } from '@valguide/core/features/db'
 import {
-  getStopByNanoId,
   getGuideIdByStopNanoId,
   getPublishedGuideByNanoId,
+  getStopByNanoId,
 } from '@valguide/core/features/guides/queries'
-import { getLocalizedStopText } from '@valguide/core/features/guides/schema'
-import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
+// biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
+import { notFound } from 'next/navigation'
 import { StopContent } from './components/stop-content'
 import { StopNavigation } from './components/stop-navigation'
 

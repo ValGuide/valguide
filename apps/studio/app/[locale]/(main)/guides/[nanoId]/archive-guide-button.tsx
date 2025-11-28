@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { Button } from '@valguide/ui/components/button'
+import { archiveGuide } from '@valguide/core/features/guides/actions'
+import { useRouter } from '@valguide/i18n/routing'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,9 +12,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
+import { Button } from '@valguide/ui/components/button'
 import { Archive } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import { archiveGuide } from '@valguide/core/features/guides/actions'
 
 interface ArchiveGuideButtonProps {
   guideId: string
@@ -37,7 +37,7 @@ export function ArchiveGuideButton({ guideId }: ArchiveGuideButtonProps) {
       })
       router.push('/')
       router.refresh()
-    } catch (error) {
+    } catch (_error) {
       toast.error(t('error'), {
         description: t('errorDescription'),
       })

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { CreateTeamDialog } from './create-team-dialog'
 import { Button } from '@valguide/ui/components/button'
+import { CreateTeamDialog } from './create-team-dialog'
 
 const meta = {
   title: 'Features/Orgs/CreateTeamDialog',

@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
-import { todo, todoTranslation } from './schema'
 import { taskToTodo } from '../task/schema'
+import { todo, todoTranslation } from './schema'
 
 export const todoRelations = relations(todo, ({ many }) => ({
   translations: many(todoTranslation),

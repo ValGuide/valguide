@@ -1,9 +1,9 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import { LocaleTabs } from './locale-tabs'
-import { useState } from 'react'
+import { fn } from '@storybook/test'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import {fn} from '@storybook/test'
+import { useState } from 'react'
+import { LocaleTabs } from './locale-tabs'
 
 const meta = {
   title: 'Guides/LocaleTabs',

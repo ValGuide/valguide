@@ -1,17 +1,16 @@
-export function randomBytes(size: number) {
+export function randomBytes(_size: number) {
   return {
-    toString: (encoding?: string) => {
-      // return a random string of length 'size' * 2 (hex) approx
+    toString: (_encoding?: string) => {
       return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2)
     },
   }
 }
 
-export function createHash(algorithm: string) {
+export function createHash(_algorithm: string) {
   return {
-    update: (data: any) => {
+    update: (_data: unknown) => {
       return {
-        digest: (encoding?: string) => 'mock-hash',
+        digest: (_encoding?: string) => 'mock-hash',
       }
     },
   }

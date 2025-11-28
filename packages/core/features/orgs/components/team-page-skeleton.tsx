@@ -34,7 +34,8 @@ export function TeamPageSkeleton() {
               </TableHeader>
               <TableBody>
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
+                  // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton elements
+                  <TableRow key={`skeleton-row-${i}`}>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Skeleton className="size-10 rounded-full" />

@@ -1,42 +1,19 @@
 {
   "extends": "@valguide/typescript-config/nextjs.json",
   "compilerOptions": {
-    "types": [
-      "jest",
-      "node"
-    ],
+    "types": ["jest", "node"],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@valguide/features/*": [
-        "../../packages/core/features/*"
-      ],
-      "@valguide/slack/*": [
-        "../../packages/core/slack/*"
-      ],
-      "@valguide/ui/*": [
-        "../../packages/core/ui/*"
-      ],
-      "@valguide/supabase/*": [
-        "../../packages/core/supabase/*"
-      ],
-      "@valguide/i18n/*": [
-        "../../packages/core/i18n/*"
-      ],
-      "@valguide/core/*": [
-        "../../packages/core/*"
-      ],
-      "@valguide/icons/*": [
-        "../../packages/icons/dist/*"
-      ],
-      "@valguide/logger/*": [
-        "../../packages/logger/src/*"
-      ],
-      "@valguide/logger": [
-        "../../packages/logger"
-      ]
+      "@/*": ["./*"],
+      "@valguide/features/*": ["../../packages/core/features/*"],
+      "@valguide/slack/*": ["../../packages/core/slack/*"],
+      "@valguide/ui/*": ["../../packages/core/ui/*"],
+      "@valguide/supabase/*": ["../../packages/core/supabase/*"],
+      "@valguide/i18n/*": ["../../packages/core/i18n/*"],
+      "@valguide/core/*": ["../../packages/core/*"],
+      "@valguide/icons/*": ["../../packages/icons/dist/*"],
+      "@valguide/logger/*": ["../../packages/logger/src/*"],
+      "@valguide/logger": ["../../packages/logger"]
     },
     "plugins": [
       {
@@ -44,14 +21,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "next.config.mjs",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,9 +1,8 @@
 'use client'
 
-import { type LucideIcon } from 'lucide-react'
-
+import { Link } from '@valguide/i18n/routing'
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@valguide/ui/components/sidebar'
-import Link from 'next/link'
+import type { LucideIcon } from 'lucide-react'
 
 export function NavMain({
   items,

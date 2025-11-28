@@ -1,16 +1,13 @@
 'use client'
 
-import * as React from 'react'
-import { useTranslations } from 'next-intl'
-import { Plus, Trash2, GripVertical } from 'lucide-react'
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from '@dnd-kit/core'
 import {
   arrayMove,
@@ -20,18 +17,21 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import {
   Empty,
+  EmptyContent,
+  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
 } from '@valguide/ui/components/empty'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
+import { GripVertical, Plus, Trash2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import * as React from 'react'
 
 export type StopsListProps = {
   stops: StopWithTranslations[]

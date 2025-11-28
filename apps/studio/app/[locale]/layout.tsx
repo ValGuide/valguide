@@ -1,15 +1,16 @@
 import '@valguide/ui/styles/globals.css'
 
-import { Bricolage_Grotesque as BricolageGrotesque, Geist, Geist_Mono } from 'next/font/google'
-import { Providers } from '@/components/providers'
-import { Metadata, Viewport } from 'next'
-import { PageParamsWithLocale } from '@valguide/core/utils/types'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { ReactNode } from 'react'
-import { i18nStaticParams, SupportedLocale } from '@valguide/i18n/i18n.config'
-import { routing } from '@valguide/i18n/routing'
-import { notFound } from 'next/navigation'
+import type { PageParamsWithLocale } from '@valguide/core/utils/types'
+import { i18nStaticParams, type SupportedLocale } from '@valguide/i18n/i18n.config'
 import { getMessages } from '@valguide/i18n/messages'
+import { routing } from '@valguide/i18n/routing'
+import type { Metadata, Viewport } from 'next'
+import { Bricolage_Grotesque as BricolageGrotesque, Geist, Geist_Mono } from 'next/font/google'
+// biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
+import { notFound } from 'next/navigation'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import type { ReactNode } from 'react'
+import { Providers } from '@/components/providers'
 
 const fontSans = Geist({
   subsets: ['latin'],
@@ -22,7 +23,7 @@ const fontMono = Geist_Mono({
 })
 
 // TODO: add groteske ront
-const inter = BricolageGrotesque({ subsets: ['latin'] })
+const _inter = BricolageGrotesque({ subsets: ['latin'] })
 
 export const generateStaticParams = () => i18nStaticParams
 
@@ -52,7 +53,7 @@ export default async function RootLayout({
   const locale = (await params).locale
 
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as SupportedLocale)) {
     notFound()
   }
 

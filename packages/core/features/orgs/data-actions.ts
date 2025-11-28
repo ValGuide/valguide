@@ -2,9 +2,9 @@
 
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
-import { getTeamBySlug, getTeamMembers, getPendingInvitations, getUserRole } from './queries'
 import { getActiveTeamSlug } from './context-actions'
-import { type OrgRole } from './schema'
+import { getPendingInvitations, getTeamBySlug, getTeamMembers, getUserRole } from './queries'
+import type { OrgRole } from './schema'
 
 export async function getTeamDataAction() {
   const supabase = await createClient()
@@ -18,13 +18,12 @@ export async function getTeamDataAction() {
 
   const teamSlug = await getActiveTeamSlug()
 
-  if (!teamSlug){
+  if (!teamSlug) {
     console.info('no team slug')
-     return null
+    return null
   }
 
   const team = await getTeamBySlug(db, teamSlug)
-
 
   if (!team) {
     console.info('no team')
@@ -48,7 +47,7 @@ export async function getTeamDataAction() {
     lastName: profile?.lastName,
     role: member.role as OrgRole,
     joinedAt: member.createdAt.toISOString(),
-    isOwner: member.isOwner || false
+    isOwner: member.isOwner || false,
   }))
 
   const pendingInvites = pendingInvitesData.map(({ invitation, inviter, inviterProfile }: any) => ({
@@ -56,13 +55,14 @@ export async function getTeamDataAction() {
     email: invitation.email,
     role: invitation.role as OrgRole,
     invitedBy: {
-      name: inviterProfile?.firstName && inviterProfile?.lastName 
-            ? `${inviterProfile.firstName} ${inviterProfile.lastName}`
-            : inviter?.email?.split('@')[0] || 'Unknown',
-      email: inviter?.email || ''
+      name:
+        inviterProfile?.firstName && inviterProfile?.lastName
+          ? `${inviterProfile.firstName} ${inviterProfile.lastName}`
+          : inviter?.email?.split('@')[0] || 'Unknown',
+      email: inviter?.email || '',
     },
     invitedAt: invitation.createdAt.toISOString(),
-    expiresAt: invitation.expiresAt.toISOString()
+    expiresAt: invitation.expiresAt.toISOString(),
   }))
 
   return {
@@ -70,6 +70,6 @@ export async function getTeamDataAction() {
     members,
     pendingInvites,
     currentUserRole: currentUserRole as OrgRole,
-    currentUserId: user.sub
+    currentUserId: user.sub,
   }
 }

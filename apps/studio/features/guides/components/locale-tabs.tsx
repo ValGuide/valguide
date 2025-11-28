@@ -1,7 +1,7 @@
 'use client'
 
+import { type SupportedLocale, supportedLocales } from '@valguide/i18n/i18n.config'
 import { Tabs, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
-import { supportedLocales, type SupportedLocale } from '@valguide/i18n/i18n.config'
 
 export type LocaleTabsProps = {
   value: SupportedLocale

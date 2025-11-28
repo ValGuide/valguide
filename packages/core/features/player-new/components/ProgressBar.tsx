@@ -1,8 +1,8 @@
 'use client'
 
-import * as React from 'react'
 import * as SliderPrimitive from '@radix-ui/react-slider'
 import { cn } from '@valguide/core/ui/lib/utils'
+import * as React from 'react'
 
 interface ProgressBarProps {
   currentTime: number
@@ -54,9 +54,7 @@ export function ProgressBar({ currentTime, duration, onSeek, className }: Progre
         <SliderPrimitive.Track className="relative h-1.5 w-full grow rounded-full bg-white/20">
           <SliderPrimitive.Range className="absolute h-full rounded-full bg-white" />
         </SliderPrimitive.Track>
-        <SliderPrimitive.Thumb
-          className="block h-4 w-4 rounded-full bg-white shadow-lg ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-        />
+        <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full bg-white shadow-lg ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
       </SliderPrimitive.Root>
       <div className="flex w-full justify-between text-xs font-medium text-white/70">
         <span>{formatTime(value[0] ?? 0)}</span>

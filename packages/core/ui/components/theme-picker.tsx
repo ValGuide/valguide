@@ -1,10 +1,5 @@
 'use client'
 
-import * as React from 'react'
-import { useTheme } from 'next-themes'
-import { Check, ChevronDown } from 'lucide-react'
-
-import { cn } from '@valguide/ui/lib/utils'
 import { Button } from '@valguide/ui/components/button'
 import {
   Command,
@@ -15,8 +10,12 @@ import {
   CommandList,
 } from '@valguide/ui/components/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
+import type { DataTestIdProps } from '@valguide/ui/lib/types'
+import { cn } from '@valguide/ui/lib/utils'
 import { themes } from '@valguide/ui/theme/themes'
-import { DataTestIdProps } from '@valguide/ui/lib/types'
+import { Check, ChevronDown } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import * as React from 'react'
 
 export interface ThemePickerProps extends React.HTMLAttributes<HTMLDivElement>, DataTestIdProps {
   align?: 'start' | 'center' | 'end'

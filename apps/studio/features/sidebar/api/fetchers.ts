@@ -1,4 +1,4 @@
-import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
+import type { Team } from '@valguide/core/features/orgs/components/team-switcher'
 
 export interface SidebarData {
   user: {

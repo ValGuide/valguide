@@ -1,5 +1,4 @@
 import { Body, Container, Head, Heading, Html, Img, Preview, Section, Tailwind, Text } from '@react-email/components'
-import * as React from 'react'
 
 export interface OtpLoginEmailProps {
   code: string

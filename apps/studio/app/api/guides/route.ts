@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@valguide/supabase/server'
 import { db } from '@valguide/core/features/db'
 import { createGuide, getGuidesByOrganizationId } from '@valguide/core/features/guides/queries'
-import { getUserTeams, getTeamBySlug } from '@valguide/core/features/orgs/queries'
+import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/i18n/i18n.config'
+import { createClient } from '@valguide/supabase/server'
 import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
     // 1. Try query param (if user is member)
     if (queryOrganizationId) {
-      const hasAccess = userTeams.some((t: any) => t.id === queryOrganizationId)
+      const hasAccess = userTeams.some((t: { id: string }) => t.id === queryOrganizationId)
       if (hasAccess) {
         targetOrganizationId = queryOrganizationId
       }
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
       const activeTeamSlug = cookieStore.get('active-team-slug')?.value
 
       if (activeTeamSlug) {
-        const team = userTeams.find((t: any) => t.slug === activeTeamSlug)
+        const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
         if (team) {
           targetOrganizationId = team.id
         }
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
         const activeTeamSlug = cookieStore.get('active-team-slug')?.value
 
         if (activeTeamSlug) {
-          const team = userTeams.find((t: any) => t.slug === activeTeamSlug)
+          const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
           if (team) {
             organizationId = team.id
           }

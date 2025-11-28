@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { AssetsList } from './assets-list'
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { AssetsList } from './assets-list'
 
 const meta = {
   title: 'Assets/AssetsList',

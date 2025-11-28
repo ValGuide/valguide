@@ -1,4 +1,3 @@
-import { eq } from 'drizzle-orm'
 import { db } from '@valguide/core/features/db'
 import { profiles } from './schema'
 

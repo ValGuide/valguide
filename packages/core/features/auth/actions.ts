@@ -1,20 +1,20 @@
 'use server'
 
-import { waitUntil } from '@vercel/functions'
-import { createClient } from '@valguide/supabase/server'
 import type {
+  AuthError,
   AuthOtpResponse,
   AuthResponse,
   SignInWithPasswordlessCredentials,
   SignOut,
   VerifyOtpParams,
 } from '@supabase/supabase-js'
-import { AuthError } from '@supabase/supabase-js'
-import { postMessage } from '@valguide/slack/send-slack-message'
-import { userStartedLoginMessage } from '@valguide/slack/messages/user-started-login.message'
 import { createLogger } from '@valguide/logger'
+import { userStartedLoginMessage } from '@valguide/slack/messages/user-started-login.message'
+import { postMessage } from '@valguide/slack/send-slack-message'
+import { createClient } from '@valguide/supabase/server'
+import { waitUntil } from '@vercel/functions'
 
-const log = createLogger('auth-actions')
+const _log = createLogger('auth-actions')
 
 export type SignInWithOtpAction = (credentials: SignInWithPasswordlessCredentials) => Promise<AuthOtpResponse>
 export type VerifyOtpAction = (params: VerifyOtpParams) => Promise<AuthResponse>

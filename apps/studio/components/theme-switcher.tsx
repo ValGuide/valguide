@@ -1,12 +1,11 @@
 'use client'
 
-import * as React from 'react'
-import { Moon, Sun } from 'lucide-react'
-import { useTheme } from 'next-themes'
-import { useTranslations } from 'next-intl'
-
 import { Button } from '@valguide/ui/components/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
+import { Moon, Sun } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useTheme } from 'next-themes'
+import * as React from 'react'
 
 export function ThemeSwitcher() {
   const { theme, setTheme, resolvedTheme } = useTheme()

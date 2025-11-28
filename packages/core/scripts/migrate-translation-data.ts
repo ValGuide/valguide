@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
+
 /**
  * Data migration script: Move existing translation data to versioned structure
- * 
+ *
  * This script:
  * 1. Finds all guide_translation rows that have title/description (old schema)
  * 2. Creates version 1 in guide_translation_version for each
@@ -9,17 +10,17 @@
  * 4. Does the same for stop_translation
  */
 
+import { sql } from 'drizzle-orm'
 import { db } from '../features/db'
-import { guideTranslation, guideTranslationVersion, stopTranslation, stopTranslationVersion } from '../features/guides/schema'
-import { eq, sql, isNotNull } from 'drizzle-orm'
+import { guideTranslationVersion, stopTranslationVersion } from '../features/guides/schema'
 
 async function migrateGuideTranslations() {
   console.log('🔄 Migrating guide translations...')
-  
+
   // Find all guide_translation rows that still have title/description columns
   // (This will fail if columns don't exist, which is fine - means already migrated)
   let translationsToMigrate: any[]
-  
+
   try {
     translationsToMigrate = await db.execute(sql`
       SELECT id, guide_id, locale, title, description, created_at
@@ -27,7 +28,8 @@ async function migrateGuideTranslations() {
       WHERE title IS NOT NULL
     `)
   } catch (error: any) {
-    if (error.code === '42703') { // column does not exist
+    if (error.code === '42703') {
+      // column does not exist
       console.log('✅ Guide translation columns already migrated')
       return
     }
@@ -80,9 +82,9 @@ async function migrateGuideTranslations() {
 
 async function migrateStopTranslations() {
   console.log('\n🔄 Migrating stop translations...')
-  
+
   let translationsToMigrate: any[]
-  
+
   try {
     translationsToMigrate = await db.execute(sql`
       SELECT id, stop_id, locale, title, description, transcription, created_at
@@ -90,7 +92,8 @@ async function migrateStopTranslations() {
       WHERE title IS NOT NULL
     `)
   } catch (error: any) {
-    if (error.code === '42703') { // column does not exist
+    if (error.code === '42703') {
+      // column does not exist
       console.log('✅ Stop translation columns already migrated')
       return
     }
@@ -145,11 +148,11 @@ async function migrateStopTranslations() {
 
 async function main() {
   console.log('🚀 Starting translation data migration...\n')
-  
+
   try {
     await migrateGuideTranslations()
     await migrateStopTranslations()
-    
+
     console.log('\n✨ Migration complete!')
   } catch (error) {
     console.error('\n❌ Migration failed:', error)

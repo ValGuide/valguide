@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { InviteMemberDialog } from './invite-member-dialog'
-import { Button } from '@valguide/ui/components/button'
-import { UserPlus } from 'lucide-react'
-
+import deMessages from '@valguide/i18n/messages/de.json'
 // Import messages for the story
 import enMessages from '@valguide/i18n/messages/en.json'
-import deMessages from '@valguide/i18n/messages/de.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
+import { Button } from '@valguide/ui/components/button'
+import { UserPlus } from 'lucide-react'
+import { NextIntlClientProvider } from 'next-intl'
+import { InviteMemberDialog } from './invite-member-dialog'
 
 const meta: Meta<typeof InviteMemberDialog> = {
   title: 'Core/Orgs/InviteMemberDialog',
@@ -130,7 +129,7 @@ export const WithError: Story = {
       },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ _canvasElement }) => {
     // This would auto-trigger the dialog for testing
   },
 }

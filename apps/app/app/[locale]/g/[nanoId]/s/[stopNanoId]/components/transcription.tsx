@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 
 type TranscriptionProps = {
   content: string
@@ -17,11 +17,7 @@ export function Transcription({ content }: TranscriptionProps) {
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <Button
-        variant="ghost"
-        className="w-full justify-between p-4"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
+      <Button variant="ghost" className="w-full justify-between p-4" onClick={() => setIsExpanded(!isExpanded)}>
         <span className="font-semibold">{t('transcription')}</span>
         {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
       </Button>

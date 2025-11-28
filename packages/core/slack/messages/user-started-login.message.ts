@@ -1,4 +1,4 @@
-import { SlackMessage } from '@valguide/slack/slack-message'
+import type { SlackMessage } from '@valguide/slack/slack-message'
 
 type Props = {
   email?: string

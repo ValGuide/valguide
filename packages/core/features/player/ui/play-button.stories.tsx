@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { PlayButton } from './play-button'
 import { themes } from '@valguide/ui/theme/themes'
+import { PlayButton } from './play-button'
 
 const meta: Meta<typeof PlayButton> = {
   title: 'Player/PlayButton',

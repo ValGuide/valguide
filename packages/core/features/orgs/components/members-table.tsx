@@ -1,8 +1,5 @@
 'use client'
 
-import * as React from 'react'
-import { useTranslations } from 'next-intl'
-import { MoreHorizontal, Mail, Crown, Shield, Palette, Edit3, Eye, Trash2 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
@@ -14,6 +11,9 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
+import { Crown, Edit3, Eye, Mail, MoreHorizontal, Palette, Shield, Trash2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import type * as React from 'react'
 
 export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
 
@@ -156,7 +156,7 @@ export function MembersTable({
                 const isCurrentUser = member.userId === currentUserId
                 const canManage = canManageMember(currentUserRole, member.role) && !isCurrentUser
                 const RoleIcon = roleIcons[member.role]
-  
+
                 return (
                   <TableRow key={member.id}>
                     <TableCell>
@@ -184,59 +184,61 @@ export function MembersTable({
                         {roleLabels[member.role]}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground hidden md:table-cell">{formatDate(member.joinedAt)}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden md:table-cell">
+                      {formatDate(member.joinedAt)}
+                    </TableCell>
                     <TableCell>
-                    {canManage && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8">
-                            <MoreHorizontal className="size-4" />
-                            <span className="sr-only">{t('actions')}</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {onChangeRole && (
-                            <>
-                              {(['owner', 'admin', 'curator', 'editor', 'viewer'] as OrgRole[])
-                                .filter((role) => role !== member.role)
-                                .filter((role) => roleHierarchy[role] < roleHierarchy[currentUserRole])
-                                .map((role) => {
-                                  const Icon = roleIcons[role]
-                                  return (
-                                    <DropdownMenuItem key={role} onClick={() => handleChangeRole(member.id, role)}>
-                                      <Icon className="mr-2 size-4" />
-                                      {t('changeRoleTo', { role: roleLabels[role] })}
-                                    </DropdownMenuItem>
-                                  )
-                                })}
-                              <DropdownMenuSeparator />
-                            </>
-                          )}
-                          {onResendInvite && (
-                            <DropdownMenuItem onClick={() => handleResendInvite(member.id)}>
-                              <Mail className="mr-2 size-4" />
-                              {t('resendInvite')}
-                            </DropdownMenuItem>
-                          )}
-                          {onRemoveMember && (
-                            <DropdownMenuItem
-                              onClick={() => handleRemoveMember(member.id)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 className="mr-2 size-4" />
-                              {t('removeMember')}
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </TableCell>
-                </TableRow>
-              )
-            })
-          )}
-        </TableBody>
-      </Table>
+                      {canManage && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="size-8">
+                              <MoreHorizontal className="size-4" />
+                              <span className="sr-only">{t('actions')}</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {onChangeRole && (
+                              <>
+                                {(['owner', 'admin', 'curator', 'editor', 'viewer'] as OrgRole[])
+                                  .filter((role) => role !== member.role)
+                                  .filter((role) => roleHierarchy[role] < roleHierarchy[currentUserRole])
+                                  .map((role) => {
+                                    const Icon = roleIcons[role]
+                                    return (
+                                      <DropdownMenuItem key={role} onClick={() => handleChangeRole(member.id, role)}>
+                                        <Icon className="mr-2 size-4" />
+                                        {t('changeRoleTo', { role: roleLabels[role] })}
+                                      </DropdownMenuItem>
+                                    )
+                                  })}
+                                <DropdownMenuSeparator />
+                              </>
+                            )}
+                            {onResendInvite && (
+                              <DropdownMenuItem onClick={() => handleResendInvite(member.id)}>
+                                <Mail className="mr-2 size-4" />
+                                {t('resendInvite')}
+                              </DropdownMenuItem>
+                            )}
+                            {onRemoveMember && (
+                              <DropdownMenuItem
+                                onClick={() => handleRemoveMember(member.id)}
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <Trash2 className="mr-2 size-4" />
+                                {t('removeMember')}
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   )

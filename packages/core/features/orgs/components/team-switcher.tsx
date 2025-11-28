@@ -1,8 +1,5 @@
 'use client'
 
-import * as React from 'react'
-import { ChevronsUpDown, Plus, Settings } from 'lucide-react'
-import { useTranslations } from 'next-intl'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import {
   DropdownMenu,
@@ -13,6 +10,9 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
+import { ChevronsUpDown, Plus, Settings } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import * as React from 'react'
 
 export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
 
@@ -127,7 +127,7 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">{t('teams')}</DropdownMenuLabel>
-            {teams.map((team, index) => (
+            {teams.map((team, _index) => (
               <DropdownMenuItem
                 key={team.id}
                 onClick={() => handleTeamSwitch(team.slug)}

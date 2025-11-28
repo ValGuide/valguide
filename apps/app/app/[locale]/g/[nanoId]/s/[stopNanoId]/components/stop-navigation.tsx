@@ -1,8 +1,8 @@
-import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import { Button } from '@valguide/core/ui/components/button'
-import { ChevronLeft, ChevronRight, List } from 'lucide-react'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import { Button } from '@valguide/core/ui/components/button'
+import { Link } from '@valguide/i18n/routing'
+import { ChevronLeft, ChevronRight, List } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 type StopNavigationProps = {
   guideNanoId: string

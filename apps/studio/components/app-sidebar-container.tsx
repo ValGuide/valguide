@@ -3,14 +3,14 @@
 import { signOutAction } from '@valguide/core/features/auth/actions'
 import { switchTeamAction } from '@valguide/core/features/orgs/context-actions'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
+import { usePathname, useRouter } from '@valguide/i18n/routing'
 import { useTranslations } from 'next-intl'
-import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { mutate } from 'swr'
+import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
 import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
-import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
 
 export function AppSidebarContainer() {
   const pathname = usePathname()

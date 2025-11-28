@@ -1,14 +1,14 @@
-import { db } from '../../db'
-import { eq, sql } from 'drizzle-orm'
-import { todo, todoTranslation } from '../schema'
-import { customAlphabet } from 'nanoid'
 import { createLogger } from '@valguide/logger'
+import { sql } from 'drizzle-orm'
+import { customAlphabet } from 'nanoid'
+import { db } from '../../db'
+import { todo, todoTranslation } from '../schema'
 
-const log = createLogger('create-todo')
+const _log = createLogger('create-todo')
 
-const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10)
+const _nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10)
 
-const insertTodo = db
+const _insertTodo = db
   .insert(todo)
   .values({
     key: sql.placeholder('key'),
@@ -16,7 +16,7 @@ const insertTodo = db
   .returning({ todoId: todo.id })
   .prepare('insert_todo')
 
-const insertTranslation = db
+const _insertTranslation = db
   .insert(todoTranslation)
   .values({
     todoId: sql.placeholder('todoId'),

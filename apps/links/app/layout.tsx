@@ -1,7 +1,7 @@
-import { ReactNode } from 'react'
 import { PostHogProvider } from '@valguide/core/posthog/PostHogProvider'
-import { setRequestLocale } from 'next-intl/server'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
+import { setRequestLocale } from 'next-intl/server'
+import type { ReactNode } from 'react'
 
 type Props = {
   children: ReactNode

@@ -5,6 +5,6 @@
  * including logo insertion, color customization, and download capabilities.
  */
 
-export { QRCode } from './qr-code'
 export type { QRCodeProps } from './qr-code'
+export { QRCode } from './qr-code'
 export * from './utils'

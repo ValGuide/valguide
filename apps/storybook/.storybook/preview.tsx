@@ -1,14 +1,14 @@
 import '@valguide/ui/styles/globals.css'
 
-import type { Preview } from '@storybook/nextjs-vite'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
-import { NextIntlClientProvider } from 'next-intl'
+import type { Preview } from '@storybook/nextjs-vite'
+import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 
 import { themes } from '@valguide/ui/theme/themes'
-import { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { NextIntlClientProvider } from 'next-intl'
 import nextIntl from './next-intl'
 
-const locales: Record<SupportedLocale, String> = {
+const locales: Record<SupportedLocale, string> = {
   en: 'English 🇺🇸',
   de: 'Deutsch 🇩🇪',
   rm: 'Romontsch 🇨🇭',
@@ -45,13 +45,7 @@ const preview: Preview = {
       </NextIntlClientProvider>
     ),
     withThemeByDataAttribute({
-      themes: themes.reduce(
-        (acc, theme) => ({
-          ...acc,
-          [theme]: theme,
-        }),
-        {},
-      ),
+      themes: Object.fromEntries(themes.map((theme) => [theme, theme])),
       defaultTheme: 'light',
       attributeName: 'data-theme',
     }),

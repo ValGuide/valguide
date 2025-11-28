@@ -3,7 +3,6 @@
 
 import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
-import React from 'react'
 
 export const HomeButton = () => (
   <Link href="/">

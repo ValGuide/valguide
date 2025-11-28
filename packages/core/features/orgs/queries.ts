@@ -1,8 +1,8 @@
-import { and, eq, desc, gt } from 'drizzle-orm'
-import type { DB } from '../db'
-import { organization, organizationMember, organizationInvitation } from './schema'
-import { profiles } from '../profiles/schema'
+import { and, desc, eq, gt } from 'drizzle-orm'
 import { authUsers } from 'drizzle-orm/supabase'
+import type { DB } from '../db'
+import { profiles } from '../profiles/schema'
+import { organization, organizationInvitation, organizationMember } from './schema'
 
 /**
  * Get all teams a user belongs to
@@ -63,15 +63,12 @@ export async function getPendingInvitations(db: DB, teamId: string) {
     .select({
       invitation: organizationInvitation,
       inviter: authUsers,
-      inviterProfile: profiles
+      inviterProfile: profiles,
     })
     .from(organizationInvitation)
     .leftJoin(authUsers, eq(organizationInvitation.invitedBy, authUsers.id))
     .leftJoin(profiles, eq(organizationInvitation.invitedBy, profiles.id))
-    .where(and(
-      eq(organizationInvitation.organizationId, teamId),
-      gt(organizationInvitation.expiresAt, new Date())
-    ))
+    .where(and(eq(organizationInvitation.organizationId, teamId), gt(organizationInvitation.expiresAt, new Date())))
     .orderBy(desc(organizationInvitation.createdAt))
 }
 
@@ -89,10 +86,7 @@ export async function getInvitationById(db: DB, id: string) {
  */
 export async function getInvitationByTokenHash(db: DB, tokenHash: string) {
   return db.query.organizationInvitation.findFirst({
-    where: and(
-      eq(organizationInvitation.tokenHash, tokenHash),
-      gt(organizationInvitation.expiresAt, new Date())
-    ),
+    where: and(eq(organizationInvitation.tokenHash, tokenHash), gt(organizationInvitation.expiresAt, new Date())),
     with: {
       organization: true,
     },
@@ -104,12 +98,9 @@ export async function getInvitationByTokenHash(db: DB, tokenHash: string) {
  */
 export async function isTeamMember(db: DB, teamId: string, userId: string) {
   const member = await db.query.organizationMember.findFirst({
-    where: and(
-      eq(organizationMember.organizationId, teamId),
-      eq(organizationMember.userId, userId)
-    ),
+    where: and(eq(organizationMember.organizationId, teamId), eq(organizationMember.userId, userId)),
   })
-  
+
   return !!member
 }
 
@@ -118,11 +109,8 @@ export async function isTeamMember(db: DB, teamId: string, userId: string) {
  */
 export async function getUserRole(db: DB, teamId: string, userId: string) {
   const member = await db.query.organizationMember.findFirst({
-    where: and(
-      eq(organizationMember.organizationId, teamId),
-      eq(organizationMember.userId, userId)
-    ),
+    where: and(eq(organizationMember.organizationId, teamId), eq(organizationMember.userId, userId)),
   })
-  
+
   return member?.role ?? null
 }

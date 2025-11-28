@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react'
-import { cn } from '@valguide/ui/lib/utils'
 import { Skeleton } from '@valguide/ui/components/skeleton'
+import { cn } from '@valguide/ui/lib/utils'
+import type React from 'react'
 
 export interface AuthSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {}
 

@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { NextIntlClientProvider } from 'next-intl'
-import { GuidesList } from '@/features/guides/components/guides-list'
-import { Guide } from '@valguide/features/guides/types'
-
+import type { Guide } from '@valguide/features/guides/types'
+import deMessages from '@valguide/i18n/messages/de.json'
 // Import messages for the story
 import enMessages from '@valguide/i18n/messages/en.json'
-import deMessages from '@valguide/i18n/messages/de.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
+import { NextIntlClientProvider } from 'next-intl'
+import { GuidesList } from '@/features/guides/components/guides-list'
 
 const meta: Meta<typeof GuidesList> = {
   title: 'Studio/Guides/GuidesList',

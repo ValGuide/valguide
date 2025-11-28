@@ -1,7 +1,7 @@
 'use client'
 
 import { Badge } from '@valguide/ui/components/badge'
-import { CheckCircle2, Edit3, Clock, Archive } from 'lucide-react'
+import { Archive, CheckCircle2, Clock, Edit3 } from 'lucide-react'
 
 type TranslationStatus = 'draft' | 'in_review' | 'published' | 'archived'
 

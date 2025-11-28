@@ -20,11 +20,11 @@ export const useSelectedLayoutSegment = () => null
 
 export const useSelectedLayoutSegments = () => []
 
-export const redirect = (url: string) => {}
+export const redirect = (_url: string) => {}
 
 export const notFound = () => {}
 
-export const ServerInsertedHTMLContext = React.createContext<any>(null)
+export const ServerInsertedHTMLContext = React.createContext<((content: React.ReactNode) => void) | null>(null)
 
 export const useServerInsertedHTML = () => {}
 

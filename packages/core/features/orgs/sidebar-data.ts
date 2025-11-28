@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers'
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
-import { getUserTeams } from './queries'
 import { getProfile } from '../profiles/queries'
 import { getUserDisplayName } from '../profiles/utils'
+import { getUserTeams } from './queries'
 
 export const TEAM_COOKIE_NAME = 'active-team-slug'
 

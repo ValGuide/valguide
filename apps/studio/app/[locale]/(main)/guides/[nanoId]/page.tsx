@@ -1,11 +1,12 @@
-import { notFound } from 'next/navigation'
-import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
-import Link from 'next/link'
+import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 import { Pencil } from 'lucide-react'
-import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+// biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
+import { notFound } from 'next/navigation'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { ArchiveGuideButton } from './archive-guide-button'
 import { ViewInAppButton } from './view-in-app-button'
 
@@ -73,6 +74,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
 
         {guide.coverImage && (
           <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+            {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
             <img
               src={guide.coverImage}
               alt={(() => {

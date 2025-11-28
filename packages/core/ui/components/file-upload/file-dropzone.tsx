@@ -1,8 +1,8 @@
 'use client'
 
-import * as React from 'react'
-import { Upload, X, FileIcon, CheckCircle2 } from 'lucide-react'
 import { cn } from '@valguide/ui/lib/utils'
+import { CheckCircle2, FileIcon, Upload, X } from 'lucide-react'
+import * as React from 'react'
 
 export interface FileDropzoneProps {
   onFilesSelected?: (files: File[]) => void
@@ -204,7 +204,7 @@ export function FileDropzone({
         }
       })
     }
-  }, [])
+  }, [uploadedFiles.forEach])
 
   return (
     <div className={cn('w-full space-y-6', className)}>
@@ -294,6 +294,7 @@ export function FileDropzone({
                       <FileIcon className="w-5 h-5 text-destructive" />
                     </div>
                   ) : getFileIcon(uploadedFile.file) === 'image' ? (
+                    // biome-ignore lint/performance/noImgElement: Using img for dynamic content
                     <img
                       src={uploadedFile.preview}
                       alt={uploadedFile.file.name}

@@ -1,6 +1,6 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { GuidePreviewCard } from './preview-card'
-import { faker } from '@faker-js/faker'
 
 const meta: Meta<typeof GuidePreviewCard> = {
   title: 'Guide/PreviewCard',

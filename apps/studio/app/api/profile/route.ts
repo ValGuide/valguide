@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server'
 import { createClient } from '@valguide/core/supabase/server'
 import { getProfile } from '@valguide/features/profiles/queries'
+import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   try {
     const supabase = await createClient()
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()

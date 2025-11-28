@@ -1,11 +1,9 @@
-import * as React from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
-
 import { cn } from '@valguide/ui/lib/utils'
-import { DataTestIdProps } from '@valguide/ui/lib/types'
-import { TrackInfo } from './track-info'
+import { cva, type VariantProps } from 'class-variance-authority'
+import type * as React from 'react'
 import { PlayerControls } from './player-controls'
 import { ProgressBar } from './progress-bar'
+import { TrackInfo } from './track-info'
 import { VolumeControl } from './volume-control'
 
 const playerVariants = cva('flex flex-col gap-2 rounded-lg border bg-card p-4 shadow-xs', {

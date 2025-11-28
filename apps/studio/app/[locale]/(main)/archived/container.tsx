@@ -1,9 +1,9 @@
 'use client'
 
-import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
 import { useTranslations } from 'next-intl'
-import { ArchivedSkeleton } from './skeleton'
+import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
 import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
+import { ArchivedSkeleton } from './skeleton'
 
 export function ArchivedPageContainer() {
   const t = useTranslations('guides')

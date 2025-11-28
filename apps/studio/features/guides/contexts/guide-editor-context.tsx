@@ -1,27 +1,19 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react'
-import type {
-  GuideWithStops,
-  StopWithTranslations,
-  GuideTranslationWithVersion,
-  StopTranslationWithVersion,
-} from '@valguide/core/features/guides/schema'
-import type { Asset } from '@valguide/core/features/assets/schema'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import { useTranslations } from 'next-intl'
 import {
+  attachAssetToStop as attachAssetToStopAction,
+  createStop,
+  deleteStop as deleteStopAction,
+  detachAssetFromStop as detachAssetFromStopAction,
+  reorderStops as reorderStopsAction,
   updateGuide,
   updateGuideTranslation,
-  createStop,
   updateStop,
-  deleteStop as deleteStopAction,
-  reorderStops as reorderStopsAction,
-  attachAssetToStop as attachAssetToStopAction,
-  detachAssetFromStop as detachAssetFromStopAction,
-  attachAssetToGuide as attachAssetToGuideAction,
-  detachAssetFromGuide as detachAssetFromGuideAction,
 } from '@valguide/core/features/guides/actions'
+import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { useTranslations } from 'next-intl'
+import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 interface GuideEditorContextValue {
@@ -33,10 +25,7 @@ interface GuideEditorContextValue {
   isSaving: boolean
 
   // Guide actions
-  updateGuideTranslationData: (
-    locale: SupportedLocale,
-    data: { title: string; description?: string | null },
-  ) => void
+  updateGuideTranslationData: (locale: SupportedLocale, data: { title: string; description?: string | null }) => void
   updateCoverImage: (assetId: string | null) => void
 
   // Stop actions
@@ -67,13 +56,7 @@ interface GuideEditorContextValue {
 
 const GuideEditorContext = createContext<GuideEditorContextValue | null>(null)
 
-export function GuideEditorProvider({
-  children,
-  initialGuide,
-}: {
-  children: ReactNode
-  initialGuide: GuideWithStops
-}) {
+export function GuideEditorProvider({ children, initialGuide }: { children: ReactNode; initialGuide: GuideWithStops }) {
   const t = useTranslations()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
@@ -114,7 +97,7 @@ export function GuideEditorProvider({
                           ? { ...t.currentVersion, ...data, status: 'draft' as const }
                           : undefined,
                     }
-                  : t
+                  : t,
               ),
             }
           }
@@ -169,7 +152,7 @@ export function GuideEditorProvider({
       console.error('Failed to add stop:', error)
       toast.error(t('stops.actions.addError'))
     }
-  }, [guide.id, guide.stops.length])
+  }, [guide.id, guide.stops.length, t])
 
   // Delete stop
   const deleteStop = useCallback(
@@ -192,25 +175,28 @@ export function GuideEditorProvider({
         toast.error(t('stops.actions.deleteError'))
       }
     },
-    [guide.stops, selectedStop?.id],
+    [guide.stops, selectedStop?.id, t],
   )
 
   // Reorder stops
-  const reorderStops = useCallback(async (stops: StopWithTranslations[]) => {
-    try {
-      await reorderStopsAction(stops.map((s, idx) => ({ id: s.id, order: idx })))
+  const reorderStops = useCallback(
+    async (stops: StopWithTranslations[]) => {
+      try {
+        await reorderStopsAction(stops.map((s, idx) => ({ id: s.id, order: idx })))
 
-      setGuide((prev) => ({
-        ...prev,
-        stops,
-      }))
+        setGuide((prev) => ({
+          ...prev,
+          stops,
+        }))
 
-      toast.success(t('stops.actions.reorderSuccess'))
-    } catch (error) {
-      console.error('Failed to reorder stops:', error)
-      toast.error(t('stops.actions.reorderError'))
-    }
-  }, [])
+        toast.success(t('stops.actions.reorderSuccess'))
+      } catch (error) {
+        console.error('Failed to reorder stops:', error)
+        toast.error(t('stops.actions.reorderError'))
+      }
+    },
+    [t],
+  )
 
   // Update stop translation
   const updateStopTranslationData = useCallback(
@@ -242,7 +228,7 @@ export function GuideEditorProvider({
                             ? { ...t.currentVersion, ...data, status: 'draft' as const }
                             : undefined,
                       }
-                    : t
+                    : t,
                 ),
               }
             }
@@ -272,7 +258,7 @@ export function GuideEditorProvider({
                           ? { ...t.currentVersion, ...data, status: 'draft' as const }
                           : undefined,
                     }
-                  : t
+                  : t,
               ),
             }
           }
@@ -287,36 +273,42 @@ export function GuideEditorProvider({
   )
 
   // Asset actions
-  const attachAssetToStop = useCallback(async (stopId: string, assetId: string, role: string, locale?: string) => {
-    try {
-      await attachAssetToStopAction({
-        stopId,
-        assetId,
-        role,
-        locale,
-        order: 0, // Will be incremented server-side based on existing assets
-      })
+  const attachAssetToStop = useCallback(
+    async (stopId: string, assetId: string, role: string, locale?: string) => {
+      try {
+        await attachAssetToStopAction({
+          stopId,
+          assetId,
+          role,
+          locale,
+          order: 0, // Will be incremented server-side based on existing assets
+        })
 
-      // Optimistically update UI - will be replaced by refetch
-      setIsDirty(true)
-      toast.success(t('stops.assets.attachSuccess'))
-    } catch (error) {
-      console.error('Failed to attach asset:', error)
-      toast.error(t('stops.assets.attachError'))
-    }
-  }, [])
+        // Optimistically update UI - will be replaced by refetch
+        setIsDirty(true)
+        toast.success(t('stops.assets.attachSuccess'))
+      } catch (error) {
+        console.error('Failed to attach asset:', error)
+        toast.error(t('stops.assets.attachError'))
+      }
+    },
+    [t],
+  )
 
-  const detachAssetFromStop = useCallback(async (stopAssetId: string) => {
-    try {
-      await detachAssetFromStopAction(stopAssetId)
+  const detachAssetFromStop = useCallback(
+    async (stopAssetId: string) => {
+      try {
+        await detachAssetFromStopAction(stopAssetId)
 
-      setIsDirty(true)
-      toast.success(t('stops.assets.removeSuccess'))
-    } catch (error) {
-      console.error('Failed to detach asset:', error)
-      toast.error(t('stops.assets.removeError'))
-    }
-  }, [])
+        setIsDirty(true)
+        toast.success(t('stops.assets.removeSuccess'))
+      } catch (error) {
+        console.error('Failed to detach asset:', error)
+        toast.error(t('stops.assets.removeError'))
+      }
+    },
+    [t],
+  )
 
   // Save
   const save = useCallback(async () => {
@@ -393,7 +385,7 @@ export function GuideEditorProvider({
     } finally {
       setIsSaving(false)
     }
-  }, [])
+  }, [t])
 
   // Publish
   const publish = useCallback(async () => {
@@ -417,7 +409,7 @@ export function GuideEditorProvider({
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guide.id, guide.coverImage, guide.organizationId, save])
+  }, [guide.id, guide.coverImage, guide.organizationId, save, t])
 
   const value: GuideEditorContextValue = {
     guide,

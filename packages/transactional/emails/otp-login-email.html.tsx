@@ -1,4 +1,4 @@
-import { OtpLoginEmailProps } from './otp-login-email'
+import type { OtpLoginEmailProps } from './otp-login-email'
 
 export const otpLoginEmailHtml = ({ code, maxValidMinutes, logoUrl }: OtpLoginEmailProps) => {
   return `

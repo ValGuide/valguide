@@ -1,8 +1,8 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import { type ReactNode, useEffect, useState } from 'react'
 
 const QUOTE_KEYS = ['quote1', 'quote2', 'quote3', 'quote4', 'quote5', 'quote6']
 
@@ -77,9 +77,7 @@ export function AuthLayout({
                   <p className="text-4xl lg:text-5xl font-serif italic mb-6 leading-relaxed drop-shadow-lg">
                     "{currentQuote.text}"
                   </p>
-                  <footer className="text-2xl text-white/95 font-medium drop-shadow-md">
-                    — {currentQuote.author}
-                  </footer>
+                  <footer className="text-2xl text-white/95 font-medium drop-shadow-md">— {currentQuote.author}</footer>
                 </blockquote>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { CustomAssetUpload } from './asset-upload-custom'
-import { useState } from 'react'
 import { Button } from '@valguide/ui/components/button'
+import { useState } from 'react'
+import { CustomAssetUpload } from './asset-upload-custom'
 
 const meta = {
   title: 'Assets/CustomAssetUpload',
@@ -15,6 +15,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+// biome-ignore lint/suspicious/noExplicitAny: Storybook action handler
 const ControlledWrapper = (args: any) => {
   const [open, setOpen] = useState(true)
   return (
@@ -72,6 +73,7 @@ export const AudioUploadWithLocale: Story = {
   render: (args) => <ControlledWrapper {...args} />,
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: Storybook action handler
 const UncontrolledStory = (args: any) => {
   return <CustomAssetUpload {...args} />
 }
@@ -84,6 +86,7 @@ export const UncontrolledMode: Story = {
   render: (args) => <UncontrolledStory {...args} />,
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: Storybook action handler
 const FileSelectedWrapper = (args: any) => {
   const [open, setOpen] = useState(true)
   return (
@@ -105,6 +108,7 @@ export const InteractiveFileSelection: Story = {
   render: (args) => <FileSelectedWrapper {...args} />,
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: Storybook action handler
 const UploadingStateWrapper = (args: any) => {
   const [open, setOpen] = useState(true)
   return (
@@ -153,10 +157,12 @@ export const AllAssetTypes: Story = {
   render: () => <AllTypesWrapper />,
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: Storybook action handler
 const WithCallbacksWrapper = (args: any) => {
   const [open, setOpen] = useState(true)
   const [log, setLog] = useState<string[]>([])
 
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook action handler
   const handleUploadComplete = (asset: any) => {
     setLog((prev) => [...prev, `Upload complete: ${asset.fileName}`])
     args.onUploadComplete?.(asset)
@@ -180,6 +186,7 @@ const WithCallbacksWrapper = (args: any) => {
         <p className="text-sm font-medium">Event Log:</p>
         <div className="max-h-32 overflow-y-auto rounded border p-2">
           {log.map((entry, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: log entries have no unique ID
             <p key={i} className="text-xs text-muted-foreground">
               {entry}
             </p>
@@ -263,7 +270,7 @@ export const ResponsiveBehavior: Story = {
 
 const ErrorStateDemo = () => {
   const [open, setOpen] = useState(true)
-  const [showError, setShowError] = useState(false)
+  const [_showError, _setShowError] = useState(false)
 
   return (
     <div>

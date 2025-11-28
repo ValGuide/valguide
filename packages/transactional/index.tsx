@@ -1,17 +1,14 @@
 import { Resend } from 'resend'
-import { TeamInviteEmail, TeamInviteEmailProps } from './emails/team-invite-email'
+import { TeamInviteEmail, type TeamInviteEmailProps } from './emails/team-invite-email'
 
 // Initialize Resend with API key from environment
 // Don't throw if key is missing, we'll handle it in sendEmail
-const resend = process.env.VG_RESEND_SENDING_API_KEY 
-  ? new Resend(process.env.VG_RESEND_SENDING_API_KEY)
-  : null
+const resend = process.env.VG_RESEND_SENDING_API_KEY ? new Resend(process.env.VG_RESEND_SENDING_API_KEY) : null
 
 // Configurable sender
 const FROM_EMAIL = process.env.VG_EMAIL_FROM || 'ValGuide <noreply@valguide.com>'
 
-export type EmailTemplate = 
-  | { name: 'team-invite'; data: TeamInviteEmailProps }
+export type EmailTemplate = { name: 'team-invite'; data: TeamInviteEmailProps }
 
 export interface SendEmailOptions {
   to: string
@@ -41,7 +38,7 @@ export async function sendEmail({ to, subject, template }: SendEmailOptions) {
       react = <TeamInviteEmail {...template.data} />
       break
     default:
-      throw new Error(`Unknown template: ${(template as any).name}`)
+      throw new Error(`Unknown template: ${(template as EmailTemplate).name}`)
   }
 
   try {

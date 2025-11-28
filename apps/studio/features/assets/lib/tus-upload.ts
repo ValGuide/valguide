@@ -1,5 +1,5 @@
-import * as tus from 'tus-js-client'
 import { getUploadCredentials } from '@valguide/core/features/assets/actions/get-upload-credentials'
+import * as tus from 'tus-js-client'
 
 export type TUSUploadOptions = {
   bucketName: string

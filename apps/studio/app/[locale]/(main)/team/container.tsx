@@ -1,11 +1,11 @@
 'use client'
 
-import { TeamMembersClient } from './client'
-import { Button } from '@valguide/ui/components/button'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { TeamPageSkeleton } from '@valguide/core/features/orgs/components/team-page-skeleton'
+import { Button } from '@valguide/ui/components/button'
 import { useTranslations } from 'next-intl'
 import { useTeam } from '../../../../features/team/hooks/use-team'
+import { TeamMembersClient } from './client'
 
 export function TeamPageContainer() {
   const t = useTranslations('orgs.noTeam')

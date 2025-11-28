@@ -1,4 +1,4 @@
-import { Dictionary, FlatDictionary } from './types'
+import type { Dictionary, FlatDictionary } from './types'
 
 export const convertToDotNotation = (json: Dictionary, parentKey = ''): FlatDictionary =>
   Object.keys(json).reduce((result, key) => {
@@ -15,7 +15,7 @@ export const convertToDotNotation = (json: Dictionary, parentKey = ''): FlatDict
 export const revertFromDotNotation = (dotNotationObject: FlatDictionary): Dictionary =>
   Object.entries(dotNotationObject).reduce((result, [key, value]) => {
     const keys = key.split('.')
-    const isArray = keys.some((k) => !isNaN(Number(k)))
+    const isArray = keys.some((k) => !Number.isNaN(Number(k)))
     keys.reduce((temp: any, innerKey, index) => {
       if (index === keys.length - 1) {
         temp[innerKey] = value

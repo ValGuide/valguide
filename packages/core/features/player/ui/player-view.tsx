@@ -1,12 +1,10 @@
-import * as React from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { motion, AnimatePresence } from 'framer-motion'
-
-import { cn } from '@valguide/ui/lib/utils'
-import { DataTestIdProps } from '@valguide/ui/lib/types'
 import { AspectRatio } from '@valguide/ui/components/aspect-ratio'
-import { Player, PlayerProps } from './player'
+import { cn } from '@valguide/ui/lib/utils'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { AnimatePresence, motion } from 'framer-motion'
+import * as React from 'react'
 import { useHover } from 'usehooks-ts'
+import { Player, type PlayerProps } from './player'
 
 const playerViewVariants = cva('relative flex flex-col overflow-hidden', {
   variants: {
@@ -119,6 +117,7 @@ const PlayerView = ({
             {imageRatio === 'square' ? (
               <div className="w-full max-w-full max-h-[calc(100vh-72px)] flex items-center justify-center">
                 <div className="aspect-square w-full max-h-full">
+                  {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
                   <motion.img
                     src={image}
                     alt={`${title} by ${artist}`}
@@ -135,6 +134,7 @@ const PlayerView = ({
             ) : (
               <div className="w-full max-w-full max-h-[calc(100vh-72px)] flex items-center justify-center">
                 <div className="w-full h-auto" style={{ aspectRatio }}>
+                  {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
                   <motion.img
                     src={image}
                     alt={`${title} by ${artist}`}
@@ -153,6 +153,7 @@ const PlayerView = ({
         ) : (
           <div className={cn('w-full', imageRatio === 'original' && aspectRatio < 1 ? 'max-h-[600px]' : '')}>
             <AspectRatio ratio={imageRatio === 'square' ? 1 : aspectRatio}>
+              {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
               <motion.img
                 src={image}
                 alt={`${title} by ${artist}`}

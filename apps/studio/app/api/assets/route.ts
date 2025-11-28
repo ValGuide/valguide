@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getAssets, type GetAssetsFilters } from '@valguide/core/features/assets/queries'
+import { type GetAssetsFilters, getAssets } from '@valguide/core/features/assets/queries'
 import { createClient } from '@valguide/supabase/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 

@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
-import QRCodeStyling from 'qr-code-styling'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
-import { Slider } from '@valguide/ui/components/slider'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
+import { Slider } from '@valguide/ui/components/slider'
+import QRCodeStyling from 'qr-code-styling'
+import React, { useRef, useState } from 'react'
 
 export interface QRCodeProps {
   /**

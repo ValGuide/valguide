@@ -1,22 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@valguide/ui/components/dialog'
-import { Button } from '@valguide/ui/components/button'
-import { ScrollArea } from '@valguide/ui/components/scroll-area'
-import { History, RotateCcw } from 'lucide-react'
-import { toast } from 'sonner'
-import { getGuideTranslationHistory, rollbackGuideTranslation } from '../translation-actions'
-import { TranslationStatusBadge } from './translation-status-badge'
-import { useTranslations } from 'next-intl'
-import type { GuideTranslationVersion } from '../schema'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +10,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
+import { Button } from '@valguide/ui/components/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@valguide/ui/components/dialog'
+import { ScrollArea } from '@valguide/ui/components/scroll-area'
+import { History, RotateCcw } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import type { GuideTranslationVersion } from '../schema'
+import { getGuideTranslationHistory, rollbackGuideTranslation } from '../translation-actions'
+import { TranslationStatusBadge } from './translation-status-badge'
 
 interface VersionHistoryDialogProps {
   guideId: string
@@ -52,7 +52,7 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
     if (isOpen) {
       loadVersions()
     }
-  }, [isOpen, guideId, locale])
+  }, [isOpen, loadVersions])
 
   const loadVersions = async () => {
     setIsLoading(true)
@@ -78,7 +78,7 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
     setIsRollingBack(true)
     try {
       const result = await rollbackGuideTranslation(guideId, locale, selectedVersion)
-      
+
       if (result.success) {
         toast.success(t('rollbackSuccess'))
         setIsRollbackOpen(false)
@@ -141,10 +141,7 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
             ) : (
               <div className="space-y-4">
                 {versions.map((version) => (
-                  <div
-                    key={version.id}
-                    className="rounded-lg border p-4 hover:bg-accent/50 transition-colors"
-                  >
+                  <div key={version.id} className="rounded-lg border p-4 hover:bg-accent/50 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
@@ -160,9 +157,13 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
                           )}
                         </div>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span>{t('created')}: {formatDate(version.createdAt)}</span>
+                          <span>
+                            {t('created')}: {formatDate(version.createdAt)}
+                          </span>
                           {version.publishedAt && (
-                            <span>{t('published')}: {formatDate(version.publishedAt)}</span>
+                            <span>
+                              {t('published')}: {formatDate(version.publishedAt)}
+                            </span>
                           )}
                         </div>
                       </div>

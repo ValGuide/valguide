@@ -1,23 +1,22 @@
 'use client'
 
-import * as React from 'react'
-import { useState, useMemo } from 'react'
-import { useTranslations } from 'next-intl'
-import { Plus, Image as ImageIcon, Music, Video, Search, Upload } from 'lucide-react'
+import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { Button } from '@valguide/ui/components/button'
-import { Input } from '@valguide/ui/components/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import {
   Empty,
+  EmptyContent,
+  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
 } from '@valguide/ui/components/empty'
+import { Input } from '@valguide/ui/components/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Skeleton } from '@valguide/ui/components/skeleton'
-import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
+import { Image as ImageIcon, Music, Search, Upload, Video } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useMemo, useState } from 'react'
 import { AssetCard } from './asset-card'
 import { AssetUploadInline } from './asset-upload-inline'
 
@@ -77,6 +76,7 @@ export function AssetsList({
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {[...Array(8)].map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items have no unique ID
             <div key={i} className="space-y-3">
               <Skeleton className="h-48 w-full rounded-xl" />
               <Skeleton className="h-4 w-3/4" />

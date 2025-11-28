@@ -1,9 +1,9 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { useState } from 'react'
-import { QRCode } from './qr-code'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
-import { faker } from '@faker-js/faker'
+import { useState } from 'react'
+import { QRCode } from './qr-code'
 
 const QRCodeExample = () => {
   const [activeTab, setActiveTab] = useState('basic')

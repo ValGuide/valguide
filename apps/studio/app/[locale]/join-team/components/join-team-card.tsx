@@ -2,14 +2,7 @@
 
 import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@valguide/ui/components/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { useTranslations } from 'next-intl'
 import { SignOutButton } from './sign-out-button'
 
@@ -24,13 +17,7 @@ type JoinTeamCardProps = {
   error?: string | null
 }
 
-export function JoinTeamCard({
-  variant,
-  invite,
-  userEmail,
-  nextUrl = '/',
-  error,
-}: JoinTeamCardProps) {
+export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error }: JoinTeamCardProps) {
   const t = useTranslations('joinTeam')
 
   if (variant === 'invalid') {
@@ -56,9 +43,7 @@ export function JoinTeamCard({
     return (
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>
-            {t('public.title', { teamName: invite.organization.name })}
-          </CardTitle>
+          <CardTitle>{t('public.title', { teamName: invite.organization.name })}</CardTitle>
           <CardDescription>
             {t.rich('public.description', {
               teamName: invite.organization.name,
@@ -71,24 +56,16 @@ export function JoinTeamCard({
             <p className="font-medium">{t('public.invitationFor')}</p>
             <p className="text-muted-foreground">{invite.email}</p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {t('public.instruction')}
-          </p>
+          <p className="text-sm text-muted-foreground">{t('public.instruction')}</p>
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           <Button asChild className="w-full">
-            <Link
-              href={`/signup?email=${encodeURIComponent(
-                invite.email
-              )}&next=${encodeURIComponent(nextUrl)}`}
-            >
+            <Link href={`/signup?email=${encodeURIComponent(invite.email)}&next=${encodeURIComponent(nextUrl)}`}>
               {t('public.createAccount')}
             </Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
-            <Link href={`/login?next=${encodeURIComponent(nextUrl)}`}>
-              {t('public.haveAccount')}
-            </Link>
+            <Link href={`/login?next=${encodeURIComponent(nextUrl)}`}>{t('public.haveAccount')}</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -116,9 +93,7 @@ export function JoinTeamCard({
               })}
             </p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {t('wrongAccount.instruction')}
-          </p>
+          <p className="text-sm text-muted-foreground">{t('wrongAccount.instruction')}</p>
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           <SignOutButton>{t('wrongAccount.signOutButton')}</SignOutButton>
@@ -135,19 +110,13 @@ export function JoinTeamCard({
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>{t('joining.title')}</CardTitle>
-          <CardDescription>
-            {t('joining.description', { teamName: invite.organization.name })}
-          </CardDescription>
+          <CardDescription>{t('joining.description', { teamName: invite.organization.name })}</CardDescription>
         </CardHeader>
         <CardContent>
           {error ? (
             <div className="flex flex-col gap-4">
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                {error}
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {t('joining.error')}
-              </p>
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+              <p className="text-sm text-muted-foreground">{t('joining.error')}</p>
             </div>
           ) : (
             <div className="flex justify-center p-4">

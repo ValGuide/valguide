@@ -1,11 +1,10 @@
 'use client'
 
-import * as React from 'react'
+import { Button } from '@valguide/ui/components/button'
+import { cn } from '@valguide/ui/lib/utils'
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-
-import { cn } from '@valguide/ui/lib/utils'
-import { Button } from '@valguide/ui/components/button'
+import * as React from 'react'
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>

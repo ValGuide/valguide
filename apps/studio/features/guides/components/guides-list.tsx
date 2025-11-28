@@ -1,20 +1,20 @@
 'use client'
 
-import * as React from 'react'
-import { useTranslations } from 'next-intl'
-import { Plus, BookOpen, AlertCircle } from 'lucide-react'
+import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
+import type { Guide } from '@valguide/features/guides/types'
 import { Button } from '@valguide/ui/components/button'
 import {
   Empty,
+  EmptyContent,
+  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
 } from '@valguide/ui/components/empty'
 import { Skeleton } from '@valguide/ui/components/skeleton'
-import { Guide } from '@valguide/features/guides/types'
-import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
+import { AlertCircle, BookOpen, Plus } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import * as React from 'react'
 import { toast } from 'sonner'
 
 interface GuidesListProps {
@@ -109,7 +109,8 @@ export function GuidesList({
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="space-y-3">
+            // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton elements
+            <div key={`skeleton-${i}`} className="space-y-3">
               <Skeleton className="h-48 w-full rounded-xl" />
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-full" />

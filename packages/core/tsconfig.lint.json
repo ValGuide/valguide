@@ -3,11 +3,6 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": [
-    "turbo"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["turbo"],
+  "exclude": ["node_modules", "dist"]
 }

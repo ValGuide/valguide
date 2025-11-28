@@ -1,7 +1,7 @@
 'use client'
 
+import type { Guide } from '@valguide/features/guides/types'
 import useSWR from 'swr'
-import { Guide } from '@valguide/features/guides/types'
 import { fetchGuides } from '../api/fetchers'
 
 interface CreateGuideData {

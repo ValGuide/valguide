@@ -1,5 +1,5 @@
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { Separator } from '@valguide/ui/components/separator'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AppSidebarContainer } from '@/components/app-sidebar-container'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 
@@ -24,4 +24,3 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   )
 }
-

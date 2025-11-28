@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { PlayerView } from './player-view'
 import { themes } from '@valguide/ui/theme/themes'
+import { PlayerView } from './player-view'
 
 const meta: Meta<typeof PlayerView> = {
   title: 'Player/PlayerView',

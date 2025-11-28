@@ -1,4 +1,4 @@
-import { SupportedLocale, supportedLocales } from './i18n.config'
+import { type SupportedLocale, supportedLocales } from './i18n.config'
 
 // Function to dynamically import messages for a specific locale
 export const getMessages = async (locale: SupportedLocale) => {

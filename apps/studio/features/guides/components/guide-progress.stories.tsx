@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react'
-import { GuideProgress } from './guide-progress'
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
+import { GuideProgress } from './guide-progress'
 
 const meta: Meta<typeof GuideProgress> = {
   title: 'Guides/GuideProgress',

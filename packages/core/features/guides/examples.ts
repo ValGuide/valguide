@@ -6,12 +6,7 @@
  */
 
 import { db } from '../db'
-import {
-  createGuide,
-  getGuideByNanoId,
-  getAllGuides,
-  updateGuideTranslation,
-} from './queries'
+import { createGuide, getAllGuides, getGuideByNanoId, updateGuideTranslation } from './queries'
 import { getLocalizedGuideText } from './schema'
 
 /**
@@ -42,10 +37,10 @@ async function exampleCreateGuide(userId: string, orgId: string) {
       },
       {
         locale: 'rm',
-        title: 'Tur d\'audio dal museum 2024',
-        description: 'Scuvri ils accents da nossa collecziun cun questa tur d\'audio guidada.',
+        title: "Tur d'audio dal museum 2024",
+        description: "Scuvri ils accents da nossa collecziun cun questa tur d'audio guidada.",
       },
-    ]
+    ],
   )
 
   console.log('Created guide:', guide.id)
@@ -155,4 +150,3 @@ export {
   exampleUpdateTranslation,
   exampleEfficientQuery,
 }
-

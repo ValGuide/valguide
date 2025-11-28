@@ -1,28 +1,23 @@
 'use client'
 
-import { useState } from 'react'
-import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { Button } from '@valguide/ui/components/button'
-import { Save, ArrowLeft, Check } from 'lucide-react'
-import { LocaleTabs } from '@/features/guides/components/locale-tabs'
-import { GuideMetadataForm } from '@/features/guides/components/guide-metadata-form'
-import { StopsList } from '@/features/guides/components/stops-list'
-import { StopEditor } from '@/features/guides/components/stop-editor'
-import { GuideProgress } from '@/features/guides/components/guide-progress'
-import { AssetPickerModal } from '@/features/assets/components/asset-picker-modal'
-import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
+import type { Asset } from '@valguide/core/features/assets/schema'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
-import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
+import type { GuideWithStops } from '@valguide/core/features/guides/schema'
+import { Link, useRouter } from '@valguide/i18n/routing'
+import { Button } from '@valguide/ui/components/button'
+import { ArrowLeft } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { AssetPickerModal } from '@/features/assets/components/asset-picker-modal'
+import { GuideMetadataForm } from '@/features/guides/components/guide-metadata-form'
+import { GuideProgress } from '@/features/guides/components/guide-progress'
+import { LocaleTabs } from '@/features/guides/components/locale-tabs'
+import { StopEditor } from '@/features/guides/components/stop-editor'
+import { StopsList } from '@/features/guides/components/stops-list'
 import { GuideEditorProvider, useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import type { GuideWithStops } from '@valguide/core/features/guides/schema'
-import type { Asset } from '@valguide/core/features/assets/schema'
-import { toast } from 'sonner'
-import { formatDistanceToNow } from 'date-fns'
 
 export type GuideEditorClientProps = {
   guide: GuideWithStops
@@ -37,7 +32,7 @@ function GuideEditorContent() {
     selectedStop,
     isDirty,
     isSaving,
-    lastSaved,
+    _lastSaved,
     updateGuideTranslationData,
     updateCoverImage,
     selectStop,
@@ -46,10 +41,10 @@ function GuideEditorContent() {
     reorderStops,
     updateStopTranslationData,
     attachAssetToStop,
-    detachAssetFromStop,
+    _detachAssetFromStop,
     setActiveLocale,
     save,
-    publish,
+    _publish,
   } = useGuideEditor()
 
   const backUrl = `/guides/${guide.nanoId}`
@@ -58,7 +53,7 @@ function GuideEditorContent() {
   const [assetPickerType, setAssetPickerType] = useState<'image' | 'audio' | 'video'>('image')
   const [assetPickerMultiple, setAssetPickerMultiple] = useState(false)
   const [assetPickerCallback, setAssetPickerCallback] = useState<((assets: Asset[]) => void) | null>(null)
-  
+
   const { data: sidebarData } = useSidebarData()
   const organizationId = sidebarData?.currentTeam?.id ?? ''
 

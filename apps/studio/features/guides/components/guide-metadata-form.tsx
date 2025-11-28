@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
-import { Input } from '@valguide/ui/components/input'
-import { Label } from '@valguide/ui/components/label'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
+import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
+import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Input } from '@valguide/ui/components/input'
+import { Label } from '@valguide/ui/components/label'
 import { Image as ImageIcon, X } from 'lucide-react'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 export type GuideMetadataFormProps = {
   locale: SupportedLocale
@@ -28,7 +28,7 @@ export function GuideMetadataForm({
   onCoverImageChange,
   onSelectCoverImage,
 }: GuideMetadataFormProps) {
-  const t = useTranslations('guides')
+  const _t = useTranslations('guides')
   const [title, setTitle] = useState(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
   const [description, setDescription] = useState(
     translation?.draftVersion?.description ?? translation?.currentVersion?.description ?? '',
@@ -37,7 +37,7 @@ export function GuideMetadataForm({
   useEffect(() => {
     setTitle(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
     setDescription(translation?.draftVersion?.description ?? translation?.currentVersion?.description ?? '')
-  }, [locale, translation])
+  }, [translation])
 
   const handleTitleChange = (value: string) => {
     setTitle(value)
@@ -88,6 +88,7 @@ export function GuideMetadataForm({
           {coverImage ? (
             <div className="relative">
               <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
+                {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
                 <img src={coverImage} alt="Cover" className="h-full w-full object-cover" />
                 <Button
                   variant="destructive"

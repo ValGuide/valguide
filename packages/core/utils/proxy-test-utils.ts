@@ -1,7 +1,7 @@
 import { RequestCookies } from 'next/dist/compiled/@edge-runtime/cookies'
 import { NextURL } from 'next/dist/server/web/next-url'
-import type { NextFetchEvent } from 'next/server'
 import type { NextRequest } from 'next/dist/server/web/spec-extension/request'
+import type { NextFetchEvent } from 'next/server'
 
 export type MockRequestParams = {
   url: string | URL

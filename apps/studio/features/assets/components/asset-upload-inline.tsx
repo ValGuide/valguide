@@ -1,17 +1,17 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
-import { useTranslations } from 'next-intl'
+import { type AssetType, confirmAssetUpload } from '@valguide/core/features/assets/actions'
+import type { Asset } from '@valguide/core/features/assets/schema'
+import { getAllowedMimeTypes, validateFileSize } from '@valguide/core/features/assets/utils'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'
-import { Upload, X, FileIcon, ImageIcon, Music, Video, CheckCircle2 } from 'lucide-react'
 import { cn } from '@valguide/ui/lib/utils'
+import { CheckCircle2, FileIcon, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
+import { nanoid } from 'nanoid'
+import { useTranslations } from 'next-intl'
+import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { uploadFileWithTUS } from '../lib/tus-upload'
-import { confirmAssetUpload, type AssetType } from '@valguide/core/features/assets/actions'
-import { getAllowedMimeTypes, validateFileSize } from '@valguide/core/features/assets/utils'
-import type { Asset } from '@valguide/core/features/assets/schema'
-import { nanoid } from 'nanoid'
 
 export type AssetUploadInlineProps = {
   type: AssetType
@@ -20,12 +20,7 @@ export type AssetUploadInlineProps = {
   onUploadComplete?: (asset: Asset) => void
 }
 
-export function AssetUploadInline({
-  type,
-  locale,
-  organizationId,
-  onUploadComplete,
-}: AssetUploadInlineProps) {
+export function AssetUploadInline({ type, locale, organizationId, onUploadComplete }: AssetUploadInlineProps) {
   const t = useTranslations('assets')
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -71,7 +66,7 @@ export function AssetUploadInline({
       setError(null)
       setUploadComplete(false)
     },
-    [allowedTypes, maxSizeMB, type]
+    [allowedTypes, maxSizeMB, type],
   )
 
   const handleDrop = useCallback(
@@ -96,7 +91,7 @@ export function AssetUploadInline({
       setError(null)
       setUploadComplete(false)
     },
-    [allowedTypes, maxSizeMB, type]
+    [allowedTypes, maxSizeMB, type],
   )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -184,7 +179,7 @@ export function AssetUploadInline({
             : file
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-primary/50 hover:bg-accent/50',
-          uploading && 'pointer-events-none opacity-60'
+          uploading && 'pointer-events-none opacity-60',
         )}
       >
         <input
@@ -208,6 +203,7 @@ export function AssetUploadInline({
           ) : file ? (
             <>
               {type === 'image' ? (
+                // biome-ignore lint/performance/noImgElement: Using img for dynamic content
                 <img
                   src={URL.createObjectURL(file)}
                   alt={file.name}

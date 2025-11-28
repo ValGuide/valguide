@@ -1,8 +1,6 @@
-import * as React from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
-
 import { cn } from '@valguide/ui/lib/utils'
-import { DataTestIdProps } from '@valguide/ui/lib/types'
+import { cva, type VariantProps } from 'class-variance-authority'
+import type * as React from 'react'
 
 const trackInfoVariants = cva('flex items-center gap-3', {
   variants: {
@@ -27,6 +25,7 @@ const TrackInfo = ({ ref, className, variant, title, artist, albumArt, ...props 
     <div className={cn(trackInfoVariants({ variant, className }))} ref={ref} {...props}>
       {albumArt && (
         <div className="h-10 w-10 overflow-hidden rounded-md">
+          {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
           <img src={albumArt} alt={`${title} by ${artist}`} className="h-full w-full object-cover" />
         </div>
       )}

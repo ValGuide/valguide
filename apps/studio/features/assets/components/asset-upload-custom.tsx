@@ -1,18 +1,18 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
+import { type AssetType, confirmAssetUpload } from '@valguide/core/features/assets/actions'
+import type { Asset } from '@valguide/core/features/assets/schema'
+import { getAllowedMimeTypes, validateFile, validateFileSize } from '@valguide/core/features/assets/utils'
 import { Button } from '@valguide/ui/components/button'
-import { Progress } from '@valguide/ui/components/progress'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
-import { Upload, X, FileIcon, ImageIcon, Music, Video, CheckCircle2 } from 'lucide-react'
+import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
+import { CheckCircle2, FileIcon, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
+import { nanoid } from 'nanoid'
+import { useTranslations } from 'next-intl'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { uploadFileWithTUS } from '../lib/tus-upload'
-import { confirmAssetUpload, type AssetType } from '@valguide/core/features/assets/actions'
-import { getAllowedMimeTypes, validateFileSize, validateFile } from '@valguide/core/features/assets/utils'
-import type { Asset } from '@valguide/core/features/assets/schema'
-import { nanoid } from 'nanoid'
 
 export type CustomAssetUploadProps = {
   type: AssetType
@@ -95,7 +95,7 @@ export function CustomAssetUpload({
         setPreviewUrl(url)
       }
     },
-    [allowedTypes, maxSizeMB, type],
+    [allowedTypes, maxSizeMB, type, t, translatedType],
   )
 
   const handleDrop = useCallback(
@@ -126,7 +126,7 @@ export function CustomAssetUpload({
         setPreviewUrl(url)
       }
     },
-    [allowedTypes, maxSizeMB, type],
+    [allowedTypes, maxSizeMB, type, t, translatedType],
   )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -275,6 +275,7 @@ export function CustomAssetUpload({
                 ) : file ? (
                   <>
                     {previewUrl ? (
+                      // biome-ignore lint/performance/noImgElement: Using img for dynamic content
                       <img src={previewUrl} alt={file.name} className="max-h-48 max-w-full rounded-lg object-contain" />
                     ) : (
                       getTypeIcon()

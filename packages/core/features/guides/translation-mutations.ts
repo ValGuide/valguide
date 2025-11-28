@@ -1,13 +1,6 @@
-import { eq, and, max } from 'drizzle-orm'
+import { and, eq, max } from 'drizzle-orm'
 import { db } from '../db'
-import {
-  guideTranslation,
-  guideTranslationVersion,
-  stopTranslation,
-  stopTranslationVersion,
-  type NewGuideTranslationVersion,
-  type NewStopTranslationVersion,
-} from './schema'
+import { guideTranslation, guideTranslationVersion, stopTranslation, stopTranslationVersion } from './schema'
 
 /**
  * Create or update a draft guide translation
@@ -24,7 +17,7 @@ export async function upsertGuideTranslationDraft(
   userId?: string,
 ): Promise<string> {
   // Find or create translation identity row
-  let translation = await db
+  const translation = await db
     .select()
     .from(guideTranslation)
     .where(and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)))
@@ -268,7 +261,7 @@ export async function upsertStopTranslationDraft(
   },
   userId?: string,
 ): Promise<string> {
-  let translation = await db
+  const translation = await db
     .select()
     .from(stopTranslation)
     .where(and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)))

@@ -1,9 +1,6 @@
 'use client'
 
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react'
-import { useTranslations } from 'next-intl'
 import { Link } from '@valguide/i18n/routing'
-
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import {
   DropdownMenu,
@@ -15,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
+import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export function NavUser({
   user,

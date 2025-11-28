@@ -42,9 +42,7 @@
         "unique_todo_key": {
           "name": "unique_todo_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "key"
-          ]
+          "columns": ["key"]
         }
       },
       "policies": {},
@@ -115,12 +113,8 @@
           "tableFrom": "todo_translation",
           "tableTo": "todo",
           "schemaTo": "private",
-          "columnsFrom": [
-            "todo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["todo_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -169,9 +163,7 @@
         "unique_task_key": {
           "name": "unique_task_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "key"
-          ]
+          "columns": ["key"]
         }
       },
       "policies": {},
@@ -202,12 +194,8 @@
           "tableFrom": "task_to_todo",
           "tableTo": "task",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "task_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["task_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -216,12 +204,8 @@
           "tableFrom": "task_to_todo",
           "tableTo": "todo",
           "schemaTo": "private",
-          "columnsFrom": [
-            "todo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["todo_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -329,12 +313,8 @@
           "tableFrom": "guide",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -343,12 +323,8 @@
           "tableFrom": "guide",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -357,12 +333,8 @@
           "tableFrom": "guide",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -372,9 +344,7 @@
         "unique_guide_nano_id": {
           "name": "unique_guide_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -460,12 +430,8 @@
           "tableFrom": "guide_translation",
           "tableTo": "guide",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "guide_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["guide_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -589,12 +555,8 @@
           "tableFrom": "guide_translation_version",
           "tableTo": "guide_translation",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "translation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["translation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -603,12 +565,8 @@
           "tableFrom": "guide_translation_version",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -677,12 +635,8 @@
           "tableFrom": "stop",
           "tableTo": "guide",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "guide_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["guide_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -691,12 +645,8 @@
           "tableFrom": "stop",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -706,9 +656,7 @@
         "unique_stop_nano_id": {
           "name": "unique_stop_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -794,12 +742,8 @@
           "tableFrom": "stop_translation",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -929,12 +873,8 @@
           "tableFrom": "stop_translation_version",
           "tableTo": "stop_translation",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "translation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["translation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -943,12 +883,8 @@
           "tableFrom": "stop_translation_version",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1092,12 +1028,8 @@
           "tableFrom": "asset",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "uploaded_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["uploaded_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1107,9 +1039,7 @@
         "unique_asset_nano_id": {
           "name": "unique_asset_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -1173,12 +1103,8 @@
           "tableFrom": "guide_asset",
           "tableTo": "guide",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "guide_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["guide_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1187,12 +1113,8 @@
           "tableFrom": "guide_asset",
           "tableTo": "asset",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "asset_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["asset_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1260,12 +1182,8 @@
           "tableFrom": "stop_asset",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1274,12 +1192,8 @@
           "tableFrom": "stop_asset",
           "tableTo": "asset",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "asset_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["asset_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1341,9 +1255,7 @@
         "unique_org_slug": {
           "name": "unique_org_slug",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -1457,12 +1369,8 @@
           "tableFrom": "organization_invitation",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1471,12 +1379,8 @@
           "tableFrom": "organization_invitation",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "invited_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invited_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1486,9 +1390,7 @@
         "organization_invitation_token_hash_unique": {
           "name": "organization_invitation_token_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token_hash"
-          ]
+          "columns": ["token_hash"]
         }
       },
       "policies": {},
@@ -1613,12 +1515,8 @@
           "tableFrom": "organization_member",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1627,12 +1525,8 @@
           "tableFrom": "organization_member",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1687,9 +1581,7 @@
         "unique_link_short_code": {
           "name": "unique_link_short_code",
           "nullsNotDistinct": false,
-          "columns": [
-            "code"
-          ]
+          "columns": ["code"]
         }
       },
       "policies": {},
@@ -1759,12 +1651,8 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1780,23 +1668,12 @@
     "public.translation_status": {
       "name": "translation_status",
       "schema": "public",
-      "values": [
-        "draft",
-        "in_review",
-        "published",
-        "archived"
-      ]
+      "values": ["draft", "in_review", "published", "archived"]
     },
     "public.org_role": {
       "name": "org_role",
       "schema": "public",
-      "values": [
-        "owner",
-        "admin",
-        "curator",
-        "editor",
-        "viewer"
-      ]
+      "values": ["owner", "admin", "curator", "editor", "viewer"]
     }
   },
   "schemas": {},

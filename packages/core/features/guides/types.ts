@@ -27,4 +27,3 @@ export const guideSchema = z.object({
 
 export type GuideTranslation = z.infer<typeof guideTranslationSchema>
 export type Guide = z.infer<typeof guideSchema>
-

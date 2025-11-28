@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
 import { Button } from '@valguide/core/ui/components/button'
-import { Play, Pause } from 'lucide-react'
+import { Pause, Play } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 type AudioPlayerProps = {
   src: string
@@ -62,6 +62,7 @@ export function AudioPlayer({ src }: AudioPlayerProps) {
 
   return (
     <div className="bg-muted rounded-lg p-6 space-y-4">
+      {/* biome-ignore lint/a11y/useMediaCaption: Audio guides may not have captions available */}
       <audio ref={audioRef} src={src} preload="metadata" />
 
       <div className="flex items-center gap-4">

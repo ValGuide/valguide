@@ -1,8 +1,8 @@
-import { db } from '../db'
-import { stop, stopTranslation, type Stop, type StopTranslation, type NewStop } from './schema'
-import { eq, and, asc } from 'drizzle-orm'
+import { asc, eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import type { SupportedLocale } from '../../i18n/i18n.config'
+import { db } from '../db'
+import { stop, stopTranslation } from './schema'
 
 export async function getStopById(stopId: string) {
   return await db.query.stop.findFirst({
@@ -98,20 +98,16 @@ export async function updateStopTranslation(
 ) {
   // Use new versioning system - create/update draft
   const { upsertStopTranslationDraft } = await import('./translation-mutations')
-  
+
   if (!data.title) {
     throw new Error('Title is required')
   }
 
-  const versionId = await upsertStopTranslationDraft(
-    stopId,
-    locale,
-    { 
-      title: data.title, 
-      description: data.description || null,
-      transcription: data.transcription || null,
-    },
-  )
+  const versionId = await upsertStopTranslationDraft(stopId, locale, {
+    title: data.title,
+    description: data.description || null,
+    transcription: data.transcription || null,
+  })
 
   return { versionId }
 }

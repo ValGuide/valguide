@@ -1,8 +1,7 @@
-import { pgSchema, text, timestamp, uuid, varchar, integer, index } from 'drizzle-orm/pg-core'
-import { authUsers } from 'drizzle-orm/supabase'
 import { relations } from 'drizzle-orm'
-import { guide } from '../guides/schema'
-import { stop } from '../guides/schema'
+import { index, integer, pgSchema, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import { authUsers } from 'drizzle-orm/supabase'
+import { guide, stop } from '../guides/schema'
 
 const studioSchema = pgSchema('studio')
 

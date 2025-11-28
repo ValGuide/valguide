@@ -1,9 +1,9 @@
 'use client'
 
-import { Progress } from '@valguide/ui/components/progress'
-import { CheckCircle2, Circle } from 'lucide-react'
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { Progress } from '@valguide/ui/components/progress'
+import { CheckCircle2, Circle } from 'lucide-react'
 
 interface GuideProgressProps {
   guide: GuideWithStops
@@ -62,8 +62,8 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
       <Progress value={progressPercentage} className="h-2" />
 
       <ul className="space-y-2">
-        {items.map((item, index) => (
-          <li key={index} className="flex items-center gap-2 text-sm">
+        {items.map((item) => (
+          <li key={item.label} className="flex items-center gap-2 text-sm">
             {item.completed ? (
               <CheckCircle2 className="h-4 w-4 text-green-600" />
             ) : (

@@ -1,6 +1,6 @@
 import { Link } from '@valguide/i18n/routing'
-import { useTranslations } from 'next-intl'
 import { FieldDescription } from '@valguide/ui/components/field'
+import { useTranslations } from 'next-intl'
 
 export const Consent = () => {
   const commonT = useTranslations('common')

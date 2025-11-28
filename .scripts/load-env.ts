@@ -1,6 +1,6 @@
-import { execSync } from 'child_process'
-import { borderBox } from './border-box'
+import { execSync } from 'node:child_process'
 import chalk from 'chalk'
+import { borderBox } from './border-box'
 
 type EnvOptions<T extends string> = {
   name: string
@@ -68,7 +68,7 @@ const extractEnv = <T extends string>({
 
 const envs = options.map((option) => extractEnv(option))
 
-const logEnvs = (...envs: EnvAndFile<any>[]): string[] =>
+const logEnvs = (...envs: EnvAndFile<string>[]): string[] =>
   envs.map((env) => `${env.name.toUpperCase()}: ${env.env} [${env.file}]`)
 console.info(`\n${borderBox(...logEnvs(...envs))}\n`)
 

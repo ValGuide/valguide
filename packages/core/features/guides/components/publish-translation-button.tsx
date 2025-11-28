@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-import { Button } from '@valguide/ui/components/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,10 +10,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
+import { Button } from '@valguide/ui/components/button'
 import { Upload } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { publishGuideTranslationDraft } from '../translation-actions'
-import { useTranslations } from 'next-intl'
 
 interface PublishTranslationButtonProps {
   guideId: string
@@ -44,7 +44,7 @@ export function PublishTranslationButton({
     setIsPublishing(true)
     try {
       const result = await publishGuideTranslationDraft(guideId, locale)
-      
+
       if (result.success) {
         toast.success(t('success'))
         setIsOpen(false)
@@ -62,12 +62,7 @@ export function PublishTranslationButton({
 
   return (
     <>
-      <Button
-        onClick={() => setIsOpen(true)}
-        disabled={disabled}
-        variant="default"
-        size="sm"
-      >
+      <Button onClick={() => setIsOpen(true)} disabled={disabled} variant="default" size="sm">
         <Upload className="mr-2 h-4 w-4" />
         {t('button')}
       </Button>

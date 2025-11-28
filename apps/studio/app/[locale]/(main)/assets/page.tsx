@@ -1,6 +1,6 @@
+import { i18nStaticParams } from '@valguide/i18n/i18n.config'
 import { setRequestLocale } from 'next-intl/server'
 import { AssetsPageClient } from './page.client'
-import { i18nStaticParams } from '@valguide/i18n/i18n.config'
 
 interface AssetsPageParams {
   locale: string

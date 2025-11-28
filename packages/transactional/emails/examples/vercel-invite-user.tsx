@@ -1,8 +1,8 @@
 import {
   Body,
   Button,
-  Container,
   Column,
+  Container,
   Head,
   Heading,
   Hr,
@@ -12,10 +12,10 @@ import {
   Preview,
   Row,
   Section,
-  Text,
   Tailwind,
+  Text,
 } from '@react-email/components'
-import * as React from 'react'
+import type * as React from 'react'
 
 export interface VercelInviteUserEmailTranslations {
   preview: string
@@ -106,9 +106,7 @@ export const VercelInviteUserEmail = ({
                 className="my-0 mx-auto"
               />
             </Section>
-            <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-              {t.heading}
-            </Heading>
+            <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">{t.heading}</Heading>
             <Text className="text-black text-[14px] leading-[24px]">{t.greeting}</Text>
             <Text className="text-black text-[14px] leading-[24px]">{t.invitation}</Text>
             <Section>

@@ -1,7 +1,7 @@
-import type { NextRequest, NextResponse } from 'next/server'
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
-import { defaultLocale, SupportedLocale, supportedLocales } from './i18n.config'
+import type { NextRequest, NextResponse } from 'next/server'
+import { defaultLocale, type SupportedLocale, supportedLocales } from './i18n.config'
 
 export const hasPathnameLocale = (req: NextRequest) => {
   // Check if there is any supported locale in the pathname
@@ -21,7 +21,7 @@ const getAcceptLanguageLocale = (requestHeaders: Headers) => {
   try {
     return match(languages, supportedLocales, defaultLocale)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (e) {
+  } catch (_e) {
     // Invalid language
   }
 

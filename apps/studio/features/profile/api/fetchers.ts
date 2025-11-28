@@ -1,4 +1,4 @@
-import { Profile } from '@valguide/features/profiles/types'
+import type { Profile } from '@valguide/features/profiles/types'
 
 export async function fetchProfile(): Promise<Profile | null> {
   const res = await fetch('/api/profile')

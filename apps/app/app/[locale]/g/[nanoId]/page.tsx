@@ -1,12 +1,13 @@
-import { notFound } from 'next/navigation'
 import { db } from '@valguide/core/features/db'
 import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/queries'
 import { getLocalizedGuideText } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
+import type { Metadata } from 'next'
+// biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
+import { notFound } from 'next/navigation'
 import { GuideHero } from './components/guide-hero'
-import { GuideStopList } from './components/guide-stop-list'
 import { GuideMetadata } from './components/guide-metadata'
-import { Metadata } from 'next'
+import { GuideStopList } from './components/guide-stop-list'
 
 export const dynamic = 'force-static'
 export const dynamicParams = true

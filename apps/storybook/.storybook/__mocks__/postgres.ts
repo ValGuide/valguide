@@ -1,34 +1,31 @@
-// Mock postgres module for Storybook  
-const mockPostgres: any = function postgres(connectionString?: string, options?: any) {
-  const mockClient: any = () => Promise.resolve({ rows: [] })
-  
-  // postgres.js client structure expected by Drizzle ORM
+// biome-ignore-all lint/suspicious/noExplicitAny: Mock file for Storybook
+const mockPostgres = function postgres(_connectionString?: string, options?: Record<string, unknown>) {
+  const mockClient = (() => Promise.resolve({ rows: [] })) as unknown as Record<string, unknown>
+
   mockClient.options = options || { prepare: false }
   mockClient.parameters = {}
-  
-  // Create a Proxy for types to allow dynamic property assignment
+
   mockClient.types = new Proxy(
     {
       arrayParser: () => ({}),
       builtins: {},
-    },
+    } as Record<string, unknown>,
     {
-      get: (target: any, prop) => {
+      get: (target: Record<string, unknown>, prop) => {
         if (prop in target) return target[prop]
-        // Return a mock parser function for any type OID
         return { to: 0, from: [] }
       },
-      set: (target: any, prop, value) => {
+      set: (target: Record<string, unknown>, prop: string, value) => {
         target[prop] = value
         return true
       },
     },
   )
-  
+
   // Mock query method
   mockClient.query = () => Promise.resolve({ rows: [] })
   mockClient.end = () => Promise.resolve()
-  
+
   return mockClient
 }
 

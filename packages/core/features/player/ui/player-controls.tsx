@@ -1,10 +1,7 @@
-import * as React from 'react'
-import { Repeat, Shuffle, SkipBack, SkipForward } from 'lucide-react'
+import { cn } from '@valguide/ui/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { motion } from 'framer-motion'
-
-import { cn } from '@valguide/ui/lib/utils'
-import { DataTestIdProps } from '@valguide/ui/lib/types'
+import { Repeat, Shuffle, SkipBack, SkipForward } from 'lucide-react'
 import { PlayButton } from './play-button'
 
 const playerControlsVariants = cva('flex items-center gap-2', {
@@ -24,8 +21,6 @@ const playerControlsVariants = cva('flex items-center gap-2', {
     size: 'default',
   },
 })
-
-import { HTMLMotionProps } from 'framer-motion'
 
 export interface PlayerControlsProps extends VariantProps<typeof playerControlsVariants> {
   isPlaying?: boolean

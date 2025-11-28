@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { signOutAction } from '@valguide/core/features/auth/actions'
 import { useRouter } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
+import { useState } from 'react'
 
 export function SignOutButton({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -24,12 +24,7 @@ export function SignOutButton({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <Button
-      variant="outline"
-      className="w-full"
-      onClick={handleSignOut}
-      disabled={loading}
-    >
+    <Button variant="outline" className="w-full" onClick={handleSignOut} disabled={loading}>
       {loading ? 'Signing out...' : children}
     </Button>
   )

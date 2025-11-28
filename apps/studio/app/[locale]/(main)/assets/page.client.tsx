@@ -8,11 +8,16 @@ export function AssetsPageClient() {
   const { data: sidebarData, isLoading: isSidebarLoading } = useSidebarData()
   const organizationId = sidebarData?.currentTeam?.id
 
-  const { assets, isLoading: isAssetsLoading, error, refetch } = useAssets({ 
-    organizationId: organizationId ?? undefined 
+  const {
+    assets,
+    isLoading: isAssetsLoading,
+    error,
+    refetch,
+  } = useAssets({
+    organizationId: organizationId ?? undefined,
   })
 
-  const handleAssetDeleted = (assetId: string) => {
+  const handleAssetDeleted = (_assetId: string) => {
     refetch()
   }
 

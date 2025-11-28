@@ -1,35 +1,25 @@
 'use client'
 
-import * as React from 'react'
-import { useTranslations } from 'next-intl'
-import {
-  BarChart3,
-  BookOpen,
-  Image,
-  LayoutGrid,
-  Settings2,
-  SlidersHorizontal,
-  User,
-} from 'lucide-react'
-
-import { Link } from '@valguide/i18n/routing'
-import { NavUser } from '@/components/nav-user'
-import { TeamSwitcher, type Team } from '@valguide/core/features/orgs/components/team-switcher'
+import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
+import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'
+import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
+import { Link, usePathname, useRouter } from '@valguide/i18n/routing'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
 } from '@valguide/ui/components/sidebar'
-import { usePathname, useRouter } from 'next/navigation'
-import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
-import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
+import { BarChart3, BookOpen, Image, LayoutGrid, Settings2, SlidersHorizontal, User } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import * as React from 'react'
+import { NavUser } from '@/components/nav-user'
 
 export function AppSidebar({
   pathname: pathnameProp,
@@ -67,7 +57,7 @@ export function AppSidebar({
   // Reset pending URL when pathname changes (navigation completed)
   React.useEffect(() => {
     setPendingUrl(null)
-  }, [pathnameWithoutLocale])
+  }, [])
 
   const handleNavClick = (url: string) => {
     setPendingUrl(url)

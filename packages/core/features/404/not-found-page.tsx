@@ -1,4 +1,3 @@
-import React from 'react'
 import { HomeButton } from './home-button'
 
 export type NotFoundPageProps = {

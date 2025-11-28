@@ -1,7 +1,7 @@
 'use client'
 
+import type { Profile } from '@valguide/features/profiles/types'
 import useSWR from 'swr'
-import { Profile } from '@valguide/features/profiles/types'
 import { fetchProfile } from '../api/fetchers'
 
 interface UseProfileReturn {

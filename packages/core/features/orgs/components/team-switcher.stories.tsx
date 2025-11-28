@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { TeamSwitcher } from './team-switcher'
-import { SidebarProvider } from '@valguide/ui/components/sidebar'
-
+import deMessages from '@valguide/i18n/messages/de.json'
 // Import messages for the story
 import enMessages from '@valguide/i18n/messages/en.json'
-import deMessages from '@valguide/i18n/messages/de.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
+import { SidebarProvider } from '@valguide/ui/components/sidebar'
+import { NextIntlClientProvider } from 'next-intl'
+import { TeamSwitcher } from './team-switcher'
 
 const meta: Meta<typeof TeamSwitcher> = {
   title: 'Core/Orgs/TeamSwitcher',

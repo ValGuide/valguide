@@ -1,5 +1,5 @@
-import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Card, CardContent, CardFooter, CardHeader } from '@valguide/ui/components/card'
+import { Skeleton } from '@valguide/ui/components/skeleton'
 
 export function ArchivedSkeleton() {
   return (
@@ -7,6 +7,7 @@ export function ArchivedSkeleton() {
       <Skeleton className="mb-6 h-8 w-48 sm:text-3xl" />
       <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
         {Array.from({ length: 4 }).map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array that never reorders
           <Card key={i} className="flex flex-col">
             <CardHeader>
               <Skeleton className="h-6 w-3/4" />

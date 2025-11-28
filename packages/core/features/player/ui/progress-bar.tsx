@@ -1,10 +1,8 @@
-import * as React from 'react'
 import * as SliderPrimitive from '@radix-ui/react-slider'
+import { cn } from '@valguide/ui/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { motion } from 'framer-motion'
-
-import { cn } from '@valguide/ui/lib/utils'
-import { DataTestIdProps } from '@valguide/ui/lib/types'
+import type * as React from 'react'
 
 const progressBarVariants = cva('relative flex w-full touch-none select-none items-center', {
   variants: {

@@ -1,6 +1,6 @@
+import { and, desc, eq, inArray } from 'drizzle-orm'
 import { db } from '../db'
-import { asset, guideAsset, stopAsset, type Asset, type AssetType } from './schema'
-import { eq, and, desc, inArray } from 'drizzle-orm'
+import { type AssetType, asset, guideAsset, stopAsset } from './schema'
 
 export type GetAssetsFilters = {
   type?: AssetType
@@ -66,7 +66,7 @@ export async function getGuideAssets(guideId: string, locale?: string) {
     .leftJoin(asset, eq(guideAsset.assetId, asset.id))
     .orderBy(guideAsset.order)
 
-  return results.map((r: typeof results[0]) => ({
+  return results.map((r: (typeof results)[0]) => ({
     ...r.guide_asset,
     asset: r.asset,
   }))
@@ -86,7 +86,7 @@ export async function getStopAssets(stopId: string, locale?: string) {
     .leftJoin(asset, eq(stopAsset.assetId, asset.id))
     .orderBy(stopAsset.order)
 
-  return results.map((r: typeof results[0]) => ({
+  return results.map((r: (typeof results)[0]) => ({
     ...r.stop_asset,
     asset: r.asset,
   }))

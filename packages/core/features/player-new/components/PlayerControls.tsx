@@ -1,9 +1,7 @@
 'use client'
 
-import * as React from 'react'
-import { Play, Pause, RotateCcw, RotateCw, Volume2, Cast } from 'lucide-react'
 import { cn } from '@valguide/core/ui/lib/utils'
-import { Button } from '@valguide/core/ui/components/button'
+import { Cast, Pause, Play, RotateCcw, RotateCw, Volume2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 interface PlayerControlsProps {
@@ -14,27 +12,22 @@ interface PlayerControlsProps {
   className?: string
 }
 
-export function PlayerControls({
-  isPlaying,
-  onPlayPause,
-  onRewind,
-  onForward,
-  className,
-}: PlayerControlsProps) {
+export function PlayerControls({ isPlaying, onPlayPause, onRewind, onForward, className }: PlayerControlsProps) {
   const t = useTranslations('player')
 
   return (
     <div className={cn('flex items-center justify-between w-full px-4', className)}>
       {/* Left secondary controls (Volume/Cast placeholder) */}
       <div className="flex items-center gap-4 text-white/70">
-        <button className="p-2 hover:text-white transition-colors">
-           <Volume2 size={20} />
+        <button type="button" className="p-2 hover:text-white transition-colors">
+          <Volume2 size={20} />
         </button>
       </div>
 
       {/* Main Playback Controls */}
       <div className="flex items-center gap-6">
         <button
+          type="button"
           onClick={onRewind}
           className="p-2 text-white/90 hover:text-white transition-transform hover:scale-105 active:scale-95"
           aria-label={t('rewind')}
@@ -43,6 +36,7 @@ export function PlayerControls({
         </button>
 
         <button
+          type="button"
           onClick={onPlayPause}
           className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-black shadow-xl transition-transform hover:scale-105 active:scale-95"
           aria-label={isPlaying ? t('pause') : t('play')}
@@ -55,6 +49,7 @@ export function PlayerControls({
         </button>
 
         <button
+          type="button"
           onClick={onForward}
           className="p-2 text-white/90 hover:text-white transition-transform hover:scale-105 active:scale-95"
           aria-label={t('forward')}
@@ -65,7 +60,7 @@ export function PlayerControls({
 
       {/* Right secondary controls (Cast/More placeholder) */}
       <div className="flex items-center gap-4 text-white/70">
-        <button className="p-2 hover:text-white transition-colors">
+        <button type="button" className="p-2 hover:text-white transition-colors">
           <Cast size={20} />
         </button>
       </div>

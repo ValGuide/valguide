@@ -3,8 +3,8 @@
 import { cookies } from 'next/headers'
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
-import { isTeamMember, getTeamBySlug } from './queries'
-import { getSidebarData, TEAM_COOKIE_NAME, getActiveTeamSlug as getActiveTeamSlugInternal } from './sidebar-data'
+import { getTeamBySlug, isTeamMember } from './queries'
+import { getActiveTeamSlug as getActiveTeamSlugInternal, getSidebarData, TEAM_COOKIE_NAME } from './sidebar-data'
 
 export async function getSidebarDataAction() {
   return getSidebarData()

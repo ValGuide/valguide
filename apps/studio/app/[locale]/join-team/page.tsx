@@ -1,9 +1,9 @@
-import { createHash } from 'crypto'
-import { createClient } from '@valguide/core/supabase/server'
+import { createHash } from 'node:crypto'
+import { db } from '@valguide/core/features/db'
 import { joinTeamAction } from '@valguide/core/features/orgs/actions'
 import { getInvitationByTokenHash } from '@valguide/core/features/orgs/queries'
-import { db } from '@valguide/core/features/db'
-import { redirect } from 'next/navigation'
+import { createClient } from '@valguide/core/supabase/server'
+import { redirect } from '@valguide/i18n/routing'
 import { JoinTeamCard } from './components/join-team-card'
 
 export default async function JoinTeamPage({
@@ -44,11 +44,7 @@ export default async function JoinTeamPage({
   if (!user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-        <JoinTeamCard 
-          variant="public" 
-          invite={invite} 
-          nextUrl={nextUrl}
-        />
+        <JoinTeamCard variant="public" invite={invite} nextUrl={nextUrl} />
       </div>
     )
   }
@@ -58,11 +54,7 @@ export default async function JoinTeamPage({
   if (invite.email.toLowerCase() !== userEmail.toLowerCase()) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-        <JoinTeamCard 
-          variant="wrong-account" 
-          invite={invite}
-          userEmail={userEmail}
-        />
+        <JoinTeamCard variant="wrong-account" invite={invite} userEmail={userEmail} />
       </div>
     )
   }
@@ -81,11 +73,7 @@ export default async function JoinTeamPage({
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-      <JoinTeamCard 
-        variant="joining" 
-        invite={invite}
-        error={error}
-      />
+      <JoinTeamCard variant="joining" invite={invite} error={error} />
     </div>
   )
 }

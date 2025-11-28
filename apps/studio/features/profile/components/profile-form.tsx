@@ -1,11 +1,9 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { useTranslations } from 'next-intl'
-import { toast } from 'sonner'
+import { useRouter } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
   Form,
   FormControl,
@@ -16,12 +14,14 @@ import {
   FormMessage,
 } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { updateProfileAction, type ProfileFormData } from '../actions'
-import { useProfile } from '../'
-import { useTransition, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { Skeleton } from '@valguide/ui/components/skeleton'
+import { useTranslations } from 'next-intl'
+import { useEffect, useTransition } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { useProfile } from '../'
+import { type ProfileFormData, updateProfileAction } from '../actions'
 
 const profileSchema = z.object({
   username: z.string().min(3).optional().or(z.literal('')),

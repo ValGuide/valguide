@@ -16,6 +16,7 @@ export default function GuideLoading() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[...Array(6)].map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array that never reorders
             <div key={i} className="space-y-3">
               <Skeleton className="h-48 w-full rounded-lg" />
               <Skeleton className="h-6 w-3/4" />
@@ -28,4 +29,3 @@ export default function GuideLoading() {
     </main>
   )
 }
-

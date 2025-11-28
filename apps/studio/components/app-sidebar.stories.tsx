@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { type Team } from '@valguide/core/features/orgs/components/team-switcher'
-import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
-import { NextIntlClientProvider } from 'next-intl'
-import { AppSidebar } from './app-sidebar'
-import { AppSidebarSkeleton } from './app-sidebar-skeleton'
-
+import type { Team } from '@valguide/core/features/orgs/components/team-switcher'
 // Import messages for the story
 import deMessages from '@valguide/i18n/messages/de.json'
 import enMessages from '@valguide/i18n/messages/en.json'
 import rmMessages from '@valguide/i18n/messages/rm.json'
+import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
+import { NextIntlClientProvider } from 'next-intl'
+import { AppSidebar } from './app-sidebar'
+import { AppSidebarSkeleton } from './app-sidebar-skeleton'
 
 const mockUser = {
   name: 'John Doe',

@@ -14,9 +14,9 @@ export async function getArchivedGuidesAction() {
   }
 
   const guides = await getArchivedGuides(db, user.sub)
-  
+
   return {
     guides,
-    userId: user.sub
+    userId: user.sub,
   }
 }

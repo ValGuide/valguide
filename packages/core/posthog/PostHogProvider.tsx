@@ -1,11 +1,13 @@
 'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation'
-import React, { Suspense, useEffect } from 'react'
-import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
-
-import posthog from 'posthog-js'
+import { usePathname } from '@valguide/i18n/routing'
 import { createLogger } from '@valguide/logger'
+// biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
+import { useSearchParams } from 'next/navigation'
+import posthog from 'posthog-js'
+import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
+import type React from 'react'
+import { Suspense, useEffect } from 'react'
 
 const log = createLogger('PostHog')
 
@@ -16,7 +18,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     if (!isPostHogEnabled) {
       log.warn('PostHogProvider is disabled')
     }
-  }, [isPostHogEnabled])
+  }, [])
   return isPostHogEnabled ? <Provider>{children}</Provider> : children
 }
 
@@ -49,7 +51,7 @@ function PostHogPageView() {
     if (pathname && posthog) {
       let url = window.origin + pathname
       if (searchParams.toString()) {
-        url = url + '?' + searchParams.toString()
+        url = `${url}?${searchParams.toString()}`
       }
 
       posthog.capture('$pageview', { $current_url: url })

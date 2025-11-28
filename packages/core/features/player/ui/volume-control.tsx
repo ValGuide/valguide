@@ -1,11 +1,9 @@
-import * as React from 'react'
 import * as SliderPrimitive from '@radix-ui/react-slider'
-import { Volume, Volume1, Volume2, VolumeX } from 'lucide-react'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { motion, AnimatePresence } from 'framer-motion'
-
 import { cn } from '@valguide/ui/lib/utils'
-import { DataTestIdProps } from '@valguide/ui/lib/types'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Volume, Volume1, Volume2, VolumeX } from 'lucide-react'
+import * as React from 'react'
 
 const volumeControlVariants = cva('flex items-center gap-2', {
   variants: {

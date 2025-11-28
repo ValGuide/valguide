@@ -1,16 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
+import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { Badge } from '@valguide/ui/components/badge'
+import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { Textarea } from '@valguide/ui/components/textarea'
-import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { Badge } from '@valguide/ui/components/badge'
-import { Image as ImageIcon, Music, Video, Mic, X, Plus } from 'lucide-react'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import { Image as ImageIcon, Mic, Music, Plus, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 export type StopEditorProps = {
   stop?: StopWithTranslations
@@ -34,8 +33,8 @@ export function StopEditor({
   onSave,
   onCancel,
   onSelectImages,
-  onSelectAudio,
-  onSelectVideo,
+  _onSelectAudio,
+  _onSelectVideo,
 }: StopEditorProps) {
   const t = useTranslations('stops.editor')
   const tActions = useTranslations('stops.actions')
@@ -57,7 +56,7 @@ export function StopEditor({
     setTitle(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
     setDescription(translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '')
     setTranscription(translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '')
-  }, [locale, translation])
+  }, [translation])
 
   const handleSave = () => {
     onSave({ title, description, transcription })
@@ -162,6 +161,7 @@ export function StopEditor({
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {images.map((image) => (
               <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg border bg-white">
+                {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
                 <img src={image.url} alt="" className="h-full w-full object-cover" />
                 <Button
                   variant="destructive"
@@ -186,11 +186,7 @@ export function StopEditor({
                 </Button>
               </div>
             )}
-            <Button
-              variant="outline"
-              onClick={onSelectImages}
-              className="aspect-square h-full w-full border-dashed"
-            >
+            <Button variant="outline" onClick={onSelectImages} className="aspect-square h-full w-full border-dashed">
               <Plus className="h-6 w-6" />
             </Button>
           </div>
