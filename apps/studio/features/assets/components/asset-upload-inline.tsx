@@ -1,8 +1,14 @@
 'use client'
 
-import { type AssetType, confirmAssetUpload } from '@valguide/core/features/assets/actions'
-import type { Asset } from '@valguide/core/features/assets/schema'
-import { getAllowedMimeTypes, validateFileSize } from '@valguide/core/features/assets/utils'
+import { confirmAssetUpload } from '@valguide/core/features/assets/actions'
+import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import {
+  detectAssetType,
+  getAllAllowedMimeTypes,
+  getAllowedMimeTypes,
+  MAX_SIZE_MB,
+  validateFileSize,
+} from '@valguide/core/features/assets/utils'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
@@ -14,25 +20,30 @@ import { toast } from 'sonner'
 import { uploadFileWithTUS } from '../lib/tus-upload'
 
 export type AssetUploadInlineProps = {
-  type: AssetType
+  allowedTypes?: AssetType[]
   locale?: string
   organizationId: string
   onUploadComplete?: (asset: Asset) => void
 }
 
-export function AssetUploadInline({ type, locale, organizationId, onUploadComplete }: AssetUploadInlineProps) {
+export function AssetUploadInline({ allowedTypes, locale, organizationId, onUploadComplete }: AssetUploadInlineProps) {
   const t = useTranslations('assets')
   const [file, setFile] = useState<File | null>(null)
+  const [detectedType, setDetectedType] = useState<AssetType | null>(null)
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [uploadComplete, setUploadComplete] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const maxSizeMB = type === 'video' ? 500 : type === 'audio' ? 50 : 10
-  const allowedTypes = getAllowedMimeTypes(type)
+  const isSingleTypeMode = allowedTypes?.length === 1
+  const singleType: AssetType | null = isSingleTypeMode && allowedTypes[0] ? allowedTypes[0] : null
 
-  const getTypeIcon = () => {
+  const acceptedMimeTypes = allowedTypes
+    ? allowedTypes.flatMap((t) => getAllowedMimeTypes(t))
+    : getAllAllowedMimeTypes()
+
+  const getTypeIcon = (type: AssetType | null) => {
     switch (type) {
       case 'image':
         return <ImageIcon className="h-10 w-10 text-muted-foreground" />
@@ -41,32 +52,45 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
       case 'video':
         return <Video className="h-10 w-10 text-muted-foreground" />
       default:
-        return <FileIcon className="h-10 w-10 text-muted-foreground" />
+        return <Upload className="h-10 w-10 text-muted-foreground" />
     }
   }
+
+  const validateAndSetFile = useCallback(
+    (selectedFile: File) => {
+      const detected = detectAssetType(selectedFile)
+
+      if (!detected) {
+        setError(t('upload.unsupportedType'))
+        return
+      }
+
+      if (allowedTypes && !allowedTypes.includes(detected)) {
+        setError(t('upload.invalidFileType', { type: t(`types.${allowedTypes[0]}`) }))
+        return
+      }
+
+      const maxSizeMB = MAX_SIZE_MB[detected]
+      if (!validateFileSize(selectedFile.size, detected)) {
+        setError(t('upload.fileSizeExceeded', { size: maxSizeMB }))
+        return
+      }
+
+      setDetectedType(detected)
+      setFile(selectedFile)
+      setError(null)
+      setUploadComplete(false)
+    },
+    [t, allowedTypes],
+  )
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFile = e.target.files?.[0]
       if (!selectedFile) return
-
-      // Validate file type
-      if (!allowedTypes.includes(selectedFile.type)) {
-        setError(`Invalid file type. Please select a ${type} file.`)
-        return
-      }
-
-      // Validate file size
-      if (!validateFileSize(selectedFile.size, type)) {
-        setError(`File size exceeds ${maxSizeMB}MB limit`)
-        return
-      }
-
-      setFile(selectedFile)
-      setError(null)
-      setUploadComplete(false)
+      validateAndSetFile(selectedFile)
     },
-    [allowedTypes, maxSizeMB, type],
+    [validateAndSetFile],
   )
 
   const handleDrop = useCallback(
@@ -74,24 +98,9 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
       e.preventDefault()
       const droppedFile = e.dataTransfer.files?.[0]
       if (!droppedFile) return
-
-      // Validate file type
-      if (!allowedTypes.includes(droppedFile.type)) {
-        setError(`Invalid file type. Please select a ${type} file.`)
-        return
-      }
-
-      // Validate file size
-      if (!validateFileSize(droppedFile.size, type)) {
-        setError(`File size exceeds ${maxSizeMB}MB limit`)
-        return
-      }
-
-      setFile(droppedFile)
-      setError(null)
-      setUploadComplete(false)
+      validateAndSetFile(droppedFile)
     },
-    [allowedTypes, maxSizeMB, type],
+    [validateAndSetFile],
   )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -99,7 +108,7 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
   }, [])
 
   const handleUpload = async () => {
-    if (!file) return
+    if (!file || !detectedType) return
 
     setUploading(true)
     setProgress(0)
@@ -108,9 +117,8 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
     try {
       const assetId = nanoid()
       const timestamp = Date.now()
-      const fileName = `${organizationId}/${type}/${timestamp}-${file.name}`
+      const fileName = `${organizationId}/${detectedType}/${timestamp}-${file.name}`
 
-      // Upload file with TUS
       await uploadFileWithTUS({
         bucketName: 'assets',
         fileName,
@@ -119,13 +127,12 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
         onError: (err) => setError(err.message),
       })
 
-      // Confirm upload and save to database
       const asset = await confirmAssetUpload({
         assetId,
         fileName: file.name,
         fileSize: file.size,
         mimeType: file.type,
-        type,
+        type: detectedType,
         locale,
         storagePath: fileName,
         organizationId,
@@ -138,9 +145,9 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
         })
         onUploadComplete?.(asset)
 
-        // Reset after a short delay
         setTimeout(() => {
           setFile(null)
+          setDetectedType(null)
           setProgress(0)
           setUploadComplete(false)
         }, 1500)
@@ -158,6 +165,7 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
 
   const handleReset = () => {
     setFile(null)
+    setDetectedType(null)
     setProgress(0)
     setError(null)
     setUploadComplete(false)
@@ -168,7 +176,6 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
 
   return (
     <div className="space-y-4">
-      {/* Drag & Drop Zone - uses div for native drag/drop support with file input overlay */}
       {/* biome-ignore lint/a11y/useSemanticElements: button cannot support drag/drop events properly */}
       <div
         role="button"
@@ -193,7 +200,7 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
         <input
           ref={fileInputRef}
           type="file"
-          accept={allowedTypes.join(',')}
+          accept={acceptedMimeTypes.join(',')}
           onChange={handleFileChange}
           disabled={uploading || uploadComplete}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
@@ -208,9 +215,9 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
                 <p className="text-sm text-muted-foreground">{file?.name}</p>
               </div>
             </>
-          ) : file ? (
+          ) : file && detectedType ? (
             <>
-              {type === 'image' ? (
+              {detectedType === 'image' ? (
                 // biome-ignore lint/performance/noImgElement: Using img for dynamic content
                 <img
                   src={URL.createObjectURL(file)}
@@ -218,27 +225,31 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
                   className="h-32 w-auto max-w-full rounded object-contain"
                 />
               ) : (
-                getTypeIcon()
+                getTypeIcon(detectedType)
               )}
               <div className="space-y-2">
                 <p className="text-sm font-medium">{file.name}</p>
-                {/* biome-ignore lint/nursery/noJsxLiterals: MB is a universal unit abbreviation */}
-                <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <p className="text-xs text-muted-foreground">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB · {t(`types.${detectedType}`)}
+                </p>
               </div>
             </>
           ) : (
             <>
-              {getTypeIcon()}
+              {getTypeIcon(singleType)}
               <div className="space-y-2">
-                <p className="text-base font-medium">{t('upload.dropzone', { type: t(`types.${type}`) })}</p>
-                <p className="text-sm text-muted-foreground">{t('upload.maxSize', { size: maxSizeMB })}</p>
+                <p className="text-base font-medium">
+                  {singleType ? t('upload.dropzone', { type: t(`types.${singleType}`) }) : t('upload.dropzoneGeneric')}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {singleType ? t('upload.maxSize', { size: MAX_SIZE_MB[singleType] }) : t('upload.sizeLimits')}
+                </p>
               </div>
             </>
           )}
         </div>
       </div>
 
-      {/* Progress Bar */}
       {uploading && (
         <div className="space-y-2">
           <Progress value={progress} className="h-2" />
@@ -248,19 +259,17 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
         </div>
       )}
 
-      {/* Error Message */}
       {error && (
         <div className="p-4 text-sm bg-destructive/10 text-destructive rounded-md border border-destructive/20 break-words overflow-wrap-anywhere">
           {error}
         </div>
       )}
 
-      {/* Actions */}
-      {file && !uploading && !uploadComplete && (
+      {file && detectedType && !uploading && !uploadComplete && (
         <div className="flex gap-2">
           <Button onClick={handleUpload} className="flex-1" size="lg">
             <Upload className="mr-2 h-4 w-4" />
-            {t('upload.uploadButton', { type: t(`types.${type}`) })}
+            {t('upload.uploadButton', { type: t(`types.${detectedType}`) })}
           </Button>
           <Button variant="outline" size="lg" onClick={handleReset}>
             <X className="h-4 w-4" />

@@ -14,7 +14,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
-import { Image as ImageIcon, Music, Search, Upload, Video } from 'lucide-react'
+import { Image as ImageIcon, Search, Upload } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { AssetCard } from './asset-card'
@@ -44,7 +44,6 @@ export function AssetsList({
   const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all')
   const [localeFilter, setLocaleFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [uploadType, setUploadType] = useState<AssetType>('image')
 
   const filteredAssets = useMemo(() => {
     return assets.filter((asset) => {
@@ -195,44 +194,8 @@ export function AssetsList({
         </TabsContent>
 
         <TabsContent value="upload" className="space-y-6">
-          <div className="flex flex-col gap-6">
-            <div className="flex justify-center">
-              <div className="inline-flex items-center rounded-lg border p-1 bg-muted/50">
-                <Button
-                  variant={uploadType === 'image' ? 'secondary' : 'ghost'}
-                  onClick={() => setUploadType('image')}
-                  className="gap-2"
-                >
-                  <ImageIcon className="h-4 w-4" />
-                  {t('types.image')}
-                </Button>
-                <Button
-                  variant={uploadType === 'audio' ? 'secondary' : 'ghost'}
-                  onClick={() => setUploadType('audio')}
-                  className="gap-2"
-                >
-                  <Music className="h-4 w-4" />
-                  {t('types.audio')}
-                </Button>
-                <Button
-                  variant={uploadType === 'video' ? 'secondary' : 'ghost'}
-                  onClick={() => setUploadType('video')}
-                  className="gap-2"
-                >
-                  <Video className="h-4 w-4" />
-                  {t('types.video')}
-                </Button>
-              </div>
-            </div>
-
-            <div className="mx-auto w-full max-w-2xl">
-              <AssetUploadInline
-                key={uploadType}
-                type={uploadType}
-                organizationId={organizationId}
-                onUploadComplete={handleUploadComplete}
-              />
-            </div>
+          <div className="mx-auto w-full max-w-2xl">
+            <AssetUploadInline organizationId={organizationId} onUploadComplete={handleUploadComplete} />
           </div>
         </TabsContent>
       </Tabs>

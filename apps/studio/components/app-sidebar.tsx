@@ -223,7 +223,14 @@ export function AppSidebar({
         <NavUser user={user} onLogout={handleLogout} />
       </SidebarFooter>
       <SidebarRail />
-      {onCreateTeam && <CreateTeamDialog open={createTeamOpen} onOpenChange={setCreateTeamOpen} showTrigger={false} onCreateTeam={onCreateTeam} />}
+      {onCreateTeam && (
+        <CreateTeamDialog
+          open={createTeamOpen}
+          onOpenChange={setCreateTeamOpen}
+          showTrigger={false}
+          onCreateTeam={onCreateTeam}
+        />
+      )}
     </Sidebar>
   )
 }
