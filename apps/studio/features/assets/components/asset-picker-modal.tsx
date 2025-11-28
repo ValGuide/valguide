@@ -186,9 +186,11 @@ export function AssetPickerModal({
                       >
                         {/* Checkbox */}
                         <div className="absolute top-2 right-2 z-10">
-                          <div className="rounded-sm bg-background/80 p-1">
-                            <Checkbox checked={isSelected} onCheckedChange={() => handleToggleAsset(asset.id)} />
-                          </div>
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => handleToggleAsset(asset.id)}
+                            className="h-6 w-6 border-2 shadow-sm bg-background/80 backdrop-blur-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          />
                         </div>
 
                         {/* Preview */}
@@ -237,43 +239,13 @@ export function AssetPickerModal({
           </TabsContent>
         </Tabs>
 
-        {/* Selected Image Preview */}
-        {selected.size > 0 && (
-          <div className="border-t pt-4 mt-4">
-            <div className="flex items-center gap-4">
-              {assets
-                .filter((asset) => selected.has(asset.id))
-                .slice(0, multiple ? 3 : 1)
-                .map((asset) => (
-                  <div key={asset.id} className="flex items-center gap-3 p-2 rounded-lg border bg-muted/50">
-                    {asset.type === 'image' && asset.publicUrl ? (
-                      <img src={asset.publicUrl} alt={asset.fileName} className="h-16 w-16 rounded object-cover" />
-                    ) : (
-                      <div className="h-16 w-16 rounded bg-muted flex items-center justify-center">{getTypeIcon()}</div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{asset.fileName}</p>
-                      <p className="text-xs text-muted-foreground">{formatFileSize(asset.fileSize)}</p>
-                    </div>
-                  </div>
-                ))}
-              {multiple && selected.size > 3 && <Badge variant="secondary">+{selected.size - 3}</Badge>}
-            </div>
-          </div>
-        )}
-
-        <DialogFooter className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            {selected.size > 0 && t('selected', { count: selected.size })}
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={handleCancel}>
-              {t('cancel')}
-            </Button>
-            <Button onClick={handleSelect} disabled={selected.size === 0}>
-              {t('select')}
-            </Button>
-          </div>
+        <DialogFooter className="flex items-center justify-end gap-2">
+          <Button variant="outline" onClick={handleCancel}>
+            {t('cancel')}
+          </Button>
+          <Button onClick={handleSelect} disabled={selected.size === 0}>
+            {t('select')}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

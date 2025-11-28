@@ -73,8 +73,8 @@ export async function updateGuide(params: UpdateGuideParams) {
   const [updatedGuide] = await db
     .update(guide)
     .set({
-      coverImage: coverImage ?? undefined,
-      published: published ?? undefined,
+      coverImage: coverImage === undefined ? undefined : coverImage,
+      published: published === undefined ? undefined : published,
       organizationId: organizationId ?? undefined,
       updatedBy: user.id,
       updatedAt: new Date(),

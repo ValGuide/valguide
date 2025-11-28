@@ -37,7 +37,7 @@ interface GuideEditorContextValue {
     locale: SupportedLocale,
     data: { title: string; description?: string | null },
   ) => void
-  updateCoverImage: (assetId: string) => void
+  updateCoverImage: (assetId: string | null) => void
 
   // Stop actions
   selectStop: (stop: StopWithTranslations | null) => void
@@ -129,7 +129,7 @@ export function GuideEditorProvider({
   )
 
   // Update cover image
-  const updateCoverImage = useCallback((assetId: string) => {
+  const updateCoverImage = useCallback((assetId: string | null) => {
     setGuide((prev) => ({
       ...prev,
       coverImage: assetId,

@@ -17,6 +17,7 @@ import { VersionHistoryDialog } from '@valguide/core/features/guides/components/
 import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { GuideEditorProvider, useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
+import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import type { Asset } from '@valguide/core/features/assets/schema'
@@ -57,7 +58,9 @@ function GuideEditorContent() {
   const [assetPickerType, setAssetPickerType] = useState<'image' | 'audio' | 'video'>('image')
   const [assetPickerMultiple, setAssetPickerMultiple] = useState(false)
   const [assetPickerCallback, setAssetPickerCallback] = useState<((assets: Asset[]) => void) | null>(null)
-  const organizationId = '00000000-0000-0000-0000-000000000123' // TODO: Get from user context
+  
+  const { data: sidebarData } = useSidebarData()
+  const organizationId = sidebarData?.currentTeam?.id ?? ''
 
   // Auto-save
   useAutoSave(save, isDirty)
@@ -69,7 +72,7 @@ function GuideEditorContent() {
     setAssetPickerMultiple(false)
     setAssetPickerCallback(() => (assets: Asset[]) => {
       if (assets[0]) {
-        updateCoverImage(assets[0].id)
+        updateCoverImage(assets[0].publicUrl ?? assets[0].id)
         toast.success(t('editor.coverImageUpdated'))
       }
     })
@@ -146,7 +149,7 @@ function GuideEditorContent() {
                     updateGuideTranslationData(activeLocale, data)
                   }}
                   onCoverImageChange={(url) => {
-                    if (url) updateCoverImage(url)
+                    updateCoverImage(url)
                   }}
                   onSelectCoverImage={handleSelectCoverImage}
                 />
