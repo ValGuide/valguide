@@ -1,9 +1,8 @@
 'use client'
 
-import { usePathname } from '@valguide/i18n/routing'
 import { createLogger } from '@valguide/logger'
-// biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
-import { useSearchParams } from 'next/navigation'
+// biome-ignore lint/style/noRestrictedImports: useSearchParams and usePathname are only available from next/navigation
+import { usePathname, useSearchParams } from 'next/navigation'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
 import type React from 'react'
@@ -61,8 +60,8 @@ function PostHogPageView() {
   return null
 }
 
-// Wrap PostHogPageView in Suspense to avoid the useSearchParams usage above
-// from de-opting the whole app into client-side rendering
+// Wrap PostHogPageView in Suspense to avoid useSearchParams and usePathname
+// from de-opting the whole app into client-side rendering during prerender
 // See: https://nextjs.org/docs/messages/deopted-into-client-rendering
 function SuspendedPostHogPageView() {
   return (
