@@ -109,29 +109,33 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
   if (variant === 'joining' && invite) {
     return (
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>{t('joining.title')}</CardTitle>
-          <CardDescription>{t('joining.description', { teamName: invite.organization.name })}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {error ? (
-            <div className="flex flex-col gap-4">
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
-              <p className="text-sm text-muted-foreground">{t('joining.error')}</p>
-            </div>
-          ) : (
-            <div className="flex justify-center p-4">
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            </div>
-          )}
-        </CardContent>
-        <CardFooter>
-          {error && (
-            <Button asChild className="w-full">
-              <Link href="/">{t('joining.dashboardButton')}</Link>
-            </Button>
-          )}
-        </CardFooter>
+        {error ? (
+          <>
+            <CardHeader>
+              <CardTitle>{t('joining.title')}</CardTitle>
+              <CardDescription>{t('joining.description', { teamName: invite.organization.name })}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+                <p className="text-sm text-muted-foreground">{t('joining.error')}</p>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                <Link href="/">{t('joining.dashboardButton')}</Link>
+              </Button>
+            </CardFooter>
+          </>
+        ) : (
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <div className="mb-6 h-10 w-10 animate-spin rounded-full border-3 border-primary border-t-transparent" />
+            <p className="text-lg font-medium">{t('joining.title')}</p>
+            <p className="mt-1 text-center text-sm text-muted-foreground">
+              {t('joining.description', { teamName: invite.organization.name })}
+            </p>
+          </CardContent>
+        )}
       </Card>
     )
   }
