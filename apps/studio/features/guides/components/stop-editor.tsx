@@ -63,7 +63,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
       {/* Title */}
       <div className="space-y-2">
         <Label htmlFor={`stop-title-${locale}`} className="text-sm font-medium">
-          Stop Title
+          {t('titleLabel')}
         </Label>
         <Input
           id={`stop-title-${locale}`}
@@ -78,7 +78,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
 
       {/* Audio */}
       <div className="space-y-2">
-        <Label className="text-sm font-medium">Audio</Label>
+        <Label className="text-sm font-medium">{t('audioLabel')}</Label>
         {audio ? (
           <div className="flex items-center justify-between rounded-lg border bg-white p-4">
             <div className="flex items-center gap-3">
@@ -86,7 +86,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
                 <Music className="h-5 w-5" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Audio file</span>
+                <span className="text-sm font-medium">{t('audioFile')}</span>
                 {audio.locale && (
                   <Badge variant="secondary" className="uppercase">
                     {audio.locale}
@@ -103,12 +103,12 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
               <Music className="h-6 w-6 text-gray-600" />
             </div>
-            <p className="mb-1 text-sm font-medium">Click to upload or drag and drop</p>
-            <p className="mb-4 text-xs text-muted-foreground">MP3 files up to 50MB</p>
+            <p className="mb-1 text-sm font-medium">{t('dropzoneText')}</p>
+            <p className="mb-4 text-xs text-muted-foreground">{t('audioHint')}</p>
           </div>
         )}
         <Button variant="link" size="sm" className="px-0 text-sm">
-          Browse Asset Library...
+          {t('browseLibrary')}
         </Button>
       </div>
 
@@ -116,23 +116,26 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor={`stop-description-${locale}`} className="text-sm font-medium">
-            Description
+            {t('descriptionLabel')}
           </Label>
           <Button variant="ghost" size="sm" className="gap-1">
             <Mic className="h-4 w-4" />
-            Auto-generate from audio
+            {t('autoGenerate')}
           </Button>
         </div>
         <div className="rounded-lg border bg-white p-3">
           <div className="mb-2 flex gap-1">
-            <Button variant="ghost" size="sm" className="h-8 px-2">
+            <Button variant="ghost" size="sm" className="h-8 px-2" aria-label={t('boldButton')}>
+              {/* biome-ignore lint/nursery/noJsxLiterals: Single character formatting symbol */}
               <span className="font-semibold">B</span>
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 px-2">
+            <Button variant="ghost" size="sm" className="h-8 px-2" aria-label={t('italicButton')}>
+              {/* biome-ignore lint/nursery/noJsxLiterals: Single character formatting symbol */}
               <span className="italic">I</span>
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 px-2">
-              • List
+            <Button variant="ghost" size="sm" className="h-8 px-2" aria-label={t('listButton')}>
+              {/* biome-ignore lint/nursery/noJsxLiterals: Bullet point symbol */}
+              <span>•</span>
             </Button>
           </div>
           <Textarea
@@ -148,7 +151,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
 
       {/* Gallery */}
       <div className="space-y-2">
-        <Label className="text-sm font-medium">Gallery (Images & Video)</Label>
+        <Label className="text-sm font-medium">{t('galleryLabel')}</Label>
         {images.length > 0 || video ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {images.map((image) => (
@@ -187,12 +190,12 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
               <ImageIcon className="h-6 w-6 text-gray-600" />
             </div>
-            <p className="mb-1 text-sm font-medium">Click to upload or drag and drop</p>
-            <p className="mb-4 text-xs text-muted-foreground">Images and videos up to 50MB each</p>
+            <p className="mb-1 text-sm font-medium">{t('dropzoneText')}</p>
+            <p className="mb-4 text-xs text-muted-foreground">{t('galleryHint')}</p>
           </div>
         )}
         <Button variant="link" size="sm" className="px-0 text-sm">
-          Browse Asset Library...
+          {t('browseLibrary')}
         </Button>
       </div>
 

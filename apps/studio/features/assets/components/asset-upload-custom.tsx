@@ -223,7 +223,7 @@ export function CustomAssetUpload({
       {controlledOpen === undefined && (
         <Button onClick={() => setIsOpen(true)}>
           <Upload className="h-4 w-4" />
-          Upload {type}
+          {t('upload.uploadButton', { type: translatedType })}
         </Button>
       )}
 

@@ -96,12 +96,12 @@ export function AssetsList({
           <EmptyMedia variant="icon">
             <ImageIcon className="text-destructive" />
           </EmptyMedia>
-          <EmptyTitle>Failed to load assets</EmptyTitle>
-          <EmptyDescription>{error.message || 'An unexpected error occurred'}</EmptyDescription>
+          <EmptyTitle>{t('error.failedToLoad')}</EmptyTitle>
+          <EmptyDescription>{error.message || t('error.unexpected')}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button onClick={onRetry} variant="outline">
-            Try again
+            {t('error.tryAgain')}
           </Button>
         </EmptyContent>
       </Empty>
@@ -160,10 +160,10 @@ export function AssetsList({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t('filter.allLocales')}</SelectItem>
-                <SelectItem value="en">EN</SelectItem>
-                <SelectItem value="de">DE</SelectItem>
-                <SelectItem value="rm">RM</SelectItem>
-                <SelectItem value="none">No locale</SelectItem>
+                <SelectItem value="en">{t('filter.localeEn')}</SelectItem>
+                <SelectItem value="de">{t('filter.localeDe')}</SelectItem>
+                <SelectItem value="rm">{t('filter.localeRm')}</SelectItem>
+                <SelectItem value="none">{t('filter.noLocale')}</SelectItem>
               </SelectContent>
             </Select>
           </div>

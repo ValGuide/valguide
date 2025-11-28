@@ -1,6 +1,7 @@
 // @ts-expect-error - vitest is available at runtime in test environment
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import { eq } from 'drizzle-orm'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { db } from '../db'
 import { guide } from './schema'
 import {

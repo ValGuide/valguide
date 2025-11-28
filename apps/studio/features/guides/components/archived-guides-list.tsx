@@ -34,6 +34,7 @@ type DialogState = {
 
 export function ArchivedGuidesList({ guides, userId, onActionComplete }: ArchivedGuidesListProps) {
   const t = useTranslations('guides')
+  const tCommon = useTranslations('common')
   const locale = useLocale()
   const router = useRouter()
   const [dialogState, setDialogState] = useState<DialogState>({ type: null, guideId: null })
@@ -106,7 +107,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
         {guides.map((guide) => {
           const translation = guide.translations?.find((t) => t.locale === locale) || guide.translations?.[0]
           const displayTitle =
-            translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? 'Untitled Guide'
+            translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? t('untitledGuide')
           const displayDescription =
             translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? ''
           const displayImage = guide.coverImage
@@ -125,7 +126,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
               </CardHeader>
               <CardContent className="flex-1">
                 <p className="text-xs text-muted-foreground sm:text-sm">
-                  {t('archivedOn')}: {formatDate(guide.archivedAt ?? undefined)}
+                  {t('archivedOnDate', { date: formatDate(guide.archivedAt ?? undefined) })}
                 </p>
               </CardContent>
               <CardFooter className="flex flex-col gap-2 sm:flex-row sm:justify-between">
@@ -165,7 +166,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleRecover} disabled={isLoading}>
-              {isLoading ? '...' : t('recover')}
+              {isLoading ? tCommon('loading') : t('recover')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -183,7 +184,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isLoading}>
-              {isLoading ? '...' : t('permanentlyDelete')}
+              {isLoading ? tCommon('loading') : t('permanentlyDelete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

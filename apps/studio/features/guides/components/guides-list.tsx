@@ -39,6 +39,7 @@ export function GuidesList({
   onRetry,
 }: GuidesListProps) {
   const t = useTranslations('guides')
+  const tCommon = useTranslations('common')
   const [isCreating, setIsCreating] = React.useState(false)
 
   const handleViewGuide = React.useCallback(
@@ -130,12 +131,12 @@ export function GuidesList({
           <EmptyMedia variant="icon">
             <AlertCircle className="text-destructive" />
           </EmptyMedia>
-          <EmptyTitle>Failed to load guides</EmptyTitle>
-          <EmptyDescription>{error.message || 'An unexpected error occurred'}</EmptyDescription>
+          <EmptyTitle>{t('error.failedToLoad')}</EmptyTitle>
+          <EmptyDescription>{error.message || t('error.unexpected')}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button onClick={onRetry} variant="outline">
-            Try again
+            {tCommon('tryAgain')}
           </Button>
         </EmptyContent>
       </Empty>

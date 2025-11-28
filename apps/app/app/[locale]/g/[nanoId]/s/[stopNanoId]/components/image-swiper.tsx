@@ -4,6 +4,7 @@ import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 type ImageSwiperProps = {
@@ -11,6 +12,7 @@ type ImageSwiperProps = {
 }
 
 export function ImageSwiper({ images }: ImageSwiperProps) {
+  const t = useTranslations('guide')
   const [currentIndex, setCurrentIndex] = useState(0)
 
   if (images.length === 0) return null
@@ -45,7 +47,7 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
             </Button>
 
             <span className="text-sm text-muted-foreground">
-              {currentIndex + 1} / {images.length}
+              {t('imageCounter', { current: currentIndex + 1, total: images.length })}
             </span>
 
             <Button

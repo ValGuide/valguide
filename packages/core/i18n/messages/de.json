@@ -3,6 +3,10 @@
     "metadata": {
       "title": "Admin - ValGuide",
       "description": "Verwalte die ValGuide-Plattform"
+    },
+    "assets": {
+      "title": "Assets",
+      "comingSoon": "Asset-Verwaltung kommt bald"
     }
   },
   "studio": {
@@ -32,7 +36,9 @@
   "common": {
     "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu.",
     "saved": "Gespeichert",
-    "saveError": "Speichern fehlgeschlagen"
+    "saveError": "Speichern fehlgeschlagen",
+    "loading": "...",
+    "tryAgain": "Erneut versuchen"
   },
   "comingSoon": {
     "title": "Bald verfügbar",
@@ -152,7 +158,10 @@
     "next": "Weiter",
     "backToOverview": "Zurück zur Übersicht",
     "startTour": "Tour starten",
-    "of": "von"
+    "of": "von",
+    "separator": "•",
+    "imageCounter": "{current} / {total}",
+    "videoNotSupported": "Ihr Browser unterstützt das Video-Element nicht."
   },
   "guides": {
     "title": "Guides",
@@ -168,7 +177,23 @@
       "blockquote": "Zitat",
       "undo": "Rückgängig",
       "redo": "Wiederholen",
-      "coverImageUpdated": "Cover image updated"
+      "coverImageUpdated": "Titelbild aktualisiert",
+      "preview": "Vorschau",
+      "saving": "Speichern...",
+      "save": "Speichern",
+      "guideDetails": "Guide-Details",
+      "localeIndicator": "({locale})",
+      "guideDetailsDescription": "Bearbeiten Sie die Guide-Informationen für diese Sprache",
+      "titleLabel": "Titel *",
+      "titlePlaceholder": "Guide-Titel eingeben",
+      "characterCount": "{current}/500 Zeichen",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Guide-Beschreibung eingeben",
+      "coverImageLabel": "Titelbild",
+      "coverImageAlt": "Titelbild",
+      "selectCoverImage": "Titelbild auswählen",
+      "guideProgress": "Guide-Fortschritt",
+      "stopProgress": "Stop-Fortschritt"
     },
     "empty": {
       "title": "Noch keine Guides",
@@ -224,6 +249,7 @@
     },
     "archived": "Archiviert",
     "archiveGuide": "Guide archivieren",
+    "recover": "Wiederherstellen",
     "recoverGuide": "Guide wiederherstellen",
     "permanentlyDelete": "Endgültig löschen",
     "archiveConfirmTitle": "Diesen Guide archivieren?",
@@ -236,6 +262,7 @@
     "recoveredSuccessfully": "Guide erfolgreich wiederhergestellt",
     "deletedSuccessfully": "Guide erfolgreich gelöscht",
     "archivedOn": "Archiviert am",
+    "archivedOnDate": "Archiviert am: {date}",
     "noArchivedGuides": "Keine archivierten Guides",
     "noArchivedGuidesDescription": "Archivierte Guides werden hier angezeigt",
     "publish": {
@@ -249,6 +276,15 @@
       "publishing": "Wird veröffentlicht...",
       "guidePublished": "Guide veröffentlicht",
       "guidePublishError": "Fehler beim Veröffentlichen des Guides"
+    },
+    "progress": {
+      "title": "Guide-Fortschritt",
+      "count": "{completed}/{total}",
+      "titleAdded": "Titel hinzugefügt",
+      "descriptionAdded": "Beschreibung hinzugefügt",
+      "coverImageAdded": "Titelbild hinzugefügt",
+      "atLeastOneStop": "Mindestens 1 Stop erstellt",
+      "allStopsHaveTitles": "Alle Stops haben Titel"
     },
     "versionHistory": {
       "button": "Versionsverlauf",
@@ -268,6 +304,22 @@
       "cancel": "Abbrechen",
       "confirm": "Wiederherstellen",
       "rollingBack": "Wird wiederhergestellt..."
+    },
+    "untitledGuide": "Unbenannter Guide",
+    "error": {
+      "failedToLoad": "Guides konnten nicht geladen werden",
+      "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
+    },
+    "details": {
+      "title": "Guide-Details",
+      "guideId": "Guide-ID",
+      "guideCover": "Guide-Titelbild",
+      "created": "Erstellt",
+      "lastUpdated": "Zuletzt aktualisiert",
+      "status": "Status",
+      "published": "Veröffentlicht",
+      "draft": "Entwurf",
+      "translations": "Übersetzungen"
     }
   },
   "stops": {
@@ -276,6 +328,7 @@
     "add": "Stop hinzufügen",
     "edit": "Bearbeiten",
     "stopNumber": "Station {number}",
+    "stopTitle": "{number}: {title}",
     "empty": {
       "title": "Noch keine Stops",
       "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben."
@@ -297,7 +350,17 @@
       "noImages": "Keine Bilder",
       "noAudio": "Kein Audio",
       "noVideo": "Kein Video",
-      "autoTranscribe": "Automatisch aus Audio generieren"
+      "autoTranscribe": "Automatisch aus Audio generieren",
+      "audioFile": "Audiodatei",
+      "dropzoneText": "Klicken zum Hochladen oder per Drag & Drop",
+      "audioHint": "MP3-Dateien bis 50MB",
+      "browseLibrary": "Asset-Bibliothek durchsuchen...",
+      "autoGenerate": "Automatisch aus Audio generieren",
+      "boldButton": "Fett",
+      "italicButton": "Kursiv",
+      "listButton": "Liste",
+      "galleryLabel": "Galerie (Bilder & Video)",
+      "galleryHint": "Bilder und Videos bis 50MB pro Datei"
     },
     "actions": {
       "delete": "Stop löschen",
@@ -337,6 +400,7 @@
     },
     "picker": {
       "title": "{type} auswählen",
+      "titleWithLocale": "{type} auswählen ({locale})",
       "tabs": {
         "library": "Bibliothek",
         "upload": "Hochladen"
@@ -370,6 +434,10 @@
     "filter": {
       "all": "Alle Typen",
       "allLocales": "Alle Sprachen",
+      "noLocale": "Keine Sprache",
+      "localeEn": "Englisch",
+      "localeDe": "Deutsch",
+      "localeRm": "Rätoromanisch",
       "image": "Bilder",
       "audio": "Audio",
       "video": "Video",
@@ -377,9 +445,15 @@
       "searchPlaceholder": "Nach Dateinamen suchen...",
       "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen"
     },
+    "error": {
+      "failedToLoad": "Assets konnten nicht geladen werden",
+      "unexpected": "Ein unerwarteter Fehler ist aufgetreten",
+      "tryAgain": "Erneut versuchen"
+    },
     "card": {
       "uploaded": "Hochgeladen",
       "size": "Größe",
+      "sizeValue": "Größe: {size}",
       "locale": "Sprache",
       "delete": "Löschen",
       "deleting": "Wird gelöscht...",
@@ -387,7 +461,8 @@
       "deleteSuccess": "Asset gelöscht",
       "deleteError": "Asset konnte nicht gelöscht werden",
       "preview": "Vorschau",
-      "download": "Herunterladen"
+      "download": "Herunterladen",
+      "cancel": "Abbrechen"
     },
     "limits": {
       "maxSize": "Max. Dateigröße: {size}",
@@ -409,8 +484,14 @@
       "teamAndMembers": "Team & Mitglieder",
       "settings": "Einstellungen",
       "support": "Support",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "recentGuides": "Neueste Guides",
+      "more": "Mehr",
+      "viewProject": "Projekt anzeigen",
+      "shareProject": "Projekt teilen",
+      "deleteProject": "Projekt löschen"
     },
+    "appName": "Valguide Studio",
     "sections": {
       "content": "Inhalt",
       "performance": "Leistung",
@@ -464,6 +545,8 @@
       "error": "Failed to switch team"
     },
     "members": {
+      "title": "Team & Mitglieder",
+      "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen.",
       "member": "Mitglied",
       "role": "Rolle",
       "joined": "Beigetreten",

@@ -4,6 +4,7 @@ import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Progress } from '@valguide/ui/components/progress'
 import { CheckCircle2, Circle } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface GuideProgressProps {
   guide: GuideWithStops
@@ -11,32 +12,33 @@ interface GuideProgressProps {
 }
 
 interface ProgressItem {
-  label: string
+  labelKey: string
   completed: boolean
 }
 
 export function GuideProgress({ guide, locale }: GuideProgressProps) {
+  const t = useTranslations('guides.progress')
   const translation = guide.translations.find((t) => t.locale === locale)
 
   const items: ProgressItem[] = [
     {
-      label: 'Title added',
+      labelKey: 'titleAdded',
       completed: !!(translation?.currentVersion?.title ?? translation?.draftVersion?.title),
     },
     {
-      label: 'Description added',
+      labelKey: 'descriptionAdded',
       completed: !!(translation?.currentVersion?.description ?? translation?.draftVersion?.description),
     },
     {
-      label: 'Cover image added',
+      labelKey: 'coverImageAdded',
       completed: !!guide.coverImage,
     },
     {
-      label: 'At least 1 stop created',
+      labelKey: 'atLeastOneStop',
       completed: guide.stops.length > 0,
     },
     {
-      label: 'All stops have titles',
+      labelKey: 'allStopsHaveTitles',
       completed:
         guide.stops.length > 0 &&
         guide.stops.every((stop) => {
@@ -53,9 +55,9 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium">Guide Completion</h3>
+        <h3 className="text-sm font-medium">{t('title')}</h3>
         <span className="text-sm text-muted-foreground">
-          {completedCount}/{totalCount}
+          {t('count', { completed: completedCount, total: totalCount })}
         </span>
       </div>
 
@@ -63,13 +65,13 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
 
       <ul className="space-y-2">
         {items.map((item) => (
-          <li key={item.label} className="flex items-center gap-2 text-sm">
+          <li key={item.labelKey} className="flex items-center gap-2 text-sm">
             {item.completed ? (
               <CheckCircle2 className="h-4 w-4 text-green-600" />
             ) : (
               <Circle className="h-4 w-4 text-muted-foreground" />
             )}
-            <span className={item.completed ? 'text-foreground' : 'text-muted-foreground'}>{item.label}</span>
+            <span className={item.completed ? 'text-foreground' : 'text-muted-foreground'}>{t(item.labelKey)}</span>
           </li>
         ))}
       </ul>

@@ -88,9 +88,7 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium truncate">
-              {t('stopNumber', { number: index + 1 })}: {displayTitle}
-            </h3>
+            <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title: displayTitle })}</h3>
           </div>
 
           <div className="flex items-center gap-3">
@@ -197,9 +195,7 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
                   <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium truncate">
-                    {t('stopNumber', { number: index + 1 })}: {displayTitle}
-                  </h3>
+                  <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title: displayTitle })}</h3>
                 </div>
                 <div className="flex items-center gap-3">
                   <Button variant="outline" size="sm" onClick={() => onEdit(stop)}>

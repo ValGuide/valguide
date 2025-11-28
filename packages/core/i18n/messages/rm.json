@@ -3,6 +3,10 @@
     "metadata": {
       "title": "Admin - ValGuide",
       "description": "Administrescha la plattafurma ValGuide"
+    },
+    "assets": {
+      "title": "Assets",
+      "comingSoon": "Administraziun dad assets vegn prest"
     }
   },
   "studio": {
@@ -32,7 +36,9 @@
   "common": {
     "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>.",
     "saved": "Memorisà",
-    "saveError": "Errur cun memorisar"
+    "saveError": "Errur cun memorisar",
+    "loading": "...",
+    "tryAgain": "Empruvar danovamain"
   },
   "comingSoon": {
     "title": "Prest disponibel",
@@ -152,7 +158,10 @@
     "next": "Vinavant",
     "backToOverview": "Turnar a la survista",
     "startTour": "Cumenzar la tura",
-    "of": "da"
+    "of": "da",
+    "separator": "•",
+    "imageCounter": "{current} / {total}",
+    "videoNotSupported": "Voss navigatur na sustegna betg l'element video."
   },
   "guides": {
     "title": "Guids",
@@ -168,7 +177,23 @@
       "blockquote": "Citaziun",
       "undo": "Revocar",
       "redo": "Repeter",
-      "coverImageUpdated": "Cover image updated"
+      "coverImageUpdated": "Maletg da front actualisà",
+      "preview": "Prevista",
+      "saving": "Memorisar...",
+      "save": "Memorisar",
+      "guideDetails": "Detagls dal guid",
+      "localeIndicator": "({locale})",
+      "guideDetailsDescription": "Modifitgar las infurmaziuns dal guid per questa lingua",
+      "titleLabel": "Titel *",
+      "titlePlaceholder": "Endatar il titel dal guid",
+      "characterCount": "{current}/500 caracters",
+      "descriptionLabel": "Descripziun",
+      "descriptionPlaceholder": "Endatar la descripziun dal guid",
+      "coverImageLabel": "Maletg da front",
+      "coverImageAlt": "Maletg da front",
+      "selectCoverImage": "Tscherner maletg da front",
+      "guideProgress": "Progress dal guid",
+      "stopProgress": "Progress dal stop"
     },
     "empty": {
       "title": "Anc nagins guids",
@@ -224,6 +249,7 @@
     },
     "archived": "Archivà",
     "archiveGuide": "Archivar la guida",
+    "recover": "Restaurar",
     "recoverGuide": "Restaurar la guida",
     "permanentlyDelete": "Stizzar definitivamain",
     "archiveConfirmTitle": "Archivar questa guida?",
@@ -236,6 +262,7 @@
     "recoveredSuccessfully": "Guida restaurada cun success",
     "deletedSuccessfully": "Guida stizzada cun success",
     "archivedOn": "Archivà ils",
+    "archivedOnDate": "Archivà ils: {date}",
     "noArchivedGuides": "Naginas guidas archivadas",
     "noArchivedGuidesDescription": "Guidas archivadas vegnan mussadas qua",
     "publish": {
@@ -249,6 +276,15 @@
       "publishing": "Vegn publichà...",
       "guidePublished": "Guid publichà",
       "guidePublishError": "Errur cun publitgar il guid"
+    },
+    "progress": {
+      "title": "Progress dal guid",
+      "count": "{completed}/{total}",
+      "titleAdded": "Titel agiuntà",
+      "descriptionAdded": "Descripziun agiuntada",
+      "coverImageAdded": "Maletg da front agiuntà",
+      "atLeastOneStop": "Almain 1 stop creà",
+      "allStopsHaveTitles": "Tut ils stops han titels"
     },
     "versionHistory": {
       "button": "Cronologia da versiuns",
@@ -268,6 +304,22 @@
       "cancel": "Interrumper",
       "confirm": "Restaurar",
       "rollingBack": "Vegn restaurà..."
+    },
+    "untitledGuide": "Guid senza num",
+    "error": {
+      "failedToLoad": "Impussibel da chargiar ils guids",
+      "unexpected": "Ina errur nunspetgada è succedida"
+    },
+    "details": {
+      "title": "Detagls dal guid",
+      "guideId": "ID dal guid",
+      "guideCover": "Maletg da front dal guid",
+      "created": "Creà",
+      "lastUpdated": "Ultima actualisaziun",
+      "status": "Status",
+      "published": "Publichà",
+      "draft": "Sboz",
+      "translations": "Translaziuns"
     }
   },
   "stops": {
@@ -276,6 +328,7 @@
     "add": "Agiuntar stop",
     "edit": "Modifitgar",
     "stopNumber": "Staziun {number}",
+    "stopTitle": "{number}: {title}",
     "empty": {
       "title": "Anc nagins stops",
       "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas."
@@ -297,7 +350,17 @@
       "noImages": "Nagins maletgs",
       "noAudio": "Nagin audio",
       "noVideo": "Nagin video",
-      "autoTranscribe": "Generar automaticamain dall'audio"
+      "autoTranscribe": "Generar automaticamain dall'audio",
+      "audioFile": "Datoteca audio",
+      "dropzoneText": "Cliccar per chargiar si u metter cun drag & drop",
+      "audioHint": "Datotecas MP3 fin 50MB",
+      "browseLibrary": "Tschertgar en la biblioteca d'assets...",
+      "autoGenerate": "Generar automaticamain dall'audio",
+      "boldButton": "Grass",
+      "italicButton": "Cursiv",
+      "listButton": "Glista",
+      "galleryLabel": "Galaria (Maletgs & Video)",
+      "galleryHint": "Maletgs e videos fin 50MB per datoteca"
     },
     "actions": {
       "delete": "Stizzar stop",
@@ -337,6 +400,7 @@
     },
     "picker": {
       "title": "Tscherner {type}",
+      "titleWithLocale": "Tscherner {type} ({locale})",
       "tabs": {
         "library": "Biblioteca",
         "upload": "Chargiar si"
@@ -370,6 +434,10 @@
     "filter": {
       "all": "Tut tips",
       "allLocales": "Tut linguas",
+      "noLocale": "Nagina lingua",
+      "localeEn": "Englais",
+      "localeDe": "Tudestg",
+      "localeRm": "Rumantsch",
       "image": "Maletgs",
       "audio": "Audio",
       "video": "Video",
@@ -377,9 +445,15 @@
       "searchPlaceholder": "Tschertgar tenor num da datoteca...",
       "noResults": "Nagins assets chattads che correspundan a voss filters"
     },
+    "error": {
+      "failedToLoad": "Errur cun chargiar ils assets",
+      "unexpected": "In errur nunspetgà è succedì",
+      "tryAgain": "Empruvar danovamain"
+    },
     "card": {
       "uploaded": "Chargià si",
       "size": "Grondezza",
+      "sizeValue": "Grondezza: {size}",
       "locale": "Lingua",
       "delete": "Stizzar",
       "deleting": "Vegn stizzà...",
@@ -387,7 +461,8 @@
       "deleteSuccess": "Asset stizzà",
       "deleteError": "Errur cun stizzar l'asset",
       "preview": "Prevista",
-      "download": "Chargiar giu"
+      "download": "Chargiar giu",
+      "cancel": "Interrumper"
     },
     "limits": {
       "maxSize": "Grondezza maximala da datoteca: {size}",
@@ -409,8 +484,14 @@
       "teamAndMembers": "Team & Commembers",
       "settings": "Parameters",
       "support": "Support",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "recentGuides": "Guids novs",
+      "more": "Dapli",
+      "viewProject": "Mussar project",
+      "shareProject": "Cundivider project",
+      "deleteProject": "Stizzar project"
     },
+    "appName": "Valguide Studio",
     "sections": {
       "content": "Cuntegn",
       "performance": "Prestaziun",
@@ -464,6 +545,8 @@
       "error": "Failed to switch team"
     },
     "members": {
+      "title": "Team & Commembers",
+      "description": "Administrescha ils commembers da tes team e lur permissiuns.",
       "member": "Commember",
       "role": "Rolla",
       "joined": "Uniua",

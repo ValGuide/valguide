@@ -54,6 +54,28 @@
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["**/*.stories.tsx", "**/*.stories.ts"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "noJsxLiterals": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/transactional/**/*.tsx", "packages/transactional/**/*.ts"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "noJsxLiterals": "off"
+          }
+        }
+      }
+    }
+  ],
   "files": {
     "includes": [
       "**",

@@ -196,7 +196,7 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
             <>
               <CheckCircle2 className="h-16 w-16 text-green-600" />
               <div className="space-y-2">
-                <p className="text-lg font-semibold text-green-700 dark:text-green-400">Upload Complete!</p>
+                <p className="text-lg font-semibold text-green-700 dark:text-green-400">{t('upload.uploadComplete')}</p>
                 <p className="text-sm text-muted-foreground">{file?.name}</p>
               </div>
             </>
@@ -214,6 +214,7 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
               )}
               <div className="space-y-2">
                 <p className="text-sm font-medium">{file.name}</p>
+                {/* biome-ignore lint/nursery/noJsxLiterals: MB is a universal unit abbreviation */}
                 <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
               </div>
             </>
@@ -221,8 +222,8 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
             <>
               {getTypeIcon()}
               <div className="space-y-2">
-                <p className="text-base font-medium">Drop {type} here or click to browse</p>
-                <p className="text-sm text-muted-foreground">Maximum size: {maxSizeMB}MB</p>
+                <p className="text-base font-medium">{t('upload.dropzone', { type: t(`types.${type}`) })}</p>
+                <p className="text-sm text-muted-foreground">{t('upload.maxSize', { size: maxSizeMB })}</p>
               </div>
             </>
           )}
@@ -233,7 +234,9 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
       {uploading && (
         <div className="space-y-2">
           <Progress value={progress} className="h-2" />
-          <p className="text-sm text-center text-muted-foreground">{progress.toFixed(1)}% uploaded</p>
+          <p className="text-sm text-center text-muted-foreground">
+            {t('upload.uploading', { progress: progress.toFixed(1) })}
+          </p>
         </div>
       )}
 
@@ -249,7 +252,7 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
         <div className="flex gap-2">
           <Button onClick={handleUpload} className="flex-1" size="lg">
             <Upload className="mr-2 h-4 w-4" />
-            Upload {type}
+            {t('upload.uploadButton', { type: t(`types.${type}`) })}
           </Button>
           <Button variant="outline" size="lg" onClick={handleReset}>
             <X className="h-4 w-4" />

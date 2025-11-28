@@ -39,7 +39,8 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
               href="/"
               className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              ← {t('backToGuides')}
+              {/* biome-ignore lint/nursery/noJsxLiterals: Unicode arrow is a universal visual symbol */}←{' '}
+              {t('backToGuides')}
             </Link>
             <div className="flex gap-2">
               <ViewInAppButton nanoId={nanoId} published={!!guide.published} />
@@ -57,7 +58,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
               {(() => {
                 const trans = guide.translations.find((t) => t.locale === locale) || guide.translations[0]
                 const version = trans?.draftVersion || trans?.currentVersion
-                return version?.title || 'Untitled Guide'
+                return version?.title || t('untitledGuide')
               })()}
             </h1>
             <div className="text-muted-foreground mt-2">
@@ -80,7 +81,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
               alt={(() => {
                 const trans = guide.translations[0]
                 const version = trans?.draftVersion || trans?.currentVersion
-                return version?.title || 'Guide cover'
+                return version?.title ?? t('details.guideCover')
               })()}
               className="h-full w-full object-cover"
             />
@@ -88,29 +89,29 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
         )}
 
         <div className="rounded-lg border p-6">
-          <h2 className="text-xl font-semibold mb-4">Guide Details</h2>
+          <h2 className="text-xl font-semibold mb-4">{t('details.title')}</h2>
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Guide ID</dt>
+              <dt className="text-sm font-medium text-muted-foreground">{t('details.guideId')}</dt>
               <dd className="mt-1 text-sm">{guide.nanoId}</dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Created</dt>
+              <dt className="text-sm font-medium text-muted-foreground">{t('details.created')}</dt>
               <dd className="mt-1 text-sm">{new Date(guide.createdAt).toLocaleDateString()}</dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Last Updated</dt>
+              <dt className="text-sm font-medium text-muted-foreground">{t('details.lastUpdated')}</dt>
               <dd className="mt-1 text-sm">{new Date(guide.updatedAt).toLocaleDateString()}</dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Status</dt>
-              <dd className="mt-1 text-sm">{guide.published ? 'Published' : 'Draft'}</dd>
+              <dt className="text-sm font-medium text-muted-foreground">{t('details.status')}</dt>
+              <dd className="mt-1 text-sm">{guide.published ? t('details.published') : t('details.draft')}</dd>
             </div>
           </dl>
         </div>
 
         <div className="rounded-lg border p-6">
-          <h2 className="text-xl font-semibold mb-4">Translations</h2>
+          <h2 className="text-xl font-semibold mb-4">{t('details.translations')}</h2>
           <div className="space-y-4">
             {guide.translations.map((translation) => {
               const version = translation.draftVersion || translation.currentVersion
@@ -119,7 +120,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm font-medium uppercase">{translation.locale}</span>
                   </div>
-                  <h3 className="font-medium">{version?.title || 'Untitled'}</h3>
+                  <h3 className="font-medium">{version?.title || t('untitledGuide')}</h3>
                   {version?.description && (
                     <div className="text-sm text-muted-foreground mt-1">
                       <RichTextDisplay content={version.description} />

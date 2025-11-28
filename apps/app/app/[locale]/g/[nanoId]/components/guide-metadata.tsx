@@ -20,7 +20,7 @@ export function GuideMetadata({ stopCount, createdAt, locale }: GuideMetadataPro
       <div>
         <span className="font-medium">{stopCount}</span> {stopCount === 1 ? t('stop') : t('stops')}
       </div>
-      <div className="hidden sm:block">•</div>
+      <div className="hidden sm:block">{t('separator')}</div>
       <div>{formattedDate}</div>
     </div>
   )

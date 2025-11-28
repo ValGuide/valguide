@@ -32,6 +32,10 @@
     "metadata": {
       "title": "Admin - ValGuide",
       "description": "Manage the ValGuide platform"
+    },
+    "assets": {
+      "title": "Assets",
+      "comingSoon": "Asset management coming soon"
     }
   },
   "studio": {
@@ -61,7 +65,9 @@
   "common": {
     "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>.",
     "saved": "Saved",
-    "saveError": "Failed to save"
+    "saveError": "Failed to save",
+    "loading": "...",
+    "tryAgain": "Try again"
   },
   "comingSoon": {
     "title": "Coming Soon",
@@ -181,7 +187,10 @@
     "next": "Next",
     "backToOverview": "Back to overview",
     "startTour": "Start tour",
-    "of": "of"
+    "of": "of",
+    "separator": "•",
+    "imageCounter": "{current} / {total}",
+    "videoNotSupported": "Your browser does not support the video tag."
   },
   "guides": {
     "title": "Guides",
@@ -197,7 +206,23 @@
       "blockquote": "Quote",
       "undo": "Undo",
       "redo": "Redo",
-      "coverImageUpdated": "Cover image updated"
+      "coverImageUpdated": "Cover image updated",
+      "preview": "Preview",
+      "saving": "Saving...",
+      "save": "Save",
+      "guideDetails": "Guide Details",
+      "localeIndicator": "({locale})",
+      "guideDetailsDescription": "Edit the guide information for this language",
+      "titleLabel": "Title *",
+      "titlePlaceholder": "Enter guide title",
+      "characterCount": "{current}/500 characters",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter guide description",
+      "coverImageLabel": "Cover Image",
+      "coverImageAlt": "Cover",
+      "selectCoverImage": "Select Cover Image",
+      "guideProgress": "Guide Progress",
+      "stopProgress": "Stop Progress"
     },
     "empty": {
       "title": "No guides yet",
@@ -253,6 +278,7 @@
     },
     "archived": "Archived",
     "archiveGuide": "Archive Guide",
+    "recover": "Recover",
     "recoverGuide": "Recover Guide",
     "permanentlyDelete": "Permanently Delete",
     "archiveConfirmTitle": "Archive this guide?",
@@ -265,6 +291,7 @@
     "recoveredSuccessfully": "Guide recovered successfully",
     "deletedSuccessfully": "Guide deleted successfully",
     "archivedOn": "Archived on",
+    "archivedOnDate": "Archived on: {date}",
     "noArchivedGuides": "No archived guides",
     "noArchivedGuidesDescription": "Archived guides will appear here",
     "publish": {
@@ -278,6 +305,15 @@
       "publishing": "Publishing...",
       "guidePublished": "Guide published",
       "guidePublishError": "Failed to publish guide"
+    },
+    "progress": {
+      "title": "Guide Completion",
+      "count": "{completed}/{total}",
+      "titleAdded": "Title added",
+      "descriptionAdded": "Description added",
+      "coverImageAdded": "Cover image added",
+      "atLeastOneStop": "At least 1 stop created",
+      "allStopsHaveTitles": "All stops have titles"
     },
     "versionHistory": {
       "button": "Version History",
@@ -297,6 +333,22 @@
       "cancel": "Cancel",
       "confirm": "Restore",
       "rollingBack": "Restoring..."
+    },
+    "untitledGuide": "Untitled Guide",
+    "error": {
+      "failedToLoad": "Failed to load guides",
+      "unexpected": "An unexpected error occurred"
+    },
+    "details": {
+      "title": "Guide Details",
+      "guideId": "Guide ID",
+      "guideCover": "Guide cover",
+      "created": "Created",
+      "lastUpdated": "Last Updated",
+      "status": "Status",
+      "published": "Published",
+      "draft": "Draft",
+      "translations": "Translations"
     }
   },
   "stops": {
@@ -305,6 +357,7 @@
     "add": "Add Stop",
     "edit": "Edit",
     "stopNumber": "Stop {number}",
+    "stopTitle": "{number}: {title}",
     "empty": {
       "title": "No stops yet",
       "description": "Add stops to create the journey through your guide. Each stop can have its own content in multiple languages."
@@ -326,7 +379,17 @@
       "noImages": "No images",
       "noAudio": "No audio",
       "noVideo": "No video",
-      "autoTranscribe": "Auto-generate from audio"
+      "autoTranscribe": "Auto-generate from audio",
+      "audioFile": "Audio file",
+      "dropzoneText": "Click to upload or drag and drop",
+      "audioHint": "MP3 files up to 50MB",
+      "browseLibrary": "Browse Asset Library...",
+      "autoGenerate": "Auto-generate from audio",
+      "boldButton": "Bold",
+      "italicButton": "Italic",
+      "listButton": "List",
+      "galleryLabel": "Gallery (Images & Video)",
+      "galleryHint": "Images and videos up to 50MB each"
     },
     "actions": {
       "addSuccess": "Stop added",
@@ -366,6 +429,7 @@
     },
     "picker": {
       "title": "Select {type}",
+      "titleWithLocale": "Select {type} ({locale})",
       "tabs": {
         "library": "Library",
         "upload": "Upload"
@@ -399,6 +463,10 @@
     "filter": {
       "all": "All Types",
       "allLocales": "All Languages",
+      "noLocale": "No locale",
+      "localeEn": "English",
+      "localeDe": "German",
+      "localeRm": "Romansh",
       "image": "Images",
       "audio": "Audio",
       "video": "Video",
@@ -406,9 +474,15 @@
       "searchPlaceholder": "Search by filename...",
       "noResults": "No assets found matching your filters"
     },
+    "error": {
+      "failedToLoad": "Failed to load assets",
+      "unexpected": "An unexpected error occurred",
+      "tryAgain": "Try again"
+    },
     "card": {
       "uploaded": "Uploaded",
       "size": "Size",
+      "sizeValue": "Size: {size}",
       "locale": "Language",
       "delete": "Delete",
       "deleting": "Deleting...",
@@ -416,7 +490,8 @@
       "deleteSuccess": "Asset deleted",
       "deleteError": "Failed to delete asset",
       "preview": "Preview",
-      "download": "Download"
+      "download": "Download",
+      "cancel": "Cancel"
     },
     "limits": {
       "maxSize": "Max file size: {size}",
@@ -438,8 +513,14 @@
       "teamAndMembers": "Team & Members",
       "settings": "Settings",
       "support": "Support",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "recentGuides": "Recent Guides",
+      "more": "More",
+      "viewProject": "View Project",
+      "shareProject": "Share Project",
+      "deleteProject": "Delete Project"
     },
+    "appName": "Valguide Studio",
     "sections": {
       "content": "Content",
       "performance": "Performance",
@@ -493,6 +574,8 @@
       "error": "Failed to switch team"
     },
     "members": {
+      "title": "Team & Members",
+      "description": "Manage your team members and their permissions.",
       "member": "Member",
       "role": "Role",
       "joined": "Joined",

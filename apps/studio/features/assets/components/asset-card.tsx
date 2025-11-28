@@ -150,9 +150,7 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
             </div>
 
             <div className="space-y-1 text-xs text-muted-foreground">
-              <div>
-                {t('card.size')}: {formatFileSize(asset.fileSize)}
-              </div>
+              <div>{t('card.sizeValue', { size: formatFileSize(asset.fileSize) })}</div>
               <div>
                 {t('card.uploaded')} {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
               </div>
@@ -169,7 +167,7 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
             <AlertDialogDescription>{t('card.deleteConfirm')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>{t('card.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}

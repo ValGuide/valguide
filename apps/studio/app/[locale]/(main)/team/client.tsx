@@ -108,8 +108,8 @@ export function TeamMembersClient({
     <div className="container mx-auto max-w-5xl py-8 space-y-8 px-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Team & Members</h1>
-          <p className="text-muted-foreground">Manage your team members and their permissions.</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
+          <p className="text-muted-foreground">{t('description')}</p>
         </div>
         {['owner', 'admin'].includes(currentUserRole) && (
           <InviteMemberDialog currentUserRole={currentUserRole} onInvite={handleInvite} />

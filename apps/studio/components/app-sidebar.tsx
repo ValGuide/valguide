@@ -42,6 +42,7 @@ export function AppSidebar({
   onLogout?: () => void
 }) {
   const t = useTranslations('sidebar.nav')
+  const tSidebar = useTranslations('sidebar')
   const tSections = useTranslations('sidebar.sections')
   const pathnameFromRouter = usePathname()
   const router = useRouter()
@@ -141,7 +142,7 @@ export function AppSidebar({
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
-          <h1 className="text-lg font-medium px-2 truncate">Valguide Studio</h1>
+          <h1 className="text-lg font-medium px-2 truncate">{tSidebar('appName')}</h1>
         </div>
         <TeamSwitcher
           teams={teams}

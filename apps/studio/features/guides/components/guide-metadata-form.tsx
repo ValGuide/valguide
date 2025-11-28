@@ -28,7 +28,7 @@ export function GuideMetadataForm({
   onCoverImageChange,
   onSelectCoverImage,
 }: GuideMetadataFormProps) {
-  const _t = useTranslations('guides')
+  const t = useTranslations('guides')
   const [title, setTitle] = useState(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
   const [description, setDescription] = useState(
     translation?.draftVersion?.description ?? translation?.currentVersion?.description ?? '',
@@ -53,43 +53,46 @@ export function GuideMetadataForm({
     <Card>
       <CardHeader>
         <CardTitle>
-          Guide Details <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">({locale})</span>
+          {t('editor.guideDetails')}{' '}
+          <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">
+            {t('editor.localeIndicator', { locale })}
+          </span>
         </CardTitle>
-        <CardDescription>Edit the guide information for this language</CardDescription>
+        <CardDescription>{t('editor.guideDetailsDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Title */}
         <div className="space-y-2">
-          <Label htmlFor={`title-${locale}`}>Title *</Label>
+          <Label htmlFor={`title-${locale}`}>{t('editor.titleLabel')}</Label>
           <Input
             id={`title-${locale}`}
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="Enter guide title"
+            placeholder={t('editor.titlePlaceholder')}
             maxLength={500}
             required
           />
-          <p className="text-xs text-muted-foreground">{title.length}/500 characters</p>
+          <p className="text-xs text-muted-foreground">{t('editor.characterCount', { current: title.length })}</p>
         </div>
 
         {/* Description */}
         <div className="space-y-2">
-          <Label htmlFor={`description-${locale}`}>Description</Label>
+          <Label htmlFor={`description-${locale}`}>{t('editor.descriptionLabel')}</Label>
           <RichTextEditor
             value={description}
             onChange={handleDescriptionChange}
-            placeholder="Enter guide description"
+            placeholder={t('editor.descriptionPlaceholder')}
           />
         </div>
 
         {/* Cover Image */}
         <div className="space-y-2">
-          <Label>Cover Image</Label>
+          <Label>{t('editor.coverImageLabel')}</Label>
           {coverImage ? (
             <div className="relative">
               <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
                 {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
-                <img src={coverImage} alt="Cover" className="h-full w-full object-cover" />
+                <img src={coverImage} alt={t('editor.coverImageAlt')} className="h-full w-full object-cover" />
                 <Button
                   variant="destructive"
                   size="icon"
@@ -103,7 +106,7 @@ export function GuideMetadataForm({
           ) : (
             <Button variant="outline" onClick={onSelectCoverImage} className="w-full">
               <ImageIcon className="mr-2 h-4 w-4" />
-              Select Cover Image
+              {t('editor.selectCoverImage')}
             </Button>
           )}
         </div>

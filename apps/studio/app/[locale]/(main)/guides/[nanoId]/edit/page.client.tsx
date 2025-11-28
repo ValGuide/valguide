@@ -26,6 +26,7 @@ export type GuideEditorClientProps = {
 function GuideEditorContent() {
   const router = useRouter()
   const t = useTranslations('guides')
+  const tStops = useTranslations('stops')
   const {
     guide,
     activeLocale,
@@ -96,7 +97,7 @@ function GuideEditorContent() {
           <Link href={backUrl}>
             <Button variant="ghost" size="sm" className="gap-1">
               <ArrowLeft className="h-4 w-4" />
-              Guides
+              {t('title')}
             </Button>
           </Link>
         </div>
@@ -109,10 +110,10 @@ function GuideEditorContent() {
             }}
           />
           <Button variant="ghost" size="sm">
-            Preview
+            {t('editor.preview')}
           </Button>
           <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
-            {isSaving ? 'Saving...' : 'Save'}
+            {isSaving ? t('editor.saving') : t('editor.save')}
           </Button>
         </div>
       </div>
@@ -126,7 +127,7 @@ function GuideEditorContent() {
               <div className="space-y-6">
                 {/* Guide Details Header */}
                 <div>
-                  <h2 className="mb-4 text-lg font-semibold">Guide Details</h2>
+                  <h2 className="mb-4 text-lg font-semibold">{t('editor.guideDetails')}</h2>
 
                   {/* Locale Tabs */}
                   <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
@@ -148,7 +149,7 @@ function GuideEditorContent() {
 
                 {/* Stops Section */}
                 <div>
-                  <h3 className="mb-4 text-base font-medium">Stops</h3>
+                  <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
                   <StopsList
                     stops={guide.stops}
                     locale={activeLocale}
@@ -165,7 +166,7 @@ function GuideEditorContent() {
                 {/* Back to Guide Button */}
                 <Button variant="ghost" size="sm" onClick={() => selectStop(null)} className="gap-1">
                   <ArrowLeft className="h-4 w-4" />
-                  Guide
+                  {t('title')}
                 </Button>
 
                 {/* Locale Tabs */}
@@ -218,7 +219,7 @@ function GuideEditorContent() {
         {/* Right Sidebar - Progress */}
         {!selectedStop && (
           <div className="w-80 border-l bg-background p-6">
-            <h3 className="mb-4 text-base font-semibold">Guide Progress</h3>
+            <h3 className="mb-4 text-base font-semibold">{t('editor.guideProgress')}</h3>
             <GuideProgress guide={guide} locale={activeLocale} />
           </div>
         )}
@@ -226,7 +227,7 @@ function GuideEditorContent() {
         {/* Right Sidebar - Stop Progress */}
         {selectedStop && (
           <div className="w-80 border-l bg-background p-6">
-            <h3 className="mb-4 text-base font-semibold">Stop Progress</h3>
+            <h3 className="mb-4 text-base font-semibold">{t('editor.stopProgress')}</h3>
             {/* TODO: Add stop-specific progress */}
           </div>
         )}

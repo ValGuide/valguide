@@ -129,8 +129,9 @@ export function AssetPickerModal({
       <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>
-            {t('title', { type: tTypes(type) })}
-            {locale && <span className="ml-2 text-muted-foreground">({locale.toUpperCase()})</span>}
+            {locale
+              ? t('titleWithLocale', { type: tTypes(type), locale: locale.toUpperCase() })
+              : t('title', { type: tTypes(type) })}
           </DialogTitle>
         </DialogHeader>
 
