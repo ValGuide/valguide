@@ -7,6 +7,7 @@ type UseAssetsOptions = {
   type?: AssetType
   locale?: string
   organizationId?: string
+  enabled?: boolean
 }
 
 type AssetsResponse = {
@@ -27,6 +28,7 @@ export function useAssets(options?: UseAssetsOptions) {
   if (options?.organizationId) params.set('organizationId', options.organizationId)
 
   const url = `/api/assets${params.toString() ? `?${params.toString()}` : ''}`
+  const enabled = options?.enabled ?? true
 
   const {
     data,
@@ -34,7 +36,7 @@ export function useAssets(options?: UseAssetsOptions) {
     isLoading,
     isValidating: _isValidating,
     mutate,
-  } = useSWR<AssetsResponse>(url, fetcher, {
+  } = useSWR<AssetsResponse>(enabled ? url : null, fetcher, {
     keepPreviousData: true,
     revalidateOnFocus: false,
   })

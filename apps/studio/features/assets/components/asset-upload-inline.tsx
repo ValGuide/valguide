@@ -168,10 +168,18 @@ export function AssetUploadInline({ type, locale, organizationId, onUploadComple
 
   return (
     <div className="space-y-4">
-      {/* Drag & Drop Zone */}
+      {/* Drag & Drop Zone - uses div for native drag/drop support with file input overlay */}
+      {/* biome-ignore lint/a11y/useSemanticElements: button cannot support drag/drop events properly */}
       <div
+        role="button"
+        tabIndex={0}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            fileInputRef.current?.click()
+          }
+        }}
         className={cn(
           'relative border-2 border-dashed rounded-lg p-12 transition-all',
           uploadComplete

@@ -14,6 +14,7 @@ export function RichTextDisplay({ content, className = '' }: RichTextDisplayProp
   return (
     <div
       className={`prose prose-sm dark:prose-invert max-w-none ${className}`}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized by TipTap
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )

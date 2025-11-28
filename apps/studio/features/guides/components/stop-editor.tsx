@@ -170,6 +170,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
             ))}
             {video && (
               <div className="relative aspect-square overflow-hidden rounded-lg border bg-white">
+                {/* biome-ignore lint/a11y/useMediaCaption: captions not available for user-uploaded content */}
                 <video src={video.url} className="h-full w-full object-cover" controls />
                 <Button
                   variant="destructive"

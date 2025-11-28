@@ -15,7 +15,9 @@ async function verify() {
   `
 
   console.log('guide_translation columns:')
-  gtCols.forEach((r) => console.log(`  ✓ ${r.column_name}`))
+  gtCols.forEach((r) => {
+    console.log(`  ✓ ${r.column_name}`)
+  })
 
   const hasCurrentVersion = gtCols.some((r) => r.column_name === 'current_version_id')
   const hasDraftVersion = gtCols.some((r) => r.column_name === 'draft_version_id')
@@ -43,7 +45,9 @@ async function verify() {
       ORDER BY ordinal_position
     `
     console.log('\nguide_translation_version columns:')
-    versionCols.forEach((r) => console.log(`  ✓ ${r.column_name}`))
+    versionCols.forEach((r) => {
+      console.log(`  ✓ ${r.column_name}`)
+    })
   }
 
   // Check enum

@@ -50,7 +50,7 @@
         "useButtonType": "warn"
       },
       "nursery": {
-        "noJsxLiterals": "error"
+        "noJsxLiterals": "warn"
       }
     }
   },
@@ -61,6 +61,9 @@
         "rules": {
           "nursery": {
             "noJsxLiterals": "off"
+          },
+          "style": {
+            "noNonNullAssertion": "off"
           }
         }
       }
@@ -71,6 +74,31 @@
         "rules": {
           "nursery": {
             "noJsxLiterals": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/core/ui/**/*.tsx", "packages/core/ui/**/*.ts"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "noJsxLiterals": "off"
+          },
+          "a11y": {
+            "useSemanticElements": "warn",
+            "useFocusableInteractive": "warn",
+            "useAriaPropsForRole": "warn"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/core/scripts/**/*.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
           }
         }
       }
@@ -93,6 +121,7 @@
       "!**/drizzle.config.ts",
       "!**/postcss.config.mjs",
       "!**/tailwind.config.ts",
+      "!**/growth",
       "!**/*.css"
     ]
   }

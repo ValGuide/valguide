@@ -232,7 +232,9 @@ export async function deleteGuideTranslationDraft(guideId: string, locale: strin
 
   await db.transaction(async (tx: typeof db) => {
     // Delete draft version
-    await tx.delete(guideTranslationVersion).where(eq(guideTranslationVersion.id, currentTranslation.draftVersionId!))
+    if (currentTranslation.draftVersionId) {
+      await tx.delete(guideTranslationVersion).where(eq(guideTranslationVersion.id, currentTranslation.draftVersionId))
+    }
 
     // Clear draft pointer
     await tx
@@ -464,7 +466,9 @@ export async function deleteStopTranslationDraft(stopId: string, locale: string)
   }
 
   await db.transaction(async (tx: typeof db) => {
-    await tx.delete(stopTranslationVersion).where(eq(stopTranslationVersion.id, currentTranslation.draftVersionId!))
+    if (currentTranslation.draftVersionId) {
+      await tx.delete(stopTranslationVersion).where(eq(stopTranslationVersion.id, currentTranslation.draftVersionId))
+    }
 
     await tx
       .update(stopTranslation)

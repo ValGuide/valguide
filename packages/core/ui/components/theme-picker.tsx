@@ -60,7 +60,6 @@ export function ThemePicker({
           <Command>
             <CommandInput placeholder="Search theme..." />
             <CommandList>
-              {/* biome-ignore lint/nursery/noJsxLiterals: generic UI component strings not for app-specific translation */}
               <CommandEmpty>No theme found.</CommandEmpty>
               <CommandGroup>
                 <CommandItem
@@ -72,7 +71,6 @@ export function ThemePicker({
                   }}
                 >
                   <Check className={cn('mr-2 h-4 w-4', theme === 'system' ? 'opacity-100' : 'opacity-0')} />
-                  {/* biome-ignore lint/nursery/noJsxLiterals: generic UI component strings not for app-specific translation */}
                   System
                 </CommandItem>
                 {themes.map((themeOption) => (

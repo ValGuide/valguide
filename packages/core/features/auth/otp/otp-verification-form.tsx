@@ -104,16 +104,9 @@ export function OtpVerificationForm({
         </Field>
         <div className="text-center text-sm">
           {t('didntReceiveEmail')}{' '}
-          <a
-            href="#"
-            className="font-medium hover:underline"
-            onClick={(e) => {
-              e.preventDefault()
-              onResendClick()
-            }}
-          >
+          <button type="button" className="font-medium hover:underline" onClick={onResendClick}>
             {t('resendCode')}
-          </a>
+          </button>
         </div>
       </FieldGroup>
     </form>

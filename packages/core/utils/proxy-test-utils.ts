@@ -15,9 +15,7 @@ export const mockRequest = ({ url, cookies, headers, base }: MockRequestParams):
     cookies: new RequestCookies(
       new Headers({
         cookie: Object.entries(cookies ?? {})
-          .reduce<string[]>((acc, [key, value]) => {
-            return [...acc, `${key}=${value}`]
-          }, [])
+          .map(([key, value]) => `${key}=${value}`)
           .join(';'),
       }),
     ),

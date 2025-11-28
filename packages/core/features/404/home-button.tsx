@@ -8,6 +8,7 @@ export const HomeButton = () => (
   <Link href="/">
     <Button>
       <svg
+        aria-hidden="true"
         className="size-6"
         fill="none"
         stroke="currentColor"

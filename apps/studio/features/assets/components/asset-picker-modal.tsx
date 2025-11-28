@@ -55,9 +55,7 @@ export function AssetPickerModal({
     assets: assetsFromHook,
     isLoading: isLoadingFromHook,
     refetch,
-  } = shouldFetchAssets
-    ? useAssets({ type, locale, organizationId })
-    : { assets: [], isLoading: false, refetch: () => {} }
+  } = useAssets({ type, locale, organizationId, enabled: shouldFetchAssets })
 
   const assets = assetsProp ?? assetsFromHook
   const isLoading = isLoadingProp ?? isLoadingFromHook
@@ -183,9 +181,10 @@ export function AssetPickerModal({
                   {filteredAssets.map((asset) => {
                     const isSelected = selected.has(asset.id)
                     return (
-                      <div
+                      <button
+                        type="button"
                         key={asset.id}
-                        className={`relative rounded-lg border-2 transition-all cursor-pointer hover:shadow-md ${
+                        className={`relative rounded-lg border-2 transition-all cursor-pointer hover:shadow-md text-left ${
                           isSelected ? 'border-primary shadow-sm' : 'border-border'
                         }`}
                         onClick={() => handleToggleAsset(asset.id)}
@@ -228,7 +227,7 @@ export function AssetPickerModal({
                             {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
                           </div>
                         </div>
-                      </div>
+                      </button>
                     )
                   })}
                 </div>

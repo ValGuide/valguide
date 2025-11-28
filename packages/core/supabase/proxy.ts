@@ -58,11 +58,15 @@ export const supbaseProxyFn = (options?: {
           return req.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options: _options }) => req.cookies.set(name, value))
+          for (const { name, value } of cookiesToSet) {
+            req.cookies.set(name, value)
+          }
           supabaseResponse = NextResponse.next({
             request: req,
           })
-          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
+          for (const { name, value, options } of cookiesToSet) {
+            supabaseResponse.cookies.set(name, value, options)
+          }
         },
       },
       cookieOptions,

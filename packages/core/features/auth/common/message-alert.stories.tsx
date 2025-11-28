@@ -22,7 +22,7 @@ export const Success: Story = {
   },
 }
 
-export const Error: Story = {
+export const ErrorMessage: Story = {
   args: {
     type: 'error',
   },
