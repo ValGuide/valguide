@@ -4,6 +4,7 @@ import { confirmAssetUpload } from '@valguide/core/features/assets/actions'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import {
   detectAssetType,
+  formatFileSize,
   getAllAllowedMimeTypes,
   getAllowedMimeTypes,
   MAX_SIZE_MB,
@@ -230,7 +231,7 @@ export function AssetUploadInline({ allowedTypes, locale, organizationId, onUplo
               <div className="space-y-2">
                 <p className="text-sm font-medium">{file.name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {(file.size / 1024 / 1024).toFixed(2)} MB · {t(`types.${detectedType}`)}
+                  {formatFileSize(file.size)} · {t(`types.${detectedType}`)}
                 </p>
               </div>
             </>
