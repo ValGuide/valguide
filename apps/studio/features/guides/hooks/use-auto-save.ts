@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useDebounceCallback } from 'usehooks-ts'
 
-export function useAutoSave(save: () => Promise<void>, isDirty: boolean, delay = 2000) {
+export function useAutoSave(save: () => Promise<void>, isDirty: boolean, delay = 2000, enabled = false) {
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const debouncedSave = useDebounceCallback(async () => {
@@ -15,16 +15,16 @@ export function useAutoSave(save: () => Promise<void>, isDirty: boolean, delay =
   }, delay)
 
   useEffect(() => {
-    if (isDirty) {
+    if (enabled && isDirty) {
       debouncedSave()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDirty])
+  }, [enabled, isDirty])
 
-  // Save on unmount if dirty
+  // Save on unmount if dirty (only if enabled)
   useEffect(() => {
     return () => {
-      if (isDirty) {
+      if (enabled && isDirty) {
         save()
       }
     }
