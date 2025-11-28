@@ -356,7 +356,9 @@
       "status": "Status",
       "published": "Published",
       "draft": "Draft",
-      "translations": "Translations"
+      "translations": "Translations",
+      "noCoverImage": "Cover Image",
+      "addCoverImageHint": "Add a cover image in the editor"
     }
   },
   "stops": {

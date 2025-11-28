@@ -327,7 +327,9 @@
       "status": "Status",
       "published": "Publichà",
       "draft": "Sboz",
-      "translations": "Translaziuns"
+      "translations": "Translaziuns",
+      "noCoverImage": "Maletg da front",
+      "addCoverImageHint": "Agiuntai in maletg da front en l'editur"
     }
   },
   "stops": {

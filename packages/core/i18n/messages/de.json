@@ -327,7 +327,9 @@
       "status": "Status",
       "published": "Veröffentlicht",
       "draft": "Entwurf",
-      "translations": "Übersetzungen"
+      "translations": "Übersetzungen",
+      "noCoverImage": "Titelbild",
+      "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
     }
   },
   "stops": {
