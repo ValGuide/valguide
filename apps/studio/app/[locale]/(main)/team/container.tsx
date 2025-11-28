@@ -1,5 +1,6 @@
 'use client'
 
+import { createTeamAction } from '@valguide/core/features/orgs/actions'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { TeamPageSkeleton } from '@valguide/core/features/orgs/components/team-page-skeleton'
 import { Button } from '@valguide/ui/components/button'
@@ -22,7 +23,7 @@ export function TeamPageContainer() {
           <h2 className="text-2xl font-bold tracking-tight">{t('welcome')}</h2>
           <p className="text-muted-foreground">{t('description')}</p>
         </div>
-        <CreateTeamDialog>
+        <CreateTeamDialog onCreateTeam={createTeamAction}>
           <Button size="lg">{t('createButton')}</Button>
         </CreateTeamDialog>
       </div>

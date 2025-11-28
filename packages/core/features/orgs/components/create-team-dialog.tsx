@@ -17,13 +17,13 @@ import { PlusCircle } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import * as React from 'react'
 import { toast } from 'sonner'
-import { createTeamAction } from '../actions'
 
 export interface CreateTeamDialogProps {
   children?: React.ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
   showTrigger?: boolean
+  onCreateTeam: (name: string, slug?: string) => Promise<unknown>
 }
 
 export function CreateTeamDialog({
@@ -31,6 +31,7 @@ export function CreateTeamDialog({
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
   showTrigger = true,
+  onCreateTeam,
 }: CreateTeamDialogProps) {
   const [internalOpen, setInternalOpen] = React.useState(false)
   const [name, setName] = React.useState('')
@@ -60,8 +61,7 @@ export function CreateTeamDialog({
 
     setIsSubmitting(true)
     try {
-      // Slug is optional, if empty send undefined
-      await createTeamAction(name, slug || undefined)
+      await onCreateTeam(name, slug || undefined)
       toast.success(t('success'))
       // Hard redirect to reload the app/sidebar with the new team
       window.location.href = `/${locale}`

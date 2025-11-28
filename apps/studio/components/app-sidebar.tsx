@@ -28,6 +28,7 @@ export function AppSidebar({
   currentTeam,
   onTeamSwitch,
   onLogout,
+  onCreateTeam,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   pathname?: string
@@ -40,6 +41,7 @@ export function AppSidebar({
   currentTeam?: Team
   onTeamSwitch?: (teamSlug: string) => void
   onLogout?: () => void
+  onCreateTeam?: (name: string, slug?: string) => Promise<unknown>
 }) {
   const t = useTranslations('sidebar.nav')
   const tSidebar = useTranslations('sidebar')
@@ -221,7 +223,7 @@ export function AppSidebar({
         <NavUser user={user} onLogout={handleLogout} />
       </SidebarFooter>
       <SidebarRail />
-      <CreateTeamDialog open={createTeamOpen} onOpenChange={setCreateTeamOpen} showTrigger={false} />
+      {onCreateTeam && <CreateTeamDialog open={createTeamOpen} onOpenChange={setCreateTeamOpen} showTrigger={false} onCreateTeam={onCreateTeam} />}
     </Sidebar>
   )
 }

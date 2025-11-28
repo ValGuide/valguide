@@ -1,6 +1,7 @@
 'use client'
 
 import { signOutAction } from '@valguide/core/features/auth/actions'
+import { createTeamAction } from '@valguide/core/features/orgs/actions'
 import { switchTeamAction } from '@valguide/core/features/orgs/context-actions'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { usePathname, useRouter } from '@valguide/i18n/routing'
@@ -74,6 +75,7 @@ export function AppSidebarContainer() {
       currentTeam={data.currentTeam}
       onTeamSwitch={handleTeamSwitch}
       onLogout={handleLogout}
+      onCreateTeam={createTeamAction}
     />
   )
 }

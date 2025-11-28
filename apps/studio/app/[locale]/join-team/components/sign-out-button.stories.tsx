@@ -16,5 +16,6 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     children: 'Sign Out',
+    onSignOut: async () => console.log('Sign out clicked'),
   },
 }
