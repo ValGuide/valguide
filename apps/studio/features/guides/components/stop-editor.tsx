@@ -1,12 +1,12 @@
 'use client'
 
+import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
-import { Textarea } from '@valguide/ui/components/textarea'
 import { Image as ImageIcon, Mic, Music, Plus, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -72,7 +72,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
           placeholder={t('titlePlaceholder')}
           maxLength={500}
           required
-          className="bg-gray-100"
+          className="bg-muted"
         />
       </div>
 
@@ -80,9 +80,9 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
       <div className="space-y-2">
         <Label className="text-sm font-medium">{t('audioLabel')}</Label>
         {audio ? (
-          <div className="flex items-center justify-between rounded-lg border bg-white p-4">
+          <div className="flex items-center justify-between rounded-lg border bg-card p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted">
                 <Music className="h-5 w-5" />
               </div>
               <div className="flex items-center gap-2">
@@ -99,9 +99,9 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-white p-12">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-              <Music className="h-6 w-6 text-gray-600" />
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-card p-12">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+              <Music className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="mb-1 text-sm font-medium">{t('dropzoneText')}</p>
             <p className="mb-4 text-xs text-muted-foreground">{t('audioHint')}</p>
@@ -123,30 +123,11 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
             {t('autoGenerate')}
           </Button>
         </div>
-        <div className="rounded-lg border bg-white p-3">
-          <div className="mb-2 flex gap-1">
-            <Button variant="ghost" size="sm" className="h-8 px-2" aria-label={t('boldButton')}>
-              {/* biome-ignore lint/nursery/noJsxLiterals: Single character formatting symbol */}
-              <span className="font-semibold">B</span>
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 px-2" aria-label={t('italicButton')}>
-              {/* biome-ignore lint/nursery/noJsxLiterals: Single character formatting symbol */}
-              <span className="italic">I</span>
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 px-2" aria-label={t('listButton')}>
-              {/* biome-ignore lint/nursery/noJsxLiterals: Bullet point symbol */}
-              <span>•</span>
-            </Button>
-          </div>
-          <Textarea
-            id={`stop-description-${locale}`}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder={t('descriptionPlaceholder')}
-            rows={4}
-            className="border-0 p-0 focus-visible:ring-0"
-          />
-        </div>
+        <RichTextEditor
+          value={description}
+          onChange={setDescription}
+          placeholder={t('descriptionPlaceholder')}
+        />
       </div>
 
       {/* Gallery */}
@@ -155,7 +136,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
         {images.length > 0 || video ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {images.map((image) => (
-              <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg border bg-white">
+              <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg border bg-card">
                 {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
                 <img src={image.url} alt="" className="h-full w-full object-cover" />
                 <Button
@@ -169,7 +150,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
               </div>
             ))}
             {video && (
-              <div className="relative aspect-square overflow-hidden rounded-lg border bg-white">
+              <div className="relative aspect-square overflow-hidden rounded-lg border bg-card">
                 {/* biome-ignore lint/a11y/useMediaCaption: captions not available for user-uploaded content */}
                 <video src={video.url} className="h-full w-full object-cover" controls />
                 <Button
@@ -187,9 +168,9 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-white p-12">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-              <ImageIcon className="h-6 w-6 text-gray-600" />
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-card p-12">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+              <ImageIcon className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="mb-1 text-sm font-medium">{t('dropzoneText')}</p>
             <p className="mb-4 text-xs text-muted-foreground">{t('galleryHint')}</p>
