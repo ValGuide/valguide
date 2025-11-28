@@ -59,13 +59,13 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
     } finally {
       setIsLoading(false)
     }
-  }, [guideId, locale, t])
+  }, [guideId, locale])
 
   useEffect(() => {
     if (isOpen) {
       loadVersions()
     }
-  }, [isOpen, loadVersions])
+  }, [isOpen, guideId, locale])
 
   const handleRollbackClick = (version: number) => {
     setSelectedVersion(version)
