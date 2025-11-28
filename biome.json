@@ -1,0 +1,71 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "warn",
+        "useImportType": "warn",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "next/link": "Please import from `@valguide/i18n/routing` instead.",
+              "next/navigation": "Please import `redirect`, `permanentRedirect`, `useRouter`, `usePathname` from `@valguide/i18n/routing` instead."
+            }
+          }
+        }
+      },
+      "a11y": {
+        "useAltText": "warn",
+        "useButtonType": "warn"
+      },
+      "nursery": {}
+    }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/.turbo",
+      "!**/dist",
+      "!**/storybook-static",
+      "!**/*.config.js",
+      "!**/*.config.mjs",
+      "!**/*.config.ts",
+      "!**/drizzle.config.ts",
+      "!**/postcss.config.mjs",
+      "!**/tailwind.config.ts"
+    ]
+  }
+}

@@ -1,10 +1,4 @@
 module.exports = {
-  // '**/*.ts?(x)': 'tsc --noEmit',
-
-  // NOTICE: patterns are the same, but in different order, to fix
-  // https://github.com/lint-staged/lint-staged/issues/934
-  '*.{html,js,jsx,ts,tsx}': 'prettier --write',
+  '*.{html,js,jsx,ts,tsx,json}': 'biome check --write --no-errors-on-unmatched',
   '*.{js,jsx,ts,tsx}': 'pnpm dlx madge --circular',
-  '*.{js,jsx,tsx,ts}': 'pnpm dlx lint',
-  // '*.{js,jsx,ts,tsx,html}': 'eslint',
 }

@@ -8,7 +8,8 @@
     "env:copy-example": "shx -- cp -n .env.example .env",
     "env:remove": "shx -- rm -f .env",
     "env:run": "dotenv --",
-    "lint": "eslint",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "start": "NODE_ENV=production pnpm env:run node dist/index.js",
     "typecheck": "tsc --noEmit"
   },

@@ -6,7 +6,8 @@
     "prepare": "husky",
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "test": "turbo test",
     "type-check": "turbo type-check",
     "clean": "turbo clean --parallel && rm -rf node_modules pnpm-lock.yaml .turbo",
@@ -49,9 +50,9 @@
     "supabase:link:prod": "pnpm env:load pnpm supabase link"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.1.0",
     "@dotenvx/dotenvx": "^1.22.0",
     "@types/node": "^22.13.1",
-    "@valguide/eslint-config": "workspace:*",
     "@valguide/test-config": "workspace:*",
     "@valguide/typescript-config": "workspace:*",
     "boxen": "^8.0.1",

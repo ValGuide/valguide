@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "eslint",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "env:load": "pnpm dlx tsx ../../.scripts/load-env.ts",
     "db:generate": "pnpm env:load drizzle-kit generate",
     "db:migrate": "pnpm env:load drizzle-kit migrate",
@@ -105,7 +106,7 @@
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "@types/ws": "^8.5.12",
-    "@valguide/eslint-config": "workspace:*",
+
     "@valguide/typescript-config": "workspace:*",
     "bufferutil": "^4.0.8",
     "bun-types": "latest",

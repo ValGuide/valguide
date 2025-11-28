@@ -7,7 +7,8 @@
     "build": "next build",
     "dev": "next dev --turbopack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .next .turbo",
     "type-check": "tsc --noEmit",
     "test": "jest",
@@ -53,7 +54,7 @@
     "@types/node": "^20.17.17",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
-    "@valguide/eslint-config": "workspace:*",
+
     "@valguide/test-config": "workspace:*",
     "@valguide/typescript-config": "workspace:*",
     "storybook": "^10.0.8",
