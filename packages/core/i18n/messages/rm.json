@@ -276,6 +276,8 @@
     "title": "Stops",
     "description": "Puncts dal cuntegn en voss guid",
     "add": "Agiuntar stop",
+    "edit": "Modifitgar",
+    "stopNumber": "Staziun {number}",
     "empty": {
       "title": "Anc nagins stops",
       "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas."

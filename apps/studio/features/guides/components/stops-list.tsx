@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useTranslations } from 'next-intl'
-import { Plus, Pencil, Trash2, GripVertical } from 'lucide-react'
+import { Plus, Trash2, GripVertical } from 'lucide-react'
 import {
   DndContext,
   closestCenter,
@@ -21,7 +21,6 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Button } from '@valguide/ui/components/button'
-import { Badge } from '@valguide/ui/components/badge'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import {
   Empty,
@@ -31,7 +30,7 @@ import {
   EmptyDescription,
   EmptyContent,
 } from '@valguide/ui/components/empty'
-import type { Stop, StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 
 export type StopsListProps = {
@@ -54,6 +53,7 @@ type SortableStopItemProps = {
 }
 
 function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: SortableStopItemProps) {
+  const t = useTranslations('stops')
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: stop.id })
 
   const style = {
@@ -70,10 +70,9 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
     fallbackTranslation?.currentVersion?.title ??
     fallbackTranslation?.draftVersion?.title ??
     'Untitled Stop'
-  const displayLocale = translation?.locale || fallbackTranslation?.locale
 
   return (
-    <div ref={setNodeRef} style={style} className="group">
+    <div ref={setNodeRef} style={style}>
       <Card className={`hover:shadow-md transition-shadow ${selected ? 'ring-2 ring-primary' : ''}`}>
         <CardContent className="flex items-center gap-4 p-4">
           <button
@@ -84,30 +83,28 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
             <GripVertical className="h-5 w-5" />
           </button>
 
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm shrink-0">
-            {index + 1}
+          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="font-medium truncate">{displayTitle}</h3>
-              {displayLocale && (
-                <Badge variant="outline" className="text-xs uppercase shrink-0">
-                  {displayLocale}
-                </Badge>
-              )}
-            </div>
-            {stop.translations.length > 1 && (
-              <p className="text-sm text-muted-foreground">{stop.translations.length} translations</p>
-            )}
+            <h3 className="font-medium truncate">
+              {t('stopNumber', { number: index + 1 })}: {displayTitle}
+            </h3>
           </div>
 
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button variant="ghost" size="icon-sm" onClick={() => onEdit(stop)}>
-              <Pencil />
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" onClick={() => onEdit(stop)}>
+              {t('edit')}
             </Button>
-            <Button variant="ghost" size="icon-sm" onClick={() => onDelete(stop.id)}>
-              <Trash2 />
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-destructive hover:text-destructive"
+              onClick={() => onDelete(stop.id)}
+            >
+              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </CardContent>
@@ -181,74 +178,59 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
 
   if (!isMounted) {
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold">{t('title')}</h2>
-            <p className="text-sm text-muted-foreground">{t('description')}</p>
-          </div>
-          <Button onClick={onAdd}>
-            <Plus />
-            {t('add')}
-          </Button>
-        </div>
-        <div className="space-y-2">
-          {items.map((stop, index) => {
-            const translation = stop.translations.find((t) => t.locale === locale)
-            const fallbackTranslation = stop.translations[0]
-            const displayTitle =
-              translation?.currentVersion?.title ??
-              translation?.draftVersion?.title ??
-              fallbackTranslation?.currentVersion?.title ??
-              fallbackTranslation?.draftVersion?.title ??
-              'Untitled Stop'
-            const displayLocale = translation?.locale || fallbackTranslation?.locale
+      <div className="space-y-3">
+        {items.map((stop, index) => {
+          const translation = stop.translations.find((t) => t.locale === locale)
+          const fallbackTranslation = stop.translations[0]
+          const displayTitle =
+            translation?.currentVersion?.title ??
+            translation?.draftVersion?.title ??
+            fallbackTranslation?.currentVersion?.title ??
+            fallbackTranslation?.draftVersion?.title ??
+            'Untitled Stop'
 
-            return (
-              <Card key={stop.id} className={`${stop.id === selectedStopId ? 'ring-2 ring-primary' : ''}`}>
-                <CardContent className="flex items-center gap-4 p-4">
-                  <GripVertical className="h-5 w-5 text-muted-foreground" />
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm shrink-0">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium truncate">{displayTitle}</h3>
-                      {displayLocale && (
-                        <Badge variant="outline" className="text-xs uppercase shrink-0">
-                          {displayLocale}
-                        </Badge>
-                      )}
-                    </div>
-                    {stop.translations.length > 1 && (
-                      <p className="text-sm text-muted-foreground">{stop.translations.length} translations</p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
+          return (
+            <Card key={stop.id} className={`${stop.id === selectedStopId ? 'ring-2 ring-primary' : ''}`}>
+              <CardContent className="flex items-center gap-4 p-4">
+                <GripVertical className="h-5 w-5 text-muted-foreground" />
+                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium truncate">
+                    {t('stopNumber', { number: index + 1 })}: {displayTitle}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Button variant="outline" size="sm" onClick={() => onEdit(stop)}>
+                    {t('edit')}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => onDelete(stop.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
+        <Button onClick={onAdd} className="w-full" size="lg">
+          <Plus />
+          {t('add')}
+        </Button>
       </div>
     )
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">{t('title')}</h2>
-          <p className="text-sm text-muted-foreground">{t('description')}</p>
-        </div>
-        <Button onClick={onAdd}>
-          <Plus />
-          {t('add')}
-        </Button>
-      </div>
-
+    <div className="space-y-3">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {items.map((stop, index) => (
               <SortableStopItem
                 key={stop.id}
@@ -263,6 +245,10 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
           </div>
         </SortableContext>
       </DndContext>
+      <Button onClick={onAdd} className="w-full" size="lg">
+        <Plus />
+        {t('add')}
+      </Button>
     </div>
   )
 }

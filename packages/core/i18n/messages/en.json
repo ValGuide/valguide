@@ -305,6 +305,8 @@
     "title": "Stops",
     "description": "Content points in your guide",
     "add": "Add Stop",
+    "edit": "Edit",
+    "stopNumber": "Stop {number}",
     "empty": {
       "title": "No stops yet",
       "description": "Add stops to create the journey through your guide. Each stop can have its own content in multiple languages."

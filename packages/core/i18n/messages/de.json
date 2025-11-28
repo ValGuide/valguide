@@ -276,6 +276,8 @@
     "title": "Stops",
     "description": "Inhaltspunkte in Ihrem Guide",
     "add": "Stop hinzufügen",
+    "edit": "Bearbeiten",
+    "stopNumber": "Station {number}",
     "empty": {
       "title": "Noch keine Stops",
       "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben."
