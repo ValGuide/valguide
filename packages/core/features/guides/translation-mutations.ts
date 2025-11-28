@@ -118,8 +118,17 @@ export async function publishGuideTranslationDraft(
   }
 
   const draftId = currentTranslation.draftVersionId
+  const oldCurrentVersionId = currentTranslation.currentVersionId
 
   await db.transaction(async (tx: typeof db) => {
+    // Archive the old published version (if any)
+    if (oldCurrentVersionId) {
+      await tx
+        .update(guideTranslationVersion)
+        .set({ status: 'archived' })
+        .where(eq(guideTranslationVersion.id, oldCurrentVersionId))
+    }
+
     // Update draft version to published
     await tx
       .update(guideTranslationVersion)
@@ -359,8 +368,17 @@ export async function publishStopTranslationDraft(
   }
 
   const draftId = currentTranslation.draftVersionId
+  const oldCurrentVersionId = currentTranslation.currentVersionId
 
   await db.transaction(async (tx: typeof db) => {
+    // Archive the old published version (if any)
+    if (oldCurrentVersionId) {
+      await tx
+        .update(stopTranslationVersion)
+        .set({ status: 'archived' })
+        .where(eq(stopTranslationVersion.id, oldCurrentVersionId))
+    }
+
     await tx
       .update(stopTranslationVersion)
       .set({
