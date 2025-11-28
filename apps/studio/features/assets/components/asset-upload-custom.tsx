@@ -2,7 +2,12 @@
 
 import { type AssetType, confirmAssetUpload } from '@valguide/core/features/assets/actions'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { getAllowedMimeTypes, validateFile, validateFileSize } from '@valguide/core/features/assets/utils'
+import {
+  formatFileSize,
+  getAllowedMimeTypes,
+  validateFile,
+  validateFileSize,
+} from '@valguide/core/features/assets/utils'
 import { Button } from '@valguide/ui/components/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
 import { Progress } from '@valguide/ui/components/progress'
@@ -47,13 +52,6 @@ export function CustomAssetUpload({
   const maxSizeMB = type === 'video' ? 500 : type === 'audio' ? 50 : 10
   const allowedTypes = getAllowedMimeTypes(type)
   const translatedType = t(`types.${type}`)
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(2)} KB`
-    }
-    return `${(bytes / 1024 / 1024).toFixed(2)} MB`
-  }
 
   const getTypeIcon = () => {
     switch (type) {

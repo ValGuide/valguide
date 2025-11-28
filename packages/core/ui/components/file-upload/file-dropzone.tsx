@@ -1,5 +1,6 @@
 'use client'
 
+import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { cn } from '@valguide/ui/lib/utils'
 import { CheckCircle2, FileIcon, Upload, X } from 'lucide-react'
 import * as React from 'react'
@@ -311,7 +312,7 @@ export function FileDropzone({
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{uploadedFile.file.name}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <p className="text-xs text-muted-foreground">{(uploadedFile.file.size / 1024).toFixed(1)}KB</p>
+                    <p className="text-xs text-muted-foreground">{formatFileSize(uploadedFile.file.size)}</p>
                     {uploadedFile.status === 'error' && uploadedFile.error && (
                       <p className="text-xs text-destructive">{uploadedFile.error}</p>
                     )}

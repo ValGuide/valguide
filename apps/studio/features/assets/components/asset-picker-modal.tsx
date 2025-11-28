@@ -1,6 +1,7 @@
 'use client'
 
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Checkbox } from '@valguide/ui/components/checkbox'
@@ -112,14 +113,6 @@ export function AssetPickerModal({
       case 'video':
         return <Video className="h-12 w-12 text-muted-foreground" />
     }
-  }
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 B'
-    const k = 1024
-    const sizes = ['B', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return `${Math.round((bytes / k ** i) * 100) / 100} ${sizes[i]}`
   }
 
   return (

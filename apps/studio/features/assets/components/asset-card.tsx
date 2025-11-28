@@ -2,6 +2,7 @@
 
 import { deleteAsset } from '@valguide/core/features/assets/actions'
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { formatFileSize } from '@valguide/core/features/assets/utils'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -75,14 +76,6 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
       default:
         return null
     }
-  }
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 B'
-    const k = 1024
-    const sizes = ['B', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return `${Math.round((bytes / k ** i) * 100) / 100} ${sizes[i]}`
   }
 
   return (
