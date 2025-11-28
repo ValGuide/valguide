@@ -145,7 +145,11 @@
       "author": "Autor",
       "created": "Erstellt",
       "updated": "Aktualisiert",
-      "authorInfo": "Autorinformationen"
+      "authorInfo": "Autorinformationen",
+      "coverImage": "Titelbild",
+      "addCoverImage": "Fügen Sie ein Bild hinzu, das diese Ausstellung einfängt",
+      "published": "Veröffentlicht",
+      "draft": "Entwurf"
     },
     "stops": "Stationen",
     "stop": "Station",
@@ -198,9 +202,14 @@
     "empty": {
       "title": "Noch keine Guides",
       "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",
+      "heroDescription": "Erstellen Sie Ihren ersten Audio-Guide und erwecken Sie Ihre Ausstellungen mit Klang, Bildern und Geschichten zum Leben.",
       "createButton": "Ihren ersten Guide erstellen",
       "createNewButton": "Neuen Guide erstellen",
-      "creating": "Wird erstellt..."
+      "creating": "Wird erstellt...",
+      "feature1": "Strukturieren Sie Touren nach Räumen, Themen oder Künstlern",
+      "feature2": "Fügen Sie Audio, Bilder und Text für jede Station hinzu",
+      "feature3": "Veröffentlichen Sie mit einem Klick für Ihre Besucher",
+      "quote": "Ein Guide ist mehr als Information – er ist der rote Faden Ihrer Ausstellung."
     },
     "create": {
       "success": "Guide erstellt",

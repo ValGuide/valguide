@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 import { cn } from '@valguide/core/ui/lib/utils'
 import { Link } from '@valguide/i18n/routing'
-import { LucideInfo } from 'lucide-react'
+import { ImageIcon, LucideInfo } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import * as React from 'react'
 import { RichTextDisplay } from './rich-text-display'
@@ -30,7 +30,6 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
     return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(date))
   }
 
-  // Get the translation in the current locale or fall back to the first available translation
   const translation = React.useMemo(() => {
     const localeTranslation = guide.translations?.find((t) => t.locale === locale)
     return localeTranslation || guide.translations?.[0]
@@ -41,27 +40,84 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
   const displayImage = guide.coverImage || guide.imageUrl
   const guideUrl = guide.nanoId ? `/guides/${guide.nanoId}` : '#'
 
+  const isPublished = !!guide.published
+  const status = isPublished ? 'published' : 'draft'
+
   return (
-    <Card className={cn('overflow-hidden transition-all hover:shadow-md', className)} {...props}>
-      {displayImage && (
-        <div className="relative h-48 w-full overflow-hidden">
-          {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
+    <Card
+      className={cn(
+        'overflow-hidden transition-all duration-200',
+        'hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/30',
+        className,
+      )}
+      {...props}
+    >
+      <div className="relative h-48 w-full overflow-hidden">
+        {displayImage ? (
+          // biome-ignore lint/performance/noImgElement: Using img for dynamic content
           <img
             src={displayImage}
             alt={displayTitle}
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
           />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-muted/40 px-4 py-6">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
+              <ImageIcon className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+            </div>
+            <div className="text-center">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                {t('coverImage')}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground/70">{t('addCoverImage')}</p>
+            </div>
+          </div>
+        )}
+      </div>
+      <CardHeader className="space-y-2">
+        <CardTitle className="flex items-start justify-between gap-2">
+          <span className="line-clamp-2 text-base font-semibold leading-snug">{displayTitle}</span>
+          <div className="flex shrink-0 flex-col items-end gap-2">
+            <Badge
+              variant="outline"
+              className={cn(
+                'text-[11px] uppercase tracking-wide',
+                status === 'published' && 'border-emerald-500/50 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400',
+                status === 'draft' && 'border-slate-400/50 bg-slate-50 text-slate-600 dark:bg-slate-800/50 dark:text-slate-400',
+              )}
+            >
+              {t(status)}
+            </Badge>
+          </div>
+        </CardTitle>
+        {displayDescription && (
+          <div className="text-sm text-muted-foreground">
+            <RichTextDisplay content={displayDescription} className="line-clamp-2" />
+          </div>
+        )}
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-1.5">
+          {guide.tags?.map((tag) => (
+            <Badge key={tag} variant="outline" className="text-[11px]">
+              {tag}
+            </Badge>
+          ))}
         </div>
-      )}
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>{displayTitle}</span>
+      </CardContent>
+      <CardFooter className="flex flex-col items-stretch gap-3">
+        <div className="flex items-center justify-between">
+          <Button variant="outline" size="sm" asChild>
+            <Link href={guideUrl} prefetch={true}>
+              {t('viewDetails')}
+            </Link>
+          </Button>
           {guide.author && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <LucideInfo className="h-4 w-4" />
+                  <Button variant="ghost" size="icon" className="h-7 w-7">
+                    <LucideInfo className="h-3.5 w-3.5" />
                     <span className="sr-only">{t('authorInfo')}</span>
                   </Button>
                 </TooltipTrigger>
@@ -78,28 +134,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
               </Tooltip>
             </TooltipProvider>
           )}
-        </CardTitle>
-        {displayDescription && (
-          <div className="text-sm text-muted-foreground">
-            <RichTextDisplay content={displayDescription} className="line-clamp-3" />
-          </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
-          {guide.tags?.map((tag) => (
-            <Badge key={tag} variant="outline">
-              {tag}
-            </Badge>
-          ))}
         </div>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline" asChild>
-          <Link href={guideUrl} prefetch={true}>
-            {t('viewDetails')}
-          </Link>
-        </Button>
         {guide.updatedAt && (
           <span className="text-xs text-muted-foreground">
             {t('updated')}: {formatDate(guide.updatedAt)}

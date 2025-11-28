@@ -145,7 +145,11 @@
       "author": "Autur",
       "created": "Creà",
       "updated": "Actualisà",
-      "authorInfo": "Infurmaziuns davart l'autur"
+      "authorInfo": "Infurmaziuns davart l'autur",
+      "coverImage": "Maletg da front",
+      "addCoverImage": "Agiuntai in maletg che representa questa exposiziun",
+      "published": "Publitgà",
+      "draft": "Sboz"
     },
     "stops": "Staziuns",
     "stop": "Staziun",
@@ -198,9 +202,14 @@
     "empty": {
       "title": "Anc nagins guids",
       "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",
+      "heroDescription": "Creai voss emprim audio-guid e dastgai vossas exposiziuns cun tuns, maletgs e raquints.",
       "createButton": "Crear voss emprim guid",
       "createNewButton": "Crear nov guid",
-      "creating": "Vegn creà..."
+      "creating": "Vegn creà...",
+      "feature1": "Structurai turas tenor stanzas, temas u artists",
+      "feature2": "Agiuntai audio, maletgs e text per mintga staziun",
+      "feature3": "Publitgai per voss visitaders cun in clic",
+      "quote": "In guid è dapli che infurmaziun – el è il fil cotschen da vossa exposiziun."
     },
     "create": {
       "success": "Guid creà",

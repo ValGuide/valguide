@@ -100,7 +100,7 @@ export function GuidesList({
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <Skeleton className="h-8 w-32" />
@@ -108,7 +108,7 @@ export function GuidesList({
           </div>
           <Skeleton className="h-9 w-40" />
         </div>
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2 2xl:grid-cols-3">
           {[...Array(6)].map((_, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton elements
             <div key={`skeleton-${i}`} className="space-y-3">
@@ -146,38 +146,59 @@ export function GuidesList({
   // Empty state when no guides exist
   if (guides.length === 0) {
     return (
-      <Empty className="border">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <BookOpen />
-          </EmptyMedia>
-          <EmptyTitle>{t('empty.title')}</EmptyTitle>
-          <EmptyDescription>{t('empty.description')}</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button onClick={handleCreateGuide} size="lg" disabled={isCreating}>
-            <Plus />
-            {isCreating ? t('empty.creating') : t('empty.createButton')}
-          </Button>
-        </EmptyContent>
-      </Empty>
+      <div className="mx-auto max-w-3xl">
+        <Empty className="border bg-muted/10">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <BookOpen className="h-10 w-10 text-amber-600" />
+            </EmptyMedia>
+            <EmptyTitle className="text-xl">{t('empty.title')}</EmptyTitle>
+            <EmptyDescription className="text-base">{t('empty.heroDescription')}</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent className="space-y-6">
+            <div className="grid gap-4 text-left text-sm text-muted-foreground md:grid-cols-2">
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                  <span>{t('empty.feature1')}</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                  <span>{t('empty.feature2')}</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                  <span>{t('empty.feature3')}</span>
+                </li>
+              </ul>
+              <div className="rounded-lg border bg-background p-4 text-xs italic leading-relaxed text-muted-foreground/80">
+                "{t('empty.quote')}"
+              </div>
+            </div>
+            <Button onClick={handleCreateGuide} size="lg" disabled={isCreating} className="group">
+              <Plus className="transition-transform group-hover:rotate-90" />
+              {isCreating ? t('empty.creating') : t('empty.createButton')}
+            </Button>
+          </EmptyContent>
+        </Empty>
+      </div>
     )
   }
 
   // List view when guides exist
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
-          <p className="text-muted-foreground">{t('description')}</p>
+          <p className="text-sm text-muted-foreground">{t('description')}</p>
         </div>
-        <Button onClick={handleCreateGuide} disabled={isCreating}>
-          <Plus />
+        <Button onClick={handleCreateGuide} disabled={isCreating} className="group">
+          <Plus className="transition-transform group-hover:rotate-90" />
           {isCreating ? t('empty.creating') : t('empty.createNewButton')}
         </Button>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 2xl:grid-cols-3">
         {guides.map((guide) => (
           <GuidePreviewCard key={guide.id} guide={guide} onViewDetails={handleViewGuide} />
         ))}

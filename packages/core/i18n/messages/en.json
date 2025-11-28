@@ -174,7 +174,11 @@
       "author": "Author",
       "created": "Created",
       "updated": "Updated",
-      "authorInfo": "Author Information"
+      "authorInfo": "Author Information",
+      "coverImage": "Cover image",
+      "addCoverImage": "Add an image that captures this exhibition",
+      "published": "Published",
+      "draft": "Draft"
     },
     "stops": "Stops",
     "stop": "Stop",
@@ -227,9 +231,14 @@
     "empty": {
       "title": "No guides yet",
       "description": "Create engaging multimedia guides with text, images, audio, and video content for your museum or educational institution.",
+      "heroDescription": "Craft your first audio guide and bring your exhibitions to life with sound, images, and stories.",
       "createButton": "Create your first guide",
       "createNewButton": "Create new guide",
-      "creating": "Creating..."
+      "creating": "Creating...",
+      "feature1": "Structure tours by rooms, themes, or artists",
+      "feature2": "Add audio, images, and text for each stop",
+      "feature3": "Publish to your visitors in one click",
+      "quote": "A guide is more than information – it's the narrative thread of your exhibition."
     },
     "create": {
       "success": "Guide created",
