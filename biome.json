@@ -57,10 +57,13 @@
   "files": {
     "includes": [
       "**",
-      "!**/node_modules",
+      "!**/.history",
+      "!**/.idea",
       "!**/.next",
       "!**/.turbo",
+      "!**/.vercel",
       "!**/dist",
+      "!**/node_modules",
       "!**/storybook-static",
       "!**/*.config.js",
       "!**/*.config.mjs",
