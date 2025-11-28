@@ -15,9 +15,10 @@ type JoinTeamCardProps = {
   userEmail?: string
   nextUrl?: string
   error?: string | null
+  onSignOut?: () => Promise<void>
 }
 
-export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error }: JoinTeamCardProps) {
+export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error, onSignOut }: JoinTeamCardProps) {
   const t = useTranslations('joinTeam')
 
   if (variant === 'invalid') {
@@ -96,7 +97,7 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error 
           <p className="text-sm text-muted-foreground">{t('wrongAccount.instruction')}</p>
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
-          <SignOutButton>{t('wrongAccount.signOutButton')}</SignOutButton>
+          {onSignOut && <SignOutButton onSignOut={onSignOut}>{t('wrongAccount.signOutButton')}</SignOutButton>}
           <Button asChild variant="ghost" className="w-full">
             <Link href="/">{t('wrongAccount.cancelButton')}</Link>
           </Button>

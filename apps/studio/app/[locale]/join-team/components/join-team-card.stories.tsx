@@ -1,4 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import deMessages from '@valguide/i18n/messages/de.json'
+import enMessages from '@valguide/i18n/messages/en.json'
+import rmMessages from '@valguide/i18n/messages/rm.json'
+import { NextIntlClientProvider } from 'next-intl'
 import { JoinTeamCard } from './join-team-card'
 
 const meta = {
@@ -7,7 +11,22 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
+    nextjs: {
+      appDirectory: true,
+    },
   },
+  decorators: [
+    (Story, { globals: { locale } }) => {
+      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
+      const currentLocale = locale || 'en'
+
+      return (
+        <NextIntlClientProvider locale={currentLocale} messages={messages}>
+          <Story />
+        </NextIntlClientProvider>
+      )
+    },
+  ],
 } satisfies Meta<typeof JoinTeamCard>
 
 export default meta
@@ -16,6 +35,10 @@ type Story = StoryObj<typeof meta>
 const mockInvite = {
   organization: { name: 'Acme Museum' },
   email: 'jane@example.com',
+}
+
+const mockSignOut = async () => {
+  console.log('Sign out clicked')
 }
 
 export const Invalid: Story = {
@@ -37,6 +60,7 @@ export const WrongAccount: Story = {
     variant: 'wrong-account',
     invite: mockInvite,
     userEmail: 'wrong@example.com',
+    onSignOut: mockSignOut,
   },
 }
 

@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import type { Team } from '@valguide/core/features/orgs/components/team-switcher'
-// Import messages for the story
-import deMessages from '@valguide/i18n/messages/de.json'
-import enMessages from '@valguide/i18n/messages/en.json'
-import rmMessages from '@valguide/i18n/messages/rm.json'
 import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
-import { NextIntlClientProvider } from 'next-intl'
 import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
 
@@ -66,22 +61,17 @@ const meta: Meta<typeof AppSidebar> = {
     onTeamSwitch: (teamSlug) => console.log('Team switched to:', teamSlug),
   },
   decorators: [
-    (Story, { globals: { locale } }) => {
-      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
-      return (
-        <NextIntlClientProvider locale={locale || 'en'} messages={messages} timeZone="Europe/Zurich">
-          <SidebarProvider defaultOpen={true}>
-            <div style={{ minWidth: '768px', width: '100%', height: '100vh', display: 'flex' }}>
-              <Story />
-              <main className="flex-1 p-4">
-                <SidebarTrigger className="mb-4" />
-                <div className="text-muted-foreground text-sm">Click the button above to toggle the sidebar</div>
-              </main>
-            </div>
-          </SidebarProvider>
-        </NextIntlClientProvider>
-      )
-    },
+    (Story) => (
+      <SidebarProvider defaultOpen={true}>
+        <div style={{ minWidth: '768px', width: '100%', height: '100vh', display: 'flex' }}>
+          <Story />
+          <main className="flex-1 p-4">
+            <SidebarTrigger className="mb-4" />
+            <div className="text-muted-foreground text-sm">Click the button above to toggle the sidebar</div>
+          </main>
+        </div>
+      </SidebarProvider>
+    ),
   ],
 }
 

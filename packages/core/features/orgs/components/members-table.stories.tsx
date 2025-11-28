@@ -1,9 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import deMessages from '@valguide/i18n/messages/de.json'
-// Import messages for the story
-import enMessages from '@valguide/i18n/messages/en.json'
-import rmMessages from '@valguide/i18n/messages/rm.json'
-import { NextIntlClientProvider } from 'next-intl'
 import { MembersTable } from './members-table'
 
 const meta: Meta<typeof MembersTable> = {
@@ -19,22 +14,12 @@ const meta: Meta<typeof MembersTable> = {
     },
   },
   decorators: [
-    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
-      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
-      const currentLocale = locale || 'en'
-
-      return (
-        <NextIntlClientProvider locale={currentLocale} messages={messages}>
-          <div className="w-full max-w-4xl">
-            <Story />
-          </div>
-        </NextIntlClientProvider>
-      )
-    },
+    (Story) => (
+      <div className="w-full max-w-4xl">
+        <Story />
+      </div>
+    ),
   ],
-  args: {
-    // Action handlers are auto-wired via the Actions addon
-  },
 }
 
 export default meta

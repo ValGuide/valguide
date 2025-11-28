@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import deMessages from '@valguide/i18n/messages/de.json'
-// Import messages for the story
-import enMessages from '@valguide/i18n/messages/en.json'
-import rmMessages from '@valguide/i18n/messages/rm.json'
 import { Button } from '@valguide/ui/components/button'
 import { UserPlus } from 'lucide-react'
-import { NextIntlClientProvider } from 'next-intl'
 import { InviteMemberDialog } from './invite-member-dialog'
 
 const meta: Meta<typeof InviteMemberDialog> = {
@@ -19,21 +14,6 @@ const meta: Meta<typeof InviteMemberDialog> = {
           'Dialog for inviting new team members via email. Shows available roles based on current user permissions and provides role descriptions.',
       },
     },
-  },
-  decorators: [
-    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
-      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
-      const currentLocale = locale || 'en'
-
-      return (
-        <NextIntlClientProvider locale={currentLocale} messages={messages}>
-          <Story />
-        </NextIntlClientProvider>
-      )
-    },
-  ],
-  args: {
-    // Action handlers are auto-wired via the Actions addon
   },
 }
 

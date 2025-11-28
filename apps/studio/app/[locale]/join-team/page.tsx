@@ -5,6 +5,7 @@ import { getInvitationByTokenHash } from '@valguide/core/features/orgs/queries'
 import { createClient } from '@valguide/core/supabase/server'
 import { redirect } from '@valguide/i18n/routing'
 import { JoinTeamCard } from './components/join-team-card'
+import { JoinTeamCardWrapper } from './components/join-team-card-wrapper'
 
 export default async function JoinTeamPage({
   params,
@@ -54,7 +55,7 @@ export default async function JoinTeamPage({
   if (invite.email.toLowerCase() !== userEmail.toLowerCase()) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-        <JoinTeamCard variant="wrong-account" invite={invite} userEmail={userEmail} />
+        <JoinTeamCardWrapper variant="wrong-account" invite={invite} userEmail={userEmail} />
       </div>
     )
   }

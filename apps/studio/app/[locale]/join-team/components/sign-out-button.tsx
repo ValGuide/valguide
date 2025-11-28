@@ -1,23 +1,22 @@
 'use client'
 
-import { signOutAction } from '@valguide/core/features/auth/actions'
-import { useRouter } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 import { useState } from 'react'
 
-export function SignOutButton({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
+type SignOutButtonProps = {
+  children: React.ReactNode
+  onSignOut: () => Promise<void>
+}
+
+export function SignOutButton({ children, onSignOut }: SignOutButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const handleSignOut = async () => {
     try {
       setLoading(true)
-      await signOutAction({ scope: 'global' })
-      router.refresh()
+      await onSignOut()
     } catch (error) {
       console.error('Failed to sign out:', error)
-      // Even if it fails, we try to refresh to update state
-      router.refresh()
     } finally {
       setLoading(false)
     }

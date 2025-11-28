@@ -1,10 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import deMessages from '@valguide/i18n/messages/de.json'
-// Import messages for the story
-import enMessages from '@valguide/i18n/messages/en.json'
-import rmMessages from '@valguide/i18n/messages/rm.json'
 import { SidebarProvider } from '@valguide/ui/components/sidebar'
-import { NextIntlClientProvider } from 'next-intl'
 import { TeamSwitcher } from './team-switcher'
 
 const meta: Meta<typeof TeamSwitcher> = {
@@ -20,24 +15,14 @@ const meta: Meta<typeof TeamSwitcher> = {
     },
   },
   decorators: [
-    (Story: React.ComponentType, { globals: { locale } }: { globals: { locale?: string } }) => {
-      const messages = locale === 'de' ? deMessages : locale === 'rm' ? rmMessages : enMessages
-      const currentLocale = locale || 'en'
-
-      return (
-        <NextIntlClientProvider locale={currentLocale} messages={messages}>
-          <SidebarProvider>
-            <div style={{ width: '280px' }}>
-              <Story />
-            </div>
-          </SidebarProvider>
-        </NextIntlClientProvider>
-      )
-    },
+    (Story) => (
+      <SidebarProvider>
+        <div style={{ width: '280px' }}>
+          <Story />
+        </div>
+      </SidebarProvider>
+    ),
   ],
-  args: {
-    // Action handlers are auto-wired via the Actions addon
-  },
 }
 
 export default meta
