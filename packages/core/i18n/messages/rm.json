@@ -554,6 +554,18 @@
     "limits": {
       "maxSize": "Grondezza maximala da datoteca: {size}",
       "maxFiles": "Fin {count} datotecas"
+    },
+    "mediaPicker": {
+      "dropzoneDesktop": "Tira qua u clicca per transferir",
+      "dropzoneMobile": "Tucca per transferir",
+      "dropHere": "Lascha cader qua",
+      "dropzoneAriaLabel": "Transferir datotecas",
+      "browseLibrary": "Sfuglia biblioteca",
+      "replace": "Remplazzar",
+      "remove": "Allontanar",
+      "addMore": "Agiuntar dapli",
+      "noPreview": "Nagina prevista",
+      "uploading": "{progress}% vegn transferì..."
     }
   },
   "sidebar": {

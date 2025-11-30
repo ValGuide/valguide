@@ -554,6 +554,18 @@
     "limits": {
       "maxSize": "Max file size: {size}",
       "maxFiles": "Up to {count} files"
+    },
+    "mediaPicker": {
+      "dropzoneDesktop": "Drag & drop or click to upload",
+      "dropzoneMobile": "Tap to upload",
+      "dropHere": "Drop files here",
+      "dropzoneAriaLabel": "Upload files",
+      "browseLibrary": "Browse Library",
+      "replace": "Replace",
+      "remove": "Remove",
+      "addMore": "Add more",
+      "noPreview": "No preview",
+      "uploading": "{progress}% uploading..."
     }
   },
   "sidebar": {
