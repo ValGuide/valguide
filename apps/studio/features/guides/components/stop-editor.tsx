@@ -1,5 +1,6 @@
 'use client'
 
+import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
@@ -44,6 +45,9 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
   const [audio, setAudio] = useState<MediaItem | null>(null)
   const [video, setVideo] = useState<MediaItem | null>(null)
 
+  const hasDraft = !!translation?.draftVersionId
+  const publishedStatus = translation?.currentVersion?.status
+
   useEffect(() => {
     setTitle(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
     setDescription(translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '')
@@ -62,9 +66,12 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
     <div className="space-y-6">
       {/* Title */}
       <div className="space-y-2">
-        <Label htmlFor={`stop-title-${locale}`} className="text-sm font-medium">
-          {t('titleLabel')}
-        </Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor={`stop-title-${locale}`} className="text-sm font-medium">
+            {t('titleLabel')}
+          </Label>
+          <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
+        </div>
         <Input
           id={`stop-title-${locale}`}
           value={title}
@@ -123,11 +130,7 @@ export function StopEditor({ stop, locale, onSave, onCancel, onSelectImages }: S
             {t('autoGenerate')}
           </Button>
         </div>
-        <RichTextEditor
-          value={description}
-          onChange={setDescription}
-          placeholder={t('descriptionPlaceholder')}
-        />
+        <RichTextEditor value={description} onChange={setDescription} placeholder={t('descriptionPlaceholder')} />
       </div>
 
       {/* Gallery */}

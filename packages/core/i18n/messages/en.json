@@ -327,7 +327,11 @@
       "descriptionAdded": "Description added",
       "coverImageAdded": "Cover image added",
       "atLeastOneStop": "At least 1 stop created",
-      "allStopsHaveTitles": "All stops have titles"
+      "allStopsHaveTitles": "All stops have titles",
+      "unpublishedChanges": "Unpublished Changes",
+      "stopsWithDrafts": "{count, plural, =1 {1 stop has unpublished changes} other {# stops have unpublished changes}}",
+      "guideDraft": "Guide has unpublished changes",
+      "allPublished": "All content is published"
     },
     "versionHistory": {
       "button": "Version History",
@@ -426,6 +430,40 @@
       "attachError": "Failed to attach asset",
       "removeSuccess": "Asset removed",
       "removeError": "Failed to remove asset"
+    },
+    "publish": {
+      "button": "Publish",
+      "success": "Stop translation published successfully",
+      "error": "Failed to publish stop translation",
+      "confirmTitle": "Publish stop translation?",
+      "confirmDescription": "This will make the draft version of this stop visible to users. The current published version will be replaced.",
+      "cancel": "Cancel",
+      "confirm": "Publish",
+      "publishing": "Publishing..."
+    },
+    "versionHistory": {
+      "button": "Version History",
+      "title": "Stop Translation History",
+      "description": "View and manage previous versions of this stop translation",
+      "loading": "Loading versions...",
+      "noVersions": "No version history available",
+      "versionLabel": "Version",
+      "created": "Created",
+      "published": "Published",
+      "rollback": "Restore",
+      "rollbackSuccess": "Version restored as draft",
+      "rollbackError": "Failed to restore version",
+      "loadError": "Failed to load version history",
+      "rollbackConfirmTitle": "Restore this version?",
+      "rollbackConfirmDescription": "Version {version} will be restored as a new draft. You can then review and publish it.",
+      "cancel": "Cancel",
+      "confirm": "Restore",
+      "rollingBack": "Restoring..."
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "draftChanges": "Draft changes"
     }
   },
   "assets": {

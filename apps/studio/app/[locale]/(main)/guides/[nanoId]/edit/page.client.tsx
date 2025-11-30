@@ -1,8 +1,10 @@
 'use client'
 
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { PublishStopTranslationButton } from '@valguide/core/features/guides/components/publish-stop-translation-button'
 import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
+import { VersionHistoryDialogStop } from '@valguide/core/features/guides/components/version-history-dialog-stop'
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import { Link, useRouter } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
@@ -84,6 +86,7 @@ function GuideEditorContent() {
   useAutoSave(save, isDirty)
 
   const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
+  const currentStopTranslation = selectedStop?.translations.find((t) => t.locale === activeLocale)
 
   const handleSelectCoverImage = () => {
     setAssetPickerType('image')
@@ -145,21 +148,43 @@ function GuideEditorContent() {
           )}
         </nav>
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <VersionHistoryDialog
-            guideId={guide.id}
-            locale={activeLocale}
-            onRollback={() => {
-              router.refresh()
-            }}
-          />
-          <PublishTranslationButton
-            guideId={guide.id}
-            locale={activeLocale}
-            hasDraft={!!currentTranslation?.draftVersionId}
-            onPublished={() => {
-              router.refresh()
-            }}
-          />
+          {!selectedStop ? (
+            <>
+              <VersionHistoryDialog
+                guideId={guide.id}
+                locale={activeLocale}
+                onRollback={() => {
+                  router.refresh()
+                }}
+              />
+              <PublishTranslationButton
+                guideId={guide.id}
+                locale={activeLocale}
+                hasDraft={!!currentTranslation?.draftVersionId}
+                onPublished={() => {
+                  router.refresh()
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <VersionHistoryDialogStop
+                stopId={selectedStop.id}
+                locale={activeLocale}
+                onRollback={() => {
+                  router.refresh()
+                }}
+              />
+              <PublishStopTranslationButton
+                stopId={selectedStop.id}
+                locale={activeLocale}
+                hasDraft={!!currentStopTranslation?.draftVersionId}
+                onPublished={() => {
+                  router.refresh()
+                }}
+              />
+            </>
+          )}
           <Button variant="ghost" size="sm" className="hidden sm:flex">
             {t('editor.preview')}
           </Button>

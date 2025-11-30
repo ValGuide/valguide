@@ -17,6 +17,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
@@ -71,6 +72,9 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
     fallbackTranslation?.draftVersion?.title ??
     'Untitled Stop'
 
+  const hasDraft = !!translation?.draftVersionId
+  const publishedStatus = translation?.currentVersion?.status
+
   return (
     <div ref={setNodeRef} style={style}>
       <Card className={`hover:shadow-md transition-shadow ${selected ? 'ring-2 ring-primary' : ''}`}>
@@ -88,7 +92,10 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title: displayTitle })}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title: displayTitle })}</h3>
+              <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -187,6 +194,9 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
             fallbackTranslation?.draftVersion?.title ??
             'Untitled Stop'
 
+          const hasDraft = !!translation?.draftVersionId
+          const publishedStatus = translation?.currentVersion?.status
+
           return (
             <Card key={stop.id} className={`${stop.id === selectedStopId ? 'ring-2 ring-primary' : ''}`}>
               <CardContent className="flex items-center gap-4 p-4">
@@ -195,7 +205,12 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
                   <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title: displayTitle })}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium truncate">
+                      {t('stopTitle', { number: index + 1, title: displayTitle })}
+                    </h3>
+                    <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Button variant="outline" size="sm" onClick={() => onEdit(stop)}>
