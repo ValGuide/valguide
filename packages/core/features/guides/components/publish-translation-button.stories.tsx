@@ -48,27 +48,3 @@ export const WithCallback: Story = {
     disabled: false,
   },
 }
-
-export const GermanLocale: Story = {
-  args: {
-    guideId: 'guide-123',
-    locale: 'de',
-    hasDraft: true,
-    disabled: false,
-  },
-  globals: {
-    locale: 'de',
-  },
-}
-
-export const RomanshLocale: Story = {
-  args: {
-    guideId: 'guide-123',
-    locale: 'rm',
-    hasDraft: true,
-    disabled: false,
-  },
-  globals: {
-    locale: 'rm',
-  },
-}

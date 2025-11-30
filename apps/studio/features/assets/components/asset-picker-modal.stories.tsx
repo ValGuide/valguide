@@ -233,17 +233,6 @@ export const AudioPickerWithLocale: Story = {
   },
 }
 
-export const AudioPickerGermanLocale: Story = {
-  render: (args) => <PickerWrapper {...args} />,
-  args: {
-    type: 'audio',
-    locale: 'de',
-    organizationId: 'org-123',
-    multiple: false,
-    assets: mockAssets,
-  },
-}
-
 export const VideoPickerWithLocale: Story = {
   render: (args) => <PickerWrapper {...args} />,
   args: {

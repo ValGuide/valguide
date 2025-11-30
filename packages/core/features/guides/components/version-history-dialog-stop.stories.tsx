@@ -116,28 +116,6 @@ export const WithCallback: Story = {
   },
 }
 
-export const GermanLocale: Story = {
-  args: {
-    stopId: 'stop-123',
-    locale: 'de',
-    onRollback: fn(),
-  },
-  globals: {
-    locale: 'de',
-  },
-}
-
-export const RomanshLocale: Story = {
-  args: {
-    stopId: 'stop-123',
-    locale: 'rm',
-    onRollback: fn(),
-  },
-  globals: {
-    locale: 'rm',
-  },
-}
-
 export const EmptyHistory: Story = {
   args: {
     stopId: 'stop-empty',

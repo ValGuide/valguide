@@ -37,16 +37,6 @@ const mockTranslationEN: GuideTranslation = {
   updatedAt: new Date('2025-01-01'),
 }
 
-const mockTranslationDE: GuideTranslation = {
-  id: '2',
-  guideId: 'guide-123',
-  locale: 'de',
-  title: 'Museumsführung 2025',
-  description: 'Entdecken Sie unsere neueste Ausstellung mit zeitgenössischer Kunst und historischen Artefakten.',
-  createdAt: new Date('2025-01-01'),
-  updatedAt: new Date('2025-01-01'),
-}
-
 export const EnglishEmpty: Story = {
   args: {
     locale: 'en',
@@ -58,20 +48,6 @@ export const EnglishWithContent: Story = {
   args: {
     locale: 'en',
     translation: mockTranslationEN,
-  },
-}
-
-export const GermanWithContent: Story = {
-  args: {
-    locale: 'de',
-    translation: mockTranslationDE,
-  },
-}
-
-export const RomanshEmpty: Story = {
-  args: {
-    locale: 'rm',
-    translation: undefined,
   },
 }
 

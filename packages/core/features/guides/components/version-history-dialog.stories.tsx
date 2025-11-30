@@ -139,28 +139,6 @@ export const WithCallback: Story = {
   },
 }
 
-export const GermanLocale: Story = {
-  args: {
-    guideId: 'guide-123',
-    locale: 'de',
-    onRollback: fn(),
-  },
-  globals: {
-    locale: 'de',
-  },
-}
-
-export const RomanshLocale: Story = {
-  args: {
-    guideId: 'guide-123',
-    locale: 'rm',
-    onRollback: fn(),
-  },
-  globals: {
-    locale: 'rm',
-  },
-}
-
 // Story with empty history
 export const EmptyHistory: Story = {
   args: {

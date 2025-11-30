@@ -416,28 +416,6 @@ export const WithDraftChanges: Story = {
   },
 }
 
-export const GermanLocale: Story = {
-  args: {
-    stops: mockStops,
-    locale: 'de',
-    onReorder: () => {},
-    onEdit: () => {},
-    onDelete: () => {},
-    onAdd: () => {},
-  },
-}
-
-export const RomanshLocale: Story = {
-  args: {
-    stops: mockStops,
-    locale: 'rm',
-    onReorder: () => {},
-    onEdit: () => {},
-    onDelete: () => {},
-    onAdd: () => {},
-  },
-}
-
 export const MissingTranslation: Story = {
   args: {
     stops: [

@@ -51,27 +51,3 @@ export const WithCallback: Story = {
     },
   },
 }
-
-export const GermanLocale: Story = {
-  args: {
-    stopId: 'stop-123',
-    locale: 'de',
-    hasDraft: true,
-    disabled: false,
-  },
-  globals: {
-    locale: 'de',
-  },
-}
-
-export const RomanshLocale: Story = {
-  args: {
-    stopId: 'stop-123',
-    locale: 'rm',
-    hasDraft: true,
-    disabled: false,
-  },
-  globals: {
-    locale: 'rm',
-  },
-}

@@ -141,41 +141,6 @@ const mockStopDraftOnly: StopWithTranslations = {
   ],
 }
 
-const mockStopDE: StopWithTranslations = {
-  id: 'stop-2',
-  guideId: 'guide-123',
-  nanoId: 'def456ghi789',
-  order: 1,
-  createdAt: new Date('2025-01-01'),
-  updatedAt: new Date('2025-01-15'),
-  createdBy: 'user-1',
-  translations: [
-    {
-      id: 'trans-2',
-      stopId: 'stop-2',
-      locale: 'de',
-      currentVersionId: 'v1',
-      draftVersionId: null,
-      createdAt: new Date('2025-01-01'),
-      updatedAt: new Date('2025-01-15'),
-      currentVersion: {
-        id: 'v1',
-        translationId: 'trans-2',
-        version: 1,
-        status: 'published',
-        title: 'Der Große Saal',
-        description:
-          'Willkommen im prächtigen Großen Saal, erbaut 1872. Dieser Raum war Schauplatz zahlreicher Ausstellungen und Veranstaltungen.',
-        transcription: 'Willkommen im Großen Saal. Beachten Sie die kunstvollen Deckendetails und die Marmorsäulen.',
-        createdAt: new Date('2025-01-01'),
-        createdBy: 'user-1',
-        publishedAt: new Date('2025-01-01'),
-      },
-      draftVersion: null,
-    },
-  ],
-}
-
 const mockStopLongContent: StopWithTranslations = {
   id: 'stop-3',
   guideId: 'guide-123',
@@ -241,13 +206,6 @@ export const StopDraftOnly: Story = {
   },
 }
 
-export const ExistingStopGerman: Story = {
-  args: {
-    locale: 'de',
-    stop: mockStopDE,
-  },
-}
-
 export const StopWithImages: Story = {
   args: {
     locale: 'en',
@@ -280,12 +238,5 @@ export const LongContent: Story = {
   args: {
     locale: 'en',
     stop: mockStopLongContent,
-  },
-}
-
-export const RomanshEmpty: Story = {
-  args: {
-    locale: 'rm',
-    stop: undefined,
   },
 }

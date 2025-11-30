@@ -109,12 +109,12 @@ export const AnalyticsActive: Story = {
 
 export const DesignActive: Story = {
   args: {
-    pathname: '/de/design',
+    pathname: '/en/design',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Sidebar with Design page active (German locale).',
+        story: 'Sidebar with Design page active.',
       },
     },
   },
@@ -122,12 +122,12 @@ export const DesignActive: Story = {
 
 export const TeamActive: Story = {
   args: {
-    pathname: '/rm/team',
+    pathname: '/en/team',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Sidebar with Team & Members page active (Romansh locale).',
+        story: 'Sidebar with Team & Members page active.',
       },
     },
   },
