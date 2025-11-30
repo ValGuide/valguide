@@ -118,16 +118,13 @@ function GuideEditorContent() {
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
       {/* Header */}
       <div className="flex items-center justify-between border-b bg-background px-3 py-3 sm:px-6">
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+        {/* Breadcrumb Navigation - hidden below lg to prioritize action buttons */}
+        <nav className="hidden min-w-0 shrink items-center gap-1 text-sm text-muted-foreground lg:flex">
           <Link href="/guides" className="hover:text-foreground hover:underline">
             {t('title')}
           </Link>
           <ChevronRight className="h-4 w-4" />
-          <Link
-            href={guideDetailUrl}
-            className="max-w-[120px] truncate hover:text-foreground hover:underline sm:max-w-[200px]"
-          >
+          <Link href={guideDetailUrl} className="max-w-[200px] truncate hover:text-foreground hover:underline">
             {guideTitle}
           </Link>
           <ChevronRight className="h-4 w-4" />
@@ -143,13 +140,11 @@ function GuideEditorContent() {
                 {t('breadcrumb.stops')}
               </button>
               <ChevronRight className="h-4 w-4" />
-              <span className="max-w-[100px] truncate font-medium text-foreground sm:max-w-[150px]">
-                {selectedStopTitle}
-              </span>
+              <span className="max-w-[150px] truncate font-medium text-foreground">{selectedStopTitle}</span>
             </>
           )}
         </nav>
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <VersionHistoryDialog
             guideId={guide.id}
             locale={activeLocale}
