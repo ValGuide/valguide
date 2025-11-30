@@ -1,32 +1,32 @@
 'use client'
 
+import type { Asset } from '@valguide/core/features/assets/schema'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
-import { Image as ImageIcon, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 
 export type GuideMetadataFormProps = {
   locale: SupportedLocale
   translation?: GuideTranslationWithVersion
   coverImage?: string | null
+  organizationId: string
   onTranslationChange: (data: { title: string; description: string }) => void
   onCoverImageChange?: (url: string | null) => void
-  onSelectCoverImage?: () => void
 }
 
 export function GuideMetadataForm({
   locale,
   translation,
   coverImage,
+  organizationId,
   onTranslationChange,
   onCoverImageChange,
-  onSelectCoverImage,
 }: GuideMetadataFormProps) {
   const t = useTranslations('guides')
   const [title, setTitle] = useState(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
@@ -47,6 +47,36 @@ export function GuideMetadataForm({
   const handleDescriptionChange = (value: string) => {
     setDescription(value)
     onTranslationChange({ title, description: value })
+  }
+
+  const coverImageAsset: Asset | null = useMemo(() => {
+    if (!coverImage) return null
+    return {
+      id: 'cover-image',
+      nanoId: 'cover',
+      fileName: 'Cover Image',
+      fileSize: 0,
+      mimeType: 'image/jpeg',
+      type: 'image',
+      storagePath: '',
+      publicUrl: coverImage,
+      locale: null,
+      width: null,
+      height: null,
+      duration: null,
+      organizationId: organizationId,
+      uploadedBy: '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+  }, [coverImage, organizationId])
+
+  const handleCoverImageChange = (value: Asset | Asset[] | null) => {
+    if (value === null) {
+      onCoverImageChange?.(null)
+    } else if (!Array.isArray(value)) {
+      onCoverImageChange?.(value.publicUrl ?? null)
+    }
   }
 
   return (
@@ -86,30 +116,14 @@ export function GuideMetadataForm({
         </div>
 
         {/* Cover Image */}
-        <div className="space-y-2">
-          <Label>{t('editor.coverImageLabel')}</Label>
-          {coverImage ? (
-            <div className="relative">
-              <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
-                <img src={coverImage} alt={t('editor.coverImageAlt')} className="h-full w-full object-cover" />
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  className="absolute right-2 top-2"
-                  onClick={() => onCoverImageChange?.(null)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <Button variant="outline" onClick={onSelectCoverImage} className="w-full">
-              <ImageIcon className="mr-2 h-4 w-4" />
-              {t('editor.selectCoverImage')}
-            </Button>
-          )}
-        </div>
+        <MediaPicker
+          mode="single"
+          mediaTypes={['image']}
+          value={coverImageAsset}
+          onChange={handleCoverImageChange}
+          label={t('editor.coverImageLabel')}
+          organizationId={organizationId}
+        />
       </CardContent>
     </Card>
   )

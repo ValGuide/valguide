@@ -11,9 +11,6 @@ import { Button } from '@valguide/ui/components/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
 import { ArrowLeft, ChevronRight, ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { AssetPickerModal } from '@/features/assets/components/asset-picker-modal'
 import { GuideMetadataForm } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { LocaleTabs } from '@/features/guides/components/locale-tabs'
@@ -74,11 +71,6 @@ function GuideEditorContent() {
     }
   }
 
-  const [showAssetPicker, setShowAssetPicker] = useState(false)
-  const [assetPickerType, setAssetPickerType] = useState<'image' | 'audio' | 'video'>('image')
-  const [assetPickerMultiple, setAssetPickerMultiple] = useState(false)
-  const [assetPickerCallback, setAssetPickerCallback] = useState<((assets: Asset[]) => void) | null>(null)
-
   const { data: sidebarData } = useSidebarData()
   const organizationId = sidebarData?.currentTeam?.id ?? ''
 
@@ -87,26 +79,6 @@ function GuideEditorContent() {
 
   const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
   const currentStopTranslation = selectedStop?.translations.find((t) => t.locale === activeLocale)
-
-  const handleSelectCoverImage = () => {
-    setAssetPickerType('image')
-    setAssetPickerMultiple(false)
-    setAssetPickerCallback(() => (assets: Asset[]) => {
-      if (assets[0]) {
-        updateCoverImage(assets[0].publicUrl ?? assets[0].id)
-        toast.success(t('editor.coverImageUpdated'))
-      }
-    })
-    setShowAssetPicker(true)
-  }
-
-  const handleAssetSelect = (assets: Asset[]) => {
-    if (assetPickerCallback) {
-      assetPickerCallback(assets)
-    }
-    setShowAssetPicker(false)
-    setAssetPickerCallback(null)
-  }
 
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
     const reordered = [...guide.stops]
@@ -233,13 +205,13 @@ function GuideEditorContent() {
                   locale={activeLocale}
                   translation={currentTranslation}
                   coverImage={guide.coverImage}
+                  organizationId={organizationId}
                   onTranslationChange={(data) => {
                     updateGuideTranslationData(activeLocale, data)
                   }}
                   onCoverImageChange={(url) => {
                     updateCoverImage(url)
                   }}
-                  onSelectCoverImage={handleSelectCoverImage}
                 />
 
                 {/* Stops Section */}
@@ -276,39 +248,20 @@ function GuideEditorContent() {
                 <StopEditor
                   stop={selectedStop}
                   locale={activeLocale}
+                  organizationId={organizationId}
                   onSave={(data) => {
                     updateStopTranslationData(selectedStop.id, activeLocale, data)
                   }}
                   onCancel={() => handleSelectStop(null)}
-                  onSelectImages={() => {
-                    setAssetPickerType('image')
-                    setAssetPickerMultiple(true)
-                    setAssetPickerCallback(() => async (assets: Asset[]) => {
-                      for (const asset of assets) {
-                        await attachAssetToStop(selectedStop.id, asset.id, 'image', activeLocale)
-                      }
-                    })
-                    setShowAssetPicker(true)
+                  onImageChange={async (assets) => {
+                    for (const asset of assets) {
+                      await attachAssetToStop(selectedStop.id, asset.id, 'image', activeLocale)
+                    }
                   }}
-                  onSelectAudio={() => {
-                    setAssetPickerType('audio')
-                    setAssetPickerMultiple(false)
-                    setAssetPickerCallback(() => async (assets: Asset[]) => {
-                      if (assets[0]) {
-                        await attachAssetToStop(selectedStop.id, assets[0].id, 'audio', activeLocale)
-                      }
-                    })
-                    setShowAssetPicker(true)
-                  }}
-                  onSelectVideo={() => {
-                    setAssetPickerType('video')
-                    setAssetPickerMultiple(false)
-                    setAssetPickerCallback(() => async (assets: Asset[]) => {
-                      if (assets[0]) {
-                        await attachAssetToStop(selectedStop.id, assets[0].id, 'video', activeLocale)
-                      }
-                    })
-                    setShowAssetPicker(true)
+                  onAudioChange={async (asset) => {
+                    if (asset) {
+                      await attachAssetToStop(selectedStop.id, asset.id, 'audio', activeLocale)
+                    }
                   }}
                 />
               </div>
@@ -332,17 +285,6 @@ function GuideEditorContent() {
           </div>
         )}
       </div>
-
-      {/* Asset Picker Modal */}
-      <AssetPickerModal
-        open={showAssetPicker}
-        onOpenChange={setShowAssetPicker}
-        type={assetPickerType}
-        locale={assetPickerType !== 'image' ? activeLocale : undefined}
-        organizationId={organizationId}
-        multiple={assetPickerMultiple}
-        onSelect={handleAssetSelect}
-      />
     </div>
   )
 }

@@ -16,12 +16,20 @@ const meta = {
   tags: ['autodocs'],
   args: {
     onTranslationChange: fn(),
+    onCoverImageChange: fn(),
+    organizationId: 'org-123',
   },
   argTypes: {
     onTranslationChange: { action: 'translation-changed' },
     onCoverImageChange: { action: 'cover-image-changed' },
-    onSelectCoverImage: { action: 'select-cover-image' },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[600px]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof GuideMetadataForm>
 
 export default meta

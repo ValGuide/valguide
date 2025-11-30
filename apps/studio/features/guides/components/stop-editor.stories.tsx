@@ -1,5 +1,7 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import type { Asset } from '@valguide/core/features/assets/schema'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { StopEditor } from './stop-editor'
 
@@ -13,17 +15,68 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  args: {
+    onSave: fn(),
+    onCancel: fn(),
+    onImageChange: fn(),
+    onAudioChange: fn(),
+    organizationId: 'org-123',
+  },
   argTypes: {
     onSave: { action: 'save' },
     onCancel: { action: 'cancel' },
-    onSelectImages: { action: 'select-images' },
-    onSelectAudio: { action: 'select-audio' },
-    onSelectVideo: { action: 'select-video' },
+    onImageChange: { action: 'image-change' },
+    onAudioChange: { action: 'audio-change' },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[600px]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof StopEditor>
 
 export default meta
 type Story = StoryObj<typeof meta>
+
+const mockImageAsset: Asset = {
+  id: '1',
+  nanoId: 'img1',
+  fileName: 'gallery-image.jpg',
+  fileSize: 2048576,
+  mimeType: 'image/jpeg',
+  type: 'image',
+  storagePath: 'org/images/img1.jpg',
+  publicUrl: 'https://picsum.photos/seed/1/400/300',
+  locale: null,
+  width: 1920,
+  height: 1080,
+  duration: null,
+  organizationId: 'org-123',
+  uploadedBy: 'user-456',
+  createdAt: new Date('2025-01-10T10:00:00Z'),
+  updatedAt: new Date('2025-01-10T10:00:00Z'),
+}
+
+const mockAudioAsset: Asset = {
+  id: '2',
+  nanoId: 'aud1',
+  fileName: 'narration-en.mp3',
+  fileSize: 5242880,
+  mimeType: 'audio/mpeg',
+  type: 'audio',
+  storagePath: 'org/audios/en/aud1.mp3',
+  publicUrl: null,
+  locale: 'en',
+  width: null,
+  height: null,
+  duration: 180,
+  organizationId: 'org-123',
+  uploadedBy: 'user-456',
+  createdAt: new Date('2025-01-08T09:15:00Z'),
+  updatedAt: new Date('2025-01-08T09:15:00Z'),
+}
 
 const mockStopEN: StopWithTranslations = {
   id: 'stop-1',
@@ -141,43 +194,6 @@ const mockStopDraftOnly: StopWithTranslations = {
   ],
 }
 
-const mockStopLongContent: StopWithTranslations = {
-  id: 'stop-3',
-  guideId: 'guide-123',
-  nanoId: 'ghi789jkl012',
-  order: 2,
-  createdAt: new Date('2025-01-01'),
-  updatedAt: new Date('2025-01-15'),
-  createdBy: 'user-1',
-  translations: [
-    {
-      id: 'trans-3',
-      stopId: 'stop-3',
-      locale: 'en',
-      currentVersionId: 'v1',
-      draftVersionId: null,
-      createdAt: new Date('2025-01-01'),
-      updatedAt: new Date('2025-01-15'),
-      currentVersion: {
-        id: 'v1',
-        translationId: 'trans-3',
-        version: 1,
-        status: 'published',
-        title:
-          'This is a very long stop title that demonstrates how the editor handles lengthy titles and text wrapping',
-        description:
-          "This is an extensive description that contains multiple paragraphs of text. It describes the artwork, its historical context, the artist's background, and the techniques used in creating this masterpiece.\n\nThe second paragraph continues with more detailed information about the restoration process, the materials used, and the significance of this piece in the broader context of art history.\n\nThe third paragraph explores the symbolism and hidden meanings within the work, inviting viewers to look deeper and discover new interpretations with each viewing.",
-        transcription:
-          "Welcome to this comprehensive audio guide. In this extended transcription, we will explore every aspect of this remarkable piece. The artist spent over five years creating this work, meticulously planning each element to convey a specific message.\n\nAs you observe the painting, notice the play of light and shadow, the careful composition, and the emotional depth captured in the subjects' expressions. Each brushstroke was intentional, each color choice deliberate.\n\nThe background reveals subtle details that reward careful observation. Take your time to discover the hidden elements that the artist has woven throughout the composition.",
-        createdAt: new Date('2025-01-01'),
-        createdBy: 'user-1',
-        publishedAt: new Date('2025-01-01'),
-      },
-      draftVersion: null,
-    },
-  ],
-}
-
 export const NewStop: Story = {
   args: {
     locale: 'en',
@@ -210,20 +226,19 @@ export const StopWithImages: Story = {
   args: {
     locale: 'en',
     stop: mockStopEN,
+    images: [
+      mockImageAsset,
+      { ...mockImageAsset, id: '2', publicUrl: 'https://picsum.photos/seed/2/400/300' },
+      { ...mockImageAsset, id: '3', publicUrl: 'https://picsum.photos/seed/3/400/300' },
+    ],
   },
 }
 
-export const StopWithAudioEN: Story = {
+export const StopWithAudio: Story = {
   args: {
     locale: 'en',
     stop: mockStopEN,
-  },
-}
-
-export const StopWithVideoDE: Story = {
-  args: {
-    locale: 'de',
-    stop: mockStopDE,
+    audio: mockAudioAsset,
   },
 }
 
@@ -231,12 +246,7 @@ export const StopWithAllMedia: Story = {
   args: {
     locale: 'en',
     stop: mockStopEN,
-  },
-}
-
-export const LongContent: Story = {
-  args: {
-    locale: 'en',
-    stop: mockStopLongContent,
+    images: [mockImageAsset, { ...mockImageAsset, id: '2', publicUrl: 'https://picsum.photos/seed/2/400/300' }],
+    audio: mockAudioAsset,
   },
 }
