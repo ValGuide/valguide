@@ -72,11 +72,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
             <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-muted/40">
               {guide.coverImage ? (
                 // biome-ignore lint/performance/noImgElement: Using img for dynamic content
-                <img
-                  src={guide.coverImage}
-                  alt={title}
-                  className="h-full w-full object-cover"
-                />
+                <img src={guide.coverImage} alt={title} className="h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-4 py-6">
                   <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">

@@ -66,9 +66,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
               <ImageIcon className="h-8 w-8 text-amber-600 dark:text-amber-400" />
             </div>
             <div className="text-center">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                {t('coverImage')}
-              </p>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t('coverImage')}</p>
               <p className="mt-1 text-xs text-muted-foreground/70">{t('addCoverImage')}</p>
             </div>
           </div>
@@ -82,8 +80,10 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
               variant="outline"
               className={cn(
                 'text-[11px] uppercase tracking-wide',
-                status === 'published' && 'border-emerald-500/50 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400',
-                status === 'draft' && 'border-slate-400/50 bg-slate-50 text-slate-600 dark:bg-slate-800/50 dark:text-slate-400',
+                status === 'published' &&
+                  'border-emerald-500/50 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400',
+                status === 'draft' &&
+                  'border-slate-400/50 bg-slate-50 text-slate-600 dark:bg-slate-800/50 dark:text-slate-400',
               )}
             >
               {t(status)}
