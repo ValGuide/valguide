@@ -198,7 +198,12 @@
       "selectCoverImage": "Titelbild auswählen",
       "guideProgress": "Guide-Fortschritt",
       "stopProgress": "Stop-Fortschritt",
-      "progress": "Fortschritt"
+      "progress": "Fortschritt",
+      "backToGuide": "Zurück zum Guide",
+      "edit": "Bearbeiten"
+    },
+    "breadcrumb": {
+      "stops": "Stops"
     },
     "empty": {
       "title": "Noch keine Guides",
@@ -338,6 +343,7 @@
     "description": "Inhaltspunkte in Ihrem Guide",
     "add": "Stop hinzufügen",
     "edit": "Bearbeiten",
+    "untitled": "Unbenannter Stop",
     "stopNumber": "Station {number}",
     "stopTitle": "{number}: {title}",
     "empty": {

@@ -60,11 +60,20 @@ interface GuideEditorContextValue {
 
 const GuideEditorContext = createContext<GuideEditorContextValue | null>(null)
 
-export function GuideEditorProvider({ children, initialGuide }: { children: ReactNode; initialGuide: GuideWithStops }) {
+export function GuideEditorProvider({
+  children,
+  initialGuide,
+  initialStopId,
+}: { children: ReactNode; initialGuide: GuideWithStops; initialStopId?: string }) {
   const t = useTranslations()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
-  const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(null)
+  const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(() => {
+    if (initialStopId) {
+      return initialGuide.stops.find((s) => s.id === initialStopId) ?? null
+    }
+    return null
+  })
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)

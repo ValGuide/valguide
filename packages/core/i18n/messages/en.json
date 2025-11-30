@@ -227,7 +227,12 @@
       "selectCoverImage": "Select Cover Image",
       "guideProgress": "Guide Progress",
       "stopProgress": "Stop Progress",
-      "progress": "Progress"
+      "progress": "Progress",
+      "backToGuide": "Back to guide details",
+      "edit": "Edit"
+    },
+    "breadcrumb": {
+      "stops": "Stops"
     },
     "empty": {
       "title": "No guides yet",
@@ -367,6 +372,7 @@
     "description": "Content points in your guide",
     "add": "Add Stop",
     "edit": "Edit",
+    "untitled": "Untitled Stop",
     "stopNumber": "Stop {number}",
     "stopTitle": "{number}: {title}",
     "empty": {

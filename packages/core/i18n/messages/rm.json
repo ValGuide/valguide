@@ -198,7 +198,12 @@
       "selectCoverImage": "Tscherner maletg da front",
       "guideProgress": "Progress dal guid",
       "stopProgress": "Progress dal stop",
-      "progress": "Progress"
+      "progress": "Progress",
+      "backToGuide": "Enavos al guid",
+      "edit": "Modifitgar"
+    },
+    "breadcrumb": {
+      "stops": "Stops"
     },
     "empty": {
       "title": "Anc nagins guids",
@@ -338,6 +343,7 @@
     "description": "Puncts dal cuntegn en voss guid",
     "add": "Agiuntar stop",
     "edit": "Modifitgar",
+    "untitled": "Stop senza titel",
     "stopNumber": "Staziun {number}",
     "stopTitle": "{number}: {title}",
     "empty": {

@@ -7,7 +7,7 @@ import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import { Link, useRouter } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { ArrowLeft, ListChecks } from 'lucide-react'
+import { ArrowLeft, ChevronRight, ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -23,6 +23,7 @@ import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 export type GuideEditorClientProps = {
   guide: GuideWithStops
+  initialStopId?: string
 }
 
 function GuideEditorContent() {
@@ -47,7 +48,31 @@ function GuideEditorContent() {
     save,
   } = useGuideEditor()
 
-  const backUrl = `/guides/${guide.nanoId}`
+  const guideDetailUrl = `/guides/${guide.nanoId}`
+
+  // Get guide title for breadcrumb
+  const guideTitle =
+    guide.translations.find((t) => t.locale === activeLocale)?.currentVersion?.title ??
+    guide.translations.find((t) => t.locale === activeLocale)?.draftVersion?.title ??
+    guide.translations[0]?.currentVersion?.title ??
+    guide.translations[0]?.draftVersion?.title ??
+    t('untitledGuide')
+
+  // Get selected stop title for breadcrumb
+  const selectedStopTitle = selectedStop
+    ? (selectedStop.translations.find((t) => t.locale === activeLocale)?.currentVersion?.title ??
+        selectedStop.translations.find((t) => t.locale === activeLocale)?.draftVersion?.title ??
+        tStops('untitled'))
+    : null
+
+  // Navigate to stop edit or back to guide edit
+  const handleSelectStop = (stop: typeof selectedStop) => {
+    if (stop) {
+      router.push(`/guides/${guide.nanoId}/stops/${stop.id}/edit`)
+    } else {
+      router.push(`/guides/${guide.nanoId}/edit`)
+    }
+  }
 
   const [showAssetPicker, setShowAssetPicker] = useState(false)
   const [assetPickerType, setAssetPickerType] = useState<'image' | 'audio' | 'video'>('image')
@@ -95,14 +120,34 @@ function GuideEditorContent() {
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
       {/* Header */}
       <div className="flex items-center justify-between border-b bg-background px-3 py-3 sm:px-6">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Link href={backUrl}>
-            <Button variant="ghost" size="sm" className="gap-1 px-2 sm:px-3">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('title')}</span>
-            </Button>
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+          <Link href="/guides" className="hover:text-foreground hover:underline">
+            {t('title')}
           </Link>
-        </div>
+          <ChevronRight className="h-4 w-4" />
+          <Link href={guideDetailUrl} className="max-w-[120px] truncate hover:text-foreground hover:underline sm:max-w-[200px]">
+            {guideTitle}
+          </Link>
+          <ChevronRight className="h-4 w-4" />
+          {!selectedStop ? (
+            <span className="font-medium text-foreground">{t('editor.edit')}</span>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => handleSelectStop(null)}
+                className="hover:text-foreground hover:underline"
+              >
+                {t('breadcrumb.stops')}
+              </button>
+              <ChevronRight className="h-4 w-4" />
+              <span className="max-w-[100px] truncate font-medium text-foreground sm:max-w-[150px]">
+                {selectedStopTitle}
+              </span>
+            </>
+          )}
+        </nav>
         <div className="flex items-center gap-1 sm:gap-2">
           <VersionHistoryDialog
             guideId={guide.id}
@@ -184,7 +229,7 @@ function GuideEditorContent() {
                     locale={activeLocale}
                     selectedStopId={undefined}
                     onReorder={handleReorderStops}
-                    onEdit={selectStop}
+                    onEdit={handleSelectStop}
                     onDelete={deleteStop}
                     onAdd={addStop}
                   />
@@ -193,9 +238,9 @@ function GuideEditorContent() {
             ) : (
               <div className="space-y-6">
                 {/* Back to Guide Button */}
-                <Button variant="ghost" size="sm" onClick={() => selectStop(null)} className="gap-1">
+                <Button variant="ghost" size="sm" onClick={() => handleSelectStop(null)} className="gap-1">
                   <ArrowLeft className="h-4 w-4" />
-                  {t('title')}
+                  {t('editor.backToGuide')}
                 </Button>
 
                 {/* Locale Tabs */}
@@ -208,7 +253,7 @@ function GuideEditorContent() {
                   onSave={(data) => {
                     updateStopTranslationData(selectedStop.id, activeLocale, data)
                   }}
-                  onCancel={() => selectStop(null)}
+                  onCancel={() => handleSelectStop(null)}
                   onSelectImages={() => {
                     setAssetPickerType('image')
                     setAssetPickerMultiple(true)
@@ -276,9 +321,9 @@ function GuideEditorContent() {
   )
 }
 
-export function GuideEditorClient({ guide }: GuideEditorClientProps) {
+export function GuideEditorClient({ guide, initialStopId }: GuideEditorClientProps) {
   return (
-    <GuideEditorProvider initialGuide={guide}>
+    <GuideEditorProvider initialGuide={guide} initialStopId={initialStopId}>
       <GuideEditorContent />
     </GuideEditorProvider>
   )
