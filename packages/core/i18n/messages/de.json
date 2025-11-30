@@ -1,4 +1,33 @@
 {
+  "emails": {
+    "vercelInviteUser": {
+      "preview": "Tritt {invitedByUsername} auf Vercel bei",
+      "heading": "Tritt <strong1>{teamName}</strong1> auf <strong2>Vercel</strong2> bei",
+      "greeting": "Hallo {username},",
+      "invitation": "<strong1>{invitedByUsername}</strong1> (<link>{invitedByEmail}</link>) hat dich zum Team <strong2>{teamName}</strong2> auf <strong3>Vercel</strong3> eingeladen.",
+      "button": "Dem Team beitreten",
+      "copyLink": "oder kopiere und füge diese URL in deinen Browser ein:",
+      "footer": {
+        "intendedFor": "Diese Einladung war für <span1>{username}</span1> bestimmt. Diese Einladung wurde von <span2>{inviteFromIp}</span2> aus <span3>{inviteFromLocation}</span3> gesendet.",
+        "ignore": "Falls du diese Einladung nicht erwartet hast, kannst du diese E-Mail ignorieren.",
+        "concern": "Falls du Bedenken bezüglich der Sicherheit deines Kontos hast, antworte bitte auf diese E-Mail."
+      }
+    }
+  },
+  "player": {
+    "play": "Abspielen",
+    "pause": "Pause",
+    "rewind": "10 Sekunden zurück",
+    "forward": "10 Sekunden vor",
+    "transcript": "Transkript",
+    "transcriptAndMore": "Transkript & Mehr",
+    "noTranscript": "Kein Transkript für diesen Track verfügbar",
+    "close": "Schließen",
+    "language": "Sprache",
+    "save": "Speichern",
+    "share": "Teilen",
+    "minimize": "Minimieren"
+  },
   "admin": {
     "metadata": {
       "title": "Admin - ValGuide",
@@ -298,7 +327,11 @@
       "descriptionAdded": "Beschreibung hinzugefügt",
       "coverImageAdded": "Titelbild hinzugefügt",
       "atLeastOneStop": "Mindestens 1 Stop erstellt",
-      "allStopsHaveTitles": "Alle Stops haben Titel"
+      "allStopsHaveTitles": "Alle Stops haben Titel",
+      "unpublishedChanges": "Unveröffentlichte Änderungen",
+      "stopsWithDrafts": "{count, plural, =1 {1 Stop hat unveröffentlichte Änderungen} other {# Stops haben unveröffentlichte Änderungen}}",
+      "guideDraft": "Guide hat unveröffentlichte Änderungen",
+      "allPublished": "Alle Inhalte sind veröffentlicht"
     },
     "versionHistory": {
       "button": "Versionsverlauf",
@@ -387,16 +420,50 @@
       "save": "Stop speichern",
       "saving": "Wird gespeichert...",
       "cancel": "Abbrechen",
-      "addSuccess": "Stop added",
-      "addError": "Failed to add stop",
-      "reorderSuccess": "Stops reordered",
-      "reorderError": "Failed to reorder stops"
+      "addSuccess": "Stop hinzugefügt",
+      "addError": "Fehler beim Hinzufügen des Stops",
+      "reorderSuccess": "Stops neu angeordnet",
+      "reorderError": "Fehler beim Neuanordnen der Stops"
     },
     "assets": {
-      "attachSuccess": "Asset attached",
-      "attachError": "Failed to attach asset",
-      "removeSuccess": "Asset removed",
-      "removeError": "Failed to remove asset"
+      "attachSuccess": "Asset angehängt",
+      "attachError": "Fehler beim Anhängen des Assets",
+      "removeSuccess": "Asset entfernt",
+      "removeError": "Fehler beim Entfernen des Assets"
+    },
+    "publish": {
+      "button": "Veröffentlichen",
+      "success": "Stop-Übersetzung erfolgreich veröffentlicht",
+      "error": "Fehler beim Veröffentlichen der Stop-Übersetzung",
+      "confirmTitle": "Stop-Übersetzung veröffentlichen?",
+      "confirmDescription": "Dies wird die Entwurfsversion dieses Stops für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
+      "cancel": "Abbrechen",
+      "confirm": "Veröffentlichen",
+      "publishing": "Wird veröffentlicht..."
+    },
+    "versionHistory": {
+      "button": "Versionsverlauf",
+      "title": "Stop-Übersetzungsverlauf",
+      "description": "Vorherige Versionen dieser Stop-Übersetzung anzeigen und verwalten",
+      "loading": "Versionen werden geladen...",
+      "noVersions": "Kein Versionsverlauf verfügbar",
+      "versionLabel": "Version",
+      "created": "Erstellt",
+      "published": "Veröffentlicht",
+      "rollback": "Wiederherstellen",
+      "rollbackSuccess": "Version als Entwurf wiederhergestellt",
+      "rollbackError": "Fehler beim Wiederherstellen der Version",
+      "loadError": "Fehler beim Laden des Versionsverlaufs",
+      "rollbackConfirmTitle": "Diese Version wiederherstellen?",
+      "rollbackConfirmDescription": "Version {version} wird als neuer Entwurf wiederhergestellt. Sie können sie dann überprüfen und veröffentlichen.",
+      "cancel": "Abbrechen",
+      "confirm": "Wiederherstellen",
+      "rollingBack": "Wird wiederhergestellt..."
+    },
+    "status": {
+      "draft": "Entwurf",
+      "published": "Veröffentlicht",
+      "draftChanges": "Entwurfsänderungen"
     }
   },
   "assets": {
@@ -561,8 +628,8 @@
       "teams": "Teams",
       "createTeam": "Team erstellen",
       "teamSettings": "Team-Einstellungen",
-      "success": "Switched team",
-      "error": "Failed to switch team"
+      "success": "Team gewechselt",
+      "error": "Fehler beim Wechseln des Teams"
     },
     "members": {
       "title": "Team & Mitglieder",
@@ -576,10 +643,10 @@
       "changeRoleTo": "Ändern zu {role}",
       "resendInvite": "Einladung erneut senden",
       "removeMember": "Mitglied entfernen",
-      "removeSuccess": "Member removed",
-      "removeError": "Failed to remove member",
-      "roleUpdateSuccess": "Role updated",
-      "roleUpdateError": "Failed to update role"
+      "removeSuccess": "Mitglied entfernt",
+      "removeError": "Fehler beim Entfernen des Mitglieds",
+      "roleUpdateSuccess": "Rolle aktualisiert",
+      "roleUpdateError": "Fehler beim Aktualisieren der Rolle"
     },
     "inviteDialog": {
       "inviteMember": "Mitglied einladen",
@@ -591,7 +658,7 @@
       "sending": "Wird gesendet...",
       "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
       "inviteError": "Fehler beim Senden der Einladung. Bitte versuchen Sie es erneut.",
-      "success": "Invitation sent"
+      "success": "Einladung gesendet"
     },
     "pendingInvites": {
       "title": "Ausstehende Einladungen",
@@ -604,10 +671,10 @@
       "actions": "Aktionen",
       "resend": "Einladung erneut senden",
       "cancel": "Einladung abbrechen",
-      "resendSuccess": "Invitation resent",
-      "resendError": "Failed to resend invitation",
-      "cancelSuccess": "Invitation cancelled",
-      "cancelError": "Failed to cancel invitation"
+      "resendSuccess": "Einladung erneut gesendet",
+      "resendError": "Fehler beim erneuten Senden der Einladung",
+      "cancelSuccess": "Einladung abgebrochen",
+      "cancelError": "Fehler beim Abbrechen der Einladung"
     },
     "noTeam": {
       "welcome": "Willkommen bei ValGuide",
