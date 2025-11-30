@@ -4,9 +4,12 @@ import type { SupportedLocale } from '../../i18n/i18n.config'
 import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
 import type { DB } from '../db'
 import {
+  type GuideStopWithStop,
+  type GuideWithGuideStops,
   type GuideWithStops,
   type GuideWithTranslations,
   guide,
+  guideStop,
   guideTranslation,
   guideTranslationVersion,
   type StopWithTranslations,
@@ -50,9 +53,44 @@ export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTr
 }
 
 /**
- * Get a guide by nanoId with all its translations and stops with assets
+ * Get a guide by nanoId with all its translations and stops via junction table
  */
-export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithStops | null> {
+export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithGuideStops | null> {
+  const result = await db.query.guide.findFirst({
+    where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
+    with: {
+      translations: {
+        with: {
+          currentVersion: true,
+          draftVersion: true,
+        },
+      },
+      guideStops: {
+        orderBy: asc(guideStop.position),
+        with: {
+          stop: {
+            with: {
+              translations: {
+                with: {
+                  currentVersion: true,
+                  draftVersion: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+
+  return result ?? null
+}
+
+/**
+ * @deprecated Use getGuideByNanoId which returns guideStops instead
+ * Get a guide by nanoId with stops using legacy direct relation (for backward compatibility)
+ */
+export async function getGuideByNanoIdLegacy(db: DB, nanoId: string): Promise<GuideWithStops | null> {
   const result = await db.query.guide.findFirst({
     where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
@@ -276,22 +314,30 @@ export async function updateGuideTranslation(
 
 /**
  * Get a published guide by nanoId with all assets for the app viewer
+ * Uses junction table for stops ordering
  */
 export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithStopsAndAssets | null> {
   const result = await db.query.guide.findFirst({
     where: and(eq(guide.nanoId, nanoId), isNull(guide.deletedAt), isNull(guide.archivedAt), isNotNull(guide.published)),
     with: {
       translations: true,
-      stops: {
+      guideStops: {
+        orderBy: asc(guideStop.position),
         with: {
-          translations: true,
+          stop: {
+            with: {
+              translations: true,
+            },
+          },
         },
-        orderBy: asc(stop.order),
       },
     },
   })
 
   if (!result) return null
+
+  // Extract stops from guideStops junction
+  const stops = result.guideStops.map((gs) => gs.stop)
 
   // Fetch guide assets
   const guideAssets = await db
@@ -307,7 +353,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
     .orderBy(asc(guideAsset.order))
 
   // Fetch all stop assets
-  const stopIds = result.stops.map((s) => s.id)
+  const stopIds = stops.map((s) => s.id)
   const stopAssetsData =
     stopIds.length > 0
       ? await db
@@ -346,7 +392,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
       order: item.order,
       locale: item.locale,
     })),
-    stops: result.stops.map((s) => ({
+    stops: stops.map((s) => ({
       ...s,
       assets: stopAssetsMap.get(s.id) ?? [],
     })),
@@ -391,15 +437,73 @@ export async function getStopByNanoId(db: DB, stopNanoId: string): Promise<StopW
 }
 
 /**
- * Get guide ID by stop nanoId
+ * Get guide ID by stop nanoId (returns first guide if stop is in multiple guides)
  */
 export async function getGuideIdByStopNanoId(db: DB, stopNanoId: string): Promise<string | null> {
   const result = await db.query.stop.findFirst({
     where: eq(stop.nanoId, stopNanoId),
-    columns: {
-      guideId: true,
+    with: {
+      guideStops: {
+        limit: 1,
+        columns: {
+          guideId: true,
+        },
+      },
     },
   })
 
+  // First try junction table
+  if (result?.guideStops?.[0]?.guideId) {
+    return result.guideStops[0].guideId
+  }
+
+  // Fallback to deprecated guideId for backward compatibility
   return result?.guideId ?? null
+}
+
+/**
+ * Get all guides a stop belongs to
+ */
+export async function getGuidesForStop(db: DB, stopId: string): Promise<GuideWithTranslations[]> {
+  const result = await db.query.guideStop.findMany({
+    where: eq(guideStop.stopId, stopId),
+    with: {
+      guide: {
+        with: {
+          translations: {
+            with: {
+              currentVersion: true,
+              draftVersion: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  return result.map((gs) => gs.guide)
+}
+
+/**
+ * Get stops for a guide ordered by position
+ */
+export async function getGuideStops(db: DB, guideId: string): Promise<StopWithTranslations[]> {
+  const result = await db.query.guideStop.findMany({
+    where: eq(guideStop.guideId, guideId),
+    orderBy: asc(guideStop.position),
+    with: {
+      stop: {
+        with: {
+          translations: {
+            with: {
+              currentVersion: true,
+              draftVersion: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  return result.map((gs) => gs.stop)
 }

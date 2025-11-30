@@ -80,22 +80,52 @@ export const guideTranslationVersion = studioSchema.table(
 )
 
 // Stop table (content points within a guide)
-export const stop = studioSchema.table('stop', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  guideId: uuid('guide_id')
-    .notNull()
-    .references(() => guide.id, { onDelete: 'cascade' }),
-  nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_stop_nano_id'),
-  order: integer('order').notNull().default(0),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date()),
-  createdBy: uuid('created_by')
-    .notNull()
-    .references(() => authUsers.id, { onDelete: 'cascade' }),
-})
+// Note: guideId and order are deprecated - use guideStop junction table instead
+export const stop = studioSchema.table(
+  'stop',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_stop_nano_id'),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+    createdBy: uuid('created_by')
+      .notNull()
+      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    // Deprecated columns - kept for backward compatibility during migration
+    guideId: uuid('guide_id').references(() => guide.id, { onDelete: 'set null' }),
+    order: integer('order').default(0),
+  },
+  (t) => ({
+    orgIdx: index('stop_organization_id_idx').on(t.organizationId),
+  }),
+)
+
+// Junction table for many-to-many guide-stop relationship
+export const guideStop = studioSchema.table(
+  'guide_stop',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    guideId: uuid('guide_id')
+      .notNull()
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    position: integer('position').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqueStopPerGuide: uniqueIndex('uniq_guide_stop').on(t.guideId, t.stopId),
+    guideIdx: index('guide_stop_guide_idx').on(t.guideId),
+    stopIdx: index('guide_stop_stop_idx').on(t.stopId),
+  }),
+)
 
 export const stopTranslation = studioSchema.table(
   'stop_translation',
@@ -143,6 +173,8 @@ export const stopTranslationVersion = studioSchema.table(
 // Relations
 export const guideRelations = relations(guide, ({ many, one }) => ({
   translations: many(guideTranslation),
+  guideStops: many(guideStop),
+  // Deprecated: direct stop relation - use guideStops instead
   stops: many(stop),
   creator: one(authUsers, {
     fields: [guide.createdBy],
@@ -185,7 +217,20 @@ export const guideTranslationVersionRelations = relations(guideTranslationVersio
   }),
 }))
 
+export const guideStopRelations = relations(guideStop, ({ one }) => ({
+  guide: one(guide, {
+    fields: [guideStop.guideId],
+    references: [guide.id],
+  }),
+  stop: one(stop, {
+    fields: [guideStop.stopId],
+    references: [stop.id],
+  }),
+}))
+
 export const stopRelations = relations(stop, ({ many, one }) => ({
+  guideStops: many(guideStop),
+  // Deprecated: direct guide relation - use guideStops instead
   guide: one(guide, {
     fields: [stop.guideId],
     references: [guide.id],
@@ -194,6 +239,10 @@ export const stopRelations = relations(stop, ({ many, one }) => ({
   creator: one(authUsers, {
     fields: [stop.createdBy],
     references: [authUsers.id],
+  }),
+  organization: one(organization, {
+    fields: [stop.organizationId],
+    references: [organization.id],
   }),
 }))
 
@@ -241,6 +290,9 @@ export type NewStopTranslation = typeof stopTranslation.$inferInsert
 export type StopTranslationVersion = typeof stopTranslationVersion.$inferSelect
 export type NewStopTranslationVersion = typeof stopTranslationVersion.$inferInsert
 
+export type GuideStop = typeof guideStop.$inferSelect
+export type NewGuideStop = typeof guideStop.$inferInsert
+
 // Helper types with versions
 export type GuideTranslationWithVersion = GuideTranslation & {
   currentVersion?: GuideTranslationVersion | null
@@ -262,9 +314,36 @@ export type StopWithTranslations = Stop & {
   translations: StopTranslationWithVersion[]
 }
 
+// GuideStop with nested stop data
+export type GuideStopWithStop = GuideStop & {
+  stop: StopWithTranslations
+}
+
+// Guide with stops via junction table (preferred)
+export type GuideWithGuideStops = Guide & {
+  translations: GuideTranslationWithVersion[]
+  guideStops: GuideStopWithStop[]
+}
+
+// Deprecated: Guide with direct stops relation (for backward compatibility)
 export type GuideWithStops = Guide & {
   translations: GuideTranslationWithVersion[]
   stops: StopWithTranslations[]
+}
+
+/**
+ * Convert GuideWithGuideStops (junction table format) to GuideWithStops (flat stops array)
+ * Use this for backward compatibility with UI components that expect flat stops array
+ */
+export function toGuideWithStops(guide: GuideWithGuideStops): GuideWithStops {
+  return {
+    ...guide,
+    stops: guide.guideStops.map((gs) => ({
+      ...gs.stop,
+      // Include position from junction table as order for backward compatibility
+      order: gs.position,
+    })),
+  }
 }
 
 // Helper function to get localized text from current version with fallback

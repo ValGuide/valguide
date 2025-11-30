@@ -6,7 +6,7 @@ import { createClient } from '@valguide/supabase/server'
 import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import { organizationMember } from '../orgs/schema'
-import { guide, stop } from './schema'
+import { guide, guideStop, stop } from './schema'
 
 async function requireUser() {
   const supabase = await createClient()
@@ -47,10 +47,26 @@ async function requireGuideAccess(guideId: string) {
 }
 
 async function requireStopAccess(stopId: string) {
+  // First try to get guide access via junction table
+  const guideStopResult = await db
+    .select({ guideId: guideStop.guideId })
+    .from(guideStop)
+    .where(eq(guideStop.stopId, stopId))
+    .limit(1)
+
+  if (guideStopResult[0]) {
+    return requireGuideAccess(guideStopResult[0].guideId)
+  }
+
+  // Fallback to deprecated guideId for backward compatibility
   const [foundStop] = await db.select({ guideId: stop.guideId }).from(stop).where(eq(stop.id, stopId)).limit(1)
 
   if (!foundStop) {
     throw new Error('Stop not found')
+  }
+
+  if (!foundStop.guideId) {
+    throw new Error('Stop is not associated with any guide')
   }
 
   return requireGuideAccess(foundStop.guideId)
@@ -109,7 +125,7 @@ export async function updateGuideTranslation(params: UpdateGuideTranslationParam
 export type CreateStopParams = {
   guideId: string
   userId?: string
-  order: number
+  position?: number
   translations: Array<{
     locale: string
     title: string
@@ -119,25 +135,57 @@ export type CreateStopParams = {
 }
 
 export async function createStop(params: CreateStopParams) {
-  const { guideId, order, translations } = params
+  const { guideId, position, translations } = params
   const user = await requireGuideAccess(guideId)
   const userId = user.id
+
+  // Get guide to determine organizationId
+  const [guideData] = await db
+    .select({ organizationId: guide.organizationId })
+    .from(guide)
+    .where(eq(guide.id, guideId))
+    .limit(1)
+
+  if (!guideData) {
+    throw new Error('Guide not found')
+  }
+
+  // Determine position - if not specified, add at the end
+  let finalPosition = position
+  if (finalPosition === undefined) {
+    const existingStops = await db
+      .select({ position: guideStop.position })
+      .from(guideStop)
+      .where(eq(guideStop.guideId, guideId))
+
+    const maxPosition = existingStops.length > 0 ? Math.max(...existingStops.map((s) => s.position)) : -1
+    finalPosition = maxPosition + 1
+  }
 
   const nanoId = nanoid(21)
 
   const [newStop] = await db
     .insert(stop)
     .values({
-      guideId,
+      organizationId: guideData.organizationId,
       nanoId,
-      order,
       createdBy: userId,
+      // Deprecated fields kept for backward compatibility
+      guideId,
+      order: finalPosition,
     })
     .returning()
 
   if (!newStop) {
     throw new Error('Failed to create stop')
   }
+
+  // Add to junction table
+  await db.insert(guideStop).values({
+    guideId,
+    stopId: newStop.id,
+    position: finalPosition,
+  })
 
   // Create translations
   const { upsertStopTranslationDraft } = await import('./translation-mutations')
@@ -201,6 +249,9 @@ export async function deleteStop(stopId: string) {
   return { success: true }
 }
 
+/**
+ * @deprecated Use reorderGuideStopsAction instead
+ */
 export type ReorderStopsParams = Array<{ id: string; order: number }>
 
 export async function reorderStops(updates: ReorderStopsParams) {
@@ -213,7 +264,9 @@ export async function reorderStops(updates: ReorderStopsParams) {
       .from(stop)
       .where(inArray(stop.id, stopIds))
 
-    const guideIds: string[] = Array.from(new Set(stopsToCheck.map((s: { guideId: string }) => s.guideId)))
+    const guideIds: string[] = Array.from(
+      new Set(stopsToCheck.filter((s) => s.guideId != null).map((s) => s.guideId as string)),
+    )
     for (const gId of guideIds) {
       await checkGuideAccess(gId, user.id)
     }
@@ -222,6 +275,107 @@ export async function reorderStops(updates: ReorderStopsParams) {
   for (const update of updates) {
     await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
   }
+
+  return { success: true }
+}
+
+export type ReorderGuideStopsParams = {
+  guideId: string
+  stopIds: string[]
+}
+
+/**
+ * Reorder stops in a guide by providing ordered array of stop IDs
+ * Uses the junction table for ordering
+ */
+export async function reorderGuideStopsAction(params: ReorderGuideStopsParams) {
+  const { guideId, stopIds } = params
+  await requireGuideAccess(guideId)
+
+  await db.transaction(async (tx: typeof db) => {
+    // Delete all positions for this guide
+    await tx.delete(guideStop).where(eq(guideStop.guideId, guideId))
+
+    // Re-insert with new positions
+    if (stopIds.length > 0) {
+      await tx.insert(guideStop).values(
+        stopIds.map((stopId, index) => ({
+          guideId,
+          stopId,
+          position: index,
+        })),
+      )
+    }
+
+    // Also update deprecated order column for backward compatibility
+    for (let i = 0; i < stopIds.length; i++) {
+      await tx.update(stop).set({ order: i }).where(eq(stop.id, stopIds[i]!))
+    }
+  })
+
+  return { success: true }
+}
+
+export type AddStopToGuideParams = {
+  guideId: string
+  stopId: string
+  position?: number
+}
+
+/**
+ * Add an existing stop to a guide at a specific position
+ */
+export async function addStopToGuideAction(params: AddStopToGuideParams) {
+  const { guideId, stopId, position } = params
+  await requireGuideAccess(guideId)
+
+  // Check if already in guide
+  const existing = await db.query.guideStop.findFirst({
+    where: and(eq(guideStop.guideId, guideId), eq(guideStop.stopId, stopId)),
+  })
+
+  if (existing) {
+    throw new Error('Stop is already in this guide')
+  }
+
+  // Determine position
+  let finalPosition = position
+  if (finalPosition === undefined) {
+    const existingStops = await db
+      .select({ position: guideStop.position })
+      .from(guideStop)
+      .where(eq(guideStop.guideId, guideId))
+
+    const maxPosition = existingStops.length > 0 ? Math.max(...existingStops.map((s) => s.position)) : -1
+    finalPosition = maxPosition + 1
+  }
+
+  // Add to junction table
+  const [newGuideStop] = await db
+    .insert(guideStop)
+    .values({
+      guideId,
+      stopId,
+      position: finalPosition,
+    })
+    .returning()
+
+  return newGuideStop
+}
+
+export type RemoveStopFromGuideParams = {
+  guideId: string
+  stopId: string
+}
+
+/**
+ * Remove a stop from a guide (does NOT delete the stop itself)
+ */
+export async function removeStopFromGuideAction(params: RemoveStopFromGuideParams) {
+  const { guideId, stopId } = params
+  await requireGuideAccess(guideId)
+
+  await db.delete(guideStop).where(and(eq(guideStop.guideId, guideId), eq(guideStop.stopId, stopId)))
 
   return { success: true }
 }

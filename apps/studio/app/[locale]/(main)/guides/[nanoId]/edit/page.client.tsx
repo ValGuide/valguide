@@ -83,10 +83,10 @@ function GuideEditorContent() {
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
     const reordered = [...guide.stops]
     updates.forEach(({ id, order }) => {
-      const stop = reordered.find((s) => s.id === id)
-      if (stop) stop.order = order
+      const stopToUpdate = reordered.find((s) => s.id === id)
+      if (stopToUpdate) stopToUpdate.order = order
     })
-    reorderStops(reordered.sort((a, b) => a.order - b.order))
+    reorderStops(reordered.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)))
   }
 
   return (

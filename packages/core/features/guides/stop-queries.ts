@@ -1,8 +1,8 @@
-import { asc, eq } from 'drizzle-orm'
+import { and, asc, eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import type { SupportedLocale } from '../../i18n/i18n.config'
 import { db } from '../db'
-import { stop, stopTranslation } from './schema'
+import { guide, guideStop, stop, stopTranslation } from './schema'
 
 export async function getStopById(stopId: string) {
   return await db.query.stop.findFirst({
@@ -22,6 +22,33 @@ export async function getStopByNanoId(nanoId: string) {
   })
 }
 
+/**
+ * Get stops for a guide ordered by position (uses junction table)
+ */
+export async function getGuideStopsOrdered(guideId: string) {
+  const result = await db.query.guideStop.findMany({
+    where: eq(guideStop.guideId, guideId),
+    orderBy: [asc(guideStop.position)],
+    with: {
+      stop: {
+        with: {
+          translations: {
+            with: {
+              currentVersion: true,
+              draftVersion: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  return result.map((gs) => gs.stop)
+}
+
+/**
+ * @deprecated Use getGuideStopsOrdered which uses the junction table
+ */
 export async function getGuideStops(guideId: string) {
   return await db.query.stop.findMany({
     where: eq(stop.guideId, guideId),
@@ -32,32 +59,68 @@ export async function getGuideStops(guideId: string) {
   })
 }
 
+/**
+ * Create a new stop and add it to a guide
+ * Uses the junction table for ordering
+ */
 export async function createStop({
   guideId,
   userId,
   translations,
-  order = 0,
+  position,
 }: {
   guideId: string
   userId: string
   translations: Array<{ locale: string; title: string; description?: string; transcription?: string }>
-  order?: number
+  position?: number
 }) {
   return await db.transaction(async (tx: typeof db) => {
-    // Create stop
+    // Get guide to determine organizationId
+    const [guideData] = await tx
+      .select({ organizationId: guide.organizationId })
+      .from(guide)
+      .where(eq(guide.id, guideId))
+      .limit(1)
+
+    if (!guideData) {
+      throw new Error('Guide not found')
+    }
+
+    // Determine position - if not specified, add at the end
+    let finalPosition = position
+    if (finalPosition === undefined) {
+      const maxPositionResult = await tx
+        .select({ maxPos: guideStop.position })
+        .from(guideStop)
+        .where(eq(guideStop.guideId, guideId))
+        .orderBy(asc(guideStop.position))
+      const maxPosition = maxPositionResult.length > 0 ? Math.max(...maxPositionResult.map((r) => r.maxPos)) : -1
+      finalPosition = maxPosition + 1
+    }
+
+    // Create stop with organizationId
     const [newStop] = await tx
       .insert(stop)
       .values({
-        guideId,
+        organizationId: guideData.organizationId,
         nanoId: nanoid(21),
-        order,
         createdBy: userId,
+        // Deprecated fields kept for backward compatibility
+        guideId,
+        order: finalPosition,
       })
       .returning()
 
     if (!newStop) {
       throw new Error('Failed to create stop')
     }
+
+    // Add to junction table
+    await tx.insert(guideStop).values({
+      guideId,
+      stopId: newStop.id,
+      position: finalPosition,
+    })
 
     // Create translations
     const newTranslations = await tx
@@ -98,11 +161,17 @@ export async function updateStopTranslation(
   return { versionId }
 }
 
+/**
+ * @deprecated Use reorderGuideStops which uses the junction table
+ */
 export async function updateStopOrder(stopId: string, order: number) {
   const [updated] = await db.update(stop).set({ order }).where(eq(stop.id, stopId)).returning()
   return updated
 }
 
+/**
+ * @deprecated Use reorderGuideStops which uses the junction table
+ */
 export async function reorderStops(updates: Array<{ id: string; order: number }>) {
   return await db.transaction(async (tx: typeof db) => {
     const results = []
@@ -112,6 +181,81 @@ export async function reorderStops(updates: Array<{ id: string; order: number }>
     }
     return results
   })
+}
+
+/**
+ * Reorder stops in a guide by providing ordered array of stop IDs
+ * Uses the junction table for ordering
+ */
+export async function reorderGuideStops(guideId: string, stopIds: string[]) {
+  return await db.transaction(async (tx: typeof db) => {
+    // Delete all positions for this guide
+    await tx.delete(guideStop).where(eq(guideStop.guideId, guideId))
+
+    // Re-insert with new positions
+    if (stopIds.length > 0) {
+      await tx.insert(guideStop).values(
+        stopIds.map((stopId, index) => ({
+          guideId,
+          stopId,
+          position: index,
+        })),
+      )
+    }
+
+    // Also update deprecated order column for backward compatibility
+    for (let i = 0; i < stopIds.length; i++) {
+      await tx.update(stop).set({ order: i }).where(eq(stop.id, stopIds[i]!))
+    }
+  })
+}
+
+/**
+ * Add a stop to a guide at a specific position
+ */
+export async function addStopToGuide(guideId: string, stopId: string, position?: number) {
+  return await db.transaction(async (tx: typeof db) => {
+    // Check if already in guide
+    const existing = await tx.query.guideStop.findFirst({
+      where: eq(guideStop.guideId, guideId),
+    })
+
+    if (existing) {
+      throw new Error('Stop is already in this guide')
+    }
+
+    // Determine position
+    let finalPosition = position
+    if (finalPosition === undefined) {
+      const maxPositionResult = await tx
+        .select({ maxPos: guideStop.position })
+        .from(guideStop)
+        .where(eq(guideStop.guideId, guideId))
+      const maxPosition = maxPositionResult.length > 0 ? Math.max(...maxPositionResult.map((r) => r.maxPos)) : -1
+      finalPosition = maxPosition + 1
+    }
+
+    // Add to junction table
+    const [newGuideStop] = await tx
+      .insert(guideStop)
+      .values({
+        guideId,
+        stopId,
+        position: finalPosition,
+      })
+      .returning()
+
+    return newGuideStop
+  })
+}
+
+/**
+ * Remove a stop from a guide (does NOT delete the stop itself)
+ */
+export async function removeStopFromGuide(guideId: string, stopId: string) {
+  await db.delete(guideStop).where(and(eq(guideStop.guideId, guideId), eq(guideStop.stopId, stopId)))
+
+  return { success: true }
 }
 
 export async function deleteStop(stopId: string) {

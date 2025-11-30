@@ -199,7 +199,7 @@ export function GuideEditorProvider({
     try {
       const newStopWithTranslations = await createStop({
         guideId: guide.id,
-        order: guide.stops.length,
+        position: guide.stops.length,
         translations: [
           {
             locale: 'en',
