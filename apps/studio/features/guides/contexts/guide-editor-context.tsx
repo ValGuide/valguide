@@ -34,7 +34,7 @@ interface GuideEditorContextValue {
 
   // Stop actions
   selectStop: (stop: StopWithTranslations | null) => void
-  addStop: () => Promise<void>
+  addStop: () => Promise<StopWithTranslations | null>
   deleteStop: (stopId: string) => Promise<void>
   reorderStops: (stops: StopWithTranslations[]) => Promise<void>
   updateStopTranslationData: (
@@ -64,7 +64,11 @@ export function GuideEditorProvider({
   children,
   initialGuide,
   initialStopId,
-}: { children: ReactNode; initialGuide: GuideWithStops; initialStopId?: string }) {
+}: {
+  children: ReactNode
+  initialGuide: GuideWithStops
+  initialStopId?: string
+}) {
   const t = useTranslations()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
@@ -190,8 +194,8 @@ export function GuideEditorProvider({
     setSelectedStop(stop)
   }, [])
 
-  // Add stop
-  const addStop = useCallback(async () => {
+  // Add stop - returns the new stop so caller can navigate
+  const addStop = useCallback(async (): Promise<StopWithTranslations | null> => {
     try {
       const newStopWithTranslations = await createStop({
         guideId: guide.id,
@@ -206,16 +210,19 @@ export function GuideEditorProvider({
         ],
       })
 
+      const newStop = newStopWithTranslations as StopWithTranslations
+
       setGuide((prev) => ({
         ...prev,
-        stops: [...prev.stops, newStopWithTranslations as StopWithTranslations],
+        stops: [...prev.stops, newStop],
       }))
 
-      setSelectedStop(newStopWithTranslations as StopWithTranslations)
       toast.success(t('stops.actions.addSuccess'))
+      return newStop
     } catch (error) {
       console.error('Failed to add stop:', error)
       toast.error(t('stops.actions.addError'))
+      return null
     }
   }, [guide.id, guide.stops.length, t])
 

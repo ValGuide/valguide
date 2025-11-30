@@ -40,7 +40,7 @@ export type StopsListProps = {
   onReorder: (updates: Array<{ id: string; order: number }>) => void
   onEdit: (stop: StopWithTranslations) => void
   onDelete: (stopId: string) => void
-  onAdd: () => void
+  onAdd: () => void | Promise<void>
 }
 
 type SortableStopItemProps = {

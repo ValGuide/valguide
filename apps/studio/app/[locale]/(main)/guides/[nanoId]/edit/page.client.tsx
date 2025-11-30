@@ -50,19 +50,17 @@ function GuideEditorContent() {
 
   const guideDetailUrl = `/guides/${guide.nanoId}`
 
-  // Get guide title for breadcrumb
+  // Get guide title for breadcrumb (use first available from any locale)
   const guideTitle =
-    guide.translations.find((t) => t.locale === activeLocale)?.currentVersion?.title ??
-    guide.translations.find((t) => t.locale === activeLocale)?.draftVersion?.title ??
-    guide.translations[0]?.currentVersion?.title ??
-    guide.translations[0]?.draftVersion?.title ??
+    guide.translations.find((t) => t.currentVersion?.title)?.currentVersion?.title ??
+    guide.translations.find((t) => t.draftVersion?.title)?.draftVersion?.title ??
     t('untitledGuide')
 
   // Get selected stop title for breadcrumb
   const selectedStopTitle = selectedStop
     ? (selectedStop.translations.find((t) => t.locale === activeLocale)?.currentVersion?.title ??
-        selectedStop.translations.find((t) => t.locale === activeLocale)?.draftVersion?.title ??
-        tStops('untitled'))
+      selectedStop.translations.find((t) => t.locale === activeLocale)?.draftVersion?.title ??
+      tStops('untitled'))
     : null
 
   // Navigate to stop edit or back to guide edit
@@ -126,7 +124,10 @@ function GuideEditorContent() {
             {t('title')}
           </Link>
           <ChevronRight className="h-4 w-4" />
-          <Link href={guideDetailUrl} className="max-w-[120px] truncate hover:text-foreground hover:underline sm:max-w-[200px]">
+          <Link
+            href={guideDetailUrl}
+            className="max-w-[120px] truncate hover:text-foreground hover:underline sm:max-w-[200px]"
+          >
             {guideTitle}
           </Link>
           <ChevronRight className="h-4 w-4" />
@@ -231,7 +232,12 @@ function GuideEditorContent() {
                     onReorder={handleReorderStops}
                     onEdit={handleSelectStop}
                     onDelete={deleteStop}
-                    onAdd={addStop}
+                    onAdd={async () => {
+                      const newStop = await addStop()
+                      if (newStop) {
+                        router.push(`/guides/${guide.nanoId}/stops/${newStop.id}/edit`)
+                      }
+                    }}
                   />
                 </div>
               </div>
