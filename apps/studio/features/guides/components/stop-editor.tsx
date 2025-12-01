@@ -55,7 +55,7 @@ export function StopEditor({
     setTitle(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
     setDescription(translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '')
     setTranscription(translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '')
-  }, [translation])
+  }, [locale, translation])
 
   useEffect(() => {
     if (isExternalUpdate.current) {
@@ -80,7 +80,7 @@ export function StopEditor({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 rounded-xl border bg-card p-6">
       {/* Title */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">

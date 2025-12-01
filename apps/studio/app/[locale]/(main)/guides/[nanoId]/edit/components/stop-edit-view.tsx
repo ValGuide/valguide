@@ -34,7 +34,7 @@ interface StopEditViewProps {
     organizationId?: string
 }
 
-export function StopEditView({ stop, organizationId: organizationIdProp }: StopEditViewProps) {
+export function StopEditView({ stop: stopProp, organizationId: organizationIdProp }: StopEditViewProps) {
     const router = useRouter()
     const pathname = usePathname()
     const t = useTranslations('guides')
@@ -49,6 +49,8 @@ export function StopEditView({ stop, organizationId: organizationIdProp }: StopE
         setActiveLocale,
         save,
     } = useGuideEditor()
+
+    const stop = guide.stops.find((s) => s.id === stopProp.id) ?? stopProp
 
     const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard()
 
