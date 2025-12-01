@@ -19,6 +19,7 @@ import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { useTranslations } from 'next-intl'
 import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import type { KeyedMutator } from 'swr'
 
 interface GuideEditorContextValue {
   // State
@@ -63,21 +64,16 @@ const GuideEditorContext = createContext<GuideEditorContextValue | null>(null)
 export function GuideEditorProvider({
   children,
   initialGuide,
-  initialStopId,
+  onMutate,
 }: {
   children: ReactNode
   initialGuide: GuideWithStops
-  initialStopId?: string
+  onMutate?: KeyedMutator<GuideWithStops | null>
 }) {
   const t = useTranslations()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
-  const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(() => {
-    if (initialStopId) {
-      return initialGuide.stops.find((s) => s.id === initialStopId) ?? null
-    }
-    return null
-  })
+  const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(null)
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
@@ -87,10 +83,12 @@ export function GuideEditorProvider({
   const initialGuideRef = useRef(initialGuide)
   const modifiedTranslationsRef = useRef<Set<string>>(new Set())
   const modifiedStopsRef = useRef<Set<string>>(new Set())
+  const onMutateRef = useRef(onMutate)
 
   // Keep refs in sync
   guideRef.current = guide
   isDirtyRef.current = isDirty
+  onMutateRef.current = onMutate
 
   // Update guide translation
   const updateGuideTranslationData = useCallback(
@@ -470,6 +468,9 @@ export function GuideEditorProvider({
 
       // Update initial guide for next comparison
       initialGuideRef.current = currentGuide
+
+      // Update SWR cache so navigation shows fresh data
+      onMutateRef.current?.(currentGuide)
 
       setIsDirty(false)
       setLastSaved(new Date())

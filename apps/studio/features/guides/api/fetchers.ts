@@ -1,5 +1,23 @@
-import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideWithStops, GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import type { Guide } from '@valguide/features/guides/types'
+
+export async function fetchGuideByNanoId(url: string): Promise<GuideWithStops | null> {
+  const res = await fetch(url)
+
+  if (res.status === 401) {
+    return null
+  }
+
+  if (res.status === 404) {
+    return null
+  }
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch guide: ${res.statusText}`)
+  }
+
+  return res.json()
+}
 
 export async function fetchGuides(): Promise<Guide[]> {
   const res = await fetch('/api/guides')

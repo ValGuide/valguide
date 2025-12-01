@@ -26,5 +26,5 @@ export default async function GuideEditPage({ params }: { params: Promise<GuideE
   // Convert to flat stops array format for UI components
   const guide = toGuideWithStops(guideData)
 
-  return <GuideEditorClient guide={guide} />
+  return <GuideEditorClient fallbackGuide={guide} />
 }
