@@ -13,6 +13,7 @@ import {
 import type {
   GuideTranslationWithVersion,
   GuideWithStops,
+  StopTranslationWithVersion,
   StopWithTranslations,
 } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
@@ -306,8 +307,63 @@ export function GuideEditorProvider({
                 ),
               }
             }
+
+            // Translation exists but has no versions - create a draft version in local state
+            const now = new Date()
+            return {
+              ...stop,
+              translations: stop.translations.map((t) =>
+                t.locale === locale
+                  ? {
+                      ...t,
+                      draftVersion: {
+                        id: `temp-version-${stopId}-${locale}`,
+                        translationId: t.id,
+                        version: 1,
+                        status: 'draft' as const,
+                        title: data.title,
+                        description: data.description ?? null,
+                        transcription: data.transcription ?? null,
+                        createdBy: null,
+                        createdAt: now,
+                        publishedAt: null,
+                      },
+                    }
+                  : t,
+              ),
+            }
           }
-          return stop
+
+          // No translation exists for this locale - create a placeholder in local state
+          // Server will create the actual translation + version on save
+          const now = new Date()
+          const newTranslation: StopTranslationWithVersion = {
+            id: `temp-${stopId}-${locale}`,
+            stopId: stop.id,
+            locale,
+            currentVersionId: null,
+            draftVersionId: null,
+            currentVersion: null,
+            draftVersion: {
+              id: `temp-version-${stopId}-${locale}`,
+              translationId: `temp-${stopId}-${locale}`,
+              version: 1,
+              status: 'draft',
+              title: data.title,
+              description: data.description ?? null,
+              transcription: data.transcription ?? null,
+              createdBy: null,
+              createdAt: now,
+              publishedAt: null,
+            },
+            createdAt: now,
+            updatedAt: now,
+          }
+
+          return {
+            ...stop,
+            translations: [...stop.translations, newTranslation],
+          }
         }),
       }))
 
