@@ -19,6 +19,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
@@ -66,11 +67,7 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
   const translation = stop.translations.find((t) => t.locale === locale)
   const fallbackTranslation = stop.translations[0]
   const displayTitle =
-    translation?.currentVersion?.title ??
-    translation?.draftVersion?.title ??
-    fallbackTranslation?.currentVersion?.title ??
-    fallbackTranslation?.draftVersion?.title ??
-    'Untitled Stop'
+    getVersionedField(translation, 'title') || getVersionedField(fallbackTranslation, 'title') || 'Untitled Stop'
 
   const hasDraft = !!translation?.draftVersionId
   const publishedStatus = translation?.currentVersion?.status
@@ -188,10 +185,8 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
           const translation = stop.translations.find((t) => t.locale === locale)
           const fallbackTranslation = stop.translations[0]
           const displayTitle =
-            translation?.currentVersion?.title ??
-            translation?.draftVersion?.title ??
-            fallbackTranslation?.currentVersion?.title ??
-            fallbackTranslation?.draftVersion?.title ??
+            getVersionedField(translation, 'title') ||
+            getVersionedField(fallbackTranslation, 'title') ||
             'Untitled Stop'
 
           const hasDraft = !!translation?.draftVersionId

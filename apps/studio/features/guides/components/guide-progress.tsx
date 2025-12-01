@@ -1,6 +1,7 @@
 'use client'
 
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
+import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Badge } from '@valguide/ui/components/badge'
 import { Progress } from '@valguide/ui/components/progress'
@@ -34,11 +35,11 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
   const items: ProgressItem[] = [
     {
       labelKey: 'titleAdded',
-      completed: !!(translation?.currentVersion?.title ?? translation?.draftVersion?.title),
+      completed: !!getVersionedField(translation, 'title'),
     },
     {
       labelKey: 'descriptionAdded',
-      completed: !!(translation?.currentVersion?.description ?? translation?.draftVersion?.description),
+      completed: !!getVersionedField(translation, 'description'),
     },
     {
       labelKey: 'coverImageAdded',
@@ -54,7 +55,7 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
         guide.stops.length > 0 &&
         guide.stops.every((stop) => {
           const stopTranslation = stop.translations.find((t) => t.locale === locale)
-          return !!(stopTranslation?.currentVersion?.title ?? stopTranslation?.draftVersion?.title)
+          return !!getVersionedField(stopTranslation, 'title')
         }),
     },
   ]

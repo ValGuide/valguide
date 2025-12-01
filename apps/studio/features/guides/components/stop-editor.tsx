@@ -4,6 +4,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
@@ -37,13 +38,9 @@ export function StopEditor({
   const t = useTranslations('stops.editor')
 
   const translation = stop?.translations.find((t) => t.locale === locale)
-  const [title, setTitle] = useState(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
-  const [description, setDescription] = useState(
-    translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '',
-  )
-  const [transcription, setTranscription] = useState(
-    translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '',
-  )
+  const [title, setTitle] = useState(getVersionedField(translation, 'title'))
+  const [description, setDescription] = useState(getVersionedField(translation, 'description'))
+  const [transcription, setTranscription] = useState(getVersionedField(translation, 'transcription'))
 
   const hasDraft = !!translation?.draftVersionId
   const publishedStatus = translation?.currentVersion?.status
@@ -52,9 +49,9 @@ export function StopEditor({
 
   useEffect(() => {
     isExternalUpdate.current = true
-    setTitle(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
-    setDescription(translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '')
-    setTranscription(translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '')
+    setTitle(getVersionedField(translation, 'title'))
+    setDescription(getVersionedField(translation, 'description'))
+    setTranscription(getVersionedField(translation, 'transcription'))
   }, [locale, translation])
 
   useEffect(() => {
@@ -134,7 +131,6 @@ export function StopEditor({
         label={t('galleryLabel')}
         organizationId={organizationId}
       />
-
     </div>
   )
 }

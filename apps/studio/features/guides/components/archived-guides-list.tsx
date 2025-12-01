@@ -2,6 +2,7 @@
 
 import { deleteGuide, recoverGuide } from '@valguide/core/features/guides/actions'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useRouter } from '@valguide/i18n/routing'
 import {
   AlertDialog,
@@ -106,10 +107,8 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
       <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
         {guides.map((guide) => {
           const translation = guide.translations?.find((t) => t.locale === locale) || guide.translations?.[0]
-          const displayTitle =
-            translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? t('untitledGuide')
-          const displayDescription =
-            translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? ''
+          const displayTitle = getVersionedField(translation, 'title') || t('untitledGuide')
+          const displayDescription = getVersionedField(translation, 'description')
           const displayImage = guide.coverImage
 
           return (

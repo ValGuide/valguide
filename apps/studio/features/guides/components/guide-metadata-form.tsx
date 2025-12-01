@@ -3,6 +3,7 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
+import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
@@ -29,14 +30,12 @@ export function GuideMetadataForm({
   onCoverImageChange,
 }: GuideMetadataFormProps) {
   const t = useTranslations('guides')
-  const [title, setTitle] = useState(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
-  const [description, setDescription] = useState(
-    translation?.draftVersion?.description ?? translation?.currentVersion?.description ?? '',
-  )
+  const [title, setTitle] = useState(getVersionedField(translation, 'title', true))
+  const [description, setDescription] = useState(getVersionedField(translation, 'description', true))
 
   useEffect(() => {
-    setTitle(translation?.draftVersion?.title ?? translation?.currentVersion?.title ?? '')
-    setDescription(translation?.draftVersion?.description ?? translation?.currentVersion?.description ?? '')
+    setTitle(getVersionedField(translation, 'title', true))
+    setDescription(getVersionedField(translation, 'description', true))
   }, [translation])
 
   const handleTitleChange = (value: string) => {
