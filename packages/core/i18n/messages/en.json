@@ -353,6 +353,12 @@
       "rollingBack": "Restoring..."
     },
     "untitledGuide": "Untitled Guide",
+    "unsavedChanges": {
+      "title": "Unsaved changes",
+      "description": "You have unsaved changes. If you leave now, your changes will be lost.",
+      "stay": "Stay and continue editing",
+      "leave": "Leave without saving"
+    },
     "error": {
       "failedToLoad": "Failed to load guides",
       "unexpected": "An unexpected error occurred"

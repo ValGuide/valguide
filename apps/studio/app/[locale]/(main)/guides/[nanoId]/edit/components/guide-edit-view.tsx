@@ -3,7 +3,7 @@
 import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { Link, usePathname, useRouter } from '@valguide/i18n/routing'
+import { usePathname, useRouter } from '@valguide/i18n/routing'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,6 +22,7 @@ import { LocaleTabs } from '@/features/guides/components/locale-tabs'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
+import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
 interface GuideEditViewProps {
   organizationId?: string
@@ -46,6 +47,8 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     save,
   } = useGuideEditor()
 
+  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard()
+
   const guideDetailUrl = `/guides/${guide.nanoId}`
 
   const guideTitle =
@@ -65,6 +68,14 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     }
   }
 
+  const handleNavigateToGuides = () => {
+    confirmIfDirty(() => router.push('/'))
+  }
+
+  const handleNavigateToGuideDetail = () => {
+    confirmIfDirty(() => router.push(guideDetailUrl))
+  }
+
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
     const reordered = [...guide.stops]
     updates.forEach(({ id, order }) => {
@@ -75,29 +86,35 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
-      {/* Header */}
-      <div className="border-b bg-background px-3 py-3 sm:px-6">
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-          <Breadcrumb className="hidden min-w-0 flex-1 overflow-x-auto lg:flex">
-            <BreadcrumbList className="flex-nowrap">
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/">{t('title')}</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild className="block max-w-[180px] truncate">
-                  <Link href={guideDetailUrl}>{guideTitle}</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{t('editor.edit')}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+    <>
+      {unsavedChangesDialog}
+      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
+        {/* Header */}
+        <div className="border-b bg-background px-3 py-3 sm:px-6">
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+            <Breadcrumb className="hidden min-w-0 flex-1 overflow-x-auto lg:flex">
+              <BreadcrumbList className="flex-nowrap">
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <button type="button" onClick={handleNavigateToGuides}>
+                      {t('title')}
+                    </button>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild className="block max-w-[180px] truncate">
+                    <button type="button" onClick={handleNavigateToGuideDetail}>
+                      {guideTitle}
+                    </button>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{t('editor.edit')}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
             <VersionHistoryDialog
               guideId={guide.id}
@@ -189,6 +206,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
           <GuideProgress guide={guide} locale={activeLocale} />
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

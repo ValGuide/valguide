@@ -353,6 +353,12 @@
       "rollingBack": "Vegn restaurà..."
     },
     "untitledGuide": "Guid senza num",
+    "unsavedChanges": {
+      "title": "Midadas betg memorisadas",
+      "description": "Ti has midadas betg memorisadas. Sche ti vas ussa, van tias midadas a perder.",
+      "stay": "Restar e cuntinuar da modifitgar",
+      "leave": "Bandunar senza memorisar"
+    },
     "error": {
       "failedToLoad": "Impussibel da chargiar ils guids",
       "unexpected": "Ina errur nunspetgada è succedida"

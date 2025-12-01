@@ -353,6 +353,12 @@
       "rollingBack": "Wird wiederhergestellt..."
     },
     "untitledGuide": "Unbenannter Guide",
+    "unsavedChanges": {
+      "title": "Nicht gespeicherte Änderungen",
+      "description": "Sie haben nicht gespeicherte Änderungen. Wenn Sie jetzt gehen, gehen Ihre Änderungen verloren.",
+      "stay": "Bleiben und weiter bearbeiten",
+      "leave": "Verlassen ohne zu speichern"
+    },
     "error": {
       "failedToLoad": "Guides konnten nicht geladen werden",
       "unexpected": "Ein unerwarteter Fehler ist aufgetreten"

@@ -48,17 +48,18 @@ export function StopEditor({
   const hasDraft = !!translation?.draftVersionId
   const publishedStatus = translation?.currentVersion?.status
 
-  const isInitialMount = useRef(true)
+  const isExternalUpdate = useRef(false)
 
   useEffect(() => {
+    isExternalUpdate.current = true
     setTitle(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
     setDescription(translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '')
     setTranscription(translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '')
   }, [translation])
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false
+    if (isExternalUpdate.current) {
+      isExternalUpdate.current = false
       return
     }
     onChange?.({ title, description, transcription })
