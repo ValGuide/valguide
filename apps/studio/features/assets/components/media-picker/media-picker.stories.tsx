@@ -2,6 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { useState } from 'react'
+import { MockAssetsProvider } from '../../context/mock-assets-provider'
 import { MediaPicker, type MediaPickerProps } from './media-picker'
 
 const meta = {
@@ -26,9 +27,11 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[400px]">
-        <Story />
-      </div>
+      <MockAssetsProvider>
+        <div className="w-[400px]">
+          <Story />
+        </div>
+      </MockAssetsProvider>
     ),
   ],
 } satisfies Meta<typeof MediaPicker>

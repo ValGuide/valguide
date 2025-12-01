@@ -14,6 +14,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Image as ImageIcon, Music, Search, Video } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
+import { useAssetsContextOptional } from '../context/assets-context'
 import { useAssets } from '../hooks/use-assets'
 import { AssetUploadInline } from './asset-upload-inline'
 
@@ -51,15 +52,17 @@ export function AssetPickerModal({
   const [searchQuery, setSearchQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set(selectedAssetIds))
 
-  const shouldFetchAssets = !assetsProp
+  const contextValue = useAssetsContextOptional()
+  const shouldFetchAssets = !assetsProp && !contextValue
   const {
     assets: assetsFromHook,
     isLoading: isLoadingFromHook,
-    refetch,
+    refetch: refetchFromHook,
   } = useAssets({ type, locale, organizationId, enabled: shouldFetchAssets })
 
-  const assets = assetsProp ?? assetsFromHook
-  const isLoading = isLoadingProp ?? isLoadingFromHook
+  const assets = assetsProp ?? contextValue?.assets ?? assetsFromHook
+  const isLoading = isLoadingProp ?? contextValue?.isLoading ?? isLoadingFromHook
+  const refetch = contextValue?.refetch ?? refetchFromHook
 
   const filteredAssets = useMemo(() => {
     return assets.filter((asset) => {

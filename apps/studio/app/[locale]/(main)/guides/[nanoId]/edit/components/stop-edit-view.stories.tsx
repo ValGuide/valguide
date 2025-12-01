@@ -1,6 +1,7 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
+import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { StopEditView } from './stop-edit-view'
 
@@ -114,12 +115,14 @@ const meta = {
   },
   decorators: [
     (Story, { args }) => (
-      <GuideEditorProvider initialGuide={args.guide ?? mockGuide}>
-        <Story />
-      </GuideEditorProvider>
+      <MockAssetsProvider>
+        <GuideEditorProvider initialGuide={args.guide ?? mockGuide}>
+          <Story />
+        </GuideEditorProvider>
+      </MockAssetsProvider>
     ),
   ],
-} satisfies Meta<typeof StopEditView & { guide: GuideWithStops }>
+} satisfies Meta<typeof StopEditView & { guide: GuideWithStops; organizationId: string }>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -128,6 +131,7 @@ export const Default: Story = {
   args: {
     stop: mockStop,
     guide: mockGuide,
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -158,6 +162,7 @@ export const WithDraft: Story = {
       ],
     },
     guide: mockGuide,
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -198,6 +203,7 @@ export const NewStop: Story = {
       ],
     },
     guide: mockGuide,
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -231,6 +237,7 @@ Now, please turn to your left. Here you'll find our collection of Flemish Master
       ],
     },
     guide: mockGuide,
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -241,5 +248,6 @@ export const PublishedGuide: Story = {
       ...mockGuide,
       published: new Date('2025-01-10T10:00:00Z'),
     },
+    organizationId: 'org-mock-123',
   },
 }

@@ -2,6 +2,7 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
+import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { GuideEditView } from './guide-edit-view'
 
@@ -204,12 +205,14 @@ const meta = {
   },
   decorators: [
     (Story, { args }) => (
-      <GuideEditorProvider initialGuide={args.guide ?? baseGuide}>
-        <Story />
-      </GuideEditorProvider>
+      <MockAssetsProvider>
+        <GuideEditorProvider initialGuide={args.guide ?? baseGuide}>
+          <Story />
+        </GuideEditorProvider>
+      </MockAssetsProvider>
     ),
   ],
-} satisfies Meta<typeof GuideEditView & { guide: GuideWithStops }>
+} satisfies Meta<typeof GuideEditView & { guide: GuideWithStops; organizationId: string }>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -217,6 +220,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     guide: baseGuide,
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -226,6 +230,7 @@ export const WithCoverImage: Story = {
       ...baseGuide,
       coverImage: faker.image.url({ width: 2070, height: 1380 }),
     },
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -253,6 +258,7 @@ export const WithDraft: Story = {
         baseGuide.translations[1],
       ],
     },
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -263,6 +269,7 @@ export const Published: Story = {
       published: new Date('2025-01-10T10:00:00Z'),
       coverImage: faker.image.url({ width: 2070, height: 1380 }),
     },
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -285,6 +292,7 @@ export const EmptyGuide: Story = {
       ],
       stops: [],
     },
+    organizationId: 'org-mock-123',
   },
 }
 
@@ -327,5 +335,6 @@ export const ManyStops: Story = {
         ],
       })),
     },
+    organizationId: 'org-mock-123',
   },
 }
