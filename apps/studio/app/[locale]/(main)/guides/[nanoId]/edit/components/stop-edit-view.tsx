@@ -75,7 +75,7 @@ export function StopEditView({ stop }: StopEditViewProps) {
           <ChevronRight className="h-4 w-4" />
           <span className="max-w-[150px] truncate font-medium text-foreground">{stopTitle}</span>
         </nav>
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
           <VersionHistoryDialogStop
             stopId={stop.id}
             locale={activeLocale}

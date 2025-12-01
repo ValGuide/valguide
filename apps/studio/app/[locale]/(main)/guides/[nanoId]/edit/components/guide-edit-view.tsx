@@ -79,7 +79,7 @@ export function GuideEditView() {
           <ChevronRight className="h-4 w-4" />
           <span className="font-medium text-foreground">{t('editor.edit')}</span>
         </nav>
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
           <VersionHistoryDialog
             guideId={guide.id}
             locale={activeLocale}
