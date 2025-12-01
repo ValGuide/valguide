@@ -16,15 +16,13 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
-    onSave: fn(),
-    onCancel: fn(),
+    onChange: fn(),
     onImageChange: fn(),
     onAudioChange: fn(),
     organizationId: 'org-123',
   },
   argTypes: {
-    onSave: { action: 'save' },
-    onCancel: { action: 'cancel' },
+    onChange: { action: 'change' },
     onImageChange: { action: 'image-change' },
     onAudioChange: { action: 'audio-change' },
   },

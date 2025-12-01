@@ -22,6 +22,7 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { useCallback } from 'react'
 import { LocaleTabs } from '@/features/guides/components/locale-tabs'
 import { StopEditor } from '@/features/guides/components/stop-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
@@ -69,6 +70,13 @@ export function StopEditView({ stop, organizationId: organizationIdProp }: StopE
   const handleBackToGuide = () => {
     router.replace(pathname)
   }
+
+  const handleStopChange = useCallback(
+    (data: { title: string; description: string; transcription: string }) => {
+      updateStopTranslationData(stop.id, activeLocale, data)
+    },
+    [stop.id, activeLocale, updateStopTranslationData],
+  )
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
@@ -161,10 +169,7 @@ export function StopEditView({ stop, organizationId: organizationIdProp }: StopE
                 stop={stop}
                 locale={activeLocale}
                 organizationId={organizationId}
-                onSave={(data) => {
-                  updateStopTranslationData(stop.id, activeLocale, data)
-                }}
-                onCancel={handleBackToGuide}
+                onChange={handleStopChange}
                 onImageChange={async (assets) => {
                   for (const asset of assets) {
                     await attachAssetToStop(stop.id, asset.id, 'image', activeLocale)

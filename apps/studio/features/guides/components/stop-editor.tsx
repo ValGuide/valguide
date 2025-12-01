@@ -10,15 +10,14 @@ import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { Mic } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 
 export type StopEditorProps = {
   stop?: StopWithTranslations
   locale: SupportedLocale
   organizationId: string
-  onSave: (data: { title: string; description: string; transcription: string }) => void
-  onCancel: () => void
+  onChange?: (data: { title: string; description: string; transcription: string }) => void
   onImageChange?: (assets: Asset[]) => void
   onAudioChange?: (asset: Asset | null) => void
   images?: Asset[]
@@ -29,15 +28,13 @@ export function StopEditor({
   stop,
   locale,
   organizationId,
-  onSave,
-  onCancel,
+  onChange,
   onImageChange,
   onAudioChange,
   images = [],
   audio = null,
 }: StopEditorProps) {
   const t = useTranslations('stops.editor')
-  const tActions = useTranslations('stops.actions')
 
   const translation = stop?.translations.find((t) => t.locale === locale)
   const [title, setTitle] = useState(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
@@ -51,15 +48,21 @@ export function StopEditor({
   const hasDraft = !!translation?.draftVersionId
   const publishedStatus = translation?.currentVersion?.status
 
+  const isInitialMount = useRef(true)
+
   useEffect(() => {
     setTitle(translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? '')
     setDescription(translation?.currentVersion?.description ?? translation?.draftVersion?.description ?? '')
     setTranscription(translation?.currentVersion?.transcription ?? translation?.draftVersion?.transcription ?? '')
   }, [translation])
 
-  const handleSave = () => {
-    onSave({ title, description, transcription })
-  }
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+    onChange?.({ title, description, transcription })
+  }, [title, description, transcription, onChange])
 
   const handleImagesChange = (value: Asset | Asset[] | null) => {
     if (Array.isArray(value)) {
@@ -131,13 +134,6 @@ export function StopEditor({
         organizationId={organizationId}
       />
 
-      {/* Actions */}
-      <div className="flex justify-end gap-3 border-t pt-6">
-        <Button variant="outline" onClick={onCancel}>
-          {tActions('cancel')}
-        </Button>
-        <Button onClick={handleSave}>{tActions('save')}</Button>
-      </div>
     </div>
   )
 }
