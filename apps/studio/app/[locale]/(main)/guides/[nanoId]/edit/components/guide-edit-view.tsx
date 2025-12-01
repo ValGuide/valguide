@@ -4,9 +4,17 @@ import { PublishTranslationButton } from '@valguide/core/features/guides/compone
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { Link, usePathname, useRouter } from '@valguide/i18n/routing'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@valguide/ui/components/breadcrumb'
 import { Button } from '@valguide/ui/components/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { ChevronRight, ListChecks } from 'lucide-react'
+import { ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { GuideMetadataForm } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
@@ -14,6 +22,7 @@ import { LocaleTabs } from '@/features/guides/components/locale-tabs'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
+
 interface GuideEditViewProps {
   organizationId?: string
 }
@@ -68,56 +77,66 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between border-b bg-background px-3 py-3 sm:px-6">
-        <nav className="hidden min-w-0 shrink items-center gap-1 text-sm text-muted-foreground lg:flex">
-          <Link href="/guides" className="hover:text-foreground hover:underline">
-            {t('title')}
-          </Link>
-          <ChevronRight className="h-4 w-4" />
-          <Link href={guideDetailUrl} className="max-w-[200px] truncate hover:text-foreground hover:underline">
-            {guideTitle}
-          </Link>
-          <ChevronRight className="h-4 w-4" />
-          <span className="font-medium text-foreground">{t('editor.edit')}</span>
-        </nav>
-        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
-          <VersionHistoryDialog
-            guideId={guide.id}
-            locale={activeLocale}
-            onRollback={() => {
-              router.refresh()
-            }}
-          />
-          <PublishTranslationButton
-            guideId={guide.id}
-            locale={activeLocale}
-            hasDraft={!!currentTranslation?.draftVersionId}
-            onPublished={() => {
-              router.refresh()
-            }}
-          />
-          <Button variant="ghost" size="sm" className="hidden sm:flex">
-            {t('editor.preview')}
-          </Button>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1 lg:hidden">
-                <ListChecks className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('editor.progress')}</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
-              <SheetHeader>
-                <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6">
-                <GuideProgress guide={guide} locale={activeLocale} />
-              </div>
-            </SheetContent>
-          </Sheet>
-          <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
-            {isSaving ? t('editor.saving') : t('editor.save')}
-          </Button>
+      <div className="border-b bg-background px-3 py-3 sm:px-6">
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <Breadcrumb className="hidden min-w-0 flex-1 overflow-x-auto lg:flex">
+            <BreadcrumbList className="flex-nowrap">
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/">{t('title')}</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild className="block max-w-[180px] truncate">
+                  <Link href={guideDetailUrl}>{guideTitle}</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{t('editor.edit')}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
+            <VersionHistoryDialog
+              guideId={guide.id}
+              locale={activeLocale}
+              onRollback={() => {
+                router.refresh()
+              }}
+            />
+            <PublishTranslationButton
+              guideId={guide.id}
+              locale={activeLocale}
+              hasDraft={!!currentTranslation?.draftVersionId}
+              onPublished={() => {
+                router.refresh()
+              }}
+            />
+            <Button variant="ghost" size="sm" className="hidden sm:flex">
+              {t('editor.preview')}
+            </Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-1 lg:hidden">
+                  <ListChecks className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('editor.progress')}</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
+                <SheetHeader>
+                  <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6">
+                  <GuideProgress guide={guide} locale={activeLocale} />
+                </div>
+              </SheetContent>
+            </Sheet>
+            <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
+              {isSaving ? t('editor.saving') : t('editor.save')}
+            </Button>
+          </div>
         </div>
       </div>
 
