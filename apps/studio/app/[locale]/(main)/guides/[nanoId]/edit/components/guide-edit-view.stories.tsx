@@ -1,4 +1,5 @@
 // @ts-nocheck - Storybook types only available in storybook package
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
@@ -223,7 +224,7 @@ export const WithCoverImage: Story = {
   args: {
     guide: {
       ...baseGuide,
-      coverImage: 'asset-cover-123',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
     },
   },
 }
@@ -260,7 +261,7 @@ export const Published: Story = {
     guide: {
       ...baseGuide,
       published: new Date('2025-01-10T10:00:00Z'),
-      coverImage: 'asset-cover-123',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
     },
   },
 }

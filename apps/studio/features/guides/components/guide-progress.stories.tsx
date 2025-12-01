@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
 import { GuideProgress } from './guide-progress'
@@ -109,7 +110,7 @@ export const WithCoverImage: Story = {
   args: {
     guide: {
       ...baseGuide,
-      coverImage: 'asset-1',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
       translations: [
         {
           id: 'trans-1',
@@ -142,7 +143,7 @@ export const WithStopsButNoTitles: Story = {
   args: {
     guide: {
       ...baseGuide,
-      coverImage: 'asset-1',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
       translations: [
         {
           id: 'trans-1',
@@ -187,7 +188,7 @@ export const Complete: Story = {
   args: {
     guide: {
       ...baseGuide,
-      coverImage: 'asset-1',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
       translations: [
         {
           id: 'trans-1',
@@ -288,7 +289,7 @@ export const WithUnpublishedGuideDraft: Story = {
   args: {
     guide: {
       ...baseGuide,
-      coverImage: 'asset-1',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
       translations: [
         {
           id: 'trans-1',
@@ -366,7 +367,7 @@ export const WithUnpublishedStopDrafts: Story = {
   args: {
     guide: {
       ...baseGuide,
-      coverImage: 'asset-1',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
       translations: [
         {
           id: 'trans-1',
@@ -489,7 +490,7 @@ export const AllPublished: Story = {
   args: {
     guide: {
       ...baseGuide,
-      coverImage: 'asset-1',
+      coverImage: faker.image.url({ width: 2070, height: 1380 }),
       translations: [
         {
           id: 'trans-1',
