@@ -151,7 +151,7 @@ export function AppSidebar({
           activeTeamSlug={currentTeam?.slug}
           onTeamSwitch={onTeamSwitch}
           onCreateTeam={() => setCreateTeamOpen(true)}
-          onTeamSettings={() => router.push('/settings')}
+          onTeamSettings={() => router.push('/team')}
         />
       </SidebarHeader>
       <SidebarContent>
