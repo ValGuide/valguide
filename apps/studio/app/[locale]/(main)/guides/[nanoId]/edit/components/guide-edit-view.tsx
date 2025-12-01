@@ -14,9 +14,11 @@ import { LocaleTabs } from '@/features/guides/components/locale-tabs'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
-import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
+interface GuideEditViewProps {
+  organizationId?: string
+}
 
-export function GuideEditView() {
+export function GuideEditView({ organizationId: organizationIdProp }: GuideEditViewProps) {
   const router = useRouter()
   const pathname = usePathname()
   const t = useTranslations('guides')
@@ -42,8 +44,7 @@ export function GuideEditView() {
     guide.translations.find((t) => t.draftVersion?.title)?.draftVersion?.title ??
     t('untitledGuide')
 
-  const { data: sidebarData } = useSidebarData()
-  const organizationId = sidebarData?.currentTeam?.id ?? ''
+  const organizationId = organizationIdProp ?? ''
 
   useAutoSave(save, isDirty)
 

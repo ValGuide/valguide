@@ -210,10 +210,14 @@ export function GuideEditorProvider({
 
       const newStop = newStopWithTranslations as StopWithTranslations
 
-      setGuide((prev) => ({
-        ...prev,
-        stops: [...prev.stops, newStop],
-      }))
+      const updatedGuide = {
+        ...guide,
+        stops: [...guide.stops, newStop],
+      }
+      setGuide(updatedGuide)
+
+      // Sync SWR cache so page.client.tsx sees the new stop
+      onMutateRef.current?.(updatedGuide)
 
       toast.success(t('stops.actions.addSuccess'))
       return newStop

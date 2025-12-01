@@ -64,15 +64,6 @@ const config: StorybookConfig = {
           // Next.js mocks
           'next/image': path.resolve(__dirname, './__mocks__/NextImageMock.tsx'),
           'next/navigation': path.resolve(__dirname, './__mocks__/NextNavigationMock.tsx'),
-          // Studio hooks mocks (must come before @/ alias)
-          [path.join(studioPath, 'features/sidebar/hooks/use-sidebar-data')]: path.resolve(
-            __dirname,
-            './__mocks__/sidebar-hooks.ts',
-          ),
-          [path.join(studioPath, 'features/assets/hooks/use-assets')]: path.resolve(
-            __dirname,
-            './__mocks__/assets-hooks.ts',
-          ),
           // Studio path alias
           '@': studioPath,
           // Mock server-side modules for browser compatibility
