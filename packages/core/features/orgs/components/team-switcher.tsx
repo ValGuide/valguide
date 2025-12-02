@@ -131,7 +131,7 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
               <DropdownMenuItem
                 key={team.id}
                 onClick={() => handleTeamSwitch(team.slug)}
-                className="gap-2 p-2"
+                className="cursor-pointer gap-2 p-2"
                 disabled={team.slug === activeTeam.slug}
               >
                 <Avatar className="size-6 rounded-md">
@@ -146,7 +146,7 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
             ))}
             <DropdownMenuSeparator />
             {onCreateTeam && (
-              <DropdownMenuItem onClick={handleCreateTeam} className="gap-2 p-2">
+              <DropdownMenuItem onClick={handleCreateTeam} className="cursor-pointer gap-2 p-2">
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Plus className="size-4" />
                 </div>
@@ -154,7 +154,7 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
               </DropdownMenuItem>
             )}
             {onTeamSettings && (
-              <DropdownMenuItem onClick={handleTeamSettings} className="gap-2 p-2">
+              <DropdownMenuItem onClick={handleTeamSettings} className="cursor-pointer gap-2 p-2">
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Settings className="size-4" />
                 </div>
