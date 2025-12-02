@@ -1,8 +1,36 @@
-import { and, asc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import type { SupportedLocale } from '../../i18n/i18n.config'
 import { db } from '../db'
 import { guide, guideStop, stop, stopTranslation } from './schema'
+
+export async function getStopsByOrganizationId(organizationId: string) {
+  return await db.query.stop.findMany({
+    where: eq(stop.organizationId, organizationId),
+    orderBy: [desc(stop.createdAt)],
+    with: {
+      translations: {
+        with: {
+          currentVersion: true,
+          draftVersion: true,
+        },
+      },
+      guideStops: {
+        with: {
+          guide: {
+            with: {
+              translations: {
+                with: {
+                  currentVersion: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+}
 
 export async function getStopById(stopId: string) {
   return await db.query.stop.findFirst({

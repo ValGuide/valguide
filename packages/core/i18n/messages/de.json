@@ -389,6 +389,14 @@
       "title": "Noch keine Stops",
       "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben."
     },
+    "list": {
+      "description": "Verwalten Sie alle Stops in Ihren Guides",
+      "error": "Stops konnten nicht geladen werden",
+      "emptyDescription": "Stops sind Inhaltspunkte, die in mehreren Guides wiederverwendet werden können.",
+      "emptyHint": "Erstellen Sie Stops innerhalb eines Guide-Editors, um zu beginnen.",
+      "usedIn": "Verwendet in {count, plural, =1 {# Guide} other {# Guides}}",
+      "moreGuides": "+{count}"
+    },
     "editor": {
       "title": "Stop-Details",
       "titleLabel": "Titel",

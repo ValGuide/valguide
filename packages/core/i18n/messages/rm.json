@@ -389,6 +389,14 @@
       "title": "Anc nagins stops",
       "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas."
     },
+    "list": {
+      "description": "Administrescha tut ils stops en voss guids",
+      "error": "Betg pussaivel da chargiar ils stops",
+      "emptyDescription": "Stops èn puncts dal cuntegn che pon vegnir duvrads en plirs guids.",
+      "emptyHint": "Creai stops en in editur da guids per cumenzar.",
+      "usedIn": "Duvrà en {count, plural, =1 {# guid} other {# guids}}",
+      "moreGuides": "+{count}"
+    },
     "editor": {
       "title": "Detagls dal stop",
       "titleLabel": "Titel",

@@ -389,6 +389,14 @@
       "title": "No stops yet",
       "description": "Add stops to create the journey through your guide. Each stop can have its own content in multiple languages."
     },
+    "list": {
+      "description": "Manage all stops across your guides",
+      "error": "Failed to load stops",
+      "emptyDescription": "Stops are content points that can be reused across multiple guides.",
+      "emptyHint": "Create stops from within a guide editor to get started.",
+      "usedIn": "Used in {count, plural, =1 {# guide} other {# guides}}",
+      "moreGuides": "+{count}"
+    },
     "editor": {
       "title": "Stop Details",
       "titleLabel": "Title",
