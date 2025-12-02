@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@valguide/ui/components/sidebar'
-import { BarChart3, BookOpen, Image, LayoutGrid, Settings2, SlidersHorizontal, User } from 'lucide-react'
+import { BarChart3, BookOpen, Image, LayoutGrid, MapPin, Settings2, SlidersHorizontal, User } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
@@ -83,14 +83,14 @@ export function AppSidebar({
 
   const contentItems = [
     {
-      title: t('profile'),
+      title: t('guides'),
       url: '/',
-      icon: User,
+      icon: BookOpen,
     },
     {
-      title: t('tours'),
-      url: '/tours',
-      icon: BookOpen,
+      title: t('stops'),
+      url: '/stops',
+      icon: MapPin,
     },
     {
       title: t('collections'),
