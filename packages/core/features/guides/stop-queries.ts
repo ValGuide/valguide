@@ -45,7 +45,12 @@ export async function getStopByNanoId(nanoId: string) {
   return await db.query.stop.findFirst({
     where: eq(stop.nanoId, nanoId),
     with: {
-      translations: true,
+      translations: {
+        with: {
+          currentVersion: true,
+          draftVersion: true,
+        },
+      },
     },
   })
 }

@@ -1,15 +1,30 @@
-// biome-ignore lint/style/noRestrictedImports: redirect is only available from next/navigation
-import { redirect } from 'next/navigation'
+import { db } from '@valguide/core/features/db'
+import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
+import { toGuideWithStops } from '@valguide/core/features/guides/schema'
+// biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
+import { notFound } from 'next/navigation'
+import { setRequestLocale } from 'next-intl/server'
+import { GuideEditorClient } from '../../../edit/page.client'
 
-interface StopEditPageParams {
+interface GuideStopEditPageParams {
   locale: string
   nanoId: string
   stopId: string
 }
 
-export default async function StopEditPage({ params }: { params: Promise<StopEditPageParams> }) {
-  const { locale, nanoId, stopId } = await params
+export const dynamic = 'force-dynamic'
 
-  // Redirect to the unified edit page with stop query param
-  redirect(`/${locale}/guides/${nanoId}/edit?stop=${stopId}`)
+export default async function GuideStopEditPage({ params }: { params: Promise<GuideStopEditPageParams> }) {
+  const { locale, nanoId, stopId } = await params
+  setRequestLocale(locale)
+
+  const guideData = await getGuideByNanoId(db, nanoId)
+
+  if (!guideData) {
+    notFound()
+  }
+
+  const guide = toGuideWithStops(guideData)
+
+  return <GuideEditorClient fallbackGuide={guide} initialSelectedStopId={stopId} />
 }

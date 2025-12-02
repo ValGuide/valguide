@@ -9,11 +9,11 @@ export function StopsListContainer() {
   const router = useRouter()
   const { stops, isLoading, error, refetch } = useStops()
 
-  const handleViewStop = (stop: StopWithGuides) => {
+  const handleEditStop = (stop: StopWithGuides) => {
     if (stop.nanoId) {
-      router.push(`/stops/${stop.nanoId}`)
+      router.push(`/stops/${stop.nanoId}/edit`)
     }
   }
 
-  return <StopsList stops={stops} isLoading={isLoading} error={error} onViewStop={handleViewStop} onRetry={refetch} />
+  return <StopsList stops={stops} isLoading={isLoading} error={error} onEditStop={handleEditStop} onRetry={refetch} />
 }

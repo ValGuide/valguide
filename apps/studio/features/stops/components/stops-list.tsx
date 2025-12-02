@@ -19,7 +19,7 @@ interface StopsListProps {
   stops?: StopWithGuides[]
   isLoading?: boolean
   error?: Error | null
-  onViewStop?: (stop: StopWithGuides) => void
+  onEditStop?: (stop: StopWithGuides) => void
   onRetry?: () => void
 }
 
@@ -50,7 +50,7 @@ function getGuideNames(stop: StopWithGuides, locale: string): string[] {
   })
 }
 
-export function StopsList({ stops = [], isLoading = false, error = null, onViewStop, onRetry }: StopsListProps) {
+export function StopsList({ stops = [], isLoading = false, error = null, onEditStop, onRetry }: StopsListProps) {
   const t = useTranslations('stops')
   const tCommon = useTranslations('common')
   const locale = useLocale()
@@ -138,7 +138,7 @@ export function StopsList({ stops = [], isLoading = false, error = null, onViewS
             <Card
               key={stop.id}
               className="cursor-pointer transition-shadow hover:shadow-md"
-              onClick={() => onViewStop?.(stop)}
+              onClick={() => onEditStop?.(stop)}
             >
               <CardHeader>
                 <CardTitle className="line-clamp-2">{title}</CardTitle>

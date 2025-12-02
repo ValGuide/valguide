@@ -3,7 +3,7 @@
 import { PublishStopTranslationButton } from '@valguide/core/features/guides/components/publish-stop-translation-button'
 import { VersionHistoryDialogStop } from '@valguide/core/features/guides/components/version-history-dialog-stop'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { Link, usePathname, useRouter } from '@valguide/i18n/routing'
+import { Link, useRouter } from '@valguide/i18n/routing'
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -36,7 +36,6 @@ interface StopEditViewProps {
 
 export function StopEditView({ stop: stopProp, organizationId: organizationIdProp }: StopEditViewProps) {
   const router = useRouter()
-  const pathname = usePathname()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
   const {
@@ -52,7 +51,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
 
   const stop = guide.stops.find((s) => s.id === stopProp.id) ?? stopProp
 
-  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard()
+  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   const guideDetailUrl = `/guides/${guide.nanoId}`
 
@@ -73,7 +72,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   const currentStopTranslation = stop.translations.find((t) => t.locale === activeLocale)
 
   const handleBackToGuide = () => {
-    confirmIfDirty(() => router.replace(pathname))
+    confirmIfDirty(() => router.push(`/guides/${guide.nanoId}/edit`))
   }
 
   const handleStopChange = useCallback(

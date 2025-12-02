@@ -64,6 +64,8 @@
   },
   "common": {
     "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>.",
+    "save": "Memorisar",
+    "saving": "Memorisar...",
     "saved": "Memorisà",
     "saveError": "Errur cun memorisar",
     "loading": "...",
@@ -383,6 +385,7 @@
     "add": "Agiuntar stop",
     "edit": "Modifitgar",
     "untitled": "Stop senza titel",
+    "backToStops": "Enavos tar ils stops",
     "stopNumber": "Staziun {number}",
     "stopTitle": "{number}: {title}",
     "empty": {
@@ -655,6 +658,7 @@
       "teams": "Teams",
       "createTeam": "Crear team",
       "teamSettings": "Parameters dal team",
+      "current": "Actual",
       "success": "Team midà",
       "error": "Errur cun midar il team"
     },

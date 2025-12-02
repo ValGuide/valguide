@@ -1,8 +1,6 @@
 'use client'
 
 import type { GuideWithStops } from '@valguide/core/features/guides/schema'
-// biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
-import { useSearchParams } from 'next/navigation'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuide } from '@/features/guides/hooks/use-guide'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
@@ -11,13 +9,12 @@ import { StopEditView } from './components/stop-edit-view'
 
 export type GuideEditorClientProps = {
   fallbackGuide: GuideWithStops
+  initialSelectedStopId?: string
 }
 
-export function GuideEditorClient({ fallbackGuide }: GuideEditorClientProps) {
+export function GuideEditorClient({ fallbackGuide, initialSelectedStopId }: GuideEditorClientProps) {
   const { guide, mutate } = useGuide(fallbackGuide.nanoId, { fallbackData: fallbackGuide })
   const { data: sidebarData } = useSidebarData()
-  const searchParams = useSearchParams()
-  const stopId = searchParams.get('stop')
 
   const organizationId = sidebarData?.currentTeam?.id
 
@@ -25,7 +22,7 @@ export function GuideEditorClient({ fallbackGuide }: GuideEditorClientProps) {
     return null
   }
 
-  const stop = stopId ? guide.stops.find((s) => s.id === stopId) : null
+  const stop = initialSelectedStopId ? guide.stops.find((s) => s.id === initialSelectedStopId) : null
 
   return (
     <GuideEditorProvider initialGuide={guide} onMutate={mutate}>

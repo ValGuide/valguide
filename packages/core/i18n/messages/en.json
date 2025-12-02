@@ -64,6 +64,8 @@
   },
   "common": {
     "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>.",
+    "save": "Save",
+    "saving": "Saving...",
     "saved": "Saved",
     "saveError": "Failed to save",
     "loading": "...",
@@ -383,6 +385,7 @@
     "add": "Add Stop",
     "edit": "Edit",
     "untitled": "Untitled Stop",
+    "backToStops": "Back to Stops",
     "stopNumber": "Stop {number}",
     "stopTitle": "{number}: {title}",
     "empty": {
@@ -655,6 +658,7 @@
       "teams": "Teams",
       "createTeam": "Create team",
       "teamSettings": "Team settings",
+      "current": "Current",
       "success": "Switched team",
       "error": "Failed to switch team"
     },

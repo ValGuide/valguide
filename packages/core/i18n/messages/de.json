@@ -64,6 +64,8 @@
   },
   "common": {
     "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu.",
+    "save": "Speichern",
+    "saving": "Speichern...",
     "saved": "Gespeichert",
     "saveError": "Speichern fehlgeschlagen",
     "loading": "...",
@@ -383,6 +385,7 @@
     "add": "Stop hinzufügen",
     "edit": "Bearbeiten",
     "untitled": "Unbenannter Stop",
+    "backToStops": "Zurück zu Stops",
     "stopNumber": "Station {number}",
     "stopTitle": "{number}: {title}",
     "empty": {
@@ -655,6 +658,7 @@
       "teams": "Teams",
       "createTeam": "Team erstellen",
       "teamSettings": "Team-Einstellungen",
+      "current": "Aktuell",
       "success": "Team gewechselt",
       "error": "Fehler beim Wechseln des Teams"
     },

@@ -3,7 +3,7 @@
 import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { usePathname, useRouter } from '@valguide/i18n/routing'
+import { useRouter } from '@valguide/i18n/routing'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,7 +30,6 @@ interface GuideEditViewProps {
 
 export function GuideEditView({ organizationId: organizationIdProp }: GuideEditViewProps) {
   const router = useRouter()
-  const pathname = usePathname()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
   const {
@@ -47,7 +46,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     save,
   } = useGuideEditor()
 
-  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard()
+  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   const guideDetailUrl = `/guides/${guide.nanoId}`
 
@@ -64,7 +63,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
 
   const handleSelectStop = (stop: StopWithTranslations | null) => {
     if (stop) {
-      router.replace(`${pathname}?stop=${stop.id}`)
+      router.push(`/guides/${guide.nanoId}/stops/${stop.id}/edit`)
     }
   }
 
@@ -115,97 +114,97 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-          <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
-            <VersionHistoryDialog
-              guideId={guide.id}
-              locale={activeLocale}
-              onRollback={() => {
-                router.refresh()
-              }}
-            />
-            <PublishTranslationButton
-              guideId={guide.id}
-              locale={activeLocale}
-              hasDraft={!!currentTranslation?.draftVersionId}
-              onPublished={() => {
-                router.refresh()
-              }}
-            />
-            <Button variant="ghost" size="sm" className="hidden sm:flex">
-              {t('editor.preview')}
-            </Button>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-1 lg:hidden">
-                  <ListChecks className="h-4 w-4" />
-                  <span className="hidden sm:inline">{t('editor.progress')}</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
-                <SheetHeader>
-                  <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
-                </SheetHeader>
-                <div className="mt-6">
-                  <GuideProgress guide={guide} locale={activeLocale} />
-                </div>
-              </SheetContent>
-            </Sheet>
-            <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
-              {isSaving ? t('editor.saving') : t('editor.save')}
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex min-w-0 flex-1 overflow-hidden">
-        <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
-          <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
-            <div className="space-y-6">
-              <div>
-                <h2 className="mb-4 text-lg font-semibold">{t('editor.guideDetails')}</h2>
-                <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
-              </div>
-
-              <GuideMetadataForm
+            <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
+              <VersionHistoryDialog
+                guideId={guide.id}
                 locale={activeLocale}
-                translation={currentTranslation}
-                coverImage={guide.coverImage}
-                organizationId={organizationId}
-                onTranslationChange={(data) => {
-                  updateGuideTranslationData(activeLocale, data)
-                }}
-                onCoverImageChange={(url) => {
-                  updateCoverImage(url)
+                onRollback={() => {
+                  router.refresh()
                 }}
               />
-
-              <div>
-                <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
-                <StopsList
-                  stops={guide.stops}
-                  locale={activeLocale}
-                  selectedStopId={undefined}
-                  onReorder={handleReorderStops}
-                  onEdit={handleSelectStop}
-                  onDelete={deleteStop}
-                  onAdd={async () => {
-                    const newStop = await addStop()
-                    if (newStop) {
-                      router.replace(`${pathname}?stop=${newStop.id}`)
-                    }
-                  }}
-                />
-              </div>
+              <PublishTranslationButton
+                guideId={guide.id}
+                locale={activeLocale}
+                hasDraft={!!currentTranslation?.draftVersionId}
+                onPublished={() => {
+                  router.refresh()
+                }}
+              />
+              <Button variant="ghost" size="sm" className="hidden sm:flex">
+                {t('editor.preview')}
+              </Button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1 lg:hidden">
+                    <ListChecks className="h-4 w-4" />
+                    <span className="hidden sm:inline">{t('editor.progress')}</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
+                  <SheetHeader>
+                    <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <GuideProgress guide={guide} locale={activeLocale} />
+                  </div>
+                </SheetContent>
+              </Sheet>
+              <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
+                {isSaving ? t('editor.saving') : t('editor.save')}
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
-          <h3 className="mb-4 text-base font-semibold">{t('editor.guideProgress')}</h3>
-          <GuideProgress guide={guide} locale={activeLocale} />
+        {/* Main Content */}
+        <div className="flex min-w-0 flex-1 overflow-hidden">
+          <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
+            <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
+              <div className="space-y-6">
+                <div>
+                  <h2 className="mb-4 text-lg font-semibold">{t('editor.guideDetails')}</h2>
+                  <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
+                </div>
+
+                <GuideMetadataForm
+                  locale={activeLocale}
+                  translation={currentTranslation}
+                  coverImage={guide.coverImage}
+                  organizationId={organizationId}
+                  onTranslationChange={(data) => {
+                    updateGuideTranslationData(activeLocale, data)
+                  }}
+                  onCoverImageChange={(url) => {
+                    updateCoverImage(url)
+                  }}
+                />
+
+                <div>
+                  <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
+                  <StopsList
+                    stops={guide.stops}
+                    locale={activeLocale}
+                    selectedStopId={undefined}
+                    onReorder={handleReorderStops}
+                    onEdit={handleSelectStop}
+                    onDelete={deleteStop}
+                    onAdd={async () => {
+                      const newStop = await addStop()
+                      if (newStop) {
+                        router.push(`/guides/${guide.nanoId}/stops/${newStop.id}/edit`)
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
+            <h3 className="mb-4 text-base font-semibold">{t('editor.guideProgress')}</h3>
+            <GuideProgress guide={guide} locale={activeLocale} />
+          </div>
         </div>
-      </div>
       </div>
     </>
   )

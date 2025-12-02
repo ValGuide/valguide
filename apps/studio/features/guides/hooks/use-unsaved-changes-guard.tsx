@@ -12,10 +12,12 @@ import {
 } from '@valguide/ui/components/alert-dialog'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
-import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 
-export function useUnsavedChangesGuard() {
-  const { isDirty } = useGuideEditor()
+interface UseUnsavedChangesGuardOptions {
+  isDirty: boolean
+}
+
+export function useUnsavedChangesGuard({ isDirty }: UseUnsavedChangesGuardOptions) {
   const t = useTranslations('guides.unsavedChanges')
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null)
   const [open, setOpen] = useState(false)
