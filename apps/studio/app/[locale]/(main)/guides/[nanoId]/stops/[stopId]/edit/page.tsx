@@ -1,6 +1,5 @@
 import { db } from '@valguide/core/features/db'
-import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
-import { toGuideWithStops } from '@valguide/core/features/guides/schema'
+import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
 import { setRequestLocale } from 'next-intl/server'
@@ -18,13 +17,11 @@ export default async function GuideStopEditPage({ params }: { params: Promise<Gu
   const { locale, nanoId, stopId } = await params
   setRequestLocale(locale)
 
-  const guideData = await getGuideByNanoId(db, nanoId)
+  const guide = await getGuideByNanoIdWithAssets(db, nanoId)
 
-  if (!guideData) {
+  if (!guide) {
     notFound()
   }
-
-  const guide = toGuideWithStops(guideData)
 
   return <GuideEditorClient fallbackGuide={guide} initialSelectedStopId={stopId} />
 }

@@ -27,7 +27,7 @@ export type StopWithAssets = StopWithTranslations & {
   assets: AssetWithRole[]
 }
 
-export type GuideWithStopsAndAssets = GuideWithStops & {
+export type GuideWithStopsAndAssets = Omit<GuideWithStops, 'stops'> & {
   assets: AssetWithRole[]
   stops: StopWithAssets[]
 }
@@ -82,6 +82,103 @@ export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWit
   })
 
   return result ?? null
+}
+
+/**
+ * Get a guide by nanoId with all its assets for the studio editor
+ * Includes translations, stops, and assets
+ */
+export async function getGuideByNanoIdWithAssets(db: DB, nanoId: string): Promise<GuideWithStopsAndAssets | null> {
+  const result = await db.query.guide.findFirst({
+    where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
+    with: {
+      translations: {
+        with: {
+          currentVersion: true,
+          draftVersion: true,
+        },
+      },
+      guideStops: {
+        orderBy: asc(guideStop.position),
+        with: {
+          stop: {
+            with: {
+              translations: {
+                with: {
+                  currentVersion: true,
+                  draftVersion: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (!result) return null
+
+  // Extract stops from guideStops junction
+  const stops = result.guideStops.map((gs) => gs.stop)
+
+  // Fetch guide assets
+  const guideAssets = await db
+    .select({
+      asset: asset,
+      role: guideAsset.role,
+      order: guideAsset.order,
+      locale: guideAsset.locale,
+    })
+    .from(guideAsset)
+    .innerJoin(asset, eq(guideAsset.assetId, asset.id))
+    .where(eq(guideAsset.guideId, result.id))
+    .orderBy(asc(guideAsset.order))
+
+  // Fetch all stop assets
+  const stopIds = stops.map((s) => s.id)
+  const stopAssetsData =
+    stopIds.length > 0
+      ? await db
+          .select({
+            stopId: stopAsset.stopId,
+            asset: asset,
+            role: stopAsset.role,
+            order: stopAsset.order,
+            locale: stopAsset.locale,
+          })
+          .from(stopAsset)
+          .innerJoin(asset, eq(stopAsset.assetId, asset.id))
+          .where(inArray(stopAsset.stopId, stopIds))
+          .orderBy(asc(stopAsset.order))
+      : []
+
+  // Group stop assets by stop ID
+  const stopAssetsMap = new Map<string, AssetWithRole[]>()
+  for (const item of stopAssetsData) {
+    if (!stopAssetsMap.has(item.stopId)) {
+      stopAssetsMap.set(item.stopId, [])
+    }
+    stopAssetsMap.get(item.stopId)?.push({
+      ...item.asset,
+      role: item.role,
+      order: item.order,
+      locale: item.locale,
+    })
+  }
+
+  return {
+    ...result,
+    assets: guideAssets.map((item) => ({
+      ...item.asset,
+      role: item.role,
+      order: item.order,
+      locale: item.locale,
+    })),
+    stops: stops.map((s) => ({
+      ...s,
+      assets: stopAssetsMap.get(s.id) ?? [],
+    })),
+  }
 }
 
 /**

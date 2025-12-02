@@ -1,6 +1,5 @@
 import { db } from '@valguide/core/features/db'
-import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
-import { toGuideWithStops } from '@valguide/core/features/guides/schema'
+import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 import { createClient } from '@valguide/supabase/server'
 import { NextResponse } from 'next/server'
 
@@ -16,13 +15,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nan
     return new NextResponse('Unauthorized', { status: 401 })
   }
 
-  const guideData = await getGuideByNanoId(db, nanoId)
+  const guide = await getGuideByNanoIdWithAssets(db, nanoId)
 
-  if (!guideData) {
+  if (!guide) {
     return new NextResponse('Not found', { status: 404 })
   }
-
-  const guide = toGuideWithStops(guideData)
 
   return NextResponse.json(guide)
 }

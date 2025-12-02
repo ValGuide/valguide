@@ -1,7 +1,8 @@
-import type { GuideWithStops, GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
+import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import type { Guide } from '@valguide/features/guides/types'
 
-export async function fetchGuideByNanoId(url: string): Promise<GuideWithStops | null> {
+export async function fetchGuideByNanoId(url: string): Promise<GuideWithStopsAndAssets | null> {
   const res = await fetch(url)
 
   if (res.status === 401) {

@@ -3,8 +3,6 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/comp
 import { AppSidebarContainer } from '@/components/app-sidebar-container'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 
-export const dynamic = 'error'
-
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen={true}>

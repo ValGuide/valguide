@@ -2,7 +2,7 @@
 
 import { PublishStopTranslationButton } from '@valguide/core/features/guides/components/publish-stop-translation-button'
 import { VersionHistoryDialogStop } from '@valguide/core/features/guides/components/version-history-dialog-stop'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { Link, useRouter } from '@valguide/i18n/routing'
 import {
   Breadcrumb,
@@ -30,7 +30,7 @@ import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
 interface StopEditViewProps {
-  stop: StopWithTranslations
+  stop: StopWithAssets
   organizationId?: string
 }
 
@@ -49,27 +49,35 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     save,
   } = useGuideEditor()
 
-  const stop = guide.stops.find((s) => s.id === stopProp.id) ?? stopProp
+  const foundStop = guide.stops.find((s) => s.id === stopProp.id)
+  const stop: StopWithAssets = foundStop ?? stopProp
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   const guideDetailUrl = `/guides/${guide.nanoId}`
 
   const guideTitle =
-    guide.translations.find((t) => t.currentVersion?.title)?.currentVersion?.title ??
-    guide.translations.find((t) => t.draftVersion?.title)?.draftVersion?.title ??
+    guide.translations.find((tr) => tr.currentVersion?.title)?.currentVersion?.title ??
+    guide.translations.find((tr) => tr.draftVersion?.title)?.draftVersion?.title ??
     t('untitledGuide')
 
   const stopTitle =
-    stop.translations.find((t) => t.locale === activeLocale)?.currentVersion?.title ??
-    stop.translations.find((t) => t.locale === activeLocale)?.draftVersion?.title ??
+    stop.translations.find((tr) => tr.locale === activeLocale)?.currentVersion?.title ??
+    stop.translations.find((tr) => tr.locale === activeLocale)?.draftVersion?.title ??
     tStops('untitled')
 
   const organizationId = organizationIdProp ?? ''
 
   useAutoSave(save, isDirty)
 
-  const currentStopTranslation = stop.translations.find((t) => t.locale === activeLocale)
+  const currentStopTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
+
+  // Filter assets by role and locale for the current stop
+  const stopImages = stop.assets.filter(
+    (a) => (a.role === 'image' || a.role === 'video') && (a.locale === activeLocale || a.locale === null),
+  )
+  const stopAudio =
+    stop.assets.find((a) => a.role === 'audio' && (a.locale === activeLocale || a.locale === null)) ?? null
 
   const handleBackToGuide = () => {
     confirmIfDirty(() => router.push(`/guides/${guide.nanoId}/edit`))
@@ -80,11 +88,6 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
       updateStopTranslationData(stop.id, activeLocale, data)
     },
     [stop.id, activeLocale, updateStopTranslationData],
-  )
-
-  console.info(
-    'stop',
-    stop.translations.map((t) => t.draftVersion?.title),
   )
 
   return (
@@ -181,15 +184,17 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                   stop={stop}
                   locale={activeLocale}
                   organizationId={organizationId}
+                  images={stopImages}
+                  audio={stopAudio}
                   onChange={handleStopChange}
                   onImageChange={async (assets) => {
                     for (const asset of assets) {
-                      await attachAssetToStop(stop.id, asset.id, 'image', activeLocale)
+                      await attachAssetToStop(stop.id, asset, 'image', activeLocale)
                     }
                   }}
                   onAudioChange={async (asset) => {
                     if (asset) {
-                      await attachAssetToStop(stop.id, asset.id, 'audio', activeLocale)
+                      await attachAssetToStop(stop.id, asset, 'audio', activeLocale)
                     }
                   }}
                 />

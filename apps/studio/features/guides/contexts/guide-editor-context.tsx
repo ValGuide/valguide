@@ -1,5 +1,6 @@
 'use client'
 
+import type { Asset } from '@valguide/core/features/assets/schema'
 import {
   attachAssetToStop as attachAssetToStopAction,
   createStop,
@@ -10,12 +11,8 @@ import {
   updateGuideTranslation,
   updateStop,
 } from '@valguide/core/features/guides/actions'
-import type {
-  GuideTranslationWithVersion,
-  GuideWithStops,
-  StopTranslationWithVersion,
-  StopWithTranslations,
-} from '@valguide/core/features/guides/schema'
+import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@valguide/core/features/guides/queries'
+import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { useTranslations } from 'next-intl'
 import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from 'react'
@@ -24,9 +21,9 @@ import type { KeyedMutator } from 'swr'
 
 interface GuideEditorContextValue {
   // State
-  guide: GuideWithStops
+  guide: GuideWithStopsAndAssets
   activeLocale: SupportedLocale
-  selectedStop: StopWithTranslations | null
+  selectedStop: StopWithAssets | null
   isDirty: boolean
   isSaving: boolean
 
@@ -35,18 +32,18 @@ interface GuideEditorContextValue {
   updateCoverImage: (assetId: string | null) => void
 
   // Stop actions
-  selectStop: (stop: StopWithTranslations | null) => void
-  addStop: () => Promise<StopWithTranslations | null>
+  selectStop: (stop: StopWithAssets | null) => void
+  addStop: () => Promise<StopWithAssets | null>
   deleteStop: (stopId: string) => Promise<void>
-  reorderStops: (stops: StopWithTranslations[]) => Promise<void>
+  reorderStops: (stops: StopWithAssets[]) => Promise<void>
   updateStopTranslationData: (
     stopId: string,
     locale: SupportedLocale,
     data: { title: string; description?: string | null; transcription?: string | null },
   ) => void
 
-  // Asset actions (placeholder for Week 2)
-  attachAssetToStop: (stopId: string, assetId: string, role: string, locale?: string) => Promise<void>
+  // Asset actions
+  attachAssetToStop: (stopId: string, asset: Asset, role: string, locale?: string) => Promise<void>
   detachAssetFromStop: (stopAssetId: string) => Promise<void>
 
   // Locale actions
@@ -68,13 +65,13 @@ export function GuideEditorProvider({
   onMutate,
 }: {
   children: ReactNode
-  initialGuide: GuideWithStops
-  onMutate?: KeyedMutator<GuideWithStops | null>
+  initialGuide: GuideWithStopsAndAssets
+  onMutate?: KeyedMutator<GuideWithStopsAndAssets | null>
 }) {
   const t = useTranslations()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
-  const [selectedStop, setSelectedStop] = useState<StopWithTranslations | null>(null)
+  const [selectedStop, setSelectedStop] = useState<StopWithAssets | null>(null)
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
@@ -189,12 +186,12 @@ export function GuideEditorProvider({
   }, [])
 
   // Select stop
-  const selectStop = useCallback((stop: StopWithTranslations | null) => {
+  const selectStop = useCallback((stop: StopWithAssets | null) => {
     setSelectedStop(stop)
   }, [])
 
   // Add stop - returns the new stop so caller can navigate
-  const addStop = useCallback(async (): Promise<StopWithTranslations | null> => {
+  const addStop = useCallback(async (): Promise<StopWithAssets | null> => {
     try {
       const newStopWithTranslations = await createStop({
         guideId: guide.id,
@@ -209,7 +206,7 @@ export function GuideEditorProvider({
         ],
       })
 
-      const newStop = newStopWithTranslations as StopWithTranslations
+      const newStop: StopWithAssets = { ...newStopWithTranslations, assets: [] }
 
       const updatedGuide = {
         ...guide,
@@ -237,7 +234,7 @@ export function GuideEditorProvider({
 
         setGuide((prev) => ({
           ...prev,
-          stops: prev.stops.filter((s) => s.id !== stopId),
+          stops: prev.stops.filter((s): s is StopWithAssets => s.id !== stopId),
         }))
 
         if (selectedStop?.id === stopId) {
@@ -255,7 +252,7 @@ export function GuideEditorProvider({
 
   // Reorder stops
   const reorderStops = useCallback(
-    async (stops: StopWithTranslations[]) => {
+    async (stops: StopWithAssets[]) => {
       try {
         await reorderStopsAction(stops.map((s, idx) => ({ id: s.id, order: idx })))
 
@@ -282,7 +279,7 @@ export function GuideEditorProvider({
     ) => {
       setGuide((prev) => ({
         ...prev,
-        stops: prev.stops.map((stop) => {
+        stops: prev.stops.map((stop: StopWithAssets): StopWithAssets => {
           if (stop.id !== stopId) return stop
 
           const existingTranslation = stop.translations.find((t) => t.locale === locale)
@@ -293,6 +290,7 @@ export function GuideEditorProvider({
             if (versionToUpdate) {
               return {
                 ...stop,
+                assets: stop.assets,
                 translations: stop.translations.map((t) =>
                   t.locale === locale
                     ? {
@@ -312,6 +310,7 @@ export function GuideEditorProvider({
             const now = new Date()
             return {
               ...stop,
+              assets: stop.assets,
               translations: stop.translations.map((t) =>
                 t.locale === locale
                   ? {
@@ -362,6 +361,7 @@ export function GuideEditorProvider({
 
           return {
             ...stop,
+            assets: stop.assets,
             translations: [...stop.translations, newTranslation],
           }
         }),
@@ -404,18 +404,35 @@ export function GuideEditorProvider({
 
   // Asset actions
   const attachAssetToStop = useCallback(
-    async (stopId: string, assetId: string, role: string, locale?: string) => {
+    async (stopId: string, asset: Asset, role: string, locale?: string) => {
       try {
         await attachAssetToStopAction({
           stopId,
-          assetId,
+          assetId: asset.id,
           role,
           locale,
           order: 0, // Will be incremented server-side based on existing assets
         })
 
-        // Optimistically update UI - will be replaced by refetch
-        setIsDirty(true)
+        // Optimistically update local state with the new asset
+        const assetWithRole: AssetWithRole = {
+          ...asset,
+          role,
+          order: 0,
+          locale: locale ?? null,
+        }
+
+        setGuide((prev) => ({
+          ...prev,
+          stops: prev.stops.map((stop: StopWithAssets): StopWithAssets => {
+            if (stop.id !== stopId) return stop
+            return {
+              ...stop,
+              assets: [...stop.assets, assetWithRole],
+            }
+          }),
+        }))
+
         toast.success(t('stops.assets.attachSuccess'))
       } catch (error) {
         console.error('Failed to attach asset:', error)

@@ -1,22 +1,22 @@
 'use client'
 
-import type { GuideWithStops } from '@valguide/core/features/guides/schema'
+import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
 import useSWR, { type KeyedMutator } from 'swr'
 import { fetchGuideByNanoId } from '../api/fetchers'
 
 interface UseGuideOptions {
-  fallbackData?: GuideWithStops
+  fallbackData?: GuideWithStopsAndAssets
 }
 
 interface UseGuideReturn {
-  guide: GuideWithStops | null
+  guide: GuideWithStopsAndAssets | null
   isLoading: boolean
   error: Error | null
-  mutate: KeyedMutator<GuideWithStops | null>
+  mutate: KeyedMutator<GuideWithStopsAndAssets | null>
 }
 
 export function useGuide(nanoId: string, options?: UseGuideOptions): UseGuideReturn {
-  const { data, error, isLoading, mutate } = useSWR<GuideWithStops | null>(
+  const { data, error, isLoading, mutate } = useSWR<GuideWithStopsAndAssets | null>(
     `/api/guides/${nanoId}`,
     fetchGuideByNanoId,
     {

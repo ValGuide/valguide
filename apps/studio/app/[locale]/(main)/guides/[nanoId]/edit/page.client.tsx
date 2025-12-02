@@ -1,6 +1,6 @@
 'use client'
 
-import type { GuideWithStops } from '@valguide/core/features/guides/schema'
+import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuide } from '@/features/guides/hooks/use-guide'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
@@ -8,7 +8,7 @@ import { GuideEditView } from './components/guide-edit-view'
 import { StopEditView } from './components/stop-edit-view'
 
 export type GuideEditorClientProps = {
-  fallbackGuide: GuideWithStops
+  fallbackGuide: GuideWithStopsAndAssets
   initialSelectedStopId?: string
 }
 
