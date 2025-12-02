@@ -1,7 +1,6 @@
 'use client'
 
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { Button } from '@valguide/ui/components/button'
 import { Music, Trash2, Video } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -49,7 +48,6 @@ export function MediaPickerPreview({ asset, onRemove, disabled = false }: MediaP
           <p className="truncate text-sm font-medium" title={asset.fileName}>
             {asset.fileName}
           </p>
-          <p className="text-xs text-muted-foreground">{formatFileSize(asset.fileSize)}</p>
         </div>
         <Button
           variant="outline"

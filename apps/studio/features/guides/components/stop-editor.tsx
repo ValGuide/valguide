@@ -1,5 +1,6 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
@@ -7,60 +8,76 @@ import type { StopWithTranslations } from '@valguide/core/features/guides/schema
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
-import { Label } from '@valguide/ui/components/label'
 import { Mic } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle } from 'react'
+import { type UseFormReturn, useForm } from 'react-hook-form'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
 
 export type StopEditorProps = {
   stop?: StopWithTranslations
   locale: SupportedLocale
   organizationId: string
-  onChange?: (data: { title: string; description: string; transcription: string }) => void
+  onChange?: (data: StopTranslationFormData) => void
+  onDirtyChange?: (isDirty: boolean) => void
   onImageChange?: (assets: Asset[]) => void
   onAudioChange?: (asset: Asset | null) => void
   images?: Asset[]
   audio?: Asset | null
 }
 
-export function StopEditor({
-  stop,
-  locale,
-  organizationId,
-  onChange,
-  onImageChange,
-  onAudioChange,
-  images = [],
-  audio = null,
-}: StopEditorProps) {
+export type StopEditorRef = {
+  form: UseFormReturn<StopTranslationFormData>
+  resetToCurrentValues: () => void
+}
+
+export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function StopEditor(
+  { stop, locale, organizationId, onChange, onDirtyChange, onImageChange, onAudioChange, images = [], audio = null },
+  ref,
+) {
   const t = useTranslations('stops.editor')
 
   const translation = stop?.translations.find((t) => t.locale === locale)
-  const [title, setTitle] = useState(getVersionedField(translation, 'title'))
-  const [description, setDescription] = useState(getVersionedField(translation, 'description'))
-  const [transcription, setTranscription] = useState(getVersionedField(translation, 'transcription'))
-
   const hasDraft = !!translation?.draftVersionId
   const publishedStatus = translation?.currentVersion?.status
 
-  const isExternalUpdate = useRef(false)
+  const form = useForm<StopTranslationFormData>({
+    resolver: zodResolver(stopTranslationFormSchema),
+    defaultValues: {
+      title: getVersionedField(translation, 'title'),
+      description: getVersionedField(translation, 'description'),
+      transcription: getVersionedField(translation, 'transcription'),
+    },
+  })
+
+  const { isDirty } = form.formState
+
+  useImperativeHandle(ref, () => ({
+    form,
+    resetToCurrentValues: () => {
+      form.reset(form.getValues())
+    },
+  }))
 
   useEffect(() => {
-    isExternalUpdate.current = true
-    setTitle(getVersionedField(translation, 'title'))
-    setDescription(getVersionedField(translation, 'description'))
-    setTranscription(getVersionedField(translation, 'transcription'))
-  }, [locale, translation])
+    onDirtyChange?.(isDirty)
+  }, [isDirty, onDirtyChange])
 
   useEffect(() => {
-    if (isExternalUpdate.current) {
-      isExternalUpdate.current = false
-      return
-    }
-    onChange?.({ title, description, transcription })
-  }, [title, description, transcription, onChange])
+    const subscription = form.watch((values) => {
+      if (values.title !== undefined) {
+        onChange?.({
+          title: values.title ?? '',
+          description: values.description ?? '',
+          transcription: values.transcription ?? '',
+        })
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [form, onChange])
 
   const handleImagesChange = (value: Asset | Asset[] | null) => {
     if (Array.isArray(value)) {
@@ -77,60 +94,70 @@ export function StopEditor({
   }
 
   return (
-    <div className="space-y-6 rounded-xl border bg-card p-6">
-      {/* Title */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor={`stop-title-${locale}`} className="text-sm font-medium">
-            {t('titleLabel')}
-          </Label>
-          <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
-        </div>
-        <Input
-          id={`stop-title-${locale}`}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder={t('titlePlaceholder')}
-          maxLength={500}
-          required
-          className="bg-muted"
+    <Form {...form}>
+      <form className="space-y-6 rounded-xl border bg-card p-6">
+        {/* Title */}
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between">
+                <FormLabel>{t('titleLabel')}</FormLabel>
+                <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
+              </div>
+              <FormControl>
+                <Input {...field} placeholder={t('titlePlaceholder')} maxLength={500} required className="bg-muted" />
+              </FormControl>
+            </FormItem>
+          )}
         />
-      </div>
 
-      {/* Audio */}
-      <MediaPicker
-        mode="single"
-        mediaTypes={['audio']}
-        value={audio}
-        onChange={handleAudioChange}
-        label={t('audioLabel')}
-        organizationId={organizationId}
-        locale={locale}
-      />
+        {/* Audio */}
+        <MediaPicker
+          mode="single"
+          mediaTypes={['audio']}
+          value={audio}
+          onChange={handleAudioChange}
+          label={t('audioLabel')}
+          organizationId={organizationId}
+          locale={locale}
+        />
 
-      {/* Description */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor={`stop-description-${locale}`} className="text-sm font-medium">
-            {t('descriptionLabel')}
-          </Label>
-          <Button variant="ghost" size="sm" className="gap-1">
-            <Mic className="h-4 w-4" />
-            {t('autoGenerate')}
-          </Button>
-        </div>
-        <RichTextEditor value={description} onChange={setDescription} placeholder={t('descriptionPlaceholder')} />
-      </div>
+        {/* Description */}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between">
+                <FormLabel>{t('descriptionLabel')}</FormLabel>
+                <Button type="button" variant="ghost" size="sm" className="gap-1">
+                  <Mic className="h-4 w-4" />
+                  {t('autoGenerate')}
+                </Button>
+              </div>
+              <FormControl>
+                <RichTextEditor
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder={t('descriptionPlaceholder')}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
-      {/* Gallery */}
-      <MediaPicker
-        mode="multiple"
-        mediaTypes={['image', 'video']}
-        value={images}
-        onChange={handleImagesChange}
-        label={t('galleryLabel')}
-        organizationId={organizationId}
-      />
-    </div>
+        {/* Gallery */}
+        <MediaPicker
+          mode="multiple"
+          mediaTypes={['image', 'video']}
+          value={images}
+          onChange={handleImagesChange}
+          label={t('galleryLabel')}
+          organizationId={organizationId}
+        />
+      </form>
+    </Form>
   )
-}
+})
