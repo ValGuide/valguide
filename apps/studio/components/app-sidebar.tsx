@@ -76,7 +76,7 @@ export function AppSidebar({
   const isActive = (url: string) => {
     const currentPath = pendingUrl ?? pathnameWithoutLocale
     if (url === '/') {
-      return currentPath === '/'
+      return currentPath === '/' || currentPath.startsWith('/guides')
     }
     return currentPath.startsWith(url)
   }
