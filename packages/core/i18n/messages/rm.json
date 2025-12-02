@@ -355,9 +355,9 @@
     "untitledGuide": "Guid senza num",
     "unsavedChanges": {
       "title": "Midadas betg memorisadas",
-      "description": "Ti has midadas betg memorisadas. Sche ti vas ussa, van tias midadas a perder.",
-      "stay": "Restar e cuntinuar da modifitgar",
-      "leave": "Bandunar senza memorisar"
+      "description": "Es ti segir che ti vuls bandunar questa pagina?",
+      "stay": "Cuntinuar da modifitgar",
+      "leave": "Sbittar las midadas"
     },
     "error": {
       "failedToLoad": "Impussibel da chargiar ils guids",
