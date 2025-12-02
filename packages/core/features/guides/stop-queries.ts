@@ -1,6 +1,6 @@
 import { and, asc, desc, eq } from 'drizzle-orm'
-import { nanoid } from 'nanoid'
 import type { SupportedLocale } from '../../i18n/i18n.config'
+import { valguideId } from '../../utils/nanoid'
 import { db } from '../db'
 import { guide, guideStop, stop, stopTranslation } from './schema'
 
@@ -131,7 +131,7 @@ export async function createStop({
       .insert(stop)
       .values({
         organizationId: guideData.organizationId,
-        nanoId: nanoid(21),
+        nanoId: valguideId(),
         createdBy: userId,
         // Deprecated fields kept for backward compatibility
         guideId,

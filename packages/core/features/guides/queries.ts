@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
-import { customAlphabet } from 'nanoid'
 import type { SupportedLocale } from '../../i18n/i18n.config'
+import { valguideId } from '../../utils/nanoid'
 import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
 import type { DB } from '../db'
 import {
@@ -15,8 +15,6 @@ import {
   type StopWithTranslations,
   stop,
 } from './schema'
-
-const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10)
 
 // Extended types for app viewer
 export type AssetWithRole = Asset & {
@@ -209,7 +207,7 @@ export async function createGuide(
       .insert(guide)
       .values({
         ...guideData,
-        nanoId: guideData.nanoId ?? nanoid(),
+        nanoId: guideData.nanoId ?? valguideId(),
       })
       .returning()
 

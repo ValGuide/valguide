@@ -10,11 +10,11 @@ import {
   MAX_SIZE_MB,
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
 import { CheckCircle2, FileIcon, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
-import { nanoid } from 'nanoid'
 import { useTranslations } from 'next-intl'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -116,7 +116,7 @@ export function AssetUploadInline({ allowedTypes, locale, organizationId, onUplo
     setError(null)
 
     try {
-      const assetId = nanoid()
+      const assetId = valguideId()
       const timestamp = Date.now()
       const fileName = `${organizationId}/${detectedType}/${timestamp}-${file.name}`
 

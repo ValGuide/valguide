@@ -1,9 +1,9 @@
 'use server'
 
 import { db } from '@valguide/core/features/db'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
-import { nanoid } from 'nanoid'
 import { asset } from './schema'
 import { validateFile } from './utils'
 
@@ -55,7 +55,7 @@ export async function getUploadSignedUrl(params: GetUploadSignedUrlParams): Prom
   if (!user) throw new Error('Not authenticated')
 
   const { fileName, fileType: _fileType, type, locale, organizationId } = params
-  const assetId = nanoid(21)
+  const assetId = valguideId()
 
   // Validate file
   const { sanitizedName } = validateFile(fileName)

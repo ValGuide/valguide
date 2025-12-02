@@ -2,9 +2,9 @@
 
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
 import { db } from '@valguide/core/features/db'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { createClient } from '@valguide/supabase/server'
 import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
-import { nanoid } from 'nanoid'
 import { organizationMember } from '../orgs/schema'
 import { guide, guideStop, stop } from './schema'
 
@@ -162,7 +162,7 @@ export async function createStop(params: CreateStopParams) {
     finalPosition = maxPosition + 1
   }
 
-  const nanoId = nanoid(21)
+  const nanoId = valguideId()
 
   const [newStop] = await db
     .insert(stop)

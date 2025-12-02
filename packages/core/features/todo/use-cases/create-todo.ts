@@ -1,12 +1,12 @@
 import { createLogger } from '@valguide/logger'
 import { sql } from 'drizzle-orm'
-import { customAlphabet } from 'nanoid'
+import { valguideId } from '../../../utils/nanoid'
 import { db } from '../../db'
 import { todo, todoTranslation } from '../schema'
 
 const _log = createLogger('create-todo')
 
-const _nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10)
+const _nanoid = valguideId
 
 const _insertTodo = db
   .insert(todo)

@@ -1,15 +1,13 @@
 import { and, eq } from 'drizzle-orm'
-import { customAlphabet } from 'nanoid'
+import { valguideId } from '../../utils/nanoid'
 import type { DB } from '../db'
 import { type OrgRole, organization, organizationInvitation, organizationMember } from './schema'
-
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 10)
 
 /**
  * Create a new team
  */
 export async function createTeam(db: DB, name: string, userId: string, slug?: string) {
-  const teamSlug = slug || nanoid()
+  const teamSlug = slug || valguideId()
 
   return await db.transaction(async (tx: DB) => {
     const [newTeam] = await tx

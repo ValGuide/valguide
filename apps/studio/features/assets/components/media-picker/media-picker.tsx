@@ -8,7 +8,7 @@ import {
   MAX_SIZE_MB,
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
-import { nanoid } from 'nanoid'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { useTranslations } from 'next-intl'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
@@ -81,7 +81,7 @@ export function MediaPicker({
       setUploadFileName(file.name)
 
       try {
-        const assetId = nanoid()
+        const assetId = valguideId()
         const timestamp = Date.now()
         const fileName = `${organizationId}/${detected}/${timestamp}-${file.name}`
 
