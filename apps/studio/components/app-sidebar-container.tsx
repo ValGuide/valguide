@@ -40,14 +40,8 @@ export function AppSidebarContainer() {
     try {
       const result = await switchTeamAction(teamSlug)
       if (result?.success) {
-        // Refresh data locally
-        await mutateSidebar()
-        // Refresh server components (if any rely on cookie)
-        router.refresh()
-        // Invalidate guides cache to force reload
-        await mutate('/api/guides')
-        // Show success
-        toast.success(t('success'))
+        // Full page reload to ensure all state is reset
+        window.location.reload()
       }
     } catch (error) {
       console.error(error)
