@@ -16,7 +16,8 @@ import { Button } from '@valguide/ui/components/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
 import { ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { GuideMetadataForm } from '@/features/guides/components/guide-metadata-form'
+import { useCallback, useEffect, useRef } from 'react'
+import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { LocaleTabs } from '@/features/guides/components/locale-tabs'
 import { StopsList } from '@/features/guides/components/stops-list'
@@ -44,6 +45,9 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     reorderStops,
     setActiveLocale,
     save,
+    registerFormDirty,
+    unregisterForm,
+    registerFormReset,
   } = useGuideEditor()
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
@@ -60,6 +64,25 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   useAutoSave(save, isDirty)
 
   const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
+
+  const formRef = useRef<GuideMetadataFormRef>(null)
+  const formId = `guide-translation-${activeLocale}`
+
+  const handleDirtyChange = useCallback(
+    (formIsDirty: boolean) => {
+      registerFormDirty(formId, formIsDirty)
+    },
+    [formId, registerFormDirty],
+  )
+
+  useEffect(() => {
+    registerFormReset(formId, () => {
+      formRef.current?.resetToCurrentValues()
+    })
+    return () => {
+      unregisterForm(formId)
+    }
+  }, [formId, registerFormReset, unregisterForm])
 
   const handleSelectStop = (stop: StopWithTranslations | null) => {
     if (stop) {
@@ -167,6 +190,8 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                 </div>
 
                 <GuideMetadataForm
+                  ref={formRef}
+                  key={`guide-metadata-${activeLocale}`}
                   locale={activeLocale}
                   translation={currentTranslation}
                   coverImage={guide.coverImage}
@@ -177,6 +202,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                   onCoverImageChange={(url) => {
                     updateCoverImage(url)
                   }}
+                  onDirtyChange={handleDirtyChange}
                 />
 
                 <div>

@@ -19,9 +19,10 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { LocaleTabs } from '@/features/guides/components/locale-tabs'
-import { StopEditor } from '@/features/guides/components/stop-editor'
+import { StopEditor, type StopEditorRef } from '@/features/guides/components/stop-editor'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 interface StandaloneStopEditorClientProps {
@@ -41,9 +42,8 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
 
   const modifiedLocalesRef = useRef<Set<string>>(new Set())
   const stopRef = useRef(stop)
-  const isDirtyRef = useRef(isDirty)
+  const stopEditorRef = useRef<StopEditorRef>(null)
   stopRef.current = stop
-  isDirtyRef.current = isDirty
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
@@ -56,8 +56,12 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
     confirmIfDirty(() => router.push('/stops'))
   }
 
+  const handleDirtyChange = useCallback((dirty: boolean) => {
+    setIsDirty(dirty)
+  }, [])
+
   const handleStopChange = useCallback(
-    (data: { title: string; description: string; transcription: string }) => {
+    (data: StopTranslationFormData) => {
       setStop((prev) => ({
         ...prev,
         translations: prev.translations.map((translation) => {
@@ -86,13 +90,12 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
         }),
       }))
       modifiedLocalesRef.current.add(activeLocale)
-      setIsDirty(true)
     },
     [activeLocale],
   )
 
   const save = useCallback(async () => {
-    if (!isDirtyRef.current) return
+    if (!isDirty) return
 
     setIsSaving(true)
     try {
@@ -116,7 +119,7 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
       }
 
       modifiedLocalesRef.current.clear()
-      setIsDirty(false)
+      stopEditorRef.current?.resetToCurrentValues()
       toast.success(tCommon('saved'))
     } catch (error) {
       console.error('Failed to save:', error)
@@ -124,7 +127,7 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
     } finally {
       setIsSaving(false)
     }
-  }, [tCommon])
+  }, [isDirty, tCommon])
 
   useAutoSave(save, isDirty)
 
@@ -169,11 +172,13 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
                 <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
 
                 <StopEditor
+                  ref={stopEditorRef}
                   key={`${stop.id}-${activeLocale}`}
                   stop={stop}
                   locale={activeLocale}
                   organizationId={organizationId}
                   onChange={handleStopChange}
+                  onDirtyChange={handleDirtyChange}
                 />
               </div>
             </div>

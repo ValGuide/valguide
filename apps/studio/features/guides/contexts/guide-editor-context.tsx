@@ -15,7 +15,7 @@ import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@va
 import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { useTranslations } from 'next-intl'
-import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from 'react'
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import type { KeyedMutator } from 'swr'
 
@@ -53,6 +53,12 @@ interface GuideEditorContextValue {
   save: () => Promise<void>
   publish: () => Promise<void>
 
+  // Form dirty registration
+  registerFormDirty: (formId: string, isDirty: boolean) => void
+  unregisterForm: (formId: string) => void
+  resetAllForms: () => void
+  registerFormReset: (formId: string, resetFn: () => void) => void
+
   // Metadata
   lastSaved: Date | null
 }
@@ -72,12 +78,18 @@ export function GuideEditorProvider({
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
   const [selectedStop, setSelectedStop] = useState<StopWithAssets | null>(null)
-  const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
+  // Form dirty tracking
+  const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())
+  const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
+
+  // Cover image dirty tracking (not a form field)
+  const initialCoverImageRef = useRef(initialGuide.coverImage)
+  const coverImageDirty = guide.coverImage !== initialCoverImageRef.current
+
   const guideRef = useRef(guide)
-  const isDirtyRef = useRef(isDirty)
   const initialGuideRef = useRef(initialGuide)
   const modifiedTranslationsRef = useRef<Set<string>>(new Set())
   const modifiedStopsRef = useRef<Set<string>>(new Set())
@@ -85,8 +97,48 @@ export function GuideEditorProvider({
 
   // Keep refs in sync
   guideRef.current = guide
-  isDirtyRef.current = isDirty
   onMutateRef.current = onMutate
+
+  // Computed isDirty from form registrations and cover image
+  const isDirty = useMemo(() => {
+    return dirtyForms.size > 0 || coverImageDirty
+  }, [dirtyForms, coverImageDirty])
+
+  const isDirtyRef = useRef(isDirty)
+  isDirtyRef.current = isDirty
+
+  // Form registration functions
+  const registerFormDirty = useCallback((formId: string, formIsDirty: boolean) => {
+    setDirtyForms((prev) => {
+      const next = new Set(prev)
+      if (formIsDirty) {
+        next.add(formId)
+      } else {
+        next.delete(formId)
+      }
+      return next
+    })
+  }, [])
+
+  const unregisterForm = useCallback((formId: string) => {
+    setDirtyForms((prev) => {
+      const next = new Set(prev)
+      next.delete(formId)
+      return next
+    })
+    formResetFnsRef.current.delete(formId)
+  }, [])
+
+  const registerFormReset = useCallback((formId: string, resetFn: () => void) => {
+    formResetFnsRef.current.set(formId, resetFn)
+  }, [])
+
+  const resetAllForms = useCallback(() => {
+    for (const resetFn of formResetFnsRef.current.values()) {
+      resetFn()
+    }
+    setDirtyForms(new Set())
+  }, [])
 
   // Update guide translation
   const updateGuideTranslationData = useCallback(
@@ -171,7 +223,6 @@ export function GuideEditorProvider({
         }
       })
       modifiedTranslationsRef.current.add(locale)
-      setIsDirty(true)
     },
     [],
   )
@@ -182,7 +233,6 @@ export function GuideEditorProvider({
       ...prev,
       coverImage: assetId,
     }))
-    setIsDirty(true)
   }, [])
 
   // Select stop
@@ -397,7 +447,6 @@ export function GuideEditorProvider({
       })
 
       modifiedStopsRef.current.add(`${stopId}:${locale}`)
-      setIsDirty(true)
     },
     [],
   )
@@ -446,8 +495,6 @@ export function GuideEditorProvider({
     async (stopAssetId: string) => {
       try {
         await detachAssetFromStopAction(stopAssetId)
-
-        setIsDirty(true)
         toast.success(t('stops.assets.removeSuccess'))
       } catch (error) {
         console.error('Failed to detach asset:', error)
@@ -482,7 +529,6 @@ export function GuideEditorProvider({
       for (const locale of modifiedTranslations) {
         const translation = currentGuide.translations.find((t) => t.locale === locale)
 
-        console.info('translation', translation)
         if (translation) {
           // Get content from draft version or current version
           const version = translation.draftVersion || translation.currentVersion
@@ -543,13 +589,16 @@ export function GuideEditorProvider({
         }))
       }
 
-      // Update initial guide for next comparison
+      // Update initial refs for next comparison
       initialGuideRef.current = currentGuide
+      initialCoverImageRef.current = currentGuide.coverImage
+
+      // Reset all forms to update their baselines
+      resetAllForms()
 
       // Update SWR cache so navigation shows fresh data
       onMutateRef.current?.(currentGuide)
 
-      setIsDirty(false)
       setLastSaved(new Date())
       toast.success(t('common.saved'))
     } catch (error) {
@@ -558,7 +607,7 @@ export function GuideEditorProvider({
     } finally {
       setIsSaving(false)
     }
-  }, [t])
+  }, [t, resetAllForms])
 
   // Publish
   const publish = useCallback(async () => {
@@ -602,6 +651,10 @@ export function GuideEditorProvider({
     setActiveLocale,
     save,
     publish,
+    registerFormDirty,
+    unregisterForm,
+    resetAllForms,
+    registerFormReset,
     lastSaved,
   }
 

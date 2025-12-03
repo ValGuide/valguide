@@ -22,12 +22,13 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { LocaleTabs } from '@/features/guides/components/locale-tabs'
-import { StopEditor } from '@/features/guides/components/stop-editor'
+import { StopEditor, type StopEditorRef } from '@/features/guides/components/stop-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
 
 interface StopEditViewProps {
   stop: StopWithAssets
@@ -47,6 +48,9 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     attachAssetToStop,
     setActiveLocale,
     save,
+    registerFormDirty,
+    unregisterForm,
+    registerFormReset,
   } = useGuideEditor()
 
   const foundStop = guide.stops.find((s) => s.id === stopProp.id)
@@ -79,12 +83,31 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   const stopAudio =
     stop.assets.find((a) => a.role === 'audio' && (a.locale === activeLocale || a.locale === null)) ?? null
 
+  const stopEditorRef = useRef<StopEditorRef>(null)
+  const formId = `stop-translation-${stop.id}-${activeLocale}`
+
+  const handleDirtyChange = useCallback(
+    (formIsDirty: boolean) => {
+      registerFormDirty(formId, formIsDirty)
+    },
+    [formId, registerFormDirty],
+  )
+
+  useEffect(() => {
+    registerFormReset(formId, () => {
+      stopEditorRef.current?.resetToCurrentValues()
+    })
+    return () => {
+      unregisterForm(formId)
+    }
+  }, [formId, registerFormReset, unregisterForm])
+
   const handleBackToGuide = () => {
     confirmIfDirty(() => router.push(`/guides/${guide.nanoId}/edit`))
   }
 
   const handleStopChange = useCallback(
-    (data: { title: string; description: string; transcription: string }) => {
+    (data: StopTranslationFormData) => {
       updateStopTranslationData(stop.id, activeLocale, data)
     },
     [stop.id, activeLocale, updateStopTranslationData],
@@ -180,6 +203,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                 <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
 
                 <StopEditor
+                  ref={stopEditorRef}
                   key={`${stop.id}-${activeLocale}`}
                   stop={stop}
                   locale={activeLocale}
@@ -187,6 +211,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                   images={stopImages}
                   audio={stopAudio}
                   onChange={handleStopChange}
+                  onDirtyChange={handleDirtyChange}
                   onImageChange={async (assets) => {
                     for (const asset of assets) {
                       await attachAssetToStop(stop.id, asset, 'image', activeLocale)

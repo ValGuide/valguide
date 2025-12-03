@@ -1,16 +1,19 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
-import { Label } from '@valguide/ui/components/label'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react'
+import { type UseFormReturn, useForm } from 'react-hook-form'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import { type GuideTranslationFormData, guideTranslationFormSchema } from '../schemas/guide-form'
 
 export type GuideMetadataFormProps = {
   locale: SupportedLocale
@@ -19,34 +22,52 @@ export type GuideMetadataFormProps = {
   organizationId: string
   onTranslationChange: (data: { title: string; description: string }) => void
   onCoverImageChange?: (url: string | null) => void
+  onDirtyChange?: (isDirty: boolean) => void
 }
 
-export function GuideMetadataForm({
-  locale,
-  translation,
-  coverImage,
-  organizationId,
-  onTranslationChange,
-  onCoverImageChange,
-}: GuideMetadataFormProps) {
+export type GuideMetadataFormRef = {
+  form: UseFormReturn<GuideTranslationFormData>
+  resetToCurrentValues: () => void
+}
+
+export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataFormProps>(function GuideMetadataForm(
+  { locale, translation, coverImage, organizationId, onTranslationChange, onCoverImageChange, onDirtyChange },
+  ref,
+) {
   const t = useTranslations('guides')
-  const [title, setTitle] = useState(getVersionedField(translation, 'title', true))
-  const [description, setDescription] = useState(getVersionedField(translation, 'description', true))
+
+  const form = useForm<GuideTranslationFormData>({
+    resolver: zodResolver(guideTranslationFormSchema),
+    defaultValues: {
+      title: getVersionedField(translation, 'title', true),
+      description: getVersionedField(translation, 'description', true),
+    },
+  })
+
+  const { isDirty } = form.formState
+
+  useImperativeHandle(ref, () => ({
+    form,
+    resetToCurrentValues: () => {
+      form.reset(form.getValues())
+    },
+  }))
 
   useEffect(() => {
-    setTitle(getVersionedField(translation, 'title', true))
-    setDescription(getVersionedField(translation, 'description', true))
-  }, [translation])
+    onDirtyChange?.(isDirty)
+  }, [isDirty, onDirtyChange])
 
-  const handleTitleChange = (value: string) => {
-    setTitle(value)
-    onTranslationChange({ title: value, description })
-  }
-
-  const handleDescriptionChange = (value: string) => {
-    setDescription(value)
-    onTranslationChange({ title, description: value })
-  }
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      if (values.title !== undefined) {
+        onTranslationChange({
+          title: values.title ?? '',
+          description: values.description ?? '',
+        })
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [form, onTranslationChange])
 
   const coverImageAsset: Asset | null = useMemo(() => {
     if (!coverImage) return null
@@ -78,52 +99,71 @@ export function GuideMetadataForm({
     }
   }
 
+  const title = form.watch('title')
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {t('editor.guideDetails')}{' '}
-          <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">
-            {t('editor.localeIndicator', { locale })}
-          </span>
-        </CardTitle>
-        <CardDescription>{t('editor.guideDetailsDescription')}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Title */}
-        <div className="space-y-2">
-          <Label htmlFor={`title-${locale}`}>{t('editor.titleLabel')}</Label>
-          <Input
-            id={`title-${locale}`}
-            value={title}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder={t('editor.titlePlaceholder')}
-            maxLength={500}
-            required
-          />
-          <p className="text-xs text-muted-foreground">{t('editor.characterCount', { current: title.length })}</p>
-        </div>
+    <Form {...form}>
+      <form>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {t('editor.guideDetails')}{' '}
+              <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">
+                {t('editor.localeIndicator', { locale })}
+              </span>
+            </CardTitle>
+            <CardDescription>{t('editor.guideDetailsDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Title */}
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('editor.titleLabel')}</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder={t('editor.titlePlaceholder')} maxLength={500} required />
+                  </FormControl>
+                  <p className="text-xs text-muted-foreground">
+                    {t('editor.characterCount', { current: title.length })}
+                  </p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Description */}
-        <div className="space-y-2">
-          <Label htmlFor={`description-${locale}`}>{t('editor.descriptionLabel')}</Label>
-          <RichTextEditor
-            value={description}
-            onChange={handleDescriptionChange}
-            placeholder={t('editor.descriptionPlaceholder')}
-          />
-        </div>
+            {/* Description */}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('editor.descriptionLabel')}</FormLabel>
+                  <FormControl>
+                    <RichTextEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={t('editor.descriptionPlaceholder')}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Cover Image */}
-        <MediaPicker
-          mode="single"
-          mediaTypes={['image']}
-          value={coverImageAsset}
-          onChange={handleCoverImageChange}
-          label={t('editor.coverImageLabel')}
-          organizationId={organizationId}
-        />
-      </CardContent>
-    </Card>
+            {/* Cover Image */}
+            <MediaPicker
+              mode="single"
+              mediaTypes={['image']}
+              value={coverImageAsset}
+              onChange={handleCoverImageChange}
+              label={t('editor.coverImageLabel')}
+              organizationId={organizationId}
+            />
+          </CardContent>
+        </Card>
+      </form>
+    </Form>
   )
-}
+})
