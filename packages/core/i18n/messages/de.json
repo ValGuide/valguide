@@ -42,6 +42,37 @@
     "metadata": {
       "title": "Studio - ValGuide",
       "description": "Erstelle und gestalte deine Guides"
+    },
+    "themeCustomizer": {
+      "title": "Design-Anpassung",
+      "reset": "Zurücksetzen",
+      "livePreview": "Live-Vorschau",
+      "customTheme": "Benutzerdefiniert",
+      "themePreset": "Design-Vorlage",
+      "radius": "Rundung",
+      "radiusSquare": "Eckig",
+      "radiusDefault": "Standard",
+      "radiusRounded": "Gerundet",
+      "radiusExtra": "Extra",
+      "primaryColors": "Primärfarben",
+      "backgroundColors": "Hintergrundfarben",
+      "otherColors": "Weitere Farben",
+      "customize": "Anpassen",
+      "preview": "Vorschau",
+      "formElementsPreview": "Formularelemente-Vorschau",
+      "inputField": "Eingabefeld",
+      "toggleSwitch": "Schalter",
+      "primary": "Primär",
+      "secondary": "Sekundär",
+      "outline": "Umriss",
+      "destructive": "Destruktiv",
+      "playerPreview": {
+        "tourTitle": "Stadtführung",
+        "tourInfo": "12 Stationen • 2h 30min",
+        "stopBadge": "Station 1 von 12",
+        "stopTitle": "Historischer Marktplatz",
+        "stopDescription": "Das Herz der Altstadt seit 1250"
+      }
     }
   },
   "app": {

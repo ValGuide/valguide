@@ -2,13 +2,13 @@
 
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { Progress } from '@valguide/ui/components/progress'
 import { Switch } from '@valguide/ui/components/switch'
 import { cn } from '@valguide/ui/lib/utils'
-import { Heart, MapPin, Pause, Play, Share2, SkipBack, SkipForward, Volume2 } from 'lucide-react'
+import { Heart, MapPin, Play, Share2, SkipBack, SkipForward, Volume2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import type { CSSProperties } from 'react'
 
 export interface PlayerPreviewProps {
@@ -17,6 +17,8 @@ export interface PlayerPreviewProps {
 }
 
 export function PlayerPreview({ style, className }: PlayerPreviewProps) {
+  const t = useTranslations('studio.themeCustomizer')
+
   return (
     <div className={cn('bg-background text-foreground rounded-lg overflow-hidden border', className)} style={style}>
       <div className="flex flex-col h-full">
@@ -28,8 +30,8 @@ export function PlayerPreview({ style, className }: PlayerPreviewProps) {
                 <MapPin className="size-5 text-primary-foreground" />
               </div>
               <div>
-                <h2 className="font-semibold text-card-foreground">City Walking Tour</h2>
-                <p className="text-xs text-muted-foreground">12 stops • 2h 30min</p>
+                <h2 className="font-semibold text-card-foreground">{t('playerPreview.tourTitle')}</h2>
+                <p className="text-xs text-muted-foreground">{t('playerPreview.tourInfo')}</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -61,7 +63,7 @@ export function PlayerPreview({ style, className }: PlayerPreviewProps) {
           </svg>
           <div className="absolute bottom-4 left-4 right-4">
             <Badge variant="secondary" className="bg-card/90 backdrop-blur-sm">
-              Stop 1 of 12
+              {t('playerPreview.stopBadge')}
             </Badge>
           </div>
         </div>
@@ -69,8 +71,8 @@ export function PlayerPreview({ style, className }: PlayerPreviewProps) {
         {/* Player Controls */}
         <div className="bg-card p-4 space-y-4">
           <div>
-            <h3 className="font-semibold text-card-foreground">Historic Town Square</h3>
-            <p className="text-sm text-muted-foreground">The heart of the old town since 1250</p>
+            <h3 className="font-semibold text-card-foreground">{t('playerPreview.stopTitle')}</h3>
+            <p className="text-sm text-muted-foreground">{t('playerPreview.stopDescription')}</p>
           </div>
 
           <div className="space-y-2">
@@ -101,38 +103,38 @@ export function PlayerPreview({ style, className }: PlayerPreviewProps) {
 
         {/* Sample Form Elements */}
         <div className="bg-background p-4 space-y-4 border-t">
-          <h4 className="text-sm font-medium">Form Elements Preview</h4>
+          <h4 className="text-sm font-medium">{t('formElementsPreview')}</h4>
 
           <div className="space-y-2">
-            <Label htmlFor="preview-input">Input Field</Label>
-            <Input id="preview-input" placeholder="Type something..." />
+            <Label htmlFor="preview-input">{t('inputField')}</Label>
+            <Input id="preview-input" placeholder="..." />
           </div>
 
           <div className="flex items-center justify-between">
-            <Label htmlFor="preview-switch">Toggle Switch</Label>
+            <Label htmlFor="preview-switch">{t('toggleSwitch')}</Label>
             <Switch id="preview-switch" defaultChecked />
           </div>
 
           <div className="flex gap-2">
             <Button variant="default" size="sm">
-              Primary
+              {t('primary')}
             </Button>
             <Button variant="secondary" size="sm">
-              Secondary
+              {t('secondary')}
             </Button>
             <Button variant="outline" size="sm">
-              Outline
+              {t('outline')}
             </Button>
             <Button variant="destructive" size="sm">
-              Destructive
+              {t('destructive')}
             </Button>
           </div>
 
           <div className="flex gap-2 flex-wrap">
-            <Badge>Default</Badge>
-            <Badge variant="secondary">Secondary</Badge>
-            <Badge variant="outline">Outline</Badge>
-            <Badge variant="destructive">Destructive</Badge>
+            <Badge>{t('primary')}</Badge>
+            <Badge variant="secondary">{t('secondary')}</Badge>
+            <Badge variant="outline">{t('outline')}</Badge>
+            <Badge variant="destructive">{t('destructive')}</Badge>
           </div>
         </div>
       </div>

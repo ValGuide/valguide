@@ -6,6 +6,7 @@ import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { Separator } from '@valguide/ui/components/separator'
 import type { Theme } from '@valguide/ui/theme/themes'
 import { RotateCcw } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { backgroundColorKeys, otherColorKeys, primaryColorKeys, type ThemeColors } from '../types'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { ColorGroup } from './color-group'
@@ -18,6 +19,7 @@ export interface ThemeCustomizerPanelProps {
 }
 
 export function ThemeCustomizerPanel({ customizer, className }: ThemeCustomizerPanelProps) {
+  const t = useTranslations('studio.themeCustomizer')
   const { config, setTheme, setColor, setRadius, resetToTheme } = customizer
 
   const handleColorChange = (key: keyof ThemeColors, value: string) => {
@@ -33,10 +35,10 @@ export function ThemeCustomizerPanel({ customizer, className }: ThemeCustomizerP
     <Card className={className}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Theme Customizer</CardTitle>
+          <CardTitle className="text-lg">{t('title')}</CardTitle>
           <Button variant="ghost" size="sm" onClick={handleReset} className="gap-1.5">
             <RotateCcw className="size-3.5" />
-            Reset
+            {t('reset')}
           </Button>
         </div>
       </CardHeader>
@@ -53,7 +55,7 @@ export function ThemeCustomizerPanel({ customizer, className }: ThemeCustomizerP
 
             <div className="space-y-1">
               <ColorGroup
-                title="Primary Colors"
+                title={t('primaryColors')}
                 colorKeys={primaryColorKeys}
                 colors={config.colors}
                 onColorChange={handleColorChange}
@@ -61,14 +63,14 @@ export function ThemeCustomizerPanel({ customizer, className }: ThemeCustomizerP
               />
 
               <ColorGroup
-                title="Background Colors"
+                title={t('backgroundColors')}
                 colorKeys={backgroundColorKeys}
                 colors={config.colors}
                 onColorChange={handleColorChange}
               />
 
               <ColorGroup
-                title="Other Colors"
+                title={t('otherColors')}
                 colorKeys={otherColorKeys}
                 colors={config.colors}
                 onColorChange={handleColorChange}

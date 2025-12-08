@@ -42,6 +42,37 @@
     "metadata": {
       "title": "Studio - ValGuide",
       "description": "Create and design your guides"
+    },
+    "themeCustomizer": {
+      "title": "Theme Customizer",
+      "reset": "Reset",
+      "livePreview": "Live Preview",
+      "customTheme": "Custom Theme",
+      "themePreset": "Theme Preset",
+      "radius": "Radius",
+      "radiusSquare": "Square",
+      "radiusDefault": "Default",
+      "radiusRounded": "Rounded",
+      "radiusExtra": "Extra",
+      "primaryColors": "Primary Colors",
+      "backgroundColors": "Background Colors",
+      "otherColors": "Other Colors",
+      "customize": "Customize",
+      "preview": "Preview",
+      "formElementsPreview": "Form Elements Preview",
+      "inputField": "Input Field",
+      "toggleSwitch": "Toggle Switch",
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "outline": "Outline",
+      "destructive": "Destructive",
+      "playerPreview": {
+        "tourTitle": "City Walking Tour",
+        "tourInfo": "12 stops • 2h 30min",
+        "stopBadge": "Stop 1 of 12",
+        "stopTitle": "Historic Town Square",
+        "stopDescription": "The heart of the old town since 1250"
+      }
     }
   },
   "app": {

@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/component
 import { cn } from '@valguide/ui/lib/utils'
 import type { Theme } from '@valguide/ui/theme/themes'
 import { Palette, Smartphone } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { PlayerPreview } from './player-preview'
@@ -16,6 +17,7 @@ export interface ThemeCustomizerProps {
 }
 
 export function ThemeCustomizer({ initialTheme = 'light', className }: ThemeCustomizerProps) {
+  const t = useTranslations('studio.themeCustomizer')
   const customizer = useThemeCustomizer(initialTheme)
   const cssVariables = customizer.getCSSVariables()
 
@@ -29,11 +31,11 @@ export function ThemeCustomizer({ initialTheme = 'light', className }: ThemeCust
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="customizer" className="gap-2">
               <Palette className="size-4" />
-              Customize
+              {t('customize')}
             </TabsTrigger>
             <TabsTrigger value="preview" className="gap-2">
               <Smartphone className="size-4" />
-              Preview
+              {t('preview')}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="customizer" className="mt-4">
@@ -59,10 +61,10 @@ export function ThemeCustomizer({ initialTheme = 'light', className }: ThemeCust
         {/* Preview Panel - Right */}
         <div className="flex-1 flex flex-col min-w-0">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Live Preview</h2>
+            <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
             <span className="text-sm text-muted-foreground">
               {customizer.config.theme === 'custom'
-                ? 'Custom Theme'
+                ? t('customTheme')
                 : `${customizer.config.theme.charAt(0).toUpperCase()}${customizer.config.theme.slice(1).replace('-', ' ')}`}
             </span>
           </div>

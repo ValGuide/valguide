@@ -42,6 +42,37 @@
     "metadata": {
       "title": "Studio - ValGuide",
       "description": "Creescha e designescha tes guids"
+    },
+    "themeCustomizer": {
+      "title": "Persunalisaziun dal design",
+      "reset": "Reinizialisar",
+      "livePreview": "Prevista directa",
+      "customTheme": "Persunalisà",
+      "themePreset": "Model da design",
+      "radius": "Cunturn",
+      "radiusSquare": "Quadrat",
+      "radiusDefault": "Standard",
+      "radiusRounded": "Radund",
+      "radiusExtra": "Extra",
+      "primaryColors": "Colurs primaras",
+      "backgroundColors": "Colurs dal fund",
+      "otherColors": "Autras colurs",
+      "customize": "Persunalisar",
+      "preview": "Prevista",
+      "formElementsPreview": "Prevista dals elements da formular",
+      "inputField": "Champ d'endataziun",
+      "toggleSwitch": "Cumitar",
+      "primary": "Primara",
+      "secondary": "Secundara",
+      "outline": "Cuntur",
+      "destructive": "Destructiv",
+      "playerPreview": {
+        "tourTitle": "Tur tras la citad",
+        "tourInfo": "12 staziuns • 2h 30min",
+        "stopBadge": "Staziun 1 da 12",
+        "stopTitle": "Plazza istorica",
+        "stopDescription": "Il cor da la citad veglia dapi 1250"
+      }
     }
   },
   "app": {

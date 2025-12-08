@@ -3,6 +3,7 @@
 import { Label } from '@valguide/ui/components/label'
 import { ToggleGroup, ToggleGroupItem } from '@valguide/ui/components/toggle-group'
 import { cn } from '@valguide/ui/lib/utils'
+import { useTranslations } from 'next-intl'
 import { type RadiusOption, radiusOptions } from '../types'
 
 export interface RadiusSelectorProps {
@@ -11,23 +12,25 @@ export interface RadiusSelectorProps {
   className?: string
 }
 
-function getRadiusLabel(radius: RadiusOption): string {
-  switch (radius) {
-    case 0:
-      return 'Square'
-    case 0.5:
-      return 'Default'
-    case 1.5:
-      return 'Rounded'
-    case 2:
-      return 'Pill'
-  }
-}
-
 export function RadiusSelector({ value, onValueChange, className }: RadiusSelectorProps) {
+  const t = useTranslations('studio.themeCustomizer')
+
+  const getRadiusLabel = (radius: RadiusOption): string => {
+    switch (radius) {
+      case 0:
+        return t('radiusSquare')
+      case 0.5:
+        return t('radiusDefault')
+      case 1.5:
+        return t('radiusRounded')
+      case 2:
+        return t('radiusExtra')
+    }
+  }
+
   return (
     <div className={cn('space-y-2', className)}>
-      <Label>Radius</Label>
+      <Label>{t('radius')}</Label>
       <ToggleGroup
         type="single"
         value={String(value)}
@@ -39,7 +42,7 @@ export function RadiusSelector({ value, onValueChange, className }: RadiusSelect
             key={radius}
             value={String(radius)}
             className="flex items-center gap-1.5 px-3 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-            aria-label={`Radius ${getRadiusLabel(radius)}rem`}
+            aria-label={getRadiusLabel(radius)}
           >
             <div className="size-4 border-2 border-current" style={{ borderRadius: `${radius * 4}px` }} />
             <span className="text-xs">{getRadiusLabel(radius)}</span>

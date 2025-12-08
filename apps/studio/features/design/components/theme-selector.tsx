@@ -3,6 +3,7 @@
 import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { type Theme, themes } from '@valguide/ui/theme/themes'
+import { useTranslations } from 'next-intl'
 import { themePresets } from '../theme-presets'
 
 function formatThemeName(themeName: string): string {
@@ -18,12 +19,14 @@ export interface ThemeSelectorProps {
 }
 
 export function ThemeSelector({ value, onValueChange }: ThemeSelectorProps) {
+  const t = useTranslations('studio.themeCustomizer')
+
   return (
     <div className="space-y-2">
-      <Label>Theme Preset</Label>
+      <Label>{t('themePreset')}</Label>
       <Select value={value === 'custom' ? undefined : value} onValueChange={(v) => onValueChange(v as Theme)}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder={value === 'custom' ? 'Custom' : formatThemeName(value)} />
+          <SelectValue placeholder={value === 'custom' ? t('customTheme') : formatThemeName(value)} />
         </SelectTrigger>
         <SelectContent>
           {themes.map((theme) => {
