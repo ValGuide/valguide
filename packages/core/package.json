@@ -107,7 +107,6 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@types/ws": "^8.5.12",
-
     "@valguide/typescript-config": "workspace:*",
     "bufferutil": "^4.0.8",
     "bun-types": "latest",

@@ -115,7 +115,7 @@ export function PlayerPreview({ style, className }: PlayerPreviewProps) {
             <Switch id="preview-switch" defaultChecked />
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button variant="default" size="sm">
               {t('primary')}
             </Button>

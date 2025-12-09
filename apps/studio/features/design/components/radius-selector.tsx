@@ -35,13 +35,13 @@ export function RadiusSelector({ value, onValueChange, className }: RadiusSelect
         type="single"
         value={String(value)}
         onValueChange={(v) => v && onValueChange(Number.parseFloat(v))}
-        className="justify-start gap-1"
+        className="justify-start gap-1 flex-wrap"
       >
         {radiusOptions.map((radius) => (
           <ToggleGroupItem
             key={radius}
             value={String(radius)}
-            className="flex items-center gap-1.5 px-3 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
             aria-label={getRadiusLabel(radius)}
           >
             <div className="size-4 border-2 border-current" style={{ borderRadius: `${radius * 4}px` }} />
