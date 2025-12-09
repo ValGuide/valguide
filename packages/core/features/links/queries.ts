@@ -100,6 +100,9 @@ async function createShortLink(input: CreateShortLinkInput): Promise<ShortLink> 
     try {
       const values = buildInsertValues(input, code)
       const [result] = await db.insert(short_links).values(values).returning()
+      if (!result) {
+        throw new Error('Failed to create short link')
+      }
       return result
     } catch (err: unknown) {
       if (!isUniqueViolation(err)) {
