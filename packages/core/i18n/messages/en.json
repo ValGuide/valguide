@@ -61,7 +61,7 @@
       "preview": "Preview",
       "library": "Library",
       "startFromPreset": "Start from a preset",
-      "savedThemes": "Your Saved Themes",
+      "savedThemes": "Your Saved Themes ({count})",
       "formElementsPreview": "Form Elements Preview",
       "inputField": "Input Field",
       "toggleSwitch": "Toggle Switch",

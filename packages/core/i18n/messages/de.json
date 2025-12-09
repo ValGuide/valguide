@@ -61,7 +61,7 @@
       "preview": "Vorschau",
       "library": "Bibliothek",
       "startFromPreset": "Mit einer Vorlage beginnen",
-      "savedThemes": "Deine gespeicherten Designs",
+      "savedThemes": "Deine gespeicherten Designs ({count})",
       "formElementsPreview": "Formularelemente-Vorschau",
       "inputField": "Eingabefeld",
       "toggleSwitch": "Schalter",

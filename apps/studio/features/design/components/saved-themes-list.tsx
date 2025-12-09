@@ -46,7 +46,7 @@ export function SavedThemesList({
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className={className}>
       <CollapsibleTrigger className="flex w-full items-center justify-between py-2 text-sm font-medium hover:underline">
-        {t('savedThemes')} ({themes.length})
+        {t('savedThemes', { count: themes.length })}
         <ChevronDown className={cn('size-4 transition-transform', isOpen && 'rotate-180')} />
       </CollapsibleTrigger>
       <CollapsibleContent>
@@ -54,36 +54,20 @@ export function SavedThemesList({
           {themes.map((theme) => {
             const isSelected = theme.id === selectedThemeId
             return (
-              <div
+              <button
                 key={theme.id}
-                role="button"
-                tabIndex={0}
+                type="button"
                 onClick={() => onSelectTheme(theme)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    onSelectTheme(theme)
-                  }
-                }}
                 className={cn(
-                  'group relative flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-all',
+                  'group relative flex w-full items-center gap-2 p-2 rounded-md border cursor-pointer transition-all text-left',
                   'hover:bg-accent/50',
                   isSelected && 'ring-2 ring-primary border-primary bg-accent/30',
                 )}
               >
                 <div className="flex gap-px shrink-0">
-                  <div
-                    className="size-5 rounded-l border"
-                    style={{ backgroundColor: theme.colors.background }}
-                  />
-                  <div
-                    className="size-5 border-y"
-                    style={{ backgroundColor: theme.colors.primary }}
-                  />
-                  <div
-                    className="size-5 rounded-r border"
-                    style={{ backgroundColor: theme.colors.accent }}
-                  />
+                  <div className="size-5 rounded-l border" style={{ backgroundColor: theme.colors.background }} />
+                  <div className="size-5 border-y" style={{ backgroundColor: theme.colors.primary }} />
+                  <div className="size-5 rounded-r border" style={{ backgroundColor: theme.colors.accent }} />
                 </div>
 
                 <span className="flex-1 text-sm font-medium truncate">{theme.name}</span>
@@ -100,7 +84,7 @@ export function SavedThemesList({
                 >
                   <Trash2 className="size-3.5" />
                 </Button>
-              </div>
+              </button>
             )
           })}
         </div>
