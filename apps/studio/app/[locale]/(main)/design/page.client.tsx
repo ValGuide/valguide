@@ -1,8 +1,8 @@
 'use client'
 
 import { Skeleton } from '@valguide/ui/components/skeleton'
-import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { useTranslations } from 'next-intl'
+import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { ThemeCustomizerContainer } from '../../../../features/design/components/theme-customizer-container'
 
 export function DesignPageClient() {
@@ -18,10 +18,9 @@ export function DesignPageClient() {
       </div>
       <div className="flex-1 min-h-0">
         {isSidebarLoading || !organizationId ? (
-          <div className="flex gap-6">
-            <Skeleton className="h-[400px] w-[280px]" />
-            <Skeleton className="h-[400px] w-[360px]" />
-            <Skeleton className="h-[400px] flex-1" />
+          <div className="hidden lg:grid lg:grid-cols-[minmax(0,1.4fr)_minmax(380px,0.8fr)] gap-6 w-full flex-1 min-h-0">
+            <Skeleton className="h-[500px] rounded-lg" />
+            <Skeleton className="h-[500px] rounded-lg" />
           </div>
         ) : (
           <ThemeCustomizerContainer organizationId={organizationId} />
