@@ -72,6 +72,11 @@
         "stopBadge": "Stop 1 of 12",
         "stopTitle": "Historic Town Square",
         "stopDescription": "The heart of the old town since 1250"
+      },
+      "colorPicker": {
+        "pickColor": "Pick color for {label}",
+        "hexInput": "{label} hex color",
+        "eyeDropper": "Pick color from screen"
       }
     }
   },

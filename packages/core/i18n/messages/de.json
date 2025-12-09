@@ -72,6 +72,11 @@
         "stopBadge": "Station 1 von 12",
         "stopTitle": "Historischer Marktplatz",
         "stopDescription": "Das Herz der Altstadt seit 1250"
+      },
+      "colorPicker": {
+        "pickColor": "Farbe für {label} auswählen",
+        "hexInput": "{label} Hex-Farbwert",
+        "eyeDropper": "Farbe vom Bildschirm auswählen"
       }
     }
   },

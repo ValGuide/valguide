@@ -72,6 +72,11 @@
         "stopBadge": "Staziun 1 da 12",
         "stopTitle": "Plazza istorica",
         "stopDescription": "Il cor da la citad veglia dapi 1250"
+      },
+      "colorPicker": {
+        "pickColor": "Tscherner colur per {label}",
+        "hexInput": "Valur hex da colur {label}",
+        "eyeDropper": "Tscherner colur dal visur"
       }
     }
   },
