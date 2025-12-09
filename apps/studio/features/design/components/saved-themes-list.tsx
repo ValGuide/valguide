@@ -54,37 +54,37 @@ export function SavedThemesList({
           {themes.map((theme) => {
             const isSelected = theme.id === selectedThemeId
             return (
-              <button
+              <div
                 key={theme.id}
-                type="button"
-                onClick={() => onSelectTheme(theme)}
                 className={cn(
-                  'group relative flex w-full items-center gap-2 p-2 rounded-md border cursor-pointer transition-all text-left',
+                  'group relative flex w-full items-center gap-2 p-2 rounded-md border transition-all',
                   'hover:bg-accent/50',
                   isSelected && 'ring-2 ring-primary border-primary bg-accent/30',
                 )}
               >
-                <div className="flex gap-px shrink-0">
-                  <div className="size-5 rounded-l border" style={{ backgroundColor: theme.colors.background }} />
-                  <div className="size-5 border-y" style={{ backgroundColor: theme.colors.primary }} />
-                  <div className="size-5 rounded-r border" style={{ backgroundColor: theme.colors.accent }} />
-                </div>
-
-                <span className="flex-1 text-sm font-medium truncate">{theme.name}</span>
+                <button
+                  type="button"
+                  onClick={() => onSelectTheme(theme)}
+                  className="flex flex-1 items-center gap-2 text-left min-w-0"
+                >
+                  <div className="flex gap-px shrink-0">
+                    <div className="size-5 rounded-l border" style={{ backgroundColor: theme.colors.background }} />
+                    <div className="size-5 border-y" style={{ backgroundColor: theme.colors.primary }} />
+                    <div className="size-5 rounded-r border" style={{ backgroundColor: theme.colors.accent }} />
+                  </div>
+                  <span className="flex-1 text-sm font-medium truncate">{theme.name}</span>
+                </button>
 
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-6 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDeleteTheme(theme)
-                  }}
+                  className="size-6 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+                  onClick={() => onDeleteTheme(theme)}
                   aria-label={t('themeLibrary.delete')}
                 >
                   <Trash2 className="size-3.5" />
                 </Button>
-              </button>
+              </div>
             )
           })}
         </div>
