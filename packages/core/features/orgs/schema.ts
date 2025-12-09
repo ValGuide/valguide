@@ -12,6 +12,7 @@ export const organization = studioSchema.table('organization', {
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique('unique_org_slug'),
   logo: text('logo'),
+  defaultThemeId: uuid('default_theme_id'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()

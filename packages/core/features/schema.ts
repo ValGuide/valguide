@@ -6,6 +6,7 @@ export * from './links/schema'
 export * from './orgs/schema'
 export * from './profiles/schema'
 export * from './task/schema'
+export * from './themes/schema'
 export * from './todo/schema'
 
 // relations
