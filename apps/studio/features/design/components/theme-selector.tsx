@@ -2,9 +2,8 @@
 
 import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
-import { type Theme, themes } from '@valguide/ui/theme/themes'
 import { useTranslations } from 'next-intl'
-import { themePresets } from '../theme-presets'
+import { themeColorPresets, themePresets, type ThemePreset } from '../theme-presets'
 
 function formatThemeName(themeName: string): string {
   return themeName
@@ -14,8 +13,8 @@ function formatThemeName(themeName: string): string {
 }
 
 export interface ThemeSelectorProps {
-  value: Theme | 'custom'
-  onValueChange: (theme: Theme) => void
+  value: ThemePreset
+  onValueChange: (preset: ThemePreset) => void
 }
 
 export function ThemeSelector({ value, onValueChange }: ThemeSelectorProps) {
@@ -24,24 +23,24 @@ export function ThemeSelector({ value, onValueChange }: ThemeSelectorProps) {
   return (
     <div className="space-y-2">
       <Label>{t('themePreset')}</Label>
-      <Select value={value === 'custom' ? undefined : value} onValueChange={(v) => onValueChange(v as Theme)}>
+      <Select value={value} onValueChange={(v) => onValueChange(v as ThemePreset)}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder={value === 'custom' ? t('customTheme') : formatThemeName(value)} />
+          <SelectValue placeholder={formatThemeName(value)} />
         </SelectTrigger>
         <SelectContent>
-          {themes.map((theme) => {
-            const preset = themePresets[theme]
+          {themePresets.map((preset) => {
+            const colors = themeColorPresets[preset]
             return (
-              <SelectItem key={theme} value={theme}>
+              <SelectItem key={preset} value={preset}>
                 <div className="flex items-center gap-2">
                   <div
                     className="size-3 rounded-full border shrink-0"
                     style={{
-                      backgroundColor: preset.primary,
-                      borderColor: preset.border,
+                      backgroundColor: colors.primary,
+                      borderColor: colors.border,
                     }}
                   />
-                  {formatThemeName(theme)}
+                  {formatThemeName(preset)}
                 </div>
               </SelectItem>
             )

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import type { Theme } from '@valguide/ui/theme/themes'
 import { useState } from 'react'
+import type { ThemePreset } from '../theme-presets'
 import { ThemeSelector } from './theme-selector'
 
 const meta: Meta<typeof ThemeSelector> = {
@@ -15,8 +15,8 @@ const meta: Meta<typeof ThemeSelector> = {
 export default meta
 type Story = StoryObj<typeof ThemeSelector>
 
-function ThemeSelectorWithState({ initialValue = 'light' }: { initialValue?: Theme | 'custom' }) {
-  const [value, setValue] = useState<Theme | 'custom'>(initialValue)
+function ThemeSelectorWithState({ initialValue = 'light' }: { initialValue?: ThemePreset }) {
+  const [value, setValue] = useState<ThemePreset>(initialValue)
   return (
     <div className="w-64">
       <ThemeSelector value={value} onValueChange={setValue} />
@@ -36,6 +36,6 @@ export const BlueThemeSelected: Story = {
   render: () => <ThemeSelectorWithState initialValue="blue" />,
 }
 
-export const CustomTheme: Story = {
-  render: () => <ThemeSelectorWithState initialValue="custom" />,
+export const PurpleThemeSelected: Story = {
+  render: () => <ThemeSelectorWithState initialValue="purple" />,
 }

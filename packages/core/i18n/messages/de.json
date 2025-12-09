@@ -59,6 +59,9 @@
       "otherColors": "Weitere Farben",
       "customize": "Anpassen",
       "preview": "Vorschau",
+      "library": "Bibliothek",
+      "startFromPreset": "Mit einer Vorlage beginnen",
+      "savedThemes": "Deine gespeicherten Designs",
       "formElementsPreview": "Formularelemente-Vorschau",
       "inputField": "Eingabefeld",
       "toggleSwitch": "Schalter",
@@ -77,6 +80,42 @@
         "pickColor": "Farbe für {label} auswählen",
         "hexInput": "{label} Hex-Farbwert",
         "eyeDropper": "Farbe vom Bildschirm auswählen"
+      },
+      "themeLibrary": {
+        "title": "Deine Designs",
+        "newTheme": "Neues Design",
+        "noThemes": "Noch keine Designs. Erstelle eines zum Starten.",
+        "presets": "Mit einer Vorlage beginnen",
+        "basedOn": "Basierend auf {preset}",
+        "delete": "Löschen",
+        "edit": "Bearbeiten"
+      },
+      "saveDialog": {
+        "title": "Design speichern",
+        "name": "Design-Name",
+        "namePlaceholder": "z.B. Marken-Primär",
+        "saveAsNew": "Als neues Design speichern",
+        "updateExisting": "Bestehendes Design aktualisieren",
+        "save": "Design speichern",
+        "cancel": "Abbrechen",
+        "nameRequired": "Design-Name ist erforderlich",
+        "nameTaken": "Ein Design mit diesem Namen existiert bereits"
+      },
+      "deleteDialog": {
+        "title": "Design löschen",
+        "message": "Möchtest du \"{name}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "confirm": "Löschen",
+        "cancel": "Abbrechen"
+      },
+      "editor": {
+        "editing": "Bearbeiten: {name}",
+        "unsavedChanges": "Ungespeicherte Änderungen",
+        "saveTheme": "Design speichern"
+      },
+      "toast": {
+        "created": "Design erfolgreich erstellt",
+        "updated": "Design erfolgreich aktualisiert",
+        "deleted": "Design erfolgreich gelöscht"
       }
     }
   },

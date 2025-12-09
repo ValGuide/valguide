@@ -59,6 +59,9 @@
       "otherColors": "Other Colors",
       "customize": "Customize",
       "preview": "Preview",
+      "library": "Library",
+      "startFromPreset": "Start from a preset",
+      "savedThemes": "Your Saved Themes",
       "formElementsPreview": "Form Elements Preview",
       "inputField": "Input Field",
       "toggleSwitch": "Toggle Switch",
@@ -77,6 +80,42 @@
         "pickColor": "Pick color for {label}",
         "hexInput": "{label} hex color",
         "eyeDropper": "Pick color from screen"
+      },
+      "themeLibrary": {
+        "title": "Your Themes",
+        "newTheme": "New Theme",
+        "noThemes": "No themes yet. Create one to get started.",
+        "presets": "Start from a preset",
+        "basedOn": "Based on {preset}",
+        "delete": "Delete",
+        "edit": "Edit"
+      },
+      "saveDialog": {
+        "title": "Save Theme",
+        "name": "Theme Name",
+        "namePlaceholder": "e.g., Brand Primary",
+        "saveAsNew": "Save as new theme",
+        "updateExisting": "Update existing theme",
+        "save": "Save Theme",
+        "cancel": "Cancel",
+        "nameRequired": "Theme name is required",
+        "nameTaken": "A theme with this name already exists"
+      },
+      "deleteDialog": {
+        "title": "Delete Theme",
+        "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "editor": {
+        "editing": "Editing: {name}",
+        "unsavedChanges": "Unsaved changes",
+        "saveTheme": "Save Theme"
+      },
+      "toast": {
+        "created": "Theme created successfully",
+        "updated": "Theme updated successfully",
+        "deleted": "Theme deleted successfully"
       }
     }
   },

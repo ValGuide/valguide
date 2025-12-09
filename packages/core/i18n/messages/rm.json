@@ -59,6 +59,9 @@
       "otherColors": "Autras colurs",
       "customize": "Persunalisar",
       "preview": "Prevista",
+      "library": "Biblioteca",
+      "startFromPreset": "Cumenzar cun in model",
+      "savedThemes": "Tes designs memorisads",
       "formElementsPreview": "Prevista dals elements da formular",
       "inputField": "Champ d'endataziun",
       "toggleSwitch": "Cumitar",
@@ -77,6 +80,42 @@
         "pickColor": "Tscherner colur per {label}",
         "hexInput": "Valur hex da colur {label}",
         "eyeDropper": "Tscherner colur dal visur"
+      },
+      "themeLibrary": {
+        "title": "Tes designs",
+        "newTheme": "Nov design",
+        "noThemes": "Anc nagins designs. Creescha in per cumenzar.",
+        "presets": "Cumenzar cun ina basa",
+        "basedOn": "Basà sin {preset}",
+        "delete": "Stizzar",
+        "edit": "Modifitgar"
+      },
+      "saveDialog": {
+        "title": "Memorisar design",
+        "name": "Num dal design",
+        "namePlaceholder": "p.ex. Design primari",
+        "saveAsNew": "Memorisar sco nov design",
+        "updateExisting": "Actualisar design existent",
+        "save": "Memorisar design",
+        "cancel": "Annullar",
+        "nameRequired": "Il num dal design è necessari",
+        "nameTaken": "In design cun quest num exista gia"
+      },
+      "deleteDialog": {
+        "title": "Stizzar design",
+        "message": "Es ti segir che ti vuls stizzar \"{name}\"? Questa acziun na po betg vegnir revocada.",
+        "confirm": "Stizzar",
+        "cancel": "Annullar"
+      },
+      "editor": {
+        "editing": "Modifitgar: {name}",
+        "unsavedChanges": "Midadas betg memorisadas",
+        "saveTheme": "Memorisar design"
+      },
+      "toast": {
+        "created": "Design creà cun success",
+        "updated": "Design actualisà cun success",
+        "deleted": "Design stizzà cun success"
       }
     }
   },

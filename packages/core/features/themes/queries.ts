@@ -3,7 +3,7 @@ import { db } from '../db'
 import { guide } from '../guides/schema'
 import { organization } from '../orgs/schema'
 import { defaultFonts, defaultRadius, themeColorPresets } from './presets'
-import { theme } from './schema'
+import { theme as themeTable } from './schema'
 import type { ThemeConfig } from './types'
 
 export const DEFAULT_THEME: ThemeConfig = {
@@ -14,20 +14,25 @@ export const DEFAULT_THEME: ThemeConfig = {
 }
 
 export async function getThemeById(themeId: string): Promise<ThemeConfig | null> {
-  const [theme] = await db.select().from(theme).where(eq(theme.id, themeId)).limit(1)
+  const [row] = await db.select().from(themeTable).where(eq(themeTable.id, themeId)).limit(1)
 
-  if (!theme) return null
+  if (!row) return null
 
   return {
-    basePreset: theme.basePreset,
-    colors: theme.colors,
-    radius: Number(theme.radius),
-    fonts: theme.fonts,
+    basePreset: row.basePreset,
+    colors: row.colors,
+    radius: Number(row.radius),
+    fonts: row.fonts,
   }
 }
 
+export async function getFullThemeById(themeId: string) {
+  const [row] = await db.select().from(themeTable).where(eq(themeTable.id, themeId)).limit(1)
+  return row ?? null
+}
+
 export async function getOrgThemes(organizationId: string) {
-  return db.select().from(theme).where(eq(theme.organizationId, organizationId)).orderBy(theme.name)
+  return db.select().from(themeTable).where(eq(themeTable.organizationId, organizationId)).orderBy(themeTable.name)
 }
 
 export async function getOrgDefaultTheme(organizationId: string): Promise<ThemeConfig | null> {
@@ -55,14 +60,14 @@ export async function getEffectiveGuideTheme(guideId: string): Promise<ThemeConf
     .select({
       guideThemeId: guide.themeId,
       orgThemeId: organization.defaultThemeId,
-      guideColors: theme.colors,
-      guideBasePreset: theme.basePreset,
-      guideRadius: theme.radius,
-      guideFonts: theme.fonts,
+      guideColors: themeTable.colors,
+      guideBasePreset: themeTable.basePreset,
+      guideRadius: themeTable.radius,
+      guideFonts: themeTable.fonts,
     })
     .from(guide)
     .innerJoin(organization, eq(organization.id, guide.organizationId))
-    .leftJoin(theme, eq(theme.id, guide.themeId))
+    .leftJoin(themeTable, eq(themeTable.id, guide.themeId))
     .where(eq(guide.id, guideId))
     .limit(1)
 
@@ -88,11 +93,11 @@ export async function getEffectiveGuideTheme(guideId: string): Promise<ThemeConf
 }
 
 export async function getThemeByName(organizationId: string, name: string) {
-  const [theme] = await db
+  const [row] = await db
     .select()
-    .from(theme)
-    .where(and(eq(theme.organizationId, organizationId), eq(theme.name, name)))
+    .from(themeTable)
+    .where(and(eq(themeTable.organizationId, organizationId), eq(themeTable.name, name)))
     .limit(1)
 
-  return theme ?? null
+  return row ?? null
 }

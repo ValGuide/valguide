@@ -3,16 +3,16 @@
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { cn } from '@valguide/ui/lib/utils'
-import type { Theme } from '@valguide/ui/theme/themes'
 import { Palette, Smartphone } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import type { ThemePreset } from '../types'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { PlayerPreview } from './player-preview'
 import { ThemeCustomizerPanel } from './theme-customizer-panel'
 
 export interface ThemeCustomizerProps {
-  initialTheme?: Theme
+  initialTheme?: ThemePreset
   className?: string
 }
 
@@ -63,9 +63,7 @@ export function ThemeCustomizer({ initialTheme = 'light', className }: ThemeCust
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
             <span className="text-sm text-muted-foreground">
-              {customizer.config.theme === 'custom'
-                ? t('customTheme')
-                : `${customizer.config.theme.charAt(0).toUpperCase()}${customizer.config.theme.slice(1).replace('-', ' ')}`}
+              {`${customizer.config.basePreset.charAt(0).toUpperCase()}${customizer.config.basePreset.slice(1).replace('-', ' ')}`}
             </span>
           </div>
           <ScrollArea className="flex-1 rounded-lg border bg-muted/30 p-6">
@@ -78,3 +76,5 @@ export function ThemeCustomizer({ initialTheme = 'light', className }: ThemeCust
     </div>
   )
 }
+
+export { ThemeCustomizerContainer } from './theme-customizer-container'
