@@ -3,7 +3,7 @@ import { db } from '../db'
 import { guide } from '../guides/schema'
 import { organization } from '../orgs/schema'
 import { defaultFonts, defaultRadius, themeColorPresets } from './presets'
-import { customTheme } from './schema'
+import { theme } from './schema'
 import type { ThemeConfig } from './types'
 
 export const DEFAULT_THEME: ThemeConfig = {
@@ -14,7 +14,7 @@ export const DEFAULT_THEME: ThemeConfig = {
 }
 
 export async function getThemeById(themeId: string): Promise<ThemeConfig | null> {
-  const [theme] = await db.select().from(customTheme).where(eq(customTheme.id, themeId)).limit(1)
+  const [theme] = await db.select().from(theme).where(eq(theme.id, themeId)).limit(1)
 
   if (!theme) return null
 
@@ -27,7 +27,7 @@ export async function getThemeById(themeId: string): Promise<ThemeConfig | null>
 }
 
 export async function getOrgThemes(organizationId: string) {
-  return db.select().from(customTheme).where(eq(customTheme.organizationId, organizationId)).orderBy(customTheme.name)
+  return db.select().from(theme).where(eq(theme.organizationId, organizationId)).orderBy(theme.name)
 }
 
 export async function getOrgDefaultTheme(organizationId: string): Promise<ThemeConfig | null> {
@@ -55,14 +55,14 @@ export async function getEffectiveGuideTheme(guideId: string): Promise<ThemeConf
     .select({
       guideThemeId: guide.themeId,
       orgThemeId: organization.defaultThemeId,
-      guideColors: customTheme.colors,
-      guideBasePreset: customTheme.basePreset,
-      guideRadius: customTheme.radius,
-      guideFonts: customTheme.fonts,
+      guideColors: theme.colors,
+      guideBasePreset: theme.basePreset,
+      guideRadius: theme.radius,
+      guideFonts: theme.fonts,
     })
     .from(guide)
     .innerJoin(organization, eq(organization.id, guide.organizationId))
-    .leftJoin(customTheme, eq(customTheme.id, guide.themeId))
+    .leftJoin(theme, eq(theme.id, guide.themeId))
     .where(eq(guide.id, guideId))
     .limit(1)
 
@@ -87,11 +87,11 @@ export async function getEffectiveGuideTheme(guideId: string): Promise<ThemeConf
   return DEFAULT_THEME
 }
 
-export async function getCustomThemeByName(organizationId: string, name: string) {
+export async function getThemeByName(organizationId: string, name: string) {
   const [theme] = await db
     .select()
-    .from(customTheme)
-    .where(and(eq(customTheme.organizationId, organizationId), eq(customTheme.name, name)))
+    .from(theme)
+    .where(and(eq(theme.organizationId, organizationId), eq(theme.name, name)))
     .limit(1)
 
   return theme ?? null

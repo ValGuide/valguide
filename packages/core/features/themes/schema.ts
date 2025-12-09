@@ -17,8 +17,8 @@ export const themePresetEnum = pgEnum('theme_preset', [
   'purple-dark',
 ])
 
-export const customTheme = studioSchema.table(
-  'custom_theme',
+export const theme = studioSchema.table(
+  'theme',
   {
     id: uuid('id').defaultRandom().primaryKey(),
     organizationId: uuid('organization_id')
@@ -37,21 +37,21 @@ export const customTheme = studioSchema.table(
     createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqueNamePerOrg: uniqueIndex('custom_theme_unique_name_per_org').on(t.organizationId, t.name),
-    orgIdx: index('custom_theme_org_idx').on(t.organizationId),
+    uniqueNamePerOrg: uniqueIndex('theme_unique_name_per_org').on(t.organizationId, t.name),
+    orgIdx: index('theme_org_idx').on(t.organizationId),
   }),
 )
 
-export const customThemeRelations = relations(customTheme, ({ one }) => ({
+export const themeRelations = relations(theme, ({ one }) => ({
   organization: one(organization, {
-    fields: [customTheme.organizationId],
+    fields: [theme.organizationId],
     references: [organization.id],
   }),
   creator: one(authUsers, {
-    fields: [customTheme.createdBy],
+    fields: [theme.createdBy],
     references: [authUsers.id],
   }),
 }))
 
-export type CustomTheme = typeof customTheme.$inferSelect
-export type NewCustomTheme = typeof customTheme.$inferInsert
+export type Theme = typeof theme.$inferSelect
+export type NewTheme = typeof theme.$inferInsert

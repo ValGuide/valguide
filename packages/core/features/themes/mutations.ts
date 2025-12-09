@@ -2,7 +2,7 @@ import { and, eq } from 'drizzle-orm'
 import { db } from '../db'
 import { guide } from '../guides/schema'
 import { organization } from '../orgs/schema'
-import { customTheme, type NewCustomTheme } from './schema'
+import { type NewTheme, theme } from './schema'
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
 
 export interface CreateThemeInput {
@@ -17,7 +17,7 @@ export interface CreateThemeInput {
 
 export async function createTheme(input: CreateThemeInput) {
   const [theme] = await db
-    .insert(customTheme)
+    .insert(theme)
     .values({
       organizationId: input.organizationId,
       name: input.name,
@@ -26,7 +26,7 @@ export async function createTheme(input: CreateThemeInput) {
       radius: String(input.radius),
       fonts: input.fonts,
       createdBy: input.createdBy,
-    } satisfies NewCustomTheme)
+    } satisfies NewTheme)
     .returning()
 
   return theme
@@ -42,7 +42,7 @@ export interface UpdateThemeInput {
 }
 
 export async function updateTheme(input: UpdateThemeInput) {
-  const updates: Partial<NewCustomTheme> = {}
+  const updates: Partial<NewTheme> = {}
 
   if (input.name !== undefined) updates.name = input.name
   if (input.basePreset !== undefined) updates.basePreset = input.basePreset
@@ -50,7 +50,7 @@ export async function updateTheme(input: UpdateThemeInput) {
   if (input.radius !== undefined) updates.radius = String(input.radius)
   if (input.fonts !== undefined) updates.fonts = input.fonts
 
-  const [theme] = await db.update(customTheme).set(updates).where(eq(customTheme.id, input.id)).returning()
+  const [theme] = await db.update(theme).set(updates).where(eq(theme.id, input.id)).returning()
 
   return theme
 }
@@ -60,7 +60,7 @@ export async function deleteTheme(themeId: string) {
 
   await db.update(guide).set({ themeId: null }).where(eq(guide.themeId, themeId))
 
-  const [deleted] = await db.delete(customTheme).where(eq(customTheme.id, themeId)).returning()
+  const [deleted] = await db.delete(theme).where(eq(theme.id, themeId)).returning()
 
   return deleted
 }
@@ -69,8 +69,8 @@ export async function setOrgDefaultTheme(organizationId: string, themeId: string
   if (themeId) {
     const [theme] = await db
       .select()
-      .from(customTheme)
-      .where(and(eq(customTheme.id, themeId), eq(customTheme.organizationId, organizationId)))
+      .from(theme)
+      .where(and(eq(theme.id, themeId), eq(theme.organizationId, organizationId)))
       .limit(1)
 
     if (!theme) {
@@ -101,8 +101,8 @@ export async function setGuideTheme(guideId: string, themeId: string | null) {
 
     const [theme] = await db
       .select()
-      .from(customTheme)
-      .where(and(eq(customTheme.id, themeId), eq(customTheme.organizationId, g.organizationId)))
+      .from(theme)
+      .where(and(eq(theme.id, themeId), eq(theme.organizationId, g.organizationId)))
       .limit(1)
 
     if (!theme) {
@@ -116,7 +116,7 @@ export async function setGuideTheme(guideId: string, themeId: string | null) {
 }
 
 export async function duplicateTheme(themeId: string, newName: string, createdBy?: string) {
-  const [original] = await db.select().from(customTheme).where(eq(customTheme.id, themeId)).limit(1)
+  const [original] = await db.select().from(theme).where(eq(theme.id, themeId)).limit(1)
 
   if (!original) {
     throw new Error('Theme not found')
