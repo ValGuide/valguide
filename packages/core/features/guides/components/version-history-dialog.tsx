@@ -127,12 +127,12 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
             <span className="hidden lg:inline">{t('button')}</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-2xl max-h-[90vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle>{t('titleWithLocale', { locale: displayLocale })}</DialogTitle>
             <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
-          <ScrollArea className="h-[400px] pr-4">
+          <ScrollArea className="h-[60vh] sm:h-[400px] pr-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <p className="text-muted-foreground">{t('loading')}</p>
@@ -144,29 +144,25 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
             ) : (
               <div className="space-y-4">
                 {versions.map((version) => (
-                  <div key={version.id} className="rounded-lg border p-4 hover:bg-accent/50 transition-colors">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold">
+                  <div key={version.id} className="rounded-lg border p-3 sm:p-4 hover:bg-accent/50 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                      <div className="flex-1 space-y-2 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold text-sm sm:text-base">
                             {t('versionLabel')} {version.version}
                           </span>
                           <TranslationStatusBadge status={version.status} />
                         </div>
                         <div className="space-y-1 text-sm">
-                          <p className="font-medium">{version.title}</p>
+                          <p className="font-medium truncate">{version.title}</p>
                           {version.description && (
                             <p className="text-muted-foreground line-clamp-2">{version.description}</p>
                           )}
                         </div>
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span>
-                            {t('created')}: {formatDate(version.createdAt)}
-                          </span>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-muted-foreground">
+                          <span>{t('created', { date: formatDate(version.createdAt) })}</span>
                           {version.publishedAt && (
-                            <span>
-                              {t('published')}: {formatDate(version.publishedAt)}
-                            </span>
+                            <span>{t('published', { date: formatDate(version.publishedAt) })}</span>
                           )}
                         </div>
                       </div>
@@ -174,7 +170,7 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
                         variant="ghost"
                         size="sm"
                         onClick={() => handleRollbackClick(version.version)}
-                        className="ml-4"
+                        className="self-start shrink-0"
                       >
                         <RotateCcw className="mr-2 h-3 w-3" />
                         {t('rollback')}
