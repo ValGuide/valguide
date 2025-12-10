@@ -309,7 +309,8 @@
       "edit": "Bearbeiten"
     },
     "breadcrumb": {
-      "stops": "Stops"
+      "stops": "Stops",
+      "toggleMenu": "Menü umschalten"
     },
     "empty": {
       "title": "Noch keine Guides",
@@ -442,8 +443,8 @@
       "loading": "Versionen werden geladen...",
       "noVersions": "Kein Versionsverlauf verfügbar",
       "versionLabel": "Version",
-      "created": "Erstellt",
-      "published": "Veröffentlicht",
+      "created": "Erstellt: {date}",
+      "published": "Veröffentlicht: {date}",
       "rollback": "Wiederherstellen",
       "rollbackSuccess": "Version als Entwurf wiederhergestellt",
       "rollbackError": "Fehler beim Wiederherstellen der Version",
@@ -574,8 +575,8 @@
       "loading": "Versionen werden geladen...",
       "noVersions": "Kein Versionsverlauf verfügbar",
       "versionLabel": "Version",
-      "created": "Erstellt",
-      "published": "Veröffentlicht",
+      "created": "Erstellt: {date}",
+      "published": "Veröffentlicht: {date}",
       "rollback": "Wiederherstellen",
       "rollbackSuccess": "Version als Entwurf wiederhergestellt",
       "rollbackError": "Fehler beim Wiederherstellen der Version",

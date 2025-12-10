@@ -50,6 +50,7 @@ export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollbac
     setIsMounted(true)
   }, [])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: t changes on every render, causing infinite loops
   const loadVersions = useCallback(async () => {
     setIsLoading(true)
     try {
@@ -61,7 +62,7 @@ export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollbac
     } finally {
       setIsLoading(false)
     }
-  }, [stopId, locale, t])
+  }, [stopId, locale])
 
   useEffect(() => {
     if (isOpen) {
@@ -159,13 +160,9 @@ export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollbac
                           )}
                         </div>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span>
-                            {t('created')}: {formatDate(version.createdAt)}
-                          </span>
+                          <span>{t('created', { date: formatDate(version.createdAt) })}</span>
                           {version.publishedAt && (
-                            <span>
-                              {t('published')}: {formatDate(version.publishedAt)}
-                            </span>
+                            <span>{t('published', { date: formatDate(version.publishedAt) })}</span>
                           )}
                         </div>
                       </div>

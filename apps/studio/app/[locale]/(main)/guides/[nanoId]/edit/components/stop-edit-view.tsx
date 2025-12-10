@@ -50,6 +50,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     attachAssetToStop,
     setActiveLocale,
     save,
+    refetch,
     registerFormDirty,
     unregisterForm,
     registerFormReset,
@@ -137,7 +138,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                   <DropdownMenu>
                     <DropdownMenuTrigger className="flex items-center gap-1">
                       <BreadcrumbEllipsis className="h-4 w-4" />
-                      <span className="sr-only">Toggle menu</span>
+                      <span className="sr-only">{t('breadcrumb.toggleMenu')}</span>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start">
                       <DropdownMenuItem asChild>
@@ -174,7 +175,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                 locale={activeLocale}
                 localeName={getLocaleDisplayName(activeLocale)}
                 onRollback={() => {
-                  router.refresh()
+                  refetch()
                 }}
               />
               <PublishStopTranslationButton
@@ -183,7 +184,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                 localeName={getLocaleDisplayName(activeLocale)}
                 hasDraft={!!currentStopTranslation?.draftVersionId}
                 onPublished={() => {
-                  router.refresh()
+                  refetch()
                 }}
               />
               <Button variant="ghost" size="sm" className="hidden sm:flex">

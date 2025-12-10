@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@valguide/core'],
+  transpilePackages: ['@valguide/core', 'nanoid'],
   images: {
     remotePatterns: [
       {

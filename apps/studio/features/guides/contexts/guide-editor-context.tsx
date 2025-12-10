@@ -15,6 +15,7 @@ import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@va
 import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
 import { defaultLocale, type SupportedLocale, supportedLocales } from '@valguide/i18n/i18n.config'
 import { usePathname, useRouter } from '@valguide/i18n/routing'
+// biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
@@ -64,6 +65,9 @@ interface GuideEditorContextValue {
   // Save actions
   save: () => Promise<void>
   publish: () => Promise<void>
+
+  // Refetch data from server
+  refetch: () => Promise<void>
 
   // Form dirty registration
   registerFormDirty: (formId: string, isDirty: boolean) => void
@@ -307,7 +311,7 @@ export function GuideEditorProvider({
       toast.error(t('stops.actions.addError'))
       return null
     }
-  }, [guide.id, guide.stops.length, t])
+  }, [guide, t])
 
   // Delete stop
   const deleteStop = useCallback(
@@ -580,6 +584,7 @@ export function GuideEditorProvider({
       }
 
       // Only save modified stop translations
+      const savedStopVersionIds: Record<string, string> = {}
       for (const key of modifiedStops) {
         const [stopId, locale] = key.split(':')
         const stop = currentGuide.stops.find((s) => s.id === stopId)
@@ -589,13 +594,16 @@ export function GuideEditorProvider({
             // Get content from draft version or current version
             const version = translation.draftVersion || translation.currentVersion
             if (version) {
-              await updateStop({
+              const result = await updateStop({
                 stopId: stop.id,
                 locale: translation.locale,
                 title: version.title,
                 description: version.description || '',
                 transcription: version.transcription || '',
               })
+              if (result.versionId) {
+                savedStopVersionIds[key] = result.versionId
+              }
             }
           }
         }
@@ -606,7 +614,7 @@ export function GuideEditorProvider({
       modifiedStopsRef.current.clear()
 
       // Update local state with draft version IDs so publish button appears
-      if (Object.keys(savedTranslationVersionIds).length > 0) {
+      if (Object.keys(savedTranslationVersionIds).length > 0 || Object.keys(savedStopVersionIds).length > 0) {
         setGuide((prev) => ({
           ...prev,
           translations: prev.translations.map((t) => {
@@ -619,6 +627,20 @@ export function GuideEditorProvider({
             }
             return t
           }),
+          stops: prev.stops.map((s) => ({
+            ...s,
+            translations: s.translations.map((t) => {
+              const key = `${s.id}:${t.locale}`
+              const versionId = savedStopVersionIds[key]
+              if (versionId) {
+                return {
+                  ...t,
+                  draftVersionId: versionId,
+                }
+              }
+              return t
+            }),
+          })),
         }))
       }
 
@@ -666,6 +688,17 @@ export function GuideEditorProvider({
     }
   }, [guide.id, guide.coverImage, guide.organizationId, save, t])
 
+  // Refetch data from server (revalidates SWR and updates local state)
+  const refetch = useCallback(async () => {
+    const freshData = await onMutateRef.current?.()
+    if (freshData) {
+      setGuide(freshData)
+      initialGuideRef.current = freshData
+      initialCoverImageRef.current = freshData.coverImage
+      resetAllForms()
+    }
+  }, [resetAllForms])
+
   const value: GuideEditorContextValue = {
     guide,
     activeLocale,
@@ -684,6 +717,7 @@ export function GuideEditorProvider({
     setActiveLocale,
     save,
     publish,
+    refetch,
     registerFormDirty,
     unregisterForm,
     resetAllForms,

@@ -309,7 +309,8 @@
       "edit": "Modifitgar"
     },
     "breadcrumb": {
-      "stops": "Stops"
+      "stops": "Stops",
+      "toggleMenu": "Avrir menu"
     },
     "empty": {
       "title": "Anc nagins guids",
@@ -442,8 +443,8 @@
       "loading": "Chargiar versiuns...",
       "noVersions": "Nagina cronologia da versiuns disponibla",
       "versionLabel": "Versiun",
-      "created": "Creà",
-      "published": "Publichà",
+      "created": "Creà: {date}",
+      "published": "Publichà: {date}",
       "rollback": "Restaurar",
       "rollbackSuccess": "Versiun restaurada sco sboz",
       "rollbackError": "Errur tar restaurar la versiun",
@@ -574,8 +575,8 @@
       "loading": "Chargiar versiuns...",
       "noVersions": "Nagina cronologia da versiuns disponibla",
       "versionLabel": "Versiun",
-      "created": "Creà",
-      "published": "Publichà",
+      "created": "Creà: {date}",
+      "published": "Publichà: {date}",
       "rollback": "Restaurar",
       "rollbackSuccess": "Versiun restaurada sco sboz",
       "rollbackError": "Errur tar restaurar la versiun",

@@ -309,7 +309,8 @@
       "edit": "Edit"
     },
     "breadcrumb": {
-      "stops": "Stops"
+      "stops": "Stops",
+      "toggleMenu": "Toggle menu"
     },
     "empty": {
       "title": "No guides yet",
@@ -442,8 +443,8 @@
       "loading": "Loading versions...",
       "noVersions": "No version history available",
       "versionLabel": "Version",
-      "created": "Created",
-      "published": "Published",
+      "created": "Created: {date}",
+      "published": "Published: {date}",
       "rollback": "Restore",
       "rollbackSuccess": "Version restored as draft",
       "rollbackError": "Failed to restore version",
@@ -574,8 +575,8 @@
       "loading": "Loading versions...",
       "noVersions": "No version history available",
       "versionLabel": "Version",
-      "created": "Created",
-      "published": "Published",
+      "created": "Created: {date}",
+      "published": "Published: {date}",
       "rollback": "Restore",
       "rollbackSuccess": "Version restored as draft",
       "rollbackError": "Failed to restore version",

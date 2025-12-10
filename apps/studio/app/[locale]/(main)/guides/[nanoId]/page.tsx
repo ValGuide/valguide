@@ -56,7 +56,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
             <Button asChild>
               <Link href={`/guides/${nanoId}/edit`}>
                 <Pencil className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('editGuide')}</span>
+                {t('editGuide')}
               </Link>
             </Button>
           </div>
