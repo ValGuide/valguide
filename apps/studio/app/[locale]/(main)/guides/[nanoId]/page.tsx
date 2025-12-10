@@ -18,7 +18,7 @@ interface GuidePageParams {
   nanoId: string
 }
 
-export const dynamic = 'error'
+export const dynamic = 'force-dynamic'
 
 export default async function GuidePage({ params }: { params: Promise<GuidePageParams> }) {
   const { locale, nanoId } = await params
