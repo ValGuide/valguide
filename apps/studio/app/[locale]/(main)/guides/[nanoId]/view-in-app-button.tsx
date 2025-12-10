@@ -20,7 +20,7 @@ export function ViewInAppButton({ nanoId, published }: ViewInAppButtonProps) {
     <Button variant="outline" asChild>
       <a href={`https://${appDomain}/g/${nanoId}`} target="_blank" rel="noopener noreferrer">
         <ExternalLink />
-        {t('viewInApp')}
+        <span className="hidden sm:inline">{t('viewInApp')}</span>
       </a>
     </Button>
   )

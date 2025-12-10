@@ -51,7 +51,7 @@ export function ArchiveGuideButton({ guideId }: ArchiveGuideButtonProps) {
     <>
       <Button variant="outline" onClick={() => setOpen(true)}>
         <Archive />
-        {t('button')}
+        <span className="hidden sm:inline">{t('button')}</span>
       </Button>
 
       <AlertDialog open={open} onOpenChange={setOpen}>

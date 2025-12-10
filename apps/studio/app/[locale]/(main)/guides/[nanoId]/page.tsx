@@ -41,14 +41,14 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
   return (
     <main className="flex flex-1 flex-col bg-gray-50 dark:bg-background">
       {/* Header */}
-      <div className="border-b bg-background px-6 py-3">
-        <div className="mx-auto flex max-w-5xl items-center justify-between">
+      <div className="border-b bg-background px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">
           <Link
             href="/"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
           >
-            <ArrowLeft className="h-4 w-4" />
-            {t('backToGuides')}
+            <ArrowLeft className="h-4 w-4 shrink-0" />
+            <span className="hidden sm:inline">{t('backToGuides')}</span>
           </Link>
           <div className="flex gap-2">
             <ViewInAppButton nanoId={nanoId} published={isPublished} />
@@ -56,7 +56,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
             <Button asChild>
               <Link href={`/guides/${nanoId}/edit`}>
                 <Pencil className="h-4 w-4" />
-                {t('editGuide')}
+                <span className="hidden sm:inline">{t('editGuide')}</span>
               </Link>
             </Button>
           </div>

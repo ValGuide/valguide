@@ -73,13 +73,20 @@ export function AssetsList({
           <Skeleton className="h-10 w-40" />
           <Skeleton className="h-10 w-40" />
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {[...Array(8)].map((_, i) => (
+        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]">
+          {[...Array(12)].map((_, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items have no unique ID
-            <div key={i} className="space-y-3">
-              <Skeleton className="h-48 w-full rounded-xl" />
+            <div key={i} className="rounded-xl border bg-card p-4 space-y-3">
+              <Skeleton className="h-48 w-full rounded-lg" />
               <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
+              <div className="flex gap-2">
+                <Skeleton className="h-5 w-12 rounded-full" />
+                <Skeleton className="h-5 w-8 rounded-full" />
+              </div>
+              <div className="space-y-1">
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-3 w-28" />
+              </div>
             </div>
           ))}
         </div>
@@ -185,7 +192,7 @@ export function AssetsList({
               </EmptyContent>
             </Empty>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]">
               {filteredAssets.map((asset) => (
                 <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} />
               ))}
