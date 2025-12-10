@@ -66,8 +66,8 @@ export function PublishTranslationButton({
   return (
     <>
       <Button onClick={() => setIsOpen(true)} disabled={disabled} variant="default" size="sm">
-        <Upload className="h-4 w-4 sm:mr-2" />
-        <span className="hidden sm:inline">{t('buttonWithLocale', { locale: displayLocale })}</span>
+        <Upload className="h-4 w-4 lg:mr-2" />
+        <span className="hidden lg:inline">{t('buttonWithLocale', { locale: displayLocale })}</span>
       </Button>
 
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

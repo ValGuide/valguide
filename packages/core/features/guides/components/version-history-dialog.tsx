@@ -61,7 +61,8 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
     } finally {
       setIsLoading(false)
     }
-  }, [guideId, locale, t])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- t changes on every render, causing infinite loops
+  }, [guideId, locale])
 
   useEffect(() => {
     if (isOpen) {
@@ -111,8 +112,8 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
   if (!isMounted) {
     return (
       <Button variant="outline" size="sm" disabled>
-        <History className="h-4 w-4 sm:mr-2" />
-        <span className="hidden sm:inline">{t('button')}</span>
+        <History className="h-4 w-4 lg:mr-2" />
+        <span className="hidden lg:inline">{t('button')}</span>
       </Button>
     )
   }
@@ -122,8 +123,8 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
-            <History className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">{t('button')}</span>
+            <History className="h-4 w-4 lg:mr-2" />
+            <span className="hidden lg:inline">{t('button')}</span>
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-2xl">

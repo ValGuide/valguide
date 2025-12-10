@@ -14,7 +14,7 @@ import {
 } from '@valguide/ui/components/breadcrumb'
 import { Button } from '@valguide/ui/components/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { ListChecks } from 'lucide-react'
+import { Eye, ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef } from 'react'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
@@ -47,6 +47,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     reorderStops,
     setActiveLocale,
     save,
+    refetch,
     registerFormDirty,
     unregisterForm,
     registerFormReset,
@@ -141,13 +142,13 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
+            <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
               <VersionHistoryDialog
                 guideId={guide.id}
                 locale={activeLocale}
                 localeName={getLocaleDisplayName(activeLocale)}
                 onRollback={() => {
-                  router.refresh()
+                  refetch()
                 }}
               />
               <PublishTranslationButton
@@ -156,17 +157,21 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                 localeName={getLocaleDisplayName(activeLocale)}
                 hasDraft={!!currentTranslation?.draftVersionId}
                 onPublished={() => {
-                  router.refresh()
+                  refetch()
                 }}
               />
-              <Button variant="ghost" size="sm" className="hidden sm:flex">
+              <Button variant="ghost" size="icon" className="h-8 w-8 lg:hidden">
+                <span className="sr-only">{t('editor.preview')}</span>
+                <Eye className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm" className="hidden lg:flex">
                 {t('editor.preview')}
               </Button>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-1 lg:hidden">
+                  <Button variant="outline" size="icon" className="h-8 w-8 lg:hidden">
                     <ListChecks className="h-4 w-4" />
-                    <span className="hidden sm:inline">{t('editor.progress')}</span>
+                    <span className="sr-only">{t('editor.progress')}</span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
@@ -178,7 +183,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                   </div>
                 </SheetContent>
               </Sheet>
-              <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
+              <Button onClick={save} disabled={isSaving || !isDirty} size="sm" className="px-2 sm:px-3">
                 {isSaving ? t('editor.saving') : t('editor.save')}
               </Button>
             </div>
