@@ -387,15 +387,26 @@
     "noArchivedGuidesDescription": "Guidas archivadas vegnan mussadas qua",
     "publish": {
       "button": "Publitgar",
+      "buttonWithLocale": "Publitgar {locale}",
       "success": "Translaziun publichada cun success",
       "error": "Errur tar publitgar la translaziun",
       "confirmTitle": "Publitgar questa translaziun?",
+      "confirmTitleWithLocale": "Publitgar versiun {locale}?",
       "confirmDescription": "Quai renda la versiun da sboz visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
+      "confirmDescriptionWithLocale": "Quai publitgescha la translaziun {locale}. La versiun actualmain publichada vegn remplazzada.",
       "cancel": "Interrumper",
       "confirm": "Publitgar",
       "publishing": "Vegn publichà...",
       "guidePublished": "Guid publichà",
       "guidePublishError": "Errur cun publitgar il guid"
+    },
+    "localeSelector": {
+      "selectLanguage": "Tscherner linguatg",
+      "searchLanguages": "Tschertgar linguatgs...",
+      "noLanguageFound": "Nagin linguatg chattà",
+      "statusPublished": "Publichà",
+      "statusDraft": "Sboz",
+      "statusEmpty": "Vid"
     },
     "progress": {
       "title": "Progress dal guid",
@@ -408,11 +419,25 @@
       "unpublishedChanges": "Midadas betg publitgadas",
       "stopsWithDrafts": "{count, plural, =1 {1 stop ha midadas betg publitgadas} other {# stops han midadas betg publitgadas}}",
       "guideDraft": "Guid ha midadas betg publitgadas",
-      "allPublished": "Tut il cuntegn è publitgà"
+      "allPublished": "Tut il cuntegn è publitgà",
+      "currentLanguage": "Translaziun {language}",
+      "guideStatus": "Status dal guid",
+      "status": {
+        "published": "Publichà",
+        "draft": "Sboz",
+        "empty": "Betg cumenzà"
+      },
+      "stopsBreakdown": "Stops ({total} total)",
+      "published": "Publichà",
+      "draft": "Sboz",
+      "notStarted": "Betg cumenzà",
+      "allLanguages": "Tut ils linguatgs",
+      "translatedCount": "{translated}/{total} translatà"
     },
     "versionHistory": {
       "button": "Cronologia da versiuns",
       "title": "Cronologia da translaziuns",
+      "titleWithLocale": "Cronologia da versiuns ({locale})",
       "description": "Mussar e administrar versiuns pli veglias da questa translaziun",
       "loading": "Chargiar versiuns...",
       "noVersions": "Nagina cronologia da versiuns disponibla",
@@ -525,17 +550,26 @@
     },
     "publish": {
       "button": "Publitgar",
+      "buttonWithLocale": "Publitgar {locale}",
       "success": "Translaziun dal stop publichada cun success",
       "error": "Errur tar publitgar la translaziun dal stop",
       "confirmTitle": "Publitgar translaziun dal stop?",
+      "confirmTitleWithLocale": "Publitgar stop en {locale}?",
       "confirmDescription": "Quai renda la versiun da sboz da quest stop visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
+      "confirmDescriptionWithLocale": "Quai publitgescha la translaziun {locale} da quest stop. La versiun actualmain publichada vegn remplazzada.",
       "cancel": "Interrumper",
       "confirm": "Publitgar",
       "publishing": "Vegn publichà..."
     },
+    "translationStatus": {
+      "published": "Publichà",
+      "draft": "Sboz",
+      "empty": "Betg cumenzà"
+    },
     "versionHistory": {
       "button": "Cronologia da versiuns",
       "title": "Cronologia da translaziuns dal stop",
+      "titleWithLocale": "Cronologia da versiuns ({locale})",
       "description": "Mussar e administrar versiuns pli veglias da questa translaziun dal stop",
       "loading": "Chargiar versiuns...",
       "noVersions": "Nagina cronologia da versiuns disponibla",

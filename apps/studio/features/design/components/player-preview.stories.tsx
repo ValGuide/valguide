@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { themeColorPresets, type ThemePreset } from '../theme-presets'
+import { type ThemePreset, themeColorPresets } from '../theme-presets'
 import { PlayerPreview } from './player-preview'
 
 const meta: Meta<typeof PlayerPreview> = {

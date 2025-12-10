@@ -23,12 +23,14 @@ import {
 import { ArrowLeft } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef } from 'react'
-import { LocaleTabs } from '@/features/guides/components/locale-tabs'
+import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
 import { StopEditor, type StopEditorRef } from '@/features/guides/components/stop-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
+import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
+import { getStopLocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 interface StopEditViewProps {
   stop: StopWithAssets
@@ -57,6 +59,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   const stop: StopWithAssets = foundStop ?? stopProp
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
+  const { buildUrl } = useLocaleUrl(activeLocale)
 
   const guideDetailUrl = `/guides/${guide.nanoId}`
 
@@ -75,6 +78,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   useAutoSave(save, isDirty)
 
   const currentStopTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
+  const localeStatusMap = getStopLocaleStatusMap(stop)
 
   // Filter assets by role and locale for the current stop
   const stopImages = stop.assets.filter(
@@ -103,7 +107,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   }, [formId, registerFormReset, unregisterForm])
 
   const handleBackToGuide = () => {
-    confirmIfDirty(() => router.push(`/guides/${guide.nanoId}/edit`))
+    confirmIfDirty(() => router.push(buildUrl(`/guides/${guide.nanoId}/edit`)))
   }
 
   const handleStopChange = useCallback(
@@ -168,6 +172,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
               <VersionHistoryDialogStop
                 stopId={stop.id}
                 locale={activeLocale}
+                localeName={getLocaleDisplayName(activeLocale)}
                 onRollback={() => {
                   router.refresh()
                 }}
@@ -175,6 +180,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
               <PublishStopTranslationButton
                 stopId={stop.id}
                 locale={activeLocale}
+                localeName={getLocaleDisplayName(activeLocale)}
                 hasDraft={!!currentStopTranslation?.draftVersionId}
                 onPublished={() => {
                   router.refresh()
@@ -195,12 +201,13 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
           <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
-                <Button variant="ghost" size="sm" onClick={handleBackToGuide} className="gap-1">
-                  <ArrowLeft className="h-4 w-4" />
-                  {t('editor.backToGuide')}
-                </Button>
-
-                <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
+                <div className="flex items-center justify-between gap-4">
+                  <Button variant="ghost" size="sm" onClick={handleBackToGuide} className="gap-1 w-fit">
+                    <ArrowLeft className="h-4 w-4" />
+                    {t('editor.backToGuide')}
+                  </Button>
+                  <LocaleSelector value={activeLocale} onValueChange={setActiveLocale} localeStatus={localeStatusMap} />
+                </div>
 
                 <StopEditor
                   ref={stopEditorRef}

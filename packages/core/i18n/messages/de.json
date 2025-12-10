@@ -387,15 +387,26 @@
     "noArchivedGuidesDescription": "Archivierte Guides werden hier angezeigt",
     "publish": {
       "button": "Veröffentlichen",
+      "buttonWithLocale": "{locale} veröffentlichen",
       "success": "Übersetzung erfolgreich veröffentlicht",
       "error": "Fehler beim Veröffentlichen der Übersetzung",
       "confirmTitle": "Übersetzung veröffentlichen?",
+      "confirmTitleWithLocale": "{locale} Version veröffentlichen?",
       "confirmDescription": "Dies wird die Entwurfsversion für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
+      "confirmDescriptionWithLocale": "Dies wird die {locale} Übersetzung veröffentlichen. Die aktuelle veröffentlichte Version wird ersetzt.",
       "cancel": "Abbrechen",
       "confirm": "Veröffentlichen",
       "publishing": "Wird veröffentlicht...",
       "guidePublished": "Guide veröffentlicht",
       "guidePublishError": "Fehler beim Veröffentlichen des Guides"
+    },
+    "localeSelector": {
+      "selectLanguage": "Sprache auswählen",
+      "searchLanguages": "Sprachen suchen...",
+      "noLanguageFound": "Keine Sprache gefunden",
+      "statusPublished": "Veröffentlicht",
+      "statusDraft": "Entwurf",
+      "statusEmpty": "Leer"
     },
     "progress": {
       "title": "Guide-Fortschritt",
@@ -408,11 +419,25 @@
       "unpublishedChanges": "Unveröffentlichte Änderungen",
       "stopsWithDrafts": "{count, plural, =1 {1 Stop hat unveröffentlichte Änderungen} other {# Stops haben unveröffentlichte Änderungen}}",
       "guideDraft": "Guide hat unveröffentlichte Änderungen",
-      "allPublished": "Alle Inhalte sind veröffentlicht"
+      "allPublished": "Alle Inhalte sind veröffentlicht",
+      "currentLanguage": "{language} Übersetzung",
+      "guideStatus": "Guide-Status",
+      "status": {
+        "published": "Veröffentlicht",
+        "draft": "Entwurf",
+        "empty": "Nicht begonnen"
+      },
+      "stopsBreakdown": "Stops ({total} insgesamt)",
+      "published": "Veröffentlicht",
+      "draft": "Entwurf",
+      "notStarted": "Nicht begonnen",
+      "allLanguages": "Alle Sprachen",
+      "translatedCount": "{translated}/{total} übersetzt"
     },
     "versionHistory": {
       "button": "Versionsverlauf",
       "title": "Übersetzungsverlauf",
+      "titleWithLocale": "Versionsverlauf ({locale})",
       "description": "Vorherige Versionen dieser Übersetzung anzeigen und verwalten",
       "loading": "Versionen werden geladen...",
       "noVersions": "Kein Versionsverlauf verfügbar",
@@ -525,17 +550,26 @@
     },
     "publish": {
       "button": "Veröffentlichen",
+      "buttonWithLocale": "{locale} veröffentlichen",
       "success": "Stop-Übersetzung erfolgreich veröffentlicht",
       "error": "Fehler beim Veröffentlichen der Stop-Übersetzung",
       "confirmTitle": "Stop-Übersetzung veröffentlichen?",
+      "confirmTitleWithLocale": "Stop auf {locale} veröffentlichen?",
       "confirmDescription": "Dies wird die Entwurfsversion dieses Stops für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
+      "confirmDescriptionWithLocale": "Dies wird die {locale} Übersetzung dieses Stops veröffentlichen. Die aktuelle veröffentlichte Version wird ersetzt.",
       "cancel": "Abbrechen",
       "confirm": "Veröffentlichen",
       "publishing": "Wird veröffentlicht..."
     },
+    "translationStatus": {
+      "published": "Veröffentlicht",
+      "draft": "Entwurf",
+      "empty": "Nicht begonnen"
+    },
     "versionHistory": {
       "button": "Versionsverlauf",
       "title": "Stop-Übersetzungsverlauf",
+      "titleWithLocale": "Versionsverlauf ({locale})",
       "description": "Vorherige Versionen dieser Stop-Übersetzung anzeigen und verwalten",
       "loading": "Versionen werden geladen...",
       "noVersions": "Kein Versionsverlauf verfügbar",

@@ -31,11 +31,13 @@ import { TranslationStatusBadge } from './translation-status-badge'
 interface VersionHistoryDialogProps {
   guideId: string
   locale: string
+  localeName?: string
   onRollback?: () => void
 }
 
-export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHistoryDialogProps) {
+export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }: VersionHistoryDialogProps) {
   const t = useTranslations('guides.versionHistory')
+  const displayLocale = localeName ?? locale.toUpperCase()
   const [isMounted, setIsMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [versions, setVersions] = useState<GuideTranslationVersion[]>([])
@@ -59,13 +61,13 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
     } finally {
       setIsLoading(false)
     }
-  }, [guideId, locale])
+  }, [guideId, locale, t])
 
   useEffect(() => {
     if (isOpen) {
       loadVersions()
     }
-  }, [isOpen, guideId, locale])
+  }, [isOpen, loadVersions])
 
   const handleRollbackClick = (version: number) => {
     setSelectedVersion(version)
@@ -126,7 +128,7 @@ export function VersionHistoryDialog({ guideId, locale, onRollback }: VersionHis
         </DialogTrigger>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{t('title')}</DialogTitle>
+            <DialogTitle>{t('titleWithLocale', { locale: displayLocale })}</DialogTitle>
             <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
           <ScrollArea className="h-[400px] pr-4">

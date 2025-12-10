@@ -3,12 +3,12 @@
 import type { Theme } from '@valguide/core/features/themes/schema'
 import useSWR from 'swr'
 import {
-  createThemeApi,
   type CreateThemeData,
+  createThemeApi,
   deleteThemeApi,
   fetchOrgThemes,
-  updateThemeApi,
   type UpdateThemeData,
+  updateThemeApi,
 } from '../api/fetchers'
 
 interface UseOrgThemesOptions {

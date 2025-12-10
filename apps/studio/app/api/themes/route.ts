@@ -1,6 +1,6 @@
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
-import { createTheme, type CreateThemeInput } from '@valguide/core/features/themes/mutations'
+import { type CreateThemeInput, createTheme } from '@valguide/core/features/themes/mutations'
 import { getOrgThemes } from '@valguide/core/features/themes/queries'
 import { createClient } from '@valguide/supabase/server'
 import { cookies } from 'next/headers'

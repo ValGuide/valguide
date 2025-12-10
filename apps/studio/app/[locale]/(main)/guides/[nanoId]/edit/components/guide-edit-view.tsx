@@ -19,11 +19,13 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef } from 'react'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
-import { LocaleTabs } from '@/features/guides/components/locale-tabs'
+import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
+import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import { getGuideLocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 interface GuideEditViewProps {
   organizationId?: string
@@ -51,6 +53,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   } = useGuideEditor()
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
+  const { buildUrl } = useLocaleUrl(activeLocale)
 
   const guideDetailUrl = `/guides/${guide.nanoId}`
 
@@ -64,6 +67,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   useAutoSave(save, isDirty)
 
   const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
+  const localeStatusMap = getGuideLocaleStatusMap(guide)
 
   const formRef = useRef<GuideMetadataFormRef>(null)
   const formId = `guide-translation-${activeLocale}`
@@ -86,7 +90,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
 
   const handleSelectStop = (stop: StopWithTranslations | null) => {
     if (stop) {
-      router.push(`/guides/${guide.nanoId}/stops/${stop.id}/edit`)
+      router.push(buildUrl(`/guides/${guide.nanoId}/stops/${stop.id}/edit`))
     }
   }
 
@@ -141,6 +145,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
               <VersionHistoryDialog
                 guideId={guide.id}
                 locale={activeLocale}
+                localeName={getLocaleDisplayName(activeLocale)}
                 onRollback={() => {
                   router.refresh()
                 }}
@@ -148,6 +153,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
               <PublishTranslationButton
                 guideId={guide.id}
                 locale={activeLocale}
+                localeName={getLocaleDisplayName(activeLocale)}
                 hasDraft={!!currentTranslation?.draftVersionId}
                 onPublished={() => {
                   router.refresh()
@@ -184,9 +190,9 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
           <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
-                <div>
-                  <h2 className="mb-4 text-lg font-semibold">{t('editor.guideDetails')}</h2>
-                  <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="text-lg font-semibold">{t('editor.guideDetails')}</h2>
+                  <LocaleSelector value={activeLocale} onValueChange={setActiveLocale} localeStatus={localeStatusMap} />
                 </div>
 
                 <GuideMetadataForm
@@ -217,7 +223,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                     onAdd={async () => {
                       const newStop = await addStop()
                       if (newStop) {
-                        router.push(`/guides/${guide.nanoId}/stops/${newStop.id}/edit`)
+                        router.push(buildUrl(`/guides/${guide.nanoId}/stops/${newStop.id}/edit`))
                       }
                     }}
                   />

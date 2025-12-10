@@ -20,15 +20,10 @@ export function GuideEditSkeleton() {
         {/* Center Panel */}
         <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-background">
           <div className="mx-auto max-w-4xl space-y-6 p-8">
-            {/* Guide Details Header */}
-            <div>
-              <Skeleton className="mb-4 h-6 w-32" />
-              {/* Locale Tabs */}
-              <div className="flex gap-2">
-                <Skeleton className="h-9 w-12" />
-                <Skeleton className="h-9 w-12" />
-                <Skeleton className="h-9 w-12" />
-              </div>
+            {/* Guide Details Header with Locale Selector */}
+            <div className="flex items-center justify-between gap-4">
+              <Skeleton className="h-6 w-32" />
+              <Skeleton className="h-9 w-[200px]" />
             </div>
 
             {/* Guide Metadata Form */}

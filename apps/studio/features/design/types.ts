@@ -3,11 +3,11 @@ export {
   colorVariableLabels,
   otherColorKeys,
   primaryColorKeys,
-  themePresets,
   type ThemeColors,
   type ThemeConfig,
   type ThemeFonts,
   type ThemePreset,
+  themePresets,
 } from '@valguide/core/features/themes/types'
 
 export type RadiusOption = 0 | 0.5 | 1.5 | 2

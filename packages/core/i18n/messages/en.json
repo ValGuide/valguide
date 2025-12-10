@@ -387,15 +387,26 @@
     "noArchivedGuidesDescription": "Archived guides will appear here",
     "publish": {
       "button": "Publish",
+      "buttonWithLocale": "Publish {locale}",
       "success": "Translation published successfully",
       "error": "Failed to publish translation",
       "confirmTitle": "Publish translation?",
+      "confirmTitleWithLocale": "Publish {locale} version?",
       "confirmDescription": "This will make the draft version visible to users. The current published version will be replaced.",
+      "confirmDescriptionWithLocale": "This will publish the {locale} translation. The current published version will be replaced.",
       "cancel": "Cancel",
       "confirm": "Publish",
       "publishing": "Publishing...",
       "guidePublished": "Guide published",
       "guidePublishError": "Failed to publish guide"
+    },
+    "localeSelector": {
+      "selectLanguage": "Select language",
+      "searchLanguages": "Search languages...",
+      "noLanguageFound": "No language found",
+      "statusPublished": "Published",
+      "statusDraft": "Draft",
+      "statusEmpty": "Empty"
     },
     "progress": {
       "title": "Guide Completion",
@@ -408,11 +419,25 @@
       "unpublishedChanges": "Unpublished Changes",
       "stopsWithDrafts": "{count, plural, =1 {1 stop has unpublished changes} other {# stops have unpublished changes}}",
       "guideDraft": "Guide has unpublished changes",
-      "allPublished": "All content is published"
+      "allPublished": "All content is published",
+      "currentLanguage": "{language} Translation",
+      "guideStatus": "Guide Status",
+      "status": {
+        "published": "Published",
+        "draft": "Draft",
+        "empty": "Not started"
+      },
+      "stopsBreakdown": "Stops ({total} total)",
+      "published": "Published",
+      "draft": "Draft",
+      "notStarted": "Not started",
+      "allLanguages": "All Languages",
+      "translatedCount": "{translated}/{total} translated"
     },
     "versionHistory": {
       "button": "Version History",
       "title": "Translation History",
+      "titleWithLocale": "Version History ({locale})",
       "description": "View and manage previous versions of this translation",
       "loading": "Loading versions...",
       "noVersions": "No version history available",
@@ -525,17 +550,26 @@
     },
     "publish": {
       "button": "Publish",
+      "buttonWithLocale": "Publish {locale}",
       "success": "Stop translation published successfully",
       "error": "Failed to publish stop translation",
       "confirmTitle": "Publish stop translation?",
+      "confirmTitleWithLocale": "Publish stop in {locale}?",
       "confirmDescription": "This will make the draft version of this stop visible to users. The current published version will be replaced.",
+      "confirmDescriptionWithLocale": "This will publish the {locale} translation of this stop. The current published version will be replaced.",
       "cancel": "Cancel",
       "confirm": "Publish",
       "publishing": "Publishing..."
     },
+    "translationStatus": {
+      "published": "Published",
+      "draft": "Draft",
+      "empty": "Not started"
+    },
     "versionHistory": {
       "button": "Version History",
       "title": "Stop Translation History",
+      "titleWithLocale": "Version History ({locale})",
       "description": "View and manage previous versions of this stop translation",
       "loading": "Loading versions...",
       "noVersions": "No version history available",

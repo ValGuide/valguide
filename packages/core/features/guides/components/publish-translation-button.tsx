@@ -20,6 +20,7 @@ import { publishGuideTranslationDraft } from '../translation-actions'
 interface PublishTranslationButtonProps {
   guideId: string
   locale: string
+  localeName?: string
   hasDraft: boolean
   onPublished?: () => void
   disabled?: boolean
@@ -28,6 +29,7 @@ interface PublishTranslationButtonProps {
 export function PublishTranslationButton({
   guideId,
   locale,
+  localeName,
   hasDraft,
   onPublished,
   disabled,
@@ -35,6 +37,7 @@ export function PublishTranslationButton({
   const t = useTranslations('guides.publish')
   const [isOpen, setIsOpen] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
+  const displayLocale = localeName ?? locale.toUpperCase()
 
   if (!hasDraft) {
     return null
@@ -64,14 +67,16 @@ export function PublishTranslationButton({
     <>
       <Button onClick={() => setIsOpen(true)} disabled={disabled} variant="default" size="sm">
         <Upload className="h-4 w-4 sm:mr-2" />
-        <span className="hidden sm:inline">{t('button')}</span>
+        <span className="hidden sm:inline">{t('buttonWithLocale', { locale: displayLocale })}</span>
       </Button>
 
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('confirmDescription')}</AlertDialogDescription>
+            <AlertDialogTitle>{t('confirmTitleWithLocale', { locale: displayLocale })}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('confirmDescriptionWithLocale', { locale: displayLocale })}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isPublishing}>{t('cancel')}</AlertDialogCancel>

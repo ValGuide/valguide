@@ -11,10 +11,20 @@ interface GuideStopEditPageParams {
   stopId: string
 }
 
+interface GuideStopEditPageSearchParams {
+  locale?: string
+}
+
 export const dynamic = 'force-dynamic'
 
-export default async function GuideStopEditPage({ params }: { params: Promise<GuideStopEditPageParams> }) {
-  const { locale, nanoId, stopId } = await params
+export default async function GuideStopEditPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<GuideStopEditPageParams>
+  searchParams: Promise<GuideStopEditPageSearchParams>
+}) {
+  const [{ locale, nanoId, stopId }, { locale: editorLocale }] = await Promise.all([params, searchParams])
   setRequestLocale(locale)
 
   const guide = await getGuideByNanoIdWithAssets(db, nanoId)
@@ -23,5 +33,5 @@ export default async function GuideStopEditPage({ params }: { params: Promise<Gu
     notFound()
   }
 
-  return <GuideEditorClient fallbackGuide={guide} initialSelectedStopId={stopId} />
+  return <GuideEditorClient fallbackGuide={guide} initialSelectedStopId={stopId} initialLocale={editorLocale} />
 }

@@ -5,7 +5,7 @@ import { Button } from '@valguide/ui/components/button'
 import { cn } from '@valguide/ui/lib/utils'
 import { Music, Plus, Video, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 
 export type MediaPickerGalleryProps = {
   assets: Asset[]
@@ -24,6 +24,16 @@ export function MediaPickerGallery({
 }: MediaPickerGalleryProps) {
   const t = useTranslations('assets.mediaPicker')
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Dedupe assets by ID to prevent React key warnings
+  const uniqueAssets = useMemo(() => {
+    const seen = new Set<string>()
+    return assets.filter((asset) => {
+      if (seen.has(asset.id)) return false
+      seen.add(asset.id)
+      return true
+    })
+  }, [assets])
 
   const handleAddClick = useCallback(() => {
     if (!disabled) {
@@ -83,7 +93,7 @@ export function MediaPickerGallery({
       />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-        {assets.map((asset) => (
+        {uniqueAssets.map((asset) => (
           <div key={asset.id} className="relative aspect-square overflow-hidden rounded-lg border bg-card">
             {renderThumbnail(asset)}
             <Button

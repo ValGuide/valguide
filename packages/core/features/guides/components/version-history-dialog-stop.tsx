@@ -31,11 +31,13 @@ import { TranslationStatusBadge } from './translation-status-badge'
 interface VersionHistoryDialogStopProps {
   stopId: string
   locale: string
+  localeName?: string
   onRollback?: () => void
 }
 
-export function VersionHistoryDialogStop({ stopId, locale, onRollback }: VersionHistoryDialogStopProps) {
+export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollback }: VersionHistoryDialogStopProps) {
   const t = useTranslations('stops.versionHistory')
+  const displayLocale = localeName ?? locale.toUpperCase()
   const [isMounted, setIsMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [versions, setVersions] = useState<StopTranslationVersion[]>([])
@@ -59,7 +61,7 @@ export function VersionHistoryDialogStop({ stopId, locale, onRollback }: Version
     } finally {
       setIsLoading(false)
     }
-  }, [stopId, locale])
+  }, [stopId, locale, t])
 
   useEffect(() => {
     if (isOpen) {
@@ -126,7 +128,7 @@ export function VersionHistoryDialogStop({ stopId, locale, onRollback }: Version
         </DialogTrigger>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{t('title')}</DialogTitle>
+            <DialogTitle>{t('titleWithLocale', { locale: displayLocale })}</DialogTitle>
             <DialogDescription>{t('description')}</DialogDescription>
           </DialogHeader>
           <ScrollArea className="h-[400px] pr-4">

@@ -1,6 +1,6 @@
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
-import { deleteTheme, updateTheme, type UpdateThemeInput } from '@valguide/core/features/themes/mutations'
+import { deleteTheme, type UpdateThemeInput, updateTheme } from '@valguide/core/features/themes/mutations'
 import { getFullThemeById } from '@valguide/core/features/themes/queries'
 import { createClient } from '@valguide/supabase/server'
 import { NextResponse } from 'next/server'

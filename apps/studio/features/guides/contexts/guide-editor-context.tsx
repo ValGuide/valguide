@@ -13,9 +13,21 @@ import {
 } from '@valguide/core/features/guides/actions'
 import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@valguide/core/features/guides/queries'
 import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { defaultLocale, type SupportedLocale, supportedLocales } from '@valguide/i18n/i18n.config'
+import { usePathname, useRouter } from '@valguide/i18n/routing'
+import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
+
+const LOCALE_PARAM = 'locale'
+
+function parseLocale(locale: string | undefined): SupportedLocale {
+  if (locale && supportedLocales.includes(locale as SupportedLocale)) {
+    return locale as SupportedLocale
+  }
+  return defaultLocale
+}
+
 import { toast } from 'sonner'
 import type { KeyedMutator } from 'swr'
 
@@ -68,15 +80,20 @@ const GuideEditorContext = createContext<GuideEditorContextValue | null>(null)
 export function GuideEditorProvider({
   children,
   initialGuide,
+  initialLocale,
   onMutate,
 }: {
   children: ReactNode
   initialGuide: GuideWithStopsAndAssets
+  initialLocale?: string
   onMutate?: KeyedMutator<GuideWithStopsAndAssets | null>
 }) {
   const t = useTranslations()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [guide, setGuide] = useState(initialGuide)
-  const [activeLocale, setActiveLocale] = useState<SupportedLocale>('en')
+  const [activeLocale, setActiveLocaleState] = useState<SupportedLocale>(() => parseLocale(initialLocale))
   const [selectedStop, setSelectedStop] = useState<StopWithAssets | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
@@ -106,6 +123,22 @@ export function GuideEditorProvider({
 
   const isDirtyRef = useRef(isDirty)
   isDirtyRef.current = isDirty
+
+  // Set active locale and update URL
+  const setActiveLocale = useCallback(
+    (locale: SupportedLocale) => {
+      setActiveLocaleState(locale)
+      const params = new URLSearchParams(searchParams.toString())
+      if (locale === defaultLocale) {
+        params.delete(LOCALE_PARAM)
+      } else {
+        params.set(LOCALE_PARAM, locale)
+      }
+      const query = params.toString()
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+    },
+    [pathname, router, searchParams],
+  )
 
   // Form registration functions
   const registerFormDirty = useCallback((formId: string, formIsDirty: boolean) => {

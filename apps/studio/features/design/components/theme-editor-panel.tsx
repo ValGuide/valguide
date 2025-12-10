@@ -72,9 +72,7 @@ export function ThemeEditorPanel({
           </div>
         </div>
 
-        {config.isDirty && (
-          <p className="text-xs text-amber-600 dark:text-amber-500">{t('editor.unsavedChanges')}</p>
-        )}
+        {config.isDirty && <p className="text-xs text-amber-600 dark:text-amber-500">{t('editor.unsavedChanges')}</p>}
 
         <ThemePresetChips value={config.basePreset} onSelect={onStartFromPreset} />
       </CardHeader>

@@ -1,7 +1,7 @@
 'use client'
 
 import { themeColorPresets } from '@valguide/core/features/themes/presets'
-import { themePresets, type ThemePreset } from '@valguide/core/features/themes/types'
+import { type ThemePreset, themePresets } from '@valguide/core/features/themes/types'
 import { cn } from '@valguide/ui/lib/utils'
 import { useTranslations } from 'next-intl'
 

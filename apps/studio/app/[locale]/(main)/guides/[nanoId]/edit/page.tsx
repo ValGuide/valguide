@@ -12,6 +12,7 @@ interface GuideEditPageParams {
 
 interface GuideEditPageSearchParams {
   stop?: string
+  locale?: string
 }
 
 export const dynamic = 'force-dynamic'
@@ -23,7 +24,7 @@ export default async function GuideEditPage({
   params: Promise<GuideEditPageParams>
   searchParams: Promise<GuideEditPageSearchParams>
 }) {
-  const [{ locale, nanoId }, { stop: stopId }] = await Promise.all([params, searchParams])
+  const [{ locale, nanoId }, { stop: stopId, locale: editorLocale }] = await Promise.all([params, searchParams])
   setRequestLocale(locale)
 
   // Redirect legacy query param to new route
@@ -37,5 +38,5 @@ export default async function GuideEditPage({
     notFound()
   }
 
-  return <GuideEditorClient fallbackGuide={guide} />
+  return <GuideEditorClient fallbackGuide={guide} initialLocale={editorLocale} />
 }
