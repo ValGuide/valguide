@@ -26,19 +26,23 @@
     "api:docker": "docker build -t valguide-api -f ./apps/api/Dockerfile .",
     "api:docker:run": "docker run -p 3000:3000 valguide-api",
     "app:dev": "pnpm env:load turbo run dev --filter ./apps/app -- --port 3001 --hostname app.local.dev --experimental-https",
-    "app:start": "pnpm env:load turbo run start --filter ./apps/app -- --port 3001 --hostname app.local.dev --experimental-https",
+    "app:start": "pnpm env:load turbo run start --filter ./apps/app -- --port 3001 --hostname localhost",
+    "app:start:https": "pnpm app:start & sleep 2 && caddy reverse-proxy --from https://app.local.dev --to localhost:3001 --internal-certs",
     "app:build": "pnpm env:load turbo run build --filter ./apps/app --",
     "app:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/app --",
     "studio:dev": "pnpm env:load turbo run dev --filter ./apps/studio -- --port 3002 --hostname studio.local.dev --experimental-https",
-    "studio:start": "pnpm env:load turbo run start --filter ./apps/studio -- --port 3002 --hostname studio.local.dev --experimental-https",
+    "studio:start": "pnpm env:load turbo run start --filter ./apps/studio -- --port 3002 --hostname localhost",
+    "studio:start:https": "pnpm studio:start & sleep 2 && caddy reverse-proxy --from https://studio.local.dev --to localhost:3002 --internal-certs",
     "studio:build": "pnpm env:load turbo run build --filter ./apps/studio --",
     "studio:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/studio --",
     "www:dev": "pnpm env:load turbo run dev --filter ./apps/www -- --port 3003 --hostname www.local.dev --experimental-https",
-    "www:start": "pnpm env:load turbo run start --filter ./apps/www -- --port 3003 --hostname www.local.dev --experimental-https",
+    "www:start": "pnpm env:load turbo run start --filter ./apps/www -- --port 3003 --hostname localhost",
+    "www:start:https": "pnpm www:start & sleep 2 && caddy reverse-proxy --from https://www.local.dev --to localhost:3003 --internal-certs",
     "www:build": "pnpm env:load turbo run build --filter ./apps/www --",
     "www:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/www --",
     "links:dev": "pnpm env:load turbo run dev --filter ./apps/links -- --port 3004 --hostname l.local.dev --experimental-https",
-    "links:start": "pnpm env:load turbo run start --filter ./apps/links -- --port 3004 --hostname l.local.dev --experimental-https",
+    "links:start": "pnpm env:load turbo run start --filter ./apps/links -- --port 3004 --hostname localhost",
+    "links:start:https": "pnpm links:start & sleep 2 && caddy reverse-proxy --from https://l.local.dev --to localhost:3004 --internal-certs",
     "links:build": "pnpm env:load turbo run build --filter ./apps/links --",
     "links:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/links --",
     "db:generate": "turbo run db:generate --",
@@ -73,8 +77,8 @@
   "packageManager": "pnpm@10.10.0",
   "pnpm": {
     "overrides": {
-      "@types/react": "19.2.7",
-      "@types/react-dom": "19.2.3"
+      "@types/react": "19.2.2",
+      "@types/react-dom": "19.2.2"
     }
   },
   "husky": {
