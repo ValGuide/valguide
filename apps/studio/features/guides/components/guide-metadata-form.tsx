@@ -72,8 +72,10 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
   }, [isDirty, onDirtyChange])
 
   useEffect(() => {
-    const subscription = form.watch((values) => {
-      if (values.title !== undefined) {
+    const subscription = form.watch((values, { type }) => {
+      // Only notify parent of changes when the user actually changes a field
+      // Skip the initial mount subscription event (type is undefined on mount)
+      if (type === 'change' && values.title !== undefined) {
         onTranslationChange({
           title: values.title ?? '',
           description: values.description ?? '',
