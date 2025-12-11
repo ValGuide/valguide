@@ -25,6 +25,7 @@ export type StopEditorProps = {
   onDirtyChange?: (isDirty: boolean) => void
   onImageChange?: (assets: Asset[]) => void
   onAudioChange?: (asset: Asset | null) => void
+  onSave?: () => void
   images?: Asset[]
   audio?: Asset | null
 }
@@ -36,7 +37,18 @@ export type StopEditorRef = {
 }
 
 export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function StopEditor(
-  { stop, locale, organizationId, onChange, onDirtyChange, onImageChange, onAudioChange, images = [], audio = null },
+  {
+    stop,
+    locale,
+    organizationId,
+    onChange,
+    onDirtyChange,
+    onImageChange,
+    onAudioChange,
+    onSave,
+    images = [],
+    audio = null,
+  },
   ref,
 ) {
   const t = useTranslations('stops.editor')
@@ -121,7 +133,19 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
                 <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
               </div>
               <FormControl>
-                <Input {...field} placeholder={t('titlePlaceholder')} maxLength={500} required className="bg-muted" />
+                <Input
+                  {...field}
+                  placeholder={t('titlePlaceholder')}
+                  maxLength={500}
+                  required
+                  className="bg-muted"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      onSave?.()
+                    }
+                  }}
+                />
               </FormControl>
             </FormItem>
           )}

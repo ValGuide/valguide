@@ -97,6 +97,7 @@ export function MediaPickerGallery({
           <div key={asset.id} className="relative aspect-square overflow-hidden rounded-lg border bg-card">
             {renderThumbnail(asset)}
             <Button
+              type="button"
               variant="destructive"
               size="icon"
               onClick={() => onRemove(asset.id)}

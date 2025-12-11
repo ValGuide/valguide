@@ -228,6 +228,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                   audio={stopAudio}
                   onChange={handleStopChange}
                   onDirtyChange={handleDirtyChange}
+                  onSave={save}
                   onImageChange={async (assets) => {
                     for (const asset of assets) {
                       await attachAssetToStop(stop.id, asset, 'image', activeLocale)

@@ -222,6 +222,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                     updateCoverImage(url)
                   }}
                   onDirtyChange={handleDirtyChange}
+                  onSave={save}
                 />
 
                 <div>

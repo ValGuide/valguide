@@ -23,6 +23,7 @@ export type GuideMetadataFormProps = {
   onTranslationChange: (data: { title: string; description: string }) => void
   onCoverImageChange?: (url: string | null) => void
   onDirtyChange?: (isDirty: boolean) => void
+  onSave?: () => void
 }
 
 export type GuideMetadataFormRef = {
@@ -32,7 +33,7 @@ export type GuideMetadataFormRef = {
 }
 
 export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataFormProps>(function GuideMetadataForm(
-  { locale, translation, coverImage, organizationId, onTranslationChange, onCoverImageChange, onDirtyChange },
+  { locale, translation, coverImage, organizationId, onTranslationChange, onCoverImageChange, onDirtyChange, onSave },
   ref,
 ) {
   const t = useTranslations('guides')
@@ -136,7 +137,18 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
                 <FormItem>
                   <FormLabel>{t('editor.titleLabel')}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder={t('editor.titlePlaceholder')} maxLength={500} required />
+                    <Input
+                      {...field}
+                      placeholder={t('editor.titlePlaceholder')}
+                      maxLength={500}
+                      required
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onSave?.()
+                        }
+                      }}
+                    />
                   </FormControl>
                   <p className="text-xs text-muted-foreground">
                     {t('editor.characterCount', { current: title.length })}

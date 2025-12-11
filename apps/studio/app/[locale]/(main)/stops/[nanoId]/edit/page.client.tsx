@@ -179,6 +179,7 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
                   organizationId={organizationId}
                   onChange={handleStopChange}
                   onDirtyChange={handleDirtyChange}
+                  onSave={save}
                 />
               </div>
             </div>
