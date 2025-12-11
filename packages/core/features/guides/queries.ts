@@ -18,6 +18,7 @@ import {
 
 // Extended types for app viewer
 export type AssetWithRole = Asset & {
+  stopAssetId?: string
   role: string
   order: number
   locale?: string | null
@@ -141,6 +142,7 @@ export async function getGuideByNanoIdWithAssets(db: DB, nanoId: string): Promis
       ? await db
           .select({
             stopId: stopAsset.stopId,
+            stopAssetId: stopAsset.id,
             asset: asset,
             role: stopAsset.role,
             order: stopAsset.order,
@@ -160,6 +162,7 @@ export async function getGuideByNanoIdWithAssets(db: DB, nanoId: string): Promis
     }
     stopAssetsMap.get(item.stopId)?.push({
       ...item.asset,
+      stopAssetId: item.stopAssetId,
       role: item.role,
       order: item.order,
       locale: item.locale,
@@ -454,6 +457,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
       ? await db
           .select({
             stopId: stopAsset.stopId,
+            stopAssetId: stopAsset.id,
             asset: asset,
             role: stopAsset.role,
             order: stopAsset.order,
@@ -473,6 +477,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
     }
     stopAssetsMap.get(item.stopId)?.push({
       ...item.asset,
+      stopAssetId: item.stopAssetId,
       role: item.role,
       order: item.order,
       locale: item.locale,

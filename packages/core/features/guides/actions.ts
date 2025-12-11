@@ -459,7 +459,7 @@ export async function detachAssetFromStop(stopAssetId: string) {
     .limit(1)
 
   if (!asset) {
-    throw new Error('Asset attachment not found')
+    throw new Error('Asset at tachment not found')
   }
 
   await requireStopAccess(asset.stopId)

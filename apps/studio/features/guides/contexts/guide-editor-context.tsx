@@ -57,7 +57,7 @@ interface GuideEditorContextValue {
 
   // Asset actions
   attachAssetToStop: (stopId: string, asset: Asset, role: string, locale?: string) => Promise<void>
-  detachAssetFromStop: (stopAssetId: string) => Promise<void>
+  detachAssetFromStop: (stopId: string, assetId: string, stopAssetId: string) => Promise<void>
 
   // Locale actions
   setActiveLocale: (locale: SupportedLocale) => void
@@ -541,8 +541,22 @@ export function GuideEditorProvider({
   )
 
   const detachAssetFromStop = useCallback(
-    async (stopAssetId: string) => {
+    async (stopId: string, assetId: string, stopAssetId: string) => {
       try {
+        // Update UI immediately
+        setGuide((prev) => ({
+          ...prev,
+          stops: prev.stops.map((s) =>
+            s.id === stopId
+              ? {
+                  ...s,
+                  assets: s.assets.filter((a) => a.id !== assetId),
+                }
+              : s,
+          ),
+        }))
+
+        // Delete from DB
         await detachAssetFromStopAction(stopAssetId)
         toast.success(t('stops.assets.removeSuccess'))
       } catch (error) {

@@ -48,6 +48,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     isSaving,
     updateStopTranslationData,
     attachAssetToStop,
+    detachAssetFromStop,
     setActiveLocale,
     save,
     refetch,
@@ -230,8 +231,21 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
                   onDirtyChange={handleDirtyChange}
                   onSave={save}
                   onImageChange={async (assets) => {
+                    const newAssetIds = new Set(assets.map((a) => a.id))
+                    const currentAssetIds = new Set(stopImages.map((a) => a.id))
+
+                    // Detect removed assets and detach them
+                    for (const existing of stopImages) {
+                      if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
+                        await detachAssetFromStop(stop.id, existing.id, existing.stopAssetId)
+                      }
+                    }
+
+                    // Detect new assets and attach them
                     for (const asset of assets) {
-                      await attachAssetToStop(stop.id, asset, 'image', activeLocale)
+                      if (!currentAssetIds.has(asset.id)) {
+                        await attachAssetToStop(stop.id, asset, 'image', activeLocale)
+                      }
                     }
                   }}
                   onAudioChange={async (asset) => {

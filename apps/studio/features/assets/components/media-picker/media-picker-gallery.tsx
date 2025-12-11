@@ -1,6 +1,7 @@
 'use client'
 
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { Progress } from '@valguide/ui/components/progress'
 import { Button } from '@valguide/ui/components/button'
 import { cn } from '@valguide/ui/lib/utils'
 import { Music, Plus, Video, X } from 'lucide-react'
@@ -13,6 +14,9 @@ export type MediaPickerGalleryProps = {
   onAdd: (file: File) => void
   acceptedMimeTypes: string[]
   disabled?: boolean
+  uploading?: boolean
+  uploadProgress?: number
+  uploadFileName?: string | null
 }
 
 export function MediaPickerGallery({
@@ -21,6 +25,9 @@ export function MediaPickerGallery({
   onAdd,
   acceptedMimeTypes,
   disabled = false,
+  uploading = false,
+  uploadProgress = 0,
+  uploadFileName = null,
 }: MediaPickerGalleryProps) {
   const t = useTranslations('assets.mediaPicker')
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -92,7 +99,7 @@ export function MediaPickerGallery({
         tabIndex={-1}
       />
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3">
         {uniqueAssets.map((asset) => (
           <div key={asset.id} className="relative aspect-square overflow-hidden rounded-lg border bg-card">
             {renderThumbnail(asset)}
@@ -110,19 +117,37 @@ export function MediaPickerGallery({
           </div>
         ))}
 
-        <button
-          type="button"
-          onClick={handleAddClick}
-          disabled={disabled}
-          className={cn(
-            'aspect-square flex items-center justify-center rounded-lg border-2 border-dashed transition-colors',
-            'hover:border-primary/50 hover:bg-accent/50',
-            disabled && 'opacity-50 cursor-not-allowed',
-          )}
-        >
-          <Plus className="h-8 w-8 text-muted-foreground" />
-          <span className="sr-only">{t('addMore')}</span>
-        </button>
+        {uploading && (
+          <div className="aspect-square flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-2">
+            <div className="w-full space-y-2">
+              <Progress value={uploadProgress} className="h-2" />
+              <div className="text-center">
+                <p className="text-xs font-medium">{t('uploading', { progress: Math.round(uploadProgress) })}</p>
+                {uploadFileName && (
+                  <p className="text-xs text-muted-foreground truncate" title={uploadFileName}>
+                    {uploadFileName}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!uploading && (
+          <button
+            type="button"
+            onClick={handleAddClick}
+            disabled={disabled}
+            className={cn(
+              'aspect-square flex items-center justify-center rounded-lg border-2 border-dashed transition-colors',
+              'hover:border-primary/50 hover:bg-accent/50',
+              disabled && 'opacity-50 cursor-not-allowed',
+            )}
+          >
+            <Plus className="h-8 w-8 text-muted-foreground" />
+            <span className="sr-only">{t('addMore')}</span>
+          </button>
+        )}
       </div>
     </div>
   )

@@ -153,7 +153,7 @@ export function MediaPicker({
   )
 
   const renderContent = () => {
-    if (uploading) {
+    if (mode === 'single' && uploading) {
       return <MediaPickerProgress progress={uploadProgress} fileName={uploadFileName ?? ''} />
     }
 
@@ -161,16 +161,23 @@ export function MediaPicker({
       return <MediaPickerPreview asset={value} onRemove={() => handleRemove()} disabled={disabled} />
     }
 
-    if (mode === 'multiple' && Array.isArray(value) && value.length > 0) {
+    if (mode === 'multiple' && (Array.isArray(value) && value.length > 0 || uploading)) {
       return (
         <MediaPickerGallery
-          assets={value}
+          assets={Array.isArray(value) ? value : []}
           onRemove={handleRemove}
           onAdd={handleFileSelect}
           acceptedMimeTypes={acceptedMimeTypes}
           disabled={disabled || uploading}
+          uploading={uploading}
+          uploadProgress={uploadProgress}
+          uploadFileName={uploadFileName}
         />
       )
+    }
+
+    if (uploading) {
+      return <MediaPickerProgress progress={uploadProgress} fileName={uploadFileName ?? ''} />
     }
 
     return (

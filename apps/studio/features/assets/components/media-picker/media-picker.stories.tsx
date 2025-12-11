@@ -223,3 +223,37 @@ export const VideoOnly: Story = {
     label: 'Intro Video',
   },
 }
+
+export const MultipleFilledUploading: Story = {
+  render: (args) => {
+    const { MediaPickerGallery } = require('./media-picker-gallery')
+    return (
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Gallery</p>
+        <MediaPickerGallery
+          assets={mockGalleryAssets}
+          onRemove={() => {}}
+          onAdd={() => {}}
+          acceptedMimeTypes={['image/*', 'video/*']}
+          uploading={true}
+          uploadProgress={45}
+          uploadFileName="new-photo.jpg"
+        />
+      </div>
+    )
+  },
+  args: {
+    mode: 'multiple',
+    mediaTypes: ['image', 'video'],
+    organizationId: 'org-123',
+    label: 'Gallery',
+    initialValue: mockGalleryAssets,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Shows the upload progress inline as a card in the grid instead of replacing the entire gallery.',
+      },
+    },
+  },
+}
