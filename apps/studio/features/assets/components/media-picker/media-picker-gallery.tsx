@@ -1,8 +1,8 @@
 'use client'
 
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { Progress } from '@valguide/ui/components/progress'
 import { Button } from '@valguide/ui/components/button'
+import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
 import { Music, Plus, Video, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -99,7 +99,7 @@ export function MediaPickerGallery({
         tabIndex={-1}
       />
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {uniqueAssets.map((asset) => (
           <div key={asset.id} className="relative aspect-square overflow-hidden rounded-lg border bg-card">
             {renderThumbnail(asset)}

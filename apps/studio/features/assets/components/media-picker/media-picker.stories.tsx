@@ -28,7 +28,7 @@ const meta = {
   decorators: [
     (Story) => (
       <MockAssetsProvider>
-        <div className="w-[400px]">
+        <div className="w-full max-w-[400px]">
           <Story />
         </div>
       </MockAssetsProvider>
