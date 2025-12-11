@@ -28,6 +28,7 @@ export type GuideMetadataFormProps = {
 export type GuideMetadataFormRef = {
   form: UseFormReturn<GuideTranslationFormData>
   resetToCurrentValues: () => void
+  resetToFormValues: () => void
 }
 
 export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataFormProps>(function GuideMetadataForm(
@@ -46,12 +47,24 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
 
   const { isDirty } = form.formState
 
-  useImperativeHandle(ref, () => ({
-    form,
-    resetToCurrentValues: () => {
-      form.reset(form.getValues())
-    },
-  }))
+  useImperativeHandle(
+    ref,
+    () => ({
+      form,
+      resetToCurrentValues: () => {
+        // Reset to fresh prop values - use after refetch when translation data changes
+        form.reset({
+          title: getVersionedField(translation, 'title', true),
+          description: getVersionedField(translation, 'description', true),
+        })
+      },
+      resetToFormValues: () => {
+        // Reset baseline to current form values - use after save to mark form as clean
+        form.reset(form.getValues())
+      },
+    }),
+    [form, translation],
+  )
 
   useEffect(() => {
     onDirtyChange?.(isDirty)

@@ -32,6 +32,7 @@ export type StopEditorProps = {
 export type StopEditorRef = {
   form: UseFormReturn<StopTranslationFormData>
   resetToCurrentValues: () => void
+  resetToFormValues: () => void
 }
 
 export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function StopEditor(
@@ -47,20 +48,33 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
   const form = useForm<StopTranslationFormData>({
     resolver: zodResolver(stopTranslationFormSchema),
     defaultValues: {
-      title: getVersionedField(translation, 'title'),
-      description: getVersionedField(translation, 'description'),
-      transcription: getVersionedField(translation, 'transcription'),
+      title: getVersionedField(translation, 'title', true),
+      description: getVersionedField(translation, 'description', true),
+      transcription: getVersionedField(translation, 'transcription', true),
     },
   })
 
   const { isDirty } = form.formState
 
-  useImperativeHandle(ref, () => ({
-    form,
-    resetToCurrentValues: () => {
-      form.reset(form.getValues())
-    },
-  }))
+  useImperativeHandle(
+    ref,
+    () => ({
+      form,
+      resetToCurrentValues: () => {
+        // Reset to fresh prop values - use after refetch when stop data changes
+        form.reset({
+          title: getVersionedField(translation, 'title', true),
+          description: getVersionedField(translation, 'description', true),
+          transcription: getVersionedField(translation, 'transcription', true),
+        })
+      },
+      resetToFormValues: () => {
+        // Reset baseline to current form values - use after save to mark form as clean
+        form.reset(form.getValues())
+      },
+    }),
+    [form, translation],
+  )
 
   useEffect(() => {
     onDirtyChange?.(isDirty)

@@ -99,9 +99,17 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   )
 
   useEffect(() => {
-    registerFormReset(formId, () => {
-      stopEditorRef.current?.resetToCurrentValues()
-    })
+    registerFormReset(
+      formId,
+      () => {
+        // Called after refetch - reset to prop values
+        stopEditorRef.current?.resetToCurrentValues()
+      },
+      () => {
+        // Called after save - reset baseline to current form values
+        stopEditorRef.current?.resetToFormValues()
+      },
+    )
     return () => {
       unregisterForm(formId)
     }

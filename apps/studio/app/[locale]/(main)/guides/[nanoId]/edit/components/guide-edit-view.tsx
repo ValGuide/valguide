@@ -81,9 +81,17 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   )
 
   useEffect(() => {
-    registerFormReset(formId, () => {
-      formRef.current?.resetToCurrentValues()
-    })
+    registerFormReset(
+      formId,
+      () => {
+        // Called after refetch - reset to prop values
+        formRef.current?.resetToCurrentValues()
+      },
+      () => {
+        // Called after save - reset baseline to current form values
+        formRef.current?.resetToFormValues()
+      },
+    )
     return () => {
       unregisterForm(formId)
     }

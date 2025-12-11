@@ -73,7 +73,7 @@ interface GuideEditorContextValue {
   registerFormDirty: (formId: string, isDirty: boolean) => void
   unregisterForm: (formId: string) => void
   resetAllForms: () => void
-  registerFormReset: (formId: string, resetFn: () => void) => void
+  registerFormReset: (formId: string, resetFn: () => void, saveResetFn?: () => void) => void
 
   // Metadata
   lastSaved: Date | null
@@ -105,6 +105,7 @@ export function GuideEditorProvider({
   // Form dirty tracking
   const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())
   const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
+  const formSaveResetFnsRef = useRef<Map<string, () => void>>(new Map())
 
   // Cover image dirty tracking (not a form field)
   const initialCoverImageRef = useRef(initialGuide.coverImage)
@@ -164,14 +165,25 @@ export function GuideEditorProvider({
       return next
     })
     formResetFnsRef.current.delete(formId)
+    formSaveResetFnsRef.current.delete(formId)
   }, [])
 
-  const registerFormReset = useCallback((formId: string, resetFn: () => void) => {
+  const registerFormReset = useCallback((formId: string, resetFn: () => void, saveResetFn?: () => void) => {
     formResetFnsRef.current.set(formId, resetFn)
+    if (saveResetFn) {
+      formSaveResetFnsRef.current.set(formId, saveResetFn)
+    }
   }, [])
 
   const resetAllForms = useCallback(() => {
     for (const resetFn of formResetFnsRef.current.values()) {
+      resetFn()
+    }
+    setDirtyForms(new Set())
+  }, [])
+
+  const resetAllFormsAfterSave = useCallback(() => {
+    for (const resetFn of formSaveResetFnsRef.current.values()) {
       resetFn()
     }
     setDirtyForms(new Set())
@@ -619,10 +631,15 @@ export function GuideEditorProvider({
           ...prev,
           translations: prev.translations.map((t) => {
             const versionId = savedTranslationVersionIds[t.locale]
-            if (versionId) {
+            if (versionId && t.draftVersion) {
+              // Update both draftVersionId and draftVersion.id to keep them in sync
               return {
                 ...t,
                 draftVersionId: versionId,
+                draftVersion: {
+                  ...t.draftVersion,
+                  id: versionId,
+                },
               }
             }
             return t
@@ -632,10 +649,15 @@ export function GuideEditorProvider({
             translations: s.translations.map((t) => {
               const key = `${s.id}:${t.locale}`
               const versionId = savedStopVersionIds[key]
-              if (versionId) {
+              if (versionId && t.draftVersion) {
+                // Update both draftVersionId and draftVersion.id to keep them in sync
                 return {
                   ...t,
                   draftVersionId: versionId,
+                  draftVersion: {
+                    ...t.draftVersion,
+                    id: versionId,
+                  },
                 }
               }
               return t
@@ -648,8 +670,8 @@ export function GuideEditorProvider({
       initialGuideRef.current = currentGuide
       initialCoverImageRef.current = currentGuide.coverImage
 
-      // Reset all forms to update their baselines
-      resetAllForms()
+      // Reset all forms to mark as clean (using current form values, not prop values)
+      resetAllFormsAfterSave()
 
       // Update SWR cache so navigation shows fresh data
       onMutateRef.current?.(currentGuide)
@@ -662,7 +684,7 @@ export function GuideEditorProvider({
     } finally {
       setIsSaving(false)
     }
-  }, [t, resetAllForms])
+  }, [t, resetAllFormsAfterSave])
 
   // Publish
   const publish = useCallback(async () => {
