@@ -1,18 +1,7 @@
-import type { PageParamsWithLocale } from '@valguide/core/utils/types'
-import { i18nStaticParams } from '@valguide/i18n/i18n.config'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 
-export const dynamic = 'error'
-
-export const dynamicParams = false
-
-export const generateStaticParams = () => i18nStaticParams
-
-export default async function AnalyticsPage({ params }: PageParamsWithLocale) {
-  const locale = (await params).locale
-  setRequestLocale(locale)
-
-  const t = await getTranslations({ locale, namespace: 'sidebar' })
+export default async function AnalyticsPage() {
+  const t = await getTranslations('sidebar')
   return (
     <main className="min-h-svh flex flex-col flex-1 items-center justify-center px-8">
       <article className="max-w-2xl items-center flex flex-col gap-4 text-center">
