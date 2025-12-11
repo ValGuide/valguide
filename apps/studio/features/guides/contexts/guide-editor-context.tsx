@@ -121,10 +121,15 @@ export function GuideEditorProvider({
   guideRef.current = guide
   onMutateRef.current = onMutate
 
-  // Computed isDirty from form registrations and cover image
+  // Track modified translations for dirty state (survives locale switches)
+  const [modifiedTranslations, setModifiedTranslations] = useState<Set<string>>(new Set())
+  const [modifiedStops, setModifiedStops] = useState<Set<string>>(new Set())
+
+  // Computed isDirty from form registrations, modified translations/stops, and cover image
+  // This ensures dirty state persists when switching locales
   const isDirty = useMemo(() => {
-    return dirtyForms.size > 0 || coverImageDirty
-  }, [dirtyForms, coverImageDirty])
+    return dirtyForms.size > 0 || modifiedTranslations.size > 0 || modifiedStops.size > 0 || coverImageDirty
+  }, [dirtyForms, modifiedTranslations, modifiedStops, coverImageDirty])
 
   const isDirtyRef = useRef(isDirty)
   isDirtyRef.current = isDirty
@@ -272,6 +277,7 @@ export function GuideEditorProvider({
         }
       })
       modifiedTranslationsRef.current.add(locale)
+      setModifiedTranslations((prev) => new Set(prev).add(locale))
     },
     [],
   )
@@ -495,7 +501,9 @@ export function GuideEditorProvider({
         return prev
       })
 
-      modifiedStopsRef.current.add(`${stopId}:${locale}`)
+      const key = `${stopId}:${locale}`
+      modifiedStopsRef.current.add(key)
+      setModifiedStops((prev) => new Set(prev).add(key))
     },
     [],
   )
@@ -635,9 +643,11 @@ export function GuideEditorProvider({
         }
       }
 
-      // Clear tracking sets
+      // Clear tracking sets and state
       modifiedTranslationsRef.current.clear()
       modifiedStopsRef.current.clear()
+      setModifiedTranslations(new Set())
+      setModifiedStops(new Set())
 
       // Update local state with draft version IDs so publish button appears
       if (Object.keys(savedTranslationVersionIds).length > 0 || Object.keys(savedStopVersionIds).length > 0) {
@@ -731,6 +741,10 @@ export function GuideEditorProvider({
       setGuide(freshData)
       initialGuideRef.current = freshData
       initialCoverImageRef.current = freshData.coverImage
+      modifiedTranslationsRef.current.clear()
+      modifiedStopsRef.current.clear()
+      setModifiedTranslations(new Set())
+      setModifiedStops(new Set())
       resetAllForms()
     }
   }, [resetAllForms])
