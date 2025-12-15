@@ -1,42 +1,36 @@
 'use client'
 
-import { updateStop } from '@valguide/core/features/guides/actions'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import {
+  attachAssetToStop as attachAssetToStopAction,
+  detachAssetFromStop as detachAssetFromStopAction,
+  updateStop,
+} from '@valguide/core/features/guides/actions'
+import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Link, useRouter } from '@valguide/i18n/routing'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@valguide/ui/components/breadcrumb'
-import { Button } from '@valguide/ui/components/button'
-import { ArrowLeft } from 'lucide-react'
+import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'
 import { useTranslations } from 'next-intl'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { LocaleTabs } from '@/features/guides/components/locale-tabs'
-import { StopEditor, type StopEditorRef } from '@/features/guides/components/stop-editor'
-import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
-import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
+import type { StopEditorRef } from '@/features/guides/components/stop-editor'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 interface StandaloneStopEditorClientProps {
-  fallbackStop: StopWithTranslations
+  fallbackStop: StopWithAssets
+  initialLocale?: string
 }
 
-export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEditorClientProps) {
+export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: StandaloneStopEditorClientProps) {
   const router = useRouter()
-  const t = useTranslations('stops')
+  const tStops = useTranslations('stops')
   const tCommon = useTranslations('common')
   const { data: sidebarData } = useSidebarData()
 
-  const [stop, setStop] = useState<StopWithTranslations>(fallbackStop)
-  const [activeLocale, setActiveLocale] = useState<SupportedLocale>('de')
+  const [stop, setStop] = useState<StopWithAssets>(fallbackStop)
+  const [activeLocale, setActiveLocale] = useState<SupportedLocale>((initialLocale as SupportedLocale) ?? 'de')
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -45,16 +39,18 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
   const stopEditorRef = useRef<StopEditorRef>(null)
   stopRef.current = stop
 
-  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
-
   const organizationId = sidebarData?.currentTeam?.id ?? ''
 
-  const currentTranslation = stop.translations.find((t) => t.locale === activeLocale)
-  const stopTitle = getVersionedField(currentTranslation, 'title') || t('untitled')
+  const currentTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
+  const stopTitle = getVersionedField(currentTranslation, 'title') || tStops('untitled')
 
-  const handleBack = () => {
-    confirmIfDirty(() => router.push('/stops'))
-  }
+  const stopImages = stop.assets.filter(
+    (a) => (a.role === 'image' || a.role === 'video') && (a.locale === activeLocale || a.locale === null),
+  )
+
+  const handleBack = useCallback(() => {
+    router.push('/stops')
+  }, [router])
 
   const handleDirtyChange = useCallback((dirty: boolean) => {
     setIsDirty(dirty)
@@ -94,6 +90,10 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
     [activeLocale],
   )
 
+  const refetch = useCallback(() => {
+    router.refresh()
+  }, [router])
+
   const save = useCallback(async () => {
     if (!isDirty) return
 
@@ -103,7 +103,7 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
       const modifiedLocales = modifiedLocalesRef.current
 
       for (const localeKey of modifiedLocales) {
-        const translation = currentStop.translations.find((t) => t.locale === localeKey)
+        const translation = currentStop.translations.find((tr) => tr.locale === localeKey)
         if (translation) {
           const version = translation.draftVersion ?? translation.currentVersion
           if (version) {
@@ -129,63 +129,99 @@ export function StandaloneStopEditorClient({ fallbackStop }: StandaloneStopEdito
     }
   }, [isDirty, tCommon])
 
-  useAutoSave(save, isDirty)
+  const attachAssetToStop = useCallback(
+    async (asset: { id: string }, role: string, locale: SupportedLocale) => {
+      try {
+        const result = await attachAssetToStopAction({
+          stopId: stop.id,
+          assetId: asset.id,
+          role,
+          locale,
+        })
+        if (!result) return
+        setStop((prev) => ({
+          ...prev,
+          assets: [
+            ...prev.assets,
+            {
+              id: asset.id,
+              stopAssetId: result.id,
+              role,
+              order: prev.assets.length,
+              locale,
+            } as StopWithAssets['assets'][number],
+          ],
+        }))
+      } catch (error) {
+        console.error('Failed to attach asset:', error)
+        toast.error(tCommon('error'))
+      }
+    },
+    [stop.id, tCommon],
+  )
+
+  const detachAssetFromStop = useCallback(
+    async (assetId: string, stopAssetId: string) => {
+      try {
+        await detachAssetFromStopAction(stopAssetId)
+        setStop((prev) => ({
+          ...prev,
+          assets: prev.assets.filter((a) => a.id !== assetId),
+        }))
+      } catch (error) {
+        console.error('Failed to detach asset:', error)
+        toast.error(tCommon('error'))
+      }
+    },
+    [tCommon],
+  )
+
+  const breadcrumbContent = (
+    <BreadcrumbItem>
+      <BreadcrumbLink asChild>
+        <Link href="/stops">{tStops('title')}</Link>
+      </BreadcrumbLink>
+    </BreadcrumbItem>
+  )
 
   return (
-    <>
-      {unsavedChangesDialog}
-      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
-        {/* Header */}
-        <div className="border-b bg-background px-3 py-3 sm:px-6">
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-            <Breadcrumb className="hidden min-w-0 flex-1 lg:flex">
-              <BreadcrumbList className="flex-nowrap">
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="/stops">{t('title')}</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="block max-w-[200px] truncate">{stopTitle}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
-              <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
-                {isSaving ? tCommon('saving') : tCommon('save')}
-              </Button>
-            </div>
-          </div>
-        </div>
+    <StopEditLayout
+      stop={stop}
+      activeLocale={activeLocale}
+      isDirty={isDirty}
+      isSaving={isSaving}
+      organizationId={organizationId}
+      stopTitle={stopTitle}
+      onLocaleChange={setActiveLocale}
+      onStopChange={handleStopChange}
+      onDirtyChange={handleDirtyChange}
+      onSave={save}
+      onRefetch={refetch}
+      onBack={handleBack}
+      backLabel={tStops('backToStops')}
+      stopEditorRef={stopEditorRef}
+      breadcrumbContent={breadcrumbContent}
+      onImageChange={async (assets) => {
+        const newAssetIds = new Set(assets.map((a) => a.id))
+        const currentAssetIds = new Set(stopImages.map((a) => a.id))
 
-        {/* Main Content */}
-        <div className="flex min-w-0 flex-1 overflow-hidden">
-          <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
-            <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
-              <div className="space-y-6">
-                <Button variant="ghost" size="sm" onClick={handleBack} className="gap-1">
-                  <ArrowLeft className="h-4 w-4" />
-                  {t('backToStops')}
-                </Button>
+        for (const existing of stopImages) {
+          if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
+            await detachAssetFromStop(existing.id, existing.stopAssetId)
+          }
+        }
 
-                <LocaleTabs value={activeLocale} onValueChange={setActiveLocale} />
-
-                <StopEditor
-                  ref={stopEditorRef}
-                  key={`${stop.id}-${activeLocale}`}
-                  stop={stop}
-                  locale={activeLocale}
-                  organizationId={organizationId}
-                  onChange={handleStopChange}
-                  onDirtyChange={handleDirtyChange}
-                  onSave={save}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+        for (const asset of assets) {
+          if (!currentAssetIds.has(asset.id)) {
+            await attachAssetToStop(asset, 'image', activeLocale)
+          }
+        }
+      }}
+      onAudioChange={async (asset) => {
+        if (asset) {
+          await attachAssetToStop(asset, 'audio', activeLocale)
+        }
+      }}
+    />
   )
 }

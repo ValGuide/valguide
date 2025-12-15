@@ -1,36 +1,26 @@
 'use client'
 
-import { PublishStopTranslationButton } from '@valguide/core/features/guides/components/publish-stop-translation-button'
-import { VersionHistoryDialogStop } from '@valguide/core/features/guides/components/version-history-dialog-stop'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { Link, useRouter } from '@valguide/i18n/routing'
 import {
-  Breadcrumb,
   BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@valguide/ui/components/breadcrumb'
-import { Button } from '@valguide/ui/components/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { ArrowLeft } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef } from 'react'
-import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
-import { StopEditor, type StopEditorRef } from '@/features/guides/components/stop-editor'
+import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
+import type { StopEditorRef } from '@/features/guides/components/stop-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
-import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
-import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
-import { getStopLocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 interface StopEditViewProps {
   stop: StopWithAssets
@@ -60,7 +50,6 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   const foundStop = guide.stops.find((s) => s.id === stopProp.id)
   const stop: StopWithAssets = foundStop ?? stopProp
 
-  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const { buildUrl } = useLocaleUrl(activeLocale)
 
   const guideDetailUrl = `/guides/${guide.nanoId}`
@@ -77,17 +66,9 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
 
   const organizationId = organizationIdProp ?? ''
 
-  useAutoSave(save, isDirty)
-
-  const currentStopTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
-  const localeStatusMap = getStopLocaleStatusMap(stop)
-
-  // Filter assets by role and locale for the current stop
   const stopImages = stop.assets.filter(
     (a) => (a.role === 'image' || a.role === 'video') && (a.locale === activeLocale || a.locale === null),
   )
-  const stopAudio =
-    stop.assets.find((a) => a.role === 'audio' && (a.locale === activeLocale || a.locale === null)) ?? null
 
   const stopEditorRef = useRef<StopEditorRef>(null)
   const formId = `stop-translation-${stop.id}-${activeLocale}`
@@ -103,11 +84,9 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     registerFormReset(
       formId,
       () => {
-        // Called after refetch - reset to prop values
         stopEditorRef.current?.resetToCurrentValues()
       },
       () => {
-        // Called after save - reset baseline to current form values
         stopEditorRef.current?.resetToFormValues()
       },
     )
@@ -116,9 +95,9 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     }
   }, [formId, registerFormReset, unregisterForm])
 
-  const handleBackToGuide = () => {
-    confirmIfDirty(() => router.push(buildUrl(`/guides/${guide.nanoId}/edit`)))
-  }
+  const handleBackToGuide = useCallback(() => {
+    router.push(buildUrl(`/guides/${guide.nanoId}/edit`))
+  }, [router, buildUrl, guide.nanoId])
 
   const handleStopChange = useCallback(
     (data: StopTranslationFormData) => {
@@ -127,143 +106,86 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     [stop.id, activeLocale, updateStopTranslationData],
   )
 
-  return (
+  const breadcrumbContent = (
     <>
-      {unsavedChangesDialog}
-      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
-        {/* Header */}
-        <div className="border-b bg-background px-3 py-3 sm:px-6">
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-            <Breadcrumb className="hidden min-w-0 flex-1 lg:flex">
-              <BreadcrumbList className="flex-nowrap">
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="/">{t('title')}</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                {/* Collapsed items on lg, expanded on xl */}
-                <BreadcrumbItem className="xl:hidden">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="flex items-center gap-1">
-                      <BreadcrumbEllipsis className="h-4 w-4" />
-                      <span className="sr-only">{t('breadcrumb.toggleMenu')}</span>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                      <DropdownMenuItem asChild>
-                        <Link href={guideDetailUrl}>{guideTitle}</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleBackToGuide}>{t('breadcrumb.stops')}</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="xl:hidden" />
-                {/* Expanded items on xl */}
-                <BreadcrumbItem className="hidden xl:list-item">
-                  <BreadcrumbLink asChild className="block max-w-[180px] truncate">
-                    <Link href={guideDetailUrl}>{guideTitle}</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden xl:flex" />
-                <BreadcrumbItem className="hidden xl:list-item">
-                  <BreadcrumbLink asChild>
-                    <button type="button" onClick={handleBackToGuide}>
-                      {t('breadcrumb.stops')}
-                    </button>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden xl:flex" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="block max-w-[150px] truncate">{stopTitle}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
-              <VersionHistoryDialogStop
-                stopId={stop.id}
-                locale={activeLocale}
-                localeName={getLocaleDisplayName(activeLocale)}
-                onRollback={() => {
-                  refetch()
-                }}
-              />
-              <PublishStopTranslationButton
-                stopId={stop.id}
-                locale={activeLocale}
-                localeName={getLocaleDisplayName(activeLocale)}
-                hasDraft={!!currentStopTranslation?.draftVersionId}
-                onPublished={() => {
-                  refetch()
-                }}
-              />
-              <Button variant="ghost" size="sm" className="hidden sm:flex">
-                {t('editor.preview')}
-              </Button>
-              <Button onClick={save} disabled={isSaving || !isDirty} size="sm">
-                {isSaving ? t('editor.saving') : t('editor.save')}
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex min-w-0 flex-1 overflow-hidden">
-          <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
-            <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between gap-4">
-                  <Button variant="ghost" size="sm" onClick={handleBackToGuide} className="gap-1 w-fit">
-                    <ArrowLeft className="h-4 w-4" />
-                    {t('editor.backToGuide')}
-                  </Button>
-                  <LocaleSelector value={activeLocale} onValueChange={setActiveLocale} localeStatus={localeStatusMap} />
-                </div>
-
-                <StopEditor
-                  ref={stopEditorRef}
-                  key={`${stop.id}-${activeLocale}`}
-                  stop={stop}
-                  locale={activeLocale}
-                  organizationId={organizationId}
-                  images={stopImages}
-                  audio={stopAudio}
-                  onChange={handleStopChange}
-                  onDirtyChange={handleDirtyChange}
-                  onSave={save}
-                  onImageChange={async (assets) => {
-                    const newAssetIds = new Set(assets.map((a) => a.id))
-                    const currentAssetIds = new Set(stopImages.map((a) => a.id))
-
-                    // Detect removed assets and detach them
-                    for (const existing of stopImages) {
-                      if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
-                        await detachAssetFromStop(stop.id, existing.id, existing.stopAssetId)
-                      }
-                    }
-
-                    // Detect new assets and attach them
-                    for (const asset of assets) {
-                      if (!currentAssetIds.has(asset.id)) {
-                        await attachAssetToStop(stop.id, asset, 'image', activeLocale)
-                      }
-                    }
-                  }}
-                  onAudioChange={async (asset) => {
-                    if (asset) {
-                      await attachAssetToStop(stop.id, asset, 'audio', activeLocale)
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
-            <h3 className="mb-4 text-base font-semibold">{t('editor.stopProgress')}</h3>
-            {/* TODO: Add stop-specific progress */}
-          </div>
-        </div>
-      </div>
+      <BreadcrumbItem>
+        <BreadcrumbLink asChild>
+          <Link href="/">{t('title')}</Link>
+        </BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator />
+      {/* Collapsed items on lg, expanded on xl */}
+      <BreadcrumbItem className="xl:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex items-center gap-1">
+            <BreadcrumbEllipsis className="h-4 w-4" />
+            <span className="sr-only">{t('breadcrumb.toggleMenu')}</span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem asChild>
+              <Link href={guideDetailUrl}>{guideTitle}</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleBackToGuide}>{t('breadcrumb.stops')}</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator className="xl:hidden" />
+      {/* Expanded items on xl */}
+      <BreadcrumbItem className="hidden xl:list-item">
+        <BreadcrumbLink asChild className="block max-w-[180px] truncate">
+          <Link href={guideDetailUrl}>{guideTitle}</Link>
+        </BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator className="hidden xl:flex" />
+      <BreadcrumbItem className="hidden xl:list-item">
+        <BreadcrumbLink asChild>
+          <button type="button" onClick={handleBackToGuide}>
+            {t('breadcrumb.stops')}
+          </button>
+        </BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator className="hidden xl:flex" />
     </>
+  )
+
+  return (
+    <StopEditLayout
+      stop={stop}
+      activeLocale={activeLocale}
+      isDirty={isDirty}
+      isSaving={isSaving}
+      organizationId={organizationId}
+      stopTitle={stopTitle}
+      onLocaleChange={setActiveLocale}
+      onStopChange={handleStopChange}
+      onDirtyChange={handleDirtyChange}
+      onSave={save}
+      onRefetch={refetch}
+      onBack={handleBackToGuide}
+      backLabel={t('editor.backToGuide')}
+      stopEditorRef={stopEditorRef}
+      breadcrumbContent={breadcrumbContent}
+      onImageChange={async (assets) => {
+        const newAssetIds = new Set(assets.map((a) => a.id))
+        const currentAssetIds = new Set(stopImages.map((a) => a.id))
+
+        for (const existing of stopImages) {
+          if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
+            await detachAssetFromStop(stop.id, existing.id, existing.stopAssetId)
+          }
+        }
+
+        for (const asset of assets) {
+          if (!currentAssetIds.has(asset.id)) {
+            await attachAssetToStop(stop.id, asset, 'image', activeLocale)
+          }
+        }
+      }}
+      onAudioChange={async (asset) => {
+        if (asset) {
+          await attachAssetToStop(stop.id, asset, 'audio', activeLocale)
+        }
+      }}
+    />
   )
 }
