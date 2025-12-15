@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components
 import { cn } from '@valguide/ui/lib/utils'
 import { Check, ChevronDown, Circle } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { LocaleStatusMap, TranslationLocaleStatus } from '../utils/translation-status'
 
 export type { LocaleStatusMap, TranslationLocaleStatus }
@@ -70,20 +70,7 @@ export function LocaleSelector({ value, onValueChange, localeStatus, className }
   const selectedLocaleName = LOCALE_NAMES[value] ?? value.toUpperCase()
   const selectedStatus = localeStatus?.[value]
 
-  const sortedLocales = useMemo(() => {
-    if (!localeStatus) return [...supportedLocales]
-
-    return [...supportedLocales].sort((a, b) => {
-      const statusOrder: Record<TranslationLocaleStatus, number> = {
-        draft: 0,
-        published: 1,
-        empty: 2,
-      }
-      const aStatus = localeStatus[a] ?? 'empty'
-      const bStatus = localeStatus[b] ?? 'empty'
-      return statusOrder[aStatus] - statusOrder[bStatus]
-    })
-  }, [localeStatus])
+  const locales = supportedLocales
 
   if (!isMounted) {
     return (
@@ -120,7 +107,7 @@ export function LocaleSelector({ value, onValueChange, localeStatus, className }
           <CommandList>
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
-              {sortedLocales.map((locale) => {
+              {locales.map((locale) => {
                 const localeName = LOCALE_NAMES[locale] ?? locale.toUpperCase()
                 const status = localeStatus?.[locale]
                 return (
