@@ -31,6 +31,7 @@ export const guide = studioSchema.table(
     themeId: uuid('theme_id'),
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
+    availableLocales: text('available_locales').array().notNull().default(['en', 'de', 'rm']),
   },
   (t) => ({
     orgIdx: index('guide_organization_id_idx').on(t.organizationId),
@@ -308,6 +309,7 @@ export type StopTranslationWithVersion = StopTranslation & {
 
 export type GuideWithTranslations = Guide & {
   translations: GuideTranslationWithVersion[]
+  availableLocales?: string[]
 }
 
 export type StopWithTranslations = Stop & {
@@ -329,6 +331,7 @@ export type GuideWithGuideStops = Guide & {
 export type GuideWithStops = Guide & {
   translations: GuideTranslationWithVersion[]
   stops: StopWithTranslations[]
+  availableLocales?: string[]
 }
 
 /**
@@ -350,8 +353,8 @@ export function toGuideWithStops(guide: GuideWithGuideStops): GuideWithStops {
 export function getLocalizedGuideText(
   guide: GuideWithTranslations,
   field: 'title' | 'description',
-  locale: SupportedLocale,
-  fallbackLocale: SupportedLocale = 'en',
+  locale: string,
+  fallbackLocale: string = 'en',
 ): string {
   const translation = guide.translations.find((t) => t.locale === locale)
   if (translation?.currentVersion?.[field]) {
@@ -372,8 +375,8 @@ export function getLocalizedGuideText(
 export function getLocalizedStopText(
   stop: StopWithTranslations,
   field: 'title' | 'description' | 'transcription',
-  locale: SupportedLocale,
-  fallbackLocale: SupportedLocale = 'en',
+  locale: string,
+  fallbackLocale: string = 'en',
 ): string {
   const translation = stop.translations.find((t) => t.locale === locale)
   if (translation?.currentVersion?.[field]) {

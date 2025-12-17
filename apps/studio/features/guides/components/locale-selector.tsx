@@ -1,7 +1,5 @@
 'use client'
 
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import { supportedLocales } from '@valguide/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import {
   Command,
@@ -20,17 +18,62 @@ import type { LocaleStatusMap, TranslationLocaleStatus } from '../utils/translat
 
 export type { LocaleStatusMap, TranslationLocaleStatus }
 
+export type ContentLocale = string
+
 export type LocaleSelectorProps = {
-  value: SupportedLocale
-  onValueChange: (locale: SupportedLocale) => void
+  value: ContentLocale
+  locales: ContentLocale[]
+  onValueChange: (locale: ContentLocale) => void
   localeStatus?: LocaleStatusMap
   className?: string
 }
 
-const LOCALE_NAMES: Record<SupportedLocale, string> = {
+const LOCALE_NAMES: Record<string, string> = {
   en: 'English',
   de: 'German',
   rm: 'Romansh',
+  fr: 'French',
+  it: 'Italian',
+  es: 'Spanish',
+  pt: 'Portuguese',
+  nl: 'Dutch',
+  pl: 'Polish',
+  cs: 'Czech',
+  sk: 'Slovak',
+  hu: 'Hungarian',
+  ro: 'Romanian',
+  bg: 'Bulgarian',
+  hr: 'Croatian',
+  sl: 'Slovenian',
+  uk: 'Ukrainian',
+  ru: 'Russian',
+  ja: 'Japanese',
+  zh: 'Chinese',
+  ko: 'Korean',
+  ar: 'Arabic',
+  he: 'Hebrew',
+  tr: 'Turkish',
+  el: 'Greek',
+  da: 'Danish',
+  sv: 'Swedish',
+  no: 'Norwegian',
+  fi: 'Finnish',
+}
+
+export function getLocaleDisplayName(locale: string): string {
+  if (LOCALE_NAMES[locale]) return LOCALE_NAMES[locale]
+
+  if (typeof window !== 'undefined' && 'DisplayNames' in Intl) {
+    try {
+      const dn = new Intl.DisplayNames(['en'], { type: 'language' })
+      const name = dn.of(locale)
+      if (name) return name
+    } catch {
+      // ignore
+    }
+  }
+
+  return locale.toUpperCase()
 }
 
 function getStatusIcon(status: TranslationLocaleStatus) {
@@ -58,7 +101,7 @@ function getStatusLabel(
   }
 }
 
-export function LocaleSelector({ value, onValueChange, localeStatus, className }: LocaleSelectorProps) {
+export function LocaleSelector({ value, locales, onValueChange, localeStatus, className }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const t = useTranslations('guides.localeSelector')
@@ -67,10 +110,8 @@ export function LocaleSelector({ value, onValueChange, localeStatus, className }
     setIsMounted(true)
   }, [])
 
-  const selectedLocaleName = LOCALE_NAMES[value] ?? value.toUpperCase()
+  const selectedLocaleName = getLocaleDisplayName(value)
   const selectedStatus = localeStatus?.[value]
-
-  const locales = supportedLocales
 
   if (!isMounted) {
     return (
@@ -108,7 +149,7 @@ export function LocaleSelector({ value, onValueChange, localeStatus, className }
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
               {locales.map((locale) => {
-                const localeName = LOCALE_NAMES[locale] ?? locale.toUpperCase()
+                const localeName = getLocaleDisplayName(locale)
                 const status = localeStatus?.[locale]
                 return (
                   <CommandItem
@@ -137,8 +178,4 @@ export function LocaleSelector({ value, onValueChange, localeStatus, className }
       </PopoverContent>
     </Popover>
   )
-}
-
-export function getLocaleDisplayName(locale: SupportedLocale): string {
-  return LOCALE_NAMES[locale] ?? locale.toUpperCase()
 }

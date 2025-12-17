@@ -1,10 +1,8 @@
 import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-import { supportedLocales } from '@valguide/i18n/i18n.config'
 
 export type TranslationLocaleStatus = 'published' | 'draft' | 'empty'
 
-export type LocaleStatusMap = Record<SupportedLocale, TranslationLocaleStatus>
+export type LocaleStatusMap = Record<string, TranslationLocaleStatus>
 
 type TranslationLike = {
   locale: string
@@ -31,10 +29,11 @@ export function getTranslationLocaleStatus(translation: TranslationLike | undefi
   return 'empty'
 }
 
-export function getGuideLocaleStatusMap(guide: GuideWithStops): LocaleStatusMap {
-  const statusMap = {} as LocaleStatusMap
+export function getGuideLocaleStatusMap(guide: GuideWithStops, locales?: string[]): LocaleStatusMap {
+  const statusMap: LocaleStatusMap = {}
+  const localesToCheck = locales ?? guide.availableLocales ?? ['en']
 
-  for (const locale of supportedLocales) {
+  for (const locale of localesToCheck) {
     const translation = guide.translations.find((t) => t.locale === locale)
     statusMap[locale] = getTranslationLocaleStatus(translation)
   }
@@ -42,10 +41,11 @@ export function getGuideLocaleStatusMap(guide: GuideWithStops): LocaleStatusMap 
   return statusMap
 }
 
-export function getStopLocaleStatusMap(stop: StopWithTranslations): LocaleStatusMap {
-  const statusMap = {} as LocaleStatusMap
+export function getStopLocaleStatusMap(stop: StopWithTranslations, locales?: string[]): LocaleStatusMap {
+  const statusMap: LocaleStatusMap = {}
+  const localesToCheck = locales ?? ['en']
 
-  for (const locale of supportedLocales) {
+  for (const locale of localesToCheck) {
     const translation = stop.translations.find((t) => t.locale === locale)
     statusMap[locale] = getTranslationLocaleStatus(translation)
   }
@@ -54,7 +54,7 @@ export function getStopLocaleStatusMap(stop: StopWithTranslations): LocaleStatus
 }
 
 export type LocaleTranslationSummary = {
-  locale: SupportedLocale
+  locale: string
   guideStatus: TranslationLocaleStatus
   stopsPublished: number
   stopsDraft: number
@@ -62,7 +62,7 @@ export type LocaleTranslationSummary = {
   totalStops: number
 }
 
-export function getGuideLocaleSummary(guide: GuideWithStops, locale: SupportedLocale): LocaleTranslationSummary {
+export function getGuideLocaleSummary(guide: GuideWithStops, locale: string): LocaleTranslationSummary {
   const guideTranslation = guide.translations.find((t) => t.locale === locale)
   const guideStatus = getTranslationLocaleStatus(guideTranslation)
 
@@ -97,13 +97,14 @@ export function getGuideLocaleSummary(guide: GuideWithStops, locale: SupportedLo
   }
 }
 
-export function getOverallTranslationProgress(guide: GuideWithStops): {
+export function getOverallTranslationProgress(guide: GuideWithStops & { availableLocales?: string[] }): {
   translatedLocales: number
   totalLocales: number
 } {
+  const locales = guide.availableLocales ?? ['en']
   let translatedLocales = 0
 
-  for (const locale of supportedLocales) {
+  for (const locale of locales) {
     const translation = guide.translations.find((t) => t.locale === locale)
     const status = getTranslationLocaleStatus(translation)
     if (status !== 'empty') {
@@ -113,13 +114,13 @@ export function getOverallTranslationProgress(guide: GuideWithStops): {
 
   return {
     translatedLocales,
-    totalLocales: supportedLocales.length,
+    totalLocales: locales.length,
   }
 }
 
 export function getStopsTranslationProgress(
   stops: StopWithTranslations[],
-  locale: SupportedLocale,
+  locale: string,
 ): { translated: number; total: number } {
   let translated = 0
 

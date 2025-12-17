@@ -15,7 +15,10 @@ import {
 } from '@valguide/core/features/guides/actions'
 import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@valguide/core/features/guides/queries'
 import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
-import { defaultLocale, type SupportedLocale, supportedLocales } from '@valguide/i18n/i18n.config'
+import { defaultLocale } from '@valguide/i18n/i18n.config'
+
+type ContentLocale = string
+
 import { usePathname, useRouter } from '@valguide/i18n/routing'
 // biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
 import { useSearchParams } from 'next/navigation'
@@ -24,11 +27,11 @@ import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef
 
 const LOCALE_PARAM = 'locale'
 
-function parseLocale(locale: string | undefined): SupportedLocale {
-  if (locale && supportedLocales.includes(locale as SupportedLocale)) {
-    return locale as SupportedLocale
+function parseLocale(locale: string | undefined, availableLocales: string[]): ContentLocale {
+  if (locale && availableLocales.includes(locale)) {
+    return locale
   }
-  return defaultLocale
+  return availableLocales[0] ?? defaultLocale
 }
 
 import { toast } from 'sonner'
@@ -37,13 +40,14 @@ import type { KeyedMutator } from 'swr'
 interface GuideEditorContextValue {
   // State
   guide: GuideWithStopsAndAssets
-  activeLocale: SupportedLocale
+  activeLocale: ContentLocale
   selectedStop: StopWithAssets | null
   isDirty: boolean
   isSaving: boolean
 
   // Guide actions
-  updateGuideTranslationData: (locale: SupportedLocale, data: { title: string; description?: string | null }) => void
+  updateGuideTranslationData: (locale: ContentLocale, data: { title: string; description?: string | null }) => void
+  updateGuideAvailableLocales: (locales: string[]) => Promise<void>
 
   // Guide asset actions
   attachAssetToGuide: (asset: Asset, role: string) => Promise<void>
@@ -56,7 +60,7 @@ interface GuideEditorContextValue {
   reorderStops: (stops: StopWithAssets[]) => Promise<void>
   updateStopTranslationData: (
     stopId: string,
-    locale: SupportedLocale,
+    locale: ContentLocale,
     data: { title: string; description?: string | null; transcription?: string | null },
   ) => void
 
@@ -65,7 +69,7 @@ interface GuideEditorContextValue {
   detachAssetFromStop: (stopId: string, assetId: string, stopAssetId: string) => Promise<void>
 
   // Locale actions
-  setActiveLocale: (locale: SupportedLocale) => void
+  setActiveLocale: (locale: ContentLocale) => void
 
   // Save actions
   save: () => Promise<void>
