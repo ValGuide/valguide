@@ -1,6 +1,6 @@
 'use client'
 
-import type { GuideWithStops } from '@valguide/core/features/guides/schema'
+import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Progress } from '@valguide/ui/components/progress'
@@ -16,7 +16,7 @@ import {
 import { getLocaleDisplayName } from './locale-selector'
 
 interface GuideProgressProps {
-  guide: GuideWithStops
+  guide: GuideWithStopsAndAssets
   locale: SupportedLocale
 }
 
@@ -63,7 +63,7 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
     },
     {
       labelKey: 'coverImageAdded',
-      completed: !!guide.coverImage,
+      completed: !!guide.assets?.find((a) => a.role === 'cover'),
     },
     {
       labelKey: 'atLeastOneStop',

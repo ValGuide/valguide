@@ -18,6 +18,7 @@ import {
 
 // Extended types for app viewer
 export type AssetWithRole = Asset & {
+  guideAssetId?: string
   stopAssetId?: string
   role: string
   order: number
@@ -125,6 +126,7 @@ export async function getGuideByNanoIdWithAssets(db: DB, nanoId: string): Promis
   // Fetch guide assets
   const guideAssets = await db
     .select({
+      guideAssetId: guideAsset.id,
       asset: asset,
       role: guideAsset.role,
       order: guideAsset.order,
@@ -173,6 +175,7 @@ export async function getGuideByNanoIdWithAssets(db: DB, nanoId: string): Promis
     ...result,
     assets: guideAssets.map((item) => ({
       ...item.asset,
+      guideAssetId: item.guideAssetId,
       role: item.role,
       order: item.order,
       locale: item.locale,
@@ -440,6 +443,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
   // Fetch guide assets
   const guideAssets = await db
     .select({
+      guideAssetId: guideAsset.id,
       asset: asset,
       role: guideAsset.role,
       order: guideAsset.order,
@@ -488,6 +492,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
     ...result,
     assets: guideAssets.map((item) => ({
       ...item.asset,
+      guideAssetId: item.guideAssetId,
       role: item.role,
       order: item.order,
       locale: item.locale,

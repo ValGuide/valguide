@@ -109,16 +109,9 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
           const translation = guide.translations?.find((t) => t.locale === locale) || guide.translations?.[0]
           const displayTitle = getVersionedField(translation, 'title') || t('untitledGuide')
           const displayDescription = getVersionedField(translation, 'description')
-          const displayImage = guide.coverImage
 
           return (
             <Card key={guide.id} className="flex flex-col">
-              {displayImage && (
-                <div className="relative h-32 w-full overflow-hidden sm:h-48">
-                  {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
-                  <img src={displayImage} alt={displayTitle} className="h-full w-full object-cover" />
-                </div>
-              )}
               <CardHeader>
                 <CardTitle className="truncate">{displayTitle}</CardTitle>
                 {displayDescription && <CardDescription className="line-clamp-2">{displayDescription}</CardDescription>}

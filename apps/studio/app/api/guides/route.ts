@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
     // Parse request body
     const body = await request.json()
-    let { translations, organizationId, coverImage } = body
+    let { translations, organizationId } = body
 
     // If organizationId is not provided, try to find one from the user's memberships
     if (!organizationId) {
@@ -136,7 +136,6 @@ export async function POST(request: Request) {
         createdBy: userId,
         updatedBy: userId,
         organizationId,
-        coverImage: coverImage || null,
       },
       translations,
     )

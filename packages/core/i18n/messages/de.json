@@ -291,6 +291,9 @@
       "preview": "Vorschau",
       "saving": "Speichern...",
       "save": "Speichern",
+      "sharedContent": "Für alle Sprachen gültig",
+      "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
+      "localeContent": "Sprachspezifischer Inhalt",
       "guideDetails": "Guide-Details",
       "localeIndicator": "({locale})",
       "guideDetailsDescription": "Bearbeiten Sie die Guide-Informationen für diese Sprache",
@@ -478,6 +481,12 @@
       "translations": "Übersetzungen",
       "noCoverImage": "Titelbild",
       "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
+    },
+    "assets": {
+      "attachSuccess": "Asset zum Guide hinzugefügt",
+      "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
+      "removeSuccess": "Asset vom Guide entfernt",
+      "removeError": "Fehler beim Entfernen des Assets vom Guide"
     }
   },
   "stops": {
@@ -503,6 +512,10 @@
     },
     "editor": {
       "title": "Stop-Details",
+      "sharedContent": "Für alle Sprachen gültig",
+      "sharedContentDescription": "Bilder und Videos gelten für alle Sprachen",
+      "localeContent": "Sprachspezifischer Inhalt",
+      "localeContentDescription": "Bearbeiten Sie den Stop-Inhalt für diese Sprache",
       "titleLabel": "Titel",
       "titlePlaceholder": "Stop-Titel eingeben",
       "descriptionLabel": "Beschreibung",

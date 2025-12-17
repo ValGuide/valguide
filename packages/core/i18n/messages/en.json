@@ -291,6 +291,9 @@
       "preview": "Preview",
       "saving": "Saving...",
       "save": "Save",
+      "sharedContent": "Shared across all languages",
+      "sharedContentDescription": "Changes here will apply to all languages",
+      "localeContent": "Language-specific content",
       "guideDetails": "Guide Details",
       "localeIndicator": "({locale})",
       "guideDetailsDescription": "Edit the guide information for this language",
@@ -478,6 +481,12 @@
       "translations": "Translations",
       "noCoverImage": "Cover Image",
       "addCoverImageHint": "Add a cover image in the editor"
+    },
+    "assets": {
+      "attachSuccess": "Asset attached to guide",
+      "attachError": "Failed to attach asset to guide",
+      "removeSuccess": "Asset removed from guide",
+      "removeError": "Failed to remove asset from guide"
     }
   },
   "stops": {
@@ -503,6 +512,10 @@
     },
     "editor": {
       "title": "Stop Details",
+      "sharedContent": "Shared across all languages",
+      "sharedContentDescription": "Images and videos apply to all languages",
+      "localeContent": "Language-specific content",
+      "localeContentDescription": "Edit the stop content for this language",
       "titleLabel": "Title",
       "titlePlaceholder": "Enter stop title",
       "descriptionLabel": "Description",

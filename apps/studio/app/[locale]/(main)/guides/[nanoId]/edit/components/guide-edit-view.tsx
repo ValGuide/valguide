@@ -1,5 +1,6 @@
 'use client'
 
+import type { Asset } from '@valguide/core/features/assets/schema'
 import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
@@ -13,10 +14,12 @@ import {
   BreadcrumbSeparator,
 } from '@valguide/ui/components/breadcrumb'
 import { Button } from '@valguide/ui/components/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { Eye, ListChecks } from 'lucide-react'
+import { Eye, Globe, ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
@@ -35,13 +38,15 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
+  const tCommon = useTranslations('common')
   const {
     guide,
     activeLocale,
     isDirty,
     isSaving,
     updateGuideTranslationData,
-    updateCoverImage,
+    attachAssetToGuide,
+    detachAssetFromGuide,
     addStop,
     deleteStop,
     reorderStops,
@@ -84,11 +89,9 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     registerFormReset(
       formId,
       () => {
-        // Called after refetch - reset to prop values
         formRef.current?.resetToCurrentValues()
       },
       () => {
-        // Called after save - reset baseline to current form values
         formRef.current?.resetToFormValues()
       },
     )
@@ -119,6 +122,26 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     })
     reorderStops(reordered.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)))
   }
+
+  const coverAsset = useMemo(() => {
+    return guide.assets.find((a) => a.role === 'cover') ?? null
+  }, [guide.assets])
+
+  const handleCoverImageChange = useCallback(
+    async (value: Asset | Asset[] | null) => {
+      if (value === null) {
+        if (coverAsset?.guideAssetId) {
+          await detachAssetFromGuide(coverAsset.id, coverAsset.guideAssetId)
+        }
+      } else if (!Array.isArray(value)) {
+        if (coverAsset?.guideAssetId) {
+          await detachAssetFromGuide(coverAsset.id, coverAsset.guideAssetId)
+        }
+        await attachAssetToGuide(value, 'cover')
+      }
+    },
+    [coverAsset, attachAssetToGuide, detachAssetFromGuide],
+  )
 
   return (
     <>
@@ -203,8 +226,30 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
           <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
+                {/* Global Assets Section */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      {t('editor.sharedContent')}
+                    </CardTitle>
+                    <CardDescription>{t('editor.sharedContentDescription')}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <MediaPicker
+                      mode="single"
+                      mediaTypes={['image']}
+                      value={coverAsset}
+                      onChange={handleCoverImageChange}
+                      label={t('editor.coverImageLabel')}
+                      organizationId={organizationId}
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
-                  <h2 className="text-lg font-semibold">{t('editor.guideDetails')}</h2>
+                  <h2 className="text-lg font-semibold">{t('editor.localeContent')}</h2>
                   <LocaleSelector value={activeLocale} onValueChange={setActiveLocale} localeStatus={localeStatusMap} />
                 </div>
 
@@ -213,13 +258,9 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                   key={`guide-metadata-${activeLocale}`}
                   locale={activeLocale}
                   translation={currentTranslation}
-                  coverImage={guide.coverImage}
                   organizationId={organizationId}
                   onTranslationChange={(data) => {
                     updateGuideTranslationData(activeLocale, data)
-                  }}
-                  onCoverImageChange={(url) => {
-                    updateCoverImage(url)
                   }}
                   onDirtyChange={handleDirtyChange}
                   onSave={save}

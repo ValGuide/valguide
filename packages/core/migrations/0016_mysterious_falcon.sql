@@ -1,0 +1,1 @@
+ALTER TABLE "studio"."guide" DROP COLUMN "cover_image";

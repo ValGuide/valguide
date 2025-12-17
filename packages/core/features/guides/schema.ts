@@ -25,7 +25,6 @@ export const guide = studioSchema.table(
       .notNull()
       .references(() => authUsers.id, { onDelete: 'cascade' }),
     published: timestamp('published', { withTimezone: true }),
-    coverImage: text('cover_image'),
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),

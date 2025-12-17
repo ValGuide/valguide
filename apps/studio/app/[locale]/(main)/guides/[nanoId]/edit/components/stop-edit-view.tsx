@@ -17,7 +17,7 @@ import {
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef } from 'react'
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
-import type { StopEditorRef } from '@/features/guides/components/stop-editor'
+import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
@@ -66,11 +66,9 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
 
   const organizationId = organizationIdProp ?? ''
 
-  const stopImages = stop.assets.filter(
-    (a) => (a.role === 'image' || a.role === 'video') && (a.locale === activeLocale || a.locale === null),
-  )
+  const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
 
-  const stopEditorRef = useRef<StopEditorRef>(null)
+  const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   const formId = `stop-translation-${stop.id}-${activeLocale}`
 
   const handleDirtyChange = useCallback(
@@ -177,7 +175,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
 
         for (const asset of assets) {
           if (!currentAssetIds.has(asset.id)) {
-            await attachAssetToStop(stop.id, asset, 'image', activeLocale)
+            await attachAssetToStop(stop.id, asset, 'image', null)
           }
         }
       }}

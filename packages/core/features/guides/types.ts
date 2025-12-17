@@ -16,7 +16,6 @@ export const guideSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   imageUrl: z.string().optional(),
-  coverImage: z.string().nullable().optional(),
   author: z.string().optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),

@@ -76,20 +76,18 @@ async function requireStopAccess(stopId: string) {
 
 export type UpdateGuideParams = {
   id: string
-  coverImage?: string | null
   published?: Date | null
   organizationId?: string | null
   userId?: string // Ignored, used from session
 }
 
 export async function updateGuide(params: UpdateGuideParams) {
-  const { id, coverImage, published, organizationId } = params
+  const { id, published, organizationId } = params
   const user = await requireGuideAccess(id)
 
   const [updatedGuide] = await db
     .update(guide)
     .set({
-      coverImage: coverImage === undefined ? undefined : coverImage,
       published: published === undefined ? undefined : published,
       organizationId: organizationId ?? undefined,
       updatedBy: user.id,

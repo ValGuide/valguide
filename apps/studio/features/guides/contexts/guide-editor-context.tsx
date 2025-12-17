@@ -2,9 +2,11 @@
 
 import type { Asset } from '@valguide/core/features/assets/schema'
 import {
+  attachAssetToGuide as attachAssetToGuideAction,
   attachAssetToStop as attachAssetToStopAction,
   createStop,
   deleteStop as deleteStopAction,
+  detachAssetFromGuide as detachAssetFromGuideAction,
   detachAssetFromStop as detachAssetFromStopAction,
   reorderStops as reorderStopsAction,
   updateGuide,
@@ -42,7 +44,10 @@ interface GuideEditorContextValue {
 
   // Guide actions
   updateGuideTranslationData: (locale: SupportedLocale, data: { title: string; description?: string | null }) => void
-  updateCoverImage: (assetId: string | null) => void
+
+  // Guide asset actions
+  attachAssetToGuide: (asset: Asset, role: string) => Promise<void>
+  detachAssetFromGuide: (assetId: string, guideAssetId: string) => Promise<void>
 
   // Stop actions
   selectStop: (stop: StopWithAssets | null) => void
@@ -55,8 +60,8 @@ interface GuideEditorContextValue {
     data: { title: string; description?: string | null; transcription?: string | null },
   ) => void
 
-  // Asset actions
-  attachAssetToStop: (stopId: string, asset: Asset, role: string, locale?: string) => Promise<void>
+  // Stop asset actions
+  attachAssetToStop: (stopId: string, asset: Asset, role: string, locale?: string | null) => Promise<void>
   detachAssetFromStop: (stopId: string, assetId: string, stopAssetId: string) => Promise<void>
 
   // Locale actions
@@ -107,10 +112,6 @@ export function GuideEditorProvider({
   const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
   const formSaveResetFnsRef = useRef<Map<string, () => void>>(new Map())
 
-  // Cover image dirty tracking (not a form field)
-  const initialCoverImageRef = useRef(initialGuide.coverImage)
-  const coverImageDirty = guide.coverImage !== initialCoverImageRef.current
-
   const guideRef = useRef(guide)
   const initialGuideRef = useRef(initialGuide)
   const modifiedTranslationsRef = useRef<Set<string>>(new Set())
@@ -125,11 +126,11 @@ export function GuideEditorProvider({
   const [modifiedTranslations, setModifiedTranslations] = useState<Set<string>>(new Set())
   const [modifiedStops, setModifiedStops] = useState<Set<string>>(new Set())
 
-  // Computed isDirty from form registrations, modified translations/stops, and cover image
-  // This ensures dirty state persists when switching locales
+  // Computed isDirty from form registrations, modified translations/stops
+  // Note: Assets are saved immediately, so they don't affect dirty state
   const isDirty = useMemo(() => {
-    return dirtyForms.size > 0 || modifiedTranslations.size > 0 || modifiedStops.size > 0 || coverImageDirty
-  }, [dirtyForms, modifiedTranslations, modifiedStops, coverImageDirty])
+    return dirtyForms.size > 0 || modifiedTranslations.size > 0 || modifiedStops.size > 0
+  }, [dirtyForms, modifiedTranslations, modifiedStops])
 
   const isDirtyRef = useRef(isDirty)
   isDirtyRef.current = isDirty
@@ -281,14 +282,6 @@ export function GuideEditorProvider({
     },
     [],
   )
-
-  // Update cover image
-  const updateCoverImage = useCallback((assetId: string | null) => {
-    setGuide((prev) => ({
-      ...prev,
-      coverImage: assetId,
-    }))
-  }, [])
 
   // Select stop
   const selectStop = useCallback((stop: StopWithAssets | null) => {
@@ -508,21 +501,81 @@ export function GuideEditorProvider({
     [],
   )
 
-  // Asset actions
-  const attachAssetToStop = useCallback(
-    async (stopId: string, asset: Asset, role: string, locale?: string) => {
+  // Guide asset actions (immediate save - global assets)
+  const attachAssetToGuide = useCallback(
+    async (asset: Asset, role: string) => {
       try {
-        await attachAssetToStopAction({
+        const result = await attachAssetToGuideAction({
+          guideId: guide.id,
+          assetId: asset.id,
+          role,
+          locale: undefined,
+          order: 0,
+        })
+
+        if (!result) {
+          throw new Error('Failed to attach asset to guide')
+        }
+
+        const assetWithRole: AssetWithRole = {
+          ...asset,
+          guideAssetId: result.id,
+          role,
+          order: 0,
+          locale: null,
+        }
+
+        setGuide((prev) => ({
+          ...prev,
+          assets: [...prev.assets, assetWithRole],
+        }))
+
+        toast.success(t('guides.assets.attachSuccess'))
+      } catch (error) {
+        console.error('Failed to attach asset to guide:', error)
+        toast.error(t('guides.assets.attachError'))
+      }
+    },
+    [guide.id, t],
+  )
+
+  const detachAssetFromGuide = useCallback(
+    async (assetId: string, guideAssetId: string) => {
+      try {
+        setGuide((prev) => ({
+          ...prev,
+          assets: prev.assets.filter((a) => a.id !== assetId),
+        }))
+
+        await detachAssetFromGuideAction(guideAssetId)
+        toast.success(t('guides.assets.removeSuccess'))
+      } catch (error) {
+        console.error('Failed to detach asset from guide:', error)
+        toast.error(t('guides.assets.removeError'))
+      }
+    },
+    [t],
+  )
+
+  // Stop asset actions (immediate save)
+  const attachAssetToStop = useCallback(
+    async (stopId: string, asset: Asset, role: string, locale?: string | null) => {
+      try {
+        const result = await attachAssetToStopAction({
           stopId,
           assetId: asset.id,
           role,
-          locale,
-          order: 0, // Will be incremented server-side based on existing assets
+          locale: locale ?? undefined,
+          order: 0,
         })
 
-        // Optimistically update local state with the new asset
+        if (!result) {
+          throw new Error('Failed to attach asset to stop')
+        }
+
         const assetWithRole: AssetWithRole = {
           ...asset,
+          stopAssetId: result.id,
           role,
           order: 0,
           locale: locale ?? null,
@@ -584,16 +637,6 @@ export function GuideEditorProvider({
       const currentGuide = guideRef.current
       const modifiedTranslations = modifiedTranslationsRef.current
       const modifiedStops = modifiedStopsRef.current
-
-      // Save guide metadata if cover image changed
-      if (currentGuide.coverImage !== initialGuideRef.current.coverImage) {
-        await updateGuide({
-          id: currentGuide.id,
-          coverImage: currentGuide.coverImage,
-          published: currentGuide.published,
-          organizationId: currentGuide.organizationId,
-        })
-      }
 
       // Only save modified translations
       const savedTranslationVersionIds: Record<string, string> = {}
@@ -692,7 +735,6 @@ export function GuideEditorProvider({
 
       // Update initial refs for next comparison
       initialGuideRef.current = currentGuide
-      initialCoverImageRef.current = currentGuide.coverImage
 
       // Reset all forms to mark as clean (using current form values, not prop values)
       resetAllFormsAfterSave()
@@ -718,7 +760,6 @@ export function GuideEditorProvider({
       await updateGuide({
         id: guide.id,
         published: new Date(),
-        coverImage: guide.coverImage,
         organizationId: guide.organizationId,
       })
 
@@ -732,15 +773,14 @@ export function GuideEditorProvider({
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guide.id, guide.coverImage, guide.organizationId, save, t])
+  }, [guide.id, guide.organizationId, save, t])
 
   // Refetch data from server (revalidates SWR and updates local state)
   const refetch = useCallback(async () => {
-    const freshData = await onMutateRef.current?.()
-    if (freshData) {
-      setGuide(freshData)
-      initialGuideRef.current = freshData
-      initialCoverImageRef.current = freshData.coverImage
+    const result = await onMutateRef.current?.()
+    if (result) {
+      setGuide(result)
+      initialGuideRef.current = result
       modifiedTranslationsRef.current.clear()
       modifiedStopsRef.current.clear()
       setModifiedTranslations(new Set())
@@ -756,7 +796,8 @@ export function GuideEditorProvider({
     isDirty,
     isSaving,
     updateGuideTranslationData,
-    updateCoverImage,
+    attachAssetToGuide,
+    detachAssetFromGuide,
     selectStop,
     addStop,
     deleteStop,

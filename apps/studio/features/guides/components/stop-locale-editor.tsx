@@ -1,44 +1,57 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { Asset } from '@valguide/core/features/assets/schema'
+import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
-import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
+import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@valguide/ui/components/form'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
+import { Mic } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
 import { type UseFormReturn, useForm } from 'react-hook-form'
-import { type GuideTranslationFormData, guideTranslationFormSchema } from '../schemas/guide-form'
+import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
 
-export type GuideMetadataFormProps = {
+export type StopLocaleEditorProps = {
+  stop?: StopWithTranslations
   locale: SupportedLocale
-  translation?: GuideTranslationWithVersion
   organizationId: string
-  onTranslationChange: (data: { title: string; description: string }) => void
+  onChange?: (data: StopTranslationFormData) => void
   onDirtyChange?: (isDirty: boolean) => void
+  onAudioChange?: (asset: Asset | null) => Promise<void>
   onSave?: () => void
+  audio?: Asset | null
 }
 
-export type GuideMetadataFormRef = {
-  form: UseFormReturn<GuideTranslationFormData>
+export type StopLocaleEditorRef = {
+  form: UseFormReturn<StopTranslationFormData>
   resetToCurrentValues: () => void
   resetToFormValues: () => void
 }
 
-export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataFormProps>(function GuideMetadataForm(
-  { locale, translation, organizationId, onTranslationChange, onDirtyChange, onSave },
+export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditorProps>(function StopLocaleEditor(
+  { stop, locale, organizationId, onChange, onDirtyChange, onAudioChange, onSave, audio = null },
   ref,
 ) {
-  const t = useTranslations('guides')
+  const t = useTranslations('stops.editor')
+  const tGuides = useTranslations('guides')
 
-  const form = useForm<GuideTranslationFormData>({
-    resolver: zodResolver(guideTranslationFormSchema),
+  const translation = stop?.translations.find((t) => t.locale === locale)
+  const hasDraft = !!translation?.draftVersionId
+  const publishedStatus = translation?.currentVersion?.status
+
+  const form = useForm<StopTranslationFormData>({
+    resolver: zodResolver(stopTranslationFormSchema),
     defaultValues: {
       title: getVersionedField(translation, 'title', true),
       description: getVersionedField(translation, 'description', true),
+      transcription: getVersionedField(translation, 'transcription', true),
     },
   })
 
@@ -52,6 +65,7 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
         form.reset({
           title: getVersionedField(translation, 'title', true),
           description: getVersionedField(translation, 'description', true),
+          transcription: getVersionedField(translation, 'transcription', true),
         })
       },
       resetToFormValues: () => {
@@ -68,16 +82,21 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
   useEffect(() => {
     const subscription = form.watch((values, { type }) => {
       if (type === 'change' && values.title !== undefined) {
-        onTranslationChange({
+        onChange?.({
           title: values.title ?? '',
           description: values.description ?? '',
+          transcription: values.transcription ?? '',
         })
       }
     })
     return () => subscription.unsubscribe()
-  }, [form, onTranslationChange])
+  }, [form, onChange])
 
-  const title = form.watch('title')
+  const handleAudioChange = async (value: Asset | Asset[] | null) => {
+    if (value === null || (!Array.isArray(value) && value)) {
+      await onAudioChange?.(value as Asset | null)
+    }
+  }
 
   return (
     <Form {...form}>
@@ -85,12 +104,12 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('editor.guideDetails')}{' '}
+              {t('title')}{' '}
               <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">
-                {t('editor.localeIndicator', { locale })}
+                {tGuides('editor.localeIndicator', { locale })}
               </span>
             </CardTitle>
-            <CardDescription>{t('editor.guideDetailsDescription')}</CardDescription>
+            <CardDescription>{t('localeContentDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Title */}
@@ -99,13 +118,17 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('editor.titleLabel')}</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>{t('titleLabel')}</FormLabel>
+                    <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
+                  </div>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder={t('editor.titlePlaceholder')}
+                      placeholder={t('titlePlaceholder')}
                       maxLength={500}
                       required
+                      className="bg-muted"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault()
@@ -114,12 +137,19 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
                       }}
                     />
                   </FormControl>
-                  <p className="text-xs text-muted-foreground">
-                    {t('editor.characterCount', { current: title.length })}
-                  </p>
-                  <FormMessage />
                 </FormItem>
               )}
+            />
+
+            {/* Audio - locale-specific */}
+            <MediaPicker
+              mode="single"
+              mediaTypes={['audio']}
+              value={audio}
+              onChange={handleAudioChange}
+              label={t('audioLabel')}
+              organizationId={organizationId}
+              locale={locale}
             />
 
             {/* Description */}
@@ -128,15 +158,20 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('editor.descriptionLabel')}</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>{t('descriptionLabel')}</FormLabel>
+                    <Button type="button" variant="ghost" size="sm" className="gap-1">
+                      <Mic className="h-4 w-4" />
+                      {t('autoGenerate')}
+                    </Button>
+                  </div>
                   <FormControl>
                     <RichTextEditor
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder={t('editor.descriptionPlaceholder')}
+                      placeholder={t('descriptionPlaceholder')}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />

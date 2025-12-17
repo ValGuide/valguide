@@ -13,11 +13,13 @@ import {
   BreadcrumbSeparator,
 } from '@valguide/ui/components/breadcrumb'
 import { Button } from '@valguide/ui/components/button'
-import { ArrowLeft } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { ArrowLeft, Globe } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { type ReactNode, useCallback, useRef } from 'react'
+import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
-import { StopEditor, type StopEditorRef } from '@/features/guides/components/stop-editor'
+import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
@@ -40,7 +42,7 @@ export interface StopEditLayoutProps {
   onImageChange: (assets: Asset[]) => Promise<void>
   onAudioChange: (asset: Asset | null) => Promise<void>
   breadcrumbContent: ReactNode
-  stopEditorRef?: React.RefObject<StopEditorRef | null>
+  stopEditorRef?: React.RefObject<StopLocaleEditorRef | null>
 }
 
 export function StopEditLayout({
@@ -63,7 +65,8 @@ export function StopEditLayout({
   stopEditorRef: externalRef,
 }: StopEditLayoutProps) {
   const t = useTranslations('guides')
-  const internalRef = useRef<StopEditorRef>(null)
+  const tStops = useTranslations('stops')
+  const internalRef = useRef<StopLocaleEditorRef>(null)
   const stopEditorRef = externalRef ?? internalRef
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
@@ -71,17 +74,25 @@ export function StopEditLayout({
   const currentStopTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
   const localeStatusMap = getStopLocaleStatusMap(stop)
 
-  const stopImages = stop.assets.filter(
-    (a) => (a.role === 'image' || a.role === 'video') && (a.locale === activeLocale || a.locale === null),
-  )
-  const stopAudio =
-    stop.assets.find((a) => a.role === 'audio' && (a.locale === activeLocale || a.locale === null)) ?? null
+  const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
+  const stopAudio = stop.assets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
 
   useAutoSave(onSave, isDirty)
 
   const handleBack = useCallback(() => {
     confirmIfDirty(onBack)
   }, [confirmIfDirty, onBack])
+
+  const handleImagesChange = useCallback(
+    async (value: Asset | Asset[] | null) => {
+      if (Array.isArray(value)) {
+        await onImageChange(value)
+      } else if (value === null) {
+        await onImageChange([])
+      }
+    },
+    [onImageChange],
+  )
 
   return (
     <>
@@ -133,38 +144,45 @@ export function StopEditLayout({
                     <ArrowLeft className="h-4 w-4" />
                     {backLabel}
                   </Button>
+                </div>
+
+                {/* Global Assets Section */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      {tStops('editor.sharedContent')}
+                    </CardTitle>
+                    <CardDescription>{tStops('editor.sharedContentDescription')}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <MediaPicker
+                      mode="multiple"
+                      mediaTypes={['image', 'video']}
+                      value={stopImages}
+                      onChange={handleImagesChange}
+                      label={tStops('editor.galleryLabel')}
+                      organizationId={organizationId}
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Locale-specific Content Section */}
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="text-lg font-semibold">{tStops('editor.localeContent')}</h2>
                   <LocaleSelector value={activeLocale} onValueChange={onLocaleChange} localeStatus={localeStatusMap} />
                 </div>
 
-                <StopEditor
+                <StopLocaleEditor
                   ref={stopEditorRef}
                   key={`${stop.id}-${activeLocale}`}
                   stop={stop}
                   locale={activeLocale}
                   organizationId={organizationId}
-                  images={stopImages}
                   audio={stopAudio}
                   onChange={onStopChange}
                   onDirtyChange={onDirtyChange}
                   onSave={onSave}
-                  onImageChange={async (assets) => {
-                    const newAssetIds = new Set(assets.map((a) => a.id))
-                    const currentAssetIds = new Set(stopImages.map((a) => a.id))
-
-                    for (const existing of stopImages) {
-                      if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
-                        await onImageChange(assets)
-                        return
-                      }
-                    }
-
-                    for (const asset of assets) {
-                      if (!currentAssetIds.has(asset.id)) {
-                        await onImageChange(assets)
-                        return
-                      }
-                    }
-                  }}
                   onAudioChange={onAudioChange}
                 />
               </div>

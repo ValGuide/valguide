@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
-import type { StopEditorRef } from '@/features/guides/components/stop-editor'
+import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
@@ -36,7 +36,7 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
 
   const modifiedLocalesRef = useRef<Set<string>>(new Set())
   const stopRef = useRef(stop)
-  const stopEditorRef = useRef<StopEditorRef>(null)
+  const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   stopRef.current = stop
 
   const organizationId = sidebarData?.currentTeam?.id ?? ''
@@ -44,9 +44,7 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
   const currentTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
   const stopTitle = getVersionedField(currentTranslation, 'title') || tStops('untitled')
 
-  const stopImages = stop.assets.filter(
-    (a) => (a.role === 'image' || a.role === 'video') && (a.locale === activeLocale || a.locale === null),
-  )
+  const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
 
   const handleBack = useCallback(() => {
     router.push('/stops')
@@ -130,13 +128,13 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
   }, [isDirty, tCommon])
 
   const attachAssetToStop = useCallback(
-    async (asset: { id: string }, role: string, locale: SupportedLocale) => {
+    async (asset: { id: string }, role: string, locale: string | null) => {
       try {
         const result = await attachAssetToStopAction({
           stopId: stop.id,
           assetId: asset.id,
           role,
-          locale,
+          locale: locale ?? undefined,
         })
         if (!result) return
         setStop((prev) => ({
@@ -213,7 +211,7 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
 
         for (const asset of assets) {
           if (!currentAssetIds.has(asset.id)) {
-            await attachAssetToStop(asset, 'image', activeLocale)
+            await attachAssetToStop(asset, 'image', null)
           }
         }
       }}

@@ -7,7 +7,6 @@ import { fetchGuides } from '../api/fetchers'
 interface CreateGuideData {
   translations: Array<{ locale: string; title: string; description?: string }>
   organizationId?: string
-  coverImage?: string
 }
 
 interface UseGuidesReturn {
@@ -42,7 +41,6 @@ export function useGuides(teamSlug?: string): UseGuidesReturn {
         createdAt: now,
         updatedAt: now,
       })),
-      coverImage: guideData.coverImage || null,
       createdAt: now,
       updatedAt: now,
     }

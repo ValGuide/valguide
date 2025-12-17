@@ -21,7 +21,6 @@ async function exampleCreateGuide(userId: string, orgId: string) {
       createdBy: userId,
       updatedBy: userId,
       organizationId: orgId,
-      coverImage: 'https://example.com/cover.jpg',
       // published: new Date(), // Uncomment to publish immediately
     },
     [

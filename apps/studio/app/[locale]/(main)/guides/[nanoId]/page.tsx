@@ -1,5 +1,5 @@
 import { db } from '@valguide/core/features/db'
-import { getGuideByNanoId } from '@valguide/core/features/guides/queries'
+import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { Link } from '@valguide/i18n/routing'
 import { Badge } from '@valguide/ui/components/badge'
@@ -25,7 +25,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
   setRequestLocale(locale)
 
   const t = await getTranslations('guides')
-  const guide = await getGuideByNanoId(db, nanoId)
+  const guide = await getGuideByNanoIdWithAssets(db, nanoId)
 
   if (!guide) {
     notFound()
@@ -37,6 +37,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
   const description = version?.description ?? ''
   const isPublished = !!guide.published
   const status = isPublished ? 'published' : 'draft'
+  const coverImageUrl = guide.assets.find((a) => a.role === 'cover')?.publicUrl
 
   return (
     <main className="flex flex-1 flex-col bg-gray-50 dark:bg-background">
@@ -70,9 +71,9 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
           <Card className="overflow-hidden">
             {/* Cover Image Section */}
             <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-muted/40">
-              {guide.coverImage ? (
+              {coverImageUrl ? (
                 // biome-ignore lint/performance/noImgElement: Using img for dynamic content
-                <img src={guide.coverImage} alt={title} className="h-full w-full object-cover" />
+                <img src={coverImageUrl} alt={title} className="h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-4 py-6">
                   <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
