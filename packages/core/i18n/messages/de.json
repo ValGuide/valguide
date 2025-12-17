@@ -487,6 +487,16 @@
       "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
       "removeSuccess": "Asset vom Guide entfernt",
       "removeError": "Fehler beim Entfernen des Assets vom Guide"
+    },
+    "localesManager": {
+      "addLanguage": "Sprache hinzufügen",
+      "removeLanguage": "{language} entfernen",
+      "searchLanguages": "Sprachen suchen...",
+      "noLanguageFound": "Keine Sprache gefunden.",
+      "confirmRemoveTitle": "Sprache entfernen?",
+      "confirmRemoveDescription": "Dieser Guide hat Inhalte in {language}. Das Entfernen der Sprache wird sie aus dem Guide ausblenden. Die Inhalte werden nicht gelöscht, sind aber nicht mehr von diesem Guide aus bearbeitbar.",
+      "cancel": "Abbrechen",
+      "confirmRemove": "Entfernen"
     }
   },
   "stops": {

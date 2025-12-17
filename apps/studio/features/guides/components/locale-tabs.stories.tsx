@@ -1,7 +1,6 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { useState } from 'react'
 import { LocaleTabs } from './locale-tabs'
 
@@ -18,7 +17,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 function LocaleTabsWrapper() {
-  const [locale, setLocale] = useState<SupportedLocale>('en')
+  const [locale, setLocale] = useState('en')
   return <LocaleTabs value={locale} onValueChange={setLocale} />
 }
 

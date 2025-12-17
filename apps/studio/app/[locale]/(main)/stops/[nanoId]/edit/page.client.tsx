@@ -7,7 +7,6 @@ import {
 } from '@valguide/core/features/guides/actions'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import { Link, useRouter } from '@valguide/i18n/routing'
 import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'
 import { useTranslations } from 'next-intl'
@@ -30,7 +29,7 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
   const { data: sidebarData } = useSidebarData()
 
   const [stop, setStop] = useState<StopWithAssets>(fallbackStop)
-  const [activeLocale, setActiveLocale] = useState<SupportedLocale>((initialLocale as SupportedLocale) ?? 'de')
+  const [activeLocale, setActiveLocale] = useState<string>(initialLocale ?? 'de')
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 

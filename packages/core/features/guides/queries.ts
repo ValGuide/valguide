@@ -1,5 +1,4 @@
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
-import type { SupportedLocale } from '../../i18n/i18n.config'
 import { valguideId } from '../../utils/nanoid'
 import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
 import type { DB } from '../db'
@@ -272,7 +271,7 @@ export async function getGuidesByOrganizationId(db: DB, organizationId: string):
 export async function getGuideByIdWithLocale(
   db: DB,
   guideId: string,
-  locale: SupportedLocale,
+  locale: string,
 ): Promise<(typeof guide.$inferSelect & { translation?: any }) | null> {
   const result = await db.query.guide.findFirst({
     where: and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)),

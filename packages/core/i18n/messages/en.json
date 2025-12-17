@@ -487,6 +487,16 @@
       "attachError": "Failed to attach asset to guide",
       "removeSuccess": "Asset removed from guide",
       "removeError": "Failed to remove asset from guide"
+    },
+    "localesManager": {
+      "addLanguage": "Add Language",
+      "removeLanguage": "Remove {language}",
+      "searchLanguages": "Search languages...",
+      "noLanguageFound": "No language found.",
+      "confirmRemoveTitle": "Remove Language?",
+      "confirmRemoveDescription": "This guide has content in {language}. Removing the language will hide it from the guide. The content will not be deleted but will no longer be editable from this guide.",
+      "cancel": "Cancel",
+      "confirmRemove": "Remove"
     }
   },
   "stops": {

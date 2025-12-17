@@ -487,6 +487,16 @@
       "attachError": "Errur cun agiuntar l'asset al guid",
       "removeSuccess": "Asset allontanà dal guid",
       "removeError": "Errur cun allontanar l'asset dal guid"
+    },
+    "localesManager": {
+      "addLanguage": "Agiuntar lingua",
+      "removeLanguage": "Allontanar {language}",
+      "searchLanguages": "Tschertgar linguas...",
+      "noLanguageFound": "Nagina lingua chattada.",
+      "confirmRemoveTitle": "Allontanar lingua?",
+      "confirmRemoveDescription": "Quest guid ha cuntegn en {language}. L'allontanament da la lingua va a zuppentar quel ord il guid. Il cuntegn na vegn betg stizzà, ma na po betg pli vegnir modifitgà da quest guid.",
+      "cancel": "Interrumper",
+      "confirmRemove": "Allontanar"
     }
   },
   "stops": {

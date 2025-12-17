@@ -1,7 +1,7 @@
 'use client'
 
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { supportedLocales } from '@valguide/i18n/i18n.config'
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { Circle } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -11,6 +11,7 @@ import { getTranslationLocaleStatus, type TranslationLocaleStatus } from '../uti
 interface TranslationStatusInlineProps {
   stop: StopWithTranslations
   maxVisible?: number
+  locales?: string[]
 }
 
 function getStatusColor(status: TranslationLocaleStatus): string {
@@ -38,18 +39,22 @@ function getStatusLabel(
   }
 }
 
-export function TranslationStatusInline({ stop, maxVisible = 3 }: TranslationStatusInlineProps) {
+export function TranslationStatusInline({
+  stop,
+  maxVisible = 3,
+  locales = ['en', 'de', 'rm'],
+}: TranslationStatusInlineProps) {
   const t = useTranslations('stops.translationStatus')
 
   const localeStatuses = useMemo(() => {
-    return supportedLocales.map((locale) => {
+    return locales.map((locale) => {
       const translation = stop.translations.find((tr) => tr.locale === locale)
       return {
         locale,
         status: getTranslationLocaleStatus(translation),
       }
     })
-  }, [stop.translations])
+  }, [locales, stop.translations])
 
   const visibleLocales = localeStatuses.slice(0, maxVisible)
   const hiddenCount = localeStatuses.length - maxVisible

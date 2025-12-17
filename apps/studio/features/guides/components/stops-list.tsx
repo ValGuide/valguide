@@ -19,7 +19,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
+
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import {
@@ -37,7 +37,7 @@ import { TranslationStatusInline } from './translation-status-inline'
 
 export type StopsListProps = {
   stops: StopWithTranslations[]
-  locale: SupportedLocale
+  locale: string
   selectedStopId?: string
   onReorder: (updates: Array<{ id: string; order: number }>) => void
   onEdit: (stop: StopWithTranslations) => void
@@ -48,7 +48,7 @@ export type StopsListProps = {
 type SortableStopItemProps = {
   stop: StopWithTranslations
   index: number
-  locale: SupportedLocale
+  locale: string
   selected: boolean
   onEdit: (stop: StopWithTranslations) => void
   onDelete: (stopId: string) => void

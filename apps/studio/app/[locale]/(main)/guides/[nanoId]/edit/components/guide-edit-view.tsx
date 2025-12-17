@@ -20,6 +20,7 @@ import { Eye, Globe, ListChecks } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import { GuideLocalesManager } from '@/features/guides/components/guide-locales-manager'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
@@ -51,6 +52,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     deleteStop,
     reorderStops,
     setActiveLocale,
+    updateGuideAvailableLocales,
     save,
     refetch,
     registerFormDirty,
@@ -73,7 +75,15 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   useAutoSave(save, isDirty)
 
   const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
-  const localeStatusMap = getGuideLocaleStatusMap(guide)
+  const localeStatusMap = getGuideLocaleStatusMap(guide, guide.availableLocales)
+
+  const hasContentForLocale = useCallback(
+    (locale: string) => {
+      const translation = guide.translations.find((t) => t.locale === locale)
+      return !!(translation?.currentVersionId || translation?.draftVersionId)
+    },
+    [guide.translations],
+  )
 
   const formRef = useRef<GuideMetadataFormRef>(null)
   const formId = `guide-translation-${activeLocale}`
@@ -244,13 +254,25 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                       label={t('editor.coverImageLabel')}
                       organizationId={organizationId}
                     />
+                    <div className="mt-4">
+                      <GuideLocalesManager
+                        value={guide.availableLocales ?? ['en', 'de', 'rm']}
+                        onChange={updateGuideAvailableLocales}
+                        hasContentForLocale={hasContentForLocale}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
 
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-lg font-semibold">{t('editor.localeContent')}</h2>
-                  <LocaleSelector value={activeLocale} onValueChange={setActiveLocale} localeStatus={localeStatusMap} />
+                  <LocaleSelector
+                    value={activeLocale}
+                    locales={guide.availableLocales ?? ['en', 'de', 'rm']}
+                    onValueChange={setActiveLocale}
+                    localeStatus={localeStatusMap}
+                  />
                 </div>
 
                 <GuideMetadataForm

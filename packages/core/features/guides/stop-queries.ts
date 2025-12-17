@@ -1,5 +1,4 @@
 import { and, asc, desc, eq } from 'drizzle-orm'
-import type { SupportedLocale } from '../../i18n/i18n.config'
 import { valguideId } from '../../utils/nanoid'
 import { db } from '../db'
 import { guide, guideStop, stop, stopTranslation } from './schema'
@@ -299,8 +298,8 @@ export async function deleteStop(stopId: string) {
 export function getLocalizedStopText(
   stop: { translations: any[] },
   field: 'title' | 'description' | 'transcription',
-  locale: SupportedLocale,
-  fallbackLocale: SupportedLocale = 'en',
+  locale: string,
+  fallbackLocale: string = 'en',
 ): string {
   // Now works with versioned translations
   const translation = stop.translations.find((t) => t.locale === locale)

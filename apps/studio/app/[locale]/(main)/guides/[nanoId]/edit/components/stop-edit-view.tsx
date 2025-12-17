@@ -154,6 +154,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
       isSaving={isSaving}
       organizationId={organizationId}
       stopTitle={stopTitle}
+      locales={guide.availableLocales ?? ['en', 'de', 'rm']}
       onLocaleChange={setActiveLocale}
       onStopChange={handleStopChange}
       onDirtyChange={handleDirtyChange}

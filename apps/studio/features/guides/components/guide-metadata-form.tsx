@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
@@ -14,7 +14,7 @@ import { type UseFormReturn, useForm } from 'react-hook-form'
 import { type GuideTranslationFormData, guideTranslationFormSchema } from '../schemas/guide-form'
 
 export type GuideMetadataFormProps = {
-  locale: SupportedLocale
+  locale: string
   translation?: GuideTranslationWithVersion
   organizationId: string
   onTranslationChange: (data: { title: string; description: string }) => void

@@ -78,11 +78,12 @@ export type UpdateGuideParams = {
   id: string
   published?: Date | null
   organizationId?: string | null
+  availableLocales?: string[]
   userId?: string // Ignored, used from session
 }
 
 export async function updateGuide(params: UpdateGuideParams) {
-  const { id, published, organizationId } = params
+  const { id, published, organizationId, availableLocales } = params
   const user = await requireGuideAccess(id)
 
   const [updatedGuide] = await db
@@ -90,6 +91,7 @@ export async function updateGuide(params: UpdateGuideParams) {
     .set({
       published: published === undefined ? undefined : published,
       organizationId: organizationId ?? undefined,
+      availableLocales: availableLocales ?? undefined,
       updatedBy: user.id,
       updatedAt: new Date(),
     })

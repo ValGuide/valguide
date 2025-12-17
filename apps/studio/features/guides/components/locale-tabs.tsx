@@ -1,21 +1,21 @@
 'use client'
 
-import { type SupportedLocale, supportedLocales } from '@valguide/i18n/i18n.config'
 import { Tabs, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { useId } from 'react'
 
 export type LocaleTabsProps = {
-  value: SupportedLocale
-  onValueChange: (locale: SupportedLocale) => void
+  value: string
+  onValueChange: (locale: string) => void
+  locales?: string[]
 }
 
-export function LocaleTabs({ value, onValueChange }: LocaleTabsProps) {
+export function LocaleTabs({ value, onValueChange, locales = ['en', 'de', 'rm'] }: LocaleTabsProps) {
   const id = useId()
 
   return (
-    <Tabs id={id} value={value} onValueChange={(val) => onValueChange(val as SupportedLocale)}>
+    <Tabs id={id} value={value} onValueChange={onValueChange}>
       <TabsList>
-        {supportedLocales.map((locale) => (
+        {locales.map((locale) => (
           <TabsTrigger key={locale} value={locale} className="uppercase">
             {locale}
           </TabsTrigger>

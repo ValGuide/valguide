@@ -4,7 +4,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { PublishStopTranslationButton } from '@valguide/core/features/guides/components/publish-stop-translation-button'
 import { VersionHistoryDialogStop } from '@valguide/core/features/guides/components/version-history-dialog-stop'
 import type { AssetWithRole, StopWithAssets } from '@valguide/core/features/guides/queries'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,12 +27,13 @@ import { getStopLocaleStatusMap } from '@/features/guides/utils/translation-stat
 
 export interface StopEditLayoutProps {
   stop: StopWithAssets
-  activeLocale: SupportedLocale
+  activeLocale: string
   isDirty: boolean
   isSaving: boolean
   organizationId: string
   stopTitle: string
-  onLocaleChange: (locale: SupportedLocale) => void
+  locales?: string[]
+  onLocaleChange: (locale: string) => void
   onStopChange: (data: StopTranslationFormData) => void
   onDirtyChange: (dirty: boolean) => void
   onSave: () => Promise<void>
@@ -52,6 +53,7 @@ export function StopEditLayout({
   isSaving,
   organizationId,
   stopTitle,
+  locales,
   onLocaleChange,
   onStopChange,
   onDirtyChange,
@@ -170,7 +172,12 @@ export function StopEditLayout({
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-lg font-semibold">{tStops('editor.localeContent')}</h2>
-                  <LocaleSelector value={activeLocale} onValueChange={onLocaleChange} localeStatus={localeStatusMap} />
+                  <LocaleSelector
+                    value={activeLocale}
+                    locales={locales ?? ['en', 'de', 'rm']}
+                    onValueChange={onLocaleChange}
+                    localeStatus={localeStatusMap}
+                  />
                 </div>
 
                 <StopLocaleEditor

@@ -161,7 +161,7 @@ export function MediaPicker({
       return <MediaPickerPreview asset={value} onRemove={() => handleRemove()} disabled={disabled} />
     }
 
-    if (mode === 'multiple' && (Array.isArray(value) && value.length > 0 || uploading)) {
+    if (mode === 'multiple' && ((Array.isArray(value) && value.length > 0) || uploading)) {
       return (
         <MediaPickerGallery
           assets={Array.isArray(value) ? value : []}

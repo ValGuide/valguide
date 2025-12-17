@@ -6,7 +6,7 @@ import { TranslationStatusBadge } from '@valguide/core/features/guides/component
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+
 import { Button } from '@valguide/ui/components/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
@@ -19,7 +19,7 @@ import { type StopTranslationFormData, stopTranslationFormSchema } from '../sche
 
 export type StopEditorProps = {
   stop?: StopWithTranslations
-  locale: SupportedLocale
+  locale: string
   organizationId: string
   onChange?: (data: StopTranslationFormData) => void
   onDirtyChange?: (isDirty: boolean) => void

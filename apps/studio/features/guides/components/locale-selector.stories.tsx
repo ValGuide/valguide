@@ -23,6 +23,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     value: 'en',
+    locales: ['en', 'de', 'rm'],
     onValueChange: () => {},
   },
 }
@@ -30,6 +31,7 @@ export const Default: Story = {
 export const WithStatusIndicators: Story = {
   args: {
     value: 'en',
+    locales: ['en', 'de', 'rm'],
     onValueChange: () => {},
     localeStatus: {
       en: 'published',
@@ -42,6 +44,7 @@ export const WithStatusIndicators: Story = {
 export const AllPublished: Story = {
   args: {
     value: 'de',
+    locales: ['en', 'de', 'rm'],
     onValueChange: () => {},
     localeStatus: {
       en: 'published',
@@ -54,6 +57,7 @@ export const AllPublished: Story = {
 export const AllDrafts: Story = {
   args: {
     value: 'rm',
+    locales: ['en', 'de', 'rm'],
     onValueChange: () => {},
     localeStatus: {
       en: 'draft',
@@ -66,6 +70,7 @@ export const AllDrafts: Story = {
 export const AllEmpty: Story = {
   args: {
     value: 'en',
+    locales: ['en', 'de', 'rm'],
     onValueChange: () => {},
     localeStatus: {
       en: 'empty',

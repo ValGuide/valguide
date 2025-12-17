@@ -106,7 +106,9 @@ export function GuideEditorProvider({
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [guide, setGuide] = useState(initialGuide)
-  const [activeLocale, setActiveLocaleState] = useState<SupportedLocale>(() => parseLocale(initialLocale))
+  const [activeLocale, setActiveLocaleState] = useState<ContentLocale>(() =>
+    parseLocale(initialLocale, initialGuide.availableLocales ?? ['en', 'de', 'rm']),
+  )
   const [selectedStop, setSelectedStop] = useState<StopWithAssets | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
@@ -141,7 +143,12 @@ export function GuideEditorProvider({
 
   // Set active locale and update URL
   const setActiveLocale = useCallback(
-    (locale: SupportedLocale) => {
+    (locale: ContentLocale) => {
+      const availableLocales = guideRef.current.availableLocales ?? ['en', 'de', 'rm']
+      if (!availableLocales.includes(locale)) {
+        console.warn(`Locale ${locale} not in available locales`)
+        return
+      }
       setActiveLocaleState(locale)
       const params = new URLSearchParams(searchParams.toString())
       if (locale === defaultLocale) {
@@ -199,9 +206,38 @@ export function GuideEditorProvider({
     setDirtyForms(new Set())
   }, [])
 
+  // Update guide available locales
+  const updateGuideAvailableLocales = useCallback(
+    async (locales: string[]) => {
+      try {
+        await updateGuide({
+          id: guide.id,
+          availableLocales: locales,
+          organizationId: guide.organizationId,
+        })
+
+        setGuide((prev) => ({
+          ...prev,
+          availableLocales: locales,
+        }))
+
+        if (!locales.includes(activeLocale)) {
+          const newLocale = locales[0] ?? defaultLocale
+          setActiveLocaleState(newLocale)
+        }
+
+        toast.success(t('guides.locales.updateSuccess'))
+      } catch (error) {
+        console.error('Failed to update available locales:', error)
+        toast.error(t('guides.locales.updateError'))
+      }
+    },
+    [guide.id, guide.organizationId, activeLocale, t],
+  )
+
   // Update guide translation
   const updateGuideTranslationData = useCallback(
-    (locale: SupportedLocale, data: { title: string; description?: string | null }) => {
+    (locale: ContentLocale, data: { title: string; description?: string | null }) => {
       setGuide((prev) => {
         const existingTranslation = prev.translations.find((t) => t.locale === locale)
 
@@ -376,7 +412,7 @@ export function GuideEditorProvider({
   const updateStopTranslationData = useCallback(
     (
       stopId: string,
-      locale: SupportedLocale,
+      locale: ContentLocale,
       data: { title: string; description?: string | null; transcription?: string | null },
     ) => {
       setGuide((prev) => ({
@@ -800,6 +836,7 @@ export function GuideEditorProvider({
     isDirty,
     isSaving,
     updateGuideTranslationData,
+    updateGuideAvailableLocales,
     attachAssetToGuide,
     detachAssetFromGuide,
     selectStop,

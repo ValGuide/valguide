@@ -1,7 +1,6 @@
 import { relations } from 'drizzle-orm'
 import { index, integer, pgEnum, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
-import type { SupportedLocale } from '../../i18n/i18n.config'
 import { organization } from '../orgs/schema'
 
 const studioSchema = pgSchema('studio')

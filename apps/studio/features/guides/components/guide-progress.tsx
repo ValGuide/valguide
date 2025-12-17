@@ -2,7 +2,7 @@
 
 import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
+
 import { Progress } from '@valguide/ui/components/progress'
 import { Separator } from '@valguide/ui/components/separator'
 import { AlertCircle, CheckCircle2, Circle } from 'lucide-react'
@@ -17,7 +17,7 @@ import { getLocaleDisplayName } from './locale-selector'
 
 interface GuideProgressProps {
   guide: GuideWithStopsAndAssets
-  locale: SupportedLocale
+  locale: string
 }
 
 interface ProgressItem {
