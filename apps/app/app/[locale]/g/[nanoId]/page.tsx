@@ -24,6 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
   const description = getLocalizedGuideText(guide, 'description', locale as SupportedLocale)
+  const coverAsset = guide.assets?.find((a) => a.role === 'cover')
+  const coverImageUrl = coverAsset?.publicUrl
 
   return {
     title,
@@ -31,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      images: guide.coverImage ? [guide.coverImage] : [],
+      images: coverImageUrl ? [coverImageUrl] : [],
     },
   }
 }
@@ -44,10 +46,12 @@ export default async function GuidePage({ params }: Props) {
 
   const title = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
   const description = getLocalizedGuideText(guide, 'description', locale as SupportedLocale)
+  const coverAsset = guide.assets?.find((a) => a.role === 'cover')
+  const coverImageUrl = coverAsset?.publicUrl ?? null
 
   return (
     <div className="container max-w-4xl py-8 space-y-8">
-      <GuideHero title={title} description={description} coverImage={guide.coverImage} assets={guide.assets} />
+      <GuideHero title={title} description={description} coverImage={coverImageUrl} assets={guide.assets} />
 
       <GuideMetadata stopCount={guide.stops.length} createdAt={guide.createdAt} locale={locale} />
 
