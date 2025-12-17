@@ -497,6 +497,10 @@
       "confirmRemoveDescription": "Dieser Guide hat Inhalte in {language}. Das Entfernen der Sprache wird sie aus dem Guide ausblenden. Die Inhalte werden nicht gelöscht, sind aber nicht mehr von diesem Guide aus bearbeitbar.",
       "cancel": "Abbrechen",
       "confirmRemove": "Entfernen"
+    },
+    "locales": {
+      "updateSuccess": "Sprachen aktualisiert",
+      "updateError": "Fehler beim Aktualisieren der Sprachen"
     }
   },
   "stops": {

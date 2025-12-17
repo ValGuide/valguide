@@ -497,6 +497,10 @@
       "confirmRemoveDescription": "This guide has content in {language}. Removing the language will hide it from the guide. The content will not be deleted but will no longer be editable from this guide.",
       "cancel": "Cancel",
       "confirmRemove": "Remove"
+    },
+    "locales": {
+      "updateSuccess": "Languages updated",
+      "updateError": "Failed to update languages"
     }
   },
   "stops": {
