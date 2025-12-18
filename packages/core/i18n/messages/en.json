@@ -410,7 +410,9 @@
       "noLanguageFound": "No language found",
       "statusPublished": "Published",
       "statusDraft": "Draft",
-      "statusEmpty": "Empty"
+      "statusEmpty": "Empty",
+      "enabledLanguages": "Guide Languages",
+      "addLanguage": "Add Translation"
     },
     "progress": {
       "title": "Guide Completion",

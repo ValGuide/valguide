@@ -410,7 +410,9 @@
       "noLanguageFound": "Keine Sprache gefunden",
       "statusPublished": "Veröffentlicht",
       "statusDraft": "Entwurf",
-      "statusEmpty": "Leer"
+      "statusEmpty": "Leer",
+      "enabledLanguages": "Guide-Sprachen",
+      "addLanguage": "Übersetzung hinzufügen"
     },
     "progress": {
       "title": "Guide-Fortschritt",

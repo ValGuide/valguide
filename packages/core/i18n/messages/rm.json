@@ -410,7 +410,9 @@
       "noLanguageFound": "Nagin linguatg chattà",
       "statusPublished": "Publichà",
       "statusDraft": "Sboz",
-      "statusEmpty": "Vid"
+      "statusEmpty": "Vid",
+      "enabledLanguages": "Linguatgs dal guid",
+      "addLanguage": "Agiuntar translaziun"
     },
     "progress": {
       "title": "Progress dal guid",

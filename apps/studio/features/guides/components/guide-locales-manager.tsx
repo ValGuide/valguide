@@ -26,6 +26,7 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { getLocaleDisplayName } from './locale-selector'
 
+// TODO: unify with supportedLocales
 const AVAILABLE_LANGUAGES = [
   'en',
   'de',
