@@ -248,27 +248,6 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
           <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
-                {/* Global Assets Section */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      {t('editor.sharedContent')}
-                    </CardTitle>
-                    <CardDescription>{t('editor.sharedContentDescription')}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <MediaPicker
-                      mode="single"
-                      mediaTypes={['image']}
-                      value={coverAsset}
-                      onChange={handleCoverImageChange}
-                      label={t('editor.coverImageLabel')}
-                      organizationId={organizationId}
-                    />
-                  </CardContent>
-                </Card>
-
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-lg font-semibold">
@@ -289,6 +268,28 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                   onSave={save}
                 />
 
+                {/* Shared Content Section */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      {t('editor.sharedContent')}
+                    </CardTitle>
+                    <CardDescription>{t('editor.sharedContentDescription')}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <MediaPicker
+                      mode="single"
+                      mediaTypes={['image']}
+                      value={coverAsset}
+                      onChange={handleCoverImageChange}
+                      label={t('editor.coverImageLabel')}
+                      organizationId={organizationId}
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Stops Section */}
                 <div>
                   <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
                   <StopsList

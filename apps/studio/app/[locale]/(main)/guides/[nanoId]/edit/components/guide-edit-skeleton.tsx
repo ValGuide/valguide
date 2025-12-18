@@ -24,28 +24,9 @@ export function GuideEditSkeleton() {
         <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
           <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
             <div className="space-y-6">
-              {/* Global Assets Section (Shared Content) */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="h-4 w-4" />
-                    <Skeleton className="h-5 w-48" />
-                  </div>
-                  <Skeleton className="h-4 w-72" />
-                </CardHeader>
-                <CardContent>
-                  {/* Cover Image Picker */}
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-10 w-full" />
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Locale-specific Content Header */}
               <div className="flex items-center justify-between gap-4">
                 <Skeleton className="h-6 w-40" />
-                <Skeleton className="h-9 w-[180px]" />
               </div>
 
               {/* Guide Metadata Form Card */}
@@ -80,17 +61,33 @@ export function GuideEditSkeleton() {
                 </CardContent>
               </Card>
 
+              {/* Shared Content Section */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-4 w-4" />
+                    <Skeleton className="h-5 w-48" />
+                  </div>
+                  <Skeleton className="h-4 w-72" />
+                </CardHeader>
+                <CardContent>
+                  {/* Cover Image Picker */}
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-10 w-full" />
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Stops Section */}
               <div>
                 <Skeleton className="mb-4 h-5 w-16" />
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center p-8">
-                    <Skeleton className="mb-4 h-12 w-12 rounded-full" />
-                    <Skeleton className="mb-2 h-5 w-32" />
-                    <Skeleton className="mb-4 h-4 w-64" />
-                    <Skeleton className="h-9 w-32" />
-                  </CardContent>
-                </Card>
+                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
+                  <Skeleton className="mb-4 h-12 w-12 rounded-full" />
+                  <Skeleton className="mb-2 h-5 w-32" />
+                  <Skeleton className="mb-4 h-4 w-64" />
+                  <Skeleton className="h-9 w-32" />
+                </div>
               </div>
             </div>
           </div>

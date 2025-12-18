@@ -529,7 +529,7 @@
     "editor": {
       "title": "Stop-Details",
       "sharedContent": "Für alle Sprachen gültig",
-      "sharedContentDescription": "Bilder und Videos gelten für alle Sprachen",
+      "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
       "localeContent": "Sprachspezifischer Inhalt",
       "localeContentDescription": "Bearbeiten Sie den Stop-Inhalt für diese Sprache",
       "titleLabel": "Titel",

@@ -27,27 +27,6 @@ export function StopEditSkeleton() {
                 <Skeleton className="h-8 w-32" />
               </div>
 
-              {/* Global Assets Section (Shared Content - Images/Video Gallery) */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="h-4 w-4" />
-                    <Skeleton className="h-5 w-48" />
-                  </div>
-                  <Skeleton className="h-4 w-80" />
-                </CardHeader>
-                <CardContent>
-                  {/* Gallery Picker */}
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-20" />
-                    <div className="grid grid-cols-3 gap-4">
-                      <Skeleton className="aspect-square w-full rounded-lg" />
-                      <Skeleton className="aspect-square w-full rounded-lg" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Locale-specific Content Header */}
               <div className="flex items-center justify-between gap-4">
                 <Skeleton className="h-6 w-40" />
@@ -93,6 +72,27 @@ export function StopEditSkeleton() {
                       ))}
                     </div>
                     <Skeleton className="h-32 w-full" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Shared Content Section (Images/Video Gallery) */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-4 w-4" />
+                    <Skeleton className="h-5 w-48" />
+                  </div>
+                  <Skeleton className="h-4 w-80" />
+                </CardHeader>
+                <CardContent>
+                  {/* Gallery Picker */}
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-20" />
+                    <div className="grid grid-cols-3 gap-4">
+                      <Skeleton className="aspect-square w-full rounded-lg" />
+                      <Skeleton className="aspect-square w-full rounded-lg" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>

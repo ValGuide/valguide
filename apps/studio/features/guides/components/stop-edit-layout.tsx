@@ -148,27 +148,6 @@ export function StopEditLayout({
                   </Button>
                 </div>
 
-                {/* Global Assets Section */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      {tStops('editor.sharedContent')}
-                    </CardTitle>
-                    <CardDescription>{tStops('editor.sharedContentDescription')}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <MediaPicker
-                      mode="multiple"
-                      mediaTypes={['image', 'video']}
-                      value={stopImages}
-                      onChange={handleImagesChange}
-                      label={tStops('editor.galleryLabel')}
-                      organizationId={organizationId}
-                    />
-                  </CardContent>
-                </Card>
-
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-lg font-semibold">{tStops('editor.localeContent')}</h2>
@@ -192,6 +171,27 @@ export function StopEditLayout({
                   onSave={onSave}
                   onAudioChange={onAudioChange}
                 />
+
+                {/* Shared Content Section */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      {tStops('editor.sharedContent')}
+                    </CardTitle>
+                    <CardDescription>{tStops('editor.sharedContentDescription')}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <MediaPicker
+                      mode="multiple"
+                      mediaTypes={['image', 'video']}
+                      value={stopImages}
+                      onChange={handleImagesChange}
+                      label={tStops('editor.galleryLabel')}
+                      organizationId={organizationId}
+                    />
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
