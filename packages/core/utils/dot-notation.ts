@@ -20,7 +20,7 @@ export const revertFromDotNotation = (dotNotationObject: FlatDictionary): Dictio
     const isArray = keys.some((k) => !Number.isNaN(Number(k)))
     let temp: Record<string, unknown> = result
     for (let index = 0; index < keys.length; index++) {
-      const innerKey = keys[index]
+      const innerKey = keys[index] as string
       if (index === keys.length - 1) {
         temp[innerKey] = value
       } else {

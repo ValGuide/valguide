@@ -24,7 +24,7 @@ describe.skip('Translation Versioning', () => {
         organizationId: '00000000-0000-0000-0000-000000000001',
       })
       .returning()
-    testGuideId = testGuide?.id
+    testGuideId = testGuide?.id ?? ''
   })
 
   afterAll(async () => {
@@ -85,7 +85,7 @@ describe.skip('Translation Versioning', () => {
     const history = await getGuideTranslationHistory(testGuideId, 'en')
 
     expect(history.length).toBeGreaterThanOrEqual(2)
-    expect(history[0]?.version).toBeGreaterThan(history[1]?.version) // Ordered by version desc
+    expect(history[0]?.version).toBeGreaterThan(history[1]?.version ?? 0) // Ordered by version desc
   })
 
   it('should rollback to a previous version', async () => {

@@ -487,8 +487,13 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
     })
   }
 
+  // Filter availableLocales to only include locales with published translations
+  const publishedLocales = result.translations.filter((t) => t.currentVersionId != null).map((t) => t.locale)
+  const availableLocales = result.availableLocales.filter((locale) => publishedLocales.includes(locale))
+
   return {
     ...result,
+    availableLocales,
     assets: guideAssets.map((item) => ({
       ...item.asset,
       guideAssetId: item.guideAssetId,
