@@ -18,6 +18,7 @@ import { useTranslations } from 'next-intl'
 export function NavUser({
   user,
   onLogout,
+  handleNavClick,
 }: {
   user: {
     name: string
@@ -25,6 +26,7 @@ export function NavUser({
     avatar: string
   }
   onLogout?: () => void
+  handleNavClick?: (url: string) => void
 }) {
   const { isMobile } = useSidebar()
   const t = useTranslations('sidebar.user')
@@ -91,7 +93,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/profile">
+                <Link href="/profile" onClick={() => handleNavClick?.('/profile')}>
                   <BadgeCheck />
                   {t('myProfile')}
                 </Link>
