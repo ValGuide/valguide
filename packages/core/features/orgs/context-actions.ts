@@ -4,11 +4,7 @@ import { cookies } from 'next/headers'
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
 import { getTeamBySlug, isTeamMember } from './queries'
-import { getActiveTeamSlug as getActiveTeamSlugInternal, getSidebarData, TEAM_COOKIE_NAME } from './sidebar-data'
-
-export async function getSidebarDataAction() {
-  return getSidebarData()
-}
+import { TEAM_COOKIE_NAME } from './sidebar-data'
 
 export async function switchTeamAction(slug: string) {
   const supabase = await createClient()
@@ -43,8 +39,4 @@ export async function switchTeamAction(slug: string) {
 
   // Reload
   return { success: true }
-}
-
-export async function getActiveTeamSlug() {
-  return getActiveTeamSlugInternal()
 }

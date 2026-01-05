@@ -2,7 +2,6 @@
 
 import { createClient } from '@valguide/core/supabase/server'
 import { updateProfile } from '@valguide/features/profiles/mutations'
-import { getProfile } from '@valguide/features/profiles/queries'
 import { getTranslations } from 'next-intl/server'
 import { z } from 'zod'
 
@@ -13,19 +12,6 @@ const profileSchema = z.object({
 })
 
 export type ProfileFormData = z.infer<typeof profileSchema>
-
-export async function getProfileAction() {
-  const supabase = await createClient()
-  const { data: claimsData } = await supabase.auth.getClaims()
-  const user = claimsData?.claims
-
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
-
-  const profile = await getProfile(user.sub)
-  return profile
-}
 
 export async function updateProfileAction(data: ProfileFormData) {
   const supabase = await createClient()

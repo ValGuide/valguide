@@ -3,7 +3,6 @@ import { valguideId } from '../../utils/nanoid'
 import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
 import type { DB } from '../db'
 import {
-  type GuideStopWithStop,
   type GuideWithGuideStops,
   type GuideWithStops,
   type GuideWithTranslations,
@@ -184,37 +183,6 @@ export async function getGuideByNanoIdWithAssets(db: DB, nanoId: string): Promis
       assets: stopAssetsMap.get(s.id) ?? [],
     })),
   }
-}
-
-/**
- * @deprecated Use getGuideByNanoId which returns guideStops instead
- * Get a guide by nanoId with stops using legacy direct relation (for backward compatibility)
- */
-export async function getGuideByNanoIdLegacy(db: DB, nanoId: string): Promise<GuideWithStops | null> {
-  const result = await db.query.guide.findFirst({
-    where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
-    with: {
-      translations: {
-        with: {
-          currentVersion: true,
-          draftVersion: true,
-        },
-      },
-      stops: {
-        with: {
-          translations: {
-            with: {
-              currentVersion: true,
-              draftVersion: true,
-            },
-          },
-        },
-        orderBy: asc(stop.order),
-      },
-    },
-  })
-
-  return result ?? null
 }
 
 /**
