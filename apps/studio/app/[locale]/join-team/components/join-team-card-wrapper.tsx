@@ -1,6 +1,7 @@
 'use client'
 
-import { signOutAction } from '@valguide/core/features/auth/actions'
+import { useServerFn } from '@tanstack/react-start'
+import { signOutFn } from '@valguide/core/features/auth/actions'
 import { useRouter } from '@valguide/i18n/routing'
 import { JoinTeamCard } from './join-team-card'
 
@@ -15,9 +16,10 @@ type JoinTeamCardWrapperProps = {
 
 export function JoinTeamCardWrapper({ variant, invite, userEmail }: JoinTeamCardWrapperProps) {
   const router = useRouter()
+  const signOut = useServerFn(signOutFn)
 
   const handleSignOut = async () => {
-    await signOutAction({ scope: 'global' })
+    await signOut({ data: { scope: 'global' } })
     router.refresh()
   }
 

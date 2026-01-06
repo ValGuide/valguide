@@ -1,24 +1,26 @@
-import type {
-  AuthError,
-  AuthOtpResponse,
-  AuthResponse,
-  SignInWithPasswordlessCredentials,
-  SignOut,
-  VerifyOtpParams,
-} from '@supabase/supabase-js'
+import type { AuthError, SignInWithPasswordlessCredentials, SignOut, VerifyOtpParams } from '@supabase/supabase-js'
 import { createServerFn } from '@tanstack/react-start'
-import { createLogger } from '@valguide/logger'
 import { userStartedLoginMessage } from '@valguide/slack/messages/user-started-login.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { createClient } from '@valguide/supabase/server'
 import { waitUntil } from '@vercel/functions'
 import { z } from 'zod'
 
-const _log = createLogger('auth-actions')
+type SerializableError = {
+  code: string | undefined
+  status: number | undefined
+  name: string
+  message: string
+}
 
-export type SignInWithOtpAction = (credentials: SignInWithPasswordlessCredentials) => Promise<AuthOtpResponse>
-export type VerifyOtpAction = (params: VerifyOtpParams) => Promise<AuthResponse>
-export type SignOutAction = (options: SignOut) => Promise<{ error: AuthError | null }>
+function serializeAuthError(error: AuthError): SerializableError {
+  return {
+    code: error.code,
+    status: error.status,
+    name: error.name,
+    message: error.message,
+  }
+}
 
 const signInWithOtpSchema = z.object({
   email: z.string().email().optional(),
@@ -41,8 +43,9 @@ export const signInWithOtpFn = createServerFn({ method: 'POST' })
     if (!response.error) {
       const email = 'email' in credentials ? credentials.email : undefined
       waitUntil(postMessage(userStartedLoginMessage({ email })))
+      return { data: response.data, error: null }
     }
-    return response
+    return { data: response.data, error: serializeAuthError(response.error) }
   })
 
 const verifyOtpSchema = z.object({
@@ -62,7 +65,11 @@ export const verifyOtpFn = createServerFn({ method: 'POST' })
   .inputValidator(verifyOtpSchema)
   .handler(async ({ data: params }) => {
     const supabase = await createClient()
-    return supabase.auth.verifyOtp(params as VerifyOtpParams)
+    const response = await supabase.auth.verifyOtp(params as VerifyOtpParams)
+    if (response.error) {
+      return { data: response.data, error: serializeAuthError(response.error) }
+    }
+    return { data: response.data, error: null }
   })
 
 const signOutSchema = z.object({
@@ -73,5 +80,9 @@ export const signOutFn = createServerFn({ method: 'POST' })
   .inputValidator(signOutSchema)
   .handler(async ({ data: options }) => {
     const supabase = await createClient()
-    return supabase.auth.signOut(options as SignOut)
+    const response = await supabase.auth.signOut(options as SignOut)
+    if (response.error) {
+      return { error: serializeAuthError(response.error) }
+    }
+    return { error: null }
   })

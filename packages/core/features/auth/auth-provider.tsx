@@ -1,5 +1,6 @@
 'use client'
 
+import { useServerFn } from '@tanstack/react-start'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
 import { useRouter } from '@valguide/i18n/routing'
 import { createLogger } from '@valguide/logger'
@@ -8,7 +9,7 @@ import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import type React from 'react'
 import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
-import type { SignInWithOtpAction, VerifyOtpAction } from './actions'
+import { signInWithOtpFn, verifyOtpFn } from './actions'
 
 const log = createLogger('auth-provider')
 
@@ -43,17 +44,10 @@ const Context = createContext<{
 const defaultNextPath = '/'
 
 type AuthProviderProps = PropsWithChildren<{
-  signInWithOtpAction: SignInWithOtpAction
-  verifyOtpAction: VerifyOtpAction
   isLogin?: boolean
 }>
 
-export const AuthProvider = ({
-  children,
-  signInWithOtpAction,
-  verifyOtpAction,
-  isLogin = false,
-}: AuthProviderProps) => {
+export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) => {
   const t = useTranslations(isLogin ? 'login' : 'signup')
   const router = useRouter()
 
@@ -66,15 +60,20 @@ export const AuthProvider = ({
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [otp, setOtp] = useState('')
 
+  const signInWithOtp = useServerFn(signInWithOtpFn)
+  const verifyOtp = useServerFn(verifyOtpFn)
+
   const handleEmailAuth = async (email: string) => {
     setLoading(true)
     setMessage(null)
 
     try {
-      const { error } = await signInWithOtpAction({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}${next}`,
+      const { error } = await signInWithOtp({
+        data: {
+          email,
+          options: {
+            emailRedirectTo: `${window.location.origin}${next}`,
+          },
         },
       })
 
@@ -106,10 +105,12 @@ export const AuthProvider = ({
     setMessage(null)
 
     try {
-      const { error } = await verifyOtpAction({
-        email,
-        token: otp,
-        type: 'email',
+      const { error } = await verifyOtp({
+        data: {
+          email,
+          token: otp,
+          type: 'email',
+        },
       })
 
       if (error) {
@@ -137,10 +138,12 @@ export const AuthProvider = ({
     setMessage(null)
 
     try {
-      const { error } = await signInWithOtpAction({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}${next}`,
+      const { error } = await signInWithOtp({
+        data: {
+          email,
+          options: {
+            emailRedirectTo: `${window.location.origin}${next}`,
+          },
         },
       })
 

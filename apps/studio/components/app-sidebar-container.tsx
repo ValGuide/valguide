@@ -1,6 +1,7 @@
 'use client'
 
-import { signOutAction } from '@valguide/core/features/auth/actions'
+import { useServerFn } from '@tanstack/react-start'
+import { signOutFn } from '@valguide/core/features/auth/actions'
 import { createTeamAction } from '@valguide/core/features/orgs/actions'
 import { switchTeamAction } from '@valguide/core/features/orgs/context-actions'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
@@ -19,6 +20,7 @@ export function AppSidebarContainer() {
   const t = useTranslations('orgs.teamSwitcher')
 
   const { data, isLoading, mutate: mutateSidebar } = useSidebarData()
+  const signOut = useServerFn(signOutFn)
 
   useEffect(() => {
     if (data?.wasAutoSelected) {
@@ -50,7 +52,7 @@ export function AppSidebarContainer() {
   }
 
   const handleLogout = async () => {
-    await signOutAction({ scope: 'global' })
+    await signOut({ data: { scope: 'global' } })
     router.refresh()
   }
 
