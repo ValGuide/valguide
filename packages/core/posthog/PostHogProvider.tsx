@@ -1,7 +1,5 @@
-
+import { useLocation, useSearch } from '@tanstack/react-router'
 import { createLogger } from '@valguide/logger'
-// biome-ignore lint/style/noRestrictedImports: useSearchParams and usePathname are only available from next/navigation
-import { usePathname, useSearchParams } from 'next/navigation'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
 import type React from 'react'
@@ -40,16 +38,19 @@ function Provider({ children }: { children: React.ReactNode }) {
 }
 
 function PostHogPageView() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const location = useLocation()
+  const searchParams = useSearch({ strict: false })
   const posthog = usePostHog()
+
+  const pathname = location.pathname
 
   // Track pageviews
   useEffect(() => {
     if (pathname && posthog) {
       let url = window.origin + pathname
-      if (searchParams.toString()) {
-        url = `${url}?${searchParams.toString()}`
+      const searchString = new URLSearchParams(searchParams as Record<string, string>).toString()
+      if (searchString) {
+        url = `${url}?${searchString}`
       }
 
       posthog.capture('$pageview', { $current_url: url })

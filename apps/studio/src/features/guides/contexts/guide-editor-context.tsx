@@ -17,10 +17,8 @@ import { defaultLocale } from '@valguide/i18n/i18n.config'
 
 type ContentLocale = string
 
-import { useLocation, useRouter } from '@tanstack/react-router'
+import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/mock'
-// biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
-import { useSearchParams } from 'next/navigation'
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
 
 const LOCALE_PARAM = 'locale'
@@ -103,7 +101,7 @@ export function GuideEditorProvider({
   const router = useRouter()
   const location = useLocation()
   const pathname = location.pathname
-  const searchParams = useSearchParams()
+  const searchParams = useSearch({ strict: false })
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocaleState] = useState<ContentLocale>(() =>
     parseLocale(initialLocale, initialGuide.availableLocales ?? ['en', 'de', 'rm']),
@@ -149,14 +147,11 @@ export function GuideEditorProvider({
         return
       }
       setActiveLocaleState(locale)
-      const params = new URLSearchParams(searchParams.toString())
-      if (locale === defaultLocale) {
-        params.delete(LOCALE_PARAM)
-      } else {
-        params.set(LOCALE_PARAM, locale)
-      }
-      const query = params.toString()
-      router.navigate({ to: query ? `${pathname}?${query}` : pathname, replace: true })
+      const newSearch =
+        locale === defaultLocale
+          ? { ...searchParams, [LOCALE_PARAM]: undefined }
+          : { ...searchParams, [LOCALE_PARAM]: locale }
+      router.navigate({ to: pathname, search: newSearch, replace: true })
     },
     [pathname, router, searchParams],
   )
