@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@fontsource-variable/noto-sans": "^5.2.10",
     "@formatjs/intl-localematcher": "^0.5.10",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.12",

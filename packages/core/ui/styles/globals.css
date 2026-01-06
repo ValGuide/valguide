@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
+@import "@fontsource-variable/noto-sans";
+@import "@fontsource-variable/jetbrains-mono";
 
 @source '../../../../**/*.{ts,tsx}';
 @source not '../../../**/node_modules/**/*';
@@ -56,11 +58,8 @@
     --animate-fade-in: fade-in 0.3s ease-out forwards;
     --animate-fade-out: fade-out 0.3s ease-out forwards;
 
-    --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
-    --font-noto: var(--font-noto), Noto Sans, sans-serif;
+    --font-sans: 'Noto Sans Variable', sans-serif;
+    --font-mono: 'JetBrains Mono Variable', monospace;
 
     @keyframes caret-blink {
         0%,

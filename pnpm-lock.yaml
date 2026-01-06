@@ -80,7 +80,7 @@ importers:
         version: 0.546.0(react@19.2.1)
       next:
         specifier: 16.0.7
-        version: 16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -108,10 +108,10 @@ importers:
     devDependencies:
       '@storybook/nextjs-vite':
         specifier: ^10.0.8
-        version: 10.0.8(@babel/core@7.28.5)(esbuild@0.25.12)(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+        version: 10.0.8(esbuild@0.25.12)(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       '@storybook/test':
         specifier: ^8.6.14
-        version: 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
+        version: 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
       '@tailwindcss/postcss':
         specifier: ^4.1.16
         version: 4.1.16
@@ -138,7 +138,7 @@ importers:
         version: link:../../packages/configs/typescript
       storybook:
         specifier: ^10.0.8
-        version: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+        version: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       tailwindcss:
         specifier: ^4.1.16
         version: 4.1.16
@@ -381,7 +381,7 @@ importers:
         version: link:../www
       next:
         specifier: 16.0.7
-        version: 16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react:
         specifier: 19.2.1
         version: 19.2.1
@@ -400,7 +400,7 @@ importers:
         version: 9.1.13(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
       '@storybook/nextjs-vite':
         specifier: ^10.0.8
-        version: 10.0.8(@babel/core@7.28.5)(esbuild@0.25.12)(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+        version: 10.0.8(esbuild@0.25.12)(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       '@storybook/test':
         specifier: ^8.6.14
         version: 8.6.14(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
@@ -743,6 +743,12 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.9.0
+      '@fontsource-variable/jetbrains-mono':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource-variable/noto-sans':
+        specifier: ^5.2.10
+        version: 5.2.10
       '@formatjs/intl-localematcher':
         specifier: ^0.5.10
         version: 0.5.10
@@ -910,7 +916,7 @@ importers:
         version: 1.0.0
       next:
         specifier: 16.0.7
-        version: 16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -968,13 +974,13 @@ importers:
     devDependencies:
       '@storybook/nextjs-vite':
         specifier: ^10.0.8
-        version: 10.0.8(esbuild@0.25.11)(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+        version: 10.0.8(@babel/core@7.28.5)(esbuild@0.25.11)(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       '@storybook/react':
         specifier: ^9.1.13
-        version: 9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
+        version: 9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
       '@storybook/test':
         specifier: ^8.6.14
-        version: 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
+        version: 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
       '@tailwindcss/postcss':
         specifier: ^4.1.16
         version: 4.1.16
@@ -1022,7 +1028,7 @@ importers:
         version: 29.7.0(@types/node@22.18.12)(ts-node@10.9.2(@types/node@22.18.12)(typescript@5.9.3))
       storybook:
         specifier: ^10.0.8
-        version: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+        version: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       tailwindcss:
         specifier: ^4.1.16
         version: 4.1.16
@@ -1995,6 +2001,12 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@fontsource-variable/jetbrains-mono@5.2.8':
+    resolution: {integrity: sha512-WBA9elru6Jdp5df2mES55wuOO0WIrn3kpXnI4+W2ek5u3ZgLS9XS4gmIlcQhiZOWEKl95meYdvK7xI+ETLCq/Q==}
+
+  '@fontsource-variable/noto-sans@5.2.10':
+    resolution: {integrity: sha512-wyFgKkFu7jki5kEL8qv7avjQ8rxHX0J/nhLWvbR9T0hOH1HRKZEvb9EW9lMjZfWHHfEzKkYf5J+NadwgCS7TXA==}
 
   '@formatjs/intl-localematcher@0.5.10':
     resolution: {integrity: sha512-af3qATX+m4Rnd9+wHcjJ4w2ijq+rAVP3CCinJQvFv1kgSu1W6jypUmvleJxcewdxmutM8dmIRZFxO/IQBZmP2Q==}
@@ -9543,6 +9555,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
+  '@fontsource-variable/jetbrains-mono@5.2.8': {}
+
+  '@fontsource-variable/noto-sans@5.2.10': {}
+
   '@formatjs/intl-localematcher@0.5.10':
     dependencies:
       tslib: 2.8.1
@@ -11200,23 +11216,12 @@ snapshots:
       storybook: 10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       ts-dedent: 2.2.0
 
-  '@storybook/builder-vite@10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
+  '@storybook/builder-vite@10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
-      '@storybook/csf-plugin': 10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      '@storybook/csf-plugin': 10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       ts-dedent: 2.2.0
       vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-    transitivePeerDependencies:
-      - esbuild
-      - rollup
-      - webpack
-
-  '@storybook/builder-vite@10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
-    dependencies:
-      '@storybook/csf-plugin': 10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      ts-dedent: 2.2.0
-      vite: 7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
     transitivePeerDependencies:
       - esbuild
       - rollup
@@ -11248,23 +11253,14 @@ snapshots:
     dependencies:
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
-  '@storybook/csf-plugin@10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
+  '@storybook/csf-plugin@10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       unplugin: 2.3.10
     optionalDependencies:
       esbuild: 0.25.11
       rollup: 4.52.5
       vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-
-  '@storybook/csf-plugin@10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
-    dependencies:
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      unplugin: 2.3.10
-    optionalDependencies:
-      esbuild: 0.25.12
-      rollup: 4.52.5
-      vite: 7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
 
   '@storybook/csf-plugin@10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
@@ -11291,23 +11287,17 @@ snapshots:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
 
-  '@storybook/instrumenter@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
+  '@storybook/instrumenter@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       '@storybook/global': 5.0.0
       '@vitest/utils': 2.1.9
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
   '@storybook/instrumenter@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       '@storybook/global': 5.0.0
       '@vitest/utils': 2.1.9
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-
-  '@storybook/instrumenter@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@vitest/utils': 2.1.9
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
   '@storybook/instrumenter@8.6.14(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
@@ -11319,18 +11309,18 @@ snapshots:
     dependencies:
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
-  '@storybook/nextjs-vite@10.0.8(@babel/core@7.28.5)(esbuild@0.25.12)(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
+  '@storybook/nextjs-vite@10.0.8(@babel/core@7.28.5)(esbuild@0.25.11)(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
-      '@storybook/builder-vite': 10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
-      '@storybook/react-vite': 10.0.8(esbuild@0.25.12)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      '@storybook/builder-vite': 10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
+      '@storybook/react-vite': 10.0.8(esbuild@0.25.11)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       next: 16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       styled-jsx: 5.1.6(@babel/core@7.28.5)(react@19.2.1)
-      vite: 7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-      vite-plugin-storybook-nextjs: 3.1.1(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
+      vite-plugin-storybook-nextjs: 3.1.1(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -11363,50 +11353,6 @@ snapshots:
       - supports-color
       - webpack
 
-  '@storybook/nextjs-vite@10.0.8(@babel/core@7.28.5)(esbuild@0.25.12)(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
-    dependencies:
-      '@storybook/builder-vite': 10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
-      '@storybook/react-vite': 10.0.8(esbuild@0.25.12)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      next: 16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      styled-jsx: 5.1.6(@babel/core@7.28.5)(react@19.2.1)
-      vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-      vite-plugin-storybook-nextjs: 3.1.1(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-      - esbuild
-      - rollup
-      - supports-color
-      - webpack
-
-  '@storybook/nextjs-vite@10.0.8(esbuild@0.25.11)(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
-    dependencies:
-      '@storybook/builder-vite': 10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
-      '@storybook/react-vite': 10.0.8(esbuild@0.25.11)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      next: 16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      styled-jsx: 5.1.6(react@19.2.1)
-      vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-      vite-plugin-storybook-nextjs: 3.1.1(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-      - esbuild
-      - rollup
-      - supports-color
-      - webpack
-
   '@storybook/nextjs-vite@10.0.8(esbuild@0.25.12)(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
       '@storybook/builder-vite': 10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
@@ -11429,27 +11375,43 @@ snapshots:
       - supports-color
       - webpack
 
+  '@storybook/nextjs-vite@10.0.8(esbuild@0.25.12)(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
+    dependencies:
+      '@storybook/builder-vite': 10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
+      '@storybook/react-vite': 10.0.8(esbuild@0.25.12)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      next: 16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      storybook: 10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      styled-jsx: 5.1.6(react@19.2.1)
+      vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
+      vite-plugin-storybook-nextjs: 3.1.1(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+    optionalDependencies:
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+      - esbuild
+      - rollup
+      - supports-color
+      - webpack
+
   '@storybook/preview-api@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
-  '@storybook/react-dom-shim@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
+  '@storybook/react-dom-shim@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
   '@storybook/react-dom-shim@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-
-  '@storybook/react-dom-shim@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
-    dependencies:
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
   '@storybook/react-dom-shim@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
@@ -11463,55 +11425,33 @@ snapshots:
       react-dom: 19.2.1(react@19.2.1)
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
+  '@storybook/react-dom-shim@9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
+    dependencies:
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+
   '@storybook/react-dom-shim@9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
-  '@storybook/react-dom-shim@9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
-    dependencies:
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-
-  '@storybook/react-vite@10.0.8(esbuild@0.25.11)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
+  '@storybook/react-vite@10.0.8(esbuild@0.25.11)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
       '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.1(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       '@rollup/pluginutils': 5.3.0(rollup@4.52.5)
-      '@storybook/builder-vite': 10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
+      '@storybook/builder-vite': 10.0.8(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
       empathic: 2.0.0
       magic-string: 0.30.21
       react: 19.2.1
       react-docgen: 8.0.2
       react-dom: 19.2.1(react@19.2.1)
       resolve: 1.22.11
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       tsconfig-paths: 4.2.0
       vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-    transitivePeerDependencies:
-      - esbuild
-      - rollup
-      - supports-color
-      - typescript
-      - webpack
-
-  '@storybook/react-vite@10.0.8(esbuild@0.25.12)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))':
-    dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.1(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      '@rollup/pluginutils': 5.3.0(rollup@4.52.5)
-      '@storybook/builder-vite': 10.0.8(esbuild@0.25.12)(rollup@4.52.5)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      '@storybook/react': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)
-      empathic: 2.0.0
-      magic-string: 0.30.21
-      react: 19.2.1
-      react-docgen: 8.0.2
-      react-dom: 19.2.1(react@19.2.1)
-      resolve: 1.22.11
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      tsconfig-paths: 4.2.0
-      vite: 7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
     transitivePeerDependencies:
       - esbuild
       - rollup
@@ -11563,13 +11503,13 @@ snapshots:
       - typescript
       - webpack
 
-  '@storybook/react@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)':
+  '@storybook/react@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
+      '@storybook/react-dom-shim': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
     optionalDependencies:
       typescript: 5.9.3
 
@@ -11580,16 +11520,6 @@ snapshots:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@storybook/react@10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)':
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 10.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
     optionalDependencies:
       typescript: 5.9.3
 
@@ -11618,6 +11548,16 @@ snapshots:
       '@storybook/test': 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
       typescript: 5.9.3
 
+  '@storybook/react@9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)':
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@storybook/react-dom-shim': 9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+    optionalDependencies:
+      typescript: 5.9.3
+
   '@storybook/react@9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)':
     dependencies:
       '@storybook/global': 5.0.0
@@ -11628,26 +11568,16 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@storybook/react@9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)':
+  '@storybook/test@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 9.1.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@storybook/test@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@storybook/instrumenter': 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
+      '@storybook/instrumenter': 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
       '@testing-library/dom': 10.4.0
       '@testing-library/jest-dom': 6.5.0
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
       '@vitest/expect': 2.0.5
       '@vitest/spy': 2.0.5
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
   '@storybook/test@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
@@ -11659,17 +11589,6 @@ snapshots:
       '@vitest/expect': 2.0.5
       '@vitest/spy': 2.0.5
       storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-
-  '@storybook/test@8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@storybook/instrumenter': 8.6.14(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))
-      '@testing-library/dom': 10.4.0
-      '@testing-library/jest-dom': 6.5.0
-      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
-      '@vitest/expect': 2.0.5
-      '@vitest/spy': 2.0.5
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
   '@storybook/test@8.6.14(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
@@ -16892,14 +16811,14 @@ snapshots:
       es-errors: 1.3.0
       internal-slot: 1.1.0
 
-  storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
+  storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/icons': 1.6.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@testing-library/jest-dom': 6.9.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.0)
       '@vitest/expect': 3.2.4
-      '@vitest/mocker': 3.2.4(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      '@vitest/mocker': 3.2.4(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       '@vitest/spy': 3.2.4
       esbuild: 0.25.12
       recast: 0.23.11
@@ -16924,30 +16843,6 @@ snapshots:
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
       '@vitest/expect': 3.2.4
       '@vitest/mocker': 3.2.4(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      '@vitest/spy': 3.2.4
-      esbuild: 0.25.12
-      recast: 0.23.11
-      semver: 7.7.3
-      ws: 8.18.3(bufferutil@4.0.9)
-    optionalDependencies:
-      prettier: 3.6.2
-    transitivePeerDependencies:
-      - '@testing-library/dom'
-      - bufferutil
-      - msw
-      - react
-      - react-dom
-      - utf-8-validate
-      - vite
-
-  storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@storybook/icons': 1.6.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      '@testing-library/jest-dom': 6.9.1
-      '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
-      '@vitest/expect': 3.2.4
-      '@vitest/mocker': 3.2.4(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       '@vitest/spy': 3.2.4
       esbuild: 0.25.12
       recast: 0.23.11
@@ -17495,17 +17390,17 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  vite-plugin-storybook-nextjs@3.1.1(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
+  vite-plugin-storybook-nextjs@3.1.1(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
     dependencies:
       '@next/env': 16.0.0
       image-size: 2.0.2
       magic-string: 0.30.21
       module-alias: 2.2.3
       next: 16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@10.4.0)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       ts-dedent: 2.2.0
-      vite: 7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-      vite-tsconfig-paths: 5.1.4(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
+      vite-tsconfig-paths: 5.1.4(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -17525,21 +17420,6 @@ snapshots:
       - supports-color
       - typescript
 
-  vite-plugin-storybook-nextjs@3.1.1(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
-    dependencies:
-      '@next/env': 16.0.0
-      image-size: 2.0.2
-      magic-string: 0.30.21
-      module-alias: 2.2.3
-      next: 16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-      ts-dedent: 2.2.0
-      vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
-      vite-tsconfig-paths: 5.1.4(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-
   vite-plugin-storybook-nextjs@3.1.1(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@20.19.25)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
     dependencies:
       '@next/env': 16.0.0
@@ -17555,14 +17435,14 @@ snapshots:
       - supports-color
       - typescript
 
-  vite-plugin-storybook-nextjs@3.1.1(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
+  vite-plugin-storybook-nextjs@3.1.1(next@16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(storybook@10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)):
     dependencies:
       '@next/env': 16.0.0
       image-size: 2.0.2
       magic-string: 0.30.21
       module-alias: 2.2.3
       next: 16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      storybook: 10.0.8(@testing-library/dom@10.4.1)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
+      storybook: 10.0.8(@testing-library/dom@9.3.4)(bufferutil@4.0.9)(msw@2.12.3(@types/node@22.18.12)(typescript@5.9.3))(prettier@3.6.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
       ts-dedent: 2.2.0
       vite: 7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1)
       vite-tsconfig-paths: 5.1.4(typescript@5.9.3)(vite@7.1.12(@types/node@22.18.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
