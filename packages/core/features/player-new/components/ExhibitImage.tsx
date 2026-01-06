@@ -2,7 +2,6 @@
 
 import { cn } from '@valguide/core/ui/lib/utils'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 
 interface ExhibitImageProps {
   src: string
@@ -15,7 +14,7 @@ export function ExhibitImage({ src, alt, className }: ExhibitImageProps) {
     <div className={cn('relative h-full w-full overflow-hidden', className)}>
       {/* Blured background for filling space */}
       <div className="absolute inset-0 z-0 scale-110 opacity-50 blur-3xl">
-        <Image src={src} alt="" fill className="object-cover" priority />
+        <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover" />
       </div>
 
       {/* Main Image */}
@@ -26,7 +25,7 @@ export function ExhibitImage({ src, alt, className }: ExhibitImageProps) {
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
         <div className="relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-[32px] shadow-2xl ring-1 ring-white/10">
-          <Image src={src} alt={alt} fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+          <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
         </div>
       </motion.div>
     </div>

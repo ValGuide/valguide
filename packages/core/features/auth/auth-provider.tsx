@@ -1,12 +1,11 @@
 'use client'
 
+import { useSearch } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
 import { useRouter } from '@valguide/i18n/routing'
 import { createLogger } from '@valguide/logger'
-// biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
-import { useSearchParams } from 'next/navigation'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import type React from 'react'
 import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
 import { signInWithOtpFn, verifyOtpFn } from './actions'
@@ -51,12 +50,12 @@ export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) =
   const t = useTranslations(isLogin ? 'login' : 'signup')
   const router = useRouter()
 
-  const searchParams = useSearchParams()
-  const next = withLeadingSlash(searchParams.get('next') ?? defaultNextPath)
+  const searchParams = useSearch({ strict: false }) as { next?: string; email?: string }
+  const next = withLeadingSlash(searchParams.next ?? defaultNextPath)
 
   const [loading, setLoading] = useState<boolean>(false)
   const [verifyingOtp, setValidatingOpt] = useState<boolean>(false)
-  const [email, setEmail] = useState<string>(searchParams.get('email') ?? '')
+  const [email, setEmail] = useState<string>(searchParams.email ?? '')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [otp, setOtp] = useState('')
 

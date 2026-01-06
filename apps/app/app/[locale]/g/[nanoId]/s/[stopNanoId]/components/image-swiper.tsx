@@ -1,10 +1,9 @@
 'use client'
 
 import type { AssetWithRole } from '@valguide/core/features/guides/queries'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import Image from 'next/image'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 
 type ImageSwiperProps = {
@@ -24,12 +23,10 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
     <div className="space-y-4">
       <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted">
         {currentImage.publicUrl && (
-          <Image
+          <img
             src={currentImage.publicUrl}
             alt={currentImage.fileName}
-            fill
-            className="object-contain"
-            sizes="(max-width: 768px) 100vw, 768px"
+            className="absolute inset-0 w-full h-full object-contain"
           />
         )}
       </div>
@@ -71,7 +68,11 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
                 }`}
               >
                 {img.publicUrl && (
-                  <Image src={img.publicUrl} alt={img.fileName} fill className="object-cover rounded" sizes="64px" />
+                  <img
+                    src={img.publicUrl}
+                    alt={img.fileName}
+                    className="absolute inset-0 w-full h-full object-cover rounded"
+                  />
                 )}
               </button>
             ))}

@@ -1,8 +1,7 @@
+import { Link } from '@tanstack/react-router'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { getLocalizedStopText } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
-import { Link } from '@valguide/i18n/routing'
-import Image from 'next/image'
 import { useTranslations } from '@valguide/core/i18n/mock'
 
 type GuideStopListProps = {
@@ -28,17 +27,15 @@ export function GuideStopList({ stops, guideNanoId, locale }: GuideStopListProps
           return (
             <Link
               key={stop.id}
-              href={`/${locale}/g/${guideNanoId}/s/${stop.nanoId}`}
+              to={`/${locale}/g/${guideNanoId}/s/${stop.nanoId}`}
               className="group border rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
             >
               {thumbnail?.publicUrl && (
                 <div className="relative aspect-[16/9]">
-                  <Image
+                  <img
                     src={thumbnail.publicUrl}
                     alt={title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform"
-                    sizes="(max-width: 640px) 100vw, (max-width: 896px) 50vw, 400px"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
                 </div>
               )}

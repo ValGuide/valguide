@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { type ReactNode, useEffect, useState } from 'react'
 
@@ -63,7 +62,7 @@ export function AuthLayout({
       {/* Right side - Image */}
       <div className="hidden lg:block lg:w-1/2 bg-gray-100">
         <div className="h-full w-full relative">
-          <Image src={imageUrl} alt={imageAlt} fill style={{ objectFit: 'cover' }} />
+          <img src={imageUrl} alt={imageAlt} className="absolute inset-0 w-full h-full object-cover" />
 
           {/* Quote Overlay */}
           {currentQuote && (

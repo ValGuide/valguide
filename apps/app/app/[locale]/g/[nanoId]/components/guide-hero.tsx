@@ -2,7 +2,6 @@
 
 import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
-import Image from 'next/image'
 import { ImageGallery } from './image-gallery'
 
 type GuideHeroProps = {
@@ -19,14 +18,7 @@ export function GuideHero({ title, description, coverImage, assets }: GuideHeroP
     <div className="space-y-6">
       {coverImage && (
         <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden">
-          <Image
-            src={coverImage}
-            alt={title}
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 896px) 100vw, 896px"
-          />
+          <img src={coverImage} alt={title} className="absolute inset-0 w-full h-full object-cover" />
         </div>
       )}
 
