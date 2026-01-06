@@ -1,4 +1,3 @@
-'use client'
 
 import { Tabs, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { useId } from 'react'

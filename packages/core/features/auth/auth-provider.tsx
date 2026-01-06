@@ -1,4 +1,3 @@
-'use client'
 
 import { useSearch } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'

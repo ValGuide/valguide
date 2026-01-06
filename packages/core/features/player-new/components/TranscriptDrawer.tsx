@@ -1,4 +1,3 @@
-'use client'
 
 import { cn } from '@valguide/core/ui/lib/utils'
 import { ChevronUp, Globe, Heart, Share } from 'lucide-react'

@@ -1,4 +1,3 @@
-'use client'
 
 import { Button } from '@valguide/ui/components/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'

@@ -1,4 +1,3 @@
-'use client'
 
 import { Label } from '@valguide/ui/components/label'
 import { ToggleGroup, ToggleGroupItem } from '@valguide/ui/components/toggle-group'

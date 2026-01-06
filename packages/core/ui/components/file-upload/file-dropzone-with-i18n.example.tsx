@@ -1,4 +1,3 @@
-'use client'
 
 import { FileDropzone } from '@valguide/ui/components/file-upload/file-dropzone'
 import { useTranslations } from '@valguide/core/i18n/mock'

@@ -1,4 +1,3 @@
-'use client'
 
 import { type AssetType, confirmAssetUpload } from '@valguide/core/features/assets/actions'
 import type { Asset } from '@valguide/core/features/assets/schema'

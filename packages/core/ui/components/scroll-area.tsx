@@ -1,4 +1,3 @@
-'use client'
 
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import { cn } from '@valguide/ui/lib/utils'

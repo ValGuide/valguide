@@ -1,4 +1,3 @@
-'use client'
 
 import { useServerFn } from '@tanstack/react-start'
 import { signOutFn } from '@valguide/core/features/auth/actions'

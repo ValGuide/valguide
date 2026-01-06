@@ -1,4 +1,3 @@
-'use client'
 
 import { cn } from '@valguide/core/ui/lib/utils'
 import { Cast, Pause, Play, RotateCcw, RotateCw, Volume2 } from 'lucide-react'

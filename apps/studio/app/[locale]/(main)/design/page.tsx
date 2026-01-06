@@ -1,4 +1,3 @@
-'use client'
 
 import { DesignPageClient } from './page.client'
 

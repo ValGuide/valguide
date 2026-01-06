@@ -1,4 +1,3 @@
-'use client'
 
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronDown, ChevronUp } from 'lucide-react'

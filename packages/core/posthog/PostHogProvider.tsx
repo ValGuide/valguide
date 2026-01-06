@@ -1,4 +1,3 @@
-'use client'
 
 import { createLogger } from '@valguide/logger'
 // biome-ignore lint/style/noRestrictedImports: useSearchParams and usePathname are only available from next/navigation

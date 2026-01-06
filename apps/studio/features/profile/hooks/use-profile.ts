@@ -1,4 +1,3 @@
-'use client'
 
 import type { Profile } from '@valguide/features/profiles/types'
 import useSWR from 'swr'

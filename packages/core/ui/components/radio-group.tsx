@@ -1,4 +1,3 @@
-'use client'
 
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
 import { cn } from '@valguide/ui/lib/utils'

@@ -1,4 +1,3 @@
-'use client'
 
 import * as ContextMenuPrimitive from '@radix-ui/react-context-menu'
 import { cn } from '@valguide/ui/lib/utils'

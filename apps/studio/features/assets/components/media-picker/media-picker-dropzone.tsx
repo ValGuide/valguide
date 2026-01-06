@@ -1,4 +1,3 @@
-'use client'
 
 import type { AssetType } from '@valguide/core/features/assets/schema'
 import { cn } from '@valguide/ui/lib/utils'

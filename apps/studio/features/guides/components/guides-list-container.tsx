@@ -1,4 +1,3 @@
-'use client'
 
 import type { Guide } from '@valguide/features/guides/types'
 import { useRouter } from '@valguide/i18n/routing'

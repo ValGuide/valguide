@@ -1,4 +1,3 @@
-'use client'
 
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { cn } from '@valguide/ui/lib/utils'

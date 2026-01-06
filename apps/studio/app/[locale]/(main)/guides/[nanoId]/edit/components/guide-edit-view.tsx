@@ -1,4 +1,3 @@
-'use client'
 
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'

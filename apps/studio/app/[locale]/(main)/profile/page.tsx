@@ -1,4 +1,3 @@
-'use client'
 
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { ProfileForm } from '@/features/profile/components/profile-form'

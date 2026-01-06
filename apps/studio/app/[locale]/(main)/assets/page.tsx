@@ -1,4 +1,3 @@
-'use client'
 
 import { AssetsPageClient } from './page.client'
 

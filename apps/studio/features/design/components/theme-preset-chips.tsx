@@ -1,4 +1,3 @@
-'use client'
 
 import { themeColorPresets } from '@valguide/core/features/themes/presets'
 import { type ThemePreset, themePresets } from '@valguide/core/features/themes/types'

@@ -1,4 +1,3 @@
-'use client'
 
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'

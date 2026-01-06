@@ -1,4 +1,3 @@
-'use client'
 
 import { useRouter } from '@valguide/i18n/routing'
 import type { StopWithGuides } from '../api/fetchers'

@@ -1,4 +1,3 @@
-'use client'
 
 import { deleteAsset } from '@valguide/core/features/assets/actions'
 import type { Asset } from '@valguide/core/features/assets/schema'

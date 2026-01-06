@@ -1,4 +1,3 @@
-'use client'
 
 import { useAuth } from '../auth-provider'
 import { AuthContainer } from '../common/auth-container'

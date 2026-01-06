@@ -1,4 +1,3 @@
-'use client'
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
 import { cn } from '@valguide/ui/lib/utils'

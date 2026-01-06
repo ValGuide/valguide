@@ -1,4 +1,3 @@
-'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from '@valguide/i18n/routing'

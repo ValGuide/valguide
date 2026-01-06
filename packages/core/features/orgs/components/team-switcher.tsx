@@ -1,4 +1,3 @@
-'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import {

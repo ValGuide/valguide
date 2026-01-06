@@ -1,4 +1,3 @@
-'use client'
 
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'

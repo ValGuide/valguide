@@ -1,4 +1,3 @@
-'use client'
 
 import { Link } from '@valguide/i18n/routing'
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@valguide/ui/components/sidebar'

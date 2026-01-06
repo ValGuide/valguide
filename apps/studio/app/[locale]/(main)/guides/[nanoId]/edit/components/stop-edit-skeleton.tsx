@@ -1,4 +1,3 @@
-'use client'
 
 import { Card, CardContent, CardHeader } from '@valguide/ui/components/card'
 import { Skeleton } from '@valguide/ui/components/skeleton'

@@ -1,4 +1,3 @@
-'use client'
 
 import { cn } from '@valguide/ui/lib/utils'
 import { OTPInput, OTPInputContext } from 'input-otp'

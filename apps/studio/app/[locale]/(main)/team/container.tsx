@@ -1,4 +1,3 @@
-'use client'
 
 import { createTeamAction } from '@valguide/core/features/orgs/actions'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'

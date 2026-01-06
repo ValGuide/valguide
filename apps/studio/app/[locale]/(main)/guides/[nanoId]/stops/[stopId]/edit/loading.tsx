@@ -1,4 +1,3 @@
-'use client'
 
 import { Skeleton } from '@valguide/ui/components/skeleton'
 

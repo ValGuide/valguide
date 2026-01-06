@@ -1,4 +1,3 @@
-'use client'
 
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 

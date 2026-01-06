@@ -1,4 +1,3 @@
-'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Asset } from '@valguide/core/features/assets/schema'

@@ -1,4 +1,3 @@
-'use client'
 
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { Link, useRouter } from '@valguide/i18n/routing'

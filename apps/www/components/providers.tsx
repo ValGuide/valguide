@@ -1,4 +1,3 @@
-'use client'
 
 import { Toaster } from '@valguide/ui/components/sonner'
 import { themes } from '@valguide/ui/theme/themes'

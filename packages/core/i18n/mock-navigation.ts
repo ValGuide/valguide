@@ -1,4 +1,3 @@
-'use client'
 
 import type { ComponentType, AnchorHTMLAttributes, ReactNode } from 'react'
 import { forwardRef, createElement } from 'react'

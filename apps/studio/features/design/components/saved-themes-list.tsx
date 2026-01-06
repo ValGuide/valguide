@@ -1,4 +1,3 @@
-'use client'
 
 import type { Theme } from '@valguide/core/features/themes/schema'
 import { Button } from '@valguide/ui/components/button'

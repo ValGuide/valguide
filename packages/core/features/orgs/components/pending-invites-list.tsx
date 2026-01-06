@@ -1,4 +1,3 @@
-'use client'
 
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'

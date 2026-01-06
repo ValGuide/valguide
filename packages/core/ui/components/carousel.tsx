@@ -1,4 +1,3 @@
-'use client'
 
 import { Button } from '@valguide/ui/components/button'
 import { cn } from '@valguide/ui/lib/utils'

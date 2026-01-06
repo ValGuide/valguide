@@ -1,4 +1,3 @@
-'use client'
 
 import { deleteGuide, recoverGuide } from '@valguide/core/features/guides/actions'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'

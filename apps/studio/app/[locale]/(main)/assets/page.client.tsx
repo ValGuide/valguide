@@ -1,4 +1,3 @@
-'use client'
 
 import { AssetsList } from '@/features/assets/components/assets-list'
 import { useAssets } from '@/features/assets/hooks/use-assets'

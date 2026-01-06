@@ -1,4 +1,3 @@
-'use client'
 
 import * as SheetPrimitive from '@radix-ui/react-dialog'
 import { cn } from '@valguide/ui/lib/utils'

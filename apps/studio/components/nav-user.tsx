@@ -1,4 +1,3 @@
-'use client'
 
 import { Link } from '@valguide/i18n/routing'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'

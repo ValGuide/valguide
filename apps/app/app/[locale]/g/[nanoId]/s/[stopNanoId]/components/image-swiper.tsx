@@ -1,4 +1,3 @@
-'use client'
 
 import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { useTranslations } from '@valguide/core/i18n/mock'

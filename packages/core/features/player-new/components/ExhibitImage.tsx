@@ -1,4 +1,3 @@
-'use client'
 
 import { cn } from '@valguide/core/ui/lib/utils'
 import { motion } from 'framer-motion'

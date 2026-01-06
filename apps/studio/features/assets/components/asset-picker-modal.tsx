@@ -1,4 +1,3 @@
-'use client'
 
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { formatFileSize } from '@valguide/core/features/assets/utils'

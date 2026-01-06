@@ -1,4 +1,3 @@
-'use client'
 
 // biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
 import { useSearchParams } from 'next/navigation'

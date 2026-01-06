@@ -1,4 +1,3 @@
-'use client'
 
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'

@@ -1,4 +1,3 @@
-'use client'
 
 import { GuidesListContainer } from '@/features/guides'
 

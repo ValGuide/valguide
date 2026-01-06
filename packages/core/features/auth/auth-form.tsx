@@ -1,4 +1,3 @@
-'use client'
 
 import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'

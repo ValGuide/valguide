@@ -1,6 +1,3 @@
-// must be a client component due to the Link from next-intl
-'use client'
-
 import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 

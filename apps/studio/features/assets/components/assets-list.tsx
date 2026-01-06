@@ -1,4 +1,3 @@
-'use client'
 
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { Button } from '@valguide/ui/components/button'

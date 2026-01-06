@@ -1,4 +1,3 @@
-'use client'
 
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
 import type { Guide } from '@valguide/features/guides/types'

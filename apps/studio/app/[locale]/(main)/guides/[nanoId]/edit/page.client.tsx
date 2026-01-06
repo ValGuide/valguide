@@ -1,4 +1,3 @@
-'use client'
 
 import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
 import { useEffect, useState } from 'react'

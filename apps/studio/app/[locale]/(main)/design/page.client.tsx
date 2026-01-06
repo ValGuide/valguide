@@ -1,4 +1,3 @@
-'use client'
 
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useTranslations } from '@valguide/core/i18n/mock'

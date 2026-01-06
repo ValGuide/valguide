@@ -1,4 +1,3 @@
-'use client'
 
 import { archiveGuide } from '@valguide/core/features/guides/actions'
 import { useRouter } from '@valguide/i18n/routing'
