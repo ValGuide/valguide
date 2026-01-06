@@ -1,4 +1,3 @@
-import { useRouter } from '@tanstack/react-router'
 import { archiveGuideFn } from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import {
@@ -18,12 +17,12 @@ import { toast } from 'sonner'
 
 interface ArchiveGuideButtonProps {
   guideId: string
+  onArchived?: () => void
 }
 
-export function ArchiveGuideButton({ guideId }: ArchiveGuideButtonProps) {
+export function ArchiveGuideButton({ guideId, onArchived }: ArchiveGuideButtonProps) {
   const [open, setOpen] = useState(false)
   const [isArchiving, setIsArchiving] = useState(false)
-  const router = useRouter()
   const t = useTranslations('guides.archive')
 
   const handleArchive = async () => {
@@ -33,8 +32,7 @@ export function ArchiveGuideButton({ guideId }: ArchiveGuideButtonProps) {
       toast.success(t('success'), {
         description: t('successDescription'),
       })
-      router.navigate({ to: '/' })
-      router.invalidate()
+      onArchived?.()
     } catch (_error) {
       toast.error(t('error'), {
         description: t('errorDescription'),

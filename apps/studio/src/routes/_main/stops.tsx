@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { StopsListContainer } from '@/features/stops'
 
-export const Route = createFileRoute('/stops')({
+export const Route = createFileRoute('/_main/stops')({
   component: StopsPage,
 })
 

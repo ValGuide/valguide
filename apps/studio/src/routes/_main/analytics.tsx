@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { useTranslations } from '@valguide/core/i18n/mock'
 
-export const Route = createFileRoute('/analytics')({
+export const Route = createFileRoute('/_main/analytics')({
   component: AnalyticsPage,
 })
 

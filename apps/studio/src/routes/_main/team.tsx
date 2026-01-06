@@ -7,7 +7,7 @@ import { Button } from '@valguide/ui/components/button'
 import { TeamMembersClient } from '@/features/team/components/team-members-client'
 import { useTeam } from '@/features/team/hooks/use-team'
 
-export const Route = createFileRoute('/team')({
+export const Route = createFileRoute('/_main/team')({
   component: TeamPage,
 })
 

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { getStopByNanoIdFn } from '@valguide/core/features/guides/server-functions'
 
-export const Route = createFileRoute('/stops/$nanoId/edit')({
+export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
   loader: async ({ params }) => {
     const stop = await getStopByNanoIdFn({ data: { stopNanoId: params.nanoId } })
     if (!stop) {

@@ -5,7 +5,7 @@ import { ArchivedSkeleton } from '@/components/archived-skeleton'
 import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
 import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
 
-export const Route = createFileRoute('/archived')({
+export const Route = createFileRoute('/_main/archived')({
   component: ArchivedPage,
 })
 

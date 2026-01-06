@@ -1,19 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
-import { getGuideByNanoIdFn } from '@/features/guides/server-functions'
 import { useEffect, useState } from 'react'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuide } from '@/features/guides/hooks/use-guide'
+import { getGuideByNanoIdFn } from '@/features/guides/server-functions'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 type SearchParams = {
   locale?: string
 }
 
-export const Route = createFileRoute('/guides/$nanoId/stops/$stopId/edit')({
+export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')({
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
     locale: search.locale as string | undefined,
   }),

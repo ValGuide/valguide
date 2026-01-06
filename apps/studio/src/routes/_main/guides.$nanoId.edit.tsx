@@ -1,12 +1,12 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
-import { getGuideByNanoIdFn } from '@/features/guides/server-functions'
 import { useEffect, useState } from 'react'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuide } from '@/features/guides/hooks/use-guide'
+import { getGuideByNanoIdFn } from '@/features/guides/server-functions'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 type SearchParams = {
@@ -14,7 +14,7 @@ type SearchParams = {
   locale?: string
 }
 
-export const Route = createFileRoute('/guides/$nanoId/edit')({
+export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
     stop: search.stop as string | undefined,
     locale: search.locale as string | undefined,

@@ -4,7 +4,7 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 import { ThemeCustomizerContainer } from '@/features/design/components/theme-customizer-container'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
-export const Route = createFileRoute('/design')({
+export const Route = createFileRoute('/_main/design')({
   component: DesignPage,
 })
 

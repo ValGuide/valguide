@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { GuidesListContainer } from '@/features/guides'
 
-export const Route = createFileRoute('/guides')({
+export const Route = createFileRoute('/_main/guides')({
   component: GuidesPage,
 })
 

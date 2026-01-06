@@ -5,16 +5,15 @@ import { ExternalLink } from 'lucide-react'
 interface ViewInAppButtonProps {
   nanoId: string
   published: boolean
+  appDomain?: string
 }
 
-export function ViewInAppButton({ nanoId, published }: ViewInAppButtonProps) {
+export function ViewInAppButton({ nanoId, published, appDomain = 'app.valguide.com' }: ViewInAppButtonProps) {
   const t = useTranslations('guides')
 
   if (!published) {
     return null
   }
-
-  const appDomain = import.meta.env.VITE_APP_DOMAIN || 'app.valguide.com'
 
   return (
     <Button variant="outline" asChild>

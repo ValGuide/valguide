@@ -9,91 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TeamRouteImport } from './routes/team'
-import { Route as SupportRouteImport } from './routes/support'
-import { Route as StopsRouteImport } from './routes/stops'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as JoinTeamRouteImport } from './routes/join-team'
-import { Route as GuidesRouteImport } from './routes/guides'
-import { Route as FeedbackRouteImport } from './routes/feedback'
-import { Route as DesignRouteImport } from './routes/design'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AssetsRouteImport } from './routes/assets'
-import { Route as ArchivedRouteImport } from './routes/archived'
-import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as GuidesNanoIdRouteImport } from './routes/guides.$nanoId'
+import { Route as MainTeamRouteImport } from './routes/_main/team'
+import { Route as MainSupportRouteImport } from './routes/_main/support'
+import { Route as MainStopsRouteImport } from './routes/_main/stops'
+import { Route as MainSettingsRouteImport } from './routes/_main/settings'
+import { Route as MainProfileRouteImport } from './routes/_main/profile'
+import { Route as MainGuidesRouteImport } from './routes/_main/guides'
+import { Route as MainFeedbackRouteImport } from './routes/_main/feedback'
+import { Route as MainDesignRouteImport } from './routes/_main/design'
+import { Route as MainDashboardRouteImport } from './routes/_main/dashboard'
+import { Route as MainAssetsRouteImport } from './routes/_main/assets'
+import { Route as MainArchivedRouteImport } from './routes/_main/archived'
+import { Route as MainAnalyticsRouteImport } from './routes/_main/analytics'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as StopsNanoIdEditRouteImport } from './routes/stops.$nanoId.edit'
-import { Route as GuidesNanoIdEditRouteImport } from './routes/guides.$nanoId.edit'
-import { Route as GuidesNanoIdStopsStopIdEditRouteImport } from './routes/guides.$nanoId.stops.$stopId.edit'
+import { Route as MainGuidesNanoIdRouteImport } from './routes/_main/guides.$nanoId'
+import { Route as MainStopsNanoIdEditRouteImport } from './routes/_main/stops.$nanoId.edit'
+import { Route as MainGuidesNanoIdEditRouteImport } from './routes/_main/guides.$nanoId.edit'
+import { Route as MainGuidesNanoIdStopsStopIdEditRouteImport } from './routes/_main/guides.$nanoId.stops.$stopId.edit'
 
-const TeamRoute = TeamRouteImport.update({
-  id: '/team',
-  path: '/team',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SupportRoute = SupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StopsRoute = StopsRouteImport.update({
-  id: '/stops',
-  path: '/stops',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const JoinTeamRoute = JoinTeamRouteImport.update({
   id: '/join-team',
   path: '/join-team',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GuidesRoute = GuidesRouteImport.update({
-  id: '/guides',
-  path: '/guides',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeedbackRoute = FeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DesignRoute = DesignRouteImport.update({
-  id: '/design',
-  path: '/design',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AssetsRoute = AssetsRouteImport.update({
-  id: '/assets',
-  path: '/assets',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArchivedRoute = ArchivedRouteImport.update({
-  id: '/archived',
-  path: '/archived',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AnalyticsRoute = AnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
+const MainRoute = MainRouteImport.update({
+  id: '/_main',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -105,10 +50,65 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GuidesNanoIdRoute = GuidesNanoIdRouteImport.update({
-  id: '/$nanoId',
-  path: '/$nanoId',
-  getParentRoute: () => GuidesRoute,
+const MainTeamRoute = MainTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainSupportRoute = MainSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainStopsRoute = MainStopsRouteImport.update({
+  id: '/stops',
+  path: '/stops',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainSettingsRoute = MainSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainProfileRoute = MainProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainGuidesRoute = MainGuidesRouteImport.update({
+  id: '/guides',
+  path: '/guides',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainFeedbackRoute = MainFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainDesignRoute = MainDesignRouteImport.update({
+  id: '/design',
+  path: '/design',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainDashboardRoute = MainDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainAssetsRoute = MainAssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainArchivedRoute = MainArchivedRouteImport.update({
+  id: '/archived',
+  path: '/archived',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainAnalyticsRoute = MainAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => MainRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
@@ -120,95 +120,104 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
-const StopsNanoIdEditRoute = StopsNanoIdEditRouteImport.update({
+const MainGuidesNanoIdRoute = MainGuidesNanoIdRouteImport.update({
+  id: '/$nanoId',
+  path: '/$nanoId',
+  getParentRoute: () => MainGuidesRoute,
+} as any)
+const MainStopsNanoIdEditRoute = MainStopsNanoIdEditRouteImport.update({
   id: '/$nanoId/edit',
   path: '/$nanoId/edit',
-  getParentRoute: () => StopsRoute,
+  getParentRoute: () => MainStopsRoute,
 } as any)
-const GuidesNanoIdEditRoute = GuidesNanoIdEditRouteImport.update({
+const MainGuidesNanoIdEditRoute = MainGuidesNanoIdEditRouteImport.update({
   id: '/edit',
   path: '/edit',
-  getParentRoute: () => GuidesNanoIdRoute,
+  getParentRoute: () => MainGuidesNanoIdRoute,
 } as any)
-const GuidesNanoIdStopsStopIdEditRoute =
-  GuidesNanoIdStopsStopIdEditRouteImport.update({
+const MainGuidesNanoIdStopsStopIdEditRoute =
+  MainGuidesNanoIdStopsStopIdEditRouteImport.update({
     id: '/stops/$stopId/edit',
     path: '/stops/$stopId/edit',
-    getParentRoute: () => GuidesNanoIdRoute,
+    getParentRoute: () => MainGuidesNanoIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/analytics': typeof AnalyticsRoute
-  '/archived': typeof ArchivedRoute
-  '/assets': typeof AssetsRoute
-  '/dashboard': typeof DashboardRoute
-  '/design': typeof DesignRoute
-  '/feedback': typeof FeedbackRoute
-  '/guides': typeof GuidesRouteWithChildren
   '/join-team': typeof JoinTeamRoute
-  '/profile': typeof ProfileRoute
-  '/settings': typeof SettingsRoute
-  '/stops': typeof StopsRouteWithChildren
-  '/support': typeof SupportRoute
-  '/team': typeof TeamRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
-  '/guides/$nanoId': typeof GuidesNanoIdRouteWithChildren
-  '/guides/$nanoId/edit': typeof GuidesNanoIdEditRoute
-  '/stops/$nanoId/edit': typeof StopsNanoIdEditRoute
-  '/guides/$nanoId/stops/$stopId/edit': typeof GuidesNanoIdStopsStopIdEditRoute
+  '/analytics': typeof MainAnalyticsRoute
+  '/archived': typeof MainArchivedRoute
+  '/assets': typeof MainAssetsRoute
+  '/dashboard': typeof MainDashboardRoute
+  '/design': typeof MainDesignRoute
+  '/feedback': typeof MainFeedbackRoute
+  '/guides': typeof MainGuidesRouteWithChildren
+  '/profile': typeof MainProfileRoute
+  '/settings': typeof MainSettingsRoute
+  '/stops': typeof MainStopsRouteWithChildren
+  '/support': typeof MainSupportRoute
+  '/team': typeof MainTeamRoute
+  '/guides/$nanoId': typeof MainGuidesNanoIdRouteWithChildren
+  '/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
+  '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
+  '/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/analytics': typeof AnalyticsRoute
-  '/archived': typeof ArchivedRoute
-  '/assets': typeof AssetsRoute
-  '/dashboard': typeof DashboardRoute
-  '/design': typeof DesignRoute
-  '/feedback': typeof FeedbackRoute
-  '/guides': typeof GuidesRouteWithChildren
   '/join-team': typeof JoinTeamRoute
-  '/profile': typeof ProfileRoute
-  '/settings': typeof SettingsRoute
-  '/stops': typeof StopsRouteWithChildren
-  '/support': typeof SupportRoute
-  '/team': typeof TeamRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
-  '/guides/$nanoId': typeof GuidesNanoIdRouteWithChildren
-  '/guides/$nanoId/edit': typeof GuidesNanoIdEditRoute
-  '/stops/$nanoId/edit': typeof StopsNanoIdEditRoute
-  '/guides/$nanoId/stops/$stopId/edit': typeof GuidesNanoIdStopsStopIdEditRoute
+  '/analytics': typeof MainAnalyticsRoute
+  '/archived': typeof MainArchivedRoute
+  '/assets': typeof MainAssetsRoute
+  '/dashboard': typeof MainDashboardRoute
+  '/design': typeof MainDesignRoute
+  '/feedback': typeof MainFeedbackRoute
+  '/guides': typeof MainGuidesRouteWithChildren
+  '/profile': typeof MainProfileRoute
+  '/settings': typeof MainSettingsRoute
+  '/stops': typeof MainStopsRouteWithChildren
+  '/support': typeof MainSupportRoute
+  '/team': typeof MainTeamRoute
+  '/guides/$nanoId': typeof MainGuidesNanoIdRouteWithChildren
+  '/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
+  '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
+  '/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/analytics': typeof AnalyticsRoute
-  '/archived': typeof ArchivedRoute
-  '/assets': typeof AssetsRoute
-  '/dashboard': typeof DashboardRoute
-  '/design': typeof DesignRoute
-  '/feedback': typeof FeedbackRoute
-  '/guides': typeof GuidesRouteWithChildren
+  '/_main': typeof MainRouteWithChildren
   '/join-team': typeof JoinTeamRoute
-  '/profile': typeof ProfileRoute
-  '/settings': typeof SettingsRoute
-  '/stops': typeof StopsRouteWithChildren
-  '/support': typeof SupportRoute
-  '/team': typeof TeamRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
-  '/guides/$nanoId': typeof GuidesNanoIdRouteWithChildren
-  '/guides/$nanoId/edit': typeof GuidesNanoIdEditRoute
-  '/stops/$nanoId/edit': typeof StopsNanoIdEditRoute
-  '/guides/$nanoId/stops/$stopId/edit': typeof GuidesNanoIdStopsStopIdEditRoute
+  '/_main/analytics': typeof MainAnalyticsRoute
+  '/_main/archived': typeof MainArchivedRoute
+  '/_main/assets': typeof MainAssetsRoute
+  '/_main/dashboard': typeof MainDashboardRoute
+  '/_main/design': typeof MainDesignRoute
+  '/_main/feedback': typeof MainFeedbackRoute
+  '/_main/guides': typeof MainGuidesRouteWithChildren
+  '/_main/profile': typeof MainProfileRoute
+  '/_main/settings': typeof MainSettingsRoute
+  '/_main/stops': typeof MainStopsRouteWithChildren
+  '/_main/support': typeof MainSupportRoute
+  '/_main/team': typeof MainTeamRoute
+  '/_main/guides/$nanoId': typeof MainGuidesNanoIdRouteWithChildren
+  '/_main/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
+  '/_main/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
+  '/_main/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/join-team'
+    | '/login'
+    | '/signup'
     | '/analytics'
     | '/archived'
     | '/assets'
@@ -216,14 +225,11 @@ export interface FileRouteTypes {
     | '/design'
     | '/feedback'
     | '/guides'
-    | '/join-team'
     | '/profile'
     | '/settings'
     | '/stops'
     | '/support'
     | '/team'
-    | '/login'
-    | '/signup'
     | '/guides/$nanoId'
     | '/guides/$nanoId/edit'
     | '/stops/$nanoId/edit'
@@ -231,6 +237,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/join-team'
+    | '/login'
+    | '/signup'
     | '/analytics'
     | '/archived'
     | '/assets'
@@ -238,14 +247,11 @@ export interface FileRouteTypes {
     | '/design'
     | '/feedback'
     | '/guides'
-    | '/join-team'
     | '/profile'
     | '/settings'
     | '/stops'
     | '/support'
     | '/team'
-    | '/login'
-    | '/signup'
     | '/guides/$nanoId'
     | '/guides/$nanoId/edit'
     | '/stops/$nanoId/edit'
@@ -254,82 +260,37 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
-    | '/analytics'
-    | '/archived'
-    | '/assets'
-    | '/dashboard'
-    | '/design'
-    | '/feedback'
-    | '/guides'
+    | '/_main'
     | '/join-team'
-    | '/profile'
-    | '/settings'
-    | '/stops'
-    | '/support'
-    | '/team'
     | '/_auth/login'
     | '/_auth/signup'
-    | '/guides/$nanoId'
-    | '/guides/$nanoId/edit'
-    | '/stops/$nanoId/edit'
-    | '/guides/$nanoId/stops/$stopId/edit'
+    | '/_main/analytics'
+    | '/_main/archived'
+    | '/_main/assets'
+    | '/_main/dashboard'
+    | '/_main/design'
+    | '/_main/feedback'
+    | '/_main/guides'
+    | '/_main/profile'
+    | '/_main/settings'
+    | '/_main/stops'
+    | '/_main/support'
+    | '/_main/team'
+    | '/_main/guides/$nanoId'
+    | '/_main/guides/$nanoId/edit'
+    | '/_main/stops/$nanoId/edit'
+    | '/_main/guides/$nanoId/stops/$stopId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  AnalyticsRoute: typeof AnalyticsRoute
-  ArchivedRoute: typeof ArchivedRoute
-  AssetsRoute: typeof AssetsRoute
-  DashboardRoute: typeof DashboardRoute
-  DesignRoute: typeof DesignRoute
-  FeedbackRoute: typeof FeedbackRoute
-  GuidesRoute: typeof GuidesRouteWithChildren
+  MainRoute: typeof MainRouteWithChildren
   JoinTeamRoute: typeof JoinTeamRoute
-  ProfileRoute: typeof ProfileRoute
-  SettingsRoute: typeof SettingsRoute
-  StopsRoute: typeof StopsRouteWithChildren
-  SupportRoute: typeof SupportRoute
-  TeamRoute: typeof TeamRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/team': {
-      id: '/team'
-      path: '/team'
-      fullPath: '/team'
-      preLoaderRoute: typeof TeamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/support': {
-      id: '/support'
-      path: '/support'
-      fullPath: '/support'
-      preLoaderRoute: typeof SupportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/stops': {
-      id: '/stops'
-      path: '/stops'
-      fullPath: '/stops'
-      preLoaderRoute: typeof StopsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/join-team': {
       id: '/join-team'
       path: '/join-team'
@@ -337,53 +298,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JoinTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/guides': {
-      id: '/guides'
-      path: '/guides'
-      fullPath: '/guides'
-      preLoaderRoute: typeof GuidesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feedback': {
-      id: '/feedback'
-      path: '/feedback'
-      fullPath: '/feedback'
-      preLoaderRoute: typeof FeedbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/design': {
-      id: '/design'
-      path: '/design'
-      fullPath: '/design'
-      preLoaderRoute: typeof DesignRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/assets': {
-      id: '/assets'
-      path: '/assets'
-      fullPath: '/assets'
-      preLoaderRoute: typeof AssetsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/archived': {
-      id: '/archived'
-      path: '/archived'
-      fullPath: '/archived'
-      preLoaderRoute: typeof ArchivedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/analytics': {
-      id: '/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AnalyticsRouteImport
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -400,12 +319,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/guides/$nanoId': {
-      id: '/guides/$nanoId'
-      path: '/$nanoId'
-      fullPath: '/guides/$nanoId'
-      preLoaderRoute: typeof GuidesNanoIdRouteImport
-      parentRoute: typeof GuidesRoute
+    '/_main/team': {
+      id: '/_main/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof MainTeamRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/support': {
+      id: '/_main/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof MainSupportRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/stops': {
+      id: '/_main/stops'
+      path: '/stops'
+      fullPath: '/stops'
+      preLoaderRoute: typeof MainStopsRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/settings': {
+      id: '/_main/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof MainSettingsRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/profile': {
+      id: '/_main/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof MainProfileRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/guides': {
+      id: '/_main/guides'
+      path: '/guides'
+      fullPath: '/guides'
+      preLoaderRoute: typeof MainGuidesRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/feedback': {
+      id: '/_main/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof MainFeedbackRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/design': {
+      id: '/_main/design'
+      path: '/design'
+      fullPath: '/design'
+      preLoaderRoute: typeof MainDesignRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/dashboard': {
+      id: '/_main/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof MainDashboardRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/assets': {
+      id: '/_main/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof MainAssetsRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/archived': {
+      id: '/_main/archived'
+      path: '/archived'
+      fullPath: '/archived'
+      preLoaderRoute: typeof MainArchivedRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/analytics': {
+      id: '/_main/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof MainAnalyticsRouteImport
+      parentRoute: typeof MainRoute
     }
     '/_auth/signup': {
       id: '/_auth/signup'
@@ -421,26 +417,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/stops/$nanoId/edit': {
-      id: '/stops/$nanoId/edit'
+    '/_main/guides/$nanoId': {
+      id: '/_main/guides/$nanoId'
+      path: '/$nanoId'
+      fullPath: '/guides/$nanoId'
+      preLoaderRoute: typeof MainGuidesNanoIdRouteImport
+      parentRoute: typeof MainGuidesRoute
+    }
+    '/_main/stops/$nanoId/edit': {
+      id: '/_main/stops/$nanoId/edit'
       path: '/$nanoId/edit'
       fullPath: '/stops/$nanoId/edit'
-      preLoaderRoute: typeof StopsNanoIdEditRouteImport
-      parentRoute: typeof StopsRoute
+      preLoaderRoute: typeof MainStopsNanoIdEditRouteImport
+      parentRoute: typeof MainStopsRoute
     }
-    '/guides/$nanoId/edit': {
-      id: '/guides/$nanoId/edit'
+    '/_main/guides/$nanoId/edit': {
+      id: '/_main/guides/$nanoId/edit'
       path: '/edit'
       fullPath: '/guides/$nanoId/edit'
-      preLoaderRoute: typeof GuidesNanoIdEditRouteImport
-      parentRoute: typeof GuidesNanoIdRoute
+      preLoaderRoute: typeof MainGuidesNanoIdEditRouteImport
+      parentRoute: typeof MainGuidesNanoIdRoute
     }
-    '/guides/$nanoId/stops/$stopId/edit': {
-      id: '/guides/$nanoId/stops/$stopId/edit'
+    '/_main/guides/$nanoId/stops/$stopId/edit': {
+      id: '/_main/guides/$nanoId/stops/$stopId/edit'
       path: '/stops/$stopId/edit'
       fullPath: '/guides/$nanoId/stops/$stopId/edit'
-      preLoaderRoute: typeof GuidesNanoIdStopsStopIdEditRouteImport
-      parentRoute: typeof GuidesNanoIdRoute
+      preLoaderRoute: typeof MainGuidesNanoIdStopsStopIdEditRouteImport
+      parentRoute: typeof MainGuidesNanoIdRoute
     }
   }
 }
@@ -457,57 +460,80 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface GuidesNanoIdRouteChildren {
-  GuidesNanoIdEditRoute: typeof GuidesNanoIdEditRoute
-  GuidesNanoIdStopsStopIdEditRoute: typeof GuidesNanoIdStopsStopIdEditRoute
+interface MainGuidesNanoIdRouteChildren {
+  MainGuidesNanoIdEditRoute: typeof MainGuidesNanoIdEditRoute
+  MainGuidesNanoIdStopsStopIdEditRoute: typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
 
-const GuidesNanoIdRouteChildren: GuidesNanoIdRouteChildren = {
-  GuidesNanoIdEditRoute: GuidesNanoIdEditRoute,
-  GuidesNanoIdStopsStopIdEditRoute: GuidesNanoIdStopsStopIdEditRoute,
+const MainGuidesNanoIdRouteChildren: MainGuidesNanoIdRouteChildren = {
+  MainGuidesNanoIdEditRoute: MainGuidesNanoIdEditRoute,
+  MainGuidesNanoIdStopsStopIdEditRoute: MainGuidesNanoIdStopsStopIdEditRoute,
 }
 
-const GuidesNanoIdRouteWithChildren = GuidesNanoIdRoute._addFileChildren(
-  GuidesNanoIdRouteChildren,
+const MainGuidesNanoIdRouteWithChildren =
+  MainGuidesNanoIdRoute._addFileChildren(MainGuidesNanoIdRouteChildren)
+
+interface MainGuidesRouteChildren {
+  MainGuidesNanoIdRoute: typeof MainGuidesNanoIdRouteWithChildren
+}
+
+const MainGuidesRouteChildren: MainGuidesRouteChildren = {
+  MainGuidesNanoIdRoute: MainGuidesNanoIdRouteWithChildren,
+}
+
+const MainGuidesRouteWithChildren = MainGuidesRoute._addFileChildren(
+  MainGuidesRouteChildren,
 )
 
-interface GuidesRouteChildren {
-  GuidesNanoIdRoute: typeof GuidesNanoIdRouteWithChildren
+interface MainStopsRouteChildren {
+  MainStopsNanoIdEditRoute: typeof MainStopsNanoIdEditRoute
 }
 
-const GuidesRouteChildren: GuidesRouteChildren = {
-  GuidesNanoIdRoute: GuidesNanoIdRouteWithChildren,
+const MainStopsRouteChildren: MainStopsRouteChildren = {
+  MainStopsNanoIdEditRoute: MainStopsNanoIdEditRoute,
 }
 
-const GuidesRouteWithChildren =
-  GuidesRoute._addFileChildren(GuidesRouteChildren)
+const MainStopsRouteWithChildren = MainStopsRoute._addFileChildren(
+  MainStopsRouteChildren,
+)
 
-interface StopsRouteChildren {
-  StopsNanoIdEditRoute: typeof StopsNanoIdEditRoute
+interface MainRouteChildren {
+  MainAnalyticsRoute: typeof MainAnalyticsRoute
+  MainArchivedRoute: typeof MainArchivedRoute
+  MainAssetsRoute: typeof MainAssetsRoute
+  MainDashboardRoute: typeof MainDashboardRoute
+  MainDesignRoute: typeof MainDesignRoute
+  MainFeedbackRoute: typeof MainFeedbackRoute
+  MainGuidesRoute: typeof MainGuidesRouteWithChildren
+  MainProfileRoute: typeof MainProfileRoute
+  MainSettingsRoute: typeof MainSettingsRoute
+  MainStopsRoute: typeof MainStopsRouteWithChildren
+  MainSupportRoute: typeof MainSupportRoute
+  MainTeamRoute: typeof MainTeamRoute
 }
 
-const StopsRouteChildren: StopsRouteChildren = {
-  StopsNanoIdEditRoute: StopsNanoIdEditRoute,
+const MainRouteChildren: MainRouteChildren = {
+  MainAnalyticsRoute: MainAnalyticsRoute,
+  MainArchivedRoute: MainArchivedRoute,
+  MainAssetsRoute: MainAssetsRoute,
+  MainDashboardRoute: MainDashboardRoute,
+  MainDesignRoute: MainDesignRoute,
+  MainFeedbackRoute: MainFeedbackRoute,
+  MainGuidesRoute: MainGuidesRouteWithChildren,
+  MainProfileRoute: MainProfileRoute,
+  MainSettingsRoute: MainSettingsRoute,
+  MainStopsRoute: MainStopsRouteWithChildren,
+  MainSupportRoute: MainSupportRoute,
+  MainTeamRoute: MainTeamRoute,
 }
 
-const StopsRouteWithChildren = StopsRoute._addFileChildren(StopsRouteChildren)
+const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  AnalyticsRoute: AnalyticsRoute,
-  ArchivedRoute: ArchivedRoute,
-  AssetsRoute: AssetsRoute,
-  DashboardRoute: DashboardRoute,
-  DesignRoute: DesignRoute,
-  FeedbackRoute: FeedbackRoute,
-  GuidesRoute: GuidesRouteWithChildren,
+  MainRoute: MainRouteWithChildren,
   JoinTeamRoute: JoinTeamRoute,
-  ProfileRoute: ProfileRoute,
-  SettingsRoute: SettingsRoute,
-  StopsRoute: StopsRouteWithChildren,
-  SupportRoute: SupportRoute,
-  TeamRoute: TeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

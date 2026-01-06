@@ -1,18 +1,17 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
-
-import { getGuideByNanoIdWithAssetsFn } from '@valguide/core/features/guides/server-functions'
+import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
+import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { getGuideByNanoIdWithAssetsFn } from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { cn } from '@valguide/ui/lib/utils'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
-import { ArchiveGuideButton } from './guides.$nanoId/-components/archive-guide-button'
-import { ViewInAppButton } from './guides.$nanoId/-components/view-in-app-button'
 
-export const Route = createFileRoute('/guides/$nanoId')({
+export const Route = createFileRoute('/_main/guides/$nanoId')({
   loader: async ({ params }) => {
     const guide = await getGuideByNanoIdWithAssetsFn({ data: { nanoId: params.nanoId } })
     if (!guide) {
@@ -27,6 +26,12 @@ function GuidePage() {
   const guide = Route.useLoaderData()
   const { nanoId } = Route.useParams()
   const t = useTranslations('guides')
+  const router = useRouter()
+
+  const handleArchived = () => {
+    router.navigate({ to: '/' })
+    router.invalidate()
+  }
 
   const translation = guide.translations.find((tr) => tr.locale === 'de') ?? guide.translations[0]
   const version = translation?.draftVersion ?? translation?.currentVersion
@@ -49,8 +54,8 @@ function GuidePage() {
             <span className="hidden sm:inline">{t('backToGuides')}</span>
           </Link>
           <div className="flex gap-2">
-            <ViewInAppButton nanoId={nanoId} published={isPublished} />
-            <ArchiveGuideButton guideId={guide.id} />
+            <ViewInAppButton nanoId={nanoId} published={isPublished} appDomain={import.meta.env.VITE_APP_DOMAIN} />
+            <ArchiveGuideButton guideId={guide.id} onArchived={handleArchived} />
             <Button asChild>
               <Link to="/guides/$nanoId/edit" params={{ nanoId }}>
                 <Pencil className="h-4 w-4" />
