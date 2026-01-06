@@ -1,7 +1,6 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { createElement } from 'react'
 
 export type RichTranslationValues = Record<
 	string,
@@ -21,15 +20,4 @@ export function useTranslations(_namespace?: string): TranslationFunction {
 
 export function useLocale(): string {
 	return 'en'
-}
-
-export function NextIntlClientProvider({
-	children,
-}: {
-	children: ReactNode
-	locale?: string
-	messages?: Record<string, unknown>
-	timeZone?: string
-}): ReactNode {
-	return createElement('div', null, children)
 }
