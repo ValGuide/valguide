@@ -1,29 +1,22 @@
+import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getArchivedGuides } from '@valguide/core/features/guides/queries'
 import { createClient } from '@valguide/supabase/server'
-import { NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic'
+export const getArchivedGuidesFn = createServerFn({ method: 'GET' }).handler(async () => {
+  const supabase = await createClient()
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
 
-export async function GET() {
-  try {
-    const supabase = await createClient()
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-    if (claimsError || !claimsData?.claims?.sub) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userId = claimsData.claims.sub
-
-    const guides = await getArchivedGuides(db, userId)
-
-    return NextResponse.json({
-      guides,
-      userId,
-    })
-  } catch (error) {
-    console.error('Failed to fetch archived guides:', error)
-    return NextResponse.json({ error: 'Failed to fetch archived guides' }, { status: 500 })
+  if (claimsError || !claimsData?.claims?.sub) {
+    throw new Error('Unauthorized')
   }
-}
+
+  const userId = claimsData.claims.sub
+
+  const guides = await getArchivedGuides(db, userId)
+
+  return {
+    guides,
+    userId,
+  }
+})

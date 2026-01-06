@@ -1,25 +1,30 @@
+import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 import { createClient } from '@valguide/supabase/server'
-import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-export const dynamic = 'force-dynamic'
+const getGuideByNanoIdInputSchema = z.object({
+  nanoId: z.string(),
+})
 
-export async function GET(_request: Request, { params }: { params: Promise<{ nanoId: string }> }) {
-  const { nanoId } = await params
+export const getGuideByNanoIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideByNanoIdInputSchema)
+  .handler(async ({ data }) => {
+    const { nanoId } = data
 
-  const supabase = await createClient()
-  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
+    const supabase = await createClient()
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
 
-  if (claimsError || !claimsData?.claims?.sub) {
-    return new NextResponse('Unauthorized', { status: 401 })
-  }
+    if (claimsError || !claimsData?.claims?.sub) {
+      throw new Error('Unauthorized')
+    }
 
-  const guide = await getGuideByNanoIdWithAssets(db, nanoId)
+    const guide = await getGuideByNanoIdWithAssets(db, nanoId)
 
-  if (!guide) {
-    return new NextResponse('Not found', { status: 404 })
-  }
+    if (!guide) {
+      throw new Error('Not found')
+    }
 
-  return NextResponse.json(guide)
-}
+    return guide
+  })

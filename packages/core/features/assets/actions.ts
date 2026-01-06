@@ -1,93 +1,105 @@
-'use server'
-
+import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
-import { valguideId } from '@valguide/core/utils/nanoid'
 import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
+import { z } from 'zod'
 import { asset } from './schema'
-import { validateFile } from './utils'
 
 export type AssetType = 'image' | 'audio' | 'video'
 
-export type ConfirmAssetUploadParams = {
-  assetId: string
-  fileName: string
-  fileSize: number
-  mimeType: string
-  type: AssetType
-  locale?: string
-  storagePath: string
-  organizationId: string
-  width?: number
-  height?: number
-  duration?: number
-}
+const confirmAssetUploadSchema = z.object({
+  assetId: z.string(),
+  fileName: z.string(),
+  fileSize: z.number(),
+  mimeType: z.string(),
+  type: z.enum(['image', 'audio', 'video']),
+  locale: z.string().optional(),
+  storagePath: z.string(),
+  organizationId: z.string(),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  duration: z.number().optional(),
+})
 
-export async function confirmAssetUpload(params: ConfirmAssetUploadParams) {
-  const supabase = await createClient()
-  const { data: claimsData } = await supabase.auth.getClaims()
-  const user = claimsData?.claims
+export type ConfirmAssetUploadParams = z.infer<typeof confirmAssetUploadSchema>
 
-  if (!user) throw new Error('Not authenticated')
+export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
+  .inputValidator(confirmAssetUploadSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  const { assetId, fileName, fileSize, mimeType, type, locale, storagePath, organizationId, width, height, duration } =
-    params
+    if (!user) throw new Error('Not authenticated')
 
-  // Get public URL (will respect RLS policies)
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from('assets').getPublicUrl(storagePath)
-
-  // Save to database
-  const [newAsset] = await db
-    .insert(asset)
-    .values({
-      // id: auto-generated uuid
-      nanoId: assetId, // assetId from client is actually a nanoid
+    const {
+      assetId,
       fileName,
       fileSize,
       mimeType,
       type,
+      locale,
       storagePath,
-      publicUrl,
-      locale: locale || null,
       organizationId,
-      uploadedBy: user.sub,
-      width: width || null,
-      height: height || null,
-      duration: duration || null,
-    })
-    .returning()
+      width,
+      height,
+      duration,
+    } = data
 
-  return newAsset
-}
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('assets').getPublicUrl(storagePath)
 
-export async function deleteAsset(assetId: string) {
-  const supabase = await createClient()
-  const { data: claimsData } = await supabase.auth.getClaims()
-  const user = claimsData?.claims
+    const [newAsset] = await db
+      .insert(asset)
+      .values({
+        nanoId: assetId,
+        fileName,
+        fileSize,
+        mimeType,
+        type,
+        storagePath,
+        publicUrl,
+        locale: locale || null,
+        organizationId,
+        uploadedBy: user.sub,
+        width: width || null,
+        height: height || null,
+        duration: duration || null,
+      })
+      .returning()
 
-  if (!user) throw new Error('Not authenticated')
-
-  // Get asset metadata
-  const assetData = await db.query.asset.findFirst({
-    where: eq(asset.id, assetId),
+    return newAsset
   })
 
-  if (!assetData) throw new Error('Asset not found')
+const deleteAssetSchema = z.object({
+  assetId: z.string(),
+})
 
-  // Verify ownership
-  if (assetData.uploadedBy !== user.sub) {
-    throw new Error('Unauthorized to delete this asset')
-  }
+export const deleteAssetFn = createServerFn({ method: 'POST' })
+  .inputValidator(deleteAssetSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  // Delete from storage
-  const { error: storageError } = await supabase.storage.from('assets').remove([assetData.storagePath])
+    if (!user) throw new Error('Not authenticated')
 
-  if (storageError) throw storageError
+    const assetData = await db.query.asset.findFirst({
+      where: eq(asset.id, data.assetId),
+    })
 
-  // Delete from database (cascade will handle relationships)
-  await db.delete(asset).where(eq(asset.id, assetId))
+    if (!assetData) throw new Error('Asset not found')
 
-  return { success: true }
-}
+    if (assetData.uploadedBy !== user.sub) {
+      throw new Error('Unauthorized to delete this asset')
+    }
+
+    const { error: storageError } = await supabase.storage.from('assets').remove([assetData.storagePath])
+
+    if (storageError) throw storageError
+
+    await db.delete(asset).where(eq(asset.id, data.assetId))
+
+    return { success: true }
+  })

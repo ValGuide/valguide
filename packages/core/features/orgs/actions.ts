@@ -1,8 +1,8 @@
-'use server'
-
 import { createHash, randomBytes } from 'node:crypto'
+import { createServerFn } from '@tanstack/react-start'
 import { sendEmail } from '@valguide/transactional'
 import { cookies } from 'next/headers'
+import { z } from 'zod'
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
 import {
@@ -16,207 +16,251 @@ import {
 import { canManageMembers, type OrgRole } from './permissions'
 import { getInvitationById, getInvitationByTokenHash, getTeamById, getUserRole, isTeamMember } from './queries'
 
-export async function createTeamAction(name: string, slug?: string) {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+const createTeamSchema = z.object({
+  name: z.string(),
+  slug: z.string().optional(),
+})
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+export const createTeamFn = createServerFn({ method: 'POST' })
+  .inputValidator(createTeamSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  const team = await createTeam(db, name, user.sub, slug)
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
 
-  // Set cookie for new team
-  const cookieStore = await cookies()
-  cookieStore.set('active-team-slug', team.slug, {
-    path: '/',
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 365, // 1 year
+    const team = await createTeam(db, data.name, user.sub, data.slug)
+
+    const cookieStore = await cookies()
+    cookieStore.set('active-team-slug', team.slug, {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365,
+    })
+
+    return team
   })
 
-  return team
-}
+const inviteMemberSchema = z.object({
+  teamId: z.string(),
+  email: z.string().email(),
+  role: z.enum(['owner', 'admin', 'member', 'viewer']),
+})
 
-export async function inviteMemberAction(teamId: string, email: string, role: OrgRole) {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+export const inviteMemberFn = createServerFn({ method: 'POST' })
+  .inputValidator(inviteMemberSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
 
-  const currentUserRole = await getUserRole(db, teamId, user.sub)
+    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
 
-  if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-    throw new Error('Insufficient permissions')
-  }
+    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
+      throw new Error('Insufficient permissions')
+    }
 
-  const team = await getTeamById(db, teamId)
-  if (!team) throw new Error('Team not found')
+    const team = await getTeamById(db, data.teamId)
+    if (!team) throw new Error('Team not found')
 
-  // Generate token
-  const token = randomBytes(32).toString('hex')
-  const tokenHash = createHash('sha256').update(token).digest('hex')
+    const token = randomBytes(32).toString('hex')
+    const tokenHash = createHash('sha256').update(token).digest('hex')
 
-  await createInvitation(db, teamId, email, role, user.sub, tokenHash)
+    await createInvitation(db, data.teamId, data.email, data.role as OrgRole, user.sub, tokenHash)
 
-  await sendEmail({
-    to: email,
-    subject: `Join ${team.name} on ValGuide`,
-    template: {
-      name: 'team-invite',
-      data: {
-        inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
-        teamName: team.name,
-        inviterName: user.email || 'A colleague',
-        logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
+    await sendEmail({
+      to: data.email,
+      subject: `Join ${team.name} on ValGuide`,
+      template: {
+        name: 'team-invite',
+        data: {
+          inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
+          teamName: team.name,
+          inviterName: user.email || 'A colleague',
+          logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
+        },
       },
-    },
+    })
+
+    console.log(`Invite link for ${data.email}: /join-team?token=${token}`)
   })
 
-  console.log(`Invite link for ${email}: /join-team?token=${token}`)
-}
+const resendInviteSchema = z.object({
+  inviteId: z.string(),
+  teamId: z.string(),
+})
 
-export async function resendInviteAction(inviteId: string, teamId: string) {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+export const resendInviteFn = createServerFn({ method: 'POST' })
+  .inputValidator(resendInviteSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
 
-  const currentUserRole = await getUserRole(db, teamId, user.sub)
+    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
 
-  if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-    throw new Error('Insufficient permissions')
-  }
+    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
+      throw new Error('Insufficient permissions')
+    }
 
-  const invite = await getInvitationById(db, inviteId)
-  if (!invite) throw new Error('Invitation not found')
+    const invite = await getInvitationById(db, data.inviteId)
+    if (!invite) throw new Error('Invitation not found')
 
-  const team = await getTeamById(db, teamId)
-  if (!team) throw new Error('Team not found')
+    const team = await getTeamById(db, data.teamId)
+    if (!team) throw new Error('Team not found')
 
-  // Generate token
-  const token = randomBytes(32).toString('hex')
-  const tokenHash = createHash('sha256').update(token).digest('hex')
+    const token = randomBytes(32).toString('hex')
+    const tokenHash = createHash('sha256').update(token).digest('hex')
 
-  await createInvitation(db, teamId, invite.email, invite.role as OrgRole, user.sub, tokenHash)
+    await createInvitation(db, data.teamId, invite.email, invite.role as OrgRole, user.sub, tokenHash)
 
-  await sendEmail({
-    to: invite.email,
-    subject: `Join ${team.name} on ValGuide`,
-    template: {
-      name: 'team-invite',
-      data: {
-        inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
-        teamName: team.name,
-        inviterName: user.email || 'A colleague',
-        logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
+    await sendEmail({
+      to: invite.email,
+      subject: `Join ${team.name} on ValGuide`,
+      template: {
+        name: 'team-invite',
+        data: {
+          inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
+          teamName: team.name,
+          inviterName: user.email || 'A colleague',
+          logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
+        },
       },
-    },
+    })
+
+    console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
   })
 
-  console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
-}
+const cancelInviteSchema = z.object({
+  inviteId: z.string(),
+  teamId: z.string(),
+})
 
-export async function cancelInviteAction(inviteId: string, teamId: string) {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+export const cancelInviteFn = createServerFn({ method: 'POST' })
+  .inputValidator(cancelInviteSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
 
-  const currentUserRole = await getUserRole(db, teamId, user.sub)
+    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
 
-  if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-    throw new Error('Insufficient permissions')
-  }
+    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
+      throw new Error('Insufficient permissions')
+    }
 
-  await deleteInvitation(db, inviteId)
-}
+    await deleteInvitation(db, data.inviteId)
+  })
 
-export async function removeMemberAction(memberId: string, teamId: string) {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+const removeMemberSchema = z.object({
+  memberId: z.string(),
+  teamId: z.string(),
+})
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+export const removeMemberFn = createServerFn({ method: 'POST' })
+  .inputValidator(removeMemberSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  const currentUserRole = await getUserRole(db, teamId, user.sub)
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
 
-  if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-    throw new Error('Insufficient permissions')
-  }
+    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
 
-  await removeMember(db, memberId)
-}
+    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
+      throw new Error('Insufficient permissions')
+    }
 
-export async function updateMemberRoleAction(memberId: string, teamId: string, newRole: OrgRole) {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+    await removeMember(db, data.memberId)
+  })
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+const updateMemberRoleSchema = z.object({
+  memberId: z.string(),
+  teamId: z.string(),
+  newRole: z.enum(['owner', 'admin', 'member', 'viewer']),
+})
 
-  const currentUserRole = await getUserRole(db, teamId, user.sub)
+export const updateMemberRoleFn = createServerFn({ method: 'POST' })
+  .inputValidator(updateMemberRoleSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-    throw new Error('Insufficient permissions')
-  }
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
 
-  await updateMemberRole(db, memberId, newRole)
-}
+    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
 
-export async function joinTeamAction(token: string) {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
+      throw new Error('Insufficient permissions')
+    }
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+    await updateMemberRole(db, data.memberId, data.newRole as OrgRole)
+  })
 
-  const tokenHash = createHash('sha256').update(token).digest('hex')
-  const invite = await getInvitationByTokenHash(db, tokenHash)
+const joinTeamSchema = z.object({
+  token: z.string(),
+})
 
-  if (!invite) {
-    throw new Error('Invalid or expired invitation')
-  }
+export const joinTeamFn = createServerFn({ method: 'POST' })
+  .inputValidator(joinTeamSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
-  // Check if already member
-  const isMember = await isTeamMember(db, invite.organizationId, user.sub)
-  if (isMember) {
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
+
+    const tokenHash = createHash('sha256').update(data.token).digest('hex')
+    const invite = await getInvitationByTokenHash(db, tokenHash)
+
+    if (!invite) {
+      throw new Error('Invalid or expired invitation')
+    }
+
+    const isMember = await isTeamMember(db, invite.organizationId, user.sub)
+    if (isMember) {
+      return { success: true, slug: invite.organization.slug }
+    }
+
+    if (invite.email.toLowerCase() !== (user.email || '').toLowerCase()) {
+      throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${user.email}`)
+    }
+
+    await acceptInvitation(db, invite.id, user.sub)
+
+    const cookieStore = await cookies()
+    cookieStore.set('active-team-slug', invite.organization.slug, {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365,
+    })
+
     return { success: true, slug: invite.organization.slug }
-  }
-
-  // Verify email matches
-  if (invite.email.toLowerCase() !== (user.email || '').toLowerCase()) {
-    throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${user.email}`)
-  }
-
-  await acceptInvitation(db, invite.id, user.sub)
-
-  // Set cookie for new team
-  const cookieStore = await cookies()
-  cookieStore.set('active-team-slug', invite.organization.slug, {
-    path: '/',
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 365, // 1 year
   })
-
-  return { success: true, slug: invite.organization.slug }
-}

@@ -1,41 +1,38 @@
+import { createServerFn } from '@tanstack/react-start'
 import { type GetAssetsFilters, getAssets } from '@valguide/core/features/assets/queries'
 import { createClient } from '@valguide/supabase/server'
-import { type NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
-export const dynamic = 'force-dynamic'
+const getAssetsInputSchema = z.object({
+  type: z.enum(['image', 'audio', 'video']).optional(),
+  locale: z.string().optional(),
+  organizationId: z.string().optional(),
+})
 
-export async function GET(request: NextRequest) {
-  try {
+export const getAssetsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getAssetsInputSchema)
+  .handler(async ({ data }) => {
     const supabase = await createClient()
-    const { data } = await supabase.auth.getClaims()
-    const user = data?.claims
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
 
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      throw new Error('Unauthorized')
     }
-
-    const searchParams = request.nextUrl.searchParams
-    const type = searchParams.get('type') as GetAssetsFilters['type'] | null
-    const locale = searchParams.get('locale') || undefined
-    const organizationId = searchParams.get('organizationId') || undefined
 
     const filters: GetAssetsFilters = {}
 
-    if (type && (type === 'image' || type === 'audio' || type === 'video')) {
-      filters.type = type
+    if (data.type) {
+      filters.type = data.type
     }
-    if (locale) {
-      filters.locale = locale
+    if (data.locale) {
+      filters.locale = data.locale
     }
-    if (organizationId) {
-      filters.organizationId = organizationId
+    if (data.organizationId) {
+      filters.organizationId = data.organizationId
     }
 
     const assets = await getAssets(filters)
 
-    return NextResponse.json({ assets })
-  } catch (error) {
-    console.error('Error fetching assets:', error)
-    return NextResponse.json({ error: 'Failed to fetch assets' }, { status: 500 })
-  }
-}
+    return { assets }
+  })

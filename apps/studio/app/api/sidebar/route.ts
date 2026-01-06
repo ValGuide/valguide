@@ -1,12 +1,12 @@
+import { createServerFn } from '@tanstack/react-start'
 import { getSidebarData } from '@valguide/core/features/orgs/sidebar-data'
-import { NextResponse } from 'next/server'
 
-export async function GET() {
+export const getSidebarDataFn = createServerFn({ method: 'GET' }).handler(async () => {
   const data = await getSidebarData()
 
   if (!data) {
-    return new NextResponse('Unauthorized', { status: 401 })
+    throw new Error('Unauthorized')
   }
 
-  return NextResponse.json(data)
-}
+  return data
+})

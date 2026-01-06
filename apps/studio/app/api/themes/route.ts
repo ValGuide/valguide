@@ -1,30 +1,33 @@
+import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { type CreateThemeInput, createTheme } from '@valguide/core/features/themes/mutations'
 import { getOrgThemes } from '@valguide/core/features/themes/queries'
 import { createClient } from '@valguide/supabase/server'
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-export const dynamic = 'force-dynamic'
+const getThemesInputSchema = z.object({
+  organizationId: z.string().optional(),
+})
 
-export async function GET(request: Request) {
-  try {
+export const getThemesFn = createServerFn({ method: 'GET' })
+  .inputValidator(getThemesInputSchema)
+  .handler(async ({ data }) => {
     const supabase = await createClient()
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
 
     if (claimsError || !claimsData?.claims?.sub) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      throw new Error('Unauthorized')
     }
 
     const userId = claimsData.claims.sub
-    const { searchParams } = new URL(request.url)
-    const queryOrganizationId = searchParams.get('organizationId')
+    const queryOrganizationId = data.organizationId
 
     const userTeams = await getUserTeams(db, userId)
 
     if (userTeams.length === 0) {
-      return NextResponse.json([])
+      return []
     }
 
     let targetOrganizationId: string | undefined
@@ -54,55 +57,36 @@ export async function GET(request: Request) {
 
     const themes = await getOrgThemes(targetOrganizationId as string)
 
-    return NextResponse.json(themes)
-  } catch (error) {
-    console.error('Failed to fetch themes:', error)
-    return NextResponse.json({ error: 'Failed to fetch themes' }, { status: 500 })
-  }
-}
+    return themes
+  })
 
-export async function POST(request: Request) {
-  try {
+const createThemeInputSchema = z.object({
+  organizationId: z.string(),
+  name: z.string().min(1),
+  basePreset: z.string(),
+  colors: z.record(z.string()),
+  radius: z.number(),
+  fonts: z.record(z.string()),
+})
+
+export const createThemeFn = createServerFn({ method: 'POST' })
+  .inputValidator(createThemeInputSchema)
+  .handler(async ({ data }) => {
     const supabase = await createClient()
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
 
     if (claimsError || !claimsData?.claims?.sub) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      throw new Error('Unauthorized')
     }
 
     const userId = claimsData.claims.sub
-    const body = await request.json()
-    const { organizationId, name, basePreset, colors, radius, fonts } = body
-
-    if (!organizationId) {
-      return NextResponse.json({ error: 'organizationId is required' }, { status: 400 })
-    }
-
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
-      return NextResponse.json({ error: 'name is required' }, { status: 400 })
-    }
-
-    if (!basePreset) {
-      return NextResponse.json({ error: 'basePreset is required' }, { status: 400 })
-    }
-
-    if (!colors) {
-      return NextResponse.json({ error: 'colors is required' }, { status: 400 })
-    }
-
-    if (radius === undefined || radius === null) {
-      return NextResponse.json({ error: 'radius is required' }, { status: 400 })
-    }
-
-    if (!fonts) {
-      return NextResponse.json({ error: 'fonts is required' }, { status: 400 })
-    }
+    const { organizationId, name, basePreset, colors, radius, fonts } = data
 
     const userTeams = await getUserTeams(db, userId)
     const hasAccess = userTeams.some((t: { id: string }) => t.id === organizationId)
 
     if (!hasAccess) {
-      return NextResponse.json({ error: 'You do not have access to this organization' }, { status: 403 })
+      throw new Error('You do not have access to this organization')
     }
 
     const input: CreateThemeInput = {
@@ -110,21 +94,12 @@ export async function POST(request: Request) {
       name: name.trim(),
       basePreset,
       colors,
-      radius: Number(radius),
+      radius,
       fonts,
       createdBy: userId,
     }
 
     const theme = await createTheme(input)
 
-    return NextResponse.json(theme, { status: 201 })
-  } catch (error) {
-    console.error('Failed to create theme:', error)
-
-    if (error instanceof Error && error.message.includes('unique')) {
-      return NextResponse.json({ error: 'A theme with this name already exists' }, { status: 409 })
-    }
-
-    return NextResponse.json({ error: 'Failed to create theme' }, { status: 500 })
-  }
-}
+    return theme
+  })

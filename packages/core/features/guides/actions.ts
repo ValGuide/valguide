@@ -1,10 +1,10 @@
-'use server'
-
+import { createServerFn } from '@tanstack/react-start'
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
 import { db } from '@valguide/core/features/db'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { createClient } from '@valguide/supabase/server'
 import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
+import { z } from 'zod'
 import { organizationMember } from '../orgs/schema'
 import { guide, guideStop, stop } from './schema'
 
@@ -47,7 +47,6 @@ async function requireGuideAccess(guideId: string) {
 }
 
 async function requireStopAccess(stopId: string) {
-  // First try to get guide access via junction table
   const guideStopResult = await db
     .select({ guideId: guideStop.guideId })
     .from(guideStop)
@@ -58,7 +57,6 @@ async function requireStopAccess(stopId: string) {
     return requireGuideAccess(guideStopResult[0].guideId)
   }
 
-  // Fallback to deprecated guideId for backward compatibility
   const [foundStop] = await db.select({ guideId: stop.guideId }).from(stop).where(eq(stop.id, stopId)).limit(1)
 
   if (!foundStop) {
@@ -74,364 +72,414 @@ async function requireStopAccess(stopId: string) {
 
 // Guide actions
 
-export type UpdateGuideParams = {
-  id: string
-  published?: Date | null
-  organizationId?: string | null
-  availableLocales?: string[]
-  userId?: string // Ignored, used from session
-}
+const updateGuideSchema = z.object({
+  id: z.string(),
+  published: z.date().nullable().optional(),
+  organizationId: z.string().nullable().optional(),
+  availableLocales: z.array(z.string()).optional(),
+})
 
-export async function updateGuide(params: UpdateGuideParams) {
-  const { id, published, organizationId, availableLocales } = params
-  const user = await requireGuideAccess(id)
+export type UpdateGuideParams = z.infer<typeof updateGuideSchema>
 
-  const [updatedGuide] = await db
-    .update(guide)
-    .set({
-      published: published === undefined ? undefined : published,
-      organizationId: organizationId ?? undefined,
-      availableLocales: availableLocales ?? undefined,
-      updatedBy: user.id,
-      updatedAt: new Date(),
-    })
-    .where(eq(guide.id, id))
-    .returning()
+export const updateGuideFn = createServerFn({ method: 'POST' })
+  .inputValidator(updateGuideSchema)
+  .handler(async ({ data }) => {
+    const { id, published, organizationId, availableLocales } = data
+    const user = await requireGuideAccess(id)
 
-  return updatedGuide
-}
+    const [updatedGuide] = await db
+      .update(guide)
+      .set({
+        published: published === undefined ? undefined : published,
+        organizationId: organizationId ?? undefined,
+        availableLocales: availableLocales ?? undefined,
+        updatedBy: user.id,
+        updatedAt: new Date(),
+      })
+      .where(eq(guide.id, id))
+      .returning()
 
-export type UpdateGuideTranslationParams = {
-  guideId: string
-  locale: string
-  title: string
-  description: string
-}
+    return updatedGuide
+  })
 
-export async function updateGuideTranslation(params: UpdateGuideTranslationParams) {
-  const { guideId, locale, title, description } = params
-  await requireGuideAccess(guideId)
+const updateGuideTranslationSchema = z.object({
+  guideId: z.string(),
+  locale: z.string(),
+  title: z.string(),
+  description: z.string(),
+})
 
-  // Use the new upsertGuideTranslationDraft function
-  const { upsertGuideTranslationDraft } = await import('./translation-mutations')
+export type UpdateGuideTranslationParams = z.infer<typeof updateGuideTranslationSchema>
 
-  const versionId = await upsertGuideTranslationDraft(guideId, locale, { title, description })
+export const updateGuideTranslationFn = createServerFn({ method: 'POST' })
+  .inputValidator(updateGuideTranslationSchema)
+  .handler(async ({ data }) => {
+    const { guideId, locale, title, description } = data
+    await requireGuideAccess(guideId)
 
-  return { versionId }
-}
+    const { upsertGuideTranslationDraft } = await import('./translation-mutations')
+
+    const versionId = await upsertGuideTranslationDraft(guideId, locale, { title, description })
+
+    return { versionId }
+  })
 
 // Stop actions
 
-export type CreateStopParams = {
-  guideId: string
-  userId?: string
-  position?: number
-  translations: Array<{
-    locale: string
-    title: string
-    description: string
-    transcription: string
-  }>
-}
+const createStopSchema = z.object({
+  guideId: z.string(),
+  position: z.number().optional(),
+  translations: z.array(
+    z.object({
+      locale: z.string(),
+      title: z.string(),
+      description: z.string(),
+      transcription: z.string(),
+    }),
+  ),
+})
 
-export async function createStop(params: CreateStopParams) {
-  const { guideId, position, translations } = params
-  const user = await requireGuideAccess(guideId)
-  const userId = user.id
+export type CreateStopParams = z.infer<typeof createStopSchema>
 
-  // Get guide to determine organizationId
-  const [guideData] = await db
-    .select({ organizationId: guide.organizationId })
-    .from(guide)
-    .where(eq(guide.id, guideId))
-    .limit(1)
+export const createStopFn = createServerFn({ method: 'POST' })
+  .inputValidator(createStopSchema)
+  .handler(async ({ data }) => {
+    const { guideId, position, translations } = data
+    const user = await requireGuideAccess(guideId)
+    const userId = user.id
 
-  if (!guideData) {
-    throw new Error('Guide not found')
-  }
+    const [guideData] = await db
+      .select({ organizationId: guide.organizationId })
+      .from(guide)
+      .where(eq(guide.id, guideId))
+      .limit(1)
 
-  // Determine position - if not specified, add at the end
-  let finalPosition = position
-  if (finalPosition === undefined) {
-    const existingStops = await db
-      .select({ position: guideStop.position })
-      .from(guideStop)
-      .where(eq(guideStop.guideId, guideId))
+    if (!guideData) {
+      throw new Error('Guide not found')
+    }
 
-    const maxPosition = existingStops.length > 0 ? Math.max(...existingStops.map((s) => s.position)) : -1
-    finalPosition = maxPosition + 1
-  }
+    let finalPosition = position
+    if (finalPosition === undefined) {
+      const existingStops = await db
+        .select({ position: guideStop.position })
+        .from(guideStop)
+        .where(eq(guideStop.guideId, guideId))
 
-  const nanoId = valguideId()
+      const maxPosition = existingStops.length > 0 ? Math.max(...existingStops.map((s) => s.position)) : -1
+      finalPosition = maxPosition + 1
+    }
 
-  const [newStop] = await db
-    .insert(stop)
-    .values({
-      organizationId: guideData.organizationId,
-      nanoId,
-      createdBy: userId,
-      // Deprecated fields kept for backward compatibility
+    const nanoId = valguideId()
+
+    const [newStop] = await db
+      .insert(stop)
+      .values({
+        organizationId: guideData.organizationId,
+        nanoId,
+        createdBy: userId,
+        guideId,
+        order: finalPosition,
+      })
+      .returning()
+
+    if (!newStop) {
+      throw new Error('Failed to create stop')
+    }
+
+    await db.insert(guideStop).values({
       guideId,
-      order: finalPosition,
+      stopId: newStop.id,
+      position: finalPosition,
     })
-    .returning()
 
-  if (!newStop) {
-    throw new Error('Failed to create stop')
-  }
+    const { upsertStopTranslationDraft } = await import('./translation-mutations')
 
-  // Add to junction table
-  await db.insert(guideStop).values({
-    guideId,
-    stopId: newStop.id,
-    position: finalPosition,
-  })
+    for (const trans of translations) {
+      await upsertStopTranslationDraft(
+        newStop.id,
+        trans.locale,
+        {
+          title: trans.title,
+          description: trans.description,
+          transcription: trans.transcription,
+        },
+        userId,
+      )
+    }
 
-  // Create translations
-  const { upsertStopTranslationDraft } = await import('./translation-mutations')
-
-  for (const trans of translations) {
-    await upsertStopTranslationDraft(
-      newStop.id,
-      trans.locale,
-      {
-        title: trans.title,
-        description: trans.description,
-        transcription: trans.transcription,
-      },
-      userId,
-    )
-  }
-
-  const fullStop = await db.query.stop.findFirst({
-    where: eq(stop.id, newStop.id),
-    with: {
-      translations: {
-        with: {
-          draftVersion: true,
-          currentVersion: true,
+    const fullStop = await db.query.stop.findFirst({
+      where: eq(stop.id, newStop.id),
+      with: {
+        translations: {
+          with: {
+            draftVersion: true,
+            currentVersion: true,
+          },
         },
       },
-    },
+    })
+
+    if (!fullStop) {
+      throw new Error('Failed to fetch created stop')
+    }
+
+    return fullStop
   })
 
-  if (!fullStop) {
-    throw new Error('Failed to fetch created stop')
-  }
+const updateStopSchema = z.object({
+  stopId: z.string(),
+  locale: z.string(),
+  title: z.string(),
+  description: z.string(),
+  transcription: z.string(),
+})
 
-  return fullStop
-}
+export type UpdateStopParams = z.infer<typeof updateStopSchema>
 
-export type UpdateStopParams = {
-  stopId: string
-  locale: string
-  title: string
-  description: string
-  transcription: string
-}
+export const updateStopFn = createServerFn({ method: 'POST' })
+  .inputValidator(updateStopSchema)
+  .handler(async ({ data }) => {
+    const { stopId, locale, title, description, transcription } = data
+    await requireStopAccess(stopId)
 
-export async function updateStop(params: UpdateStopParams) {
-  const { stopId, locale, title, description, transcription } = params
-  await requireStopAccess(stopId)
+    const { upsertStopTranslationDraft } = await import('./translation-mutations')
 
-  // Use the new upsertStopTranslationDraft function
-  const { upsertStopTranslationDraft } = await import('./translation-mutations')
+    const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
 
-  const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
+    return { versionId }
+  })
 
-  return { versionId }
-}
+const deleteStopSchema = z.object({
+  stopId: z.string(),
+})
 
-export async function deleteStop(stopId: string) {
-  await requireStopAccess(stopId)
-  await db.delete(stop).where(eq(stop.id, stopId))
+export const deleteStopFn = createServerFn({ method: 'POST' })
+  .inputValidator(deleteStopSchema)
+  .handler(async ({ data }) => {
+    await requireStopAccess(data.stopId)
+    await db.delete(stop).where(eq(stop.id, data.stopId))
 
-  return { success: true }
-}
+    return { success: true }
+  })
 
-/**
- * @deprecated Use reorderGuideStopsAction instead
- */
-export type ReorderStopsParams = Array<{ id: string; order: number }>
+const reorderStopsSchema = z.array(
+  z.object({
+    id: z.string(),
+    order: z.number(),
+  }),
+)
 
-export async function reorderStops(updates: ReorderStopsParams) {
-  const user = await requireUser()
+export type ReorderStopsParams = z.infer<typeof reorderStopsSchema>
 
-  if (updates.length > 0) {
-    const stopIds = updates.map((u) => u.id)
-    const stopsToCheck = await db
-      .select({ id: stop.id, guideId: stop.guideId })
-      .from(stop)
-      .where(inArray(stop.id, stopIds))
+export const reorderStopsFn = createServerFn({ method: 'POST' })
+  .inputValidator(reorderStopsSchema)
+  .handler(async ({ data: updates }) => {
+    const user = await requireUser()
 
-    const guideIds: string[] = Array.from(
-      new Set(stopsToCheck.filter((s) => s.guideId != null).map((s) => s.guideId as string)),
-    )
-    for (const gId of guideIds) {
-      await checkGuideAccess(gId, user.id)
+    if (updates.length > 0) {
+      const stopIds = updates.map((u) => u.id)
+      const stopsToCheck = await db
+        .select({ id: stop.id, guideId: stop.guideId })
+        .from(stop)
+        .where(inArray(stop.id, stopIds))
+
+      const guideIds: string[] = Array.from(
+        new Set(stopsToCheck.filter((s) => s.guideId != null).map((s) => s.guideId as string)),
+      )
+      for (const gId of guideIds) {
+        await checkGuideAccess(gId, user.id)
+      }
     }
-  }
 
-  for (const update of updates) {
-    await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
-  }
+    for (const update of updates) {
+      await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
+    }
 
-  return { success: true }
-}
+    return { success: true }
+  })
 
 // Asset attachment actions
 
-export type AttachAssetToGuideParams = {
-  guideId: string
-  assetId: string
-  role: string
-  locale?: string
-  order?: number
-}
+const attachAssetToGuideSchema = z.object({
+  guideId: z.string(),
+  assetId: z.string(),
+  role: z.string(),
+  locale: z.string().optional(),
+  order: z.number().optional(),
+})
 
-export async function attachAssetToGuide(params: AttachAssetToGuideParams) {
-  const { guideId, assetId, role, locale, order = 0 } = params
-  await requireGuideAccess(guideId)
+export type AttachAssetToGuideParams = z.infer<typeof attachAssetToGuideSchema>
 
-  const [attachment] = await db
-    .insert(guideAsset)
-    .values({
-      guideId,
-      assetId,
-      role,
-      locale: locale || null,
-      order,
-    })
-    .returning()
+export const attachAssetToGuideFn = createServerFn({ method: 'POST' })
+  .inputValidator(attachAssetToGuideSchema)
+  .handler(async ({ data }) => {
+    const { guideId, assetId, role, locale, order = 0 } = data
+    await requireGuideAccess(guideId)
 
-  return attachment
-}
+    const [attachment] = await db
+      .insert(guideAsset)
+      .values({
+        guideId,
+        assetId,
+        role,
+        locale: locale || null,
+        order,
+      })
+      .returning()
 
-export type AttachAssetToStopParams = {
-  stopId: string
-  assetId: string
-  role: string
-  locale?: string
-  order?: number
-}
+    return attachment
+  })
 
-export async function attachAssetToStop(params: AttachAssetToStopParams) {
-  const { stopId, assetId, role, locale, order = 0 } = params
-  await requireStopAccess(stopId)
+const attachAssetToStopSchema = z.object({
+  stopId: z.string(),
+  assetId: z.string(),
+  role: z.string(),
+  locale: z.string().optional(),
+  order: z.number().optional(),
+})
 
-  const [attachment] = await db
-    .insert(stopAsset)
-    .values({
-      stopId,
-      assetId,
-      role,
-      locale: locale || null,
-      order,
-    })
-    .returning()
+export type AttachAssetToStopParams = z.infer<typeof attachAssetToStopSchema>
 
-  return attachment
-}
+export const attachAssetToStopFn = createServerFn({ method: 'POST' })
+  .inputValidator(attachAssetToStopSchema)
+  .handler(async ({ data }) => {
+    const { stopId, assetId, role, locale, order = 0 } = data
+    await requireStopAccess(stopId)
 
-export async function detachAssetFromGuide(guideAssetId: string) {
-  const [asset] = await db
-    .select({ guideId: guideAsset.guideId })
-    .from(guideAsset)
-    .where(eq(guideAsset.id, guideAssetId))
-    .limit(1)
+    const [attachment] = await db
+      .insert(stopAsset)
+      .values({
+        stopId,
+        assetId,
+        role,
+        locale: locale || null,
+        order,
+      })
+      .returning()
 
-  if (!asset) {
-    throw new Error('Asset attachment not found')
-  }
+    return attachment
+  })
 
-  await requireGuideAccess(asset.guideId)
-  await db.delete(guideAsset).where(eq(guideAsset.id, guideAssetId))
+const detachAssetFromGuideSchema = z.object({
+  guideAssetId: z.string(),
+})
 
-  return { success: true }
-}
+export const detachAssetFromGuideFn = createServerFn({ method: 'POST' })
+  .inputValidator(detachAssetFromGuideSchema)
+  .handler(async ({ data }) => {
+    const [asset] = await db
+      .select({ guideId: guideAsset.guideId })
+      .from(guideAsset)
+      .where(eq(guideAsset.id, data.guideAssetId))
+      .limit(1)
 
-export async function detachAssetFromStop(stopAssetId: string) {
-  const [asset] = await db
-    .select({ stopId: stopAsset.stopId })
-    .from(stopAsset)
-    .where(eq(stopAsset.id, stopAssetId))
-    .limit(1)
+    if (!asset) {
+      throw new Error('Asset attachment not found')
+    }
 
-  if (!asset) {
-    throw new Error('Asset at tachment not found')
-  }
+    await requireGuideAccess(asset.guideId)
+    await db.delete(guideAsset).where(eq(guideAsset.id, data.guideAssetId))
 
-  await requireStopAccess(asset.stopId)
-  await db.delete(stopAsset).where(eq(stopAsset.id, stopAssetId))
+    return { success: true }
+  })
 
-  return { success: true }
-}
+const detachAssetFromStopSchema = z.object({
+  stopAssetId: z.string(),
+})
 
-export type ArchiveGuideParams = {
-  id: string
-  userId?: string
-}
+export const detachAssetFromStopFn = createServerFn({ method: 'POST' })
+  .inputValidator(detachAssetFromStopSchema)
+  .handler(async ({ data }) => {
+    const [asset] = await db
+      .select({ stopId: stopAsset.stopId })
+      .from(stopAsset)
+      .where(eq(stopAsset.id, data.stopAssetId))
+      .limit(1)
 
-export async function archiveGuide(params: ArchiveGuideParams) {
-  const { id } = params
-  const user = await requireGuideAccess(id)
-  const userId = user.id
+    if (!asset) {
+      throw new Error('Asset attachment not found')
+    }
 
-  const [archivedGuide] = await db
-    .update(guide)
-    .set({
-      archivedAt: new Date(),
-      updatedBy: userId,
-      updatedAt: new Date(),
-    })
-    .where(eq(guide.id, id))
-    .returning()
+    await requireStopAccess(asset.stopId)
+    await db.delete(stopAsset).where(eq(stopAsset.id, data.stopAssetId))
 
-  return archivedGuide
-}
+    return { success: true }
+  })
 
-export type RecoverGuideParams = {
-  id: string
-  userId?: string
-}
+const archiveGuideSchema = z.object({
+  id: z.string(),
+})
 
-export async function recoverGuide(params: RecoverGuideParams) {
-  const { id } = params
-  const user = await requireGuideAccess(id)
-  const userId = user.id
+export type ArchiveGuideParams = z.infer<typeof archiveGuideSchema>
 
-  const [recoveredGuide] = await db
-    .update(guide)
-    .set({
-      archivedAt: null,
-      updatedBy: userId,
-      updatedAt: new Date(),
-    })
-    .where(and(eq(guide.id, id), isNotNull(guide.archivedAt), isNull(guide.deletedAt)))
-    .returning()
+export const archiveGuideFn = createServerFn({ method: 'POST' })
+  .inputValidator(archiveGuideSchema)
+  .handler(async ({ data }) => {
+    const { id } = data
+    const user = await requireGuideAccess(id)
+    const userId = user.id
 
-  return recoveredGuide
-}
+    const [archivedGuide] = await db
+      .update(guide)
+      .set({
+        archivedAt: new Date(),
+        updatedBy: userId,
+        updatedAt: new Date(),
+      })
+      .where(eq(guide.id, id))
+      .returning()
 
-export type DeleteGuideParams = {
-  id: string
-  userId?: string
-}
+    return archivedGuide
+  })
 
-export async function deleteGuide(params: DeleteGuideParams) {
-  const { id } = params
-  const user = await requireGuideAccess(id)
-  const userId = user.id
+const recoverGuideSchema = z.object({
+  id: z.string(),
+})
 
-  const [deletedGuide] = await db
-    .update(guide)
-    .set({
-      deletedAt: new Date(),
-      updatedBy: userId,
-      updatedAt: new Date(),
-    })
-    .where(and(eq(guide.id, id), isNotNull(guide.archivedAt)))
-    .returning()
+export type RecoverGuideParams = z.infer<typeof recoverGuideSchema>
 
-  return deletedGuide
-}
+export const recoverGuideFn = createServerFn({ method: 'POST' })
+  .inputValidator(recoverGuideSchema)
+  .handler(async ({ data }) => {
+    const { id } = data
+    const user = await requireGuideAccess(id)
+    const userId = user.id
+
+    const [recoveredGuide] = await db
+      .update(guide)
+      .set({
+        archivedAt: null,
+        updatedBy: userId,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(guide.id, id), isNotNull(guide.archivedAt), isNull(guide.deletedAt)))
+      .returning()
+
+    return recoveredGuide
+  })
+
+const deleteGuideSchema = z.object({
+  id: z.string(),
+})
+
+export type DeleteGuideParams = z.infer<typeof deleteGuideSchema>
+
+export const deleteGuideFn = createServerFn({ method: 'POST' })
+  .inputValidator(deleteGuideSchema)
+  .handler(async ({ data }) => {
+    const { id } = data
+    const user = await requireGuideAccess(id)
+    const userId = user.id
+
+    const [deletedGuide] = await db
+      .update(guide)
+      .set({
+        deletedAt: new Date(),
+        updatedBy: userId,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(guide.id, id), isNotNull(guide.archivedAt)))
+      .returning()
+
+    return deletedGuide
+  })

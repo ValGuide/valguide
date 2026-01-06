@@ -1,29 +1,32 @@
+import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getStopsByOrganizationId } from '@valguide/core/features/guides/stop-queries'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { createClient } from '@valguide/supabase/server'
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-export const dynamic = 'force-dynamic'
+const getStopsInputSchema = z.object({
+  organizationId: z.string().optional(),
+})
 
-export async function GET(request: Request) {
-  try {
+export const getStopsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopsInputSchema)
+  .handler(async ({ data }) => {
     const supabase = await createClient()
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
 
     if (claimsError || !claimsData?.claims?.sub) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      throw new Error('Unauthorized')
     }
 
     const userId = claimsData.claims.sub
-    const { searchParams } = new URL(request.url)
-    const queryOrganizationId = searchParams.get('organizationId')
+    const queryOrganizationId = data.organizationId
 
     const userTeams = await getUserTeams(db, userId)
 
     if (userTeams.length === 0) {
-      return NextResponse.json([])
+      return []
     }
 
     let targetOrganizationId: string | undefined
@@ -53,9 +56,5 @@ export async function GET(request: Request) {
 
     const stops = await getStopsByOrganizationId(targetOrganizationId as string)
 
-    return NextResponse.json(stops)
-  } catch (error) {
-    console.error('Failed to fetch stops:', error)
-    return NextResponse.json({ error: 'Failed to fetch stops' }, { status: 500 })
-  }
-}
+    return stops
+  })
