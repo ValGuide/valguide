@@ -1,8 +1,8 @@
-import { deleteGuide, recoverGuide } from '@valguide/core/features/guides/actions'
+import { useRouter } from '@tanstack/react-router'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/server-functions'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
-import { useRouter } from '@tanstack/react-router'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +31,7 @@ type DialogState = {
   guideId: string | null
 }
 
-export function ArchivedGuidesList({ guides, userId, onActionComplete }: ArchivedGuidesListProps) {
+export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }: ArchivedGuidesListProps) {
   const t = useTranslations('guides')
   const tCommon = useTranslations('common')
   const locale = useLocale()
@@ -49,7 +49,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
 
     setIsLoading(true)
     try {
-      await recoverGuide({ id: dialogState.guideId, userId })
+      await recoverGuideFn({ data: { id: dialogState.guideId } })
       toast.success(t('recover.success'), {
         description: t('recover.successDescription'),
       })
@@ -70,7 +70,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
 
     setIsLoading(true)
     try {
-      await deleteGuide({ id: dialogState.guideId, userId })
+      await deleteGuideFn({ data: { id: dialogState.guideId } })
       toast.success(t('delete.success'), {
         description: t('delete.successDescription'),
       })

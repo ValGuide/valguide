@@ -1,4 +1,4 @@
-
+import { useTranslations } from '@valguide/core/i18n/mock'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,10 +11,9 @@ import {
 } from '@valguide/ui/components/alert-dialog'
 import { Button } from '@valguide/ui/components/button'
 import { Upload } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { publishGuideTranslationDraft } from '../translation-actions'
+import { publishGuideTranslationDraftFn } from '../server-functions'
 
 interface PublishTranslationButtonProps {
   guideId: string
@@ -45,7 +44,7 @@ export function PublishTranslationButton({
   const handlePublish = async () => {
     setIsPublishing(true)
     try {
-      const result = await publishGuideTranslationDraft(guideId, locale)
+      const result = await publishGuideTranslationDraftFn({ data: { guideId, locale } })
 
       if (result.success) {
         toast.success(t('success'))

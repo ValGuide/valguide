@@ -1,5 +1,5 @@
-import { confirmAssetUpload } from '@valguide/core/features/assets/actions'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import { confirmAssetUploadFn } from '@valguide/core/features/assets/server-functions'
 import {
   detectAssetType,
   getAllowedMimeTypes,
@@ -91,15 +91,17 @@ export function MediaPicker({
           onError: (err) => setError(err.message),
         })
 
-        const asset = await confirmAssetUpload({
-          assetId,
-          fileName: file.name,
-          fileSize: file.size,
-          mimeType: file.type,
-          type: detected,
-          locale,
-          storagePath: fileName,
-          organizationId,
+        const asset = await confirmAssetUploadFn({
+          data: {
+            assetId,
+            fileName: file.name,
+            fileSize: file.size,
+            mimeType: file.type,
+            type: detected,
+            locale,
+            storagePath: fileName,
+            organizationId,
+          },
         })
 
         if (asset) {

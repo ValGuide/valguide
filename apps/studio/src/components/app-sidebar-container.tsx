@@ -1,14 +1,11 @@
-
-import { useServerFn } from '@tanstack/react-start'
-import { signOutFn } from '@valguide/core/features/auth/actions'
-import { createTeamAction } from '@valguide/core/features/orgs/actions'
-import { switchTeamAction } from '@valguide/core/features/orgs/context-actions'
-import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { useLocation, useRouter } from '@tanstack/react-router'
+import { useServerFn } from '@tanstack/react-start'
+import { signOutFn } from '@valguide/core/features/auth/server-functions'
+import { createTeamFn, switchTeamFn } from '@valguide/core/features/orgs/server-functions'
 import { useTranslations } from '@valguide/core/i18n/mock'
+import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
-import { mutate } from 'swr'
 import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
 import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
@@ -19,7 +16,7 @@ export function AppSidebarContainer() {
   const router = useRouter()
   const t = useTranslations('orgs.teamSwitcher')
 
-  const { data, isLoading, mutate: mutateSidebar } = useSidebarData()
+  const { data, isLoading } = useSidebarData()
   const signOut = useServerFn(signOutFn)
 
   useEffect(() => {
@@ -40,7 +37,7 @@ export function AppSidebarContainer() {
 
   const handleTeamSwitch = async (teamSlug: string) => {
     try {
-      const result = await switchTeamAction(teamSlug)
+      const result = await switchTeamFn({ data: { slug: teamSlug } })
       if (result?.success) {
         // Full page reload to ensure all state is reset
         window.location.reload()
@@ -71,7 +68,7 @@ export function AppSidebarContainer() {
       currentTeam={data.currentTeam}
       onTeamSwitch={handleTeamSwitch}
       onLogout={handleLogout}
-      onCreateTeam={createTeamAction}
+      onCreateTeam={async (name: string, slug?: string) => createTeamFn({ data: { name, slug } })}
     />
   )
 }

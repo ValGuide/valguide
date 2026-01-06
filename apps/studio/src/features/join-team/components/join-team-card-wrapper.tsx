@@ -1,6 +1,6 @@
-import { useServerFn } from '@tanstack/react-start'
-import { signOutFn } from '@valguide/core/features/auth/actions'
 import { useRouter } from '@tanstack/react-router'
+import { useServerFn } from '@tanstack/react-start'
+import { signOutFn } from '@valguide/core/features/auth/server-functions'
 import { JoinTeamCard } from './join-team-card'
 
 type JoinTeamCardWrapperProps = {

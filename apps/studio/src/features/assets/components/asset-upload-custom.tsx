@@ -1,5 +1,5 @@
-import { type AssetType, confirmAssetUpload } from '@valguide/core/features/assets/actions'
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { type AssetType, confirmAssetUploadFn } from '@valguide/core/features/assets/server-functions'
 import {
   formatFileSize,
   getAllowedMimeTypes,
@@ -154,15 +154,17 @@ export function CustomAssetUpload({
       })
 
       // Confirm upload and save to database
-      const asset = await confirmAssetUpload({
-        assetId,
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type,
-        type,
-        locale,
-        storagePath: fileName,
-        organizationId,
+      const asset = await confirmAssetUploadFn({
+        data: {
+          assetId,
+          fileName: file.name,
+          fileSize: file.size,
+          mimeType: file.type,
+          type,
+          locale,
+          storagePath: fileName,
+          organizationId,
+        },
       })
 
       if (asset) {

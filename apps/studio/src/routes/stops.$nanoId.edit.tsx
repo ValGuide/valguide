@@ -29,8 +29,12 @@ function StopEditPage() {
 }
 
 import { Link, useRouter } from '@tanstack/react-router'
-import { attachAssetToStopFn, detachAssetFromStopFn, updateStopFn } from '@valguide/core/features/guides/actions'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import {
+  attachAssetToStopFn,
+  detachAssetFromStopFn,
+  updateStopFn,
+} from '@valguide/core/features/guides/server-functions'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'

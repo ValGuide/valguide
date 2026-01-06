@@ -1,24 +1,24 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import {
-  attachAssetToGuide as attachAssetToGuideAction,
-  attachAssetToStop as attachAssetToStopAction,
-  createStop,
-  deleteStop as deleteStopAction,
-  detachAssetFromGuide as detachAssetFromGuideAction,
-  detachAssetFromStop as detachAssetFromStopAction,
-  reorderStops as reorderStopsAction,
-  updateGuide,
-  updateGuideTranslation,
-  updateStop,
-} from '@valguide/core/features/guides/actions'
 import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@valguide/core/features/guides/queries'
 import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
+import {
+  attachAssetToGuideFn,
+  attachAssetToStopFn,
+  createStopFn,
+  deleteStopFn,
+  detachAssetFromGuideFn,
+  detachAssetFromStopFn,
+  reorderStopsFn,
+  updateGuideFn,
+  updateGuideTranslationFn,
+  updateStopFn,
+} from '@valguide/core/features/guides/server-functions'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 
 type ContentLocale = string
 
-import { useTranslations } from '@valguide/core/i18n/mock'
 import { useLocation, useRouter } from '@tanstack/react-router'
+import { useTranslations } from '@valguide/core/i18n/mock'
 // biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
 import { useSearchParams } from 'next/navigation'
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
@@ -209,10 +209,12 @@ export function GuideEditorProvider({
   const updateGuideAvailableLocales = useCallback(
     async (locales: string[]) => {
       try {
-        await updateGuide({
-          id: guide.id,
-          availableLocales: locales,
-          organizationId: guide.organizationId,
+        await updateGuideFn({
+          data: {
+            id: guide.id,
+            availableLocales: locales,
+            organizationId: guide.organizationId,
+          },
         })
 
         setGuide((prev) => ({
@@ -330,17 +332,19 @@ export function GuideEditorProvider({
   // Add stop - returns the new stop so caller can navigate
   const addStop = useCallback(async (): Promise<StopWithAssets | null> => {
     try {
-      const newStopWithTranslations = await createStop({
-        guideId: guide.id,
-        position: guide.stops.length,
-        translations: [
-          {
-            locale: 'en',
-            title: 'New Stop',
-            description: '',
-            transcription: '',
-          },
-        ],
+      const newStopWithTranslations = await createStopFn({
+        data: {
+          guideId: guide.id,
+          position: guide.stops.length,
+          translations: [
+            {
+              locale: 'en',
+              title: 'New Stop',
+              description: '',
+              transcription: '',
+            },
+          ],
+        },
       })
 
       const newStop: StopWithAssets = { ...newStopWithTranslations, assets: [] }
@@ -367,7 +371,7 @@ export function GuideEditorProvider({
   const deleteStop = useCallback(
     async (stopId: string) => {
       try {
-        await deleteStopAction(stopId)
+        await deleteStopFn({ data: { stopId } })
 
         setGuide((prev) => ({
           ...prev,
@@ -391,7 +395,7 @@ export function GuideEditorProvider({
   const reorderStops = useCallback(
     async (stops: StopWithAssets[]) => {
       try {
-        await reorderStopsAction(stops.map((s, idx) => ({ id: s.id, order: idx })))
+        await reorderStopsFn({ data: stops.map((s, idx) => ({ id: s.id, order: idx })) })
 
         setGuide((prev) => ({
           ...prev,
@@ -544,12 +548,14 @@ export function GuideEditorProvider({
   const attachAssetToGuide = useCallback(
     async (asset: Asset, role: string) => {
       try {
-        const result = await attachAssetToGuideAction({
-          guideId: guide.id,
-          assetId: asset.id,
-          role,
-          locale: undefined,
-          order: 0,
+        const result = await attachAssetToGuideFn({
+          data: {
+            guideId: guide.id,
+            assetId: asset.id,
+            role,
+            locale: undefined,
+            order: 0,
+          },
         })
 
         if (!result) {
@@ -586,7 +592,7 @@ export function GuideEditorProvider({
           assets: prev.assets.filter((a) => a.id !== assetId),
         }))
 
-        await detachAssetFromGuideAction(guideAssetId)
+        await detachAssetFromGuideFn({ data: { guideAssetId } })
         toast.success(t('guides.assets.removeSuccess'))
       } catch (error) {
         console.error('Failed to detach asset from guide:', error)
@@ -600,12 +606,14 @@ export function GuideEditorProvider({
   const attachAssetToStop = useCallback(
     async (stopId: string, asset: Asset, role: string, locale?: string | null) => {
       try {
-        const result = await attachAssetToStopAction({
-          stopId,
-          assetId: asset.id,
-          role,
-          locale: locale ?? undefined,
-          order: 0,
+        const result = await attachAssetToStopFn({
+          data: {
+            stopId,
+            assetId: asset.id,
+            role,
+            locale: locale ?? undefined,
+            order: 0,
+          },
         })
 
         if (!result) {
@@ -657,7 +665,7 @@ export function GuideEditorProvider({
         }))
 
         // Delete from DB
-        await detachAssetFromStopAction(stopAssetId)
+        await detachAssetFromStopFn({ data: { stopAssetId } })
         toast.success(t('stops.assets.removeSuccess'))
       } catch (error) {
         console.error('Failed to detach asset:', error)
@@ -686,11 +694,13 @@ export function GuideEditorProvider({
           // Get content from draft version or current version
           const version = translation.draftVersion || translation.currentVersion
           if (version) {
-            const result = await updateGuideTranslation({
-              guideId: currentGuide.id,
-              locale: translation.locale,
-              title: version.title,
-              description: version.description || '',
+            const result = await updateGuideTranslationFn({
+              data: {
+                guideId: currentGuide.id,
+                locale: translation.locale,
+                title: version.title,
+                description: version.description || '',
+              },
             })
             if (result.versionId) {
               savedTranslationVersionIds[locale] = result.versionId
@@ -710,12 +720,14 @@ export function GuideEditorProvider({
             // Get content from draft version or current version
             const version = translation.draftVersion || translation.currentVersion
             if (version) {
-              const result = await updateStop({
-                stopId: stop.id,
-                locale: translation.locale,
-                title: version.title,
-                description: version.description || '',
-                transcription: version.transcription || '',
+              const result = await updateStopFn({
+                data: {
+                  stopId: stop.id,
+                  locale: translation.locale,
+                  title: version.title,
+                  description: version.description || '',
+                  transcription: version.transcription || '',
+                },
               })
               if (result.versionId) {
                 savedStopVersionIds[key] = result.versionId
@@ -796,10 +808,12 @@ export function GuideEditorProvider({
     await save()
 
     try {
-      await updateGuide({
-        id: guide.id,
-        published: new Date(),
-        organizationId: guide.organizationId,
+      await updateGuideFn({
+        data: {
+          id: guide.id,
+          published: new Date(),
+          organizationId: guide.organizationId,
+        },
       })
 
       setGuide((prev) => ({

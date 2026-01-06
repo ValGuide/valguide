@@ -6,9 +6,52 @@ import { createClient } from '@valguide/supabase/server'
 import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { z } from 'zod'
 import { organizationMember } from '../orgs/schema'
+import {
+  getAllGuides,
+  getArchivedGuides,
+  getGuideById,
+  getGuideByIdWithLocale,
+  getGuideByNanoId,
+  getGuideByNanoIdWithAssets,
+  getGuideIdByStopNanoId,
+  getGuideStops,
+  getGuidesByOrganizationId,
+  getGuidesByUserId,
+  getGuidesForStop,
+  getPublishedGuideByNanoId,
+  getStopByNanoId,
+} from './queries'
 import { guide, guideStop, stop } from './schema'
+import {
+  getGuideStopsOrdered,
+  getStopById,
+  getStopByNanoId as getStopByNanoIdFromStopQueries,
+  getStopsByOrganizationId,
+} from './stop-queries'
+import {
+  publishGuideTranslationDraft as publishDraft,
+  publishStopTranslationDraft as publishStopDraft,
+  rollbackGuideTranslation as rollbackGuide,
+  rollbackStopTranslation as rollbackStop,
+} from './translation-mutations'
+import {
+  getCurrentGuideTranslation,
+  getCurrentStopTranslation,
+  getDraftGuideTranslation,
+  getDraftStopTranslation,
+  getGuideTranslationHistory,
+  getGuideTranslations,
+  getGuideTranslationWithVersions,
+  getStopTranslationHistory,
+  getStopTranslations,
+  getStopTranslationWithVersions,
+} from './translation-queries'
 
-async function requireUser() {
+// ============================================================================
+// Helper functions
+// ============================================================================
+
+export async function requireUser() {
   const supabase = await createClient()
   const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
 
@@ -18,7 +61,7 @@ async function requireUser() {
   return { id: claimsData.claims.sub }
 }
 
-async function checkGuideAccess(guideId: string, userId: string) {
+export async function checkGuideAccess(guideId: string, userId: string) {
   const [foundGuide] = await db
     .select({ organizationId: guide.organizationId })
     .from(guide)
@@ -40,13 +83,13 @@ async function checkGuideAccess(guideId: string, userId: string) {
   }
 }
 
-async function requireGuideAccess(guideId: string) {
+export async function requireGuideAccess(guideId: string) {
   const user = await requireUser()
   await checkGuideAccess(guideId, user.id)
   return user
 }
 
-async function requireStopAccess(stopId: string) {
+export async function requireStopAccess(stopId: string) {
   const guideStopResult = await db
     .select({ guideId: guideStop.guideId })
     .from(guideStop)
@@ -70,7 +113,183 @@ async function requireStopAccess(stopId: string) {
   return requireGuideAccess(foundStop.guideId)
 }
 
-// Guide actions
+// ============================================================================
+// Query Server Functions (GET)
+// ============================================================================
+
+// --- queries.ts wrappers ---
+
+const getGuideByIdSchema = z.object({ guideId: z.string() })
+
+export const getGuideByIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideByIdSchema)
+  .handler(async ({ data }) => getGuideById(db, data.guideId))
+
+const getGuideByNanoIdSchema = z.object({ nanoId: z.string() })
+
+export const getGuideByNanoIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideByNanoIdSchema)
+  .handler(async ({ data }) => getGuideByNanoId(db, data.nanoId))
+
+const getGuideByNanoIdWithAssetsSchema = z.object({ nanoId: z.string() })
+
+export const getGuideByNanoIdWithAssetsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideByNanoIdWithAssetsSchema)
+  .handler(async ({ data }) => getGuideByNanoIdWithAssets(data.nanoId))
+
+export const getAllGuidesFn = createServerFn({ method: 'GET' }).handler(async () => getAllGuides(db))
+
+const getGuidesByUserIdSchema = z.object({ userId: z.string() })
+
+export const getGuidesByUserIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuidesByUserIdSchema)
+  .handler(async ({ data }) => getGuidesByUserId(db, data.userId))
+
+const getGuidesByOrganizationIdSchema = z.object({ organizationId: z.string() })
+
+export const getGuidesByOrganizationIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuidesByOrganizationIdSchema)
+  .handler(async ({ data }) => getGuidesByOrganizationId(db, data.organizationId))
+
+const getGuideByIdWithLocaleSchema = z.object({ guideId: z.string(), locale: z.string() })
+
+export const getGuideByIdWithLocaleFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideByIdWithLocaleSchema)
+  .handler(async ({ data }) => getGuideByIdWithLocale(db, data.guideId, data.locale))
+
+const getArchivedGuidesSchema = z.object({ userId: z.string() })
+
+export const getArchivedGuidesFn = createServerFn({ method: 'GET' })
+  .inputValidator(getArchivedGuidesSchema)
+  .handler(async ({ data }) => getArchivedGuides(db, data.userId))
+
+const getPublishedGuideByNanoIdSchema = z.object({ nanoId: z.string() })
+
+export const getPublishedGuideByNanoIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getPublishedGuideByNanoIdSchema)
+  .handler(async ({ data }) => getPublishedGuideByNanoId(db, data.nanoId))
+
+const getStopByNanoIdQueriesSchema = z.object({ stopNanoId: z.string() })
+
+export const getStopByNanoIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopByNanoIdQueriesSchema)
+  .handler(async ({ data }) => getStopByNanoId(data.stopNanoId))
+
+const getGuideIdByStopNanoIdSchema = z.object({ stopNanoId: z.string() })
+
+export const getGuideIdByStopNanoIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideIdByStopNanoIdSchema)
+  .handler(async ({ data }) => getGuideIdByStopNanoId(db, data.stopNanoId))
+
+const getGuidesForStopSchema = z.object({ stopId: z.string() })
+
+export const getGuidesForStopFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuidesForStopSchema)
+  .handler(async ({ data }) => getGuidesForStop(db, data.stopId))
+
+const getGuideStopsSchema = z.object({ guideId: z.string() })
+
+export const getGuideStopsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideStopsSchema)
+  .handler(async ({ data }) => getGuideStops(db, data.guideId))
+
+// --- translation-queries.ts wrappers ---
+
+const getCurrentGuideTranslationSchema = z.object({ guideId: z.string(), locale: z.string() })
+
+export const getCurrentGuideTranslationFn = createServerFn({ method: 'GET' })
+  .inputValidator(getCurrentGuideTranslationSchema)
+  .handler(async ({ data }) => getCurrentGuideTranslation(data.guideId, data.locale))
+
+const getDraftGuideTranslationSchema = z.object({ guideId: z.string(), locale: z.string() })
+
+export const getDraftGuideTranslationFn = createServerFn({ method: 'GET' })
+  .inputValidator(getDraftGuideTranslationSchema)
+  .handler(async ({ data }) => getDraftGuideTranslation(data.guideId, data.locale))
+
+const getGuideTranslationWithVersionsSchema = z.object({ guideId: z.string(), locale: z.string() })
+
+export const getGuideTranslationWithVersionsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideTranslationWithVersionsSchema)
+  .handler(async ({ data }) => getGuideTranslationWithVersions(data.guideId, data.locale))
+
+const getGuideTranslationsSchema = z.object({ guideId: z.string() })
+
+export const getGuideTranslationsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideTranslationsSchema)
+  .handler(async ({ data }) => getGuideTranslations(data.guideId))
+
+const getCurrentStopTranslationSchema = z.object({ stopId: z.string(), locale: z.string() })
+
+export const getCurrentStopTranslationFn = createServerFn({ method: 'GET' })
+  .inputValidator(getCurrentStopTranslationSchema)
+  .handler(async ({ data }) => getCurrentStopTranslation(data.stopId, data.locale))
+
+const getDraftStopTranslationSchema = z.object({ stopId: z.string(), locale: z.string() })
+
+export const getDraftStopTranslationFn = createServerFn({ method: 'GET' })
+  .inputValidator(getDraftStopTranslationSchema)
+  .handler(async ({ data }) => getDraftStopTranslation(data.stopId, data.locale))
+
+const getStopTranslationWithVersionsSchema = z.object({ stopId: z.string(), locale: z.string() })
+
+export const getStopTranslationWithVersionsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopTranslationWithVersionsSchema)
+  .handler(async ({ data }) => getStopTranslationWithVersions(data.stopId, data.locale))
+
+const getStopTranslationsSchema = z.object({ stopId: z.string() })
+
+export const getStopTranslationsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopTranslationsSchema)
+  .handler(async ({ data }) => getStopTranslations(data.stopId))
+
+const getGuideTranslationHistorySchema = z.object({
+  guideId: z.string(),
+  locale: z.string(),
+})
+
+export const getGuideTranslationHistoryFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideTranslationHistorySchema)
+  .handler(async ({ data }) => getGuideTranslationHistory(data.guideId, data.locale))
+
+const getStopTranslationHistorySchema = z.object({
+  stopId: z.string(),
+  locale: z.string(),
+})
+
+export const getStopTranslationHistoryFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopTranslationHistorySchema)
+  .handler(async ({ data }) => getStopTranslationHistory(data.stopId, data.locale))
+
+// --- stop-queries.ts wrappers ---
+
+const getStopsByOrganizationIdSchema = z.object({ organizationId: z.string() })
+
+export const getStopsByOrganizationIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopsByOrganizationIdSchema)
+  .handler(async ({ data }) => getStopsByOrganizationId(data.organizationId))
+
+const getStopByIdSchema = z.object({ stopId: z.string() })
+
+export const getStopByIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopByIdSchema)
+  .handler(async ({ data }) => getStopById(data.stopId))
+
+const getStopByNanoIdStopQueriesSchema = z.object({ nanoId: z.string() })
+
+export const getStopByNanoIdFromStopQueriesFn = createServerFn({ method: 'GET' })
+  .inputValidator(getStopByNanoIdStopQueriesSchema)
+  .handler(async ({ data }) => getStopByNanoIdFromStopQueries(data.nanoId))
+
+const getGuideStopsOrderedSchema = z.object({ guideId: z.string() })
+
+export const getGuideStopsOrderedFn = createServerFn({ method: 'GET' })
+  .inputValidator(getGuideStopsOrderedSchema)
+  .handler(async ({ data }) => getGuideStopsOrdered(data.guideId))
+
+// ============================================================================
+// Mutation Server Functions (POST) - from actions.ts
+// ============================================================================
 
 const updateGuideSchema = z.object({
   id: z.string(),
@@ -482,4 +701,56 @@ export const deleteGuideFn = createServerFn({ method: 'POST' })
       .returning()
 
     return deletedGuide
+  })
+
+// ============================================================================
+// Mutation Server Functions (POST) - from translation-actions.ts
+// ============================================================================
+
+const publishGuideTranslationDraftSchema = z.object({
+  guideId: z.string(),
+  locale: z.string(),
+})
+
+export const publishGuideTranslationDraftFn = createServerFn({ method: 'POST' })
+  .inputValidator(publishGuideTranslationDraftSchema)
+  .handler(async ({ data }) => {
+    return publishDraft(data.guideId, data.locale)
+  })
+
+const publishStopTranslationDraftSchema = z.object({
+  stopId: z.string(),
+  locale: z.string(),
+})
+
+export const publishStopTranslationDraftFn = createServerFn({ method: 'POST' })
+  .inputValidator(publishStopTranslationDraftSchema)
+  .handler(async ({ data }) => {
+    return publishStopDraft(data.stopId, data.locale)
+  })
+
+const rollbackGuideTranslationSchema = z.object({
+  guideId: z.string(),
+  locale: z.string(),
+  targetVersion: z.number(),
+  userId: z.string().optional(),
+})
+
+export const rollbackGuideTranslationFn = createServerFn({ method: 'POST' })
+  .inputValidator(rollbackGuideTranslationSchema)
+  .handler(async ({ data }) => {
+    return rollbackGuide(data.guideId, data.locale, data.targetVersion, data.userId)
+  })
+
+const rollbackStopTranslationSchema = z.object({
+  stopId: z.string(),
+  locale: z.string(),
+  targetVersion: z.number(),
+  userId: z.string().optional(),
+})
+
+export const rollbackStopTranslationFn = createServerFn({ method: 'POST' })
+  .inputValidator(rollbackStopTranslationSchema)
+  .handler(async ({ data }) => {
+    return rollbackStop(data.stopId, data.locale, data.targetVersion, data.userId)
   })

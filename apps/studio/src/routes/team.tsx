@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { createTeamFn } from '@valguide/core/features/orgs/actions'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { TeamPageSkeleton } from '@valguide/core/features/orgs/components/team-page-skeleton'
+import { createTeamFn } from '@valguide/core/features/orgs/server-functions'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Button } from '@valguide/ui/components/button'
 import { TeamMembersClient } from '@/features/team/components/team-members-client'

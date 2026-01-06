@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import { useRouter } from '@tanstack/react-router'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { useProfile } from '../'
-import { type ProfileFormData, updateProfileAction } from '../actions'
+import { type ProfileFormData, updateProfileFn } from '../actions'
 
 const profileSchema = z.object({
   username: z.string().min(3).optional().or(z.literal('')),
@@ -93,7 +93,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
   function onSubmit(formData: ProfileFormData) {
     startTransition(async () => {
-      const result = await updateProfileAction(formData)
+      const result = await updateProfileFn({ data: formData })
       if (result.error) {
         toast.error(result.error)
       } else {

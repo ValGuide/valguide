@@ -14,7 +14,80 @@ import {
   updateMemberRole,
 } from './mutations'
 import { canManageMembers, type OrgRole } from './permissions'
-import { getInvitationById, getInvitationByTokenHash, getTeamById, getUserRole, isTeamMember } from './queries'
+import {
+  getInvitationById,
+  getInvitationByTokenHash,
+  getPendingInvitations,
+  getTeamById,
+  getTeamBySlug,
+  getTeamMembers,
+  getUserRole,
+  getUserTeams,
+  isTeamMember,
+} from './queries'
+import { TEAM_COOKIE_NAME } from './sidebar-data'
+
+// ============================================================================
+// Query Server Functions (GET)
+// ============================================================================
+
+const getUserTeamsSchema = z.object({ userId: z.string() })
+
+export const getUserTeamsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getUserTeamsSchema)
+  .handler(async ({ data }) => getUserTeams(db, data.userId))
+
+const getTeamBySlugSchema = z.object({ slug: z.string() })
+
+export const getTeamBySlugFn = createServerFn({ method: 'GET' })
+  .inputValidator(getTeamBySlugSchema)
+  .handler(async ({ data }) => getTeamBySlug(db, data.slug))
+
+const getTeamByIdSchema = z.object({ id: z.string() })
+
+export const getTeamByIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getTeamByIdSchema)
+  .handler(async ({ data }) => getTeamById(db, data.id))
+
+const getTeamMembersSchema = z.object({ teamId: z.string() })
+
+export const getTeamMembersFn = createServerFn({ method: 'GET' })
+  .inputValidator(getTeamMembersSchema)
+  .handler(async ({ data }) => getTeamMembers(db, data.teamId))
+
+const getPendingInvitationsSchema = z.object({ teamId: z.string() })
+
+export const getPendingInvitationsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getPendingInvitationsSchema)
+  .handler(async ({ data }) => getPendingInvitations(db, data.teamId))
+
+const getInvitationByIdSchema = z.object({ id: z.string() })
+
+export const getInvitationByIdFn = createServerFn({ method: 'GET' })
+  .inputValidator(getInvitationByIdSchema)
+  .handler(async ({ data }) => getInvitationById(db, data.id))
+
+const getInvitationByTokenHashSchema = z.object({ tokenHash: z.string() })
+
+export const getInvitationByTokenHashFn = createServerFn({ method: 'GET' })
+  .inputValidator(getInvitationByTokenHashSchema)
+  .handler(async ({ data }) => getInvitationByTokenHash(db, data.tokenHash))
+
+const isTeamMemberSchema = z.object({ teamId: z.string(), userId: z.string() })
+
+export const isTeamMemberFn = createServerFn({ method: 'GET' })
+  .inputValidator(isTeamMemberSchema)
+  .handler(async ({ data }) => isTeamMember(db, data.teamId, data.userId))
+
+const getUserRoleSchema = z.object({ teamId: z.string(), userId: z.string() })
+
+export const getUserRoleFn = createServerFn({ method: 'GET' })
+  .inputValidator(getUserRoleSchema)
+  .handler(async ({ data }) => getUserRole(db, data.teamId, data.userId))
+
+// ============================================================================
+// Mutation Server Functions (POST) - from actions.ts
+// ============================================================================
 
 const createTeamSchema = z.object({
   name: z.string(),
@@ -263,4 +336,45 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
     })
 
     return { success: true, slug: invite.organization.slug }
+  })
+
+// ============================================================================
+// Context Server Functions (POST) - from context-actions.ts
+// ============================================================================
+
+const switchTeamSchema = z.object({
+  slug: z.string(),
+})
+
+export const switchTeamFn = createServerFn({ method: 'POST' })
+  .inputValidator(switchTeamSchema)
+  .handler(async ({ data }) => {
+    const supabase = await createClient()
+    const { data: claimsData } = await supabase.auth.getClaims()
+    const user = claimsData?.claims
+
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
+
+    const team = await getTeamBySlug(db, data.slug)
+    if (!team) {
+      throw new Error('Team not found')
+    }
+
+    const isMember = await isTeamMember(db, team.id, user.sub)
+    if (!isMember) {
+      throw new Error('Not a member of this team')
+    }
+
+    const cookieStore = await cookies()
+    cookieStore.set(TEAM_COOKIE_NAME, data.slug, {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365,
+    })
+
+    return { success: true }
   })

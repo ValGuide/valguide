@@ -1,4 +1,4 @@
-import { getUploadCredentials } from '@valguide/core/features/assets/actions/get-upload-credentials'
+import { getUploadCredentialsFn } from '@valguide/core/features/assets/server-functions'
 import * as tus from 'tus-js-client'
 
 export type TUSUploadOptions = {
@@ -19,7 +19,7 @@ export async function uploadFileWithTUS({
   metadata = {},
 }: TUSUploadOptions): Promise<{ path: string }> {
   // Get secure upload credentials from server action
-  const { accessToken, projectId } = await getUploadCredentials()
+  const { accessToken, projectId } = await getUploadCredentialsFn()
 
   return new Promise((resolve, reject) => {
     const upload = new tus.Upload(file, {

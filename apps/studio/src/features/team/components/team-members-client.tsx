@@ -1,16 +1,16 @@
-import {
-  cancelInviteFn,
-  inviteMemberFn,
-  removeMemberFn,
-  resendInviteFn,
-  updateMemberRoleFn,
-} from '@valguide/core/features/orgs/actions'
 import { InviteMemberDialog } from '@valguide/core/features/orgs/components/invite-member-dialog'
 import { MembersTable, type OrgRole, type TeamMember } from '@valguide/core/features/orgs/components/members-table'
 import {
   type PendingInvitation,
   PendingInvitesList,
 } from '@valguide/core/features/orgs/components/pending-invites-list'
+import {
+  cancelInviteFn,
+  inviteMemberFn,
+  removeMemberFn,
+  resendInviteFn,
+  updateMemberRoleFn,
+} from '@valguide/core/features/orgs/server-functions'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { toast } from 'sonner'
 

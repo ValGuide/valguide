@@ -1,13 +1,11 @@
-
-import { useSearch } from '@tanstack/react-router'
+import { useRouter, useSearch } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { useTranslations } from '@valguide/core/i18n/mock'
-import { useRouter } from '@tanstack/react-router'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
 import { createLogger } from '@valguide/logger'
 import type React from 'react'
 import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
-import { signInWithOtpFn, verifyOtpFn } from './actions'
+import { signInWithOtpFn, verifyOtpFn } from './server-functions'
 
 const log = createLogger('auth-provider')
 

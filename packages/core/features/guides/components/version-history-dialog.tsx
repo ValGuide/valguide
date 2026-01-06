@@ -1,4 +1,4 @@
-
+import { useTranslations } from '@valguide/core/i18n/mock'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,11 +20,10 @@ import {
 } from '@valguide/ui/components/dialog'
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import type { GuideTranslationVersion } from '../schema'
-import { getGuideTranslationHistory, rollbackGuideTranslation } from '../translation-actions'
+import { getGuideTranslationHistoryFn, rollbackGuideTranslationFn } from '../server-functions'
 import { TranslationStatusBadge } from './translation-status-badge'
 
 interface VersionHistoryDialogProps {
@@ -52,7 +51,7 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
   const loadVersions = useCallback(async () => {
     setIsLoading(true)
     try {
-      const history = await getGuideTranslationHistory(guideId, locale)
+      const history = await getGuideTranslationHistoryFn({ data: { guideId, locale } })
       setVersions(history)
     } catch (error) {
       console.error('Failed to load version history:', error)
@@ -79,7 +78,7 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
 
     setIsRollingBack(true)
     try {
-      const result = await rollbackGuideTranslation(guideId, locale, selectedVersion)
+      const result = await rollbackGuideTranslationFn({ data: { guideId, locale, targetVersion: selectedVersion } })
 
       if (result.success) {
         toast.success(t('rollbackSuccess'))

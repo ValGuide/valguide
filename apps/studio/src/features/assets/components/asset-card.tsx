@@ -1,6 +1,6 @@
 import { Image as UnpicImage } from '@unpic/react'
-import { deleteAsset } from '@valguide/core/features/assets/actions'
 import type { Asset } from '@valguide/core/features/assets/schema'
+import { deleteAssetFn } from '@valguide/core/features/assets/server-functions'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import {
@@ -45,7 +45,7 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
       if (mockDelete) {
         await new Promise((resolve) => setTimeout(resolve, 500))
       } else {
-        await deleteAsset(asset.id)
+        await deleteAssetFn({ data: { assetId: asset.id } })
       }
       toast.success(t('card.deleteSuccess'))
       onDelete?.(asset.id)
