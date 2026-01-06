@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "sideEffects": false,
+  "scripts": {
+    "clean:vite": "rm -rf node_modules/.vite"
+  },
   "devDependencies": {
     "@valguide/typescript-config": "workspace:*"
   }

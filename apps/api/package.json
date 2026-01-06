@@ -4,6 +4,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "clean:vite": "rm -rf node_modules/.vite",
     "dev": "pnpm env:run tsx watch src/index.ts",
     "env:copy-example": "shx -- cp -n .env.example .env",
     "env:remove": "shx -- rm -f .env",

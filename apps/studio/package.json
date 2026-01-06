@@ -14,6 +14,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .next .turbo",
+    "clean:vite": "rm -rf node_modules/.vite",
     "type-check": "tsc --noEmit",
     "test": "jest",
     "ngrok": "ngrok http 3000"

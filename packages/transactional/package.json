@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "email dev -p 3001",
     "export": "email export",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules",
+    "clean:vite": "rm -rf node_modules/.vite"
   },
   "dependencies": {
     "@react-email/components": "^0.0.32",

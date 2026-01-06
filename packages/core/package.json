@@ -17,7 +17,8 @@
     "db:up": "pnpm env:load drizzle-kit up",
     "db:studio": "pnpm env:load drizzle-kit studio",
     "test": "jest",
-    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .turbo"
+    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .turbo",
+    "clean:vite": "rm -rf node_modules/.vite"
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
