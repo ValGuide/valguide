@@ -2,7 +2,7 @@ import { deleteGuide, recoverGuide } from '@valguide/core/features/guides/action
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
-import { useRouter } from '@valguide/i18n/routing'
+import { useRouter } from '@tanstack/react-router'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,7 +53,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
       toast.success(t('recover.success'), {
         description: t('recover.successDescription'),
       })
-      router.refresh()
+      router.invalidate()
       onActionComplete?.()
     } catch (_error) {
       toast.error(t('recover.error'), {
@@ -74,7 +74,7 @@ export function ArchivedGuidesList({ guides, userId, onActionComplete }: Archive
       toast.success(t('delete.success'), {
         description: t('delete.successDescription'),
       })
-      router.refresh()
+      router.invalidate()
       onActionComplete?.()
     } catch (_error) {
       toast.error(t('delete.error'), {

@@ -39,8 +39,8 @@
           "level": "error",
           "options": {
             "paths": {
-              "next/link": "Please import from `@valguide/i18n/routing` instead.",
-              "next/navigation": "Please import `redirect`, `permanentRedirect`, `useRouter`, `usePathname` from `@valguide/i18n/routing` instead."
+              "next/link": "Please import Link from `@tanstack/react-router` instead.",
+              "next/navigation": "Please import from `@tanstack/react-router` instead. Use `useRouter`, `useLocation`, `Link` from TanStack Router."
             }
           }
         }

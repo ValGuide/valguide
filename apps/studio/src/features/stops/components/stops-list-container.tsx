@@ -1,4 +1,4 @@
-import { useRouter } from '@valguide/i18n/routing'
+import { useRouter } from '@tanstack/react-router'
 import type { StopWithGuides } from '../api/fetchers'
 import { useStops } from '../hooks/use-stops'
 import { StopsList } from './stops-list'
@@ -9,7 +9,7 @@ export function StopsListContainer() {
 
   const handleEditStop = (stop: StopWithGuides) => {
     if (stop.nanoId) {
-      router.push(`/stops/${stop.nanoId}/edit`)
+      router.navigate({ to: `/stops/${stop.nanoId}/edit` })
     }
   }
 

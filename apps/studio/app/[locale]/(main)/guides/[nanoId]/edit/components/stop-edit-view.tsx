@@ -1,6 +1,6 @@
 
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
-import { Link, useRouter } from '@valguide/i18n/routing'
+import { Link, useRouter } from '@tanstack/react-router'
 import {
   BreadcrumbEllipsis,
   BreadcrumbItem,
@@ -93,7 +93,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
   }, [formId, registerFormReset, unregisterForm])
 
   const handleBackToGuide = useCallback(() => {
-    router.push(buildUrl(`/guides/${guide.nanoId}/edit`))
+    router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/edit`) })
   }, [router, buildUrl, guide.nanoId])
 
   const handleStopChange = useCallback(
@@ -107,7 +107,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
     <>
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link href="/">{t('title')}</Link>
+          <Link to="/">{t('title')}</Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
@@ -120,7 +120,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem asChild>
-              <Link href={guideDetailUrl}>{guideTitle}</Link>
+              <Link to={guideDetailUrl}>{guideTitle}</Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleBackToGuide}>{t('breadcrumb.stops')}</DropdownMenuItem>
           </DropdownMenuContent>
@@ -130,7 +130,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
       {/* Expanded items on xl */}
       <BreadcrumbItem className="hidden xl:list-item">
         <BreadcrumbLink asChild className="block max-w-[180px] truncate">
-          <Link href={guideDetailUrl}>{guideTitle}</Link>
+          <Link to={guideDetailUrl}>{guideTitle}</Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator className="hidden xl:flex" />

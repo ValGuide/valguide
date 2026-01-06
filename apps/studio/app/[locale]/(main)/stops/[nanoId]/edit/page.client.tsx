@@ -6,7 +6,7 @@ import {
 } from '@valguide/core/features/guides/actions'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import { Link, useRouter } from '@valguide/i18n/routing'
+import { Link, useRouter } from '@tanstack/react-router'
 import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { useCallback, useRef, useState } from 'react'
@@ -45,7 +45,7 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
   const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
 
   const handleBack = useCallback(() => {
-    router.push('/stops')
+    router.navigate({ to: '/stops' })
   }, [router])
 
   const handleDirtyChange = useCallback((dirty: boolean) => {
@@ -87,7 +87,7 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
   )
 
   const refetch = useCallback(() => {
-    router.refresh()
+    router.invalidate()
   }, [router])
 
   const save = useCallback(async () => {
@@ -175,7 +175,7 @@ export function StandaloneStopEditorClient({ fallbackStop, initialLocale }: Stan
   const breadcrumbContent = (
     <BreadcrumbItem>
       <BreadcrumbLink asChild>
-        <Link href="/stops">{tStops('title')}</Link>
+        <Link to="/stops">{tStops('title')}</Link>
       </BreadcrumbLink>
     </BreadcrumbItem>
   )

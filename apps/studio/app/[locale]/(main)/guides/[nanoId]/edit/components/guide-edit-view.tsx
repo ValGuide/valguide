@@ -3,7 +3,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { useRouter } from '@valguide/i18n/routing'
+import { useRouter } from '@tanstack/react-router'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -110,16 +110,16 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
 
   const handleSelectStop = (stop: StopWithTranslations | null) => {
     if (stop) {
-      router.push(buildUrl(`/guides/${guide.nanoId}/stops/${stop.id}/edit`))
+      router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/stops/${stop.id}/edit`) })
     }
   }
 
   const handleNavigateToGuides = () => {
-    confirmIfDirty(() => router.push('/'))
+    confirmIfDirty(() => router.navigate({ to: '/' }))
   }
 
   const handleNavigateToGuideDetail = () => {
-    confirmIfDirty(() => router.push(guideDetailUrl))
+    confirmIfDirty(() => router.navigate({ to: guideDetailUrl }))
   }
 
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
@@ -301,7 +301,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                     onAdd={async () => {
                       const newStop = await addStop()
                       if (newStop) {
-                        router.push(buildUrl(`/guides/${guide.nanoId}/stops/${newStop.id}/edit`))
+                        router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/stops/${newStop.id}/edit`) })
                       }
                     }}
                   />

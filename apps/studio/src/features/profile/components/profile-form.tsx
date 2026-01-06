@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from '@valguide/core/i18n/mock'
-import { useRouter } from '@valguide/i18n/routing'
+import { useRouter } from '@tanstack/react-router'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
@@ -98,7 +98,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         toast.error(result.error)
       } else {
         toast.success(result.message)
-        router.refresh()
+        router.invalidate()
         await refetch()
         await mutate('/api/sidebar')
       }

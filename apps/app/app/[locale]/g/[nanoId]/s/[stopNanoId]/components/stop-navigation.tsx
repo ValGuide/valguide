@@ -1,6 +1,6 @@
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { Button } from '@valguide/core/ui/components/button'
-import { Link } from '@valguide/i18n/routing'
+import { Link } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight, List } from 'lucide-react'
 import { useTranslations } from '@valguide/core/i18n/mock'
 
@@ -21,7 +21,7 @@ export function StopNavigation({ guideNanoId, currentIndex, stops, locale }: Sto
       <div className="flex items-center justify-between gap-4">
         {prevStop ? (
           <Button asChild variant="outline">
-            <Link href={`/${locale}/g/${guideNanoId}/s/${prevStop.nanoId}`}>
+            <Link to={`/${locale}/g/${guideNanoId}/s/${prevStop.nanoId}`}>
               <ChevronLeft className="h-4 w-4 mr-2" />
               {t('previous')}
             </Link>
@@ -31,7 +31,7 @@ export function StopNavigation({ guideNanoId, currentIndex, stops, locale }: Sto
         )}
 
         <Button asChild variant="outline">
-          <Link href={`/${locale}/g/${guideNanoId}`}>
+          <Link to={`/${locale}/g/${guideNanoId}`}>
             <List className="h-4 w-4 mr-2" />
             {t('backToOverview')}
           </Link>
@@ -39,7 +39,7 @@ export function StopNavigation({ guideNanoId, currentIndex, stops, locale }: Sto
 
         {nextStop ? (
           <Button asChild variant="outline">
-            <Link href={`/${locale}/g/${guideNanoId}/s/${nextStop.nanoId}`}>
+            <Link to={`/${locale}/g/${guideNanoId}/s/${nextStop.nanoId}`}>
               {t('next')}
               <ChevronRight className="h-4 w-4 ml-2" />
             </Link>

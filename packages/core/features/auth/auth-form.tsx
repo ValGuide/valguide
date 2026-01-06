@@ -1,5 +1,5 @@
 
-import { Link } from '@valguide/i18n/routing'
+import { Link } from '@tanstack/react-router'
 import { Button } from '@valguide/ui/components/button'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 import { Input } from '@valguide/ui/components/input'
@@ -114,7 +114,7 @@ export function AuthForm({
           <div className="text-center">
             <p className="text-sm">
               {isLogin ? t('noAccount') : t('haveAccount')}{' '}
-              <Link href={isLogin ? '/signup' : '/login'} className="text-secondary-foreground hover:underline">
+              <Link to={isLogin ? '/signup' : '/login'} className="text-secondary-foreground hover:underline">
                 {isLogin ? t('signupLink') : t('loginLink')}
               </Link>
             </p>

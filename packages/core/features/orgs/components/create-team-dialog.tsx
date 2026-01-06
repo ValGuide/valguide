@@ -1,5 +1,5 @@
 
-import { useRouter } from '@valguide/i18n/routing'
+import { useRouter } from '@tanstack/react-router'
 import { Button } from '@valguide/ui/components/button'
 import {
   Dialog,

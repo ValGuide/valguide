@@ -3,7 +3,7 @@ import { Button } from '@valguide/core/ui/components/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 import { cn } from '@valguide/core/ui/lib/utils'
-import { Link } from '@valguide/i18n/routing'
+import { Link } from '@tanstack/react-router'
 import { ImageIcon, LucideInfo } from 'lucide-react'
 import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
@@ -108,7 +108,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
       <CardFooter className="flex flex-col items-stretch gap-3">
         <div className="flex items-center justify-between">
           <Button variant="outline" size="sm" asChild>
-            <Link href={guideUrl} prefetch={true}>
+            <Link to={guideUrl} preload="intent">
               {t('viewDetails')}
             </Link>
           </Button>

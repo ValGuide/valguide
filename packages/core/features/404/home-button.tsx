@@ -1,8 +1,8 @@
-import { Link } from '@valguide/i18n/routing'
+import { Link } from '@tanstack/react-router'
 import { Button } from '@valguide/ui/components/button'
 
 export const HomeButton = () => (
-  <Link href="/">
+  <Link to="/">
     <Button>
       <svg
         aria-hidden="true"

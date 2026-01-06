@@ -18,7 +18,7 @@ import { defaultLocale } from '@valguide/i18n/i18n.config'
 type ContentLocale = string
 
 import { useTranslations } from '@valguide/core/i18n/mock'
-import { usePathname, useRouter } from '@valguide/i18n/routing'
+import { useLocation, useRouter } from '@tanstack/react-router'
 // biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
 import { useSearchParams } from 'next/navigation'
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
@@ -101,7 +101,8 @@ export function GuideEditorProvider({
 }) {
   const t = useTranslations()
   const router = useRouter()
-  const pathname = usePathname()
+  const location = useLocation()
+  const pathname = location.pathname
   const searchParams = useSearchParams()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocaleState] = useState<ContentLocale>(() =>
@@ -155,7 +156,7 @@ export function GuideEditorProvider({
         params.set(LOCALE_PARAM, locale)
       }
       const query = params.toString()
-      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+      router.navigate({ to: query ? `${pathname}?${query}` : pathname, replace: true })
     },
     [pathname, router, searchParams],
   )

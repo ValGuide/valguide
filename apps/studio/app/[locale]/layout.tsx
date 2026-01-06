@@ -2,9 +2,8 @@ import '@valguide/ui/styles/globals.css'
 
 import { getTranslations } from '@valguide/core/i18n/mock-server'
 import type { PageParamsWithLocale } from '@valguide/core/utils/types'
-import { i18nStaticParams, type SupportedLocale } from '@valguide/i18n/i18n.config'
+import { i18nStaticParams, supportedLocales, type SupportedLocale } from '@valguide/i18n/i18n.config'
 import { getMessages } from '@valguide/i18n/messages'
-import { routing } from '@valguide/i18n/routing'
 import type { Metadata, Viewport } from 'next'
 import { Bricolage_Grotesque as BricolageGrotesque, Geist, Geist_Mono } from 'next/font/google'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
@@ -53,7 +52,7 @@ export default async function RootLayout({
   const locale = (await params).locale
 
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as SupportedLocale)) {
+  if (!supportedLocales.includes(locale as SupportedLocale)) {
     notFound()
   }
 

@@ -1,6 +1,6 @@
 
 import { archiveGuide } from '@valguide/core/features/guides/actions'
-import { useRouter } from '@valguide/i18n/routing'
+import { useRouter } from '@tanstack/react-router'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,8 +34,8 @@ export function ArchiveGuideButton({ guideId }: ArchiveGuideButtonProps) {
       toast.success(t('success'), {
         description: t('successDescription'),
       })
-      router.push('/')
-      router.refresh()
+      router.navigate({ to: '/' })
+      router.invalidate()
     } catch (_error) {
       toast.error(t('error'), {
         description: t('errorDescription'),

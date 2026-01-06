@@ -4,7 +4,7 @@ import { signOutFn } from '@valguide/core/features/auth/actions'
 import { createTeamAction } from '@valguide/core/features/orgs/actions'
 import { switchTeamAction } from '@valguide/core/features/orgs/context-actions'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
-import { usePathname, useRouter } from '@valguide/i18n/routing'
+import { useLocation, useRouter } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
@@ -14,7 +14,8 @@ import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
 
 export function AppSidebarContainer() {
-  const pathname = usePathname()
+  const location = useLocation()
+  const pathname = location.pathname
   const router = useRouter()
   const t = useTranslations('orgs.teamSwitcher')
 
@@ -23,7 +24,7 @@ export function AppSidebarContainer() {
 
   useEffect(() => {
     if (data?.wasAutoSelected) {
-      router.refresh()
+      router.invalidate()
     }
   }, [data?.wasAutoSelected, router])
 
@@ -32,7 +33,7 @@ export function AppSidebarContainer() {
       const currentPath = unlocalizedPathname(pathname)
       if (currentPath !== '/team') {
         const locale = pathname.split('/')[1]
-        router.push(`/${locale}/team`)
+        router.navigate({ to: `/${locale}/team` })
       }
     }
   }, [isLoading, data, pathname, router])
@@ -52,7 +53,7 @@ export function AppSidebarContainer() {
 
   const handleLogout = async () => {
     await signOut({ data: { scope: 'global' } })
-    router.refresh()
+    router.invalidate()
   }
 
   if (isLoading) {

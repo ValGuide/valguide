@@ -1,5 +1,5 @@
 
-import { Link } from '@valguide/i18n/routing'
+import { Link } from '@tanstack/react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import {
   DropdownMenu,
@@ -92,7 +92,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/profile" onClick={() => handleNavClick?.('/profile')}>
+                <Link to="/profile" onClick={() => handleNavClick?.('/profile')}>
                   <BadgeCheck />
                   {t('myProfile')}
                 </Link>

@@ -1,5 +1,5 @@
 
-import { Link } from '@valguide/i18n/routing'
+import { Link } from '@tanstack/react-router'
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -29,7 +29,7 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm" isActive={item.isActive}>
-                <Link href={item.url} onClick={() => onItemClickAction?.(item.url)}>
+                <Link to={item.url} onClick={() => onItemClickAction?.(item.url)}>
                   <item.icon />
                   <span>{item.title}</span>
                 </Link>

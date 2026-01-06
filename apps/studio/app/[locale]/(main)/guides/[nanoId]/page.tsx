@@ -2,7 +2,7 @@ import { db } from '@valguide/core/features/db'
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { getTranslations } from '@valguide/core/i18n/mock-server'
-import { Link } from '@valguide/i18n/routing'
+import { Link } from '@tanstack/react-router'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
@@ -44,7 +44,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
       <div className="border-b bg-background px-4 py-3 sm:px-6">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">
           <Link
-            href="/"
+            to="/"
             className="inline-flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
           >
             <ArrowLeft className="h-4 w-4 shrink-0" />
@@ -54,7 +54,7 @@ export default async function GuidePage({ params }: { params: Promise<GuidePageP
             <ViewInAppButton nanoId={nanoId} published={isPublished} />
             <ArchiveGuideButton guideId={guide.id} />
             <Button asChild>
-              <Link href={`/guides/${nanoId}/edit`}>
+              <Link to={`/guides/${nanoId}/edit`}>
                 <Pencil className="h-4 w-4" />
                 {t('editGuide')}
               </Link>

@@ -2,8 +2,8 @@
 import { useSearch } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { useTranslations } from '@valguide/core/i18n/mock'
+import { useRouter } from '@tanstack/react-router'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
-import { useRouter } from '@valguide/i18n/routing'
 import { createLogger } from '@valguide/logger'
 import type React from 'react'
 import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) =
         setMessage({ type: 'error', text: error.message })
       } else {
         // Successfully verified OTP, redirect to the next page
-        router.push(next)
+        router.navigate({ to: next })
       }
     } catch (error) {
       log.error('Error verifying OTP:', error)
