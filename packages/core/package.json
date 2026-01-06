@@ -101,6 +101,7 @@
     "@storybook/react": "^9.1.13",
     "@storybook/test": "^8.6.14",
     "@tailwindcss/postcss": "^4.1.16",
+    "@tailwindcss/vite": "^4.1.16",
     "@turbo/gen": "^2.4.0",
     "@types/jest": "^29.5.14",
     "@types/negotiator": "^0.6.3",
@@ -109,13 +110,16 @@
     "@types/react-dom": "19.2.3",
     "@types/ws": "^8.5.12",
     "@valguide/typescript-config": "workspace:*",
+    "@vitejs/plugin-react": "^5.0.4",
     "bufferutil": "^4.0.8",
     "bun-types": "latest",
     "drizzle-kit": "^0.31.1",
     "jest": "^29.7.0",
     "storybook": "^10.0.8",
     "tailwindcss": "^4.1.16",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vite": "^7.1.12",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "exports": {
     "./ui/globals.css": "./ui/styles/globals.css",

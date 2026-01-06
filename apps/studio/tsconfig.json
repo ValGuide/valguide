@@ -1,7 +1,7 @@
 {
-  "extends": "@valguide/typescript-config/nextjs.json",
+  "extends": "@valguide/typescript-config/start.json",
   "compilerOptions": {
-    "types": ["jest", "node"],
+    "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
@@ -14,12 +14,7 @@
       "@valguide/icons/*": ["../../packages/icons/dist/*"],
       "@valguide/logger/*": ["../../packages/logger/src/*"],
       "@valguide/logger": ["../../packages/logger"]
-    },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    }
   },
   "include": ["next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

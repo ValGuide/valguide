@@ -1,5 +1,5 @@
 import createNextIntlPlugin from 'next-intl/plugin'
-import { rewrites as posthotRewrites } from '@valguide/core/posthog/rewrites.js'
+import { rewrites as posthogRewrites } from '@valguide/core/posthog/rewrites.js'
 
 const withNextIntl = createNextIntlPlugin()
 
@@ -22,7 +22,7 @@ const nextConfig = {
 
   rewrites() {
     return {
-      beforeFiles: [...posthotRewrites],
+      beforeFiles: [...posthogRewrites],
     }
   },
 }
