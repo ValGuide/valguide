@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { Image } from '@unpic/react'
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
@@ -76,7 +77,7 @@ function GuidePage() {
             {/* Cover Image Section */}
             <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-muted/40">
               {coverImageUrl ? (
-                <img src={coverImageUrl} alt={title} className="h-full w-full object-cover" />
+                <Image src={coverImageUrl} alt={title} layout="fullWidth" className="h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-4 py-6">
                   <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">

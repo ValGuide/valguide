@@ -1,3 +1,4 @@
+import { Image as UnpicImage } from '@unpic/react'
 import { deleteAsset } from '@valguide/core/features/assets/actions'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
@@ -87,8 +88,12 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
             onClick={() => onPreview?.(asset)}
           >
             {asset.type === 'image' && asset.publicUrl ? (
-              // biome-ignore lint/performance/noImgElement: Using img for dynamic content
-              <img src={asset.publicUrl} alt={asset.fileName} className="h-full w-full object-cover" />
+              <UnpicImage
+                src={asset.publicUrl}
+                alt={asset.fileName}
+                layout="fullWidth"
+                className="h-full w-full object-cover"
+              />
             ) : (
               getIcon()
             )}

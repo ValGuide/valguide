@@ -1,3 +1,4 @@
+import { Image } from '@unpic/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Button } from '@valguide/ui/components/button'
@@ -16,8 +17,7 @@ export function MediaPickerPreview({ asset, onRemove, disabled = false }: MediaP
     switch (asset.type) {
       case 'image':
         return asset.publicUrl ? (
-          // biome-ignore lint/performance/noImgElement: Using img for dynamic content
-          <img src={asset.publicUrl} alt={asset.fileName} className="h-full w-full object-cover" />
+          <Image src={asset.publicUrl} alt={asset.fileName} layout="fullWidth" className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted">
             <span className="text-sm text-muted-foreground">{t('noPreview')}</span>

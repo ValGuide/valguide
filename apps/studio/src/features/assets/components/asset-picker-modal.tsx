@@ -1,3 +1,4 @@
+import { Image } from '@unpic/react'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/mock'
@@ -204,8 +205,12 @@ export function AssetPickerModal({
                         {/* Preview */}
                         <div className="flex h-40 items-center justify-center overflow-hidden rounded-t-lg bg-muted">
                           {asset.type === 'image' && asset.publicUrl ? (
-                            // biome-ignore lint/performance/noImgElement: Using img for dynamic content
-                            <img src={asset.publicUrl} alt={asset.fileName} className="h-full w-full object-cover" />
+                            <Image
+                              src={asset.publicUrl}
+                              alt={asset.fileName}
+                              layout="fullWidth"
+                              className="h-full w-full object-cover"
+                            />
                           ) : (
                             getTypeIcon()
                           )}
