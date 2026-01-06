@@ -2,9 +2,18 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
+import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 
 export const Route = createRootRoute({
+  notFoundComponent: () => (
+    <NotFoundPage
+      i18n={{
+        title: 'Page Not Found',
+        description: 'The page you are looking for does not exist.',
+      }}
+    />
+  ),
   head: () => ({
     meta: [
       {

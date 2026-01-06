@@ -2,7 +2,7 @@ import { db } from '@valguide/core/features/db'
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
-import { setRequestLocale } from '@valguide/core/i18n/mock-server'
+
 import { GuideEditorClient } from '../../../edit/page.client'
 
 interface GuideStopEditPageParams {
@@ -24,8 +24,7 @@ export default async function GuideStopEditPage({
   params: Promise<GuideStopEditPageParams>
   searchParams: Promise<GuideStopEditPageSearchParams>
 }) {
-  const [{ locale, nanoId, stopId }, { locale: editorLocale }] = await Promise.all([params, searchParams])
-  setRequestLocale(locale)
+  const [{ nanoId, stopId }, { locale: editorLocale }] = await Promise.all([params, searchParams])
 
   const guide = await getGuideByNanoIdWithAssets(db, nanoId)
 

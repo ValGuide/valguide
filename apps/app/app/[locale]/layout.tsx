@@ -1,5 +1,6 @@
 import '@valguide/ui/styles/globals.css'
 
+import { getTranslations } from '@valguide/core/i18n/mock-server'
 import type { PageParamsWithLocale } from '@valguide/core/utils/types'
 import { i18nStaticParams, type SupportedLocale } from '@valguide/i18n/i18n.config'
 import { getMessages } from '@valguide/i18n/messages'
@@ -8,7 +9,6 @@ import type { Metadata, Viewport } from 'next'
 import { Bricolage_Grotesque as BricolageGrotesque, Geist, Geist_Mono } from 'next/font/google'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
-import { getTranslations, setRequestLocale } from '@valguide/core/i18n/mock-server'
 import type { ReactNode } from 'react'
 import { Providers } from '@/components/providers'
 
@@ -56,8 +56,6 @@ export default async function RootLayout({
   if (!routing.locales.includes(locale as SupportedLocale)) {
     notFound()
   }
-
-  setRequestLocale(locale)
 
   // Load messages for the current locale
   const messages = await getMessages(locale as SupportedLocale)

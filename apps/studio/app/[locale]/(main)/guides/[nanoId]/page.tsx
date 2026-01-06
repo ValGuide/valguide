@@ -1,6 +1,7 @@
 import { db } from '@valguide/core/features/db'
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { getTranslations } from '@valguide/core/i18n/mock-server'
 import { Link } from '@valguide/i18n/routing'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
@@ -9,7 +10,6 @@ import { cn } from '@valguide/ui/lib/utils'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
-import { getTranslations, setRequestLocale } from '@valguide/core/i18n/mock-server'
 import { ArchiveGuideButton } from './archive-guide-button'
 import { ViewInAppButton } from './view-in-app-button'
 
@@ -22,7 +22,6 @@ export const dynamic = 'force-dynamic'
 
 export default async function GuidePage({ params }: { params: Promise<GuidePageParams> }) {
   const { locale, nanoId } = await params
-  setRequestLocale(locale)
 
   const t = await getTranslations('guides')
   const guide = await getGuideByNanoIdWithAssets(db, nanoId)

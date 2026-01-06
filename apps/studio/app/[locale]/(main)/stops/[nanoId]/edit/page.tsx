@@ -2,7 +2,7 @@ import { db } from '@valguide/core/features/db'
 import { getStopByNanoId } from '@valguide/core/features/guides/queries'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
-import { setRequestLocale } from '@valguide/core/i18n/mock-server'
+
 import { StandaloneStopEditorClient } from './page.client'
 
 interface StopEditPageParams {
@@ -23,8 +23,7 @@ export default async function StopEditPage({
   params: Promise<StopEditPageParams>
   searchParams: Promise<StopEditPageSearchParams>
 }) {
-  const [{ locale, nanoId }, { locale: editorLocale }] = await Promise.all([params, searchParams])
-  setRequestLocale(locale)
+  const [{ nanoId }, { locale: editorLocale }] = await Promise.all([params, searchParams])
 
   const stop = await getStopByNanoId(db, nanoId)
 

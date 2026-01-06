@@ -2,7 +2,7 @@ import { db } from '@valguide/core/features/db'
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 // biome-ignore lint/style/noRestrictedImports: notFound and redirect are only available from next/navigation
 import { notFound, redirect } from 'next/navigation'
-import { setRequestLocale } from '@valguide/core/i18n/mock-server'
+
 import { GuideEditorClient } from './page.client'
 
 interface GuideEditPageParams {
@@ -25,7 +25,6 @@ export default async function GuideEditPage({
   searchParams: Promise<GuideEditPageSearchParams>
 }) {
   const [{ locale, nanoId }, { stop: stopId, locale: editorLocale }] = await Promise.all([params, searchParams])
-  setRequestLocale(locale)
 
   // Redirect legacy query param to new route
   if (stopId) {

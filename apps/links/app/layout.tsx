@@ -1,6 +1,4 @@
 import { PostHogProvider } from '@valguide/core/posthog/PostHogProvider'
-import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { setRequestLocale } from '@valguide/core/i18n/mock-server'
 import type { ReactNode } from 'react'
 
 type Props = {
@@ -10,6 +8,5 @@ type Props = {
 // Since we have a `not-found-page.tsx` page on the root, a layout file
 // is required, even if it's just passing children through.
 export default function RootLayout({ children }: Props) {
-  setRequestLocale(defaultLocale)
   return <PostHogProvider>{children}</PostHogProvider>
 }
