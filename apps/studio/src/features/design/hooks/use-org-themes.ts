@@ -1,13 +1,24 @@
 import type { Theme } from '@valguide/core/features/themes/schema'
+import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
 import useSWR from 'swr'
-import {
-  type CreateThemeData,
-  createThemeApi,
-  deleteThemeApi,
-  fetchOrgThemes,
-  type UpdateThemeData,
-  updateThemeApi,
-} from '../api/fetchers'
+import { createThemeFn, deleteThemeFn, getThemesFn, updateThemeFn } from '../server-functions'
+
+export interface CreateThemeData {
+  organizationId: string
+  name: string
+  basePreset: ThemePreset
+  colors: ThemeColors
+  radius: number
+  fonts: ThemeFonts
+}
+
+export interface UpdateThemeData {
+  name?: string
+  basePreset?: ThemePreset
+  colors?: ThemeColors
+  radius?: number
+  fonts?: ThemeFonts
+}
 
 interface UseOrgThemesOptions {
   organizationId?: string
@@ -24,10 +35,15 @@ interface UseOrgThemesReturn {
   deleteTheme: (id: string) => Promise<void>
 }
 
+async function fetchOrgThemes(organizationId?: string): Promise<Theme[]> {
+  const data = await getThemesFn({ data: { organizationId } })
+  return data as Theme[]
+}
+
 export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesReturn {
   const { organizationId, enabled = true } = options
 
-  const key = enabled ? ['/api/themes', organizationId] : null
+  const key = enabled ? ['themes', organizationId] : null
 
   const { data, error, isLoading, mutate } = useSWR<Theme[]>(key, () => fetchOrgThemes(organizationId), {
     revalidateOnFocus: false,
@@ -41,26 +57,33 @@ export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesRet
       throw new Error('Organization ID is required to create a theme')
     }
 
-    const created = await createThemeApi({
-      ...themeData,
-      organizationId,
+    const created = await createThemeFn({
+      data: {
+        ...themeData,
+        organizationId,
+      },
     })
 
     await mutate()
 
-    return created
+    return created as Theme
   }
 
   const updateTheme = async (id: string, themeData: UpdateThemeData): Promise<Theme> => {
-    const updated = await updateThemeApi(id, themeData)
+    const updated = await updateThemeFn({
+      data: {
+        id,
+        ...themeData,
+      },
+    })
 
     await mutate()
 
-    return updated
+    return updated as Theme
   }
 
   const deleteTheme = async (id: string): Promise<void> => {
-    await deleteThemeApi(id)
+    await deleteThemeFn({ data: { id } })
 
     await mutate()
   }

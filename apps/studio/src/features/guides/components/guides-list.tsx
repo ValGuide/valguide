@@ -1,6 +1,6 @@
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
+import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { useTranslations } from '@valguide/core/i18n/mock'
-import type { Guide } from '@valguide/features/guides/types'
 import { Button } from '@valguide/ui/components/button'
 import {
   Empty,
@@ -16,15 +16,15 @@ import * as React from 'react'
 import { toast } from 'sonner'
 
 interface GuidesListProps {
-  guides?: Guide[]
+  guides?: GuideWithTranslations[]
   isLoading?: boolean
   error?: Error | null
   onCreateGuide?: (data: {
     translations: Array<{ locale: string; title: string; description?: string }>
     organizationId?: string
     coverImage?: string
-  }) => Promise<Guide>
-  onViewGuide?: (guide: Guide) => void
+  }) => Promise<GuideWithTranslations>
+  onViewGuide?: (guide: GuideWithTranslations) => void
   onRetry?: () => void
 }
 
@@ -41,7 +41,7 @@ export function GuidesList({
   const [isCreating, setIsCreating] = React.useState(false)
 
   const handleViewGuide = React.useCallback(
-    (guide: Guide) => {
+    (guide: GuideWithTranslations) => {
       onViewGuide?.(guide)
     },
     [onViewGuide],

@@ -1,6 +1,6 @@
 import type { Profile } from '@valguide/features/profiles/types'
 import useSWR from 'swr'
-import { fetchProfile } from '../api/fetchers'
+import { getProfileFn } from '../server-functions'
 
 interface UseProfileReturn {
   profile: Profile | null | undefined
@@ -9,8 +9,20 @@ interface UseProfileReturn {
   refetch: () => Promise<void>
 }
 
+async function fetchProfile(): Promise<Profile | null> {
+  try {
+    const profile = await getProfileFn()
+    return profile
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      throw new Error('You must be logged in to view profile')
+    }
+    throw error
+  }
+}
+
 export function useProfile(): UseProfileReturn {
-  const { data, error, isLoading, mutate } = useSWR<Profile | null>('/api/profile', fetchProfile, {
+  const { data, error, isLoading, mutate } = useSWR<Profile | null>('profile', fetchProfile, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     dedupingInterval: 2000,
@@ -24,7 +36,7 @@ export function useProfile(): UseProfileReturn {
   return {
     profile: data,
     isLoading,
-    error: error || null,
+    error: error ?? null,
     refetch,
   }
 }

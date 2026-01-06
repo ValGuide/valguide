@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import type { Guide } from '@valguide/features/guides/types'
+import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { GuidesList } from '@/features/guides/components/guides-list'
 
 const meta: Meta<typeof GuidesList> = {
@@ -24,41 +24,76 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 // Sample guides data
-const sampleGuides: Guide[] = [
+const sampleGuides: GuideWithTranslations[] = [
   {
     id: '1',
     nanoId: '1',
-    title: 'Ancient Egypt Exhibition',
-    description:
-      'Explore the wonders of Ancient Egypt with interactive audio guides, historical images, and expert narration.',
-    imageUrl: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop',
-    author: 'Dr. Sarah Johnson',
+    organizationId: 'org-1',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+    themeId: null,
+    archivedAt: null,
+    deletedAt: null,
+    published: null,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20'),
-    tags: ['history', 'ancient-egypt', 'archaeology'],
+    translations: [
+      {
+        id: 't1',
+        guideId: '1',
+        locale: 'en',
+        currentVersionId: 'v1',
+        draftVersionId: 'v1',
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-01-15'),
+        currentVersion: {
+          id: 'v1',
+          translationId: 't1',
+          title: 'Ancient Egypt Exhibition',
+          description: 'Explore the wonders of Ancient Egypt.',
+          status: 'published',
+          version: 1,
+          createdAt: new Date('2024-01-15'),
+          createdBy: 'user-1',
+          publishedAt: new Date('2024-01-15'),
+        },
+      },
+    ],
   },
   {
     id: '2',
     nanoId: '2',
-    title: 'Modern Art Gallery Tour',
-    description:
-      'A comprehensive multimedia guide through our modern art collection featuring artist interviews and detailed analysis.',
-    imageUrl: 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&h=600&fit=crop',
-    author: 'Michael Chen',
+    organizationId: 'org-1',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+    themeId: null,
+    archivedAt: null,
+    deletedAt: null,
+    published: null,
     createdAt: new Date('2024-02-01'),
     updatedAt: new Date('2024-02-10'),
-    tags: ['art', 'modern', 'gallery'],
-  },
-  {
-    id: '3',
-    nanoId: '3',
-    title: 'Natural History: Dinosaurs',
-    description:
-      'Journey back in time with interactive videos, 3D models, and audio narration about the age of dinosaurs.',
-    imageUrl: 'https://images.unsplash.com/photo-1581822261290-991b38693d1b?w=800&h=600&fit=crop',
-    author: 'Prof. Alex Rivera',
-    createdAt: new Date('2024-02-15'),
-    tags: ['science', 'natural-history', 'dinosaurs', 'paleontology'],
+    translations: [
+      {
+        id: 't2',
+        guideId: '2',
+        locale: 'en',
+        currentVersionId: 'v2',
+        draftVersionId: 'v2',
+        createdAt: new Date('2024-02-01'),
+        updatedAt: new Date('2024-02-01'),
+        currentVersion: {
+          id: 'v2',
+          translationId: 't2',
+          title: 'Modern Art Gallery Tour',
+          description: 'A comprehensive multimedia guide.',
+          status: 'published',
+          version: 1,
+          createdAt: new Date('2024-02-01'),
+          createdBy: 'user-1',
+          publishedAt: new Date('2024-02-01'),
+        },
+      },
+    ],
   },
 ]
 
@@ -110,7 +145,7 @@ export const WithCreateHandler: Story = {
     onCreateGuide: async () => {
       console.log('Create guide clicked!')
       alert('Create guide clicked!')
-      return {} as Guide
+      return {} as GuideWithTranslations
     },
   },
 }

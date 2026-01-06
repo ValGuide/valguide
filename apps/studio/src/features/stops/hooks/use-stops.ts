@@ -1,5 +1,6 @@
 import useSWR from 'swr'
-import { fetchStops, type StopWithGuides } from '../api/fetchers'
+import type { StopWithGuides } from '../api/fetchers'
+import { getStopsFn } from '../server-functions'
 
 interface UseStopsReturn {
   stops: StopWithGuides[]
@@ -8,8 +9,20 @@ interface UseStopsReturn {
   refetch: () => Promise<void>
 }
 
+async function fetchStops(): Promise<StopWithGuides[]> {
+  try {
+    const data = await getStopsFn({ data: {} })
+    return data as StopWithGuides[]
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      throw new Error('You must be logged in to view stops')
+    }
+    throw error
+  }
+}
+
 export function useStops(): UseStopsReturn {
-  const { data, error, isLoading, mutate } = useSWR<StopWithGuides[]>('/api/stops', fetchStops, {
+  const { data, error, isLoading, mutate } = useSWR<StopWithGuides[]>('stops', fetchStops, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     dedupingInterval: 2000,

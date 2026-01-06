@@ -4,7 +4,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
-import { Providers } from '~/components/providers'
+import { Providers } from '@/components/providers'
 
 export const Route = createRootRoute({
   notFoundComponent: () => (

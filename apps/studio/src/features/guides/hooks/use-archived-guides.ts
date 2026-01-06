@@ -1,5 +1,11 @@
+import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import useSWR from 'swr'
-import { type ArchivedGuidesResponse, fetchArchivedGuides } from '../api/fetchers'
+import { getArchivedGuidesFn } from '../server-functions'
+
+export interface ArchivedGuidesResponse {
+  guides: GuideWithTranslations[]
+  userId: string
+}
 
 interface UseArchivedGuidesReturn {
   data: ArchivedGuidesResponse | undefined
@@ -8,8 +14,13 @@ interface UseArchivedGuidesReturn {
   refetch: () => Promise<void>
 }
 
+async function fetchArchivedGuides(): Promise<ArchivedGuidesResponse> {
+  const data = await getArchivedGuidesFn()
+  return data
+}
+
 export function useArchivedGuides(): UseArchivedGuidesReturn {
-  const key = '/api/guides/archived'
+  const key = 'archived-guides'
   const { data, error, isLoading, mutate } = useSWR<ArchivedGuidesResponse>(key, fetchArchivedGuides, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
@@ -24,7 +35,7 @@ export function useArchivedGuides(): UseArchivedGuidesReturn {
   return {
     data,
     isLoading,
-    error: error || null,
+    error: error ?? null,
     refetch,
   }
 }

@@ -1,5 +1,6 @@
 import useSWR from 'swr'
-import { fetchTeamData, type TeamData } from '../api/fetchers'
+import type { TeamData } from '../api/fetchers'
+import { getTeamDataFn } from '../server-functions'
 
 interface UseTeamReturn {
   data: TeamData | null
@@ -9,8 +10,20 @@ interface UseTeamReturn {
   isNoTeam: boolean
 }
 
+async function fetchTeamData(): Promise<TeamData | null> {
+  try {
+    const data = await getTeamDataFn()
+    return data as TeamData | null
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      throw error
+    }
+    throw error
+  }
+}
+
 export function useTeam(): UseTeamReturn {
-  const { data, error, isLoading, mutate } = useSWR<TeamData | null>('/api/team', fetchTeamData, {
+  const { data, error, isLoading, mutate } = useSWR<TeamData | null>('team', fetchTeamData, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     dedupingInterval: 2000,
@@ -21,13 +34,12 @@ export function useTeam(): UseTeamReturn {
     await mutate()
   }
 
-  // If data is null (and not loading/error), it means the user is authenticated but has no active team
   const isNoTeam = data === null && !isLoading && !error
 
   return {
-    data: data || null,
+    data: data ?? null,
     isLoading,
-    error: error || null,
+    error: error ?? null,
     refetch,
     isNoTeam,
   }
