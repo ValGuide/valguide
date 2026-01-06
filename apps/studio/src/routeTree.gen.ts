@@ -9,27 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
-import { Route as AnalyticsRouteImport } from './routes/analytics'
-import { Route as ArchivedRouteImport } from './routes/archived'
-import { Route as AssetsRouteImport } from './routes/assets'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as DesignRouteImport } from './routes/design'
-import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as TeamRouteImport } from './routes/team'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as StopsRouteImport } from './routes/stops'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as JoinTeamRouteImport } from './routes/join-team'
 import { Route as GuidesRouteImport } from './routes/guides'
+import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as DesignRouteImport } from './routes/design'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as ArchivedRouteImport } from './routes/archived'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuidesNanoIdRouteImport } from './routes/guides.$nanoId'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as StopsNanoIdEditRouteImport } from './routes/stops.$nanoId.edit'
 import { Route as GuidesNanoIdEditRouteImport } from './routes/guides.$nanoId.edit'
 import { Route as GuidesNanoIdStopsStopIdEditRouteImport } from './routes/guides.$nanoId.stops.$stopId.edit'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as JoinTeamRouteImport } from './routes/join-team'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as StopsRouteImport } from './routes/stops'
-import { Route as StopsNanoIdEditRouteImport } from './routes/stops.$nanoId.edit'
-import { Route as SupportRouteImport } from './routes/support'
-import { Route as TeamRouteImport } from './routes/team'
 
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
@@ -130,11 +130,12 @@ const GuidesNanoIdEditRoute = GuidesNanoIdEditRouteImport.update({
   path: '/edit',
   getParentRoute: () => GuidesNanoIdRoute,
 } as any)
-const GuidesNanoIdStopsStopIdEditRoute = GuidesNanoIdStopsStopIdEditRouteImport.update({
-  id: '/stops/$stopId/edit',
-  path: '/stops/$stopId/edit',
-  getParentRoute: () => GuidesNanoIdRoute,
-} as any)
+const GuidesNanoIdStopsStopIdEditRoute =
+  GuidesNanoIdStopsStopIdEditRouteImport.update({
+    id: '/stops/$stopId/edit',
+    path: '/stops/$stopId/edit',
+    getParentRoute: () => GuidesNanoIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -466,7 +467,9 @@ const GuidesNanoIdRouteChildren: GuidesNanoIdRouteChildren = {
   GuidesNanoIdStopsStopIdEditRoute: GuidesNanoIdStopsStopIdEditRoute,
 }
 
-const GuidesNanoIdRouteWithChildren = GuidesNanoIdRoute._addFileChildren(GuidesNanoIdRouteChildren)
+const GuidesNanoIdRouteWithChildren = GuidesNanoIdRoute._addFileChildren(
+  GuidesNanoIdRouteChildren,
+)
 
 interface GuidesRouteChildren {
   GuidesNanoIdRoute: typeof GuidesNanoIdRouteWithChildren
@@ -476,7 +479,8 @@ const GuidesRouteChildren: GuidesRouteChildren = {
   GuidesNanoIdRoute: GuidesNanoIdRouteWithChildren,
 }
 
-const GuidesRouteWithChildren = GuidesRoute._addFileChildren(GuidesRouteChildren)
+const GuidesRouteWithChildren =
+  GuidesRoute._addFileChildren(GuidesRouteChildren)
 
 interface StopsRouteChildren {
   StopsNanoIdEditRoute: typeof StopsNanoIdEditRoute
@@ -505,11 +509,12 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   TeamRoute: TeamRoute,
 }
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
-import type { createStart } from '@tanstack/react-start'
 import type { getRouter } from './router.tsx'
-
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true

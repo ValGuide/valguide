@@ -1,4 +1,0 @@
-const tsrStartManifest = () => ({ "routes": { "__root__": { "filePath": "/workspace/valguide-turbo/apps/studio/src/routes/__root.tsx", "children": ["/", "/_auth"], "preloads": ["/assets/main-h3A6ciXn.js"], "assets": [] }, "/": { "filePath": "/workspace/valguide-turbo/apps/studio/src/routes/index.tsx", "assets": [], "preloads": ["/assets/index-BTfN4MP4.js"] }, "/_auth": { "filePath": "/workspace/valguide-turbo/apps/studio/src/routes/_auth.tsx", "children": ["/_auth/login"], "assets": [], "preloads": ["/assets/_auth-g5Yd2gUa.js", "/assets/utils-B3vrBTQv.js"] }, "/_auth/login": { "filePath": "/workspace/valguide-turbo/apps/studio/src/routes/_auth/login.tsx", "assets": [], "preloads": ["/assets/login-MIOesbsB.js"] } }, "clientEntry": "/assets/main-h3A6ciXn.js" });
-export {
-  tsrStartManifest
-};
