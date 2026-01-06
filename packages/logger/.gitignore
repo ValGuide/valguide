@@ -173,3 +173,11 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Additional ignores
+dist-ssr
+*.local
+count.txt
+.nitro
+.tanstack
+.output

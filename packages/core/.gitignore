@@ -167,3 +167,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.\*
+
+# Additional ignores
+.DS_Store
+dist-ssr
+*.local
+count.txt
+.nitro
+.tanstack
+.output

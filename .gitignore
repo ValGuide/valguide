@@ -50,3 +50,12 @@ key.txt
 *storybook.log
 
 .vercel
+
+# Additional ignores
+dist-ssr
+*.local
+count.txt
+.env
+.nitro
+.tanstack
+.output

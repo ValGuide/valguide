@@ -26,3 +26,10 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+dist
+dist-ssr
+*.local
+count.txt
+.nitro
+.tanstack
+.output
