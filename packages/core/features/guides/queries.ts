@@ -1,17 +1,16 @@
-import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
-import { valguideId } from '../../utils/nanoid'
-import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
-import { type DB, db } from '../db'
+import {and, asc, desc, eq, inArray, isNotNull, isNull} from 'drizzle-orm'
+import {valguideId} from '../../utils/nanoid'
+import {type Asset, asset, guideAsset, stopAsset} from '../assets/schema'
+import {type DB, db} from '../db'
 import {
-  type GuideWithGuideStops,
-  type GuideWithStops,
-  type GuideWithTranslations,
   guide,
   guideStop,
   guideTranslation,
   guideTranslationVersion,
-  type StopWithTranslations,
+  type GuideWithStops,
+  type GuideWithTranslations,
   stop,
+  type StopWithTranslations,
 } from './schema'
 
 // Extended types for app viewer
@@ -50,39 +49,6 @@ export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTr
   return result ?? null
 }
 
-/**
- * Get a guide by nanoId with all its translations and stops via junction table
- */
-export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWithGuideStops | null> {
-  const result = await db.query.guide.findFirst({
-    where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
-    with: {
-      translations: {
-        with: {
-          currentVersion: true,
-          draftVersion: true,
-        },
-      },
-      guideStops: {
-        orderBy: asc(guideStop.position),
-        with: {
-          stop: {
-            with: {
-              translations: {
-                with: {
-                  currentVersion: true,
-                  draftVersion: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  })
-
-  return result ?? null
-}
 
 /**
  * Get a guide by nanoId with all its assets for the studio editor
@@ -186,38 +152,10 @@ export async function getGuideByNanoIdWithAssets(nanoId: string): Promise<GuideW
 }
 
 /**
- * Get all guides with their translations
- */
-export async function getAllGuides(db: DB): Promise<GuideWithTranslations[]> {
-  const result = await db.query.guide.findMany({
-    where: and(isNull(guide.archivedAt), isNull(guide.deletedAt)),
-    with: {
-      translations: true,
-    },
-  })
-
-  return result
-}
-
-/**
- * Get all guides created by a specific user with their translations
- */
-export async function getGuidesByUserId(db: DB, userId: string): Promise<GuideWithTranslations[]> {
-  const result = await db.query.guide.findMany({
-    where: and(eq(guide.createdBy, userId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
-    with: {
-      translations: true,
-    },
-  })
-
-  return result
-}
-
-/**
  * Get all guides for a specific organization with their translations
  */
 export async function getGuidesByOrganizationId(db: DB, organizationId: string): Promise<GuideWithTranslations[]> {
-  const result = await db.query.guide.findMany({
+  return db.query.guide.findMany({
     where: and(eq(guide.organizationId, organizationId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: {
@@ -229,38 +167,8 @@ export async function getGuidesByOrganizationId(db: DB, organizationId: string):
     },
     orderBy: [desc(guide.createdAt)],
   })
-
-  return result
 }
 
-/**
- * Get a guide with only a specific locale translation (with current version)
- */
-export async function getGuideByIdWithLocale(
-  db: DB,
-  guideId: string,
-  locale: string,
-): Promise<(typeof guide.$inferSelect & { translation?: any }) | null> {
-  const result = await db.query.guide.findFirst({
-    where: and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
-    with: {
-      translations: {
-        where: eq(guideTranslation.locale, locale),
-        limit: 1,
-        with: {
-          currentVersion: true,
-        },
-      },
-    },
-  })
-
-  if (!result) return null
-
-  return {
-    ...result,
-    translation: result.translations[0],
-  }
-}
 
 /**
  * Create a new guide with translations
@@ -356,14 +264,10 @@ export async function getArchivedGuides(db: DB, userId: string): Promise<GuideWi
  * Creates a new translation if one doesn't exist
  */
 export async function updateGuideTranslation(
-  db: DB,
   guideId: string,
   locale: string,
   data: { title?: string; description?: string },
 ): Promise<typeof guideTranslation.$inferSelect> {
-  const _existing = await db.query.guideTranslation.findFirst({
-    where: and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)),
-  })
 
   // Use new versioning system - create/update draft
   const { upsertGuideTranslationDraft } = await import('./translation-mutations')
@@ -538,28 +442,6 @@ export async function getGuideIdByStopNanoId(db: DB, stopNanoId: string): Promis
   return result?.guideId ?? null
 }
 
-/**
- * Get all guides a stop belongs to
- */
-export async function getGuidesForStop(db: DB, stopId: string): Promise<GuideWithTranslations[]> {
-  const result = await db.query.guideStop.findMany({
-    where: eq(guideStop.stopId, stopId),
-    with: {
-      guide: {
-        with: {
-          translations: {
-            with: {
-              currentVersion: true,
-              draftVersion: true,
-            },
-          },
-        },
-      },
-    },
-  })
-
-  return result.map((gs) => gs.guide)
-}
 
 /**
  * Get stops for a guide ordered by position

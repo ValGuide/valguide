@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
 import { Image } from '@unpic/react'
 
-import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
+import { getGuideByNanoIdWithAssetsFn } from '@valguide/core/features/guides/server-functions'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Badge } from '@valguide/ui/components/badge'
@@ -10,23 +9,16 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { cn } from '@valguide/ui/lib/utils'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
-import { z } from 'zod'
 import { ArchiveGuideButton } from './guides.$nanoId/-components/archive-guide-button'
 import { ViewInAppButton } from './guides.$nanoId/-components/view-in-app-button'
 
-const getGuideData = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ nanoId: z.string() }))
-  .handler(async ({ data }) => {
-    const guide = await getGuideByNanoIdWithAssets(data.nanoId)
+export const Route = createFileRoute('/guides/$nanoId')({
+  loader: async ({ params }) => {
+    const guide = await getGuideByNanoIdWithAssetsFn({ data: { nanoId: params.nanoId } })
     if (!guide) {
       throw new Error('Guide not found')
     }
     return guide
-  })
-
-export const Route = createFileRoute('/guides/$nanoId')({
-  loader: async ({ params }) => {
-    return getGuideData({ data: { nanoId: params.nanoId } })
   },
   component: GuidePage,
 })

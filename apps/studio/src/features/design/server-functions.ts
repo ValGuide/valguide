@@ -1,18 +1,18 @@
-import { createServerFn } from '@tanstack/react-start'
-import { db } from '@valguide/core/features/db'
-import { getUserTeams } from '@valguide/core/features/orgs/queries'
+import {createServerFn} from '@tanstack/react-start'
+import {db} from '@valguide/core/features/db'
+import {getUserTeams} from '@valguide/core/features/orgs/queries'
 import {
-  type CreateThemeInput,
-  createTheme,
-  deleteTheme,
-  type UpdateThemeInput,
-  updateTheme,
+    createTheme,
+    type CreateThemeInput,
+    deleteTheme,
+    updateTheme,
+    type UpdateThemeInput,
 } from '@valguide/core/features/themes/mutations'
-import { getFullThemeById, getOrgThemes } from '@valguide/core/features/themes/queries'
-import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
-import { createClient } from '@valguide/supabase/server'
-import { z } from 'zod'
-import { getActiveTeamSlug } from '@/utils/cookies'
+import {getFullThemeById, getOrgThemes} from '@valguide/core/features/themes/queries'
+import type {ThemeColors, ThemeFonts, ThemePreset} from '@valguide/core/features/themes/types'
+import {createClient} from '@valguide/supabase/server'
+import {z} from 'zod'
+import {getActiveTeamSlug} from '@/utils/cookies'
 
 // Get themes for organization
 const getThemesInputSchema = z.object({
@@ -62,44 +62,7 @@ export const getThemesFn = createServerFn({ method: 'GET' })
       targetOrganizationId = userTeams[0].id
     }
 
-    const themes = await getOrgThemes(targetOrganizationId as string)
-
-    return themes
-  })
-
-// Get theme by ID
-const getThemeByIdInputSchema = z.object({
-  id: z.string(),
-})
-
-export const getThemeByIdFn = createServerFn({ method: 'GET' })
-  .inputValidator(getThemeByIdInputSchema)
-  .handler(async ({ data }) => {
-    const { id } = data
-
-    const supabase = await createClient()
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-    if (claimsError || !claimsData?.claims?.sub) {
-      throw new Error('Unauthorized')
-    }
-
-    const userId = claimsData.claims.sub
-
-    const theme = await getFullThemeById(id)
-
-    if (!theme) {
-      throw new Error('Theme not found')
-    }
-
-    const userTeams = await getUserTeams(db, userId)
-    const hasAccess = userTeams.some((t: { id: string }) => t.id === theme.organizationId)
-
-    if (!hasAccess) {
-      throw new Error('You do not have access to this theme')
-    }
-
-    return theme
+    return await getOrgThemes(targetOrganizationId as string)
   })
 
 // Create theme - uses any for colors/fonts since Zod can't validate complex types well
@@ -142,9 +105,7 @@ export const createThemeFn = createServerFn({ method: 'POST' })
       createdBy: userId,
     }
 
-    const theme = await createTheme(input)
-
-    return theme
+    return await createTheme(input)
   })
 
 // Update theme
@@ -192,9 +153,7 @@ export const updateThemeFn = createServerFn({ method: 'POST' })
     if (radius !== undefined) input.radius = radius
     if (fonts !== undefined) input.fonts = fonts as ThemeFonts
 
-    const updated = await updateTheme(input)
-
-    return updated
+    return await updateTheme(input)
   })
 
 // Delete theme

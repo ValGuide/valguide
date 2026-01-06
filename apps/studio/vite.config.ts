@@ -6,6 +6,7 @@ import viteReact from '@vitejs/plugin-react'
 import { nitro } from 'nitro/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import Inspect from "vite-plugin-inspect";
 
 export default defineConfig({
   server: {
@@ -30,5 +31,6 @@ export default defineConfig({
     nitro(),
     devtools(),
     viteReact(),
+    Inspect(),
   ],
 })

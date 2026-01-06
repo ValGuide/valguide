@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
-import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
+import { getGuideByNanoIdFn } from '@/features/guides/server-functions'
 import { useEffect, useState } from 'react'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
@@ -20,7 +20,7 @@ export const Route = createFileRoute('/guides/$nanoId/edit')({
     locale: search.locale as string | undefined,
   }),
   loader: async ({ params }) => {
-    const guide = await getGuideByNanoIdWithAssets(params.nanoId)
+    const guide = await getGuideByNanoIdFn({ data: { nanoId: params.nanoId } })
 
     if (!guide) {
       throw new Error('Guide not found')

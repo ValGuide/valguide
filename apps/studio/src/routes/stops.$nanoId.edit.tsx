@@ -1,22 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
 
-import { getStopByNanoId } from '@valguide/core/features/guides/queries'
-import { z } from 'zod'
+import { getStopByNanoIdFn } from '@valguide/core/features/guides/server-functions'
 
-const getStopData = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ nanoId: z.string() }))
-  .handler(async ({ data }) => {
-    const stop = await getStopByNanoId(data.nanoId)
+export const Route = createFileRoute('/stops/$nanoId/edit')({
+  loader: async ({ params }) => {
+    const stop = await getStopByNanoIdFn({ data: { stopNanoId: params.nanoId } })
     if (!stop) {
       throw new Error('Stop not found')
     }
     return stop
-  })
-
-export const Route = createFileRoute('/stops/$nanoId/edit')({
-  loader: async ({ params }) => {
-    return getStopData({ data: { nanoId: params.nanoId } })
   },
   component: StopEditPage,
 })
