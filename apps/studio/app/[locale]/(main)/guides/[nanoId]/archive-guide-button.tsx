@@ -14,7 +14,7 @@ import {
 } from '@valguide/ui/components/alert-dialog'
 import { Button } from '@valguide/ui/components/button'
 import { Archive } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 import { toast } from 'sonner'
 

@@ -3,7 +3,7 @@
 import { Label } from '@valguide/ui/components/label'
 import { ToggleGroup, ToggleGroupItem } from '@valguide/ui/components/toggle-group'
 import { cn } from '@valguide/ui/lib/utils'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { type RadiusOption, radiusOptions } from '../types'
 
 export interface RadiusSelectorProps {

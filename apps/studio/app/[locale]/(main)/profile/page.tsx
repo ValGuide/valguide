@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { ProfileForm } from '@/features/profile/components/profile-form'
 
 export default function ProfilePage() {

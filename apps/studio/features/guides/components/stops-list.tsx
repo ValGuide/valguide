@@ -31,7 +31,7 @@ import {
   EmptyTitle,
 } from '@valguide/ui/components/empty'
 import { GripVertical, Plus, Trash2 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { TranslationStatusInline } from './translation-status-inline'
 

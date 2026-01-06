@@ -3,7 +3,7 @@
 import type { AssetType } from '@valguide/core/features/assets/schema'
 import { cn } from '@valguide/ui/lib/utils'
 import { Image as ImageIcon, Music, Upload, Video } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useCallback, useRef, useState } from 'react'
 
 export type MediaPickerDropzoneProps = {

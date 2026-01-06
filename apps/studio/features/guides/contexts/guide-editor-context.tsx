@@ -22,7 +22,7 @@ type ContentLocale = string
 import { usePathname, useRouter } from '@valguide/i18n/routing'
 // biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
 import { useSearchParams } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
 
 const LOCALE_PARAM = 'locale'

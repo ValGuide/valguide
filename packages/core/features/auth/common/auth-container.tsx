@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { AuthForm } from '../auth-form'
 import { Consent } from '../consent'
 import { OtpVerificationForm } from '../otp/otp-verification-form'

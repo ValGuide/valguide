@@ -3,7 +3,7 @@
 import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { SignOutButton } from './sign-out-button'
 
 type JoinTeamCardProps = {

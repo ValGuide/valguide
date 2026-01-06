@@ -13,7 +13,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { RadioGroup, RadioGroupItem } from '@valguide/ui/components/radio-group'
 import { Loader2 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useEffect, useState } from 'react'
 
 export interface SaveThemeDialogProps {

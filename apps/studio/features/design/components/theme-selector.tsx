@@ -2,7 +2,7 @@
 
 import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { type ThemePreset, themeColorPresets, themePresets } from '../theme-presets'
 
 function formatThemeName(themeName: string): string {

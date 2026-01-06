@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { themes } from '@valguide/ui/theme/themes'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { FileDropzone } from './file-dropzone'
 
 const meta: Meta<typeof FileDropzone> = {

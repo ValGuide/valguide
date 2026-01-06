@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server'
+import { getTranslations } from '@valguide/core/i18n/mock-server'
 
 export default async function AssetsPage() {
   const t = await getTranslations('admin.assets')

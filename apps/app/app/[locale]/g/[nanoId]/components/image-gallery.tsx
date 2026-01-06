@@ -4,7 +4,7 @@ import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 
 type ImageGalleryProps = {

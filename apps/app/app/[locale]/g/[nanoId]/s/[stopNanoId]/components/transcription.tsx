@@ -2,7 +2,7 @@
 
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 
 type TranscriptionProps = {

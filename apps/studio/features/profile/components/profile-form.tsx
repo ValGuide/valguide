@@ -15,7 +15,7 @@ import {
 } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'
 import { Skeleton } from '@valguide/ui/components/skeleton'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'

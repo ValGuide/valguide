@@ -9,7 +9,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from '@valguide/core/i18n/mock-server'
 import { ArchiveGuideButton } from './archive-guide-button'
 import { ViewInAppButton } from './view-in-app-button'
 

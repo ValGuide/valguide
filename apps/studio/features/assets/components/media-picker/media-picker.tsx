@@ -9,7 +9,7 @@ import {
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
 import { uploadFileWithTUS } from '../../lib/tus-upload'

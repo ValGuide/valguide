@@ -4,7 +4,7 @@ import type { StopWithTranslations } from '@valguide/core/features/guides/schema
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { Circle } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useMemo } from 'react'
 import { getTranslationLocaleStatus, type TranslationLocaleStatus } from '../utils/translation-status'
 

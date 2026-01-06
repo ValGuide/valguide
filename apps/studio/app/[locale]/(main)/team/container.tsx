@@ -4,7 +4,7 @@ import { createTeamAction } from '@valguide/core/features/orgs/actions'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { TeamPageSkeleton } from '@valguide/core/features/orgs/components/team-page-skeleton'
 import { Button } from '@valguide/ui/components/button'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useTeam } from '../../../../features/team/hooks/use-team'
 import { TeamMembersClient } from './client'
 

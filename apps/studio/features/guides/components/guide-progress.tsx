@@ -6,7 +6,7 @@ import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { Progress } from '@valguide/ui/components/progress'
 import { Separator } from '@valguide/ui/components/separator'
 import { AlertCircle, CheckCircle2, Circle } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useMemo } from 'react'
 import {
   getGuideLocaleSummary,

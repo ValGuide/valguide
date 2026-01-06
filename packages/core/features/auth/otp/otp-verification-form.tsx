@@ -1,7 +1,7 @@
 import { Button } from '@valguide/ui/components/button'
 import { Field, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@valguide/ui/components/input-otp'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import type { ChangeEvent, FormEvent } from 'react'
 
 export interface OtpVerificationFormProps {

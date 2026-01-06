@@ -4,7 +4,7 @@ import type { Editor } from '@tiptap/react'
 import { Button } from '@valguide/core/ui/components/button'
 import { Separator } from '@valguide/core/ui/components/separator'
 import { Bold, Heading2, Italic, List, ListOrdered, Quote, Redo, Strikethrough, Undo } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 export interface EditorToolbarProps {
   editor: Editor | null

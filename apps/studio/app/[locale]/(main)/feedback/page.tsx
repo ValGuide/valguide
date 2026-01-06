@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 export default function FeedbackPage() {
   const t = useTranslations('sidebar')

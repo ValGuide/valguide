@@ -13,7 +13,7 @@ import {
 } from '@valguide/ui/components/empty'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { AlertCircle, BookOpen, Plus } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { toast } from 'sonner'
 

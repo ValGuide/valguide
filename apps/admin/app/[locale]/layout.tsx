@@ -8,7 +8,7 @@ import type { Metadata, Viewport } from 'next'
 import { Bricolage_Grotesque as BricolageGrotesque, Geist, Geist_Mono } from 'next/font/google'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from '@valguide/core/i18n/mock-server'
 import type { ReactNode } from 'react'
 import { Providers } from '@/components/providers'
 

@@ -4,7 +4,7 @@ import { Link } from '@valguide/i18n/routing'
 import { Button } from '@valguide/ui/components/button'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 import { Input } from '@valguide/ui/components/input'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { type FormEvent, useState } from 'react'
 
 export interface AuthFormProps {

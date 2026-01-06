@@ -6,7 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/u
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { cn } from '@valguide/ui/lib/utils'
 import { ChevronDown, Trash2 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 
 export interface SavedThemesListProps {

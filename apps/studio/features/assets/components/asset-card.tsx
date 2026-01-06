@@ -24,7 +24,7 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { formatDistanceToNow } from 'date-fns'
 import { Download, Eye, Image, MoreVertical, Music, Trash2, Video } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 import { toast } from 'sonner'
 

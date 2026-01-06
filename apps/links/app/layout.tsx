@@ -1,6 +1,6 @@
 import { PostHogProvider } from '@valguide/core/posthog/PostHogProvider'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { setRequestLocale } from 'next-intl/server'
+import { setRequestLocale } from '@valguide/core/i18n/mock-server'
 import type { ReactNode } from 'react'
 
 type Props = {

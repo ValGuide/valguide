@@ -21,7 +21,7 @@ import {
 } from '@valguide/ui/components/dialog'
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import type { StopTranslationVersion } from '../schema'

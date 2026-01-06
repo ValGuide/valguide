@@ -5,7 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valgu
 import { cn } from '@valguide/core/ui/lib/utils'
 import { Link } from '@valguide/i18n/routing'
 import { ImageIcon, LucideInfo } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { RichTextDisplay } from './rich-text-display'
 

@@ -3,7 +3,7 @@
 import { themeColorPresets } from '@valguide/core/features/themes/presets'
 import { type ThemePreset, themePresets } from '@valguide/core/features/themes/types'
 import { cn } from '@valguide/ui/lib/utils'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 export interface ThemePresetChipsProps {
   value: ThemePreset

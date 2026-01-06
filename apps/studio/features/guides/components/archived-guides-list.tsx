@@ -18,7 +18,7 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@valguide/ui/components/empty'
 import { Archive, RotateCcw, Trash2 } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 import { toast } from 'sonner'
 

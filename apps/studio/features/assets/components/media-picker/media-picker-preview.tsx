@@ -3,7 +3,7 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { Button } from '@valguide/ui/components/button'
 import { Music, Trash2, Video } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 export type MediaPickerPreviewProps = {
   asset: Asset

@@ -2,7 +2,7 @@ import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { Button } from '@valguide/core/ui/components/button'
 import { Link } from '@valguide/i18n/routing'
 import { ChevronLeft, ChevronRight, List } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 type StopNavigationProps = {
   guideNanoId: string

@@ -5,7 +5,7 @@ import type { Preview } from '@storybook/nextjs-vite'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 
 import { themes } from '@valguide/ui/theme/themes'
-import { NextIntlClientProvider } from 'next-intl'
+import { NextIntlClientProvider } from '@valguide/core/i18n/mock'
 import nextIntl from './next-intl'
 
 const locales: Record<SupportedLocale, string> = {

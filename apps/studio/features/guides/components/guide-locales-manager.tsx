@@ -22,7 +22,7 @@ import {
 } from '@valguide/ui/components/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { Check, Plus, X } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useState } from 'react'
 import { getLocaleDisplayName } from './locale-selector'
 

@@ -14,7 +14,7 @@ import {
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { PlusCircle } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { toast } from 'sonner'
 

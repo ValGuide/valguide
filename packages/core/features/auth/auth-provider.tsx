@@ -6,7 +6,7 @@ import { useRouter } from '@valguide/i18n/routing'
 import { createLogger } from '@valguide/logger'
 // biome-ignore lint/style/noRestrictedImports: useSearchParams is only available from next/navigation
 import { useSearchParams } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import type React from 'react'
 import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
 import { signInWithOtpFn, verifyOtpFn } from './actions'

@@ -3,7 +3,7 @@ import { getLocalizedStopText } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { Link } from '@valguide/i18n/routing'
 import Image from 'next/image'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 type GuideStopListProps = {
   stops: StopWithAssets[]

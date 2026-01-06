@@ -12,7 +12,7 @@ import {
 } from '@valguide/ui/components/empty'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { AlertCircle, MapPin } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
 import type { StopWithGuides } from '../api/fetchers'
 
 interface StopsListProps {

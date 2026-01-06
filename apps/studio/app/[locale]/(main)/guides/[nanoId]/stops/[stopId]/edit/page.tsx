@@ -2,7 +2,7 @@ import { db } from '@valguide/core/features/db'
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 // biome-ignore lint/style/noRestrictedImports: notFound is only available from next/navigation
 import { notFound } from 'next/navigation'
-import { setRequestLocale } from 'next-intl/server'
+import { setRequestLocale } from '@valguide/core/i18n/mock-server'
 import { GuideEditorClient } from '../../../edit/page.client'
 
 interface GuideStopEditPageParams {

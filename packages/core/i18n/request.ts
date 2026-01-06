@@ -1,6 +1,6 @@
 import type { SupportedLocale as AppSupportedLocale, SupportedLocale } from '@valguide/i18n/i18n.config'
 import { getMessages } from '@valguide/i18n/messages'
-import { getRequestConfig } from 'next-intl/server'
+import { getRequestConfig } from '@valguide/core/i18n/mock-server'
 import { routing } from './routing'
 
 export default getRequestConfig(async ({ requestLocale }) => {

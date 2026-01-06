@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { cn } from '@valguide/ui/lib/utils'
 import { Pipette } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useCallback, useEffect, useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
 import { hexToRgba, hslaToRgba, hslToRgb, rgbaToHex, rgbaToHsla, rgbToHex, rgbToHsl } from '../color-converter'

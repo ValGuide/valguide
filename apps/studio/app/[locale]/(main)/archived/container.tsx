@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
 import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
 import { ArchivedSkeleton } from './skeleton'

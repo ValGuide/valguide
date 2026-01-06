@@ -13,7 +13,7 @@ import {
   type PendingInvitation,
   PendingInvitesList,
 } from '@valguide/core/features/orgs/components/pending-invites-list'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { toast } from 'sonner'
 
 interface TeamMembersClientProps {

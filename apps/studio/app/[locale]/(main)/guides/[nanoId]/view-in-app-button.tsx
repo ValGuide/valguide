@@ -2,7 +2,7 @@
 
 import { Button } from '@valguide/ui/components/button'
 import { ExternalLink } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 interface ViewInAppButtonProps {
   nanoId: string

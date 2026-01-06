@@ -12,7 +12,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
 import { Check, ChevronDown, Circle } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useEffect, useState } from 'react'
 import type { LocaleStatusMap, TranslationLocaleStatus } from '../utils/translation-status'
 

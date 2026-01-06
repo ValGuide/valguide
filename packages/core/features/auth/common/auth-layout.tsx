@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { type ReactNode, useEffect, useState } from 'react'
 
 const QUOTE_KEYS = ['quote1', 'quote2', 'quote3', 'quote4', 'quote5', 'quote6']

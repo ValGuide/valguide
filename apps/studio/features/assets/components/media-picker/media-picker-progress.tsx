@@ -1,7 +1,7 @@
 'use client'
 
 import { Progress } from '@valguide/ui/components/progress'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 export type MediaPickerProgressProps = {
   progress: number

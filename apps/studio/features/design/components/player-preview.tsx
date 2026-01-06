@@ -8,7 +8,7 @@ import { Progress } from '@valguide/ui/components/progress'
 import { Switch } from '@valguide/ui/components/switch'
 import { cn } from '@valguide/ui/lib/utils'
 import { Heart, MapPin, Play, Share2, SkipBack, SkipForward, Volume2 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import type { CSSProperties } from 'react'
 
 export interface PlayerPreviewProps {

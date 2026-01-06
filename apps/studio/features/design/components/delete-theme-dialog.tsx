@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
 import { Loader2 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 
 export interface DeleteThemeDialogProps {
   open: boolean

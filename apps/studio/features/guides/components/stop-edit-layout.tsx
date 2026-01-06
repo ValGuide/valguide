@@ -15,7 +15,7 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { ArrowLeft, Globe } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { type ReactNode, useCallback, useRef } from 'react'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'

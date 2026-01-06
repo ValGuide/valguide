@@ -18,7 +18,7 @@ import {
   useSidebar,
 } from '@valguide/ui/components/sidebar'
 import { BarChart3, BookOpen, Image, LayoutGrid, MapPin, Settings2, SlidersHorizontal } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
 

@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { createClient } from '@valguide/core/supabase/server'
 import { updateProfile } from '@valguide/features/profiles/mutations'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations } from '@valguide/core/i18n/mock-server'
 import { z } from 'zod'
 
 const profileSchema = z.object({

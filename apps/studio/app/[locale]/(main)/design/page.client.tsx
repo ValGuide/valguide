@@ -1,7 +1,7 @@
 'use client'
 
 import { Skeleton } from '@valguide/ui/components/skeleton'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { ThemeCustomizerContainer } from '../../../../features/design/components/theme-customizer-container'
 
