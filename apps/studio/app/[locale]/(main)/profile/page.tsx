@@ -1,8 +1,10 @@
-import { getTranslations } from 'next-intl/server'
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { ProfileForm } from '@/features/profile/components/profile-form'
 
-export default async function ProfilePage() {
-  const t = await getTranslations('profile')
+export default function ProfilePage() {
+  const t = useTranslations('profile')
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">

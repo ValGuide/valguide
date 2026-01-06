@@ -1,3 +1,5 @@
+'use client'
+
 import { StopsListContainer } from '@/features/stops'
 
 export default function StopsPage() {

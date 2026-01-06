@@ -1,3 +1,5 @@
+'use client'
+
 import { GuidesListContainer } from '@/features/guides'
 
 export default function Page() {

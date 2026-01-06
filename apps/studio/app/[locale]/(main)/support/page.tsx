@@ -1,7 +1,9 @@
-import { getTranslations } from 'next-intl/server'
+'use client'
 
-export default async function SupportPage() {
-  const t = await getTranslations('sidebar')
+import { useTranslations } from 'next-intl'
+
+export default function SupportPage() {
+  const t = useTranslations('sidebar')
   return (
     <main className="min-h-svh flex flex-col flex-1 items-center justify-center px-8">
       <article className="max-w-2xl items-center flex flex-col gap-4 text-center">

@@ -1,3 +1,5 @@
+'use client'
+
 import { TeamPageContainer } from './container'
 
 export default function TeamPage() {

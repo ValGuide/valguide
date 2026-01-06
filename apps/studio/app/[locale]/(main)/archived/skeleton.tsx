@@ -1,3 +1,5 @@
+'use client'
+
 import { Card, CardContent, CardFooter, CardHeader } from '@valguide/ui/components/card'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 
