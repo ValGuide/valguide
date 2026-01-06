@@ -1,3 +1,4 @@
+import { Image } from '@unpic/react'
 import { cn } from '@valguide/ui/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type * as React from 'react'
@@ -33,8 +34,12 @@ const TrackInfo = ({
     <div className={cn(trackInfoVariants({ variant, className }))} ref={ref} {...props}>
       {albumArt && (
         <div className="h-10 w-10 overflow-hidden rounded-md">
-          {/* biome-ignore lint/performance/noImgElement: Using img for dynamic content */}
-          <img src={albumArt} alt={`${title} by ${artist}`} className="h-full w-full object-cover" />
+          <Image
+            src={albumArt}
+            alt={`${title} by ${artist}`}
+            layout="fullWidth"
+            className="h-full w-full object-cover"
+          />
         </div>
       )}
       <div className="flex flex-col">

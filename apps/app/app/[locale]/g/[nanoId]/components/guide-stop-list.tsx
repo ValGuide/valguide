@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { Image } from '@unpic/react'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { getLocalizedStopText } from '@valguide/core/features/guides/schema'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
@@ -32,9 +33,10 @@ export function GuideStopList({ stops, guideNanoId, locale }: GuideStopListProps
             >
               {thumbnail?.publicUrl && (
                 <div className="relative aspect-[16/9]">
-                  <img
+                  <Image
                     src={thumbnail.publicUrl}
                     alt={title}
+                    layout="fullWidth"
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
                 </div>

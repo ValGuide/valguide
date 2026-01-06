@@ -1,4 +1,4 @@
-
+import { Image } from '@unpic/react'
 import { cn } from '@valguide/core/ui/lib/utils'
 
 interface ExhibitImageProps {
@@ -10,7 +10,7 @@ interface ExhibitImageProps {
 export function ExhibitImage({ src, alt, className }: ExhibitImageProps) {
   return (
     <div className={cn('relative aspect-square overflow-hidden rounded-2xl shadow-lg', className)}>
-      <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
+      <Image src={src} alt={alt} layout="fullWidth" className="absolute inset-0 w-full h-full object-cover" />
     </div>
   )
 }

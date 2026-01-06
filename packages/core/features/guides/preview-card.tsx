@@ -1,11 +1,12 @@
+import { Link } from '@tanstack/react-router'
+import { Image } from '@unpic/react'
+import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
 import { Badge } from '@valguide/core/ui/components/badge'
 import { Button } from '@valguide/core/ui/components/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 import { cn } from '@valguide/core/ui/lib/utils'
-import { Link } from '@tanstack/react-router'
 import { ImageIcon, LucideInfo } from 'lucide-react'
-import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { RichTextDisplay } from './rich-text-display'
 
@@ -54,10 +55,10 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
     >
       <div className="relative h-48 w-full overflow-hidden">
         {displayImage ? (
-          // biome-ignore lint/performance/noImgElement: Using img for dynamic content
-          <img
+          <Image
             src={displayImage}
             alt={displayTitle}
+            layout="fullWidth"
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
           />
         ) : (

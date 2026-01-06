@@ -1,4 +1,4 @@
-
+import { Image } from '@unpic/react'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { type ReactNode, useEffect, useState } from 'react'
 
@@ -61,7 +61,12 @@ export function AuthLayout({
       {/* Right side - Image */}
       <div className="hidden lg:block lg:w-1/2 bg-gray-100">
         <div className="h-full w-full relative">
-          <img src={imageUrl} alt={imageAlt} className="absolute inset-0 w-full h-full object-cover" />
+          <Image
+            src={imageUrl}
+            alt={imageAlt}
+            layout="fullWidth"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
 
           {/* Quote Overlay */}
           {currentQuote && (

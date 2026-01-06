@@ -1,4 +1,4 @@
-
+import { Image } from '@unpic/react'
 import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Button } from '@valguide/core/ui/components/button'
@@ -22,9 +22,10 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
     <div className="space-y-4">
       <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted">
         {currentImage.publicUrl && (
-          <img
+          <Image
             src={currentImage.publicUrl}
             alt={currentImage.fileName}
+            layout="fullWidth"
             className="absolute inset-0 w-full h-full object-contain"
           />
         )}
@@ -67,9 +68,10 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
                 }`}
               >
                 {img.publicUrl && (
-                  <img
+                  <Image
                     src={img.publicUrl}
                     alt={img.fileName}
+                    layout="fullWidth"
                     className="absolute inset-0 w-full h-full object-cover rounded"
                   />
                 )}
