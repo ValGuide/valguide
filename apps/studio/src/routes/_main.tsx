@@ -1,14 +1,13 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { getCookies } from '@tanstack/react-start/server'
+import { getCookie } from '@tanstack/react-start/server'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
 import { ThemeSwitcher } from '../components/theme-switcher'
 
-const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(async () => {
-  const cookies = await getCookies()
-  const sidebarState = cookies.get('sidebar_state')
+const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
+  const sidebarState = getCookie('sidebar_state')
   return sidebarState !== 'false'
 })
 
