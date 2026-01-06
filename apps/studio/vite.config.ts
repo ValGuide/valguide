@@ -12,23 +12,23 @@ export default defineConfig({
     port: 3002,
   },
   plugins: [
-    // Enables Vite to resolve imports using path aliases - must be first
+    // Enables Vite to resolve imports using path aliases
     tsconfigPaths({
       projects: [
         './tsconfig.json',
         '../../packages/core/tsconfig.json'
       ],
     }),
-    nitro(),
-    devtools(),
     tailwindcss(),
+    // TanStack Start must come BEFORE nitro for proper server function code splitting
     tanstackStart({
-      srcDirectory: 'src', // This is the default
+      srcDirectory: 'src',
       router: {
-        // Specifies the directory TanStack Router uses for your routes.
-        routesDirectory: 'routes', // Defaults to "routes", relative to srcDirectory
+        routesDirectory: 'routes',
       },
     }),
+    nitro(),
+    devtools(),
     viteReact(),
   ],
 })

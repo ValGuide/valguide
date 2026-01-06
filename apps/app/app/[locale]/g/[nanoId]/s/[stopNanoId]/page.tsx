@@ -18,7 +18,7 @@ type Props = {
 
 export default async function StopPage({ params }: Props) {
   const { locale, nanoId, stopNanoId } = await params
-  const stop = await getStopByNanoId(db, stopNanoId)
+  const stop = await getStopByNanoId(stopNanoId)
 
   if (!stop) notFound()
 

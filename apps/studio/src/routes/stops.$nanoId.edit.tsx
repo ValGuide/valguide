@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { db } from '@valguide/core/features/db'
+
 import { getStopByNanoId } from '@valguide/core/features/guides/queries'
 import { z } from 'zod'
 
 const getStopData = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ nanoId: z.string() }))
   .handler(async ({ data }) => {
-    const stop = await getStopByNanoId(db, data.nanoId)
+    const stop = await getStopByNanoId(data.nanoId)
     if (!stop) {
       throw new Error('Stop not found')
     }

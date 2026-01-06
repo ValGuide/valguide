@@ -1,7 +1,7 @@
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
 import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
-import type { DB } from '../db'
+import { type DB, db } from '../db'
 import {
   type GuideWithGuideStops,
   type GuideWithStops,
@@ -88,7 +88,7 @@ export async function getGuideByNanoId(db: DB, nanoId: string): Promise<GuideWit
  * Get a guide by nanoId with all its assets for the studio editor
  * Includes translations, stops, and assets
  */
-export async function getGuideByNanoIdWithAssets(db: DB, nanoId: string): Promise<GuideWithStopsAndAssets | null> {
+export async function getGuideByNanoIdWithAssets(nanoId: string): Promise<GuideWithStopsAndAssets | null> {
   const result = await db.query.guide.findFirst({
     where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
@@ -479,7 +479,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
 /**
  * Get a stop by nanoId with all its assets for the app viewer
  */
-export async function getStopByNanoId(db: DB, stopNanoId: string): Promise<StopWithAssets | null> {
+export async function getStopByNanoId(stopNanoId: string): Promise<StopWithAssets | null> {
   const result = await db.query.stop.findFirst({
     where: eq(stop.nanoId, stopNanoId),
     with: {

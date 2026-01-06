@@ -29,7 +29,7 @@ export const getGuideByNanoIdFn = createServerFn({ method: 'GET' })
       throw new Error('Unauthorized')
     }
 
-    const guide = await getGuideByNanoIdWithAssets(db, nanoId)
+    const guide = await getGuideByNanoIdWithAssets(nanoId)
 
     if (!guide) {
       throw new Error('Not found')

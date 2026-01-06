@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { Image } from '@unpic/react'
-import { db } from '@valguide/core/features/db'
+
 import { getGuideByNanoIdWithAssets } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
 import { useTranslations } from '@valguide/core/i18n/mock'
@@ -17,7 +17,7 @@ import { ViewInAppButton } from './guides.$nanoId/-components/view-in-app-button
 const getGuideData = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ nanoId: z.string() }))
   .handler(async ({ data }) => {
-    const guide = await getGuideByNanoIdWithAssets(db, data.nanoId)
+    const guide = await getGuideByNanoIdWithAssets(data.nanoId)
     if (!guide) {
       throw new Error('Guide not found')
     }
