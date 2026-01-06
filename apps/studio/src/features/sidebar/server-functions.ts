@@ -4,7 +4,7 @@ import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { getProfile } from '@valguide/core/features/profiles/queries'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { createClient } from '@valguide/supabase/server'
-import { getActiveTeamSlug, setActiveTeamSlug } from '../../utils/cookies'
+import { getActiveTeamSlug, setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 
 export const getSidebarDataFn = createServerFn({ method: 'GET' }).handler(async () => {
   const supabase = await createClient()

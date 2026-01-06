@@ -4,7 +4,7 @@ import { getPendingInvitations, getTeamBySlug, getTeamMembers, getUserRole } fro
 import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { createClient } from '@valguide/supabase/server'
-import { getActiveTeamSlug } from '../../utils/cookies'
+import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 
 export const getTeamDataFn = createServerFn({ method: 'GET' }).handler(async () => {
   const supabase = await createClient()

@@ -22,7 +22,7 @@ import {
     getUserRole,
     isTeamMember,
 } from './queries'
-import {TEAM_COOKIE_NAME} from './sidebar-data'
+import {setActiveTeamSlug} from "@valguide/features/utils/cookies.ts";
 
 const createTeamSchema = z.object({
     name: z.string(),
@@ -302,14 +302,7 @@ export const switchTeamFn = createServerFn({method: 'POST'})
             throw new Error('Not a member of this team')
         }
 
-        const cookieStore = await cookies()
-        cookieStore.set(TEAM_COOKIE_NAME, data.slug, {
-            path: '/',
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 24 * 365,
-        })
+        setActiveTeamSlug(team.slug)
 
         return {success: true}
     })

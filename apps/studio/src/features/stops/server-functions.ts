@@ -4,7 +4,7 @@ import { getStopsByOrganizationId } from '@valguide/core/features/guides/stop-qu
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
-import { getActiveTeamSlug } from '../../utils/cookies'
+import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 
 const getStopsInputSchema = z.object({
   organizationId: z.string().optional(),

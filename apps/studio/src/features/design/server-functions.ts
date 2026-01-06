@@ -12,7 +12,7 @@ import {getFullThemeById, getOrgThemes} from '@valguide/core/features/themes/que
 import type {ThemeColors, ThemeFonts, ThemePreset} from '@valguide/core/features/themes/types'
 import {createClient} from '@valguide/supabase/server'
 import {z} from 'zod'
-import {getActiveTeamSlug} from '@/utils/cookies'
+import {getActiveTeamSlug} from '@valguide/features/utils/cookies.ts'
 
 // Get themes for organization
 const getThemesInputSchema = z.object({

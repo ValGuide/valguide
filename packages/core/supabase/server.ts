@@ -1,26 +1,24 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookieOptions } from '@valguide/supabase/cookies'
-import { cookies } from 'next/headers'
+import {createServerClient} from '@supabase/ssr'
+import {cookieOptions} from '@valguide/supabase/cookies'
+import {getCookies, setCookie} from '@tanstack/react-start/server'
+
 
 export async function createClient() {
-  const cookieStore = await cookies()
-  return createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_PUBLISHABLE_KEY!, {
-    cookies: {
-      getAll() {
-        return cookieStore.getAll()
-      },
-      setAll(cookiesToSet) {
-        try {
-          for (const { name, value, options } of cookiesToSet) {
-            cookieStore.set(name, value, options)
-          }
-        } catch {
-          // The `setAll` method was called from a Server Component.
-          // This can be ignored if you have middleware refreshing
-          // user sessions.
-        }
-      },
-    },
-    cookieOptions,
-  })
+    return createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_PUBLISHABLE_KEY!, {
+
+        cookies: {
+            getAll() {
+                return Object.entries(getCookies()).map(([name, value]) => ({
+                    name,
+                    value,
+                }))
+            },
+            setAll(cookies) {
+                cookies.forEach((cookie) => {
+                    setCookie(cookie.name, cookie.value)
+                })
+            },
+        },
+        cookieOptions,
+    })
 }

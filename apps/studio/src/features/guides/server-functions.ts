@@ -10,7 +10,7 @@ import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
-import { getActiveTeamSlug } from '../../utils/cookies'
+import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 
 // Get guide by nanoId
 const getGuideByNanoIdInputSchema = z.object({
