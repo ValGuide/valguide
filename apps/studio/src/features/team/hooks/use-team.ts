@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import type { TeamData } from '../api/fetchers'
 import { getTeamDataFn } from '../server-functions'
 
@@ -23,15 +23,22 @@ async function fetchTeamData(): Promise<TeamData | null> {
 }
 
 export function useTeam(): UseTeamReturn {
-  const { data, error, isLoading, mutate } = useSWR<TeamData | null>('team', fetchTeamData, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 2000,
-    keepPreviousData: true,
+  const {
+    data,
+    error,
+    isLoading,
+    refetch: queryRefetch,
+  } = useQuery<TeamData | null>({
+    queryKey: ['team'],
+    queryFn: fetchTeamData,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    staleTime: 2000,
+    placeholderData: keepPreviousData,
   })
 
   const refetch = async () => {
-    await mutate()
+    await queryRefetch()
   }
 
   const isNoTeam = data === null && !isLoading && !error

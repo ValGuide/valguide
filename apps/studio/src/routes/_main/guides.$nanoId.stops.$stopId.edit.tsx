@@ -45,7 +45,7 @@ type GuideEditorClientProps = {
 
 function GuideEditorClient({ fallbackGuide, initialSelectedStopId, initialLocale }: GuideEditorClientProps) {
   const [isMounted, setIsMounted] = useState(false)
-  const { guide, mutate } = useGuide(fallbackGuide.nanoId, { fallbackData: fallbackGuide })
+  const { guide, mutate } = useGuide(fallbackGuide.nanoId, { initialData: fallbackGuide })
   const { data: sidebarData } = useSidebarData()
 
   useEffect(() => {

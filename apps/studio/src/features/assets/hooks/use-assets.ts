@@ -1,5 +1,5 @@
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
-import useSWR from 'swr'
 import { getAssetsFn } from '../server-functions'
 
 type UseAssetsOptions = {
@@ -26,17 +26,21 @@ async function fetchAssets(options?: UseAssetsOptions): Promise<AssetsResponse> 
 
 export function useAssets(options?: UseAssetsOptions) {
   const enabled = options?.enabled ?? true
-  const key = enabled ? ['assets', options?.type, options?.locale, options?.organizationId] : null
+  const queryKey = ['assets', options?.type, options?.locale, options?.organizationId]
+  const queryClient = useQueryClient()
 
-  const { data, error, isLoading, mutate } = useSWR<AssetsResponse>(key, () => fetchAssets(options), {
-    keepPreviousData: true,
-    revalidateOnFocus: false,
+  const { data, error, isLoading } = useQuery<AssetsResponse>({
+    queryKey,
+    queryFn: () => fetchAssets(options),
+    enabled,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   })
 
   return {
     assets: data?.assets ?? [],
     error,
     isLoading,
-    refetch: mutate,
+    refetch: () => queryClient.invalidateQueries({ queryKey }),
   }
 }

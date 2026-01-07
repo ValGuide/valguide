@@ -1,6 +1,6 @@
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
-import useSWR from 'swr'
 import { createThemeFn, deleteThemeFn, getThemesFn, updateThemeFn } from '../server-functions'
 
 export interface CreateThemeData {
@@ -29,7 +29,7 @@ interface UseOrgThemesReturn {
   themes: Theme[]
   isLoading: boolean
   error: Error | null
-  mutate: () => Promise<Theme[] | undefined>
+  refetch: () => Promise<Theme[]>
   createTheme: (data: Omit<CreateThemeData, 'organizationId'>) => Promise<Theme>
   updateTheme: (id: string, data: UpdateThemeData) => Promise<Theme>
   deleteTheme: (id: string) => Promise<void>
@@ -42,15 +42,23 @@ async function fetchOrgThemes(organizationId?: string): Promise<Theme[]> {
 
 export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesReturn {
   const { organizationId, enabled = true } = options
+  const queryClient = useQueryClient()
 
-  const key = enabled ? ['themes', organizationId] : null
+  const queryKey = ['themes', organizationId]
 
-  const { data, error, isLoading, mutate } = useSWR<Theme[]>(key, () => fetchOrgThemes(organizationId), {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 2000,
-    keepPreviousData: true,
+  const { data, error, isLoading, refetch } = useQuery<Theme[], Error>({
+    queryKey,
+    queryFn: () => fetchOrgThemes(organizationId),
+    enabled,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    staleTime: 2000,
+    placeholderData: keepPreviousData,
   })
+
+  const invalidateThemes = async () => {
+    await queryClient.invalidateQueries({ queryKey })
+  }
 
   const createTheme = async (themeData: Omit<CreateThemeData, 'organizationId'>): Promise<Theme> => {
     if (!organizationId) {
@@ -64,7 +72,7 @@ export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesRet
       },
     })
 
-    await mutate()
+    await invalidateThemes()
 
     return created as Theme
   }
@@ -77,7 +85,7 @@ export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesRet
       },
     })
 
-    await mutate()
+    await invalidateThemes()
 
     return updated as Theme
   }
@@ -85,14 +93,17 @@ export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesRet
   const deleteTheme = async (id: string): Promise<void> => {
     await deleteThemeFn({ data: { id } })
 
-    await mutate()
+    await invalidateThemes()
   }
 
   return {
     themes: data ?? [],
     isLoading,
     error: error ?? null,
-    mutate,
+    refetch: async () => {
+      const result = await refetch()
+      return result.data ?? []
+    },
     createTheme,
     updateTheme,
     deleteTheme,

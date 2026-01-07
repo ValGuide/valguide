@@ -31,7 +31,10 @@ function parseLocale(locale: string | undefined, availableLocales: string[]): Co
 }
 
 import { toast } from 'sonner'
-import type { KeyedMutator } from 'swr'
+
+type MutateFn = (
+  data?: GuideWithStopsAndAssets | null | ((prev?: GuideWithStopsAndAssets | null) => GuideWithStopsAndAssets | null),
+) => Promise<GuideWithStopsAndAssets | null | undefined>
 
 interface GuideEditorContextValue {
   // State
@@ -95,7 +98,7 @@ export function GuideEditorProvider({
   children: ReactNode
   initialGuide: GuideWithStopsAndAssets
   initialLocale?: string
-  onMutate?: KeyedMutator<GuideWithStopsAndAssets | null>
+  onMutate?: MutateFn
 }) {
   const t = useTranslations()
   const router = useRouter()
@@ -349,10 +352,7 @@ export function GuideEditorProvider({
         stops: [...guide.stops, newStop],
       }
       setGuide(updatedGuide)
-
-      // Sync SWR cache so page.client.tsx sees the new stop
       onMutateRef.current?.(updatedGuide)
-
       toast.success(t('stops.actions.addSuccess'))
       return newStop
     } catch (error) {

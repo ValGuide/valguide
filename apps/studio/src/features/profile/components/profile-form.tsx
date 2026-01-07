@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Button } from '@valguide/ui/components/button'
@@ -35,12 +36,11 @@ interface ProfileFormProps {
   }
 }
 
-import { mutate } from 'swr'
-
 export function ProfileForm({ initialData }: ProfileFormProps) {
   const t = useTranslations('profile')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { profile, isLoading, refetch } = useProfile()
 
   const form = useForm<ProfileFormData>({
@@ -98,7 +98,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         toast.success(t('actions.updateSuccess'))
         router.invalidate()
         await refetch()
-        await mutate('/api/sidebar')
+        await queryClient.invalidateQueries({ queryKey: ['sidebar'] })
       } else {
         toast.error(t('actions.updateError'))
       }

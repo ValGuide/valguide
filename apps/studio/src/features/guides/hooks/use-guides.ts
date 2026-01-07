@@ -1,5 +1,5 @@
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import useSWR from 'swr'
 import { createGuideFn, getGuidesFn } from '../server-functions'
 
 interface CreateGuideData {
@@ -20,36 +20,23 @@ async function fetchGuides(): Promise<GuideWithTranslations[]> {
 }
 
 export function useGuides(teamSlug?: string): UseGuidesReturn {
-  const key = teamSlug ? ['guides', teamSlug] : 'guides'
-  const { data, error, isLoading, mutate } = useSWR<GuideWithTranslations[]>(key, () => fetchGuides(), {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 2000,
-    keepPreviousData: true,
+  const queryClient = useQueryClient()
+  const queryKey = teamSlug ? ['guides', teamSlug] : ['guides']
+
+  const { data, error, isLoading, refetch } = useQuery<GuideWithTranslations[]>({
+    queryKey,
+    queryFn: fetchGuides,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    staleTime: 2000,
+    placeholderData: keepPreviousData,
   })
 
   const createGuide = async (guideData: CreateGuideData): Promise<GuideWithTranslations> => {
     try {
-      const newGuide = await mutate(
-        async (current) => {
-          const createdGuide = await createGuideFn({
-            data: guideData,
-          })
-
-          return [createdGuide, ...(current ?? [])]
-        },
-        {
-          rollbackOnError: true,
-          populateCache: true,
-          revalidate: false,
-        },
-      )
-
-      if (!newGuide?.[0]) {
-        throw new Error('Failed to create guide')
-      }
-
-      return newGuide[0]
+      const createdGuide = await createGuideFn({ data: guideData })
+      await queryClient.invalidateQueries({ queryKey: ['guides'] })
+      return createdGuide
     } catch (err) {
       console.error('Error creating guide:', err)
       throw err
@@ -57,7 +44,7 @@ export function useGuides(teamSlug?: string): UseGuidesReturn {
   }
 
   const refetchGuides = async () => {
-    await mutate()
+    await refetch()
   }
 
   return {

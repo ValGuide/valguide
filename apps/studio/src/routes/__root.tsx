@@ -1,13 +1,15 @@
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
+import type { QueryClient } from '@tanstack/react-query'
+import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { getCurrentUserFn } from '@valguide/core/features/auth/server-functions'
-
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient
+}>()({
   beforeLoad: async () => {
     const user = await getCurrentUserFn()
     return { user }

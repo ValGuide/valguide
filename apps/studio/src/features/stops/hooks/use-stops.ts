@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import type { StopWithGuides } from '../api/fetchers'
 import { getStopsFn } from '../server-functions'
 
@@ -22,15 +22,22 @@ async function fetchStops(): Promise<StopWithGuides[]> {
 }
 
 export function useStops(): UseStopsReturn {
-  const { data, error, isLoading, mutate } = useSWR<StopWithGuides[]>('stops', fetchStops, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 2000,
-    keepPreviousData: true,
+  const {
+    data,
+    error,
+    isLoading,
+    refetch: queryRefetch,
+  } = useQuery<StopWithGuides[], Error>({
+    queryKey: ['stops'],
+    queryFn: fetchStops,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    staleTime: 2000,
+    placeholderData: keepPreviousData,
   })
 
   const refetch = async () => {
-    await mutate()
+    await queryRefetch()
   }
 
   return {

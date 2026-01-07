@@ -1,3 +1,23 @@
+jest.mock('../../env/server', () => ({
+  serverEnv: {
+    DATABASE_URL: 'postgresql://test:test@localhost:5432/test',
+    SUPABASE_URL: 'https://test.supabase.co',
+    SUPABASE_PUBLISHABLE_KEY: 'test-key',
+    DRIIZLE_LOG_ENABLED: false,
+  },
+}))
+
+jest.mock('../db', () => ({
+  db: {
+    insert: jest.fn().mockReturnThis(),
+    delete: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
+    values: jest.fn().mockReturnThis(),
+    returning: jest.fn().mockResolvedValue([{ id: 'test-id' }]),
+    where: jest.fn().mockResolvedValue([]),
+  },
+}))
+
 import { eq } from 'drizzle-orm'
 import { db } from '../db'
 import { guide } from './schema'

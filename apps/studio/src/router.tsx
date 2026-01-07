@@ -1,7 +1,8 @@
-import { createRouter } from '@tanstack/react-router'
-import type { AuthUser } from '@valguide/core/features/auth/server-functions'
-
 // Import the generated route tree
+import { QueryClient } from '@tanstack/react-query'
+import { createRouter } from '@tanstack/react-router'
+import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
+import type { AuthUser } from '@valguide/core/features/auth/server-functions'
 import { routeTree } from './routeTree.gen'
 
 declare module '@tanstack/react-router' {
@@ -12,10 +13,18 @@ declare module '@tanstack/react-router' {
 
 // Create a new router instance
 export const getRouter = () => {
+  const queryClient = new QueryClient()
+
   const router = createRouter({
     routeTree,
+    context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+  })
+
+  setupRouterSsrQueryIntegration({
+    router,
+    queryClient,
   })
 
   return router

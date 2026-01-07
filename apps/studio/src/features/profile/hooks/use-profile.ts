@@ -1,5 +1,5 @@
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Profile } from '@valguide/features/profiles/types'
-import useSWR from 'swr'
 import { getProfileFn } from '../server-functions'
 
 interface UseProfileReturn {
@@ -22,15 +22,18 @@ async function fetchProfile(): Promise<Profile | null> {
 }
 
 export function useProfile(): UseProfileReturn {
-  const { data, error, isLoading, mutate } = useSWR<Profile | null>('profile', fetchProfile, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 2000,
-    keepPreviousData: true,
+  const queryClient = useQueryClient()
+  const { data, error, isLoading } = useQuery<Profile | null>({
+    queryKey: ['profile'],
+    queryFn: fetchProfile,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    staleTime: 2000,
+    placeholderData: keepPreviousData,
   })
 
   const refetch = async () => {
-    await mutate()
+    await queryClient.invalidateQueries({ queryKey: ['profile'] })
   }
 
   return {
