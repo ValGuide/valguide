@@ -1,6 +1,7 @@
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import { createGuideFn, getGuidesFn } from '../server-functions'
+import { guidesQueryOptions } from '../query-options'
+import { createGuideFn } from '../server-functions'
 
 interface CreateGuideData {
   translations: Array<{ locale: string; title: string; description?: string }>
@@ -15,22 +16,10 @@ interface UseGuidesReturn {
   createGuide: (data: CreateGuideData) => Promise<GuideWithTranslations>
 }
 
-async function fetchGuides(): Promise<GuideWithTranslations[]> {
-  return await getGuidesFn({ data: {} })
-}
-
-export function useGuides(teamSlug?: string): UseGuidesReturn {
+export function useGuides(_teamSlug?: string): UseGuidesReturn {
   const queryClient = useQueryClient()
-  const queryKey = teamSlug ? ['guides', teamSlug] : ['guides']
 
-  const { data, error, isLoading, refetch } = useQuery<GuideWithTranslations[]>({
-    queryKey,
-    queryFn: fetchGuides,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: true,
-    staleTime: 2000,
-    placeholderData: keepPreviousData,
-  })
+  const { data, error, isLoading, refetch } = useQuery(guidesQueryOptions())
 
   const createGuide = async (guideData: CreateGuideData): Promise<GuideWithTranslations> => {
     try {

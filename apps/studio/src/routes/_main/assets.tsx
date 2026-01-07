@@ -2,9 +2,18 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { AssetsList } from '@/features/assets/components/assets-list'
 import { useAssets } from '@/features/assets/hooks/use-assets'
+import { assetsQueryOptions } from '@/features/assets/query-options'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
+import { sidebarQueryOptions } from '@/features/sidebar/query-options'
 
 export const Route = createFileRoute('/_main/assets')({
+  loader: async ({ context }) => {
+    const sidebarData = await context.queryClient.ensureQueryData(sidebarQueryOptions())
+    if (sidebarData?.currentTeam?.id) {
+      await context.queryClient.ensureQueryData(assetsQueryOptions({ organizationId: sidebarData.currentTeam.id }))
+    }
+    return { sidebarData }
+  },
   component: AssetsPage,
 })
 

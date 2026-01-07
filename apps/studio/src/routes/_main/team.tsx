@@ -6,9 +6,11 @@ import { useTranslations } from '@valguide/core/i18n/mock'
 import { Button } from '@valguide/ui/components/button'
 import { TeamMembersClient } from '@/features/team/components/team-members-client'
 import { useTeam } from '@/features/team/hooks/use-team'
+import { teamQueryOptions } from '@/features/team/query-options'
 
 export const Route = createFileRoute('/_main/team')({
   component: TeamPage,
+  loader: ({ context }) => context.queryClient.ensureQueryData(teamQueryOptions()),
 })
 
 function TeamPage() {

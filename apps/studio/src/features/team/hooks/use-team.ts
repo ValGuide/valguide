@@ -1,6 +1,6 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import type { TeamData } from '../api/fetchers'
-import { getTeamDataFn } from '../server-functions'
+import { teamQueryOptions } from '../query-options'
 
 interface UseTeamReturn {
   data: TeamData | null
@@ -10,32 +10,8 @@ interface UseTeamReturn {
   isNoTeam: boolean
 }
 
-async function fetchTeamData(): Promise<TeamData | null> {
-  try {
-    const data = await getTeamDataFn()
-    return data as TeamData | null
-  } catch (error) {
-    if (error instanceof Error && error.message === 'Unauthorized') {
-      throw error
-    }
-    throw error
-  }
-}
-
 export function useTeam(): UseTeamReturn {
-  const {
-    data,
-    error,
-    isLoading,
-    refetch: queryRefetch,
-  } = useQuery<TeamData | null>({
-    queryKey: ['team'],
-    queryFn: fetchTeamData,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: true,
-    staleTime: 2000,
-    placeholderData: keepPreviousData,
-  })
+  const { data, error, isLoading, refetch: queryRefetch } = useQuery(teamQueryOptions())
 
   const refetch = async () => {
     await queryRefetch()

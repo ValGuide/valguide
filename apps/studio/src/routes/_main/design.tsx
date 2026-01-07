@@ -2,9 +2,18 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { ThemeCustomizerContainer } from '@/features/design/components/theme-customizer-container'
+import { themesQueryOptions } from '@/features/design/query-options'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
+import { sidebarQueryOptions } from '@/features/sidebar/query-options'
 
 export const Route = createFileRoute('/_main/design')({
+  loader: async ({ context }) => {
+    const sidebarData = await context.queryClient.ensureQueryData(sidebarQueryOptions())
+    if (sidebarData?.currentTeam?.id) {
+      await context.queryClient.ensureQueryData(themesQueryOptions(sidebarData.currentTeam.id))
+    }
+    return { sidebarData }
+  },
   component: DesignPage,
 })
 

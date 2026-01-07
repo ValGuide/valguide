@@ -1,11 +1,5 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import { getArchivedGuidesFn } from '../server-functions'
-
-export interface ArchivedGuidesResponse {
-  guides: GuideWithTranslations[]
-  userId: string
-}
+import { useQuery } from '@tanstack/react-query'
+import { type ArchivedGuidesResponse, archivedGuidesQueryOptions } from '../query-options'
 
 interface UseArchivedGuidesReturn {
   data: ArchivedGuidesResponse | undefined
@@ -14,25 +8,8 @@ interface UseArchivedGuidesReturn {
   refetch: () => Promise<void>
 }
 
-async function fetchArchivedGuides(): Promise<ArchivedGuidesResponse> {
-  const data = await getArchivedGuidesFn()
-  return data
-}
-
 export function useArchivedGuides(): UseArchivedGuidesReturn {
-  const {
-    data,
-    error,
-    isLoading,
-    refetch: queryRefetch,
-  } = useQuery<ArchivedGuidesResponse>({
-    queryKey: ['archived-guides'],
-    queryFn: fetchArchivedGuides,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: true,
-    staleTime: 2000,
-    placeholderData: keepPreviousData,
-  })
+  const { data, error, isLoading, refetch: queryRefetch } = useQuery(archivedGuidesQueryOptions())
 
   const refetch = async () => {
     await queryRefetch()

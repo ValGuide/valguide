@@ -1,8 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { GuidesListContainer } from '@/features/guides'
+import { guidesQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides')({
+  loader: ({ context }) => context.queryClient.ensureQueryData(guidesQueryOptions()),
   component: GuidesPage,
 })
 

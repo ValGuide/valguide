@@ -1,31 +1,26 @@
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { clientEnv } from '@valguide/core/env/client'
 import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
-import { getGuideByNanoIdWithAssetsFn } from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { cn } from '@valguide/ui/lib/utils'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
+import { guideWithAssetsQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId')({
-  loader: async ({ params }) => {
-    const guide = await getGuideByNanoIdWithAssetsFn({ data: { nanoId: params.nanoId } })
-    if (!guide) {
-      throw new Error('Guide not found')
-    }
-    return guide
-  },
+  loader: ({ context, params }) => context.queryClient.ensureQueryData(guideWithAssetsQueryOptions(params.nanoId)),
   component: GuidePage,
 })
 
 function GuidePage() {
-  const guide = Route.useLoaderData()
   const { nanoId } = Route.useParams()
+  const { data: guide } = useQuery(guideWithAssetsQueryOptions(nanoId))
   const t = useTranslations('guides')
   const router = useRouter()
 
@@ -33,6 +28,8 @@ function GuidePage() {
     router.navigate({ to: '/' })
     router.invalidate()
   }
+
+  if (!guide) return null
 
   const translation = guide.translations.find((tr) => tr.locale === 'de') ?? guide.translations[0]
   const version = translation?.draftVersion ?? translation?.currentVersion

@@ -1,7 +1,8 @@
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
-import { createThemeFn, deleteThemeFn, getThemesFn, updateThemeFn } from '../server-functions'
+import { themesQueryKey, themesQueryOptions } from '../query-options'
+import { createThemeFn, deleteThemeFn, updateThemeFn } from '../server-functions'
 
 export interface CreateThemeData {
   organizationId: string
@@ -35,29 +36,17 @@ interface UseOrgThemesReturn {
   deleteTheme: (id: string) => Promise<void>
 }
 
-async function fetchOrgThemes(organizationId?: string): Promise<Theme[]> {
-  const data = await getThemesFn({ data: { organizationId } })
-  return data as Theme[]
-}
-
 export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesReturn {
   const { organizationId, enabled = true } = options
   const queryClient = useQueryClient()
 
-  const queryKey = ['themes', organizationId]
-
-  const { data, error, isLoading, refetch } = useQuery<Theme[], Error>({
-    queryKey,
-    queryFn: () => fetchOrgThemes(organizationId),
-    enabled,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: true,
-    staleTime: 2000,
-    placeholderData: keepPreviousData,
+  const { data, error, isLoading, refetch } = useQuery({
+    ...themesQueryOptions(organizationId),
+    enabled: enabled && !!organizationId,
   })
 
   const invalidateThemes = async () => {
-    await queryClient.invalidateQueries({ queryKey })
+    await queryClient.invalidateQueries({ queryKey: themesQueryKey(organizationId) })
   }
 
   const createTheme = async (themeData: Omit<CreateThemeData, 'organizationId'>): Promise<Theme> => {

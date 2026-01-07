@@ -1,9 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/mock'
 import { ProfileForm } from '@/features/profile/components/profile-form'
+import { profileQueryOptions } from '@/features/profile/query-options'
 
 export const Route = createFileRoute('/_main/profile')({
   component: ProfilePage,
+  loader: ({ context }) => context.queryClient.ensureQueryData(profileQueryOptions()),
 })
 
 function ProfilePage() {
