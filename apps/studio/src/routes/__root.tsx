@@ -20,8 +20,12 @@ export const Route = createRootRouteWithContext<{
       resolveLocaleFn(),
       getThemeFn(),
     ])
-    await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
-    return { user, locale, theme }
+    const messages = await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
+    const metadata = {
+      title: messages?.studio?.metadata?.title ?? 'Studio - ValGuide',
+      description: messages?.studio?.metadata?.description ?? 'Create and design your guides',
+    }
+    return { user, locale, theme, metadata }
   },
   notFoundComponent: () => (
     <NotFoundPage
@@ -31,7 +35,7 @@ export const Route = createRootRouteWithContext<{
       }}
     />
   ),
-  head: () => ({
+  head: ({ match }) => ({
     meta: [
       {
         charSet: 'utf-8',
@@ -41,7 +45,11 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: match.context.metadata.title,
+      },
+      {
+        name: 'description',
+        content: match.context.metadata.description,
       },
     ],
     links: [
