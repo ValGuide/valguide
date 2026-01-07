@@ -9,15 +9,19 @@ import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
 import { currentUserQueryOptions } from '@/features/auth/query-options'
+import { getThemeFn } from '@/features/theme/server-functions'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   beforeLoad: async ({ context }) => {
-    const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
-    const locale = await resolveLocaleFn()
+    const [user, locale, theme] = await Promise.all([
+      context.queryClient.ensureQueryData(currentUserQueryOptions()),
+      resolveLocaleFn(),
+      getThemeFn(),
+    ])
     await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
-    return { user, locale }
+    return { user, locale, theme }
   },
   notFoundComponent: () => (
     <NotFoundPage
@@ -50,21 +54,31 @@ export const Route = createRootRouteWithContext<{
         href: '/favicon.ico',
       },
     ],
+    scripts: [
+      {
+        // Inline script to prevent FOUC for system theme
+        // Runs before React hydrates to apply correct theme immediately
+        children: `(function(){var t=document.cookie.match(/valguide-studio-theme=([^;]+)/);if(t&&t[1]==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}})()`,
+      },
+    ],
   }),
 
   shellComponent: RootDocument,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const { locale } = Route.useRouteContext()
+  const { locale, theme } = Route.useRouteContext()
+  const resolvedTheme = theme === 'system' ? 'light' : theme
 
   return (
-    <html lang={locale}>
+    <html lang={locale} data-theme={resolvedTheme}>
       <head>
         <HeadContent />
       </head>
       <body>
-        <Providers locale={locale}>{children}</Providers>
+        <Providers locale={locale} initialTheme={theme}>
+          {children}
+        </Providers>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

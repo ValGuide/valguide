@@ -13,6 +13,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
 import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react'
 import { LocaleSwitcherDropdown } from './locale-switcher-dropdown'
+import { ThemeSwitcherDropdown } from './theme-switcher-dropdown'
 
 export function NavUser({
   user,
@@ -109,6 +110,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <LocaleSwitcherDropdown />
+              <ThemeSwitcherDropdown />
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
