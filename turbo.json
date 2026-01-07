@@ -18,6 +18,10 @@
       "cache": false,
       "persistent": true
     },
+    "preview": {
+      "cache": false,
+      "persistent": true
+    },
     "serve": {
       "outputs": []
     },
