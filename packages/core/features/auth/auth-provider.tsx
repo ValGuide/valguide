@@ -113,9 +113,8 @@ export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) =
         log.error('Error verifying OTP:', error)
         setMessage({ type: 'error', text: error.message })
       } else {
-        // Successfully verified OTP, invalidate router to re-fetch user context
-        await router.invalidate()
-        router.navigate({ to: next })
+        log.info('OTP verified successfully, clearing cache and navigating...')
+        window.location.replace(next)
       }
     } catch (error) {
       log.error('Error verifying OTP:', error)

@@ -8,5 +8,5 @@ export const cookieOptions = (): CookieOptionsWithName => ({
   sameSite: 'lax',
   secure: true,
   httpOnly: true,
-  maxAge: 60 * 60 * 24 * 7, // 1 week (notice: doesn't seem to work)
+  maxAge: 60 * 60 * 24 * 7, // 1 week
 })

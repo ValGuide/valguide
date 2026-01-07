@@ -64,9 +64,9 @@ export const Route = createRootRouteWithContext<{
     ],
     scripts: [
       {
-        // Inline script to prevent FOUC for system theme
-        // Runs before React hydrates to apply correct theme immediately
-        children: `(function(){var t=document.cookie.match(/valguide-studio-theme=([^;]+)/);if(t&&t[1]==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}})()`,
+        // Inline script to prevent FOUC by applying theme before React hydrates
+        // Handles all three theme modes: 'light', 'dark', and 'system'
+        children: `(function(){var m=document.cookie.match(/valguide-studio-theme=([^;]+)/),t=m?m[1]:'system',r;r=t==='system'?(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r)})()`,
       },
     ],
   }),
