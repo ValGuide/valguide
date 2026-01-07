@@ -4,6 +4,7 @@ import { getCookie } from '@tanstack/react-start/server'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
+import { sidebarQueryOptions } from '../features/sidebar/query-options'
 
 const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
   const sidebarState = getCookie('sidebar_state')
@@ -19,7 +20,14 @@ export const Route = createFileRoute('/_main')({
       })
     }
   },
-  loader: () => getSidebarStateFn(),
+  loader: async ({ context }) => {
+    // Prefetch sidebar data and state in parallel
+    const [sidebarState] = await Promise.all([
+      getSidebarStateFn(),
+      context.queryClient.ensureQueryData(sidebarQueryOptions()),
+    ])
+    return sidebarState
+  },
   component: MainLayout,
 })
 
