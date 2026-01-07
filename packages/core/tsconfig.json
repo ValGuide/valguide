@@ -14,6 +14,6 @@
       "@valguide/logger": ["../logger"]
     }
   },
-  "include": ["next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["env/env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

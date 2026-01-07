@@ -81,10 +81,10 @@ export const inviteMemberFn = createServerFn({ method: 'POST' })
       template: {
         name: 'team-invite',
         data: {
-          inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
+          inviteLink: `${process.env.VITE_STUDIO_URL}/join-team?token=${token}`,
           teamName: team.name,
           inviterName: user.email || 'A colleague',
-          logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
+          logoUrl: `${process.env.VITE_STUDIO_URL}/icon.png`,
         },
       },
     })
@@ -131,10 +131,10 @@ export const resendInviteFn = createServerFn({ method: 'POST' })
       template: {
         name: 'team-invite',
         data: {
-          inviteLink: `${process.env.NEXT_PUBLIC_STUDIO_URL}/join-team?token=${token}`,
+          inviteLink: `${process.env.VITE_STUDIO_URL}/join-team?token=${token}`,
           teamName: team.name,
           inviterName: user.email || 'A colleague',
-          logoUrl: `${process.env.NEXT_PUBLIC_STUDIO_URL}/icon.png`,
+          logoUrl: `${process.env.VITE_STUDIO_URL}/icon.png`,
         },
       },
     })

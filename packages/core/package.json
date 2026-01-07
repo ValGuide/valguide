@@ -133,6 +133,8 @@
     "./ui/components/*": "./ui/components/*.tsx",
     "./ui/hooks/*": "./ui/hooks/*.ts",
     "./features/qrcodes": "./features/qrcodes/index.ts",
-    "./posthog/rewrites.js": "./posthog/rewrites.js"
+    "./posthog/rewrites.js": "./posthog/rewrites.js",
+    "./env/server": "./env/server.ts",
+    "./env/client": "./env/client.ts"
   }
 }

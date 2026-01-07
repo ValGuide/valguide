@@ -7,7 +7,7 @@ import { Suspense, useEffect } from 'react'
 
 const log = createLogger('PostHog')
 
-const isPostHogEnabled = process.env.NEXT_PUBLIC_VG_POSTHOG_ENABLED === 'true'
+const isPostHogEnabled = process.env.VITE_VG_POSTHOG_ENABLED === 'true'
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -20,10 +20,10 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
 function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_VG_POSTHOG_KEY as string, {
+    posthog.init(process.env.VITE_VG_POSTHOG_KEY as string, {
       // we rewrite the host using Vercel's rewrites in next.config.mjs
       // so we send events from the browser to our own domain
-      api_host: `${window.location.origin}/ingest`, // process.env.NEXT_PUBLIC_VG_POSTHOG_HOST || 'https://eu.i.posthog.com',
+      api_host: `${window.location.origin}/ingest`, // process.env.VITE_VG_POSTHOG_HOST || 'https://eu.i.posthog.com',
       person_profiles: 'always', // or 'always' to create profiles for anonymous users as well
       capture_pageview: false, // Disable automatic pageview capture, as we capture manually
     })
