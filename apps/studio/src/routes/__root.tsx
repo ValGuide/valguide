@@ -3,16 +3,16 @@ import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { getCurrentUserFn } from '@valguide/core/features/auth/server-functions'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
+import { currentUserQueryOptions } from '@/features/auth/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  beforeLoad: async () => {
-    const user = await getCurrentUserFn()
+  beforeLoad: async ({ context }) => {
+    const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
     return { user }
   },
   notFoundComponent: () => (
