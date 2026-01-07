@@ -8,7 +8,7 @@ import { clientEnv } from '../env/client'
 
 const log = createLogger('PostHog')
 
-const isPostHogEnabled = clientEnv.VITE_VG_POSTHOG_ENABLED
+const isPostHogEnabled = clientEnv.VITE_POSTHOG_ENABLED
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -21,10 +21,10 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
 function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    posthog.init(clientEnv.VITE_VG_POSTHOG_KEY!, {
+    posthog.init(clientEnv.VITE_POSTHOG_KEY!, {
       // we rewrite the host using Vercel's rewrites in next.config.mjs
       // so we send events from the browser to our own domain
-      api_host: `${window.location.origin}/ingest`, // process.env.VITE_VG_POSTHOG_HOST || 'https://eu.i.posthog.com',
+      api_host: `${window.location.origin}/ingest`, // process.env.VITE_POSTHOG_HOST || 'https://eu.i.posthog.com',
       person_profiles: 'always', // or 'always' to create profiles for anonymous users as well
       capture_pageview: false, // Disable automatic pageview capture, as we capture manually
     })

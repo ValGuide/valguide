@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import postgres from 'postgres'
 
-const sql = postgres(process.env.VG_DATABASE_URL!)
+const sql = postgres(process.env.DATABASE_URL!)
 
 async function verify() {
   console.log('🔍 Verifying database schema...\n')

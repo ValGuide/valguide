@@ -53,7 +53,7 @@ export const supbaseProxyFn = (options?: {
 
     let supabaseResponse = localizedResponse(req, config, locale)
 
-    const supabase = createServerClient(serverEnv.VG_SUPABASE_URL, serverEnv.VG_SUPABASE_PUBLISHABLE_KEY, {
+    const supabase = createServerClient(serverEnv.SUPABASE_URL, serverEnv.SUPABASE_PUBLISHABLE_KEY, {
       cookies: {
         getAll() {
           return req.cookies.getAll()

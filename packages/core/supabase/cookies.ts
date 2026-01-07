@@ -3,7 +3,7 @@ import { serverEnv } from '../env/server'
 
 export const cookieOptions: CookieOptionsWithName = {
   name: 'sb-auth-token',
-  domain: serverEnv.VG_SUPABASE_COOKIE_DOMAIN,
+  domain: serverEnv.SUPABASE_COOKIE_DOMAIN,
   path: '/',
   sameSite: 'lax',
   secure: true,

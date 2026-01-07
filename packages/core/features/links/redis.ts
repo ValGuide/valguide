@@ -3,8 +3,8 @@ import { serverEnv } from '../../env/server'
 
 // Create Redis client using environment variables
 export const redis = new Redis({
-  url: serverEnv.VG_KV_REST_API_URL,
-  token: serverEnv.VG_KV_REST_API_TOKEN,
+  url: serverEnv.KV_REST_API_URL,
+  token: serverEnv.KV_REST_API_TOKEN,
 })
 
 // Cache TTL in seconds (default: 24 hours)

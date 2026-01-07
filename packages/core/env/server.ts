@@ -3,22 +3,22 @@ import { z } from 'zod'
 const isTest = process.env.NODE_ENV === 'test'
 
 const serverEnvSchema = z.object({
-  VG_DATABASE_URL: isTest ? z.string().optional().default('') : z.string().min(1, 'Database URL is required'),
-  VG_SUPABASE_URL: isTest
+  DATABASE_URL: isTest ? z.string().optional().default('') : z.string().min(1, 'Database URL is required'),
+  SUPABASE_URL: isTest
     ? z.string().optional().default('https://test.supabase.co')
     : z.string().url('Invalid Supabase URL'),
-  VG_SUPABASE_PUBLISHABLE_KEY: isTest
+  SUPABASE_PUBLISHABLE_KEY: isTest
     ? z.string().optional().default('test-key')
     : z.string().min(1, 'Supabase publishable key is required'),
-  VG_SUPABASE_COOKIE_DOMAIN: z.string().optional(),
-  VG_KV_REST_API_URL: z.string().optional(),
-  VG_KV_REST_API_TOKEN: z.string().optional(),
-  VG_DRIIZLE_LOG_ENABLED: z
+  SUPABASE_COOKIE_DOMAIN: z.string().optional(),
+  KV_REST_API_URL: z.string().optional(),
+  KV_REST_API_TOKEN: z.string().optional(),
+  DRIIZLE_LOG_ENABLED: z
     .string()
     .optional()
     .transform((v) => v === 'true'),
-  VG_RESEND_SENDING_API_KEY: z.string().optional(),
-  VG_EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
+  RESEND_SENDING_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
   VALBOT_SLACK_TOKEN: z.string().optional(),
   VERCEL_ENV: z.enum(['development', 'preview', 'production']).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),

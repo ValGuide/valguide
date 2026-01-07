@@ -55,7 +55,7 @@
     "storybook:serve": "pnpm --filter @valguide/storybook serve",
     "storybook:dev": "turbo run dev --filter ./apps/storybook",
     "icons:build": "turbo run build --filter ./packages/icons",
-    "supabase:link": "supabase link --project-ref $VG_SUPABASE_PROJECT_ID",
+    "supabase:link": "supabase link --project-ref $SUPABASE_PROJECT_ID",
     "supabase:link:dev": "pnpm env:load pnpm supabase:link",
     "supabase:link:prod": "pnpm env:load pnpm supabase link"
   },

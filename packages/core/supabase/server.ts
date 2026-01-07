@@ -4,7 +4,7 @@ import { serverEnv } from '../env/server'
 import { cookieOptions } from './cookies'
 
 export async function createClient() {
-  return createServerClient(serverEnv.VG_SUPABASE_URL, serverEnv.VG_SUPABASE_PUBLISHABLE_KEY, {
+  return createServerClient(serverEnv.SUPABASE_URL, serverEnv.SUPABASE_PUBLISHABLE_KEY, {
     cookies: {
       getAll() {
         return Object.entries(getCookies()).map(([name, value]) => ({

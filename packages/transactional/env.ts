@@ -3,8 +3,8 @@ import { z } from 'zod'
 const isTest = process.env.NODE_ENV === 'test'
 
 const envSchema = z.object({
-  VG_RESEND_SENDING_API_KEY: z.string().optional(),
-  VG_EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
+  RESEND_SENDING_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 })
 

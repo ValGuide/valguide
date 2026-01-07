@@ -10,6 +10,6 @@ export default defineConfig({
     },
   },
   dbCredentials: {
-    url: process.env.VG_DATABASE_URL!,
+    url: process.env.DATABASE_URL!,
   },
 })

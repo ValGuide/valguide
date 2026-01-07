@@ -1,12 +1,12 @@
 import { z } from 'zod'
 
 const clientEnvSchema = z.object({
-  VITE_VG_POSTHOG_ENABLED: z
+  VITE_POSTHOG_ENABLED: z
     .string()
     .optional()
     .transform((v) => v === 'true'),
-  VITE_VG_POSTHOG_KEY: z.string().optional(),
-  VITE_VG_POSTHOG_HOST: z.string().optional(),
+  VITE_POSTHOG_KEY: z.string().optional(),
+  VITE_POSTHOG_HOST: z.string().optional(),
   VITE_STUDIO_URL: z.string().optional(),
   VITE_APP_DOMAIN: z.string().optional(),
 })

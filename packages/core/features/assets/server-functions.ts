@@ -28,7 +28,7 @@ export const getUploadCredentialsFn = createServerFn({ method: 'GET' }).handler(
       throw new Error('No active session')
     }
 
-    const supabaseUrl = serverEnv.VG_SUPABASE_URL
+    const supabaseUrl = serverEnv.SUPABASE_URL
     const projectId = new URL(supabaseUrl).hostname.split('.')[0]
 
     if (!projectId) {
