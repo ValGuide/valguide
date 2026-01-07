@@ -4,7 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vite dev --port 3002 --host studio.local.dev",
+    "dev": "vite dev --port 3002",
+    "dev:local": "vite dev --port 3002 --host studio.local.dev",
+    "dev:https": "pnpm dev:local & sleep 2 && caddy reverse-proxy --from https://studio.local.dev --to localhost:3002 --internal-certs",
     "build": "vite build",
     "preview": "vite preview --port 3002",
     "start": "PORT=3002 node .output/server/index.mjs",

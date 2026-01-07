@@ -32,6 +32,7 @@
     "app:build": "pnpm env:load turbo run build --filter ./apps/app --",
     "app:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/app --",
     "studio:dev": "pnpm env:load turbo run dev --filter ./apps/studio",
+    "studio:dev:https": "pnpm env:load turbo run dev:https --filter ./apps/studio",
     "studio:start": "pnpm env:load turbo run start --filter ./apps/studio",
     "studio:start:https": "pnpm env:load pnpm --filter @valguide/studio start:https",
     "studio:build": "pnpm env:load turbo run build --filter ./apps/studio",
