@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getCookie } from '@tanstack/react-start/server'
 import { Separator } from '@valguide/ui/components/separator'
@@ -11,6 +11,14 @@ const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
 })
 
 export const Route = createFileRoute('/_main')({
+  beforeLoad: ({ context, location }) => {
+    if (!context.user) {
+      throw redirect({
+        to: '/login',
+        search: { next: location.href },
+      })
+    }
+  },
   loader: () => getSidebarStateFn(),
   component: MainLayout,
 })

@@ -1,8 +1,8 @@
-
+import { Link, useLocation, useRouter } from '@tanstack/react-router'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
-import { Link, useLocation, useRouter } from '@tanstack/react-router'
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +17,6 @@ import {
   useSidebar,
 } from '@valguide/ui/components/sidebar'
 import { BarChart3, BookOpen, Image, LayoutGrid, MapPin, Settings2, SlidersHorizontal } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
 
@@ -91,7 +90,7 @@ export function AppSidebar({
   const contentItems = [
     {
       title: t('guides'),
-      url: '/',
+      url: '/guides',
       icon: BookOpen,
     },
     {

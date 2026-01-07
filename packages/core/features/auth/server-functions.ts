@@ -6,6 +6,25 @@ import { createClient } from '@valguide/supabase/server'
 import { waitUntil } from '@vercel/functions'
 import { z } from 'zod'
 
+export type AuthUser = {
+  id: string
+  email: string | undefined
+}
+
+export const getCurrentUserFn = createServerFn({ method: 'GET' }).handler(async (): Promise<AuthUser | null> => {
+  const supabase = await createClient()
+  const { data, error } = await supabase.auth.getUser()
+
+  if (error || !data.user) {
+    return null
+  }
+
+  return {
+    id: data.user.id,
+    email: data.user.email,
+  }
+})
+
 type SerializableError = {
   code: string | undefined
   status: number | undefined
