@@ -11,6 +11,7 @@ import Inspect from "vite-plugin-inspect";
 export default defineConfig({
   server: {
     port: 3002,
+    allowedHosts: ['studio.local.dev'],
   },
   plugins: [
     // Enables Vite to resolve imports using path aliases
