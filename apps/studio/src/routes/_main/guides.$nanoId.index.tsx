@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { clientEnv } from '@valguide/core/env/client'
@@ -23,10 +23,11 @@ function GuidePage() {
   const { data: guide } = useQuery(guideWithAssetsQueryOptions(nanoId))
   const t = useTranslations('guides')
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const handleArchived = () => {
+    queryClient.invalidateQueries({ queryKey: ['guides'] })
     router.navigate({ to: '/' })
-    router.invalidate()
   }
 
   if (!guide) return null
