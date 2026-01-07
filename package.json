@@ -35,7 +35,6 @@
     "studio:start": "pnpm env:load turbo run start --filter ./apps/studio -- --port 3002 --hostname localhost",
     "studio:start:https": "pnpm studio:start & sleep 2 && caddy reverse-proxy --from https://studio.local.dev --to localhost:3002 --internal-certs",
     "studio:build": "pnpm env:load turbo run build --filter ./apps/studio --",
-    "studio:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/studio --",
     "www:dev": "pnpm env:load turbo run dev --filter ./apps/www -- --port 3003 --hostname www.local.dev --experimental-https",
     "www:start": "pnpm env:load turbo run start --filter ./apps/www -- --port 3003 --hostname localhost",
     "www:start:https": "pnpm www:start & sleep 2 && caddy reverse-proxy --from https://www.local.dev --to localhost:3003 --internal-certs",
