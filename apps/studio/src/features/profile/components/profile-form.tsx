@@ -94,13 +94,13 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   function onSubmit(formData: ProfileFormData) {
     startTransition(async () => {
       const result = await updateProfileFn({ data: formData })
-      if (result.error) {
-        toast.error(result.error)
-      } else {
-        toast.success(result.message)
+      if (result.success) {
+        toast.success(t('actions.updateSuccess'))
         router.invalidate()
         await refetch()
         await mutate('/api/sidebar')
+      } else {
+        toast.error(t('actions.updateError'))
       }
     })
   }

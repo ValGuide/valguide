@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getTranslations } from '@valguide/core/i18n/mock-server'
+
 import { createClient } from '@valguide/core/supabase/server'
 import { updateProfile } from '@valguide/features/profiles/mutations'
 import { z } from 'zod'
@@ -18,7 +18,6 @@ export const updateProfileFn = createServerFn({ method: 'POST' })
     const supabase = await createClient()
     const { data: claimsData } = await supabase.auth.getClaims()
     const user = claimsData?.claims
-    const t = await getTranslations('profile.actions')
 
     if (!user) {
       throw new Error('Unauthorized')
@@ -26,7 +25,7 @@ export const updateProfileFn = createServerFn({ method: 'POST' })
 
     const validated = profileSchema.safeParse(data)
     if (!validated.success) {
-      return { error: t('invalidData') }
+      return { success: false, validationError: true }
     }
 
     try {
@@ -36,9 +35,9 @@ export const updateProfileFn = createServerFn({ method: 'POST' })
         lastName: validated.data.lastName || null,
       })
 
-      return { success: true, message: t('updateSuccess') }
+      return { success: true }
     } catch (error) {
       console.error('Profile update error:', error)
-      return { error: t('updateError') }
+      return { success: false }
     }
   })
