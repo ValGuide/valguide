@@ -1,9 +1,10 @@
+import { serverEnv } from '@valguide/core/env/server'
 import { buildPathFromShortLink, isAbsoluteUrl } from '@valguide/core/features/links/paths'
 import { getShortLinkByCode } from '@valguide/core/features/links/queries'
 import { CACHE_TTL, getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/redis'
 import { type NextRequest, NextResponse } from 'next/server'
 
-const APP_BASE_URL = process.env.APP_BASE_URL ?? 'https://app.valguide.com'
+const APP_BASE_URL = serverEnv.APP_BASE_URL
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params

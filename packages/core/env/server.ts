@@ -17,6 +17,8 @@ const serverEnvSchema = z.object({
     .string()
     .optional()
     .transform((v) => v === 'true'),
+  VG_RESEND_SENDING_API_KEY: z.string().optional(),
+  VG_EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
   VALBOT_SLACK_TOKEN: z.string().optional(),
   VERCEL_ENV: z.enum(['development', 'preview', 'production']).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
