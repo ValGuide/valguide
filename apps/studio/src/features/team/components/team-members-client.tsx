@@ -11,7 +11,7 @@ import {
   resendInviteFn,
   updateMemberRoleFn,
 } from '@valguide/core/features/orgs/server-functions'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from 'sonner'
 
 interface TeamMembersClientProps {

@@ -1,5 +1,5 @@
-
 import { useRouter } from '@tanstack/react-router'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
   Dialog,
@@ -13,7 +13,6 @@ import {
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { PlusCircle } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { toast } from 'sonner'
 

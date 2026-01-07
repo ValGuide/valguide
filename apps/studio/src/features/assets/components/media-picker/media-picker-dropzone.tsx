@@ -1,5 +1,5 @@
 import type { AssetType } from '@valguide/core/features/assets/schema'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
 import { Image as ImageIcon, Music, Upload, Video } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'

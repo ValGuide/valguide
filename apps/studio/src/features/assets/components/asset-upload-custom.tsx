@@ -6,7 +6,7 @@ import {
   validateFile,
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { Button } from '@valguide/ui/components/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'

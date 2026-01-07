@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { SignOutButton } from './sign-out-button'

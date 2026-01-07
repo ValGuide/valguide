@@ -1,5 +1,5 @@
 import type { Theme } from '@valguide/core/features/themes/schema'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/ui/components/collapsible'
 import { Skeleton } from '@valguide/ui/components/skeleton'

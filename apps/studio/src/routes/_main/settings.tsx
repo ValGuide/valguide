@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 
 export const Route = createFileRoute('/_main/settings')({
   component: SettingsPage,

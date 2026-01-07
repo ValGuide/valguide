@@ -8,7 +8,7 @@ import {
   MAX_SIZE_MB,
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'

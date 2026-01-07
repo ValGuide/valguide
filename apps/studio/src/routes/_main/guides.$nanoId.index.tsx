@@ -5,17 +5,19 @@ import { clientEnv } from '@valguide/core/env/client'
 import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { cn } from '@valguide/ui/lib/utils'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
+import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
 import { guideWithAssetsQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId/')({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(guideWithAssetsQueryOptions(params.nanoId)),
   component: GuidePage,
+  pendingComponent: GuideDetailSkeleton,
 })
 
 function GuidePage() {

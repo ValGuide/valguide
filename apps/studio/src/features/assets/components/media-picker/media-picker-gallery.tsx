@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'

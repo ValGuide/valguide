@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { useState } from 'react'
 import { AuthContainer } from '../common/auth-container'
 import LoginLoading from './loading'

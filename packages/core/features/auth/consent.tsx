@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { FieldDescription } from '@valguide/ui/components/field'
-import { useTranslations } from '@valguide/core/i18n/mock'
 
 export const Consent = () => {
   const commonT = useTranslations('common')

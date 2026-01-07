@@ -2,7 +2,7 @@ import { useRouter } from '@tanstack/react-router'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/server-functions'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
   AlertDialogAction,

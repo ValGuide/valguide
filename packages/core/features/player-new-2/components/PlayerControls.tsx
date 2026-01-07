@@ -1,7 +1,6 @@
-
+import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/core/ui/lib/utils'
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 
 interface PlayerControlsProps {
   isPlaying: boolean

@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Music, Trash2, Video } from 'lucide-react'
 

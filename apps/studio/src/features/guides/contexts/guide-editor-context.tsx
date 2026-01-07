@@ -18,7 +18,7 @@ import { defaultLocale } from '@valguide/i18n/i18n.config'
 type ContentLocale = string
 
 import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
 
 const LOCALE_PARAM = 'locale'

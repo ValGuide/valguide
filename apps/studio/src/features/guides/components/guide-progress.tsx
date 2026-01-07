@@ -1,6 +1,6 @@
 import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Progress } from '@valguide/ui/components/progress'
 import { Separator } from '@valguide/ui/components/separator'
 import { AlertCircle, CheckCircle2, Circle } from 'lucide-react'

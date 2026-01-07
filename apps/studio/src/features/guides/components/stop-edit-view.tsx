@@ -1,6 +1,6 @@
 import { Link, useRouter } from '@tanstack/react-router'
 import type { StopWithAssets } from '@valguide/core/features/guides/queries'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import {
   BreadcrumbEllipsis,
   BreadcrumbItem,

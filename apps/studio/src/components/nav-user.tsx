@@ -1,5 +1,5 @@
-
 import { Link } from '@tanstack/react-router'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import {
   DropdownMenu,
@@ -12,7 +12,6 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
 import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 
 export function NavUser({
   user,

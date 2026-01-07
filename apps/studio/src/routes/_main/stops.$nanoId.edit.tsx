@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { getStopByNanoIdFn } from '@valguide/core/features/guides/server-functions'
+import { StopStandaloneEditSkeleton } from '@/features/guides/components/stop-standalone-edit-skeleton'
 
 export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
   loader: async ({ params }) => {
@@ -11,6 +12,7 @@ export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
     return stop
   },
   component: StopEditPage,
+  pendingComponent: StopStandaloneEditSkeleton,
 })
 
 function StopEditPage() {
@@ -28,7 +30,7 @@ import {
   updateStopFn,
 } from '@valguide/core/features/guides/server-functions'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'

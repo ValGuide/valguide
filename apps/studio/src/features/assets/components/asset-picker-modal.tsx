@@ -1,7 +1,7 @@
 import { Image } from '@unpic/react'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Checkbox } from '@valguide/ui/components/checkbox'

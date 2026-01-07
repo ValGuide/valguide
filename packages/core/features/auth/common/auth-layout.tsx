@@ -1,5 +1,5 @@
 import { Image } from '@unpic/react'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { type ReactNode, useEffect, useState } from 'react'
 
 const QUOTE_KEYS = ['quote1', 'quote2', 'quote3', 'quote4', 'quote5', 'quote6']

@@ -1,4 +1,4 @@
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Label } from '@valguide/ui/components/label'
 import { ToggleGroup, ToggleGroupItem } from '@valguide/ui/components/toggle-group'
 import { cn } from '@valguide/ui/lib/utils'

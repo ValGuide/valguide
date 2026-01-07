@@ -2,7 +2,7 @@ import { Image as UnpicImage } from '@unpic/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { deleteAssetFn } from '@valguide/core/features/assets/server-functions'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
   AlertDialogAction,

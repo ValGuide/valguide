@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Skeleton } from '@valguide/ui/components/skeleton'
+import { DesignPageSkeleton } from '@/features/design/components/design-page-skeleton'
 import { ThemeCustomizerContainer } from '@/features/design/components/theme-customizer-container'
 import { themesQueryOptions } from '@/features/design/query-options'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
@@ -15,6 +16,7 @@ export const Route = createFileRoute('/_main/design')({
     return { sidebarData }
   },
   component: DesignPage,
+  pendingComponent: DesignPageSkeleton,
 })
 
 function DesignPage() {

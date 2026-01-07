@@ -1,6 +1,6 @@
 import { useRouter, useSearch } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
 import { createLogger } from '@valguide/logger'
 import type React from 'react'

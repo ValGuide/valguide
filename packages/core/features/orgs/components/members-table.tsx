@@ -1,4 +1,4 @@
-
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
@@ -11,7 +11,6 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { Crown, Edit3, Eye, Mail, MoreHorizontal, Palette, Shield, Trash2 } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import type * as React from 'react'
 
 export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'

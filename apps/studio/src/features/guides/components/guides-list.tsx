@@ -1,6 +1,6 @@
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
   Empty,

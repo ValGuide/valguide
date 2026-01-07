@@ -1,6 +1,6 @@
 import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemePreset } from '@valguide/core/features/themes/types'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { cn } from '@valguide/ui/lib/utils'

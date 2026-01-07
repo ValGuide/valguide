@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
-import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/core/ui/components/badge'
 import { Button } from '@valguide/core/ui/components/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'

@@ -1,4 +1,4 @@
-import { useTranslations } from '@valguide/i18n'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { ArchivedGuidesList } from '~/features/guides/components/archived-guides-list'
 import { useArchivedGuides } from '~/features/guides/hooks/use-archived-guides'
 import { ArchivedSkeleton } from './archived-skeleton'

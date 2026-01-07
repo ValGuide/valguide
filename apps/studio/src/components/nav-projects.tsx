@@ -1,4 +1,4 @@
-
+import { useTranslations } from '@valguide/core/i18n/client'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +16,6 @@ import {
   useSidebar,
 } from '@valguide/ui/components/sidebar'
 import { Folder, Forward, type LucideIcon, MoreHorizontal, Trash2 } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 
 export function NavProjects({
   projects,

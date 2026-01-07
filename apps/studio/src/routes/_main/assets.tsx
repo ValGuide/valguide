@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-
 import { AssetsList } from '@/features/assets/components/assets-list'
+import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
 import { useAssets } from '@/features/assets/hooks/use-assets'
 import { assetsQueryOptions } from '@/features/assets/query-options'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
@@ -15,6 +15,7 @@ export const Route = createFileRoute('/_main/assets')({
     return { sidebarData }
   },
   component: AssetsPage,
+  pendingComponent: AssetsListSkeleton,
 })
 
 function AssetsPage() {

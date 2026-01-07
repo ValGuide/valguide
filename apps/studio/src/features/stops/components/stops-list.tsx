@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {

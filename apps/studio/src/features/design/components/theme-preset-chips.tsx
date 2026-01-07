@@ -1,6 +1,6 @@
 import { themeColorPresets } from '@valguide/core/features/themes/presets'
 import { type ThemePreset, themePresets } from '@valguide/core/features/themes/types'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
 
 export interface ThemePresetChipsProps {

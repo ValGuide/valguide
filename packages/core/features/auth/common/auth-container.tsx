@@ -1,5 +1,4 @@
-
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { AuthForm } from '../auth-form'
 import { Consent } from '../consent'
 import { OtpVerificationForm } from '../otp/otp-verification-form'

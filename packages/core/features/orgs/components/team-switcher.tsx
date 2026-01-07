@@ -1,4 +1,4 @@
-
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import {
   DropdownMenu,
@@ -10,7 +10,6 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
 import { ChevronsUpDown, Plus, Settings } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 
 export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'

@@ -4,7 +4,7 @@ import { TranslationStatusBadge } from '@valguide/core/features/guides/component
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@valguide/ui/components/form'
 import { Input } from '@valguide/ui/components/input'

@@ -3,6 +3,8 @@ import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { messagesQueryOptions } from '@valguide/core/i18n/query-options'
+import { resolveLocaleFn } from '@valguide/core/i18n/server-functions'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
@@ -13,7 +15,9 @@ export const Route = createRootRouteWithContext<{
 }>()({
   beforeLoad: async ({ context }) => {
     const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
-    return { user }
+    const locale = await resolveLocaleFn()
+    await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
+    return { user, locale }
   },
   notFoundComponent: () => (
     <NotFoundPage
@@ -52,13 +56,15 @@ export const Route = createRootRouteWithContext<{
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { locale } = Route.useRouteContext()
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <HeadContent />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers locale={locale}>{children}</Providers>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

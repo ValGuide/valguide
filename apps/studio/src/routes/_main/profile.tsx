@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { ProfileForm } from '@/features/profile/components/profile-form'
+import { ProfileSkeleton } from '@/features/profile/components/profile-skeleton'
 import { profileQueryOptions } from '@/features/profile/query-options'
 
 export const Route = createFileRoute('/_main/profile')({
   component: ProfilePage,
   loader: ({ context }) => context.queryClient.ensureQueryData(profileQueryOptions()),
+  pendingComponent: ProfileSkeleton,
 })
 
 function ProfilePage() {

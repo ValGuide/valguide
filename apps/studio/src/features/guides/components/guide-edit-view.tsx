@@ -3,7 +3,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
 import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import {
   Breadcrumb,
   BreadcrumbItem,

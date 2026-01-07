@@ -1,4 +1,4 @@
-
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
@@ -10,7 +10,6 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { Clock, Mail, MoreHorizontal, RefreshCw, X } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 
 export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
 

@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 
 import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
 import { useEffect, useState } from 'react'
+import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
@@ -29,6 +30,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
     return { guide }
   },
   component: GuideEditPage,
+  pendingComponent: GuideEditSkeleton,
 })
 
 function GuideEditPage() {

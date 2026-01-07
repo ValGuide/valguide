@@ -1,4 +1,4 @@
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Progress } from '@valguide/ui/components/progress'
 
 export type MediaPickerProgressProps = {

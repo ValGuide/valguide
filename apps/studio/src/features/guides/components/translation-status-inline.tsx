@@ -1,5 +1,5 @@
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { Circle } from 'lucide-react'
 import { useMemo } from 'react'

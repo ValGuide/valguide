@@ -1,7 +1,6 @@
-
+import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/core/ui/lib/utils'
 import { Languages } from 'lucide-react'
-import { useTranslations } from '@valguide/core/i18n/mock'
 
 interface PlaybackOptionsProps {
   playbackSpeed: number

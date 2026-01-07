@@ -1,9 +1,8 @@
-
 import { Link } from '@tanstack/react-router'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 import { Input } from '@valguide/ui/components/input'
-import { useTranslations } from '@valguide/core/i18n/mock'
 import { type FormEvent, useState } from 'react'
 
 export interface AuthFormProps {

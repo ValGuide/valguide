@@ -1,6 +1,5 @@
-
+import { useTranslations } from '@valguide/core/i18n/client'
 import { FileDropzone } from '@valguide/ui/components/file-upload/file-dropzone'
-import { useTranslations } from '@valguide/core/i18n/mock'
 
 export function FileDropzoneWithI18n() {
   const t = useTranslations('fileDropzone')

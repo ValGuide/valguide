@@ -2,7 +2,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { PublishStopTranslationButton } from '@valguide/core/features/guides/components/publish-stop-translation-button'
 import { VersionHistoryDialogStop } from '@valguide/core/features/guides/components/version-history-dialog-stop'
 import type { AssetWithRole, StopWithAssets } from '@valguide/core/features/guides/queries'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import {
   Breadcrumb,
   BreadcrumbItem,

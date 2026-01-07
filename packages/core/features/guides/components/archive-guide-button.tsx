@@ -1,5 +1,5 @@
 import { archiveGuideFn } from '@valguide/core/features/guides/server-functions'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
   AlertDialogAction,

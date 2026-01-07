@@ -1,7 +1,7 @@
 import { Link, useLocation, useRouter } from '@tanstack/react-router'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'
-import { useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/client'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import {
   Sidebar,
