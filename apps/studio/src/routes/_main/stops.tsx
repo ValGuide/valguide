@@ -1,16 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { StopsListContainer } from '@/features/stops'
-import { stopsQueryOptions } from '@/features/stops/query-options'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_main/stops')({
-  loader: ({ context }) => context.queryClient.ensureQueryData(stopsQueryOptions()),
-  component: StopsPage,
+  component: () => <Outlet />,
 })
-
-function StopsPage() {
-  return (
-    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <StopsListContainer />
-    </main>
-  )
-}
