@@ -3,6 +3,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { sendEmail } from '@valguide/transactional'
 import { z } from 'zod'
+import { serverEnv } from '../../env/server'
 import { createClient } from '../../supabase/server'
 import { db } from '../db'
 import {
@@ -81,10 +82,10 @@ export const inviteMemberFn = createServerFn({ method: 'POST' })
       template: {
         name: 'team-invite',
         data: {
-          inviteLink: `${process.env.VITE_STUDIO_URL}/join-team?token=${token}`,
+          inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
           teamName: team.name,
           inviterName: user.email || 'A colleague',
-          logoUrl: `${process.env.VITE_STUDIO_URL}/icon.png`,
+          logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
         },
       },
     })
@@ -131,10 +132,10 @@ export const resendInviteFn = createServerFn({ method: 'POST' })
       template: {
         name: 'team-invite',
         data: {
-          inviteLink: `${process.env.VITE_STUDIO_URL}/join-team?token=${token}`,
+          inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
           teamName: team.name,
           inviterName: user.email || 'A colleague',
-          logoUrl: `${process.env.VITE_STUDIO_URL}/icon.png`,
+          logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
         },
       },
     })

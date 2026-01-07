@@ -2,8 +2,9 @@ import { createServerClient } from '@supabase/ssr'
 import { hasPathnameLocale, resolveLocale, setLocaleCookie } from '@valguide/i18n/resolve-locale'
 import { unlocalizedPathname } from '@valguide/i18n/route.utils'
 import { createLogger } from '@valguide/logger'
-import { cookieOptions } from '@valguide/supabase/cookies'
 import { type NextRequest, NextResponse } from 'next/server'
+import { serverEnv } from '../env/server'
+import { cookieOptions } from './cookies'
 
 const internalUsers = ['valerius@valguide.com']
 
@@ -52,7 +53,7 @@ export const supbaseProxyFn = (options?: {
 
     let supabaseResponse = localizedResponse(req, config, locale)
 
-    const supabase = createServerClient(process.env.VG_SUPABASE_URL!, process.env.VG_SUPABASE_PUBLISHABLE_KEY!, {
+    const supabase = createServerClient(serverEnv.VG_SUPABASE_URL, serverEnv.VG_SUPABASE_PUBLISHABLE_KEY, {
       cookies: {
         getAll() {
           return req.cookies.getAll()

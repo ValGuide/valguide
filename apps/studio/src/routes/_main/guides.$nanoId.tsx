@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
+import { clientEnv } from '@valguide/core/env/client'
 import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
@@ -54,7 +55,7 @@ function GuidePage() {
             <span className="hidden sm:inline">{t('backToGuides')}</span>
           </Link>
           <div className="flex gap-2">
-            <ViewInAppButton nanoId={nanoId} published={isPublished} appDomain={import.meta.env.VITE_APP_DOMAIN} />
+            <ViewInAppButton nanoId={nanoId} published={isPublished} appDomain={clientEnv.VITE_APP_DOMAIN} />
             <ArchiveGuideButton guideId={guide.id} onArchived={handleArchived} />
             <Button asChild>
               <Link to="/guides/$nanoId/edit" params={{ nanoId }}>
