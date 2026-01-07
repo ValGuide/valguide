@@ -15,7 +15,7 @@ export type ClientEnv = z.infer<typeof clientEnvSchema>
 
 let _clientEnv: ClientEnv | null = null
 
-export function getClientEnv(): ClientEnv {
+function getClientEnv(): ClientEnv {
   if (_clientEnv) return _clientEnv
 
   const parsed = clientEnvSchema.safeParse(import.meta.env)
@@ -30,8 +30,5 @@ export function getClientEnv(): ClientEnv {
   return _clientEnv
 }
 
-export const clientEnv = new Proxy({} as ClientEnv, {
-  get(_, prop: string) {
-    return getClientEnv()[prop as keyof ClientEnv]
-  },
-})
+export const clientEnv = getClientEnv()
+

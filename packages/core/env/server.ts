@@ -1,15 +1,11 @@
 import { z } from 'zod'
 
-const isTest = process.env.NODE_ENV === 'test'
-
 const serverEnvSchema = z.object({
-  DATABASE_URL: isTest ? z.string().optional().default('') : z.string().min(1, 'Database URL is required'),
-  SUPABASE_URL: isTest
-    ? z.string().optional().default('https://test.supabase.co')
-    : z.string().url('Invalid Supabase URL'),
-  SUPABASE_PUBLISHABLE_KEY: isTest
-    ? z.string().optional().default('test-key')
-    : z.string().min(1, 'Supabase publishable key is required'),
+  DATABASE_URL: z.string().min(1, 'Database URL is required'),
+  SUPABASE_URL: z.string().url('Invalid Supabase URL'),
+  SUPABASE_PUBLISHABLE_KEY: z.string({
+    required_error: 'Supabase publishable key is required'
+  }),
   SUPABASE_COOKIE_DOMAIN: z.string().optional(),
   KV_REST_API_URL: z.string().optional(),
   KV_REST_API_TOKEN: z.string().optional(),
@@ -30,10 +26,11 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>
 
 let _serverEnv: ServerEnv | null = null
 
-export function getServerEnv(): ServerEnv {
+function getServerEnv(): ServerEnv {
   if (_serverEnv) return _serverEnv
 
   const parsed = serverEnvSchema.safeParse(process.env)
+
 
   if (!parsed.success) {
     console.error('❌ Invalid server environment variables:')
@@ -45,8 +42,4 @@ export function getServerEnv(): ServerEnv {
   return _serverEnv
 }
 
-export const serverEnv = new Proxy({} as ServerEnv, {
-  get(_, prop: string) {
-    return getServerEnv()[prop as keyof ServerEnv]
-  },
-})
+export const serverEnv = getServerEnv()

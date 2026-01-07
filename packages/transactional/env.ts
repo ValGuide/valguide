@@ -27,8 +27,4 @@ export function getEnv(): Env {
   return _env
 }
 
-export const env = new Proxy({} as Env, {
-  get(_, prop: string) {
-    return getEnv()[prop as keyof Env]
-  },
-})
+export const env = getEnv()

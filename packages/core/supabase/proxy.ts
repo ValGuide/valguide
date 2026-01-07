@@ -70,7 +70,7 @@ export const supbaseProxyFn = (options?: {
           }
         },
       },
-      cookieOptions,
+      cookieOptions: cookieOptions(),
     })
 
     if (
