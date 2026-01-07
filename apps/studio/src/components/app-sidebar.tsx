@@ -16,7 +16,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@valguide/ui/components/sidebar'
-import { BarChart3, BookOpen, Image, LayoutGrid, MapPin, Settings2, SlidersHorizontal } from 'lucide-react'
+import { BarChart3, BookOpen, Image, MapPin, Settings2, SlidersHorizontal } from 'lucide-react'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
 
@@ -97,11 +97,6 @@ export function AppSidebar({
       title: t('stops'),
       url: '/stops',
       icon: MapPin,
-    },
-    {
-      title: t('collections'),
-      url: '/collections',
-      icon: LayoutGrid,
     },
   ].map((item) => ({
     ...item,

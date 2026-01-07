@@ -13,7 +13,7 @@ import {
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { PlusCircle } from 'lucide-react'
-import { useLocale, useTranslations } from '@valguide/core/i18n/mock'
+import { useTranslations } from '@valguide/core/i18n/mock'
 import * as React from 'react'
 import { toast } from 'sonner'
 
@@ -38,7 +38,6 @@ export function CreateTeamDialog({
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const t = useTranslations('orgs.createTeam')
   const _router = useRouter()
-  const locale = useLocale()
 
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : internalOpen
@@ -63,7 +62,7 @@ export function CreateTeamDialog({
       await onCreateTeam(name, slug || undefined)
       toast.success(t('success'))
       // Hard redirect to reload the app/sidebar with the new team
-      window.location.href = `/${locale}`
+      window.location.href = '/'
       handleOpenChange(false)
     } catch (err) {
       console.error(err)
