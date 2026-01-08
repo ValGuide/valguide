@@ -112,14 +112,15 @@ export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) =
       if (error) {
         log.error('Error verifying OTP:', error)
         setMessage({ type: 'error', text: error.message })
+        setLoading(false)
       } else {
         log.info('OTP verified successfully, clearing cache and navigating...')
+        // Keep loading state active during navigation
         window.location.replace(next)
       }
     } catch (error) {
       log.error('Error verifying OTP:', error)
       setMessage({ type: 'error', text: t('otpError') })
-    } finally {
       setLoading(false)
     }
   }
