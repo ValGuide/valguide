@@ -1,11 +1,8 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { Providers as CoreProviders } from '@valguide/core/features/app-providers/providers'
+import type { Theme } from '@valguide/core/features/app-theme/types'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
-import { IntlProvider } from '@valguide/core/i18n/provider'
-import { messagesQueryOptions } from '@valguide/core/i18n/query-options'
-import { Toaster } from '@valguide/ui/components/sonner'
 import type { PropsWithChildren } from 'react'
-import { ThemeProvider } from '@/features/theme/theme-provider'
-import type { Theme } from '@/features/theme/types'
+import { setThemeFn } from '@/features/theme/server-functions'
 
 type ProvidersProps = PropsWithChildren<{
   locale: SupportedLocale
@@ -13,14 +10,9 @@ type ProvidersProps = PropsWithChildren<{
 }>
 
 export function Providers({ locale, initialTheme, children }: ProvidersProps) {
-  const { data: messages } = useSuspenseQuery(messagesQueryOptions(locale))
-
   return (
-    <ThemeProvider initialTheme={initialTheme}>
-      <IntlProvider locale={locale} messages={messages}>
-        {children}
-        <Toaster />
-      </IntlProvider>
-    </ThemeProvider>
+    <CoreProviders locale={locale} initialTheme={initialTheme} setThemeFn={setThemeFn}>
+      {children}
+    </CoreProviders>
   )
 }

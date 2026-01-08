@@ -1,13 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { TermsOfServicePage } from '@valguide/core/features/legal/terms-of-service'
 
 export const Route = createFileRoute('/terms-of-service')({
-  component: RouteComponent,
+  component: TermsOfServicePage,
 })
-
-function RouteComponent() {
-  return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-2xl font-bold">Coming Soon</h1>
-    </div>
-  )
-}

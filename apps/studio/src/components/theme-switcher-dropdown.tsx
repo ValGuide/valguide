@@ -1,5 +1,7 @@
 'use client'
 
+import { useTheme } from '@valguide/core/features/app-theme/theme-provider'
+import type { Theme } from '@valguide/core/features/app-theme/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   DropdownMenuItem,
@@ -8,8 +10,6 @@ import {
   DropdownMenuSubTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { Check, Monitor, Moon, Sun } from 'lucide-react'
-import { useTheme } from '@/features/theme/theme-provider'
-import type { Theme } from '@/features/theme/types'
 
 const themeOptions: { value: Theme; icon: typeof Sun }[] = [
   { value: 'light', icon: Sun },

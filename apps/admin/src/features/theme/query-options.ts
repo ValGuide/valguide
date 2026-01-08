@@ -1,10 +1,4 @@
-import { queryOptions } from '@tanstack/react-query'
+import { createThemeQueryOptions } from '@valguide/core/features/app-theme/query-options'
 import { getThemeFn } from './server-functions'
-import type { Theme } from './types'
 
-export const themeQueryOptions = () =>
-  queryOptions<Theme>({
-    queryKey: ['theme'],
-    queryFn: () => getThemeFn(),
-    staleTime: 5 * 60 * 1000,
-  })
+export const themeQueryOptions = () => createThemeQueryOptions(getThemeFn)

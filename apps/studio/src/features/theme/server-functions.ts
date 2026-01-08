@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getCookie, setCookie } from '@tanstack/react-start/server'
-import { type Theme, themeSchema } from './types'
+import { type Theme, themeSchema } from '@valguide/core/features/app-theme/types'
 
 const THEME_COOKIE_KEY = 'valguide-studio-theme'
 
@@ -15,7 +15,7 @@ export const setThemeFn = createServerFn({ method: 'POST' })
   .handler(async ({ data }: { data: Theme }) => {
     setCookie(THEME_COOKIE_KEY, data, {
       path: '/',
-      maxAge: 60 * 60 * 24 * 365, // 1 year
+      maxAge: 60 * 60 * 24 * 365,
       sameSite: 'lax',
     })
     return data

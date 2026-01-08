@@ -1,5 +1,4 @@
 import { createContext, type PropsWithChildren, use, useCallback, useEffect, useMemo, useState } from 'react'
-import { setThemeFn } from './server-functions'
 import type { ResolvedTheme, Theme } from './types'
 
 interface ThemeContextValue {
@@ -12,6 +11,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 interface ThemeProviderProps extends PropsWithChildren {
   initialTheme: Theme
+  setThemeFn: (args: { data: Theme }) => Promise<Theme>
 }
 
 function getSystemTheme(): ResolvedTheme {
@@ -27,17 +27,20 @@ function applyTheme(resolvedTheme: ResolvedTheme) {
   document.documentElement.setAttribute('data-theme', resolvedTheme)
 }
 
-export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
+export function ThemeProvider({ children, initialTheme, setThemeFn }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(initialTheme)
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolveTheme(initialTheme))
 
-  const setTheme = useCallback(async (newTheme: Theme) => {
-    setThemeState(newTheme)
-    const resolved = resolveTheme(newTheme)
-    setResolvedTheme(resolved)
-    applyTheme(resolved)
-    await setThemeFn({ data: newTheme })
-  }, [])
+  const setTheme = useCallback(
+    async (newTheme: Theme) => {
+      setThemeState(newTheme)
+      const resolved = resolveTheme(newTheme)
+      setResolvedTheme(resolved)
+      applyTheme(resolved)
+      await setThemeFn({ data: newTheme })
+    },
+    [setThemeFn],
+  )
 
   useEffect(() => {
     if (theme !== 'system') return

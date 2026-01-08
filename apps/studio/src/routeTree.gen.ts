@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as JoinTeamRouteImport } from './routes/join-team'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
@@ -35,6 +37,16 @@ import { Route as MainStopsNanoIdEditRouteImport } from './routes/_main/stops.$n
 import { Route as MainGuidesNanoIdEditRouteImport } from './routes/_main/guides.$nanoId.edit'
 import { Route as MainGuidesNanoIdStopsStopIdEditRouteImport } from './routes/_main/guides.$nanoId.stops.$stopId.edit'
 
+const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
+  id: '/terms-of-service',
+  path: '/terms-of-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JoinTeamRoute = JoinTeamRouteImport.update({
   id: '/join-team',
   path: '/join-team',
@@ -163,6 +175,8 @@ const MainGuidesNanoIdStopsStopIdEditRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/join-team': typeof JoinTeamRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/analytics': typeof MainAnalyticsRoute
@@ -188,6 +202,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/join-team': typeof JoinTeamRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/analytics': typeof MainAnalyticsRoute
@@ -213,6 +229,8 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/_main': typeof MainRouteWithChildren
   '/join-team': typeof JoinTeamRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_main/analytics': typeof MainAnalyticsRoute
@@ -240,6 +258,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/join-team'
+    | '/privacy-policy'
+    | '/terms-of-service'
     | '/login'
     | '/signup'
     | '/analytics'
@@ -265,6 +285,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/join-team'
+    | '/privacy-policy'
+    | '/terms-of-service'
     | '/login'
     | '/signup'
     | '/analytics'
@@ -289,6 +311,8 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_main'
     | '/join-team'
+    | '/privacy-policy'
+    | '/terms-of-service'
     | '/_auth/login'
     | '/_auth/signup'
     | '/_main/analytics'
@@ -317,10 +341,26 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   MainRoute: typeof MainRouteWithChildren
   JoinTeamRoute: typeof JoinTeamRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  TermsOfServiceRoute: typeof TermsOfServiceRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms-of-service': {
+      id: '/terms-of-service'
+      path: '/terms-of-service'
+      fullPath: '/terms-of-service'
+      preLoaderRoute: typeof TermsOfServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/join-team': {
       id: '/join-team'
       path: '/join-team'
@@ -591,6 +631,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   MainRoute: MainRouteWithChildren,
   JoinTeamRoute: JoinTeamRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  TermsOfServiceRoute: TermsOfServiceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

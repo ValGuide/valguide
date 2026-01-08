@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getCookie, setCookie } from '@tanstack/react-start/server'
-import { type Theme, themeSchema } from './types'
+import { type Theme, themeSchema } from '@valguide/core/features/app-theme/types'
 
 const THEME_COOKIE_KEY = 'valguide-admin-theme'
 
