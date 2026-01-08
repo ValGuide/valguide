@@ -11,3 +11,5 @@ count.txt
 .nitro
 .tanstack
 .output
+.wrangler
+.next

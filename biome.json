@@ -122,7 +122,8 @@
       "!**/postcss.config.mjs",
       "!**/tailwind.config.ts",
       "!**/growth",
-      "!**/*.css"
+      "!**/*.css",
+      "!**/routeTree.gen.ts"
     ]
   }
 }
