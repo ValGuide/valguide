@@ -31,4 +31,3 @@ function getClientEnv(): ClientEnv {
 }
 
 export const clientEnv = getClientEnv()
-

@@ -1,4 +1,3 @@
-
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { cn } from '@valguide/ui/lib/utils'
 import { CheckCircle2, FileIcon, Upload, X } from 'lucide-react'

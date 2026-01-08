@@ -4,7 +4,7 @@ const serverEnvSchema = z.object({
   DATABASE_URL: z.string().min(1, 'Database URL is required'),
   SUPABASE_URL: z.string().url('Invalid Supabase URL'),
   SUPABASE_PUBLISHABLE_KEY: z.string({
-    required_error: 'Supabase publishable key is required'
+    required_error: 'Supabase publishable key is required',
   }),
   SUPABASE_COOKIE_DOMAIN: z.string().optional(),
   KV_REST_API_URL: z.string().optional(),
@@ -30,7 +30,6 @@ function getServerEnv(): ServerEnv {
   if (_serverEnv) return _serverEnv
 
   const parsed = serverEnvSchema.safeParse(process.env)
-
 
   if (!parsed.success) {
     console.error('❌ Invalid server environment variables:')

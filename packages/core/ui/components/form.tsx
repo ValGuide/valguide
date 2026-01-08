@@ -1,4 +1,3 @@
-
 import type * as LabelPrimitive from '@radix-ui/react-label'
 import { Slot } from '@radix-ui/react-slot'
 import { Label } from '@valguide/ui/components/label'

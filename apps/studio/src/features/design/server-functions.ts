@@ -1,18 +1,18 @@
-import {createServerFn} from '@tanstack/react-start'
-import {db} from '@valguide/core/features/db'
-import {getUserTeams} from '@valguide/core/features/orgs/queries'
+import { createServerFn } from '@tanstack/react-start'
+import { db } from '@valguide/core/features/db'
+import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import {
-    createTheme,
-    type CreateThemeInput,
-    deleteTheme,
-    updateTheme,
-    type UpdateThemeInput,
+  createTheme,
+  type CreateThemeInput,
+  deleteTheme,
+  updateTheme,
+  type UpdateThemeInput,
 } from '@valguide/core/features/themes/mutations'
-import {getFullThemeById, getOrgThemes} from '@valguide/core/features/themes/queries'
-import type {ThemeColors, ThemeFonts, ThemePreset} from '@valguide/core/features/themes/types'
-import {createClient} from '@valguide/supabase/server'
-import {z} from 'zod'
-import {getActiveTeamSlug} from '@valguide/features/utils/cookies.ts'
+import { getFullThemeById, getOrgThemes } from '@valguide/core/features/themes/queries'
+import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
+import { createClient } from '@valguide/supabase/server'
+import { z } from 'zod'
+import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 
 // Get themes for organization
 const getThemesInputSchema = z.object({

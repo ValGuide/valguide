@@ -1,4 +1,3 @@
-
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { cn } from '@valguide/ui/lib/utils'
 import type React from 'react'

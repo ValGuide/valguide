@@ -1,7 +1,7 @@
-import {and, asc, desc, eq, inArray, isNotNull, isNull} from 'drizzle-orm'
-import {valguideId} from '../../utils/nanoid'
-import {type Asset, asset, guideAsset, stopAsset} from '../assets/schema'
-import {type DB, db} from '../db'
+import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
+import { valguideId } from '../../utils/nanoid'
+import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
+import { type DB, db } from '../db'
 import {
   guide,
   guideStop,
@@ -48,7 +48,6 @@ export async function getGuideById(db: DB, guideId: string): Promise<GuideWithTr
 
   return result ?? null
 }
-
 
 /**
  * Get a guide by nanoId with all its assets for the studio editor
@@ -169,7 +168,6 @@ export async function getGuidesByOrganizationId(db: DB, organizationId: string):
   })
 }
 
-
 /**
  * Create a new guide with translations
  * Automatically generates a nanoId if not provided
@@ -268,7 +266,6 @@ export async function updateGuideTranslation(
   locale: string,
   data: { title?: string; description?: string },
 ): Promise<typeof guideTranslation.$inferSelect> {
-
   // Use new versioning system - create/update draft
   const { upsertGuideTranslationDraft } = await import('./translation-mutations')
 
@@ -441,7 +438,6 @@ export async function getGuideIdByStopNanoId(db: DB, stopNanoId: string): Promis
   // Fallback to deprecated guideId for backward compatibility
   return result?.guideId ?? null
 }
-
 
 /**
  * Get stops for a guide ordered by position

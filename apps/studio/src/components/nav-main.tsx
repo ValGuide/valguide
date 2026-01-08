@@ -1,4 +1,3 @@
-
 import { Link } from '@tanstack/react-router'
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@valguide/ui/components/sidebar'
 import type { LucideIcon } from 'lucide-react'

@@ -1,4 +1,3 @@
-
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { EditorToolbar } from './editor-toolbar'
