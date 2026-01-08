@@ -63,6 +63,14 @@ export function AppSidebar({
     setPendingUrl(null)
   }, [])
 
+  // Preload all sidebar routes on mount for instant navigation
+  React.useEffect(() => {
+    const routes = ['/guides', '/stops', '/analytics', '/assets', '/design', '/settings', '/team', '/profile']
+    for (const route of routes) {
+      router.preloadRoute({ to: route })
+    }
+  }, [router])
+
   React.useEffect(() => {
     setOpenMobile(false)
   }, [pathnameFromRouter])
@@ -166,7 +174,7 @@ export function AppSidebar({
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -182,7 +190,7 @@ export function AppSidebar({
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -198,7 +206,7 @@ export function AppSidebar({
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -214,7 +222,7 @@ export function AppSidebar({
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
