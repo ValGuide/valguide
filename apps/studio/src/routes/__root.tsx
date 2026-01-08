@@ -3,13 +3,12 @@ import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { messagesQueryOptions } from '@valguide/core/i18n/query-options'
-import { resolveLocaleFn } from '@valguide/core/i18n/server-functions'
+import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
 import { currentUserQueryOptions } from '@/features/auth/query-options'
-import { getThemeFn } from '@/features/theme/server-functions'
+import { themeQueryOptions } from '@/features/theme/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -17,8 +16,8 @@ export const Route = createRootRouteWithContext<{
   beforeLoad: async ({ context }) => {
     const [user, locale, theme] = await Promise.all([
       context.queryClient.ensureQueryData(currentUserQueryOptions()),
-      resolveLocaleFn(),
-      getThemeFn(),
+      context.queryClient.ensureQueryData(localeQueryOptions()),
+      context.queryClient.ensureQueryData(themeQueryOptions()),
     ])
     const messages = await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
     const metadata = {
