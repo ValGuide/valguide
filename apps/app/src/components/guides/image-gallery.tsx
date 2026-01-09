@@ -1,4 +1,5 @@
 import { Image } from '@unpic/react'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
@@ -21,14 +22,12 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   return (
     <div className="space-y-4">
       <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted">
-        {currentImage.publicUrl && (
-          <Image
-            src={currentImage.publicUrl}
-            alt={currentImage.fileName}
-            layout="fullWidth"
-            className="absolute inset-0 w-full h-full object-contain"
-          />
-        )}
+        <Image
+          src={getAssetImageUrl(currentImage)}
+          alt={currentImage.fileName}
+          layout="fullWidth"
+          className="absolute inset-0 w-full h-full object-contain"
+        />
       </div>
 
       {images.length > 1 && (
@@ -67,14 +66,12 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   idx === currentIndex ? 'border-primary' : 'border-transparent'
                 }`}
               >
-                {img.publicUrl && (
-                  <Image
-                    src={img.publicUrl}
-                    alt={img.fileName}
-                    layout="fullWidth"
-                    className="absolute inset-0 w-full h-full object-cover rounded"
-                  />
-                )}
+                <Image
+                  src={getAssetImageUrl(img)}
+                  alt={img.fileName}
+                  layout="fullWidth"
+                  className="absolute inset-0 w-full h-full object-cover rounded"
+                />
               </button>
             ))}
           </div>

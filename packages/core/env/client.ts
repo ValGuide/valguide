@@ -9,6 +9,7 @@ const clientEnvSchema = z.object({
   VITE_POSTHOG_HOST: z.string().optional(),
   VITE_STUDIO_URL: z.string().optional(),
   VITE_APP_DOMAIN: z.string().optional(),
+  VITE_IMAGEKIT_URL: z.string().optional().default('https://ik.imagekit.io/valguide'),
 })
 
 export type ClientEnv = z.infer<typeof clientEnvSchema>

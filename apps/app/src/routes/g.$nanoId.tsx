@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { db } from '@valguide/core/features/db'
 import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/queries'
 import { getLocalizedGuideText } from '@valguide/core/features/guides/schema'
@@ -35,7 +36,7 @@ function GuidePage() {
   const title = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
   const description = getLocalizedGuideText(guide, 'description', locale as SupportedLocale)
   const coverAsset = guide.assets?.find((a) => a.role === 'cover')
-  const coverImageUrl = coverAsset?.publicUrl ?? null
+  const coverImageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
 
   return (
     <div className="container max-w-4xl py-8 space-y-8">

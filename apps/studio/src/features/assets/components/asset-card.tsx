@@ -1,4 +1,5 @@
 import { Image as UnpicImage } from '@unpic/react'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { deleteAssetFn } from '@valguide/core/features/assets/server-functions'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
@@ -87,9 +88,9 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
             className="relative mb-3 flex h-48 w-full items-center justify-center overflow-hidden rounded-lg bg-muted cursor-pointer"
             onClick={() => onPreview?.(asset)}
           >
-            {asset.type === 'image' && asset.publicUrl ? (
+            {asset.type === 'image' ? (
               <UnpicImage
-                src={asset.publicUrl}
+                src={getAssetImageUrl(asset)}
                 alt={asset.fileName}
                 layout="fullWidth"
                 className="h-full w-full object-cover"
