@@ -13,10 +13,6 @@ export default defineConfig({
     port: 3002,
     allowedHosts: ['studio.local.dev'],
   },
-  ssr: {
-    // Externalize uuid to avoid ESM default import issues with svix (via resend)
-    external: ['uuid'],
-  },
   plugins: [
     // Enables Vite to resolve imports using path aliases
     tsconfigPaths({
