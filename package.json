@@ -3,6 +3,9 @@
   "private": true,
   "scripts": {
     "env:load": "pnpm dlx tsx ./.scripts/load-env.ts",
+    "env:merge": "pnpm dlx tsx ./.scripts/merge-env.ts",
+    "env:push": "pnpm dlx tsx ./.scripts/push-to-vercel.ts",
+    "env:clear": "pnpm dlx tsx ./.scripts/clear-vercel-env.ts",
     "prepare": "husky",
     "build": "turbo build",
     "dev": "turbo dev",
@@ -76,7 +79,7 @@
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.27.0",
   "pnpm": {
     "overrides": {
       "@types/react": "19.2.2",
