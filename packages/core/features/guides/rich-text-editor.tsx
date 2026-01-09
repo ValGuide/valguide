@@ -46,7 +46,7 @@ export function RichTextEditor({ value, onChange, placeholder, className, readOn
   return (
     <div className={className}>
       <div className="overflow-hidden rounded-md border">
-        {!readOnly && <EditorToolbar editor={editor} />}
+        <EditorToolbar editor={editor} disabled={readOnly} />
         <EditorContent editor={editor} />
       </div>
     </div>

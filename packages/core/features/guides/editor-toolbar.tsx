@@ -6,21 +6,22 @@ import { Bold, Heading2, Italic, List, ListOrdered, Quote, Redo, Strikethrough, 
 
 export interface EditorToolbarProps {
   editor: Editor | null
+  disabled?: boolean
 }
 
-export function EditorToolbar({ editor }: EditorToolbarProps) {
+export function EditorToolbar({ editor, disabled }: EditorToolbarProps) {
   const t = useTranslations('guides.editor')
 
   if (!editor) return null
 
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b p-2">
+    <div className={`flex flex-wrap items-center gap-1 border-b p-2 ${disabled ? 'opacity-50' : ''}`}>
       <Button
         type="button"
         variant={editor.isActive('bold') ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={!editor.can().chain().focus().toggleBold().run()}
+        disabled={disabled || !editor.can().chain().focus().toggleBold().run()}
         aria-label={t('bold')}
         title={t('bold')}
       >
@@ -31,7 +32,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant={editor.isActive('italic') ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        disabled={!editor.can().chain().focus().toggleItalic().run()}
+        disabled={disabled || !editor.can().chain().focus().toggleItalic().run()}
         aria-label={t('italic')}
         title={t('italic')}
       >
@@ -42,7 +43,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant={editor.isActive('strike') ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleStrike().run()}
-        disabled={!editor.can().chain().focus().toggleStrike().run()}
+        disabled={disabled || !editor.can().chain().focus().toggleStrike().run()}
         aria-label={t('strikethrough')}
         title={t('strikethrough')}
       >
@@ -56,7 +57,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant={editor.isActive('heading', { level: 2 }) ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        disabled={!editor.can().chain().focus().toggleHeading({ level: 2 }).run()}
+        disabled={disabled || !editor.can().chain().focus().toggleHeading({ level: 2 }).run()}
         aria-label={t('heading')}
         title={t('heading')}
       >
@@ -70,7 +71,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant={editor.isActive('bulletList') ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        disabled={!editor.can().chain().focus().toggleBulletList().run()}
+        disabled={disabled || !editor.can().chain().focus().toggleBulletList().run()}
         aria-label={t('bulletList')}
         title={t('bulletList')}
       >
@@ -81,7 +82,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant={editor.isActive('orderedList') ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        disabled={!editor.can().chain().focus().toggleOrderedList().run()}
+        disabled={disabled || !editor.can().chain().focus().toggleOrderedList().run()}
         aria-label={t('orderedList')}
         title={t('orderedList')}
       >
@@ -95,7 +96,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant={editor.isActive('blockquote') ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        disabled={!editor.can().chain().focus().toggleBlockquote().run()}
+        disabled={disabled || !editor.can().chain().focus().toggleBlockquote().run()}
         aria-label={t('blockquote')}
         title={t('blockquote')}
       >
@@ -109,7 +110,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().undo().run()}
-        disabled={!editor.can().chain().focus().undo().run()}
+        disabled={disabled || !editor.can().chain().focus().undo().run()}
         aria-label={t('undo')}
         title={t('undo')}
       >
@@ -120,7 +121,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().redo().run()}
-        disabled={!editor.can().chain().focus().redo().run()}
+        disabled={disabled || !editor.can().chain().focus().redo().run()}
         aria-label={t('redo')}
         title={t('redo')}
       >
