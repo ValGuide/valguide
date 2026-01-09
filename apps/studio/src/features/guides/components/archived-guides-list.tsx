@@ -1,4 +1,4 @@
-import { useRouter } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/server-functions'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
@@ -35,7 +35,7 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
   const t = useTranslations('guides')
   const tCommon = useTranslations('common')
   const locale = useLocale()
-  const router = useRouter()
+  const queryClient = useQueryClient()
   const [dialogState, setDialogState] = useState<DialogState>({ type: null, guideId: null })
   const [isLoading, setIsLoading] = useState(false)
 
@@ -53,7 +53,8 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
       toast.success(t('recover.success'), {
         description: t('recover.successDescription'),
       })
-      router.invalidate()
+      await queryClient.invalidateQueries({ queryKey: ['guides'] })
+      await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
       onActionComplete?.()
     } catch (_error) {
       toast.error(t('recover.error'), {
@@ -74,7 +75,7 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
       toast.success(t('delete.success'), {
         description: t('delete.successDescription'),
       })
-      router.invalidate()
+      await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
       onActionComplete?.()
     } catch (_error) {
       toast.error(t('delete.error'), {

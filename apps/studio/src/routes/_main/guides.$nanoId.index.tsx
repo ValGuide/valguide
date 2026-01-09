@@ -27,8 +27,9 @@ function GuidePage() {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const handleArchived = () => {
-    queryClient.invalidateQueries({ queryKey: ['guides'] })
+  const handleArchived = async () => {
+    await queryClient.invalidateQueries({ queryKey: ['guides'] })
+    await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
     router.navigate({ to: '/' })
   }
 
