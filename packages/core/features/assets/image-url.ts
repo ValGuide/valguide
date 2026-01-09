@@ -12,8 +12,15 @@ export function getImageKitUrl(storagePath: string): string {
 
 /**
  * Get optimized image URL from an asset object.
- * Prefers storagePath + ImageKit, falls back to Supabase URL.
+ * Prefers storagePath + ImageKit for production assets.
+ * Falls back to publicUrl when storagePath is not provided (e.g., Storybook mocks).
  */
-export function getAssetImageUrl(asset: { storagePath: string; publicUrl?: string | null }): string {
-  return getImageKitUrl(asset.storagePath)
+export function getAssetImageUrl(asset: { storagePath?: string | null; publicUrl?: string | null }): string {
+  if (asset.storagePath) {
+    return getImageKitUrl(asset.storagePath)
+  }
+  if (asset.publicUrl) {
+    return asset.publicUrl
+  }
+  return ''
 }
