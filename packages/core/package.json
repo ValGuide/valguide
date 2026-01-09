@@ -136,6 +136,7 @@
     "./posthog/rewrites.js": "./posthog/rewrites.js",
     "./env/server": "./env/server.ts",
     "./env/client": "./env/client.ts",
+    "./env/schema": "./env/schema.ts",
     "./i18n": "./i18n/index.ts",
     "./i18n/server": "./i18n/server.ts",
     "./i18n/client": "./i18n/client.ts",

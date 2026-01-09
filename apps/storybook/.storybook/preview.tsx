@@ -2,12 +2,22 @@ import '@valguide/ui/styles/globals.css'
 
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import type { Preview } from '@storybook/nextjs-vite'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import de from '@valguide/i18n/messages/de.json'
 import en from '@valguide/i18n/messages/en.json'
 import rm from '@valguide/i18n/messages/rm.json'
 import { themes } from '@valguide/ui/theme/themes'
 import { IntlProvider } from 'use-intl'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: Number.POSITIVE_INFINITY,
+    },
+  },
+})
 
 const messagesByLocale: Record<SupportedLocale, typeof en> = { en, de, rm }
 
@@ -36,11 +46,13 @@ const preview: Preview = {
   },
   decorators: [
     (Story, { globals: { locale } }) => (
-      <IntlProvider locale={locale} messages={messagesByLocale[locale as SupportedLocale]} timeZone="Europe/Zurich">
-        <main className="font-geist">
-          <Story />
-        </main>
-      </IntlProvider>
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale={locale} messages={messagesByLocale[locale as SupportedLocale]} timeZone="Europe/Zurich">
+          <main className="font-geist">
+            <Story />
+          </main>
+        </IntlProvider>
+      </QueryClientProvider>
     ),
     withThemeByDataAttribute({
       themes: Object.fromEntries(themes.map((theme) => [theme, theme])),

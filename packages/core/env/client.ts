@@ -1,18 +1,4 @@
-import { z } from 'zod'
-
-const clientEnvSchema = z.object({
-  VITE_POSTHOG_ENABLED: z
-    .string()
-    .optional()
-    .transform((v) => v === 'true'),
-  VITE_POSTHOG_KEY: z.string().optional(),
-  VITE_POSTHOG_HOST: z.string().optional(),
-  VITE_STUDIO_URL: z.string().optional(),
-  VITE_APP_DOMAIN: z.string().optional(),
-  VITE_IMAGEKIT_URL: z.string().optional().default('https://ik.imagekit.io/valguide'),
-})
-
-export type ClientEnv = z.infer<typeof clientEnvSchema>
+import { type ClientEnv, clientEnvSchema } from './schema'
 
 let _clientEnv: ClientEnv | null = null
 
