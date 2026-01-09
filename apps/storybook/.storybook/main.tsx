@@ -47,8 +47,6 @@ const config: StorybookConfig = {
       }),
     )
 
-    const studioPath = path.resolve(path.dirname(__dirname), '../studio')
-
     return mergeConfig(config, {
       define: {
         'process.env': '{}',
@@ -61,11 +59,10 @@ const config: StorybookConfig = {
       },
       resolve: {
         alias: {
-          // Next.js mocks
-          'next/image': path.resolve(__dirname, './__mocks__/NextImageMock.tsx'),
-          'next/navigation': path.resolve(__dirname, './__mocks__/NextNavigationMock.tsx'),
-          // Studio path alias
-          '@': studioPath,
+          // Note: @/* paths are resolved by vite-tsconfig-paths based on each app's tsconfig.json
+          // Mock TanStack Start to prevent server-side modules from being bundled
+          '@tanstack/react-start/server': path.resolve(__dirname, './__mocks__/tanstack-react-start-server.ts'),
+          '@tanstack/react-start': path.resolve(__dirname, './__mocks__/tanstack-react-start.ts'),
           // Mock server-side modules for browser compatibility
           postgres: path.resolve(__dirname, './__mocks__/postgres.ts'),
           '@valguide/supabase/server': path.resolve(__dirname, './__mocks__/supabase-server.ts'),
@@ -73,6 +70,10 @@ const config: StorybookConfig = {
           '@valguide/core/features/assets/queries': path.resolve(__dirname, './__mocks__/asset-queries.ts'),
           '@valguide/core/features/orgs/actions': path.resolve(__dirname, './__mocks__/org-actions.ts'),
           '@valguide/core/features/guides/actions': path.resolve(__dirname, './__mocks__/guide-actions.ts'),
+          '@valguide/core/features/guides/server-functions': path.resolve(
+            __dirname,
+            './__mocks__/guide-server-functions.ts',
+          ),
           '@valguide/core/features/db': path.resolve(__dirname, './__mocks__/db.ts'),
           crypto: path.resolve(__dirname, './__mocks__/crypto.ts'),
         },

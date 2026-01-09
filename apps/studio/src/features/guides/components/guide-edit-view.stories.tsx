@@ -2,8 +2,8 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
-import { MockAssetsProvider } from '@valguide/features/assets/context/mock-assets-provider'
-import { GuideEditorProvider } from '@valguide/features/guides/contexts/guide-editor-context'
+import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
+import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { GuideEditView } from './guide-edit-view'
 
 const mockStops: StopWithTranslations[] = [

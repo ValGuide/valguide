@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { PropsWithChildren, ReactNode } from 'react'
 
 export type RichTranslationValues = Record<
   string,
@@ -18,4 +18,15 @@ export function useTranslations(_namespace?: string): TranslationFunction {
 
 export function useLocale(): string {
   return 'en'
+}
+
+// Mock NextIntlClientProvider for Storybook - just renders children
+interface NextIntlClientProviderProps {
+  locale?: string
+  messages?: Record<string, unknown>
+  timeZone?: string
+}
+
+export function NextIntlClientProvider({ children }: PropsWithChildren<NextIntlClientProviderProps>): ReactNode {
+  return children
 }

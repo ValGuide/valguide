@@ -1,4 +1,3 @@
-// Mock for next/navigation to work with Storybook
 import * as React from 'react'
 
 export const useRouter = () => ({
