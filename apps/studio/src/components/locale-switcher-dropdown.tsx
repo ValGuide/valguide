@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from '@tanstack/react-router'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { setLocaleFn } from '@valguide/core/i18n/server-functions'
@@ -20,13 +19,12 @@ const localeNames: Record<SupportedLocale, string> = {
 
 export function LocaleSwitcherDropdown() {
   const currentLocale = useLocale()
-  const router = useRouter()
   const t = useTranslations('sidebar.user')
 
   const handleLocaleChange = async (newLocale: SupportedLocale) => {
     if (newLocale === currentLocale) return
     await setLocaleFn({ data: { locale: newLocale } })
-    router.invalidate()
+    window.location.replace(window.location.href)
   }
 
   return (
