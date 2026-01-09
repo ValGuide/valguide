@@ -31,7 +31,7 @@ const baseAsset: AssetWithUsage = {
   fileSize: 2048576, // 2MB
   mimeType: 'image/jpeg',
   type: 'image',
-  storagePath: 'org-123/images/user-456/abc123-museum-photo.jpg',
+  storagePath: '',
   publicUrl: 'https://picsum.photos/400/300',
   locale: null,
   width: 1920,
