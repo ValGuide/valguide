@@ -13,6 +13,11 @@ export default defineConfig({
     port: 3002,
     allowedHosts: ['studio.local.dev'],
   },
+  ssr: {
+    // Force bundle svix (and its uuid dependency) to handle ESM default import issue
+    // svix uses `import uuid from 'uuid'` but uuid v10+ only has named exports
+    noExternal: ['svix'],
+  },
   plugins: [
     // Enables Vite to resolve imports using path aliases
     tsconfigPaths({
