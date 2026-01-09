@@ -8,7 +8,7 @@ import {
   unpublishGuideTranslationFn,
 } from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { Alert, AlertDescription } from '@valguide/ui/components/alert'
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,7 +20,7 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { Eye, Globe, Info, ListChecks } from 'lucide-react'
+import { Eye, Globe, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
@@ -44,7 +44,6 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
-  const tReadOnly = useTranslations('guides.readOnly')
   const {
     guide,
     activeLocale,
@@ -331,22 +330,6 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
           <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
-                {/* Read-only banner */}
-                {isReadOnly && (
-                  <Alert>
-                    <Info className="h-4 w-4" />
-                    <AlertDescription>{tReadOnly('banner')}</AlertDescription>
-                  </Alert>
-                )}
-
-                {/* Never published notice */}
-                {activeTab === 'published' && !hasPublished && (
-                  <Alert>
-                    <Info className="h-4 w-4" />
-                    <AlertDescription>{tReadOnly('neverPublished')}</AlertDescription>
-                  </Alert>
-                )}
-
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-lg font-semibold">
