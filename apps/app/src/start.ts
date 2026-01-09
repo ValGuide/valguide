@@ -50,6 +50,7 @@ const globalErrorMiddleware = createMiddleware({
       },
     })
   } catch (e: any) {
+    console.error('Global error middleware caught error:', e)
     return Response.json(
       {
         error: e.message ?? 'Server Error',
