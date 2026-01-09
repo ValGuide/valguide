@@ -216,38 +216,37 @@ function main() {
 
   // Parse arguments
   let vercelEnv: VercelEnvironment | undefined
-  let targetApp: AppName | 'all' = 'all'
+  let targetApp: AppName | undefined
   let gitBranch: string | undefined
 
   // First pass: identify known arguments
-  const knownArgs = new Set<string>(['preview', 'production', 'all', ...Object.keys(VERCEL_APPS)])
+  const knownArgs = new Set<string>(['preview', 'production', ...Object.keys(VERCEL_APPS)])
 
   for (const arg of args) {
     if (arg === 'preview' || arg === 'production') {
       vercelEnv = arg
-    } else if (arg === 'all' || arg in VERCEL_APPS) {
-      targetApp = arg as AppName | 'all'
+    } else if (arg in VERCEL_APPS) {
+      targetApp = arg as AppName
     } else if (!knownArgs.has(arg)) {
       // Assume unknown args are git branch names
       gitBranch = arg
     }
   }
 
-  // Validate environment argument
-  if (!vercelEnv) {
+  // Validate arguments - both environment and app are required
+  if (!vercelEnv || !targetApp) {
     console.error(
       chalk.red(
-        `\nUsage: pnpm env:clear <vercel-environment> [app] [git-branch]
+        `\nUsage: pnpm env:clear <vercel-environment> <app> [git-branch]
 
 Vercel Environments: preview, production
-Apps: ${Object.keys(VERCEL_APPS).join(', ')}, all (default)
+Apps: ${Object.keys(VERCEL_APPS).join(', ')}
 Git Branch: Optional branch name for preview environment
 
 Examples:
-  pnpm env:clear preview              # Clear preview env from all apps
-  pnpm env:clear production app       # Clear production env from app only
+  pnpm env:clear preview app          # Clear preview env from app
+  pnpm env:clear production studio    # Clear production env from studio
   pnpm env:clear preview app feat-1   # Clear preview env for branch 'feat-1' from app
-  pnpm env:clear preview all dev      # Clear preview env for branch 'dev' from all apps
 `,
       ),
     )
@@ -260,43 +259,23 @@ Examples:
     process.exit(1)
   }
 
-  // Check if projects are linked
-  const apps = targetApp === 'all' ? (Object.keys(VERCEL_APPS) as AppName[]) : [targetApp]
-  const unlinkedApps: AppName[] = []
-
-  for (const app of apps) {
-    const linkStatus = checkAppLinkStatus(app)
-    if (!linkStatus.isLinked) {
-      unlinkedApps.push(app)
-    }
-  }
-
-  if (unlinkedApps.length > 0) {
-    console.error(chalk.red(`\n✗ The following apps are not linked to Vercel:\n`))
-    for (const app of unlinkedApps) {
-      console.error(chalk.yellow(`   • ${app} (expected project: ${VERCEL_APPS[app]})`))
-    }
-    console.error(chalk.cyan(`\nTo link these projects, run the following commands:\n`))
-    for (const app of unlinkedApps) {
-      console.error(chalk.white(`   cd apps/${app} && vercel link`))
-    }
+  // Check if project is linked
+  const linkStatus = checkAppLinkStatus(targetApp)
+  if (!linkStatus.isLinked) {
+    console.error(chalk.red(`\n✗ App "${targetApp}" is not linked to Vercel\n`))
+    console.error(chalk.yellow(`   Expected project: ${VERCEL_APPS[targetApp]}`))
+    console.error(chalk.cyan(`\nTo link this project, run:\n`))
+    console.error(chalk.white(`   cd apps/${targetApp} && vercel link`))
     console.error('')
     process.exit(1)
   }
 
   const envLabel = gitBranch ? `${vercelEnv.toUpperCase()} (${gitBranch})` : vercelEnv.toUpperCase()
 
-  console.log(
-    `\n${borderBox(
-      `Clearing ${envLabel} environment from Vercel`,
-      `Target: ${targetApp === 'all' ? 'All apps' : targetApp}`,
-    )}\n`,
-  )
+  console.log(`\n${borderBox(`Clearing ${envLabel} environment from Vercel`, `Target: ${targetApp}`)}\n`)
 
-  // Clear env vars from apps
-  for (const app of apps) {
-    clearEnvsForApp(app, vercelEnv, gitBranch)
-  }
+  // Clear env vars from app
+  clearEnvsForApp(targetApp, vercelEnv, gitBranch)
 
   console.log(chalk.green(`\n✅ Done!\n`))
 }
