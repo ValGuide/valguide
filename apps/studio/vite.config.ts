@@ -13,6 +13,12 @@ export default defineConfig({
     port: 3002,
     allowedHosts: ['studio.local.dev'],
   },
+  ssr: {
+    noExternal: ["uuid"],
+  },
+  optimizeDeps: {
+    include: ["uuid"],
+  },
   plugins: [
     // Enables Vite to resolve imports using path aliases
     tsconfigPaths({
