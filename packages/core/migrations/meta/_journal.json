@@ -127,6 +127,13 @@
       "when": 1766014875350,
       "tag": "0017_fast_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1767975593052,
+      "tag": "0018_brief_chameleon",
+      "breakpoints": true
     }
   ]
 }

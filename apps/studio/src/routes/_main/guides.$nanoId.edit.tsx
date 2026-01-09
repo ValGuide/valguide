@@ -7,7 +7,7 @@ import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuide } from '@/features/guides/hooks/use-guide'
-import { getGuideByNanoIdFn } from '@/features/guides/server-functions'
+import { guideQueryOptions } from '@/features/guides/query-options'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 type SearchParams = {
@@ -20,8 +20,8 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
     stop: search.stop as string | undefined,
     locale: search.locale as string | undefined,
   }),
-  loader: async ({ params }) => {
-    const guide = await getGuideByNanoIdFn({ data: { nanoId: params.nanoId } })
+  loader: async ({ params, context }) => {
+    const guide = await context.queryClient.ensureQueryData(guideQueryOptions(params.nanoId))
 
     if (!guide) {
       throw new Error('Guide not found')

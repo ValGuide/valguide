@@ -46,33 +46,45 @@ export const asset = studioSchema.table(
   }),
 )
 
-export const guideAsset = studioSchema.table('guide_asset', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  guideId: uuid('guide_id')
-    .notNull()
-    .references(() => guide.id, { onDelete: 'cascade' }),
-  assetId: uuid('asset_id')
-    .notNull()
-    .references(() => asset.id, { onDelete: 'cascade' }),
-  order: integer('order').notNull().default(0),
-  role: varchar('role', { length: 50 }).notNull(),
-  locale: varchar('locale', { length: 10 }),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-})
+export const guideAsset = studioSchema.table(
+  'guide_asset',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    guideId: uuid('guide_id')
+      .notNull()
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id')
+      .notNull()
+      .references(() => asset.id, { onDelete: 'cascade' }),
+    order: integer('order').notNull().default(0),
+    role: varchar('role', { length: 50 }).notNull(),
+    locale: varchar('locale', { length: 10 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    guideIdx: index('guide_asset_guide_id_idx').on(t.guideId),
+  }),
+)
 
-export const stopAsset = studioSchema.table('stop_asset', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  stopId: uuid('stop_id')
-    .notNull()
-    .references(() => stop.id, { onDelete: 'cascade' }),
-  assetId: uuid('asset_id')
-    .notNull()
-    .references(() => asset.id, { onDelete: 'cascade' }),
-  order: integer('order').notNull().default(0),
-  role: varchar('role', { length: 50 }).notNull(),
-  locale: varchar('locale', { length: 10 }),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-})
+export const stopAsset = studioSchema.table(
+  'stop_asset',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id')
+      .notNull()
+      .references(() => asset.id, { onDelete: 'cascade' }),
+    order: integer('order').notNull().default(0),
+    role: varchar('role', { length: 50 }).notNull(),
+    locale: varchar('locale', { length: 10 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    stopIdx: index('stop_asset_stop_id_idx').on(t.stopId),
+  }),
+)
 
 // Relations
 export const assetRelations = relations(asset, ({ many, one }) => ({

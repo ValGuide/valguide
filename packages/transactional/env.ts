@@ -1,7 +1,5 @@
 import { z } from 'zod'
 
-const isTest = process.env.NODE_ENV === 'test'
-
 const envSchema = z.object({
   RESEND_SENDING_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),

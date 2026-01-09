@@ -29,6 +29,7 @@ export const guideQueryOptions = (nanoId: string) =>
         throw error
       }
     },
+    staleTime: 30 * 1000,
   })
 
 export const archivedGuidesQueryOptions = () =>
@@ -48,4 +49,5 @@ export const guideWithAssetsQueryOptions = (nanoId: string) =>
       }
       return guide
     },
+    staleTime: 30 * 1000,
   })
