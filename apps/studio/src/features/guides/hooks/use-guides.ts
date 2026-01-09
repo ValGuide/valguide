@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/queries'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { guidesQueryOptions } from '../query-options'
 import { createGuideFn } from '../server-functions'
@@ -9,7 +10,7 @@ interface CreateGuideData {
 }
 
 interface UseGuidesReturn {
-  guides: GuideWithTranslations[]
+  guides: GuideWithTranslationsAndCover[]
   isLoading: boolean
   error: Error | null
   refetch: () => Promise<void>

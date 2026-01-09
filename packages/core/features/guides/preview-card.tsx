@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/core/ui/components/badge'
 import { Button } from '@valguide/core/ui/components/button'
@@ -38,7 +39,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
 
   const displayTitle = translation?.title || guide.title || 'Untitled Guide'
   const displayDescription = translation?.description || guide.description || ''
-  const displayImage = guide.imageUrl
+  const displayImage = guide.coverImage ? getAssetImageUrl(guide.coverImage) : guide.imageUrl
   const guideUrl = guide.nanoId ? `/guides/${guide.nanoId}` : '#'
 
   const isPublished = !!guide.published

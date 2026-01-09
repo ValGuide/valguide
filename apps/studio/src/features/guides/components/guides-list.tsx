@@ -1,5 +1,8 @@
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
+import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/queries'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { Guide } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -15,8 +18,26 @@ import { AlertCircle, BookOpen, Plus } from 'lucide-react'
 import * as React from 'react'
 import { toast } from 'sonner'
 
+function toGuideForPreview(guide: GuideWithTranslationsAndCover): Guide {
+  const translation = guide.translations.find((t) => t.locale === 'de') ?? guide.translations[0]
+  const version = translation?.draftVersion ?? translation?.currentVersion
+  return {
+    id: guide.id,
+    nanoId: guide.nanoId,
+    title: version?.title,
+    description: version?.description ?? undefined,
+    coverImage: guide.coverImage
+      ? { storagePath: guide.coverImage.storagePath, publicUrl: guide.coverImage.publicUrl }
+      : undefined,
+    imageUrl: guide.coverImage ? getAssetImageUrl(guide.coverImage) : undefined,
+    createdAt: guide.createdAt,
+    updatedAt: guide.updatedAt,
+    published: guide.published,
+  }
+}
+
 interface GuidesListProps {
-  guides?: GuideWithTranslations[]
+  guides?: GuideWithTranslationsAndCover[]
   isLoading?: boolean
   error?: Error | null
   onCreateGuide?: (data: {
@@ -24,7 +45,7 @@ interface GuidesListProps {
     organizationId?: string
     coverImage?: string
   }) => Promise<GuideWithTranslations>
-  onViewGuide?: (guide: GuideWithTranslations) => void
+  onViewGuide?: (guide: GuideWithTranslationsAndCover) => void
   onRetry?: () => void
 }
 
@@ -41,7 +62,7 @@ export function GuidesList({
   const [isCreating, setIsCreating] = React.useState(false)
 
   const handleViewGuide = React.useCallback(
-    (guide: GuideWithTranslations) => {
+    (guide: GuideWithTranslationsAndCover) => {
       onViewGuide?.(guide)
     },
     [onViewGuide],
@@ -213,7 +234,11 @@ export function GuidesList({
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {guides.map((guide) => (
-          <GuidePreviewCard key={guide.id} guide={guide} onViewDetails={handleViewGuide} />
+          <GuidePreviewCard
+            key={guide.id}
+            guide={toGuideForPreview(guide)}
+            onViewDetails={() => handleViewGuide(guide)}
+          />
         ))}
       </div>
     </div>

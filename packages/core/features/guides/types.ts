@@ -10,12 +10,21 @@ export const guideTranslationSchema = z.object({
   updatedAt: z.date(),
 })
 
+export const coverImageSchema = z
+  .object({
+    storagePath: z.string(),
+    publicUrl: z.string().nullable().optional(),
+  })
+  .nullable()
+  .optional()
+
 export const guideSchema = z.object({
   id: z.string(),
   nanoId: z.string(),
   title: z.string().optional(),
   description: z.string().optional(),
   imageUrl: z.string().optional(),
+  coverImage: coverImageSchema,
   author: z.string().optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),

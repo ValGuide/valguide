@@ -32,6 +32,10 @@ export type GuideWithStopsAndAssets = Omit<GuideWithStops, 'stops'> & {
   stops: StopWithAssets[]
 }
 
+export type GuideWithTranslationsAndCover = GuideWithTranslations & {
+  coverImage?: AssetWithRole | null
+}
+
 /**
  * Query utilities for guides with i18n support
  */
@@ -152,10 +156,13 @@ export async function getGuideByNanoIdWithAssets(nanoId: string): Promise<GuideW
 }
 
 /**
- * Get all guides for a specific organization with their translations
+ * Get all guides for a specific organization with their translations and cover images
  */
-export async function getGuidesByOrganizationId(db: DB, organizationId: string): Promise<GuideWithTranslations[]> {
-  return db.query.guide.findMany({
+export async function getGuidesByOrganizationId(
+  db: DB,
+  organizationId: string,
+): Promise<GuideWithTranslationsAndCover[]> {
+  const guides = await db.query.guide.findMany({
     where: and(eq(guide.organizationId, organizationId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: {
@@ -167,6 +174,42 @@ export async function getGuidesByOrganizationId(db: DB, organizationId: string):
     },
     orderBy: [desc(guide.createdAt)],
   })
+
+  if (guides.length === 0) return []
+
+  // Fetch cover images for all guides
+  const guideIds = guides.map((g) => g.id)
+  const coverAssets = await db
+    .select({
+      guideId: guideAsset.guideId,
+      guideAssetId: guideAsset.id,
+      asset: asset,
+      role: guideAsset.role,
+      order: guideAsset.order,
+      locale: guideAsset.locale,
+    })
+    .from(guideAsset)
+    .innerJoin(asset, eq(guideAsset.assetId, asset.id))
+    .where(and(inArray(guideAsset.guideId, guideIds), eq(guideAsset.role, 'cover')))
+
+  // Map cover assets by guide ID
+  const coverMap = new Map<string, AssetWithRole>()
+  for (const item of coverAssets) {
+    if (!coverMap.has(item.guideId)) {
+      coverMap.set(item.guideId, {
+        ...item.asset,
+        guideAssetId: item.guideAssetId,
+        role: item.role,
+        order: item.order,
+        locale: item.locale,
+      })
+    }
+  }
+
+  return guides.map((g) => ({
+    ...g,
+    coverImage: coverMap.get(g.id) ?? null,
+  }))
 }
 
 /**

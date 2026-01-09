@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
+import type { GuideWithStopsAndAssets, GuideWithTranslationsAndCover } from '@valguide/core/features/guides/queries'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { getGuideByNanoIdWithAssetsFn } from '@valguide/core/features/guides/server-functions'
 import { getArchivedGuidesFn, getGuideByNanoIdFn, getGuidesFn } from './server-functions'
@@ -10,7 +10,7 @@ export interface ArchivedGuidesResponse {
 }
 
 export const guidesQueryOptions = () =>
-  queryOptions({
+  queryOptions<GuideWithTranslationsAndCover[]>({
     queryKey: ['guides'],
     queryFn: () => getGuidesFn({ data: {} }),
   })

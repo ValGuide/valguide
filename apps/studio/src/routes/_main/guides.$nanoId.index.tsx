@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { clientEnv } from '@valguide/core/env/client'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
@@ -41,7 +42,8 @@ function GuidePage() {
   const description = version?.description ?? ''
   const isPublished = !!guide.published
   const status = isPublished ? 'published' : 'draft'
-  const coverImageUrl = guide.assets.find((a) => a.role === 'cover')?.publicUrl
+  const coverAsset = guide.assets.find((a) => a.role === 'cover')
+  const coverImageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
 
   return (
     <main className="flex flex-1 flex-col bg-gray-50 dark:bg-background">
