@@ -246,11 +246,11 @@ export async function createGuide(
 }
 
 /**
- * Get archived guides for a specific user
+ * Get archived guides for a specific organization
  */
-export async function getArchivedGuides(db: DB, userId: string): Promise<GuideWithTranslations[]> {
+export async function getArchivedGuides(db: DB, organizationId: string): Promise<GuideWithTranslations[]> {
   return db.query.guide.findMany({
-    where: and(eq(guide.createdBy, userId), isNotNull(guide.archivedAt), isNull(guide.deletedAt)),
+    where: and(eq(guide.organizationId, organizationId), isNotNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       translations: true,
     },

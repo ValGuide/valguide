@@ -16,7 +16,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@valguide/ui/components/sidebar'
-import { BarChart3, BookOpen, Image, MapPin, Settings2, SlidersHorizontal } from 'lucide-react'
+import { Archive, BarChart3, BookOpen, Image, MapPin, Settings2, SlidersHorizontal } from 'lucide-react'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
 
@@ -65,7 +65,17 @@ export function AppSidebar({
 
   // Preload all sidebar routes on mount for instant navigation
   React.useEffect(() => {
-    const routes = ['/guides', '/stops', '/analytics', '/assets', '/design', '/settings', '/team', '/profile']
+    const routes = [
+      '/guides',
+      '/stops',
+      '/analytics',
+      '/assets',
+      '/design',
+      '/settings',
+      '/team',
+      '/profile',
+      '/archived',
+    ]
     for (const route of routes) {
       router.preloadRoute({ to: route })
     }
@@ -105,6 +115,11 @@ export function AppSidebar({
       title: t('stops'),
       url: '/stops',
       icon: MapPin,
+    },
+    {
+      title: t('archived'),
+      url: '/archived',
+      icon: Archive,
     },
   ].map((item) => ({
     ...item,

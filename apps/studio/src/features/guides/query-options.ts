@@ -35,6 +35,7 @@ export const archivedGuidesQueryOptions = () =>
   queryOptions<ArchivedGuidesResponse>({
     queryKey: ['archived-guides'],
     queryFn: () => getArchivedGuidesFn(),
+    staleTime: 30 * 1000,
   })
 
 export const guideWithAssetsQueryOptions = (nanoId: string) =>

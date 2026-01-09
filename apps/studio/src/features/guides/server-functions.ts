@@ -8,9 +8,9 @@ import {
 } from '@valguide/core/features/guides/queries'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/core/i18n/i18n.config'
+import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
-import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 
 // Get guide by nanoId
 const getGuideByNanoIdInputSchema = z.object({
@@ -91,7 +91,7 @@ export const getGuidesFn = createServerFn({ method: 'GET' })
     return guides
   })
 
-// Get archived guides
+// Get archived guides for the current organization
 export const getArchivedGuidesFn = createServerFn({ method: 'GET' }).handler(async () => {
   const supabase = await createClient()
   const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
@@ -101,8 +101,23 @@ export const getArchivedGuidesFn = createServerFn({ method: 'GET' }).handler(asy
   }
 
   const userId = claimsData.claims.sub
+  const userTeams = await getUserTeams(db, userId)
 
-  const guides = await getArchivedGuides(db, userId)
+  if (userTeams.length === 0) {
+    return { guides: [], userId }
+  }
+
+  const activeTeamSlug = getActiveTeamSlug()
+  let targetOrganizationId = userTeams[0].id
+
+  if (activeTeamSlug) {
+    const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+    if (team) {
+      targetOrganizationId = team.id
+    }
+  }
+
+  const guides = await getArchivedGuides(db, targetOrganizationId)
 
   return {
     guides,
