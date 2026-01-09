@@ -467,6 +467,9 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.81.5
+        version: 5.90.16(react@19.2.1)
       '@valguide/app':
         specifier: workspace:*
         version: link:../app
@@ -488,6 +491,9 @@ importers:
       react-dom:
         specifier: 19.2.1
         version: 19.2.1(react@19.2.1)
+      use-intl:
+        specifier: ^4.3.3
+        version: 4.7.0(react@19.2.1)
     devDependencies:
       '@storybook/addon-themes':
         specifier: ^9.1.13
