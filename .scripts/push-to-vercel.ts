@@ -4,12 +4,11 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import chalk from 'chalk'
 import { borderBox } from './border-box'
+import { type Environment, mergeAndWrite } from './merge-env'
 
-type Environment = 'dev' | 'prod'
 type VercelEnvironment = 'production' | 'preview'
 
 const ROOT_DIR = join(__dirname, '..')
-const MERGED_DIR = join(ROOT_DIR, '.env-merged')
 
 // TanStack Start apps that are deployed to Vercel
 // Maps app folder name to Vercel project name
@@ -22,37 +21,6 @@ const VERCEL_APPS = {
 } as const
 
 type AppName = keyof typeof VERCEL_APPS
-
-/**
- * Parse a .env file and return key-value pairs
- */
-function parseEnvFile(content: string): Map<string, string> {
-  const vars = new Map<string, string>()
-  const lines = content.split('\n')
-
-  for (const line of lines) {
-    const trimmed = line.trim()
-
-    // Skip comments and empty lines
-    if (!trimmed || trimmed.startsWith('#')) {
-      continue
-    }
-
-    const equalIndex = trimmed.indexOf('=')
-    if (equalIndex === -1) {
-      continue
-    }
-
-    const key = trimmed.slice(0, equalIndex).trim()
-    const value = trimmed.slice(equalIndex + 1).trim()
-
-    if (key) {
-      vars.set(key, value)
-    }
-  }
-
-  return vars
-}
 
 /**
  * Execute a shell command and return output
@@ -224,18 +192,10 @@ function main() {
     )}\n`,
   )
 
-  // Read merged env file
-  const envFilePath = join(MERGED_DIR, `.env.${environment}`)
-  let content: string
+  // Merge env files first
+  console.log(chalk.blue('📁 Merging environment files...\n'))
+  const vars = mergeAndWrite(environment)
 
-  try {
-    content = readFileSync(envFilePath, 'utf-8')
-  } catch {
-    console.error(chalk.red(`\n✗ Could not read ${envFilePath}\n\nPlease run: pnpm env:merge ${environment}\n`))
-    process.exit(1)
-  }
-
-  const vars = parseEnvFile(content)
   console.log(chalk.blue(`📋 Found ${vars.size} variables to push\n`))
 
   // Push to apps

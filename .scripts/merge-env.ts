@@ -1,13 +1,14 @@
 #!/usr/bin/env tsx
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import chalk from 'chalk'
 import { borderBox } from './border-box'
 
-type Environment = 'local' | 'dev' | 'prod'
+export type Environment = 'local' | 'dev' | 'prod'
 
-const SECRETS_DIR = join(__dirname, '../.secrets')
-const OUTPUT_DIR = join(__dirname, '../.env-merged')
+const ROOT_DIR = join(__dirname, '..')
+const SECRETS_DIR = join(ROOT_DIR, '.secrets')
+const OUTPUT_DIR = join(ROOT_DIR, '.env-merged')
 
 const ENV_FILES: Record<Environment, string[]> = {
   local: ['.env.defaults', '.env.supabase.local', '.env.resend.dev'],
@@ -18,7 +19,7 @@ const ENV_FILES: Record<Environment, string[]> = {
 /**
  * Parse a .env file and return key-value pairs
  */
-function parseEnvFile(content: string): Map<string, string> {
+export function parseEnvFile(content: string): Map<string, string> {
   const vars = new Map<string, string>()
   const lines = content.split('\n')
 
@@ -49,7 +50,7 @@ function parseEnvFile(content: string): Map<string, string> {
 /**
  * Merge multiple env files, with later files overriding earlier ones
  */
-function mergeEnvFiles(env: Environment): Map<string, string> {
+export function mergeEnvFiles(env: Environment, silent = false): Map<string, string> {
   const merged = new Map<string, string>()
   const files = ENV_FILES[env]
 
@@ -65,9 +66,13 @@ function mergeEnvFiles(env: Environment): Map<string, string> {
         merged.set(key, value)
       }
 
-      console.log(chalk.green(`✓ Loaded ${file} (${vars.size} variables)`))
-    } catch (error) {
-      console.warn(chalk.yellow(`⚠ Skipped ${file} (file not found)`))
+      if (!silent) {
+        console.log(chalk.green(`✓ Loaded ${file} (${vars.size} variables)`))
+      }
+    } catch {
+      if (!silent) {
+        console.warn(chalk.yellow(`⚠ Skipped ${file} (file not found)`))
+      }
     }
   }
 
@@ -77,8 +82,8 @@ function mergeEnvFiles(env: Environment): Map<string, string> {
 /**
  * Convert Map to .env file format
  */
-function formatEnvFile(vars: Map<string, string>): string {
-  const lines: string[] = ['# Merged environment variables', '']
+export function formatEnvFile(vars: Map<string, string>): string {
+  const lines: string[] = [`# Merged environment variables - Generated at ${new Date().toISOString()}`, '']
 
   for (const [key, value] of vars) {
     lines.push(`${key}=${value}`)
@@ -88,7 +93,68 @@ function formatEnvFile(vars: Map<string, string>): string {
 }
 
 /**
- * Main function
+ * Get the output path for a merged env file
+ */
+export function getMergedEnvPath(env: Environment): string {
+  return join(OUTPUT_DIR, `.env.${env}`)
+}
+
+/**
+ * Check if merged env file exists and is recent (within maxAge ms)
+ */
+export function isMergedEnvRecent(env: Environment, maxAgeMs = 60000): boolean {
+  const outputPath = getMergedEnvPath(env)
+  if (!existsSync(outputPath)) {
+    return false
+  }
+
+  try {
+    const stats = require('node:fs').statSync(outputPath)
+    const age = Date.now() - stats.mtimeMs
+    return age < maxAgeMs
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Merge env files and write to output directory
+ * Returns the merged variables
+ */
+export function mergeAndWrite(env: Environment, silent = false): Map<string, string> {
+  // Merge env files
+  const merged = mergeEnvFiles(env, silent)
+
+  // Create output directory if it doesn't exist
+  mkdirSync(OUTPUT_DIR, { recursive: true })
+
+  // Write merged file
+  const outputPath = getMergedEnvPath(env)
+  const content = formatEnvFile(merged)
+  writeFileSync(outputPath, content, 'utf-8')
+
+  if (!silent) {
+    console.log(chalk.green(`\n✓ Merged ${merged.size} variables to ${outputPath.replace(ROOT_DIR + '/', '')}\n`))
+  }
+
+  return merged
+}
+
+/**
+ * Read merged env file if it exists
+ */
+export function readMergedEnv(env: Environment): Map<string, string> | null {
+  const outputPath = getMergedEnvPath(env)
+  try {
+    const content = readFileSync(outputPath, 'utf-8')
+    return parseEnvFile(content)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Main function - only runs when script is executed directly
  */
 function main() {
   const args = process.argv.slice(2)
@@ -105,18 +171,10 @@ function main() {
 
   console.log(`\n${borderBox(`Merging environment variables for: ${env.toUpperCase()}`)}\n`)
 
-  // Merge env files
-  const merged = mergeEnvFiles(env)
-
-  // Create output directory if it doesn't exist
-  mkdirSync(OUTPUT_DIR, { recursive: true })
-
-  // Write merged file
-  const outputPath = join(OUTPUT_DIR, `.env.${env}`)
-  const content = formatEnvFile(merged)
-  writeFileSync(outputPath, content, 'utf-8')
-
-  console.log(chalk.green(`\n✓ Merged ${merged.size} variables to ${outputPath.replace(__dirname + '/../', '')}\n`))
+  mergeAndWrite(env)
 }
 
-main()
+// Only run main() if this file is executed directly (not imported)
+if (require.main === module) {
+  main()
+}
