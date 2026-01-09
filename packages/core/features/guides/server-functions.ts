@@ -13,6 +13,8 @@ import {
   publishStopTranslationDraft as publishStopDraft,
   rollbackGuideTranslation as rollbackGuide,
   rollbackStopTranslation as rollbackStop,
+  upsertGuideTranslationDraft,
+  upsertStopTranslationDraft,
 } from './translation-mutations'
 import { getGuideTranslationHistory, getStopTranslationHistory } from './translation-queries'
 
@@ -166,8 +168,6 @@ export const updateGuideTranslationFn = createServerFn({ method: 'POST' })
     const { guideId, locale, title, description } = data
     await requireGuideAccess(guideId)
 
-    const { upsertGuideTranslationDraft } = await import('./translation-mutations')
-
     const versionId = await upsertGuideTranslationDraft(guideId, locale, { title, description })
 
     return { versionId }
@@ -239,8 +239,6 @@ export const createStopFn = createServerFn({ method: 'POST' })
       position: finalPosition,
     })
 
-    const { upsertStopTranslationDraft } = await import('./translation-mutations')
-
     for (const trans of translations) {
       await upsertStopTranslationDraft(
         newStop.id,
@@ -286,8 +284,6 @@ export const updateStopFn = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const { stopId, locale, title, description, transcription } = data
     await requireStopAccess(stopId)
-
-    const { upsertStopTranslationDraft } = await import('./translation-mutations')
 
     const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
 

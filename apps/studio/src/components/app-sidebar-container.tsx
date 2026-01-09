@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { signOutFn } from '@valguide/core/features/auth/server-functions'
@@ -14,6 +15,7 @@ export function AppSidebarContainer() {
   const location = useLocation()
   const pathname = location.pathname
   const router = useRouter()
+  const queryClient = useQueryClient()
   const t = useTranslations('orgs.teamSwitcher')
 
   const { data, isLoading } = useSidebarData()
@@ -39,7 +41,7 @@ export function AppSidebarContainer() {
     try {
       const result = await switchTeamFn({ data: { slug: teamSlug } })
       if (result?.success) {
-        // Full page reload to ensure all state is reset
+        queryClient.removeQueries({ queryKey: ['sidebar'] })
         window.location.reload()
       }
     } catch (error) {

@@ -3,15 +3,16 @@ import { valguideId } from '../../utils/nanoid'
 import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
 import { type DB, db } from '../db'
 import {
+  type GuideWithStops,
+  type GuideWithTranslations,
   guide,
   guideStop,
   guideTranslation,
   guideTranslationVersion,
-  type GuideWithStops,
-  type GuideWithTranslations,
-  stop,
   type StopWithTranslations,
+  stop,
 } from './schema'
+import { upsertGuideTranslationDraft } from './translation-mutations'
 
 // Extended types for app viewer
 export type AssetWithRole = Asset & {
@@ -266,9 +267,6 @@ export async function updateGuideTranslation(
   locale: string,
   data: { title?: string; description?: string },
 ): Promise<typeof guideTranslation.$inferSelect> {
-  // Use new versioning system - create/update draft
-  const { upsertGuideTranslationDraft } = await import('./translation-mutations')
-
   if (!data.title) {
     throw new Error('Title is required')
   }
