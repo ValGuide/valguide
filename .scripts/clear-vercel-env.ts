@@ -1,13 +1,19 @@
 #!/usr/bin/env tsx
-import { execSync } from 'node:child_process'
+import { exec, execSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { promisify } from 'node:util'
 import chalk from 'chalk'
 import { borderBox } from './border-box'
+
+const execAsync = promisify(exec)
 
 type VercelEnvironment = 'production' | 'preview'
 
 const ROOT_DIR = join(__dirname, '..')
+
+// Number of concurrent env deletions (too many can cause rate limiting)
+const CONCURRENCY = 5
 
 // TanStack Start apps that are deployed to Vercel
 // Maps app folder name to Vercel project name
@@ -22,7 +28,7 @@ const VERCEL_APPS = {
 type AppName = keyof typeof VERCEL_APPS
 
 /**
- * Execute a shell command and return output
+ * Execute a shell command and return output (sync version for listing)
  */
 function execCommand(command: string, silent = false): string {
   try {
@@ -147,23 +153,58 @@ function getVercelEnvVars(appName: AppName, gitBranch?: string): EnvVar[] {
 }
 
 /**
- * Remove a single env variable from Vercel
+ * Remove a single env variable from Vercel (async)
  */
-function removeEnvVar(key: string, appName: AppName, vercelEnv: VercelEnvironment, gitBranch?: string): boolean {
+async function removeEnvVar(
+  key: string,
+  appName: AppName,
+  vercelEnv: VercelEnvironment,
+  gitBranch?: string,
+): Promise<{ key: string; success: boolean }> {
   const appDir = getAppDir(appName)
   try {
     const branchArg = gitBranch ? ` ${gitBranch}` : ''
-    execCommand(`vercel env rm ${key} ${vercelEnv}${branchArg} --cwd "${appDir}" -y 2>&1`, true)
-    return true
+    await execAsync(`vercel env rm ${key} ${vercelEnv}${branchArg} --cwd "${appDir}" -y`)
+    return { key, success: true }
   } catch {
-    return false
+    return { key, success: false }
   }
 }
 
 /**
- * Clear all env variables for a specific app and environment
+ * Run promises with concurrency limit
  */
-function clearEnvsForApp(appName: AppName, vercelEnv: VercelEnvironment, gitBranch?: string): void {
+async function runWithConcurrency<T>(tasks: (() => Promise<T>)[], concurrency: number): Promise<T[]> {
+  const results: T[] = []
+  const executing: Promise<void>[] = []
+
+  for (const task of tasks) {
+    const p = task().then((result) => {
+      results.push(result)
+    })
+
+    executing.push(p)
+
+    if (executing.length >= concurrency) {
+      await Promise.race(executing)
+      // Remove completed promises
+      for (let i = executing.length - 1; i >= 0; i--) {
+        const settled = await Promise.race([executing[i]!.then(() => true), Promise.resolve(false)])
+        if (settled) {
+          executing.splice(i, 1)
+        }
+      }
+    }
+  }
+
+  await Promise.all(executing)
+  return results
+}
+
+/**
+ * Clear all env variables for a specific app and environment (parallel)
+ */
+async function clearEnvsForApp(appName: AppName, vercelEnv: VercelEnvironment, gitBranch?: string): Promise<void> {
   const projectName = VERCEL_APPS[appName]
 
   console.log(chalk.cyan(`\n🗑️  Clearing env vars from ${appName} (${projectName})`))
@@ -186,18 +227,24 @@ function clearEnvsForApp(appName: AppName, vercelEnv: VercelEnvironment, gitBran
     return
   }
 
-  console.log(chalk.gray(`   Found ${varsToRemove.length} variables to remove\n`))
+  console.log(chalk.gray(`   Removing ${varsToRemove.length} variables (${CONCURRENCY} concurrent)...\n`))
 
+  // Create tasks for parallel execution
+  const tasks = varsToRemove.map((envVar) => () => removeEnvVar(envVar.name, appName, vercelEnv, gitBranch))
+
+  // Run with concurrency limit
+  const results = await runWithConcurrency(tasks, CONCURRENCY)
+
+  // Report results
   let successCount = 0
   let errorCount = 0
 
-  for (const envVar of varsToRemove) {
-    const success = removeEnvVar(envVar.name, appName, vercelEnv, gitBranch)
-    if (success) {
-      console.log(chalk.green(`  ✓ ${envVar.name}`))
+  for (const result of results) {
+    if (result.success) {
+      console.log(chalk.green(`  ✓ ${result.key}`))
       successCount++
     } else {
-      console.error(chalk.red(`  ✗ ${envVar.name}`))
+      console.error(chalk.red(`  ✗ ${result.key}`))
       errorCount++
     }
   }
@@ -211,7 +258,7 @@ function clearEnvsForApp(appName: AppName, vercelEnv: VercelEnvironment, gitBran
 /**
  * Main function
  */
-function main() {
+async function main() {
   const args = process.argv.slice(2)
 
   // Parse arguments
@@ -275,9 +322,12 @@ Examples:
   console.log(`\n${borderBox(`Clearing ${envLabel} environment from Vercel`, `Target: ${targetApp}`)}\n`)
 
   // Clear env vars from app
-  clearEnvsForApp(targetApp, vercelEnv, gitBranch)
+  await clearEnvsForApp(targetApp, vercelEnv, gitBranch)
 
   console.log(chalk.green(`\n✅ Done!\n`))
 }
 
-main()
+main().catch((err) => {
+  console.error(chalk.red(`\n✗ Error: ${err.message}\n`))
+  process.exit(1)
+})

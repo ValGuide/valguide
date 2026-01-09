@@ -1,14 +1,20 @@
 #!/usr/bin/env tsx
-import { execSync } from 'node:child_process'
+import { exec } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { promisify } from 'node:util'
 import chalk from 'chalk'
 import { borderBox } from './border-box'
 import { type Environment, mergeAndWrite } from './merge-env'
 
+const execAsync = promisify(exec)
+
 type VercelEnvironment = 'production' | 'preview'
 
 const ROOT_DIR = join(__dirname, '..')
+
+// Number of concurrent env pushes (too many can cause rate limiting)
+const CONCURRENCY = 5
 
 // TanStack Start apps that are deployed to Vercel
 // Maps app folder name to Vercel project name
@@ -23,21 +29,6 @@ const VERCEL_APPS = {
 type AppName = keyof typeof VERCEL_APPS
 
 /**
- * Execute a shell command and return output
- */
-function execCommand(command: string, silent = false): string {
-  try {
-    return execSync(command, {
-      encoding: 'utf-8',
-      stdio: silent ? 'pipe' : 'inherit',
-    })
-  } catch (error) {
-    console.error(chalk.red(`Failed to execute: ${command}`))
-    throw error
-  }
-}
-
-/**
  * Get the app directory path
  */
 function getAppDir(appName: AppName): string {
@@ -47,53 +38,91 @@ function getAppDir(appName: AppName): string {
 /**
  * Push a single env variable to Vercel using --force to overwrite if exists
  */
-function pushEnvVar(
+async function pushEnvVar(
   key: string,
   value: string,
   appName: AppName,
   vercelEnv: VercelEnvironment,
   gitBranch?: string,
-): void {
+): Promise<{ key: string; success: boolean }> {
   const appDir = getAppDir(appName)
   const branchArg = gitBranch ? ` ${gitBranch}` : ''
 
-  // Add the variable with --force to overwrite if exists
   try {
-    execCommand(
-      `printf '%s' "${value}" | vercel env add ${key} ${vercelEnv}${branchArg} --cwd "${appDir}" --force`,
-      true,
-    )
+    await execAsync(`printf '%s' "${value}" | vercel env add ${key} ${vercelEnv}${branchArg} --cwd "${appDir}" --force`)
+    return { key, success: true }
   } catch {
-    throw new Error(`Failed to push ${key}`)
+    return { key, success: false }
   }
 }
 
 /**
- * Push all env variables for a specific app
+ * Run promises with concurrency limit
  */
-function pushEnvsForApp(
+async function runWithConcurrency<T>(tasks: (() => Promise<T>)[], concurrency: number): Promise<T[]> {
+  const results: T[] = []
+  const executing: Promise<void>[] = []
+
+  for (const task of tasks) {
+    const p = task().then((result) => {
+      results.push(result)
+    })
+
+    executing.push(p)
+
+    if (executing.length >= concurrency) {
+      await Promise.race(executing)
+      // Remove completed promises
+      for (let i = executing.length - 1; i >= 0; i--) {
+        // Check if promise is settled by racing with an immediately resolved promise
+        const settled = await Promise.race([executing[i]!.then(() => true), Promise.resolve(false)])
+        if (settled) {
+          executing.splice(i, 1)
+        }
+      }
+    }
+  }
+
+  await Promise.all(executing)
+  return results
+}
+
+/**
+ * Push all env variables for a specific app (parallel)
+ */
+async function pushEnvsForApp(
   appName: AppName,
   vars: Map<string, string>,
   vercelEnv: VercelEnvironment,
   gitBranch?: string,
-): void {
+): Promise<void> {
   const projectName = VERCEL_APPS[appName]
   const envLabel = gitBranch ? `${vercelEnv} (${gitBranch})` : vercelEnv
 
   console.log(chalk.cyan(`\n📦 Pushing to ${appName} (${projectName})`))
   console.log(chalk.gray(`   Environment: ${envLabel}`))
+  console.log(chalk.gray(`   Pushing ${vars.size} variables (${CONCURRENCY} concurrent)...\n`))
 
-  // Push each variable
+  // Create tasks for parallel execution
+  const tasks = Array.from(vars.entries()).map(
+    ([key, value]) =>
+      () =>
+        pushEnvVar(key, value, appName, vercelEnv, gitBranch),
+  )
+
+  // Run with concurrency limit
+  const results = await runWithConcurrency(tasks, CONCURRENCY)
+
+  // Report results
   let successCount = 0
   let errorCount = 0
 
-  for (const [key, value] of vars) {
-    try {
-      pushEnvVar(key, value, appName, vercelEnv, gitBranch)
-      console.log(chalk.green(`  ✓ ${key}`))
+  for (const result of results) {
+    if (result.success) {
+      console.log(chalk.green(`  ✓ ${result.key}`))
       successCount++
-    } catch {
-      console.error(chalk.red(`  ✗ ${key} (failed)`))
+    } else {
+      console.error(chalk.red(`  ✗ ${result.key} (failed)`))
       errorCount++
     }
   }
@@ -136,7 +165,7 @@ function checkAppLinkStatus(appName: AppName): LinkStatus {
 /**
  * Main function
  */
-function main() {
+async function main() {
   const args = process.argv.slice(2)
 
   // Parse arguments
@@ -257,11 +286,14 @@ Examples:
     for (const env of vercelEnvs) {
       // Only apply gitBranch to preview environment
       const branch = env === 'preview' ? gitBranch : undefined
-      pushEnvsForApp(app, vars, env, branch)
+      await pushEnvsForApp(app, vars, env, branch)
     }
   }
 
   console.log(chalk.green(`\n✅ Done!\n`))
 }
 
-main()
+main().catch((err) => {
+  console.error(chalk.red(`\n✗ Error: ${err.message}\n`))
+  process.exit(1)
+})
