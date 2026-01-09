@@ -193,9 +193,9 @@ export function StopEditLayout({
   return (
     <>
       {unsavedChangesDialog}
-      <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
+      <div className="min-h-[calc(100vh-4rem)] bg-background">
         {/* Header */}
-        <div className="border-b bg-background px-3 py-3 sm:px-6">
+        <div className="sticky top-0 z-10 border-b bg-background px-3 py-3 sm:px-6">
           <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
             <Breadcrumb className="hidden min-w-0 flex-1 lg:flex">
               <BreadcrumbList className="flex-nowrap">
@@ -221,7 +221,7 @@ export function StopEditLayout({
         </div>
 
         {/* Status Badge and Tabs */}
-        <div className="border-b bg-background px-3 py-3 sm:px-6">
+        <div className="sticky top-[57px] z-10 border-b bg-background px-3 py-3 sm:px-6">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="sm" onClick={handleBack} className="gap-1 w-fit -ml-2">
@@ -241,8 +241,8 @@ export function StopEditLayout({
         </div>
 
         {/* Main Content */}
-        <div className="flex min-w-0 flex-1 overflow-hidden">
-          <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
+        <div className="flex min-w-0">
+          <div className="min-w-0 flex-1 bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
                 {/* Locale-specific Content Section */}
@@ -291,7 +291,7 @@ export function StopEditLayout({
           </div>
 
           {/* Right Sidebar - Actions Panel */}
-          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
+          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block self-start sticky top-[140px]">
             <EditorActionsPanel
               hasDraft={hasDraft}
               hasPublished={hasPublished}
