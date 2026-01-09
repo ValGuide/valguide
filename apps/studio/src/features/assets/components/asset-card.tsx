@@ -1,19 +1,9 @@
 import { Image as UnpicImage } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import { deleteAssetFn } from '@valguide/core/features/assets/server-functions'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@valguide/ui/components/alert-dialog'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
@@ -27,11 +17,12 @@ import { formatDistanceToNow } from 'date-fns'
 import { Download, Eye, Image, MoreVertical, Music, Trash2, Video } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { DeleteAssetDialog } from './delete-asset-dialog'
 
 export type AssetCardProps = {
-  asset: Asset
+  asset: AssetWithUsage
   onDelete?: (assetId: string) => void
-  onPreview?: (asset: Asset) => void
+  onPreview?: (asset: AssetWithUsage) => void
   mockDelete?: boolean
 }
 
@@ -145,6 +136,18 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
                   {asset.locale}
                 </Badge>
               )}
+              {(asset.guideCount > 0 || asset.stopCount > 0) && (
+                <Badge variant="outline" className="text-muted-foreground">
+                  {asset.guideCount > 0 && asset.stopCount > 0
+                    ? t('usage.guidesAndStops', {
+                        guides: t('usage.guidesCount', { count: asset.guideCount }),
+                        stops: t('usage.stopsCount', { count: asset.stopCount }),
+                      })
+                    : asset.guideCount > 0
+                      ? t('usage.guidesCount', { count: asset.guideCount })
+                      : t('usage.stopsCount', { count: asset.stopCount })}
+                </Badge>
+              )}
             </div>
 
             <div className="space-y-1 text-xs text-muted-foreground">
@@ -157,25 +160,14 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
         </CardContent>
       </Card>
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('card.delete')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('card.deleteConfirm')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>{t('card.cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeleting ? t('card.deleting') : t('card.delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteAssetDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        assetId={asset.id}
+        fileName={asset.fileName}
+        isDeleting={isDeleting}
+        onConfirmDelete={handleDelete}
+      />
     </>
   )
 }

@@ -1,6 +1,6 @@
-import { and, desc, eq } from 'drizzle-orm'
+import { and, count, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { db } from '../db'
-import { asset, type AssetType, guideAsset, stopAsset } from './schema'
+import { type AssetType, asset, guideAsset, stopAsset } from './schema'
 
 export type GetAssetsFilters = {
   type?: AssetType
@@ -9,7 +9,12 @@ export type GetAssetsFilters = {
   uploadedBy?: string
 }
 
-export async function getAssets(filters?: GetAssetsFilters) {
+export type AssetWithUsage = typeof asset.$inferSelect & {
+  guideCount: number
+  stopCount: number
+}
+
+export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUsage[]> {
   const conditions = []
 
   if (filters?.type) {
@@ -25,13 +30,24 @@ export async function getAssets(filters?: GetAssetsFilters) {
     conditions.push(eq(asset.uploadedBy, filters.uploadedBy))
   }
 
-  const query = db.select().from(asset)
+  const guideCountSq = db.select({ count: count() }).from(guideAsset).where(eq(guideAsset.assetId, asset.id))
+
+  const stopCountSq = db.select({ count: count() }).from(stopAsset).where(eq(stopAsset.assetId, asset.id))
+
+  const query = db
+    .select({
+      ...getTableColumns(asset),
+      guideCount: sql<number>`COALESCE(${guideCountSq}, 0)`.as('guide_count'),
+      stopCount: sql<number>`COALESCE(${stopCountSq}, 0)`.as('stop_count'),
+    })
+    .from(asset)
+    .orderBy(desc(asset.createdAt))
 
   if (conditions.length > 0) {
-    return query.where(and(...conditions)).orderBy(desc(asset.createdAt))
+    return query.where(and(...conditions))
   }
 
-  return query.orderBy(desc(asset.createdAt))
+  return query
 }
 
 export async function attachAssetToGuide({

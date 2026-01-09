@@ -707,6 +707,28 @@
       "download": "Herunterladen",
       "cancel": "Abbrechen"
     },
+    "usage": {
+      "title": "Verwendung",
+      "notUsed": "Nicht verwendet",
+      "guidesCount": "{count, plural, one {# Guide} other {# Guides}}",
+      "stopsCount": "{count, plural, one {# Stopp} other {# Stopps}}",
+      "guidesAndStops": "{guides}, {stops}",
+      "role": {
+        "cover": "Titelbild",
+        "gallery": "Galerie",
+        "audio": "Audioguide"
+      }
+    },
+    "deleteWithUsage": {
+      "title": "Asset löschen",
+      "warningTitle": "Dieses Asset wird verwendet",
+      "description": "\"{fileName}\" wird verwendet in:",
+      "guidesSection": "Guides",
+      "stopsSection": "Stopps",
+      "warning": "Das Löschen entfernt dieses Asset dauerhaft von allen diesen Orten.",
+      "confirmButton": "Trotzdem löschen",
+      "loadingUsage": "Verwendung wird geprüft..."
+    },
     "limits": {
       "maxSize": "Max. Dateigröße: {size}",
       "maxFiles": "Bis zu {count} Dateien"

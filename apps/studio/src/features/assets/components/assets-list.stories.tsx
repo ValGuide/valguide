@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import { AssetsList } from './assets-list'
 
 const meta = {
@@ -21,7 +21,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const mockAssets: Asset[] = [
+const mockAssets: AssetWithUsage[] = [
   {
     id: '1',
     nanoId: 'img1',
@@ -39,6 +39,8 @@ const mockAssets: Asset[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-10T10:00:00Z'),
     updatedAt: new Date('2025-01-10T10:00:00Z'),
+    guideCount: 2,
+    stopCount: 1,
   },
   {
     id: '2',
@@ -57,6 +59,8 @@ const mockAssets: Asset[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-09T14:30:00Z'),
     updatedAt: new Date('2025-01-09T14:30:00Z'),
+    guideCount: 0,
+    stopCount: 3,
   },
   {
     id: '3',
@@ -75,6 +79,8 @@ const mockAssets: Asset[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-08T09:15:00Z'),
     updatedAt: new Date('2025-01-08T09:15:00Z'),
+    guideCount: 1,
+    stopCount: 0,
   },
   {
     id: '4',
@@ -93,6 +99,8 @@ const mockAssets: Asset[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-08T09:20:00Z'),
     updatedAt: new Date('2025-01-08T09:20:00Z'),
+    guideCount: 0,
+    stopCount: 0,
   },
   {
     id: '5',
@@ -111,6 +119,8 @@ const mockAssets: Asset[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-07T16:45:00Z'),
     updatedAt: new Date('2025-01-07T16:45:00Z'),
+    guideCount: 0,
+    stopCount: 2,
   },
   {
     id: '6',
@@ -129,6 +139,8 @@ const mockAssets: Asset[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-06T11:00:00Z'),
     updatedAt: new Date('2025-01-06T11:00:00Z'),
+    guideCount: 0,
+    stopCount: 0,
   },
 ]
 

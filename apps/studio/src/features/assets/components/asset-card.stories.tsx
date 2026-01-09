@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import { AssetCard } from './asset-card'
 
 const meta = {
@@ -24,7 +24,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const baseAsset: Asset = {
+const baseAsset: AssetWithUsage = {
   id: '1',
   nanoId: 'abc123',
   fileName: 'museum-photo.jpg',
@@ -41,6 +41,8 @@ const baseAsset: Asset = {
   uploadedBy: 'user-456',
   createdAt: new Date('2025-01-10T10:00:00Z'),
   updatedAt: new Date('2025-01-10T10:00:00Z'),
+  guideCount: 0,
+  stopCount: 0,
 }
 
 export const ImageAsset: Story = {
@@ -127,6 +129,36 @@ export const OldUpload: Story = {
     asset: {
       ...baseAsset,
       createdAt: new Date('2024-01-01T00:00:00Z'),
+    },
+  },
+}
+
+export const UsedInGuides: Story = {
+  args: {
+    asset: {
+      ...baseAsset,
+      guideCount: 2,
+      stopCount: 0,
+    },
+  },
+}
+
+export const UsedInStops: Story = {
+  args: {
+    asset: {
+      ...baseAsset,
+      guideCount: 0,
+      stopCount: 3,
+    },
+  },
+}
+
+export const UsedInBoth: Story = {
+  args: {
+    asset: {
+      ...baseAsset,
+      guideCount: 2,
+      stopCount: 1,
     },
   },
 }

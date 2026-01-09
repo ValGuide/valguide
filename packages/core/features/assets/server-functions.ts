@@ -144,3 +144,89 @@ export const deleteAssetFn = createServerFn({ method: 'POST' })
 
     return { success: true }
   })
+
+// ============================================================================
+// Get Asset Usage Details (GET)
+// ============================================================================
+
+const getAssetUsageDetailsSchema = z.object({
+  assetId: z.string(),
+})
+
+export type AssetUsageDetails = {
+  guides: Array<{
+    id: string
+    nanoId: string
+    name: string
+    role: string
+    locale: string | null
+  }>
+  stops: Array<{
+    id: string
+    nanoId: string
+    name: string
+    role: string
+    locale: string | null
+  }>
+}
+
+export const getAssetUsageDetailsFn = createServerFn({ method: 'GET' })
+  .inputValidator(getAssetUsageDetailsSchema)
+  .handler(async ({ data }): Promise<AssetUsageDetails> => {
+    const usage = await db.query.asset.findFirst({
+      where: eq(asset.id, data.assetId),
+      with: {
+        guideAssets: {
+          with: {
+            guide: {
+              columns: { id: true, nanoId: true },
+              with: {
+                translations: {
+                  with: {
+                    currentVersion: {
+                      columns: { title: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        stopAssets: {
+          with: {
+            stop: {
+              columns: { id: true, nanoId: true },
+              with: {
+                translations: {
+                  with: {
+                    currentVersion: {
+                      columns: { title: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+
+    return {
+      guides:
+        usage?.guideAssets.map((ga) => ({
+          id: ga.guide.id,
+          nanoId: ga.guide.nanoId,
+          name: ga.guide.translations[0]?.currentVersion?.title ?? 'Untitled',
+          role: ga.role,
+          locale: ga.locale,
+        })) ?? [],
+      stops:
+        usage?.stopAssets.map((sa) => ({
+          id: sa.stop.id,
+          nanoId: sa.stop.nanoId,
+          name: sa.stop.translations[0]?.currentVersion?.title ?? 'Untitled',
+          role: sa.role,
+          locale: sa.locale,
+        })) ?? [],
+    }
+  })

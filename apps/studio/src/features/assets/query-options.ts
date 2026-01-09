@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
-import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
+import type { AssetType } from '@valguide/core/features/assets/schema'
 import { getAssetsFn } from './server-functions'
 
 export type AssetsQueryOptions = {
@@ -9,7 +10,7 @@ export type AssetsQueryOptions = {
 }
 
 export type AssetsResponse = {
-  assets: Asset[]
+  assets: AssetWithUsage[]
 }
 
 export const assetsQueryKey = (options?: AssetsQueryOptions) =>

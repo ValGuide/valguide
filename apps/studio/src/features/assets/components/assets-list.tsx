@@ -1,3 +1,4 @@
+import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
@@ -19,7 +20,7 @@ import { AssetCard } from './asset-card'
 import { AssetUploadInline } from './asset-upload-inline'
 
 export type AssetsListProps = {
-  assets?: Asset[]
+  assets?: AssetWithUsage[]
   isLoading?: boolean
   error?: Error | null
   organizationId: string

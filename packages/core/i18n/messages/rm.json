@@ -707,6 +707,28 @@
       "download": "Chargiar giu",
       "cancel": "Interrumper"
     },
+    "usage": {
+      "title": "Utilisaziun",
+      "notUsed": "Betg utilisà",
+      "guidesCount": "{count, plural, one {# guide} other {# guides}}",
+      "stopsCount": "{count, plural, one {# stop} other {# stops}}",
+      "guidesAndStops": "{guides}, {stops}",
+      "role": {
+        "cover": "Maletg da titel",
+        "gallery": "Galaria",
+        "audio": "Audioguide"
+      }
+    },
+    "deleteWithUsage": {
+      "title": "Stizzar l'asset",
+      "warningTitle": "Quest asset vegn utilisà",
+      "description": "\"{fileName}\" vegn utilisà en:",
+      "guidesSection": "Guides",
+      "stopsSection": "Stops",
+      "warning": "Stizzar vegn a allontanar quest asset da tut quests lieus permanentamain.",
+      "confirmButton": "Stizzar tuttina",
+      "loadingUsage": "Controllar l'utilisaziun..."
+    },
     "limits": {
       "maxSize": "Grondezza maximala da datoteca: {size}",
       "maxFiles": "Fin {count} datotecas"

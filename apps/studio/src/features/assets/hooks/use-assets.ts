@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { type AssetsQueryOptions, assetsQueryKey, assetsQueryOptions } from '../query-options'
+import { type AssetsQueryOptions, assetsQueryOptions } from '../query-options'
 
 type UseAssetsOptions = AssetsQueryOptions & {
   enabled?: boolean
@@ -18,6 +18,6 @@ export function useAssets(options?: UseAssetsOptions) {
     assets: data?.assets ?? [],
     error,
     isLoading,
-    refetch: () => queryClient.invalidateQueries({ queryKey: assetsQueryKey(options) }),
+    refetch: () => queryClient.invalidateQueries({ queryKey: ['assets'] }),
   }
 }
