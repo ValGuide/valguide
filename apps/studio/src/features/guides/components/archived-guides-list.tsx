@@ -127,7 +127,7 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
                   className="w-full sm:w-auto"
                 >
                   <RotateCcw />
-                  {t('recover')}
+                  {t('recoverGuide')}
                 </Button>
                 <Button
                   variant="destructive"
@@ -156,7 +156,7 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleRecover} disabled={isLoading}>
-              {isLoading ? tCommon('loading') : t('recover')}
+              {isLoading ? tCommon('loading') : t('recoverGuide')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
