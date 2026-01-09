@@ -14,9 +14,13 @@ export default defineConfig({
     allowedHosts: ['studio.local.dev'],
   },
   ssr: {
+    // required because resend uses uuid v9 which caused
+    // The requested module 'uuid' does not provide an export named 'default'
     noExternal: ["uuid"],
   },
   optimizeDeps: {
+    // required because resend uses uuid v9 which caused
+    // The requested module 'uuid' does not provide an export named 'default'
     include: ["uuid"],
   },
   plugins: [

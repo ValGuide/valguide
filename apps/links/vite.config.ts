@@ -12,6 +12,16 @@ export default defineConfig({
     port: 3003,
     allowedHosts: ['links.local.dev'],
   },
+  ssr: {
+    // required because resend uses uuid v9 which caused
+    // The requested module 'uuid' does not provide an export named 'default'
+    noExternal: ["uuid"],
+  },
+  optimizeDeps: {
+    // required because resend uses uuid v9 which caused
+    // The requested module 'uuid' does not provide an export named 'default'
+    include: ["uuid"],
+  },
   plugins: [
     tsconfigPaths({
       projects: ['./tsconfig.json', '../../packages/core/tsconfig.json'],

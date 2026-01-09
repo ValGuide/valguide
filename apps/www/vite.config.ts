@@ -13,6 +13,16 @@ export default defineConfig({
     port: 3004,
     allowedHosts: ['www.local.dev'],
   },
+  ssr: {
+    // required because resend uses uuid v9 which caused
+    // The requested module 'uuid' does not provide an export named 'default'
+    noExternal: ["uuid"],
+  },
+  optimizeDeps: {
+    // required because resend uses uuid v9 which caused
+    // The requested module 'uuid' does not provide an export named 'default'
+    include: ["uuid"],
+  },
   plugins: [
     // Enables Vite to resolve imports using path aliases
     tsconfigPaths({
