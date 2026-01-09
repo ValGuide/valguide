@@ -9,7 +9,7 @@ import { type Environment, mergeAndWrite } from './merge-env'
 
 const execAsync = promisify(exec)
 
-type VercelEnvironment = 'production' | 'preview'
+type VercelEnvironment = 'production' | 'preview' | 'development'
 
 const ROOT_DIR = join(__dirname, '..')
 
@@ -37,19 +37,21 @@ function getAppDir(appName: AppName): string {
 
 /**
  * Push a single env variable to Vercel using --force to overwrite if exists
+ * If vercelEnv is undefined, pushes to all environments (global)
  */
 async function pushEnvVar(
   key: string,
   value: string,
   appName: AppName,
-  vercelEnv: VercelEnvironment,
+  vercelEnv?: VercelEnvironment,
   gitBranch?: string,
 ): Promise<{ key: string; success: boolean }> {
   const appDir = getAppDir(appName)
+  const envArg = vercelEnv ? ` ${vercelEnv}` : ''
   const branchArg = gitBranch ? ` ${gitBranch}` : ''
 
   try {
-    await execAsync(`printf '%s' "${value}" | vercel env add ${key} ${vercelEnv}${branchArg} --cwd "${appDir}" --force`)
+    await execAsync(`printf '%s' "${value}" | vercel env add ${key}${envArg}${branchArg} --cwd "${appDir}" --force`)
     return { key, success: true }
   } catch {
     return { key, success: false }
@@ -93,11 +95,11 @@ async function runWithConcurrency<T>(tasks: (() => Promise<T>)[], concurrency: n
 async function pushEnvsForApp(
   appName: AppName,
   vars: Map<string, string>,
-  vercelEnv: VercelEnvironment,
+  vercelEnv?: VercelEnvironment,
   gitBranch?: string,
 ): Promise<void> {
   const projectName = VERCEL_APPS[appName]
-  const envLabel = gitBranch ? `${vercelEnv} (${gitBranch})` : vercelEnv
+  const envLabel = vercelEnv ? (gitBranch ? `${vercelEnv} (${gitBranch})` : vercelEnv) : 'all environments'
 
   console.log(chalk.cyan(`\n📦 Pushing to ${appName} (${projectName})`))
   console.log(chalk.gray(`   Environment: ${envLabel}`))
@@ -170,25 +172,32 @@ async function main() {
 
   // Parse arguments
   // Format: pnpm env:push <vercel-env> <app> [source-env]
-  // - vercel-env: preview or prod (prod pushes to both production and preview)
+  // - vercel-env: preview, prod (production + preview), all (each env separately), or global (single push to all)
   // - app: app name or 'all'
   // - source-env: dev or prod (which .secrets files to use), defaults based on vercel-env
-  let vercelEnv: VercelEnvironment | 'prod' | undefined
+  let vercelEnv: VercelEnvironment | 'prod' | 'all' | 'global' | undefined
   let targetApp: AppName | 'all' = 'all'
   let sourceEnv: Environment | undefined
   let gitBranch: string | undefined
 
   // Known arguments
-  const knownArgs = new Set<string>(['preview', 'prod', 'dev', 'all', ...Object.keys(VERCEL_APPS)])
+  const knownArgs = new Set<string>(['preview', 'prod', 'dev', 'all', 'global', ...Object.keys(VERCEL_APPS)])
 
   for (const arg of args) {
-    if (arg === 'preview' || arg === 'prod') {
+    if (arg === 'preview' || arg === 'prod' || arg === 'global') {
       vercelEnv = arg
+    } else if (arg === 'all') {
+      // 'all' can be vercel env (push to all environments) or target app
+      if (!vercelEnv) {
+        vercelEnv = 'all'
+      } else {
+        targetApp = 'all'
+      }
     } else if (arg === 'dev') {
       // 'dev' can be either source env or is implied
       sourceEnv = 'dev'
-    } else if (arg === 'all' || arg in VERCEL_APPS) {
-      targetApp = arg as AppName | 'all'
+    } else if (arg in VERCEL_APPS) {
+      targetApp = arg as AppName
     } else if (!knownArgs.has(arg)) {
       // Unknown args are git branch names (only for preview)
       gitBranch = arg
@@ -201,7 +210,11 @@ async function main() {
       chalk.red(
         `\nUsage: pnpm env:push <vercel-env> <app> [git-branch]
 
-Vercel Environments: preview, prod
+Vercel Environments: preview, prod, all, global
+  - preview: Push to preview environment only
+  - prod: Push to production + preview environments
+  - all: Push to all environments (3 separate pushes per variable)
+  - global: Push once per variable, applies to all environments
 Apps: ${Object.keys(VERCEL_APPS).join(', ')}, all (default)
 Git Branch: Optional branch name for preview environment
 
@@ -210,6 +223,8 @@ Examples:
   pnpm env:push preview app dev       # Push dev secrets to preview env for branch 'dev'
   pnpm env:push prod app              # Push prod secrets to production + preview for app
   pnpm env:push prod all              # Push prod secrets to production + preview for all apps
+  pnpm env:push all app               # Push prod secrets to all 3 environments (separate)
+  pnpm env:push global app            # Push prod secrets to all environments (single push)
 `,
       ),
     )
@@ -224,7 +239,7 @@ Examples:
 
   // Determine source environment (which secrets to use)
   // - preview -> dev secrets
-  // - prod -> prod secrets
+  // - prod/all -> prod secrets
   if (!sourceEnv) {
     sourceEnv = vercelEnv === 'preview' ? 'dev' : 'prod'
   }
@@ -262,16 +277,29 @@ Examples:
   }
 
   // Determine Vercel environments to push to
-  const vercelEnvs: VercelEnvironment[] = vercelEnv === 'prod' ? ['production', 'preview'] : ['preview']
+  // 'global' means push without specifying env (applies to all)
+  // Other options push to specific environments
+  let vercelEnvs: (VercelEnvironment | undefined)[]
+  if (vercelEnv === 'global') {
+    vercelEnvs = [undefined] // undefined = no env arg = all environments
+  } else if (vercelEnv === 'all') {
+    vercelEnvs = ['production', 'preview', 'development']
+  } else if (vercelEnv === 'prod') {
+    vercelEnvs = ['production', 'preview']
+  } else {
+    vercelEnvs = ['preview']
+  }
 
   const envLabel = gitBranch ? `${vercelEnv.toUpperCase()} (branch: ${gitBranch})` : vercelEnv.toUpperCase()
+
+  const envsDisplay = vercelEnv === 'global' ? 'all (global)' : vercelEnvs.filter(Boolean).join(', ')
 
   console.log(
     `\n${borderBox(
       `Pushing to Vercel ${envLabel}`,
       `Source: ${sourceEnv} secrets`,
       `Target: ${targetApp === 'all' ? 'All apps' : targetApp}`,
-      `Vercel environments: ${vercelEnvs.join(', ')}`,
+      `Vercel environments: ${envsDisplay}`,
     )}\n`,
   )
 

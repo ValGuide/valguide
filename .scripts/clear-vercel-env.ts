@@ -8,7 +8,7 @@ import { borderBox } from './border-box'
 
 const execAsync = promisify(exec)
 
-type VercelEnvironment = 'production' | 'preview'
+type VercelEnvironment = 'production' | 'preview' | 'development'
 
 const ROOT_DIR = join(__dirname, '..')
 
@@ -267,10 +267,10 @@ async function main() {
   let gitBranch: string | undefined
 
   // First pass: identify known arguments
-  const knownArgs = new Set<string>(['preview', 'production', ...Object.keys(VERCEL_APPS)])
+  const knownArgs = new Set<string>(['preview', 'production', 'development', ...Object.keys(VERCEL_APPS)])
 
   for (const arg of args) {
-    if (arg === 'preview' || arg === 'production') {
+    if (arg === 'preview' || arg === 'production' || arg === 'development') {
       vercelEnv = arg
     } else if (arg in VERCEL_APPS) {
       targetApp = arg as AppName
@@ -286,13 +286,14 @@ async function main() {
       chalk.red(
         `\nUsage: pnpm env:clear <vercel-environment> <app> [git-branch]
 
-Vercel Environments: preview, production
+Vercel Environments: preview, production, development
 Apps: ${Object.keys(VERCEL_APPS).join(', ')}
 Git Branch: Optional branch name for preview environment
 
 Examples:
   pnpm env:clear preview app          # Clear preview env from app
   pnpm env:clear production studio    # Clear production env from studio
+  pnpm env:clear development app      # Clear development env from app
   pnpm env:clear preview app feat-1   # Clear preview env for branch 'feat-1' from app
 `,
       ),
