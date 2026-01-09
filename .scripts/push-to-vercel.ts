@@ -47,28 +47,41 @@ function getAppDir(appName: AppName): string {
 /**
  * Push a single env variable to Vercel using --force to overwrite if exists
  */
-function pushEnvVar(key: string, value: string, appName: AppName, vercelEnvs: VercelEnvironment[]): void {
+function pushEnvVar(
+  key: string,
+  value: string,
+  appName: AppName,
+  vercelEnv: VercelEnvironment,
+  gitBranch?: string,
+): void {
   const appDir = getAppDir(appName)
+  const branchArg = gitBranch ? ` ${gitBranch}` : ''
 
   // Add the variable with --force to overwrite if exists
   try {
-    for (const env of vercelEnvs) {
-      execCommand(`printf '%s' "${value}" | vercel env add ${key} ${env} --cwd "${appDir}" --force`, true)
-    }
-    console.log(chalk.green(`  ✓ ${key}`))
+    execCommand(
+      `printf '%s' "${value}" | vercel env add ${key} ${vercelEnv}${branchArg} --cwd "${appDir}" --force`,
+      true,
+    )
   } catch {
-    console.error(chalk.red(`  ✗ ${key} (failed)`))
+    throw new Error(`Failed to push ${key}`)
   }
 }
 
 /**
  * Push all env variables for a specific app
  */
-function pushEnvsForApp(appName: AppName, vars: Map<string, string>, vercelEnvs: VercelEnvironment[]): void {
+function pushEnvsForApp(
+  appName: AppName,
+  vars: Map<string, string>,
+  vercelEnv: VercelEnvironment,
+  gitBranch?: string,
+): void {
   const projectName = VERCEL_APPS[appName]
+  const envLabel = gitBranch ? `${vercelEnv} (${gitBranch})` : vercelEnv
 
   console.log(chalk.cyan(`\n📦 Pushing to ${appName} (${projectName})`))
-  console.log(chalk.gray(`   Environments: ${vercelEnvs.join(', ')}`))
+  console.log(chalk.gray(`   Environment: ${envLabel}`))
 
   // Push each variable
   let successCount = 0
@@ -76,9 +89,11 @@ function pushEnvsForApp(appName: AppName, vars: Map<string, string>, vercelEnvs:
 
   for (const [key, value] of vars) {
     try {
-      pushEnvVar(key, value, appName, vercelEnvs)
+      pushEnvVar(key, value, appName, vercelEnv, gitBranch)
+      console.log(chalk.green(`  ✓ ${key}`))
       successCount++
     } catch {
+      console.error(chalk.red(`  ✗ ${key} (failed)`))
       errorCount++
     }
   }
@@ -125,25 +140,64 @@ function main() {
   const args = process.argv.slice(2)
 
   // Parse arguments
-  let environment: Environment | undefined
+  // Format: pnpm env:push <vercel-env> <app> [source-env]
+  // - vercel-env: preview or prod (prod pushes to both production and preview)
+  // - app: app name or 'all'
+  // - source-env: dev or prod (which .secrets files to use), defaults based on vercel-env
+  let vercelEnv: VercelEnvironment | 'prod' | undefined
   let targetApp: AppName | 'all' = 'all'
+  let sourceEnv: Environment | undefined
+  let gitBranch: string | undefined
+
+  // Known arguments
+  const knownArgs = new Set<string>(['preview', 'prod', 'dev', 'all', ...Object.keys(VERCEL_APPS)])
 
   for (const arg of args) {
-    if (arg === 'dev' || arg === 'prod') {
-      environment = arg
+    if (arg === 'preview' || arg === 'prod') {
+      vercelEnv = arg
+    } else if (arg === 'dev') {
+      // 'dev' can be either source env or is implied
+      sourceEnv = 'dev'
     } else if (arg === 'all' || arg in VERCEL_APPS) {
       targetApp = arg as AppName | 'all'
+    } else if (!knownArgs.has(arg)) {
+      // Unknown args are git branch names (only for preview)
+      gitBranch = arg
     }
   }
 
-  // Validate environment argument
-  if (!environment) {
+  // Validate vercel environment argument
+  if (!vercelEnv) {
     console.error(
       chalk.red(
-        `\nUsage: pnpm env:push <environment> [app]\n\nEnvironments: dev, prod\nApps: ${Object.keys(VERCEL_APPS).join(', ')}, all (default)\n\nExamples:\n  pnpm env:push dev          # Push dev env to all apps\n  pnpm env:push prod app     # Push prod env to app only\n`,
+        `\nUsage: pnpm env:push <vercel-env> <app> [git-branch]
+
+Vercel Environments: preview, prod
+Apps: ${Object.keys(VERCEL_APPS).join(', ')}, all (default)
+Git Branch: Optional branch name for preview environment
+
+Examples:
+  pnpm env:push preview app           # Push dev secrets to preview env for app
+  pnpm env:push preview app dev       # Push dev secrets to preview env for branch 'dev'
+  pnpm env:push prod app              # Push prod secrets to production + preview for app
+  pnpm env:push prod all              # Push prod secrets to production + preview for all apps
+`,
       ),
     )
     process.exit(1)
+  }
+
+  // Git branch only makes sense for preview environment
+  if (gitBranch && vercelEnv !== 'preview') {
+    console.error(chalk.red(`\n✗ Git branch can only be specified for 'preview' environment\n`))
+    process.exit(1)
+  }
+
+  // Determine source environment (which secrets to use)
+  // - preview -> dev secrets
+  // - prod -> prod secrets
+  if (!sourceEnv) {
+    sourceEnv = vercelEnv === 'preview' ? 'dev' : 'prod'
   }
 
   // Check if projects are linked
@@ -178,15 +232,15 @@ function main() {
     process.exit(1)
   }
 
-  // Determine Vercel environments based on our environment
-  const vercelEnvs: VercelEnvironment[] =
-    environment === 'dev'
-      ? ['preview'] // dev branch -> preview only
-      : ['production', 'preview'] // prod (main) -> production + preview
+  // Determine Vercel environments to push to
+  const vercelEnvs: VercelEnvironment[] = vercelEnv === 'prod' ? ['production', 'preview'] : ['preview']
+
+  const envLabel = gitBranch ? `${vercelEnv.toUpperCase()} (branch: ${gitBranch})` : vercelEnv.toUpperCase()
 
   console.log(
     `\n${borderBox(
-      `Pushing ${environment.toUpperCase()} environment to Vercel`,
+      `Pushing to Vercel ${envLabel}`,
+      `Source: ${sourceEnv} secrets`,
       `Target: ${targetApp === 'all' ? 'All apps' : targetApp}`,
       `Vercel environments: ${vercelEnvs.join(', ')}`,
     )}\n`,
@@ -194,13 +248,17 @@ function main() {
 
   // Merge env files first
   console.log(chalk.blue('📁 Merging environment files...\n'))
-  const vars = mergeAndWrite(environment)
+  const vars = mergeAndWrite(sourceEnv)
 
   console.log(chalk.blue(`📋 Found ${vars.size} variables to push\n`))
 
   // Push to apps
   for (const app of apps) {
-    pushEnvsForApp(app, vars, vercelEnvs)
+    for (const env of vercelEnvs) {
+      // Only apply gitBranch to preview environment
+      const branch = env === 'preview' ? gitBranch : undefined
+      pushEnvsForApp(app, vars, env, branch)
+    }
   }
 
   console.log(chalk.green(`\n✅ Done!\n`))
