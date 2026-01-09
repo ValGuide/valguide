@@ -3,10 +3,13 @@ import '@valguide/ui/styles/globals.css'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import type { Preview } from '@storybook/nextjs-vite'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-
+import de from '@valguide/i18n/messages/de.json'
+import en from '@valguide/i18n/messages/en.json'
+import rm from '@valguide/i18n/messages/rm.json'
 import { themes } from '@valguide/ui/theme/themes'
-import { NextIntlClientProvider } from '@valguide/core/i18n/mock'
-import nextIntl from './next-intl'
+import { IntlProvider } from 'use-intl'
+
+const messagesByLocale: Record<SupportedLocale, typeof en> = { en, de, rm }
 
 const locales: Record<SupportedLocale, string> = {
   en: 'English 🇺🇸',
@@ -20,7 +23,6 @@ const preview: Preview = {
     locales,
   },
   parameters: {
-    nextIntl,
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
@@ -34,15 +36,11 @@ const preview: Preview = {
   },
   decorators: [
     (Story, { globals: { locale } }) => (
-      <NextIntlClientProvider
-        locale={locale}
-        messages={nextIntl.messagesByLocale[locale as SupportedLocale]}
-        timeZone="Europe/Zurich"
-      >
+      <IntlProvider locale={locale} messages={messagesByLocale[locale as SupportedLocale]} timeZone="Europe/Zurich">
         <main className="font-geist">
           <Story />
         </main>
-      </NextIntlClientProvider>
+      </IntlProvider>
     ),
     withThemeByDataAttribute({
       themes: Object.fromEntries(themes.map((theme) => [theme, theme])),

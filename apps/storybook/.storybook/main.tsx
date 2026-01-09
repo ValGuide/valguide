@@ -15,10 +15,7 @@ const config: StorybookConfig = {
   ],
 
   addons: [
-    getAbsolutePath('@storybook/addon-links'),
-    getAbsolutePath('@storybook/addon-themes'),
     getAbsolutePath('storybook-next-intl'),
-
     // TODO Storybook: enable dark mode (broke in v9)
     // getAbsolutePath('storybook-dark-mode'),
   ],
@@ -53,8 +50,6 @@ const config: StorybookConfig = {
         'process.env.DATABASE_URL': '""',
       },
       optimizeDeps: {
-        // TODO Storybook: enable dark mode (broke in v9)
-        include: ['storybook-dark-mode'],
         exclude: ['@storybook/builder-vite'],
       },
       resolve: {

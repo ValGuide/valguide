@@ -1,7 +1,7 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { LocaleTabs } from './locale-tabs'
 
 const meta = {

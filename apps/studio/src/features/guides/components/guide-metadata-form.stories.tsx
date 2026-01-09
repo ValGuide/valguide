@@ -1,7 +1,7 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
 import type { GuideTranslation } from '@valguide/core/features/guides/schema'
+import { fn } from 'storybook/test'
 import { GuideMetadataForm } from './guide-metadata-form'
 
 const meta = {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
+import { fn } from 'storybook/test'
 import type { StopTranslationVersion } from '../schema'
 import { VersionHistoryDialogStop } from './version-history-dialog-stop'
 

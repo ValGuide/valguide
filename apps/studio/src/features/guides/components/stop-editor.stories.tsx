@@ -1,8 +1,8 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import { fn } from 'storybook/test'
 import { StopEditor } from './stop-editor'
 
 const meta = {
