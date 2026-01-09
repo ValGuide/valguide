@@ -1,8 +1,13 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { PublishStopTranslationButton } from '@valguide/core/features/guides/components/publish-stop-translation-button'
-import { VersionHistoryDialogStop } from '@valguide/core/features/guides/components/version-history-dialog-stop'
-import type { AssetWithRole, StopWithAssets } from '@valguide/core/features/guides/queries'
+import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
+import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import {
+  discardStopTranslationDraftFn,
+  publishStopTranslationDraftFn,
+  unpublishStopTranslationFn,
+} from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { Alert, AlertDescription } from '@valguide/ui/components/alert'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,10 +17,13 @@ import {
 } from '@valguide/ui/components/breadcrumb'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { ArrowLeft, Globe } from 'lucide-react'
-import { type ReactNode, useCallback, useRef } from 'react'
+import { ArrowLeft, Globe, Info } from 'lucide-react'
+import { type ReactNode, useCallback, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
-import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
+import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
+import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
+import { LocaleSelector } from '@/features/guides/components/locale-selector'
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
@@ -65,13 +73,41 @@ export function StopEditLayout({
 }: StopEditLayoutProps) {
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
+  const tReadOnly = useTranslations('guides.readOnly')
   const internalRef = useRef<StopLocaleEditorRef>(null)
   const stopEditorRef = externalRef ?? internalRef
+
+  const [activeTab, setActiveTab] = useState<EditorTab>('draft')
+  const [isPublishing, setIsPublishing] = useState(false)
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   const currentStopTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
   const localeStatusMap = getStopLocaleStatusMap(stop)
+
+  const hasDraft = !!currentStopTranslation?.draftVersionId
+  const hasPublished = !!currentStopTranslation?.currentVersionId
+  const contentStatus = getContentStatus(hasDraft, hasPublished)
+
+  const isReadOnly = activeTab === 'published'
+
+  const draftVersionData = currentStopTranslation?.draftVersion
+    ? {
+        title: currentStopTranslation.draftVersion.title,
+        description: currentStopTranslation.draftVersion.description,
+        transcription: currentStopTranslation.draftVersion.transcription,
+      }
+    : undefined
+
+  const publishedVersionData = currentStopTranslation?.currentVersion
+    ? {
+        title: currentStopTranslation.currentVersion.title,
+        description: currentStopTranslation.currentVersion.description,
+        transcription: currentStopTranslation.currentVersion.transcription,
+      }
+    : undefined
+
+  const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
 
   const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
   const stopAudio = stop.assets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
@@ -93,6 +129,68 @@ export function StopEditLayout({
     [onImageChange],
   )
 
+  const handlePublish = useCallback(async () => {
+    setIsPublishing(true)
+    try {
+      const result = await publishStopTranslationDraftFn({ data: { stopId: stop.id, locale: activeLocale } })
+      if (result.success) {
+        toast.success(t('publish.success'))
+        onRefetch()
+        setActiveTab('published')
+      } else {
+        toast.error(result.error ?? t('publish.error'))
+      }
+    } catch (error) {
+      console.error('Failed to publish:', error)
+      toast.error(t('publish.error'))
+    } finally {
+      setIsPublishing(false)
+    }
+  }, [stop.id, activeLocale, onRefetch, t])
+
+  const handleUnpublish = useCallback(async () => {
+    try {
+      const result = await unpublishStopTranslationFn({ data: { stopId: stop.id, locale: activeLocale } })
+      if (result.success) {
+        toast.success('Content unpublished')
+        onRefetch()
+        setActiveTab('draft')
+      } else {
+        toast.error(result.error ?? 'Failed to unpublish')
+      }
+    } catch (error) {
+      console.error('Failed to unpublish:', error)
+      toast.error('Failed to unpublish')
+    }
+  }, [stop.id, activeLocale, onRefetch])
+
+  const handleDiscard = useCallback(async () => {
+    try {
+      const result = await discardStopTranslationDraftFn({ data: { stopId: stop.id, locale: activeLocale } })
+      if (result.success) {
+        toast.success('Draft discarded')
+        onRefetch()
+      } else {
+        toast.error('Failed to discard draft')
+      }
+    } catch (error) {
+      console.error('Failed to discard:', error)
+      toast.error('Failed to discard draft')
+    }
+  }, [stop.id, activeLocale, onRefetch])
+
+  const handleTabChange = useCallback(
+    (tab: EditorTab) => {
+      if (tab === 'published' && !hasPublished) return
+      if (isDirty && tab === 'published') {
+        confirmIfDirty(() => setActiveTab(tab))
+      } else {
+        setActiveTab(tab)
+      }
+    },
+    [hasPublished, isDirty, confirmIfDirty],
+  )
+
   return (
     <>
       {unsavedChangesDialog}
@@ -110,26 +208,36 @@ export function StopEditLayout({
               </BreadcrumbList>
             </Breadcrumb>
             <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
-              <VersionHistoryDialogStop
-                stopId={stop.id}
-                locale={activeLocale}
-                localeName={getLocaleDisplayName(activeLocale)}
-                onRollback={onRefetch}
-              />
-              <PublishStopTranslationButton
-                stopId={stop.id}
-                locale={activeLocale}
-                localeName={getLocaleDisplayName(activeLocale)}
-                hasDraft={!!currentStopTranslation?.draftVersionId}
-                onPublished={onRefetch}
+              <LocaleSelector
+                value={activeLocale}
+                locales={locales ?? ['en', 'de', 'rm']}
+                onValueChange={onLocaleChange}
+                localeStatus={localeStatusMap}
               />
               <Button variant="ghost" size="sm" className="hidden sm:flex">
                 {t('editor.preview')}
               </Button>
-              <Button onClick={onSave} disabled={isSaving || !isDirty} size="sm">
-                {isSaving ? t('editor.saving') : t('editor.save')}
-              </Button>
             </div>
+          </div>
+        </div>
+
+        {/* Status Badge and Tabs */}
+        <div className="border-b bg-background px-3 py-3 sm:px-6">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="sm" onClick={handleBack} className="gap-1 w-fit -ml-2">
+                <ArrowLeft className="h-4 w-4" />
+                {backLabel}
+              </Button>
+              <h1 className="text-xl font-semibold truncate">{stopTitle}</h1>
+              <ContentStatusBadge status={contentStatus} size="lg" />
+            </div>
+            <DraftPublishedTabs
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+            />
           </div>
         </div>
 
@@ -138,31 +246,36 @@ export function StopEditLayout({
           <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
-                <div className="flex items-center justify-between gap-4">
-                  <Button variant="ghost" size="sm" onClick={handleBack} className="gap-1 w-fit">
-                    <ArrowLeft className="h-4 w-4" />
-                    {backLabel}
-                  </Button>
-                </div>
+                {/* Read-only banner */}
+                {isReadOnly && (
+                  <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>{tReadOnly('banner')}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Never published notice */}
+                {activeTab === 'published' && !hasPublished && (
+                  <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>{tReadOnly('neverPublished')}</AlertDescription>
+                  </Alert>
+                )}
 
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-lg font-semibold">{tStops('editor.localeContent')}</h2>
-                  <LocaleSelector
-                    value={activeLocale}
-                    locales={locales ?? ['en', 'de', 'rm']}
-                    onValueChange={onLocaleChange}
-                    localeStatus={localeStatusMap}
-                  />
                 </div>
 
                 <StopLocaleEditor
                   ref={stopEditorRef}
-                  key={`${stop.id}-${activeLocale}`}
+                  key={`${stop.id}-${activeLocale}-${activeTab}`}
                   stop={stop}
                   locale={activeLocale}
                   organizationId={organizationId}
                   audio={stopAudio}
+                  versionData={displayVersionData}
+                  readOnly={isReadOnly}
                   onChange={onStopChange}
                   onDirtyChange={onDirtyChange}
                   onSave={onSave}
@@ -170,7 +283,7 @@ export function StopEditLayout({
                 />
 
                 {/* Shared Content Section */}
-                <Card>
+                <Card className={isReadOnly ? 'opacity-60' : ''}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Globe className="h-4 w-4" />
@@ -186,6 +299,7 @@ export function StopEditLayout({
                       onChange={handleImagesChange}
                       label={tStops('editor.galleryLabel')}
                       organizationId={organizationId}
+                      disabled={isReadOnly}
                     />
                   </CardContent>
                 </Card>
@@ -193,9 +307,28 @@ export function StopEditLayout({
             </div>
           </div>
 
+          {/* Right Sidebar - Actions Panel */}
           <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
-            <h3 className="mb-4 text-base font-semibold">{t('editor.stopProgress')}</h3>
-            {/* TODO: Add stop-specific progress */}
+            <EditorActionsPanel
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+              isDirty={isDirty}
+              isSaving={isSaving}
+              isPublishing={isPublishing}
+              onSave={onSave}
+              onPublish={handlePublish}
+              onUnpublish={handleUnpublish}
+              onDiscard={handleDiscard}
+              onOpenVersionHistory={() => {}}
+              disabled={isReadOnly}
+            />
+
+            <div className="mt-8">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {t('editor.stopProgress')}
+              </h3>
+              {/* TODO: Add stop-specific progress */}
+            </div>
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
-import { Check, ChevronDown, Circle, Globe, MoreHorizontal, Plus, Trash2 } from 'lucide-react'
+import { Check, ChevronDown, Globe, MoreHorizontal, Plus, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { LocaleStatusMap, TranslationLocaleStatus } from '../utils/translation-status'
 
@@ -174,28 +174,28 @@ export function getLocaleDisplayName(locale: string): string {
   return locale.toUpperCase()
 }
 
-function getStatusIcon(status: TranslationLocaleStatus) {
-  switch (status) {
-    case 'published':
-      return <Circle className="h-2.5 w-2.5 fill-green-500 text-green-500" />
-    case 'draft':
-      return <Circle className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
-    case 'empty':
-      return <Circle className="h-2.5 w-2.5 fill-muted-foreground/30 text-muted-foreground/30" />
-  }
-}
+function StatusBadge({
+  status,
+  t,
+}: {
+  status: TranslationLocaleStatus
+  t: ReturnType<typeof useTranslations<'guides.localeSelector'>>
+}) {
+  const baseClasses = 'rounded-full px-2 py-0.5 text-xs whitespace-nowrap'
 
-function getStatusLabel(
-  status: TranslationLocaleStatus,
-  t: ReturnType<typeof useTranslations<'guides.localeSelector'>>,
-) {
   switch (status) {
     case 'published':
-      return t('statusPublished')
+      return <span className={cn(baseClasses, 'bg-success text-success-foreground')}>{t('statusPublished')}</span>
     case 'draft':
-      return t('statusDraft')
+      return (
+        <span className={cn(baseClasses, 'border border-primary text-primary bg-transparent')}>{t('statusDraft')}</span>
+      )
     case 'empty':
-      return t('statusEmpty')
+      return (
+        <span className={cn(baseClasses, 'border border-muted-foreground/30 text-muted-foreground/50 bg-transparent')}>
+          {t('statusEmpty')}
+        </span>
+      )
   }
 }
 
@@ -309,8 +309,8 @@ export function UnifiedLocaleSelector({
           >
             <span className="flex items-center gap-2">
               <Globe className="h-4 w-4 text-muted-foreground" />
-              {selectedStatus && getStatusIcon(selectedStatus)}
               <span className="font-medium">{selectedLocaleName}</span>
+              {selectedStatus && <StatusBadge status={selectedStatus} t={t} />}
             </span>
             <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -338,9 +338,9 @@ export function UnifiedLocaleSelector({
                       className="flex items-center justify-between pr-1"
                     >
                       <span className="flex items-center gap-2">
-                        {status && getStatusIcon(status)}
                         <span>{localeName}</span>
-                        {status && <span className="text-xs text-muted-foreground">({getStatusLabel(status, t)})</span>}
+                        <span className="text-xs text-muted-foreground">({locale})</span>
+                        {status && <StatusBadge status={status} t={t} />}
                       </span>
                       <span className="flex items-center gap-1">
                         {isSelected && <Check className="h-4 w-4 text-primary" />}

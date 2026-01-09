@@ -460,6 +460,39 @@
       "confirm": "Restore",
       "rollingBack": "Restoring..."
     },
+    "contentStatus": {
+      "draft": "Draft",
+      "published": "Published",
+      "modified": "Modified"
+    },
+    "tabs": {
+      "draft": "Draft",
+      "published": "Published"
+    },
+    "actions": {
+      "publish": "Publish",
+      "save": "Save",
+      "saving": "Saving...",
+      "unpublish": "Unpublish",
+      "discardChanges": "Discard changes",
+      "moreActions": "More actions"
+    },
+    "readOnly": {
+      "banner": "This is the published version. Switch to Draft to make changes.",
+      "neverPublished": "This content has never been published."
+    },
+    "confirmDiscard": {
+      "title": "Discard changes?",
+      "description": "This will delete your draft and revert to the published version. This action cannot be undone.",
+      "confirm": "Discard",
+      "cancel": "Cancel"
+    },
+    "confirmUnpublish": {
+      "title": "Unpublish content?",
+      "description": "This will remove the content from the public site. You can republish anytime.",
+      "confirm": "Unpublish",
+      "cancel": "Cancel"
+    },
     "untitledGuide": "Untitled Guide",
     "unsavedChanges": {
       "title": "Unsaved Changes",

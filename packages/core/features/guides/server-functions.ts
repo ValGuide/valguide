@@ -9,10 +9,14 @@ import { organizationMember } from '../orgs/schema'
 import { getGuideById, getGuideByNanoIdWithAssets, getStopByNanoId } from './queries'
 import { guide, guideStop, stop } from './schema'
 import {
+  deleteGuideTranslationDraft,
+  deleteStopTranslationDraft,
   publishGuideTranslationDraft as publishDraft,
   publishStopTranslationDraft as publishStopDraft,
   rollbackGuideTranslation as rollbackGuide,
   rollbackStopTranslation as rollbackStop,
+  unpublishGuideTranslation,
+  unpublishStopTranslation,
   upsertGuideTranslationDraft,
   upsertStopTranslationDraft,
 } from './translation-mutations'
@@ -563,4 +567,58 @@ export const rollbackStopTranslationFn = createServerFn({ method: 'POST' })
   .inputValidator(rollbackStopTranslationSchema)
   .handler(async ({ data }) => {
     return rollbackStop(data.stopId, data.locale, data.targetVersion, data.userId)
+  })
+
+// ============================================================================
+// Discard Draft Server Functions
+// ============================================================================
+
+const discardGuideTranslationDraftSchema = z.object({
+  guideId: z.string(),
+  locale: z.string(),
+})
+
+export const discardGuideTranslationDraftFn = createServerFn({ method: 'POST' })
+  .inputValidator(discardGuideTranslationDraftSchema)
+  .handler(async ({ data }) => {
+    const success = await deleteGuideTranslationDraft(data.guideId, data.locale)
+    return { success }
+  })
+
+const discardStopTranslationDraftSchema = z.object({
+  stopId: z.string(),
+  locale: z.string(),
+})
+
+export const discardStopTranslationDraftFn = createServerFn({ method: 'POST' })
+  .inputValidator(discardStopTranslationDraftSchema)
+  .handler(async ({ data }) => {
+    const success = await deleteStopTranslationDraft(data.stopId, data.locale)
+    return { success }
+  })
+
+// ============================================================================
+// Unpublish Server Functions
+// ============================================================================
+
+const unpublishGuideTranslationSchema = z.object({
+  guideId: z.string(),
+  locale: z.string(),
+})
+
+export const unpublishGuideTranslationFn = createServerFn({ method: 'POST' })
+  .inputValidator(unpublishGuideTranslationSchema)
+  .handler(async ({ data }) => {
+    return unpublishGuideTranslation(data.guideId, data.locale)
+  })
+
+const unpublishStopTranslationSchema = z.object({
+  stopId: z.string(),
+  locale: z.string(),
+})
+
+export const unpublishStopTranslationFn = createServerFn({ method: 'POST' })
+  .inputValidator(unpublishStopTranslationSchema)
+  .handler(async ({ data }) => {
+    return unpublishStopTranslation(data.stopId, data.locale)
   })

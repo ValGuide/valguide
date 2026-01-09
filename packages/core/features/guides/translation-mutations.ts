@@ -468,6 +468,96 @@ export async function rollbackStopTranslation(
 }
 
 /**
+ * Unpublish a guide translation
+ * Removes the current_version_id pointer but keeps the version in history
+ */
+export async function unpublishGuideTranslation(
+  guideId: string,
+  locale: string,
+): Promise<{ success: boolean; error?: string }> {
+  const translation = await db
+    .select()
+    .from(guideTranslation)
+    .where(and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)))
+    .limit(1)
+
+  const currentTranslation = translation[0]
+
+  if (!currentTranslation) {
+    return { success: false, error: 'Translation not found' }
+  }
+
+  if (!currentTranslation.currentVersionId) {
+    return { success: false, error: 'Translation is not published' }
+  }
+
+  await db.transaction(async (tx: typeof db) => {
+    // Archive the published version
+    if (currentTranslation.currentVersionId) {
+      await tx
+        .update(guideTranslationVersion)
+        .set({ status: 'archived' })
+        .where(eq(guideTranslationVersion.id, currentTranslation.currentVersionId))
+    }
+
+    // Clear the current version pointer
+    await tx
+      .update(guideTranslation)
+      .set({
+        currentVersionId: null,
+      })
+      .where(eq(guideTranslation.id, currentTranslation.id))
+  })
+
+  return { success: true }
+}
+
+/**
+ * Unpublish a stop translation
+ * Removes the current_version_id pointer but keeps the version in history
+ */
+export async function unpublishStopTranslation(
+  stopId: string,
+  locale: string,
+): Promise<{ success: boolean; error?: string }> {
+  const translation = await db
+    .select()
+    .from(stopTranslation)
+    .where(and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)))
+    .limit(1)
+
+  const currentTranslation = translation[0]
+
+  if (!currentTranslation) {
+    return { success: false, error: 'Translation not found' }
+  }
+
+  if (!currentTranslation.currentVersionId) {
+    return { success: false, error: 'Translation is not published' }
+  }
+
+  await db.transaction(async (tx: typeof db) => {
+    // Archive the published version
+    if (currentTranslation.currentVersionId) {
+      await tx
+        .update(stopTranslationVersion)
+        .set({ status: 'archived' })
+        .where(eq(stopTranslationVersion.id, currentTranslation.currentVersionId))
+    }
+
+    // Clear the current version pointer
+    await tx
+      .update(stopTranslation)
+      .set({
+        currentVersionId: null,
+      })
+      .where(eq(stopTranslation.id, currentTranslation.id))
+  })
+
+  return { success: true }
+}
+
+/**
  * Delete a draft translation version
  */
 export async function deleteStopTranslationDraft(stopId: string, locale: string): Promise<boolean> {

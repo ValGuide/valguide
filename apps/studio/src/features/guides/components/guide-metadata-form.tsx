@@ -17,6 +17,8 @@ export type GuideMetadataFormProps = {
   onTranslationChange: (data: { title: string; description: string }) => void
   onDirtyChange?: (isDirty: boolean) => void
   onSave?: () => void
+  readOnly?: boolean
+  versionData?: { title: string; description: string | null }
 }
 
 export type GuideMetadataFormRef = {
@@ -26,16 +28,26 @@ export type GuideMetadataFormRef = {
 }
 
 export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataFormProps>(function GuideMetadataForm(
-  { locale, translation, organizationId, onTranslationChange, onDirtyChange, onSave },
+  {
+    locale,
+    translation,
+    organizationId: _organizationId,
+    onTranslationChange,
+    onDirtyChange,
+    onSave,
+    readOnly,
+    versionData,
+  },
   ref,
 ) {
+  void _organizationId
   const t = useTranslations('guides')
 
   const form = useForm<GuideTranslationFormData>({
     resolver: zodResolver(guideTranslationFormSchema),
     defaultValues: {
-      title: getVersionedField(translation, 'title', true),
-      description: getVersionedField(translation, 'description', true),
+      title: versionData?.title ?? getVersionedField(translation, 'title', true),
+      description: versionData?.description ?? getVersionedField(translation, 'description', true),
     },
   })
 
@@ -59,10 +71,13 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
   )
 
   useEffect(() => {
-    onDirtyChange?.(isDirty)
-  }, [isDirty, onDirtyChange])
+    if (!readOnly) {
+      onDirtyChange?.(isDirty)
+    }
+  }, [isDirty, onDirtyChange, readOnly])
 
   useEffect(() => {
+    if (readOnly) return
     const subscription = form.watch((values, { type }) => {
       if (type === 'change' && values.title !== undefined) {
         onTranslationChange({
@@ -72,14 +87,14 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
       }
     })
     return () => subscription.unsubscribe()
-  }, [form, onTranslationChange])
+  }, [form, onTranslationChange, readOnly])
 
   const title = form.watch('title')
 
   return (
     <Form {...form}>
       <form>
-        <Card>
+        <Card className={readOnly ? 'opacity-60' : undefined}>
           <CardHeader>
             <CardTitle>
               {t('editor.guideDetails')}{' '}
@@ -103,6 +118,7 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
                       placeholder={t('editor.titlePlaceholder')}
                       maxLength={500}
                       required
+                      disabled={readOnly}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault()
@@ -131,6 +147,7 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
                       value={field.value}
                       onChange={field.onChange}
                       placeholder={t('editor.descriptionPlaceholder')}
+                      readOnly={readOnly}
                     />
                   </FormControl>
                   <FormMessage />

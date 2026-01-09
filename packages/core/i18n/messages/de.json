@@ -460,6 +460,39 @@
       "confirm": "Wiederherstellen",
       "rollingBack": "Wird wiederhergestellt..."
     },
+    "contentStatus": {
+      "draft": "Entwurf",
+      "published": "Veröffentlicht",
+      "modified": "Geändert"
+    },
+    "tabs": {
+      "draft": "Entwurf",
+      "published": "Veröffentlicht"
+    },
+    "actions": {
+      "publish": "Veröffentlichen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert...",
+      "unpublish": "Zurückziehen",
+      "discardChanges": "Änderungen verwerfen",
+      "moreActions": "Weitere Aktionen"
+    },
+    "readOnly": {
+      "banner": "Dies ist die veröffentlichte Version. Wechsle zum Entwurf, um Änderungen vorzunehmen.",
+      "neverPublished": "Dieser Inhalt wurde noch nie veröffentlicht."
+    },
+    "confirmDiscard": {
+      "title": "Änderungen verwerfen?",
+      "description": "Dies löscht deinen Entwurf und stellt die veröffentlichte Version wieder her. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirm": "Verwerfen",
+      "cancel": "Abbrechen"
+    },
+    "confirmUnpublish": {
+      "title": "Inhalt zurückziehen?",
+      "description": "Dies entfernt den Inhalt von der öffentlichen Seite. Du kannst ihn jederzeit erneut veröffentlichen.",
+      "confirm": "Zurückziehen",
+      "cancel": "Abbrechen"
+    },
     "untitledGuide": "Unbenannter Guide",
     "unsavedChanges": {
       "title": "Ungespeicherte Änderungen",

@@ -24,6 +24,8 @@ export type StopLocaleEditorProps = {
   onAudioChange?: (asset: Asset | null) => Promise<void>
   onSave?: () => void
   audio?: Asset | null
+  readOnly?: boolean
+  versionData?: { title: string; description: string | null; transcription: string | null }
 }
 
 export type StopLocaleEditorRef = {
@@ -33,7 +35,18 @@ export type StopLocaleEditorRef = {
 }
 
 export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditorProps>(function StopLocaleEditor(
-  { stop, locale, organizationId, onChange, onDirtyChange, onAudioChange, onSave, audio = null },
+  {
+    stop,
+    locale,
+    organizationId,
+    onChange,
+    onDirtyChange,
+    onAudioChange,
+    onSave,
+    audio = null,
+    readOnly = false,
+    versionData,
+  },
   ref,
 ) {
   const t = useTranslations('stops.editor')
@@ -43,13 +56,24 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
   const hasDraft = !!translation?.draftVersionId
   const publishedStatus = translation?.currentVersion?.status
 
-  const form = useForm<StopTranslationFormData>({
-    resolver: zodResolver(stopTranslationFormSchema),
-    defaultValues: {
+  const getDefaultValues = () => {
+    if (versionData) {
+      return {
+        title: versionData.title,
+        description: versionData.description ?? '',
+        transcription: versionData.transcription ?? '',
+      }
+    }
+    return {
       title: getVersionedField(translation, 'title', true),
       description: getVersionedField(translation, 'description', true),
       transcription: getVersionedField(translation, 'transcription', true),
-    },
+    }
+  }
+
+  const form = useForm<StopTranslationFormData>({
+    resolver: zodResolver(stopTranslationFormSchema),
+    defaultValues: getDefaultValues(),
   })
 
   const { isDirty } = form.formState
@@ -73,10 +97,13 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
   )
 
   useEffect(() => {
-    onDirtyChange?.(isDirty)
-  }, [isDirty, onDirtyChange])
+    if (!readOnly) {
+      onDirtyChange?.(isDirty)
+    }
+  }, [isDirty, onDirtyChange, readOnly])
 
   useEffect(() => {
+    if (readOnly) return
     const subscription = form.watch((values, { type }) => {
       if (type === 'change' && values.title !== undefined) {
         onChange?.({
@@ -87,7 +114,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
       }
     })
     return () => subscription.unsubscribe()
-  }, [form, onChange])
+  }, [form, onChange, readOnly])
 
   const handleAudioChange = async (value: Asset | Asset[] | null) => {
     if (value === null || (!Array.isArray(value) && value)) {
@@ -98,7 +125,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
   return (
     <Form {...form}>
       <form>
-        <Card>
+        <Card className={readOnly ? 'opacity-60' : undefined}>
           <CardHeader>
             <CardTitle>
               {t('title')}{' '}
@@ -125,6 +152,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
                       placeholder={t('titlePlaceholder')}
                       maxLength={500}
                       required
+                      disabled={readOnly}
                       className="bg-muted"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -147,6 +175,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
               label={t('audioLabel')}
               organizationId={organizationId}
               locale={locale}
+              disabled={readOnly}
             />
 
             {/* Description */}
@@ -157,7 +186,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
                 <FormItem>
                   <div className="flex items-center justify-between">
                     <FormLabel>{t('descriptionLabel')}</FormLabel>
-                    <Button type="button" variant="ghost" size="sm" className="gap-1">
+                    <Button type="button" variant="ghost" size="sm" className="gap-1" disabled={readOnly}>
                       <Mic className="h-4 w-4" />
                       {t('autoGenerate')}
                     </Button>
@@ -167,6 +196,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
                       value={field.value}
                       onChange={field.onChange}
                       placeholder={t('descriptionPlaceholder')}
+                      readOnly={readOnly}
                     />
                   </FormControl>
                 </FormItem>

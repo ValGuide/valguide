@@ -460,6 +460,39 @@
       "confirm": "Restaurar",
       "rollingBack": "Vegn restaurà..."
     },
+    "contentStatus": {
+      "draft": "Sboz",
+      "published": "Publitgà",
+      "modified": "Modifitgà"
+    },
+    "tabs": {
+      "draft": "Sboz",
+      "published": "Publitgà"
+    },
+    "actions": {
+      "publish": "Publitgar",
+      "save": "Memorisar",
+      "saving": "Vegn memorisà...",
+      "unpublish": "Retrar",
+      "discardChanges": "Sbittar las midadas",
+      "moreActions": "Ulteriuras acziuns"
+    },
+    "readOnly": {
+      "banner": "Quai è la versiun publitgada. Mida al sboz per far midadas.",
+      "neverPublished": "Quest cuntegn n'è anc mai vegnì publitgà."
+    },
+    "confirmDiscard": {
+      "title": "Sbittar las midadas?",
+      "description": "Quai stizza tes sboz e restituescha la versiun publitgada. Questa acziun na po betg vegnir revocada.",
+      "confirm": "Sbittar",
+      "cancel": "Interrumper"
+    },
+    "confirmUnpublish": {
+      "title": "Retrar il cuntegn?",
+      "description": "Quai allontanescha il cuntegn da la pagina publica. Ti pos publitgar danovamain da tut temp.",
+      "confirm": "Retrar",
+      "cancel": "Interrumper"
+    },
     "untitledGuide": "Guid senza num",
     "unsavedChanges": {
       "title": "Midadas betg memorisadas",

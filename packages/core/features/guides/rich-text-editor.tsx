@@ -7,11 +7,13 @@ export interface RichTextEditorProps {
   onChange: (value: string) => void
   placeholder?: string
   className?: string
+  readOnly?: boolean
 }
 
-export function RichTextEditor({ value, onChange, placeholder, className }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, placeholder, className, readOnly }: RichTextEditorProps) {
   const editor = useEditor({
     immediatelyRender: false,
+    editable: !readOnly,
     extensions: [
       StarterKit.configure({
         heading: {
@@ -44,7 +46,7 @@ export function RichTextEditor({ value, onChange, placeholder, className }: Rich
   return (
     <div className={className}>
       <div className="overflow-hidden rounded-md border">
-        <EditorToolbar editor={editor} />
+        {!readOnly && <EditorToolbar editor={editor} />}
         <EditorContent editor={editor} />
       </div>
     </div>

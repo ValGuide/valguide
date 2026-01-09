@@ -1,9 +1,14 @@
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { PublishTranslationButton } from '@valguide/core/features/guides/components/publish-translation-button'
-import { VersionHistoryDialog } from '@valguide/core/features/guides/components/version-history-dialog'
+import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import {
+  discardGuideTranslationDraftFn,
+  publishGuideTranslationDraftFn,
+  unpublishGuideTranslationFn,
+} from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { Alert, AlertDescription } from '@valguide/ui/components/alert'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,9 +20,12 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { Eye, Globe, ListChecks } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { Eye, Globe, Info, ListChecks } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
+import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { StopsList } from '@/features/guides/components/stops-list'
@@ -36,6 +44,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
+  const tReadOnly = useTranslations('guides.readOnly')
   const {
     guide,
     activeLocale,
@@ -56,6 +65,9 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     registerFormReset,
   } = useGuideEditor()
 
+  const [activeTab, setActiveTab] = useState<EditorTab>('draft')
+  const [isPublishing, setIsPublishing] = useState(false)
+
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const { buildUrl } = useLocaleUrl(activeLocale)
 
@@ -72,6 +84,22 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
 
   const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
   const localeStatusMap = getGuideLocaleStatusMap(guide, guide.availableLocales)
+
+  const hasDraft = !!currentTranslation?.draftVersionId
+  const hasPublished = !!currentTranslation?.currentVersionId
+  const contentStatus = getContentStatus(hasDraft, hasPublished)
+
+  const isReadOnly = activeTab === 'published'
+
+  const draftVersionData = currentTranslation?.draftVersion
+    ? { title: currentTranslation.draftVersion.title, description: currentTranslation.draftVersion.description }
+    : undefined
+
+  const publishedVersionData = currentTranslation?.currentVersion
+    ? { title: currentTranslation.currentVersion.title, description: currentTranslation.currentVersion.description }
+    : undefined
+
+  const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
 
   const hasContentForLocale = useCallback(
     (locale: string) => {
@@ -149,6 +177,68 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     [coverAsset, attachAssetToGuide, detachAssetFromGuide],
   )
 
+  const handlePublish = useCallback(async () => {
+    setIsPublishing(true)
+    try {
+      const result = await publishGuideTranslationDraftFn({ data: { guideId: guide.id, locale: activeLocale } })
+      if (result.success) {
+        toast.success(t('publish.success'))
+        refetch()
+        setActiveTab('published')
+      } else {
+        toast.error(result.error ?? t('publish.error'))
+      }
+    } catch (error) {
+      console.error('Failed to publish:', error)
+      toast.error(t('publish.error'))
+    } finally {
+      setIsPublishing(false)
+    }
+  }, [guide.id, activeLocale, refetch, t])
+
+  const handleUnpublish = useCallback(async () => {
+    try {
+      const result = await unpublishGuideTranslationFn({ data: { guideId: guide.id, locale: activeLocale } })
+      if (result.success) {
+        toast.success('Content unpublished')
+        refetch()
+        setActiveTab('draft')
+      } else {
+        toast.error(result.error ?? 'Failed to unpublish')
+      }
+    } catch (error) {
+      console.error('Failed to unpublish:', error)
+      toast.error('Failed to unpublish')
+    }
+  }, [guide.id, activeLocale, refetch])
+
+  const handleDiscard = useCallback(async () => {
+    try {
+      const result = await discardGuideTranslationDraftFn({ data: { guideId: guide.id, locale: activeLocale } })
+      if (result.success) {
+        toast.success('Draft discarded')
+        refetch()
+      } else {
+        toast.error('Failed to discard draft')
+      }
+    } catch (error) {
+      console.error('Failed to discard:', error)
+      toast.error('Failed to discard draft')
+    }
+  }, [guide.id, activeLocale, refetch])
+
+  const handleTabChange = useCallback(
+    (tab: EditorTab) => {
+      if (tab === 'published' && !hasPublished) return
+      if (isDirty && tab === 'published') {
+        confirmIfDirty(() => setActiveTab(tab))
+      } else {
+        setActiveTab(tab)
+      }
+    },
+    [hasPublished, isDirty, confirmIfDirty],
+  )
+
   return (
     <>
       {unsavedChangesDialog}
@@ -193,23 +283,6 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                 }}
                 hasContentForLocale={hasContentForLocale}
               />
-              <VersionHistoryDialog
-                guideId={guide.id}
-                locale={activeLocale}
-                localeName={getLocaleDisplayName(activeLocale)}
-                onRollback={() => {
-                  refetch()
-                }}
-              />
-              <PublishTranslationButton
-                guideId={guide.id}
-                locale={activeLocale}
-                localeName={getLocaleDisplayName(activeLocale)}
-                hasDraft={!!currentTranslation?.draftVersionId}
-                onPublished={() => {
-                  refetch()
-                }}
-              />
               <Button variant="ghost" size="icon" className="h-8 w-8 lg:hidden">
                 <span className="sr-only">{t('editor.preview')}</span>
                 <Eye className="h-4 w-4" />
@@ -233,10 +306,23 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                   </div>
                 </SheetContent>
               </Sheet>
-              <Button onClick={save} disabled={isSaving || !isDirty} size="sm" className="px-2 sm:px-3">
-                {isSaving ? t('editor.saving') : t('editor.save')}
-              </Button>
             </div>
+          </div>
+        </div>
+
+        {/* Status Badge and Tabs */}
+        <div className="border-b bg-background px-3 py-3 sm:px-6">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl font-semibold truncate">{guideTitle}</h1>
+              <ContentStatusBadge status={contentStatus} size="lg" />
+            </div>
+            <DraftPublishedTabs
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+            />
           </div>
         </div>
 
@@ -245,6 +331,22 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
           <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
             <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
               <div className="space-y-6">
+                {/* Read-only banner */}
+                {isReadOnly && (
+                  <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>{tReadOnly('banner')}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Never published notice */}
+                {activeTab === 'published' && !hasPublished && (
+                  <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>{tReadOnly('neverPublished')}</AlertDescription>
+                  </Alert>
+                )}
+
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-lg font-semibold">
@@ -254,10 +356,12 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
 
                 <GuideMetadataForm
                   ref={formRef}
-                  key={`guide-metadata-${activeLocale}`}
+                  key={`guide-metadata-${activeLocale}-${activeTab}`}
                   locale={activeLocale}
                   translation={currentTranslation}
+                  versionData={displayVersionData}
                   organizationId={organizationId}
+                  readOnly={isReadOnly}
                   onTranslationChange={(data) => {
                     updateGuideTranslationData(activeLocale, data)
                   }}
@@ -266,7 +370,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                 />
 
                 {/* Shared Content Section */}
-                <Card>
+                <Card className={isReadOnly ? 'opacity-60' : ''}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Globe className="h-4 w-4" />
@@ -282,12 +386,13 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
                       onChange={handleCoverImageChange}
                       label={t('editor.coverImageLabel')}
                       organizationId={organizationId}
+                      disabled={isReadOnly}
                     />
                   </CardContent>
                 </Card>
 
                 {/* Stops Section */}
-                <div>
+                <div className={isReadOnly ? 'opacity-60 pointer-events-none' : ''}>
                   <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
                   <StopsList
                     stops={guide.stops}
@@ -308,9 +413,28 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
             </div>
           </div>
 
+          {/* Right Sidebar - Actions Panel */}
           <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
-            <h3 className="mb-4 text-base font-semibold">{t('editor.guideProgress')}</h3>
-            <GuideProgress guide={guide} locale={activeLocale} />
+            <EditorActionsPanel
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+              isDirty={isDirty}
+              isSaving={isSaving}
+              isPublishing={isPublishing}
+              onSave={save}
+              onPublish={handlePublish}
+              onUnpublish={handleUnpublish}
+              onDiscard={handleDiscard}
+              onOpenVersionHistory={() => {}}
+              disabled={isReadOnly}
+            />
+
+            <div className="mt-8">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {t('editor.guideProgress')}
+              </h3>
+              <GuideProgress guide={guide} locale={activeLocale} />
+            </div>
           </div>
         </div>
       </div>
