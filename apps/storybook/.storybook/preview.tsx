@@ -3,12 +3,40 @@ import '@valguide/ui/styles/globals.css'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import type { Preview } from '@storybook/nextjs-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createMemoryHistory, createRootRoute, createRoute, createRouter, RouterProvider } from '@tanstack/react-router'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import de from '@valguide/i18n/messages/de.json'
 import en from '@valguide/i18n/messages/en.json'
 import rm from '@valguide/i18n/messages/rm.json'
 import { themes } from '@valguide/ui/theme/themes'
+import { useRef } from 'react'
 import { IntlProvider } from 'use-intl'
+
+const childrenRef = { current: null as React.ReactNode }
+
+function RootComponent() {
+  return <>{childrenRef.current}</>
+}
+
+const rootRoute = createRootRoute({
+  component: RootComponent,
+})
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+})
+rootRoute.addChildren([indexRoute])
+
+const memoryHistory = createMemoryHistory({ initialEntries: ['/'] })
+const mockRouter = createRouter({
+  routeTree: rootRoute,
+  history: memoryHistory,
+})
+
+function MockRouterProvider({ children }: { children: React.ReactNode }) {
+  childrenRef.current = children
+  return <RouterProvider router={mockRouter} />
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,11 +75,13 @@ const preview: Preview = {
   decorators: [
     (Story, { globals: { locale } }) => (
       <QueryClientProvider client={queryClient}>
-        <IntlProvider locale={locale} messages={messagesByLocale[locale as SupportedLocale]} timeZone="Europe/Zurich">
-          <main className="font-geist">
-            <Story />
-          </main>
-        </IntlProvider>
+        <MockRouterProvider>
+          <IntlProvider locale={locale} messages={messagesByLocale[locale as SupportedLocale]} timeZone="Europe/Zurich">
+            <main className="font-geist">
+              <Story />
+            </main>
+          </IntlProvider>
+        </MockRouterProvider>
       </QueryClientProvider>
     ),
     withThemeByDataAttribute({
