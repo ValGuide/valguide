@@ -1,6 +1,6 @@
 import { asc, desc, eq } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
-import { db } from '../db'
+import { db } from '@valguide/core/features/db'
 import { guide, guideStop, stop, stopTranslation } from './schema'
 
 export async function getStopsByOrganizationId(organizationId: string) {

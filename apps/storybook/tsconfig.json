@@ -12,6 +12,7 @@
   ],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {

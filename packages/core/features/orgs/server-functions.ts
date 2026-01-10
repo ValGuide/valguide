@@ -5,7 +5,7 @@ import { sendEmail } from '@valguide/transactional'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
 import { createClient } from '../../supabase/server'
-import { db } from '../db'
+import { db } from '@valguide/core/features/db'
 import {
   acceptInvitation,
   createInvitation,

@@ -1,5 +1,5 @@
 import { and, desc, eq } from 'drizzle-orm'
-import { db } from '../db'
+import { db } from '@valguide/core/features/db'
 import {
   type GuideTranslationVersion,
   type GuideTranslationWithVersion,

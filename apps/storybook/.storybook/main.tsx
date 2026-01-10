@@ -1,18 +1,26 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite'
-import { clientEnvSchema } from '@valguide/core/env/schema'
 import { createRequire } from 'node:module'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { clientEnv } from './__mocks__/env-client.ts'
+import { serverEnv } from './__mocks__/env-server.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function generateMockEnvDefines() {
   const defines: Record<string, string> = {}
-  for (const key of Object.keys(clientEnvSchema.shape)) {
-    defines[`import.meta.env.${key}`] = '""'
+  // Mock client env (import.meta.env.VITE_*)
+  for (const [key, value] of Object.entries(clientEnv)) {
+    defines[`import.meta.env.${key}`] = JSON.stringify(value)
   }
+  // Mock server env (process.env.*)
+  for (const [key, value] of Object.entries(serverEnv)) {
+    defines[`process.env.${key}`] = JSON.stringify(value)
+  }
+
+  defines['process.env'] = JSON.stringify(defines)
   return defines
 }
 const require = createRequire(import.meta.url)
@@ -47,6 +55,9 @@ const config: StorybookConfig = {
           path.resolve(path.dirname(__dirname), 'tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../app/tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../studio/tsconfig.json'),
+          path.resolve(path.dirname(__dirname), '../www/tsconfig.json'),
+          path.resolve(path.dirname(__dirname), '../admin/tsconfig.json'),
+          path.resolve(path.dirname(__dirname), '../links/tsconfig.json'),
           path.resolve(path.dirname(__dirname), '../../packages/core/tsconfig.json'),
         ],
       }),
@@ -69,6 +80,9 @@ const config: StorybookConfig = {
             find: '@tanstack/react-start',
             replacement: path.resolve(__dirname, './__mocks__/tanstack-react-start.ts'),
           },
+          // Mock environment variables
+          { find: '@valguide/core/env/server', replacement: path.resolve(__dirname, './__mocks__/env-server.ts') },
+          { find: '@valguide/core/env/client', replacement: path.resolve(__dirname, './__mocks__/env-client.ts') },
           // Mock server-side modules for browser compatibility
           { find: 'postgres', replacement: path.resolve(__dirname, './__mocks__/postgres.ts') },
           { find: '@valguide/supabase/server', replacement: path.resolve(__dirname, './__mocks__/supabase-server.ts') },
@@ -93,10 +107,62 @@ const config: StorybookConfig = {
             replacement: path.resolve(__dirname, './__mocks__/guide-server-functions.ts'),
           },
           { find: '@valguide/core/features/db', replacement: path.resolve(__dirname, './__mocks__/db.ts') },
-          // Mock drizzle to prevent DB connections
           {
-            find: 'drizzle-orm/postgres-js',
-            replacement: path.resolve(__dirname, './__mocks__/drizzle-orm-postgres.ts'),
+            find: '@valguide/core/features/assets/server-functions',
+            replacement: path.resolve(__dirname, './__mocks__/asset-server-functions.ts'),
+          },
+          {
+            find: '@valguide/core/features/auth/server-functions',
+            replacement: path.resolve(__dirname, './__mocks__/auth-server-functions.ts'),
+          },
+          {
+            find: '@valguide/core/features/orgs/server-functions',
+            replacement: path.resolve(__dirname, './__mocks__/orgs-server-functions.ts'),
+          },
+          {
+            find: '@valguide/core/i18n/server-functions',
+            replacement: path.resolve(__dirname, './__mocks__/i18n-server-functions.ts'),
+          },
+          // Studio app server functions (use @/ alias pattern)
+          {
+            find: /^@\/features\/theme\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-theme-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/profile\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-profile-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/profile\/actions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-profile-actions.ts'),
+          },
+          {
+            find: /^@\/features\/sidebar\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-sidebar-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/team\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-team-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/guides\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-guides-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/assets\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-assets-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/stops\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-stops-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/join-team\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-join-team-server-functions.ts'),
+          },
+          {
+            find: /^@\/features\/design\/server-functions$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-design-server-functions.ts'),
           },
           { find: 'crypto', replacement: path.resolve(__dirname, './__mocks__/crypto.ts') },
         ],

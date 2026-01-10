@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm'
-import { db } from '../db'
+import { db } from '@valguide/core/features/db'
 import { generateShortCode } from './generator'
 import { type ShortLink, short_links } from './schema'
 import type { CreateShortLinkInput } from './types'

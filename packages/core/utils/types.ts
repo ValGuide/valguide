@@ -32,3 +32,9 @@ export type Translators = {
   scoped: ScopedTranslator
   array: ArrayTranslator
 }
+
+export type StringifyValues<T> = {
+  [K in keyof T]: undefined extends T[K]
+      ? string | undefined
+      : string;
+};

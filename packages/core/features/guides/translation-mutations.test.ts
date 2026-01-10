@@ -19,7 +19,7 @@ jest.mock('../db', () => ({
 }))
 
 import { eq } from 'drizzle-orm'
-import { db } from '../db'
+import { db } from '@valguide/core/features/db'
 import { guide } from './schema'
 import {
   deleteGuideTranslationDraft,

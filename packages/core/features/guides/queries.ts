@@ -1,7 +1,7 @@
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
 import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
-import { type DB, db } from '../db'
+import { type DB, db } from '@valguide/core/features/db'
 import {
   type GuideWithStops,
   type GuideWithTranslations,

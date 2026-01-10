@@ -57,3 +57,13 @@ export const publishStopTranslationDraftFn = async () => ({ success: true })
 export const rollbackGuideTranslationFn = async () => ({ success: true })
 
 export const rollbackStopTranslationFn = async () => ({ success: true })
+
+export const discardGuideTranslationDraftFn = async () => ({ success: true })
+
+export const discardStopTranslationDraftFn = async () => ({ success: true })
+
+export const unpublishGuideTranslationFn = async () => ({ success: true })
+
+export const unpublishStopTranslationFn = async () => ({ success: true })
+
+export const updateStopTranslationFn = async () => ({ versionId: 'mock-version-id' })

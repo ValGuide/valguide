@@ -1,6 +1,6 @@
 import { and, eq } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
-import type { DB } from '../db'
+import type { DB } from '@valguide/core/features/db'
 import { type OrgRole, organization, organizationInvitation, organizationMember } from './schema'
 
 /**
