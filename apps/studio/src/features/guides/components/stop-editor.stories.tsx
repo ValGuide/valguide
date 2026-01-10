@@ -3,7 +3,17 @@ import type { Meta, StoryObj } from '@storybook/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
 import { fn } from 'storybook/test'
+import type { MediaPickerComponentProps } from '@/features/assets/components/media-picker/types'
 import { StopEditor } from './stop-editor'
+
+function MockMediaPicker({ label, value, mode }: MediaPickerComponentProps) {
+  const count = Array.isArray(value) ? value.length : value ? 1 : 0
+  return (
+    <div className="rounded border border-dashed p-4 text-center text-muted-foreground">
+      {label} ({mode === 'multiple' ? `${count} items` : count ? '1 item' : 'empty'})
+    </div>
+  )
+}
 
 const meta = {
   title: 'Guides/StopEditor',
@@ -20,6 +30,7 @@ const meta = {
     onImageChange: fn(),
     onAudioChange: fn(),
     organizationId: 'org-123',
+    MediaPicker: MockMediaPicker,
   },
   argTypes: {
     onChange: { action: 'change' },
