@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { AssetsList } from '@/features/assets/components/assets-list'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
@@ -19,6 +20,7 @@ export const Route = createFileRoute('/_main/assets')({
 })
 
 function AssetsPage() {
+  const queryClient = useQueryClient()
   const { data: sidebarData, isLoading: isSidebarLoading } = useSidebarData()
   const organizationId = sidebarData?.currentTeam?.id
 
@@ -31,8 +33,11 @@ function AssetsPage() {
     organizationId: organizationId ?? undefined,
   })
 
-  const handleAssetDeleted = (_assetId: string) => {
+  const handleAssetDeleted = async (_assetId: string) => {
     refetch()
+    await queryClient.invalidateQueries({ queryKey: ['guides'] })
+    await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
+    await queryClient.invalidateQueries({ queryKey: ['stops'] })
   }
 
   const handleUploadComplete = () => {
