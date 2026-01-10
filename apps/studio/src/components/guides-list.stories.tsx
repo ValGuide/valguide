@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import { GuidesList } from '@/features/guides/components/guides-list'
 
@@ -37,6 +37,7 @@ const sampleGuides: GuideWithTranslations[] = [
     published: null,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20'),
+    availableLocales: ['en'],
     translations: [
       {
         id: 't1',
@@ -72,6 +73,7 @@ const sampleGuides: GuideWithTranslations[] = [
     published: null,
     createdAt: new Date('2024-02-01'),
     updatedAt: new Date('2024-02-10'),
+    availableLocales: ['en'],
     translations: [
       {
         id: 't2',

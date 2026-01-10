@@ -1,5 +1,3 @@
-import type { SupportedLocale } from '@valguide/i18n/i18n.config'
-
 // Guide routes
 export function guideDetailUrl(nanoId: string) {
   return `/guides/${nanoId}` as const

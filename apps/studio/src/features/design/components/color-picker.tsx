@@ -8,7 +8,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { Pipette } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { HexAlphaColorPicker } from 'react-colorful'
-import { hexToRgba, hslaToRgba, hslToRgb, rgbaToHex, rgbaToHsla, rgbToHex, rgbToHsl } from '../color-converter'
+import { hexToRgba, hslaToRgba, rgbaToHex, rgbaToHsla } from '../color-converter'
 
 export interface ColorPickerProps {
   label: string

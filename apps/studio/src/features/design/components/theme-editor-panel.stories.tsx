@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import type { Theme } from '@valguide/core/features/themes/schema'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { ThemeEditorPanel } from './theme-editor-panel'
@@ -30,12 +30,13 @@ const mockThemes: Theme[] = [
       input: '#e4e4e7',
       ring: '#2563eb',
     },
-    radius: 0.5,
+    radius: '0.5',
     fonts: {
       primary: { source: 'system', family: 'Inter' },
     },
     createdAt: new Date(),
     updatedAt: new Date(),
+    createdBy: 'user-1',
   },
   {
     id: '2',
@@ -63,12 +64,13 @@ const mockThemes: Theme[] = [
       input: '#262626',
       ring: '#737373',
     },
-    radius: 0.5,
+    radius: '0.5',
     fonts: {
       primary: { source: 'system', family: 'Inter' },
     },
     createdAt: new Date(),
     updatedAt: new Date(),
+    createdBy: 'user-1',
   },
 ]
 

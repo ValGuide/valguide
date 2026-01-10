@@ -2,14 +2,7 @@ import { and, eq } from 'drizzle-orm'
 import { db } from '../db'
 import { generateShortCode } from './generator'
 import { type ShortLink, short_links } from './schema'
-import type {
-  CreateCampaignShortLink,
-  CreateExternalShortLink,
-  CreateGuideShortLink,
-  CreateLandingPageShortLink,
-  CreateShortLinkInput,
-  CreateStopShortLink,
-} from './types'
+import type { CreateShortLinkInput } from './types'
 
 const MAX_RETRIES = 5
 

@@ -23,10 +23,6 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
   const t = useTranslations('guide.previewCard')
   const locale = useLocale()
 
-  const _handleViewDetails = React.useCallback(() => {
-    onViewDetails?.(guide)
-  }, [guide, onViewDetails])
-
   const formatDate = (date?: Date | string) => {
     if (!date) return ''
     return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(date))

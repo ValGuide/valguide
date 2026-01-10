@@ -1,9 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useDebounceCallback } from 'usehooks-ts'
 
 export function useAutoSave(save: () => Promise<void>, isDirty: boolean, delay = 2000, enabled = false) {
-  const _saveTimerRef = useRef<NodeJS.Timeout | null>(null)
-
   const debouncedSave = useDebounceCallback(async () => {
     if (!isDirty) return
 

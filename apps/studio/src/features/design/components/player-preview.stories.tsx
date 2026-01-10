@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import { type ThemePreset, themeColorPresets } from '../theme-presets'
 import { PlayerPreview } from './player-preview'
 

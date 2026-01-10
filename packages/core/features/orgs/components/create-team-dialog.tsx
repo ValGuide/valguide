@@ -1,4 +1,3 @@
-import { useRouter } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -36,7 +35,6 @@ export function CreateTeamDialog({
   const [slug, setSlug] = React.useState('')
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const t = useTranslations('orgs.createTeam')
-  const _router = useRouter()
 
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : internalOpen

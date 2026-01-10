@@ -1,4 +1,4 @@
-import { useRouter, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { withLeadingSlash } from '@valguide/i18n/route.utils'
@@ -45,7 +45,6 @@ type AuthProviderProps = PropsWithChildren<{
 
 export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) => {
   const t = useTranslations(isLogin ? 'login' : 'signup')
-  const router = useRouter()
 
   const searchParams = useSearch({ strict: false }) as { next?: string; email?: string }
   const next = withLeadingSlash(searchParams.next ?? defaultNextPath)

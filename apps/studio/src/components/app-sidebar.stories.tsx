@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import type { Team } from '@valguide/core/features/orgs/components/team-switcher'
 import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AppSidebar } from './app-sidebar'
@@ -58,8 +58,8 @@ const meta: Meta<typeof AppSidebar> = {
     teams: mockTeams,
     currentTeam: mockTeams[0],
     onLogout: () => console.log('Logout clicked'),
-    onTeamSwitch: (teamSlug) => console.log('Team switched to:', teamSlug),
-    onCreateTeam: async (name, slug) => console.log('Create team:', { name, slug }),
+    onTeamSwitch: (teamSlug: string) => console.log('Team switched to:', teamSlug),
+    onCreateTeam: async (name: string, slug?: string) => console.log('Create team:', { name, slug }),
   },
   decorators: [
     (Story) => (
