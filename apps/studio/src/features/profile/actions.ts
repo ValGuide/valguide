@@ -2,15 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 
 import { createClient } from '@valguide/core/supabase/server'
 import { updateProfile } from '@valguide/features/profiles/mutations'
-import { z } from 'zod'
-
-const profileSchema = z.object({
-  username: z.string().min(3).optional().or(z.literal('')),
-  firstName: z.string().optional().or(z.literal('')),
-  lastName: z.string().optional().or(z.literal('')),
-})
-
-export type ProfileFormData = z.infer<typeof profileSchema>
+import { profileSchema } from './schemas'
 
 export const updateProfileFn = createServerFn({ method: 'POST' })
   .inputValidator(profileSchema)

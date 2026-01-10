@@ -22,7 +22,7 @@ export function DraftPublishedTabs({
   const t = useTranslations('guides.tabs')
 
   return (
-    <div className={cn('flex border-b', className)}>
+    <div className={cn('flex', className)}>
       <button
         type="button"
         onClick={() => onTabChange('draft')}

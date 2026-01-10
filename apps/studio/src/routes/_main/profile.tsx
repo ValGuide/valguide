@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { ProfileForm } from '@/features/profile/components/profile-form'
+import { ProfileFormConnected } from '@/features/profile/components/profile-form-connected'
 import { ProfileSkeleton } from '@/features/profile/components/profile-skeleton'
 import { profileQueryOptions } from '@/features/profile/query-options'
 
@@ -19,7 +19,7 @@ function ProfilePage() {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
         </div>
-        <ProfileForm />
+        <ProfileFormConnected />
       </div>
     </div>
   )

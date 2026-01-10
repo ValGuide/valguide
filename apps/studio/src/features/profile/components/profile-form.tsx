@@ -19,8 +19,7 @@ import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { useProfile } from '../'
-import { type ProfileFormData, updateProfileFn } from '../actions'
+import type { ProfileFormData } from '../schemas'
 
 const profileSchema = z.object({
   username: z.string().min(3).optional().or(z.literal('')),
@@ -28,20 +27,37 @@ const profileSchema = z.object({
   lastName: z.string().optional().or(z.literal('')),
 })
 
-interface ProfileFormProps {
+export type UpdateProfileResult = { success: boolean; validationError?: boolean }
+
+export interface ProfileFormProps {
   initialData?: {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
   }
+  profile?: {
+    username: string | null
+    firstName: string | null
+    lastName: string | null
+  } | null
+  isLoading?: boolean
+  onSubmit?: (data: ProfileFormData) => Promise<UpdateProfileResult>
+  onSuccess?: () => Promise<void>
 }
 
-export function ProfileForm({ initialData }: ProfileFormProps) {
+export function ProfileForm({
+  initialData,
+  profile: profileProp,
+  isLoading: isLoadingProp,
+  onSubmit,
+  onSuccess,
+}: ProfileFormProps) {
   const t = useTranslations('profile')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const { profile, isLoading, refetch } = useProfile()
+  const profile = profileProp
+  const isLoading = isLoadingProp ?? false
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -91,13 +107,14 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
     )
   }
 
-  function onSubmit(formData: ProfileFormData) {
+  function handleFormSubmit(formData: ProfileFormData) {
+    if (!onSubmit) return
     startTransition(async () => {
-      const result = await updateProfileFn({ data: formData })
+      const result = await onSubmit(formData)
       if (result.success) {
         toast.success(t('actions.updateSuccess'))
         router.invalidate()
-        await refetch()
+        await onSuccess?.()
         await queryClient.invalidateQueries({ queryKey: ['sidebar'] })
       } else {
         toast.error(t('actions.updateError'))
@@ -113,7 +130,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="username"

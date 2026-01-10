@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Asset } from '@valguide/core/features/assets/types'
-import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema-types'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
@@ -55,8 +54,6 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
   const tGuides = useTranslations('guides')
 
   const translation = stop?.translations.find((t) => t.locale === locale)
-  const hasDraft = !!translation?.draftVersionId
-  const publishedStatus = translation?.currentVersion?.status
 
   const getDefaultValues = () => {
     if (versionData) {
@@ -144,10 +141,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel>{t('titleLabel')}</FormLabel>
-                    <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
-                  </div>
+                  <FormLabel>{t('titleLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
