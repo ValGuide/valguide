@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '@valguide/ui/components/button'
 import { useState } from 'react'
-import { MockAssetsProvider, mockAssets } from '../context/mock-assets-provider'
+import { mockAssets } from '../context/mock-assets-provider'
 import { AssetPickerModal, type UploadInlineComponentProps } from './asset-picker-modal'
 
 function MockUploadInline({ allowedTypes, locale }: UploadInlineComponentProps) {
@@ -25,17 +25,13 @@ const meta = {
   argTypes: {
     onSelect: { action: 'assets-selected' },
     onUploadComplete: { action: 'upload-complete' },
+    onRefetch: { action: 'refetch' },
   },
   args: {
     UploadInline: MockUploadInline,
+    assets: mockAssets.filter((a) => a.type === 'image'),
+    isLoading: false,
   },
-  decorators: [
-    (Story) => (
-      <MockAssetsProvider>
-        <Story />
-      </MockAssetsProvider>
-    ),
-  ],
 } satisfies Meta<typeof AssetPickerModal>
 
 export default meta
@@ -60,6 +56,7 @@ export const SingleSelectImage: Story = {
     type: 'image',
     organizationId: 'org-123',
     multiple: false,
+    assets: mockAssets.filter((a) => a.type === 'image'),
   },
 }
 
@@ -69,6 +66,7 @@ export const MultiSelectImageGallery: Story = {
     type: 'image',
     organizationId: 'org-123',
     multiple: true,
+    assets: mockAssets.filter((a) => a.type === 'image'),
   },
 }
 
@@ -79,6 +77,7 @@ export const AudioPickerWithLocale: Story = {
     locale: 'en',
     organizationId: 'org-123',
     multiple: false,
+    assets: mockAssets.filter((a) => a.type === 'audio'),
   },
 }
 
@@ -89,68 +88,50 @@ export const VideoPickerWithLocale: Story = {
     locale: 'en',
     organizationId: 'org-123',
     multiple: false,
+    assets: mockAssets.filter((a) => a.type === 'video'),
   },
 }
 
 export const EmptyLibrary: Story = {
   render: (args) => <PickerWrapper {...args} />,
-  decorators: [
-    (Story) => (
-      <MockAssetsProvider assets={[]}>
-        <Story />
-      </MockAssetsProvider>
-    ),
-  ],
   args: {
     type: 'image',
     organizationId: 'org-123',
     multiple: false,
+    assets: [],
   },
 }
 
 export const Loading: Story = {
   render: (args) => <PickerWrapper {...args} />,
-  decorators: [
-    (Story) => (
-      <MockAssetsProvider isLoading={true} assets={[]}>
-        <Story />
-      </MockAssetsProvider>
-    ),
-  ],
   args: {
     type: 'image',
     organizationId: 'org-123',
     multiple: false,
+    assets: [],
+    isLoading: true,
   },
 }
 
 export const ManyAssets: Story = {
   render: (args) => <PickerWrapper {...args} />,
-  decorators: [
-    (Story) => (
-      <MockAssetsProvider
-        assets={[
-          ...mockAssets,
-          ...mockAssets.map((a, i) => ({
-            ...a,
-            id: `${a.id}-dup1-${i}`,
-            nanoId: `${a.nanoId}-dup1`,
-          })),
-          ...mockAssets.map((a, i) => ({
-            ...a,
-            id: `${a.id}-dup2-${i}`,
-            nanoId: `${a.nanoId}-dup2`,
-          })),
-        ].filter((a) => a.type === 'image')}
-      >
-        <Story />
-      </MockAssetsProvider>
-    ),
-  ],
   args: {
     type: 'image',
     organizationId: 'org-123',
     multiple: true,
+    assets: [
+      ...mockAssets,
+      ...mockAssets.map((a, i) => ({
+        ...a,
+        id: `${a.id}-dup1-${i}`,
+        nanoId: `${a.nanoId}-dup1`,
+      })),
+      ...mockAssets.map((a, i) => ({
+        ...a,
+        id: `${a.id}-dup2-${i}`,
+        nanoId: `${a.nanoId}-dup2`,
+      })),
+    ].filter((a) => a.type === 'image'),
   },
 }
 
@@ -161,5 +142,6 @@ export const WithPreselectedAssets: Story = {
     organizationId: 'org-123',
     multiple: true,
     selectedAssetIds: ['1', '3'],
+    assets: mockAssets.filter((a) => a.type === 'image'),
   },
 }

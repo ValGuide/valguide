@@ -14,8 +14,6 @@ import { formatDistanceToNow } from 'date-fns'
 import { Image as ImageIcon, Music, Search, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useMemo, useState } from 'react'
-import { useAssetsContextOptional } from '../context/assets-context'
-import { useAssets } from '../hooks/use-assets'
 
 export type UploadInlineComponentProps = {
   allowedTypes?: AssetType[]
@@ -35,8 +33,9 @@ export type AssetPickerModalProps = {
   multiple?: boolean
   selectedAssetIds?: string[]
   onSelect: (assets: Asset[]) => void
-  assets?: Asset[]
-  isLoading?: boolean
+  assets: Asset[]
+  isLoading: boolean
+  onRefetch?: () => void
   onUploadComplete?: (asset: Asset) => void
   UploadInline?: UploadInlineComponent
 }
@@ -50,8 +49,9 @@ export function AssetPickerModal({
   multiple = false,
   selectedAssetIds = [],
   onSelect,
-  assets: assetsProp,
-  isLoading: isLoadingProp,
+  assets,
+  isLoading,
+  onRefetch,
   onUploadComplete: onUploadCompleteProp,
   UploadInline,
 }: AssetPickerModalProps) {
@@ -61,18 +61,6 @@ export function AssetPickerModal({
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
   const [searchQuery, setSearchQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set(selectedAssetIds))
-
-  const contextValue = useAssetsContextOptional()
-  const shouldFetchAssets = !assetsProp && !contextValue
-  const {
-    assets: assetsFromHook,
-    isLoading: isLoadingFromHook,
-    refetch: refetchFromHook,
-  } = useAssets({ type, locale, organizationId, enabled: shouldFetchAssets })
-
-  const assets = assetsProp ?? contextValue?.assets ?? assetsFromHook
-  const isLoading = isLoadingProp ?? contextValue?.isLoading ?? isLoadingFromHook
-  const refetch = contextValue?.refetch ?? refetchFromHook
 
   const filteredAssets = useMemo(() => {
     return assets.filter((asset) => {
@@ -104,7 +92,7 @@ export function AssetPickerModal({
 
   const handleUploadComplete = (asset: Asset) => {
     onUploadCompleteProp?.(asset)
-    refetch()
+    onRefetch?.()
     setActiveTab('library')
     if (!multiple) {
       const newSelected = new Set([asset.id])
