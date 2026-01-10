@@ -1,4 +1,28 @@
+import type { Asset } from '../assets/schema'
+import type { GuideWithStops, GuideWithTranslations, StopWithTranslations } from './schema'
 import { z } from 'zod'
+
+// Extended types for app viewer (moved from queries.ts to avoid db.ts import in Storybook)
+export type AssetWithRole = Asset & {
+  guideAssetId?: string
+  stopAssetId?: string
+  role: string
+  order: number
+  locale?: string | null
+}
+
+export type StopWithAssets = StopWithTranslations & {
+  assets: AssetWithRole[]
+}
+
+export type GuideWithStopsAndAssets = Omit<GuideWithStops, 'stops'> & {
+  assets: AssetWithRole[]
+  stops: StopWithAssets[]
+}
+
+export type GuideWithTranslationsAndCover = GuideWithTranslations & {
+  coverImage?: AssetWithRole | null
+}
 
 export const guideTranslationSchema = z.object({
   id: z.string(),

@@ -1,5 +1,4 @@
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
-import { confirmAssetUploadFn } from '@valguide/core/features/assets/server-functions'
 import {
   detectAssetType,
   getAllowedMimeTypes,
@@ -7,11 +6,8 @@ import {
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
-import { uploadFileWithTUS } from '../../lib/tus-upload'
-import { AssetPickerModal } from '../asset-picker-modal'
 import { MediaPickerDropzone } from './media-picker-dropzone'
 import { MediaPickerGallery } from './media-picker-gallery'
 import { MediaPickerPreview } from './media-picker-preview'
@@ -25,10 +21,11 @@ export type MediaPickerProps = {
   label?: string
   helperText?: string
   maxFileSize?: number
-  organizationId: string
-  locale?: string
   showLibrary?: boolean
   disabled?: boolean
+  onUpload: (file: File, onProgress: (progress: number) => void) => Promise<Asset | null>
+  onBrowseLibrary?: () => void
+  libraryContent?: React.ReactNode
 }
 
 export function MediaPicker({
@@ -38,10 +35,11 @@ export function MediaPicker({
   onChange,
   label,
   helperText,
-  organizationId,
-  locale,
   showLibrary = true,
   disabled = false,
+  onUpload,
+  onBrowseLibrary,
+  libraryContent,
 }: MediaPickerProps) {
   const t = useTranslations('assets.mediaPicker')
   const tUpload = useTranslations('assets.upload')
@@ -49,7 +47,6 @@ export function MediaPicker({
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadFileName, setUploadFileName] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [libraryOpen, setLibraryOpen] = useState(false)
 
   const acceptedMimeTypes = mediaTypes.flatMap((type) => getAllowedMimeTypes(type))
 
@@ -79,30 +76,7 @@ export function MediaPicker({
       setUploadFileName(file.name)
 
       try {
-        const assetId = valguideId()
-        const timestamp = Date.now()
-        const fileName = `${organizationId}/${detected}/${timestamp}-${file.name}`
-
-        await uploadFileWithTUS({
-          bucketName: 'assets',
-          fileName,
-          file,
-          onProgress: setUploadProgress,
-          onError: (err) => setError(err.message),
-        })
-
-        const asset = await confirmAssetUploadFn({
-          data: {
-            assetId,
-            fileName: file.name,
-            fileSize: file.size,
-            mimeType: file.type,
-            type: detected,
-            locale,
-            storagePath: fileName,
-            organizationId,
-          },
-        })
+        const asset = await onUpload(file, setUploadProgress)
 
         if (asset) {
           if (mode === 'single') {
@@ -123,7 +97,7 @@ export function MediaPicker({
         setUploadProgress(0)
       }
     },
-    [mediaTypes, mode, value, onChange, organizationId, locale, tUpload],
+    [mediaTypes, mode, value, onChange, tUpload, onUpload],
   )
 
   const handleRemove = useCallback(
@@ -137,20 +111,6 @@ export function MediaPicker({
     [mode, value, onChange],
   )
 
-  const handleLibrarySelect = useCallback(
-    (assets: Asset[]) => {
-      if (mode === 'single') {
-        onChange(assets[0] ?? null)
-      } else {
-        const currentAssets = Array.isArray(value) ? value : []
-        const newAssetIds = new Set(assets.map((a) => a.id))
-        const filtered = currentAssets.filter((a) => !newAssetIds.has(a.id))
-        onChange([...filtered, ...assets])
-      }
-      setLibraryOpen(false)
-    },
-    [mode, value, onChange],
-  )
 
   const renderContent = () => {
     if (mode === 'single' && uploading) {
@@ -202,10 +162,10 @@ export function MediaPicker({
         </div>
       )}
 
-      {showLibrary && !uploading && (
+      {showLibrary && !uploading && onBrowseLibrary && (
         <button
           type="button"
-          onClick={() => setLibraryOpen(true)}
+          onClick={onBrowseLibrary}
           disabled={disabled}
           className="flex w-full items-center justify-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto"
         >
@@ -232,16 +192,7 @@ export function MediaPicker({
 
       {helperText && <p className="text-xs text-muted-foreground">{helperText}</p>}
 
-      <AssetPickerModal
-        open={libraryOpen}
-        onOpenChange={setLibraryOpen}
-        type={mediaTypes[0] ?? 'image'}
-        locale={locale}
-        organizationId={organizationId}
-        multiple={mode === 'multiple'}
-        selectedAssetIds={Array.isArray(value) ? value.map((a) => a.id) : value ? [value.id] : []}
-        onSelect={handleLibrarySelect}
-      />
+      {libraryContent}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
+import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/types'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Progress } from '@valguide/ui/components/progress'

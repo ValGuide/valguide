@@ -1,6 +1,6 @@
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
-import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/queries'
+import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import type { Guide } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -114,7 +114,7 @@ export function GuidesList({
     } finally {
       setIsCreating(false)
     }
-  }, [onCreateGuide, t, onViewGuide])
+  }, [onCreateGuide, onViewGuide])
 
   // Loading state
   if (isLoading) {

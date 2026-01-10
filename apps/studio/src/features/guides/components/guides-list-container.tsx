@@ -1,5 +1,5 @@
 import { useRouter } from '@tanstack/react-router'
-import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/queries'
+import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import { useGuides } from '../hooks/use-guides'
 import { GuidesList } from './guides-list'
 

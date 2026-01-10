@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
+import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/types'
 import { useCallback } from 'react'
 import { getGuideByNanoIdFn } from '../server-functions'
 

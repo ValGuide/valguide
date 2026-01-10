@@ -1,5 +1,5 @@
 import { Link, useRouter } from '@tanstack/react-router'
-import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   BreadcrumbEllipsis,
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { useCallback, useEffect, useRef } from 'react'
+import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
@@ -23,9 +24,10 @@ import type { StopTranslationFormData } from '@/features/guides/schemas/guide-fo
 interface StopEditViewProps {
   stop: StopWithAssets
   organizationId?: string
+  MediaPicker: MediaPickerComponent
 }
 
-export function StopEditView({ stop: stopProp, organizationId: organizationIdProp }: StopEditViewProps) {
+export function StopEditView({ stop: stopProp, organizationId: organizationIdProp, MediaPicker }: StopEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -162,6 +164,7 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
       backLabel={t('editor.backToGuide')}
       stopEditorRef={stopEditorRef}
       breadcrumbContent={breadcrumbContent}
+      MediaPicker={MediaPicker}
       onImageChange={async (assets) => {
         const newAssetIds = new Set(assets.map((a) => a.id))
         const currentAssetIds = new Set(stopImages.map((a) => a.id))

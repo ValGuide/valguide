@@ -1,40 +1,22 @@
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
-import { type Asset, asset, guideAsset, stopAsset } from '../assets/schema'
+import { asset, guideAsset, stopAsset } from '../assets/schema'
 import { type DB, db } from '@valguide/core/features/db'
-import {
-  type GuideWithStops,
-  type GuideWithTranslations,
-  guide,
-  guideStop,
-  guideTranslation,
-  guideTranslationVersion,
-  type StopWithTranslations,
-  stop,
-} from './schema'
+import { guide, guideStop, guideTranslation, guideTranslationVersion, stop } from './schema'
 import { upsertGuideTranslationDraft } from './translation-mutations'
 
-// Extended types for app viewer
-export type AssetWithRole = Asset & {
-  guideAssetId?: string
-  stopAssetId?: string
-  role: string
-  order: number
-  locale?: string | null
-}
+// Re-export types from types.ts for backward compatibility
+// IMPORTANT: Import types from '@valguide/core/features/guides/types' in client code
+// to avoid importing db.ts (which breaks Storybook)
+export type {
+  AssetWithRole,
+  GuideWithStopsAndAssets,
+  GuideWithTranslationsAndCover,
+  StopWithAssets,
+} from './types'
 
-export type StopWithAssets = StopWithTranslations & {
-  assets: AssetWithRole[]
-}
-
-export type GuideWithStopsAndAssets = Omit<GuideWithStops, 'stops'> & {
-  assets: AssetWithRole[]
-  stops: StopWithAssets[]
-}
-
-export type GuideWithTranslationsAndCover = GuideWithTranslations & {
-  coverImage?: AssetWithRole | null
-}
+import type { AssetWithRole, GuideWithStopsAndAssets, GuideWithTranslationsAndCover, StopWithAssets } from './types'
+import type { GuideWithTranslations, StopWithTranslations } from './schema'
 
 /**
  * Query utilities for guides with i18n support

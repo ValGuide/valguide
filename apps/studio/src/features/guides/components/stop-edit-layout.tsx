@@ -1,6 +1,6 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
-import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import {
   discardStopTranslationDraftFn,
   publishStopTranslationDraftFn,
@@ -20,7 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valg
 import { ArrowLeft, Globe } from 'lucide-react'
 import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { LocaleSelector } from '@/features/guides/components/locale-selector'
@@ -49,6 +49,7 @@ export interface StopEditLayoutProps {
   onAudioChange: (asset: Asset | null) => Promise<void>
   breadcrumbContent: ReactNode
   stopEditorRef?: React.RefObject<StopLocaleEditorRef | null>
+  MediaPicker: MediaPickerComponent
 }
 
 export function StopEditLayout({
@@ -70,6 +71,7 @@ export function StopEditLayout({
   onAudioChange,
   breadcrumbContent,
   stopEditorRef: externalRef,
+  MediaPicker,
 }: StopEditLayoutProps) {
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -268,6 +270,7 @@ export function StopEditLayout({
                   onDirtyChange={onDirtyChange}
                   onSave={onSave}
                   onAudioChange={onAudioChange}
+                  MediaPicker={MediaPicker}
                 />
 
                 {/* Shared Content Section */}

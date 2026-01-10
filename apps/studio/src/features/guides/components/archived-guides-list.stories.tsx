@@ -130,10 +130,20 @@ const archivedGuides: GuideWithTranslations[] = [
   },
 ]
 
+const mockOnRecover = async (id: string) => {
+  console.log('Recovering guide:', id)
+}
+
+const mockOnDelete = async (id: string) => {
+  console.log('Deleting guide:', id)
+}
+
 export const Empty: Story = {
   args: {
     guides: [],
     userId: 'user-1',
+    onRecover: mockOnRecover,
+    onDelete: mockOnDelete,
   },
 }
 
@@ -141,6 +151,8 @@ export const WithArchivedGuides: Story = {
   args: {
     guides: archivedGuides,
     userId: 'user-1',
+    onRecover: mockOnRecover,
+    onDelete: mockOnDelete,
   },
 }
 
@@ -148,6 +160,8 @@ export const SingleGuide: Story = {
   args: {
     guides: archivedGuides.slice(0, 1),
     userId: 'user-1',
+    onRecover: mockOnRecover,
+    onDelete: mockOnDelete,
   },
 }
 
@@ -155,6 +169,8 @@ export const WithActionHandler: Story = {
   args: {
     guides: archivedGuides,
     userId: 'user-1',
+    onRecover: mockOnRecover,
+    onDelete: mockOnDelete,
     onActionComplete: () => {
       console.log('Action completed!')
     },

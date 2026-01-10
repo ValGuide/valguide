@@ -23,7 +23,7 @@ function StopEditPage() {
 }
 
 import { Link, useRouter } from '@tanstack/react-router'
-import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import {
   attachAssetToStopFn,
   detachAssetFromStopFn,
@@ -34,6 +34,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
@@ -224,6 +225,7 @@ function StandaloneStopEditorClient({ fallbackStop, initialLocale }: StandaloneS
       backLabel={tStops('backToStops')}
       stopEditorRef={stopEditorRef}
       breadcrumbContent={breadcrumbContent}
+      MediaPicker={MediaPickerConnected}
       onImageChange={async (assets) => {
         const newAssetIds = new Set(assets.map((a) => a.id))
         const currentAssetIds = new Set(stopImages.map((a) => a.id))

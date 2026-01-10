@@ -11,7 +11,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Mic } from 'lucide-react'
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
 import { type UseFormReturn, useForm } from 'react-hook-form'
-import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
 
 export type StopEditorProps = {
@@ -25,6 +25,7 @@ export type StopEditorProps = {
   onSave?: () => void
   images?: Asset[]
   audio?: Asset | null
+  MediaPicker: MediaPickerComponent
 }
 
 export type StopEditorRef = {
@@ -45,6 +46,7 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
     onSave,
     images = [],
     audio = null,
+    MediaPicker,
   },
   ref,
 ) {

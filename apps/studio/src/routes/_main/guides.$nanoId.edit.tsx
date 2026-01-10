@@ -1,7 +1,12 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-
-import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/queries'
+import type { GuideWithStopsAndAssets } from '@valguide/core/features/guides/types'
+import {
+  discardGuideTranslationDraftFn,
+  publishGuideTranslationDraftFn,
+  unpublishGuideTranslationFn,
+} from '@valguide/core/features/guides/server-functions'
 import { useEffect, useState } from 'react'
+import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
@@ -74,9 +79,15 @@ function GuideEditorClient({ fallbackGuide, initialSelectedStopId, initialLocale
   return (
     <GuideEditorProvider initialGuide={guide} onMutate={mutate} initialLocale={initialLocale}>
       {stop ? (
-        <StopEditView stop={stop} organizationId={organizationId} />
+        <StopEditView stop={stop} organizationId={organizationId} MediaPicker={MediaPickerConnected} />
       ) : (
-        <GuideEditView organizationId={organizationId} />
+        <GuideEditView
+          organizationId={organizationId}
+          onPublish={(guideId, locale) => publishGuideTranslationDraftFn({ data: { guideId, locale } })}
+          onUnpublish={(guideId, locale) => unpublishGuideTranslationFn({ data: { guideId, locale } })}
+          onDiscard={(guideId, locale) => discardGuideTranslationDraftFn({ data: { guideId, locale } })}
+          MediaPicker={MediaPickerConnected}
+        />
       )}
     </GuideEditorProvider>
   )

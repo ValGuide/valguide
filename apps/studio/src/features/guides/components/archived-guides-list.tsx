@@ -1,6 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/server-functions'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import {
@@ -24,6 +23,8 @@ interface ArchivedGuidesListProps {
   guides: GuideWithTranslations[]
   userId: string
   onActionComplete?: () => void
+  onRecover?: (id: string) => Promise<unknown>
+  onDelete?: (id: string) => Promise<unknown>
 }
 
 type DialogState = {
@@ -31,7 +32,13 @@ type DialogState = {
   guideId: string | null
 }
 
-export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }: ArchivedGuidesListProps) {
+export function ArchivedGuidesList({
+  guides,
+  userId: _userId,
+  onActionComplete,
+  onRecover,
+  onDelete,
+}: ArchivedGuidesListProps) {
   const t = useTranslations('guides')
   const tCommon = useTranslations('common')
   const locale = useLocale()
@@ -45,11 +52,11 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
   }
 
   const handleRecover = async () => {
-    if (!dialogState.guideId) return
+    if (!dialogState.guideId || !onRecover) return
 
     setIsLoading(true)
     try {
-      await recoverGuideFn({ data: { id: dialogState.guideId } })
+      await onRecover(dialogState.guideId)
       toast.success(t('recover.success'), {
         description: t('recover.successDescription'),
       })
@@ -67,11 +74,11 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
   }
 
   const handleDelete = async () => {
-    if (!dialogState.guideId) return
+    if (!dialogState.guideId || !onDelete) return
 
     setIsLoading(true)
     try {
-      await deleteGuideFn({ data: { id: dialogState.guideId } })
+      await onDelete(dialogState.guideId)
       toast.success(t('delete.success'), {
         description: t('delete.successDescription'),
       })

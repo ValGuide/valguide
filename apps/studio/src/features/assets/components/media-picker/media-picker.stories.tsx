@@ -3,7 +3,16 @@ import type { Meta, StoryObj } from '@storybook/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { useState } from 'react'
 import { MockAssetsProvider } from '../../context/mock-assets-provider'
-import { MediaPicker, type MediaPickerProps } from './media-picker'
+import { MediaPicker } from './media-picker'
+import type { MediaPickerComponentProps } from './types'
+
+const mockOnUpload = async (_file: File, onProgress: (p: number) => void) => {
+  for (let i = 0; i <= 100; i += 20) {
+    await new Promise((r) => setTimeout(r, 200))
+    onProgress(i)
+  }
+  return null
+}
 
 const meta = {
   title: 'Assets/MediaPicker',
@@ -95,13 +104,13 @@ const mockGalleryAssets: Asset[] = [
   },
 ]
 
-type MediaPickerWrapperProps = Omit<MediaPickerProps, 'value' | 'onChange'> & {
+type MediaPickerWrapperProps = Omit<MediaPickerComponentProps, 'value' | 'onChange'> & {
   initialValue?: Asset | Asset[] | null
 }
 
 function MediaPickerWrapper({ initialValue = null, ...props }: MediaPickerWrapperProps) {
   const [value, setValue] = useState<Asset | Asset[] | null>(initialValue)
-  return <MediaPicker {...props} value={value} onChange={setValue} />
+  return <MediaPicker {...props} value={value} onChange={setValue} onUpload={mockOnUpload} />
 }
 
 export const Empty: Story = {
@@ -109,7 +118,6 @@ export const Empty: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['image'],
-    organizationId: 'org-123',
     label: 'Cover Image',
   },
 }
@@ -119,7 +127,6 @@ export const EmptyWithHelper: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['image'],
-    organizationId: 'org-123',
     label: 'Cover Image',
     helperText: 'Recommended size: 1200x630 pixels',
   },
@@ -130,7 +137,6 @@ export const SingleImageFilled: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['image'],
-    organizationId: 'org-123',
     label: 'Cover Image',
     initialValue: mockImageAsset,
   },
@@ -141,8 +147,6 @@ export const SingleAudioFilled: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['audio'],
-    organizationId: 'org-123',
-    locale: 'en',
     label: 'Narration',
     initialValue: mockAudioAsset,
   },
@@ -153,7 +157,6 @@ export const MultipleEmpty: Story = {
   args: {
     mode: 'multiple',
     mediaTypes: ['image', 'video'],
-    organizationId: 'org-123',
     label: 'Gallery',
   },
 }
@@ -163,7 +166,6 @@ export const MultipleFilled: Story = {
   args: {
     mode: 'multiple',
     mediaTypes: ['image', 'video'],
-    organizationId: 'org-123',
     label: 'Gallery',
     initialValue: mockGalleryAssets,
   },
@@ -174,7 +176,6 @@ export const NoLibrary: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['image'],
-    organizationId: 'org-123',
     label: 'Profile Photo',
     showLibrary: false,
   },
@@ -185,7 +186,6 @@ export const Disabled: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['image'],
-    organizationId: 'org-123',
     label: 'Cover Image',
     disabled: true,
   },
@@ -196,7 +196,6 @@ export const DisabledWithValue: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['image'],
-    organizationId: 'org-123',
     label: 'Cover Image',
     disabled: true,
     initialValue: mockImageAsset,
@@ -208,8 +207,6 @@ export const AudioOnly: Story = {
   args: {
     mode: 'multiple',
     mediaTypes: ['audio'],
-    organizationId: 'org-123',
-    locale: 'en',
     label: 'Audio Files',
   },
 }
@@ -219,7 +216,6 @@ export const VideoOnly: Story = {
   args: {
     mode: 'single',
     mediaTypes: ['video'],
-    organizationId: 'org-123',
     label: 'Intro Video',
   },
 }
@@ -245,7 +241,6 @@ export const MultipleFilledUploading: Story = {
   args: {
     mode: 'multiple',
     mediaTypes: ['image', 'video'],
-    organizationId: 'org-123',
     label: 'Gallery',
     initialValue: mockGalleryAssets,
   },

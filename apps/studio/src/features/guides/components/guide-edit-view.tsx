@@ -2,11 +2,6 @@ import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
-import {
-  discardGuideTranslationDraftFn,
-  publishGuideTranslationDraftFn,
-  unpublishGuideTranslationFn,
-} from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
 
 import {
@@ -23,14 +18,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@val
 import { Eye, Globe, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { getLocaleDisplayName, UnifiedLocaleSelector } from '@/features/guides/components/unified-locale-selector'
-import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
+import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
@@ -38,9 +33,19 @@ import { getGuideLocaleStatusMap } from '@/features/guides/utils/translation-sta
 
 interface GuideEditViewProps {
   organizationId?: string
+  onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onUnpublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onDiscard?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  MediaPicker: MediaPickerComponent
 }
 
-export function GuideEditView({ organizationId: organizationIdProp }: GuideEditViewProps) {
+export function GuideEditView({
+  organizationId: organizationIdProp,
+  onPublish,
+  onUnpublish,
+  onDiscard,
+  MediaPicker,
+}: GuideEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -184,9 +189,10 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   )
 
   const handlePublish = useCallback(async () => {
+    if (!onPublish) return
     setIsPublishing(true)
     try {
-      const result = await publishGuideTranslationDraftFn({ data: { guideId: guide.id, locale: activeLocale } })
+      const result = await onPublish(guide.id, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
         refetch()
@@ -199,11 +205,12 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
     } finally {
       setIsPublishing(false)
     }
-  }, [guide.id, activeLocale, refetch, t])
+  }, [guide.id, activeLocale, refetch, onPublish])
 
   const handleUnpublish = useCallback(async () => {
+    if (!onUnpublish) return
     try {
-      const result = await unpublishGuideTranslationFn({ data: { guideId: guide.id, locale: activeLocale } })
+      const result = await onUnpublish(guide.id, activeLocale)
       if (result.success) {
         toast.success('Content unpublished')
         refetch()
@@ -214,11 +221,12 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
       console.error('Failed to unpublish:', error)
       toast.error('Failed to unpublish')
     }
-  }, [guide.id, activeLocale, refetch])
+  }, [guide.id, activeLocale, refetch, onUnpublish])
 
   const handleDiscard = useCallback(async () => {
+    if (!onDiscard) return
     try {
-      const result = await discardGuideTranslationDraftFn({ data: { guideId: guide.id, locale: activeLocale } })
+      const result = await onDiscard(guide.id, activeLocale)
       if (result.success) {
         toast.success('Draft discarded')
         refetch()
@@ -229,7 +237,7 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
       console.error('Failed to discard:', error)
       toast.error('Failed to discard draft')
     }
-  }, [guide.id, activeLocale, refetch])
+  }, [guide.id, activeLocale, refetch, onDiscard])
 
   const handleTabChange = useCallback(
     (tab: EditorTab) => {

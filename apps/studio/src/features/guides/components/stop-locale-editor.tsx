@@ -12,7 +12,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Mic } from 'lucide-react'
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
 import { type UseFormReturn, useForm } from 'react-hook-form'
-import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
 
 export type StopLocaleEditorProps = {
@@ -26,6 +26,7 @@ export type StopLocaleEditorProps = {
   audio?: Asset | null
   readOnly?: boolean
   versionData?: { title: string; description: string | null; transcription: string | null }
+  MediaPicker: MediaPickerComponent
 }
 
 export type StopLocaleEditorRef = {
@@ -46,6 +47,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
     audio = null,
     readOnly = false,
     versionData,
+    MediaPicker,
   },
   ref,
 ) {

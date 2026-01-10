@@ -91,7 +91,7 @@ export function CustomAssetUpload({
         setPreviewUrl(url)
       }
     },
-    [allowedTypes, maxSizeMB, type, t, translatedType],
+    [allowedTypes, maxSizeMB, type, translatedType],
   )
 
   const handleDrop = useCallback(
@@ -122,7 +122,7 @@ export function CustomAssetUpload({
         setPreviewUrl(url)
       }
     },
-    [allowedTypes, maxSizeMB, type, t, translatedType],
+    [allowedTypes, maxSizeMB, type, translatedType],
   )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
