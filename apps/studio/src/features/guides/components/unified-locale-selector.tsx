@@ -190,6 +190,12 @@ function StatusBadge({
       return (
         <span className={cn(baseClasses, 'border border-primary text-primary bg-transparent')}>{t('statusDraft')}</span>
       )
+    case 'modified':
+      return (
+        <span className={cn(baseClasses, 'border border-warning text-warning bg-transparent')}>
+          {t('statusModified')}
+        </span>
+      )
     case 'empty':
       return (
         <span className={cn(baseClasses, 'border border-muted-foreground/30 text-muted-foreground/50 bg-transparent')}>

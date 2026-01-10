@@ -410,6 +410,7 @@
       "noLanguageFound": "Keine Sprache gefunden",
       "statusPublished": "Veröffentlicht",
       "statusDraft": "Entwurf",
+      "statusModified": "Geändert",
       "statusEmpty": "Leer",
       "enabledLanguages": "Guide-Sprachen",
       "addLanguage": "Übersetzung hinzufügen"

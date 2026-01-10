@@ -1,6 +1,6 @@
 import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
 
-export type TranslationLocaleStatus = 'published' | 'draft' | 'empty'
+export type TranslationLocaleStatus = 'published' | 'draft' | 'empty' | 'modified'
 
 export type LocaleStatusMap = Record<string, TranslationLocaleStatus>
 

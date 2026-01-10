@@ -18,7 +18,7 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { ArrowLeft, Globe } from 'lucide-react'
-import { type ReactNode, useCallback, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
@@ -28,7 +28,7 @@ import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/co
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
-import { getStopLocaleStatusMap } from '@/features/guides/utils/translation-status'
+import { getStopLocaleStatusMap, type LocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 export interface StopEditLayoutProps {
   stop: StopWithAssets
@@ -82,11 +82,18 @@ export function StopEditLayout({
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   const currentStopTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
-  const localeStatusMap = getStopLocaleStatusMap(stop)
 
   const hasDraft = !!currentStopTranslation?.draftVersionId
   const hasPublished = !!currentStopTranslation?.currentVersionId
   const contentStatus = getContentStatus(hasDraft, hasPublished)
+
+  const localeStatusMap: LocaleStatusMap = useMemo(() => {
+    const baseMap = getStopLocaleStatusMap(stop)
+    return {
+      ...baseMap,
+      [activeLocale]: contentStatus,
+    }
+  }, [stop, activeLocale, contentStatus])
 
   const isReadOnly = activeTab === 'published'
 
@@ -135,7 +142,6 @@ export function StopEditLayout({
       if (result.success) {
         toast.success(t('publish.success'))
         onRefetch()
-        setActiveTab('published')
       } else {
         toast.error(result.error ?? t('publish.error'))
       }
@@ -153,7 +159,6 @@ export function StopEditLayout({
       if (result.success) {
         toast.success('Content unpublished')
         onRefetch()
-        setActiveTab('draft')
       } else {
         toast.error(result.error ?? 'Failed to unpublish')
       }

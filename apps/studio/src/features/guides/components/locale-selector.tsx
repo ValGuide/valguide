@@ -80,6 +80,8 @@ function getStatusIcon(status: TranslationLocaleStatus) {
       return <Circle className="h-2 w-2 fill-green-500 text-green-500" />
     case 'draft':
       return <Circle className="h-2 w-2 fill-amber-500 text-amber-500" />
+    case 'modified':
+      return <Circle className="h-2 w-2 fill-warning text-warning" />
     case 'empty':
       return <Circle className="h-2 w-2 fill-muted-foreground/30 text-muted-foreground/30" />
   }
@@ -94,6 +96,8 @@ function getStatusLabel(
       return t('statusPublished')
     case 'draft':
       return t('statusDraft')
+    case 'modified':
+      return t('statusModified')
     case 'empty':
       return t('statusEmpty')
   }

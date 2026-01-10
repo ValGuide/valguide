@@ -82,11 +82,18 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
   useAutoSave(save, isDirty)
 
   const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
-  const localeStatusMap = getGuideLocaleStatusMap(guide, guide.availableLocales)
 
   const hasDraft = !!currentTranslation?.draftVersionId
   const hasPublished = !!currentTranslation?.currentVersionId
   const contentStatus = getContentStatus(hasDraft, hasPublished)
+
+  const localeStatusMap = useMemo(() => {
+    const baseMap = getGuideLocaleStatusMap(guide, guide.availableLocales)
+    return {
+      ...baseMap,
+      [activeLocale]: contentStatus,
+    }
+  }, [guide, activeLocale, contentStatus])
 
   const isReadOnly = activeTab === 'published'
 
@@ -183,7 +190,6 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
       if (result.success) {
         toast.success(t('publish.success'))
         refetch()
-        setActiveTab('published')
       } else {
         toast.error(result.error ?? t('publish.error'))
       }
@@ -201,7 +207,6 @@ export function GuideEditView({ organizationId: organizationIdProp }: GuideEditV
       if (result.success) {
         toast.success('Content unpublished')
         refetch()
-        setActiveTab('draft')
       } else {
         toast.error(result.error ?? 'Failed to unpublish')
       }
