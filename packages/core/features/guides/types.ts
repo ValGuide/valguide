@@ -1,6 +1,6 @@
-import type { Asset } from '../assets/schema'
-import type { GuideWithStops, GuideWithTranslations, StopWithTranslations } from './schema'
 import { z } from 'zod'
+import type { Asset } from '../assets/types'
+import type { GuideWithStops, GuideWithTranslations, StopWithTranslations } from './schema-types'
 
 // Extended types for app viewer (moved from queries.ts to avoid db.ts import in Storybook)
 export type AssetWithRole = Asset & {

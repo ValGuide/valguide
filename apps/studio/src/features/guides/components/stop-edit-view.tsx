@@ -17,7 +17,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
-import { useGuideEditor } from '@/features/guides/contexts/guide-editor-context'
+import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
 
@@ -25,9 +25,19 @@ interface StopEditViewProps {
   stop: StopWithAssets
   organizationId?: string
   MediaPicker: MediaPickerComponent
+  onPublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onUnpublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onDiscard: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
 }
 
-export function StopEditView({ stop: stopProp, organizationId: organizationIdProp, MediaPicker }: StopEditViewProps) {
+export function StopEditView({
+  stop: stopProp,
+  organizationId: organizationIdProp,
+  MediaPicker,
+  onPublish,
+  onUnpublish,
+  onDiscard,
+}: StopEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -165,6 +175,9 @@ export function StopEditView({ stop: stopProp, organizationId: organizationIdPro
       stopEditorRef={stopEditorRef}
       breadcrumbContent={breadcrumbContent}
       MediaPicker={MediaPicker}
+      onPublish={onPublish}
+      onUnpublish={onUnpublish}
+      onDiscard={onDiscard}
       onImageChange={async (assets) => {
         const newAssetIds = new Set(assets.map((a) => a.id))
         const currentAssetIds = new Set(stopImages.map((a) => a.id))

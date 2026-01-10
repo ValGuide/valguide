@@ -1,11 +1,6 @@
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
 import type { StopWithAssets } from '@valguide/core/features/guides/types'
-import {
-  discardStopTranslationDraftFn,
-  publishStopTranslationDraftFn,
-  unpublishStopTranslationFn,
-} from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
 
 import {
@@ -50,6 +45,9 @@ export interface StopEditLayoutProps {
   breadcrumbContent: ReactNode
   stopEditorRef?: React.RefObject<StopLocaleEditorRef | null>
   MediaPicker: MediaPickerComponent
+  onPublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onUnpublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onDiscard: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
 }
 
 export function StopEditLayout({
@@ -72,6 +70,9 @@ export function StopEditLayout({
   breadcrumbContent,
   stopEditorRef: externalRef,
   MediaPicker,
+  onPublish,
+  onUnpublish,
+  onDiscard,
 }: StopEditLayoutProps) {
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -140,7 +141,7 @@ export function StopEditLayout({
   const handlePublish = useCallback(async () => {
     setIsPublishing(true)
     try {
-      const result = await publishStopTranslationDraftFn({ data: { stopId: stop.id, locale: activeLocale } })
+      const result = await onPublish(stop.id, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
         onRefetch()
@@ -153,11 +154,11 @@ export function StopEditLayout({
     } finally {
       setIsPublishing(false)
     }
-  }, [stop.id, activeLocale, onRefetch, t])
+  }, [stop.id, activeLocale, onRefetch, t, onPublish])
 
   const handleUnpublish = useCallback(async () => {
     try {
-      const result = await unpublishStopTranslationFn({ data: { stopId: stop.id, locale: activeLocale } })
+      const result = await onUnpublish(stop.id, activeLocale)
       if (result.success) {
         toast.success('Content unpublished')
         onRefetch()
@@ -168,11 +169,11 @@ export function StopEditLayout({
       console.error('Failed to unpublish:', error)
       toast.error('Failed to unpublish')
     }
-  }, [stop.id, activeLocale, onRefetch])
+  }, [stop.id, activeLocale, onRefetch, onUnpublish])
 
   const handleDiscard = useCallback(async () => {
     try {
-      const result = await discardStopTranslationDraftFn({ data: { stopId: stop.id, locale: activeLocale } })
+      const result = await onDiscard(stop.id, activeLocale)
       if (result.success) {
         toast.success('Draft discarded')
         onRefetch()
@@ -183,7 +184,7 @@ export function StopEditLayout({
       console.error('Failed to discard:', error)
       toast.error('Failed to discard draft')
     }
-  }, [stop.id, activeLocale, onRefetch])
+  }, [stop.id, activeLocale, onRefetch, onDiscard])
 
   const handleTabChange = useCallback(
     (tab: EditorTab) => {

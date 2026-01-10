@@ -1,11 +1,28 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideWithStops } from '@valguide/core/features/guides/schema-types'
+import type { StopWithAssets } from '@valguide/core/features/guides/types'
+import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
+import type { MediaPickerComponentProps } from '@/features/assets/components/media-picker/types'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
-import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
+import { MockGuideEditorProvider } from '@/features/guides/contexts/mock-guide-editor-provider'
 import { StopEditView } from './stop-edit-view'
 
-const mockStop: StopWithTranslations = {
+const mockOnUpload = async (_file: File, onProgress: (p: number) => void) => {
+  for (let i = 0; i <= 100; i += 20) {
+    await new Promise((r) => setTimeout(r, 100))
+    onProgress(i)
+  }
+  return null
+}
+
+function StoryMediaPicker(props: MediaPickerComponentProps) {
+  return (
+    <MediaPicker {...props} onUpload={mockOnUpload} onBrowseLibrary={() => console.log('Browse library clicked')} />
+  )
+}
+
+const mockStop: StopWithAssets = {
   id: 'stop-1',
   guideId: 'guide-1',
   nanoId: 'stop1abc',
@@ -14,6 +31,7 @@ const mockStop: StopWithTranslations = {
   createdAt: new Date('2025-01-10T10:00:00Z'),
   updatedAt: new Date('2025-01-10T10:00:00Z'),
   createdBy: 'user-1',
+  assets: [],
   translations: [
     {
       id: 'st1',
@@ -104,18 +122,39 @@ const mockGuide: GuideWithStops = {
   stops: [mockStop],
 }
 
+const mockOnPublish = async (_stopId: string, _locale: string) => {
+  console.log('Publishing stop:', _stopId, _locale)
+  return { success: true }
+}
+
+const mockOnUnpublish = async (_stopId: string, _locale: string) => {
+  console.log('Unpublishing stop:', _stopId, _locale)
+  return { success: true }
+}
+
+const mockOnDiscard = async (_stopId: string, _locale: string) => {
+  console.log('Discarding stop draft:', _stopId, _locale)
+  return { success: true }
+}
+
 const meta = {
   title: 'Studio/Pages/Guides/Edit/StopEditView',
   component: StopEditView,
   parameters: {
     layout: 'fullscreen',
   },
+  args: {
+    MediaPicker: StoryMediaPicker,
+    onPublish: mockOnPublish,
+    onUnpublish: mockOnUnpublish,
+    onDiscard: mockOnDiscard,
+  },
   decorators: [
     (Story, { args }) => (
       <MockAssetsProvider>
-        <GuideEditorProvider initialGuide={args.guide ?? mockGuide}>
+        <MockGuideEditorProvider initialGuide={args.guide ?? mockGuide}>
           <Story />
-        </GuideEditorProvider>
+        </MockGuideEditorProvider>
       </MockAssetsProvider>
     ),
   ],
@@ -174,6 +213,7 @@ export const NewStop: Story = {
       createdAt: new Date(),
       updatedAt: new Date(),
       createdBy: 'user-1',
+      assets: [],
       translations: [
         {
           id: 'st-new',
