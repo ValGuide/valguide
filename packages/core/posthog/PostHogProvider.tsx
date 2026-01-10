@@ -22,11 +22,17 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     posthog.init(clientEnv.VITE_POSTHOG_KEY!, {
-      // we rewrite the host using Vercel's rewrites in next.config.mjs
-      // so we send events from the browser to our own domain
-      api_host: `${window.location.origin}/ingest`, // process.env.VITE_POSTHOG_HOST || 'https://eu.i.posthog.com',
-      person_profiles: 'always', // or 'always' to create profiles for anonymous users as well
-      capture_pageview: false, // Disable automatic pageview capture, as we capture manually
+      // Proxy through our domain to avoid ad blockers (see vercel.ts rewrites)
+      api_host: clientEnv.VITE_POSTHOG_HOST ?? `${window.location.origin}/ingest`,
+
+      // 🔒 GDPR Compliance Settings
+      cookieless_mode: 'always',
+      persistence: 'memory', // No cookies or localStorage - data only in memory
+      mask_all_text: true, // Mask all text content to prevent PII collection
+      mask_all_element_attributes: true, // Mask element attributes that may contain PII
+      disable_session_recording: true, // Prevent recording of user sessions
+      person_profiles: 'identified_only', // Only create profiles for identified users
+      capture_pageview: true,
     })
   }, [])
 

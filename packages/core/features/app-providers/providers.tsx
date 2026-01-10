@@ -6,6 +6,7 @@ import type { PropsWithChildren } from 'react'
 import type { SupportedLocale } from '../../i18n/i18n.config'
 import { IntlProvider } from '../../i18n/provider'
 import { messagesQueryOptions } from '../../i18n/query-options'
+import { PostHogProvider } from '../../posthog/PostHogProvider'
 import { ThemeProvider } from '../app-theme/theme-provider'
 import type { Theme } from '../app-theme/types'
 
@@ -19,11 +20,13 @@ export function Providers({ locale, initialTheme, setThemeFn, children }: Provid
   const { data: messages } = useSuspenseQuery(messagesQueryOptions(locale))
 
   return (
-    <ThemeProvider initialTheme={initialTheme} setThemeFn={setThemeFn}>
-      <IntlProvider locale={locale} messages={messages}>
-        {children}
-        <Toaster />
-      </IntlProvider>
-    </ThemeProvider>
+    <PostHogProvider>
+      <ThemeProvider initialTheme={initialTheme} setThemeFn={setThemeFn}>
+        <IntlProvider locale={locale} messages={messages}>
+          {children}
+          <Toaster />
+        </IntlProvider>
+      </ThemeProvider>
+    </PostHogProvider>
   )
 }
