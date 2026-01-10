@@ -3,7 +3,7 @@ import { detectAssetType } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
 import { uploadFileWithTUS } from '../../lib/tus-upload'
-import { AssetPickerModal } from '../asset-picker-modal'
+import { AssetPickerModalConnected } from '../asset-picker-modal-connected'
 import { MediaPicker } from './media-picker'
 import type { MediaPickerComponentProps } from './types'
 
@@ -84,7 +84,7 @@ export function MediaPickerConnected({
       onBrowseLibrary={showLibrary ? () => setLibraryOpen(true) : undefined}
       libraryContent={
         showLibrary ? (
-          <AssetPickerModal
+          <AssetPickerModalConnected
             open={libraryOpen}
             onOpenChange={setLibraryOpen}
             type={mediaTypes[0] ?? 'image'}

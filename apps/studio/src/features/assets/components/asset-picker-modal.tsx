@@ -12,10 +12,19 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { formatDistanceToNow } from 'date-fns'
 import { Image as ImageIcon, Music, Search, Video } from 'lucide-react'
+import type { ComponentType } from 'react'
 import { useMemo, useState } from 'react'
 import { useAssetsContextOptional } from '../context/assets-context'
 import { useAssets } from '../hooks/use-assets'
-import { AssetUploadInline } from './asset-upload-inline'
+
+export type UploadInlineComponentProps = {
+  allowedTypes?: AssetType[]
+  locale?: string
+  organizationId: string
+  onUploadComplete?: (asset: Asset) => void
+}
+
+export type UploadInlineComponent = ComponentType<UploadInlineComponentProps>
 
 export type AssetPickerModalProps = {
   open: boolean
@@ -29,6 +38,7 @@ export type AssetPickerModalProps = {
   assets?: Asset[]
   isLoading?: boolean
   onUploadComplete?: (asset: Asset) => void
+  UploadInline?: UploadInlineComponent
 }
 
 export function AssetPickerModal({
@@ -43,6 +53,7 @@ export function AssetPickerModal({
   assets: assetsProp,
   isLoading: isLoadingProp,
   onUploadComplete: onUploadCompleteProp,
+  UploadInline,
 }: AssetPickerModalProps) {
   const t = useTranslations('assets.picker')
   const tTypes = useTranslations('assets.types')
@@ -244,12 +255,14 @@ export function AssetPickerModal({
           </TabsContent>
 
           <TabsContent value="upload" className="flex-1 flex flex-col min-h-0 mt-4">
-            <AssetUploadInline
-              allowedTypes={[type]}
-              locale={locale}
-              organizationId={organizationId}
-              onUploadComplete={handleUploadComplete}
-            />
+            {UploadInline && (
+              <UploadInline
+                allowedTypes={[type]}
+                locale={locale}
+                organizationId={organizationId}
+                onUploadComplete={handleUploadComplete}
+              />
+            )}
           </TabsContent>
         </Tabs>
 

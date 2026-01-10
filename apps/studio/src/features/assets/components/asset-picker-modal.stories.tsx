@@ -3,21 +3,31 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '@valguide/ui/components/button'
 import { useState } from 'react'
 import { MockAssetsProvider, mockAssets } from '../context/mock-assets-provider'
-import { AssetPickerModal } from './asset-picker-modal'
+import { AssetPickerModal, type UploadInlineComponentProps } from './asset-picker-modal'
+
+function MockUploadInline({ allowedTypes, locale }: UploadInlineComponentProps) {
+  return (
+    <div className="flex h-48 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50">
+      <p className="text-muted-foreground">
+        Upload component (mocked) - Types: {allowedTypes?.join(', ')} {locale && `- Locale: ${locale}`}
+      </p>
+    </div>
+  )
+}
 
 const meta = {
   title: 'Assets/AssetPickerModal',
   component: AssetPickerModal,
   parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
     layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
     onSelect: { action: 'assets-selected' },
     onUploadComplete: { action: 'upload-complete' },
+  },
+  args: {
+    UploadInline: MockUploadInline,
   },
   decorators: [
     (Story) => (
