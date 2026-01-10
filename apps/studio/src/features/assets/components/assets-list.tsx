@@ -15,9 +15,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { Image as ImageIcon, Search, Upload } from 'lucide-react'
+import type { ComponentType } from 'react'
 import { useMemo, useState } from 'react'
-import { AssetCard } from './asset-card'
-import { AssetUploadInline } from './asset-upload-inline'
+
+export type AssetCardComponentProps = {
+  asset: AssetWithUsage
+  onDelete?: (assetId: string) => void
+}
+
+export type AssetCardComponent = ComponentType<AssetCardComponentProps>
+
+export type UploadInlineComponentProps = {
+  organizationId: string
+  onUploadComplete?: (asset: Asset) => void
+}
+
+export type UploadInlineComponent = ComponentType<UploadInlineComponentProps>
 
 export type AssetsListProps = {
   assets?: AssetWithUsage[]
@@ -27,6 +40,8 @@ export type AssetsListProps = {
   onAssetDeleted?: (assetId: string) => void
   onUploadComplete?: (asset: Asset) => void
   onRetry?: () => void
+  AssetCard?: AssetCardComponent
+  UploadInline?: UploadInlineComponent
 }
 
 export function AssetsList({
@@ -37,6 +52,8 @@ export function AssetsList({
   onAssetDeleted,
   onUploadComplete,
   onRetry,
+  AssetCard,
+  UploadInline,
 }: AssetsListProps) {
   const t = useTranslations('assets')
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
@@ -192,16 +209,16 @@ export function AssetsList({
             </Empty>
           ) : (
             <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]">
-              {filteredAssets.map((asset) => (
-                <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} />
-              ))}
+              {filteredAssets.map((asset) =>
+                AssetCard ? <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} /> : null,
+              )}
             </div>
           )}
         </TabsContent>
 
         <TabsContent value="upload" className="space-y-6">
           <div className="mx-auto w-full max-w-2xl">
-            <AssetUploadInline organizationId={organizationId} onUploadComplete={handleUploadComplete} />
+            {UploadInline && <UploadInline organizationId={organizationId} onUploadComplete={handleUploadComplete} />}
           </div>
         </TabsContent>
       </Tabs>

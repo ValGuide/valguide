@@ -1,14 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
-import { AssetCard } from './asset-card'
+import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
+import { DeleteAssetDialog } from './delete-asset-dialog'
+
+function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
+  return <DeleteAssetDialog {...props} onGetUsage={async () => ({ guides: [], stops: [] })} />
+}
 
 const meta = {
   title: 'Assets/AssetCard',
   component: AssetCard,
   parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
     layout: 'centered',
   },
   tags: ['autodocs'],
@@ -17,7 +19,10 @@ const meta = {
     onPreview: { action: 'previewed' },
   },
   args: {
-    mockDelete: true,
+    onDeleteAction: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    },
+    DeleteDialog: MockDeleteDialog,
   },
 } satisfies Meta<typeof AssetCard>
 
@@ -160,5 +165,31 @@ export const UsedInBoth: Story = {
       guideCount: 2,
       stopCount: 1,
     },
+  },
+}
+
+function MockDeleteDialogWithUsage(props: DeleteAssetDialogComponentProps) {
+  return (
+    <DeleteAssetDialog
+      {...props}
+      onGetUsage={async () => ({
+        guides: [{ id: 'g1', nanoId: 'guide1', name: 'City Tour Guide', role: 'cover' as const }],
+        stops: [
+          { id: 's1', nanoId: 'stop1', name: 'Museum Entrance', role: 'media' as const },
+          { id: 's2', nanoId: 'stop2', name: 'Art Gallery', role: 'media' as const },
+        ],
+      })}
+    />
+  )
+}
+
+export const WithUsageWarning: Story = {
+  args: {
+    asset: {
+      ...baseAsset,
+      guideCount: 1,
+      stopCount: 2,
+    },
+    DeleteDialog: MockDeleteDialogWithUsage,
   },
 }

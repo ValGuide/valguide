@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { type AssetUsageDetails, getAssetUsageDetailsFn } from '@valguide/core/features/assets/server-functions'
+import type { AssetUsageDetails } from '@valguide/core/features/assets/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
@@ -14,13 +14,14 @@ import {
 import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-type DeleteAssetDialogProps = {
+export type DeleteAssetDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   assetId: string
   fileName: string
   isDeleting: boolean
   onConfirmDelete: () => void
+  onGetUsage?: (assetId: string) => Promise<AssetUsageDetails>
 }
 
 export function DeleteAssetDialog({
@@ -30,15 +31,16 @@ export function DeleteAssetDialog({
   fileName,
   isDeleting,
   onConfirmDelete,
+  onGetUsage,
 }: DeleteAssetDialogProps) {
   const t = useTranslations('assets')
   const [usage, setUsage] = useState<AssetUsageDetails | null>(null)
   const [isLoadingUsage, setIsLoadingUsage] = useState(false)
 
   useEffect(() => {
-    if (open && !usage) {
+    if (open && !usage && onGetUsage) {
       setIsLoadingUsage(true)
-      getAssetUsageDetailsFn({ data: { assetId } })
+      onGetUsage(assetId)
         .then((data) => {
           setUsage(data)
         })
@@ -47,7 +49,7 @@ export function DeleteAssetDialog({
           setIsLoadingUsage(false)
         })
     }
-  }, [open, assetId, usage])
+  }, [open, assetId, usage, onGetUsage])
 
   useEffect(() => {
     if (!open) {

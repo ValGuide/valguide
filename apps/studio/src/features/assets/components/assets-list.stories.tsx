@@ -1,20 +1,48 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
-import { AssetsList } from './assets-list'
+import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
+import { type AssetCardComponentProps, AssetsList } from './assets-list'
+import { DeleteAssetDialog } from './delete-asset-dialog'
+
+function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
+  return <DeleteAssetDialog {...props} onGetUsage={async () => ({ guides: [], stops: [] })} />
+}
+
+function MockAssetCard({ asset, onDelete }: AssetCardComponentProps) {
+  return (
+    <AssetCard
+      asset={asset}
+      onDelete={onDelete}
+      onDeleteAction={async () => {
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      }}
+      DeleteDialog={MockDeleteDialog}
+    />
+  )
+}
+
+function MockUploadInline() {
+  return (
+    <div className="flex h-48 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50">
+      <p className="text-muted-foreground">Upload component (mocked for Storybook)</p>
+    </div>
+  )
+}
 
 const meta = {
   title: 'Assets/AssetsList',
   component: AssetsList,
   parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
     layout: 'padded',
   },
   tags: ['autodocs'],
   argTypes: {
     onAssetDeleted: { action: 'asset-deleted' },
     onUploadComplete: { action: 'upload-complete' },
+  },
+  args: {
+    AssetCard: MockAssetCard,
+    UploadInline: MockUploadInline,
   },
 } satisfies Meta<typeof AssetsList>
 

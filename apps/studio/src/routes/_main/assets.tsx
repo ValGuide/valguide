@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { AssetsList } from '@/features/assets/components/assets-list'
+import { AssetsListConnected } from '@/features/assets/components/assets-list-connected'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
 import { useAssets } from '@/features/assets/hooks/use-assets'
 import { assetsQueryOptions } from '@/features/assets/query-options'
@@ -48,7 +48,7 @@ function AssetsPage() {
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <AssetsList
+      <AssetsListConnected
         assets={assets}
         isLoading={isLoading}
         error={error}

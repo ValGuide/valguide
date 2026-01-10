@@ -1,7 +1,6 @@
 import { Image as UnpicImage } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
-import { deleteAssetFn } from '@valguide/core/features/assets/server-functions'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
@@ -15,18 +14,30 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { formatDistanceToNow } from 'date-fns'
 import { Download, Eye, Image, MoreVertical, Music, Trash2, Video } from 'lucide-react'
+import type { ComponentType } from 'react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { DeleteAssetDialog } from './delete-asset-dialog'
+
+export type DeleteAssetDialogComponentProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  assetId: string
+  fileName: string
+  isDeleting: boolean
+  onConfirmDelete: () => void
+}
+
+export type DeleteAssetDialogComponent = ComponentType<DeleteAssetDialogComponentProps>
 
 export type AssetCardProps = {
   asset: AssetWithUsage
   onDelete?: (assetId: string) => void
   onPreview?: (asset: AssetWithUsage) => void
-  mockDelete?: boolean
+  onDeleteAction?: (assetId: string) => Promise<void>
+  DeleteDialog?: DeleteAssetDialogComponent
 }
 
-export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: AssetCardProps) {
+export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDialog }: AssetCardProps) {
   const t = useTranslations('assets')
   const [isDeleting, setIsDeleting] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -34,11 +45,7 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
   const handleDelete = async () => {
     try {
       setIsDeleting(true)
-      if (mockDelete) {
-        await new Promise((resolve) => setTimeout(resolve, 500))
-      } else {
-        await deleteAssetFn({ data: { assetId: asset.id } })
-      }
+      await onDeleteAction?.(asset.id)
       toast.success(t('card.deleteSuccess'))
       onDelete?.(asset.id)
     } catch (error) {
@@ -160,14 +167,16 @@ export function AssetCard({ asset, onDelete, onPreview, mockDelete = false }: As
         </CardContent>
       </Card>
 
-      <DeleteAssetDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        assetId={asset.id}
-        fileName={asset.fileName}
-        isDeleting={isDeleting}
-        onConfirmDelete={handleDelete}
-      />
+      {DeleteDialog && (
+        <DeleteDialog
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          assetId={asset.id}
+          fileName={asset.fileName}
+          isDeleting={isDeleting}
+          onConfirmDelete={handleDelete}
+        />
+      )}
     </>
   )
 }
