@@ -1,8 +1,8 @@
+import type { StorybookConfig } from '@storybook/nextjs-vite'
+import { clientEnvSchema } from '@valguide/core/env/schema'
 import { createRequire } from 'node:module'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { StorybookConfig } from '@storybook/nextjs-vite'
-import { clientEnvSchema } from '@valguide/core/env/schema'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
@@ -24,7 +24,6 @@ const config: StorybookConfig = {
   ],
 
   addons: [
-    getAbsolutePath('storybook-next-intl'),
     // TODO Storybook: enable dark mode (broke in v9)
     // getAbsolutePath('storybook-dark-mode'),
   ],
