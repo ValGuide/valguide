@@ -111,7 +111,6 @@ export function MediaPicker({
     [mode, value, onChange],
   )
 
-
   const renderContent = () => {
     if (mode === 'single' && uploading) {
       return <MediaPickerProgress progress={uploadProgress} fileName={uploadFileName ?? ''} />

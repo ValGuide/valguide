@@ -21,15 +21,15 @@ import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
 
 export function AppSidebar({
-                             pathname: pathnameProp,
-                             user,
-                             teams,
-                             currentTeam,
-                             onTeamSwitch,
-                             onLogout,
-                             onCreateTeam,
-                             ...props
-                           }: React.ComponentProps<typeof Sidebar> & {
+  pathname: pathnameProp,
+  user,
+  teams,
+  currentTeam,
+  onTeamSwitch,
+  onLogout,
+  onCreateTeam,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
   pathname?: string
   user: {
     name: string
@@ -165,102 +165,102 @@ export function AppSidebar({
   }))
 
   return (
-      <>
-        <Sidebar collapsible="icon" {...props}>
-          <SidebarHeader>
-            <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
-              <h1 className="text-lg font-medium px-2 truncate">{tSidebar('appName')}</h1>
-            </div>
-            <TeamSwitcher
-                teams={teams}
-                activeTeamSlug={currentTeam?.slug}
-                onTeamSwitch={onTeamSwitch}
-                onCreateTeam={() => {
-                  setCreateTeamOpen(true)
-                  setOpenMobile(false)
-                }}
-                onTeamSettings={() => router.navigate({ to: '/team' })}
-            />
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel className="uppercase">{tSections('content')}</SidebarGroupLabel>
-              <SidebarMenu>
-                {contentItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                        <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
+    <>
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
+            <h1 className="text-lg font-medium px-2 truncate">{tSidebar('appName')}</h1>
+          </div>
+          <TeamSwitcher
+            teams={teams}
+            activeTeamSlug={currentTeam?.slug}
+            onTeamSwitch={onTeamSwitch}
+            onCreateTeam={() => {
+              setCreateTeamOpen(true)
+              setOpenMobile(false)
+            }}
+            onTeamSettings={() => router.navigate({ to: '/team' })}
+          />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel className="uppercase">{tSections('content')}</SidebarGroupLabel>
+            <SidebarMenu>
+              {contentItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
 
-            <SidebarGroup>
-              <SidebarGroupLabel className="uppercase">{tSections('performance')}</SidebarGroupLabel>
-              <SidebarMenu>
-                {performanceItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                        <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel className="uppercase">{tSections('performance')}</SidebarGroupLabel>
+            <SidebarMenu>
+              {performanceItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
 
-            <SidebarGroup>
-              <SidebarGroupLabel className="uppercase">{tSections('library')}</SidebarGroupLabel>
-              <SidebarMenu>
-                {libraryItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                        <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel className="uppercase">{tSections('library')}</SidebarGroupLabel>
+            <SidebarMenu>
+              {libraryItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
 
-            <SidebarGroup>
-              <SidebarGroupLabel className="uppercase">{tSections('settings')}</SidebarGroupLabel>
-              <SidebarMenu>
-                {settingsItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                        <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
-          </SidebarContent>
-          <SidebarFooter>
-            <NavUser user={user} onLogout={handleLogout} handleNavClick={handleNavClick} />
-          </SidebarFooter>
-          <SidebarRail />
-        </Sidebar>
+          <SidebarGroup>
+            <SidebarGroupLabel className="uppercase">{tSections('settings')}</SidebarGroupLabel>
+            <SidebarMenu>
+              {settingsItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={user} onLogout={handleLogout} handleNavClick={handleNavClick} />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
 
-        {onCreateTeam && (
-            <CreateTeamDialog
-                open={createTeamOpen}
-                onOpenChange={setCreateTeamOpen}
-                showTrigger={false}
-                onCreateTeam={onCreateTeam}
-            />
-        )}
-      </>
+      {onCreateTeam && (
+        <CreateTeamDialog
+          open={createTeamOpen}
+          onOpenChange={setCreateTeamOpen}
+          showTrigger={false}
+          onCreateTeam={onCreateTeam}
+        />
+      )}
+    </>
   )
 }

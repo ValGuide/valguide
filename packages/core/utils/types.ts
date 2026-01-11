@@ -34,7 +34,5 @@ export type Translators = {
 }
 
 export type StringifyValues<T> = {
-  [K in keyof T]: undefined extends T[K]
-      ? string | undefined
-      : string;
-};
+  [K in keyof T]: undefined extends T[K] ? string | undefined : string
+}

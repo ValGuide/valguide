@@ -12,9 +12,7 @@ export function MockGuideEditorProvider({
   initialGuide: GuideWithStopsAndAssets
 }) {
   const [guide, setGuide] = useState(initialGuide)
-  const [activeLocale, setActiveLocale] = useState<ContentLocale>(
-    initialGuide.availableLocales?.[0] ?? 'en',
-  )
+  const [activeLocale, setActiveLocale] = useState<ContentLocale>(initialGuide.availableLocales?.[0] ?? 'en')
   const [selectedStop, setSelectedStop] = useState<StopWithAssets | null>(null)
   const [isDirty, setIsDirty] = useState(false)
 
