@@ -1,10 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useLocation, useRouter } from '@tanstack/react-router'
+import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { signOutFn } from '@valguide/core/features/auth/server-functions'
 import { createTeamFn, switchTeamFn } from '@valguide/core/features/orgs/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
@@ -12,8 +11,6 @@ import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
 
 export function AppSidebarContainer() {
-  const location = useLocation()
-  const pathname = location.pathname
   const router = useRouter()
   const queryClient = useQueryClient()
   const t = useTranslations('orgs.teamSwitcher')
@@ -26,16 +23,6 @@ export function AppSidebarContainer() {
       router.invalidate()
     }
   }, [data?.wasAutoSelected, router])
-
-  useEffect(() => {
-    if (!isLoading && data && !data.currentTeam) {
-      const currentPath = unlocalizedPathname(pathname)
-      if (currentPath !== '/team') {
-        const locale = pathname.split('/')[1]
-        router.navigate({ to: `/${locale}/team` })
-      }
-    }
-  }, [isLoading, data, pathname, router])
 
   const handleTeamSwitch = async (teamSlug: string) => {
     try {

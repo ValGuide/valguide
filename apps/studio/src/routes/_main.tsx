@@ -1,9 +1,11 @@
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getCookie } from '@tanstack/react-start/server'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
+import { NoTeamWelcome } from '../components/no-team-welcome'
 import { sidebarQueryOptions } from '../features/sidebar/query-options'
 
 const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
@@ -33,6 +35,9 @@ export const Route = createFileRoute('/_main')({
 
 function MainLayout() {
   const defaultOpen = Route.useLoaderData()
+  const { data: sidebarData, isLoading } = useQuery(sidebarQueryOptions())
+
+  const hasNoTeam = !isLoading && sidebarData && !sidebarData.currentTeam
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
@@ -44,7 +49,7 @@ function MainLayout() {
             <Separator orientation="vertical" className="mr-2 h-4" />
           </div>
         </header>
-        <Outlet />
+        {hasNoTeam ? <NoTeamWelcome /> : <Outlet />}
       </SidebarInset>
     </SidebarProvider>
   )
