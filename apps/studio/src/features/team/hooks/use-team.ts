@@ -7,7 +7,6 @@ interface UseTeamReturn {
   isLoading: boolean
   error: Error | null
   refetch: () => Promise<void>
-  isNoTeam: boolean
 }
 
 export function useTeam(): UseTeamReturn {
@@ -17,13 +16,10 @@ export function useTeam(): UseTeamReturn {
     await queryRefetch()
   }
 
-  const isNoTeam = data === null && !isLoading && !error
-
   return {
     data: data ?? null,
     isLoading,
     error: error ?? null,
     refetch,
-    isNoTeam,
   }
 }

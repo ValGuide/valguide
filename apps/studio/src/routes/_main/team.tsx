@@ -1,6 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { TeamPageSkeleton } from '@valguide/core/features/orgs/components/team-page-skeleton'
-import { NoTeamWelcome } from '@/components/no-team-welcome'
 import { TeamMembersClient } from '@/features/team/components/team-members-client'
 import { useTeam } from '@/features/team/hooks/use-team'
 import { teamQueryOptions } from '@/features/team/query-options'
@@ -12,14 +11,10 @@ export const Route = createFileRoute('/_main/team')({
 })
 
 function TeamPage() {
-  const { data, isLoading, isNoTeam, refetch } = useTeam()
+  const { data, isLoading, refetch } = useTeam()
 
   if (isLoading) {
     return <TeamPageSkeleton />
-  }
-
-  if (isNoTeam) {
-    return <NoTeamWelcome />
   }
 
   if (!data) {

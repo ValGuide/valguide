@@ -1,16 +1,17 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
+import { db } from '@valguide/core/features/db'
 import { setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { sendEmail } from '@valguide/transactional'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
 import { createClient } from '../../supabase/server'
-import { db } from '@valguide/core/features/db'
 import {
   acceptInvitation,
   createInvitation,
   createTeam,
   deleteInvitation,
+  ensureDefaultTeam,
   removeMember,
   updateMemberRole,
 } from './mutations'
@@ -288,3 +289,33 @@ export const switchTeamFn = createServerFn({ method: 'POST' })
 
     return { success: true }
   })
+
+// ============================================================================
+// Ensure Default Team Server Function
+// ============================================================================
+
+/**
+ * Ensures the current user has at least one team.
+ * Creates a default team if they don't have any.
+ * Idempotent - safe to call multiple times (cached via React Query).
+ */
+export const ensureDefaultTeamFn = createServerFn({ method: 'POST' }).handler(async () => {
+  const supabase = await createClient()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims
+
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  // Get user's display name for team naming
+  const { getProfile } = await import('../profiles/queries')
+  const { getUserDisplayName } = await import('../profiles/utils')
+
+  const profile = await getProfile(user.sub)
+  const displayName = getUserDisplayName(profile, user.email, user.user_metadata)
+
+  const team = await ensureDefaultTeam(db, user.sub, displayName)
+
+  return { teamId: team.id, teamSlug: team.slug }
+})

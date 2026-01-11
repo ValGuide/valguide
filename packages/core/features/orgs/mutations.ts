@@ -1,7 +1,9 @@
+import type { DB } from '@valguide/core/features/db'
 import { and, eq } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
-import type { DB } from '@valguide/core/features/db'
 import { type OrgRole, organization, organizationInvitation, organizationMember } from './schema'
+
+export type Organization = typeof organization.$inferSelect
 
 /**
  * Create a new team
@@ -135,4 +137,26 @@ export async function removeMember(db: DB, memberId: string) {
  */
 export async function updateMemberRole(db: DB, memberId: string, role: OrgRole) {
   return db.update(organizationMember).set({ role }).where(eq(organizationMember.id, memberId))
+}
+
+/**
+ * Ensure user has at least one team, creating a default one if needed.
+ * This is idempotent - safe to call multiple times.
+ */
+export async function ensureDefaultTeam(db: DB, userId: string, userName?: string): Promise<Organization> {
+  // Check if user already has any team
+  const existingMembership = await db.query.organizationMember.findFirst({
+    where: eq(organizationMember.userId, userId),
+    with: { organization: true },
+  })
+
+  if (existingMembership?.organization) {
+    return existingMembership.organization
+  }
+
+  // Create a new team for the user using existing transactional createTeam
+  const teamName = userName ? `${userName}'s Studio` : 'My Studio'
+  const newTeam = await createTeam(db, teamName, userId)
+
+  return newTeam
 }
