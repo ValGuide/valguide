@@ -1,6 +1,53 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from 'storybook/test'
+import type { RollbackResult, VersionHistoryItem } from './version-history-dialog'
 import { VersionHistoryDialog } from './version-history-dialog'
+
+const mockVersions: VersionHistoryItem[] = [
+  {
+    id: 'v1',
+    translationId: 't1',
+    version: 3,
+    status: 'published',
+    title: 'City Walking Tour',
+    description: 'Explore the historic downtown area with expert guides.',
+    createdAt: new Date('2024-01-15T10:00:00Z'),
+    createdBy: 'user-1',
+    publishedAt: new Date('2024-01-15T12:00:00Z'),
+  },
+  {
+    id: 'v2',
+    translationId: 't1',
+    version: 2,
+    status: 'published',
+    title: 'City Walking Tour',
+    description: 'Explore the historic downtown area.',
+    createdAt: new Date('2024-01-10T10:00:00Z'),
+    createdBy: 'user-1',
+    publishedAt: new Date('2024-01-10T14:00:00Z'),
+  },
+  {
+    id: 'v3',
+    translationId: 't1',
+    version: 1,
+    status: 'draft',
+    title: 'Downtown Tour',
+    description: 'Initial draft',
+    createdAt: new Date('2024-01-05T10:00:00Z'),
+    createdBy: 'user-1',
+    publishedAt: null,
+  },
+]
+
+const mockGetHistory = async (): Promise<VersionHistoryItem[]> => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  return mockVersions
+}
+
+const mockRollbackAction = async (): Promise<RollbackResult> => {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  return { success: true }
+}
 
 const meta = {
   title: 'Features/Guides/VersionHistoryDialog',
@@ -9,6 +56,10 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  args: {
+    onGetHistory: mockGetHistory,
+    onRollbackAction: mockRollbackAction,
+  },
   argTypes: {
     onRollback: { action: 'rollback' },
   },
@@ -23,10 +74,6 @@ export const Default: Story = {
     locale: 'en',
     onRollback: fn(),
   },
-  play: async () => {
-    // Auto-click the button to open the dialog in the story
-    // This requires user interaction in actual Storybook
-  },
 }
 
 export const WithCallback: Story = {
@@ -39,38 +86,57 @@ export const WithCallback: Story = {
   },
 }
 
-// Story with empty history
 export const EmptyHistory: Story = {
   args: {
     guideId: 'guide-empty',
     locale: 'en',
     onRollback: fn(),
+    onGetHistory: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      return []
+    },
   },
 }
 
-// Story with draft versions
 export const WithDraftVersions: Story = {
   args: {
     guideId: 'guide-draft',
     locale: 'en',
     onRollback: fn(),
+    onGetHistory: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      return [
+        {
+          ...mockVersions[0],
+          status: 'draft' as const,
+          publishedAt: null,
+        },
+        ...mockVersions.slice(1),
+      ]
+    },
   },
 }
 
-// Story simulating loading error
 export const LoadingError: Story = {
   args: {
     guideId: 'guide-error',
     locale: 'en',
     onRollback: fn(),
+    onGetHistory: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      throw new Error('Failed to load history')
+    },
   },
 }
 
-// Story simulating rollback error
 export const RollbackError: Story = {
   args: {
     guideId: 'guide-rollback-error',
     locale: 'en',
     onRollback: fn(),
+    onRollbackAction: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      return { success: false, error: 'Version conflict detected' }
+    },
   },
 }

@@ -13,7 +13,8 @@ import { Button } from '@valguide/ui/components/button'
 import { Upload } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { publishGuideTranslationDraftFn } from '../server-functions'
+
+export type PublishTranslationResult = { success: true } | { success: false; error?: string }
 
 interface PublishTranslationButtonProps {
   guideId: string
@@ -22,6 +23,7 @@ interface PublishTranslationButtonProps {
   hasDraft: boolean
   onPublished?: () => void
   disabled?: boolean
+  onPublishAction?: (guideId: string, locale: string) => Promise<PublishTranslationResult>
 }
 
 export function PublishTranslationButton({
@@ -31,6 +33,7 @@ export function PublishTranslationButton({
   hasDraft,
   onPublished,
   disabled,
+  onPublishAction,
 }: PublishTranslationButtonProps) {
   const t = useTranslations('guides.publish')
   const [isOpen, setIsOpen] = useState(false)
@@ -42,9 +45,10 @@ export function PublishTranslationButton({
   }
 
   const handlePublish = async () => {
+    if (!onPublishAction) return
     setIsPublishing(true)
     try {
-      const result = await publishGuideTranslationDraftFn({ data: { guideId, locale } })
+      const result = await onPublishAction(guideId, locale)
 
       if (result.success) {
         toast.success(t('success'))

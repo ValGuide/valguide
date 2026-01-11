@@ -22,23 +22,44 @@ import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import type { StopTranslationVersion } from '../schema'
-import { getStopTranslationHistoryFn, rollbackStopTranslationFn } from '../server-functions'
 import { TranslationStatusBadge } from './translation-status-badge'
+
+export type StopRollbackResult = { success: true } | { success: false; error?: string }
+
+export type StopVersionHistoryItem = {
+  id: string
+  translationId: string
+  version: number
+  status: 'draft' | 'in_review' | 'published' | 'archived'
+  title: string
+  description: string | null
+  createdAt: Date
+  createdBy: string | null
+  publishedAt: Date | null
+}
 
 interface VersionHistoryDialogStopProps {
   stopId: string
   locale: string
   localeName?: string
   onRollback?: () => void
+  onGetHistory?: (stopId: string, locale: string) => Promise<StopVersionHistoryItem[]>
+  onRollbackAction?: (stopId: string, locale: string, targetVersion: number) => Promise<StopRollbackResult>
 }
 
-export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollback }: VersionHistoryDialogStopProps) {
+export function VersionHistoryDialogStop({
+  stopId,
+  locale,
+  localeName,
+  onRollback,
+  onGetHistory,
+  onRollbackAction,
+}: VersionHistoryDialogStopProps) {
   const t = useTranslations('stops.versionHistory')
   const displayLocale = localeName ?? locale.toUpperCase()
   const [isMounted, setIsMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const [versions, setVersions] = useState<StopTranslationVersion[]>([])
+  const [versions, setVersions] = useState<StopVersionHistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [selectedVersion, setSelectedVersion] = useState<number | null>(null)
   const [isRollbackOpen, setIsRollbackOpen] = useState(false)
@@ -50,9 +71,10 @@ export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollbac
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: t changes on every render, causing infinite loops
   const loadVersions = useCallback(async () => {
+    if (!onGetHistory) return
     setIsLoading(true)
     try {
-      const history = await getStopTranslationHistoryFn({ data: { stopId, locale } })
+      const history = await onGetHistory(stopId, locale)
       setVersions(history)
     } catch (error) {
       console.error('Failed to load version history:', error)
@@ -60,7 +82,7 @@ export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollbac
     } finally {
       setIsLoading(false)
     }
-  }, [stopId, locale])
+  }, [stopId, locale, onGetHistory])
 
   useEffect(() => {
     if (isOpen) {
@@ -74,11 +96,11 @@ export function VersionHistoryDialogStop({ stopId, locale, localeName, onRollbac
   }
 
   const handleRollback = async () => {
-    if (!selectedVersion) return
+    if (!selectedVersion || !onRollbackAction) return
 
     setIsRollingBack(true)
     try {
-      const result = await rollbackStopTranslationFn({ data: { stopId, locale, targetVersion: selectedVersion } })
+      const result = await onRollbackAction(stopId, locale, selectedVersion)
 
       if (result.success) {
         toast.success(t('rollbackSuccess'))

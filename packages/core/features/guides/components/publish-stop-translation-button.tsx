@@ -13,7 +13,8 @@ import { Button } from '@valguide/ui/components/button'
 import { Upload } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { publishStopTranslationDraftFn } from '../server-functions'
+
+export type PublishStopTranslationResult = { success: true } | { success: false; error?: string }
 
 interface PublishStopTranslationButtonProps {
   stopId: string
@@ -22,6 +23,7 @@ interface PublishStopTranslationButtonProps {
   hasDraft: boolean
   onPublished?: () => void
   disabled?: boolean
+  onPublishAction?: (stopId: string, locale: string) => Promise<PublishStopTranslationResult>
 }
 
 export function PublishStopTranslationButton({
@@ -31,6 +33,7 @@ export function PublishStopTranslationButton({
   hasDraft,
   onPublished,
   disabled,
+  onPublishAction,
 }: PublishStopTranslationButtonProps) {
   const t = useTranslations('stops.publish')
   const [isOpen, setIsOpen] = useState(false)
@@ -42,9 +45,10 @@ export function PublishStopTranslationButton({
   }
 
   const handlePublish = async () => {
+    if (!onPublishAction) return
     setIsPublishing(true)
     try {
-      const result = await publishStopTranslationDraftFn({ data: { stopId, locale } })
+      const result = await onPublishAction(stopId, locale)
 
       if (result.success) {
         toast.success(t('success'))

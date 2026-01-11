@@ -22,23 +22,44 @@ import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import type { GuideTranslationVersion } from '../schema'
-import { getGuideTranslationHistoryFn, rollbackGuideTranslationFn } from '../server-functions'
 import { TranslationStatusBadge } from './translation-status-badge'
+
+export type RollbackResult = { success: true } | { success: false; error?: string }
+
+export type VersionHistoryItem = {
+  id: string
+  translationId: string
+  version: number
+  status: 'draft' | 'in_review' | 'published' | 'archived'
+  title: string
+  description: string | null
+  createdAt: Date
+  createdBy: string | null
+  publishedAt: Date | null
+}
 
 interface VersionHistoryDialogProps {
   guideId: string
   locale: string
   localeName?: string
   onRollback?: () => void
+  onGetHistory?: (guideId: string, locale: string) => Promise<VersionHistoryItem[]>
+  onRollbackAction?: (guideId: string, locale: string, targetVersion: number) => Promise<RollbackResult>
 }
 
-export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }: VersionHistoryDialogProps) {
+export function VersionHistoryDialog({
+  guideId,
+  locale,
+  localeName,
+  onRollback,
+  onGetHistory,
+  onRollbackAction,
+}: VersionHistoryDialogProps) {
   const t = useTranslations('guides.versionHistory')
   const displayLocale = localeName ?? locale.toUpperCase()
   const [isMounted, setIsMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const [versions, setVersions] = useState<GuideTranslationVersion[]>([])
+  const [versions, setVersions] = useState<VersionHistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [selectedVersion, setSelectedVersion] = useState<number | null>(null)
   const [isRollbackOpen, setIsRollbackOpen] = useState(false)
@@ -49,9 +70,10 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
   }, [])
 
   const loadVersions = useCallback(async () => {
+    if (!onGetHistory) return
     setIsLoading(true)
     try {
-      const history = await getGuideTranslationHistoryFn({ data: { guideId, locale } })
+      const history = await onGetHistory(guideId, locale)
       setVersions(history)
     } catch (error) {
       console.error('Failed to load version history:', error)
@@ -60,7 +82,7 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
       setIsLoading(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- t changes on every render, causing infinite loops
-  }, [guideId, locale])
+  }, [guideId, locale, onGetHistory])
 
   useEffect(() => {
     if (isOpen) {
@@ -74,11 +96,11 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
   }
 
   const handleRollback = async () => {
-    if (!selectedVersion) return
+    if (!selectedVersion || !onRollbackAction) return
 
     setIsRollingBack(true)
     try {
-      const result = await rollbackGuideTranslationFn({ data: { guideId, locale, targetVersion: selectedVersion } })
+      const result = await onRollbackAction(guideId, locale, selectedVersion)
 
       if (result.success) {
         toast.success(t('rollbackSuccess'))
@@ -86,7 +108,7 @@ export function VersionHistoryDialog({ guideId, locale, localeName, onRollback }
         setIsOpen(false)
         onRollback?.()
       } else {
-        toast.error(result.error || t('rollbackError'))
+        toast.error(result.error ?? t('rollbackError'))
       }
     } catch (error) {
       console.error('Failed to rollback:', error)
