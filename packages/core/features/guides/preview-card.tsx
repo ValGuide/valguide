@@ -2,9 +2,9 @@ import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
-import { Badge } from '@valguide/core/ui/components/badge'
 import { Button } from '@valguide/core/ui/components/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
+import { StatusBadge } from '@valguide/core/ui/components/status-badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 import { cn } from '@valguide/core/ui/lib/utils'
 import { ImageIcon, LucideInfo } from 'lucide-react'
@@ -44,66 +44,53 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
   return (
     <Card
       className={cn(
-        'overflow-hidden transition-all duration-200',
-        'hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/30',
+        'overflow-hidden flex flex-col h-full hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)] hover:border-primary/20',
         className,
       )}
       {...props}
     >
-      <div className="relative h-48 w-full overflow-hidden">
+      {/* Cover Image - Fixed Height */}
+      <div className="relative h-44 w-full overflow-hidden shrink-0">
         {displayImage ? (
           <Image
             src={displayImage}
             alt={displayTitle}
             layout="fullWidth"
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-muted/40 px-4 py-6">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
-              <ImageIcon className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
+              <ImageIcon className="h-7 w-7 text-amber-600 dark:text-amber-400" />
             </div>
-            <div className="text-center">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t('coverImage')}</p>
-              <p className="mt-1 text-xs text-muted-foreground/70">{t('addCoverImage')}</p>
-            </div>
+            <p className="text-xs text-muted-foreground/70">{t('addCoverImage')}</p>
           </div>
         )}
       </div>
-      <CardHeader className="space-y-2">
-        <CardTitle className="flex items-start justify-between gap-2">
-          <span className="line-clamp-2 text-base font-semibold leading-snug">{displayTitle}</span>
-          <div className="flex shrink-0 flex-col items-end gap-2">
-            <Badge
-              variant="outline"
-              className={cn(
-                'text-[11px] uppercase tracking-wide',
-                status === 'published' &&
-                  'border-emerald-500/50 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400',
-                status === 'draft' &&
-                  'border-slate-400/50 bg-slate-50 text-slate-600 dark:bg-slate-800/50 dark:text-slate-400',
-              )}
-            >
-              {t(status)}
-            </Badge>
-          </div>
+
+      {/* Header with Title and Badge */}
+      <CardHeader className="pb-0">
+        <CardTitle className="flex items-start justify-between gap-3">
+          <span className="line-clamp-2 text-base font-semibold leading-snug flex-1">{displayTitle}</span>
+          <StatusBadge status={status} size="sm" className="shrink-0 mt-0.5">
+            {t(status)}
+          </StatusBadge>
         </CardTitle>
-        {displayDescription && (
-          <div className="text-sm text-muted-foreground">
-            <RichTextDisplay content={displayDescription} className="line-clamp-2" />
-          </div>
-        )}
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-1.5">
-          {guide.tags?.map((tag) => (
-            <Badge key={tag} variant="outline" className="text-[11px]">
-              {tag}
-            </Badge>
-          ))}
-        </div>
+
+      {/* Description - Clamped */}
+      <CardContent className="flex-1 py-3">
+        {displayDescription ? (
+          <div className="text-sm text-muted-foreground line-clamp-2">
+            <RichTextDisplay content={displayDescription} />
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground/50 italic">{t('noDescription')}</p>
+        )}
       </CardContent>
-      <CardFooter className="flex flex-col items-stretch gap-3">
+
+      {/* Footer - Consistent Position */}
+      <CardFooter className="flex-col items-stretch gap-3 pt-0">
         <div className="flex items-center justify-between">
           <Button variant="outline" size="sm" asChild>
             <Link to={guideUrl} preload="intent">
@@ -134,7 +121,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
           )}
         </div>
         {guide.updatedAt && (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-muted-foreground/70">
             {t('updated')}: {formatDate(guide.updatedAt)}
           </span>
         )}

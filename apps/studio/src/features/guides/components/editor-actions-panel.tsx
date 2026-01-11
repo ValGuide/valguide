@@ -70,21 +70,38 @@ export function EditorActionsPanel({
 
   return (
     <div className="space-y-4">
-      <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Entry</div>
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Entry</h3>
 
+      {/* Primary CTA - Publish - Made more prominent */}
+      <Button
+        onClick={onPublish}
+        disabled={!canPublish || isPublishing || disabled}
+        className="w-full shadow-[var(--shadow-sm)] transition-all duration-200 hover:shadow-[var(--shadow-md)]"
+        size="default"
+      >
+        <Upload className="mr-2 h-4 w-4" />
+        {isPublishing ? t('saving') : t('publish')}
+      </Button>
+
+      {/* Secondary actions row */}
       <div className="flex gap-2">
-        <Button onClick={onPublish} disabled={!canPublish || isPublishing || disabled} className="flex-1" size="sm">
-          <Upload className="mr-2 h-4 w-4" />
-          {isPublishing ? t('saving') : t('publish')}
+        <Button
+          variant="outline"
+          onClick={onSave}
+          disabled={!isDirty || isSaving || disabled}
+          className="flex-1 transition-colors duration-150"
+          size="sm"
+        >
+          {isSaving ? t('saving') : t('save')}
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="px-2">
+            <Button variant="outline" size="sm" className="px-2.5 transition-colors duration-150">
               <MoreHorizontal className="h-4 w-4" />
               <span className="sr-only">{t('moreActions')}</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="min-w-[160px]">
             {canUnpublish && (
               <DropdownMenuItem
                 onClick={() => setUnpublishDialogOpen(true)}
@@ -108,16 +125,6 @@ export function EditorActionsPanel({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
-      <Button
-        variant="outline"
-        onClick={onSave}
-        disabled={!isDirty || isSaving || disabled}
-        className="w-full"
-        size="sm"
-      >
-        {isSaving ? t('saving') : t('save')}
-      </Button>
 
       {/* Discard Confirmation Dialog */}
       <AlertDialog open={discardDialogOpen} onOpenChange={setDiscardDialogOpen}>

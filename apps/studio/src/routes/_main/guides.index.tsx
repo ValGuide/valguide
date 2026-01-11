@@ -5,7 +5,15 @@ import { GuidesListSkeleton } from '@/features/guides/components/guides-list-ske
 import { guidesQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/')({
-  loader: ({ context }) => context.queryClient.ensureQueryData(guidesQueryOptions()),
+  loader: ({ context }) => {
+    const options = guidesQueryOptions()
+    const cachedData = context.queryClient.getQueryData(options.queryKey)
+    if (cachedData) {
+      context.queryClient.invalidateQueries({ queryKey: options.queryKey })
+      return cachedData
+    }
+    return context.queryClient.ensureQueryData(options)
+  },
   component: GuidesPage,
   pendingComponent: GuidesListSkeleton,
 })

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import { ArchivedGuidesList } from './archived-guides-list'
 
 const meta: Meta<typeof ArchivedGuidesList> = {
@@ -19,7 +19,7 @@ const meta: Meta<typeof ArchivedGuidesList> = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const archivedGuides: GuideWithTranslations[] = [
+const archivedGuides: GuideWithTranslationsAndCover[] = [
   {
     id: '1',
     nanoId: 'abc123',
@@ -33,6 +33,26 @@ const archivedGuides: GuideWithTranslations[] = [
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20'),
     availableLocales: ['en'],
+    coverImage: {
+      id: 'asset-1',
+      nanoId: 'cover1',
+      organizationId: 'org-1',
+      fileName: 'egypt-cover.jpg',
+      fileSize: 150000,
+      mimeType: 'image/jpeg',
+      type: 'image',
+      storagePath: 'covers/egypt-cover.jpg',
+      publicUrl: 'https://picsum.photos/seed/egypt/600/400',
+      locale: null,
+      width: 1200,
+      height: 800,
+      duration: null,
+      uploadedBy: 'user-1',
+      createdAt: new Date('2024-01-15'),
+      updatedAt: new Date('2024-01-15'),
+      role: 'cover',
+      order: 0,
+    },
     translations: [
       {
         id: 't1',
@@ -69,6 +89,7 @@ const archivedGuides: GuideWithTranslations[] = [
     createdAt: new Date('2024-02-01'),
     updatedAt: new Date('2024-02-10'),
     availableLocales: ['en'],
+    coverImage: null,
     translations: [
       {
         id: 't2',
@@ -105,6 +126,26 @@ const archivedGuides: GuideWithTranslations[] = [
     createdAt: new Date('2024-03-01'),
     updatedAt: new Date('2024-03-10'),
     availableLocales: ['en'],
+    coverImage: {
+      id: 'asset-3',
+      nanoId: 'cover3',
+      organizationId: 'org-1',
+      fileName: 'city-cover.jpg',
+      fileSize: 180000,
+      mimeType: 'image/jpeg',
+      type: 'image',
+      storagePath: 'covers/city-cover.jpg',
+      publicUrl: 'https://picsum.photos/seed/city/600/400',
+      locale: null,
+      width: 1200,
+      height: 800,
+      duration: null,
+      uploadedBy: 'user-1',
+      createdAt: new Date('2024-03-01'),
+      updatedAt: new Date('2024-03-01'),
+      role: 'cover',
+      order: 0,
+    },
     translations: [
       {
         id: 't3',
@@ -130,20 +171,10 @@ const archivedGuides: GuideWithTranslations[] = [
   },
 ]
 
-const mockOnRecover = async (id: string) => {
-  console.log('Recovering guide:', id)
-}
-
-const mockOnDelete = async (id: string) => {
-  console.log('Deleting guide:', id)
-}
-
 export const Empty: Story = {
   args: {
     guides: [],
     userId: 'user-1',
-    onRecover: mockOnRecover,
-    onDelete: mockOnDelete,
   },
 }
 
@@ -151,8 +182,6 @@ export const WithArchivedGuides: Story = {
   args: {
     guides: archivedGuides,
     userId: 'user-1',
-    onRecover: mockOnRecover,
-    onDelete: mockOnDelete,
   },
 }
 
@@ -160,8 +189,6 @@ export const SingleGuide: Story = {
   args: {
     guides: archivedGuides.slice(0, 1),
     userId: 'user-1',
-    onRecover: mockOnRecover,
-    onDelete: mockOnDelete,
   },
 }
 
@@ -169,8 +196,6 @@ export const WithActionHandler: Story = {
   args: {
     guides: archivedGuides,
     userId: 'user-1',
-    onRecover: mockOnRecover,
-    onDelete: mockOnDelete,
     onActionComplete: () => {
       console.log('Action completed!')
     },

@@ -250,12 +250,12 @@ export function StopEditLayout({
 
         {/* Main Content */}
         <div className="flex min-w-0">
-          <div className="min-w-0 flex-1 bg-gray-50 dark:bg-background">
-            <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
-              <div className="space-y-6">
+          <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
+            <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
+              <div className="space-y-8">
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
-                  <h2 className="text-lg font-semibold">{tStops('editor.localeContent')}</h2>
+                  <h2 className="text-base font-semibold">{tStops('editor.localeContent')}</h2>
                 </div>
 
                 <StopLocaleEditor
@@ -277,7 +277,7 @@ export function StopEditLayout({
                 {/* Shared Content Section */}
                 <Card className={isReadOnly ? 'opacity-60' : ''}>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-base">
                       <Globe className="h-4 w-4" />
                       {tStops('editor.sharedContent')}
                     </CardTitle>
@@ -300,28 +300,23 @@ export function StopEditLayout({
           </div>
 
           {/* Right Sidebar - Actions Panel */}
-          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block self-start sticky top-[140px]">
-            <EditorActionsPanel
-              hasDraft={hasDraft}
-              hasPublished={hasPublished}
-              isDirty={isDirty}
-              isSaving={isSaving}
-              isPublishing={isPublishing}
-              onSave={onSave}
-              onPublish={handlePublish}
-              onUnpublish={handleUnpublish}
-              onDiscard={handleDiscard}
-              onOpenVersionHistory={() => {}}
-              disabled={isReadOnly}
-            />
-
-            <div className="mt-8">
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {t('editor.stopProgress')}
-              </h3>
-              {/* TODO: Add stop-specific progress */}
+          <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
+            <div className="p-5 space-y-6">
+              <EditorActionsPanel
+                hasDraft={hasDraft}
+                hasPublished={hasPublished}
+                isDirty={isDirty}
+                isSaving={isSaving}
+                isPublishing={isPublishing}
+                onSave={onSave}
+                onPublish={handlePublish}
+                onUnpublish={handleUnpublish}
+                onDiscard={handleDiscard}
+                onOpenVersionHistory={() => {}}
+                disabled={isReadOnly}
+              />
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </>

@@ -1,5 +1,4 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@valguide/core/features/guides/types'
 import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
 import {
   attachAssetToGuideFn,
@@ -13,10 +12,12 @@ import {
   updateGuideTranslationFn,
   updateStopFn,
 } from '@valguide/core/features/guides/server-functions'
+import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@valguide/core/features/guides/types'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 
 type ContentLocale = string
 
+import { useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
@@ -54,6 +55,7 @@ export function GuideEditorProvider({
   const location = useLocation()
   const pathname = location.pathname
   const searchParams = useSearch({ strict: false })
+  const queryClient = useQueryClient()
   const [guide, setGuide] = useState(initialGuide)
   const [activeLocale, setActiveLocaleState] = useState<ContentLocale>(() =>
     parseLocale(initialLocale, initialGuide.availableLocales ?? ['en', 'de', 'rm']),
@@ -519,13 +521,14 @@ export function GuideEditorProvider({
           assets: [...prev.assets, assetWithRole],
         }))
 
+        await queryClient.invalidateQueries({ queryKey: ['guides'] })
         toast.success(t('guides.assets.attachSuccess'))
       } catch (error) {
         console.error('Failed to attach asset to guide:', error)
         toast.error(t('guides.assets.attachError'))
       }
     },
-    [guide.id, t],
+    [guide.id, queryClient, t],
   )
 
   const detachAssetFromGuide = useCallback(
@@ -537,13 +540,14 @@ export function GuideEditorProvider({
         }))
 
         await detachAssetFromGuideFn({ data: { guideAssetId } })
+        await queryClient.invalidateQueries({ queryKey: ['guides'] })
         toast.success(t('guides.assets.removeSuccess'))
       } catch (error) {
         console.error('Failed to detach asset from guide:', error)
         toast.error(t('guides.assets.removeError'))
       }
     },
-    [t],
+    [queryClient, t],
   )
 
   // Stop asset actions (immediate save)

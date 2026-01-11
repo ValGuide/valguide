@@ -340,12 +340,12 @@ export function GuideEditView({
 
         {/* Main Content */}
         <div className="flex min-w-0">
-          <div className="min-w-0 flex-1 bg-gray-50 dark:bg-background">
-            <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
-              <div className="space-y-6">
+          <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
+            <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
+              <div className="space-y-8">
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
-                  <h2 className="text-lg font-semibold">
+                  <h2 className="text-base font-semibold">
                     {t('editor.localeContent')} ({getLocaleDisplayName(activeLocale)})
                   </h2>
                 </div>
@@ -410,28 +410,30 @@ export function GuideEditView({
           </div>
 
           {/* Right Sidebar - Actions Panel */}
-          <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block self-start sticky top-[140px]">
-            <EditorActionsPanel
-              hasDraft={hasDraft}
-              hasPublished={hasPublished}
-              isDirty={isDirty}
-              isSaving={isSaving}
-              isPublishing={isPublishing}
-              onSave={save}
-              onPublish={handlePublish}
-              onUnpublish={handleUnpublish}
-              onDiscard={handleDiscard}
-              onOpenVersionHistory={() => {}}
-              disabled={isReadOnly}
-            />
+          <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
+            <div className="p-5 space-y-6">
+              <EditorActionsPanel
+                hasDraft={hasDraft}
+                hasPublished={hasPublished}
+                isDirty={isDirty}
+                isSaving={isSaving}
+                isPublishing={isPublishing}
+                onSave={save}
+                onPublish={handlePublish}
+                onUnpublish={handleUnpublish}
+                onDiscard={handleDiscard}
+                onOpenVersionHistory={() => {}}
+                disabled={isReadOnly}
+              />
 
-            <div className="mt-8">
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {t('editor.guideProgress')}
-              </h3>
-              <GuideProgress guide={guide} locale={activeLocale} />
+              <div className="border-t pt-5">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {t('editor.guideProgress')}
+                </h3>
+                <GuideProgress guide={guide} locale={activeLocale} />
+              </div>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </>

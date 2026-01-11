@@ -10,7 +10,8 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
-import { cn } from '@valguide/ui/lib/utils'
+import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
+import { StatusBadge } from '@valguide/ui/components/status-badge'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
 import { guideWithAssetsQueryOptions } from '@/features/guides/query-options'
@@ -73,105 +74,87 @@ function GuidePage() {
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-5xl p-6 sm:p-8 space-y-6">
-          {/* Hero Card with Cover Image */}
-          <Card className="overflow-hidden">
-            {/* Cover Image Section */}
-            <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-muted/40">
+          {/* Hero Card with Cover Image - Reduced height with gradient overlay */}
+          <Card className="overflow-hidden shadow-[var(--shadow-md)]">
+            {/* Cover Image Section - Reduced height */}
+            <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted/30">
               {coverImageUrl ? (
                 <Image src={coverImageUrl} alt={title} layout="fullWidth" className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-4 py-6">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
-                    <ImageIcon className="h-10 w-10 text-amber-600 dark:text-amber-400" />
+                <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
+                    <ImageIcon className="h-8 w-8 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-                      {t('details.noCoverImage')}
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground/70">{t('details.addCoverImageHint')}</p>
-                  </div>
+                  <p className="text-sm text-muted-foreground/70">{t('details.addCoverImageHint')}</p>
                 </div>
               )}
             </div>
 
-            {/* Title and Description */}
-            <CardContent className="p-6 sm:p-8">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex-1 space-y-3">
-                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{title}</h1>
+            {/* Title and Description - More compact */}
+            <CardContent className="p-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex-1 space-y-2">
+                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{title}</h1>
                   {description && (
-                    <div className="text-muted-foreground">
+                    <div className="text-sm text-muted-foreground line-clamp-3">
                       <RichTextDisplay content={description} />
                     </div>
                   )}
                 </div>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    'shrink-0 text-xs uppercase tracking-wide',
-                    status === 'published' &&
-                      'border-emerald-500/50 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400',
-                    status === 'draft' &&
-                      'border-slate-400/50 bg-slate-50 text-slate-600 dark:bg-slate-800/50 dark:text-slate-400',
-                  )}
-                >
+                <StatusBadge status={status} size="lg" className="shrink-0">
                   {t(`details.${status}`)}
-                </Badge>
+                </StatusBadge>
               </div>
             </CardContent>
           </Card>
 
-          {/* Details Card */}
+          {/* Details Card - Using MetadataGrid */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-lg font-semibold mb-4">{t('details.title')}</h2>
-              <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="space-y-1">
-                  <dt className="text-sm font-medium text-muted-foreground">{t('details.guideId')}</dt>
-                  <dd className="text-sm font-mono">{guide.nanoId}</dd>
-                </div>
-                <div className="space-y-1">
-                  <dt className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {t('details.created')}
-                  </dt>
-                  <dd className="text-sm">{new Date(guide.createdAt).toLocaleDateString()}</dd>
-                </div>
-                <div className="space-y-1">
-                  <dt className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-                    <Clock className="h-3.5 w-3.5" />
-                    {t('details.lastUpdated')}
-                  </dt>
-                  <dd className="text-sm">{new Date(guide.updatedAt).toLocaleDateString()}</dd>
-                </div>
-                <div className="space-y-1">
-                  <dt className="text-sm font-medium text-muted-foreground">{t('details.status')}</dt>
-                  <dd className="text-sm">{isPublished ? t('details.published') : t('details.draft')}</dd>
-                </div>
-              </dl>
+              <h2 className="text-base font-semibold mb-4">{t('details.title')}</h2>
+              <MetadataGrid>
+                <MetadataRow
+                  label={t('details.guideId')}
+                  value={<span className="font-mono text-xs">{guide.nanoId}</span>}
+                />
+                <MetadataRow
+                  label={t('details.created')}
+                  value={new Date(guide.createdAt).toLocaleDateString()}
+                  icon={<Calendar />}
+                />
+                <MetadataRow
+                  label={t('details.lastUpdated')}
+                  value={new Date(guide.updatedAt).toLocaleDateString()}
+                  icon={<Clock />}
+                />
+                <MetadataRow
+                  label={t('details.status')}
+                  value={isPublished ? t('details.published') : t('details.draft')}
+                />
+              </MetadataGrid>
             </CardContent>
           </Card>
 
           {/* Translations Card */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-lg font-semibold mb-4">{t('details.translations')}</h2>
+              <h2 className="text-base font-semibold mb-4">{t('details.translations')}</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {guide.translations.map((trans) => {
                   const ver = trans.draftVersion ?? trans.currentVersion
                   return (
                     <div
                       key={trans.id}
-                      className="rounded-lg border bg-muted/20 p-4 transition-colors hover:bg-muted/40"
+                      className="rounded-lg border bg-muted/20 p-4 transition-all duration-200 hover:bg-muted/30 hover:border-primary/20"
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary" className="text-xs font-medium uppercase">
+                        <Badge variant="secondary" className="text-[10px] font-medium uppercase tracking-wider">
                           {trans.locale}
                         </Badge>
                       </div>
-                      <h3 className="font-medium line-clamp-1">{ver?.title ?? t('untitledGuide')}</h3>
+                      <h3 className="font-medium line-clamp-1 text-sm">{ver?.title ?? t('untitledGuide')}</h3>
                       {ver?.description && (
-                        <div className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                        <div className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
                           <RichTextDisplay content={ver.description} />
                         </div>
                       )}

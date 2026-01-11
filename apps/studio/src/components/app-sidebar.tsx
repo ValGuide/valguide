@@ -167,9 +167,9 @@ export function AppSidebar({
   return (
     <>
       <Sidebar collapsible="icon" {...props}>
-        <SidebarHeader>
-          <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
-            <h1 className="text-lg font-medium px-2 truncate">{tSidebar('appName')}</h1>
+        <SidebarHeader className="px-3 py-4">
+          <div className="group-data-[collapsible=icon]:hidden">
+            <h1 className="text-base font-semibold px-2 truncate">{tSidebar('appName')}</h1>
           </div>
           <TeamSwitcher
             teams={teams}
@@ -182,10 +182,12 @@ export function AppSidebar({
             onTeamSettings={() => router.navigate({ to: '/team' })}
           />
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="px-2">
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('content')}</SidebarGroupLabel>
-            <SidebarMenu>
+            <SidebarGroupLabel className="uppercase text-[10px] tracking-wider px-2.5 mb-1">
+              {tSections('content')}
+            </SidebarGroupLabel>
+            <SidebarMenu className="gap-0.5">
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
@@ -200,8 +202,10 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('performance')}</SidebarGroupLabel>
-            <SidebarMenu>
+            <SidebarGroupLabel className="uppercase text-[10px] tracking-wider px-2.5 mb-1">
+              {tSections('performance')}
+            </SidebarGroupLabel>
+            <SidebarMenu className="gap-0.5">
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
@@ -216,8 +220,10 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('library')}</SidebarGroupLabel>
-            <SidebarMenu>
+            <SidebarGroupLabel className="uppercase text-[10px] tracking-wider px-2.5 mb-1">
+              {tSections('library')}
+            </SidebarGroupLabel>
+            <SidebarMenu className="gap-0.5">
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
@@ -232,8 +238,10 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('settings')}</SidebarGroupLabel>
-            <SidebarMenu>
+            <SidebarGroupLabel className="uppercase text-[10px] tracking-wider px-2.5 mb-1">
+              {tSections('settings')}
+            </SidebarGroupLabel>
+            <SidebarMenu className="gap-0.5">
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>

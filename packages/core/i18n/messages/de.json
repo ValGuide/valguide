@@ -254,6 +254,7 @@
       "authorInfo": "Autorinformationen",
       "coverImage": "Titelbild",
       "addCoverImage": "Fügen Sie ein Bild hinzu, das diese Ausstellung einfängt",
+      "noDescription": "Keine Beschreibung",
       "published": "Veröffentlicht",
       "draft": "Entwurf"
     },
@@ -373,6 +374,8 @@
       "errorDescription": "Beim Wiederherstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     },
     "archived": "Archiviert",
+    "archivedDescription": "Archivierte Guides anzeigen und verwalten",
+    "archivedStatus": "Archiviert",
     "archiveGuide": "Guide archivieren",
     "recoverGuide": "Guide wiederherstellen",
     "permanentlyDelete": "Endgültig löschen",
@@ -382,6 +385,9 @@
     "recoverConfirmDescription": "Dieser Guide wird zu Ihren aktiven Guides wiederhergestellt.",
     "deleteConfirmTitle": "Diesen Guide endgültig löschen?",
     "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Der Guide wird endgültig gelöscht.",
+    "deleteConfirmDescriptionWithName": "Dadurch wird \"{name}\" endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteConfirmInstruction": "Zur Bestätigung eingeben: {phrase}",
+    "deleteConfirmPhrase": "Guide löschen",
     "archivedSuccessfully": "Guide erfolgreich archiviert",
     "recoveredSuccessfully": "Guide erfolgreich wiederhergestellt",
     "deletedSuccessfully": "Guide erfolgreich gelöscht",
@@ -389,6 +395,8 @@
     "archivedOnDate": "Archiviert am: {date}",
     "noArchivedGuides": "Keine archivierten Guides",
     "noArchivedGuidesDescription": "Archivierte Guides werden hier angezeigt",
+    "noCoverImage": "Kein Titelbild",
+    "noDescription": "Keine Beschreibung",
     "publish": {
       "button": "Veröffentlichen",
       "buttonWithLocale": "{locale} veröffentlichen",
@@ -812,16 +820,16 @@
     },
     "pages": {
       "guides": {
-        "description": "Erstellen und verwalten Sie Ihre interaktiven Anleitungen."
+        "description": "Erstellen und verwalten Sie Ihre interaktiven Guides."
       },
       "assets": {
         "description": "Verwalten Sie Ihre Medienbibliothek mit Bildern, Audio und Videos."
       },
       "design": {
-        "description": "Passen Sie das Aussehen Ihrer Anleitungen an."
+        "description": "Passen Sie das Aussehen Ihrer Guides an."
       },
       "analytics": {
-        "description": "Zeigen Sie die Leistungsmetriken Ihrer Anleitungen an und analysieren Sie diese."
+        "description": "Zeigen Sie die Leistungsmetriken Ihrer Guides an und analysieren Sie diese."
       },
       "teamAndMembers": {
         "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen."

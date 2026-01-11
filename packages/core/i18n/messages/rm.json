@@ -254,6 +254,7 @@
       "authorInfo": "Infurmaziuns davart l'autur",
       "coverImage": "Maletg da front",
       "addCoverImage": "Agiuntai in maletg che representa questa exposiziun",
+      "noDescription": "Nagina descripziun",
       "published": "Publitgà",
       "draft": "Sboz"
     },
@@ -373,6 +374,8 @@
       "errorDescription": "In errur è succedì tar restaurar la guida. Empruvai per plaschair anc ina giada."
     },
     "archived": "Archivà",
+    "archivedDescription": "Guardar e administrar las guidas archivadas",
+    "archivedStatus": "Archivà",
     "archiveGuide": "Archivar la guida",
     "recoverGuide": "Restaurar la guida",
     "permanentlyDelete": "Stizzar definitivamain",
@@ -382,6 +385,9 @@
     "recoverConfirmDescription": "Questa guida vegn restaurada tar tias guidas activas.",
     "deleteConfirmTitle": "Stizzar questa guida definitivamain?",
     "deleteConfirmDescription": "Questa acziun na po betg vegnir revocada. La guida vegn stizzada definitivamain.",
+    "deleteConfirmDescriptionWithName": "Quai stizza definitivamain «{name}». Questa acziun na po betg vegnir revocada.",
+    "deleteConfirmInstruction": "Per confermar, scriva: {phrase}",
+    "deleteConfirmPhrase": "stizzar guida",
     "archivedSuccessfully": "Guida archivada cun success",
     "recoveredSuccessfully": "Guida restaurada cun success",
     "deletedSuccessfully": "Guida stizzada cun success",
@@ -389,6 +395,8 @@
     "archivedOnDate": "Archivà ils: {date}",
     "noArchivedGuides": "Naginas guidas archivadas",
     "noArchivedGuidesDescription": "Guidas archivadas vegnan mussadas qua",
+    "noCoverImage": "Nagina maletg da titel",
+    "noDescription": "Nagina descripziun",
     "publish": {
       "button": "Publitgar",
       "buttonWithLocale": "Publitgar {locale}",

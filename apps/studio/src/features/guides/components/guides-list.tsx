@@ -1,8 +1,7 @@
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
-import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import type { Guide } from '@valguide/core/features/guides/types'
+import type { Guide, GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -119,7 +118,7 @@ export function GuidesList({
   // Loading state
   if (isLoading) {
     return (
-      <div className="mx-auto w-full max-w-5xl space-y-6">
+      <div className="mx-auto w-full max-w-5xl space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <Skeleton className="h-8 w-32" />
@@ -127,28 +126,30 @@ export function GuidesList({
           </div>
           <Skeleton className="h-9 w-40" />
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {[...Array(6)].map((_, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton elements
-            <div key={`skeleton-${i}`} className="overflow-hidden rounded-xl border bg-card">
-              <Skeleton className="h-48 w-full" />
+            <div
+              key={`skeleton-${i}`}
+              className="overflow-hidden rounded-lg border bg-card shadow-[var(--shadow-card)]"
+            >
+              <Skeleton className="h-44 w-full" />
               {/* CardHeader */}
-              <div className="flex flex-col space-y-1.5 p-6">
-                <div className="flex items-start justify-between gap-2">
+              <div className="flex flex-col gap-1.5 px-6 pt-6">
+                <div className="flex items-start justify-between gap-3">
                   <Skeleton className="h-5 w-3/4" />
-                  <Skeleton className="h-5 w-16 shrink-0" />
+                  <Skeleton className="h-5 w-14 shrink-0 rounded-full" />
                 </div>
+              </div>
+              {/* CardContent */}
+              <div className="px-6 py-3 space-y-1.5">
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-2/3" />
               </div>
-              {/* CardContent */}
-              <div className="p-6 pt-0">
-                <Skeleton className="h-5 w-16" />
-              </div>
               {/* CardFooter */}
-              <div className="flex flex-col gap-3 p-6 pt-0">
-                <Skeleton className="h-8 w-28" />
-                <Skeleton className="h-3 w-36" />
+              <div className="flex flex-col gap-3 px-6 pb-6 pt-2">
+                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-3 w-32" />
               </div>
             </div>
           ))}
@@ -221,18 +222,18 @@ export function GuidesList({
 
   // List view when guides exist
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6">
+    <div className="mx-auto w-full max-w-5xl space-y-8">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="space-y-1">
           <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
           <p className="text-sm text-muted-foreground">{t('description')}</p>
         </div>
         <Button onClick={handleCreateGuide} disabled={isCreating} className="group">
-          <Plus className="transition-transform group-hover:rotate-90" />
+          <Plus className="transition-transform duration-200 group-hover:rotate-90" />
           {isCreating ? t('empty.creating') : t('empty.createNewButton')}
         </Button>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {guides.map((guide) => (
           <GuidePreviewCard
             key={guide.id}

@@ -254,6 +254,7 @@
       "authorInfo": "Author Information",
       "coverImage": "Cover image",
       "addCoverImage": "Add an image that captures this exhibition",
+      "noDescription": "No description",
       "published": "Published",
       "draft": "Draft"
     },
@@ -373,6 +374,8 @@
       "errorDescription": "An error occurred while recovering the guide. Please try again."
     },
     "archived": "Archived",
+    "archivedDescription": "View and manage your archived guides",
+    "archivedStatus": "Archived",
     "archiveGuide": "Archive Guide",
     "recoverGuide": "Recover Guide",
     "permanentlyDelete": "Permanently Delete",
@@ -382,6 +385,9 @@
     "recoverConfirmDescription": "This guide will be restored to your active guides.",
     "deleteConfirmTitle": "Permanently delete this guide?",
     "deleteConfirmDescription": "This action cannot be undone. The guide will be permanently deleted.",
+    "deleteConfirmDescriptionWithName": "This will permanently delete \"{name}\". This action cannot be undone.",
+    "deleteConfirmInstruction": "To confirm, type: {phrase}",
+    "deleteConfirmPhrase": "delete guide",
     "archivedSuccessfully": "Guide archived successfully",
     "recoveredSuccessfully": "Guide recovered successfully",
     "deletedSuccessfully": "Guide deleted successfully",
@@ -389,6 +395,8 @@
     "archivedOnDate": "Archived on: {date}",
     "noArchivedGuides": "No archived guides",
     "noArchivedGuidesDescription": "Archived guides will appear here",
+    "noCoverImage": "No cover image",
+    "noDescription": "No description",
     "publish": {
       "button": "Publish",
       "buttonWithLocale": "Publish {locale}",

@@ -173,10 +173,10 @@ function MockDeleteDialogWithUsage(props: DeleteAssetDialogComponentProps) {
     <DeleteAssetDialog
       {...props}
       onGetUsage={async () => ({
-        guides: [{ id: 'g1', nanoId: 'guide1', name: 'City Tour Guide', role: 'cover' as const }],
+        guides: [{ id: 'g1', nanoId: 'guide1', name: 'City Tour Guide', role: 'cover', locale: 'en' }],
         stops: [
-          { id: 's1', nanoId: 'stop1', name: 'Museum Entrance', role: 'media' as const },
-          { id: 's2', nanoId: 'stop2', name: 'Art Gallery', role: 'media' as const },
+          { id: 's1', nanoId: 'stop1', name: 'Museum Entrance', role: 'media', locale: 'en' },
+          { id: 's2', nanoId: 'stop2', name: 'Art Gallery', role: 'media', locale: null },
         ],
       })}
     />

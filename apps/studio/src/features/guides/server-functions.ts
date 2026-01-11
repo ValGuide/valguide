@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import {
   createGuide,
-  getArchivedGuides,
+  getArchivedGuidesWithCover,
   getGuideByNanoIdWithAssets,
   getGuidesByOrganizationId,
 } from '@valguide/core/features/guides/queries'
@@ -117,7 +117,7 @@ export const getArchivedGuidesFn = createServerFn({ method: 'GET' }).handler(asy
     }
   }
 
-  const guides = await getArchivedGuides(db, targetOrganizationId)
+  const guides = await getArchivedGuidesWithCover(db, targetOrganizationId)
 
   return {
     guides,

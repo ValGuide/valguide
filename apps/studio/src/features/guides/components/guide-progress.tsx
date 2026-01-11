@@ -82,43 +82,47 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
   const progressPercentage = (completedCount / totalCount) * 100
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Current Language Status */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-medium">{t('currentLanguage', { language: getLocaleDisplayName(locale) })}</h4>
+          <h4 className="text-xs font-medium text-muted-foreground">
+            {t('currentLanguage', { language: getLocaleDisplayName(locale) })}
+          </h4>
           <StatusIcon status={summary.guideStatus} />
         </div>
 
         {/* Guide Status */}
-        <div className="rounded-lg border p-3">
+        <div className="rounded-md border bg-muted/20 p-3">
           <div className="flex items-center justify-between text-sm">
-            <span>{t('guideStatus')}</span>
-            <span className="capitalize text-muted-foreground">{t(`status.${summary.guideStatus}`)}</span>
+            <span className="text-muted-foreground">{t('guideStatus')}</span>
+            <span className="capitalize font-medium text-foreground">{t(`status.${summary.guideStatus}`)}</span>
           </div>
         </div>
 
         {/* Stops Breakdown */}
         {guide.stops.length > 0 && (
-          <div className="rounded-lg border p-3 space-y-2">
-            <div className="text-sm font-medium">{t('stopsBreakdown', { total: summary.totalStops })}</div>
-            <div className="grid grid-cols-3 gap-2 text-xs">
+          <div className="rounded-md border bg-muted/20 p-3 space-y-2">
+            <div className="text-xs font-medium text-muted-foreground">
+              {t('stopsBreakdown', { total: summary.totalStops })}
+            </div>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
               <div className="flex items-center gap-1.5">
-                <Circle className="h-2 w-2 fill-green-500 text-green-500" />
+                <Circle className="h-2 w-2 fill-emerald-500 text-emerald-500" />
                 <span className="text-muted-foreground">
-                  {t('published')}: {summary.stopsPublished}
+                  {t('published')}: <span className="font-medium text-foreground">{summary.stopsPublished}</span>
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Circle className="h-2 w-2 fill-amber-500 text-amber-500" />
                 <span className="text-muted-foreground">
-                  {t('draft')}: {summary.stopsDraft}
+                  {t('draft')}: <span className="font-medium text-foreground">{summary.stopsDraft}</span>
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Circle className="h-2 w-2 fill-muted-foreground/30 text-muted-foreground/30" />
+                <Circle className="h-2 w-2 fill-muted-foreground/40 text-muted-foreground/40" />
                 <span className="text-muted-foreground">
-                  {t('notStarted')}: {summary.stopsEmpty}
+                  {t('notStarted')}: <span className="font-medium text-foreground">{summary.stopsEmpty}</span>
                 </span>
               </div>
             </div>
@@ -126,26 +130,26 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
         )}
       </div>
 
-      <Separator />
+      <Separator className="opacity-50" />
 
       {/* Guide Completion Checklist */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-medium">{t('title')}</h4>
-          <span className="text-xs text-muted-foreground">
-            {t('count', { completed: completedCount, total: totalCount })}
+          <h4 className="text-xs font-medium text-muted-foreground">{t('title')}</h4>
+          <span className="text-xs font-medium">
+            {completedCount}/{totalCount}
           </span>
         </div>
 
-        <Progress value={progressPercentage} className="h-2" />
+        <Progress value={progressPercentage} className="h-1.5" />
 
-        <ul className="space-y-2">
+        <ul className="space-y-1.5">
           {items.map((item) => (
-            <li key={item.labelKey} className="flex items-center gap-2 text-sm">
+            <li key={item.labelKey} className="flex items-center gap-2 text-xs">
               {item.completed ? (
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
               ) : (
-                <Circle className="h-4 w-4 text-muted-foreground" />
+                <Circle className="h-3.5 w-3.5 text-muted-foreground/40 shrink-0" />
               )}
               <span className={item.completed ? 'text-foreground' : 'text-muted-foreground'}>{t(item.labelKey)}</span>
             </li>
@@ -154,46 +158,43 @@ export function GuideProgress({ guide, locale }: GuideProgressProps) {
       </div>
 
       {/* Unpublished Changes Section */}
-      <div className="space-y-3 border-t pt-4">
-        <h4 className="text-sm font-medium">{t('unpublishedChanges')}</h4>
+      <div className="space-y-2 border-t pt-4">
+        <h4 className="text-xs font-medium text-muted-foreground">{t('unpublishedChanges')}</h4>
         {guideHasDraft || stopsWithDrafts.length > 0 ? (
-          <ul className="space-y-2">
+          <ul className="space-y-1.5">
             {guideHasDraft && (
-              <li className="flex items-center gap-2 text-sm">
-                <AlertCircle className="h-4 w-4 text-amber-500" />
+              <li className="flex items-center gap-2 text-xs">
+                <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                 <span className="text-muted-foreground">{t('guideDraft')}</span>
               </li>
             )}
             {stopsWithDrafts.length > 0 && (
-              <li className="flex items-center gap-2 text-sm">
-                <AlertCircle className="h-4 w-4 text-amber-500" />
+              <li className="flex items-center gap-2 text-xs">
+                <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                 <span className="text-muted-foreground">{t('stopsWithDrafts', { count: stopsWithDrafts.length })}</span>
               </li>
             )}
           </ul>
         ) : (
-          <div className="flex items-center gap-2 text-sm">
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
+          <div className="flex items-center gap-2 text-xs">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
             <span className="text-muted-foreground">{t('allPublished')}</span>
           </div>
         )}
       </div>
 
-      <Separator />
+      <Separator className="opacity-50" />
 
       {/* All Languages Overview */}
-      <div className="space-y-3">
-        <h4 className="text-sm font-medium">{t('allLanguages')}</h4>
-        <div className="flex items-center gap-2">
+      <div className="space-y-2">
+        <h4 className="text-xs font-medium text-muted-foreground">{t('allLanguages')}</h4>
+        <div className="flex items-center gap-3">
           <Progress
             value={(overallProgress.translatedLocales / overallProgress.totalLocales) * 100}
-            className="h-2 flex-1"
+            className="h-1.5 flex-1"
           />
-          <span className="text-xs text-muted-foreground whitespace-nowrap">
-            {t('translatedCount', {
-              translated: overallProgress.translatedLocales,
-              total: overallProgress.totalLocales,
-            })}
+          <span className="text-xs font-medium whitespace-nowrap">
+            {overallProgress.translatedLocales}/{overallProgress.totalLocales}
           </span>
         </div>
       </div>

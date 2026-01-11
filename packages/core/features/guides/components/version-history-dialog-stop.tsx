@@ -154,45 +154,50 @@ export function VersionHistoryDialogStop({
           </DialogHeader>
           <ScrollArea className="h-[60vh] sm:h-[400px] pr-4">
             {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <p className="text-muted-foreground">{t('loading')}</p>
+              <div className="flex items-center justify-center py-12">
+                <p className="text-sm text-muted-foreground">{t('loading')}</p>
               </div>
             ) : versions.length === 0 ? (
-              <div className="flex items-center justify-center py-8">
-                <p className="text-muted-foreground">{t('noVersions')}</p>
+              <div className="flex items-center justify-center py-12">
+                <p className="text-sm text-muted-foreground">{t('noVersions')}</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {versions.map((version) => (
-                  <div key={version.id} className="rounded-lg border p-3 sm:p-4 transition-colors hover:bg-accent/50">
+                  <div
+                    key={version.id}
+                    className="rounded-lg border bg-muted/20 p-4 transition-all duration-200 hover:bg-muted/30 hover:border-primary/20"
+                  >
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                       <div className="flex-1 space-y-2 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold text-sm sm:text-base">
+                          <span className="font-semibold text-sm">
                             {t('versionLabel')} {version.version}
                           </span>
                           <TranslationStatusBadge status={version.status} />
                         </div>
-                        <div className="space-y-1 text-sm">
-                          <p className="font-medium truncate">{version.title}</p>
+                        <div className="space-y-1">
+                          <p className="font-medium text-sm truncate">{version.title}</p>
                           {version.description && (
-                            <p className="line-clamp-2 text-muted-foreground">{version.description}</p>
+                            <p className="line-clamp-2 text-xs text-muted-foreground">{version.description}</p>
                           )}
                         </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-muted-foreground">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs text-muted-foreground">
                           <span>{t('created', { date: formatDate(version.createdAt) })}</span>
                           {version.publishedAt && (
-                            <span>{t('published', { date: formatDate(version.publishedAt) })}</span>
+                            <span className="sm:before:content-['·'] sm:before:mr-3">
+                              {t('published', { date: formatDate(version.publishedAt) })}
+                            </span>
                           )}
                         </div>
                       </div>
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={() => handleRollbackClick(version.version)}
-                        className="self-start shrink-0"
+                        className="self-start shrink-0 transition-colors duration-150"
                       >
-                        <RotateCcw className="mr-2 h-3 w-3" />
+                        <RotateCcw className="mr-1.5 h-3 w-3" />
                         {t('rollback')}
                       </Button>
                     </div>

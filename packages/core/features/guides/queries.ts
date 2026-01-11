@@ -1,7 +1,7 @@
+import { type DB, db } from '@valguide/core/features/db'
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
 import { asset, guideAsset, stopAsset } from '../assets/schema'
-import { type DB, db } from '@valguide/core/features/db'
 import { guide, guideStop, guideTranslation, guideTranslationVersion, stop } from './schema'
 import { upsertGuideTranslationDraft } from './translation-mutations'
 
@@ -15,8 +15,8 @@ export type {
   StopWithAssets,
 } from './types'
 
-import type { AssetWithRole, GuideWithStopsAndAssets, GuideWithTranslationsAndCover, StopWithAssets } from './types'
 import type { GuideWithTranslations, StopWithTranslations } from './schema'
+import type { AssetWithRole, GuideWithStopsAndAssets, GuideWithTranslationsAndCover, StopWithAssets } from './types'
 
 /**
  * Query utilities for guides with i18n support
@@ -281,6 +281,61 @@ export async function getArchivedGuides(db: DB, organizationId: string): Promise
     },
     orderBy: [desc(guide.archivedAt)],
   })
+}
+
+/**
+ * Get archived guides for a specific organization with their translations and cover images
+ */
+export async function getArchivedGuidesWithCover(
+  db: DB,
+  organizationId: string,
+): Promise<GuideWithTranslationsAndCover[]> {
+  const guides = await db.query.guide.findMany({
+    where: and(eq(guide.organizationId, organizationId), isNotNull(guide.archivedAt), isNull(guide.deletedAt)),
+    with: {
+      translations: {
+        with: {
+          currentVersion: true,
+          draftVersion: true,
+        },
+      },
+    },
+    orderBy: [desc(guide.archivedAt)],
+  })
+
+  if (guides.length === 0) return []
+
+  const guideIds = guides.map((g) => g.id)
+  const coverAssets = await db
+    .select({
+      guideId: guideAsset.guideId,
+      guideAssetId: guideAsset.id,
+      asset: asset,
+      role: guideAsset.role,
+      order: guideAsset.order,
+      locale: guideAsset.locale,
+    })
+    .from(guideAsset)
+    .innerJoin(asset, eq(guideAsset.assetId, asset.id))
+    .where(and(inArray(guideAsset.guideId, guideIds), eq(guideAsset.role, 'cover')))
+
+  const coverMap = new Map<string, AssetWithRole>()
+  for (const item of coverAssets) {
+    if (!coverMap.has(item.guideId)) {
+      coverMap.set(item.guideId, {
+        ...item.asset,
+        guideAssetId: item.guideAssetId,
+        role: item.role,
+        order: item.order,
+        locale: item.locale,
+      })
+    }
+  }
+
+  return guides.map((g) => ({
+    ...g,
+    coverImage: coverMap.get(g.id) ?? null,
+  }))
 }
 
 /**
