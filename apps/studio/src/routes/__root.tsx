@@ -74,7 +74,6 @@ export const Route = createRootRouteWithContext<{
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { locale, theme } = Route.useRouteContext()
   const resolvedTheme = resolveTheme(theme)
-  console.info('Theme:', resolvedTheme)
 
   return (
     <html lang={locale} data-theme={resolvedTheme}>

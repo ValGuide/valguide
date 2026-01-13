@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, use, useCallback, useEffect, useMemo, useState } from 'react'
+import { createContext, type PropsWithChildren, use, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { defaultThemes } from '../themes/defaults'
 import type { ThemePreset } from '../themes/types'
 import type { Theme } from './types'
@@ -41,6 +41,7 @@ function applyTheme(resolvedTheme: ThemePreset) {
 export function ThemeProvider({ children, initialTheme, setThemeFn }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(initialTheme)
   const [resolvedTheme, setResolvedTheme] = useState<ThemePreset>(() => resolveThemePreset(initialTheme))
+  const isInitialMount = useRef(true)
 
   const setTheme = useCallback(
     async (newTheme: Theme) => {
@@ -69,6 +70,14 @@ export function ThemeProvider({ children, initialTheme, setThemeFn }: ThemeProvi
   }, [theme])
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      const domTheme = document.documentElement.getAttribute('data-theme') as ThemePreset | null
+      if (domTheme && domTheme !== resolvedTheme) {
+        setResolvedTheme(domTheme)
+      }
+      return
+    }
     applyTheme(resolvedTheme)
   }, [resolvedTheme])
 
