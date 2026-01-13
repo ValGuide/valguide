@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getCookie } from '@tanstack/react-start/server'
 import { ensureDefaultTeamQueryOptions } from '@valguide/core/features/orgs/query-options'
+import { currentUserQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
@@ -14,7 +15,9 @@ const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
 
 export const Route = createFileRoute('/_main')({
   beforeLoad: async ({ context, location }) => {
-    if (!context.user) {
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
+    if (!user) {
       throw redirect({
         to: '/login',
         search: { next: location.href },
@@ -23,6 +26,7 @@ export const Route = createFileRoute('/_main')({
 
     // FIRST: Ensure user has at least one team (cached after first call)
     await context.queryClient.ensureQueryData(ensureDefaultTeamQueryOptions())
+    return { user }
   },
   loader: async ({ context }) => {
     // THEN: Load sidebar data (team now guaranteed to exist)
@@ -33,6 +37,9 @@ export const Route = createFileRoute('/_main')({
     return sidebarState
   },
   component: MainLayout,
+  pendingMinMs: 0,
+  pendingMs: 2000,
+  pendingComponent: () => <div>Loading Main...</div>,
 })
 
 function MainLayout() {

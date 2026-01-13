@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import LoginLoading from '@valguide/features/auth/login/loading'
+import { currentUserQueryOptions } from '@valguide/features/auth/query-options'
 import { Suspense } from 'react'
 import { z } from 'zod'
 
@@ -10,14 +11,17 @@ const authSearchSchema = z.object({
 
 export const Route = createFileRoute('/_auth')({
   validateSearch: authSearchSchema,
-  beforeLoad: ({ context, search }) => {
-    if (context.user) {
+  beforeLoad: async ({ context, search }) => {
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
+    if (user) {
       throw redirect({
         to: search.next ?? '/guides',
       })
     }
   },
   component: AuthLayout,
+  pendingComponent: LoginLoading,
 })
 
 function AuthLayout() {

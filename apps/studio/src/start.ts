@@ -69,4 +69,5 @@ export const startInstance = createStart(() => ({
   // Request middleware - includes loggingMiddleware (issue #5239 scenario)
   // AND the same loggingMiddleware is also attached to server functions
   requestMiddleware: [globalErrorMiddleware],
+  defaultSsr: false,
 }))
