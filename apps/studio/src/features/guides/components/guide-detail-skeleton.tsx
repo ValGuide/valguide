@@ -3,7 +3,7 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 
 export function GuideDetailSkeleton() {
   return (
-    <main className="flex flex-1 flex-col bg-gray-50 dark:bg-background">
+    <main className="flex flex-1 flex-col bg-muted/50">
       {/* Header */}
       <div className="border-b bg-background px-6 py-3">
         <div className="mx-auto flex max-w-5xl items-center justify-between">

@@ -546,6 +546,206 @@
 }
 
 /* ========================
+   ANGLE THEME
+   Warm off-white background with dark forest green accents
+   Clean, professional SaaS aesthetic
+   ======================== */
+
+[data-theme="angle"] {
+    --background: hsl(40 20% 96%);
+    --foreground: hsl(220 15% 15%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(220 15% 15%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(220 15% 15%);
+    --primary: hsl(162 35% 25%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(40 15% 92%);
+    --secondary-foreground: hsl(220 15% 20%);
+    --muted: hsl(40 12% 90%);
+    --muted-foreground: hsl(220 10% 45%);
+    --accent: hsl(40 15% 88%);
+    --accent-foreground: hsl(220 15% 20%);
+    --destructive: hsl(0 55% 55%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(162 50% 35%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(38 85% 55%);
+    --warning-foreground: hsl(25 20% 15%);
+    --border: hsl(40 15% 85%);
+    --input: hsl(40 15% 85%);
+    --ring: hsl(162 35% 25%);
+    --chart-1: hsl(162 45% 40%);
+    --chart-2: hsl(180 40% 35%);
+    --chart-3: hsl(140 35% 40%);
+    --chart-4: hsl(45 70% 55%);
+    --chart-5: hsl(200 45% 45%);
+    --radius: 0.5rem;
+    --shadow-xs-value: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+    --shadow-sm-value: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-md-value: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+    --shadow-card-value: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px rgb(0 0 0 / 0.08), 0 4px 6px -2px rgb(0 0 0 / 0.04);
+    --sidebar-background: hsl(40 15% 97%);
+    --sidebar-foreground: hsl(220 15% 25%);
+    --sidebar-primary: hsl(162 35% 25%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(40 15% 92%);
+    --sidebar-accent-foreground: hsl(220 15% 20%);
+    --sidebar-border: hsl(40 12% 88%);
+    --sidebar-ring: hsl(162 35% 25%);
+}
+
+[data-theme="angle-dark"] {
+    --background: hsl(200 15% 10%);
+    --foreground: hsl(40 15% 92%);
+    --card: hsl(200 12% 14%);
+    --card-foreground: hsl(40 15% 95%);
+    --popover: hsl(200 12% 14%);
+    --popover-foreground: hsl(40 15% 92%);
+    --primary: hsl(162 40% 45%);
+    --primary-foreground: hsl(200 15% 10%);
+    --secondary: hsl(200 10% 20%);
+    --secondary-foreground: hsl(40 15% 90%);
+    --muted: hsl(200 8% 18%);
+    --muted-foreground: hsl(40 10% 60%);
+    --accent: hsl(200 10% 22%);
+    --accent-foreground: hsl(40 15% 90%);
+    --destructive: hsl(0 55% 50%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(162 50% 45%);
+    --success-foreground: hsl(200 15% 10%);
+    --warning: hsl(45 90% 50%);
+    --warning-foreground: hsl(0 0% 0%);
+    --border: hsl(200 10% 22%);
+    --input: hsl(200 10% 22%);
+    --ring: hsl(162 40% 45%);
+    --chart-1: hsl(162 50% 50%);
+    --chart-2: hsl(180 45% 45%);
+    --chart-3: hsl(140 40% 45%);
+    --chart-4: hsl(45 75% 55%);
+    --chart-5: hsl(200 50% 55%);
+    --radius: 0.5rem;
+    --shadow-xs-value: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-sm-value: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
+    --shadow-md-value: 0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+    --shadow-lg-value: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+    --shadow-xl-value: 0 20px 25px -5px rgb(0 0 0 / 0.35), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+    --shadow-card-value: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
+    --shadow-card-hover-value: 0 8px 16px -4px rgb(0 0 0 / 0.35), 0 4px 6px -2px rgb(0 0 0 / 0.2);
+    --sidebar-background: hsl(200 15% 8%);
+    --sidebar-foreground: hsl(40 15% 85%);
+    --sidebar-primary: hsl(162 40% 45%);
+    --sidebar-primary-foreground: hsl(200 15% 10%);
+    --sidebar-accent: hsl(200 10% 18%);
+    --sidebar-accent-foreground: hsl(40 15% 85%);
+    --sidebar-border: hsl(200 10% 20%);
+    --sidebar-ring: hsl(162 40% 45%);
+}
+
+/* ========================
+   CLAUDE THEME
+   Anthropic-inspired warm terracotta theme
+   Professional, warm, and approachable AI aesthetic
+   ======================== */
+
+[data-theme="claude"] {
+    --background: hsl(25 25% 97%);
+    --foreground: hsl(20 20% 10%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(20 20% 10%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(20 20% 10%);
+    --primary: hsl(16 62% 60%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(25 20% 92%);
+    --secondary-foreground: hsl(20 18% 16%);
+    --muted: hsl(25 18% 94%);
+    --muted-foreground: hsl(20 10% 40%);
+    --accent: hsl(25 18% 90%);
+    --accent-foreground: hsl(20 18% 16%);
+    --destructive: hsl(0 55% 55%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(142 50% 40%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(38 85% 55%);
+    --warning-foreground: hsl(25 20% 15%);
+    --border: hsl(25 15% 87%);
+    --input: hsl(25 15% 87%);
+    --ring: hsl(16 62% 60%);
+    --chart-1: hsl(16 62% 60%);
+    --chart-2: hsl(30 50% 55%);
+    --chart-3: hsl(45 60% 50%);
+    --chart-4: hsl(10 50% 55%);
+    --chart-5: hsl(350 45% 55%);
+    --radius: 0.5rem;
+    --shadow-xs-value: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+    --shadow-sm-value: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-md-value: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+    --shadow-card-value: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px rgb(0 0 0 / 0.08), 0 4px 6px -2px rgb(0 0 0 / 0.04);
+    --sidebar-background: hsl(25 20% 97%);
+    --sidebar-foreground: hsl(20 15% 25%);
+    --sidebar-primary: hsl(16 62% 60%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(25 18% 92%);
+    --sidebar-accent-foreground: hsl(20 18% 16%);
+    --sidebar-border: hsl(25 12% 88%);
+    --sidebar-ring: hsl(16 62% 60%);
+}
+
+[data-theme="claude-dark"] {
+    --background: hsl(20 12% 8%);
+    --foreground: hsl(25 20% 92%);
+    --card: hsl(20 10% 11%);
+    --card-foreground: hsl(25 18% 94%);
+    --popover: hsl(20 10% 11%);
+    --popover-foreground: hsl(25 20% 92%);
+    --primary: hsl(20 65% 55%);
+    --primary-foreground: hsl(20 12% 8%);
+    --secondary: hsl(20 8% 16%);
+    --secondary-foreground: hsl(25 18% 90%);
+    --muted: hsl(20 6% 14%);
+    --muted-foreground: hsl(25 12% 60%);
+    --accent: hsl(20 8% 18%);
+    --accent-foreground: hsl(25 18% 90%);
+    --destructive: hsl(0 50% 50%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(142 50% 45%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(45 90% 50%);
+    --warning-foreground: hsl(0 0% 0%);
+    --border: hsl(20 8% 18%);
+    --input: hsl(20 8% 18%);
+    --ring: hsl(20 65% 55%);
+    --chart-1: hsl(20 65% 55%);
+    --chart-2: hsl(30 55% 55%);
+    --chart-3: hsl(45 65% 55%);
+    --chart-4: hsl(10 55% 55%);
+    --chart-5: hsl(350 50% 55%);
+    --radius: 0.5rem;
+    --shadow-xs-value: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-sm-value: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
+    --shadow-md-value: 0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+    --shadow-lg-value: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+    --shadow-xl-value: 0 20px 25px -5px rgb(0 0 0 / 0.35), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+    --shadow-card-value: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
+    --shadow-card-hover-value: 0 8px 16px -4px rgb(0 0 0 / 0.35), 0 4px 6px -2px rgb(0 0 0 / 0.2);
+    --sidebar-background: hsl(20 12% 6%);
+    --sidebar-foreground: hsl(25 18% 85%);
+    --sidebar-primary: hsl(20 65% 55%);
+    --sidebar-primary-foreground: hsl(20 12% 8%);
+    --sidebar-accent: hsl(20 8% 14%);
+    --sidebar-accent-foreground: hsl(25 18% 85%);
+    --sidebar-border: hsl(20 8% 16%);
+    --sidebar-ring: hsl(20 65% 55%);
+}
+
+/* ========================
    SAGE THEME
    Soft teal/sage, gallery greens, botanical feel
    Calming, professional, pairs beautifully with art
@@ -1054,6 +1254,266 @@
     --sidebar-border: hsl(28 10% 16%);
     --sidebar-ring: hsl(160 25% 48%);
 }
+
+/* ========================
+   CURATOR THEME
+   Psychology-optimized museum SaaS theme
+   Research-backed design for cultural institution staff
+   
+   Design Principles:
+   - Warm off-white reduces eye strain (vs pure white)
+   - Deep forest green: stability, growth, institutional trust
+   - Bronze secondary: artifact warmth, premium without flashy
+   - WCAG AAA contrast ratios for aging demographics (7:1)
+   - Generous visual breathing room mirrors gallery spacing
+   - Soft corners & muted tones for psychological safety
+   - Biophilic color palette reduces cognitive stress
+   ======================== */
+
+[data-theme="curator"] {
+    --background: hsl(40 25% 97%);
+    --foreground: hsl(40 5% 10%);
+    --card: hsl(40 30% 98%);
+    --card-foreground: hsl(40 5% 10%);
+    --popover: hsl(40 28% 99%);
+    --popover-foreground: hsl(40 5% 10%);
+    --primary: hsl(160 28% 23%);
+    --primary-foreground: hsl(0 0% 98%);
+    --secondary: hsl(30 30% 42%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(40 15% 93%);
+    --muted-foreground: hsl(40 5% 36%);
+    --accent: hsl(40 18% 90%);
+    --accent-foreground: hsl(40 8% 18%);
+    --destructive: hsl(0 45% 50%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 50% 38%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(38 80% 52%);
+    --warning-foreground: hsl(30 20% 12%);
+    --border: hsl(40 15% 87%);
+    --input: hsl(40 15% 87%);
+    --ring: hsl(160 28% 23%);
+    --chart-1: hsl(160 30% 35%);
+    --chart-2: hsl(30 35% 48%);
+    --chart-3: hsl(45 25% 52%);
+    --chart-4: hsl(180 25% 42%);
+    --chart-5: hsl(140 22% 45%);
+    --radius: 0.625rem;
+    /* Shadows - warm archival-tinted, very subtle for museum feel */
+    --shadow-xs-value: 0 1px 2px 0 hsl(40 15% 20% / 0.03);
+    --shadow-sm-value: 0 1px 3px 0 hsl(40 15% 20% / 0.04), 0 1px 2px -1px hsl(40 15% 20% / 0.03);
+    --shadow-md-value: 0 4px 6px -1px hsl(40 15% 20% / 0.05), 0 2px 4px -2px hsl(40 15% 20% / 0.04);
+    --shadow-lg-value: 0 10px 15px -3px hsl(40 15% 20% / 0.06), 0 4px 6px -4px hsl(40 15% 20% / 0.05);
+    --shadow-xl-value: 0 20px 25px -5px hsl(40 15% 20% / 0.08), 0 8px 10px -6px hsl(40 15% 20% / 0.06);
+    --shadow-card-value: 0 1px 3px 0 hsl(40 15% 20% / 0.04), 0 1px 2px -1px hsl(40 15% 20% / 0.03);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(40 15% 20% / 0.08), 0 4px 6px -2px hsl(40 15% 20% / 0.04);
+    --sidebar-background: hsl(40 20% 95%);
+    --sidebar-foreground: hsl(40 8% 22%);
+    --sidebar-primary: hsl(160 28% 23%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(40 18% 90%);
+    --sidebar-accent-foreground: hsl(40 8% 22%);
+    --sidebar-border: hsl(40 12% 88%);
+    --sidebar-ring: hsl(160 28% 23%);
+}
+
+[data-theme="curator-dark"] {
+    --background: hsl(40 10% 12%);
+    --foreground: hsl(40 15% 93%);
+    --card: hsl(40 8% 16%);
+    --card-foreground: hsl(40 15% 95%);
+    --popover: hsl(40 7% 18%);
+    --popover-foreground: hsl(40 15% 93%);
+    --primary: hsl(158 30% 48%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(30 35% 58%);
+    --secondary-foreground: hsl(40 8% 10%);
+    --muted: hsl(40 8% 20%);
+    --muted-foreground: hsl(40 10% 60%);
+    --accent: hsl(40 8% 22%);
+    --accent-foreground: hsl(40 12% 88%);
+    --destructive: hsl(0 50% 55%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 48%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(40 75% 55%);
+    --warning-foreground: hsl(30 20% 10%);
+    --border: hsl(40 6% 18%);
+    --input: hsl(40 6% 20%);
+    --ring: hsl(158 30% 48%);
+    --chart-1: hsl(158 32% 52%);
+    --chart-2: hsl(30 38% 55%);
+    --chart-3: hsl(45 28% 55%);
+    --chart-4: hsl(180 28% 48%);
+    --chart-5: hsl(140 25% 50%);
+    --radius: 0.625rem;
+    /* Shadows - warm-tinted for dark mode, subtle glow effect */
+    --shadow-xs-value: 0 1px 2px 0 hsl(40 20% 4% / 0.18);
+    --shadow-sm-value: 0 1px 3px 0 hsl(40 20% 4% / 0.22), 0 1px 2px -1px hsl(40 20% 4% / 0.18);
+    --shadow-md-value: 0 4px 6px -1px hsl(40 20% 4% / 0.28), 0 2px 4px -2px hsl(40 20% 4% / 0.22);
+    --shadow-lg-value: 0 10px 15px -3px hsl(40 20% 4% / 0.32), 0 4px 6px -4px hsl(40 20% 4% / 0.28);
+    --shadow-xl-value: 0 20px 25px -5px hsl(40 20% 4% / 0.38), 0 8px 10px -6px hsl(40 20% 4% / 0.32);
+    --shadow-card-value: 0 1px 3px 0 hsl(40 20% 4% / 0.22), 0 1px 2px -1px hsl(40 20% 4% / 0.18);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(40 20% 4% / 0.38), 0 4px 6px -2px hsl(40 20% 4% / 0.22);
+    --sidebar-background: hsl(40 10% 10%);
+    --sidebar-foreground: hsl(40 12% 75%);
+    --sidebar-primary: hsl(158 30% 48%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(40 8% 18%);
+    --sidebar-accent-foreground: hsl(40 12% 75%);
+    --sidebar-border: hsl(40 6% 18%);
+    --sidebar-ring: hsl(158 30% 48%);
+}
+
+/* ========================
+   CLAUDE THEME (IMPROVED)
+   Warm pampas + museum brass (less red, more amber)
+   ======================== */
+
+[data-theme="claude"] {
+  /* Surfaces */
+  --background: hsl(48 28% 96%);        /* warmer, less yellow than before */
+  --foreground: hsl(24 16% 12%);        /* deep warm charcoal */
+
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(24 16% 12%);
+
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(24 16% 12%);
+
+  /* Brand */
+  --primary: hsl(28 58% 46%);           /* museum brass / amber (less red) */
+  --primary-foreground: hsl(0 0% 100%);
+
+  /* Neutrals */
+  --secondary: hsl(44 12% 72%);         /* warm stone */
+  --secondary-foreground: hsl(24 14% 16%);
+
+  --muted: hsl(45 18% 92%);
+  --muted-foreground: hsl(25 10% 42%);
+
+  --accent: hsl(44 20% 88%);            /* subtle warm highlight */
+  --accent-foreground: hsl(24 14% 16%);
+
+  /* States */
+  --destructive: hsl(0 65% 55%);
+  --destructive-foreground: hsl(0 0% 100%);
+
+  --success: hsl(152 45% 36%);
+  --success-foreground: hsl(0 0% 100%);
+
+  --warning: hsl(40 92% 52%);
+  --warning-foreground: hsl(24 16% 12%);
+
+  /* Lines + focus */
+  --border: hsl(45 14% 86%);
+  --input: hsl(45 14% 86%);
+  --ring: hsl(28 58% 46%);
+
+  /* Charts (keep warm-first, readable) */
+  --chart-1: hsl(28 58% 46%);
+  --chart-2: hsl(160 28% 38%);
+  --chart-3: hsl(205 38% 44%);
+  --chart-4: hsl(45 55% 52%);
+  --chart-5: hsl(270 32% 54%);
+
+  --radius: 0.5rem;
+
+  /* Shadows - warm tinted, softer + premium */
+  --shadow-xs-value: 0 1px 2px 0 hsl(30 18% 18% / 0.03);
+  --shadow-sm-value: 0 1px 3px 0 hsl(30 18% 18% / 0.05), 0 1px 2px -1px hsl(30 18% 18% / 0.04);
+  --shadow-md-value: 0 4px 6px -1px hsl(30 18% 18% / 0.07), 0 2px 4px -2px hsl(30 18% 18% / 0.06);
+  --shadow-lg-value: 0 10px 15px -3px hsl(30 18% 18% / 0.09), 0 4px 6px -4px hsl(30 18% 18% / 0.07);
+  --shadow-xl-value: 0 20px 25px -5px hsl(30 18% 18% / 0.12), 0 8px 10px -6px hsl(30 18% 18% / 0.09);
+  --shadow-card-value: 0 1px 3px 0 hsl(30 18% 18% / 0.05), 0 1px 2px -1px hsl(30 18% 18% / 0.04);
+  --shadow-card-hover-value: 0 10px 22px -6px hsl(30 18% 18% / 0.14), 0 4px 10px -4px hsl(30 18% 18% / 0.06);
+
+  /* Sidebar */
+  --sidebar-background: hsl(48 22% 93%);
+  --sidebar-foreground: hsl(24 12% 26%);
+  --sidebar-primary: hsl(28 58% 46%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(44 18% 88%);
+  --sidebar-accent-foreground: hsl(24 12% 26%);
+  --sidebar-border: hsl(45 12% 84%);
+  --sidebar-ring: hsl(28 58% 46%);
+}
+
+/* ========================
+   CLAUDE DARK (IMPROVED)
+   Same brand direction as light (warm amber), not teal
+   ======================== */
+
+[data-theme="claude-dark"] {
+  /* Surfaces */
+  --background: hsl(24 10% 10%);        /* warm charcoal, less flat gray */
+  --foreground: hsl(40 18% 92%);        /* warm off-white for readability */
+
+  --card: hsl(24 10% 14%);
+  --card-foreground: hsl(40 18% 94%);
+
+  --popover: hsl(24 10% 16%);
+  --popover-foreground: hsl(40 18% 92%);
+
+  /* Brand (same direction as light, brighter for dark mode) */
+  --primary: hsl(28 62% 56%);           /* warm amber/brass */
+  --primary-foreground: hsl(0 0% 100%);
+
+  /* Neutrals */
+  --secondary: hsl(24 8% 22%);
+  --secondary-foreground: hsl(40 16% 88%);
+
+  --muted: hsl(24 8% 18%);
+  --muted-foreground: hsl(38 10% 62%);
+
+  --accent: hsl(24 8% 20%);
+  --accent-foreground: hsl(40 14% 86%);
+
+  /* States */
+  --destructive: hsl(0 55% 58%);
+  --destructive-foreground: hsl(0 0% 100%);
+
+  --success: hsl(152 45% 48%);
+  --success-foreground: hsl(0 0% 100%);
+
+  --warning: hsl(40 85% 55%);
+  --warning-foreground: hsl(24 16% 10%);
+
+  /* Lines + focus */
+  --border: hsl(24 8% 20%);
+  --input: hsl(24 8% 22%);
+  --ring: hsl(28 62% 56%);
+
+  /* Charts */
+  --chart-1: hsl(28 62% 56%);
+  --chart-2: hsl(160 32% 52%);
+  --chart-3: hsl(205 45% 58%);
+  --chart-4: hsl(45 70% 58%);
+  --chart-5: hsl(270 40% 62%);
+
+  --radius: 0.5rem;
+
+  /* Shadows - darker, warm-tinted, less “muddy” */
+  --shadow-xs-value: 0 1px 2px 0 hsl(24 30% 2% / 0.30);
+  --shadow-sm-value: 0 1px 3px 0 hsl(24 30% 2% / 0.38), 0 1px 2px -1px hsl(24 30% 2% / 0.28);
+  --shadow-md-value: 0 6px 10px -2px hsl(24 30% 2% / 0.45), 0 2px 6px -2px hsl(24 30% 2% / 0.32);
+  --shadow-lg-value: 0 14px 18px -6px hsl(24 30% 2% / 0.55), 0 6px 10px -6px hsl(24 30% 2% / 0.38);
+  --shadow-xl-value: 0 22px 28px -10px hsl(24 30% 2% / 0.62), 0 10px 16px -10px hsl(24 30% 2% / 0.42);
+  --shadow-card-value: 0 1px 3px 0 hsl(24 30% 2% / 0.40), 0 1px 2px -1px hsl(24 30% 2% / 0.28);
+  --shadow-card-hover-value: 0 18px 26px -10px hsl(24 30% 2% / 0.68), 0 8px 14px -10px hsl(24 30% 2% / 0.42);
+
+  /* Sidebar */
+  --sidebar-background: hsl(24 10% 8%);
+  --sidebar-foreground: hsl(38 12% 76%);
+  --sidebar-primary: hsl(28 62% 56%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(24 8% 16%);
+  --sidebar-accent-foreground: hsl(38 12% 76%);
+  --sidebar-border: hsl(24 8% 16%);
+  --sidebar-ring: hsl(28 62% 56%);
+}
+
 
 @layer base {
     * {

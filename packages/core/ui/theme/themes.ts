@@ -17,6 +17,12 @@ export const themes = [
   'sand-dark',
   'gallery',
   'gallery-dark',
+  'curator',
+  'curator-dark',
+  'claude',
+  'claude-dark',
+  'angle',
+  'angle-dark',
 ] as const
 
 export type Theme = (typeof themes)[number]

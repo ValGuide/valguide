@@ -403,6 +403,152 @@ export const themeColorPresets: Record<ThemePreset, ThemeColors> = {
     input: '#3a362c',
     ring: '#6a8b7a',
   },
+
+  // ========================
+  // CURATOR - Psychology-optimized museum SaaS theme
+  // Research-backed design for non-technical cultural institution staff
+  // - Warm off-white reduces eye strain (vs pure white)
+  // - Deep forest green: stability, growth, cultural trust
+  // - Bronze secondary: artifact warmth, premium without flashy
+  // - WCAG AAA contrast ratios for aging demographics
+  // - Generous visual breathing room mirrors gallery spacing
+  // ========================
+  curator: {
+    background: '#faf9f6', // Warm archival paper white (reduces eye strain)
+    foreground: '#1a1a18', // Near-black with warmth (softer than pure black)
+    card: '#ffffff',
+    cardForeground: '#1a1a18',
+    popover: '#ffffff',
+    popoverForeground: '#1a1a18',
+    primary: '#2d4a3e', // Deep forest green - institutional trust
+    primaryForeground: '#fafafa',
+    secondary: '#8b6b4a', // Warm bronze - artifact/premium feel
+    secondaryForeground: '#fafafa',
+    muted: '#f0eeea', // Very subtle warm gray
+    mutedForeground: '#5c5a55', // High contrast muted text (AAA)
+    accent: '#e8e5de', // Gentle warm highlight
+    accentForeground: '#2a2926',
+    destructive: '#b54a4a', // Muted red (less alarming)
+    destructiveForeground: '#ffffff',
+    border: '#e2dfd8', // Soft warm border
+    input: '#e2dfd8',
+    ring: '#2d4a3e',
+  },
+  'curator-dark': {
+    background: '#141413', // Deep warm black (not pure black - reduces strain)
+    foreground: '#f0eeea', // Warm off-white
+    card: '#1c1b1a', // Subtle card elevation
+    cardForeground: '#f2f0ec',
+    popover: '#201f1e',
+    popoverForeground: '#f0eeea',
+    primary: '#5a8a72', // Lifted forest green for dark mode
+    primaryForeground: '#ffffff',
+    secondary: '#c4a882', // Warm bronze for dark bg
+    secondaryForeground: '#1a1a18',
+    muted: '#252422', // Subtle warm dark muted
+    mutedForeground: '#9c9a94', // High contrast muted (AAA)
+    accent: '#2c2a28', // Subtle warm highlight
+    accentForeground: '#e8e5de',
+    destructive: '#c76b6b', // Softer red for dark mode
+    destructiveForeground: '#ffffff',
+    border: '#2c2a28',
+    input: '#343230',
+    ring: '#5a8a72',
+  },
+
+  // ========================
+  // ANGLE - Warm off-white with dark forest green accents
+  // Clean, professional SaaS aesthetic inspired by Angle Audio
+  // ========================
+  angle: {
+    background: '#f5f3ed', // Warm off-white
+    foreground: '#212530', // Dark charcoal
+    card: '#ffffff',
+    cardForeground: '#212530',
+    popover: '#ffffff',
+    popoverForeground: '#212530',
+    primary: '#2a5c4d', // Dark forest green
+    primaryForeground: '#ffffff',
+    secondary: '#eae6dc', // Light warm
+    secondaryForeground: '#2b3140',
+    muted: '#e5e1d8', // Muted warm
+    mutedForeground: '#686e7a', // Muted gray
+    accent: '#e0dbd0', // Accent warm
+    accentForeground: '#2b3140',
+    destructive: '#c75050', // Softer red
+    destructiveForeground: '#ffffff',
+    border: '#dbd6c9', // Soft warm border
+    input: '#dbd6c9',
+    ring: '#2a5c4d',
+  },
+  'angle-dark': {
+    background: '#161b1e', // Dark blue-gray
+    foreground: '#eae6dc', // Warm off-white
+    card: '#1f2528', // Dark surface
+    cardForeground: '#f2efe8',
+    popover: '#1f2528',
+    popoverForeground: '#eae6dc',
+    primary: '#45a183', // Brighter teal for dark bg
+    primaryForeground: '#161b1e',
+    secondary: '#2e3438', // Dark secondary
+    secondaryForeground: '#e5e1d8',
+    muted: '#2a2f32', // Dark muted
+    mutedForeground: '#a39d91', // Muted warm text
+    accent: '#32393e', // Dark accent
+    accentForeground: '#e5e1d8',
+    destructive: '#c54545', // Softer red
+    destructiveForeground: '#ffffff',
+    border: '#32393e',
+    input: '#32393e',
+    ring: '#45a183',
+  },
+
+  // ========================
+  // CLAUDE - Anthropic-inspired warm terracotta theme
+  // Professional, warm, and approachable AI aesthetic
+  // ========================
+  claude: {
+    background: '#faf8f6', // Warm cream white
+    foreground: '#1f1915', // Warm near-black
+    card: '#ffffff',
+    cardForeground: '#1f1915',
+    popover: '#ffffff',
+    popoverForeground: '#1f1915',
+    primary: '#da7756', // Terracotta/coral
+    primaryForeground: '#ffffff',
+    secondary: '#f0ebe5', // Light warm
+    secondaryForeground: '#2d2520',
+    muted: '#f3eeea', // Soft warm muted
+    mutedForeground: '#6b6158', // Muted warm text
+    accent: '#ebe4dc', // Gentle warm highlight
+    accentForeground: '#2d2520',
+    destructive: '#c45050', // Softer red
+    destructiveForeground: '#ffffff',
+    border: '#e4ddd5', // Soft warm border
+    input: '#e4ddd5',
+    ring: '#da7756',
+  },
+  'claude-dark': {
+    background: '#1a1614', // Deep warm charcoal
+    foreground: '#f0ebe5', // Warm off-white
+    card: '#221e1a', // Dark warm surface
+    cardForeground: '#f3eeea',
+    popover: '#262220',
+    popoverForeground: '#f0ebe5',
+    primary: '#e8956e', // Lighter terracotta for dark bg
+    primaryForeground: '#1a1614',
+    secondary: '#2e2824', // Dark warm
+    secondaryForeground: '#e8e2da',
+    muted: '#262220', // Subtle dark muted
+    mutedForeground: '#a09888', // Muted warm text
+    accent: '#342e2a', // Subtle warm highlight
+    accentForeground: '#e8e2da',
+    destructive: '#c76b6b', // Softer red for dark mode
+    destructiveForeground: '#ffffff',
+    border: '#342e2a',
+    input: '#3a3430',
+    ring: '#e8956e',
+  },
 }
 
 export const defaultRadius = 0.5

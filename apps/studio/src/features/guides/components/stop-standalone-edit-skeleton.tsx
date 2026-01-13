@@ -16,7 +16,7 @@ export function StopStandaloneEditSkeleton() {
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Center Panel */}
-        <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-background">
+        <div className="flex-1 overflow-y-auto bg-muted/50">
           <div className="mx-auto max-w-4xl space-y-6 p-8">
             {/* Back Button */}
             <Skeleton className="h-8 w-40" />

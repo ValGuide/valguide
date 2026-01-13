@@ -21,7 +21,7 @@ export function GuideEditSkeleton() {
 
       {/* Main Content */}
       <div className="flex min-w-0 flex-1 overflow-hidden">
-        <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-background">
+        <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-muted/50">
           <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
             <div className="space-y-6">
               {/* Locale-specific Content Header */}

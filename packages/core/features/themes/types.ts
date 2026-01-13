@@ -17,6 +17,12 @@ export const themePresets = [
   'sand-dark',
   'gallery',
   'gallery-dark',
+  'curator',
+  'curator-dark',
+  'angle',
+  'angle-dark',
+  'claude',
+  'claude-dark',
 ] as const
 
 export type ThemePreset = (typeof themePresets)[number]

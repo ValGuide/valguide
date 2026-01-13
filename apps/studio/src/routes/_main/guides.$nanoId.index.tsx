@@ -47,7 +47,7 @@ function GuidePage() {
   const coverImageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-50 dark:bg-background">
+    <main className="flex flex-1 flex-col">
       {/* Header */}
       <div className="border-b bg-background px-4 py-3 sm:px-6">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">
