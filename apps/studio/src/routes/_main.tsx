@@ -5,8 +5,8 @@ import { ensureDefaultTeamQueryOptions } from '@valguide/core/features/orgs/quer
 import { currentUserQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
+import { MainLayoutPending } from '@/components/main-layout-pending'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
-import { MainLayoutPending } from '../components/main-layout-pending'
 import { sidebarQueryOptions } from '../features/sidebar/query-options'
 
 const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
@@ -37,8 +37,6 @@ export const Route = createFileRoute('/_main')({
     return sidebarState
   },
   component: MainLayout,
-  pendingMinMs: 0,
-  pendingMs: 1000,
   pendingComponent: MainLayoutPending,
 })
 

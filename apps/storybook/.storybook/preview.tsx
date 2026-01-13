@@ -60,6 +60,17 @@ const preview: Preview = {
     locale: 'en',
     locales,
   },
+  globalTypes: {
+    theme: {
+      description: 'Global theme for components',
+      toolbar: {
+        title: 'Theme',
+        icon: 'circlehollow',
+        items: themes.map((theme) => ({ value: theme, title: theme.charAt(0).toUpperCase() + theme.slice(1) })),
+        dynamicTitle: true,
+      },
+    },
+  },
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
