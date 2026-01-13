@@ -2,6 +2,8 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -14,38 +16,96 @@ export function AppSidebarSkeleton() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
+        {/* App title */}
+        <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
+          <Skeleton className="h-7 w-32 px-2" />
+        </div>
+        {/* Team switcher */}
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg">
               <Skeleton className="size-8 rounded-lg" />
               <div className="grid flex-1 text-left text-sm leading-tight gap-1 group-data-[collapsible=icon]:hidden">
                 <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-3 w-12" />
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarMenu>
-          {Array.from({ length: 6 }).map((_, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array that never reorders
-            <SidebarMenuItem key={i}>
+        {/* CONTENT section (3 items) */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">
+            <Skeleton className="h-3 w-16" />
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            {Array.from({ length: 3 }).map((_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array that never reorders
+              <SidebarMenuItem key={`content-${i}`}>
+                <SidebarMenuButton className="group-data-[collapsible=icon]:justify-center">
+                  <Skeleton className="size-4 shrink-0 rounded" />
+                  <Skeleton className="h-4 w-16 group-data-[collapsible=icon]:hidden" />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* PERFORMANCE section (1 item) */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">
+            <Skeleton className="h-3 w-24" />
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            <SidebarMenuItem>
               <SidebarMenuButton className="group-data-[collapsible=icon]:justify-center">
                 <Skeleton className="size-4 shrink-0 rounded" />
-                <Skeleton className="h-4 w-24 group-data-[collapsible=icon]:hidden" />
+                <Skeleton className="h-4 w-20 group-data-[collapsible=icon]:hidden" />
               </SidebarMenuButton>
             </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* LIBRARY section (1 item) */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">
+            <Skeleton className="h-3 w-14" />
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton className="group-data-[collapsible=icon]:justify-center">
+                <Skeleton className="size-4 shrink-0 rounded" />
+                <Skeleton className="h-4 w-14 group-data-[collapsible=icon]:hidden" />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* SETTINGS section (2 items) */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="uppercase">
+            <Skeleton className="h-3 w-16" />
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            {Array.from({ length: 2 }).map((_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array that never reorders
+              <SidebarMenuItem key={`settings-${i}`}>
+                <SidebarMenuButton className="group-data-[collapsible=icon]:justify-center">
+                  <Skeleton className="size-4 shrink-0 rounded" />
+                  <Skeleton className="h-4 w-20 group-data-[collapsible=icon]:hidden" />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg">
-              <Skeleton className="h-8 w-8 rounded-lg" />
+              <Skeleton className="size-8 rounded-full" />
               <div className="grid flex-1 text-left text-sm leading-tight gap-1 group-data-[collapsible=icon]:hidden">
-                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-20" />
                 <Skeleton className="h-3 w-32" />
               </div>
             </SidebarMenuButton>
