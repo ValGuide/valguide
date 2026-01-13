@@ -175,10 +175,10 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
                     {t('recoverGuide')}
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => setDialogState({ type: 'delete', guideId: guide.id, guideName: displayTitle })}
-                    className="w-full text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    className="w-full text-muted-foreground hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4 shrink-0" />
                     {t('permanentlyDelete')}
