@@ -6,6 +6,7 @@ import { currentUserQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
+import { MainLayoutPending } from '../components/main-layout-pending'
 import { sidebarQueryOptions } from '../features/sidebar/query-options'
 
 const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
@@ -15,7 +16,6 @@ const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
 
 export const Route = createFileRoute('/_main')({
   beforeLoad: async ({ context, location }) => {
-    await new Promise(resolve => setTimeout(resolve, 2000))
     const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
     if (!user) {
       throw redirect({
@@ -38,8 +38,8 @@ export const Route = createFileRoute('/_main')({
   },
   component: MainLayout,
   pendingMinMs: 0,
-  pendingMs: 2000,
-  pendingComponent: () => <div>Loading Main...</div>,
+  pendingMs: 200,
+  pendingComponent: MainLayoutPending,
 })
 
 function MainLayout() {

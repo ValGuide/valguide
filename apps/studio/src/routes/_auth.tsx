@@ -12,7 +12,6 @@ const authSearchSchema = z.object({
 export const Route = createFileRoute('/_auth')({
   validateSearch: authSearchSchema,
   beforeLoad: async ({ context, search }) => {
-    await new Promise(resolve => setTimeout(resolve, 2000))
     const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
     if (user) {
       throw redirect({

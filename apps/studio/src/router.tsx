@@ -1,8 +1,8 @@
-// Import the generated route tree
 import { QueryClient } from '@tanstack/react-query'
 import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import type { AuthUser } from '@valguide/core/features/auth/server-functions'
+import { DefaultPending } from './components/default-pending'
 import { routeTree } from './routeTree.gen'
 
 declare module '@tanstack/react-router' {
@@ -28,7 +28,7 @@ export const getRouter = () => {
     scrollRestoration: true,
     defaultPreloadStaleTime: 30_000,
     defaultStaleTime: 30_000,
-    defaultPendingComponent: () => (<div>Loading default....</div>),
+    defaultPendingComponent: DefaultPending,
   })
 
   setupRouterSsrQueryIntegration({
