@@ -43,6 +43,7 @@ export const asset = studioSchema.table(
   },
   (t) => ({
     assetTypeOrgIdx: index('asset_type_org_idx').on(t.type, t.organizationId),
+    orgIdx: index('asset_org_id_idx').on(t.organizationId),
   }),
 )
 

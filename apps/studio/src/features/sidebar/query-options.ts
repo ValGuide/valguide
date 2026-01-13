@@ -16,4 +16,5 @@ export const sidebarQueryOptions = () =>
         throw error
       }
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes - prevents refetches on navigation
   })

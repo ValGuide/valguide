@@ -55,6 +55,7 @@ export const guideTranslation = studioSchema.table(
   },
   (t) => ({
     uniqueTranslation: uniqueIndex('unique_guide_translation').on(t.guideId, t.locale),
+    guideIdIdx: index('guide_translation_guide_id_idx').on(t.guideId),
   }),
 )
 
@@ -145,6 +146,7 @@ export const stopTranslation = studioSchema.table(
   },
   (t) => ({
     uniqueStopTranslation: uniqueIndex('unique_stop_translation').on(t.stopId, t.locale),
+    stopIdIdx: index('stop_translation_stop_id_idx').on(t.stopId),
   }),
 )
 
