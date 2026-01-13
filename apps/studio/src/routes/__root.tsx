@@ -1,13 +1,14 @@
-import { Providers } from '@/components/providers'
-import { themeQueryOptions } from '@/features/theme/query-options'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
+import { Providers } from '@/components/providers'
+import { themeQueryOptions } from '@/features/theme/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -62,9 +63,7 @@ export const Route = createRootRouteWithContext<{
     ],
     scripts: [
       {
-        // Inline script to prevent FOUC by applying theme before React hydrates
-        // Handles all three theme modes: 'light', 'dark', and 'system'
-        children: `(function(){var m=document.cookie.match(/valguide-studio-theme=([^;]+)/),t=m?m[1]:'system',r;r=t==='system'?(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r)})()`,
+        children: generateThemeScript('valguide-studio-theme'),
       },
     ],
   }),
@@ -74,7 +73,7 @@ export const Route = createRootRouteWithContext<{
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { locale, theme } = Route.useRouteContext()
-  const resolvedTheme = theme === 'system' ? 'light' : theme
+  const resolvedTheme = resolveTheme(theme)
 
   return (
     <html lang={locale} data-theme={resolvedTheme}>
