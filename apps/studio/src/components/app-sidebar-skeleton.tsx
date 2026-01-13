@@ -31,8 +31,8 @@ export function AppSidebarSkeleton() {
           {Array.from({ length: 6 }).map((_, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array that never reorders
             <SidebarMenuItem key={i}>
-              <SidebarMenuButton className="gap-2">
-                <Skeleton className="size-4" />
+              <SidebarMenuButton className="group-data-[collapsible=icon]:justify-center">
+                <Skeleton className="size-4 shrink-0 rounded" />
                 <Skeleton className="h-4 w-24 group-data-[collapsible=icon]:hidden" />
               </SidebarMenuButton>
             </SidebarMenuItem>

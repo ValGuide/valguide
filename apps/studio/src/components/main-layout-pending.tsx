@@ -1,15 +1,15 @@
+import { ClientOnly } from '@tanstack/react-router'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider } from '@valguide/ui/components/sidebar'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
 
 function getSidebarStateFromCookie(): boolean {
-  if (typeof document === 'undefined') return true
   const match = document.cookie.match(/(?:^|;\s*)sidebar_state=([^;]*)/)
   return match ? match[1] !== 'false' : true
 }
 
-export function MainLayoutPending() {
+function MainLayoutPendingContent() {
   const defaultOpen = getSidebarStateFromCookie()
 
   return (
@@ -58,5 +58,13 @@ export function MainLayoutPending() {
         </main>
       </SidebarInset>
     </SidebarProvider>
+  )
+}
+
+export function MainLayoutPending() {
+  return (
+    <ClientOnly fallback={null}>
+      <MainLayoutPendingContent />
+    </ClientOnly>
   )
 }
