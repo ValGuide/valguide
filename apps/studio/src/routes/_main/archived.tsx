@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { ArchivedSkeleton } from '@/components/archived-skeleton'
 import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
 import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
@@ -28,7 +29,7 @@ function ArchivedPage() {
       <div className="mx-auto w-full max-w-5xl space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold tracking-tight">{t('archived')}</h2>
+            <PageTitle as="h2">{t('archived')}</PageTitle>
             <p className="text-sm text-muted-foreground">{t('archivedDescription')}</p>
           </div>
         </div>

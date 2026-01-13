@@ -1,9 +1,11 @@
 import { createContext, type PropsWithChildren, use, useCallback, useEffect, useMemo, useState } from 'react'
-import type { ResolvedTheme, Theme } from './types'
+import { defaultThemes } from '../themes/defaults'
+import type { ThemePreset } from '../themes/types'
+import type { Theme } from './types'
 
 interface ThemeContextValue {
   theme: Theme
-  resolvedTheme: ResolvedTheme
+  resolvedTheme: ThemePreset
   setTheme: (theme: Theme) => void
 }
 
@@ -14,27 +16,36 @@ interface ThemeProviderProps extends PropsWithChildren {
   setThemeFn: (args: { data: Theme }) => Promise<Theme>
 }
 
-function getSystemTheme(): ResolvedTheme {
+function getSystemPreference(): 'light' | 'dark' {
   if (typeof window === 'undefined') return 'light'
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-function resolveTheme(theme: Theme): ResolvedTheme {
-  return theme === 'system' ? getSystemTheme() : theme
+function resolveThemePreset(theme: Theme): ThemePreset {
+  if (theme === 'system') {
+    return getSystemPreference() === 'dark' ? defaultThemes.dark : defaultThemes.light
+  }
+  if (theme === 'light') {
+    return defaultThemes.light
+  }
+  if (theme === 'dark') {
+    return defaultThemes.dark
+  }
+  return theme as ThemePreset
 }
 
-function applyTheme(resolvedTheme: ResolvedTheme) {
+function applyTheme(resolvedTheme: ThemePreset) {
   document.documentElement.setAttribute('data-theme', resolvedTheme)
 }
 
 export function ThemeProvider({ children, initialTheme, setThemeFn }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(initialTheme)
-  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolveTheme(initialTheme))
+  const [resolvedTheme, setResolvedTheme] = useState<ThemePreset>(() => resolveThemePreset(initialTheme))
 
   const setTheme = useCallback(
     async (newTheme: Theme) => {
       setThemeState(newTheme)
-      const resolved = resolveTheme(newTheme)
+      const resolved = resolveThemePreset(newTheme)
       setResolvedTheme(resolved)
       applyTheme(resolved)
       await setThemeFn({ data: newTheme })
@@ -48,7 +59,7 @@ export function ThemeProvider({ children, initialTheme, setThemeFn }: ThemeProvi
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
     const handleChange = () => {
-      const resolved = getSystemTheme()
+      const resolved = getSystemPreference() === 'dark' ? defaultThemes.dark : defaultThemes.light
       setResolvedTheme(resolved)
       applyTheme(resolved)
     }

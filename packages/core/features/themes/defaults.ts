@@ -36,7 +36,7 @@ export function generateThemeScript(cookieName: string): string {
   const lightTheme = defaultThemes.light
   const darkTheme = defaultThemes.dark
 
-  return `(function(){var m=document.cookie.match(/${cookieName}=([^;]+)/),t=m?m[1]:'system',r;r=t==='system'?(window.matchMedia('(prefers-color-scheme:dark)').matches?'${darkTheme}':'${lightTheme}'):t;document.documentElement.setAttribute('data-theme',r)})()`.replace(
+  return `(function(){var m=document.cookie.match(/${cookieName}=([^;]+)/),t=m?m[1]:'system',r;r=t==='system'||t==='light'?(window.matchMedia('(prefers-color-scheme:dark)').matches?'${darkTheme}':'${lightTheme}'):t==='dark'?'${darkTheme}':t;document.documentElement.setAttribute('data-theme',r)})()`.replace(
     /\n/g,
     '',
   )
