@@ -15,6 +15,16 @@ export const themePresetEnum = pgEnum('theme_preset', [
   'green-dark',
   'purple',
   'purple-dark',
+  'sage',
+  'sage-dark',
+  'stone',
+  'stone-dark',
+  'lavender',
+  'lavender-dark',
+  'sand',
+  'sand-dark',
+  'gallery',
+  'gallery-dark',
 ])
 
 export const theme = studioSchema.table(

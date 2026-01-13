@@ -169,6 +169,240 @@ export const themeColorPresets: Record<ThemePreset, ThemeColors> = {
     input: '#6b21a8',
     ring: '#a855f7',
   },
+  // ========================
+  // SAGE - Soft teal/sage, gallery greens, botanical feel
+  // Calming, professional, pairs beautifully with art
+  // ========================
+  sage: {
+    background: '#f8faf9', // Soft sage-tinted white
+    foreground: '#1f2d2a', // Deep forest
+    card: '#ffffff',
+    cardForeground: '#1f2d2a',
+    popover: '#ffffff',
+    popoverForeground: '#1f2d2a',
+    primary: '#4a8f7a', // Soft sage green
+    primaryForeground: '#ffffff',
+    secondary: '#e8f0ec', // Light sage tint
+    secondaryForeground: '#2a3f38',
+    muted: '#eef3f0', // Very soft sage
+    mutedForeground: '#5a7068', // Muted sage text
+    accent: '#dbeae3', // Gentle sage highlight
+    accentForeground: '#2a3f38',
+    destructive: '#c45c5c', // Softer red
+    destructiveForeground: '#ffffff',
+    border: '#d4e0da', // Soft sage border
+    input: '#d4e0da',
+    ring: '#4a8f7a',
+  },
+  'sage-dark': {
+    background: '#141c19', // Deep forest
+    foreground: '#e5ebe8', // Soft sage white
+    card: '#1a2522', // Dark sage surface
+    cardForeground: '#e8ede9',
+    popover: '#1e2a26',
+    popoverForeground: '#e5ebe8',
+    primary: '#5fa88f', // Lighter sage for dark bg
+    primaryForeground: '#ffffff',
+    secondary: '#243530', // Dark sage
+    secondaryForeground: '#d8e2dc',
+    muted: '#1e2a26', // Subtle dark sage
+    mutedForeground: '#8fa89c', // Muted sage text
+    accent: '#2a3b35', // Subtle sage highlight
+    accentForeground: '#d8e2dc',
+    destructive: '#b85555',
+    destructiveForeground: '#ffffff',
+    border: '#2a3b35',
+    input: '#2f423b',
+    ring: '#5fa88f',
+  },
+
+  // ========================
+  // STONE - Warm taupe/stone, gallery wall neutrals
+  // Sophisticated, timeless, unobtrusive
+  // ========================
+  stone: {
+    background: '#faf9f7', // Warm stone white
+    foreground: '#2c2825', // Warm charcoal
+    card: '#ffffff',
+    cardForeground: '#2c2825',
+    popover: '#ffffff',
+    popoverForeground: '#2c2825',
+    primary: '#7d7167', // Warm taupe
+    primaryForeground: '#ffffff',
+    secondary: '#f0ece8', // Light stone
+    secondaryForeground: '#3d3632',
+    muted: '#f3f0ec', // Soft stone
+    mutedForeground: '#6b635c', // Muted stone text
+    accent: '#e8e2db', // Gentle stone highlight
+    accentForeground: '#3d3632',
+    destructive: '#b85c5c', // Softer red
+    destructiveForeground: '#ffffff',
+    border: '#ddd6ce', // Soft stone border
+    input: '#ddd6ce',
+    ring: '#7d7167',
+  },
+  'stone-dark': {
+    background: '#1a1816', // Deep warm charcoal
+    foreground: '#e8e4df', // Soft stone white
+    card: '#222019', // Dark stone surface
+    cardForeground: '#ebe7e2',
+    popover: '#26231c',
+    popoverForeground: '#e8e4df',
+    primary: '#9a8d82', // Lighter taupe for dark bg
+    primaryForeground: '#ffffff',
+    secondary: '#2e2a25', // Dark stone
+    secondaryForeground: '#dbd5cd',
+    muted: '#26231e', // Subtle dark stone
+    mutedForeground: '#958b80', // Muted stone text
+    accent: '#332f29', // Subtle stone highlight
+    accentForeground: '#dbd5cd',
+    destructive: '#a85050',
+    destructiveForeground: '#ffffff',
+    border: '#332f29',
+    input: '#3a352e',
+    ring: '#9a8d82',
+  },
+
+  // ========================
+  // LAVENDER - Soft lavender/dusty blue
+  // Gentle, modern, serene and approachable
+  // ========================
+  lavender: {
+    background: '#f9f9fc', // Soft lavender-tinted white
+    foreground: '#252535', // Soft navy
+    card: '#ffffff',
+    cardForeground: '#252535',
+    popover: '#ffffff',
+    popoverForeground: '#252535',
+    primary: '#7c7aa8', // Soft lavender
+    primaryForeground: '#ffffff',
+    secondary: '#eeeef5', // Light lavender tint
+    secondaryForeground: '#3a3850',
+    muted: '#f2f1f7', // Very soft lavender
+    mutedForeground: '#6b6988', // Muted lavender text
+    accent: '#e4e3f0', // Gentle lavender highlight
+    accentForeground: '#3a3850',
+    destructive: '#c45c6c', // Softer rose-red
+    destructiveForeground: '#ffffff',
+    border: '#d8d7e5', // Soft lavender border
+    input: '#d8d7e5',
+    ring: '#7c7aa8',
+  },
+  'lavender-dark': {
+    background: '#16161e', // Deep navy
+    foreground: '#e6e5f0', // Soft lavender white
+    card: '#1c1c28', // Dark lavender surface
+    cardForeground: '#e9e8f2',
+    popover: '#20202d',
+    popoverForeground: '#e6e5f0',
+    primary: '#9593c0', // Lighter lavender for dark bg
+    primaryForeground: '#ffffff',
+    secondary: '#282838', // Dark lavender
+    secondaryForeground: '#dbd9ea',
+    muted: '#20202d', // Subtle dark lavender
+    mutedForeground: '#9997b5', // Muted lavender text
+    accent: '#2d2d40', // Subtle lavender highlight
+    accentForeground: '#dbd9ea',
+    destructive: '#b05060',
+    destructiveForeground: '#ffffff',
+    border: '#2d2d40',
+    input: '#333348',
+    ring: '#9593c0',
+  },
+
+  // ========================
+  // SAND - Warm sand/ochre, earth tones
+  // Natural history museum feel, grounded and organic
+  // ========================
+  sand: {
+    background: '#faf8f5', // Warm sand white
+    foreground: '#2d2820', // Warm earth brown
+    card: '#ffffff',
+    cardForeground: '#2d2820',
+    popover: '#ffffff',
+    popoverForeground: '#2d2820',
+    primary: '#a08560', // Warm ochre/sand
+    primaryForeground: '#ffffff',
+    secondary: '#f2ede5', // Light sand
+    secondaryForeground: '#3d3528',
+    muted: '#f5f0e8', // Soft sand
+    mutedForeground: '#736a58', // Muted sand text
+    accent: '#ebe3d5', // Gentle sand highlight
+    accentForeground: '#3d3528',
+    destructive: '#b86050', // Earthy red
+    destructiveForeground: '#ffffff',
+    border: '#e0d6c6', // Soft sand border
+    input: '#e0d6c6',
+    ring: '#a08560',
+  },
+  'sand-dark': {
+    background: '#1a1712', // Deep earth brown
+    foreground: '#e8e3da', // Soft sand white
+    card: '#221e18', // Dark sand surface
+    cardForeground: '#ebe6dd',
+    popover: '#26221a',
+    popoverForeground: '#e8e3da',
+    primary: '#b89970', // Lighter ochre for dark bg
+    primaryForeground: '#ffffff',
+    secondary: '#2e2820', // Dark sand
+    secondaryForeground: '#ddd6c8',
+    muted: '#262118', // Subtle dark sand
+    mutedForeground: '#a09580', // Muted sand text
+    accent: '#342e24', // Subtle sand highlight
+    accentForeground: '#ddd6c8',
+    destructive: '#a85545',
+    destructiveForeground: '#ffffff',
+    border: '#342e24',
+    input: '#3b342a',
+    ring: '#b89970',
+  },
+
+  // ========================
+  // GALLERY - Warm parchment with sage green & terracotta
+  // Museum gallery feel, combining warmth with natural elements
+  // ========================
+  gallery: {
+    background: '#faf8f4', // Soft warm parchment
+    foreground: '#2a2520', // Deep warm charcoal
+    card: '#ffffff',
+    cardForeground: '#2a2520',
+    popover: '#ffffff',
+    popoverForeground: '#2a2520',
+    primary: '#4a6b5a', // Muted Sage Green
+    primaryForeground: '#fafafa',
+    secondary: '#b5725a', // Terracotta
+    secondaryForeground: '#fafafa',
+    muted: '#ece6dc', // Soft warm muted
+    mutedForeground: '#6b6158', // Muted warm text
+    accent: '#e8e0d4', // Gentle parchment highlight
+    accentForeground: '#3a3530',
+    destructive: '#c45c5c', // Softer red
+    destructiveForeground: '#ffffff',
+    border: '#dfd6c8', // Soft stone border
+    input: '#dfd6c8',
+    ring: '#4a6b5a',
+  },
+  'gallery-dark': {
+    background: '#1a1815', // Deep warm charcoal
+    foreground: '#e8e4dc', // Soft parchment white
+    card: '#222018', // Dark parchment surface
+    cardForeground: '#ebe7df',
+    popover: '#26241c',
+    popoverForeground: '#e8e4dc',
+    primary: '#6a8b7a', // Lighter sage for dark bg
+    primaryForeground: '#ffffff',
+    secondary: '#c08268', // Lighter terracotta for dark bg
+    secondaryForeground: '#ffffff',
+    muted: '#26241c', // Subtle dark parchment
+    mutedForeground: '#a09888', // Muted warm text
+    accent: '#322f26', // Subtle warm highlight
+    accentForeground: '#dbd6c8',
+    destructive: '#b85555',
+    destructiveForeground: '#ffffff',
+    border: '#322f26',
+    input: '#3a362c',
+    ring: '#6a8b7a',
+  },
 }
 
 export const defaultRadius = 0.5

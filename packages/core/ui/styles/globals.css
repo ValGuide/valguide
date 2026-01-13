@@ -68,14 +68,14 @@
     --radius-2xl: 24px;
     --radius-full: 9999px;
 
-    /* Shadows - subtle depth without "double depth" */
-    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
-    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
-    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
-    --shadow-card-hover: 0 8px 16px -4px rgb(0 0 0 / 0.08), 0 4px 6px -2px rgb(0 0 0 / 0.04);
+    /* Shadows - use CSS variables for theme-specific tinting */
+    --shadow-xs: var(--shadow-xs-value);
+    --shadow-sm: var(--shadow-sm-value);
+    --shadow-md: var(--shadow-md-value);
+    --shadow-lg: var(--shadow-lg-value);
+    --shadow-xl: var(--shadow-xl-value);
+    --shadow-card: var(--shadow-card-value);
+    --shadow-card-hover: var(--shadow-card-hover-value);
 
     /* Transitions - smooth micro-interactions */
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -241,6 +241,14 @@
     --chart-4: hsl(43 74% 66%);
     --chart-5: hsl(27 87% 67%);
     --radius: 0.5rem;
+    /* Shadows - neutral gray */
+    --shadow-xs-value: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+    --shadow-sm-value: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-md-value: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+    --shadow-card-value: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px rgb(0 0 0 / 0.08), 0 4px 6px -2px rgb(0 0 0 / 0.04);
   --sidebar-background: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: hsl(240 5.9% 10%);
@@ -279,6 +287,14 @@
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.627 0.265 303.9);
     --chart-5: oklch(0.645 0.246 16.439);
+    /* Shadows - darker, more prominent for dark mode */
+    --shadow-xs-value: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-sm-value: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
+    --shadow-md-value: 0 4px 6px -1px rgb(0 0 0 / 0.25), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+    --shadow-lg-value: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+    --shadow-xl-value: 0 20px 25px -5px rgb(0 0 0 / 0.35), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+    --shadow-card-value: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
+    --shadow-card-hover-value: 0 8px 16px -4px rgb(0 0 0 / 0.35), 0 4px 6px -2px rgb(0 0 0 / 0.2);
     --sidebar: oklch(0.129 0 0);
     --sidebar-background: oklch(0.129 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
@@ -527,6 +543,516 @@
     --sidebar-accent-foreground: hsl(270 100% 85%);
     --sidebar-border: hsl(270 25% 25%);
     --sidebar-ring: hsl(270 70% 55%);
+}
+
+/* ========================
+   SAGE THEME
+   Soft teal/sage, gallery greens, botanical feel
+   Calming, professional, pairs beautifully with art
+   ======================== */
+
+[data-theme="sage"] {
+    --background: hsl(150 20% 98%);
+    --foreground: hsl(160 20% 15%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(160 20% 15%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(160 20% 15%);
+    --primary: hsl(158 32% 42%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(150 20% 92%);
+    --secondary-foreground: hsl(160 18% 22%);
+    --muted: hsl(150 15% 94%);
+    --muted-foreground: hsl(155 12% 40%);
+    --accent: hsl(152 25% 88%);
+    --accent-foreground: hsl(160 18% 22%);
+    --destructive: hsl(0 55% 55%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 55% 40%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(38 85% 55%);
+    --warning-foreground: hsl(25 20% 15%);
+    --border: hsl(150 15% 85%);
+    --input: hsl(150 15% 85%);
+    --ring: hsl(158 32% 42%);
+    --chart-1: hsl(158 40% 45%);
+    --chart-2: hsl(180 35% 45%);
+    --chart-3: hsl(140 30% 50%);
+    --chart-4: hsl(200 40% 50%);
+    --chart-5: hsl(165 35% 55%);
+    --radius: 0.625rem;
+    /* Shadows - sage-tinted, soft and calming */
+    --shadow-xs-value: 0 1px 2px 0 hsl(158 20% 30% / 0.04);
+    --shadow-sm-value: 0 1px 3px 0 hsl(158 20% 30% / 0.05), 0 1px 2px -1px hsl(158 20% 30% / 0.04);
+    --shadow-md-value: 0 4px 6px -1px hsl(158 20% 30% / 0.06), 0 2px 4px -2px hsl(158 20% 30% / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px hsl(158 20% 30% / 0.07), 0 4px 6px -4px hsl(158 20% 30% / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px hsl(158 20% 30% / 0.09), 0 8px 10px -6px hsl(158 20% 30% / 0.07);
+    --shadow-card-value: 0 1px 3px 0 hsl(158 20% 30% / 0.05), 0 1px 2px -1px hsl(158 20% 30% / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(158 20% 30% / 0.09), 0 4px 6px -2px hsl(158 20% 30% / 0.05);
+    --sidebar-background: hsl(150 18% 96%);
+    --sidebar-foreground: hsl(160 15% 25%);
+    --sidebar-primary: hsl(158 32% 42%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(150 20% 90%);
+    --sidebar-accent-foreground: hsl(160 15% 25%);
+    --sidebar-border: hsl(150 12% 88%);
+    --sidebar-ring: hsl(158 32% 42%);
+}
+
+[data-theme="sage-dark"] {
+    --background: hsl(160 20% 8%);
+    --foreground: hsl(150 15% 90%);
+    --card: hsl(158 18% 12%);
+    --card-foreground: hsl(150 15% 92%);
+    --popover: hsl(158 16% 14%);
+    --popover-foreground: hsl(150 15% 90%);
+    --primary: hsl(158 35% 50%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(158 15% 18%);
+    --secondary-foreground: hsl(150 12% 85%);
+    --muted: hsl(158 12% 15%);
+    --muted-foreground: hsl(155 12% 55%);
+    --accent: hsl(158 18% 20%);
+    --accent-foreground: hsl(150 12% 85%);
+    --destructive: hsl(0 50% 45%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 50% 45%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(40 80% 55%);
+    --warning-foreground: hsl(25 20% 10%);
+    --border: hsl(158 15% 20%);
+    --input: hsl(158 15% 22%);
+    --ring: hsl(158 35% 50%);
+    --chart-1: hsl(158 40% 50%);
+    --chart-2: hsl(180 35% 50%);
+    --chart-3: hsl(140 30% 55%);
+    --chart-4: hsl(200 40% 55%);
+    --chart-5: hsl(165 35% 60%);
+    --radius: 0.625rem;
+    /* Shadows - sage-tinted for dark mode */
+    --shadow-xs-value: 0 1px 2px 0 hsl(158 30% 5% / 0.2);
+    --shadow-sm-value: 0 1px 3px 0 hsl(158 30% 5% / 0.25), 0 1px 2px -1px hsl(158 30% 5% / 0.2);
+    --shadow-md-value: 0 4px 6px -1px hsl(158 30% 5% / 0.3), 0 2px 4px -2px hsl(158 30% 5% / 0.25);
+    --shadow-lg-value: 0 10px 15px -3px hsl(158 30% 5% / 0.35), 0 4px 6px -4px hsl(158 30% 5% / 0.3);
+    --shadow-xl-value: 0 20px 25px -5px hsl(158 30% 5% / 0.4), 0 8px 10px -6px hsl(158 30% 5% / 0.35);
+    --shadow-card-value: 0 1px 3px 0 hsl(158 30% 5% / 0.25), 0 1px 2px -1px hsl(158 30% 5% / 0.2);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(158 30% 5% / 0.4), 0 4px 6px -2px hsl(158 30% 5% / 0.25);
+    --sidebar-background: hsl(160 20% 6%);
+    --sidebar-foreground: hsl(150 12% 75%);
+    --sidebar-primary: hsl(158 35% 50%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(158 15% 14%);
+    --sidebar-accent-foreground: hsl(150 12% 75%);
+    --sidebar-border: hsl(158 12% 16%);
+    --sidebar-ring: hsl(158 35% 50%);
+}
+
+/* ========================
+   STONE THEME
+   Warm taupe/stone, gallery wall neutrals
+   Sophisticated, timeless, unobtrusive
+   ======================== */
+
+[data-theme="stone"] {
+    --background: hsl(30 15% 98%);
+    --foreground: hsl(25 15% 15%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(25 15% 15%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(25 15% 15%);
+    --primary: hsl(25 18% 45%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(30 12% 92%);
+    --secondary-foreground: hsl(25 12% 22%);
+    --muted: hsl(30 10% 94%);
+    --muted-foreground: hsl(25 8% 42%);
+    --accent: hsl(28 15% 88%);
+    --accent-foreground: hsl(25 12% 22%);
+    --destructive: hsl(0 50% 50%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 42%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(38 80% 52%);
+    --warning-foreground: hsl(25 20% 15%);
+    --border: hsl(30 12% 84%);
+    --input: hsl(30 12% 84%);
+    --ring: hsl(25 18% 45%);
+    --chart-1: hsl(25 30% 50%);
+    --chart-2: hsl(45 25% 50%);
+    --chart-3: hsl(15 25% 55%);
+    --chart-4: hsl(200 25% 50%);
+    --chart-5: hsl(35 30% 55%);
+    --radius: 0.5rem;
+    /* Shadows - warm taupe-tinted, sophisticated */
+    --shadow-xs-value: 0 1px 2px 0 hsl(25 15% 25% / 0.04);
+    --shadow-sm-value: 0 1px 3px 0 hsl(25 15% 25% / 0.05), 0 1px 2px -1px hsl(25 15% 25% / 0.04);
+    --shadow-md-value: 0 4px 6px -1px hsl(25 15% 25% / 0.06), 0 2px 4px -2px hsl(25 15% 25% / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px hsl(25 15% 25% / 0.07), 0 4px 6px -4px hsl(25 15% 25% / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px hsl(25 15% 25% / 0.09), 0 8px 10px -6px hsl(25 15% 25% / 0.07);
+    --shadow-card-value: 0 1px 3px 0 hsl(25 15% 25% / 0.05), 0 1px 2px -1px hsl(25 15% 25% / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(25 15% 25% / 0.09), 0 4px 6px -2px hsl(25 15% 25% / 0.05);
+    --sidebar-background: hsl(30 12% 96%);
+    --sidebar-foreground: hsl(25 12% 28%);
+    --sidebar-primary: hsl(25 18% 45%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(30 12% 90%);
+    --sidebar-accent-foreground: hsl(25 12% 28%);
+    --sidebar-border: hsl(30 10% 86%);
+    --sidebar-ring: hsl(25 18% 45%);
+}
+
+[data-theme="stone-dark"] {
+    --background: hsl(25 15% 8%);
+    --foreground: hsl(30 12% 88%);
+    --card: hsl(25 12% 11%);
+    --card-foreground: hsl(30 12% 90%);
+    --popover: hsl(25 10% 13%);
+    --popover-foreground: hsl(30 12% 88%);
+    --primary: hsl(25 22% 55%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(25 10% 18%);
+    --secondary-foreground: hsl(30 10% 82%);
+    --muted: hsl(25 8% 15%);
+    --muted-foreground: hsl(28 8% 52%);
+    --accent: hsl(25 12% 20%);
+    --accent-foreground: hsl(30 10% 82%);
+    --destructive: hsl(0 45% 42%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 45%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(40 75% 52%);
+    --warning-foreground: hsl(25 20% 10%);
+    --border: hsl(25 10% 20%);
+    --input: hsl(25 10% 22%);
+    --ring: hsl(25 22% 55%);
+    --chart-1: hsl(25 30% 55%);
+    --chart-2: hsl(45 25% 55%);
+    --chart-3: hsl(15 25% 58%);
+    --chart-4: hsl(200 25% 55%);
+    --chart-5: hsl(35 30% 58%);
+    --radius: 0.5rem;
+    /* Shadows - warm taupe-tinted for dark mode */
+    --shadow-xs-value: 0 1px 2px 0 hsl(25 20% 5% / 0.2);
+    --shadow-sm-value: 0 1px 3px 0 hsl(25 20% 5% / 0.25), 0 1px 2px -1px hsl(25 20% 5% / 0.2);
+    --shadow-md-value: 0 4px 6px -1px hsl(25 20% 5% / 0.3), 0 2px 4px -2px hsl(25 20% 5% / 0.25);
+    --shadow-lg-value: 0 10px 15px -3px hsl(25 20% 5% / 0.35), 0 4px 6px -4px hsl(25 20% 5% / 0.3);
+    --shadow-xl-value: 0 20px 25px -5px hsl(25 20% 5% / 0.4), 0 8px 10px -6px hsl(25 20% 5% / 0.35);
+    --shadow-card-value: 0 1px 3px 0 hsl(25 20% 5% / 0.25), 0 1px 2px -1px hsl(25 20% 5% / 0.2);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(25 20% 5% / 0.4), 0 4px 6px -2px hsl(25 20% 5% / 0.25);
+    --sidebar-background: hsl(25 15% 6%);
+    --sidebar-foreground: hsl(30 10% 72%);
+    --sidebar-primary: hsl(25 22% 55%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(25 10% 14%);
+    --sidebar-accent-foreground: hsl(30 10% 72%);
+    --sidebar-border: hsl(25 8% 16%);
+    --sidebar-ring: hsl(25 22% 55%);
+}
+
+/* ========================
+   LAVENDER THEME
+   Soft lavender/dusty blue
+   Gentle, modern, serene and approachable
+   ======================== */
+
+[data-theme="lavender"] {
+    --background: hsl(250 25% 98%);
+    --foreground: hsl(245 20% 18%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(245 20% 18%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(245 20% 18%);
+    --primary: hsl(252 25% 52%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(250 18% 93%);
+    --secondary-foreground: hsl(248 15% 25%);
+    --muted: hsl(250 15% 94%);
+    --muted-foreground: hsl(250 10% 45%);
+    --accent: hsl(250 22% 90%);
+    --accent-foreground: hsl(248 15% 25%);
+    --destructive: hsl(350 55% 55%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 50% 42%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(38 82% 52%);
+    --warning-foreground: hsl(25 20% 15%);
+    --border: hsl(250 15% 86%);
+    --input: hsl(250 15% 86%);
+    --ring: hsl(252 25% 52%);
+    --chart-1: hsl(252 35% 55%);
+    --chart-2: hsl(280 30% 55%);
+    --chart-3: hsl(220 30% 55%);
+    --chart-4: hsl(200 35% 50%);
+    --chart-5: hsl(265 30% 60%);
+    --radius: 0.625rem;
+    /* Shadows - lavender-tinted, serene and gentle */
+    --shadow-xs-value: 0 1px 2px 0 hsl(250 20% 35% / 0.04);
+    --shadow-sm-value: 0 1px 3px 0 hsl(250 20% 35% / 0.05), 0 1px 2px -1px hsl(250 20% 35% / 0.04);
+    --shadow-md-value: 0 4px 6px -1px hsl(250 20% 35% / 0.06), 0 2px 4px -2px hsl(250 20% 35% / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px hsl(250 20% 35% / 0.07), 0 4px 6px -4px hsl(250 20% 35% / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px hsl(250 20% 35% / 0.09), 0 8px 10px -6px hsl(250 20% 35% / 0.07);
+    --shadow-card-value: 0 1px 3px 0 hsl(250 20% 35% / 0.05), 0 1px 2px -1px hsl(250 20% 35% / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(250 20% 35% / 0.09), 0 4px 6px -2px hsl(250 20% 35% / 0.05);
+    --sidebar-background: hsl(250 20% 96%);
+    --sidebar-foreground: hsl(248 12% 30%);
+    --sidebar-primary: hsl(252 25% 52%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(250 18% 91%);
+    --sidebar-accent-foreground: hsl(248 12% 30%);
+    --sidebar-border: hsl(250 12% 88%);
+    --sidebar-ring: hsl(252 25% 52%);
+}
+
+[data-theme="lavender-dark"] {
+    --background: hsl(248 25% 9%);
+    --foreground: hsl(250 15% 90%);
+    --card: hsl(250 20% 12%);
+    --card-foreground: hsl(250 15% 92%);
+    --popover: hsl(250 18% 14%);
+    --popover-foreground: hsl(250 15% 90%);
+    --primary: hsl(252 30% 60%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(250 18% 18%);
+    --secondary-foreground: hsl(250 12% 85%);
+    --muted: hsl(250 15% 15%);
+    --muted-foreground: hsl(250 12% 55%);
+    --accent: hsl(250 20% 22%);
+    --accent-foreground: hsl(250 12% 85%);
+    --destructive: hsl(350 50% 48%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 48%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(40 78% 52%);
+    --warning-foreground: hsl(25 20% 10%);
+    --border: hsl(250 18% 22%);
+    --input: hsl(250 18% 24%);
+    --ring: hsl(252 30% 60%);
+    --chart-1: hsl(252 35% 58%);
+    --chart-2: hsl(280 30% 58%);
+    --chart-3: hsl(220 30% 58%);
+    --chart-4: hsl(200 35% 55%);
+    --chart-5: hsl(265 30% 62%);
+    --radius: 0.625rem;
+    /* Shadows - lavender-tinted for dark mode */
+    --shadow-xs-value: 0 1px 2px 0 hsl(250 30% 5% / 0.2);
+    --shadow-sm-value: 0 1px 3px 0 hsl(250 30% 5% / 0.25), 0 1px 2px -1px hsl(250 30% 5% / 0.2);
+    --shadow-md-value: 0 4px 6px -1px hsl(250 30% 5% / 0.3), 0 2px 4px -2px hsl(250 30% 5% / 0.25);
+    --shadow-lg-value: 0 10px 15px -3px hsl(250 30% 5% / 0.35), 0 4px 6px -4px hsl(250 30% 5% / 0.3);
+    --shadow-xl-value: 0 20px 25px -5px hsl(250 30% 5% / 0.4), 0 8px 10px -6px hsl(250 30% 5% / 0.35);
+    --shadow-card-value: 0 1px 3px 0 hsl(250 30% 5% / 0.25), 0 1px 2px -1px hsl(250 30% 5% / 0.2);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(250 30% 5% / 0.4), 0 4px 6px -2px hsl(250 30% 5% / 0.25);
+    --sidebar-background: hsl(248 25% 7%);
+    --sidebar-foreground: hsl(250 12% 75%);
+    --sidebar-primary: hsl(252 30% 60%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(250 18% 16%);
+    --sidebar-accent-foreground: hsl(250 12% 75%);
+    --sidebar-border: hsl(250 15% 18%);
+    --sidebar-ring: hsl(252 30% 60%);
+}
+
+/* ========================
+   SAND THEME
+   Warm sand/ochre, earth tones
+   Natural history museum feel, grounded and organic
+   ======================== */
+
+[data-theme="sand"] {
+    --background: hsl(40 25% 97%);
+    --foreground: hsl(35 20% 15%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(35 20% 15%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(35 20% 15%);
+    --primary: hsl(38 40% 45%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(40 18% 91%);
+    --secondary-foreground: hsl(38 15% 22%);
+    --muted: hsl(40 15% 93%);
+    --muted-foreground: hsl(38 12% 42%);
+    --accent: hsl(38 25% 86%);
+    --accent-foreground: hsl(38 15% 22%);
+    --destructive: hsl(15 55% 50%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 42%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(42 85% 50%);
+    --warning-foreground: hsl(25 20% 15%);
+    --border: hsl(40 18% 82%);
+    --input: hsl(40 18% 82%);
+    --ring: hsl(38 40% 45%);
+    --chart-1: hsl(38 45% 50%);
+    --chart-2: hsl(25 40% 50%);
+    --chart-3: hsl(50 35% 50%);
+    --chart-4: hsl(180 30% 48%);
+    --chart-5: hsl(32 40% 55%);
+    --radius: 0.5rem;
+    /* Shadows - warm sand-tinted, earthy and grounded */
+    --shadow-xs-value: 0 1px 2px 0 hsl(38 25% 25% / 0.04);
+    --shadow-sm-value: 0 1px 3px 0 hsl(38 25% 25% / 0.05), 0 1px 2px -1px hsl(38 25% 25% / 0.04);
+    --shadow-md-value: 0 4px 6px -1px hsl(38 25% 25% / 0.06), 0 2px 4px -2px hsl(38 25% 25% / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px hsl(38 25% 25% / 0.07), 0 4px 6px -4px hsl(38 25% 25% / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px hsl(38 25% 25% / 0.09), 0 8px 10px -6px hsl(38 25% 25% / 0.07);
+    --shadow-card-value: 0 1px 3px 0 hsl(38 25% 25% / 0.05), 0 1px 2px -1px hsl(38 25% 25% / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(38 25% 25% / 0.09), 0 4px 6px -2px hsl(38 25% 25% / 0.05);
+    --sidebar-background: hsl(40 20% 95%);
+    --sidebar-foreground: hsl(38 12% 28%);
+    --sidebar-primary: hsl(38 40% 45%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(40 18% 89%);
+    --sidebar-accent-foreground: hsl(38 12% 28%);
+    --sidebar-border: hsl(40 15% 85%);
+    --sidebar-ring: hsl(38 40% 45%);
+}
+
+[data-theme="sand-dark"] {
+    --background: hsl(35 20% 8%);
+    --foreground: hsl(40 15% 88%);
+    --card: hsl(35 15% 11%);
+    --card-foreground: hsl(40 15% 90%);
+    --popover: hsl(35 12% 13%);
+    --popover-foreground: hsl(40 15% 88%);
+    --primary: hsl(38 45% 52%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(38 12% 18%);
+    --secondary-foreground: hsl(40 12% 82%);
+    --muted: hsl(38 10% 15%);
+    --muted-foreground: hsl(38 10% 52%);
+    --accent: hsl(38 15% 20%);
+    --accent-foreground: hsl(40 12% 82%);
+    --destructive: hsl(15 50% 45%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 45%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(42 80% 50%);
+    --warning-foreground: hsl(25 20% 10%);
+    --border: hsl(38 12% 20%);
+    --input: hsl(38 12% 22%);
+    --ring: hsl(38 45% 52%);
+    --chart-1: hsl(38 45% 55%);
+    --chart-2: hsl(25 40% 55%);
+    --chart-3: hsl(50 35% 55%);
+    --chart-4: hsl(180 30% 52%);
+    --chart-5: hsl(32 40% 58%);
+    --radius: 0.5rem;
+    /* Shadows - warm sand-tinted for dark mode */
+    --shadow-xs-value: 0 1px 2px 0 hsl(38 30% 5% / 0.2);
+    --shadow-sm-value: 0 1px 3px 0 hsl(38 30% 5% / 0.25), 0 1px 2px -1px hsl(38 30% 5% / 0.2);
+    --shadow-md-value: 0 4px 6px -1px hsl(38 30% 5% / 0.3), 0 2px 4px -2px hsl(38 30% 5% / 0.25);
+    --shadow-lg-value: 0 10px 15px -3px hsl(38 30% 5% / 0.35), 0 4px 6px -4px hsl(38 30% 5% / 0.3);
+    --shadow-xl-value: 0 20px 25px -5px hsl(38 30% 5% / 0.4), 0 8px 10px -6px hsl(38 30% 5% / 0.35);
+    --shadow-card-value: 0 1px 3px 0 hsl(38 30% 5% / 0.25), 0 1px 2px -1px hsl(38 30% 5% / 0.2);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(38 30% 5% / 0.4), 0 4px 6px -2px hsl(38 30% 5% / 0.25);
+    --sidebar-background: hsl(35 20% 6%);
+    --sidebar-foreground: hsl(40 12% 72%);
+    --sidebar-primary: hsl(38 45% 52%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(38 12% 14%);
+    --sidebar-accent-foreground: hsl(40 12% 72%);
+    --sidebar-border: hsl(38 10% 16%);
+    --sidebar-ring: hsl(38 45% 52%);
+}
+
+/* ========================
+   GALLERY THEME
+   Warm parchment with sage green & terracotta
+   Museum gallery feel, combining warmth with natural elements
+   ======================== */
+
+[data-theme="gallery"] {
+    --background: hsl(40 30% 97%);
+    --foreground: hsl(20 15% 15%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(20 15% 15%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(20 15% 15%);
+    --primary: hsl(160 20% 35%);
+    --primary-foreground: hsl(0 0% 98%);
+    --secondary: hsl(20 40% 52%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(35 18% 90%);
+    --muted-foreground: hsl(20 10% 40%);
+    --accent: hsl(38 22% 88%);
+    --accent-foreground: hsl(20 12% 22%);
+    --destructive: hsl(0 55% 55%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 40%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(38 82% 52%);
+    --warning-foreground: hsl(25 20% 15%);
+    --border: hsl(35 20% 85%);
+    --input: hsl(35 20% 85%);
+    --ring: hsl(160 20% 35%);
+    --chart-1: hsl(160 30% 40%);
+    --chart-2: hsl(20 45% 50%);
+    --chart-3: hsl(38 35% 50%);
+    --chart-4: hsl(180 30% 45%);
+    --chart-5: hsl(140 25% 48%);
+    --radius: 0.75rem;
+    /* Shadows - warm parchment-tinted, subtle museum feel */
+    --shadow-xs-value: 0 1px 2px 0 hsl(30 20% 25% / 0.04);
+    --shadow-sm-value: 0 1px 3px 0 hsl(30 20% 25% / 0.05), 0 1px 2px -1px hsl(30 20% 25% / 0.04);
+    --shadow-md-value: 0 4px 6px -1px hsl(30 20% 25% / 0.06), 0 2px 4px -2px hsl(30 20% 25% / 0.05);
+    --shadow-lg-value: 0 10px 15px -3px hsl(30 20% 25% / 0.07), 0 4px 6px -4px hsl(30 20% 25% / 0.06);
+    --shadow-xl-value: 0 20px 25px -5px hsl(30 20% 25% / 0.09), 0 8px 10px -6px hsl(30 20% 25% / 0.07);
+    --shadow-card-value: 0 1px 3px 0 hsl(30 20% 25% / 0.05), 0 1px 2px -1px hsl(30 20% 25% / 0.04);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(30 20% 25% / 0.09), 0 4px 6px -2px hsl(30 20% 25% / 0.05);
+    --sidebar-background: hsl(40 25% 95%);
+    --sidebar-foreground: hsl(20 12% 28%);
+    --sidebar-primary: hsl(160 20% 35%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(38 20% 89%);
+    --sidebar-accent-foreground: hsl(20 12% 28%);
+    --sidebar-border: hsl(38 15% 86%);
+    --sidebar-ring: hsl(160 20% 35%);
+}
+
+[data-theme="gallery-dark"] {
+    --background: hsl(25 18% 8%);
+    --foreground: hsl(38 15% 88%);
+    --card: hsl(25 14% 11%);
+    --card-foreground: hsl(38 15% 90%);
+    --popover: hsl(25 12% 13%);
+    --popover-foreground: hsl(38 15% 88%);
+    --primary: hsl(160 25% 48%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(20 45% 55%);
+    --secondary-foreground: hsl(0 0% 100%);
+    --muted: hsl(28 12% 15%);
+    --muted-foreground: hsl(30 10% 52%);
+    --accent: hsl(28 15% 20%);
+    --accent-foreground: hsl(38 12% 82%);
+    --destructive: hsl(0 50% 48%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(152 45% 45%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning: hsl(40 78% 52%);
+    --warning-foreground: hsl(25 20% 10%);
+    --border: hsl(28 12% 20%);
+    --input: hsl(28 12% 22%);
+    --ring: hsl(160 25% 48%);
+    --chart-1: hsl(160 30% 48%);
+    --chart-2: hsl(20 45% 55%);
+    --chart-3: hsl(38 35% 55%);
+    --chart-4: hsl(180 30% 50%);
+    --chart-5: hsl(140 25% 52%);
+    --radius: 0.75rem;
+    /* Shadows - warm parchment-tinted for dark mode */
+    --shadow-xs-value: 0 1px 2px 0 hsl(30 25% 5% / 0.2);
+    --shadow-sm-value: 0 1px 3px 0 hsl(30 25% 5% / 0.25), 0 1px 2px -1px hsl(30 25% 5% / 0.2);
+    --shadow-md-value: 0 4px 6px -1px hsl(30 25% 5% / 0.3), 0 2px 4px -2px hsl(30 25% 5% / 0.25);
+    --shadow-lg-value: 0 10px 15px -3px hsl(30 25% 5% / 0.35), 0 4px 6px -4px hsl(30 25% 5% / 0.3);
+    --shadow-xl-value: 0 20px 25px -5px hsl(30 25% 5% / 0.4), 0 8px 10px -6px hsl(30 25% 5% / 0.35);
+    --shadow-card-value: 0 1px 3px 0 hsl(30 25% 5% / 0.25), 0 1px 2px -1px hsl(30 25% 5% / 0.2);
+    --shadow-card-hover-value: 0 8px 16px -4px hsl(30 25% 5% / 0.4), 0 4px 6px -2px hsl(30 25% 5% / 0.25);
+    --sidebar-background: hsl(25 18% 6%);
+    --sidebar-foreground: hsl(38 12% 72%);
+    --sidebar-primary: hsl(160 25% 48%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(28 12% 14%);
+    --sidebar-accent-foreground: hsl(38 12% 72%);
+    --sidebar-border: hsl(28 10% 16%);
+    --sidebar-ring: hsl(160 25% 48%);
 }
 
 @layer base {
