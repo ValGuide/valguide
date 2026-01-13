@@ -12,6 +12,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@valguide/ui/components/empty'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { AlertCircle, BookOpen, Plus } from 'lucide-react'
 import * as React from 'react'
@@ -225,7 +226,7 @@ export function GuidesList({
     <div className="mx-auto w-full max-w-5xl space-y-8">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
+          <PageTitle as="h2">{t('title')}</PageTitle>
           <p className="text-sm text-muted-foreground">{t('description')}</p>
         </div>
         <Button onClick={handleCreateGuide} disabled={isCreating} className="group">

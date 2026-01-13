@@ -103,6 +103,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@fontsource-variable/vollkorn": "^5.2.10",
     "@storybook/nextjs-vite": "^10.0.8",
     "@storybook/react": "^10.0.8",
     "@tailwindcss/postcss": "^4.1.16",

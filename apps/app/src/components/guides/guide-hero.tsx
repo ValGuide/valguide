@@ -1,6 +1,7 @@
 import { Image } from '@unpic/react'
 import type { AssetWithRole } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { ImageGallery } from './image-gallery'
 
 type GuideHeroProps = {
@@ -27,7 +28,9 @@ export function GuideHero({ title, description, coverImage, assets }: GuideHeroP
       )}
 
       <div>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">{title}</h1>
+        <PageTitle size="xl" className="mb-4">
+          {title}
+        </PageTitle>
         {description && <RichTextDisplay content={description} />}
       </div>
 

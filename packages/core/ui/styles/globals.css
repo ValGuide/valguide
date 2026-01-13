@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "@fontsource-variable/noto-sans";
 @import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/vollkorn";
 
 @source '../../../../**/*.{ts,tsx}';
 @source not '../../../**/node_modules/**/*';
@@ -102,6 +103,7 @@
 
     /* Typography */
     --font-sans: 'Noto Sans Variable', sans-serif;
+    --font-serif: 'Vollkorn Variable', Georgia, serif;
     --font-mono: 'JetBrains Mono Variable', monospace;
 
     @keyframes caret-blink {

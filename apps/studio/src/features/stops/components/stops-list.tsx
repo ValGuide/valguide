@@ -9,6 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@valguide/ui/components/empty'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { AlertCircle, MapPin } from 'lucide-react'
 import type { StopWithGuides } from '../api/fetchers'
@@ -123,7 +124,7 @@ export function StopsList({ stops = [], isLoading = false, error = null, onEditS
     <div className="mx-auto w-full max-w-5xl space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
+          <PageTitle as="h2">{t('title')}</PageTitle>
           <p className="text-sm text-muted-foreground">{t('list.description')}</p>
         </div>
       </div>

@@ -11,6 +11,7 @@ import {
   EmptyTitle,
 } from '@valguide/ui/components/empty'
 import { Input } from '@valguide/ui/components/input'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
@@ -134,7 +135,7 @@ export function AssetsList({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
+          <PageTitle as="h2">{t('title')}</PageTitle>
           <p className="text-muted-foreground">{t('description')}</p>
         </div>
       </div>
