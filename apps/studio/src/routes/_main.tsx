@@ -16,7 +16,6 @@ const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
 
 export const Route = createFileRoute('/_main')({
   beforeLoad: async ({ context, location }) => {
-    await new Promise((resolve) => setTimeout(resolve, 10000))
     const user = await context.queryClient.ensureQueryData(currentUserQueryOptions())
     if (!user) {
       throw redirect({
