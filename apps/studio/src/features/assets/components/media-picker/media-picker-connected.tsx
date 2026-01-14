@@ -2,13 +2,13 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { detectAssetType } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
+import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { uploadFileWithTUS } from '../../lib/tus-upload'
 import { AssetPickerModalConnected } from '../asset-picker-modal-connected'
 import { MediaPicker } from './media-picker'
 import type { MediaPickerComponentProps } from './types'
 
 export function MediaPickerConnected({
-  organizationId,
   locale,
   mode,
   mediaTypes,
@@ -17,6 +17,8 @@ export function MediaPickerConnected({
   showLibrary = true,
   ...props
 }: MediaPickerComponentProps) {
+  const { data: sidebarData } = useSidebarData()
+  const organizationId = sidebarData?.currentTeam?.id ?? ''
   const [libraryOpen, setLibraryOpen] = useState(false)
 
   const handleUpload = useCallback(
@@ -48,7 +50,6 @@ export function MediaPickerConnected({
           type: detected,
           locale,
           storagePath: fileName,
-          organizationId,
         },
       })
 
@@ -89,7 +90,6 @@ export function MediaPickerConnected({
             onOpenChange={setLibraryOpen}
             type={mediaTypes[0] ?? 'image'}
             locale={locale}
-            organizationId={organizationId}
             multiple={mode === 'multiple'}
             selectedAssetIds={Array.isArray(value) ? value.map((a) => a.id) : value ? [value.id] : []}
             onSelect={handleLibrarySelect}

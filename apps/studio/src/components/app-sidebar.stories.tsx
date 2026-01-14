@@ -58,7 +58,7 @@ const meta: Meta<typeof AppSidebar> = {
     teams: mockTeams,
     currentTeam: mockTeams[0],
     onLogout: () => console.log('Logout clicked'),
-    onTeamSwitch: (teamSlug: string) => console.log('Team switched to:', teamSlug),
+    onTeamSwitch: (teamId: string) => console.log('Team switched to:', teamId),
     onCreateTeam: async (name: string, slug?: string) => console.log('Create team:', { name, slug }),
   },
   decorators: [

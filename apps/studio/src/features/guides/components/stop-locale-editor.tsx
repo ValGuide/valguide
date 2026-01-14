@@ -17,7 +17,6 @@ import { type StopTranslationFormData, stopTranslationFormSchema } from '../sche
 export type StopLocaleEditorProps = {
   stop?: StopWithTranslations
   locale: string
-  organizationId: string
   onChange?: (data: StopTranslationFormData) => void
   onDirtyChange?: (isDirty: boolean) => void
   onAudioChange?: (asset: Asset | null) => Promise<void>
@@ -38,7 +37,6 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
   {
     stop,
     locale,
-    organizationId,
     onChange,
     onDirtyChange,
     onAudioChange,
@@ -169,7 +167,6 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
               value={audio}
               onChange={handleAudioChange}
               label={t('audioLabel')}
-              organizationId={organizationId}
               locale={locale}
               disabled={readOnly}
             />

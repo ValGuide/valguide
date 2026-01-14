@@ -9,7 +9,6 @@ export type MediaPickerComponentProps = {
   label?: string
   helperText?: string
   maxFileSize?: number
-  organizationId: string
   locale?: string
   showLibrary?: boolean
   disabled?: boolean

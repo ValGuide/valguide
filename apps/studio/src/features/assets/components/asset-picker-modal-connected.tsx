@@ -3,9 +3,12 @@ import { useAssets } from '../hooks/use-assets'
 import { AssetPickerModal, type AssetPickerModalProps } from './asset-picker-modal'
 import { AssetUploadInline } from './asset-upload-inline'
 
-type AssetPickerModalConnectedProps = Omit<AssetPickerModalProps, 'assets' | 'isLoading' | 'onRefetch' | 'UploadInline'>
+type AssetPickerModalConnectedProps = Omit<
+  AssetPickerModalProps,
+  'assets' | 'isLoading' | 'onRefetch' | 'UploadInline'
+>
 
-export function AssetPickerModalConnected({ type, locale, organizationId, ...props }: AssetPickerModalConnectedProps) {
+export function AssetPickerModalConnected({ type, locale, ...props }: AssetPickerModalConnectedProps) {
   const contextValue = useAssetsContextOptional()
   const shouldFetchAssets = !contextValue
 
@@ -13,7 +16,7 @@ export function AssetPickerModalConnected({ type, locale, organizationId, ...pro
     assets: assetsFromHook,
     isLoading: isLoadingFromHook,
     refetch: refetchFromHook,
-  } = useAssets({ type, locale, organizationId, enabled: shouldFetchAssets })
+  } = useAssets({ type, locale, enabled: shouldFetchAssets })
 
   const assets = contextValue?.assets ?? assetsFromHook
   const isLoading = contextValue?.isLoading ?? isLoadingFromHook
@@ -24,7 +27,6 @@ export function AssetPickerModalConnected({ type, locale, organizationId, ...pro
       {...props}
       type={type}
       locale={locale}
-      organizationId={organizationId}
       assets={assets}
       isLoading={isLoading}
       onRefetch={refetch}

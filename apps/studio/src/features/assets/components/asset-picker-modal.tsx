@@ -18,7 +18,6 @@ import { useMemo, useState } from 'react'
 export type UploadInlineComponentProps = {
   allowedTypes?: AssetType[]
   locale?: string
-  organizationId: string
   onUploadComplete?: (asset: Asset) => void
 }
 
@@ -29,7 +28,6 @@ export type AssetPickerModalProps = {
   onOpenChange: (open: boolean) => void
   type: AssetType
   locale?: string
-  organizationId: string
   multiple?: boolean
   selectedAssetIds?: string[]
   onSelect: (assets: Asset[]) => void
@@ -45,7 +43,6 @@ export function AssetPickerModal({
   onOpenChange,
   type,
   locale,
-  organizationId,
   multiple = false,
   selectedAssetIds = [],
   onSelect,
@@ -247,7 +244,6 @@ export function AssetPickerModal({
               <UploadInline
                 allowedTypes={[type]}
                 locale={locale}
-                organizationId={organizationId}
                 onUploadComplete={handleUploadComplete}
               />
             )}

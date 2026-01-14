@@ -59,7 +59,6 @@ const confirmAssetUploadSchema = z.object({
   type: z.enum(['image', 'audio', 'video']),
   locale: z.string().optional(),
   storagePath: z.string(),
-  organizationId: z.string(),
   width: z.number().optional(),
   height: z.number().optional(),
   duration: z.number().optional(),
@@ -70,7 +69,8 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
   .inputValidator(confirmAssetUploadSchema)
   .handler(
     handleError(async ({ context, data }) => {
-      await requireOrgMember(data.organizationId, context.user.id)
+      const organizationId = context.activeOrgId!
+      await requireOrgMember(organizationId, context.user.id)
 
       const supabase = await createClient()
 
@@ -82,7 +82,6 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
         type,
         locale,
         storagePath,
-        organizationId,
         width,
         height,
         duration,

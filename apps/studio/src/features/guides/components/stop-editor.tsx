@@ -17,7 +17,6 @@ import { type StopTranslationFormData, stopTranslationFormSchema } from '../sche
 export type StopEditorProps = {
   stop?: StopWithTranslations
   locale: string
-  organizationId: string
   onChange?: (data: StopTranslationFormData) => void
   onDirtyChange?: (isDirty: boolean) => void
   onImageChange?: (assets: Asset[]) => void
@@ -38,7 +37,6 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
   {
     stop,
     locale,
-    organizationId,
     onChange,
     onDirtyChange,
     onImageChange,
@@ -159,7 +157,6 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
           value={audio}
           onChange={handleAudioChange}
           label={t('audioLabel')}
-          organizationId={organizationId}
           locale={locale}
         />
 
@@ -194,7 +191,6 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
           value={images}
           onChange={handleImagesChange}
           label={t('galleryLabel')}
-          organizationId={organizationId}
         />
       </form>
     </Form>

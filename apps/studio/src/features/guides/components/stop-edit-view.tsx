@@ -23,7 +23,6 @@ import type { StopTranslationFormData } from '@/features/guides/schemas/guide-fo
 
 interface StopEditViewProps {
   stop: StopWithAssets
-  organizationId?: string
   MediaPicker: MediaPickerComponent
   onPublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onUnpublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
@@ -32,7 +31,6 @@ interface StopEditViewProps {
 
 export function StopEditView({
   stop: stopProp,
-  organizationId: organizationIdProp,
   MediaPicker,
   onPublish,
   onUnpublish,
@@ -73,8 +71,6 @@ export function StopEditView({
     stop.translations.find((tr) => tr.locale === activeLocale)?.currentVersion?.title ??
     stop.translations.find((tr) => tr.locale === activeLocale)?.draftVersion?.title ??
     tStops('untitled')
-
-  const organizationId = organizationIdProp ?? ''
 
   const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
 

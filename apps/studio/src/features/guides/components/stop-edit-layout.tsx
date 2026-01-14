@@ -30,7 +30,6 @@ export interface StopEditLayoutProps {
   activeLocale: string
   isDirty: boolean
   isSaving: boolean
-  organizationId: string
   stopTitle: string
   locales?: string[]
   onLocaleChange: (locale: string) => void
@@ -55,7 +54,6 @@ export function StopEditLayout({
   activeLocale,
   isDirty,
   isSaving,
-  organizationId,
   stopTitle,
   locales,
   onLocaleChange,
@@ -263,7 +261,6 @@ export function StopEditLayout({
                   key={`${stop.id}-${activeLocale}-${activeTab}`}
                   stop={stop}
                   locale={activeLocale}
-                  organizationId={organizationId}
                   audio={stopAudio}
                   versionData={displayVersionData}
                   readOnly={isReadOnly}
@@ -290,7 +287,6 @@ export function StopEditLayout({
                       value={stopImages}
                       onChange={handleImagesChange}
                       label={tStops('editor.galleryLabel')}
-                      organizationId={organizationId}
                       disabled={isReadOnly}
                     />
                   </CardContent>

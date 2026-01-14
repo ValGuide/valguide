@@ -6,7 +6,7 @@ import { getProfile } from '@valguide/core/features/profiles/queries'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
-import { getActiveTeamSlug, setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
+import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 
 export const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(
   handleError(async () => {
@@ -20,11 +20,10 @@ export const getSidebarDataFn = createServerFn({ method: 'GET' })
   .handler(
     handleError(async ({ context }) => {
       const user = context.user
+      const activeTeamId = context.activeOrgId
       const [teams, profile] = await Promise.all([getUserTeams(db, user.id), getProfile(user.id)])
 
-      const activeSlug = getActiveTeamSlug()
-
-      let currentTeam = teams.find((t: any) => t.slug === activeSlug)
+      let currentTeam = teams.find((t: any) => t.id === activeTeamId)
 
       const name = getUserDisplayName(profile, user.email, user.metadata)
 
@@ -37,7 +36,7 @@ export const getSidebarDataFn = createServerFn({ method: 'GET' })
       if (!currentTeam && teams.length > 0) {
         currentTeam = teams[0]
 
-        setActiveTeamSlug(currentTeam.slug)
+        setActiveTeamId(currentTeam.id)
 
         return {
           user: sidebarUser,

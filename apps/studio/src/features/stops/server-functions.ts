@@ -4,7 +4,6 @@ import { getStopsByOrganizationId } from '@valguide/core/features/guides/stop-qu
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
-import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
 
 const getStopsInputSchema = z.object({
@@ -35,10 +34,10 @@ export const getStopsFn = createServerFn({ method: 'GET' })
       }
 
       if (!targetOrganizationId) {
-        const activeTeamSlug = getActiveTeamSlug()
+        const activeTeamId = context.activeOrgId
 
-        if (activeTeamSlug) {
-          const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+        if (activeTeamId) {
+          const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
           if (team) {
             targetOrganizationId = team.id
           }

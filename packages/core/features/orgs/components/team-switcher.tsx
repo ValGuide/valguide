@@ -25,10 +25,10 @@ export interface Team {
 
 export interface TeamSwitcherProps {
   teams: Team[]
-  activeTeamSlug?: string
-  onTeamSwitch?: (teamSlug: string) => void
+  activeTeamId?: string
+  onTeamSwitch?: (teamId: string) => void
   onCreateTeam?: () => void
-  onTeamSettings?: (teamSlug: string) => void
+  onTeamSettings?: (teamId: string) => void
 }
 
 const roleLabels: Record<OrgRole, string> = {
@@ -48,12 +48,12 @@ function getTeamInitials(name: string): string {
     .slice(0, 2)
 }
 
-export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam, onTeamSettings }: TeamSwitcherProps) {
+export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, onTeamSettings }: TeamSwitcherProps) {
   const { isMobile } = useSidebar()
   const t = useTranslations('orgs.teamSwitcher')
   const [isMounted, setIsMounted] = React.useState(false)
 
-  const activeTeam = teams.find((team) => team.slug === activeTeamSlug) ?? teams[0]
+  const activeTeam = teams.find((team) => team.id === activeTeamId) ?? teams[0]
 
   React.useEffect(() => {
     setIsMounted(true)
@@ -63,9 +63,9 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
     return null
   }
 
-  const handleTeamSwitch = (teamSlug: string) => {
+  const handleTeamSwitch = (teamId: string) => {
     if (onTeamSwitch) {
-      onTeamSwitch(teamSlug)
+      onTeamSwitch(teamId)
     }
   }
 
@@ -77,7 +77,7 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
 
   const handleTeamSettings = () => {
     if (onTeamSettings && activeTeam) {
-      onTeamSettings(activeTeam.slug)
+      onTeamSettings(activeTeam.id)
     }
   }
 
@@ -129,9 +129,9 @@ export function TeamSwitcher({ teams, activeTeamSlug, onTeamSwitch, onCreateTeam
             {teams.map((team, _index) => (
               <DropdownMenuItem
                 key={team.id}
-                onClick={() => handleTeamSwitch(team.slug)}
+                onClick={() => handleTeamSwitch(team.id)}
                 className="cursor-pointer gap-2 p-2"
-                disabled={team.slug === activeTeam.slug}
+                disabled={team.id === activeTeam.id}
               >
                 <Avatar className="size-6 rounded-md">
                   {team.logo && <AvatarImage src={team.logo} alt={team.name} />}

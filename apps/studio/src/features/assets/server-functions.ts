@@ -1,13 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
 import { type GetAssetsFilters, getAssets } from '@valguide/core/features/assets/queries'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
-import { requireAuthMiddleware } from '@valguide/studio/features/auth/server-functions'
+import { requireOrgMember } from '@valguide/features/auth/authorization'
+import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { z } from 'zod'
 
 const getAssetsInputSchema = z.object({
   type: z.enum(['image', 'audio', 'video']).optional(),
   locale: z.string().optional(),
-  organizationId: z.string().optional(),
 })
 
 export const getAssetsFn = createServerFn({ method: 'GET' })
@@ -15,17 +15,17 @@ export const getAssetsFn = createServerFn({ method: 'GET' })
   .inputValidator(getAssetsInputSchema)
   .handler(
     handleError(async ({ data, context }) => {
-      const user = context.user
-      const filters: GetAssetsFilters = {}
+      const organizationId = context.activeOrgId!!
+      await requireOrgMember(organizationId, context.user.id)
+      const filters: GetAssetsFilters = {
+        organizationId
+      }
 
       if (data.type) {
         filters.type = data.type
       }
       if (data.locale) {
         filters.locale = data.locale
-      }
-      if (data.organizationId) {
-        filters.organizationId = data.organizationId
       }
 
       const assets = await getAssets(filters)

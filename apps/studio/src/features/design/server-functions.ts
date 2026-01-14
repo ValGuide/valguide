@@ -13,7 +13,6 @@ import {
 import { getOrgThemes } from '@valguide/core/features/themes/queries'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
-import { getActiveTeamId, getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
 
 // Get themes for organization
@@ -45,19 +44,10 @@ export const getThemesFn = createServerFn({ method: 'GET' })
       }
 
       if (!targetOrganizationId) {
-        // Try team ID first (new approach), fall back to slug (backward compat)
-        const activeTeamId = getActiveTeamId()
-        if (activeTeamId) {
-          const team = userTeams.find((t: { id: string }) => t.id === activeTeamId)
-          if (team) {
-            targetOrganizationId = team.id
-          }
-        }
-
         if (!targetOrganizationId) {
-          const activeTeamSlug = getActiveTeamSlug()
-          if (activeTeamSlug) {
-            const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+          const activeTeamId = context.activeOrgId
+          if (activeTeamId) {
+            const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
             if (team) {
               targetOrganizationId = team.id
             }

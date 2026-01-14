@@ -6,7 +6,6 @@ import { AssetsContext, type AssetsContextValue } from './assets-context'
 export type UseAssetsOptions = {
   type?: AssetType
   locale?: string
-  organizationId?: string
   enabled?: boolean
 }
 

@@ -1,15 +1,8 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
-import type { AuthUser } from '@valguide/core/features/auth/server-functions'
 import { logError } from '@valguide/core/utils/log-error'
 import { routeTree } from './routeTree.gen'
-
-declare module '@tanstack/react-router' {
-  interface RouteContext {
-    user: AuthUser | null
-  }
-}
 
 export const getRouter = () => {
   const queryClient = new QueryClient({

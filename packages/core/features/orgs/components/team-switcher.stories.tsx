@@ -68,7 +68,7 @@ const mockTeams = [
 export const Default: Story = {
   args: {
     teams: mockTeams,
-    activeTeamSlug: 'national-museum-zurich',
+    activeTeamId: 'national-museum-zurich',
   },
   parameters: {
     docs: {
@@ -82,7 +82,7 @@ export const Default: Story = {
 export const AdminRole: Story = {
   args: {
     teams: mockTeams,
-    activeTeamSlug: 'art-museum-basel',
+    activeTeamId: 'art-museum-basel',
   },
   parameters: {
     docs: {
@@ -96,7 +96,7 @@ export const AdminRole: Story = {
 export const CuratorRole: Story = {
   args: {
     teams: mockTeams,
-    activeTeamSlug: 'bern-historical-museum',
+    activeTeamId: 'bern-historical-museum',
   },
   parameters: {
     docs: {
@@ -110,7 +110,7 @@ export const CuratorRole: Story = {
 export const EditorRole: Story = {
   args: {
     teams: mockTeams,
-    activeTeamSlug: 'lucerne-transport-museum',
+    activeTeamId: 'lucerne-transport-museum',
   },
   parameters: {
     docs: {
@@ -124,7 +124,7 @@ export const EditorRole: Story = {
 export const ViewerRole: Story = {
   args: {
     teams: mockTeams,
-    activeTeamSlug: 'geneva-natural-history',
+    activeTeamId: 'geneva-natural-history',
   },
   parameters: {
     docs: {
@@ -138,7 +138,7 @@ export const ViewerRole: Story = {
 export const SingleTeam: Story = {
   args: {
     teams: [mockTeams[0]!],
-    activeTeamSlug: 'national-museum-zurich',
+    activeTeamId: 'national-museum-zurich',
   },
   parameters: {
     docs: {
@@ -186,7 +186,7 @@ export const ManyTeams: Story = {
         role: 'admin' as const,
       },
     ],
-    activeTeamSlug: 'national-museum-zurich',
+    activeTeamId: 'national-museum-zurich',
   },
   parameters: {
     docs: {
@@ -200,7 +200,7 @@ export const ManyTeams: Story = {
 export const WithoutCreateAction: Story = {
   args: {
     teams: mockTeams,
-    activeTeamSlug: 'geneva-natural-history',
+    activeTeamId: 'geneva-natural-history',
     onCreateTeam: undefined,
   },
   parameters: {
@@ -215,7 +215,7 @@ export const WithoutCreateAction: Story = {
 export const WithoutSettingsAction: Story = {
   args: {
     teams: mockTeams,
-    activeTeamSlug: 'geneva-natural-history',
+    activeTeamId: 'geneva-natural-history',
     onTeamSettings: undefined,
   },
   parameters: {
@@ -230,7 +230,7 @@ export const WithoutSettingsAction: Story = {
 export const NoLogos: Story = {
   args: {
     teams: mockTeams.map((team) => ({ ...team, logo: undefined })),
-    activeTeamSlug: 'national-museum-zurich',
+    activeTeamId: 'national-museum-zurich',
   },
   parameters: {
     docs: {

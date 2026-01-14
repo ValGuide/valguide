@@ -11,9 +11,8 @@ export const Route = createFileRoute('/_main/assets')({
     const sidebarData = await context.queryClient.ensureQueryData(sidebarQueryOptions())
     // Prefetch assets - component will use useSuspenseQuery to consume
     if (sidebarData?.currentTeam?.id) {
-      await context.queryClient.ensureQueryData(assetsQueryOptions({ organizationId: sidebarData.currentTeam.id }))
+      await context.queryClient.ensureQueryData(assetsQueryOptions())
     }
-    return { organizationId: sidebarData?.currentTeam?.id ?? '' }
   },
   component: AssetsPage,
   pendingComponent: () =>
@@ -22,21 +21,19 @@ export const Route = createFileRoute('/_main/assets')({
 })
 
 function AssetsPage() {
-  const { organizationId } = Route.useLoaderData()
-
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <Suspense fallback={<AssetsListSkeleton />}>
-        <AssetsContent organizationId={organizationId} />
+        <AssetsContent />
       </Suspense>
     </main>
   )
 }
 
-function AssetsContent({ organizationId }: { organizationId: string }) {
+function AssetsContent() {
   const queryClient = useQueryClient()
 
-  const { data } = useSuspenseQuery(assetsQueryOptions({ organizationId }))
+  const { data } = useSuspenseQuery(assetsQueryOptions())
   const assets = data?.assets ?? []
 
   const handleAssetDeleted = async (_assetId: string) => {
@@ -53,7 +50,6 @@ function AssetsContent({ organizationId }: { organizationId: string }) {
   return (
     <AssetsListConnected
       assets={assets}
-      organizationId={organizationId}
       onAssetDeleted={handleAssetDeleted}
       onUploadComplete={handleUploadComplete}
       onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets'] })}

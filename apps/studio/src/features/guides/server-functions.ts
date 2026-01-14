@@ -10,7 +10,6 @@ import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
-import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
 
 // Get guide by nanoId
@@ -62,10 +61,10 @@ export const getGuidesFn = createServerFn({ method: 'GET' })
       }
 
       if (!targetOrganizationId) {
-        const activeTeamSlug = getActiveTeamSlug()
+        const activeTeamId = context.activeOrgId
 
-        if (activeTeamSlug) {
-          const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+        if (activeTeamId) {
+          const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
           if (team) {
             targetOrganizationId = team.id
           }
@@ -94,11 +93,11 @@ export const getArchivedGuidesFn = createServerFn({ method: 'GET' })
         return { guides: [], userId }
       }
 
-      const activeTeamSlug = getActiveTeamSlug()
+      const activeTeamId = context.activeOrgId
       let targetOrganizationId = userTeams[0].id
 
-      if (activeTeamSlug) {
-        const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+      if (activeTeamId) {
+        const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
         if (team) {
           targetOrganizationId = team.id
         }
@@ -136,10 +135,10 @@ export const createGuideFn = createServerFn({ method: 'POST' })
       if (!organizationId) {
         const userTeams = await getUserTeams(db, userId)
         if (userTeams && userTeams.length > 0) {
-          const activeTeamSlug = getActiveTeamSlug()
+          const activeTeamId = context.activeOrgId
 
-          if (activeTeamSlug) {
-            const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+          if (activeTeamId) {
+            const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
             if (team) {
               organizationId = team.id
             }

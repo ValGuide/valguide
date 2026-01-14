@@ -1,10 +1,20 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
+import type { TeamMember } from '@valguide/core/features/orgs/components/members-table'
+import type { PendingInvitation } from '@valguide/core/features/orgs/components/pending-invites-list'
 import { getPendingInvitations, getTeamById, getTeamMembers, getUserRole } from '@valguide/core/features/orgs/queries'
-import type { OrgRole } from '@valguide/core/features/orgs/schema'
+import type { OrgRole, organization } from '@valguide/core/features/orgs/schema'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
+
+export interface TeamData {
+  team: typeof organization.$inferSelect
+  members: TeamMember[]
+  pendingInvites: PendingInvitation[]
+  currentUserRole: OrgRole
+  currentUserId: string
+}
 
 export const getTeamDataFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])

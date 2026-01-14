@@ -32,7 +32,6 @@ import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-chan
 import { getGuideLocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 interface GuideEditViewProps {
-  organizationId?: string
   onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onUnpublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onDiscard?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
@@ -40,7 +39,6 @@ interface GuideEditViewProps {
 }
 
 export function GuideEditView({
-  organizationId: organizationIdProp,
   onPublish,
   onUnpublish,
   onDiscard,
@@ -81,8 +79,6 @@ export function GuideEditView({
     guide.translations.find((t) => t.currentVersion?.title)?.currentVersion?.title ??
     guide.translations.find((t) => t.draftVersion?.title)?.draftVersion?.title ??
     t('untitledGuide')
-
-  const organizationId = organizationIdProp ?? ''
 
   useAutoSave(save, isDirty)
 
@@ -356,7 +352,6 @@ export function GuideEditView({
                   locale={activeLocale}
                   translation={currentTranslation}
                   versionData={displayVersionData}
-                  organizationId={organizationId}
                   readOnly={isReadOnly}
                   onTranslationChange={(data) => {
                     updateGuideTranslationData(activeLocale, data)
@@ -381,7 +376,6 @@ export function GuideEditView({
                       value={coverAsset}
                       onChange={handleCoverImageChange}
                       label={t('editor.coverImageLabel')}
-                      organizationId={organizationId}
                       disabled={isReadOnly}
                     />
                   </CardContent>

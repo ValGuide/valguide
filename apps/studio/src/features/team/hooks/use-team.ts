@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { TeamData } from '../api/fetchers'
+import type { TeamData } from '../server-functions'
 import { teamQueryOptions } from '../query-options'
 
 interface UseTeamReturn {

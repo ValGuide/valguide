@@ -1,9 +1,9 @@
+import { createHash, randomBytes } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
-import { setActiveTeamId, setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
+import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 import { sendEmail } from '@valguide/transactional'
-import { createHash, randomBytes } from 'node:crypto'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
 import { ForbiddenError, NotFoundError, requireOrgRole } from '../auth/authorization'
@@ -31,7 +31,6 @@ export const createTeamFn = createServerFn({ method: 'POST' })
   .handler(
     handleError(async ({ context, data }) => {
       const team = await createTeam(db, data.name, context.user.id, data.slug)
-      setActiveTeamSlug(team.slug)
       setActiveTeamId(team.id)
       return team
     }),
@@ -192,7 +191,6 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
       }
 
       await acceptInvitation(db, invite.id, context.user.id)
-      setActiveTeamSlug(invite.organization.slug)
       setActiveTeamId(invite.organizationId)
       return { success: true, slug: invite.organization.slug }
     }),
@@ -221,7 +219,6 @@ export const switchTeamFn = createServerFn({ method: 'POST' })
         throw new ForbiddenError('Not a member of this team')
       }
 
-      setActiveTeamSlug(team.slug)
       setActiveTeamId(team.id)
 
       return { success: true }

@@ -13,7 +13,6 @@ import { type GuideTranslationFormData, guideTranslationFormSchema } from '../sc
 export type GuideMetadataFormProps = {
   locale: string
   translation?: GuideTranslationWithVersion
-  organizationId: string
   onTranslationChange: (data: { title: string; description: string }) => void
   onDirtyChange?: (isDirty: boolean) => void
   onSave?: () => void
@@ -31,7 +30,6 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
   {
     locale,
     translation,
-    organizationId: _organizationId,
     onTranslationChange,
     onDirtyChange,
     onSave,
@@ -40,7 +38,6 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
   },
   ref,
 ) {
-  void _organizationId
   const t = useTranslations('guides')
 
   const form = useForm<GuideTranslationFormData>({

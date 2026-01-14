@@ -38,7 +38,7 @@ export function AppSidebar({
   }
   teams: Team[]
   currentTeam?: Team
-  onTeamSwitch?: (teamSlug: string) => void
+  onTeamSwitch?: (teamId: string) => void
   onLogout?: () => void
   onCreateTeam?: (name: string, slug?: string) => Promise<unknown>
 }) {

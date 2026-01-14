@@ -6,7 +6,6 @@ import { getAssetsFn } from './server-functions'
 export type AssetsQueryOptions = {
   type?: AssetType
   locale?: string
-  organizationId?: string
 }
 
 export type AssetsResponse = {
@@ -14,7 +13,7 @@ export type AssetsResponse = {
 }
 
 export const assetsQueryKey = (options?: AssetsQueryOptions) =>
-  ['assets', { type: options?.type, locale: options?.locale, organizationId: options?.organizationId }] as const
+  ['assets', { type: options?.type, locale: options?.locale }] as const
 
 export const assetsQueryOptions = (options?: AssetsQueryOptions) =>
   queryOptions<AssetsResponse>({
@@ -24,7 +23,6 @@ export const assetsQueryOptions = (options?: AssetsQueryOptions) =>
         data: {
           type: options?.type,
           locale: options?.locale,
-          organizationId: options?.organizationId,
         },
       }),
   })

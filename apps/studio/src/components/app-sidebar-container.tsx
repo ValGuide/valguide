@@ -24,9 +24,9 @@ export function AppSidebarContainer() {
     }
   }, [data?.wasAutoSelected, router])
 
-  const handleTeamSwitch = async (teamSlug: string) => {
+  const handleTeamSwitch = async (teamId: string) => {
     try {
-      const result = await switchTeamFn({ data: { slug: teamSlug } })
+      const result = await switchTeamFn({ data: { id: teamId } })
       if (result?.success) {
         queryClient.removeQueries({ queryKey: ['sidebar'] })
         window.location.reload()

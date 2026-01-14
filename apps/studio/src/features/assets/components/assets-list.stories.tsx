@@ -43,7 +43,6 @@ const meta = {
   },
   args: {
     assets: [],
-    organizationId: 'org-123',
     AssetCard: MockAssetCard,
     UploadInline: MockUploadInline,
   },

@@ -26,7 +26,6 @@ export type AssetCardComponentProps = {
 export type AssetCardComponent = ComponentType<AssetCardComponentProps>
 
 export type UploadInlineComponentProps = {
-  organizationId: string
   onUploadComplete?: (asset: Asset) => void
 }
 
@@ -35,7 +34,6 @@ export type UploadInlineComponent = ComponentType<UploadInlineComponentProps>
 export type AssetsListProps = {
   assets?: AssetWithUsage[]
   error?: Error | null
-  organizationId: string
   onAssetDeleted?: (assetId: string) => void
   onUploadComplete?: (asset: Asset) => void
   onRetry?: () => void
@@ -46,7 +44,6 @@ export type AssetsListProps = {
 export function AssetsList({
   assets = [],
   error = null,
-  organizationId,
   onAssetDeleted,
   onUploadComplete,
   onRetry,
@@ -182,7 +179,7 @@ export function AssetsList({
 
         <TabsContent value="upload" className="space-y-6">
           <div className="mx-auto w-full max-w-2xl">
-            {UploadInline && <UploadInline organizationId={organizationId} onUploadComplete={handleUploadComplete} />}
+            {UploadInline && <UploadInline onUploadComplete={handleUploadComplete} />}
           </div>
         </TabsContent>
       </Tabs>
