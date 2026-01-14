@@ -14,8 +14,9 @@ const meta: Meta<typeof AuthLayout> = {
       <AuthLayout {...args}>
         {args.children || (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl tracking-tight font-serif">{t('welcome')}</h2>
-            <p className="mt-2 text-sm text-gray-600">{t('loginPrompt')}</p>
+            <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">ValGuide</p>
+            <h2 className="mt-3 text-3xl tracking-tight font-serif">{t('welcome')}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{t('loginPrompt')}</p>
           </div>
         )}
       </AuthLayout>

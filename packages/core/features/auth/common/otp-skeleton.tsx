@@ -7,27 +7,28 @@ export interface OtpSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 export function OtpSkeleton({ className, ...props }: OtpSkeletonProps) {
   return (
     <div className={cn('flex flex-col justify-center space-y-6', className)} {...props}>
-      {/* Title and subtitle skeletons */}
+      {/* Brand cue, title and subtitle skeletons */}
       <div className="text-center space-y-2">
-        <Skeleton className="h-9 w-48 mx-auto" /> {/* Title: "Verify Your Email" */}
+        <Skeleton className="h-3 w-16 mx-auto" /> {/* ValGuide brand */}
+        <Skeleton className="h-9 w-48 mx-auto mt-3" /> {/* Title: "Verify Your Email" */}
         <Skeleton className="h-5 w-80 mx-auto" /> {/* Subtitle: "Please enter the verification code we sent to..." */}
       </div>
 
-      {/* OTP input skeleton - matching the actual component with larger slots and separator */}
+      {/* OTP input skeleton - responsive sizes matching actual component */}
       <div className="space-y-6">
-        {/* OTP slots - larger size matching h-16 w-12 with gaps */}
-        <div className="flex justify-center items-center gap-4">
+        {/* OTP slots - responsive h-12 w-10 on mobile, h-16 w-12 on sm+ */}
+        <div className="flex justify-center items-center gap-2 sm:gap-4">
           {/* First group of 3 slots */}
-          <div className="flex gap-2.5">
-            <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 1 */}
-            <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 2 */}
-            <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 3 */}
+          <div className="flex gap-1.5 sm:gap-2.5">
+            <Skeleton className="h-12 w-10 sm:h-16 sm:w-12 rounded-md" />
+            <Skeleton className="h-12 w-10 sm:h-16 sm:w-12 rounded-md" />
+            <Skeleton className="h-12 w-10 sm:h-16 sm:w-12 rounded-md" />
           </div>
           {/* Second group of 3 slots */}
-          <div className="flex gap-2.5">
-            <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 4 */}
-            <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 5 */}
-            <Skeleton className="h-16 w-12 rounded-md" /> {/* OTP slot 6 */}
+          <div className="flex gap-1.5 sm:gap-2.5">
+            <Skeleton className="h-12 w-10 sm:h-16 sm:w-12 rounded-md" />
+            <Skeleton className="h-12 w-10 sm:h-16 sm:w-12 rounded-md" />
+            <Skeleton className="h-12 w-10 sm:h-16 sm:w-12 rounded-md" />
           </div>
         </div>
 

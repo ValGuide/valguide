@@ -41,13 +41,17 @@ export function AuthContainer({
       <div className="flex flex-1 flex-col justify-center gap-6">
         {verifyingOtp ? (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl tracking-tight">{t('otpTitle')}</h2>
-            <p className="mt-2 text-sm ">{email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}</p>
+            <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">ValGuide</p>
+            <h2 className="mt-3 text-3xl tracking-tight font-serif">{t('otpTitle')}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}
+            </p>
           </div>
         ) : (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl tracking-tight font-serif">{t('welcome')}</h2>
-            <p className="mt-2 text-sm">{t(isLogin ? 'loginPrompt' : 'signupPrompt')}</p>
+            <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">ValGuide</p>
+            <h2 className="mt-3 text-3xl tracking-tight font-serif">{t('welcome')}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{t(isLogin ? 'loginPrompt' : 'signupPrompt')}</p>
           </div>
         )}
         {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}

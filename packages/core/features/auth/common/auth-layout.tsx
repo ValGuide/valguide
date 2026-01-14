@@ -1,4 +1,7 @@
+'use client'
+
 import { Card, CardContent } from '@valguide/core/ui/components/card'
+import { cn } from '@valguide/ui/lib/utils'
 import type { ReactNode } from 'react'
 
 export interface AuthLayoutProps {
@@ -17,11 +20,39 @@ export interface AuthLayoutProps {
  */
 export function AuthLayout({ children, footer }: AuthLayoutProps) {
   return (
-    <main className="min-h-svh flex flex-col items-center justify-center bg-muted p-4">
-      <Card className="w-full max-w-md">
+    <main className="min-h-svh flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Background with subtle gradient */}
+      <div
+        className={cn(
+          'absolute inset-0',
+          'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]',
+          'from-background via-muted to-muted',
+          'dark:from-muted/50 dark:via-background dark:to-background',
+        )}
+      />
+
+      {/* Subtle topography-style pattern overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.025] dark:opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath fill='none' stroke='%23000' stroke-width='0.5' d='M0 50 Q50 20 100 50 T200 50 M0 100 Q50 70 100 100 T200 100 M0 150 Q50 120 100 150 T200 150'/%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px',
+        }}
+      />
+
+      {/* Card */}
+      <Card
+        className={cn(
+          'relative w-full max-w-md',
+          'shadow-xl shadow-black/5 dark:shadow-black/20',
+          'border border-border/50',
+          'rounded-2xl',
+        )}
+      >
         <CardContent className="pt-6">{children}</CardContent>
       </Card>
-      {footer && <div className="mt-6 text-center">{footer}</div>}
+
+      {footer && <div className="relative mt-6 text-center">{footer}</div>}
     </main>
   )
 }
