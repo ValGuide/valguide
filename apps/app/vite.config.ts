@@ -16,7 +16,7 @@ export default defineConfig({
   ssr: {
     // required because resend uses uuid v9 which caused
     // The requested module 'uuid' does not provide an export named 'default'
-    noExternal: ["uuid"],
+    noExternal: ["uuid", 'posthog-js', '@posthog/react'],
   },
   optimizeDeps: {
     // required because resend uses uuid v9 which caused

@@ -1,4 +1,4 @@
-import { useLocation, useSearch } from '@tanstack/react-router'
+import { ClientOnly, useLocation, useSearch } from '@tanstack/react-router'
 import { createLogger } from '@valguide/logger'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
@@ -16,11 +16,12 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       log.warn('PostHogProvider is disabled')
     }
   }, [])
-  return isPostHogEnabled ? <Provider>{children}</Provider> : children
+  return isPostHogEnabled ? <ClientOnly><Provider>{children}</Provider></ClientOnly> : children
 }
 
 function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    if (posthog.__loaded) return
     posthog.init(clientEnv.VITE_POSTHOG_KEY!, {
       // Proxy through our domain to avoid ad blockers (see vercel.ts rewrites)
       api_host: clientEnv.VITE_POSTHOG_HOST ?? `${window.location.origin}/ingest`,

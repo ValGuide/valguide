@@ -18,7 +18,6 @@ type ProvidersProps = PropsWithChildren<{
 
 export function Providers({ locale, initialTheme, setThemeFn, children }: ProvidersProps) {
   const { data: messages } = useSuspenseQuery(messagesQueryOptions(locale))
-
   return (
     <PostHogProvider>
       <ThemeProvider initialTheme={initialTheme} setThemeFn={setThemeFn}>
