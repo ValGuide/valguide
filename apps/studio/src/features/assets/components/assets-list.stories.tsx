@@ -42,6 +42,8 @@ const meta = {
     onUploadComplete: { action: 'upload-complete' },
   },
   args: {
+    assets: [],
+    organizationId: 'org-123',
     AssetCard: MockAssetCard,
     UploadInline: MockUploadInline,
   },
@@ -176,42 +178,32 @@ const mockAssets: AssetWithUsage[] = [
 export const Default: Story = {
   args: {
     assets: mockAssets,
-    organizationId: 'org-123',
   },
 }
 
-export const Empty: Story = {
-  args: {
-    assets: [],
-    organizationId: 'org-123',
-  },
-}
+export const Empty: Story = {}
 
 export const ErrorState: Story = {
   args: {
     error: new globalThis.Error('Failed to load assets from server'),
-    organizationId: 'org-123',
   },
 }
 
 export const OnlyImages: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'image'),
-    organizationId: 'org-123',
   },
 }
 
 export const OnlyAudio: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'audio'),
-    organizationId: 'org-123',
   },
 }
 
 export const OnlyVideo: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'video'),
-    organizationId: 'org-123',
   },
 }
 
@@ -222,7 +214,6 @@ export const ManyAssets: Story = {
       id: `${asset.id}-${i}`,
       nanoId: `${asset.nanoId}-${i}`,
     })),
-    organizationId: 'org-123',
   },
 }
 

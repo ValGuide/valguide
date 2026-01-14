@@ -60,7 +60,7 @@ export function AssetsList({
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredAssets = useMemo(() => {
-    return assets.filter((asset) => {
+    return (assets ?? []).filter((asset) => {
       const matchesType = typeFilter === 'all' || asset.type === typeFilter
       const matchesLocale =
         localeFilter === 'all' || asset.locale === localeFilter || (!asset.locale && localeFilter === 'none')

@@ -1,6 +1,5 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { Await, createFileRoute } from '@tanstack/react-router'
-import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { AssetsListConnected } from '@/features/assets/components/assets-list-connected'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
@@ -9,20 +8,34 @@ import { sidebarQueryOptions } from '@/features/sidebar/query-options'
 
 export const Route = createFileRoute('/_main/assets')({
   loader: async ({ context }) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     const sidebarData = await context.queryClient.ensureQueryData(sidebarQueryOptions())
-    // Don't await - return promise for Suspense to handle
-    const assetsPromise = sidebarData?.currentTeam?.id
-      ? context.queryClient.ensureQueryData(assetsQueryOptions({ organizationId: sidebarData.currentTeam.id }))
-      : Promise.resolve([] as AssetWithUsage[])
-    return { sidebarData, assetsPromise }
+    // Prefetch assets - component will use useSuspenseQuery to consume
+    if (sidebarData?.currentTeam?.id) {
+      await context.queryClient.ensureQueryData(assetsQueryOptions({ organizationId: sidebarData.currentTeam.id }))
+    }
+    return { organizationId: sidebarData?.currentTeam?.id ?? '' }
   },
   component: AssetsPage,
 })
 
 function AssetsPage() {
+  const { organizationId } = Route.useLoaderData()
+
+  return (
+    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <Suspense fallback={<AssetsListSkeleton />}>
+        <AssetsContent organizationId={organizationId} />
+      </Suspense>
+    </main>
+  )
+}
+
+function AssetsContent({ organizationId }: { organizationId: string }) {
   const queryClient = useQueryClient()
-  const { sidebarData, assetsPromise } = Route.useLoaderData()
-  const organizationId = sidebarData?.currentTeam?.id ?? ''
+
+  const { data } = useSuspenseQuery(assetsQueryOptions({ organizationId }))
+  const assets = data?.assets ?? []
 
   const handleAssetDeleted = async (_assetId: string) => {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
@@ -36,20 +49,12 @@ function AssetsPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <Suspense fallback={<AssetsListSkeleton />}>
-        <Await promise={assetsPromise}>
-          {(assets) => (
-            <AssetsListConnected
-              assets={assets}
-              organizationId={organizationId}
-              onAssetDeleted={handleAssetDeleted}
-              onUploadComplete={handleUploadComplete}
-              onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets'] })}
-            />
-          )}
-        </Await>
-      </Suspense>
-    </main>
+    <AssetsListConnected
+      assets={assets}
+      organizationId={organizationId}
+      onAssetDeleted={handleAssetDeleted}
+      onUploadComplete={handleUploadComplete}
+      onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets'] })}
+    />
   )
 }
