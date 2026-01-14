@@ -123,7 +123,7 @@ export function StopsList({ stops = [], isLoading = false, error = null, onEditS
   return (
     <div className="mx-auto w-full max-w-5xl space-y-6">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="space-y-1">
           <PageTitle as="h2">{t('title')}</PageTitle>
           <p className="text-sm text-muted-foreground">{t('list.description')}</p>
         </div>

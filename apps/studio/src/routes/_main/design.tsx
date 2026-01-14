@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { DesignPageSkeleton } from '@/features/design/components/design-page-skeleton'
 import { ThemeCustomizerContainer } from '@/features/design/components/theme-customizer-container'
@@ -25,10 +26,10 @@ function DesignPage() {
   const organizationId = sidebarData?.currentTeam?.id
 
   return (
-    <main className="flex flex-col flex-1 min-h-0 p-4 sm:p-6 lg:p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t('nav.design')}</h1>
-        <p className="text-muted-foreground mt-1">{t('pages.design.description')}</p>
+    <main className="flex flex-col flex-1 min-h-0 p-4 pt-0">
+      <div className="mb-6 space-y-1">
+        <PageTitle as="h2">{t('nav.design')}</PageTitle>
+        <p className="text-sm text-muted-foreground">{t('pages.design.description')}</p>
       </div>
       <div className="flex-1 min-h-0">
         {isSidebarLoading || !organizationId ? (
