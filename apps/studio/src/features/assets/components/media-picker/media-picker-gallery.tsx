@@ -1,4 +1,5 @@
 import { Image } from '@unpic/react'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
@@ -62,14 +63,16 @@ export function MediaPickerGallery({
 
   const renderThumbnail = (asset: Asset) => {
     switch (asset.type) {
-      case 'image':
-        return asset.publicUrl ? (
-          <Image src={asset.publicUrl} alt={asset.fileName} layout="fullWidth" className="h-full w-full object-cover" />
+      case 'image': {
+        const imageUrl = getAssetImageUrl(asset)
+        return imageUrl ? (
+          <Image src={imageUrl} alt={asset.fileName} layout="fullWidth" className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted">
             <span className="text-xs text-muted-foreground">{t('noPreview')}</span>
           </div>
         )
+      }
       case 'audio':
         return (
           <div className="flex h-full w-full items-center justify-center bg-muted">

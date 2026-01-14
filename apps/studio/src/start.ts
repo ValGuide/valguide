@@ -43,7 +43,6 @@ const globalErrorMiddleware = createMiddleware({
   type: 'request',
 }).server(async ({ next }) => {
   try {
-    console.info('Global error middleware executing')
     return await next({
       context: {
         globalMiddlewareExecuted: true,

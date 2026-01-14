@@ -29,7 +29,6 @@ function toGuideForPreview(guide: GuideWithTranslationsAndCover): Guide {
     coverImage: guide.coverImage
       ? { storagePath: guide.coverImage.storagePath, publicUrl: guide.coverImage.publicUrl }
       : undefined,
-    imageUrl: guide.coverImage ? getAssetImageUrl(guide.coverImage) : undefined,
     createdAt: guide.createdAt,
     updatedAt: guide.updatedAt,
     published: guide.published,

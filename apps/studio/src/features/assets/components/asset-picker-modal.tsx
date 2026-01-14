@@ -1,4 +1,5 @@
 import { Image } from '@unpic/react'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -203,9 +204,9 @@ export function AssetPickerModal({
 
                         {/* Preview */}
                         <div className="flex h-40 items-center justify-center overflow-hidden rounded-t-lg bg-muted">
-                          {asset.type === 'image' && asset.publicUrl ? (
+                          {asset.type === 'image' ? (
                             <Image
-                              src={asset.publicUrl}
+                              src={getAssetImageUrl(asset)}
                               alt={asset.fileName}
                               layout="fullWidth"
                               className="h-full w-full object-cover"
