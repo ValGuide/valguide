@@ -22,13 +22,15 @@ function TeamPage() {
   }
 
   return (
-    <TeamMembersClient
-      team={data.team}
-      members={data.members}
-      pendingInvites={data.pendingInvites}
-      currentUserRole={data.currentUserRole}
-      currentUserId={data.currentUserId}
-      onAction={refetch}
-    />
+    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <TeamMembersClient
+        team={data.team}
+        members={data.members}
+        pendingInvites={data.pendingInvites}
+        currentUserRole={data.currentUserRole}
+        currentUserId={data.currentUserId}
+        onAction={refetch}
+      />
+    </main>
   )
 }

@@ -12,6 +12,7 @@ import {
   updateMemberRoleFn,
 } from '@valguide/core/features/orgs/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { toast } from 'sonner'
 
 interface TeamMembersClientProps {
@@ -98,35 +99,31 @@ export function TeamMembersClient({
   }
 
   return (
-    <div className="container mx-auto max-w-5xl py-8 space-y-8 px-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
-          <p className="text-muted-foreground">{t('description')}</p>
+    <div className="mx-auto w-full max-w-5xl space-y-8">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <PageTitle as="h2">{t('title')}</PageTitle>
+          <p className="text-sm text-muted-foreground">{t('description')}</p>
         </div>
         {['owner', 'admin'].includes(currentUserRole) && (
           <InviteMemberDialog currentUserRole={currentUserRole} onInvite={handleInvite} />
         )}
       </div>
 
-      <div className="space-y-4">
-        <MembersTable
-          members={members}
-          currentUserRole={currentUserRole}
-          currentUserId={currentUserId}
-          onChangeRole={handleChangeRole}
-          onRemoveMember={handleRemoveMember}
-        />
-      </div>
+      <MembersTable
+        members={members}
+        currentUserRole={currentUserRole}
+        currentUserId={currentUserId}
+        onChangeRole={handleChangeRole}
+        onRemoveMember={handleRemoveMember}
+      />
 
       {pendingInvites.length > 0 && (
-        <div className="space-y-4">
-          <PendingInvitesList
-            invitations={pendingInvites}
-            onResendInvite={handleResendInvite}
-            onCancelInvite={handleCancelInvite}
-          />
-        </div>
+        <PendingInvitesList
+          invitations={pendingInvites}
+          onResendInvite={handleResendInvite}
+          onCancelInvite={handleCancelInvite}
+        />
       )}
     </div>
   )
