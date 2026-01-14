@@ -77,7 +77,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const resolvedTheme = resolveTheme(theme)
 
   return (
-    <html lang={locale} data-theme={resolvedTheme}>
+    <html lang={locale} data-theme={resolvedTheme} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
