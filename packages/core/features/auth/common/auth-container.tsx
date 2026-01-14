@@ -37,16 +37,16 @@ export function AuthContainer({
   const t = useTranslations(isLogin ? 'login' : 'signup')
 
   return (
-    <AuthLayout>
+    <AuthLayout footer={<Consent />}>
       <div className="flex flex-1 flex-col justify-center gap-6">
         {verifyingOtp ? (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('otpTitle')}</h2>
+            <h2 className="mt-6 text-3xl tracking-tight">{t('otpTitle')}</h2>
             <p className="mt-2 text-sm ">{email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}</p>
           </div>
         ) : (
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold tracking-tight">{t('welcome')}</h2>
+            <h2 className="mt-6 text-3xl tracking-tight font-serif">{t('welcome')}</h2>
             <p className="mt-2 text-sm">{t(isLogin ? 'loginPrompt' : 'signupPrompt')}</p>
           </div>
         )}
@@ -74,7 +74,6 @@ export function AuthContainer({
           />
         )}
       </div>
-      <Consent />
     </AuthLayout>
   )
 }

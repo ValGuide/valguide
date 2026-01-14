@@ -213,31 +213,8 @@
     }
   },
   "auth": {
-    "quotes": {
-      "quote1": {
-        "text": "Art n'è betg quai che ti vesaias, mabain quai che ti fatschas vesair ad auters.",
-        "author": "Edgar Degas"
-      },
-      "quote2": {
-        "text": "Mintga artist è stà emprim in amatur.",
-        "author": "Ralph Waldo Emerson"
-      },
-      "quote3": {
-        "text": "Museums èn lieus nua che nus pudain explorar nossa storia e s'imaginar nossa futur.",
-        "author": "Thomas Campbell"
-      },
-      "quote4": {
-        "text": "Ina ovra d'art è il resultat unic d'in temperament unic.",
-        "author": "Oscar Wilde"
-      },
-      "quote5": {
-        "text": "Il intent da l'art è da lavar la pulvra da la vita quotidiana da nossas olmas.",
-        "author": "Pablo Picasso"
-      },
-      "quote6": {
-        "text": "Cultura è l'ampliaziun dal spért e da l'olma.",
-        "author": "Jawaharlal Nehru"
-      }
+    "layout": {
+      "tagline": "Voss cumpogn per museums e spazis culturals."
     }
   },
   "notFound": {

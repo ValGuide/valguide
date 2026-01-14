@@ -1,5 +1,7 @@
 
 export const themes = [
+  'angle',
+  'angle-dark',
   'light',
   'dark',
   'blue',
@@ -22,8 +24,6 @@ export const themes = [
   'curator-dark',
   'claude',
   'claude-dark',
-  'angle',
-  'angle-dark',
 ] as const
 
 export const themePresets = themes
