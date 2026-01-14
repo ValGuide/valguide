@@ -23,8 +23,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/')({
 
 function GuidePage() {
   const { nanoId } = Route.useParams()
-  const { data: guide, isError, isPending, error } = useQuery(guideWithAssetsQueryOptions(nanoId))
-  console.info('isError', isError, guide, isPending, error)
+  const { data: guide } = useQuery(guideWithAssetsQueryOptions(nanoId))
   const t = useTranslations('guides')
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -35,7 +34,7 @@ function GuidePage() {
     router.navigate({ to: '/' })
   }
 
-  if (!guide) return <div>{isPending ? 'Loading...' : 'Guide not found'}</div>
+  if (!guide) return null
 
   const translation = guide.translations.find((tr) => tr.locale === 'de') ?? guide.translations[0]
   const version = translation?.draftVersion ?? translation?.currentVersion

@@ -12,6 +12,24 @@ export const getRouter = () => {
       queries: {
         staleTime: 30_000,
         refetchOnWindowFocus: false,
+        retry: (failureCount, error) => {
+          const status = error instanceof Response ? error.status : (error as any)?.status
+          if ([307, 403, 404].includes(status)) {
+            return false
+          }
+          // Optional: limit retries for other errors
+          return failureCount < 3
+        },
+      },
+      mutations: {
+        retry: (failureCount, error) => {
+          const status = error instanceof Response ? error.status : (error as any)?.status
+          if ([307, 403, 404].includes(status)) {
+            return false
+          }
+          // Optional: limit retries for other errors
+          return failureCount < 3
+        },
       },
     },
 

@@ -3,7 +3,7 @@ import { getCookie, setCookie } from '@tanstack/react-start/server'
 import Negotiator from 'negotiator'
 import { defaultLocale, type SupportedLocale, supportedLocales } from './i18n.config'
 
-export const LOCALE_COOKIE_NAME = 'VALGUIDE_LOCALE'
+export const LOCALE_COOKIE_NAME = 'valguide-locale'
 
 export const isSupportedLocale = (locale: string | undefined | null): locale is SupportedLocale =>
   supportedLocales.includes(locale as SupportedLocale)
