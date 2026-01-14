@@ -4,15 +4,13 @@ import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import type { Preview } from '@storybook/nextjs-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createMemoryHistory, createRootRoute, createRoute, createRouter, RouterProvider } from '@tanstack/react-router'
+import { defaultThemes } from '@valguide/features/themes/defaults.ts'
+import { themes } from '@valguide/features/themes/types.ts'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import de from '@valguide/i18n/messages/de.json'
 import en from '@valguide/i18n/messages/en.json'
 import rm from '@valguide/i18n/messages/rm.json'
 import { IntlProvider } from 'use-intl'
-import {defaultThemes} from "@valguide/features/themes/defaults.ts";
-
-
-import {themes} from "@valguide/features/themes/types.ts";
 
 const childrenRef = { current: null as React.ReactNode }
 
@@ -61,6 +59,7 @@ const preview: Preview = {
   initialGlobals: {
     locale: 'en',
     locales,
+    theme: defaultThemes.light,
   },
   globalTypes: {
     theme: {
