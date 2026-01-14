@@ -24,6 +24,15 @@ export function createServerFn(options?: { method?: string }) {
   return builder
 }
 
+// Mock createMiddleware - returns a builder that creates middleware
+export function createMiddleware() {
+  const builder = {
+    middleware: (middlewares: unknown[]) => builder,
+    server: (fn: (...args: unknown[]) => unknown) => fn,
+  }
+  return builder
+}
+
 // Export other commonly used items
 export const json = (data: unknown) => data
 export const redirect = (url: string) => ({ redirect: url })
