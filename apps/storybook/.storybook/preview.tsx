@@ -8,9 +8,11 @@ import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import de from '@valguide/i18n/messages/de.json'
 import en from '@valguide/i18n/messages/en.json'
 import rm from '@valguide/i18n/messages/rm.json'
-import { themes } from '@valguide/ui/theme/themes'
-import { useRef } from 'react'
 import { IntlProvider } from 'use-intl'
+import {defaultThemes} from "@valguide/features/themes/defaults.ts";
+
+
+import {themes} from "@valguide/features/themes/types.ts";
 
 const childrenRef = { current: null as React.ReactNode }
 
@@ -97,7 +99,7 @@ const preview: Preview = {
     ),
     withThemeByDataAttribute({
       themes: Object.fromEntries(themes.map((theme) => [theme, theme])),
-      defaultTheme: 'light',
+      defaultTheme: defaultThemes.light,
       attributeName: 'data-theme',
     }),
   ],

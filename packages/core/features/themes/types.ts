@@ -1,4 +1,5 @@
-export const themePresets = [
+
+export const themes = [
   'light',
   'dark',
   'blue',
@@ -19,13 +20,17 @@ export const themePresets = [
   'gallery-dark',
   'curator',
   'curator-dark',
-  'angle',
-  'angle-dark',
   'claude',
   'claude-dark',
+  'angle',
+  'angle-dark',
 ] as const
 
+export const themePresets = themes
+
 export type ThemePreset = (typeof themePresets)[number]
+
+export type Theme = (typeof themes)[number]
 
 export const fontSources = ['system', 'google', 'custom'] as const
 

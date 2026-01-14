@@ -13,7 +13,6 @@ import {
 import { Input } from '@valguide/ui/components/input'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
-import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { Image as ImageIcon, Search, Upload } from 'lucide-react'
 import type { ComponentType } from 'react'
@@ -35,7 +34,6 @@ export type UploadInlineComponent = ComponentType<UploadInlineComponentProps>
 
 export type AssetsListProps = {
   assets?: AssetWithUsage[]
-  isLoading?: boolean
   error?: Error | null
   organizationId: string
   onAssetDeleted?: (assetId: string) => void
@@ -47,7 +45,6 @@ export type AssetsListProps = {
 
 export function AssetsList({
   assets = [],
-  isLoading = false,
   error = null,
   organizationId,
   onAssetDeleted,
@@ -75,40 +72,6 @@ export function AssetsList({
   const handleUploadComplete = (asset: Asset) => {
     onUploadComplete?.(asset)
     setActiveTab('library')
-  }
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-9 w-40" />
-        </div>
-        <div className="flex gap-4">
-          <Skeleton className="h-10 flex-1" />
-          <Skeleton className="h-10 w-40" />
-          <Skeleton className="h-10 w-40" />
-        </div>
-        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]">
-          {[...Array(12)].map((_, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items have no unique ID
-            <div key={i} className="rounded-xl border bg-card p-4 space-y-3">
-              <Skeleton className="h-48 w-full rounded-lg" />
-              <Skeleton className="h-4 w-3/4" />
-              <div className="flex gap-2">
-                <Skeleton className="h-5 w-12 rounded-full" />
-                <Skeleton className="h-5 w-8 rounded-full" />
-              </div>
-              <div className="space-y-1">
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="h-3 w-28" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
   }
 
   // Error state

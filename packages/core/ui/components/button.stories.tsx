@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { themes } from '@valguide/ui/theme/themes'
 import { Button } from './button'
+
+
+import {themes} from "@valguide/features/themes/types.ts";
 
 const meta: Meta<typeof Button> = {
   title: 'Common/Button',

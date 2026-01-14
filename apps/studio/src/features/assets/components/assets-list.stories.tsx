@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { type AssetCardComponentProps, AssetsList } from './assets-list'
+import { AssetsListSkeleton } from './assets-list-skeleton'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 
 function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
@@ -179,13 +180,6 @@ export const Default: Story = {
   },
 }
 
-export const Loading: Story = {
-  args: {
-    isLoading: true,
-    organizationId: 'org-123',
-  },
-}
-
 export const Empty: Story = {
   args: {
     assets: [],
@@ -230,4 +224,8 @@ export const ManyAssets: Story = {
     })),
     organizationId: 'org-123',
   },
+}
+
+export const Loading: StoryObj = {
+  render: () => <AssetsListSkeleton />,
 }

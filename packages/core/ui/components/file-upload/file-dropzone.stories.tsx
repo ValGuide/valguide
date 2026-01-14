@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { themes } from '@valguide/ui/theme/themes'
 import { FileDropzone } from './file-dropzone'
+
+
+import {themes} from "@valguide/features/themes/types.ts";
 
 const meta: Meta<typeof FileDropzone> = {
   title: 'Common/Inputs/FileDropzone',

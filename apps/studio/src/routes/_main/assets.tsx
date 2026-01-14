@@ -1,62 +1,55 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { Await, createFileRoute } from '@tanstack/react-router'
+import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
+import { Suspense } from 'react'
 import { AssetsListConnected } from '@/features/assets/components/assets-list-connected'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
-import { useAssets } from '@/features/assets/hooks/use-assets'
 import { assetsQueryOptions } from '@/features/assets/query-options'
-import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { sidebarQueryOptions } from '@/features/sidebar/query-options'
 
 export const Route = createFileRoute('/_main/assets')({
   loader: async ({ context }) => {
     const sidebarData = await context.queryClient.ensureQueryData(sidebarQueryOptions())
-    if (sidebarData?.currentTeam?.id) {
-      await context.queryClient.ensureQueryData(assetsQueryOptions({ organizationId: sidebarData.currentTeam.id }))
-    }
-    return { sidebarData }
+    // Don't await - return promise for Suspense to handle
+    const assetsPromise = sidebarData?.currentTeam?.id
+      ? context.queryClient.ensureQueryData(assetsQueryOptions({ organizationId: sidebarData.currentTeam.id }))
+      : Promise.resolve([] as AssetWithUsage[])
+    return { sidebarData, assetsPromise }
   },
   component: AssetsPage,
-  pendingComponent: AssetsListSkeleton,
 })
 
 function AssetsPage() {
   const queryClient = useQueryClient()
-  const { data: sidebarData, isLoading: isSidebarLoading } = useSidebarData()
-  const organizationId = sidebarData?.currentTeam?.id
-
-  const {
-    assets,
-    isLoading: isAssetsLoading,
-    error,
-    refetch,
-  } = useAssets({
-    organizationId: organizationId ?? undefined,
-  })
+  const { sidebarData, assetsPromise } = Route.useLoaderData()
+  const organizationId = sidebarData?.currentTeam?.id ?? ''
 
   const handleAssetDeleted = async (_assetId: string) => {
-    refetch()
+    await queryClient.invalidateQueries({ queryKey: ['assets'] })
     await queryClient.invalidateQueries({ queryKey: ['guides'] })
     await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
     await queryClient.invalidateQueries({ queryKey: ['stops'] })
   }
 
-  const handleUploadComplete = () => {
-    refetch()
+  const handleUploadComplete = async () => {
+    await queryClient.invalidateQueries({ queryKey: ['assets'] })
   }
-
-  const isLoading = isSidebarLoading || isAssetsLoading || !organizationId
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <AssetsListConnected
-        assets={assets}
-        isLoading={isLoading}
-        error={error}
-        organizationId={organizationId ?? ''}
-        onAssetDeleted={handleAssetDeleted}
-        onUploadComplete={handleUploadComplete}
-        onRetry={refetch}
-      />
+      <Suspense fallback={<AssetsListSkeleton />}>
+        <Await promise={assetsPromise}>
+          {(assets) => (
+            <AssetsListConnected
+              assets={assets}
+              organizationId={organizationId}
+              onAssetDeleted={handleAssetDeleted}
+              onUploadComplete={handleUploadComplete}
+              onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets'] })}
+            />
+          )}
+        </Await>
+      </Suspense>
     </main>
   )
 }
