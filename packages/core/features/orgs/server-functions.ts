@@ -49,7 +49,7 @@ export const createTeamFn = createServerFn({ method: 'POST' })
 const inviteMemberSchema = z.object({
   teamId: z.string(),
   email: z.string().email(),
-  role: z.enum(['owner', 'admin', 'member', 'viewer']),
+  role: z.enum(['owner', 'admin', 'curator', 'editor', 'viewer']),
 })
 
 export const inviteMemberFn = createServerFn({ method: 'POST' })
@@ -197,7 +197,7 @@ export const removeMemberFn = createServerFn({ method: 'POST' })
 const updateMemberRoleSchema = z.object({
   memberId: z.string(),
   teamId: z.string(),
-  newRole: z.enum(['owner', 'admin', 'member', 'viewer']),
+  newRole: z.enum(['owner', 'admin', 'curator', 'editor', 'viewer']),
 })
 
 export const updateMemberRoleFn = createServerFn({ method: 'POST' })
