@@ -1,6 +1,13 @@
 import { queryOptions } from '@tanstack/react-query'
 import type { SidebarData } from './api/fetchers'
-import { getSidebarDataFn } from './server-functions'
+import { getSidebarDataFn, getSidebarStateFn } from './server-functions'
+
+export const sidebarStateQueryOptions = () =>
+  queryOptions<boolean>({
+    queryKey: ['sidebar-state'],
+    queryFn: () => getSidebarStateFn(),
+    staleTime: 5 * 60 * 1000,
+  })
 
 export const sidebarQueryOptions = () =>
   queryOptions<SidebarData | null>({
@@ -16,5 +23,5 @@ export const sidebarQueryOptions = () =>
         throw error
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes - prevents refetches on navigation
+    staleTime: 5 * 60 * 1000,
   })

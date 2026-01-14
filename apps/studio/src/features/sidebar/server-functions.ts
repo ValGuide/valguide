@@ -1,10 +1,16 @@
 import { createServerFn } from '@tanstack/react-start'
+import { getCookie } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { getProfile } from '@valguide/core/features/profiles/queries'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { createClient } from '@valguide/supabase/server'
 import { getActiveTeamSlug, setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
+
+export const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(() => {
+  const sidebarState = getCookie('sidebar_state')
+  return sidebarState !== 'false'
+})
 
 export const getSidebarDataFn = createServerFn({ method: 'GET' }).handler(async () => {
   const supabase = await createClient()
