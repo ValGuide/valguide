@@ -16,7 +16,6 @@ import { StopEditView } from '@/features/guides/components/stop-edit-view'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuide } from '@/features/guides/hooks/use-guide'
 import { getGuideByNanoIdFn } from '@/features/guides/server-functions'
-import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 
 type SearchParams = {
   locale?: string
@@ -56,13 +55,10 @@ type GuideEditorClientProps = {
 function GuideEditorClient({ fallbackGuide, initialSelectedStopId, initialLocale }: GuideEditorClientProps) {
   const [isMounted, setIsMounted] = useState(false)
   const { guide, mutate } = useGuide(fallbackGuide.nanoId, { initialData: fallbackGuide })
-  const { data: sidebarData } = useSidebarData()
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
-
-  const organizationId = sidebarData?.currentTeam?.id
 
   if (!isMounted || !guide) {
     return null
@@ -75,7 +71,6 @@ function GuideEditorClient({ fallbackGuide, initialSelectedStopId, initialLocale
       {stop ? (
         <StopEditView
           stop={stop}
-          organizationId={organizationId}
           MediaPicker={MediaPickerConnected}
           onPublish={(stopId, locale) => publishStopTranslationDraftFn({ data: { stopId, locale } })}
           onUnpublish={(stopId, locale) => unpublishStopTranslationFn({ data: { stopId, locale } })}
@@ -83,7 +78,6 @@ function GuideEditorClient({ fallbackGuide, initialSelectedStopId, initialLocale
         />
       ) : (
         <GuideEditView
-          organizationId={organizationId}
           onPublish={(guideId, locale) => publishGuideTranslationDraftFn({ data: { guideId, locale } })}
           onUnpublish={(guideId, locale) => unpublishGuideTranslationFn({ data: { guideId, locale } })}
           onDiscard={(guideId, locale) => discardGuideTranslationDraftFn({ data: { guideId, locale } })}

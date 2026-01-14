@@ -16,6 +16,7 @@ import type { ComponentType } from 'react'
 import { useMemo, useState } from 'react'
 
 export type UploadInlineComponentProps = {
+  organizationId: string
   allowedTypes?: AssetType[]
   locale?: string
   onUploadComplete?: (asset: Asset) => void
@@ -24,6 +25,7 @@ export type UploadInlineComponentProps = {
 export type UploadInlineComponent = ComponentType<UploadInlineComponentProps>
 
 export type AssetPickerModalProps = {
+  organizationId: string
   open: boolean
   onOpenChange: (open: boolean) => void
   type: AssetType
@@ -39,6 +41,7 @@ export type AssetPickerModalProps = {
 }
 
 export function AssetPickerModal({
+  organizationId,
   open,
   onOpenChange,
   type,
@@ -245,6 +248,7 @@ export function AssetPickerModal({
                 allowedTypes={[type]}
                 locale={locale}
                 onUploadComplete={handleUploadComplete}
+                organizationId={organizationId}
               />
             )}
           </TabsContent>

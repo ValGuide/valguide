@@ -29,13 +29,7 @@ interface StopEditViewProps {
   onDiscard: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
 }
 
-export function StopEditView({
-  stop: stopProp,
-  MediaPicker,
-  onPublish,
-  onUnpublish,
-  onDiscard,
-}: StopEditViewProps) {
+export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpublish, onDiscard }: StopEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -158,7 +152,6 @@ export function StopEditView({
       activeLocale={activeLocale}
       isDirty={isDirty}
       isSaving={isSaving}
-      organizationId={organizationId}
       stopTitle={stopTitle}
       locales={guide.availableLocales ?? ['en', 'de', 'rm']}
       onLocaleChange={setActiveLocale}

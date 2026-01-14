@@ -42,7 +42,7 @@ export function TeamMembersClient({
 
   const handleInvite = async (email: string, role: OrgRole) => {
     try {
-      await inviteMemberFn({ data: { teamId: team.id, email, role: role as 'owner' | 'admin' | 'viewer' | 'member' } })
+      await inviteMemberFn({ data: { teamId: team.id, email, role } })
       toast.success(tInvite('success'))
       onAction?.()
     } catch (error) {
@@ -66,7 +66,7 @@ export function TeamMembersClient({
   const handleChangeRole = async (memberId: string, newRole: OrgRole) => {
     try {
       await updateMemberRoleFn({
-        data: { memberId, teamId: team.id, newRole: newRole as 'owner' | 'admin' | 'viewer' | 'member' },
+        data: { memberId, teamId: team.id, newRole },
       })
       toast.success(t('roleUpdateSuccess'))
       onAction?.()

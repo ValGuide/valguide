@@ -5,7 +5,6 @@ import { themesQueryKey, themesQueryOptions } from '../query-options'
 import { createThemeFn, deleteThemeFn, updateThemeFn } from '../server-functions'
 
 export interface CreateThemeData {
-  organizationId: string
   name: string
   basePreset: ThemePreset
   colors: ThemeColors
@@ -22,7 +21,6 @@ export interface UpdateThemeData {
 }
 
 interface UseOrgThemesOptions {
-  organizationId?: string
   enabled?: boolean
 }
 
@@ -31,33 +29,28 @@ interface UseOrgThemesReturn {
   isLoading: boolean
   error: Error | null
   refetch: () => Promise<Theme[]>
-  createTheme: (data: Omit<CreateThemeData, 'organizationId'>) => Promise<Theme>
+  createTheme: (data: CreateThemeData) => Promise<Theme>
   updateTheme: (id: string, data: UpdateThemeData) => Promise<Theme>
   deleteTheme: (id: string) => Promise<void>
 }
 
 export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesReturn {
-  const { organizationId, enabled = true } = options
+  const { enabled = true } = options
   const queryClient = useQueryClient()
 
   const { data, error, isLoading, refetch } = useQuery({
-    ...themesQueryOptions(organizationId),
-    enabled: enabled && !!organizationId,
+    ...themesQueryOptions(),
+    enabled: enabled,
   })
 
   const invalidateThemes = async () => {
-    await queryClient.invalidateQueries({ queryKey: themesQueryKey(organizationId) })
+    await queryClient.invalidateQueries({ queryKey: themesQueryKey() })
   }
 
   const createTheme = async (themeData: Omit<CreateThemeData, 'organizationId'>): Promise<Theme> => {
-    if (!organizationId) {
-      throw new Error('Organization ID is required to create a theme')
-    }
-
     const created = await createThemeFn({
       data: {
         ...themeData,
-        organizationId,
       },
     })
 

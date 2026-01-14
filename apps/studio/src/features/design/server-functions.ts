@@ -16,18 +16,15 @@ import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { z } from 'zod'
 
 // Get themes for organization
-const getThemesInputSchema = z.object({
-  organizationId: z.string().optional(),
-})
+const getThemesInputSchema = z.object({})
 
 export const getThemesFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getThemesInputSchema)
   .handler(
-    handleError(async ({ context, data }) => {
+    handleError(async ({ context }) => {
       const userId = context.user.id
-      const queryOrganizationId = data.organizationId
-
+      const queryOrganizationId = context.activeOrgId
       const userTeams = await getUserTeams(db, userId)
 
       if (userTeams.length === 0) {
@@ -65,7 +62,6 @@ export const getThemesFn = createServerFn({ method: 'GET' })
 
 // Create theme - uses any for colors/fonts since Zod can't validate complex types well
 const createThemeInputSchema = z.object({
-  organizationId: z.string(),
   name: z.string().min(1),
   basePreset: z.string(),
   colors: z.any(),
@@ -78,7 +74,8 @@ export const createThemeFn = createServerFn({ method: 'POST' })
   .inputValidator(createThemeInputSchema)
   .handler(
     handleError(async ({ context, data }) => {
-      const { organizationId, name, basePreset, colors, radius, fonts } = data
+      const organizationId = context.activeOrgId!!
+      const { name, basePreset, colors, radius, fonts } = data
 
       await requireOrgMember(organizationId, context.user.id)
 

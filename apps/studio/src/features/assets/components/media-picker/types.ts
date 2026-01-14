@@ -1,5 +1,5 @@
-import type { ComponentType } from 'react'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import type { ComponentType } from 'react'
 
 export type MediaPickerComponentProps = {
   mode: 'single' | 'multiple'

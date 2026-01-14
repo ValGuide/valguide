@@ -16,18 +16,16 @@ import { cn } from '@valguide/ui/lib/utils'
 import { CheckCircle2, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { uploadFileWithTUS } from '../lib/tus-upload'
 
 export type AssetUploadInlineProps = {
+  organizationId: string
   allowedTypes?: AssetType[]
   locale?: string
   onUploadComplete?: (asset: Asset) => void
 }
 
-export function AssetUploadInline({ allowedTypes, locale, onUploadComplete }: AssetUploadInlineProps) {
-  const { data: sidebarData } = useSidebarData()
-  const organizationId = sidebarData?.currentTeam?.id ?? ''
+export function AssetUploadInline({ organizationId, allowedTypes, locale, onUploadComplete }: AssetUploadInlineProps) {
   const t = useTranslations('assets')
   const [file, setFile] = useState<File | null>(null)
   const [detectedType, setDetectedType] = useState<AssetType | null>(null)

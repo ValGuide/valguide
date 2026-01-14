@@ -1,9 +1,9 @@
-import { MainLayoutPending } from '@/components/main-layout-pending'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { ensureDefaultTeamQueryOptions } from '@valguide/core/features/orgs/query-options'
 import { isAuthenticatedQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
+import { MainLayoutPending } from '@/components/main-layout-pending'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
 import { sidebarStateQueryOptions } from '../features/sidebar/query-options'
 
@@ -18,19 +18,12 @@ export const Route = createFileRoute('/_main')({
     }
 
     // FIRST: Ensure user has at least one team (cached after first call)
-    await context.queryClient.ensureQueryData(ensureDefaultTeamQueryOptions())
+    const team = await context.queryClient.ensureQueryData(ensureDefaultTeamQueryOptions())
     const sidebarState = await context.queryClient.ensureQueryData(sidebarStateQueryOptions())
-    return { defaultOpen: sidebarState }
-  },
-  loader: async ({ context }) => {
-
-    // TODO: really needed?
-    // All data fetched via ensureQueryData - enables instant navigation after first load
-    context.queryClient.ensureQueryData(sidebarStateQueryOptions())
-
+    return { defaultOpen: sidebarState, team }
   },
   component: MainLayout,
-  pendingComponent: MainLayoutPending
+  pendingComponent: MainLayoutPending,
 })
 
 function MainLayout() {

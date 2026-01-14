@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/component
 import { Image as ImageIcon, Search, Upload } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useMemo, useState } from 'react'
+import { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
 
 export type AssetCardComponentProps = {
   asset: AssetWithUsage
@@ -25,13 +26,11 @@ export type AssetCardComponentProps = {
 
 export type AssetCardComponent = ComponentType<AssetCardComponentProps>
 
-export type UploadInlineComponentProps = {
-  onUploadComplete?: (asset: Asset) => void
-}
-
-export type UploadInlineComponent = ComponentType<UploadInlineComponentProps>
+export type UploadInlineComponent = ComponentType<AssetUploadInlineProps>
 
 export type AssetsListProps = {
+  organizationId: string
+  locale?: string
   assets?: AssetWithUsage[]
   error?: Error | null
   onAssetDeleted?: (assetId: string) => void
@@ -42,6 +41,8 @@ export type AssetsListProps = {
 }
 
 export function AssetsList({
+  locale,
+  organizationId,
   assets = [],
   error = null,
   onAssetDeleted,
@@ -179,7 +180,9 @@ export function AssetsList({
 
         <TabsContent value="upload" className="space-y-6">
           <div className="mx-auto w-full max-w-2xl">
-            {UploadInline && <UploadInline onUploadComplete={handleUploadComplete} />}
+            {UploadInline && (
+              <UploadInline onUploadComplete={handleUploadComplete} organizationId={organizationId} locale={locale} />
+            )}
           </div>
         </TabsContent>
       </Tabs>

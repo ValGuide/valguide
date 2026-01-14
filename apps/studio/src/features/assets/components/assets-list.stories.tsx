@@ -177,32 +177,42 @@ const mockAssets: AssetWithUsage[] = [
 export const Default: Story = {
   args: {
     assets: mockAssets,
+    locale: 'en',
+    organizationId: 'org-123',
   },
 }
 
-export const Empty: Story = {}
+export const Empty: Story = { args: { assets: [], locale: 'en', organizationId: 'org-123' } }
 
 export const ErrorState: Story = {
   args: {
     error: new globalThis.Error('Failed to load assets from server'),
+    locale: 'en',
+    organizationId: 'org-123',
   },
 }
 
 export const OnlyImages: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'image'),
+    locale: 'en',
+    organizationId: 'org-123',
   },
 }
 
 export const OnlyAudio: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'audio'),
+    locale: 'en',
+    organizationId: 'org-123',
   },
 }
 
 export const OnlyVideo: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'video'),
+    locale: 'en',
+    organizationId: 'org-123',
   },
 }
 
@@ -213,6 +223,8 @@ export const ManyAssets: Story = {
       id: `${asset.id}-${i}`,
       nanoId: `${asset.nanoId}-${i}`,
     })),
+    locale: 'en',
+    organizationId: 'org-123',
   },
 }
 

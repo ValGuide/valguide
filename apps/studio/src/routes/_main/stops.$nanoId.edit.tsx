@@ -1,7 +1,25 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 
-import { getStopByNanoIdFn } from '@valguide/core/features/guides/server-functions'
+import {
+  attachAssetToStopFn,
+  detachAssetFromStopFn,
+  discardStopTranslationDraftFn,
+  getStopByNanoIdFn,
+  publishStopTranslationDraftFn,
+  unpublishStopTranslationFn,
+  updateStopFn,
+} from '@valguide/core/features/guides/server-functions'
+import type { StopWithAssets } from '@valguide/core/features/guides/types'
+import { getVersionedField } from '@valguide/core/features/guides/utils'
+import { useTranslations } from '@valguide/core/i18n/client'
+import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'
+import { useCallback, useRef, useState } from 'react'
+import { toast } from 'sonner'
+import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
+import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
+import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { StopStandaloneEditSkeleton } from '@/features/guides/components/stop-standalone-edit-skeleton'
+import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
 
 export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
   loader: async ({ params }) => {
@@ -22,27 +40,6 @@ function StopEditPage() {
   return <StandaloneStopEditorClient fallbackStop={stop} initialLocale={locale} />
 }
 
-import { Link, useRouter } from '@tanstack/react-router'
-import {
-  attachAssetToStopFn,
-  detachAssetFromStopFn,
-  discardStopTranslationDraftFn,
-  publishStopTranslationDraftFn,
-  unpublishStopTranslationFn,
-  updateStopFn,
-} from '@valguide/core/features/guides/server-functions'
-import type { StopWithAssets } from '@valguide/core/features/guides/types'
-import { getVersionedField } from '@valguide/core/features/guides/utils'
-import { useTranslations } from '@valguide/core/i18n/client'
-import { BreadcrumbItem, BreadcrumbLink } from '@valguide/ui/components/breadcrumb'
-import { useCallback, useRef, useState } from 'react'
-import { toast } from 'sonner'
-import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
-import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
-import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
-import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
-import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
-
 interface StandaloneStopEditorClientProps {
   fallbackStop: StopWithAssets
   initialLocale?: string
@@ -52,7 +49,6 @@ function StandaloneStopEditorClient({ fallbackStop, initialLocale }: StandaloneS
   const router = useRouter()
   const tStops = useTranslations('stops')
   const tCommon = useTranslations('common')
-  const { data: sidebarData } = useSidebarData()
 
   const [stop, setStop] = useState<StopWithAssets>(fallbackStop)
   const [activeLocale, setActiveLocale] = useState<string>(initialLocale ?? 'de')
@@ -63,8 +59,6 @@ function StandaloneStopEditorClient({ fallbackStop, initialLocale }: StandaloneS
   const stopRef = useRef(stop)
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   stopRef.current = stop
-
-  const organizationId = sidebarData?.currentTeam?.id ?? ''
 
   const currentTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
   const stopTitle = getVersionedField(currentTranslation, 'title') || tStops('untitled')
@@ -217,7 +211,6 @@ function StandaloneStopEditorClient({ fallbackStop, initialLocale }: StandaloneS
       activeLocale={activeLocale}
       isDirty={isDirty}
       isSaving={isSaving}
-      organizationId={organizationId}
       stopTitle={stopTitle}
       onLocaleChange={setActiveLocale}
       onStopChange={handleStopChange}

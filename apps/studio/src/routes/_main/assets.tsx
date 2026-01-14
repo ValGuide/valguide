@@ -1,23 +1,21 @@
-import { AssetsListConnected } from '@/features/assets/components/assets-list-connected'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import { Suspense } from 'react'
+import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
+import { AssetUploadInline } from '@/features/assets/components/asset-upload-inline.tsx'
+import { AssetsList } from '@/features/assets/components/assets-list.tsx'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
 import { assetsQueryOptions } from '@/features/assets/query-options'
-import { sidebarQueryOptions } from '@/features/sidebar/query-options'
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
-import { Suspense } from 'react'
+
+const Root = getRouteApi('/_main')
 
 export const Route = createFileRoute('/_main/assets')({
-  loader: async ({ context }) => {
-    const sidebarData = await context.queryClient.ensureQueryData(sidebarQueryOptions())
-    // Prefetch assets - component will use useSuspenseQuery to consume
-    if (sidebarData?.currentTeam?.id) {
-      await context.queryClient.ensureQueryData(assetsQueryOptions())
-    }
-  },
   component: AssetsPage,
-  pendingComponent: () =>
+  pendingComponent: () => (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <AssetsListSkeleton /> </main>,
+      <AssetsListSkeleton />{' '}
+    </main>
+  ),
 })
 
 function AssetsPage() {
@@ -32,6 +30,7 @@ function AssetsPage() {
 
 function AssetsContent() {
   const queryClient = useQueryClient()
+  const organizationId = Root.useRouteContext().team?.teamId
 
   const { data } = useSuspenseQuery(assetsQueryOptions())
   const assets = data?.assets ?? []
@@ -47,12 +46,15 @@ function AssetsContent() {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
   }
 
-  return (
-    <AssetsListConnected
+  return organizationId ? (
+    <AssetsList
+      organizationId={organizationId}
       assets={assets}
       onAssetDeleted={handleAssetDeleted}
       onUploadComplete={handleUploadComplete}
       onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets'] })}
+      AssetCard={AssetCardConnected}
+      UploadInline={AssetUploadInline}
     />
-  )
+  ) : null
 }

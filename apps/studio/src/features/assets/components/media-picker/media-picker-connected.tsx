@@ -1,7 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { detectAssetType } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
+import { assetsQueryKey } from '@/features/assets/query-options'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { uploadFileWithTUS } from '../../lib/tus-upload'
 import { AssetPickerModalConnected } from '../asset-picker-modal-connected'
@@ -17,6 +19,7 @@ export function MediaPickerConnected({
   showLibrary = true,
   ...props
 }: MediaPickerComponentProps) {
+  const queryClient = useQueryClient()
   const { data: sidebarData } = useSidebarData()
   const organizationId = sidebarData?.currentTeam?.id ?? ''
   const [libraryOpen, setLibraryOpen] = useState(false)
@@ -53,9 +56,11 @@ export function MediaPickerConnected({
         },
       })
 
+      await queryClient.invalidateQueries({ queryKey: assetsQueryKey() })
+
       return asset
     },
-    [organizationId, locale],
+    [organizationId, locale, queryClient],
   )
 
   const handleLibrarySelect = useCallback(
@@ -86,6 +91,7 @@ export function MediaPickerConnected({
       libraryContent={
         showLibrary ? (
           <AssetPickerModalConnected
+            organizationId={organizationId}
             open={libraryOpen}
             onOpenChange={setLibraryOpen}
             type={mediaTypes[0] ?? 'image'}

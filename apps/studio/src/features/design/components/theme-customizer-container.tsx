@@ -15,14 +15,13 @@ import { SaveThemeDialog } from './save-theme-dialog'
 import { ThemeEditorPanel } from './theme-editor-panel'
 
 export interface ThemeCustomizerContainerProps {
-  organizationId: string
   className?: string
 }
 
-export function ThemeCustomizerContainer({ organizationId, className }: ThemeCustomizerContainerProps) {
+export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainerProps) {
   const t = useTranslations('studio.themeCustomizer')
   const customizer = useThemeCustomizer('light')
-  const { themes, isLoading, createTheme, updateTheme, deleteTheme } = useOrgThemes({ organizationId })
+  const { themes, isLoading, createTheme, updateTheme, deleteTheme } = useOrgThemes()
 
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)

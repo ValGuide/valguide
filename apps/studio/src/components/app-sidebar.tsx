@@ -173,7 +173,7 @@ export function AppSidebar({
           </div>
           <TeamSwitcher
             teams={teams}
-            activeTeamSlug={currentTeam?.slug}
+            activeTeamId={currentTeam?.id}
             onTeamSwitch={onTeamSwitch}
             onCreateTeam={() => {
               setCreateTeamOpen(true)
