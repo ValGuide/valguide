@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { type GetAssetsFilters, getAssets } from '@valguide/core/features/assets/queries'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
-import { createClient } from '@valguide/supabase/server'
+import { requireAuthMiddleware } from '@valguide/studio/features/auth/server-functions'
 import { z } from 'zod'
 
 const getAssetsInputSchema = z.object({
@@ -11,17 +11,11 @@ const getAssetsInputSchema = z.object({
 })
 
 export const getAssetsFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(getAssetsInputSchema)
   .handler(
-    handleError(async ({ data }) => {
-      const supabase = await createClient()
-      const { data: claimsData } = await supabase.auth.getClaims()
-      const user = claimsData?.claims
-
-      if (!user) {
-        throw new Error('Unauthorized')
-      }
-
+    handleError(async ({ data, context }) => {
+      const user = context.user
       const filters: GetAssetsFilters = {}
 
       if (data.type) {

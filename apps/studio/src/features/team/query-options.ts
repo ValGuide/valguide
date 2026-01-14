@@ -2,6 +2,7 @@ import { queryOptions } from '@tanstack/react-query'
 import type { TeamData } from './api/fetchers'
 import { getTeamDataFn } from './server-functions'
 
+
 export const teamQueryOptions = () =>
   queryOptions<TeamData | null>({
     queryKey: ['team'],

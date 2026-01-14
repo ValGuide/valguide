@@ -5,58 +5,53 @@ import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { getProfile } from '@valguide/core/features/profiles/queries'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
+import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { getActiveTeamSlug, setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
-import { createClient } from '@valguide/supabase/server'
 
 export const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(
-  handleError(() => {
+  handleError(async () => {
     const sidebarState = getCookie('sidebar_state')
     return sidebarState !== 'false'
   }),
 )
 
-export const getSidebarDataFn = createServerFn({ method: 'GET' }).handler(
-  handleError(async () => {
-    const supabase = await createClient()
-    const { data } = await supabase.auth.getClaims()
-    const user = data?.claims
+export const getSidebarDataFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .handler(
+    handleError(async ({ context }) => {
+      const user = context.user
+      const [teams, profile] = await Promise.all([getUserTeams(db, user.id), getProfile(user.id)])
 
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
+      const activeSlug = getActiveTeamSlug()
 
-    const [teams, profile] = await Promise.all([getUserTeams(db, user.sub), getProfile(user.sub)])
+      let currentTeam = teams.find((t: any) => t.slug === activeSlug)
 
-    const activeSlug = getActiveTeamSlug()
+      const name = getUserDisplayName(profile, user.email, user.metadata)
 
-    let currentTeam = teams.find((t: any) => t.slug === activeSlug)
+      const sidebarUser = {
+        name,
+        email: user.email || '',
+        avatar: user.metadata?.avatar_url || '',
+      }
 
-    const name = getUserDisplayName(profile, user.email, user.user_metadata)
+      if (!currentTeam && teams.length > 0) {
+        currentTeam = teams[0]
 
-    const sidebarUser = {
-      name,
-      email: user.email || '',
-      avatar: user.user_metadata?.avatar_url || '',
-    }
+        setActiveTeamSlug(currentTeam.slug)
 
-    if (!currentTeam && teams.length > 0) {
-      currentTeam = teams[0]
-
-      setActiveTeamSlug(currentTeam.slug)
+        return {
+          user: sidebarUser,
+          teams,
+          currentTeam,
+          wasAutoSelected: true,
+        }
+      }
 
       return {
         user: sidebarUser,
         teams,
         currentTeam,
-        wasAutoSelected: true,
+        wasAutoSelected: false,
       }
-    }
-
-    return {
-      user: sidebarUser,
-      teams,
-      currentTeam,
-      wasAutoSelected: false,
-    }
-  }),
-)
+    }),
+  )

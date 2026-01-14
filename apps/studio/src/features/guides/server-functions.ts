@@ -9,8 +9,8 @@ import {
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
+import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
-import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
 
 // Get guide by nanoId
@@ -19,20 +19,12 @@ const getGuideByNanoIdInputSchema = z.object({
 })
 
 export const getGuideByNanoIdFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(getGuideByNanoIdInputSchema)
   .handler(
     handleError(async ({ data }) => {
       const { nanoId } = data
-
-      const supabase = await createClient()
-      const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-      if (claimsError || !claimsData?.claims?.sub) {
-        throw new Error('Unauthorized')
-      }
-
       const guide = await getGuideByNanoIdWithAssets(nanoId)
-
       if (!guide) {
         throw new Error('Not found')
       }
@@ -47,17 +39,11 @@ const getGuidesInputSchema = z.object({
 })
 
 export const getGuidesFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(getGuidesInputSchema)
   .handler(
-    handleError(async ({ data }) => {
-      const supabase = await createClient()
-      const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-      if (claimsError || !claimsData?.claims?.sub) {
-        throw new Error('Unauthorized')
-      }
-
-      const userId = claimsData.claims.sub
+    handleError(async ({ data, context }) => {
+      const userId = context.user.id
       const queryOrganizationId = data.organizationId
 
       const userTeams = await getUserTeams(db, userId)
@@ -97,40 +83,35 @@ export const getGuidesFn = createServerFn({ method: 'GET' })
   )
 
 // Get archived guides for the current organization
-export const getArchivedGuidesFn = createServerFn({ method: 'GET' }).handler(
-  handleError(async () => {
-    const supabase = await createClient()
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
+export const getArchivedGuidesFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .handler(
+    handleError(async ({ context }) => {
+      const userId = context.user.id
+      const userTeams = await getUserTeams(db, userId)
 
-    if (claimsError || !claimsData?.claims?.sub) {
-      throw new Error('Unauthorized')
-    }
-
-    const userId = claimsData.claims.sub
-    const userTeams = await getUserTeams(db, userId)
-
-    if (userTeams.length === 0) {
-      return { guides: [], userId }
-    }
-
-    const activeTeamSlug = getActiveTeamSlug()
-    let targetOrganizationId = userTeams[0].id
-
-    if (activeTeamSlug) {
-      const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
-      if (team) {
-        targetOrganizationId = team.id
+      if (userTeams.length === 0) {
+        return { guides: [], userId }
       }
-    }
 
-    const guides = await getArchivedGuidesWithCover(db, targetOrganizationId)
+      const activeTeamSlug = getActiveTeamSlug()
+      let targetOrganizationId = userTeams[0].id
 
-    return {
-      guides,
-      userId,
-    }
-  }),
-)
+      if (activeTeamSlug) {
+        const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+        if (team) {
+          targetOrganizationId = team.id
+        }
+      }
+
+      const guides = await getArchivedGuidesWithCover(db, targetOrganizationId)
+
+      return {
+        guides,
+        userId,
+      }
+    }),
+  )
 
 // Create guide
 const createGuideInputSchema = z.object({
@@ -145,17 +126,11 @@ const createGuideInputSchema = z.object({
 })
 
 export const createGuideFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(createGuideInputSchema)
   .handler(
-    handleError(async ({ data }) => {
-      const supabase = await createClient()
-      const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-      if (claimsError || !claimsData?.claims?.sub) {
-        throw new Error('Unauthorized')
-      }
-
-      const userId = claimsData.claims.sub
+    handleError(async ({ data, context }) => {
+      const userId = context.user.id
       let { translations, organizationId } = data
 
       if (!organizationId) {

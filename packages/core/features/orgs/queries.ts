@@ -1,6 +1,6 @@
+import type { DB } from '@valguide/core/features/db'
 import { and, desc, eq, gt } from 'drizzle-orm'
 import { authUsers } from 'drizzle-orm/supabase'
-import type { DB } from '@valguide/core/features/db'
 import { profiles } from '../profiles/schema'
 import { organization, organizationInvitation, organizationMember } from './schema'
 
@@ -19,15 +19,6 @@ export async function getUserTeams(db: DB, userId: string) {
     ...m.organization,
     role: m.role,
   }))
-}
-
-/**
- * Get a team by slug
- */
-export async function getTeamBySlug(db: DB, slug: string) {
-  return db.query.organization.findFirst({
-    where: eq(organization.slug, slug),
-  })
 }
 
 /**

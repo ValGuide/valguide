@@ -3,8 +3,8 @@ import { db } from '@valguide/core/features/db'
 import { getStopsByOrganizationId } from '@valguide/core/features/guides/stop-queries'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
+import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
-import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
 
 const getStopsInputSchema = z.object({
@@ -12,17 +12,11 @@ const getStopsInputSchema = z.object({
 })
 
 export const getStopsFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(getStopsInputSchema)
   .handler(
-    handleError(async ({ data }) => {
-      const supabase = await createClient()
-      const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-      if (claimsError || !claimsData?.claims?.sub) {
-        throw new Error('Unauthorized')
-      }
-
-      const userId = claimsData.claims.sub
+    handleError(async ({ data, context }) => {
+      const userId = context.user.id
       const queryOrganizationId = data.organizationId
 
       const userTeams = await getUserTeams(db, userId)

@@ -10,6 +10,7 @@ import { getActiveTeamId } from '../utils/cookies'
 export type AuthUser = {
   id: string
   email?: string
+  metadata?: any
 }
 
 export type AuthContext = {
@@ -36,9 +37,10 @@ export const authContextMiddleware = createMiddleware({ type: 'function' }).serv
 
   const user: AuthUser | null = data?.claims?.sub
     ? {
-        id: data.claims.sub,
-        email: data.claims.email as string | undefined,
-      }
+      id: data.claims.sub,
+      email: data.claims.email as string | undefined,
+      metadata: data.claims.user_metadata,
+    }
     : null
 
   // Get active org from cookie (set when user switches teams)
