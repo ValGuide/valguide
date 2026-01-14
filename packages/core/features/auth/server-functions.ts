@@ -25,6 +25,12 @@ export const getCurrentUserFn = createServerFn({ method: 'GET' }).handler(async 
   }
 })
 
+export const isAuthenticatedFn = createServerFn({ method: 'GET' }).handler(async (): Promise<boolean> => {
+  const supabase = await createClient()
+  const { data } = await supabase.auth.getClaims()
+  return !!data?.claims?.sub
+})
+
 type SerializableError = {
   code: string | undefined
   status: number | undefined
