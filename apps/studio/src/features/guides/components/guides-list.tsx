@@ -1,4 +1,3 @@
-import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import type { Guide, GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'

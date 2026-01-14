@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
@@ -33,21 +33,21 @@ import * as React from 'react'
 import { TranslationStatusInline } from './translation-status-inline'
 
 export type StopsListProps = {
-  stops: StopWithTranslations[]
+  stops: StopWithAssets[]
   locale: string
   selectedStopId?: string
   onReorder: (updates: Array<{ id: string; order: number }>) => void
-  onEdit: (stop: StopWithTranslations) => void
+  onEdit: (stop: StopWithAssets) => void
   onDelete: (stopId: string) => void
   onAdd: () => void | Promise<void>
 }
 
 type SortableStopItemProps = {
-  stop: StopWithTranslations
+  stop: StopWithAssets
   index: number
   locale: string
   selected: boolean
-  onEdit: (stop: StopWithTranslations) => void
+  onEdit: (stop: StopWithAssets) => void
   onDelete: (stopId: string) => void
 }
 
@@ -66,6 +66,8 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
   const displayTitle =
     getVersionedField(translation, 'title') || getVersionedField(fallbackTranslation, 'title') || 'Untitled Stop'
 
+  const thumbnailAsset = stop.assets?.find((a) => a.mimeType?.startsWith('image/'))
+
   return (
     <div ref={setNodeRef} style={style}>
       <Card className={`hover:shadow-md transition-shadow ${selected ? 'ring-2 ring-primary' : ''}`}>
@@ -79,7 +81,11 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
           </button>
 
           <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
+            {thumbnailAsset?.publicUrl ? (
+              <img src={thumbnailAsset.publicUrl} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
+            )}
           </div>
 
           <div className="flex-1 min-w-0 space-y-1">
@@ -180,13 +186,18 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
             getVersionedField(translation, 'title') ||
             getVersionedField(fallbackTranslation, 'title') ||
             'Untitled Stop'
+          const thumbnailAsset = stop.assets?.find((a) => a.mimeType?.startsWith('image/'))
 
           return (
             <Card key={stop.id} className={`${stop.id === selectedStopId ? 'ring-2 ring-primary' : ''}`}>
               <CardContent className="flex items-center gap-4 p-4">
                 <GripVertical className="h-5 w-5 text-muted-foreground" />
                 <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
+                  {thumbnailAsset?.publicUrl ? (
+                    <img src={thumbnailAsset.publicUrl} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0 space-y-1">
                   <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title: displayTitle })}</h3>

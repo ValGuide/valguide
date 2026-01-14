@@ -182,7 +182,7 @@ export function GuideEditorProvider({
         toast.error(t('guides.locales.updateError'))
       }
     },
-    [guide.id, guide.organizationId, activeLocale, t],
+    [guide.id, guide.organizationId, activeLocale],
   )
 
   // Update guide translation
@@ -311,7 +311,7 @@ export function GuideEditorProvider({
       toast.error(t('stops.actions.addError'))
       return null
     }
-  }, [guide, t])
+  }, [guide])
 
   // Delete stop
   const deleteStop = useCallback(
@@ -334,7 +334,7 @@ export function GuideEditorProvider({
         toast.error(t('stops.actions.deleteError'))
       }
     },
-    [guide.stops, selectedStop?.id, t],
+    [guide.stops, selectedStop?.id],
   )
 
   // Reorder stops
@@ -528,7 +528,7 @@ export function GuideEditorProvider({
         toast.error(t('guides.assets.attachError'))
       }
     },
-    [guide.id, queryClient, t],
+    [guide.id, queryClient],
   )
 
   const detachAssetFromGuide = useCallback(
@@ -547,7 +547,7 @@ export function GuideEditorProvider({
         toast.error(t('guides.assets.removeError'))
       }
     },
-    [queryClient, t],
+    [queryClient],
   )
 
   // Stop asset actions (immediate save)
@@ -576,33 +576,36 @@ export function GuideEditorProvider({
           locale: locale ?? null,
         }
 
-        setGuide((prev) => ({
-          ...prev,
-          stops: prev.stops.map((stop: StopWithAssets): StopWithAssets => {
+        const newGuide = {
+          ...guide,
+          stops: guide.stops.map((stop: StopWithAssets): StopWithAssets => {
             if (stop.id !== stopId) return stop
             return {
               ...stop,
               assets: [...stop.assets, assetWithRole],
             }
           }),
-        }))
+        }
 
+        setGuide(newGuide)
+        queryClient.setQueryData(['guide', guide.nanoId], newGuide)
+        await queryClient.invalidateQueries({ queryKey: ['guides'] })
         toast.success(t('stops.assets.attachSuccess'))
       } catch (error) {
         console.error('Failed to attach asset:', error)
         toast.error(t('stops.assets.attachError'))
       }
     },
-    [t],
+    [guide, queryClient],
   )
 
   const detachAssetFromStop = useCallback(
     async (stopId: string, assetId: string, stopAssetId: string) => {
       try {
         // Update UI immediately
-        setGuide((prev) => ({
-          ...prev,
-          stops: prev.stops.map((s) =>
+        const newGuide = {
+          ...guide,
+          stops: guide.stops.map((s) =>
             s.id === stopId
               ? {
                   ...s,
@@ -610,17 +613,21 @@ export function GuideEditorProvider({
                 }
               : s,
           ),
-        }))
+        }
+
+        setGuide(newGuide)
+        queryClient.setQueryData(['guide', guide.nanoId], newGuide)
 
         // Delete from DB
         await detachAssetFromStopFn({ data: { stopAssetId } })
+        await queryClient.invalidateQueries({ queryKey: ['guides'] })
         toast.success(t('stops.assets.removeSuccess'))
       } catch (error) {
         console.error('Failed to detach asset:', error)
         toast.error(t('stops.assets.removeError'))
       }
     },
-    [t],
+    [guide, queryClient],
   )
 
   // Save
@@ -774,7 +781,7 @@ export function GuideEditorProvider({
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guide.id, guide.organizationId, save, t])
+  }, [guide.id, guide.organizationId, save])
 
   // Refetch data from server (revalidates SWR and updates local state)
   const refetch = useCallback(async () => {

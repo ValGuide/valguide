@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 
 import {
@@ -38,12 +38,7 @@ interface GuideEditViewProps {
   MediaPicker: MediaPickerComponent
 }
 
-export function GuideEditView({
-  onPublish,
-  onUnpublish,
-  onDiscard,
-  MediaPicker,
-}: GuideEditViewProps) {
+export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }: GuideEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -141,7 +136,7 @@ export function GuideEditView({
     }
   }, [formId, registerFormReset, unregisterForm])
 
-  const handleSelectStop = (stop: StopWithTranslations | null) => {
+  const handleSelectStop = (stop: StopWithAssets | null) => {
     if (stop) {
       router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/stops/${stop.id}/edit`) })
     }
