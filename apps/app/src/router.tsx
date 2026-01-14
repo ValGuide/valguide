@@ -1,8 +1,9 @@
 // Import the generated route tree
-import { QueryClient } from '@tanstack/react-query'
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import type { AuthUser } from '@valguide/core/features/auth/server-functions'
+import { logError } from '@valguide/core/utils/log-error'
 import { routeTree } from './routeTree.gen'
 
 declare module '@tanstack/react-router' {
@@ -20,6 +21,16 @@ export const getRouter = () => {
         refetchOnWindowFocus: false,
       },
     },
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        logError(error, { source: 'query', queryKey: query.queryKey })
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error, _, __, mutation) => {
+        logError(error, { source: 'mutation', mutationKey: mutation.options.mutationKey })
+      },
+    }),
   })
 
   const router = createRouter({

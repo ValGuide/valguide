@@ -43,12 +43,6 @@ export const archivedGuidesQueryOptions = () =>
 export const guideWithAssetsQueryOptions = (nanoId: string) =>
   queryOptions({
     queryKey: ['guide-with-assets', nanoId],
-    queryFn: async () => {
-      const guide = await getGuideByNanoIdWithAssetsFn({ data: { nanoId } })
-      if (!guide) {
-        throw new Error('Guide not found')
-      }
-      return guide
-    },
+    queryFn: () => getGuideByNanoIdWithAssetsFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
   })

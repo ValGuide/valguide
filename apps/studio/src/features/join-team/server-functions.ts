@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getInvitationByTokenHash } from '@valguide/core/features/orgs/queries'
+import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
 
@@ -21,54 +22,56 @@ export type JoinTeamData = {
 
 export const getJoinTeamDataFn = createServerFn({ method: 'GET' })
   .inputValidator(getJoinTeamDataSchema)
-  .handler(async ({ data }): Promise<JoinTeamData> => {
-    const { token } = data
+  .handler(
+    handleError(async ({ data }): Promise<JoinTeamData> => {
+      const { token } = data
 
-    if (!token) {
-      return { variant: 'invalid' }
-    }
+      if (!token) {
+        return { variant: 'invalid' }
+      }
 
-    const tokenHash = createHash('sha256').update(token).digest('hex')
-    const invite = await getInvitationByTokenHash(db, tokenHash)
+      const tokenHash = createHash('sha256').update(token).digest('hex')
+      const invite = await getInvitationByTokenHash(db, tokenHash)
 
-    if (!invite) {
-      return { variant: 'invalid' }
-    }
+      if (!invite) {
+        return { variant: 'invalid' }
+      }
 
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
+      const supabase = await createClient()
+      const { data: claimsData } = await supabase.auth.getClaims()
+      const user = claimsData?.claims
 
-    const nextUrl = `/join-team?token=${token}`
+      const nextUrl = `/join-team?token=${token}`
 
-    if (!user) {
+      if (!user) {
+        return {
+          variant: 'public',
+          invite: {
+            organization: { name: invite.organization.name },
+            email: invite.email,
+          },
+          nextUrl,
+        }
+      }
+
+      const userEmail = user.email ?? ''
+      if (invite.email.toLowerCase() !== userEmail.toLowerCase()) {
+        return {
+          variant: 'wrong-account',
+          invite: {
+            organization: { name: invite.organization.name },
+            email: invite.email,
+          },
+          userEmail,
+        }
+      }
+
       return {
-        variant: 'public',
+        variant: 'joining',
         invite: {
           organization: { name: invite.organization.name },
           email: invite.email,
         },
-        nextUrl,
       }
-    }
-
-    const userEmail = user.email ?? ''
-    if (invite.email.toLowerCase() !== userEmail.toLowerCase()) {
-      return {
-        variant: 'wrong-account',
-        invite: {
-          organization: { name: invite.organization.name },
-          email: invite.email,
-        },
-        userEmail,
-      }
-    }
-
-    return {
-      variant: 'joining',
-      invite: {
-        organization: { name: invite.organization.name },
-        email: invite.email,
-      },
-    }
-  })
+    }),
+  )

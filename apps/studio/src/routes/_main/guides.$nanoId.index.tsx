@@ -17,14 +17,14 @@ import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-s
 import { guideWithAssetsQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId/')({
-  loader: ({ context, params }) => context.queryClient.ensureQueryData(guideWithAssetsQueryOptions(params.nanoId)),
   component: GuidePage,
   pendingComponent: GuideDetailSkeleton,
 })
 
 function GuidePage() {
   const { nanoId } = Route.useParams()
-  const { data: guide } = useQuery(guideWithAssetsQueryOptions(nanoId))
+  const { data: guide, isError, isPending, error } = useQuery(guideWithAssetsQueryOptions(nanoId))
+  console.info('isError', isError, guide, isPending, error)
   const t = useTranslations('guides')
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -35,7 +35,7 @@ function GuidePage() {
     router.navigate({ to: '/' })
   }
 
-  if (!guide) return null
+  if (!guide) return <div>{isPending ? 'Loading...' : 'Guide not found'}</div>
 
   const translation = guide.translations.find((tr) => tr.locale === 'de') ?? guide.translations[0]
   const version = translation?.draftVersion ?? translation?.currentVersion

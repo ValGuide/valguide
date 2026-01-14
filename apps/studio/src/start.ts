@@ -42,18 +42,18 @@ export const loggingMiddleware = createMiddleware().server(async ({ next }) => {
 const globalErrorMiddleware = createMiddleware({
   type: 'request',
 }).server(async ({ next }) => {
-  // trackMiddlewareExecution('globalFunctionMiddleware')
   try {
+    console.info('Global error middleware executing')
     return await next({
       context: {
         globalMiddlewareExecuted: true,
       },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('Global error middleware caught error:', e)
     return Response.json(
       {
-        error: e.message ?? 'Server Error',
+        error: e instanceof Error ? e.message : 'Server Error',
       },
       {
         status: 500,
@@ -64,10 +64,9 @@ const globalErrorMiddleware = createMiddleware({
 
 // Create the start instance with global middleware
 export const startInstance = createStart(() => ({
-  // Global function middleware that applies to all server functions
+  // Global function middleware - handles auth errors for all server functions
   functionMiddleware: [],
-  // Request middleware - includes loggingMiddleware (issue #5239 scenario)
-  // AND the same loggingMiddleware is also attached to server functions
+  // Request middleware for unhandled errors
   requestMiddleware: [globalErrorMiddleware],
   defaultSsr: false,
 }))

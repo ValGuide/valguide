@@ -4,6 +4,7 @@ import { requireGuideAccess, requireStopAccess } from '@valguide/core/features/a
 import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { db } from '@valguide/core/features/db'
 import { valguideId } from '@valguide/core/utils/nanoid'
+import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { z } from 'zod'
 import { getGuideById, getGuideByNanoIdWithAssets, getStopByNanoId } from './queries'
@@ -33,36 +34,42 @@ const getGuideByIdSchema = z.object({ guideId: z.string() })
 export const getGuideByIdFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getGuideByIdSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return getGuideById(db, data.guideId)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireGuideAccess(data.guideId, context.user.id)
+      return getGuideById(db, data.guideId)
+    }),
+  )
 
 const getGuideByNanoIdWithAssetsSchema = z.object({ nanoId: z.string() })
 
 export const getGuideByNanoIdWithAssetsFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getGuideByNanoIdWithAssetsSchema)
-  .handler(async ({ context, data }) => {
-    const guideData = await getGuideByNanoIdWithAssets(data.nanoId)
-    if (guideData) {
-      await requireGuideAccess(guideData.id, context.user.id)
-    }
-    return guideData
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      const guideData = await getGuideByNanoIdWithAssets(data.nanoId)
+      if (guideData) {
+        await requireGuideAccess(guideData.id, context.user.id)
+      }
+      return guideData
+    }),
+  )
 
 const getStopByNanoIdQueriesSchema = z.object({ stopNanoId: z.string() })
 
 export const getStopByNanoIdFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getStopByNanoIdQueriesSchema)
-  .handler(async ({ context, data }) => {
-    const stopData = await getStopByNanoId(data.stopNanoId)
-    if (stopData) {
-      await requireStopAccess(stopData.id, context.user.id)
-    }
-    return stopData
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      const stopData = await getStopByNanoId(data.stopNanoId)
+      if (stopData) {
+        await requireStopAccess(stopData.id, context.user.id)
+      }
+      return stopData
+    }),
+  )
 
 // --- translation-queries.ts wrappers ---
 const getGuideTranslationHistorySchema = z.object({
@@ -73,10 +80,12 @@ const getGuideTranslationHistorySchema = z.object({
 export const getGuideTranslationHistoryFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getGuideTranslationHistorySchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return getGuideTranslationHistory(data.guideId, data.locale)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireGuideAccess(data.guideId, context.user.id)
+      return getGuideTranslationHistory(data.guideId, data.locale)
+    }),
+  )
 
 const getStopTranslationHistorySchema = z.object({
   stopId: z.string(),
@@ -86,10 +95,12 @@ const getStopTranslationHistorySchema = z.object({
 export const getStopTranslationHistoryFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getStopTranslationHistorySchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return getStopTranslationHistory(data.stopId, data.locale)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireStopAccess(data.stopId, context.user.id)
+      return getStopTranslationHistory(data.stopId, data.locale)
+    }),
+  )
 
 // ============================================================================
 // Mutation Server Functions (POST) - from actions.ts
@@ -105,24 +116,26 @@ const updateGuideSchema = z.object({
 export const updateGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { id, published, organizationId, availableLocales } = data
-    await requireGuideAccess(id, context.user.id)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { id, published, organizationId, availableLocales } = data
+      await requireGuideAccess(id, context.user.id)
 
-    const [updatedGuide] = await db
-      .update(guide)
-      .set({
-        published: published === undefined ? undefined : published,
-        organizationId: organizationId ?? undefined,
-        availableLocales: availableLocales ?? undefined,
-        updatedBy: context.user.id,
-        updatedAt: new Date(),
-      })
-      .where(eq(guide.id, id))
-      .returning()
+      const [updatedGuide] = await db
+        .update(guide)
+        .set({
+          published: published === undefined ? undefined : published,
+          organizationId: organizationId ?? undefined,
+          availableLocales: availableLocales ?? undefined,
+          updatedBy: context.user.id,
+          updatedAt: new Date(),
+        })
+        .where(eq(guide.id, id))
+        .returning()
 
-    return updatedGuide
-  })
+      return updatedGuide
+    }),
+  )
 
 const updateGuideTranslationSchema = z.object({
   guideId: z.string(),
@@ -134,14 +147,16 @@ const updateGuideTranslationSchema = z.object({
 export const updateGuideTranslationFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateGuideTranslationSchema)
-  .handler(async ({ context, data }) => {
-    const { guideId, locale, title, description } = data
-    await requireGuideAccess(guideId, context.user.id)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { guideId, locale, title, description } = data
+      await requireGuideAccess(guideId, context.user.id)
 
-    const versionId = await upsertGuideTranslationDraft(guideId, locale, { title, description })
+      const versionId = await upsertGuideTranslationDraft(guideId, locale, { title, description })
 
-    return { versionId }
-  })
+      return { versionId }
+    }),
+  )
 
 // Stop actions
 
@@ -161,86 +176,88 @@ const createStopSchema = z.object({
 export const createStopFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(createStopSchema)
-  .handler(async ({ context, data }) => {
-    const { guideId, position, translations } = data
-    await requireGuideAccess(guideId, context.user.id)
-    const userId = context.user.id
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { guideId, position, translations } = data
+      await requireGuideAccess(guideId, context.user.id)
+      const userId = context.user.id
 
-    const [guideData] = await db
-      .select({ organizationId: guide.organizationId })
-      .from(guide)
-      .where(eq(guide.id, guideId))
-      .limit(1)
+      const [guideData] = await db
+        .select({ organizationId: guide.organizationId })
+        .from(guide)
+        .where(eq(guide.id, guideId))
+        .limit(1)
 
-    if (!guideData) {
-      throw new Error('Guide not found')
-    }
+      if (!guideData) {
+        throw new Error('Guide not found')
+      }
 
-    let finalPosition = position
-    if (finalPosition === undefined) {
-      const existingStops = await db
-        .select({ position: guideStop.position })
-        .from(guideStop)
-        .where(eq(guideStop.guideId, guideId))
+      let finalPosition = position
+      if (finalPosition === undefined) {
+        const existingStops = await db
+          .select({ position: guideStop.position })
+          .from(guideStop)
+          .where(eq(guideStop.guideId, guideId))
 
-      const maxPosition = existingStops.length > 0 ? Math.max(...existingStops.map((s) => s.position)) : -1
-      finalPosition = maxPosition + 1
-    }
+        const maxPosition = existingStops.length > 0 ? Math.max(...existingStops.map((s) => s.position)) : -1
+        finalPosition = maxPosition + 1
+      }
 
-    const nanoId = valguideId()
+      const nanoId = valguideId()
 
-    const [newStop] = await db
-      .insert(stop)
-      .values({
-        organizationId: guideData.organizationId,
-        nanoId,
-        createdBy: userId,
+      const [newStop] = await db
+        .insert(stop)
+        .values({
+          organizationId: guideData.organizationId,
+          nanoId,
+          createdBy: userId,
+          guideId,
+          order: finalPosition,
+        })
+        .returning()
+
+      if (!newStop) {
+        throw new Error('Failed to create stop')
+      }
+
+      await db.insert(guideStop).values({
         guideId,
-        order: finalPosition,
+        stopId: newStop.id,
+        position: finalPosition,
       })
-      .returning()
 
-    if (!newStop) {
-      throw new Error('Failed to create stop')
-    }
+      for (const trans of translations) {
+        await upsertStopTranslationDraft(
+          newStop.id,
+          trans.locale,
+          {
+            title: trans.title,
+            description: trans.description,
+            transcription: trans.transcription,
+          },
+          userId,
+        )
+      }
 
-    await db.insert(guideStop).values({
-      guideId,
-      stopId: newStop.id,
-      position: finalPosition,
-    })
-
-    for (const trans of translations) {
-      await upsertStopTranslationDraft(
-        newStop.id,
-        trans.locale,
-        {
-          title: trans.title,
-          description: trans.description,
-          transcription: trans.transcription,
-        },
-        userId,
-      )
-    }
-
-    const fullStop = await db.query.stop.findFirst({
-      where: eq(stop.id, newStop.id),
-      with: {
-        translations: {
-          with: {
-            draftVersion: true,
-            currentVersion: true,
+      const fullStop = await db.query.stop.findFirst({
+        where: eq(stop.id, newStop.id),
+        with: {
+          translations: {
+            with: {
+              draftVersion: true,
+              currentVersion: true,
+            },
           },
         },
-      },
-    })
+      })
 
-    if (!fullStop) {
-      throw new Error('Failed to fetch created stop')
-    }
+      if (!fullStop) {
+        throw new Error('Failed to fetch created stop')
+      }
 
-    return fullStop
-  })
+      return fullStop
+    }),
+  )
 
 const updateStopSchema = z.object({
   stopId: z.string(),
@@ -253,14 +270,16 @@ const updateStopSchema = z.object({
 export const updateStopFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateStopSchema)
-  .handler(async ({ context, data }) => {
-    const { stopId, locale, title, description, transcription } = data
-    await requireStopAccess(stopId, context.user.id)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { stopId, locale, title, description, transcription } = data
+      await requireStopAccess(stopId, context.user.id)
 
-    const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
+      const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
 
-    return { versionId }
-  })
+      return { versionId }
+    }),
+  )
 
 const deleteStopSchema = z.object({
   stopId: z.string(),
@@ -269,12 +288,14 @@ const deleteStopSchema = z.object({
 export const deleteStopFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(deleteStopSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    await db.delete(stop).where(eq(stop.id, data.stopId))
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireStopAccess(data.stopId, context.user.id)
+      await db.delete(stop).where(eq(stop.id, data.stopId))
 
-    return { success: true }
-  })
+      return { success: true }
+    }),
+  )
 
 const reorderStopsSchema = z.array(
   z.object({
@@ -286,28 +307,30 @@ const reorderStopsSchema = z.array(
 export const reorderStopsFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(reorderStopsSchema)
-  .handler(async ({ context, data: updates }) => {
-    if (updates.length > 0) {
-      const stopIds = updates.map((u) => u.id)
-      const stopsToCheck = await db
-        .select({ id: stop.id, guideId: stop.guideId })
-        .from(stop)
-        .where(inArray(stop.id, stopIds))
+  .handler(
+    handleError(async ({ context, data: updates }) => {
+      if (updates.length > 0) {
+        const stopIds = updates.map((u) => u.id)
+        const stopsToCheck = await db
+          .select({ id: stop.id, guideId: stop.guideId })
+          .from(stop)
+          .where(inArray(stop.id, stopIds))
 
-      const guideIds: string[] = Array.from(
-        new Set(stopsToCheck.filter((s) => s.guideId != null).map((s) => s.guideId as string)),
-      )
-      for (const gId of guideIds) {
-        await requireGuideAccess(gId, context.user.id)
+        const guideIds: string[] = Array.from(
+          new Set(stopsToCheck.filter((s) => s.guideId != null).map((s) => s.guideId as string)),
+        )
+        for (const gId of guideIds) {
+          await requireGuideAccess(gId, context.user.id)
+        }
       }
-    }
 
-    for (const update of updates) {
-      await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
-    }
+      for (const update of updates) {
+        await db.update(stop).set({ order: update.order }).where(eq(stop.id, update.id))
+      }
 
-    return { success: true }
-  })
+      return { success: true }
+    }),
+  )
 
 // Asset attachment actions
 
@@ -322,23 +345,25 @@ const attachAssetToGuideSchema = z.object({
 export const attachAssetToGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(attachAssetToGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { guideId, assetId, role, locale, order = 0 } = data
-    await requireGuideAccess(guideId, context.user.id)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { guideId, assetId, role, locale, order = 0 } = data
+      await requireGuideAccess(guideId, context.user.id)
 
-    const [attachment] = await db
-      .insert(guideAsset)
-      .values({
-        guideId,
-        assetId,
-        role,
-        locale: locale || null,
-        order,
-      })
-      .returning()
+      const [attachment] = await db
+        .insert(guideAsset)
+        .values({
+          guideId,
+          assetId,
+          role,
+          locale: locale || null,
+          order,
+        })
+        .returning()
 
-    return attachment
-  })
+      return attachment
+    }),
+  )
 
 const attachAssetToStopSchema = z.object({
   stopId: z.string(),
@@ -351,23 +376,25 @@ const attachAssetToStopSchema = z.object({
 export const attachAssetToStopFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(attachAssetToStopSchema)
-  .handler(async ({ context, data }) => {
-    const { stopId, assetId, role, locale, order = 0 } = data
-    await requireStopAccess(stopId, context.user.id)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { stopId, assetId, role, locale, order = 0 } = data
+      await requireStopAccess(stopId, context.user.id)
 
-    const [attachment] = await db
-      .insert(stopAsset)
-      .values({
-        stopId,
-        assetId,
-        role,
-        locale: locale || null,
-        order,
-      })
-      .returning()
+      const [attachment] = await db
+        .insert(stopAsset)
+        .values({
+          stopId,
+          assetId,
+          role,
+          locale: locale || null,
+          order,
+        })
+        .returning()
 
-    return attachment
-  })
+      return attachment
+    }),
+  )
 
 const detachAssetFromGuideSchema = z.object({
   guideAssetId: z.string(),
@@ -376,22 +403,24 @@ const detachAssetFromGuideSchema = z.object({
 export const detachAssetFromGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(detachAssetFromGuideSchema)
-  .handler(async ({ context, data }) => {
-    const [asset] = await db
-      .select({ guideId: guideAsset.guideId })
-      .from(guideAsset)
-      .where(eq(guideAsset.id, data.guideAssetId))
-      .limit(1)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const [asset] = await db
+        .select({ guideId: guideAsset.guideId })
+        .from(guideAsset)
+        .where(eq(guideAsset.id, data.guideAssetId))
+        .limit(1)
 
-    if (!asset) {
-      throw new Error('Asset attachment not found')
-    }
+      if (!asset) {
+        throw new Error('Asset attachment not found')
+      }
 
-    await requireGuideAccess(asset.guideId, context.user.id)
-    await db.delete(guideAsset).where(eq(guideAsset.id, data.guideAssetId))
+      await requireGuideAccess(asset.guideId, context.user.id)
+      await db.delete(guideAsset).where(eq(guideAsset.id, data.guideAssetId))
 
-    return { success: true }
-  })
+      return { success: true }
+    }),
+  )
 
 const detachAssetFromStopSchema = z.object({
   stopAssetId: z.string(),
@@ -400,22 +429,24 @@ const detachAssetFromStopSchema = z.object({
 export const detachAssetFromStopFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(detachAssetFromStopSchema)
-  .handler(async ({ context, data }) => {
-    const [asset] = await db
-      .select({ stopId: stopAsset.stopId })
-      .from(stopAsset)
-      .where(eq(stopAsset.id, data.stopAssetId))
-      .limit(1)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const [asset] = await db
+        .select({ stopId: stopAsset.stopId })
+        .from(stopAsset)
+        .where(eq(stopAsset.id, data.stopAssetId))
+        .limit(1)
 
-    if (!asset) {
-      throw new Error('Asset attachment not found')
-    }
+      if (!asset) {
+        throw new Error('Asset attachment not found')
+      }
 
-    await requireStopAccess(asset.stopId, context.user.id)
-    await db.delete(stopAsset).where(eq(stopAsset.id, data.stopAssetId))
+      await requireStopAccess(asset.stopId, context.user.id)
+      await db.delete(stopAsset).where(eq(stopAsset.id, data.stopAssetId))
 
-    return { success: true }
-  })
+      return { success: true }
+    }),
+  )
 
 const archiveGuideSchema = z.object({
   id: z.string(),
@@ -424,23 +455,25 @@ const archiveGuideSchema = z.object({
 export const archiveGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(archiveGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { id } = data
-    await requireGuideAccess(id, context.user.id)
-    const userId = context.user.id
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { id } = data
+      await requireGuideAccess(id, context.user.id)
+      const userId = context.user.id
 
-    const [archivedGuide] = await db
-      .update(guide)
-      .set({
-        archivedAt: new Date(),
-        updatedBy: userId,
-        updatedAt: new Date(),
-      })
-      .where(eq(guide.id, id))
-      .returning()
+      const [archivedGuide] = await db
+        .update(guide)
+        .set({
+          archivedAt: new Date(),
+          updatedBy: userId,
+          updatedAt: new Date(),
+        })
+        .where(eq(guide.id, id))
+        .returning()
 
-    return archivedGuide
-  })
+      return archivedGuide
+    }),
+  )
 
 const recoverGuideSchema = z.object({
   id: z.string(),
@@ -449,23 +482,25 @@ const recoverGuideSchema = z.object({
 export const recoverGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(recoverGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { id } = data
-    await requireGuideAccess(id, context.user.id)
-    const userId = context.user.id
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { id } = data
+      await requireGuideAccess(id, context.user.id)
+      const userId = context.user.id
 
-    const [recoveredGuide] = await db
-      .update(guide)
-      .set({
-        archivedAt: null,
-        updatedBy: userId,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(guide.id, id), isNotNull(guide.archivedAt), isNull(guide.deletedAt)))
-      .returning()
+      const [recoveredGuide] = await db
+        .update(guide)
+        .set({
+          archivedAt: null,
+          updatedBy: userId,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(guide.id, id), isNotNull(guide.archivedAt), isNull(guide.deletedAt)))
+        .returning()
 
-    return recoveredGuide
-  })
+      return recoveredGuide
+    }),
+  )
 
 const deleteGuideSchema = z.object({
   id: z.string(),
@@ -474,23 +509,25 @@ const deleteGuideSchema = z.object({
 export const deleteGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(deleteGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { id } = data
-    await requireGuideAccess(id, context.user.id)
-    const userId = context.user.id
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { id } = data
+      await requireGuideAccess(id, context.user.id)
+      const userId = context.user.id
 
-    const [deletedGuide] = await db
-      .update(guide)
-      .set({
-        deletedAt: new Date(),
-        updatedBy: userId,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(guide.id, id), isNotNull(guide.archivedAt)))
-      .returning()
+      const [deletedGuide] = await db
+        .update(guide)
+        .set({
+          deletedAt: new Date(),
+          updatedBy: userId,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(guide.id, id), isNotNull(guide.archivedAt)))
+        .returning()
 
-    return deletedGuide
-  })
+      return deletedGuide
+    }),
+  )
 
 // ============================================================================
 // Mutation Server Functions (POST) - from translation-actions.ts
@@ -504,10 +541,12 @@ const publishGuideTranslationDraftSchema = z.object({
 export const publishGuideTranslationDraftFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(publishGuideTranslationDraftSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return publishDraft(data.guideId, data.locale)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireGuideAccess(data.guideId, context.user.id)
+      return publishDraft(data.guideId, data.locale)
+    }),
+  )
 
 const publishStopTranslationDraftSchema = z.object({
   stopId: z.string(),
@@ -517,10 +556,12 @@ const publishStopTranslationDraftSchema = z.object({
 export const publishStopTranslationDraftFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(publishStopTranslationDraftSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return publishStopDraft(data.stopId, data.locale)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireStopAccess(data.stopId, context.user.id)
+      return publishStopDraft(data.stopId, data.locale)
+    }),
+  )
 
 const rollbackGuideTranslationSchema = z.object({
   guideId: z.string(),
@@ -531,10 +572,12 @@ const rollbackGuideTranslationSchema = z.object({
 export const rollbackGuideTranslationFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(rollbackGuideTranslationSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return rollbackGuide(data.guideId, data.locale, data.targetVersion, context.user.id)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireGuideAccess(data.guideId, context.user.id)
+      return rollbackGuide(data.guideId, data.locale, data.targetVersion, context.user.id)
+    }),
+  )
 
 const rollbackStopTranslationSchema = z.object({
   stopId: z.string(),
@@ -545,10 +588,12 @@ const rollbackStopTranslationSchema = z.object({
 export const rollbackStopTranslationFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(rollbackStopTranslationSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return rollbackStop(data.stopId, data.locale, data.targetVersion, context.user.id)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireStopAccess(data.stopId, context.user.id)
+      return rollbackStop(data.stopId, data.locale, data.targetVersion, context.user.id)
+    }),
+  )
 
 // ============================================================================
 // Discard Draft Server Functions
@@ -562,11 +607,13 @@ const discardGuideTranslationDraftSchema = z.object({
 export const discardGuideTranslationDraftFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(discardGuideTranslationDraftSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    const success = await deleteGuideTranslationDraft(data.guideId, data.locale)
-    return { success }
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireGuideAccess(data.guideId, context.user.id)
+      const success = await deleteGuideTranslationDraft(data.guideId, data.locale)
+      return { success }
+    }),
+  )
 
 const discardStopTranslationDraftSchema = z.object({
   stopId: z.string(),
@@ -576,11 +623,13 @@ const discardStopTranslationDraftSchema = z.object({
 export const discardStopTranslationDraftFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(discardStopTranslationDraftSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    const success = await deleteStopTranslationDraft(data.stopId, data.locale)
-    return { success }
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireStopAccess(data.stopId, context.user.id)
+      const success = await deleteStopTranslationDraft(data.stopId, data.locale)
+      return { success }
+    }),
+  )
 
 // ============================================================================
 // Unpublish Server Functions
@@ -594,10 +643,12 @@ const unpublishGuideTranslationSchema = z.object({
 export const unpublishGuideTranslationFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(unpublishGuideTranslationSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return unpublishGuideTranslation(data.guideId, data.locale)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireGuideAccess(data.guideId, context.user.id)
+      return unpublishGuideTranslation(data.guideId, data.locale)
+    }),
+  )
 
 const unpublishStopTranslationSchema = z.object({
   stopId: z.string(),
@@ -607,7 +658,9 @@ const unpublishStopTranslationSchema = z.object({
 export const unpublishStopTranslationFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(unpublishStopTranslationSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return unpublishStopTranslation(data.stopId, data.locale)
-  })
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireStopAccess(data.stopId, context.user.id)
+      return unpublishStopTranslation(data.stopId, data.locale)
+    }),
+  )

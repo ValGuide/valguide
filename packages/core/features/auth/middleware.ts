@@ -63,7 +63,6 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
       throw redirect({ to: '/login' })
     }
 
-    // TypeScript now knows user is non-null
     return next({
       context: {
         user: context.user,
