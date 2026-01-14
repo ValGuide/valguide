@@ -18,6 +18,16 @@ import { CSS } from '@dnd-kit/utilities'
 import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@valguide/ui/components/alert-dialog'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import {
@@ -48,10 +58,10 @@ type SortableStopItemProps = {
   locale: string
   selected: boolean
   onEdit: (stop: StopWithAssets) => void
-  onDelete: (stopId: string) => void
+  onRequestDelete: (stop: StopWithAssets) => void
 }
 
-function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: SortableStopItemProps) {
+function SortableStopItem({ stop, index, locale, selected, onEdit, onRequestDelete }: SortableStopItemProps) {
   const t = useTranslations('stops')
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: stop.id })
 
@@ -102,7 +112,7 @@ function SortableStopItem({ stop, index, locale, selected, onEdit, onDelete }: S
               variant="ghost"
               size="icon"
               className="text-destructive hover:text-destructive"
-              onClick={() => onDelete(stop.id)}
+              onClick={() => onRequestDelete(stop)}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -117,6 +127,14 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
   const t = useTranslations('stops')
   const [items, setItems] = React.useState(stops)
   const [isMounted, setIsMounted] = React.useState(false)
+  const [stopToDelete, setStopToDelete] = React.useState<StopWithAssets | null>(null)
+
+  const handleConfirmDelete = React.useCallback(() => {
+    if (stopToDelete) {
+      onDelete(stopToDelete.id)
+      setStopToDelete(null)
+    }
+  }, [stopToDelete, onDelete])
 
   React.useEffect(() => {
     setIsMounted(true)
@@ -155,6 +173,36 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
       onReorder(updates)
     }
   }
+
+  const stopToDeleteTitle = React.useMemo(() => {
+    if (!stopToDelete) return ''
+    const translation = stopToDelete.translations.find((tr) => tr.locale === locale)
+    const fallbackTranslation = stopToDelete.translations[0]
+    return getVersionedField(translation, 'title') || getVersionedField(fallbackTranslation, 'title') || t('untitled')
+  }, [stopToDelete, locale])
+
+  const deleteConfirmationDialog = (
+    <AlertDialog open={!!stopToDelete} onOpenChange={(open) => !open && setStopToDelete(null)}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t('actions.delete')}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t('actions.deleteConfirm')}
+            <span className="mt-2 block font-medium text-foreground">{stopToDeleteTitle}</span>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleConfirmDelete}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {t('actions.delete')}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
 
   if (stops.length === 0) {
     return (
@@ -211,7 +259,7 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
                     variant="ghost"
                     size="icon"
                     className="text-destructive hover:text-destructive"
-                    onClick={() => onDelete(stop.id)}
+                    onClick={() => setStopToDelete(stop)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -224,6 +272,7 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
           <Plus />
           {t('add')}
         </Button>
+        {deleteConfirmationDialog}
       </div>
     )
   }
@@ -241,7 +290,7 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
                 locale={locale}
                 selected={stop.id === selectedStopId}
                 onEdit={onEdit}
-                onDelete={onDelete}
+                onRequestDelete={setStopToDelete}
               />
             ))}
           </div>
@@ -251,6 +300,7 @@ export function StopsList({ stops, locale, selectedStopId, onReorder, onEdit, on
         <Plus />
         {t('add')}
       </Button>
+      {deleteConfirmationDialog}
     </div>
   )
 }
