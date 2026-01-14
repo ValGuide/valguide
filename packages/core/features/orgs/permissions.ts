@@ -1,4 +1,6 @@
-export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
+import type { OrgRole } from './schema'
+
+export type { OrgRole }
 
 const roleHierarchy: Record<OrgRole, number> = {
   viewer: 0,

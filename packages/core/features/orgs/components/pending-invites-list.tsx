@@ -10,8 +10,9 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { Clock, Mail, MoreHorizontal, RefreshCw, X } from 'lucide-react'
+import type { OrgRole } from '../schema'
 
-export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
+export type { OrgRole }
 
 export interface PendingInvitation {
   id: string

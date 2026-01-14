@@ -12,8 +12,9 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { Crown, Edit3, Eye, Mail, MoreHorizontal, Palette, Shield, Trash2 } from 'lucide-react'
 import type * as React from 'react'
+import type { OrgRole } from '../schema'
 
-export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
+export type { OrgRole }
 
 export interface TeamMember {
   id: string

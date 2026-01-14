@@ -11,8 +11,9 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
 import { ChevronsUpDown, Plus, Settings } from 'lucide-react'
 import * as React from 'react'
+import type { OrgRole } from '../schema'
 
-export type OrgRole = 'owner' | 'admin' | 'curator' | 'editor' | 'viewer'
+export type { OrgRole }
 
 export interface Team {
   id: string

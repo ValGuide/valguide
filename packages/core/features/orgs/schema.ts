@@ -4,8 +4,9 @@ import { authUsers } from 'drizzle-orm/supabase'
 
 const studioSchema = pgSchema('studio')
 
-export const orgRole = pgEnum('org_role', ['owner', 'admin', 'curator', 'editor', 'viewer'])
-export type OrgRole = (typeof orgRole.enumValues)[number]
+export const ORG_ROLES = ['owner', 'admin', 'curator', 'editor', 'viewer'] as const
+export const orgRole = pgEnum('org_role', ORG_ROLES)
+export type OrgRole = (typeof ORG_ROLES)[number]
 
 export const organization = studioSchema.table('organization', {
   id: uuid('id').defaultRandom().primaryKey(),

@@ -1,18 +1,19 @@
 import { createServerFn } from '@tanstack/react-start'
+import { requireOrgMember, requireThemeAccess } from '@valguide/core/features/auth/authorization'
+import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import {
-  createTheme,
   type CreateThemeInput,
+  createTheme,
   deleteTheme,
-  updateTheme,
   type UpdateThemeInput,
+  updateTheme,
 } from '@valguide/core/features/themes/mutations'
-import { getFullThemeById, getOrgThemes } from '@valguide/core/features/themes/queries'
+import { getOrgThemes } from '@valguide/core/features/themes/queries'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
-import { createClient } from '@valguide/supabase/server'
+import { getActiveTeamId, getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
-import { getActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 
 // Get themes for organization
 const getThemesInputSchema = z.object({
@@ -20,16 +21,10 @@ const getThemesInputSchema = z.object({
 })
 
 export const getThemesFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(getThemesInputSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-    if (claimsError || !claimsData?.claims?.sub) {
-      throw new Error('Unauthorized')
-    }
-
-    const userId = claimsData.claims.sub
+  .handler(async ({ context, data }) => {
+    const userId = context.user.id
     const queryOrganizationId = data.organizationId
 
     const userTeams = await getUserTeams(db, userId)
@@ -48,12 +43,22 @@ export const getThemesFn = createServerFn({ method: 'GET' })
     }
 
     if (!targetOrganizationId) {
-      const activeTeamSlug = getActiveTeamSlug()
-
-      if (activeTeamSlug) {
-        const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+      // Try team ID first (new approach), fall back to slug (backward compat)
+      const activeTeamId = getActiveTeamId()
+      if (activeTeamId) {
+        const team = userTeams.find((t: { id: string }) => t.id === activeTeamId)
         if (team) {
           targetOrganizationId = team.id
+        }
+      }
+
+      if (!targetOrganizationId) {
+        const activeTeamSlug = getActiveTeamSlug()
+        if (activeTeamSlug) {
+          const team = userTeams.find((t: { id: string; slug: string }) => t.slug === activeTeamSlug)
+          if (team) {
+            targetOrganizationId = team.id
+          }
         }
       }
     }
@@ -76,24 +81,12 @@ const createThemeInputSchema = z.object({
 })
 
 export const createThemeFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(createThemeInputSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-    if (claimsError || !claimsData?.claims?.sub) {
-      throw new Error('Unauthorized')
-    }
-
-    const userId = claimsData.claims.sub
+  .handler(async ({ context, data }) => {
     const { organizationId, name, basePreset, colors, radius, fonts } = data
 
-    const userTeams = await getUserTeams(db, userId)
-    const hasAccess = userTeams.some((t: { id: string }) => t.id === organizationId)
-
-    if (!hasAccess) {
-      throw new Error('You do not have access to this organization')
-    }
+    await requireOrgMember(organizationId, context.user.id)
 
     const input: CreateThemeInput = {
       organizationId,
@@ -102,7 +95,7 @@ export const createThemeFn = createServerFn({ method: 'POST' })
       colors: colors as ThemeColors,
       radius,
       fonts: fonts as ThemeFonts,
-      createdBy: userId,
+      createdBy: context.user.id,
     }
 
     return await createTheme(input)
@@ -119,31 +112,12 @@ const updateThemeInputSchema = z.object({
 })
 
 export const updateThemeFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(updateThemeInputSchema)
-  .handler(async ({ data }) => {
+  .handler(async ({ context, data }) => {
     const { id, name, basePreset, colors, radius, fonts } = data
 
-    const supabase = await createClient()
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-    if (claimsError || !claimsData?.claims?.sub) {
-      throw new Error('Unauthorized')
-    }
-
-    const userId = claimsData.claims.sub
-
-    const existingTheme = await getFullThemeById(id)
-
-    if (!existingTheme) {
-      throw new Error('Theme not found')
-    }
-
-    const userTeams = await getUserTeams(db, userId)
-    const hasAccess = userTeams.some((t: { id: string }) => t.id === existingTheme.organizationId)
-
-    if (!hasAccess) {
-      throw new Error('You do not have access to this theme')
-    }
+    await requireThemeAccess(id, context.user.id)
 
     const input: UpdateThemeInput = { id }
 
@@ -162,31 +136,12 @@ const deleteThemeInputSchema = z.object({
 })
 
 export const deleteThemeFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(deleteThemeInputSchema)
-  .handler(async ({ data }) => {
+  .handler(async ({ context, data }) => {
     const { id } = data
 
-    const supabase = await createClient()
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-
-    if (claimsError || !claimsData?.claims?.sub) {
-      throw new Error('Unauthorized')
-    }
-
-    const userId = claimsData.claims.sub
-
-    const existingTheme = await getFullThemeById(id)
-
-    if (!existingTheme) {
-      throw new Error('Theme not found')
-    }
-
-    const userTeams = await getUserTeams(db, userId)
-    const hasAccess = userTeams.some((t: { id: string }) => t.id === existingTheme.organizationId)
-
-    if (!hasAccess) {
-      throw new Error('You do not have access to this theme')
-    }
+    await requireThemeAccess(id, context.user.id)
 
     await deleteTheme(id)
 

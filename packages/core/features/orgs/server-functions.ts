@@ -1,11 +1,12 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
-import { setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
+import { setActiveTeamId, setActiveTeamSlug } from '@valguide/features/utils/cookies.ts'
 import { sendEmail } from '@valguide/transactional'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
-import { createClient } from '../../supabase/server'
+import { requireOrgRole } from '../auth/authorization'
+import { requireAuthMiddleware } from '../auth/middleware'
 import {
   acceptInvitation,
   createInvitation,
@@ -15,15 +16,8 @@ import {
   removeMember,
   updateMemberRole,
 } from './mutations'
-import { canManageMembers, type OrgRole } from './permissions'
-import {
-  getInvitationById,
-  getInvitationByTokenHash,
-  getTeamById,
-  getTeamBySlug,
-  getUserRole,
-  isTeamMember,
-} from './queries'
+import { getInvitationById, getInvitationByTokenHash, getTeamById, getTeamBySlug, isTeamMember } from './queries'
+import { ORG_ROLES, type OrgRole } from './schema'
 
 const createTeamSchema = z.object({
   name: z.string(),
@@ -31,43 +25,26 @@ const createTeamSchema = z.object({
 })
 
 export const createTeamFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(createTeamSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
-    const team = await createTeam(db, data.name, user.sub, data.slug)
+  .handler(async ({ context, data }) => {
+    const team = await createTeam(db, data.name, context.user.id, data.slug)
     setActiveTeamSlug(team.slug)
+    setActiveTeamId(team.id)
     return team
   })
 
 const inviteMemberSchema = z.object({
   teamId: z.string(),
   email: z.string().email(),
-  role: z.enum(['owner', 'admin', 'curator', 'editor', 'viewer']),
+  role: z.enum(ORG_ROLES),
 })
 
 export const inviteMemberFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(inviteMemberSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
-    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
-
-    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-      throw new Error('Insufficient permissions')
-    }
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
     const team = await getTeamById(db, data.teamId)
     if (!team) throw new Error('Team not found')
@@ -75,7 +52,7 @@ export const inviteMemberFn = createServerFn({ method: 'POST' })
     const token = randomBytes(32).toString('hex')
     const tokenHash = createHash('sha256').update(token).digest('hex')
 
-    await createInvitation(db, data.teamId, data.email, data.role as OrgRole, user.sub, tokenHash)
+    await createInvitation(db, data.teamId, data.email, data.role as OrgRole, context.user.id, tokenHash)
 
     await sendEmail({
       to: data.email,
@@ -85,7 +62,7 @@ export const inviteMemberFn = createServerFn({ method: 'POST' })
         data: {
           inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
           teamName: team.name,
-          inviterName: user.email || 'A colleague',
+          inviterName: context.user.email || 'A colleague',
           logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
         },
       },
@@ -100,21 +77,10 @@ const resendInviteSchema = z.object({
 })
 
 export const resendInviteFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(resendInviteSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
-    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
-
-    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-      throw new Error('Insufficient permissions')
-    }
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
     const invite = await getInvitationById(db, data.inviteId)
     if (!invite) throw new Error('Invitation not found')
@@ -125,7 +91,7 @@ export const resendInviteFn = createServerFn({ method: 'POST' })
     const token = randomBytes(32).toString('hex')
     const tokenHash = createHash('sha256').update(token).digest('hex')
 
-    await createInvitation(db, data.teamId, invite.email, invite.role as OrgRole, user.sub, tokenHash)
+    await createInvitation(db, data.teamId, invite.email, invite.role as OrgRole, context.user.id, tokenHash)
 
     await sendEmail({
       to: invite.email,
@@ -135,7 +101,7 @@ export const resendInviteFn = createServerFn({ method: 'POST' })
         data: {
           inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
           teamName: team.name,
-          inviterName: user.email || 'A colleague',
+          inviterName: context.user.email || 'A colleague',
           logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
         },
       },
@@ -150,21 +116,10 @@ const cancelInviteSchema = z.object({
 })
 
 export const cancelInviteFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(cancelInviteSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
-    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
-
-    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-      throw new Error('Insufficient permissions')
-    }
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
     await deleteInvitation(db, data.inviteId)
   })
@@ -175,21 +130,10 @@ const removeMemberSchema = z.object({
 })
 
 export const removeMemberFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(removeMemberSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
-    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
-
-    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-      throw new Error('Insufficient permissions')
-    }
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
     await removeMember(db, data.memberId)
   })
@@ -197,25 +141,14 @@ export const removeMemberFn = createServerFn({ method: 'POST' })
 const updateMemberRoleSchema = z.object({
   memberId: z.string(),
   teamId: z.string(),
-  newRole: z.enum(['owner', 'admin', 'curator', 'editor', 'viewer']),
+  newRole: z.enum(ORG_ROLES),
 })
 
 export const updateMemberRoleFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(updateMemberRoleSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
-    const currentUserRole = await getUserRole(db, data.teamId, user.sub)
-
-    if (!currentUserRole || !canManageMembers(currentUserRole as OrgRole)) {
-      throw new Error('Insufficient permissions')
-    }
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
     await updateMemberRole(db, data.memberId, data.newRole as OrgRole)
   })
@@ -225,16 +158,9 @@ const joinTeamSchema = z.object({
 })
 
 export const joinTeamFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(joinTeamSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
+  .handler(async ({ context, data }) => {
     const tokenHash = createHash('sha256').update(data.token).digest('hex')
     const invite = await getInvitationByTokenHash(db, tokenHash)
 
@@ -242,17 +168,18 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
       throw new Error('Invalid or expired invitation')
     }
 
-    const isMember = await isTeamMember(db, invite.organizationId, user.sub)
+    const isMember = await isTeamMember(db, invite.organizationId, context.user.id)
     if (isMember) {
       return { success: true, slug: invite.organization.slug }
     }
 
-    if (invite.email.toLowerCase() !== (user.email || '').toLowerCase()) {
-      throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${user.email}`)
+    if (invite.email.toLowerCase() !== (context.user.email || '').toLowerCase()) {
+      throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${context.user.email}`)
     }
 
-    await acceptInvitation(db, invite.id, user.sub)
+    await acceptInvitation(db, invite.id, context.user.id)
     setActiveTeamSlug(invite.organization.slug)
+    setActiveTeamId(invite.organizationId)
     return { success: true, slug: invite.organization.slug }
   })
 
@@ -265,27 +192,21 @@ const switchTeamSchema = z.object({
 })
 
 export const switchTeamFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(switchTeamSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
-
-    if (!user) {
-      throw new Error('Unauthorized')
-    }
-
+  .handler(async ({ context, data }) => {
     const team = await getTeamBySlug(db, data.slug)
     if (!team) {
       throw new Error('Team not found')
     }
 
-    const isMember = await isTeamMember(db, team.id, user.sub)
+    const isMember = await isTeamMember(db, team.id, context.user.id)
     if (!isMember) {
       throw new Error('Not a member of this team')
     }
 
     setActiveTeamSlug(team.slug)
+    setActiveTeamId(team.id)
 
     return { success: true }
   })
@@ -299,23 +220,17 @@ export const switchTeamFn = createServerFn({ method: 'POST' })
  * Creates a default team if they don't have any.
  * Idempotent - safe to call multiple times (cached via React Query).
  */
-export const ensureDefaultTeamFn = createServerFn({ method: 'POST' }).handler(async () => {
-  const supabase = await createClient()
-  const { data: claimsData } = await supabase.auth.getClaims()
-  const user = claimsData?.claims
+export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .handler(async ({ context }) => {
+    // Get user's display name for team naming
+    const { getProfile } = await import('../profiles/queries')
+    const { getUserDisplayName } = await import('../profiles/utils')
 
-  if (!user) {
-    throw new Error('Unauthorized')
-  }
+    const profile = await getProfile(context.user.id)
+    const displayName = getUserDisplayName(profile, context.user.email)
 
-  // Get user's display name for team naming
-  const { getProfile } = await import('../profiles/queries')
-  const { getUserDisplayName } = await import('../profiles/utils')
+    const team = await ensureDefaultTeam(db, context.user.id, displayName)
 
-  const profile = await getProfile(user.sub)
-  const displayName = getUserDisplayName(profile, user.email, user.user_metadata)
-
-  const team = await ensureDefaultTeam(db, user.sub, displayName)
-
-  return { teamId: team.id, teamSlug: team.slug }
-})
+    return { teamId: team.id, teamSlug: team.slug }
+  })

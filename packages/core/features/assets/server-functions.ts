@@ -1,4 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
+import { requireAssetAccess, requireOrgMember } from '@valguide/core/features/auth/authorization'
+import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { db } from '@valguide/core/features/db'
 import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
@@ -17,8 +19,9 @@ export type UploadCredentials = {
 // Upload Credentials (GET)
 // ============================================================================
 
-export const getUploadCredentialsFn = createServerFn({ method: 'GET' }).handler(
-  async (): Promise<UploadCredentials> => {
+export const getUploadCredentialsFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .handler(async (): Promise<UploadCredentials> => {
     const supabase = await createClient()
     const {
       data: { session },
@@ -39,8 +42,7 @@ export const getUploadCredentialsFn = createServerFn({ method: 'GET' }).handler(
       accessToken: session.access_token,
       projectId,
     }
-  },
-)
+  })
 
 // ============================================================================
 // Confirm Asset Upload (POST)
@@ -61,13 +63,12 @@ const confirmAssetUploadSchema = z.object({
 })
 
 export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(confirmAssetUploadSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
+  .handler(async ({ context, data }) => {
+    await requireOrgMember(data.organizationId, context.user.id)
 
-    if (!user) throw new Error('Not authenticated')
+    const supabase = await createClient()
 
     const {
       assetId,
@@ -99,7 +100,7 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
         publicUrl,
         locale: locale ?? null,
         organizationId,
-        uploadedBy: user.sub,
+        uploadedBy: context.user.id,
         width: width ?? null,
         height: height ?? null,
         duration: duration ?? null,
@@ -118,23 +119,18 @@ const deleteAssetSchema = z.object({
 })
 
 export const deleteAssetFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(deleteAssetSchema)
-  .handler(async ({ data }) => {
-    const supabase = await createClient()
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const user = claimsData?.claims
+  .handler(async ({ context, data }) => {
+    await requireAssetAccess(data.assetId, context.user.id)
 
-    if (!user) throw new Error('Not authenticated')
+    const supabase = await createClient()
 
     const assetData = await db.query.asset.findFirst({
       where: eq(asset.id, data.assetId),
     })
 
     if (!assetData) throw new Error('Asset not found')
-
-    if (assetData.uploadedBy !== user.sub) {
-      throw new Error('Unauthorized to delete this asset')
-    }
 
     const { error: storageError } = await supabase.storage.from('assets').remove([assetData.storagePath])
 
@@ -171,8 +167,11 @@ export type AssetUsageDetails = {
 }
 
 export const getAssetUsageDetailsFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
   .inputValidator(getAssetUsageDetailsSchema)
-  .handler(async ({ data }): Promise<AssetUsageDetails> => {
+  .handler(async ({ context, data }): Promise<AssetUsageDetails> => {
+    await requireAssetAccess(data.assetId, context.user.id)
+
     const usage = await db.query.asset.findFirst({
       where: eq(asset.id, data.assetId),
       with: {
