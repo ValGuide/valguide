@@ -1,14 +1,13 @@
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
-import { Suspense } from 'react'
 import { AssetsListConnected } from '@/features/assets/components/assets-list-connected'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
 import { assetsQueryOptions } from '@/features/assets/query-options'
 import { sidebarQueryOptions } from '@/features/sidebar/query-options'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
+import { Suspense } from 'react'
 
 export const Route = createFileRoute('/_main/assets')({
   loader: async ({ context }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
     const sidebarData = await context.queryClient.ensureQueryData(sidebarQueryOptions())
     // Prefetch assets - component will use useSuspenseQuery to consume
     if (sidebarData?.currentTeam?.id) {
@@ -17,6 +16,9 @@ export const Route = createFileRoute('/_main/assets')({
     return { organizationId: sidebarData?.currentTeam?.id ?? '' }
   },
   component: AssetsPage,
+  pendingComponent: () =>
+    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <AssetsListSkeleton /> </main>,
 })
 
 function AssetsPage() {
