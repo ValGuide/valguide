@@ -1,6 +1,7 @@
 import { type DB, db } from '@valguide/core/features/db'
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
+import { getAssetImageUrl } from '../assets/image-url'
 import { asset, guideAsset, stopAsset } from '../assets/schema'
 import { guide, guideStop, guideTranslation, guideTranslationVersion, stop, stopTranslation } from './schema'
 import { upsertGuideTranslationDraft } from './translation-mutations'
@@ -251,13 +252,14 @@ export async function getGuidesListByOrganizationId(
 
   return guides.map((g) => {
     const resolved = resolveBestTranslation(g.translations, preferredLocale)
+    const coverAsset = coverMap.get(g.id)
     return {
       id: g.id,
       nanoId: g.nanoId,
       published: g.published,
       createdAt: g.createdAt,
       updatedAt: g.updatedAt,
-      coverImage: coverMap.get(g.id) ?? null,
+      coverImageUrl: coverAsset ? getAssetImageUrl(coverAsset) : null,
       displayTitle: resolved.title,
       displayDescription: resolved.description,
       displayLocale: resolved.locale,
@@ -323,16 +325,7 @@ export async function getGuideDetailByNanoId(
     .where(and(eq(guideAsset.guideId, result.id), eq(guideAsset.role, 'cover')))
     .limit(1)
 
-  const coverImage: AssetWithRole | null =
-    coverAssets.length > 0
-      ? {
-          ...coverAssets[0].asset,
-          guideAssetId: coverAssets[0].guideAssetId,
-          role: coverAssets[0].role,
-          order: coverAssets[0].order,
-          locale: coverAssets[0].locale,
-        }
-      : null
+  const coverImageUrl = coverAssets.length > 0 ? getAssetImageUrl(coverAssets[0].asset) : null
 
   // Apply translation fallback
   const resolved = resolveBestTranslation(result.translations, preferredLocale)
@@ -342,8 +335,6 @@ export async function getGuideDetailByNanoId(
     const version = t.draftVersion ?? t.currentVersion
     return {
       locale: t.locale,
-      hasCurrentVersion: !!t.currentVersion,
-      hasDraftVersion: !!t.draftVersion,
       title: version?.title ?? 'Untitled',
     }
   })
@@ -355,7 +346,7 @@ export async function getGuideDetailByNanoId(
     published: result.published,
     createdAt: result.createdAt,
     updatedAt: result.updatedAt,
-    coverImage,
+    coverImageUrl,
     displayTitle: resolved.title,
     displayDescription: resolved.description,
     displayLocale: resolved.locale,

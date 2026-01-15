@@ -23,9 +23,7 @@ function toGuideForPreview(guide: GuideListItem): Guide {
     nanoId: guide.nanoId,
     title: guide.displayTitle,
     description: guide.displayDescription ?? undefined,
-    coverImage: guide.coverImage
-      ? { storagePath: guide.coverImage.storagePath, publicUrl: guide.coverImage.publicUrl }
-      : undefined,
+    imageUrl: guide.coverImageUrl ?? undefined,
     createdAt: guide.createdAt,
     updatedAt: guide.updatedAt,
     published: guide.published,

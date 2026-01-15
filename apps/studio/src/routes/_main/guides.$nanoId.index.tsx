@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { clientEnv } from '@valguide/core/env/client'
-import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
@@ -40,7 +39,6 @@ function GuidePage() {
 
   const isPublished = !!guide.published
   const status = isPublished ? 'published' : 'draft'
-  const coverImageUrl = guide.coverImage ? getAssetImageUrl(guide.coverImage) : null
 
   return (
     <main className="flex flex-1 flex-col">
@@ -74,9 +72,9 @@ function GuidePage() {
           <Card className="overflow-hidden shadow-[var(--shadow-md)]">
             {/* Cover Image Section - Reduced height */}
             <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted/30">
-              {coverImageUrl ? (
+              {guide.coverImageUrl ? (
                 <Image
-                  src={coverImageUrl}
+                  src={guide.coverImageUrl}
                   alt={guide.displayTitle}
                   layout="fullWidth"
                   className="h-full w-full object-cover"

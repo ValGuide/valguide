@@ -35,7 +35,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
 
   const displayTitle = translation?.title || guide.title || 'Untitled Guide'
   const displayDescription = translation?.description || guide.description || ''
-  const displayImage = guide.coverImage ? getAssetImageUrl(guide.coverImage) : undefined
+  const displayImage = guide.imageUrl ?? (guide.coverImage ? getAssetImageUrl(guide.coverImage) : undefined)
   const guideUrl = guide.nanoId ? `/guides/${guide.nanoId}` : '#'
 
   const isPublished = !!guide.published

@@ -37,7 +37,7 @@ export const guidesQueryOptions = () =>
  */
 export const guidesListQueryOptions = (preferredLocale: string) =>
   queryOptions<GuideListItem[]>({
-    queryKey: ['guides-list', { preferredLocale }],
+    queryKey: ['guides-list'],
     queryFn: () => getGuidesListFn({ data: { preferredLocale } }),
     staleTime: 30_000,
     gcTime: 5 * 60 * 1000,
@@ -68,7 +68,7 @@ export const guideViewQueryOptions = (nanoId: string) =>
  */
 export const guideDetailQueryOptions = (nanoId: string, preferredLocale: string) =>
   queryOptions<GuideDetailItem | null>({
-    queryKey: ['guide', nanoId, 'detail', { preferredLocale }],
+    queryKey: ['guide', nanoId, 'detail'],
     queryFn: () => getGuideDetailFn({ data: { nanoId, preferredLocale } }),
     staleTime: 30_000,
     gcTime: 5 * 60 * 1000,

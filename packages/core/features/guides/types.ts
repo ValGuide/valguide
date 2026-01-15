@@ -166,7 +166,8 @@ export type GuideListItem = {
   published: Date | null
   createdAt: Date
   updatedAt: Date
-  coverImage: AssetWithRole | null
+  /** Resolved cover image URL (ImageKit or public URL) */
+  coverImageUrl: string | null
   /** Resolved title from best available translation */
   displayTitle: string
   /** Resolved description from best available translation */
@@ -184,8 +185,6 @@ export type GuideListItem = {
  */
 export type TranslationSummary = {
   locale: string
-  hasCurrentVersion: boolean
-  hasDraftVersion: boolean
   title: string
 }
 
@@ -200,7 +199,8 @@ export type GuideDetailItem = {
   published: Date | null
   createdAt: Date
   updatedAt: Date
-  coverImage: AssetWithRole | null
+  /** Resolved cover image URL (ImageKit or public URL) */
+  coverImageUrl: string | null
   /** Resolved title from best available translation */
   displayTitle: string
   /** Resolved description from best available translation (rich text) */
