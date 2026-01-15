@@ -49,7 +49,6 @@ export function AppSidebar({
   const location = useLocation()
   const pathnameFromRouter = location.pathname
   const router = useRouter()
-  const [pendingUrl, setPendingUrl] = React.useState<string | null>(null)
   const [createTeamOpen, setCreateTeamOpen] = React.useState(false)
 
   // Use prop if provided (e.g., in Storybook), otherwise use router pathname
@@ -58,35 +57,11 @@ export function AppSidebar({
   // Remove locale prefix from pathname (e.g., /de/analytics -> /analytics, /de -> /)
   const pathnameWithoutLocale = unlocalizedPathname(pathname)
 
-  // Reset pending URL when pathname changes (navigation completed)
-  React.useEffect(() => {
-    setPendingUrl(null)
-  }, [])
-
-  // Preload all sidebar routes on mount for instant navigation
-  React.useEffect(() => {
-    const routes = [
-      '/guides',
-      '/stops',
-      '/analytics',
-      '/assets',
-      '/design',
-      '/settings',
-      '/team',
-      '/profile',
-      '/archived',
-    ]
-    for (const route of routes) {
-      router.preloadRoute({ to: route })
-    }
-  }, [router])
-
   React.useEffect(() => {
     setOpenMobile(false)
   }, [pathnameFromRouter])
 
-  const handleNavClick = (url: string) => {
-    setPendingUrl(url)
+  const handleNavClick = () => {
     setOpenMobile(false)
   }
 
@@ -98,11 +73,10 @@ export function AppSidebar({
 
   // Helper to determine if a URL is active
   const isActive = (url: string) => {
-    const currentPath = pendingUrl ?? pathnameWithoutLocale
     if (url === '/') {
-      return currentPath === '/' || currentPath.startsWith('/guides')
+      return pathnameWithoutLocale === '/' || pathnameWithoutLocale.startsWith('/guides')
     }
-    return currentPath.startsWith(url)
+    return pathnameWithoutLocale.startsWith(url)
   }
 
   const contentItems = [
@@ -189,7 +163,7 @@ export function AppSidebar({
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -205,7 +179,7 @@ export function AppSidebar({
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -221,7 +195,7 @@ export function AppSidebar({
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -237,7 +211,7 @@ export function AppSidebar({
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={() => handleNavClick(item.url)}>
+                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
