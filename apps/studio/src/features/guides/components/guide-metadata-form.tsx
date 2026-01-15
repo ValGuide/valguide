@@ -1,21 +1,25 @@
 import { useForm } from '@tanstack/react-form'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
-import type { GuideTranslationWithVersion } from '@valguide/core/features/guides/schema'
-import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
-import { type GuideTranslationFormData, guideTranslationFormSchema } from '../schemas/guide-form'
+import { z } from 'zod'
+
+const guideTranslationFormSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(500),
+  description: z.string(),
+})
+
+export type GuideTranslationFormData = z.infer<typeof guideTranslationFormSchema>
 
 export type GuideMetadataFormProps = {
   locale: string
-  translation?: GuideTranslationWithVersion
+  versionData?: { title: string; description: string | null }
   onDirtyChange?: (isDirty: boolean) => void
   onSave?: () => void
   readOnly?: boolean
-  versionData?: { title: string; description: string | null }
 }
 
 export type GuideMetadataFormRef = {
@@ -25,15 +29,15 @@ export type GuideMetadataFormRef = {
 }
 
 export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataFormProps>(function GuideMetadataForm(
-  { locale, translation, onDirtyChange, onSave, readOnly, versionData },
+  { locale, versionData, onDirtyChange, onSave, readOnly },
   ref,
 ) {
   const t = useTranslations('guides')
 
   const form = useForm({
     defaultValues: {
-      title: versionData?.title ?? getVersionedField(translation, 'title', true),
-      description: versionData?.description ?? getVersionedField(translation, 'description', true),
+      title: versionData?.title ?? '',
+      description: versionData?.description ?? '',
     },
     validators: {
       onSubmit: guideTranslationFormSchema,
@@ -48,15 +52,15 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
       getValues: () => form.state.values,
       resetToCurrentValues: () => {
         form.reset({
-          title: getVersionedField(translation, 'title', true),
-          description: getVersionedField(translation, 'description', true),
+          title: versionData?.title ?? '',
+          description: versionData?.description ?? '',
         })
       },
       resetToFormValues: () => {
         form.reset(form.state.values)
       },
     }),
-    [form, translation],
+    [form, versionData],
   )
 
   useEffect(() => {
@@ -119,7 +123,7 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>{t('editor.descriptionLabel')}</FieldLabel>
                     <RichTextEditor
-                      value={field.state.value}
+                      value={field.state.value ?? ''}
                       onChange={field.handleChange}
                       placeholder={t('editor.descriptionPlaceholder')}
                       readOnly={readOnly}

@@ -64,12 +64,20 @@ export type Guide = z.infer<typeof guideSchema>
 // Lightweight Editor Types (Stage 2 - per-locale fetching)
 // ============================================================================
 
+// Lightweight translation status (just version IDs, no content)
+export type TranslationStatus = {
+  locale: string
+  currentVersionId: string | null
+  draftVersionId: string | null
+}
+
 // Minimal stop info for ordering/navigation (no translations)
 export type StopMetadata = {
   id: string
   nanoId: string
   position: number
   assets: AssetWithRole[]
+  translationStatuses: TranslationStatus[]
 }
 
 // Lightweight guide metadata (no translations, for editor shell)
@@ -118,4 +126,26 @@ export type GuideLocaleData = {
     currentVersion: StopTranslationVersionContent | null
     draftVersion: StopTranslationVersionContent | null
   }>
+}
+
+// Guide with all translations for view page (replaces GuideWithStopsAndAssets)
+export type GuideTranslationData = {
+  id: string
+  locale: string
+  currentVersionId: string | null
+  draftVersionId: string | null
+  currentVersion: TranslationVersionContent | null
+  draftVersion: TranslationVersionContent | null
+}
+
+export type GuideViewData = {
+  id: string
+  nanoId: string
+  organizationId: string
+  availableLocales: string[]
+  published: Date | null
+  createdAt: Date
+  updatedAt: Date
+  assets: AssetWithRole[]
+  translations: GuideTranslationData[]
 }

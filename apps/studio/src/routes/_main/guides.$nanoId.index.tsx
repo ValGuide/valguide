@@ -14,7 +14,7 @@ import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
 import { StatusBadge } from '@valguide/ui/components/status-badge'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
-import { guideWithAssetsQueryOptions } from '@/features/guides/query-options'
+import { guideViewQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId/')({
   component: GuidePage,
@@ -23,7 +23,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/')({
 
 function GuidePage() {
   const { nanoId } = Route.useParams()
-  const { data: guide } = useQuery(guideWithAssetsQueryOptions(nanoId))
+  const { data: guide } = useQuery(guideViewQueryOptions(nanoId))
   const t = useTranslations('guides')
   const router = useRouter()
   const queryClient = useQueryClient()

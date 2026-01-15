@@ -1,16 +1,16 @@
 import { queryOptions } from '@tanstack/react-query'
 import {
-  getGuideByNanoIdWithAssetsFn,
   getGuideMetadataFn,
   getGuideTranslationsForLocaleFn,
+  getGuideViewDataFn,
 } from '@valguide/core/features/guides/server-functions'
 import type {
   GuideLocaleData,
   GuideMetadata,
-  GuideWithStopsAndAssets,
+  GuideViewData,
   GuideWithTranslationsAndCover,
 } from '@valguide/core/features/guides/types'
-import { getArchivedGuidesFn, getGuideByNanoIdFn, getGuidesFn } from './server-functions'
+import { getArchivedGuidesFn, getGuidesFn } from './server-functions'
 
 export interface ArchivedGuidesResponse {
   guides: GuideWithTranslationsAndCover[]
@@ -25,23 +25,6 @@ export const guidesQueryOptions = () =>
     gcTime: 5 * 60 * 1000,
   })
 
-export const guideQueryOptions = (nanoId: string) =>
-  queryOptions({
-    queryKey: ['guide', nanoId],
-    queryFn: async (): Promise<GuideWithStopsAndAssets | null> => {
-      try {
-        const guide = await getGuideByNanoIdFn({ data: { nanoId } })
-        return guide
-      } catch (error) {
-        if (error instanceof Error && (error.message === 'Unauthorized' || error.message === 'Not found')) {
-          return null
-        }
-        throw error
-      }
-    },
-    staleTime: 30 * 1000,
-  })
-
 export const archivedGuidesQueryOptions = () =>
   queryOptions<ArchivedGuidesResponse>({
     queryKey: ['archived-guides'],
@@ -49,10 +32,14 @@ export const archivedGuidesQueryOptions = () =>
     staleTime: 30 * 1000,
   })
 
-export const guideWithAssetsQueryOptions = (nanoId: string) =>
-  queryOptions({
-    queryKey: ['guide-with-assets', nanoId],
-    queryFn: () => getGuideByNanoIdWithAssetsFn({ data: { nanoId } }),
+/**
+ * Query options for guide view page (all translations, no stops)
+ * Use for guide detail view that shows all locale translations
+ */
+export const guideViewQueryOptions = (nanoId: string) =>
+  queryOptions<GuideViewData | null>({
+    queryKey: ['guide', nanoId, 'view'],
+    queryFn: () => getGuideViewDataFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
   })
 

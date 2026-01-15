@@ -1,7 +1,17 @@
 import type { Asset } from '@valguide/core/features/assets/types'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
-import type { StopWithAssets } from '@valguide/core/features/guides/types'
+import type { AssetWithRole, TranslationStatus } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
+
+// Type for stop translation from locale data
+export type StopTranslationData = {
+  stopId: string
+  translationId: string
+  currentVersionId: string | null
+  draftVersionId: string | null
+  currentVersion: { id: string; title: string; description: string | null; transcription: string | null } | null
+  draftVersion: { id: string; title: string; description: string | null; transcription: string | null } | null
+}
 
 import {
   Breadcrumb,
@@ -23,10 +33,13 @@ import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/co
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
-import { getStopLocaleStatusMap, type LocaleStatusMap } from '@/features/guides/utils/translation-status'
+import { getLocaleStatusMapFromStatuses, type LocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 export interface StopEditLayoutProps {
-  stop: StopWithAssets
+  stopId: string
+  stopTranslation: StopTranslationData | null
+  stopAssets: AssetWithRole[]
+  stopTranslationStatuses: TranslationStatus[]
   activeLocale: string
   isDirty: boolean
   isSaving: boolean
@@ -49,7 +62,10 @@ export interface StopEditLayoutProps {
 }
 
 export function StopEditLayout({
-  stop,
+  stopId,
+  stopTranslation,
+  stopAssets,
+  stopTranslationStatuses,
   activeLocale,
   isDirty,
   isSaving,
@@ -80,42 +96,40 @@ export function StopEditLayout({
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
-  const currentStopTranslation = stop.translations.find((tr) => tr.locale === activeLocale)
-
-  const hasDraft = !!currentStopTranslation?.draftVersionId
-  const hasPublished = !!currentStopTranslation?.currentVersionId
+  const hasDraft = !!stopTranslation?.draftVersionId
+  const hasPublished = !!stopTranslation?.currentVersionId
   const contentStatus = getContentStatus(hasDraft, hasPublished)
 
   const localeStatusMap: LocaleStatusMap = useMemo(() => {
-    const baseMap = getStopLocaleStatusMap(stop)
+    const baseMap = getLocaleStatusMapFromStatuses(stopTranslationStatuses, locales ?? ['en', 'de', 'rm'])
     return {
       ...baseMap,
       [activeLocale]: contentStatus,
     }
-  }, [stop, activeLocale, contentStatus])
+  }, [stopTranslationStatuses, locales, activeLocale, contentStatus])
 
   const isReadOnly = activeTab === 'published'
 
-  const draftVersionData = currentStopTranslation?.draftVersion
+  const draftVersionData = stopTranslation?.draftVersion
     ? {
-        title: currentStopTranslation.draftVersion.title,
-        description: currentStopTranslation.draftVersion.description,
-        transcription: currentStopTranslation.draftVersion.transcription,
+        title: stopTranslation.draftVersion.title,
+        description: stopTranslation.draftVersion.description,
+        transcription: stopTranslation.draftVersion.transcription,
       }
     : undefined
 
-  const publishedVersionData = currentStopTranslation?.currentVersion
+  const publishedVersionData = stopTranslation?.currentVersion
     ? {
-        title: currentStopTranslation.currentVersion.title,
-        description: currentStopTranslation.currentVersion.description,
-        transcription: currentStopTranslation.currentVersion.transcription,
+        title: stopTranslation.currentVersion.title,
+        description: stopTranslation.currentVersion.description,
+        transcription: stopTranslation.currentVersion.transcription,
       }
     : undefined
 
   const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
 
-  const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
-  const stopAudio = stop.assets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
+  const stopImages = stopAssets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
+  const stopAudio = stopAssets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
 
   useAutoSave(onSave, isDirty)
 
@@ -137,7 +151,7 @@ export function StopEditLayout({
   const handlePublish = useCallback(async () => {
     setIsPublishing(true)
     try {
-      const result = await onPublish(stop.id, activeLocale)
+      const result = await onPublish(stopId, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
         onRefetch()
@@ -150,11 +164,11 @@ export function StopEditLayout({
     } finally {
       setIsPublishing(false)
     }
-  }, [stop.id, activeLocale, onRefetch, t, onPublish])
+  }, [stopId, activeLocale, onRefetch, t, onPublish])
 
   const handleUnpublish = useCallback(async () => {
     try {
-      const result = await onUnpublish(stop.id, activeLocale)
+      const result = await onUnpublish(stopId, activeLocale)
       if (result.success) {
         toast.success('Content unpublished')
         onRefetch()
@@ -165,11 +179,11 @@ export function StopEditLayout({
       console.error('Failed to unpublish:', error)
       toast.error('Failed to unpublish')
     }
-  }, [stop.id, activeLocale, onRefetch, onUnpublish])
+  }, [stopId, activeLocale, onRefetch, onUnpublish])
 
   const handleDiscard = useCallback(async () => {
     try {
-      const result = await onDiscard(stop.id, activeLocale)
+      const result = await onDiscard(stopId, activeLocale)
       if (result.success) {
         toast.success('Draft discarded')
         onRefetch()
@@ -180,7 +194,7 @@ export function StopEditLayout({
       console.error('Failed to discard:', error)
       toast.error('Failed to discard draft')
     }
-  }, [stop.id, activeLocale, onRefetch, onDiscard])
+  }, [stopId, activeLocale, onRefetch, onDiscard])
 
   const handleTabChange = useCallback(
     (tab: EditorTab) => {
@@ -256,8 +270,7 @@ export function StopEditLayout({
 
                 <StopLocaleEditor
                   ref={stopEditorRef}
-                  key={`${stop.id}-${activeLocale}-${activeTab}`}
-                  stop={stop}
+                  key={`${stopId}-${activeLocale}-${activeTab}`}
                   locale={activeLocale}
                   audio={stopAudio}
                   versionData={displayVersionData}

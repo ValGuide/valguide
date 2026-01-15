@@ -1,7 +1,6 @@
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
-import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 
 import {
@@ -29,7 +28,6 @@ import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
-import { getGuideLocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 interface GuideEditViewProps {
   onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
@@ -42,9 +40,14 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
+
   const {
-    guide,
+    nanoId,
+    guideId,
+    metadata,
+    localeData,
     activeLocale,
+    availableLocales,
     isDirty,
     isSaving,
     attachAssetToGuide,
@@ -53,7 +56,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     deleteStop,
     reorderStops,
     setActiveLocale,
-    updateGuideAvailableLocales,
+    updateAvailableLocales,
     save,
     refetch,
     registerFormDirty,
@@ -67,47 +70,66 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const { buildUrl } = useLocaleUrl(activeLocale)
 
-  const guideDetailUrl = `/guides/${guide.nanoId}`
+  const guideDetailUrl = `/guides/${nanoId}`
 
-  const guideTitle =
-    guide.translations.find((t) => t.currentVersion?.title)?.currentVersion?.title ??
-    guide.translations.find((t) => t.draftVersion?.title)?.draftVersion?.title ??
-    t('untitledGuide')
+  // Get title from locale data
+  const guideTitle = useMemo(() => {
+    const translation = localeData?.guideTranslation
+    return translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? t('untitledGuide')
+  }, [localeData, t])
 
   useAutoSave(save, isDirty)
 
-  const currentTranslation = guide.translations.find((t) => t.locale === activeLocale)
-
-  const hasDraft = !!currentTranslation?.draftVersionId
-  const hasPublished = !!currentTranslation?.currentVersionId
+  // Get status info from locale data
+  const hasDraft = !!localeData?.guideTranslation?.draftVersionId
+  const hasPublished = !!localeData?.guideTranslation?.currentVersionId
   const contentStatus = getContentStatus(hasDraft, hasPublished)
 
+  // Build locale status map
+  // TODO: Add guide translation statuses to metadata for proper per-locale status
   const localeStatusMap = useMemo(() => {
-    const baseMap = getGuideLocaleStatusMap(guide, guide.availableLocales)
-    return {
-      ...baseMap,
-      [activeLocale]: contentStatus,
+    const map: Record<string, 'published' | 'draft' | 'empty'> = {}
+    for (const locale of availableLocales) {
+      if (locale === activeLocale) {
+        // Map ContentStatus to TranslationLocaleStatus
+        map[locale] = contentStatus === 'modified' ? 'draft' : contentStatus
+      } else {
+        // For other locales, we'd need to fetch their status - show as 'empty' for now
+        map[locale] = 'empty'
+      }
     }
-  }, [guide, activeLocale, contentStatus])
+    return map
+  }, [availableLocales, activeLocale, contentStatus])
 
   const isReadOnly = activeTab === 'published'
 
-  const draftVersionData = currentTranslation?.draftVersion
-    ? { title: currentTranslation.draftVersion.title, description: currentTranslation.draftVersion.description }
+  const draftVersionData = localeData?.guideTranslation?.draftVersion
+    ? {
+        title: localeData.guideTranslation.draftVersion.title,
+        description: localeData.guideTranslation.draftVersion.description,
+      }
     : undefined
 
-  const publishedVersionData = currentTranslation?.currentVersion
-    ? { title: currentTranslation.currentVersion.title, description: currentTranslation.currentVersion.description }
+  const publishedVersionData = localeData?.guideTranslation?.currentVersion
+    ? {
+        title: localeData.guideTranslation.currentVersion.title,
+        description: localeData.guideTranslation.currentVersion.description,
+      }
     : undefined
 
   const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
 
   const hasContentForLocale = useCallback(
     (locale: string) => {
-      const translation = guide.translations.find((t) => t.locale === locale)
-      return !!(translation?.currentVersionId || translation?.draftVersionId)
+      // For the active locale, check from localeData
+      if (locale === activeLocale) {
+        const t = localeData?.guideTranslation
+        return !!(t?.currentVersionId || t?.draftVersionId)
+      }
+      // For other locales, we'd need to fetch - assume true for now
+      return true
     },
-    [guide.translations],
+    [activeLocale, localeData],
   )
 
   const formRef = useRef<GuideMetadataFormRef>(null)
@@ -115,7 +137,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
 
   const handleDirtyChange = useCallback(
     (formIsDirty: boolean) => {
-      registerFormDirty(formId, formIsDirty)
+      registerFormDirty(formId, formIsDirty, () => formRef.current?.getValues() ?? { title: '', description: '' })
     },
     [formId, registerFormDirty],
   )
@@ -135,10 +157,8 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     }
   }, [formId, registerFormReset, unregisterForm])
 
-  const handleSelectStop = (stop: StopWithAssets | null) => {
-    if (stop) {
-      router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/stops/${stop.id}/edit`) })
-    }
+  const handleSelectStop = (stopId: string) => {
+    router.navigate({ to: buildUrl(`/guides/${nanoId}/stops/${stopId}/edit`) })
   }
 
   const handleNavigateToGuides = () => {
@@ -150,17 +170,12 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   }
 
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
-    const reordered = [...guide.stops]
-    updates.forEach(({ id, order }) => {
-      const stopToUpdate = reordered.find((s) => s.id === id)
-      if (stopToUpdate) stopToUpdate.order = order
-    })
-    reorderStops(reordered.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)))
+    reorderStops(updates)
   }
 
   const coverAsset = useMemo(() => {
-    return guide.assets.find((a) => a.role === 'cover') ?? null
-  }, [guide.assets])
+    return metadata?.assets.find((a) => a.role === 'cover') ?? null
+  }, [metadata?.assets])
 
   const handleCoverImageChange = useCallback(
     async (value: Asset | Asset[] | null) => {
@@ -182,7 +197,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     if (!onPublish) return
     setIsPublishing(true)
     try {
-      const result = await onPublish(guide.id, activeLocale)
+      const result = await onPublish(guideId, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
         refetch()
@@ -195,12 +210,12 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     } finally {
       setIsPublishing(false)
     }
-  }, [guide.id, activeLocale, refetch, onPublish])
+  }, [guideId, activeLocale, refetch, onPublish])
 
   const handleUnpublish = useCallback(async () => {
     if (!onUnpublish) return
     try {
-      const result = await onUnpublish(guide.id, activeLocale)
+      const result = await onUnpublish(guideId, activeLocale)
       if (result.success) {
         toast.success('Content unpublished')
         refetch()
@@ -211,12 +226,12 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
       console.error('Failed to unpublish:', error)
       toast.error('Failed to unpublish')
     }
-  }, [guide.id, activeLocale, refetch, onUnpublish])
+  }, [guideId, activeLocale, refetch, onUnpublish])
 
   const handleDiscard = useCallback(async () => {
     if (!onDiscard) return
     try {
-      const result = await onDiscard(guide.id, activeLocale)
+      const result = await onDiscard(guideId, activeLocale)
       if (result.success) {
         toast.success('Draft discarded')
         refetch()
@@ -227,7 +242,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
       console.error('Failed to discard:', error)
       toast.error('Failed to discard draft')
     }
-  }, [guide.id, activeLocale, refetch, onDiscard])
+  }, [guideId, activeLocale, refetch, onDiscard])
 
   const handleTabChange = useCallback(
     (tab: EditorTab) => {
@@ -240,6 +255,10 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     },
     [hasPublished, isDirty, confirmIfDirty],
   )
+
+  if (!metadata) {
+    return null
+  }
 
   return (
     <>
@@ -274,14 +293,14 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
             <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
               <UnifiedLocaleSelector
                 value={activeLocale}
-                locales={guide.availableLocales ?? ['en', 'de', 'rm']}
+                locales={availableLocales}
                 onValueChange={setActiveLocale}
                 localeStatus={localeStatusMap}
                 onAddLocale={async (locale) => {
-                  await updateGuideAvailableLocales([...(guide.availableLocales ?? []), locale])
+                  await updateAvailableLocales([...availableLocales, locale])
                 }}
                 onRemoveLocale={async (locale) => {
-                  await updateGuideAvailableLocales((guide.availableLocales ?? []).filter((l) => l !== locale))
+                  await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
                 }}
                 hasContentForLocale={hasContentForLocale}
               />
@@ -304,7 +323,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                     <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
                   </SheetHeader>
                   <div className="mt-6">
-                    <GuideProgress guide={guide} locale={activeLocale} />
+                    <GuideProgress />
                   </div>
                 </SheetContent>
               </Sheet>
@@ -344,7 +363,6 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                   ref={formRef}
                   key={`guide-metadata-${activeLocale}-${activeTab}`}
                   locale={activeLocale}
-                  translation={currentTranslation}
                   versionData={displayVersionData}
                   readOnly={isReadOnly}
                   onDirtyChange={handleDirtyChange}
@@ -376,16 +394,13 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                 <div className={isReadOnly ? 'opacity-60 pointer-events-none' : ''}>
                   <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
                   <StopsList
-                    stops={guide.stops}
-                    locale={activeLocale}
-                    selectedStopId={undefined}
                     onReorder={handleReorderStops}
                     onEdit={handleSelectStop}
                     onDelete={deleteStop}
                     onAdd={async () => {
                       const newStop = await addStop()
                       if (newStop) {
-                        router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/stops/${newStop.id}/edit`) })
+                        router.navigate({ to: buildUrl(`/guides/${nanoId}/stops/${newStop.id}/edit`) })
                       }
                     }}
                   />
@@ -415,7 +430,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                 <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {t('editor.guideProgress')}
                 </h3>
-                <GuideProgress guide={guide} locale={activeLocale} />
+                <GuideProgress />
               </div>
             </div>
           </aside>

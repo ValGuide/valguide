@@ -1,5 +1,6 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
-
 import {
   attachAssetToGuideFn,
   attachAssetToStopFn,
@@ -12,90 +13,74 @@ import {
   updateGuideTranslationFn,
   updateStopFn,
 } from '@valguide/core/features/guides/server-functions'
-import type { AssetWithRole, GuideWithStopsAndAssets, StopWithAssets } from '@valguide/core/features/guides/types'
-import { defaultLocale } from '@valguide/i18n/i18n.config'
-
-type ContentLocale = string
-
-import { useQueryClient } from '@tanstack/react-query'
-import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
+import type { StopMetadata } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '../query-options'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
+
+// Type for form value getters
+type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
+type FormRegistry = Map<string, { getValues: FormValueGetter; isDirty: boolean }>
 
 const LOCALE_PARAM = 'locale'
 
-function parseLocale(locale: string | undefined, availableLocales: string[]): ContentLocale {
+function parseLocale(locale: string | undefined, availableLocales: string[]): string {
   if (locale && availableLocales.includes(locale)) {
     return locale
   }
   return availableLocales[0] ?? defaultLocale
 }
 
-type MutateFn = (
-  data?: GuideWithStopsAndAssets | null | ((prev?: GuideWithStopsAndAssets | null) => GuideWithStopsAndAssets | null),
-) => Promise<GuideWithStopsAndAssets | null | undefined>
-
-export { GuideEditorContext, type GuideEditorContextValue }
-
-export function GuideEditorProvider({
-  children,
-  initialGuide,
-  initialLocale,
-  onMutate,
-}: {
+interface GuideEditorProviderProps {
   children: ReactNode
-  initialGuide: GuideWithStopsAndAssets
+  nanoId: string
   initialLocale?: string
-  onMutate?: MutateFn
-}) {
+}
+
+export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEditorProviderProps) {
   const t = useTranslations()
   const router = useRouter()
   const location = useLocation()
   const pathname = location.pathname
   const searchParams = useSearch({ strict: false })
   const queryClient = useQueryClient()
-  const [guide, setGuide] = useState(initialGuide)
-  const [activeLocale, setActiveLocaleState] = useState<ContentLocale>(() =>
-    parseLocale(initialLocale, initialGuide.availableLocales ?? ['en', 'de', 'rm']),
-  )
-  const [selectedStop, setSelectedStop] = useState<StopWithAssets | null>(null)
-  const [isSaving, setIsSaving] = useState(false)
-  const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Form dirty tracking
+  // Fetch metadata (no translations)
+  const metadataQuery = useQuery(guideMetadataQueryOptions(nanoId))
+  const metadata = metadataQuery.data ?? null
+  const guideId = metadata?.id ?? ''
+  const availableLocales = metadata?.availableLocales ?? ['en', 'de', 'rm']
+
+  // Active locale state
+  const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
+
+  // Fetch locale-specific translations
+  const localeQuery = useQuery({
+    ...guideLocaleQueryOptions(guideId, activeLocale),
+    enabled: !!guideId,
+  })
+  const localeData = localeQuery.data ?? null
+  const isLoadingLocale = localeQuery.isLoading
+
+  // Form dirty tracking and value collection
   const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())
   const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
   const formSaveResetFnsRef = useRef<Map<string, () => void>>(new Map())
+  const formValueGettersRef = useRef<FormRegistry>(new Map())
 
-  const guideRef = useRef(guide)
-  const initialGuideRef = useRef(initialGuide)
-  const modifiedTranslationsRef = useRef<Set<string>>(new Set())
-  const modifiedStopsRef = useRef<Set<string>>(new Set())
-  const onMutateRef = useRef(onMutate)
+  // Save state
+  const [isSaving, setIsSaving] = useState(false)
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Keep refs in sync
-  guideRef.current = guide
-  onMutateRef.current = onMutate
-
-  // Track modified translations for dirty state (survives locale switches)
-  const [modifiedTranslations, setModifiedTranslations] = useState<Set<string>>(new Set())
-  const [modifiedStops, setModifiedStops] = useState<Set<string>>(new Set())
-
-  // Computed isDirty from form registrations, modified translations/stops
-  // Note: Assets are saved immediately, so they don't affect dirty state
-  const isDirty = useMemo(() => {
-    return dirtyForms.size > 0 || modifiedTranslations.size > 0 || modifiedStops.size > 0
-  }, [dirtyForms, modifiedTranslations, modifiedStops])
-
-  const isDirtyRef = useRef(isDirty)
-  isDirtyRef.current = isDirty
+  // Derived isDirty
+  const isDirty = dirtyForms.size > 0
 
   // Set active locale and update URL
   const setActiveLocale = useCallback(
-    (locale: ContentLocale) => {
-      const availableLocales = guideRef.current.availableLocales ?? ['en', 'de', 'rm']
+    (locale: string) => {
       if (!availableLocales.includes(locale)) {
         console.warn(`Locale ${locale} not in available locales`)
         return
@@ -107,11 +92,38 @@ export function GuideEditorProvider({
           : { ...searchParams, [LOCALE_PARAM]: locale }
       router.navigate({ to: pathname, search: newSearch, replace: true })
     },
-    [pathname, router, searchParams],
+    [pathname, router, searchParams, availableLocales],
   )
 
-  // Form registration functions
-  const registerFormDirty = useCallback((formId: string, formIsDirty: boolean) => {
+  // Update available locales
+  const updateAvailableLocales = useCallback(
+    async (locales: string[]) => {
+      if (!guideId) return
+      try {
+        await updateGuideFn({
+          data: {
+            id: guideId,
+            availableLocales: locales,
+            organizationId: metadata?.organizationId,
+          },
+        })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+
+        if (!locales.includes(activeLocale)) {
+          setActiveLocaleState(locales[0] ?? defaultLocale)
+        }
+
+        toast.success(t('guides.locales.updateSuccess'))
+      } catch (error) {
+        console.error('Failed to update available locales:', error)
+        toast.error(t('guides.locales.updateError'))
+      }
+    },
+    [guideId, metadata?.organizationId, nanoId, queryClient, activeLocale],
+  )
+
+  // Form registration
+  const registerFormDirty = useCallback((formId: string, formIsDirty: boolean, getValues?: FormValueGetter) => {
     setDirtyForms((prev) => {
       const next = new Set(prev)
       if (formIsDirty) {
@@ -121,6 +133,10 @@ export function GuideEditorProvider({
       }
       return next
     })
+    // Update the value getter in the registry
+    if (getValues) {
+      formValueGettersRef.current.set(formId, { getValues, isDirty: formIsDirty })
+    }
   }, [])
 
   const unregisterForm = useCallback((formId: string) => {
@@ -131,6 +147,7 @@ export function GuideEditorProvider({
     })
     formResetFnsRef.current.delete(formId)
     formSaveResetFnsRef.current.delete(formId)
+    formValueGettersRef.current.delete(formId)
   }, [])
 
   const registerFormReset = useCallback((formId: string, resetFn: () => void, saveResetFn?: () => void) => {
@@ -154,49 +171,16 @@ export function GuideEditorProvider({
     setDirtyForms(new Set())
   }, [])
 
-  // Update guide available locales
-  const updateGuideAvailableLocales = useCallback(
-    async (locales: string[]) => {
-      try {
-        await updateGuideFn({
-          data: {
-            id: guide.id,
-            availableLocales: locales,
-            organizationId: guide.organizationId,
-          },
-        })
+  // Stop operations
+  const stops = useMemo(() => metadata?.stops ?? [], [metadata?.stops])
 
-        setGuide((prev) => ({
-          ...prev,
-          availableLocales: locales,
-        }))
-
-        if (!locales.includes(activeLocale)) {
-          const newLocale = locales[0] ?? defaultLocale
-          setActiveLocaleState(newLocale)
-        }
-
-        toast.success(t('guides.locales.updateSuccess'))
-      } catch (error) {
-        console.error('Failed to update available locales:', error)
-        toast.error(t('guides.locales.updateError'))
-      }
-    },
-    [guide.id, guide.organizationId, activeLocale],
-  )
-
-  // Select stop
-  const selectStop = useCallback((stop: StopWithAssets | null) => {
-    setSelectedStop(stop)
-  }, [])
-
-  // Add stop - returns the new stop so caller can navigate
-  const addStop = useCallback(async (): Promise<StopWithAssets | null> => {
+  const addStop = useCallback(async (): Promise<StopMetadata | null> => {
+    if (!guideId || !metadata) return null
     try {
       const newStopWithTranslations = await createStopFn({
         data: {
-          guideId: guide.id,
-          position: guide.stops.length,
+          guideId,
+          position: stops.length,
           translations: [
             {
               locale: 'en',
@@ -208,98 +192,70 @@ export function GuideEditorProvider({
         },
       })
 
-      const newStop: StopWithAssets = { ...newStopWithTranslations, assets: [] }
+      // Invalidate metadata to get new stop
+      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+      await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
 
-      const updatedGuide = {
-        ...guide,
-        stops: [...guide.stops, newStop],
-      }
-      setGuide(updatedGuide)
-      onMutateRef.current?.(updatedGuide)
       toast.success(t('stops.actions.addSuccess'))
-      return newStop
+
+      return {
+        id: newStopWithTranslations.id,
+        nanoId: newStopWithTranslations.nanoId,
+        position: stops.length,
+        assets: [],
+        translationStatuses: [],
+      }
     } catch (error) {
       console.error('Failed to add stop:', error)
       toast.error(t('stops.actions.addError'))
       return null
     }
-  }, [guide])
+  }, [guideId, metadata, stops.length, queryClient, nanoId])
 
-  // Delete stop
   const deleteStop = useCallback(
     async (stopId: string) => {
       try {
         await deleteStopFn({ data: { stopId } })
-
-        setGuide((prev) => ({
-          ...prev,
-          stops: prev.stops.filter((s): s is StopWithAssets => s.id !== stopId),
-        }))
-
-        if (selectedStop?.id === stopId) {
-          setSelectedStop(guide.stops[0] || null)
-        }
-
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+        await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
         toast.success(t('stops.actions.deleteSuccess'))
       } catch (error) {
         console.error('Failed to delete stop:', error)
         toast.error(t('stops.actions.deleteError'))
       }
     },
-    [guide.stops, selectedStop?.id],
+    [guideId, nanoId, queryClient],
   )
 
-  // Reorder stops
   const reorderStops = useCallback(
-    async (stops: StopWithAssets[]) => {
+    async (updates: Array<{ id: string; order: number }>) => {
       try {
-        await reorderStopsFn({ data: stops.map((s, idx) => ({ id: s.id, order: idx })) })
-
-        setGuide((prev) => ({
-          ...prev,
-          stops,
-        }))
-
+        await reorderStopsFn({ data: updates })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         toast.success(t('stops.actions.reorderSuccess'))
       } catch (error) {
         console.error('Failed to reorder stops:', error)
         toast.error(t('stops.actions.reorderError'))
       }
     },
-    [t],
+    [nanoId, queryClient],
   )
 
-  // Guide asset actions (immediate save - global assets)
+  // Asset operations (immediate save)
   const attachAssetToGuide = useCallback(
     async (asset: Asset, role: string) => {
+      if (!guideId) return
       try {
-        const result = await attachAssetToGuideFn({
+        await attachAssetToGuideFn({
           data: {
-            guideId: guide.id,
+            guideId,
             assetId: asset.id,
             role,
             locale: undefined,
             order: 0,
           },
         })
-
-        if (!result) {
-          throw new Error('Failed to attach asset to guide')
-        }
-
-        const assetWithRole: AssetWithRole = {
-          ...asset,
-          guideAssetId: result.id,
-          role,
-          order: 0,
-          locale: null,
-        }
-
-        setGuide((prev) => ({
-          ...prev,
-          assets: [...prev.assets, assetWithRole],
-        }))
-
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         await queryClient.invalidateQueries({ queryKey: ['guides'] })
         toast.success(t('guides.assets.attachSuccess'))
       } catch (error) {
@@ -307,18 +263,14 @@ export function GuideEditorProvider({
         toast.error(t('guides.assets.attachError'))
       }
     },
-    [guide.id, queryClient],
+    [guideId, nanoId, queryClient],
   )
 
   const detachAssetFromGuide = useCallback(
-    async (assetId: string, guideAssetId: string) => {
+    async (_assetId: string, guideAssetId: string) => {
       try {
-        setGuide((prev) => ({
-          ...prev,
-          assets: prev.assets.filter((a) => a.id !== assetId),
-        }))
-
         await detachAssetFromGuideFn({ data: { guideAssetId } })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         await queryClient.invalidateQueries({ queryKey: ['guides'] })
         toast.success(t('guides.assets.removeSuccess'))
       } catch (error) {
@@ -326,14 +278,13 @@ export function GuideEditorProvider({
         toast.error(t('guides.assets.removeError'))
       }
     },
-    [queryClient],
+    [nanoId, queryClient],
   )
 
-  // Stop asset actions (immediate save)
   const attachAssetToStop = useCallback(
     async (stopId: string, asset: Asset, role: string, locale?: string | null) => {
       try {
-        const result = await attachAssetToStopFn({
+        await attachAssetToStopFn({
           data: {
             stopId,
             assetId: asset.id,
@@ -342,190 +293,77 @@ export function GuideEditorProvider({
             order: 0,
           },
         })
-
-        if (!result) {
-          throw new Error('Failed to attach asset to stop')
-        }
-
-        const assetWithRole: AssetWithRole = {
-          ...asset,
-          stopAssetId: result.id,
-          role,
-          order: 0,
-          locale: locale ?? null,
-        }
-
-        const newGuide = {
-          ...guide,
-          stops: guide.stops.map((stop: StopWithAssets): StopWithAssets => {
-            if (stop.id !== stopId) return stop
-            return {
-              ...stop,
-              assets: [...stop.assets, assetWithRole],
-            }
-          }),
-        }
-
-        setGuide(newGuide)
-        queryClient.setQueryData(['guide', guide.nanoId], newGuide)
-        await queryClient.invalidateQueries({ queryKey: ['guides'] })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         toast.success(t('stops.assets.attachSuccess'))
       } catch (error) {
-        console.error('Failed to attach asset:', error)
+        console.error('Failed to attach asset to stop:', error)
         toast.error(t('stops.assets.attachError'))
       }
     },
-    [guide, queryClient],
+    [nanoId, queryClient],
   )
 
   const detachAssetFromStop = useCallback(
-    async (stopId: string, assetId: string, stopAssetId: string) => {
+    async (_stopId: string, _assetId: string, stopAssetId: string) => {
       try {
-        // Update UI immediately
-        const newGuide = {
-          ...guide,
-          stops: guide.stops.map((s) =>
-            s.id === stopId
-              ? {
-                  ...s,
-                  assets: s.assets.filter((a) => a.id !== assetId),
-                }
-              : s,
-          ),
-        }
-
-        setGuide(newGuide)
-        queryClient.setQueryData(['guide', guide.nanoId], newGuide)
-
-        // Delete from DB
         await detachAssetFromStopFn({ data: { stopAssetId } })
-        await queryClient.invalidateQueries({ queryKey: ['guides'] })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         toast.success(t('stops.assets.removeSuccess'))
       } catch (error) {
-        console.error('Failed to detach asset:', error)
+        console.error('Failed to detach asset from stop:', error)
         toast.error(t('stops.assets.removeError'))
       }
     },
-    [guide, queryClient],
+    [nanoId, queryClient],
   )
 
-  // Save
+  // Save orchestration - collects form values and saves to server
   const save = useCallback(async () => {
-    if (!isDirtyRef.current) return
+    if (!isDirty || !guideId) return
 
     setIsSaving(true)
     try {
-      const currentGuide = guideRef.current
-      const modifiedTranslations = modifiedTranslationsRef.current
-      const modifiedStops = modifiedStopsRef.current
+      // Collect values from all dirty forms and save them
+      for (const [formId, registration] of formValueGettersRef.current.entries()) {
+        if (!registration.isDirty) continue
 
-      // Only save modified translations
-      const savedTranslationVersionIds: Record<string, string> = {}
-      for (const locale of modifiedTranslations) {
-        const translation = currentGuide.translations.find((t) => t.locale === locale)
+        const values = registration.getValues()
 
-        if (translation) {
-          // Get content from draft version or current version
-          const version = translation.draftVersion || translation.currentVersion
-          if (version) {
-            const result = await updateGuideTranslationFn({
+        // Determine if this is a guide translation or stop translation based on formId
+        // Format: guide-translation-{locale} or stop-translation-{stopId}-{locale}
+        if (formId.startsWith('guide-translation-')) {
+          // Save guide translation
+          await updateGuideTranslationFn({
+            data: {
+              guideId,
+              locale: activeLocale,
+              title: values.title ?? '',
+              description: values.description ?? '',
+            },
+          })
+        } else if (formId.startsWith('stop-translation-')) {
+          // Extract stopId from formId: stop-translation-{stopId}-{locale}
+          const parts = formId.split('-')
+          const stopId = parts[2] // stop-translation-{stopId}-{locale}
+          if (stopId) {
+            await updateStopFn({
               data: {
-                guideId: currentGuide.id,
-                locale: translation.locale,
-                title: version.title,
-                description: version.description || '',
+                stopId,
+                locale: activeLocale,
+                title: values.title ?? '',
+                description: values.description ?? '',
+                transcription: values.transcription ?? '',
               },
             })
-            if (result.versionId) {
-              savedTranslationVersionIds[locale] = result.versionId
-            }
           }
         }
       }
 
-      // Only save modified stop translations
-      const savedStopVersionIds: Record<string, string> = {}
-      for (const key of modifiedStops) {
-        const [stopId, locale] = key.split(':')
-        const stop = currentGuide.stops.find((s) => s.id === stopId)
-        if (stop) {
-          const translation = stop.translations.find((t) => t.locale === locale)
-          if (translation) {
-            // Get content from draft version or current version
-            const version = translation.draftVersion || translation.currentVersion
-            if (version) {
-              const result = await updateStopFn({
-                data: {
-                  stopId: stop.id,
-                  locale: translation.locale,
-                  title: version.title,
-                  description: version.description || '',
-                  transcription: version.transcription || '',
-                },
-              })
-              if (result.versionId) {
-                savedStopVersionIds[key] = result.versionId
-              }
-            }
-          }
-        }
-      }
-
-      // Clear tracking sets and state
-      modifiedTranslationsRef.current.clear()
-      modifiedStopsRef.current.clear()
-      setModifiedTranslations(new Set())
-      setModifiedStops(new Set())
-
-      // Update local state with draft version IDs so publish button appears
-      if (Object.keys(savedTranslationVersionIds).length > 0 || Object.keys(savedStopVersionIds).length > 0) {
-        setGuide((prev) => ({
-          ...prev,
-          translations: prev.translations.map((t) => {
-            const versionId = savedTranslationVersionIds[t.locale]
-            if (versionId && t.draftVersion) {
-              // Update both draftVersionId and draftVersion.id to keep them in sync
-              return {
-                ...t,
-                draftVersionId: versionId,
-                draftVersion: {
-                  ...t.draftVersion,
-                  id: versionId,
-                },
-              }
-            }
-            return t
-          }),
-          stops: prev.stops.map((s) => ({
-            ...s,
-            translations: s.translations.map((t) => {
-              const key = `${s.id}:${t.locale}`
-              const versionId = savedStopVersionIds[key]
-              if (versionId && t.draftVersion) {
-                // Update both draftVersionId and draftVersion.id to keep them in sync
-                return {
-                  ...t,
-                  draftVersionId: versionId,
-                  draftVersion: {
-                    ...t.draftVersion,
-                    id: versionId,
-                  },
-                }
-              }
-              return t
-            }),
-          })),
-        }))
-      }
-
-      // Update initial refs for next comparison
-      initialGuideRef.current = currentGuide
-
-      // Reset all forms to mark as clean (using current form values, not prop values)
+      // Reset all forms after successful save
       resetAllFormsAfterSave()
 
-      // Update SWR cache so navigation shows fresh data
-      onMutateRef.current?.(currentGuide)
+      // Invalidate locale query to get fresh data with new version IDs
+      await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale', activeLocale] })
 
       setLastSaved(new Date())
       toast.success(t('common.saved'))
@@ -535,71 +373,68 @@ export function GuideEditorProvider({
     } finally {
       setIsSaving(false)
     }
-  }, [t, resetAllFormsAfterSave])
+  }, [isDirty, guideId, activeLocale, queryClient, resetAllFormsAfterSave])
 
   // Publish
   const publish = useCallback(async () => {
     await save()
 
+    if (!guideId || !metadata) return
+
     try {
       await updateGuideFn({
         data: {
-          id: guide.id,
+          id: guideId,
           published: new Date(),
-          organizationId: guide.organizationId,
+          organizationId: metadata.organizationId,
         },
       })
 
-      setGuide((prev) => ({
-        ...prev,
-        published: new Date(),
-      }))
-
+      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
       toast.success(t('guides.publish.guidePublished'))
     } catch (error) {
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guide.id, guide.organizationId, save])
+  }, [guideId, metadata, nanoId, queryClient, save])
 
-  // Refetch data from server (revalidates SWR and updates local state)
+  // Refetch
   const refetch = useCallback(async () => {
-    const result = await onMutateRef.current?.()
-    if (result) {
-      setGuide(result)
-      initialGuideRef.current = result
-      modifiedTranslationsRef.current.clear()
-      modifiedStopsRef.current.clear()
-      setModifiedTranslations(new Set())
-      setModifiedStops(new Set())
-      resetAllForms()
+    await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+    if (guideId) {
+      await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
     }
-  }, [resetAllForms])
+    resetAllForms()
+  }, [guideId, nanoId, queryClient, resetAllForms])
 
   const value: GuideEditorContextValue = {
-    guide,
+    nanoId,
+    guideId,
     activeLocale,
-    selectedStop,
-    isDirty,
-    isSaving,
-    updateGuideAvailableLocales,
-    attachAssetToGuide,
-    detachAssetFromGuide,
-    selectStop,
+    availableLocales,
+    setActiveLocale,
+    updateAvailableLocales,
+    metadata,
+    localeData,
+    isLoadingLocale,
+    stops,
     addStop,
     deleteStop,
     reorderStops,
+    attachAssetToGuide,
+    detachAssetFromGuide,
     attachAssetToStop,
     detachAssetFromStop,
-    setActiveLocale,
-    save,
-    publish,
-    refetch,
+    isDirty,
     registerFormDirty,
     unregisterForm,
-    resetAllForms,
     registerFormReset,
+    resetAllForms,
+    save,
+    isSaving,
     lastSaved,
+    publish,
+    refetch,
   }
 
   return <GuideEditorContext.Provider value={value}>{children}</GuideEditorContext.Provider>

@@ -3,7 +3,6 @@ import { db } from '@valguide/core/features/db'
 import {
   createGuide,
   getArchivedGuidesWithCover,
-  getGuideByNanoIdWithAssets,
   getGuidesByOrganizationId,
 } from '@valguide/core/features/guides/queries'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
@@ -11,26 +10,6 @@ import { supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { z } from 'zod'
-
-// Get guide by nanoId
-const getGuideByNanoIdInputSchema = z.object({
-  nanoId: z.string(),
-})
-
-export const getGuideByNanoIdFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getGuideByNanoIdInputSchema)
-  .handler(
-    handleError(async ({ data }) => {
-      const { nanoId } = data
-      const guide = await getGuideByNanoIdWithAssets(nanoId)
-      if (!guide) {
-        throw new Error('Not found')
-      }
-
-      return guide
-    }),
-  )
 
 // Get guides for current organization
 const getGuidesInputSchema = z.object({

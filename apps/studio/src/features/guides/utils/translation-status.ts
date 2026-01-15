@@ -1,4 +1,5 @@
 import type { GuideWithStops, StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { TranslationStatus } from '@valguide/core/features/guides/types'
 
 export type TranslationLocaleStatus = 'published' | 'draft' | 'empty' | 'modified'
 
@@ -9,6 +10,22 @@ type TranslationLike = {
   currentVersionId?: string | null
   draftVersionId?: string | null
   currentVersion?: { status?: string | null } | null
+}
+
+/**
+ * Get locale status map from an array of translation statuses (lightweight, no content)
+ * Used by the new editor context that doesn't have full translations
+ */
+export function getLocaleStatusMapFromStatuses(
+  statuses: TranslationStatus[] | undefined,
+  locales: string[],
+): LocaleStatusMap {
+  const statusMap: LocaleStatusMap = {}
+  for (const locale of locales) {
+    const tr = statuses?.find((t) => t.locale === locale)
+    statusMap[locale] = getTranslationLocaleStatus(tr)
+  }
+  return statusMap
 }
 
 export function getTranslationLocaleStatus(translation: TranslationLike | undefined): TranslationLocaleStatus {

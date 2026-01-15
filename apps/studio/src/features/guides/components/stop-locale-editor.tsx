@@ -1,20 +1,17 @@
 import { useForm } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema-types'
-import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
 import { Mic } from 'lucide-react'
-import { forwardRef, useEffect, useImperativeHandle } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
 
 export type StopLocaleEditorProps = {
-  stop?: StopWithTranslations
   locale: string
   onDirtyChange?: (isDirty: boolean) => void
   onAudioChange?: (asset: Asset | null) => Promise<void>
@@ -33,31 +30,21 @@ export type StopLocaleEditorRef = {
 }
 
 export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditorProps>(function StopLocaleEditor(
-  { stop, locale, onDirtyChange, onAudioChange, onSave, audio = null, readOnly = false, versionData, MediaPicker },
+  { locale, onDirtyChange, onAudioChange, onSave, audio = null, readOnly = false, versionData, MediaPicker },
   ref,
 ) {
   const t = useTranslations('stops.editor')
   const tGuides = useTranslations('guides')
 
-  const translation = stop?.translations.find((t) => t.locale === locale)
-
-  const getDefaultValues = () => {
-    if (versionData) {
-      return {
-        title: versionData.title,
-        description: versionData.description ?? '',
-        transcription: versionData.transcription ?? '',
-      }
-    }
-    return {
-      title: getVersionedField(translation, 'title', true),
-      description: getVersionedField(translation, 'description', true),
-      transcription: getVersionedField(translation, 'transcription', true),
-    }
-  }
+  // Store initial values for reset functionality
+  const initialValuesRef = useRef({
+    title: versionData?.title ?? '',
+    description: versionData?.description ?? '',
+    transcription: versionData?.transcription ?? '',
+  })
 
   const form = useForm({
-    defaultValues: getDefaultValues(),
+    defaultValues: initialValuesRef.current,
     validators: {
       onSubmit: stopTranslationFormSchema,
     },
@@ -71,17 +58,13 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
       getValues: () => form.state.values,
       isDirty: () => form.state.isDirty,
       resetToCurrentValues: () => {
-        form.reset({
-          title: getVersionedField(translation, 'title', true),
-          description: getVersionedField(translation, 'description', true),
-          transcription: getVersionedField(translation, 'transcription', true),
-        })
+        form.reset(initialValuesRef.current)
       },
       resetToFormValues: () => {
         form.reset(form.state.values)
       },
     }),
-    [form, translation],
+    [form],
   )
 
   useEffect(() => {

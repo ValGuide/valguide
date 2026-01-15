@@ -5,7 +5,7 @@ import { createContext, useContext } from 'react'
 // Type for form value getters
 type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
 
-export interface GuideEditorV2ContextValue {
+export interface GuideEditorContextValue {
   // Core identifiers
   nanoId: string
   guideId: string
@@ -52,12 +52,12 @@ export interface GuideEditorV2ContextValue {
   refetch: () => Promise<void>
 }
 
-export const GuideEditorV2Context = createContext<GuideEditorV2ContextValue | null>(null)
+export const GuideEditorContext = createContext<GuideEditorContextValue | null>(null)
 
-export function useGuideEditorV2() {
-  const context = useContext(GuideEditorV2Context)
+export function useGuideEditor() {
+  const context = useContext(GuideEditorContext)
   if (!context) {
-    throw new Error('useGuideEditorV2 must be used within GuideEditorV2Provider')
+    throw new Error('useGuideEditor must be used within GuideEditorProvider')
   }
   return context
 }

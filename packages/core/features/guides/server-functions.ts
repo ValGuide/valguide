@@ -9,9 +9,9 @@ import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { z } from 'zod'
 import {
   getGuideById,
-  getGuideByNanoIdWithAssets,
   getGuideMetadata,
   getGuideTranslationsForLocale,
+  getGuideViewData,
   getStopByNanoId,
 } from './queries'
 import { guide, guideStop, stop } from './schema'
@@ -47,14 +47,14 @@ export const getGuideByIdFn = createServerFn({ method: 'GET' })
     }),
   )
 
-const getGuideByNanoIdWithAssetsSchema = z.object({ nanoId: z.string() })
+const getGuideViewDataSchema = z.object({ nanoId: z.string() })
 
-export const getGuideByNanoIdWithAssetsFn = createServerFn({ method: 'GET' })
+export const getGuideViewDataFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
-  .inputValidator(getGuideByNanoIdWithAssetsSchema)
+  .inputValidator(getGuideViewDataSchema)
   .handler(
     handleError(async ({ context, data }) => {
-      const guideData = await getGuideByNanoIdWithAssets(data.nanoId)
+      const guideData = await getGuideViewData(data.nanoId)
       if (guideData) {
         await requireGuideAccess(guideData.id, context.user.id)
       }

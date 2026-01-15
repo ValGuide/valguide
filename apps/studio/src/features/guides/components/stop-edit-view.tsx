@@ -1,5 +1,4 @@
 import { Link, useRouter } from '@tanstack/react-router'
-import type { StopWithAssets } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   BreadcrumbEllipsis,
@@ -13,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
@@ -21,20 +20,23 @@ import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 
 interface StopEditViewProps {
-  stop: StopWithAssets
+  stopId: string
   MediaPicker: MediaPickerComponent
   onPublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onUnpublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onDiscard: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
 }
 
-export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpublish, onDiscard }: StopEditViewProps) {
+export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDiscard }: StopEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
   const {
-    guide,
+    nanoId,
+    metadata,
+    localeData,
     activeLocale,
+    availableLocales,
     isDirty,
     isSaving,
     attachAssetToStop,
@@ -47,31 +49,44 @@ export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpubli
     registerFormReset,
   } = useGuideEditor()
 
-  const foundStop = guide.stops.find((s) => s.id === stopProp.id)
-  const stop: StopWithAssets = foundStop ?? stopProp
-
   const { buildUrl } = useLocaleUrl(activeLocale)
 
-  const guideDetailUrl = `/guides/${guide.nanoId}`
+  const guideDetailUrl = `/guides/${nanoId}`
 
-  const guideTitle =
-    guide.translations.find((tr) => tr.currentVersion?.title)?.currentVersion?.title ??
-    guide.translations.find((tr) => tr.draftVersion?.title)?.draftVersion?.title ??
-    t('untitledGuide')
+  // Get guide title from locale data
+  const guideTitle = useMemo(() => {
+    const translation = localeData?.guideTranslation
+    return translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? t('untitledGuide')
+  }, [localeData, t])
 
-  const stopTitle =
-    stop.translations.find((tr) => tr.locale === activeLocale)?.currentVersion?.title ??
-    stop.translations.find((tr) => tr.locale === activeLocale)?.draftVersion?.title ??
-    tStops('untitled')
+  // Get stop title from locale data
+  const stopTranslation = useMemo(() => {
+    return localeData?.stopTranslations.find((st) => st.stopId === stopId)
+  }, [localeData, stopId])
 
-  const stopImages = stop.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
+  const stopTitle = useMemo(() => {
+    return stopTranslation?.currentVersion?.title ?? stopTranslation?.draftVersion?.title ?? tStops('untitled')
+  }, [stopTranslation, tStops])
+
+  // Get stop assets from metadata
+  const stopMetadata = useMemo(() => {
+    return metadata?.stops.find((s) => s.id === stopId)
+  }, [metadata, stopId])
+
+  const stopImages = useMemo(() => {
+    return stopMetadata?.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null) ?? []
+  }, [stopMetadata])
 
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
-  const formId = `stop-translation-${stop.id}-${activeLocale}`
+  const formId = `stop-translation-${stopId}-${activeLocale}`
 
   const handleDirtyChange = useCallback(
     (formIsDirty: boolean) => {
-      registerFormDirty(formId, formIsDirty)
+      registerFormDirty(
+        formId,
+        formIsDirty,
+        () => stopEditorRef.current?.getValues() ?? { title: '', description: '', transcription: '' },
+      )
     },
     [formId, registerFormDirty],
   )
@@ -92,8 +107,8 @@ export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpubli
   }, [formId, registerFormReset, unregisterForm])
 
   const handleBackToGuide = useCallback(() => {
-    router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/edit`) })
-  }, [router, buildUrl, guide.nanoId])
+    router.navigate({ to: buildUrl(`/guides/${nanoId}/edit`) })
+  }, [router, buildUrl, nanoId])
 
   const breadcrumbContent = (
     <>
@@ -137,14 +152,21 @@ export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpubli
     </>
   )
 
+  if (!metadata || !stopMetadata) {
+    return null
+  }
+
   return (
     <StopEditLayout
-      stop={stop}
+      stopId={stopId}
+      stopTranslation={stopTranslation ?? null}
+      stopAssets={stopMetadata.assets}
+      stopTranslationStatuses={stopMetadata.translationStatuses}
       activeLocale={activeLocale}
       isDirty={isDirty}
       isSaving={isSaving}
       stopTitle={stopTitle}
-      locales={guide.availableLocales ?? ['en', 'de', 'rm']}
+      locales={availableLocales}
       onLocaleChange={setActiveLocale}
       onDirtyChange={handleDirtyChange}
       onSave={save}
@@ -163,19 +185,19 @@ export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpubli
 
         for (const existing of stopImages) {
           if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
-            await detachAssetFromStop(stop.id, existing.id, existing.stopAssetId)
+            await detachAssetFromStop(stopId, existing.id, existing.stopAssetId)
           }
         }
 
         for (const asset of assets) {
           if (!currentAssetIds.has(asset.id)) {
-            await attachAssetToStop(stop.id, asset, 'image', null)
+            await attachAssetToStop(stopId, asset, 'image', null)
           }
         }
       }}
       onAudioChange={async (asset) => {
         if (asset) {
-          await attachAssetToStop(stop.id, asset, 'audio', activeLocale)
+          await attachAssetToStop(stopId, asset, 'audio', activeLocale)
         }
       }}
     />
