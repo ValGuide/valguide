@@ -4,12 +4,13 @@ import {
   publishGuideTranslationDraftFn,
   unpublishGuideTranslationFn,
 } from '@valguide/core/features/guides/server-functions'
+import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
-import { guideMetadataQueryOptions } from '@/features/guides/query-options'
+import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '@/features/guides/query-options'
 
 type SearchParams = {
   stop?: string
@@ -21,13 +22,18 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
     stop: search.stop as string | undefined,
     locale: search.locale as string | undefined,
   }),
-  loader: async ({ params, context }) => {
-    // Only load metadata (no translations) - much lighter!
+  loaderDeps: ({ search }) => ({ locale: search.locale }),
+  loader: async ({ params, context, deps }) => {
+    // Load metadata first
     const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
 
     if (!metadata) {
       throw new Error('Guide not found')
     }
+
+    // Prefetch locale data so it's cached when GuideEditorProvider mounts
+    const activeLocale = deps.locale ?? defaultLocale
+    await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, activeLocale))
 
     return { nanoId: params.nanoId }
   },

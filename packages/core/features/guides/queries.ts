@@ -253,13 +253,14 @@ export async function getGuidesListByOrganizationId(
   return guides.map((g) => {
     const resolved = resolveBestTranslation(g.translations, preferredLocale)
     const coverAsset = coverMap.get(g.id)
+    const imageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
     return {
       id: g.id,
       nanoId: g.nanoId,
       published: g.published,
       createdAt: g.createdAt,
       updatedAt: g.updatedAt,
-      coverImageUrl: coverAsset ? getAssetImageUrl(coverAsset) : null,
+      coverImageUrl: imageUrl || null,
       displayTitle: resolved.title,
       displayDescription: resolved.description,
       displayLocale: resolved.locale,
