@@ -174,3 +174,39 @@ export type GuideListItem = {
   /** Which locale was used for display (for debugging/UI hints) */
   displayLocale: string
 }
+
+// ============================================================================
+// Lightweight Guide Detail Types (optimized for detail view)
+// ============================================================================
+
+/**
+ * Translation summary for locale tabs (no full content)
+ */
+export type TranslationSummary = {
+  locale: string
+  hasCurrentVersion: boolean
+  hasDraftVersion: boolean
+  title: string
+}
+
+/**
+ * Lightweight guide detail for view page
+ * Contains only data needed for detail view, with translation fallback applied server-side
+ */
+export type GuideDetailItem = {
+  id: string
+  nanoId: string
+  organizationId: string
+  published: Date | null
+  createdAt: Date
+  updatedAt: Date
+  coverImage: AssetWithRole | null
+  /** Resolved title from best available translation */
+  displayTitle: string
+  /** Resolved description from best available translation (rich text) */
+  displayDescription: string | null
+  /** Which locale was used for display */
+  displayLocale: string
+  /** Summary of all available translations for locale tabs */
+  translationSummaries: TranslationSummary[]
+}

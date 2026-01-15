@@ -13,6 +13,7 @@ export type { AssetWithRole, GuideWithStopsAndAssets, GuideWithTranslationsAndCo
 import type { GuideWithTranslations, StopWithTranslations } from './schema'
 import type {
   AssetWithRole,
+  GuideDetailItem,
   GuideListItem,
   GuideLocaleData,
   GuideMetadata,
@@ -262,6 +263,104 @@ export async function getGuidesListByOrganizationId(
       displayLocale: resolved.locale,
     }
   })
+}
+
+/**
+ * Get lightweight guide detail for view page
+ * Optimized for detail view - fetches only necessary data with translation fallback applied
+ */
+export async function getGuideDetailByNanoId(
+  db: DB,
+  nanoId: string,
+  preferredLocale: string,
+): Promise<GuideDetailItem | null> {
+  const result = await db.query.guide.findFirst({
+    where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
+    columns: {
+      id: true,
+      nanoId: true,
+      organizationId: true,
+      published: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    with: {
+      translations: {
+        columns: {
+          locale: true,
+        },
+        with: {
+          currentVersion: {
+            columns: {
+              title: true,
+              description: true,
+            },
+          },
+          draftVersion: {
+            columns: {
+              title: true,
+              description: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (!result) return null
+
+  // Fetch only cover image (not all assets)
+  const coverAssets = await db
+    .select({
+      guideAssetId: guideAsset.id,
+      asset: asset,
+      role: guideAsset.role,
+      order: guideAsset.order,
+      locale: guideAsset.locale,
+    })
+    .from(guideAsset)
+    .innerJoin(asset, eq(guideAsset.assetId, asset.id))
+    .where(and(eq(guideAsset.guideId, result.id), eq(guideAsset.role, 'cover')))
+    .limit(1)
+
+  const coverImage: AssetWithRole | null =
+    coverAssets.length > 0
+      ? {
+          ...coverAssets[0].asset,
+          guideAssetId: coverAssets[0].guideAssetId,
+          role: coverAssets[0].role,
+          order: coverAssets[0].order,
+          locale: coverAssets[0].locale,
+        }
+      : null
+
+  // Apply translation fallback
+  const resolved = resolveBestTranslation(result.translations, preferredLocale)
+
+  // Build translation summaries for locale tabs
+  const translationSummaries = result.translations.map((t) => {
+    const version = t.draftVersion ?? t.currentVersion
+    return {
+      locale: t.locale,
+      hasCurrentVersion: !!t.currentVersion,
+      hasDraftVersion: !!t.draftVersion,
+      title: version?.title ?? 'Untitled',
+    }
+  })
+
+  return {
+    id: result.id,
+    nanoId: result.nanoId,
+    organizationId: result.organizationId,
+    published: result.published,
+    createdAt: result.createdAt,
+    updatedAt: result.updatedAt,
+    coverImage,
+    displayTitle: resolved.title,
+    displayDescription: resolved.description,
+    displayLocale: resolved.locale,
+    translationSummaries,
+  }
 }
 
 /**

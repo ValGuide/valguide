@@ -1,10 +1,12 @@
 import { queryOptions } from '@tanstack/react-query'
 import {
+  getGuideDetailFn,
   getGuideMetadataFn,
   getGuideTranslationsForLocaleFn,
   getGuideViewDataFn,
 } from '@valguide/core/features/guides/server-functions'
 import type {
+  GuideDetailItem,
   GuideListItem,
   GuideLocaleData,
   GuideMetadata,
@@ -49,6 +51,7 @@ export const archivedGuidesQueryOptions = () =>
   })
 
 /**
+ * @deprecated Use guideDetailQueryOptions for view pages - it's optimized and fetches less data
  * Query options for guide view page (all translations, no stops)
  * Use for guide detail view that shows all locale translations
  */
@@ -57,6 +60,18 @@ export const guideViewQueryOptions = (nanoId: string) =>
     queryKey: ['guide', nanoId, 'view'],
     queryFn: () => getGuideViewDataFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
+  })
+
+/**
+ * Lightweight query options for guide detail view page
+ * Fetches only data needed for detail view with translation fallback applied server-side
+ */
+export const guideDetailQueryOptions = (nanoId: string, preferredLocale: string) =>
+  queryOptions<GuideDetailItem | null>({
+    queryKey: ['guide', nanoId, 'detail', { preferredLocale }],
+    queryFn: () => getGuideDetailFn({ data: { nanoId, preferredLocale } }),
+    staleTime: 30_000,
+    gcTime: 5 * 60 * 1000,
   })
 
 // ============================================================================

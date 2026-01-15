@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { clientEnv } from '@valguide/core/env/client'
@@ -14,36 +14,33 @@ import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
 import { StatusBadge } from '@valguide/ui/components/status-badge'
 import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
-import { guideViewQueryOptions } from '@/features/guides/query-options'
+import { guideDetailQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId/')({
+  loader: async ({ params, context }) => {
+    await context.queryClient.ensureQueryData(guideDetailQueryOptions(params.nanoId, context.locale))
+    return { nanoId: params.nanoId, preferredLocale: context.locale }
+  },
   component: GuidePage,
   pendingComponent: GuideDetailSkeleton,
 })
 
 function GuidePage() {
-  const { nanoId } = Route.useParams()
-  const { data: guide } = useQuery(guideViewQueryOptions(nanoId))
+  const { nanoId, preferredLocale } = Route.useLoaderData()
+  const { data: guide } = useQuery(guideDetailQueryOptions(nanoId, preferredLocale))
   const t = useTranslations('guides')
   const router = useRouter()
-  const queryClient = useQueryClient()
 
   const handleArchived = async () => {
-    await queryClient.invalidateQueries({ queryKey: ['guides'] })
-    await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
+    await router.invalidate()
     router.navigate({ to: '/' })
   }
 
   if (!guide) return null
 
-  const translation = guide.translations.find((tr) => tr.locale === 'de') ?? guide.translations[0]
-  const version = translation?.draftVersion ?? translation?.currentVersion
-  const title = version?.title ?? t('untitledGuide')
-  const description = version?.description ?? ''
   const isPublished = !!guide.published
   const status = isPublished ? 'published' : 'draft'
-  const coverAsset = guide.assets.find((a) => a.role === 'cover')
-  const coverImageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
+  const coverImageUrl = guide.coverImage ? getAssetImageUrl(guide.coverImage) : null
 
   return (
     <main className="flex flex-1 flex-col">
@@ -78,7 +75,12 @@ function GuidePage() {
             {/* Cover Image Section - Reduced height */}
             <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted/30">
               {coverImageUrl ? (
-                <Image src={coverImageUrl} alt={title} layout="fullWidth" className="h-full w-full object-cover" />
+                <Image
+                  src={coverImageUrl}
+                  alt={guide.displayTitle}
+                  layout="fullWidth"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
@@ -93,10 +95,10 @@ function GuidePage() {
             <CardContent className="p-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex-1 space-y-2">
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{title}</h1>
-                  {description && (
+                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{guide.displayTitle}</h1>
+                  {guide.displayDescription && (
                     <div className="text-sm text-muted-foreground line-clamp-3">
-                      <RichTextDisplay content={description} />
+                      <RichTextDisplay content={guide.displayDescription} />
                     </div>
                   )}
                 </div>
@@ -139,27 +141,19 @@ function GuidePage() {
             <CardContent className="p-6">
               <h2 className="text-base font-semibold mb-4">{t('details.translations')}</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {guide.translations.map((trans) => {
-                  const ver = trans.draftVersion ?? trans.currentVersion
-                  return (
-                    <div
-                      key={trans.id}
-                      className="rounded-lg border bg-muted/20 p-4 transition-all duration-200 hover:bg-muted/30 hover:border-primary/20"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary" className="text-[10px] font-medium uppercase tracking-wider">
-                          {trans.locale}
-                        </Badge>
-                      </div>
-                      <h3 className="font-medium line-clamp-1 text-sm">{ver?.title ?? t('untitledGuide')}</h3>
-                      {ver?.description && (
-                        <div className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
-                          <RichTextDisplay content={ver.description} />
-                        </div>
-                      )}
+                {guide.translationSummaries.map((trans) => (
+                  <div
+                    key={trans.locale}
+                    className="rounded-lg border bg-muted/20 p-4 transition-all duration-200 hover:bg-muted/30 hover:border-primary/20"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary" className="text-[10px] font-medium uppercase tracking-wider">
+                        {trans.locale}
+                      </Badge>
                     </div>
-                  )
-                })}
+                    <h3 className="font-medium line-clamp-1 text-sm">{trans.title}</h3>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
