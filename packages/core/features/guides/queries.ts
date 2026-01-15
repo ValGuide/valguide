@@ -2,7 +2,7 @@ import { type DB, db } from '@valguide/core/features/db'
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
 import { asset, guideAsset, stopAsset } from '../assets/schema'
-import { guide, guideStop, guideTranslation, guideTranslationVersion, stop } from './schema'
+import { guide, guideStop, guideTranslation, guideTranslationVersion, stop, stopTranslation } from './schema'
 import { upsertGuideTranslationDraft } from './translation-mutations'
 
 // Re-export types from types.ts for backward compatibility
@@ -16,7 +16,14 @@ export type {
 } from './types'
 
 import type { GuideWithTranslations, StopWithTranslations } from './schema'
-import type { AssetWithRole, GuideWithStopsAndAssets, GuideWithTranslationsAndCover, StopWithAssets } from './types'
+import type {
+  AssetWithRole,
+  GuideLocaleData,
+  GuideMetadata,
+  GuideWithStopsAndAssets,
+  GuideWithTranslationsAndCover,
+  StopWithAssets,
+} from './types'
 
 /**
  * Query utilities for guides with i18n support
@@ -539,4 +546,198 @@ export async function getGuideStops(db: DB, guideId: string): Promise<StopWithTr
   })
 
   return result.map((gs) => gs.stop)
+}
+
+// ============================================================================
+// Lightweight Editor Queries (Stage 2 - per-locale fetching)
+// ============================================================================
+
+/**
+ * Get guide metadata without translations (for editor shell)
+ * Returns guide base data, availableLocales, stops (id, nanoId, position), and all assets
+ */
+export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | null> {
+  const result = await db.query.guide.findFirst({
+    where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
+    with: {
+      guideStops: {
+        orderBy: asc(guideStop.position),
+        columns: {
+          position: true,
+        },
+        with: {
+          stop: {
+            columns: {
+              id: true,
+              nanoId: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (!result) return null
+
+  // Fetch guide assets
+  const guideAssets = await db
+    .select({
+      guideAssetId: guideAsset.id,
+      asset: asset,
+      role: guideAsset.role,
+      order: guideAsset.order,
+      locale: guideAsset.locale,
+    })
+    .from(guideAsset)
+    .innerJoin(asset, eq(guideAsset.assetId, asset.id))
+    .where(eq(guideAsset.guideId, result.id))
+    .orderBy(asc(guideAsset.order))
+
+  // Fetch all stop assets
+  const stopIds = result.guideStops.map((gs) => gs.stop.id)
+  const stopAssetsData =
+    stopIds.length > 0
+      ? await db
+          .select({
+            stopId: stopAsset.stopId,
+            stopAssetId: stopAsset.id,
+            asset: asset,
+            role: stopAsset.role,
+            order: stopAsset.order,
+            locale: stopAsset.locale,
+          })
+          .from(stopAsset)
+          .innerJoin(asset, eq(stopAsset.assetId, asset.id))
+          .where(inArray(stopAsset.stopId, stopIds))
+          .orderBy(asc(stopAsset.order))
+      : []
+
+  // Group stop assets by stop ID
+  const stopAssetsMap = new Map<string, AssetWithRole[]>()
+  for (const item of stopAssetsData) {
+    if (!stopAssetsMap.has(item.stopId)) {
+      stopAssetsMap.set(item.stopId, [])
+    }
+    stopAssetsMap.get(item.stopId)?.push({
+      ...item.asset,
+      stopAssetId: item.stopAssetId,
+      role: item.role,
+      order: item.order,
+      locale: item.locale,
+    })
+  }
+
+  return {
+    id: result.id,
+    nanoId: result.nanoId,
+    organizationId: result.organizationId,
+    availableLocales: result.availableLocales,
+    published: result.published,
+    createdAt: result.createdAt,
+    updatedAt: result.updatedAt,
+    assets: guideAssets.map((item) => ({
+      ...item.asset,
+      guideAssetId: item.guideAssetId,
+      role: item.role,
+      order: item.order,
+      locale: item.locale,
+    })),
+    stops: result.guideStops.map((gs) => ({
+      id: gs.stop.id,
+      nanoId: gs.stop.nanoId,
+      position: gs.position,
+      assets: stopAssetsMap.get(gs.stop.id) ?? [],
+    })),
+  }
+}
+
+/**
+ * Get guide translations for a single locale
+ * Returns guide translation (current + draft) and all stop translations for that locale
+ */
+export async function getGuideTranslationsForLocale(guideId: string, locale: string): Promise<GuideLocaleData> {
+  // Fetch guide translation for the locale
+  const guideTranslationResult = await db.query.guideTranslation.findFirst({
+    where: and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)),
+    with: {
+      currentVersion: true,
+      draftVersion: true,
+    },
+  })
+
+  // Fetch all stops for this guide
+  const guideStopsResult = await db.query.guideStop.findMany({
+    where: eq(guideStop.guideId, guideId),
+    orderBy: asc(guideStop.position),
+    columns: {
+      stopId: true,
+    },
+  })
+
+  const stopIds = guideStopsResult.map((gs) => gs.stopId)
+
+  // Fetch stop translations for the locale
+  const stopTranslationsResult =
+    stopIds.length > 0
+      ? await db.query.stopTranslation.findMany({
+          where: and(inArray(stopTranslation.stopId, stopIds), eq(stopTranslation.locale, locale)),
+          with: {
+            currentVersion: true,
+            draftVersion: true,
+          },
+        })
+      : []
+
+  // Create a map for quick lookup
+  const stopTranslationMap = new Map(stopTranslationsResult.map((st) => [st.stopId, st]))
+
+  return {
+    locale,
+    guideTranslation: guideTranslationResult
+      ? {
+          translationId: guideTranslationResult.id,
+          currentVersionId: guideTranslationResult.currentVersionId,
+          draftVersionId: guideTranslationResult.draftVersionId,
+          currentVersion: guideTranslationResult.currentVersion
+            ? {
+                id: guideTranslationResult.currentVersion.id,
+                title: guideTranslationResult.currentVersion.title,
+                description: guideTranslationResult.currentVersion.description,
+              }
+            : null,
+          draftVersion: guideTranslationResult.draftVersion
+            ? {
+                id: guideTranslationResult.draftVersion.id,
+                title: guideTranslationResult.draftVersion.title,
+                description: guideTranslationResult.draftVersion.description,
+              }
+            : null,
+        }
+      : null,
+    stopTranslations: stopIds.map((stopId) => {
+      const st = stopTranslationMap.get(stopId)
+      return {
+        stopId,
+        translationId: st?.id ?? '',
+        currentVersionId: st?.currentVersionId ?? null,
+        draftVersionId: st?.draftVersionId ?? null,
+        currentVersion: st?.currentVersion
+          ? {
+              id: st.currentVersion.id,
+              title: st.currentVersion.title,
+              description: st.currentVersion.description,
+              transcription: st.currentVersion.transcription,
+            }
+          : null,
+        draftVersion: st?.draftVersion
+          ? {
+              id: st.draftVersion.id,
+              title: st.draftVersion.title,
+              description: st.draftVersion.description,
+              transcription: st.draftVersion.transcription,
+            }
+          : null,
+      }
+    }),
+  }
 }

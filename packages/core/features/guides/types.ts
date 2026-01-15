@@ -59,3 +59,63 @@ export const guideSchema = z.object({
 
 export type GuideTranslation = z.infer<typeof guideTranslationSchema>
 export type Guide = z.infer<typeof guideSchema>
+
+// ============================================================================
+// Lightweight Editor Types (Stage 2 - per-locale fetching)
+// ============================================================================
+
+// Minimal stop info for ordering/navigation (no translations)
+export type StopMetadata = {
+  id: string
+  nanoId: string
+  position: number
+  assets: AssetWithRole[]
+}
+
+// Lightweight guide metadata (no translations, for editor shell)
+export type GuideMetadata = {
+  id: string
+  nanoId: string
+  organizationId: string
+  availableLocales: string[]
+  published: Date | null
+  createdAt: Date
+  updatedAt: Date
+  assets: AssetWithRole[]
+  stops: StopMetadata[]
+}
+
+// Translation version content
+export type TranslationVersionContent = {
+  id: string
+  title: string
+  description: string | null
+}
+
+// Stop translation version content (has transcription)
+export type StopTranslationVersionContent = {
+  id: string
+  title: string
+  description: string | null
+  transcription: string | null
+}
+
+// Per-locale bundle for the editor
+export type GuideLocaleData = {
+  locale: string
+  guideTranslation: {
+    translationId: string
+    currentVersionId: string | null
+    draftVersionId: string | null
+    currentVersion: TranslationVersionContent | null
+    draftVersion: TranslationVersionContent | null
+  } | null
+  stopTranslations: Array<{
+    stopId: string
+    translationId: string
+    currentVersionId: string | null
+    draftVersionId: string | null
+    currentVersion: StopTranslationVersionContent | null
+    draftVersion: StopTranslationVersionContent | null
+  }>
+}

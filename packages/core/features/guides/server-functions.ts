@@ -7,7 +7,13 @@ import { valguideId } from '@valguide/core/utils/nanoid'
 import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { z } from 'zod'
-import { getGuideById, getGuideByNanoIdWithAssets, getStopByNanoId } from './queries'
+import {
+  getGuideById,
+  getGuideByNanoIdWithAssets,
+  getGuideMetadata,
+  getGuideTranslationsForLocale,
+  getStopByNanoId,
+} from './queries'
 import { guide, guideStop, stop } from './schema'
 import {
   deleteGuideTranslationDraft,
@@ -99,6 +105,38 @@ export const getStopTranslationHistoryFn = createServerFn({ method: 'GET' })
     handleError(async ({ context, data }) => {
       await requireStopAccess(data.stopId, context.user.id)
       return getStopTranslationHistory(data.stopId, data.locale)
+    }),
+  )
+
+// --- Lightweight editor queries (Stage 2) ---
+
+const getGuideMetadataSchema = z.object({ nanoId: z.string() })
+
+export const getGuideMetadataFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getGuideMetadataSchema)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const metadata = await getGuideMetadata(data.nanoId)
+      if (metadata) {
+        await requireGuideAccess(metadata.id, context.user.id)
+      }
+      return metadata
+    }),
+  )
+
+const getGuideTranslationsForLocaleSchema = z.object({
+  guideId: z.string(),
+  locale: z.string(),
+})
+
+export const getGuideTranslationsForLocaleFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getGuideTranslationsForLocaleSchema)
+  .handler(
+    handleError(async ({ context, data }) => {
+      await requireGuideAccess(data.guideId, context.user.id)
+      return getGuideTranslationsForLocale(data.guideId, data.locale)
     }),
   )
 
