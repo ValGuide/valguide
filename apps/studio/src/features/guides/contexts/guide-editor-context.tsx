@@ -16,7 +16,7 @@ import {
 import type { StopMetadata } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '../query-options'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
@@ -64,6 +64,17 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   })
   const localeData = localeQuery.data ?? null
   const isLoadingLocale = localeQuery.isLoading
+
+  // Prefetch adjacent locales for instant switching
+  useEffect(() => {
+    if (!guideId || availableLocales.length <= 1) return
+
+    // Prefetch all other locales in background
+    const otherLocales = availableLocales.filter((l) => l !== activeLocale)
+    for (const locale of otherLocales) {
+      queryClient.prefetchQuery(guideLocaleQueryOptions(guideId, locale))
+    }
+  }, [guideId, activeLocale, availableLocales, queryClient])
 
   // Form dirty tracking and value collection
   const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())

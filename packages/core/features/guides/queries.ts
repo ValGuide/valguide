@@ -552,6 +552,16 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
     })
   }
 
+  // Fetch guide translation statuses (just IDs, no content) for all locales
+  const guideTranslationStatuses = await db
+    .select({
+      locale: guideTranslation.locale,
+      currentVersionId: guideTranslation.currentVersionId,
+      draftVersionId: guideTranslation.draftVersionId,
+    })
+    .from(guideTranslation)
+    .where(eq(guideTranslation.guideId, result.id))
+
   return {
     id: result.id,
     nanoId: result.nanoId,
@@ -573,6 +583,11 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
       position: gs.position,
       assets: stopAssetsMap.get(gs.stop.id) ?? [],
       translationStatuses: stopTranslationStatusesMap.get(gs.stop.id) ?? [],
+    })),
+    translationStatuses: guideTranslationStatuses.map((t) => ({
+      locale: t.locale,
+      currentVersionId: t.currentVersionId,
+      draftVersionId: t.draftVersionId,
     })),
   }
 }
@@ -669,7 +684,7 @@ export async function getGuideTranslationsForLocale(guideId: string, locale: str
 }
 
 /**
- * Get guide with all translations for view page (replaces getGuideByNanoIdWithAssets)
+ * Get guide with all translations for view page
  * Returns guide metadata + all translations (no stops needed for view)
  */
 export async function getGuideViewData(nanoId: string): Promise<GuideViewData | null> {

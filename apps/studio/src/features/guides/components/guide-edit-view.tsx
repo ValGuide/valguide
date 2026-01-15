@@ -28,6 +28,7 @@ import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import { getLocaleStatusMapFromStatuses } from '@/features/guides/utils/translation-status'
 
 interface GuideEditViewProps {
   onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
@@ -85,21 +86,10 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   const hasPublished = !!localeData?.guideTranslation?.currentVersionId
   const contentStatus = getContentStatus(hasDraft, hasPublished)
 
-  // Build locale status map
-  // TODO: Add guide translation statuses to metadata for proper per-locale status
+  // Build locale status map from metadata translation statuses
   const localeStatusMap = useMemo(() => {
-    const map: Record<string, 'published' | 'draft' | 'empty'> = {}
-    for (const locale of availableLocales) {
-      if (locale === activeLocale) {
-        // Map ContentStatus to TranslationLocaleStatus
-        map[locale] = contentStatus === 'modified' ? 'draft' : contentStatus
-      } else {
-        // For other locales, we'd need to fetch their status - show as 'empty' for now
-        map[locale] = 'empty'
-      }
-    }
-    return map
-  }, [availableLocales, activeLocale, contentStatus])
+    return getLocaleStatusMapFromStatuses(metadata?.translationStatuses, availableLocales)
+  }, [metadata?.translationStatuses, availableLocales])
 
   const isReadOnly = activeTab === 'published'
 

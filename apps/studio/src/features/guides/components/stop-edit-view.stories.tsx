@@ -1,7 +1,6 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import type { GuideWithStops } from '@valguide/core/features/guides/schema-types'
-import type { StopWithAssets } from '@valguide/core/features/guides/types'
+import type { GuideLocaleData, GuideMetadata, StopMetadata } from '@valguide/core/features/guides/types'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 import type { MediaPickerComponentProps } from '@/features/assets/components/media-picker/types'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
@@ -22,104 +21,66 @@ function StoryMediaPicker(props: MediaPickerComponentProps) {
   )
 }
 
-const mockStop: StopWithAssets = {
+// Mock stop metadata
+const mockStopMetadata: StopMetadata = {
   id: 'stop-1',
-  guideId: 'guide-1',
   nanoId: 'stop1abc',
-  organizationId: 'org-1',
-  order: 0,
-  createdAt: new Date('2025-01-10T10:00:00Z'),
-  updatedAt: new Date('2025-01-10T10:00:00Z'),
-  createdBy: 'user-1',
+  position: 0,
   assets: [],
-  translations: [
+  translationStatuses: [
+    { locale: 'en', currentVersionId: 'sv1', draftVersionId: null },
+    { locale: 'de', currentVersionId: 'sv1-de', draftVersionId: null },
+  ],
+}
+
+// Mock guide metadata
+const mockMetadata: GuideMetadata = {
+  id: 'guide-1',
+  nanoId: 'abc123xyz',
+  organizationId: 'org-1',
+  availableLocales: ['en', 'de'],
+  published: null,
+  createdAt: new Date('2025-01-01T10:00:00Z'),
+  updatedAt: new Date('2025-01-15T14:30:00Z'),
+  assets: [],
+  stops: [mockStopMetadata],
+  translationStatuses: [
+    { locale: 'en', currentVersionId: 'gv1', draftVersionId: null },
+    { locale: 'de', currentVersionId: 'gv1-de', draftVersionId: null },
+  ],
+}
+
+// Mock locale data for English
+const mockLocaleDataEn: GuideLocaleData = {
+  locale: 'en',
+  guideTranslation: {
+    translationId: 'gt1',
+    currentVersionId: 'gv1',
+    draftVersionId: null,
+    currentVersion: {
+      id: 'gv1',
+      title: 'City Art Museum Audio Tour',
+      description: 'Discover the rich history and stunning artworks of the City Art Museum.',
+    },
+    draftVersion: null,
+  },
+  stopTranslations: [
     {
-      id: 'st1',
       stopId: 'stop-1',
-      locale: 'en',
+      translationId: 'st1',
       currentVersionId: 'sv1',
       draftVersionId: null,
-      createdAt: new Date('2025-01-10T10:00:00Z'),
-      updatedAt: new Date('2025-01-10T10:00:00Z'),
       currentVersion: {
         id: 'sv1',
-        translationId: 'st1',
-        version: 1,
-        status: 'published',
         title: 'Museum Entrance',
         description:
           'Welcome to our museum. This is where your journey begins. The building was constructed in 1892 and has served as a cultural landmark for over a century.',
         transcription:
           'Welcome to the City Art Museum. As you enter through these grand doors, take a moment to appreciate the neoclassical architecture that has welcomed visitors for over 130 years.',
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        createdBy: 'user-1',
-        publishedAt: new Date('2025-01-10T10:00:00Z'),
-      },
-      draftVersion: null,
-    },
-    {
-      id: 'st1-de',
-      stopId: 'stop-1',
-      locale: 'de',
-      currentVersionId: 'sv1-de',
-      draftVersionId: null,
-      createdAt: new Date('2025-01-10T10:00:00Z'),
-      updatedAt: new Date('2025-01-10T10:00:00Z'),
-      currentVersion: {
-        id: 'sv1-de',
-        translationId: 'st1-de',
-        version: 1,
-        status: 'published',
-        title: 'Museumseingang',
-        description:
-          'Willkommen in unserem Museum. Hier beginnt Ihre Reise. Das Gebäude wurde 1892 erbaut und ist seit über einem Jahrhundert ein kulturelles Wahrzeichen.',
-        transcription:
-          'Willkommen im Städtischen Kunstmuseum. Wenn Sie durch diese prächtigen Türen eintreten, nehmen Sie sich einen Moment Zeit, um die neoklassizistische Architektur zu bewundern.',
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        createdBy: 'user-1',
-        publishedAt: new Date('2025-01-10T10:00:00Z'),
       },
       draftVersion: null,
     },
   ],
-}
-
-const mockGuide: GuideWithStops = {
-  id: 'guide-1',
-  nanoId: 'abc123xyz',
-  createdAt: new Date('2025-01-01T10:00:00Z'),
-  updatedAt: new Date('2025-01-15T14:30:00Z'),
-  createdBy: 'user-1',
-  updatedBy: 'user-1',
-  published: null,
-  coverImage: null,
-  organizationId: 'org-1',
-  archivedAt: null,
-  deletedAt: null,
-  translations: [
-    {
-      id: 'gt1',
-      guideId: 'guide-1',
-      locale: 'en',
-      currentVersionId: 'gv1',
-      draftVersionId: null,
-      createdAt: new Date('2025-01-01T10:00:00Z'),
-      updatedAt: new Date('2025-01-15T14:30:00Z'),
-      currentVersion: {
-        id: 'gv1',
-        translationId: 'gt1',
-        version: 1,
-        status: 'published',
-        title: 'City Art Museum Audio Tour',
-        description: 'Discover the rich history and stunning artworks of the City Art Museum.',
-        createdAt: new Date('2025-01-01T10:00:00Z'),
-        createdBy: 'user-1',
-        publishedAt: new Date('2025-01-01T10:00:00Z'),
-      },
-      draftVersion: null,
-    },
-  ],
-  stops: [mockStop],
 }
 
 const mockOnPublish = async (_stopId: string, _locale: string) => {
@@ -137,6 +98,13 @@ const mockOnDiscard = async (_stopId: string, _locale: string) => {
   return { success: true }
 }
 
+type StoryArgs = {
+  metadata?: GuideMetadata
+  localeData?: GuideLocaleData | null
+  stopId?: string
+  organizationId?: string
+}
+
 const meta = {
   title: 'Studio/Pages/Guides/Edit/StopEditView',
   component: StopEditView,
@@ -148,111 +116,129 @@ const meta = {
     onPublish: mockOnPublish,
     onUnpublish: mockOnUnpublish,
     onDiscard: mockOnDiscard,
+    stopId: 'stop-1',
   },
   decorators: [
     (Story, { args }) => (
       <MockAssetsProvider>
-        <MockGuideEditorProvider initialGuide={args.guide ?? mockGuide}>
+        <MockGuideEditorProvider
+          metadata={args.metadata ?? mockMetadata}
+          localeData={args.localeData ?? mockLocaleDataEn}
+        >
           <Story />
         </MockGuideEditorProvider>
       </MockAssetsProvider>
     ),
   ],
-} satisfies Meta<typeof StopEditView & { guide: GuideWithStops; organizationId: string }>
+} satisfies Meta<typeof StopEditView & StoryArgs>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    stop: mockStop,
-    guide: mockGuide,
+    metadata: mockMetadata,
+    localeData: mockLocaleDataEn,
+    stopId: 'stop-1',
     organizationId: 'org-mock-123',
   },
 }
 
 export const WithDraft: Story = {
   args: {
-    stop: {
-      ...mockStop,
-      translations: [
+    metadata: {
+      ...mockMetadata,
+      stops: [
         {
-          ...mockStop.translations[0],
+          ...mockStopMetadata,
+          translationStatuses: [
+            { locale: 'en', currentVersionId: 'sv1', draftVersionId: 'sv2' },
+            { locale: 'de', currentVersionId: 'sv1-de', draftVersionId: null },
+          ],
+        },
+      ],
+    },
+    localeData: {
+      ...mockLocaleDataEn,
+      stopTranslations: [
+        {
+          stopId: 'stop-1',
+          translationId: 'st1',
+          currentVersionId: 'sv1',
           draftVersionId: 'sv2',
+          currentVersion: {
+            id: 'sv1',
+            title: 'Museum Entrance',
+            description: 'Welcome to our museum. This is where your journey begins.',
+            transcription: 'Welcome to the City Art Museum.',
+          },
           draftVersion: {
             id: 'sv2',
-            translationId: 'st1',
-            version: 2,
-            status: 'draft',
             title: 'Museum Entrance - Updated',
             description:
               'Welcome to our museum. This is where your journey begins. The building was constructed in 1892 and has served as a cultural landmark for over a century. Recently renovated in 2024.',
             transcription:
               'Welcome to the City Art Museum. As you enter through these grand doors, take a moment to appreciate the neoclassical architecture that has welcomed visitors for over 130 years. Notice the newly restored marble floors.',
-            createdAt: new Date('2025-01-16T10:00:00Z'),
-            createdBy: 'user-1',
-            publishedAt: null,
           },
         },
-        mockStop.translations[1],
       ],
     },
-    guide: mockGuide,
+    stopId: 'stop-1',
     organizationId: 'org-mock-123',
   },
 }
 
 export const NewStop: Story = {
   args: {
-    stop: {
-      id: 'stop-new',
-      guideId: 'guide-1',
-      nanoId: 'stopnew123',
-      organizationId: 'org-1',
-      order: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      createdBy: 'user-1',
-      assets: [],
-      translations: [
+    metadata: {
+      ...mockMetadata,
+      stops: [
         {
-          id: 'st-new',
+          id: 'stop-new',
+          nanoId: 'stopnew123',
+          position: 0,
+          assets: [],
+          translationStatuses: [{ locale: 'en', currentVersionId: null, draftVersionId: 'sv-new-draft' }],
+        },
+      ],
+    },
+    localeData: {
+      locale: 'en',
+      guideTranslation: mockLocaleDataEn.guideTranslation,
+      stopTranslations: [
+        {
           stopId: 'stop-new',
-          locale: 'en',
+          translationId: 'st-new',
           currentVersionId: null,
           draftVersionId: 'sv-new-draft',
-          createdAt: new Date(),
-          updatedAt: new Date(),
           currentVersion: null,
           draftVersion: {
             id: 'sv-new-draft',
-            translationId: 'st-new',
-            version: 1,
-            status: 'draft',
             title: '',
             description: '',
             transcription: '',
-            createdAt: new Date(),
-            createdBy: 'user-1',
-            publishedAt: null,
           },
         },
       ],
     },
-    guide: mockGuide,
+    stopId: 'stop-new',
     organizationId: 'org-mock-123',
   },
 }
 
 export const WithLongContent: Story = {
   args: {
-    stop: {
-      ...mockStop,
-      translations: [
+    metadata: mockMetadata,
+    localeData: {
+      ...mockLocaleDataEn,
+      stopTranslations: [
         {
-          ...mockStop.translations[0],
+          stopId: 'stop-1',
+          translationId: 'st1',
+          currentVersionId: 'sv1',
+          draftVersionId: null,
           currentVersion: {
-            ...mockStop.translations[0].currentVersion!,
+            id: 'sv1',
             title: 'The Grand Exhibition Hall: A Journey Through Renaissance Masterpieces',
             description: `The Grand Exhibition Hall is the crown jewel of our museum collection. Spanning over 2,000 square meters, this magnificent space houses some of the most significant Renaissance artworks in the Western world.
 
@@ -269,22 +255,23 @@ Let's begin with the painting directly in front of you - Botticelli's "Allegory 
 
 Now, please turn to your left. Here you'll find our collection of Flemish Masters. These Northern European artists developed new techniques in oil painting that revolutionized the art world and influenced generations of painters to come.`,
           },
+          draftVersion: null,
         },
-        mockStop.translations[1],
       ],
     },
-    guide: mockGuide,
+    stopId: 'stop-1',
     organizationId: 'org-mock-123',
   },
 }
 
 export const PublishedGuide: Story = {
   args: {
-    stop: mockStop,
-    guide: {
-      ...mockGuide,
+    metadata: {
+      ...mockMetadata,
       published: new Date('2025-01-10T10:00:00Z'),
     },
+    localeData: mockLocaleDataEn,
+    stopId: 'stop-1',
     organizationId: 'org-mock-123',
   },
 }

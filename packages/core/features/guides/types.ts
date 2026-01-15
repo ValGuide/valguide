@@ -91,6 +91,8 @@ export type GuideMetadata = {
   updatedAt: Date
   assets: AssetWithRole[]
   stops: StopMetadata[]
+  // Guide translation statuses for all locales (just version IDs, no content)
+  translationStatuses: TranslationStatus[]
 }
 
 // Translation version content
