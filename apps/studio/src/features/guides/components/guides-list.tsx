@@ -1,6 +1,6 @@
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import type { Guide, GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
+import type { Guide, GuideListItem } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -17,14 +17,12 @@ import { AlertCircle, BookOpen, Plus } from 'lucide-react'
 import * as React from 'react'
 import { toast } from 'sonner'
 
-function toGuideForPreview(guide: GuideWithTranslationsAndCover): Guide {
-  const translation = guide.translations.find((t) => t.locale === 'de') ?? guide.translations[0]
-  const version = translation?.draftVersion ?? translation?.currentVersion
+function toGuideForPreview(guide: GuideListItem): Guide {
   return {
     id: guide.id,
     nanoId: guide.nanoId,
-    title: version?.title,
-    description: version?.description ?? undefined,
+    title: guide.displayTitle,
+    description: guide.displayDescription ?? undefined,
     coverImage: guide.coverImage
       ? { storagePath: guide.coverImage.storagePath, publicUrl: guide.coverImage.publicUrl }
       : undefined,
@@ -35,7 +33,7 @@ function toGuideForPreview(guide: GuideWithTranslationsAndCover): Guide {
 }
 
 interface GuidesListProps {
-  guides?: GuideWithTranslationsAndCover[]
+  guides?: GuideListItem[]
   isLoading?: boolean
   error?: Error | null
   onCreateGuide?: (data: {
@@ -43,7 +41,8 @@ interface GuidesListProps {
     organizationId?: string
     coverImage?: string
   }) => Promise<GuideWithTranslations>
-  onViewGuide?: (guide: GuideWithTranslationsAndCover) => void
+  onViewGuide?: (guide: GuideListItem) => void
+  onNavigateToGuide?: (nanoId: string) => void
   onRetry?: () => void
 }
 
@@ -53,6 +52,7 @@ export function GuidesList({
   error = null,
   onCreateGuide,
   onViewGuide,
+  onNavigateToGuide,
   onRetry,
 }: GuidesListProps) {
   const t = useTranslations('guides')
@@ -60,7 +60,7 @@ export function GuidesList({
   const [isCreating, setIsCreating] = React.useState(false)
 
   const handleViewGuide = React.useCallback(
-    (guide: GuideWithTranslationsAndCover) => {
+    (guide: GuideListItem) => {
       onViewGuide?.(guide)
     },
     [onViewGuide],
@@ -101,8 +101,8 @@ export function GuidesList({
       })
 
       // Navigate to guide editor if handler provided
-      if (onViewGuide && newGuide) {
-        onViewGuide(newGuide)
+      if (onNavigateToGuide && newGuide?.nanoId) {
+        onNavigateToGuide(newGuide.nanoId)
       }
     } catch (err) {
       console.error('Failed to create guide:', err)
@@ -112,7 +112,7 @@ export function GuidesList({
     } finally {
       setIsCreating(false)
     }
-  }, [onCreateGuide, onViewGuide])
+  }, [onCreateGuide, onNavigateToGuide])
 
   // Loading state
   if (isLoading) {

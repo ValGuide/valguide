@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideListItem } from '@valguide/core/features/guides/types'
 import { GuidesList } from '@/features/guides/components/guides-list'
 
 const meta: Meta<typeof GuidesList> = {
@@ -23,79 +24,29 @@ const meta: Meta<typeof GuidesList> = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-// Sample guides data
-const sampleGuides: GuideWithTranslations[] = [
+// Sample guides data using the lightweight GuideListItem type
+const sampleGuides: GuideListItem[] = [
   {
     id: '1',
     nanoId: '1',
-    organizationId: 'org-1',
-    createdBy: 'user-1',
-    updatedBy: 'user-1',
-    themeId: null,
-    archivedAt: null,
-    deletedAt: null,
     published: null,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20'),
-    availableLocales: ['en'],
-    translations: [
-      {
-        id: 't1',
-        guideId: '1',
-        locale: 'en',
-        currentVersionId: 'v1',
-        draftVersionId: 'v1',
-        createdAt: new Date('2024-01-15'),
-        updatedAt: new Date('2024-01-15'),
-        currentVersion: {
-          id: 'v1',
-          translationId: 't1',
-          title: 'Ancient Egypt Exhibition',
-          description: 'Explore the wonders of Ancient Egypt.',
-          status: 'published',
-          version: 1,
-          createdAt: new Date('2024-01-15'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2024-01-15'),
-        },
-      },
-    ],
+    coverImage: null,
+    displayTitle: 'Ancient Egypt Exhibition',
+    displayDescription: 'Explore the wonders of Ancient Egypt.',
+    displayLocale: 'en',
   },
   {
     id: '2',
     nanoId: '2',
-    organizationId: 'org-1',
-    createdBy: 'user-1',
-    updatedBy: 'user-1',
-    themeId: null,
-    archivedAt: null,
-    deletedAt: null,
     published: null,
     createdAt: new Date('2024-02-01'),
     updatedAt: new Date('2024-02-10'),
-    availableLocales: ['en'],
-    translations: [
-      {
-        id: 't2',
-        guideId: '2',
-        locale: 'en',
-        currentVersionId: 'v2',
-        draftVersionId: 'v2',
-        createdAt: new Date('2024-02-01'),
-        updatedAt: new Date('2024-02-01'),
-        currentVersion: {
-          id: 'v2',
-          translationId: 't2',
-          title: 'Modern Art Gallery Tour',
-          description: 'A comprehensive multimedia guide.',
-          status: 'published',
-          version: 1,
-          createdAt: new Date('2024-02-01'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2024-02-01'),
-        },
-      },
-    ],
+    coverImage: null,
+    displayTitle: 'Modern Art Gallery Tour',
+    displayDescription: 'A comprehensive multimedia guide.',
+    displayLocale: 'en',
   },
 ]
 

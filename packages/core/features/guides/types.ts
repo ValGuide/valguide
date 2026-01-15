@@ -151,3 +151,26 @@ export type GuideViewData = {
   assets: AssetWithRole[]
   translations: GuideTranslationData[]
 }
+
+// ============================================================================
+// Lightweight Guides List Types (optimized for list view)
+// ============================================================================
+
+/**
+ * Lightweight guide item for list views
+ * Contains only data needed for preview cards, with translation fallback applied server-side
+ */
+export type GuideListItem = {
+  id: string
+  nanoId: string
+  published: Date | null
+  createdAt: Date
+  updatedAt: Date
+  coverImage: AssetWithRole | null
+  /** Resolved title from best available translation */
+  displayTitle: string
+  /** Resolved description from best available translation */
+  displayDescription: string | null
+  /** Which locale was used for display (for debugging/UI hints) */
+  displayLocale: string
+}

@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
-import { guidesQueryOptions } from '../query-options'
+import type { GuideListItem } from '@valguide/core/features/guides/types'
+import { useLocale } from '@valguide/core/i18n/client'
+import { guidesListQueryOptions } from '../query-options'
 import { createGuideFn } from '../server-functions'
 
 interface CreateGuideData {
@@ -10,7 +11,7 @@ interface CreateGuideData {
 }
 
 interface UseGuidesReturn {
-  guides: GuideWithTranslationsAndCover[]
+  guides: GuideListItem[]
   isLoading: boolean
   error: Error | null
   refetch: () => Promise<void>
@@ -19,13 +20,14 @@ interface UseGuidesReturn {
 
 export function useGuides(_teamSlug?: string): UseGuidesReturn {
   const queryClient = useQueryClient()
+  const locale = useLocale()
 
-  const { data, error, isLoading, refetch } = useQuery(guidesQueryOptions())
+  const { data, error, isLoading, refetch } = useQuery(guidesListQueryOptions(locale))
 
   const createGuide = async (guideData: CreateGuideData): Promise<GuideWithTranslations> => {
     try {
       const createdGuide = await createGuideFn({ data: guideData })
-      await queryClient.invalidateQueries({ queryKey: ['guides'] })
+      await queryClient.invalidateQueries({ queryKey: ['guides-list'] })
       return createdGuide
     } catch (err) {
       console.error('Error creating guide:', err)

@@ -13,6 +13,7 @@ export type { AssetWithRole, GuideWithStopsAndAssets, GuideWithTranslationsAndCo
 import type { GuideWithTranslations, StopWithTranslations } from './schema'
 import type {
   AssetWithRole,
+  GuideListItem,
   GuideLocaleData,
   GuideMetadata,
   GuideViewData,
@@ -94,6 +95,173 @@ export async function getGuidesByOrganizationId(
     ...g,
     coverImage: coverMap.get(g.id) ?? null,
   }))
+}
+
+// Locale priority for fallback (if preferred locale not available)
+const LOCALE_FALLBACK_ORDER = ['en', 'de', 'rm']
+
+/**
+ * Resolve the best available translation for display
+ * Priority:
+ * 1. Draft version in preferred locale
+ * 2. Current version in preferred locale
+ * 3. Draft version in any locale (by fallback order)
+ * 4. Current version in any locale (by fallback order)
+ */
+function resolveBestTranslation(
+  translations: Array<{
+    locale: string
+    draftVersion: { title: string; description: string | null } | null
+    currentVersion: { title: string; description: string | null } | null
+  }>,
+  preferredLocale: string,
+): { title: string; description: string | null; locale: string } {
+  // Try preferred locale first
+  const preferred = translations.find((t) => t.locale === preferredLocale)
+  if (preferred?.draftVersion?.title) {
+    return {
+      title: preferred.draftVersion.title,
+      description: preferred.draftVersion.description,
+      locale: preferredLocale,
+    }
+  }
+  if (preferred?.currentVersion?.title) {
+    return {
+      title: preferred.currentVersion.title,
+      description: preferred.currentVersion.description,
+      locale: preferredLocale,
+    }
+  }
+
+  // Try fallback locales
+  for (const fallbackLocale of LOCALE_FALLBACK_ORDER) {
+    if (fallbackLocale === preferredLocale) continue
+    const fallback = translations.find((t) => t.locale === fallbackLocale)
+    if (fallback?.draftVersion?.title) {
+      return {
+        title: fallback.draftVersion.title,
+        description: fallback.draftVersion.description,
+        locale: fallbackLocale,
+      }
+    }
+    if (fallback?.currentVersion?.title) {
+      return {
+        title: fallback.currentVersion.title,
+        description: fallback.currentVersion.description,
+        locale: fallbackLocale,
+      }
+    }
+  }
+
+  // Last resort: any translation with content
+  for (const t of translations) {
+    if (t.draftVersion?.title) {
+      return {
+        title: t.draftVersion.title,
+        description: t.draftVersion.description,
+        locale: t.locale,
+      }
+    }
+    if (t.currentVersion?.title) {
+      return {
+        title: t.currentVersion.title,
+        description: t.currentVersion.description,
+        locale: t.locale,
+      }
+    }
+  }
+
+  return { title: 'Untitled', description: null, locale: preferredLocale }
+}
+
+/**
+ * Get lightweight guide list for a specific organization
+ * Optimized for list views - fetches only necessary data with translation fallback applied
+ */
+export async function getGuidesListByOrganizationId(
+  db: DB,
+  organizationId: string,
+  preferredLocale: string,
+): Promise<GuideListItem[]> {
+  // Fetch guides with only necessary translation data
+  const guides = await db.query.guide.findMany({
+    where: and(eq(guide.organizationId, organizationId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
+    columns: {
+      id: true,
+      nanoId: true,
+      published: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    with: {
+      translations: {
+        columns: {
+          locale: true,
+        },
+        with: {
+          currentVersion: {
+            columns: {
+              title: true,
+              description: true,
+            },
+          },
+          draftVersion: {
+            columns: {
+              title: true,
+              description: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: [desc(guide.createdAt)],
+  })
+
+  if (guides.length === 0) return []
+
+  // Fetch cover images for all guides
+  const guideIds = guides.map((g) => g.id)
+  const coverAssets = await db
+    .select({
+      guideId: guideAsset.guideId,
+      guideAssetId: guideAsset.id,
+      asset: asset,
+      role: guideAsset.role,
+      order: guideAsset.order,
+      locale: guideAsset.locale,
+    })
+    .from(guideAsset)
+    .innerJoin(asset, eq(guideAsset.assetId, asset.id))
+    .where(and(inArray(guideAsset.guideId, guideIds), eq(guideAsset.role, 'cover')))
+
+  // Map cover assets by guide ID
+  const coverMap = new Map<string, AssetWithRole>()
+  for (const item of coverAssets) {
+    if (!coverMap.has(item.guideId)) {
+      coverMap.set(item.guideId, {
+        ...item.asset,
+        guideAssetId: item.guideAssetId,
+        role: item.role,
+        order: item.order,
+        locale: item.locale,
+      })
+    }
+  }
+
+  return guides.map((g) => {
+    const resolved = resolveBestTranslation(g.translations, preferredLocale)
+    return {
+      id: g.id,
+      nanoId: g.nanoId,
+      published: g.published,
+      createdAt: g.createdAt,
+      updatedAt: g.updatedAt,
+      coverImage: coverMap.get(g.id) ?? null,
+      displayTitle: resolved.title,
+      displayDescription: resolved.description,
+      displayLocale: resolved.locale,
+    }
+  })
 }
 
 /**

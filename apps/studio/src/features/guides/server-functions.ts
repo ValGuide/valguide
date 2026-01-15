@@ -4,6 +4,7 @@ import {
   createGuide,
   getArchivedGuidesWithCover,
   getGuidesByOrganizationId,
+  getGuidesListByOrganizationId,
 } from '@valguide/core/features/guides/queries'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/core/i18n/i18n.config'
@@ -57,6 +58,42 @@ export const getGuidesFn = createServerFn({ method: 'GET' })
       const guides = await getGuidesByOrganizationId(db, targetOrganizationId as string)
 
       return guides
+    }),
+  )
+
+// Get lightweight guides list for the current organization (optimized for list view)
+const getGuidesListInputSchema = z.object({
+  preferredLocale: z.string().default('de'),
+})
+
+export const getGuidesListFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getGuidesListInputSchema)
+  .handler(
+    handleError(async ({ data, context }) => {
+      const userId = context.user.id
+
+      const userTeams = await getUserTeams(db, userId)
+
+      if (userTeams.length === 0) {
+        return []
+      }
+
+      let targetOrganizationId: string | undefined
+
+      const activeTeamId = context.activeOrgId
+      if (activeTeamId) {
+        const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+        if (team) {
+          targetOrganizationId = team.id
+        }
+      }
+
+      if (!targetOrganizationId) {
+        targetOrganizationId = userTeams[0].id
+      }
+
+      return getGuidesListByOrganizationId(db, targetOrganizationId as string, data.preferredLocale)
     }),
   )
 

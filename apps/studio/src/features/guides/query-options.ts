@@ -5,23 +5,39 @@ import {
   getGuideViewDataFn,
 } from '@valguide/core/features/guides/server-functions'
 import type {
+  GuideListItem,
   GuideLocaleData,
   GuideMetadata,
   GuideViewData,
   GuideWithTranslationsAndCover,
 } from '@valguide/core/features/guides/types'
-import { getArchivedGuidesFn, getGuidesFn } from './server-functions'
+import { getArchivedGuidesFn, getGuidesFn, getGuidesListFn } from './server-functions'
 
 export interface ArchivedGuidesResponse {
   guides: GuideWithTranslationsAndCover[]
   userId: string
 }
 
+/**
+ * @deprecated Use guidesListQueryOptions for list views - it's optimized and fetches less data
+ */
 export const guidesQueryOptions = () =>
   queryOptions<GuideWithTranslationsAndCover[]>({
     queryKey: ['guides'],
     queryFn: () => getGuidesFn({ data: {} }),
     staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+  })
+
+/**
+ * Lightweight query options for guides list view
+ * Fetches only data needed for preview cards with translation fallback applied server-side
+ */
+export const guidesListQueryOptions = (preferredLocale: string) =>
+  queryOptions<GuideListItem[]>({
+    queryKey: ['guides-list', { preferredLocale }],
+    queryFn: () => getGuidesListFn({ data: { preferredLocale } }),
+    staleTime: 30_000,
     gcTime: 5 * 60 * 1000,
   })
 

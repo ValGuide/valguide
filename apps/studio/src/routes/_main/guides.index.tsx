@@ -2,11 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { GuidesListContainer } from '@/features/guides'
 import { GuidesListSkeleton } from '@/features/guides/components/guides-list-skeleton'
-import { guidesQueryOptions } from '@/features/guides/query-options'
+import { guidesListQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/')({
   loader: ({ context }) => {
-    const options = guidesQueryOptions()
+    const locale = context.locale
+    const options = guidesListQueryOptions(locale)
     const cachedData = context.queryClient.getQueryData(options.queryKey)
     if (cachedData) {
       context.queryClient.invalidateQueries({ queryKey: options.queryKey })
