@@ -181,11 +181,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     async (value: Asset | Asset[] | null) => {
       if (value === null) {
         if (coverAsset?.guideAssetId) {
-          await detachAssetFromGuide(coverAsset.id, coverAsset.guideAssetId)
+          await detachAssetFromGuide(coverAsset.guideAssetId)
         }
       } else if (!Array.isArray(value)) {
         if (coverAsset?.guideAssetId) {
-          await detachAssetFromGuide(coverAsset.id, coverAsset.guideAssetId)
+          await detachAssetFromGuide(coverAsset.guideAssetId)
         }
         await attachAssetToGuide(value, 'cover')
       }

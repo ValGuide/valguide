@@ -267,7 +267,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   )
 
   const detachAssetFromGuide = useCallback(
-    async (_assetId: string, guideAssetId: string) => {
+    async (guideAssetId: string) => {
       try {
         await detachAssetFromGuideFn({ data: { guideAssetId } })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
@@ -304,7 +304,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   )
 
   const detachAssetFromStop = useCallback(
-    async (_stopId: string, _assetId: string, stopAssetId: string) => {
+    async (stopAssetId: string) => {
       try {
         await detachAssetFromStopFn({ data: { stopAssetId } })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })

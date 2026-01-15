@@ -185,7 +185,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
 
         for (const existing of stopImages) {
           if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
-            await detachAssetFromStop(stopId, existing.id, existing.stopAssetId)
+            await detachAssetFromStop(existing.stopAssetId)
           }
         }
 

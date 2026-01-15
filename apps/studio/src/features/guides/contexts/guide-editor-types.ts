@@ -29,9 +29,9 @@ export interface GuideEditorContextValue {
 
   // Asset operations (immediate save)
   attachAssetToGuide: (asset: Asset, role: string) => Promise<void>
-  detachAssetFromGuide: (assetId: string, guideAssetId: string) => Promise<void>
+  detachAssetFromGuide: (guideAssetId: string) => Promise<void>
   attachAssetToStop: (stopId: string, asset: Asset, role: string, locale?: string | null) => Promise<void>
-  detachAssetFromStop: (stopId: string, assetId: string, stopAssetId: string) => Promise<void>
+  detachAssetFromStop: (stopAssetId: string) => Promise<void>
 
   // Form dirty registration
   isDirty: boolean

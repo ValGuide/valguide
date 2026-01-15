@@ -48,14 +48,14 @@ export function MockGuideEditorProvider({
     attachAssetToGuide: async (asset, role) => {
       console.log('Mock: attachAssetToGuide', asset.id, role)
     },
-    detachAssetFromGuide: async (assetId, guideAssetId) => {
-      console.log('Mock: detachAssetFromGuide', assetId, guideAssetId)
+    detachAssetFromGuide: async (guideAssetId) => {
+      console.log('Mock: detachAssetFromGuide', guideAssetId)
     },
     attachAssetToStop: async (stopId, asset, role, locale) => {
       console.log('Mock: attachAssetToStop', stopId, asset.id, role, locale)
     },
-    detachAssetFromStop: async (stopId, assetId, stopAssetId) => {
-      console.log('Mock: detachAssetFromStop', stopId, assetId, stopAssetId)
+    detachAssetFromStop: async (stopAssetId) => {
+      console.log('Mock: detachAssetFromStop', stopAssetId)
     },
     isDirty,
     registerFormDirty: (_formId, formIsDirty) => {
