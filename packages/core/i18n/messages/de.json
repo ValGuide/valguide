@@ -285,7 +285,14 @@
       "selectCoverImage": "Titelbild auswählen",
       "guideProgress": "Guide-Fortschritt",
       "stopProgress": "Stop-Fortschritt",
-      "progress": "Fortschritt",
+      "progress": {
+        "label": "Vollständigkeit",
+        "guideTitle": "Guide-Titel",
+        "guideDescription": "Guide-Beschreibung",
+        "coverImage": "Titelbild",
+        "hasStops": "Mindestens ein Stop",
+        "allStopTitles": "Alle Stops haben Titel"
+      },
       "backToGuide": "Zurück zum Guide",
       "edit": "Bearbeiten"
     },

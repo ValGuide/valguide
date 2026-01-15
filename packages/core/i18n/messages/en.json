@@ -285,7 +285,14 @@
       "selectCoverImage": "Select Cover Image",
       "guideProgress": "Guide Progress",
       "stopProgress": "Stop Progress",
-      "progress": "Progress",
+      "progress": {
+        "label": "Completion",
+        "guideTitle": "Guide title",
+        "guideDescription": "Guide description",
+        "coverImage": "Cover image",
+        "hasStops": "At least one stop",
+        "allStopTitles": "All stops have titles"
+      },
       "backToGuide": "Back to guide details",
       "edit": "Edit"
     },

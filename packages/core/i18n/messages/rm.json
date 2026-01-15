@@ -285,7 +285,14 @@
       "selectCoverImage": "Tscherner maletg da front",
       "guideProgress": "Progress dal guid",
       "stopProgress": "Progress dal stop",
-      "progress": "Progress",
+      "progress": {
+        "label": "Cumplettaziun",
+        "guideTitle": "Titel dal guid",
+        "guideDescription": "Descripziun dal guid",
+        "coverImage": "Maletg da front",
+        "hasStops": "Almain in stop",
+        "allStopTitles": "Tut ils stops han in titel"
+      },
       "backToGuide": "Enavos al guid",
       "edit": "Modifitgar"
     },
