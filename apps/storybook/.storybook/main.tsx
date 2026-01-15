@@ -1,7 +1,7 @@
-import type { StorybookConfig } from '@storybook/nextjs-vite'
 import { createRequire } from 'node:module'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import type { StorybookConfig } from '@storybook/nextjs-vite'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { clientEnv } from './__mocks__/env-client.ts'

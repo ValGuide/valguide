@@ -99,5 +99,8 @@
   },
   "wallaby": {
     "trace": true
+  },
+  "dependencies": {
+    "@tanstack/react-form": "^1.27.7"
   }
 }

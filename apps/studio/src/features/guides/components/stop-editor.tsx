@@ -1,4 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod'
+import type { AnyFormApi } from '@tanstack/react-form'
+import { useForm } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
@@ -6,18 +7,16 @@ import type { StopWithTranslations } from '@valguide/core/features/guides/schema
 import { getVersionedField } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@valguide/ui/components/form'
+import { Field, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
 import { Input } from '@valguide/ui/components/input'
 import { Mic } from 'lucide-react'
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
-import { type UseFormReturn, useForm } from 'react-hook-form'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
-import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
+import { stopTranslationFormSchema } from '../schemas/guide-form'
 
 export type StopEditorProps = {
   stop?: StopWithTranslations
   locale: string
-  onChange?: (data: StopTranslationFormData) => void
   onDirtyChange?: (isDirty: boolean) => void
   onImageChange?: (assets: Asset[]) => void
   onAudioChange?: (asset: Asset | null) => void
@@ -28,24 +27,13 @@ export type StopEditorProps = {
 }
 
 export type StopEditorRef = {
-  form: UseFormReturn<StopTranslationFormData>
+  form: AnyFormApi
   resetToCurrentValues: () => void
   resetToFormValues: () => void
 }
 
 export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function StopEditor(
-  {
-    stop,
-    locale,
-    onChange,
-    onDirtyChange,
-    onImageChange,
-    onAudioChange,
-    onSave,
-    images = [],
-    audio = null,
-    MediaPicker,
-  },
+  { stop, locale, onDirtyChange, onImageChange, onAudioChange, onSave, images = [], audio = null, MediaPicker },
   ref,
 ) {
   const t = useTranslations('stops.editor')
@@ -54,23 +42,24 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
   const hasDraft = !!translation?.draftVersionId
   const publishedStatus = translation?.currentVersion?.status
 
-  const form = useForm<StopTranslationFormData>({
-    resolver: zodResolver(stopTranslationFormSchema),
+  const form = useForm({
     defaultValues: {
       title: getVersionedField(translation, 'title', true),
       description: getVersionedField(translation, 'description', true),
       transcription: getVersionedField(translation, 'transcription', true),
     },
+    validators: {
+      onSubmit: stopTranslationFormSchema,
+    },
   })
 
-  const { isDirty } = form.formState
+  const { isDirty } = form.state
 
   useImperativeHandle(
     ref,
     () => ({
       form,
       resetToCurrentValues: () => {
-        // Reset to fresh prop values - use after refetch when stop data changes
         form.reset({
           title: getVersionedField(translation, 'title', true),
           description: getVersionedField(translation, 'description', true),
@@ -78,8 +67,7 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
         })
       },
       resetToFormValues: () => {
-        // Reset baseline to current form values - use after save to mark form as clean
-        form.reset(form.getValues())
+        form.reset(form.state.values)
       },
     }),
     [form, translation],
@@ -88,21 +76,6 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
   useEffect(() => {
     onDirtyChange?.(isDirty)
   }, [isDirty, onDirtyChange])
-
-  useEffect(() => {
-    const subscription = form.watch((values, { type }) => {
-      // Only notify parent of changes when the user actually changes a field
-      // Skip the initial mount subscription event (type is undefined on mount)
-      if (type === 'change' && values.title !== undefined) {
-        onChange?.({
-          title: values.title ?? '',
-          description: values.description ?? '',
-          transcription: values.transcription ?? '',
-        })
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [form, onChange])
 
   const handleImagesChange = (value: Asset | Asset[] | null) => {
     if (Array.isArray(value)) {
@@ -119,36 +92,36 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
   }
 
   return (
-    <Form {...form}>
-      <form className="space-y-6 rounded-xl border bg-card p-6">
+    <form className="space-y-6 rounded-xl border bg-card p-6">
+      <FieldGroup>
         {/* Title */}
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
+        <form.Field name="title">
+          {(field) => (
+            <Field>
               <div className="flex items-center justify-between">
-                <FormLabel>{t('titleLabel')}</FormLabel>
+                <FieldLabel htmlFor={field.name}>{t('titleLabel')}</FieldLabel>
                 <TranslationStatusBadge status={publishedStatus} hasDraft={hasDraft} />
               </div>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder={t('titlePlaceholder')}
-                  maxLength={500}
-                  required
-                  className="bg-muted"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      onSave?.()
-                    }
-                  }}
-                />
-              </FormControl>
-            </FormItem>
+              <Input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                placeholder={t('titlePlaceholder')}
+                maxLength={500}
+                required
+                className="bg-muted"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    onSave?.()
+                  }
+                }}
+              />
+            </Field>
           )}
-        />
+        </form.Field>
 
         {/* Audio */}
         <MediaPicker
@@ -161,28 +134,24 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
         />
 
         {/* Description */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
+        <form.Field name="description">
+          {(field) => (
+            <Field>
               <div className="flex items-center justify-between">
-                <FormLabel>{t('descriptionLabel')}</FormLabel>
+                <FieldLabel htmlFor={field.name}>{t('descriptionLabel')}</FieldLabel>
                 <Button type="button" variant="ghost" size="sm" className="gap-1">
                   <Mic className="h-4 w-4" />
                   {t('autoGenerate')}
                 </Button>
               </div>
-              <FormControl>
-                <RichTextEditor
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder={t('descriptionPlaceholder')}
-                />
-              </FormControl>
-            </FormItem>
+              <RichTextEditor
+                value={field.state.value}
+                onChange={field.handleChange}
+                placeholder={t('descriptionPlaceholder')}
+              />
+            </Field>
           )}
-        />
+        </form.Field>
 
         {/* Gallery */}
         <MediaPicker
@@ -192,7 +161,7 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
           onChange={handleImagesChange}
           label={t('galleryLabel')}
         />
-      </form>
-    </Form>
+      </FieldGroup>
+    </form>
   )
 })

@@ -1,7 +1,7 @@
 // Mock for @valguide/core/env/client
 
-import { ClientEnv } from '@valguide/core/env/schema'
-import { StringifyValues } from '@valguide/core/utils/types'
+import type { ClientEnv } from '@valguide/core/env/schema'
+import type { StringifyValues } from '@valguide/core/utils/types'
 
 export const clientEnv: StringifyValues<ClientEnv> = {
   VITE_POSTHOG_ENABLED: 'false',

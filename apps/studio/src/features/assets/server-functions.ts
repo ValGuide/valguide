@@ -15,10 +15,10 @@ export const getAssetsFn = createServerFn({ method: 'GET' })
   .inputValidator(getAssetsInputSchema)
   .handler(
     handleError(async ({ data, context }) => {
-      const organizationId = context.activeOrgId!!
+      const organizationId = context.activeOrgId!
       await requireOrgMember(organizationId, context.user.id)
       const filters: GetAssetsFilters = {
-        organizationId
+        organizationId,
       }
 
       if (data.type) {

@@ -74,7 +74,7 @@ export const createThemeFn = createServerFn({ method: 'POST' })
   .inputValidator(createThemeInputSchema)
   .handler(
     handleError(async ({ context, data }) => {
-      const organizationId = context.activeOrgId!!
+      const organizationId = context.activeOrgId!
       const { name, basePreset, colors, radius, fonts } = data
 
       await requireOrgMember(organizationId, context.user.id)

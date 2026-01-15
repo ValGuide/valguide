@@ -33,7 +33,6 @@ import { Route as MainStopsIndexRouteImport } from './routes/_main/stops.index'
 import { Route as MainGuidesIndexRouteImport } from './routes/_main/guides.index'
 import { Route as MainGuidesNanoIdRouteImport } from './routes/_main/guides.$nanoId'
 import { Route as MainGuidesNanoIdIndexRouteImport } from './routes/_main/guides.$nanoId.index'
-import { Route as MainStopsNanoIdEditRouteImport } from './routes/_main/stops.$nanoId.edit'
 import { Route as MainGuidesNanoIdEditRouteImport } from './routes/_main/guides.$nanoId.edit'
 import { Route as MainGuidesNanoIdStopsStopIdEditRouteImport } from './routes/_main/guides.$nanoId.stops.$stopId.edit'
 
@@ -155,11 +154,6 @@ const MainGuidesNanoIdIndexRoute = MainGuidesNanoIdIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainGuidesNanoIdRoute,
 } as any)
-const MainStopsNanoIdEditRoute = MainStopsNanoIdEditRouteImport.update({
-  id: '/$nanoId/edit',
-  path: '/$nanoId/edit',
-  getParentRoute: () => MainStopsRoute,
-} as any)
 const MainGuidesNanoIdEditRoute = MainGuidesNanoIdEditRouteImport.update({
   id: '/edit',
   path: '/edit',
@@ -195,7 +189,6 @@ export interface FileRoutesByFullPath {
   '/guides/': typeof MainGuidesIndexRoute
   '/stops/': typeof MainStopsIndexRoute
   '/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
-  '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/guides/$nanoId/': typeof MainGuidesNanoIdIndexRoute
   '/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
@@ -219,7 +212,6 @@ export interface FileRoutesByTo {
   '/guides': typeof MainGuidesIndexRoute
   '/stops': typeof MainStopsIndexRoute
   '/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
-  '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/guides/$nanoId': typeof MainGuidesNanoIdIndexRoute
   '/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
@@ -249,7 +241,6 @@ export interface FileRoutesById {
   '/_main/guides/': typeof MainGuidesIndexRoute
   '/_main/stops/': typeof MainStopsIndexRoute
   '/_main/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
-  '/_main/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/_main/guides/$nanoId/': typeof MainGuidesNanoIdIndexRoute
   '/_main/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
@@ -278,7 +269,6 @@ export interface FileRouteTypes {
     | '/guides/'
     | '/stops/'
     | '/guides/$nanoId/edit'
-    | '/stops/$nanoId/edit'
     | '/guides/$nanoId/'
     | '/guides/$nanoId/stops/$stopId/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -302,7 +292,6 @@ export interface FileRouteTypes {
     | '/guides'
     | '/stops'
     | '/guides/$nanoId/edit'
-    | '/stops/$nanoId/edit'
     | '/guides/$nanoId'
     | '/guides/$nanoId/stops/$stopId/edit'
   id:
@@ -331,7 +320,6 @@ export interface FileRouteTypes {
     | '/_main/guides/'
     | '/_main/stops/'
     | '/_main/guides/$nanoId/edit'
-    | '/_main/stops/$nanoId/edit'
     | '/_main/guides/$nanoId/'
     | '/_main/guides/$nanoId/stops/$stopId/edit'
   fileRoutesById: FileRoutesById
@@ -515,13 +503,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainGuidesNanoIdIndexRouteImport
       parentRoute: typeof MainGuidesNanoIdRoute
     }
-    '/_main/stops/$nanoId/edit': {
-      id: '/_main/stops/$nanoId/edit'
-      path: '/$nanoId/edit'
-      fullPath: '/stops/$nanoId/edit'
-      preLoaderRoute: typeof MainStopsNanoIdEditRouteImport
-      parentRoute: typeof MainStopsRoute
-    }
     '/_main/guides/$nanoId/edit': {
       id: '/_main/guides/$nanoId/edit'
       path: '/edit'
@@ -582,12 +563,10 @@ const MainGuidesRouteWithChildren = MainGuidesRoute._addFileChildren(
 
 interface MainStopsRouteChildren {
   MainStopsIndexRoute: typeof MainStopsIndexRoute
-  MainStopsNanoIdEditRoute: typeof MainStopsNanoIdEditRoute
 }
 
 const MainStopsRouteChildren: MainStopsRouteChildren = {
   MainStopsIndexRoute: MainStopsIndexRoute,
-  MainStopsNanoIdEditRoute: MainStopsNanoIdEditRoute,
 }
 
 const MainStopsRouteWithChildren = MainStopsRoute._addFileChildren(

@@ -1,7 +1,7 @@
 // Mock for @valguide/core/env/server
 
-import { ServerEnv } from '@valguide/core/env/schema'
-import { StringifyValues } from '@valguide/core/utils/types'
+import type { ServerEnv } from '@valguide/core/env/schema'
+import type { StringifyValues } from '@valguide/core/utils/types'
 
 export const serverEnv: StringifyValues<ServerEnv> = {
   DATABASE_URL: 'mock-database-url',

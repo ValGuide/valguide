@@ -3,10 +3,7 @@ import { useAssets } from '../hooks/use-assets'
 import { AssetPickerModal, type AssetPickerModalProps } from './asset-picker-modal'
 import { AssetUploadInline } from './asset-upload-inline'
 
-type AssetPickerModalConnectedProps = Omit<
-  AssetPickerModalProps,
-  'assets' | 'isLoading' | 'onRefetch' | 'UploadInline'
->
+type AssetPickerModalConnectedProps = Omit<AssetPickerModalProps, 'assets' | 'isLoading' | 'onRefetch' | 'UploadInline'>
 
 export function AssetPickerModalConnected({ type, locale, ...props }: AssetPickerModalConnectedProps) {
   const contextValue = useAssetsContextOptional()

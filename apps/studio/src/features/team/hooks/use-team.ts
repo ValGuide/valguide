@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import type { TeamData } from '../server-functions'
 import { teamQueryOptions } from '../query-options'
+import type { TeamData } from '../server-functions'
 
 interface UseTeamReturn {
   data: TeamData | null

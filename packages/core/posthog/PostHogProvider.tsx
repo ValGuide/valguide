@@ -16,7 +16,13 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       log.warn('PostHogProvider is disabled')
     }
   }, [])
-  return isPostHogEnabled ? <ClientOnly><Provider>{children}</Provider></ClientOnly> : children
+  return isPostHogEnabled ? (
+    <ClientOnly>
+      <Provider>{children}</Provider>
+    </ClientOnly>
+  ) : (
+    children
+  )
 }
 
 function Provider({ children }: { children: React.ReactNode }) {

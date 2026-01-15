@@ -1,6 +1,3 @@
-import { Providers } from '@/components/providers'
-import { currentUserQueryOptions } from '@/features/auth/query-options'
-import { themeQueryOptions } from '@/features/theme/query-options'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
@@ -10,6 +7,9 @@ import { generateThemeScript, resolveTheme } from '@valguide/core/features/theme
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
+import { Providers } from '@/components/providers'
+import { currentUserQueryOptions } from '@/features/auth/query-options'
+import { themeQueryOptions } from '@/features/theme/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient

@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import { guidesQueryOptions } from '../query-options'
 import { createGuideFn } from '../server-functions'
 

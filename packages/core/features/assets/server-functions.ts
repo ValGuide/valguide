@@ -74,18 +74,7 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
 
       const supabase = await createClient()
 
-      const {
-        assetId,
-        fileName,
-        fileSize,
-        mimeType,
-        type,
-        locale,
-        storagePath,
-        width,
-        height,
-        duration,
-      } = data
+      const { assetId, fileName, fileSize, mimeType, type, locale, storagePath, width, height, duration } = data
 
       const {
         data: { publicUrl },

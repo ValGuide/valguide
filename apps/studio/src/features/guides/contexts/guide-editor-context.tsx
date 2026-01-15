@@ -1,5 +1,5 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { GuideTranslationWithVersion, StopTranslationWithVersion } from '@valguide/core/features/guides/schema'
+
 import {
   attachAssetToGuideFn,
   attachAssetToStopFn,
@@ -185,94 +185,6 @@ export function GuideEditorProvider({
     [guide.id, guide.organizationId, activeLocale],
   )
 
-  // Update guide translation
-  const updateGuideTranslationData = useCallback(
-    (locale: ContentLocale, data: { title: string; description?: string | null }) => {
-      setGuide((prev) => {
-        const existingTranslation = prev.translations.find((t) => t.locale === locale)
-
-        if (existingTranslation) {
-          // Update draft version if it exists, otherwise update current version
-          const versionToUpdate = existingTranslation.draftVersion || existingTranslation.currentVersion
-          if (versionToUpdate) {
-            return {
-              ...prev,
-              translations: prev.translations.map((t) =>
-                t.locale === locale
-                  ? {
-                      ...t,
-                      draftVersion: t.draftVersion
-                        ? { ...t.draftVersion, ...data }
-                        : t.currentVersion
-                          ? { ...t.currentVersion, ...data, status: 'draft' as const }
-                          : undefined,
-                    }
-                  : t,
-              ),
-            }
-          }
-
-          // Translation exists but has no versions - create a draft version in local state
-          const now = new Date()
-          return {
-            ...prev,
-            translations: prev.translations.map((t) =>
-              t.locale === locale
-                ? {
-                    ...t,
-                    draftVersion: {
-                      id: `temp-version-${locale}`,
-                      translationId: t.id,
-                      version: 1,
-                      status: 'draft' as const,
-                      title: data.title,
-                      description: data.description ?? null,
-                      createdBy: null,
-                      createdAt: now,
-                      publishedAt: null,
-                    },
-                  }
-                : t,
-            ),
-          }
-        }
-
-        // No translation exists for this locale - create a placeholder in local state
-        // Server will create the actual translation + version on save
-        const now = new Date()
-        const newTranslation: GuideTranslationWithVersion = {
-          id: `temp-${locale}`, // Temporary ID, will be replaced after save
-          guideId: prev.id,
-          locale,
-          currentVersionId: null,
-          draftVersionId: null,
-          currentVersion: null,
-          draftVersion: {
-            id: `temp-version-${locale}`,
-            translationId: `temp-${locale}`,
-            version: 1,
-            status: 'draft',
-            title: data.title,
-            description: data.description ?? null,
-            createdBy: null,
-            createdAt: now,
-            publishedAt: null,
-          },
-          createdAt: now,
-          updatedAt: now,
-        }
-
-        return {
-          ...prev,
-          translations: [...prev.translations, newTranslation],
-        }
-      })
-      modifiedTranslationsRef.current.add(locale)
-      setModifiedTranslations((prev) => new Set(prev).add(locale))
-    },
-    [],
-  )
-
   // Select stop
   const selectStop = useCallback((stop: StopWithAssets | null) => {
     setSelectedStop(stop)
@@ -355,139 +267,6 @@ export function GuideEditorProvider({
       }
     },
     [t],
-  )
-
-  // Update stop translation
-  const updateStopTranslationData = useCallback(
-    (
-      stopId: string,
-      locale: ContentLocale,
-      data: { title: string; description?: string | null; transcription?: string | null },
-    ) => {
-      setGuide((prev) => ({
-        ...prev,
-        stops: prev.stops.map((stop: StopWithAssets): StopWithAssets => {
-          if (stop.id !== stopId) return stop
-
-          const existingTranslation = stop.translations.find((t) => t.locale === locale)
-
-          if (existingTranslation) {
-            // Update draft version if it exists, otherwise update current version
-            const versionToUpdate = existingTranslation.draftVersion || existingTranslation.currentVersion
-            if (versionToUpdate) {
-              return {
-                ...stop,
-                assets: stop.assets,
-                translations: stop.translations.map((t) =>
-                  t.locale === locale
-                    ? {
-                        ...t,
-                        draftVersion: t.draftVersion
-                          ? { ...t.draftVersion, ...data }
-                          : t.currentVersion
-                            ? { ...t.currentVersion, ...data, status: 'draft' as const }
-                            : undefined,
-                      }
-                    : t,
-                ),
-              }
-            }
-
-            // Translation exists but has no versions - create a draft version in local state
-            const now = new Date()
-            return {
-              ...stop,
-              assets: stop.assets,
-              translations: stop.translations.map((t) =>
-                t.locale === locale
-                  ? {
-                      ...t,
-                      draftVersion: {
-                        id: `temp-version-${stopId}-${locale}`,
-                        translationId: t.id,
-                        version: 1,
-                        status: 'draft' as const,
-                        title: data.title,
-                        description: data.description ?? null,
-                        transcription: data.transcription ?? null,
-                        createdBy: null,
-                        createdAt: now,
-                        publishedAt: null,
-                      },
-                    }
-                  : t,
-              ),
-            }
-          }
-
-          // No translation exists for this locale - create a placeholder in local state
-          // Server will create the actual translation + version on save
-          const now = new Date()
-          const newTranslation: StopTranslationWithVersion = {
-            id: `temp-${stopId}-${locale}`,
-            stopId: stop.id,
-            locale,
-            currentVersionId: null,
-            draftVersionId: null,
-            currentVersion: null,
-            draftVersion: {
-              id: `temp-version-${stopId}-${locale}`,
-              translationId: `temp-${stopId}-${locale}`,
-              version: 1,
-              status: 'draft',
-              title: data.title,
-              description: data.description ?? null,
-              transcription: data.transcription ?? null,
-              createdBy: null,
-              createdAt: now,
-              publishedAt: null,
-            },
-            createdAt: now,
-            updatedAt: now,
-          }
-
-          return {
-            ...stop,
-            assets: stop.assets,
-            translations: [...stop.translations, newTranslation],
-          }
-        }),
-      }))
-
-      // Update selectedStop if it's the one being edited
-      setSelectedStop((prev) => {
-        if (!prev || prev.id !== stopId) return prev
-
-        const existingTranslation = prev.translations.find((t) => t.locale === locale)
-
-        if (existingTranslation) {
-          const versionToUpdate = existingTranslation.draftVersion || existingTranslation.currentVersion
-          if (versionToUpdate) {
-            return {
-              ...prev,
-              translations: prev.translations.map((t) =>
-                t.locale === locale
-                  ? {
-                      ...t,
-                      draftVersion: t.draftVersion
-                        ? { ...t.draftVersion, ...data }
-                        : t.currentVersion
-                          ? { ...t.currentVersion, ...data, status: 'draft' as const }
-                          : undefined,
-                    }
-                  : t,
-              ),
-            }
-          }
-        }
-        return prev
-      })
-
-      const key = `${stopId}:${locale}`
-      modifiedStopsRef.current.add(key)
-      setModifiedStops((prev) => new Set(prev).add(key))
-    },
-    [],
   )
 
   // Guide asset actions (immediate save - global assets)
@@ -803,7 +582,6 @@ export function GuideEditorProvider({
     selectedStop,
     isDirty,
     isSaving,
-    updateGuideTranslationData,
     updateGuideAvailableLocales,
     attachAssetToGuide,
     detachAssetFromGuide,
@@ -811,7 +589,6 @@ export function GuideEditorProvider({
     addStop,
     deleteStop,
     reorderStops,
-    updateStopTranslationData,
     attachAssetToStop,
     detachAssetFromStop,
     setActiveLocale,

@@ -13,7 +13,6 @@ export interface GuideEditorContextValue {
   isSaving: boolean
 
   // Guide actions
-  updateGuideTranslationData: (locale: ContentLocale, data: { title: string; description?: string | null }) => void
   updateGuideAvailableLocales: (locales: string[]) => Promise<void>
 
   // Guide asset actions
@@ -25,11 +24,6 @@ export interface GuideEditorContextValue {
   addStop: () => Promise<StopWithAssets | null>
   deleteStop: (stopId: string) => Promise<void>
   reorderStops: (stops: StopWithAssets[]) => Promise<void>
-  updateStopTranslationData: (
-    stopId: string,
-    locale: ContentLocale,
-    data: { title: string; description?: string | null; transcription?: string | null },
-  ) => void
 
   // Stop asset actions
   attachAssetToStop: (stopId: string, asset: Asset, role: string, locale?: string | null) => Promise<void>

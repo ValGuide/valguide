@@ -22,7 +22,7 @@ import { LocaleSelector } from '@/features/guides/components/locale-selector'
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
-import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
+
 import { getStopLocaleStatusMap, type LocaleStatusMap } from '@/features/guides/utils/translation-status'
 
 export interface StopEditLayoutProps {
@@ -33,7 +33,6 @@ export interface StopEditLayoutProps {
   stopTitle: string
   locales?: string[]
   onLocaleChange: (locale: string) => void
-  onStopChange: (data: StopTranslationFormData) => void
   onDirtyChange: (dirty: boolean) => void
   onSave: () => Promise<void>
   onRefetch: () => void
@@ -57,7 +56,6 @@ export function StopEditLayout({
   stopTitle,
   locales,
   onLocaleChange,
-  onStopChange,
   onDirtyChange,
   onSave,
   onRefetch,
@@ -264,7 +262,6 @@ export function StopEditLayout({
                   audio={stopAudio}
                   versionData={displayVersionData}
                   readOnly={isReadOnly}
-                  onChange={onStopChange}
                   onDirtyChange={onDirtyChange}
                   onSave={onSave}
                   onAudioChange={onAudioChange}

@@ -19,7 +19,6 @@ import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
-import type { StopTranslationFormData } from '@/features/guides/schemas/guide-form'
 
 interface StopEditViewProps {
   stop: StopWithAssets
@@ -38,7 +37,6 @@ export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpubli
     activeLocale,
     isDirty,
     isSaving,
-    updateStopTranslationData,
     attachAssetToStop,
     detachAssetFromStop,
     setActiveLocale,
@@ -97,13 +95,6 @@ export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpubli
     router.navigate({ to: buildUrl(`/guides/${guide.nanoId}/edit`) })
   }, [router, buildUrl, guide.nanoId])
 
-  const handleStopChange = useCallback(
-    (data: StopTranslationFormData) => {
-      updateStopTranslationData(stop.id, activeLocale, data)
-    },
-    [stop.id, activeLocale, updateStopTranslationData],
-  )
-
   const breadcrumbContent = (
     <>
       <BreadcrumbItem>
@@ -155,7 +146,6 @@ export function StopEditView({ stop: stopProp, MediaPicker, onPublish, onUnpubli
       stopTitle={stopTitle}
       locales={guide.availableLocales ?? ['en', 'de', 'rm']}
       onLocaleChange={setActiveLocale}
-      onStopChange={handleStopChange}
       onDirtyChange={handleDirtyChange}
       onSave={save}
       onRefetch={refetch}

@@ -1,4 +1,3 @@
-
 export const themes = [
   'angle',
   'angle-dark',

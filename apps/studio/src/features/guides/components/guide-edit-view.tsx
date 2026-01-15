@@ -47,7 +47,6 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     activeLocale,
     isDirty,
     isSaving,
-    updateGuideTranslationData,
     attachAssetToGuide,
     detachAssetFromGuide,
     addStop,
@@ -348,9 +347,6 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                   translation={currentTranslation}
                   versionData={displayVersionData}
                   readOnly={isReadOnly}
-                  onTranslationChange={(data) => {
-                    updateGuideTranslationData(activeLocale, data)
-                  }}
                   onDirtyChange={handleDirtyChange}
                   onSave={save}
                 />

@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/component
 import { Image as ImageIcon, Search, Upload } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useMemo, useState } from 'react'
-import { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
+import type { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
 
 export type AssetCardComponentProps = {
   asset: AssetWithUsage

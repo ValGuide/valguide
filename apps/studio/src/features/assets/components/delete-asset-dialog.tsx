@@ -108,14 +108,7 @@ export function DeleteAssetDialog({
                       <ul className="mt-1 list-inside list-disc space-y-1 text-sm">
                         {usage.stops.map((stop) => (
                           <li key={stop.id}>
-                            <Link
-                              to="/stops/$nanoId/edit"
-                              params={{ nanoId: stop.nanoId }}
-                              className="text-primary hover:underline"
-                              onClick={() => onOpenChange(false)}
-                            >
-                              {stop.name}
-                            </Link>
+                            <span className="text-foreground">{stop.name}</span>
                             <span className="text-muted-foreground">
                               {' '}
                               ({t(`usage.role.${stop.role}` as 'usage.role.cover')})
