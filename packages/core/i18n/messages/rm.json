@@ -303,10 +303,13 @@
     "empty": {
       "title": "Anc nagins guids",
       "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",
-      "heroDescription": "Creai voss emprim audio-guid e dastgai vossas exposiziuns cun tuns, maletgs e raquints.",
-      "createButton": "Crear voss emprim guid",
+      "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-guids immersivs che dattan vita a vossas exposiziuns.",
+      "createButton": "Cumenzar",
       "createNewButton": "Crear nov guid",
       "creating": "Vegn creà...",
+      "step1": "Dar num",
+      "step2": "Agiuntar stops",
+      "step3": "Publitgar",
       "feature1": "Structurai turas tenor stanzas, temas u artists",
       "feature2": "Agiuntai audio, maletgs e text per mintga staziun",
       "feature3": "Publitgai per voss visitaders cun in clic",
@@ -545,7 +548,9 @@
     "stopTitle": "{number}: {title}",
     "empty": {
       "title": "Anc nagins stops",
-      "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas."
+      "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas.",
+      "heroDescription": "Stops èn ils elements da construcziun da voss guids. Mintga stop raquinta ina part da vossa istorgia.",
+      "hint": "Creai stops en in editur da guids per cumenzar."
     },
     "list": {
       "description": "Administrescha tut ils stops en voss guids",
@@ -914,7 +919,6 @@
       "cancel": "Interrumper",
       "submit": "Crear team",
       "submitting": "Vegn creà...",
-      "success": "Team creà cun success",
       "error": "Errur cun crear il team",
       "triggerButton": "Crear team"
     }

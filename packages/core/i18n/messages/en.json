@@ -303,10 +303,13 @@
     "empty": {
       "title": "No guides yet",
       "description": "Create engaging multimedia guides with text, images, audio, and video content for your museum or educational institution.",
-      "heroDescription": "Craft your first audio guide and bring your exhibitions to life with sound, images, and stories.",
-      "createButton": "Create your first guide",
+      "heroDescription": "Your visitors deserve more than a brochure. Create immersive audio guides that bring your exhibitions to life.",
+      "createButton": "Start creating",
       "createNewButton": "Create new guide",
       "creating": "Creating...",
+      "step1": "Name",
+      "step2": "Add stops",
+      "step3": "Publish",
       "feature1": "Structure tours by rooms, themes, or artists",
       "feature2": "Add audio, images, and text for each stop",
       "feature3": "Publish to your visitors in one click",
@@ -545,7 +548,9 @@
     "stopTitle": "{number}: {title}",
     "empty": {
       "title": "No stops yet",
-      "description": "Add stops to create the journey through your guide. Each stop can have its own content in multiple languages."
+      "description": "Add stops to create the journey through your guide. Each stop can have its own content in multiple languages.",
+      "heroDescription": "Stops are the building blocks of your guides. Each stop tells part of your story.",
+      "hint": "Create stops from within a guide editor to get started."
     },
     "list": {
       "description": "Manage all stops across your guides",
@@ -914,7 +919,6 @@
       "cancel": "Cancel",
       "submit": "Create Team",
       "submitting": "Creating...",
-      "success": "Team created successfully",
       "error": "Failed to create team",
       "triggerButton": "Create Team"
     }

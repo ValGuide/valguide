@@ -57,7 +57,6 @@ export function CreateTeamDialog({
     setIsSubmitting(true)
     try {
       await onCreateTeam(name, slug || undefined)
-      toast.success(t('success'))
       // Hard redirect to reload the app/sidebar with the new team
       window.location.href = '/'
       handleOpenChange(false)

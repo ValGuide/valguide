@@ -303,10 +303,13 @@
     "empty": {
       "title": "Noch keine Guides",
       "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",
-      "heroDescription": "Erstellen Sie Ihren ersten Audio-Guide und erwecken Sie Ihre Ausstellungen mit Klang, Bildern und Geschichten zum Leben.",
-      "createButton": "Ihren ersten Guide erstellen",
+      "heroDescription": "Ihre Besucher verdienen mehr als eine Broschüre. Erstellen Sie immersive Audio-Guides, die Ihre Ausstellungen zum Leben erwecken.",
+      "createButton": "Jetzt starten",
       "createNewButton": "Neuen Guide erstellen",
       "creating": "Wird erstellt...",
+      "step1": "Benennen",
+      "step2": "Stops hinzufügen",
+      "step3": "Veröffentlichen",
       "feature1": "Strukturieren Sie Touren nach Räumen, Themen oder Künstlern",
       "feature2": "Fügen Sie Audio, Bilder und Text für jede Station hinzu",
       "feature3": "Veröffentlichen Sie mit einem Klick für Ihre Besucher",
@@ -545,7 +548,9 @@
     "stopTitle": "{number}: {title}",
     "empty": {
       "title": "Noch keine Stops",
-      "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben."
+      "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben.",
+      "heroDescription": "Stops sind die Bausteine Ihrer Guides. Jeder Stop erzählt einen Teil Ihrer Geschichte.",
+      "hint": "Erstellen Sie Stops innerhalb eines Guide-Editors, um zu beginnen."
     },
     "list": {
       "description": "Verwalten Sie alle Stops in Ihren Guides",
@@ -914,7 +919,6 @@
       "cancel": "Abbrechen",
       "submit": "Team erstellen",
       "submitting": "Wird erstellt...",
-      "success": "Team erfolgreich erstellt",
       "error": "Fehler beim Erstellen des Teams",
       "triggerButton": "Team erstellen"
     }
