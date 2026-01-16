@@ -11,7 +11,6 @@
     "env:load": "pnpm dlx tsx ../../.scripts/load-env.ts",
     "db:generate": "pnpm env:load drizzle-kit generate",
     "db:migrate": "pnpm env:load drizzle-kit migrate",
-    "db:push": "pnpm env:load drizzle-kit push",
     "db:pull": "pnpm env:load drizzle-kit pull",
     "db:check": "pnpm env:load drizzle-kit check",
     "db:up": "pnpm env:load drizzle-kit up",
