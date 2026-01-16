@@ -217,7 +217,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
       const result = await onPublish(guideId, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
-        refetch()
+        await refetch()
       } else {
         toast.error(result.error ?? t('publish.error'))
       }

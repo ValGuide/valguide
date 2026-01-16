@@ -172,7 +172,7 @@ export function StopEditLayout({
       const result = await onPublish(stopId, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
-        onRefetch()
+        await onRefetch()
       } else {
         toast.error(result.error ?? t('publish.error'))
       }

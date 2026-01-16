@@ -64,7 +64,7 @@ export function EditorActionsPanel({
     setUnpublishDialogOpen(false)
   }
 
-  const canPublish = isDirty
+  const canPublish = hasDraft || isDirty
   const canUnpublish = hasPublished
   const canDiscard = hasDraft && hasPublished
 
