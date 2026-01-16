@@ -174,30 +174,32 @@ const archivedGuides: GuideWithTranslationsAndCover[] = [
 export const Empty: Story = {
   args: {
     guides: [],
-    userId: 'user-1',
   },
 }
 
 export const WithArchivedGuides: Story = {
   args: {
     guides: archivedGuides,
-    userId: 'user-1',
   },
 }
 
 export const SingleGuide: Story = {
   args: {
     guides: archivedGuides.slice(0, 1),
-    userId: 'user-1',
   },
 }
 
-export const WithActionHandler: Story = {
+export const Loading: Story = {
   args: {
-    guides: archivedGuides,
-    userId: 'user-1',
-    onActionComplete: () => {
-      console.log('Action completed!')
+    isLoading: true,
+  },
+}
+
+export const ErrorState: Story = {
+  args: {
+    error: new globalThis.Error('Failed to load archived guides'),
+    onRetry: () => {
+      console.log('Retry clicked!')
     },
   },
 }

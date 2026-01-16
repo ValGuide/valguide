@@ -37,7 +37,7 @@ export const guidesQueryOptions = () =>
  */
 export const guidesListQueryOptions = (preferredLocale: string) =>
   queryOptions<GuideListItem[]>({
-    queryKey: ['guides-list'],
+    queryKey: ['guides'],
     queryFn: () => getGuidesListFn({ data: { preferredLocale } }),
     staleTime: 30_000,
     gcTime: 5 * 60 * 1000,

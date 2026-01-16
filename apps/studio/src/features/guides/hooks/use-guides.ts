@@ -27,7 +27,7 @@ export function useGuides(): UseGuidesReturn {
   const createGuide = async (guideData: CreateGuideData): Promise<GuideWithTranslations> => {
     try {
       const createdGuide = await createGuideFn({ data: guideData })
-      await queryClient.invalidateQueries({ queryKey: ['guides-list'] })
+      await queryClient.invalidateQueries({ queryKey: ['guides'] })
       return createdGuide
     } catch (err) {
       console.error('Error creating guide:', err)

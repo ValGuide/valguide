@@ -14,15 +14,19 @@ import {
 } from '@valguide/ui/components/alert-dialog'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
+import { PageTitle } from '@valguide/ui/components/page-title'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { ArchivedGuidesListContent } from './archived-guides-list-content'
 import { ArchivedGuidesListEmpty } from './archived-guides-list-empty'
+import { ArchivedGuidesListError } from './archived-guides-list-error'
+import { ArchivedGuidesListLoading } from './archived-guides-list-loading'
 
 interface ArchivedGuidesListProps {
-  guides: GuideWithTranslationsAndCover[]
-  userId: string
-  onActionComplete?: () => void
+  guides?: GuideWithTranslationsAndCover[]
+  isLoading?: boolean
+  error?: Error | null
+  onRetry?: () => void
 }
 
 type DialogState = {
@@ -31,12 +35,12 @@ type DialogState = {
   guideName: string | null
 }
 
-export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }: ArchivedGuidesListProps) {
+export function ArchivedGuidesList({ guides = [], isLoading = false, error = null, onRetry }: ArchivedGuidesListProps) {
   const t = useTranslations('guides')
   const tCommon = useTranslations('common')
   const queryClient = useQueryClient()
   const [dialogState, setDialogState] = useState<DialogState>({ type: null, guideId: null, guideName: null })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isActionLoading, setIsActionLoading] = useState(false)
   const [confirmationInput, setConfirmationInput] = useState('')
 
   const confirmationPhrase = t('deleteConfirmPhrase')
@@ -52,7 +56,7 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
   const handleRecover = async () => {
     if (!dialogState.guideId) return
 
-    setIsLoading(true)
+    setIsActionLoading(true)
     try {
       await recoverGuideFn({ data: { id: dialogState.guideId } })
       toast.success(t('recover.success'), {
@@ -60,13 +64,12 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
       })
       await queryClient.invalidateQueries({ queryKey: ['guides'] })
       await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
-      onActionComplete?.()
     } catch (_error) {
       toast.error(t('recover.error'), {
         description: t('recover.errorDescription'),
       })
     } finally {
-      setIsLoading(false)
+      setIsActionLoading(false)
       handleDialogClose()
     }
   }
@@ -74,20 +77,19 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
   const handleDelete = async () => {
     if (!dialogState.guideId || !isConfirmationValid) return
 
-    setIsLoading(true)
+    setIsActionLoading(true)
     try {
       await deleteGuideFn({ data: { id: dialogState.guideId } })
       toast.success(t('delete.success'), {
         description: t('delete.successDescription'),
       })
       await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
-      onActionComplete?.()
     } catch (_error) {
       toast.error(t('delete.error'), {
         description: t('delete.errorDescription'),
       })
     } finally {
-      setIsLoading(false)
+      setIsActionLoading(false)
       handleDialogClose()
     }
   }
@@ -100,12 +102,25 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
     setDialogState({ type: 'delete', guideId, guideName })
   }
 
+  if (isLoading) {
+    return <ArchivedGuidesListLoading />
+  }
+
+  if (error) {
+    return <ArchivedGuidesListError error={error} onRetry={onRetry} />
+  }
+
   if (guides.length === 0) {
     return <ArchivedGuidesListEmpty />
   }
 
   return (
-    <>
+    <div className="mx-auto w-full max-w-5xl space-y-6">
+      <div className="space-y-1">
+        <PageTitle as="h2">{t('archived.title')}</PageTitle>
+        <p className="text-sm text-muted-foreground">{t('archived.description')}</p>
+      </div>
+
       <ArchivedGuidesListContent guides={guides} onRecover={openRecoverDialog} onDelete={openDeleteDialog} />
 
       <AlertDialog open={dialogState.type === 'recover'} onOpenChange={handleDialogClose}>
@@ -115,9 +130,9 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
             <AlertDialogDescription>{t('recoverConfirmDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRecover} disabled={isLoading}>
-              {isLoading ? tCommon('loading') : t('recoverGuide')}
+            <AlertDialogCancel disabled={isActionLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRecover} disabled={isActionLoading}>
+              {isActionLoading ? tCommon('loading') : t('recoverGuide')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -138,22 +153,22 @@ export function ArchivedGuidesList({ guides, userId: _userId, onActionComplete }
               value={confirmationInput}
               onChange={(e) => setConfirmationInput(e.target.value)}
               placeholder={confirmationPhrase}
-              disabled={isLoading}
+              disabled={isActionLoading}
               autoComplete="off"
             />
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
+            <AlertDialogCancel disabled={isActionLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
-              disabled={isLoading || !isConfirmationValid}
+              disabled={isActionLoading || !isConfirmationValid}
               variant="destructive"
             >
-              {isLoading ? tCommon('loading') : t('permanentlyDelete')}
+              {isActionLoading ? tCommon('loading') : t('permanentlyDelete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   )
 }

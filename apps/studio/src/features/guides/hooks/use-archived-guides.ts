@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { type ArchivedGuidesResponse, archivedGuidesQueryOptions } from '../query-options'
+import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
+import { archivedGuidesQueryOptions } from '../query-options'
 
 interface UseArchivedGuidesReturn {
-  data: ArchivedGuidesResponse | undefined
+  guides: GuideWithTranslationsAndCover[]
   isLoading: boolean
   error: Error | null
   refetch: () => Promise<void>
@@ -16,7 +17,7 @@ export function useArchivedGuides(): UseArchivedGuidesReturn {
   }
 
   return {
-    data,
+    guides: data?.guides ?? [],
     isLoading,
     error: error ?? null,
     refetch,
