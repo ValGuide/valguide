@@ -316,8 +316,6 @@
       "quote": "A guide is more than information – it's the narrative thread of your exhibition."
     },
     "create": {
-      "success": "Guide created",
-      "successDescription": "Your new guide has been created successfully",
       "error": "Failed to create guide",
       "errorDescription": "An error occurred while creating the guide. Please try again."
     },

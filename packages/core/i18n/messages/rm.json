@@ -316,8 +316,6 @@
       "quote": "In guid è dapli che infurmaziun – el è il fil cotschen da vossa exposiziun."
     },
     "create": {
-      "success": "Guid creà",
-      "successDescription": "Voss nov guid è stà creà cun success",
       "error": "Errur cun crear il guid",
       "errorDescription": "In errur è succedì cun crear il guid. Empruvei per plascher aunc inagada."
     },

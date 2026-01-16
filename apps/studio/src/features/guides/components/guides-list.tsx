@@ -64,10 +64,6 @@ export function GuidesList({
         ],
       })
 
-      toast.success(t('create.success'), {
-        description: t('create.successDescription'),
-      })
-
       // Navigate to guide editor if handler provided
       if (onNavigateToGuide && newGuide?.nanoId) {
         onNavigateToGuide(newGuide.nanoId)

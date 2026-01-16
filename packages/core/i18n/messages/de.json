@@ -316,8 +316,6 @@
       "quote": "Ein Guide ist mehr als Information – er ist der rote Faden Ihrer Ausstellung."
     },
     "create": {
-      "success": "Guide erstellt",
-      "successDescription": "Ihr neuer Guide wurde erfolgreich erstellt",
       "error": "Guide konnte nicht erstellt werden",
       "errorDescription": "Beim Erstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     },
