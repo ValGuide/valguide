@@ -1,5 +1,6 @@
 import { db } from '@valguide/core/features/db'
 import { and, eq } from 'drizzle-orm'
+import { valguideId } from '../../utils/nanoid'
 import { guide } from '../guides/schema'
 import { organization } from '../orgs/schema'
 import { type NewTheme, theme as themeTable } from './schema'
@@ -19,6 +20,7 @@ export async function createTheme(input: CreateThemeInput) {
   const [created] = await db
     .insert(themeTable)
     .values({
+      nanoId: valguideId(),
       organizationId: input.organizationId,
       name: input.name,
       basePreset: input.basePreset,

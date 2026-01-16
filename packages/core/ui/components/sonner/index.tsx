@@ -182,7 +182,6 @@ const Toast = (props: ToastProps) => {
     setHeights((heights) => {
       const alreadyExists = heights.find((height) => height.toastId === toast.id)
       if (!alreadyExists) {
-        // @ts-expect-error - position can be undefined in some cases
         return [{ toastId: toast.id, height: newHeight, position: toast.position }, ...heights]
       } else {
         return heights.map((height) => (height.toastId === toast.id ? { ...height, height: newHeight } : height))
@@ -581,7 +580,6 @@ function useSonner() {
         ReactDOM.flushSync(() => {
           // @ts-expect-error - ok here
           setActiveToasts((toasts) => {
-            // @ts-expect-error - Type mismatch between ExternalToast and ToastT is OK here
             const indexOfExistingToast = toasts.findIndex((t) => t.id === toast.id)
 
             // Update the toast if it already exists

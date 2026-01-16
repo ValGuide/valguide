@@ -6,6 +6,33 @@ import type { ThemeColors, ThemeFonts } from './types'
 
 const studioSchema = pgSchema('studio')
 
+export const themePresetEnum = studioSchema.enum('theme_preset', [
+  'angle',
+  'angle-dark',
+  'light',
+  'dark',
+  'blue',
+  'blue-dark',
+  'green',
+  'green-dark',
+  'purple',
+  'purple-dark',
+  'sage',
+  'sage-dark',
+  'stone',
+  'stone-dark',
+  'lavender',
+  'lavender-dark',
+  'sand',
+  'sand-dark',
+  'gallery',
+  'gallery-dark',
+  'curator',
+  'curator-dark',
+  'claude',
+  'claude-dark',
+])
+
 export const theme = studioSchema.table(
   'theme',
   {
@@ -15,7 +42,7 @@ export const theme = studioSchema.table(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
     name: varchar('name', { length: 100 }).notNull(),
-    basePreset: varchar('base_preset', { length: 50 }).notNull(),
+    basePreset: themePresetEnum('base_preset').notNull(),
     colors: jsonb('colors').$type<ThemeColors>().notNull(),
     radius: numeric('radius', { precision: 3, scale: 1 }).notNull(),
     fonts: jsonb('fonts').$type<ThemeFonts>().notNull(),

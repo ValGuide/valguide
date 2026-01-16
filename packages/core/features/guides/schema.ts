@@ -1,11 +1,11 @@
 import { relations } from 'drizzle-orm'
-import { index, integer, pgEnum, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { index, integer, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
 
 const studioSchema = pgSchema('studio')
 
-export const translationStatus = pgEnum('translation_status', ['draft', 'in_review', 'published', 'archived'])
+export const translationStatus = studioSchema.enum('translation_status', ['draft', 'in_review', 'published', 'archived'])
 
 export const guide = studioSchema.table(
   'guide',

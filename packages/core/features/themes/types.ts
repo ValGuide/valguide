@@ -1,35 +1,12 @@
-export const themes = [
-  'angle',
-  'angle-dark',
-  'light',
-  'dark',
-  'blue',
-  'blue-dark',
-  'green',
-  'green-dark',
-  'purple',
-  'purple-dark',
-  'sage',
-  'sage-dark',
-  'stone',
-  'stone-dark',
-  'lavender',
-  'lavender-dark',
-  'sand',
-  'sand-dark',
-  'gallery',
-  'gallery-dark',
-  'curator',
-  'curator-dark',
-  'claude',
-  'claude-dark',
-] as const
+import { themePresetEnum } from './schema'
 
-export const themePresets = themes
+export const themePresets = themePresetEnum.enumValues
 
-export type ThemePreset = (typeof themePresets)[number]
+export const themes = themePresets
 
-export type Theme = (typeof themes)[number]
+export type ThemePreset = (typeof themePresetEnum.enumValues)[number]
+
+export type Theme = ThemePreset
 
 export const fontSources = ['system', 'google', 'custom'] as const
 

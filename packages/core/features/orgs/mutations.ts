@@ -15,6 +15,7 @@ export async function createTeam(db: DB, name: string, userId: string, slug?: st
     const [newTeam] = await tx
       .insert(organization)
       .values({
+        nanoId: valguideId(),
         name,
         slug: teamSlug,
       })

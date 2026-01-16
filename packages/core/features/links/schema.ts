@@ -1,9 +1,9 @@
 import { sql } from 'drizzle-orm'
-import { index, jsonb, pgEnum, pgSchema, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
+import { index, jsonb, pgSchema, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 
 const studioSchema = pgSchema('studio')
 
-export const shortLinkTypeEnum = pgEnum('short_link_type', ['guide', 'stop', 'campaign', 'external', 'landing_page'])
+export const shortLinkTypeEnum = studioSchema.enum('short_link_type', ['guide', 'stop', 'campaign', 'external', 'landing_page'])
 
 export const short_links = studioSchema.table(
   'short_links',

@@ -1,11 +1,11 @@
 import { relations } from 'drizzle-orm'
-import { boolean, index, pgEnum, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { boolean, index, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 
 const studioSchema = pgSchema('studio')
 
 export const ORG_ROLES = ['owner', 'admin', 'curator', 'editor', 'viewer'] as const
-export const orgRole = pgEnum('org_role', ORG_ROLES)
+export const orgRole = studioSchema.enum('org_role', ORG_ROLES)
 export type OrgRole = (typeof ORG_ROLES)[number]
 
 export const organization = studioSchema.table('organization', {
