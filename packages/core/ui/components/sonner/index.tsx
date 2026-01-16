@@ -103,7 +103,7 @@ const Toast = (props: ToastProps) => {
   const isFront = index === 0;
   const isVisible = index + 1 <= visibleToasts;
   const toastType = toast.type;
-  const dismissible = toast.dismissible === false;
+  const dismissible = toast.dismissible !== false;
   const toastClassname = toast.className || '';
   const toastDescriptionClassname = toast.descriptionClassName || '';
   // Height index is used to calculate the offset as it gets updated before the toast array, which means we can calculate the new layout faster.
@@ -569,9 +569,10 @@ function useSonner() {
       // Prevent batching, temp solution.
       setTimeout(() => {
         ReactDOM.flushSync(() => {
-          setActiveToasts((toasts: any) => {
+          // @ts-ignore - ok here
+          setActiveToasts((toasts) => {
             // @ts-ignore - Type mismatch between ExternalToast and ToastT is OK here
-            const indexOfExistingToast = toasts.findIndex((t: any) => t.id === toast.id);
+            const indexOfExistingToast = toasts.findIndex((t) => t.id === toast.id);
 
             // Update the toast if it already exists
             if (indexOfExistingToast !== -1) {
@@ -671,8 +672,8 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
       setTimeout(() => {
         ReactDOM.flushSync(() => {
           // @ts-ignore - Type mismatch between ExternalToast and ToastT is OK here
-          setToasts((toasts: any) => {
-            const indexOfExistingToast = toasts.findIndex((t: any) => t.id === toast.id);
+          setToasts((toasts) => {
+            const indexOfExistingToast = toasts.findIndex((t) => t.id === toast.id);
 
             // Update the toast if it already exists
             if (indexOfExistingToast !== -1) {
@@ -864,7 +865,7 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
                   descriptionClassName={toastOptions?.descriptionClassName}
                   invert={invert ?? false}
                   visibleToasts={visibleToasts}
-                  closeButton={toastOptions?.closeButton ?? closeButton ?? true}
+                  closeButton={toastOptions?.closeButton ?? closeButton ?? false}
                   interacting={interacting}
                   position={position}
                   style={toastOptions?.style}

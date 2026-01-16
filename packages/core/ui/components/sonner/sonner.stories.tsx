@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Toaster } from '../sonner'
 import { X } from 'lucide-react'
 import { Button } from '../button'
+import { Toaster } from '../sonner'
 import { toast } from './state'
 
 const meta: Meta<typeof Toaster> = {
@@ -52,6 +52,14 @@ export const Warning: Story = {
 export const Info: Story = {
   render: () => (
     <Button onClick={() => toast.info('Here is some information')}>Show Info</Button>
+  ),
+}
+
+export const Dismissible: Story = {
+  render: () => (
+    <Button onClick={() => toast.info('Here is some information', {
+      dismissible: true
+    })}>Show Info</Button>
   ),
 }
 
@@ -121,7 +129,7 @@ export const Closeable: Story = {
 }
 
 export const PromiseStory: Story = {
-  storyName: 'Promise',
+  name: 'Promise',
   render: () => (
     <Button
       onClick={() => {
