@@ -360,8 +360,14 @@
       "error": "Failed to recover guide",
       "errorDescription": "An error occurred while recovering the guide. Please try again."
     },
-    "archived": "Archived",
-    "archivedDescription": "View and manage your archived guides",
+    "archived": {
+      "title": "Archived",
+      "description": "View and manage your archived guides",
+      "empty": {
+        "title": "No archived guides",
+        "description": "Archived guides will appear here. You can recover them anytime."
+      }
+    },
     "archivedStatus": "Archived",
     "archiveGuide": "Archive Guide",
     "recoverGuide": "Recover Guide",
@@ -380,8 +386,6 @@
     "deletedSuccessfully": "Guide deleted successfully",
     "archivedOn": "Archived on",
     "archivedOnDate": "Archived on: {date}",
-    "noArchivedGuides": "No archived guides",
-    "noArchivedGuidesDescription": "Archived guides will appear here",
     "noCoverImage": "No cover image",
     "noDescription": "No description",
     "publish": {

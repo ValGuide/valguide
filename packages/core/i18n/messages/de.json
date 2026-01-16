@@ -360,8 +360,14 @@
       "error": "Fehler beim Wiederherstellen des Guides",
       "errorDescription": "Beim Wiederherstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     },
-    "archived": "Archiviert",
-    "archivedDescription": "Archivierte Guides anzeigen und verwalten",
+    "archived": {
+      "title": "Archiviert",
+      "description": "Archivierte Guides anzeigen und verwalten",
+      "empty": {
+        "title": "Keine archivierten Guides",
+        "description": "Archivierte Guides erscheinen hier. Sie können sie jederzeit wiederherstellen."
+      }
+    },
     "archivedStatus": "Archiviert",
     "archiveGuide": "Guide archivieren",
     "recoverGuide": "Guide wiederherstellen",
@@ -380,8 +386,6 @@
     "deletedSuccessfully": "Guide erfolgreich gelöscht",
     "archivedOn": "Archiviert am",
     "archivedOnDate": "Archiviert am: {date}",
-    "noArchivedGuides": "Keine archivierten Guides",
-    "noArchivedGuidesDescription": "Archivierte Guides werden hier angezeigt",
     "noCoverImage": "Kein Titelbild",
     "noDescription": "Keine Beschreibung",
     "publish": {

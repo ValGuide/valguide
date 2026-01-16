@@ -26,12 +26,10 @@ function ArchivedPage() {
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <div className="mx-auto w-full max-w-5xl space-y-8">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <PageTitle as="h2">{t('archived')}</PageTitle>
-            <p className="text-sm text-muted-foreground">{t('archivedDescription')}</p>
-          </div>
+      <div className="mx-auto w-full max-w-5xl space-y-6">
+        <div className="space-y-1">
+          <PageTitle as="h2">{t('archived.title')}</PageTitle>
+          <p className="text-sm text-muted-foreground">{t('archived.description')}</p>
         </div>
         <ArchivedGuidesList guides={data.guides} userId={data.userId} onActionComplete={refetch} />
       </div>

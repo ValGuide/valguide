@@ -360,8 +360,14 @@
       "error": "Errur tar restaurar la guida",
       "errorDescription": "In errur è succedì tar restaurar la guida. Empruvai per plaschair anc ina giada."
     },
-    "archived": "Archivà",
-    "archivedDescription": "Guardar e administrar las guidas archivadas",
+    "archived": {
+      "title": "Archivà",
+      "description": "Guardar e administrar las guidas archivadas",
+      "empty": {
+        "title": "Naginas guidas archivadas",
+        "description": "Guidas archivadas cumparan qua. Ti las pos restaurar da tut temp."
+      }
+    },
     "archivedStatus": "Archivà",
     "archiveGuide": "Archivar la guida",
     "recoverGuide": "Restaurar la guida",
@@ -380,8 +386,6 @@
     "deletedSuccessfully": "Guida stizzada cun success",
     "archivedOn": "Archivà ils",
     "archivedOnDate": "Archivà ils: {date}",
-    "noArchivedGuides": "Naginas guidas archivadas",
-    "noArchivedGuidesDescription": "Guidas archivadas vegnan mussadas qua",
     "noCoverImage": "Nagina maletg da titel",
     "noDescription": "Nagina descripziun",
     "publish": {
