@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import {
   discardGuideTranslationDraftFn,
   publishGuideTranslationDraftFn,
@@ -12,8 +12,18 @@ import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-con
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '@/features/guides/query-options'
 
+type SearchParams = {
+  stop?: string
+  locale?: string
+}
+
 export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
-  loader: async ({ params, context }) => {
+  validateSearch: (search: Record<string, unknown>): SearchParams => ({
+    stop: search.stop as string | undefined,
+    locale: search.locale as string | undefined,
+  }),
+  loaderDeps: ({ search }) => ({ locale: search.locale }),
+  loader: async ({ params, context, deps }) => {
     // Load metadata first
     const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
 
@@ -21,21 +31,29 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
       throw new Error('Guide not found')
     }
 
-    // Prefetch locale data for the first available locale (or default)
-    const initialLocale = metadata.availableLocales[0] ?? defaultLocale
-    await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, initialLocale))
+    // Prefetch locale data so it's cached when GuideEditorProvider mounts
+    const activeLocale = deps.locale ?? defaultLocale
+    await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, activeLocale))
 
-    return { nanoId: params.nanoId, initialLocale }
+    return { nanoId: params.nanoId }
   },
   component: GuideEditPage,
   pendingComponent: GuideEditSkeleton,
 })
 
 function GuideEditPage() {
-  const { nanoId, initialLocale } = Route.useLoaderData()
+  const { nanoId } = Route.useLoaderData()
+  const { stop: stopId, locale: editorLocale } = Route.useSearch()
+
+  if (stopId) {
+    throw redirect({
+      to: '/guides/$nanoId/stops/$stopId/edit',
+      params: { nanoId, stopId },
+    })
+  }
 
   return (
-    <GuideEditorProvider nanoId={nanoId} initialLocale={initialLocale}>
+    <GuideEditorProvider nanoId={nanoId} initialLocale={editorLocale}>
       <GuideEditContent />
     </GuideEditorProvider>
   )
