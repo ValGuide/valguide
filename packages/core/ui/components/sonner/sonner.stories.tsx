@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { toast } from 'sonner'
-import { Button } from './button'
-import { Toaster } from './sonner'
+import { Toaster } from '../sonner'
 import { X } from 'lucide-react'
+import { Button } from '../button'
+import { toast } from './state'
 
 const meta: Meta<typeof Toaster> = {
   title: 'Common/Sonner',
@@ -80,7 +80,6 @@ export const WithAction: Story = {
     <Button
       onClick={() =>
         toast('Event has been created', {
-          dismissible: true,
           action: {
             label: 'Undo',
             onClick: () => console.log('Undo clicked'),
@@ -92,7 +91,6 @@ export const WithAction: Story = {
     </Button>
   ),
 }
-
 
 export const Closeable: Story = {
   render: () => (
@@ -118,11 +116,12 @@ export const Closeable: Story = {
       }
     >
       With Action
-    </Button >
+    </Button>
   ),
 }
 
-export const Promise: Story = {
+export const PromiseStory: Story = {
+  storyName: 'Promise',
   render: () => (
     <Button
       onClick={() => {
