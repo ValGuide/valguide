@@ -140,9 +140,6 @@ export function AssetUploadInline({ organizationId, allowedTypes, locale, onUplo
 
       if (asset) {
         setUploadComplete(true)
-        toast.success(t('upload.success'), {
-          description: `${file.name} uploaded successfully`,
-        })
         onUploadComplete?.(asset)
 
         setTimeout(() => {

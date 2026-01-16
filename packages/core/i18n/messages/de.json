@@ -520,7 +520,6 @@
     "assets": {
       "attachSuccess": "Asset zum Guide hinzugefügt",
       "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
-      "removeSuccess": "Asset vom Guide entfernt",
       "removeError": "Fehler beim Entfernen des Assets vom Guide"
     },
     "localesManager": {
@@ -608,9 +607,7 @@
       "reorderError": "Fehler beim Neuanordnen der Stops"
     },
     "assets": {
-      "attachSuccess": "Asset angehängt",
       "attachError": "Fehler beim Anhängen des Assets",
-      "removeSuccess": "Asset entfernt",
       "removeError": "Fehler beim Entfernen des Assets"
     },
     "publish": {
@@ -692,8 +689,6 @@
     "upload": {
       "button": "Hochladen",
       "title": "{type} hochladen",
-      "success": "Upload abgeschlossen",
-      "successDescription": "{fileName} erfolgreich hochgeladen",
       "error": "Upload fehlgeschlagen",
       "errorDescription": "Beim Upload ist ein Fehler aufgetreten",
       "restricted": "Upload eingeschränkt",
@@ -871,7 +866,6 @@
       "changeRoleTo": "Ändern zu {role}",
       "resendInvite": "Einladung erneut senden",
       "removeMember": "Mitglied entfernen",
-      "removeSuccess": "Mitglied entfernt",
       "removeError": "Fehler beim Entfernen des Mitglieds",
       "roleUpdateSuccess": "Rolle aktualisiert",
       "roleUpdateError": "Fehler beim Aktualisieren der Rolle"

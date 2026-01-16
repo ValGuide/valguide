@@ -55,7 +55,6 @@ export function TeamMembersClient({
   const handleRemoveMember = async (memberId: string) => {
     try {
       await removeMemberFn({ data: { memberId, teamId: team.id } })
-      toast.success(t('removeSuccess'))
       onAction?.()
     } catch (error) {
       console.error(error)

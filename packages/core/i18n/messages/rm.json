@@ -518,9 +518,7 @@
       "addCoverImageHint": "Agiuntai in maletg da front en l'editur"
     },
     "assets": {
-      "attachSuccess": "Asset agiuntà al guid",
       "attachError": "Errur cun agiuntar l'asset al guid",
-      "removeSuccess": "Asset allontanà dal guid",
       "removeError": "Errur cun allontanar l'asset dal guid"
     },
     "localesManager": {
@@ -608,9 +606,7 @@
       "reorderError": "Errur cun rearranschar ils stops"
     },
     "assets": {
-      "attachSuccess": "Asset agiuntà",
       "attachError": "Errur cun agiuntar l'asset",
-      "removeSuccess": "Asset allontanà",
       "removeError": "Errur cun allontanar l'asset"
     },
     "publish": {
@@ -692,8 +688,6 @@
     "upload": {
       "button": "Chargiar si",
       "title": "Chargiar si {type}",
-      "success": "Chargiada si cumpletta",
-      "successDescription": "{fileName} chargià si cun success",
       "error": "Errur cun chargiar si",
       "errorDescription": "In errur è succedì durant la chargiada si",
       "restricted": "Chargiada si limitada",
@@ -871,7 +865,6 @@
       "changeRoleTo": "Midar a {role}",
       "resendInvite": "Trametter invitaziun danovamain",
       "removeMember": "Allontanar commember",
-      "removeSuccess": "Commember allontanà",
       "removeError": "Errur cun allontanar il commember",
       "roleUpdateSuccess": "Rolla actualisada",
       "roleUpdateError": "Errur cun actualisar la rolla"

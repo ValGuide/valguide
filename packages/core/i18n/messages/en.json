@@ -518,9 +518,7 @@
       "addCoverImageHint": "Add a cover image in the editor"
     },
     "assets": {
-      "attachSuccess": "Asset attached to guide",
       "attachError": "Failed to attach asset to guide",
-      "removeSuccess": "Asset removed from guide",
       "removeError": "Failed to remove asset from guide"
     },
     "localesManager": {
@@ -608,9 +606,7 @@
       "reorderError": "Failed to reorder stops"
     },
     "assets": {
-      "attachSuccess": "Asset attached",
       "attachError": "Failed to attach asset",
-      "removeSuccess": "Asset removed",
       "removeError": "Failed to remove asset"
     },
     "publish": {
@@ -692,8 +688,6 @@
     "upload": {
       "button": "Upload",
       "title": "Upload {type}",
-      "success": "Upload complete",
-      "successDescription": "{fileName} uploaded successfully",
       "error": "Upload failed",
       "errorDescription": "An error occurred during upload",
       "restricted": "Upload restricted",
@@ -871,7 +865,6 @@
       "changeRoleTo": "Change to {role}",
       "resendInvite": "Resend invite",
       "removeMember": "Remove member",
-      "removeSuccess": "Member removed",
       "removeError": "Failed to remove member",
       "roleUpdateSuccess": "Role updated",
       "roleUpdateError": "Failed to update role"

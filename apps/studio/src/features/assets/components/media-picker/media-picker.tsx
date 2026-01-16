@@ -6,8 +6,8 @@ import {
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { useCallback, useState } from 'react'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { useCallback, useState } from 'react'
 import { MediaPickerDropzone } from './media-picker-dropzone'
 import { MediaPickerGallery } from './media-picker-gallery'
 import { MediaPickerPreview } from './media-picker-preview'
@@ -85,7 +85,6 @@ export function MediaPicker({
             const currentAssets = Array.isArray(value) ? value : []
             onChange([...currentAssets, asset])
           }
-          toast.success(tUpload('success'))
         }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Upload failed'

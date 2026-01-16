@@ -269,7 +269,6 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         await queryClient.invalidateQueries({ queryKey: ['guides'] })
-        toast.success(t('guides.assets.attachSuccess'))
       } catch (error) {
         console.error('Failed to attach asset to guide:', error)
         toast.error(t('guides.assets.attachError'))
@@ -284,7 +283,6 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         await detachAssetFromGuideFn({ data: { guideAssetId } })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         await queryClient.invalidateQueries({ queryKey: ['guides'] })
-        toast.success(t('guides.assets.removeSuccess'))
       } catch (error) {
         console.error('Failed to detach asset from guide:', error)
         toast.error(t('guides.assets.removeError'))
@@ -306,7 +304,6 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
           },
         })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
-        toast.success(t('stops.assets.attachSuccess'))
       } catch (error) {
         console.error('Failed to attach asset to stop:', error)
         toast.error(t('stops.assets.attachError'))
@@ -320,7 +317,6 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
       try {
         await detachAssetFromStopFn({ data: { stopAssetId } })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
-        toast.success(t('stops.assets.removeSuccess'))
       } catch (error) {
         console.error('Failed to detach asset from stop:', error)
         toast.error(t('stops.assets.removeError'))
