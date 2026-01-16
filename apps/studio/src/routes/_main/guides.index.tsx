@@ -1,8 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 
-import { GuidesListContainer } from '@/features/guides'
+import { GuidesList } from '@/features/guides/components/guides-list'
 import { GuidesListSkeleton } from '@/features/guides/components/guides-list-skeleton'
+import { useGuides } from '@/features/guides/hooks/use-guides'
 import { guidesListQueryOptions } from '@/features/guides/query-options'
+import { GuideListItem } from '@valguide/features/guides/types'
 
 export const Route = createFileRoute('/_main/guides/')({
   loader: ({ context }) => {
@@ -20,9 +22,31 @@ export const Route = createFileRoute('/_main/guides/')({
 })
 
 function GuidesPage() {
+  const router = useRouter()
+  const { guides, isLoading, error, createGuide, refetch } = useGuides()
+
+  const handleViewGuide = (guide: GuideListItem) => {
+    if (guide.nanoId) {
+      router.navigate({ to: `/guides/${guide.nanoId}/edit` })
+    }
+  }
+
+  const handleNavigateToGuide = (nanoId: string) => {
+    router.navigate({ to: `/guides/${nanoId}/edit` })
+  }
+
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <GuidesListContainer />
+      <GuidesList
+        guides={guides}
+        isLoading={isLoading}
+        error={error}
+        onCreateGuide={createGuide}
+        onViewGuide={handleViewGuide}
+        onNavigateToGuide={handleNavigateToGuide}
+        onRetry={refetch}
+      />
     </main>
   )
 }

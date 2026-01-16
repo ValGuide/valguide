@@ -18,7 +18,7 @@ interface UseGuidesReturn {
   createGuide: (data: CreateGuideData) => Promise<GuideWithTranslations>
 }
 
-export function useGuides(_teamSlug?: string): UseGuidesReturn {
+export function useGuides(): UseGuidesReturn {
   const queryClient = useQueryClient()
   const locale = useLocale()
 
