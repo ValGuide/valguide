@@ -51,6 +51,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     availableLocales,
     isDirty,
     isSaving,
+    lastSaved,
     attachAssetToGuide,
     detachAssetFromGuide,
     addStop,
@@ -73,18 +74,36 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
 
   const guideDetailUrl = `/guides/${nanoId}`
 
-  // Get title from locale data
+  // Get title from locale data based on active tab
   const guideTitle = useMemo(() => {
     const translation = localeData?.guideTranslation
-    return translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? t('untitledGuide')
-  }, [localeData, t])
+    let title: string | null | undefined
+    if (activeTab === 'published') {
+      title = translation?.currentVersion?.title
+    } else {
+      title = translation?.draftVersion?.title ?? translation?.currentVersion?.title
+    }
+    return title?.trim() ? title : t('unknownTitle')
+  }, [localeData, activeTab, t])
 
   useAutoSave(save, isDirty)
 
   // Get status info from locale data
   const hasDraft = !!localeData?.guideTranslation?.draftVersionId
   const hasPublished = !!localeData?.guideTranslation?.currentVersionId
-  const contentStatus = getContentStatus(hasDraft, hasPublished)
+  const computedStatus = getContentStatus(hasDraft, hasPublished)
+
+  // Store stable status during publishing to prevent flickering
+  // Use ref to always read current isPublishing value in the effect
+  const isPublishingRef = useRef(isPublishing)
+  isPublishingRef.current = isPublishing
+
+  const [contentStatus, setContentStatus] = useState(computedStatus)
+  useEffect(() => {
+    if (!isPublishingRef.current) {
+      setContentStatus(computedStatus)
+    }
+  }, [computedStatus])
 
   // Build locale status map from metadata translation statuses
   const localeStatusMap = useMemo(() => {
@@ -98,16 +117,21 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         title: localeData.guideTranslation.draftVersion.title,
         description: localeData.guideTranslation.draftVersion.description,
       }
-    : undefined
+    : null
 
   const publishedVersionData = localeData?.guideTranslation?.currentVersion
     ? {
         title: localeData.guideTranslation.currentVersion.title,
         description: localeData.guideTranslation.currentVersion.description,
       }
-    : undefined
+    : null
 
-  const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
+  // For editing: use draft if available, otherwise fall back to published content
+  // This ensures users always see the current content when editing
+  const editableVersionData = draftVersionData ?? publishedVersionData ?? { title: '', description: '' }
+
+  // Convert null to undefined for component prop types
+  const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
 
   const hasContentForLocale = useCallback(
     (locale: string) => {
@@ -187,6 +211,9 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     if (!onPublish) return
     setIsPublishing(true)
     try {
+      if (isDirty) {
+        await save()
+      }
       const result = await onPublish(guideId, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
@@ -200,7 +227,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     } finally {
       setIsPublishing(false)
     }
-  }, [guideId, activeLocale, refetch, onPublish])
+  }, [guideId, activeLocale, refetch, onPublish, isDirty, save])
 
   const handleUnpublish = useCallback(async () => {
     if (!onUnpublish) return
@@ -351,7 +378,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
 
                 <GuideMetadataForm
                   ref={formRef}
-                  key={`guide-metadata-${activeLocale}-${activeTab}`}
+                  key={`guide-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
                   locale={activeLocale}
                   versionData={displayVersionData}
                   readOnly={isReadOnly}

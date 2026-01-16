@@ -176,10 +176,13 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   }, [])
 
   const resetAllFormsAfterSave = useCallback(() => {
-    for (const resetFn of formSaveResetFnsRef.current.values()) {
-      resetFn()
-    }
+    // Don't call form.reset() - it causes a visual flicker.
+    // Instead, we rely on the form key including lastSaved timestamp,
+    // which causes a clean remount with fresh data after save.
     setDirtyForms(new Set())
+    for (const [formId, registration] of formValueGettersRef.current.entries()) {
+      formValueGettersRef.current.set(formId, { ...registration, isDirty: false })
+    }
   }, [])
 
   // Stop operations

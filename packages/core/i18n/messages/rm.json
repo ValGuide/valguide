@@ -464,6 +464,7 @@
     },
     "actions": {
       "publish": "Publitgar",
+      "publishing": "Vegn publitgà...",
       "save": "Memorisar",
       "saving": "Vegn memorisà...",
       "unpublish": "Retrar",
@@ -487,6 +488,7 @@
       "cancel": "Interrumper"
     },
     "untitledGuide": "Guid senza num",
+    "unknownTitle": "Nunenconuschent",
     "unsavedChanges": {
       "title": "Midadas betg memorisadas",
       "description": "Es ti segir che ti vuls bandunar questa pagina?",
@@ -537,6 +539,7 @@
     "add": "Agiuntar stop",
     "edit": "Modifitgar",
     "untitled": "Stop senza titel",
+    "unknownTitle": "Nunenconuschent",
     "backToStops": "Enavos tar ils stops",
     "stopNumber": "Staziun {number}",
     "stopTitle": "{number}: {title}",

@@ -39,6 +39,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     availableLocales,
     isDirty,
     isSaving,
+    lastSaved,
     attachAssetToStop,
     detachAssetFromStop,
     setActiveLocale,
@@ -64,8 +65,14 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     return localeData?.stopTranslations.find((st) => st.stopId === stopId)
   }, [localeData, stopId])
 
-  const stopTitle = useMemo(() => {
-    return stopTranslation?.currentVersion?.title ?? stopTranslation?.draftVersion?.title ?? tStops('untitled')
+  const draftStopTitle = useMemo(() => {
+    const title = stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title
+    return title?.trim() ? title : tStops('unknownTitle')
+  }, [stopTranslation, tStops])
+
+  const publishedStopTitle = useMemo(() => {
+    const title = stopTranslation?.currentVersion?.title
+    return title?.trim() ? title : tStops('unknownTitle')
   }, [stopTranslation, tStops])
 
   // Get stop assets from metadata
@@ -165,7 +172,8 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
       activeLocale={activeLocale}
       isDirty={isDirty}
       isSaving={isSaving}
-      stopTitle={stopTitle}
+      draftStopTitle={draftStopTitle}
+      publishedStopTitle={publishedStopTitle}
       locales={availableLocales}
       onLocaleChange={setActiveLocale}
       onDirtyChange={handleDirtyChange}
@@ -179,6 +187,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
       onPublish={onPublish}
       onUnpublish={onUnpublish}
       onDiscard={onDiscard}
+      lastSaved={lastSaved}
       onImageChange={async (assets) => {
         const newAssetIds = new Set(assets.map((a) => a.id))
         const currentAssetIds = new Set(stopImages.map((a) => a.id))

@@ -1,5 +1,5 @@
 import type { AnyFormApi } from '@tanstack/react-form'
-import { useForm } from '@tanstack/react-form'
+import { useForm, useStore } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { TranslationStatusBadge } from '@valguide/core/features/guides/components/translation-status-badge'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
@@ -53,7 +53,12 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
     },
   })
 
-  const { isDirty } = form.state
+  // Use !isDefaultValue instead of isDirty for non-persistent dirty tracking
+  // isDirty in TanStack Form stays true once changed (persistent), even if reverted
+  // isDefaultValue is false when current values differ from defaults (what we want)
+  // Must use useStore(form.store) for reactivity - form.state is just a snapshot
+  const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue)
+  const hasChanges = !isDefaultValue
 
   useImperativeHandle(
     ref,
@@ -74,8 +79,8 @@ export const StopEditor = forwardRef<StopEditorRef, StopEditorProps>(function St
   )
 
   useEffect(() => {
-    onDirtyChange?.(isDirty)
-  }, [isDirty, onDirtyChange])
+    onDirtyChange?.(hasChanges)
+  }, [hasChanges, onDirtyChange])
 
   const handleImagesChange = (value: Asset | Asset[] | null) => {
     if (Array.isArray(value)) {

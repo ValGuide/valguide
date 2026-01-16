@@ -464,6 +464,7 @@
     },
     "actions": {
       "publish": "Publish",
+      "publishing": "Publishing...",
       "save": "Save",
       "saving": "Saving...",
       "unpublish": "Unpublish",
@@ -487,6 +488,7 @@
       "cancel": "Cancel"
     },
     "untitledGuide": "Untitled Guide",
+    "unknownTitle": "Unknown",
     "unsavedChanges": {
       "title": "Unsaved Changes",
       "description": "Are you sure you want to leave this page?",
@@ -537,6 +539,7 @@
     "add": "Add Stop",
     "edit": "Edit",
     "untitled": "Untitled Stop",
+    "unknownTitle": "Unknown",
     "backToStops": "Back to Stops",
     "stopNumber": "Stop {number}",
     "stopTitle": "{number}: {title}",

@@ -1,4 +1,4 @@
-import { useForm } from '@tanstack/react-form'
+import { useForm, useStore } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -50,13 +50,18 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
     },
   })
 
-  const isDirty = form.state.isDirty
+  // Use !isDefaultValue instead of isDirty for non-persistent dirty tracking
+  // isDirty in TanStack Form stays true once changed (persistent), even if reverted
+  // isDefaultValue is false when current values differ from defaults (what we want)
+  // Must use useStore(form.store) for reactivity - form.state is just a snapshot
+  const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue)
+  const hasChanges = !isDefaultValue
 
   useImperativeHandle(
     ref,
     () => ({
       getValues: () => form.state.values,
-      isDirty: () => form.state.isDirty,
+      isDirty: () => !form.state.isDefaultValue,
       resetToCurrentValues: () => {
         form.reset(initialValuesRef.current)
       },
@@ -69,9 +74,9 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
 
   useEffect(() => {
     if (!readOnly) {
-      onDirtyChange?.(isDirty)
+      onDirtyChange?.(hasChanges)
     }
-  }, [isDirty, onDirtyChange, readOnly])
+  }, [hasChanges, onDirtyChange, readOnly])
 
   const handleAudioChange = async (value: Asset | Asset[] | null) => {
     if (value === null || (!Array.isArray(value) && value)) {

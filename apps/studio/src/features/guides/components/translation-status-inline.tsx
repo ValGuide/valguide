@@ -1,4 +1,4 @@
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { TranslationStatus } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { Circle } from 'lucide-react'
@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import { getTranslationLocaleStatus, type TranslationLocaleStatus } from '../utils/translation-status'
 
 interface TranslationStatusInlineProps {
-  stop: StopWithTranslations
+  translationStatuses: TranslationStatus[]
   maxVisible?: number
   locales?: string[]
 }
@@ -37,7 +37,7 @@ function getStatusLabel(
 }
 
 export function TranslationStatusInline({
-  stop,
+  translationStatuses,
   maxVisible = 3,
   locales = ['en', 'de', 'rm'],
 }: TranslationStatusInlineProps) {
@@ -45,13 +45,13 @@ export function TranslationStatusInline({
 
   const localeStatuses = useMemo(() => {
     return locales.map((locale) => {
-      const translation = stop.translations.find((tr) => tr.locale === locale)
+      const translation = translationStatuses.find((tr) => tr.locale === locale)
       return {
         locale,
         status: getTranslationLocaleStatus(translation),
       }
     })
-  }, [locales, stop.translations])
+  }, [locales, translationStatuses])
 
   const visibleLocales = localeStatuses.slice(0, maxVisible)
   const hiddenCount = localeStatuses.length - maxVisible

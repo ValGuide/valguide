@@ -43,7 +43,8 @@ export interface StopEditLayoutProps {
   activeLocale: string
   isDirty: boolean
   isSaving: boolean
-  stopTitle: string
+  draftStopTitle: string
+  publishedStopTitle: string
   locales?: string[]
   onLocaleChange: (locale: string) => void
   onDirtyChange: (dirty: boolean) => void
@@ -59,6 +60,7 @@ export interface StopEditLayoutProps {
   onPublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onUnpublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onDiscard: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  lastSaved?: Date | null
 }
 
 export function StopEditLayout({
@@ -69,7 +71,8 @@ export function StopEditLayout({
   activeLocale,
   isDirty,
   isSaving,
-  stopTitle,
+  draftStopTitle,
+  publishedStopTitle,
   locales,
   onLocaleChange,
   onDirtyChange,
@@ -85,6 +88,7 @@ export function StopEditLayout({
   onPublish,
   onUnpublish,
   onDiscard,
+  lastSaved,
 }: StopEditLayoutProps) {
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -109,6 +113,7 @@ export function StopEditLayout({
   }, [stopTranslationStatuses, locales, activeLocale, contentStatus])
 
   const isReadOnly = activeTab === 'published'
+  const stopTitle = activeTab === 'published' ? publishedStopTitle : draftStopTitle
 
   const draftVersionData = stopTranslation?.draftVersion
     ? {
@@ -116,7 +121,7 @@ export function StopEditLayout({
         description: stopTranslation.draftVersion.description,
         transcription: stopTranslation.draftVersion.transcription,
       }
-    : undefined
+    : null
 
   const publishedVersionData = stopTranslation?.currentVersion
     ? {
@@ -124,9 +129,19 @@ export function StopEditLayout({
         description: stopTranslation.currentVersion.description,
         transcription: stopTranslation.currentVersion.transcription,
       }
-    : undefined
+    : null
 
-  const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
+  // For editing: use draft if available, otherwise fall back to published content
+  // This ensures users always see the current content when editing
+  const editableVersionData = draftVersionData ??
+    publishedVersionData ?? {
+      title: '',
+      description: '',
+      transcription: '',
+    }
+
+  // Convert null to undefined for component prop types
+  const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
 
   const stopImages = stopAssets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
   const stopAudio = stopAssets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
@@ -151,6 +166,9 @@ export function StopEditLayout({
   const handlePublish = useCallback(async () => {
     setIsPublishing(true)
     try {
+      if (isDirty) {
+        await onSave()
+      }
       const result = await onPublish(stopId, activeLocale)
       if (result.success) {
         toast.success(t('publish.success'))
@@ -164,7 +182,7 @@ export function StopEditLayout({
     } finally {
       setIsPublishing(false)
     }
-  }, [stopId, activeLocale, onRefetch, t, onPublish])
+  }, [stopId, activeLocale, onRefetch, t, onPublish, isDirty, onSave])
 
   const handleUnpublish = useCallback(async () => {
     try {
@@ -270,7 +288,7 @@ export function StopEditLayout({
 
                 <StopLocaleEditor
                   ref={stopEditorRef}
-                  key={`${stopId}-${activeLocale}-${activeTab}`}
+                  key={`${stopId}-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
                   locale={activeLocale}
                   audio={stopAudio}
                   versionData={displayVersionData}

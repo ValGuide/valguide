@@ -464,6 +464,7 @@
     },
     "actions": {
       "publish": "Veröffentlichen",
+      "publishing": "Wird veröffentlicht...",
       "save": "Speichern",
       "saving": "Wird gespeichert...",
       "unpublish": "Zurückziehen",
@@ -487,6 +488,7 @@
       "cancel": "Abbrechen"
     },
     "untitledGuide": "Unbenannter Guide",
+    "unknownTitle": "Unbekannt",
     "unsavedChanges": {
       "title": "Ungespeicherte Änderungen",
       "description": "Möchtest du diese Seite wirklich verlassen?",
@@ -537,6 +539,7 @@
     "add": "Stop hinzufügen",
     "edit": "Bearbeiten",
     "untitled": "Unbenannter Stop",
+    "unknownTitle": "Unbekannt",
     "backToStops": "Zurück zu Stops",
     "stopNumber": "Station {number}",
     "stopTitle": "{number}: {title}",

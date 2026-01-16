@@ -64,7 +64,7 @@ export function EditorActionsPanel({
     setUnpublishDialogOpen(false)
   }
 
-  const canPublish = hasDraft
+  const canPublish = isDirty
   const canUnpublish = hasPublished
   const canDiscard = hasDraft && hasPublished
 
@@ -75,12 +75,12 @@ export function EditorActionsPanel({
       {/* Primary CTA - Publish - Made more prominent */}
       <Button
         onClick={onPublish}
-        disabled={!canPublish || isPublishing || disabled}
+        disabled={!canPublish || isPublishing || isSaving || disabled}
         className="w-full shadow-[var(--shadow-sm)] transition-all duration-200 hover:shadow-[var(--shadow-md)]"
         size="default"
       >
         <Upload className="mr-2 h-4 w-4" />
-        {isPublishing ? t('saving') : t('publish')}
+        {isPublishing ? t('publishing') : t('publish')}
       </Button>
 
       {/* Secondary actions row */}
@@ -88,11 +88,11 @@ export function EditorActionsPanel({
         <Button
           variant="outline"
           onClick={onSave}
-          disabled={!isDirty || isSaving || disabled}
+          disabled={!isDirty || isSaving || isPublishing || disabled}
           className="flex-1 transition-colors duration-150"
           size="sm"
         >
-          {isSaving ? t('saving') : t('save')}
+          {isSaving && !isPublishing ? t('saving') : t('save')}
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
