@@ -94,16 +94,12 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   const computedStatus = getContentStatus(hasDraft, hasPublished)
 
   // Store stable status during publishing to prevent flickering
-  // Use ref to always read current isPublishing value in the effect
-  const isPublishingRef = useRef(isPublishing)
-  isPublishingRef.current = isPublishing
-
-  const [contentStatus, setContentStatus] = useState(computedStatus)
-  useEffect(() => {
-    if (!isPublishingRef.current) {
-      setContentStatus(computedStatus)
-    }
-  }, [computedStatus])
+  // Both badge and button update in the same render cycle
+  const stableStatusRef = useRef(computedStatus)
+  if (!isPublishing) {
+    stableStatusRef.current = computedStatus
+  }
+  const contentStatus = isPublishing ? stableStatusRef.current : computedStatus
 
   // Build locale status map from metadata translation statuses
   const localeStatusMap = useMemo(() => {
@@ -332,7 +328,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                 <SheetTrigger asChild>
                   <Button variant="outline" size="icon" className="h-8 w-8 lg:hidden">
                     <ListChecks className="h-4 w-4" />
-                    <span className="sr-only">{t('editor.progress')}</span>
+                    <span className="sr-only">{t('editor.guideProgress')}</span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">

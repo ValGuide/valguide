@@ -3,6 +3,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { EditorToolbar } from './editor-toolbar'
 
 export interface RichTextEditorProps {
+  'aria-labelledby'?: string
   value: string
   onChange: (value: string) => void
   placeholder?: string
@@ -10,7 +11,14 @@ export interface RichTextEditorProps {
   readOnly?: boolean
 }
 
-export function RichTextEditor({ value, onChange, placeholder, className, readOnly }: RichTextEditorProps) {
+export function RichTextEditor({
+  'aria-labelledby': ariaLabelledBy,
+  value,
+  onChange,
+  placeholder,
+  className,
+  readOnly,
+}: RichTextEditorProps) {
   const editor = useEditor({
     immediatelyRender: false,
     editable: !readOnly,
@@ -36,6 +44,7 @@ export function RichTextEditor({ value, onChange, placeholder, className, readOn
     },
     editorProps: {
       attributes: {
+        ...(ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {}),
         class:
           'prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[120px] p-4 rounded-b-md border-x border-b',
         placeholder: placeholder || '',

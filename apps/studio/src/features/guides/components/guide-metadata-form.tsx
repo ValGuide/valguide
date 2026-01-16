@@ -126,8 +126,9 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>{t('editor.descriptionLabel')}</FieldLabel>
+                    <FieldLabel id={`${field.name}-label`}>{t('editor.descriptionLabel')}</FieldLabel>
                     <RichTextEditor
+                      aria-labelledby={`${field.name}-label`}
                       value={field.state.value ?? ''}
                       onChange={field.handleChange}
                       placeholder={t('editor.descriptionPlaceholder')}
