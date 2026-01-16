@@ -47,6 +47,7 @@ function GuidePage() {
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">
           <Link
             to="/"
+            preload="intent"
             className="inline-flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
           >
             <ArrowLeft className="h-4 w-4 shrink-0" />
@@ -56,7 +57,7 @@ function GuidePage() {
             <ViewInAppButton nanoId={nanoId} published={isPublished} appDomain={clientEnv.VITE_APP_DOMAIN} />
             <ArchiveGuideButton guideId={guide.id} onArchived={handleArchived} />
             <Button asChild>
-              <Link to="/guides/$nanoId/edit" params={{ nanoId }}>
+              <Link to="/guides/$nanoId/edit" params={{ nanoId }} preload="intent">
                 <Pencil className="h-4 w-4" />
                 {t('editGuide')}
               </Link>

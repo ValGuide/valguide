@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Button } from '@valguide/ui/components/button'
 
 export const HomeButton = () => (
-  <Link to="/">
+  <Link to="/" preload="intent">
     <Button>
       <svg
         aria-hidden="true"

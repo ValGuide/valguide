@@ -8,12 +8,12 @@ export const Consent = () => {
     <FieldDescription className="text-center">
       {commonT.rich('consentMessage', {
         termsLink: (chunks) => (
-          <Link to="/terms-of-service" className="hover:underline">
+          <Link to="/terms-of-service" preload="intent" className="hover:underline">
             {chunks}
           </Link>
         ),
         privacyLink: (chunks) => (
-          <Link to="/privacy-policy" className="hover:underline">
+          <Link to="/privacy-policy" preload="intent" className="hover:underline">
             {chunks}
           </Link>
         ),

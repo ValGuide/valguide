@@ -93,7 +93,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild className="cursor-pointer">
-                <Link to="/profile" onClick={() => handleNavClick?.('/profile')}>
+                <Link to="/profile" preload="intent" onClick={() => handleNavClick?.('/profile')}>
                   <BadgeCheck />
                   {t('myProfile')}
                 </Link>

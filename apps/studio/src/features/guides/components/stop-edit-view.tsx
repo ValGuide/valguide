@@ -121,7 +121,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     <>
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link to="/">{t('title')}</Link>
+          <Link to="/" preload="intent">
+            {t('title')}
+          </Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
@@ -134,7 +136,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem asChild>
-              <Link to={guideDetailUrl}>{guideTitle}</Link>
+              <Link to={guideDetailUrl} preload="intent">
+                {guideTitle}
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleBackToGuide}>{t('breadcrumb.stops')}</DropdownMenuItem>
           </DropdownMenuContent>
@@ -144,7 +148,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
       {/* Expanded items on xl */}
       <BreadcrumbItem className="hidden xl:list-item">
         <BreadcrumbLink asChild className="block max-w-[180px] truncate">
-          <Link to={guideDetailUrl}>{guideTitle}</Link>
+          <Link to={guideDetailUrl} preload="intent">
+            {guideTitle}
+          </Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator className="hidden xl:flex" />

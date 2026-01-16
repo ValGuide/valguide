@@ -113,7 +113,11 @@ export function AuthForm({
           <div className="text-center">
             <p className="text-sm">
               {isLogin ? t('noAccount') : t('haveAccount')}{' '}
-              <Link to={isLogin ? '/signup' : '/login'} className="text-secondary-foreground hover:underline">
+              <Link
+                to={isLogin ? '/signup' : '/login'}
+                preload="intent"
+                className="text-secondary-foreground hover:underline"
+              >
                 {isLogin ? t('signupLink') : t('loginLink')}
               </Link>
             </p>

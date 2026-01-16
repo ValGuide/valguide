@@ -20,7 +20,7 @@ export function NavMain({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-              <Link to={item.url} onClick={() => onItemClickAction?.(item.url)}>
+              <Link to={item.url} preload="intent" onClick={() => onItemClickAction?.(item.url)}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </Link>

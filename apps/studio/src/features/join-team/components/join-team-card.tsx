@@ -31,7 +31,9 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
         </CardContent>
         <CardFooter>
           <Button asChild className="w-full">
-            <Link to="/">{t('invalid.homeButton')}</Link>
+            <Link to="/" preload="intent">
+              {t('invalid.homeButton')}
+            </Link>
           </Button>
         </CardFooter>
       </Card>
@@ -59,12 +61,12 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           <Button asChild className="w-full">
-            <Link to="/signup" search={{ email: invite.email, next: nextUrl }}>
+            <Link to="/signup" preload="intent" search={{ email: invite.email, next: nextUrl }}>
               {t('public.createAccount')}
             </Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
-            <Link to="/login" search={{ next: nextUrl }}>
+            <Link to="/login" preload="intent" search={{ next: nextUrl }}>
               {t('public.haveAccount')}
             </Link>
           </Button>
@@ -99,7 +101,9 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
         <CardFooter className="flex flex-col gap-3">
           {onSignOut && <SignOutButton onSignOut={onSignOut}>{t('wrongAccount.signOutButton')}</SignOutButton>}
           <Button asChild variant="ghost" className="w-full">
-            <Link to="/">{t('wrongAccount.cancelButton')}</Link>
+            <Link to="/" preload="intent">
+              {t('wrongAccount.cancelButton')}
+            </Link>
           </Button>
         </CardFooter>
       </Card>
@@ -123,7 +127,9 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
             </CardContent>
             <CardFooter>
               <Button asChild className="w-full">
-                <Link to="/">{t('joining.dashboardButton')}</Link>
+                <Link to="/" preload="intent">
+                  {t('joining.dashboardButton')}
+                </Link>
               </Button>
             </CardFooter>
           </>

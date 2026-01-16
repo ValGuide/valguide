@@ -87,6 +87,7 @@ export function DeleteAssetDialog({
                             <Link
                               to="/guides/$nanoId/edit"
                               params={{ nanoId: guide.nanoId }}
+                              preload="intent"
                               className="text-primary hover:underline"
                               onClick={() => onOpenChange(false)}
                             >
