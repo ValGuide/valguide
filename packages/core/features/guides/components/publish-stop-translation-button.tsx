@@ -12,7 +12,7 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Upload } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 
 export type PublishStopTranslationResult = { success: true } | { success: false; error?: string }
 

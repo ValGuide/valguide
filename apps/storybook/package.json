@@ -17,7 +17,6 @@
     "@valguide/core": "workspace:*",
     "@valguide/studio": "workspace:*",
     "@valguide/www": "workspace:*",
-    "next": "16.0.7",
     "react": "19.2.1",
     "react-dom": "19.2.1",
     "use-intl": "^4.3.3"

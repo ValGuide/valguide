@@ -7,7 +7,7 @@ import {
 } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { useCallback, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { MediaPickerDropzone } from './media-picker-dropzone'
 import { MediaPickerGallery } from './media-picker-gallery'
 import { MediaPickerPreview } from './media-picker-preview'

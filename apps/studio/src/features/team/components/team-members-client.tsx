@@ -13,7 +13,7 @@ import {
 } from '@valguide/core/features/orgs/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { PageTitle } from '@valguide/ui/components/page-title'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 
 interface TeamMembersClientProps {
   team: {

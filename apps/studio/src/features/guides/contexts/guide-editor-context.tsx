@@ -17,7 +17,7 @@ import type { StopMetadata } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '../query-options'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
 

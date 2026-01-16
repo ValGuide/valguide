@@ -13,7 +13,7 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Archive } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 
 interface ArchiveGuideButtonProps {
   guideId: string

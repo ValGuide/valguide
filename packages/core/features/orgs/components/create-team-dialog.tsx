@@ -13,7 +13,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 
 export interface CreateTeamDialogProps {
   children?: React.ReactNode

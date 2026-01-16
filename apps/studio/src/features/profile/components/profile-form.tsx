@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valg
 import { Input } from '@valguide/ui/components/input'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useEffect, useTransition } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { z } from 'zod'
 import type { ProfileFormData } from '../schemas'
 

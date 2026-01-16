@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/component
 import { cn } from '@valguide/ui/lib/utils'
 import { Palette, Smartphone } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useOrgThemes } from '../hooks/use-org-themes'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { DeleteThemeDialog } from './delete-theme-dialog'

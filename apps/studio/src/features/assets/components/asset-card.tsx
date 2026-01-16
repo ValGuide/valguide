@@ -16,7 +16,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Download, Eye, Image, MoreVertical, Music, Trash2, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 
 export type DeleteAssetDialogComponentProps = {
   open: boolean

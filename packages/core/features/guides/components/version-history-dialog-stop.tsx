@@ -21,7 +21,7 @@ import {
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { TranslationStatusBadge } from './translation-status-badge'
 
 export type StopRollbackResult = { success: true } | { success: false; error?: string }

@@ -2,7 +2,7 @@ import type { GuideWithTranslations } from '@valguide/core/features/guides/schem
 import type { GuideListItem } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import * as React from 'react'
-import { toast } from 'sonner'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { GuidesListContent } from './guides-list-content'
 import { GuidesListEmpty } from './guides-list-empty'
 import { GuidesListError } from './guides-list-error'
