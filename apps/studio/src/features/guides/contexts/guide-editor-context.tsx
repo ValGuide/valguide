@@ -11,13 +11,13 @@ import {
   reorderStopsFn,
   updateGuideFn,
   updateGuideTranslationFn,
-  updateStopFn,
+  updateStopByNanoIdFn,
 } from '@valguide/core/features/guides/server-functions'
 import type { StopMetadata } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '../query-options'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
 
@@ -356,13 +356,13 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
             },
           })
         } else if (formId.startsWith('stop-translation-')) {
-          // Extract stopId from formId: stop-translation-{stopId}-{locale}
+          // Extract stopNanoId from formId: stop-translation-{stopNanoId}-{locale}
           const parts = formId.split('-')
-          const stopId = parts[2] // stop-translation-{stopId}-{locale}
-          if (stopId) {
-            await updateStopFn({
+          const stopNanoId = parts[2] // stop-translation-{stopNanoId}-{locale}
+          if (stopNanoId) {
+            await updateStopByNanoIdFn({
               data: {
-                stopId,
+                stopNanoId,
                 locale: activeLocale,
                 title: values.title ?? '',
                 description: values.description ?? '',

@@ -2,7 +2,7 @@ import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
 import { useTranslations } from '@valguide/core/i18n/client'
-
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,7 +16,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valg
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
 import { Eye, Globe, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
@@ -413,7 +412,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                     onAdd={async () => {
                       const newStop = await addStop()
                       if (newStop) {
-                        router.navigate({ to: buildUrl(`/guides/${nanoId}/stops/${newStop.id}/edit`) })
+                        router.navigate({ to: buildUrl(`/guides/${nanoId}/stops/${newStop.nanoId}/edit`) })
                       }
                     }}
                   />

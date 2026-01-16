@@ -95,7 +95,7 @@ function SortableStopItem({ stop, index, title, onEdit, onRequestDelete }: Sorta
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={() => onEdit(stop.id)}>
+            <Button variant="outline" size="sm" onClick={() => onEdit(stop.nanoId)}>
               {t('edit')}
             </Button>
 
@@ -245,7 +245,7 @@ export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps
                   <TranslationStatusInline translationStatuses={stop.translationStatuses} />
                 </div>
                 <div className="flex items-center gap-3">
-                  <Button variant="outline" size="sm" onClick={() => onEdit(stop.id)}>
+                  <Button variant="outline" size="sm" onClick={() => onEdit(stop.nanoId)}>
                     {t('edit')}
                   </Button>
                   <Button

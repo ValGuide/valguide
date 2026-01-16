@@ -89,7 +89,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
       <Card className={readOnly ? 'opacity-60' : undefined}>
         <CardHeader>
           <CardTitle>
-            {t('title')}{' '}
+            {t('title')}
             <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">
               {tGuides('editor.localeIndicator', { locale })}
             </span>
@@ -113,7 +113,6 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
                     maxLength={500}
                     required
                     disabled={readOnly}
-                    className="bg-muted"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault()

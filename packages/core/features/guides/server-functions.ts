@@ -1,6 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
-import { requireGuideAccess, requireStopAccess } from '@valguide/core/features/auth/authorization'
+import {
+  requireGuideAccess,
+  requireStopAccess,
+  requireStopAccessByNanoId,
+} from '@valguide/core/features/auth/authorization'
 import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { db } from '@valguide/core/features/db'
 import { valguideId } from '@valguide/core/utils/nanoid'
@@ -331,6 +335,28 @@ export const updateStopFn = createServerFn({ method: 'POST' })
     handleError(async ({ context, data }) => {
       const { stopId, locale, title, description, transcription } = data
       await requireStopAccess(stopId, context.user.id)
+
+      const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
+
+      return { versionId }
+    }),
+  )
+
+const updateStopByNanoIdSchema = z.object({
+  stopNanoId: z.string(),
+  locale: z.string(),
+  title: z.string(),
+  description: z.string(),
+  transcription: z.string(),
+})
+
+export const updateStopByNanoIdFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(updateStopByNanoIdSchema)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { stopNanoId, locale, title, description, transcription } = data
+      const { stopId } = await requireStopAccessByNanoId(stopNanoId, context.user.id)
 
       const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
 

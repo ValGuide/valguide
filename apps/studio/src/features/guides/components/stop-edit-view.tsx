@@ -60,10 +60,16 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     return translation?.currentVersion?.title ?? translation?.draftVersion?.title ?? t('untitledGuide')
   }, [localeData, t])
 
-  // Get stop title from locale data
+  // Get stop metadata (has both id and nanoId)
+  const stopMetadata = useMemo(() => {
+    return metadata?.stops.find((s) => s.nanoId === stopId)
+  }, [metadata, stopId])
+
+  // Get stop title from locale data (using stopId UUID from metadata)
   const stopTranslation = useMemo(() => {
-    return localeData?.stopTranslations.find((st) => st.stopId === stopId)
-  }, [localeData, stopId])
+    if (!stopMetadata) return undefined
+    return localeData?.stopTranslations.find((st) => st.stopId === stopMetadata.id)
+  }, [localeData, stopMetadata])
 
   const draftStopTitle = useMemo(() => {
     const title = stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title
@@ -74,11 +80,6 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     const title = stopTranslation?.currentVersion?.title
     return title?.trim() ? title : tStops('unknownTitle')
   }, [stopTranslation, tStops])
-
-  // Get stop assets from metadata
-  const stopMetadata = useMemo(() => {
-    return metadata?.stops.find((s) => s.id === stopId)
-  }, [metadata, stopId])
 
   const stopImages = useMemo(() => {
     return stopMetadata?.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null) ?? []
@@ -171,7 +172,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
 
   return (
     <StopEditLayout
-      stopId={stopId}
+      stopId={stopMetadata.id}
       stopTranslation={stopTranslation ?? null}
       stopAssets={stopMetadata.assets}
       stopTranslationStatuses={stopMetadata.translationStatuses}
@@ -206,13 +207,13 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
 
         for (const asset of assets) {
           if (!currentAssetIds.has(asset.id)) {
-            await attachAssetToStop(stopId, asset, 'image', null)
+            await attachAssetToStop(stopMetadata.id, asset, 'image', null)
           }
         }
       }}
       onAudioChange={async (asset) => {
         if (asset) {
-          await attachAssetToStop(stopId, asset, 'audio', activeLocale)
+          await attachAssetToStop(stopMetadata.id, asset, 'audio', activeLocale)
         }
       }}
     />
