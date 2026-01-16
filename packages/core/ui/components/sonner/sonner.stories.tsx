@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { X } from 'lucide-react'
 import { Button } from '../button'
 import { Toaster } from '../sonner'
 import { toast } from './state'
@@ -22,51 +21,41 @@ export default meta
 type Story = StoryObj<typeof Toaster>
 
 export const Default: Story = {
-  render: () => (
-    <Button onClick={() => toast('This is a default toast')}>Show Toast</Button>
-  ),
+  render: () => <Button onClick={() => toast('This is a default toast')}>Show Toast</Button>,
 }
 
 export const Success: Story = {
-  render: () => (
-    <Button onClick={() => toast.success('Operation completed successfully')}>
-      Show Success
-    </Button>
-  ),
+  render: () => <Button onClick={() => toast.success('Operation completed successfully')}>Show Success</Button>,
 }
 
 export const Error: Story = {
-  render: () => (
-    <Button onClick={() => toast.error('Something went wrong')}>Show Error</Button>
-  ),
+  render: () => <Button onClick={() => toast.error('Something went wrong')}>Show Error</Button>,
 }
 
 export const Warning: Story = {
-  render: () => (
-    <Button onClick={() => toast.warning('Please check your input')}>
-      Show Warning
-    </Button>
-  ),
+  render: () => <Button onClick={() => toast.warning('Please check your input')}>Show Warning</Button>,
 }
 
 export const Info: Story = {
-  render: () => (
-    <Button onClick={() => toast.info('Here is some information')}>Show Info</Button>
-  ),
+  render: () => <Button onClick={() => toast.info('Here is some information')}>Show Info</Button>,
 }
 
 export const Dismissible: Story = {
   render: () => (
-    <Button onClick={() => toast.info('Here is some information', {
-      dismissible: true
-    })}>Show Info</Button>
+    <Button
+      onClick={() =>
+        toast.info('Here is some information', {
+          dismissible: true,
+        })
+      }
+    >
+      Show Info
+    </Button>
   ),
 }
 
 export const Loading: Story = {
-  render: () => (
-    <Button onClick={() => toast.loading('Loading...')}>Show Loading</Button>
-  ),
+  render: () => <Button onClick={() => toast.loading('Loading...')}>Show Loading</Button>,
 }
 
 export const WithDescription: Story = {
@@ -74,11 +63,30 @@ export const WithDescription: Story = {
     <Button
       onClick={() =>
         toast('Event has been created', {
+          closeButton: true,
           description: 'Monday, January 3rd at 6:00pm',
         })
       }
     >
       With Description
+    </Button>
+  ),
+}
+
+export const Big: Story = {
+  render: () => (
+    <Button
+      onClick={() =>
+        toast('Event has been created', {
+          action: {
+            label: 'Undo',
+            onClick: () => console.log('Undo clicked'),
+          },
+          description: 'Monday, January 3rd at 6:00pm',
+        })
+      }
+    >
+      Big
     </Button>
   ),
 }
@@ -104,26 +112,11 @@ export const Closeable: Story = {
   render: () => (
     <Button
       onClick={() =>
-        toast.custom((t) => (
-          <div className="relative rounded-lg bg-white p-4 shadow">
-            {/* Close button */}
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="absolute right-2 top-2 text-gray-400 hover:text-gray-600"
-              aria-label="Close"
-            >
-              <X size={16} />
-            </button>
-
-            {/* Toast content */}
-            <p className="pr-6 text-sm">
-              Your changes have been saved.
-            </p>
-          </div>
-        ))
+        toast.info('Your changes have been saved, following a long text blablalbalbal', {
+          closeButton: true})
       }
     >
-      With Action
+      Closeable
     </Button>
   ),
 }
@@ -134,9 +127,7 @@ export const PromiseStory: Story = {
     <Button
       onClick={() => {
         const promise = () =>
-          new Promise<{ name: string }>((resolve) =>
-            setTimeout(() => resolve({ name: 'Sonner' }), 2000),
-          )
+          new Promise<{ name: string }>((resolve) => setTimeout(() => resolve({ name: 'Sonner' }), 2000))
 
         toast.promise(promise, {
           loading: 'Loading...',

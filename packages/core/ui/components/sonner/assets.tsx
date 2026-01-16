@@ -1,26 +1,26 @@
-import type { JSX } from 'react';
-import type { ToastTypes } from './types';
+import type { JSX } from 'react'
+import type { ToastTypes } from './types'
 
 export const getAsset = (type: ToastTypes): JSX.Element | null => {
   switch (type) {
     case 'success':
-      return SuccessIcon;
+      return SuccessIcon
 
     case 'info':
-      return InfoIcon;
+      return InfoIcon
 
     case 'warning':
-      return WarningIcon;
+      return WarningIcon
 
     case 'error':
-      return ErrorIcon;
+      return ErrorIcon
 
     default:
-      return null;
+      return null
   }
-};
+}
 
-const bars = Array(12).fill(0);
+const bars = Array(12).fill(0)
 
 export const Loader = ({ visible, className }: { visible: boolean; className?: string }) => {
   return (
@@ -31,8 +31,8 @@ export const Loader = ({ visible, className }: { visible: boolean; className?: s
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
 const SuccessIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" height="20" width="20">
@@ -42,7 +42,7 @@ const SuccessIcon = (
       clipRule="evenodd"
     />
   </svg>
-);
+)
 
 const WarningIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" height="20" width="20">
@@ -52,7 +52,7 @@ const WarningIcon = (
       clipRule="evenodd"
     />
   </svg>
-);
+)
 
 const InfoIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" height="20" width="20">
@@ -62,7 +62,7 @@ const InfoIcon = (
       clipRule="evenodd"
     />
   </svg>
-);
+)
 
 const ErrorIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" height="20" width="20">
@@ -72,7 +72,7 @@ const ErrorIcon = (
       clipRule="evenodd"
     />
   </svg>
-);
+)
 
 export const CloseIcon = (
   <svg
@@ -89,4 +89,4 @@ export const CloseIcon = (
     <line x1="18" y1="6" x2="6" y2="18"></line>
     <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
-);
+)
