@@ -16,9 +16,10 @@ export function AppSidebarSkeleton() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        {/* App title */}
-        <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
-          <Skeleton className="h-7 w-32 px-2" />
+        {/* App title + toggle button */}
+        <div className="flex items-center justify-between px-2 py-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+          <Skeleton className="h-7 w-32 px-2 transition-[opacity,width,padding] duration-200 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:overflow-hidden" />
+          <Skeleton className="size-8 shrink-0 rounded-lg" />
         </div>
         {/* Team switcher */}
         <SidebarMenu>

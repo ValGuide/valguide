@@ -3,6 +3,7 @@ import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create
 import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
+import { Button } from '@valguide/ui/components/button'
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +17,18 @@ import {
   SidebarRail,
   useSidebar,
 } from '@valguide/ui/components/sidebar'
-import { Archive, BarChart3, BookOpen, Image, MapPin, Settings2, SlidersHorizontal } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
+import {
+  Archive,
+  BarChart3,
+  BookOpen,
+  Image,
+  MapPin,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Settings2,
+  SlidersHorizontal,
+} from 'lucide-react'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
 
@@ -42,7 +54,7 @@ export function AppSidebar({
   onLogout?: () => void
   onCreateTeam?: (name: string, slug?: string) => Promise<unknown>
 }) {
-  const { setOpenMobile } = useSidebar()
+  const { setOpenMobile, toggleSidebar, state, isMobile } = useSidebar()
   const t = useTranslations('sidebar.nav')
   const tSidebar = useTranslations('sidebar')
   const tSections = useTranslations('sidebar.sections')
@@ -142,8 +154,31 @@ export function AppSidebar({
     <>
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <div className="px-2 py-2 group-data-[collapsible=icon]:hidden">
-            <h1 className="text-lg font-medium px-2 truncate">{tSidebar('appName')}</h1>
+          <div className="flex items-center justify-between px-2 py-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+            <h1 className="text-lg font-medium px-2 truncate transition-[opacity,width,padding] duration-200 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:overflow-hidden">
+              {tSidebar('appName')}
+            </h1>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 shrink-0 rounded-lg"
+                  onClick={toggleSidebar}
+                  tabIndex={isMobile ? -1 : 0}
+                  aria-label={isMobile || state === 'expanded' ? 'Collapse sidebar' : 'Expand sidebar'}
+                >
+                  {isMobile || state === 'expanded' ? (
+                    <PanelLeftClose className="size-4" />
+                  ) : (
+                    <PanelLeftOpen className="size-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" hidden={isMobile}>
+                {state === 'expanded' ? 'Collapse sidebar' : 'Expand sidebar'}
+              </TooltipContent>
+            </Tooltip>
           </div>
           <TeamSwitcher
             teams={teams}
