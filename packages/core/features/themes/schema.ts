@@ -10,6 +10,7 @@ export const theme = studioSchema.table(
   'theme',
   {
     id: uuid('id').defaultRandom().primaryKey(),
+    nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_theme_nano_id'),
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),

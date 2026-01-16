@@ -10,6 +10,7 @@ export type OrgRole = (typeof ORG_ROLES)[number]
 
 export const organization = studioSchema.table('organization', {
   id: uuid('id').defaultRandom().primaryKey(),
+  nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_org_nano_id'),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique('unique_org_slug'),
   logo: text('logo'),
