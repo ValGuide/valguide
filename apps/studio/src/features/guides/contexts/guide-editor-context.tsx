@@ -210,8 +210,6 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
       await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
       await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
 
-      toast.success(t('stops.actions.addSuccess'))
-
       return {
         id: newStopWithTranslations.id,
         nanoId: newStopWithTranslations.nanoId,

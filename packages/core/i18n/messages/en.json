@@ -596,7 +596,6 @@
       "galleryHint": "Images and videos up to 50MB each"
     },
     "actions": {
-      "addSuccess": "Stop added",
       "addError": "Failed to add stop",
       "delete": "Delete Stop",
       "deleteConfirm": "Are you sure you want to delete this stop?",

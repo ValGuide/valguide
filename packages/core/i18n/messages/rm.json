@@ -603,7 +603,6 @@
       "save": "Memorisar stop",
       "saving": "Vegn memorisà...",
       "cancel": "Interrumper",
-      "addSuccess": "Stop agiuntà",
       "addError": "Errur cun agiuntar il stop",
       "reorderSuccess": "Stops rearranschads",
       "reorderError": "Errur cun rearranschar ils stops"

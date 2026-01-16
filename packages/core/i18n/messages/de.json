@@ -603,7 +603,6 @@
       "save": "Stop speichern",
       "saving": "Wird gespeichert...",
       "cancel": "Abbrechen",
-      "addSuccess": "Stop hinzugefügt",
       "addError": "Fehler beim Hinzufügen des Stops",
       "reorderSuccess": "Stops neu angeordnet",
       "reorderError": "Fehler beim Neuanordnen der Stops"
