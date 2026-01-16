@@ -1,37 +1,10 @@
 import { relations } from 'drizzle-orm'
-import { index, jsonb, numeric, pgEnum, pgSchema, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { index, jsonb, numeric, pgSchema, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
 import type { ThemeColors, ThemeFonts } from './types'
 
 const studioSchema = pgSchema('studio')
-
-export const themePresetEnum = pgEnum('theme_preset', [
-  'light',
-  'dark',
-  'blue',
-  'blue-dark',
-  'green',
-  'green-dark',
-  'purple',
-  'purple-dark',
-  'sage',
-  'sage-dark',
-  'stone',
-  'stone-dark',
-  'lavender',
-  'lavender-dark',
-  'sand',
-  'sand-dark',
-  'gallery',
-  'gallery-dark',
-  'curator',
-  'curator-dark',
-  'angle',
-  'angle-dark',
-  'claude',
-  'claude-dark',
-])
 
 export const theme = studioSchema.table(
   'theme',
@@ -41,7 +14,7 @@ export const theme = studioSchema.table(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
     name: varchar('name', { length: 100 }).notNull(),
-    basePreset: themePresetEnum('base_preset').notNull(),
+    basePreset: varchar('base_preset', { length: 50 }).notNull(),
     colors: jsonb('colors').$type<ThemeColors>().notNull(),
     radius: numeric('radius', { precision: 3, scale: 1 }).notNull(),
     fonts: jsonb('fonts').$type<ThemeFonts>().notNull(),
