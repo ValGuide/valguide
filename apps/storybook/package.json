@@ -17,12 +17,13 @@
     "@valguide/core": "workspace:*",
     "@valguide/studio": "workspace:*",
     "@valguide/www": "workspace:*",
+    "next": "16.0.7",
     "react": "19.2.1",
     "react-dom": "19.2.1",
     "use-intl": "^4.3.3"
   },
   "devDependencies": {
-    "@storybook/addon-themes": "^9.1.13",
+    "@storybook/addon-themes": "^10.1.11",
     "@storybook/nextjs-vite": "^10.0.8",
     "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",

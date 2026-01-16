@@ -68,7 +68,7 @@
     "@valguide/icons": "workspace:*",
     "@valguide/logger": "workspace:*",
     "@valguide/transactional": "workspace:*",
-    "@vercel/functions": "^1.6.0",
+    "@vercel/functions": "^3.3.6",
     "attr-accept": "^2.2.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

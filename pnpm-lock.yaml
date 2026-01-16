@@ -87,8 +87,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/transactional
       '@vercel/functions':
-        specifier: ^1.5.0
-        version: 1.6.0
+        specifier: ^3.3.6
+        version: 3.3.6
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.27)(ts-node@10.9.2(@types/node@20.19.27)(typescript@5.9.3))
@@ -106,7 +106,7 @@ importers:
         version: 5.1.6
       nitro:
         specifier: 3.0.1-alpha.1
-        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
+        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
       react:
         specifier: 19.2.1
         version: 19.2.1
@@ -245,8 +245,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/transactional
       '@vercel/functions':
-        specifier: ^1.5.0
-        version: 1.6.0
+        specifier: ^3.3.6
+        version: 3.3.6
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.27)(ts-node@10.9.2(@types/node@20.19.27)(typescript@5.9.3))
@@ -264,7 +264,7 @@ importers:
         version: 5.1.6
       nitro:
         specifier: 3.0.1-alpha.1
-        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
+        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
       react:
         specifier: 19.2.1
         version: 19.2.1
@@ -375,8 +375,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/transactional
       '@vercel/functions':
-        specifier: ^1.5.0
-        version: 1.6.0
+        specifier: ^3.3.6
+        version: 3.3.6
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.27)(ts-node@10.9.2(@types/node@20.19.27)(typescript@5.9.3))
@@ -385,7 +385,7 @@ importers:
         version: 0.546.0(react@19.2.1)
       nitro:
         specifier: 3.0.1-alpha.1
-        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
+        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
       react:
         specifier: 19.2.1
         version: 19.2.1
@@ -474,6 +474,9 @@ importers:
       '@valguide/www':
         specifier: workspace:*
         version: link:../www
+      next:
+        specifier: 16.0.7
+        version: 16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react:
         specifier: 19.2.1
         version: 19.2.1
@@ -485,8 +488,8 @@ importers:
         version: 4.7.0(react@19.2.1)
     devDependencies:
       '@storybook/addon-themes':
-        specifier: ^9.1.13
-        version: 9.1.17(storybook@10.1.11(@testing-library/dom@9.3.4)(bufferutil@4.1.0)(prettier@3.7.4)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))
+        specifier: ^10.1.11
+        version: 10.1.11(storybook@10.1.11(@testing-library/dom@9.3.4)(bufferutil@4.1.0)(prettier@3.7.4)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))
       '@storybook/nextjs-vite':
         specifier: ^10.0.8
         version: 10.1.11(@babel/core@7.28.5)(esbuild@0.27.2)(msw@2.12.7(@types/node@22.19.3)(typescript@5.9.3))(next@16.0.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(rollup@4.52.5)(storybook@10.1.11(@testing-library/dom@9.3.4)(bufferutil@4.1.0)(prettier@3.7.4)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(typescript@5.9.3)(vite@7.3.1(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
@@ -587,8 +590,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/transactional
       '@vercel/functions':
-        specifier: ^1.5.0
-        version: 1.6.0
+        specifier: ^3.3.6
+        version: 3.3.6
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -609,7 +612,7 @@ importers:
         version: 5.1.6
       nitro:
         specifier: 3.0.1-alpha.1
-        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
+        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
       react:
         specifier: 19.2.1
         version: 19.2.1
@@ -726,8 +729,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/transactional
       '@vercel/functions':
-        specifier: ^1.5.0
-        version: 1.6.0
+        specifier: ^3.3.6
+        version: 3.3.6
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.27)(ts-node@10.9.2(@types/node@20.19.27)(typescript@5.9.3))
@@ -742,7 +745,7 @@ importers:
         version: 0.546.0(react@19.2.1)
       nitro:
         specifier: 3.0.1-alpha.1
-        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
+        version: 3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))
       react:
         specifier: 19.2.1
         version: 19.2.1
@@ -992,8 +995,8 @@ importers:
         specifier: workspace:*
         version: link:../transactional
       '@vercel/functions':
-        specifier: ^1.6.0
-        version: 1.6.0
+        specifier: ^3.3.6
+        version: 3.3.6
       attr-accept:
         specifier: ^2.2.5
         version: 2.2.5
@@ -4127,10 +4130,10 @@ packages:
   '@stablelib/base64@1.0.1':
     resolution: {integrity: sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ==}
 
-  '@storybook/addon-themes@9.1.17':
-    resolution: {integrity: sha512-ffHtZw/eMZY3PsRlcQvV5rfnH88ae7Vi7wIGs3PwkYFxBYvV99UdyQRN9VUzC5Q/SMEnVgSQWZ7mG12GQ9RGuQ==}
+  '@storybook/addon-themes@10.1.11':
+    resolution: {integrity: sha512-tUX5C1ms+W4GFK8UBWd3Fq4irkLc3h092BqW90tZghcoOmGY/sfKR+PlcLhoaTs/kkHQSSHPrz8HSFR1AXVbHA==}
     peerDependencies:
-      storybook: ^9.1.17
+      storybook: ^10.1.11
 
   '@storybook/builder-vite@10.1.11':
     resolution: {integrity: sha512-MMD09Ap7FyzDfWG961pkIMv/w684XXe1bBEi+wCEpHxvrgAd3j3A9w/Rqp9Am2uRDPCEdi1QgSzS3SGW3aGThQ==}
@@ -5055,14 +5058,18 @@ packages:
     resolution: {integrity: sha512-Z998v8d1ukgfxaOVgf9qz1P4+bvpKuDRPMaEhP2pcn7SaZC6HIjAN5mlX0tLALQD7nUow1spDCdj1EiU/ldbkg==}
     hasBin: true
 
-  '@vercel/functions@1.6.0':
-    resolution: {integrity: sha512-R6FKQrYT5MZs5IE1SqeCJWxMuBdHawFcCZboKKw8p7s+6/mcd55Gx6tWmyKnQTyrSEA04NH73Tc9CbqpEle8RA==}
-    engines: {node: '>= 16'}
+  '@vercel/functions@3.3.6':
+    resolution: {integrity: sha512-mLKK3H+v1XjzTiksYN7XV4sl/n8tqb0DeavoUzjFKRQMmx5x+vy1jIl24GY4C8D2dinQPV1ZuCSPhJptBeeE/A==}
+    engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
     peerDependenciesMeta:
       '@aws-sdk/credential-provider-web-identity':
         optional: true
+
+  '@vercel/oidc@3.1.0':
+    resolution: {integrity: sha512-Fw28YZpRnA3cAHHDlkt7xQHiJ0fcL+NRcIqsocZQUSmbzeIKRpwttJjik5ZGanXP+vlA4SbTg+AbA3bP363l+w==}
+    engines: {node: '>= 20'}
 
   '@vitejs/plugin-react@5.1.2':
     resolution: {integrity: sha512-EcA07pHJouywpzsoTUqNh5NwGayl2PPVEJKUSinGGSxFGYn+shYbqMGBg6FXDqgXum9Ou/ecb+411ssw8HImJQ==}
@@ -10336,7 +10343,7 @@ snapshots:
 
   '@img/sharp-wasm32@0.34.4':
     dependencies:
-      '@emnapi/runtime': 1.6.0
+      '@emnapi/runtime': 1.8.1
     optional: true
 
   '@img/sharp-win32-arm64@0.34.4':
@@ -11949,7 +11956,7 @@ snapshots:
 
   '@stablelib/base64@1.0.1': {}
 
-  '@storybook/addon-themes@9.1.17(storybook@10.1.11(@testing-library/dom@9.3.4)(bufferutil@4.1.0)(prettier@3.7.4)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))':
+  '@storybook/addon-themes@10.1.11(storybook@10.1.11(@testing-library/dom@9.3.4)(bufferutil@4.1.0)(prettier@3.7.4)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))':
     dependencies:
       storybook: 10.1.11(@testing-library/dom@9.3.4)(bufferutil@4.1.0)(prettier@3.7.4)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       ts-dedent: 2.2.0
@@ -13339,7 +13346,11 @@ snapshots:
       pretty-cache-header: 1.0.0
       zod: 3.25.76
 
-  '@vercel/functions@1.6.0': {}
+  '@vercel/functions@3.3.6':
+    dependencies:
+      '@vercel/oidc': 3.1.0
+
+  '@vercel/oidc@3.1.0': {}
 
   '@vitejs/plugin-react@5.1.2(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))':
     dependencies:
@@ -16347,7 +16358,7 @@ snapshots:
 
   nf3@0.1.12: {}
 
-  nitro@3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1)):
+  nitro@3.0.1-alpha.1(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))(lru-cache@11.2.4)(rollup@4.52.5)(vite@7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.1(srvx@0.9.8)
@@ -16362,7 +16373,7 @@ snapshots:
       srvx: 0.9.8
       undici: 7.16.0
       unenv: 2.0.0-rc.24
-      unstorage: 2.0.0-alpha.4(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(db0@0.3.4(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8)))(lru-cache@11.2.4)(ofetch@2.0.0-alpha.3)
+      unstorage: 2.0.0-alpha.4(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(db0@0.3.4(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8)))(lru-cache@11.2.4)(ofetch@2.0.0-alpha.3)
     optionalDependencies:
       rollup: 4.52.5
       vite: 7.3.1(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1)
@@ -18043,10 +18054,10 @@ snapshots:
       picomatch: 4.0.3
       webpack-virtual-modules: 0.6.2
 
-  unstorage@2.0.0-alpha.4(@upstash/redis@1.36.0)(@vercel/functions@1.6.0)(chokidar@4.0.3)(db0@0.3.4(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8)))(lru-cache@11.2.4)(ofetch@2.0.0-alpha.3):
+  unstorage@2.0.0-alpha.4(@upstash/redis@1.36.0)(@vercel/functions@3.3.6)(chokidar@4.0.3)(db0@0.3.4(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8)))(lru-cache@11.2.4)(ofetch@2.0.0-alpha.3):
     optionalDependencies:
       '@upstash/redis': 1.36.0
-      '@vercel/functions': 1.6.0
+      '@vercel/functions': 3.3.6
       chokidar: 4.0.3
       db0: 0.3.4(drizzle-orm@0.43.1(@opentelemetry/api@1.9.0)(bun-types@1.3.6)(postgres@3.4.8))
       lru-cache: 11.2.4
