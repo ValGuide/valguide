@@ -20,33 +20,22 @@ import {
 import { History, MoreHorizontal, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
 
-export interface MobileActionBarProps {
+export interface MobileMoreMenuProps {
   hasDraft: boolean
   hasPublished: boolean
-  isDirty: boolean
-  isSaving: boolean
-  isPublishing: boolean
-  onSave: () => void
-  onPublish: () => void
   onUnpublish: () => void
   onDiscard: () => void
   onOpenVersionHistory?: () => void
-  disabled?: boolean
 }
 
-export function MobileActionBar({
+/** Mobile dropdown menu with secondary actions (unpublish, discard, version history) */
+export function MobileMoreMenu({
   hasDraft,
   hasPublished,
-  isDirty,
-  isSaving,
-  isPublishing,
-  onSave,
-  onPublish,
   onUnpublish,
   onDiscard,
   onOpenVersionHistory,
-  disabled,
-}: MobileActionBarProps) {
+}: MobileMoreMenuProps) {
   const t = useTranslations('guides.actions')
   const tDiscard = useTranslations('guides.confirmDiscard')
   const tUnpublish = useTranslations('guides.confirmUnpublish')
@@ -64,63 +53,43 @@ export function MobileActionBar({
     setUnpublishDialogOpen(false)
   }
 
-  const canPublish = hasDraft || isDirty
   const canUnpublish = hasPublished
   const canDiscard = hasDraft && hasPublished
 
   return (
     <>
-      {/* Inline action buttons for mobile header - only visible on mobile */}
-      <div className="flex items-center gap-1.5 lg:hidden">
-        {/* Save button */}
-        <Button
-          variant="outline"
-          onClick={onSave}
-          disabled={!isDirty || isSaving || isPublishing || disabled}
-          size="sm"
-        >
-          {isSaving && !isPublishing ? t('saving') : t('save')}
-        </Button>
-
-        {/* Publish button - primary action */}
-        <Button onClick={onPublish} disabled={!canPublish || isPublishing || isSaving || disabled} size="sm">
-          {isPublishing ? t('publishing') : t('publish')}
-        </Button>
-
-        {/* More actions dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon" className="h-8 w-8 shrink-0">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">{t('moreActions')}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[160px]">
-            {canUnpublish && (
-              <DropdownMenuItem
-                onClick={() => setUnpublishDialogOpen(true)}
-                className="text-destructive focus:text-destructive"
-              >
-                <X className="mr-2 h-4 w-4" />
-                {t('unpublish')}
-              </DropdownMenuItem>
-            )}
-            {canDiscard && (
-              <DropdownMenuItem onClick={() => setDiscardDialogOpen(true)}>
-                <Trash2 className="mr-2 h-4 w-4" />
-                {t('discardChanges')}
-              </DropdownMenuItem>
-            )}
-            {(canUnpublish || canDiscard) && onOpenVersionHistory && <DropdownMenuSeparator />}
-            {onOpenVersionHistory && (
-              <DropdownMenuItem onClick={onOpenVersionHistory}>
-                <History className="mr-2 h-4 w-4" />
-                Version History
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon" className="h-8 w-8 shrink-0 lg:hidden">
+            <MoreHorizontal className="h-4 w-4" />
+            <span className="sr-only">{t('moreActions')}</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="min-w-[160px]">
+          {canUnpublish && (
+            <DropdownMenuItem
+              onClick={() => setUnpublishDialogOpen(true)}
+              className="text-destructive focus:text-destructive"
+            >
+              <X className="mr-2 h-4 w-4" />
+              {t('unpublish')}
+            </DropdownMenuItem>
+          )}
+          {canDiscard && (
+            <DropdownMenuItem onClick={() => setDiscardDialogOpen(true)}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              {t('discardChanges')}
+            </DropdownMenuItem>
+          )}
+          {(canUnpublish || canDiscard) && onOpenVersionHistory && <DropdownMenuSeparator />}
+          {onOpenVersionHistory && (
+            <DropdownMenuItem onClick={onOpenVersionHistory}>
+              <History className="mr-2 h-4 w-4" />
+              Version History
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       {/* Discard Confirmation Dialog */}
       <AlertDialog open={discardDialogOpen} onOpenChange={setDiscardDialogOpen}>
@@ -159,6 +128,104 @@ export function MobileActionBar({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </>
+  )
+}
+
+export interface MobileSavePublishProps {
+  hasDraft: boolean
+  isDirty: boolean
+  isSaving: boolean
+  isPublishing: boolean
+  onSave: () => void
+  onPublish: () => void
+  disabled?: boolean
+}
+
+/** Mobile save and publish buttons */
+export function MobileSavePublish({
+  hasDraft,
+  isDirty,
+  isSaving,
+  isPublishing,
+  onSave,
+  onPublish,
+  disabled,
+}: MobileSavePublishProps) {
+  const t = useTranslations('guides.actions')
+
+  const canPublish = hasDraft || isDirty
+
+  return (
+    <>
+      <Button
+        variant="outline"
+        onClick={onSave}
+        disabled={!isDirty || isSaving || isPublishing || disabled}
+        size="sm"
+        className="lg:hidden"
+      >
+        {isSaving && !isPublishing ? t('saving') : t('save')}
+      </Button>
+
+      <Button
+        onClick={onPublish}
+        disabled={!canPublish || isPublishing || isSaving || disabled}
+        size="sm"
+        className="lg:hidden"
+      >
+        {isPublishing ? t('publishing') : t('publish')}
+      </Button>
+    </>
+  )
+}
+
+export interface MobileActionBarProps {
+  hasDraft: boolean
+  hasPublished: boolean
+  isDirty: boolean
+  isSaving: boolean
+  isPublishing: boolean
+  onSave: () => void
+  onPublish: () => void
+  onUnpublish: () => void
+  onDiscard: () => void
+  onOpenVersionHistory?: () => void
+  disabled?: boolean
+}
+
+/** Combined mobile action bar (for backwards compatibility) */
+export function MobileActionBar({
+  hasDraft,
+  hasPublished,
+  isDirty,
+  isSaving,
+  isPublishing,
+  onSave,
+  onPublish,
+  onUnpublish,
+  onDiscard,
+  onOpenVersionHistory,
+  disabled,
+}: MobileActionBarProps) {
+  return (
+    <>
+      <MobileMoreMenu
+        hasDraft={hasDraft}
+        hasPublished={hasPublished}
+        onUnpublish={onUnpublish}
+        onDiscard={onDiscard}
+        onOpenVersionHistory={onOpenVersionHistory}
+      />
+      <MobileSavePublish
+        hasDraft={hasDraft}
+        isDirty={isDirty}
+        isSaving={isSaving}
+        isPublishing={isPublishing}
+        onSave={onSave}
+        onPublish={onPublish}
+        disabled={disabled}
+      />
     </>
   )
 }

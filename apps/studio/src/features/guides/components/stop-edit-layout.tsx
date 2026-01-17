@@ -29,7 +29,7 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { LocaleSelector } from '@/features/guides/components/locale-selector'
-import { MobileActionBar } from '@/features/guides/components/mobile-action-bar'
+import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
@@ -233,7 +233,7 @@ export function StopEditLayout({
       <div className="min-h-[calc(100vh-4rem)] bg-background">
         {/* Header */}
         <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
-          {/* Mobile: Wrapping flex layout */}
+          {/* Mobile: Wrapping flex layout - order: locale | three dots | save | publish */}
           <div className="flex flex-wrap items-center justify-end gap-2 lg:hidden">
             <LocaleSelector
               value={activeLocale}
@@ -241,16 +241,19 @@ export function StopEditLayout({
               onValueChange={onLocaleChange}
               localeStatus={localeStatusMap}
             />
-            <MobileActionBar
+            <MobileMoreMenu
               hasDraft={hasDraft}
               hasPublished={hasPublished}
+              onUnpublish={handleUnpublish}
+              onDiscard={handleDiscard}
+            />
+            <MobileSavePublish
+              hasDraft={hasDraft}
               isDirty={isDirty}
               isSaving={isSaving}
               isPublishing={isPublishing}
               onSave={onSave}
               onPublish={handlePublish}
-              onUnpublish={handleUnpublish}
-              onDiscard={handleDiscard}
               disabled={isReadOnly}
             />
           </div>

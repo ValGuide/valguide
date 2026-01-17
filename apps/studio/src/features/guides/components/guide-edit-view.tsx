@@ -14,14 +14,14 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { Eye, Globe, ListChecks } from 'lucide-react'
+import { Globe, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
-import { MobileActionBar } from '@/features/guides/components/mobile-action-bar'
+import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { getLocaleDisplayName, UnifiedLocaleSelector } from '@/features/guides/components/unified-locale-selector'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
@@ -274,7 +274,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
       <div className="min-h-[calc(100vh-4rem)] bg-background">
         {/* Header */}
         <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
-          {/* Mobile: Wrapping flex layout */}
+          {/* Mobile: Wrapping flex layout - order: locale | three dots | checklist | save | publish */}
           <div className="flex flex-wrap items-center justify-end gap-2 lg:hidden">
             <UnifiedLocaleSelector
               value={activeLocale}
@@ -289,17 +289,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
               }}
               hasContentForLocale={hasContentForLocale}
             />
-            <MobileActionBar
+            <MobileMoreMenu
               hasDraft={hasDraft}
               hasPublished={hasPublished}
-              isDirty={isDirty}
-              isSaving={isSaving}
-              isPublishing={isPublishing}
-              onSave={save}
-              onPublish={handlePublish}
               onUnpublish={handleUnpublish}
               onDiscard={handleDiscard}
-              disabled={isReadOnly}
             />
             <Sheet>
               <SheetTrigger asChild>
@@ -317,6 +311,15 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                 </div>
               </SheetContent>
             </Sheet>
+            <MobileSavePublish
+              hasDraft={hasDraft}
+              isDirty={isDirty}
+              isSaving={isSaving}
+              isPublishing={isPublishing}
+              onSave={save}
+              onPublish={handlePublish}
+              disabled={isReadOnly}
+            />
           </div>
           {/* Desktop: Single row with breadcrumb */}
           <div className="hidden lg:flex items-center justify-between gap-2">
