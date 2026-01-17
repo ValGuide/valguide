@@ -142,7 +142,7 @@ export interface MobileSavePublishProps {
   disabled?: boolean
 }
 
-/** Mobile save and publish buttons */
+/** Mobile save and publish buttons - fixed bottom bar, only visible on small screens (not tablet/desktop) */
 export function MobileSavePublish({
   hasDraft,
   isDirty,
@@ -157,26 +157,28 @@ export function MobileSavePublish({
   const canPublish = hasDraft || isDirty
 
   return (
-    <>
-      <Button
-        variant="outline"
-        onClick={onSave}
-        disabled={!isDirty || isSaving || isPublishing || disabled}
-        size="sm"
-        className="lg:hidden"
-      >
-        {isSaving && !isPublishing ? t('saving') : t('save')}
-      </Button>
+    <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background p-3 sm:hidden">
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          onClick={onSave}
+          disabled={!isDirty || isSaving || isPublishing || disabled}
+          size="sm"
+          className="flex-1"
+        >
+          {isSaving && !isPublishing ? t('saving') : t('save')}
+        </Button>
 
-      <Button
-        onClick={onPublish}
-        disabled={!canPublish || isPublishing || isSaving || disabled}
-        size="sm"
-        className="lg:hidden"
-      >
-        {isPublishing ? t('publishing') : t('publish')}
-      </Button>
-    </>
+        <Button
+          onClick={onPublish}
+          disabled={!canPublish || isPublishing || isSaving || disabled}
+          size="sm"
+          className="flex-1"
+        >
+          {isPublishing ? t('publishing') : t('publish')}
+        </Button>
+      </div>
+    </div>
   )
 }
 

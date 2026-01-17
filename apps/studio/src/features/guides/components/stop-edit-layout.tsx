@@ -230,10 +230,10 @@ export function StopEditLayout({
   return (
     <>
       {unsavedChangesDialog}
-      <div className="min-h-[calc(100vh-4rem)] bg-background">
+      <div className="min-h-[calc(100vh-4rem)] bg-background pb-16 sm:pb-0">
         {/* Header */}
         <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
-          {/* Mobile: Wrapping flex layout - order: locale | three dots | save | publish */}
+          {/* Mobile: Wrapping flex layout - order: locale | three dots */}
           <div className="flex flex-wrap items-center justify-end gap-2 lg:hidden">
             <LocaleSelector
               value={activeLocale}
@@ -246,15 +246,6 @@ export function StopEditLayout({
               hasPublished={hasPublished}
               onUnpublish={handleUnpublish}
               onDiscard={handleDiscard}
-            />
-            <MobileSavePublish
-              hasDraft={hasDraft}
-              isDirty={isDirty}
-              isSaving={isSaving}
-              isPublishing={isPublishing}
-              onSave={onSave}
-              onPublish={handlePublish}
-              disabled={isReadOnly}
             />
           </div>
           {/* Desktop: Single row with breadcrumb */}
@@ -369,6 +360,17 @@ export function StopEditLayout({
           </aside>
         </div>
       </div>
+
+      {/* Mobile bottom bar for save/publish - only on small screens */}
+      <MobileSavePublish
+        hasDraft={hasDraft}
+        isDirty={isDirty}
+        isSaving={isSaving}
+        isPublishing={isPublishing}
+        onSave={onSave}
+        onPublish={handlePublish}
+        disabled={isReadOnly}
+      />
     </>
   )
 }
