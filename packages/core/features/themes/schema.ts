@@ -2,36 +2,11 @@ import { relations } from 'drizzle-orm'
 import { index, jsonb, numeric, pgSchema, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
-import type { ThemeColors, ThemeFonts } from './types'
+import { type ThemeColors, type ThemeFonts, themePresets } from './types'
 
 const studioSchema = pgSchema('studio')
 
-export const themePresetEnum = studioSchema.enum('theme_preset', [
-  'angle',
-  'angle-dark',
-  'light',
-  'dark',
-  'blue',
-  'blue-dark',
-  'green',
-  'green-dark',
-  'purple',
-  'purple-dark',
-  'sage',
-  'sage-dark',
-  'stone',
-  'stone-dark',
-  'lavender',
-  'lavender-dark',
-  'sand',
-  'sand-dark',
-  'gallery',
-  'gallery-dark',
-  'curator',
-  'curator-dark',
-  'claude',
-  'claude-dark',
-])
+export const themePresetEnum = studioSchema.enum('theme_preset', [...themePresets])
 
 export const theme = studioSchema.table(
   'theme',

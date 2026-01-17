@@ -6,6 +6,7 @@ import { ThemeEditorPanel } from './theme-editor-panel'
 const mockThemes: Theme[] = [
   {
     id: '1',
+    nanoId: 'abc123def0',
     name: 'Brand Primary',
     organizationId: 'org-1',
     basePreset: 'light',
@@ -40,6 +41,7 @@ const mockThemes: Theme[] = [
   },
   {
     id: '2',
+    nanoId: 'xyz789ghi1',
     name: 'Dark Mode',
     organizationId: 'org-1',
     basePreset: 'dark',

@@ -1,10 +1,33 @@
-import { themePresetEnum } from './schema'
-
-export const themePresets = themePresetEnum.enumValues
+export const themePresets = [
+  'angle',
+  'angle-dark',
+  'light',
+  'dark',
+  'blue',
+  'blue-dark',
+  'green',
+  'green-dark',
+  'purple',
+  'purple-dark',
+  'sage',
+  'sage-dark',
+  'stone',
+  'stone-dark',
+  'lavender',
+  'lavender-dark',
+  'sand',
+  'sand-dark',
+  'gallery',
+  'gallery-dark',
+  'curator',
+  'curator-dark',
+  'claude',
+  'claude-dark',
+] as const
 
 export const themes = themePresets
 
-export type ThemePreset = (typeof themePresetEnum.enumValues)[number]
+export type ThemePreset = (typeof themePresets)[number]
 
 export type Theme = ThemePreset
 
