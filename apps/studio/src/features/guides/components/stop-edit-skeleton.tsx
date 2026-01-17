@@ -132,6 +132,14 @@ export function StopEditSkeleton() {
           </div>
         </aside>
       </div>
+
+      {/* Mobile Fixed Bottom Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background p-3 sm:hidden">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 flex-1" /> {/* Save button */}
+          <Skeleton className="h-8 flex-1" /> {/* Publish button */}
+        </div>
+      </div>
     </div>
   )
 }

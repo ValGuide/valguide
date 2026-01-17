@@ -116,7 +116,7 @@ const meta = {
     onPublish: mockOnPublish,
     onUnpublish: mockOnUnpublish,
     onDiscard: mockOnDiscard,
-    stopId: 'stop-1',
+    stopId: 'stop1abc',
   },
   decorators: [
     (Story, { args }) => (
@@ -139,7 +139,7 @@ export const Default: Story = {
   args: {
     metadata: mockMetadata,
     localeData: mockLocaleDataEn,
-    stopId: 'stop-1',
+    stopId: 'stop1abc',
     organizationId: 'org-mock-123',
   },
 }
@@ -183,7 +183,7 @@ export const WithDraft: Story = {
         },
       ],
     },
-    stopId: 'stop-1',
+    stopId: 'stop1abc',
     organizationId: 'org-mock-123',
   },
 }
@@ -221,7 +221,7 @@ export const NewStop: Story = {
         },
       ],
     },
-    stopId: 'stop-new',
+    stopId: 'stopnew123',
     organizationId: 'org-mock-123',
   },
 }
@@ -259,7 +259,7 @@ Now, please turn to your left. Here you'll find our collection of Flemish Master
         },
       ],
     },
-    stopId: 'stop-1',
+    stopId: 'stop1abc',
     organizationId: 'org-mock-123',
   },
 }
@@ -271,7 +271,7 @@ export const PublishedGuide: Story = {
       published: new Date('2025-01-10T10:00:00Z'),
     },
     localeData: mockLocaleDataEn,
-    stopId: 'stop-1',
+    stopId: 'stop1abc',
     organizationId: 'org-mock-123',
   },
 }
