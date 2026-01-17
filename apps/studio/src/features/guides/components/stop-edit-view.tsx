@@ -40,8 +40,8 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     isDirty,
     isSaving,
     lastSaved,
-    attachAssetToStop,
-    detachAssetFromStop,
+    getStopAssets,
+    updateStopAssets,
     setActiveLocale,
     save,
     refetch,
@@ -81,13 +81,10 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     return title?.trim() ? title : tStops('unknownTitle')
   }, [stopTranslation, tStops])
 
-  const stopImages = useMemo(() => {
-    return stopMetadata?.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null) ?? []
-  }, [stopMetadata])
-
-  const stopAudio = useMemo(() => {
-    return stopMetadata?.assets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
-  }, [stopMetadata, activeLocale])
+  const stopAssets = useMemo(() => {
+    if (!stopMetadata) return []
+    return getStopAssets(stopMetadata.id)
+  }, [stopMetadata, getStopAssets])
 
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   const formId = `stop-translation-${stopId}-${activeLocale}`
@@ -178,7 +175,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     <StopEditLayout
       stopId={stopMetadata.id}
       stopTranslation={stopTranslation ?? null}
-      stopAssets={stopMetadata.assets}
+      stopAssets={stopAssets}
       stopTranslationStatuses={stopMetadata.translationStatuses}
       activeLocale={activeLocale}
       isDirty={isDirty}
@@ -199,27 +196,31 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
       onUnpublish={onUnpublish}
       onDiscard={onDiscard}
       lastSaved={lastSaved}
-      onImageChange={async (assets) => {
-        const newAssetIds = new Set(assets.map((a) => a.id))
-        const currentAssetIds = new Set(stopImages.map((a) => a.id))
-
-        for (const existing of stopImages) {
-          if (!newAssetIds.has(existing.id) && existing.stopAssetId) {
-            await detachAssetFromStop(existing.stopAssetId)
-          }
-        }
-
-        for (const asset of assets) {
-          if (!currentAssetIds.has(asset.id)) {
-            await attachAssetToStop(stopMetadata.id, asset, 'image', null)
-          }
-        }
+      onImageChange={(assets) => {
+        // Replace all media assets (images/videos) with the new list
+        // Keep audio assets unchanged
+        const audioAssets = stopAssets.filter((a) => a.role === 'audio')
+        const newMediaAssets = assets.map((asset, index) => ({
+          ...asset,
+          role: asset.type?.startsWith('video/') ? 'video' : 'image',
+          order: index,
+          locale: null,
+        }))
+        updateStopAssets(stopMetadata.id, [...newMediaAssets, ...audioAssets])
       }}
-      onAudioChange={async (asset) => {
+      onAudioChange={(asset) => {
+        // Update audio for current locale
+        const nonAudioAssets = stopAssets.filter((a) => a.role !== 'audio' || a.locale !== activeLocale)
         if (asset) {
-          await attachAssetToStop(stopMetadata.id, asset, 'audio', activeLocale)
-        } else if (stopAudio?.stopAssetId) {
-          await detachAssetFromStop(stopAudio.stopAssetId)
+          const audioAsset = {
+            ...asset,
+            role: 'audio',
+            order: nonAudioAssets.length,
+            locale: activeLocale,
+          }
+          updateStopAssets(stopMetadata.id, [...nonAudioAssets, audioAsset])
+        } else {
+          updateStopAssets(stopMetadata.id, nonAudioAssets)
         }
       }}
     />

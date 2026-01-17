@@ -1,5 +1,5 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { GuideLocaleData, GuideMetadata, StopMetadata } from '@valguide/core/features/guides/types'
+import type { AssetWithRole, GuideLocaleData, GuideMetadata, StopMetadata } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 
 // Type for form value getters
@@ -27,11 +27,15 @@ export interface GuideEditorContextValue {
   deleteStop: (stopId: string) => Promise<void>
   reorderStops: (stops: Array<{ id: string; order: number }>) => Promise<void>
 
-  // Asset operations (immediate save)
-  attachAssetToGuide: (asset: Asset, role: string) => Promise<void>
-  detachAssetFromGuide: (guideAssetId: string) => Promise<void>
-  attachAssetToStop: (stopId: string, asset: Asset, role: string, locale?: string | null) => Promise<void>
-  detachAssetFromStop: (stopAssetId: string) => Promise<void>
+  // Asset state (in-memory, saved on save())
+  guideAssets: AssetWithRole[]
+  getStopAssets: (stopId: string) => AssetWithRole[]
+
+  // Asset operations (update in-memory state, saved on save())
+  setGuideCover: (asset: Asset | null) => void
+  updateStopAssets: (stopId: string, assets: AssetWithRole[]) => void
+  addStopAsset: (stopId: string, asset: Asset, role: string, locale: string | null) => void
+  removeStopAsset: (stopId: string, assetId: string) => void
 
   // Form dirty registration
   isDirty: boolean

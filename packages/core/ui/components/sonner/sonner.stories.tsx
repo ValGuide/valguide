@@ -113,7 +113,8 @@ export const Closeable: Story = {
     <Button
       onClick={() =>
         toast.info('Your changes have been saved, following a long text blablalbalbal', {
-          closeButton: true})
+          closeButton: true,
+        })
       }
     >
       Closeable

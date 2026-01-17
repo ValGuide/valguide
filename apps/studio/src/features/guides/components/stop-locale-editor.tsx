@@ -14,7 +14,7 @@ import { type StopTranslationFormData, stopTranslationFormSchema } from '../sche
 export type StopLocaleEditorProps = {
   locale: string
   onDirtyChange?: (isDirty: boolean) => void
-  onAudioChange?: (asset: Asset | null) => Promise<void>
+  onAudioChange?: (asset: Asset | null) => void
   onSave?: () => void
   audio?: Asset | null
   readOnly?: boolean

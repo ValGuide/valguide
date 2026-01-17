@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/server-functions'
 import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +17,6 @@ import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { useMemo, useState } from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import { ArchivedGuidesListContent } from './archived-guides-list-content'
 import { ArchivedGuidesListEmpty } from './archived-guides-list-empty'
 import { ArchivedGuidesListError } from './archived-guides-list-error'

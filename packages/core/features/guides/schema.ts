@@ -5,7 +5,12 @@ import { organization } from '../orgs/schema'
 
 const studioSchema = pgSchema('studio')
 
-export const translationStatus = studioSchema.enum('translation_status', ['draft', 'in_review', 'published', 'archived'])
+export const translationStatus = studioSchema.enum('translation_status', [
+  'draft',
+  'in_review',
+  'published',
+  'archived',
+])
 
 export const guide = studioSchema.table(
   'guide',

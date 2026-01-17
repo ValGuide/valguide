@@ -1,4 +1,5 @@
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import {
   Dialog,
@@ -13,7 +14,6 @@ import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 
 export interface CreateTeamDialogProps {
   children?: React.ReactNode

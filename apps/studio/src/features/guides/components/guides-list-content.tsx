@@ -25,12 +25,7 @@ interface GuidesListContentProps {
   onViewGuide?: (guide: GuideListItem) => void
 }
 
-export function GuidesListContent({
-  guides,
-  isCreating = false,
-  onCreateGuide,
-  onViewGuide,
-}: GuidesListContentProps) {
+export function GuidesListContent({ guides, isCreating = false, onCreateGuide, onViewGuide }: GuidesListContentProps) {
   const t = useTranslations('guides')
 
   return (

@@ -1,10 +1,9 @@
+import { X } from 'lucide-react'
 import React from 'react'
 import ReactDOM from 'react-dom'
-
-import { X } from 'lucide-react'
 import { getAsset, Loader } from './assets'
 import { useIsDocumentHidden } from './hooks'
-import { toast, ToastState } from './state'
+import { ToastState, toast } from './state'
 import './styles.css'
 import {
   type ExternalToast,
@@ -319,8 +318,8 @@ const Toast = (props: ToastProps) => {
         if (disabled || !dismissible) return
         dragStartTime.current = new Date()
         setOffsetBeforeRemove(offset.current)
-          // Ensure we maintain correct pointer capture even when going outside of the toast (e.g. when swiping)
-          ; (event.target as HTMLElement).setPointerCapture(event.pointerId)
+        // Ensure we maintain correct pointer capture even when going outside of the toast (e.g. when swiping)
+        ;(event.target as HTMLElement).setPointerCapture(event.pointerId)
         if ((event.target as HTMLElement).tagName === 'BUTTON') return
         setSwiping(true)
         pointerStartRef.current = { x: event.clientX, y: event.clientY }
@@ -425,8 +424,8 @@ const Toast = (props: ToastProps) => {
     >
       {/* TODO: This can be cleaner */}
       {(toastType || toast.icon || toast.promise) &&
-        toast.icon !== null &&
-        (toastType ? (icons as any)?.[toastType] !== null : false || toast.icon) ? (
+      toast.icon !== null &&
+      (toastType ? (icons as any)?.[toastType] !== null : false || toast.icon) ? (
         <div data-icon="" className={cn(classNames?.icon, toast?.classNames?.icon)}>
           {toast.promise || (toast.type === 'loading' && !toast.icon) ? toast.icon || getLoadingIcon() : null}
           {toast.type !== 'loading' ? icon : null}
@@ -459,11 +458,11 @@ const Toast = (props: ToastProps) => {
           data-close-button
           onClick={
             disabled || !dismissible
-              ? () => { }
+              ? () => {}
               : () => {
-                deleteToast()
-                toast.onDismiss?.(toast)
-              }
+                  deleteToast()
+                  toast.onDismiss?.(toast)
+                }
           }
           className={cn(classNames?.closeButton, toast?.classNames?.closeButton)}
           type="button"
@@ -529,34 +528,34 @@ function getDocumentDirection(): ToasterProps['dir'] {
 function assignOffset(defaultOffset: ToasterProps['offset'], mobileOffset: ToasterProps['mobileOffset']) {
   const styles = {} as React.CSSProperties & Record<string, any>
 
-    ;[defaultOffset, mobileOffset].forEach((offset, index) => {
-      const isMobile = index === 1
-      const prefix = isMobile ? '--mobile-offset' : '--offset'
-      const defaultValue = isMobile ? MOBILE_VIEWPORT_OFFSET : VIEWPORT_OFFSET
+  ;[defaultOffset, mobileOffset].forEach((offset, index) => {
+    const isMobile = index === 1
+    const prefix = isMobile ? '--mobile-offset' : '--offset'
+    const defaultValue = isMobile ? MOBILE_VIEWPORT_OFFSET : VIEWPORT_OFFSET
 
-      function assignAll(offset: string | number) {
-        ;['top', 'right', 'bottom', 'left'].forEach((key) => {
-          ; (styles as Record<string, any>)[`${prefix}-${key}`] = typeof offset === 'number' ? `${offset}px` : offset
-        })
-      }
+    function assignAll(offset: string | number) {
+      ;['top', 'right', 'bottom', 'left'].forEach((key) => {
+        ;(styles as Record<string, any>)[`${prefix}-${key}`] = typeof offset === 'number' ? `${offset}px` : offset
+      })
+    }
 
-      if (typeof offset === 'number' || typeof offset === 'string') {
-        assignAll(offset)
-      } else if (typeof offset === 'object') {
-        ;['top', 'right', 'bottom', 'left'].forEach((key) => {
-          if ((offset as Record<string, any>)[key] === undefined) {
-            ; (styles as Record<string, any>)[`${prefix}-${key}`] = defaultValue
-          } else {
-            ; (styles as Record<string, any>)[`${prefix}-${key}`] =
-              typeof (offset as Record<string, any>)[key] === 'number'
-                ? `${(offset as Record<string, any>)[key]}px`
-                : (offset as Record<string, any>)[key]
-          }
-        })
-      } else {
-        assignAll(defaultValue)
-      }
-    })
+    if (typeof offset === 'number' || typeof offset === 'string') {
+      assignAll(offset)
+    } else if (typeof offset === 'object') {
+      ;['top', 'right', 'bottom', 'left'].forEach((key) => {
+        if ((offset as Record<string, any>)[key] === undefined) {
+          ;(styles as Record<string, any>)[`${prefix}-${key}`] = defaultValue
+        } else {
+          ;(styles as Record<string, any>)[`${prefix}-${key}`] =
+            typeof (offset as Record<string, any>)[key] === 'number'
+              ? `${(offset as Record<string, any>)[key]}px`
+              : (offset as Record<string, any>)[key]
+        }
+      })
+    } else {
+      assignAll(defaultValue)
+    }
+  })
 
   return styles
 }
@@ -905,4 +904,3 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
 
 export type { Action, ToastClassnames, ToastToDismiss } from './types'
 export { toast, Toaster, useSonner, type ExternalToast, type ToasterProps, type ToastT }
-

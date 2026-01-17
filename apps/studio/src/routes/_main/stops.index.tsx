@@ -1,9 +1,9 @@
-import { StopWithGuides } from '@/features/stops/api/fetchers'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
+import type { StopWithGuides } from '@/features/stops/api/fetchers'
 import { StopsList } from '@/features/stops/components/stops-list'
 import { StopsListSkeleton } from '@/features/stops/components/stops-list-skeleton'
 import { useStops } from '@/features/stops/hooks/use-stops'
 import { stopsQueryOptions } from '@/features/stops/query-options'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_main/stops/')({
   loader: ({ context }) => context.queryClient.ensureQueryData(stopsQueryOptions()),

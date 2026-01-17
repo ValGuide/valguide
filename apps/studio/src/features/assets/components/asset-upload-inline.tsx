@@ -9,13 +9,13 @@ import {
   validateFileSize,
 } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
 import { CheckCircle2, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import { uploadFileWithTUS } from '../lib/tus-upload'
 
 export type AssetUploadInlineProps = {

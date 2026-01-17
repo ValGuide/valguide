@@ -13,6 +13,7 @@ export type StopTranslationData = {
   draftVersion: { id: string; title: string; description: string | null; transcription: string | null } | null
 }
 
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,7 +25,6 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { ArrowLeft, Globe } from 'lucide-react'
 import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
@@ -52,8 +52,8 @@ export interface StopEditLayoutProps {
   onRefetch: () => void
   onBack: () => void
   backLabel: string
-  onImageChange: (assets: Asset[]) => Promise<void>
-  onAudioChange: (asset: Asset | null) => Promise<void>
+  onImageChange: (assets: Asset[]) => void
+  onAudioChange: (asset: Asset | null) => void
   breadcrumbContent: ReactNode
   stopEditorRef?: React.RefObject<StopLocaleEditorRef | null>
   MediaPicker: MediaPickerComponent
@@ -153,11 +153,11 @@ export function StopEditLayout({
   }, [confirmIfDirty, onBack])
 
   const handleImagesChange = useCallback(
-    async (value: Asset | Asset[] | null) => {
+    (value: Asset | Asset[] | null) => {
       if (Array.isArray(value)) {
-        await onImageChange(value)
+        onImageChange(value)
       } else if (value === null) {
-        await onImageChange([])
+        onImageChange([])
       }
     },
     [onImageChange],

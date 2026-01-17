@@ -3,6 +3,7 @@ import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
@@ -16,7 +17,6 @@ import { formatDistanceToNow } from 'date-fns'
 import { Download, Eye, Image, MoreVertical, Music, Trash2, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useState } from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 
 export type DeleteAssetDialogComponentProps = {
   open: boolean

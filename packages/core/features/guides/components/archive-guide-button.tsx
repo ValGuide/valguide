@@ -1,5 +1,6 @@
 import { archiveGuideFn } from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +14,6 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Archive } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 
 interface ArchiveGuideButtonProps {
   guideId: string

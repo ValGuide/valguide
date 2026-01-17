@@ -13,10 +13,7 @@ export function GuidesListLoading() {
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton elements
-          <div
-            key={`skeleton-${i}`}
-            className="overflow-hidden rounded-lg border bg-card shadow-[var(--shadow-card)]"
-          >
+          <div key={`skeleton-${i}`} className="overflow-hidden rounded-lg border bg-card shadow-[var(--shadow-card)]">
             <Skeleton className="h-44 w-full" />
             {/* CardHeader */}
             <div className="flex flex-col gap-1.5 px-6 pt-6">

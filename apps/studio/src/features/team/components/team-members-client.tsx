@@ -12,8 +12,8 @@ import {
   updateMemberRoleFn,
 } from '@valguide/core/features/orgs/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { PageTitle } from '@valguide/ui/components/page-title'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { PageTitle } from '@valguide/ui/components/page-title'
 
 interface TeamMembersClientProps {
   team: {

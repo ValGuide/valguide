@@ -51,8 +51,8 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     isDirty,
     isSaving,
     lastSaved,
-    attachAssetToGuide,
-    detachAssetFromGuide,
+    guideAssets,
+    setGuideCover,
     addStop,
     deleteStop,
     reorderStops,
@@ -183,23 +183,18 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   }
 
   const coverAsset = useMemo(() => {
-    return metadata?.assets.find((a) => a.role === 'cover') ?? null
-  }, [metadata?.assets])
+    return guideAssets.find((a) => a.role === 'cover') ?? null
+  }, [guideAssets])
 
   const handleCoverImageChange = useCallback(
-    async (value: Asset | Asset[] | null) => {
+    (value: Asset | Asset[] | null) => {
       if (value === null) {
-        if (coverAsset?.guideAssetId) {
-          await detachAssetFromGuide(coverAsset.guideAssetId)
-        }
+        setGuideCover(null)
       } else if (!Array.isArray(value)) {
-        if (coverAsset?.guideAssetId) {
-          await detachAssetFromGuide(coverAsset.guideAssetId)
-        }
-        await attachAssetToGuide(value, 'cover')
+        setGuideCover(value)
       }
     },
-    [coverAsset, attachAssetToGuide, detachAssetFromGuide],
+    [setGuideCover],
   )
 
   const handlePublish = useCallback(async () => {

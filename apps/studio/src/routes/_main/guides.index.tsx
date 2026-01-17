@@ -1,10 +1,9 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-
+import type { GuideListItem } from '@valguide/features/guides/types'
 import { GuidesList } from '@/features/guides/components/guides-list'
 import { GuidesListSkeleton } from '@/features/guides/components/guides-list-skeleton'
 import { useGuides } from '@/features/guides/hooks/use-guides'
 import { guidesListQueryOptions } from '@/features/guides/query-options'
-import { GuideListItem } from '@valguide/features/guides/types'
 
 export const Route = createFileRoute('/_main/guides/')({
   loader: ({ context }) => {
@@ -34,7 +33,6 @@ function GuidesPage() {
   const handleNavigateToGuide = (nanoId: string) => {
     router.navigate({ to: `/guides/${nanoId}/edit` })
   }
-
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">

@@ -531,6 +531,90 @@ export const detachAssetFromStopFn = createServerFn({ method: 'POST' })
     }),
   )
 
+// Replace all guide assets (delete all, insert new)
+const replaceGuideAssetsSchema = z.object({
+  guideId: z.string(),
+  assets: z.array(
+    z.object({
+      assetId: z.string(),
+      role: z.string(),
+      locale: z.string().nullable(),
+    }),
+  ),
+})
+
+export const replaceGuideAssetsFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(replaceGuideAssetsSchema)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { guideId, assets } = data
+      await requireGuideAccess(guideId, context.user.id)
+
+      await db.transaction(async (tx) => {
+        // Delete all existing guide assets
+        await tx.delete(guideAsset).where(eq(guideAsset.guideId, guideId))
+
+        // Insert new assets with order from array index
+        if (assets.length > 0) {
+          await tx.insert(guideAsset).values(
+            assets.map((a, index) => ({
+              guideId,
+              assetId: a.assetId,
+              role: a.role,
+              locale: a.locale,
+              order: index,
+            })),
+          )
+        }
+      })
+
+      return { success: true }
+    }),
+  )
+
+// Replace all stop assets (delete all, insert new)
+const replaceStopAssetsSchema = z.object({
+  stopId: z.string(),
+  assets: z.array(
+    z.object({
+      assetId: z.string(),
+      role: z.string(),
+      locale: z.string().nullable(),
+    }),
+  ),
+})
+
+export const replaceStopAssetsFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(replaceStopAssetsSchema)
+  .handler(
+    handleError(async ({ context, data }) => {
+      const { stopId, assets } = data
+      await requireStopAccess(stopId, context.user.id)
+
+      await db.transaction(async (tx) => {
+        // Delete all existing stop assets
+        await tx.delete(stopAsset).where(eq(stopAsset.stopId, stopId))
+
+        // Insert new assets with order from array index
+        if (assets.length > 0) {
+          await tx.insert(stopAsset).values(
+            assets.map((a, index) => ({
+              stopId,
+              assetId: a.assetId,
+              role: a.role,
+              locale: a.locale,
+              order: index,
+            })),
+          )
+        }
+      })
+
+      return { success: true }
+    }),
+  )
+
 const archiveGuideSchema = z.object({
   id: z.string(),
 })
