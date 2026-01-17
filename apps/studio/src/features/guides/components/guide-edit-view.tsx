@@ -21,6 +21,7 @@ import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
+import { MobileActionBar } from '@/features/guides/components/mobile-action-bar'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { getLocaleDisplayName, UnifiedLocaleSelector } from '@/features/guides/components/unified-locale-selector'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
@@ -272,9 +273,54 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
       {unsavedChangesDialog}
       <div className="min-h-[calc(100vh-4rem)] bg-background">
         {/* Header */}
-        <div className="sticky top-0 z-10 border-b bg-background px-3 py-3 sm:px-6">
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-            <Breadcrumb className="hidden min-w-0 flex-1 overflow-x-auto lg:flex">
+        <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
+          {/* Mobile: Wrapping flex layout */}
+          <div className="flex flex-wrap items-center justify-end gap-2 lg:hidden">
+            <UnifiedLocaleSelector
+              value={activeLocale}
+              locales={availableLocales}
+              onValueChange={setActiveLocale}
+              localeStatus={localeStatusMap}
+              onAddLocale={async (locale) => {
+                await updateAvailableLocales([...availableLocales, locale])
+              }}
+              onRemoveLocale={async (locale) => {
+                await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
+              }}
+              hasContentForLocale={hasContentForLocale}
+            />
+            <MobileActionBar
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+              isDirty={isDirty}
+              isSaving={isSaving}
+              isPublishing={isPublishing}
+              onSave={save}
+              onPublish={handlePublish}
+              onUnpublish={handleUnpublish}
+              onDiscard={handleDiscard}
+              disabled={isReadOnly}
+            />
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="h-8 w-8">
+                  <ListChecks className="h-4 w-4" />
+                  <span className="sr-only">{t('editor.guideProgress')}</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
+                <SheetHeader>
+                  <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6">
+                  <GuideProgress />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+          {/* Desktop: Single row with breadcrumb */}
+          <div className="hidden lg:flex items-center justify-between gap-2">
+            <Breadcrumb className="min-w-0 flex-1 overflow-x-auto">
               <BreadcrumbList className="flex-nowrap">
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
@@ -297,7 +343,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               <UnifiedLocaleSelector
                 value={activeLocale}
                 locales={availableLocales}
@@ -311,39 +357,19 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                 }}
                 hasContentForLocale={hasContentForLocale}
               />
-              <Button variant="ghost" size="icon" className="h-8 w-8 lg:hidden">
-                <span className="sr-only">{t('editor.preview')}</span>
-                <Eye className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="hidden lg:flex">
+              <Button variant="ghost" size="sm">
                 {t('editor.preview')}
               </Button>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="h-8 w-8 lg:hidden">
-                    <ListChecks className="h-4 w-4" />
-                    <span className="sr-only">{t('editor.guideProgress')}</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
-                  <SheetHeader>
-                    <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6">
-                    <GuideProgress />
-                  </div>
-                </SheetContent>
-              </Sheet>
             </div>
           </div>
         </div>
 
         {/* Status Badge and Tabs */}
-        <div className="sticky top-[57px] z-10 border-b bg-background px-3 py-3 sm:px-6">
+        <div className="sticky top-[57px] z-10 border-b bg-background px-4 py-3 sm:px-6">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-semibold truncate">{guideTitle}</h1>
-              <ContentStatusBadge status={contentStatus} size="lg" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h1 className="text-lg sm:text-xl font-semibold truncate min-w-0">{guideTitle}</h1>
+              <ContentStatusBadge status={contentStatus} size="lg" className="shrink-0" />
             </div>
             <DraftPublishedTabs
               activeTab={activeTab}
@@ -357,11 +383,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         {/* Main Content */}
         <div className="flex min-w-0">
           <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
-            <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
-              <div className="space-y-8">
+            <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+              <div className="space-y-6 sm:space-y-8">
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
-                  <h2 className="text-base font-semibold">
+                  <h2 className="text-sm sm:text-base font-semibold">
                     {t('editor.localeContent')} ({getLocaleDisplayName(activeLocale)})
                   </h2>
                 </div>
@@ -416,7 +442,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
             </div>
           </div>
 
-          {/* Right Sidebar - Actions Panel */}
+          {/* Right Sidebar - Actions Panel (Desktop only) */}
           <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
             <div className="p-5 space-y-6">
               <EditorActionsPanel

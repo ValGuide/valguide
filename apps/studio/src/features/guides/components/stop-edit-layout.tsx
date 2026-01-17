@@ -29,6 +29,7 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { LocaleSelector } from '@/features/guides/components/locale-selector'
+import { MobileActionBar } from '@/features/guides/components/mobile-action-bar'
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
@@ -231,9 +232,31 @@ export function StopEditLayout({
       {unsavedChangesDialog}
       <div className="min-h-[calc(100vh-4rem)] bg-background">
         {/* Header */}
-        <div className="sticky top-0 z-10 border-b bg-background px-3 py-3 sm:px-6">
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-            <Breadcrumb className="hidden min-w-0 flex-1 lg:flex">
+        <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
+          {/* Mobile: Wrapping flex layout */}
+          <div className="flex flex-wrap items-center justify-end gap-2 lg:hidden">
+            <LocaleSelector
+              value={activeLocale}
+              locales={locales ?? ['en', 'de', 'rm']}
+              onValueChange={onLocaleChange}
+              localeStatus={localeStatusMap}
+            />
+            <MobileActionBar
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+              isDirty={isDirty}
+              isSaving={isSaving}
+              isPublishing={isPublishing}
+              onSave={onSave}
+              onPublish={handlePublish}
+              onUnpublish={handleUnpublish}
+              onDiscard={handleDiscard}
+              disabled={isReadOnly}
+            />
+          </div>
+          {/* Desktop: Single row with breadcrumb */}
+          <div className="hidden lg:flex items-center justify-between gap-2">
+            <Breadcrumb className="min-w-0 flex-1">
               <BreadcrumbList className="flex-nowrap">
                 {breadcrumbContent}
                 <BreadcrumbSeparator />
@@ -242,14 +265,14 @@ export function StopEditLayout({
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               <LocaleSelector
                 value={activeLocale}
                 locales={locales ?? ['en', 'de', 'rm']}
                 onValueChange={onLocaleChange}
                 localeStatus={localeStatusMap}
               />
-              <Button variant="ghost" size="sm" className="hidden sm:flex">
+              <Button variant="ghost" size="sm">
                 {t('editor.preview')}
               </Button>
             </div>
@@ -257,15 +280,15 @@ export function StopEditLayout({
         </div>
 
         {/* Status Badge and Tabs */}
-        <div className="sticky top-[57px] z-10 border-b bg-background px-3 py-3 sm:px-6">
+        <div className="sticky top-[57px] z-10 border-b bg-background px-4 py-3 sm:px-6">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm" onClick={handleBack} className="gap-1 w-fit -ml-2">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Button variant="ghost" size="sm" onClick={handleBack} className="gap-1 w-fit -ml-2 shrink-0">
                 <ArrowLeft className="h-4 w-4" />
-                {backLabel}
+                <span className="hidden sm:inline">{backLabel}</span>
               </Button>
-              <h1 className="text-xl font-semibold truncate">{stopTitle}</h1>
-              <ContentStatusBadge status={contentStatus} size="lg" />
+              <h1 className="text-lg sm:text-xl font-semibold truncate min-w-0">{stopTitle}</h1>
+              <ContentStatusBadge status={contentStatus} size="lg" className="shrink-0" />
             </div>
             <DraftPublishedTabs
               activeTab={activeTab}
@@ -279,11 +302,11 @@ export function StopEditLayout({
         {/* Main Content */}
         <div className="flex min-w-0">
           <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
-            <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
-              <div className="space-y-8">
+            <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+              <div className="space-y-6 sm:space-y-8">
                 {/* Locale-specific Content Section */}
                 <div className="flex items-center justify-between gap-4">
-                  <h2 className="text-base font-semibold">{tStops('editor.localeContent')}</h2>
+                  <h2 className="text-sm sm:text-base font-semibold">{tStops('editor.localeContent')}</h2>
                 </div>
 
                 <StopLocaleEditor
@@ -323,7 +346,7 @@ export function StopEditLayout({
             </div>
           </div>
 
-          {/* Right Sidebar - Actions Panel */}
+          {/* Right Sidebar - Actions Panel (Desktop only) */}
           <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
             <div className="p-5 space-y-6">
               <EditorActionsPanel
