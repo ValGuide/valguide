@@ -3,34 +3,51 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 
 export function StopEditSkeleton() {
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col overflow-x-hidden bg-background">
+    <div className="min-h-[calc(100vh-4rem)] bg-background pb-16 sm:pb-0">
       {/* Header */}
-      <div className="border-b bg-background px-3 py-3 sm:px-6">
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-          <Skeleton className="hidden h-5 w-72 lg:block" />
-          <div className="ml-auto flex shrink-0 flex-wrap items-center gap-1 sm:gap-2">
-            <Skeleton className="h-8 w-8 sm:w-24" />
-            <Skeleton className="h-8 w-8 sm:w-20" />
-            <Skeleton className="hidden h-8 w-20 sm:block" />
-            <Skeleton className="h-8 w-16 sm:w-20" />
+      <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
+        {/* Mobile/Tablet: Wrapping flex layout */}
+        <div className="flex flex-wrap items-center justify-end gap-2 lg:hidden">
+          <Skeleton className="h-8 w-[120px]" /> {/* Locale selector */}
+          <Skeleton className="h-8 w-8" /> {/* Three dots menu */}
+          {/* Inline save/publish on tablet */}
+          <Skeleton className="hidden h-8 w-16 sm:block" /> {/* Save */}
+          <Skeleton className="hidden h-8 w-20 sm:block" /> {/* Publish */}
+        </div>
+        {/* Desktop: Single row with breadcrumb */}
+        <div className="hidden lg:flex items-center justify-between gap-2">
+          <Skeleton className="h-5 w-72" /> {/* Breadcrumb */}
+          <div className="flex shrink-0 items-center gap-2">
+            <Skeleton className="h-8 w-[120px]" /> {/* Locale selector */}
+            <Skeleton className="h-8 w-16" /> {/* Preview button */}
+          </div>
+        </div>
+      </div>
+
+      {/* Status Badge and Tabs */}
+      <div className="sticky top-[57px] z-10 border-b bg-background px-4 py-3 sm:px-6">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Skeleton className="h-8 w-8 shrink-0" /> {/* Back arrow */}
+            <Skeleton className="hidden h-4 w-20 sm:block" /> {/* Back label */}
+            <Skeleton className="h-6 w-40 sm:h-7 sm:w-56" /> {/* Title */}
+            <Skeleton className="h-5 w-16 shrink-0" /> {/* Status badge */}
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-9 w-20" /> {/* Draft tab */}
+            <Skeleton className="h-9 w-24" /> {/* Published tab */}
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex min-w-0 flex-1 overflow-hidden">
-        <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-muted/50">
-          <div className="mx-auto w-full max-w-4xl p-4 sm:p-6 lg:p-8">
-            <div className="space-y-6">
-              {/* Back button */}
-              <div className="flex items-center justify-between gap-4">
-                <Skeleton className="h-8 w-32" />
-              </div>
-
+      <div className="flex min-w-0">
+        <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
+          <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+            <div className="space-y-6 sm:space-y-8">
               {/* Locale-specific Content Header */}
               <div className="flex items-center justify-between gap-4">
-                <Skeleton className="h-6 w-40" />
-                <Skeleton className="h-9 w-[180px]" />
+                <Skeleton className="h-5 w-40 sm:h-6" />
               </div>
 
               {/* Stop Locale Editor Card */}
@@ -100,14 +117,20 @@ export function StopEditSkeleton() {
           </div>
         </div>
 
-        {/* Right Sidebar */}
-        <div className="hidden w-80 shrink-0 border-l bg-background p-6 lg:block">
-          <Skeleton className="mb-4 h-5 w-28" />
-          <div className="space-y-3">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
+        {/* Right Sidebar - Actions Panel (Desktop only) */}
+        <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
+          <div className="p-5 space-y-6">
+            {/* Editor Actions Panel */}
+            <div className="space-y-3">
+              <Skeleton className="h-9 w-full" /> {/* Save button */}
+              <Skeleton className="h-9 w-full" /> {/* Publish button */}
+              <div className="flex gap-2 pt-2">
+                <Skeleton className="h-8 w-full" /> {/* Unpublish */}
+                <Skeleton className="h-8 w-full" /> {/* Discard */}
+              </div>
+            </div>
           </div>
-        </div>
+        </aside>
       </div>
     </div>
   )
