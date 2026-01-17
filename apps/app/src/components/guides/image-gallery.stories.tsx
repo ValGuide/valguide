@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import { ImageGallery } from '@/components/guides/image-gallery'
 
@@ -19,7 +20,7 @@ const mockImages = [
     mimeType: 'image/jpeg',
     type: 'image' as const,
     storagePath: '',
-    publicUrl: 'https://picsum.photos/800/600?random=1',
+    publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 600, category: 'art' }),
     locale: null,
     width: 800,
     height: 600,
@@ -39,7 +40,7 @@ const mockImages = [
     mimeType: 'image/jpeg',
     type: 'image' as const,
     storagePath: '',
-    publicUrl: 'https://picsum.photos/600/800?random=2',
+    publicUrl: faker.image.urlLoremFlickr({ width: 600, height: 800, category: 'art' }),
     locale: null,
     width: 600,
     height: 800,
@@ -59,7 +60,7 @@ const mockImages = [
     mimeType: 'image/jpeg',
     type: 'image' as const,
     storagePath: '',
-    publicUrl: 'https://picsum.photos/800/800?random=3',
+    publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 800, category: 'art' }),
     locale: null,
     width: 800,
     height: 800,

@@ -18,7 +18,6 @@ export type StopEditorProps = {
   stop?: StopWithTranslations
   locale: string
   onDirtyChange?: (isDirty: boolean) => void
-  onImageChange?: (assets: Asset[]) => void
   onAudioChange?: (asset: Asset | null) => void
   onSave?: () => void
   images?: Asset[]

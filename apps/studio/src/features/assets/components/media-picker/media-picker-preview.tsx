@@ -50,6 +50,7 @@ export function MediaPickerPreview({ asset, onRemove, disabled = false }: MediaP
           </p>
         </div>
         <Button
+          type="button"
           variant="outline"
           size="sm"
           onClick={onRemove}

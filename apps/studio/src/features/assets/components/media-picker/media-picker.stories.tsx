@@ -1,4 +1,5 @@
 // @ts-nocheck - Storybook types only available in storybook package
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { useState } from 'react'
@@ -56,7 +57,7 @@ const mockImageAsset: Asset = {
   mimeType: 'image/jpeg',
   type: 'image',
   storagePath: '',
-  publicUrl: 'https://picsum.photos/seed/1/800/600',
+  publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 600, category: 'art' }),
   locale: null,
   width: 1920,
   height: 1080,
@@ -93,14 +94,14 @@ const mockGalleryAssets: Asset[] = [
     id: '2',
     nanoId: 'img2',
     fileName: 'artifact-display.jpg',
-    publicUrl: 'https://picsum.photos/seed/2/800/600',
+    publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 600, category: 'museum' }),
   },
   {
     ...mockImageAsset,
     id: '3',
     nanoId: 'img3',
     fileName: 'sculpture.jpg',
-    publicUrl: 'https://picsum.photos/seed/3/800/600',
+    publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 600, category: 'sculpture' }),
   },
 ]
 

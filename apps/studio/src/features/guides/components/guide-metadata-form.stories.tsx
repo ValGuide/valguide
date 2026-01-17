@@ -1,4 +1,5 @@
 // @ts-nocheck - Storybook types only available in storybook package
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideTranslation } from '@valguide/core/features/guides/schema'
 import { fn } from 'storybook/test'
@@ -63,7 +64,7 @@ export const WithCoverImage: Story = {
   args: {
     locale: 'en',
     translation: mockTranslationEN,
-    coverImage: 'https://picsum.photos/800/450',
+    coverImage: faker.image.urlLoremFlickr({ width: 800, height: 450, category: 'art' }),
   },
 }
 
@@ -84,6 +85,6 @@ export const LongContent: Story = {
       description:
         'This is a very long description that spans multiple lines. It contains detailed information about the guide, including historical context, what visitors will see, how long it takes, and any special requirements or recommendations for the tour. This helps test the textarea component with substantial content.',
     },
-    coverImage: 'https://picsum.photos/800/450',
+    coverImage: faker.image.urlLoremFlickr({ width: 800, height: 450, category: 'art' }),
   },
 }

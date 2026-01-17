@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import { ArchivedGuidesList } from './archived-guides-list'
@@ -42,7 +43,7 @@ const archivedGuides: GuideWithTranslationsAndCover[] = [
       mimeType: 'image/jpeg',
       type: 'image',
       storagePath: 'covers/egypt-cover.jpg',
-      publicUrl: 'https://picsum.photos/seed/egypt/600/400',
+      publicUrl: faker.image.urlLoremFlickr({ width: 600, height: 400, category: 'art' }),
       locale: null,
       width: 1200,
       height: 800,
@@ -135,7 +136,7 @@ const archivedGuides: GuideWithTranslationsAndCover[] = [
       mimeType: 'image/jpeg',
       type: 'image',
       storagePath: 'covers/city-cover.jpg',
-      publicUrl: 'https://picsum.photos/seed/city/600/400',
+      publicUrl: faker.image.urlLoremFlickr({ width: 600, height: 400, category: 'museum' }),
       locale: null,
       width: 1200,
       height: 800,

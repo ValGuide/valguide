@@ -116,7 +116,7 @@ export function MediaPicker({
     }
 
     if (mode === 'single' && value && !Array.isArray(value)) {
-      return <MediaPickerPreview asset={value} onRemove={() => handleRemove()} disabled={disabled} />
+      return <MediaPickerPreview asset={value} onRemove={handleRemove} disabled={disabled} />
     }
 
     if (mode === 'multiple' && ((Array.isArray(value) && value.length > 0) || uploading)) {

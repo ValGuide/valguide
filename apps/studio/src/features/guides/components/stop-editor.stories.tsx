@@ -1,4 +1,5 @@
 // @ts-nocheck - Storybook types only available in storybook package
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
@@ -57,7 +58,7 @@ const mockImageAsset: Asset = {
   mimeType: 'image/jpeg',
   type: 'image',
   storagePath: '',
-  publicUrl: 'https://picsum.photos/seed/1/400/300',
+  publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'art' }),
   locale: null,
   width: 1920,
   height: 1080,
@@ -237,8 +238,16 @@ export const StopWithImages: Story = {
     stop: mockStopEN,
     images: [
       mockImageAsset,
-      { ...mockImageAsset, id: '2', publicUrl: 'https://picsum.photos/seed/2/400/300' },
-      { ...mockImageAsset, id: '3', publicUrl: 'https://picsum.photos/seed/3/400/300' },
+      {
+        ...mockImageAsset,
+        id: '2',
+        publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'museum' }),
+      },
+      {
+        ...mockImageAsset,
+        id: '3',
+        publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'sculpture' }),
+      },
     ],
   },
 }
@@ -255,7 +264,14 @@ export const StopWithAllMedia: Story = {
   args: {
     locale: 'en',
     stop: mockStopEN,
-    images: [mockImageAsset, { ...mockImageAsset, id: '2', publicUrl: 'https://picsum.photos/seed/2/400/300' }],
+    images: [
+      mockImageAsset,
+      {
+        ...mockImageAsset,
+        id: '2',
+        publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'museum' }),
+      },
+    ],
     audio: mockAudioAsset,
   },
 }

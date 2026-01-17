@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
@@ -37,7 +38,7 @@ const baseAsset: AssetWithUsage = {
   mimeType: 'image/jpeg',
   type: 'image',
   storagePath: '',
-  publicUrl: 'https://picsum.photos/400/300',
+  publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'art' }),
   locale: null,
   width: 1920,
   height: 1080,
