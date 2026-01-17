@@ -85,6 +85,10 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     return stopMetadata?.assets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null) ?? []
   }, [stopMetadata])
 
+  const stopAudio = useMemo(() => {
+    return stopMetadata?.assets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
+  }, [stopMetadata, activeLocale])
+
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   const formId = `stop-translation-${stopId}-${activeLocale}`
 
@@ -214,6 +218,8 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
       onAudioChange={async (asset) => {
         if (asset) {
           await attachAssetToStop(stopMetadata.id, asset, 'audio', activeLocale)
+        } else if (stopAudio?.stopAssetId) {
+          await detachAssetFromStop(stopAudio.stopAssetId)
         }
       }}
     />
