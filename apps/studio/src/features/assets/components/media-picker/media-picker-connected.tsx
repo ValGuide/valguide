@@ -3,7 +3,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { detectAssetType } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
-import { assetsQueryKey } from '@/features/assets/query-options'
+
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { uploadFileWithTUS } from '../../lib/tus-upload'
 import { AssetPickerModalConnected } from '../asset-picker-modal-connected'
@@ -56,7 +56,8 @@ export function MediaPickerConnected({
         },
       })
 
-      await queryClient.invalidateQueries({ queryKey: assetsQueryKey() })
+      // Invalidate all asset queries regardless of type/locale filters
+      await queryClient.invalidateQueries({ queryKey: ['assets'] })
 
       return asset
     },
