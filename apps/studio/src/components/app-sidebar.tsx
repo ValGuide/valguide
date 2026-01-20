@@ -1,4 +1,4 @@
-import { Link, useLocation, useRouter } from '@tanstack/react-router'
+import { Link, type LinkOptions, useLocation, useRouter } from '@tanstack/react-router'
 import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -83,72 +83,38 @@ export function AppSidebar({
     }
   }
 
-  // Helper to determine if a URL is active
-  const isActive = (url: string) => {
-    if (url === '/') {
+  // Helper to determine if a path is active
+  const isActive = (path: string) => {
+    if (path === '/') {
       return pathnameWithoutLocale === '/' || pathnameWithoutLocale.startsWith('/guides')
     }
-    return pathnameWithoutLocale.startsWith(url)
+    return pathnameWithoutLocale.startsWith(path)
   }
 
-  const contentItems = [
-    {
-      title: t('guides'),
-      url: '/guides',
-      icon: BookOpen,
-    },
-    {
-      title: t('stops'),
-      url: '/stops',
-      icon: MapPin,
-    },
-    {
-      title: t('archived'),
-      url: '/archived',
-      icon: Archive,
-    },
-  ].map((item) => ({
-    ...item,
-    isActive: isActive(item.url),
-  }))
+  // Helper to create nav items with linkOptions
+  const createNavItems = <T extends { title: string; path: string; icon: typeof BookOpen }>(
+    items: T[],
+  ): Array<Omit<T, 'path'> & { linkOptions: LinkOptions; isActive: boolean }> =>
+    items.map(({ path, ...item }) => ({
+      ...item,
+      linkOptions: { to: path } as LinkOptions,
+      isActive: isActive(path),
+    }))
 
-  const performanceItems = [
-    {
-      title: t('analytics'),
-      url: '/analytics',
-      icon: BarChart3,
-    },
-  ].map((item) => ({
-    ...item,
-    isActive: isActive(item.url),
-  }))
+  const contentItems = createNavItems([
+    { title: t('guides'), path: '/guides', icon: BookOpen },
+    { title: t('stops'), path: '/stops', icon: MapPin },
+    { title: t('archived'), path: '/archived', icon: Archive },
+  ])
 
-  const libraryItems = [
-    {
-      title: t('assets'),
-      url: '/assets',
-      icon: Image,
-    },
-  ].map((item) => ({
-    ...item,
-    isActive: isActive(item.url),
-  }))
+  const performanceItems = createNavItems([{ title: t('analytics'), path: '/analytics', icon: BarChart3 }])
 
-  const settingsItems = [
-    {
-      title: t('brandKit'),
-      url: '/design',
-      icon: SlidersHorizontal,
-    },
-    {
-      title: t('workspace'),
-      url: '/settings',
-      icon: Settings2,
-    },
-  ].map((item) => ({
-    ...item,
-    isActive: isActive(item.url),
-  }))
+  const libraryItems = createNavItems([{ title: t('assets'), path: '/assets', icon: Image }])
+
+  const settingsItems = createNavItems([
+    { title: t('brandKit'), path: '/design', icon: SlidersHorizontal },
+    { title: t('workspace'), path: '/settings', icon: Settings2 },
+  ])
 
   return (
     <>
@@ -198,7 +164,7 @@ export function AppSidebar({
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -214,7 +180,7 @@ export function AppSidebar({
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -230,7 +196,7 @@ export function AppSidebar({
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -246,7 +212,7 @@ export function AppSidebar({
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link to={item.url} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

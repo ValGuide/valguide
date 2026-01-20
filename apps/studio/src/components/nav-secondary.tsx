@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, type LinkOptions } from '@tanstack/react-router'
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -8,18 +8,20 @@ import {
 } from '@valguide/ui/components/sidebar'
 import type { LucideIcon } from 'lucide-react'
 
+export interface NavSecondaryItem {
+  title: string
+  linkOptions: LinkOptions
+  icon: LucideIcon
+  isActive?: boolean
+}
+
 export function NavSecondary({
   items,
   onItemClickAction,
   ...props
 }: {
-  items: {
-    title: string
-    url: string
-    icon: LucideIcon
-    isActive?: boolean
-  }[]
-  onItemClickAction?: (url: string) => void
+  items: NavSecondaryItem[]
+  onItemClickAction?: () => void
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
@@ -28,7 +30,7 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm" isActive={item.isActive}>
-                <Link to={item.url} preload="intent" onClick={() => onItemClickAction?.(item.url)}>
+                <Link {...item.linkOptions} preload="intent" onClick={onItemClickAction}>
                   <item.icon />
                   <span>{item.title}</span>
                 </Link>
