@@ -238,8 +238,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         },
       })
 
-      // Invalidate metadata to get new stop
-      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+      // Refetch metadata to ensure cache has new stop before navigation
+      await queryClient.refetchQueries({ queryKey: ['guide', nanoId, 'metadata'] })
       await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
 
       return {
