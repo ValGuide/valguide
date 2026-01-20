@@ -15,12 +15,14 @@ import { Label } from '@valguide/ui/components/label'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
 
+export type CreateTeamResult = { success: true; team: unknown } | { success: false; error: 'SLUG_EXISTS' }
+
 export interface CreateTeamDialogProps {
   children?: React.ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
   showTrigger?: boolean
-  onCreateTeam: (name: string, slug?: string) => Promise<unknown>
+  onCreateTeam: (name: string, slug?: string) => Promise<CreateTeamResult>
 }
 
 export function CreateTeamDialog({
@@ -33,6 +35,7 @@ export function CreateTeamDialog({
   const [internalOpen, setInternalOpen] = React.useState(false)
   const [name, setName] = React.useState('')
   const [slug, setSlug] = React.useState('')
+  const [slugError, setSlugError] = React.useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const t = useTranslations('orgs.createTeam')
 
@@ -46,6 +49,7 @@ export function CreateTeamDialog({
       // Reset form when closing
       setName('')
       setSlug('')
+      setSlugError(null)
     }
   }
 
@@ -54,9 +58,16 @@ export function CreateTeamDialog({
 
     if (!name) return
 
+    setSlugError(null)
     setIsSubmitting(true)
     try {
-      await onCreateTeam(name, slug || undefined)
+      const result = await onCreateTeam(name, slug || undefined)
+      if (!result.success) {
+        if (result.error === 'SLUG_EXISTS') {
+          setSlugError(t('slugExists'))
+          return
+        }
+      }
       // Hard redirect to reload the app/sidebar with the new team
       window.location.href = '/'
       handleOpenChange(false)
@@ -103,10 +114,19 @@ export function CreateTeamDialog({
                 id="slug"
                 placeholder={t('slugPlaceholder')}
                 value={slug}
-                onChange={(e) => setSlug(e.target.value)}
+                onChange={(e) => {
+                  setSlug(e.target.value)
+                  if (slugError) setSlugError(null)
+                }}
                 disabled={isSubmitting}
+                aria-invalid={!!slugError}
+                className={slugError ? 'border-destructive' : ''}
               />
-              <p className="text-xs text-muted-foreground">{t('slugDescription')}</p>
+              {slugError ? (
+                <p className="text-xs text-destructive">{slugError}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">{t('slugDescription')}</p>
+              )}
             </div>
           </div>
           <DialogFooter>

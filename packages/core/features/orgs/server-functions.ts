@@ -14,6 +14,7 @@ import {
   deleteInvitation,
   ensureDefaultTeam,
   removeMember,
+  SlugAlreadyExistsError,
   updateMemberRole,
 } from './mutations'
 import { getInvitationById, getInvitationByTokenHash, getTeamById, isTeamMember } from './queries'
@@ -28,9 +29,16 @@ export const createTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(createTeamSchema)
   .handler(async ({ context, data }) => {
-    const team = await createTeam(db, data.name, context.user.id, data.slug)
-    setActiveTeamId(team.id)
-    return team
+    try {
+      const team = await createTeam(db, data.name, context.user.id, data.slug)
+      setActiveTeamId(team.id)
+      return { success: true as const, team }
+    } catch (error) {
+      if (error instanceof SlugAlreadyExistsError) {
+        return { success: false as const, error: 'SLUG_EXISTS' as const }
+      }
+      throw error
+    }
   })
 
 const inviteMemberSchema = z.object({

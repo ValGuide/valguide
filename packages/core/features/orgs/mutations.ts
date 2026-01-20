@@ -5,36 +5,50 @@ import { type OrgRole, organization, organizationInvitation, organizationMember 
 
 export type Organization = typeof organization.$inferSelect
 
+export class SlugAlreadyExistsError extends Error {
+  constructor() {
+    super('Slug already exists')
+    this.name = 'SlugAlreadyExistsError'
+  }
+}
+
 /**
  * Create a new team
  */
 export async function createTeam(db: DB, name: string, userId: string, slug?: string) {
   const teamSlug = slug || valguideId()
 
-  return await db.transaction(async (tx: DB) => {
-    const [newTeam] = await tx
-      .insert(organization)
-      .values({
-        nanoId: valguideId(),
-        name,
-        slug: teamSlug,
+  try {
+    return await db.transaction(async (tx: DB) => {
+      const [newTeam] = await tx
+        .insert(organization)
+        .values({
+          nanoId: valguideId(),
+          name,
+          slug: teamSlug,
+        })
+        .returning()
+
+      if (!newTeam) {
+        throw new Error('Failed to create team')
+      }
+
+      // Add creator as owner
+      await tx.insert(organizationMember).values({
+        organizationId: newTeam.id,
+        userId,
+        role: 'owner',
+        isOwner: true, // Deprecated but kept for compat
       })
-      .returning()
 
-    if (!newTeam) {
-      throw new Error('Failed to create team')
-    }
-
-    // Add creator as owner
-    await tx.insert(organizationMember).values({
-      organizationId: newTeam.id,
-      userId,
-      role: 'owner',
-      isOwner: true, // Deprecated but kept for compat
+      return newTeam
     })
-
-    return newTeam
-  })
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('unique_org_slug')) {
+      throw new SlugAlreadyExistsError()
+    }
+    throw error
+  }
 }
 
 /**

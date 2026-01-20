@@ -6,6 +6,12 @@ import { CreateTeamDialog } from './create-team-dialog'
 const mockOnCreateTeam = async (name: string, slug?: string) => {
   console.log('Creating team:', { name, slug })
   await new Promise((resolve) => setTimeout(resolve, 1000))
+  return { success: true as const, team: { id: '123', name, slug } }
+}
+
+const mockOnCreateTeamSlugExists = async (_name: string, _slug?: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  return { success: false as const, error: 'SLUG_EXISTS' as const }
 }
 
 const meta = {
@@ -45,5 +51,12 @@ export const Controlled: Story = {
         <CreateTeamDialog {...args} open={open} onOpenChange={setOpen} />
       </div>
     )
+  },
+}
+
+export const SlugAlreadyExists: Story = {
+  render: () => {
+    const [open, setOpen] = React.useState(true)
+    return <CreateTeamDialog open={open} onOpenChange={setOpen} onCreateTeam={mockOnCreateTeamSlugExists} />
   },
 }

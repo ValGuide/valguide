@@ -51,7 +51,7 @@ export function FeedbackDialog({ open, onOpenChange, onSubmit, isLoading = false
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
@@ -65,6 +65,7 @@ export function FeedbackDialog({ open, onOpenChange, onSubmit, isLoading = false
               placeholder={t('placeholder')}
               disabled={isLoading}
               rows={5}
+              className="max-h-[40vh] resize-none"
               autoFocus
             />
 

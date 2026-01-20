@@ -931,6 +931,7 @@
       "slugLabel": "Slug (Optional)",
       "slugPlaceholder": "acme-museum",
       "slugDescription": "Unique identifier for your team URL.",
+      "slugExists": "This slug is already taken. Please choose a different one.",
       "cancel": "Cancel",
       "submit": "Create Team",
       "submitting": "Creating...",

@@ -931,6 +931,7 @@
       "slugLabel": "Slug (Opziunal)",
       "slugPlaceholder": "acme-museum",
       "slugDescription": "Identificatur unic per vossa URL dal team.",
+      "slugExists": "Quest slug è gia duvrà. Tschernai per plaschair in auter.",
       "cancel": "Interrumper",
       "submit": "Crear team",
       "submitting": "Vegn creà...",
