@@ -71,7 +71,7 @@ export const studioFeedbackMessage = ({
       elements: [
         {
           type: 'mrkdwn',
-          text: `Submitted at <!date^${Math.floor(Date.now() / 1000)}^{date_short_pretty} at {time}|${new Date().toISOString()}>`,
+          text: `Submitted <!date^${Math.floor(Date.now() / 1000)}^{date_short_pretty} at {time}|${new Date().toISOString()}>`,
         },
       ],
     },
