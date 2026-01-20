@@ -1,6 +1,5 @@
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { PageTitle } from '@valguide/ui/components/page-title'
 import type { StopWithGuides } from '../api/fetchers'
 
 function getLocalizedTitle(stop: StopWithGuides, locale: string, fallbackLocale = 'en'): string {
@@ -40,53 +39,45 @@ export function StopsListContent({ stops, onEditStop }: StopsListContentProps) {
   const locale = useLocale()
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <PageTitle as="h2">{t('title')}</PageTitle>
-          <p className="text-sm text-muted-foreground">{t('list.description')}</p>
-        </div>
-      </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {stops.map((stop) => {
-          const title = getLocalizedTitle(stop, locale) || t('untitled')
-          const guideNames = getGuideNames(stop, locale)
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {stops.map((stop) => {
+        const title = getLocalizedTitle(stop, locale) || t('untitled')
+        const guideNames = getGuideNames(stop, locale)
 
-          return (
-            <Card
-              key={stop.id}
-              className="cursor-pointer transition-shadow hover:shadow-md"
-              onClick={() => onEditStop?.(stop)}
-            >
-              <CardHeader>
-                <CardTitle className="line-clamp-2">{title}</CardTitle>
-                {guideNames.length > 0 && (
-                  <CardDescription className="line-clamp-1">
-                    {t('list.usedIn', { count: guideNames.length })}
-                  </CardDescription>
+        return (
+          <Card
+            key={stop.id}
+            className="cursor-pointer transition-shadow hover:shadow-md"
+            onClick={() => onEditStop?.(stop)}
+          >
+            <CardHeader>
+              <CardTitle className="line-clamp-2">{title}</CardTitle>
+              {guideNames.length > 0 && (
+                <CardDescription className="line-clamp-1">
+                  {t('list.usedIn', { count: guideNames.length })}
+                </CardDescription>
+              )}
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-1">
+                {guideNames.slice(0, 2).map((name, i) => (
+                  <span
+                    key={`${stop.id}-guide-${i}`}
+                    className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+                  >
+                    {name}
+                  </span>
+                ))}
+                {guideNames.length > 2 && (
+                  <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                    {t('list.moreGuides', { count: guideNames.length - 2 })}
+                  </span>
                 )}
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-1">
-                  {guideNames.slice(0, 2).map((name, i) => (
-                    <span
-                      key={`${stop.id}-guide-${i}`}
-                      className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-                    >
-                      {name}
-                    </span>
-                  ))}
-                  {guideNames.length > 2 && (
-                    <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                      {t('list.moreGuides', { count: guideNames.length - 2 })}
-                    </span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
+              </div>
+            </CardContent>
+          </Card>
+        )
+      })}
     </div>
   )
 }

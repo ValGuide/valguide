@@ -10,13 +10,14 @@ import {
 } from '@valguide/ui/components/empty'
 import { AlertCircle } from 'lucide-react'
 
-interface StopsListErrorProps {
+interface ListErrorProps {
   error: Error
   onRetry?: () => void
+  title?: string
+  fallbackMessage?: string
 }
 
-export function StopsListError({ error, onRetry }: StopsListErrorProps) {
-  const t = useTranslations('stops')
+export function ListError({ error, onRetry, title, fallbackMessage }: ListErrorProps) {
   const tCommon = useTranslations('common')
 
   return (
@@ -25,14 +26,16 @@ export function StopsListError({ error, onRetry }: StopsListErrorProps) {
         <EmptyMedia variant="icon">
           <AlertCircle className="text-destructive" />
         </EmptyMedia>
-        <EmptyTitle>{t('list.error')}</EmptyTitle>
-        <EmptyDescription>{error.message ?? tCommon('error')}</EmptyDescription>
+        <EmptyTitle>{title ?? tCommon('error')}</EmptyTitle>
+        <EmptyDescription>{error.message || fallbackMessage || tCommon('error')}</EmptyDescription>
       </EmptyHeader>
-      <EmptyContent>
-        <Button onClick={onRetry} variant="outline">
-          {tCommon('tryAgain')}
-        </Button>
-      </EmptyContent>
+      {onRetry && (
+        <EmptyContent>
+          <Button onClick={onRetry} variant="outline">
+            {tCommon('tryAgain')}
+          </Button>
+        </EmptyContent>
+      )}
     </Empty>
   )
 }

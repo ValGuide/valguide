@@ -15,11 +15,11 @@ import {
 } from '@valguide/ui/components/alert-dialog'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
-import { PageTitle } from '@valguide/ui/components/page-title'
 import { useMemo, useState } from 'react'
+import { ListError } from '@/components/list-error'
+import { ListPageHeader } from '@/components/list-page-header'
 import { ArchivedGuidesListContent } from './archived-guides-list-content'
 import { ArchivedGuidesListEmpty } from './archived-guides-list-empty'
-import { ArchivedGuidesListError } from './archived-guides-list-error'
 import { ArchivedGuidesListLoading } from './archived-guides-list-loading'
 
 interface ArchivedGuidesListProps {
@@ -102,26 +102,34 @@ export function ArchivedGuidesList({ guides = [], isLoading = false, error = nul
     setDialogState({ type: 'delete', guideId, guideName })
   }
 
-  if (isLoading) {
-    return <ArchivedGuidesListLoading />
-  }
+  const renderContent = () => {
+    if (isLoading) {
+      return <ArchivedGuidesListLoading />
+    }
 
-  if (error) {
-    return <ArchivedGuidesListError error={error} onRetry={onRetry} />
-  }
+    if (error) {
+      return (
+        <ListError
+          error={error}
+          onRetry={onRetry}
+          title={t('error.failedToLoad')}
+          fallbackMessage={t('error.unexpected')}
+        />
+      )
+    }
 
-  if (guides.length === 0) {
-    return <ArchivedGuidesListEmpty />
+    if (guides.length === 0) {
+      return <ArchivedGuidesListEmpty />
+    }
+
+    return <ArchivedGuidesListContent guides={guides} onRecover={openRecoverDialog} onDelete={openDeleteDialog} />
   }
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-6">
-      <div className="space-y-1">
-        <PageTitle as="h2">{t('archived.title')}</PageTitle>
-        <p className="text-sm text-muted-foreground">{t('archived.description')}</p>
-      </div>
+      <ListPageHeader title={t('archived.title')} description={t('archived.description')} />
 
-      <ArchivedGuidesListContent guides={guides} onRecover={openRecoverDialog} onDelete={openDeleteDialog} />
+      {renderContent()}
 
       <AlertDialog open={dialogState.type === 'recover'} onOpenChange={handleDialogClose}>
         <AlertDialogContent>

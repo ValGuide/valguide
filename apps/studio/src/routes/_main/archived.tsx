@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
-import { ArchivedGuidesListLoading } from '@/features/guides/components/archived-guides-list-loading'
+import { ArchivedGuidesListSkeleton } from '@/features/guides/components/archived-guides-list-skeleton'
 import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
 import { archivedGuidesQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/archived')({
   loader: ({ context }) => context.queryClient.ensureQueryData(archivedGuidesQueryOptions()),
   component: ArchivedPage,
-  pendingComponent: ArchivedGuidesListLoading,
+  pendingComponent: ArchivedGuidesListSkeleton,
 })
 
 function ArchivedPage() {

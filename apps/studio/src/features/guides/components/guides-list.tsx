@@ -2,10 +2,13 @@ import type { GuideWithTranslations } from '@valguide/core/features/guides/schem
 import type { GuideListItem } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { Button } from '@valguide/ui/components/button'
+import { Plus } from 'lucide-react'
 import * as React from 'react'
+import { ListError } from '@/components/list-error'
+import { ListPageHeader } from '@/components/list-page-header'
 import { GuidesListContent } from './guides-list-content'
 import { GuidesListEmpty } from './guides-list-empty'
-import { GuidesListError } from './guides-list-error'
 import { GuidesListLoading } from './guides-list-loading'
 
 interface GuidesListProps {
@@ -78,24 +81,44 @@ export function GuidesList({
     }
   }, [onCreateGuide, onNavigateToGuide])
 
-  if (isLoading) {
-    return <GuidesListLoading />
-  }
+  const renderContent = () => {
+    if (isLoading) {
+      return <GuidesListLoading />
+    }
 
-  if (error) {
-    return <GuidesListError error={error} onRetry={onRetry} />
-  }
+    if (error) {
+      return (
+        <ListError
+          error={error}
+          onRetry={onRetry}
+          title={t('error.failedToLoad')}
+          fallbackMessage={t('error.unexpected')}
+        />
+      )
+    }
 
-  if (guides.length === 0) {
-    return <GuidesListEmpty isCreating={isCreating} onCreateGuide={handleCreateGuide} />
+    if (guides.length === 0) {
+      return <GuidesListEmpty isCreating={isCreating} onCreateGuide={handleCreateGuide} />
+    }
+
+    return <GuidesListContent guides={guides} onViewGuide={onViewGuide} />
   }
 
   return (
-    <GuidesListContent
-      guides={guides}
-      isCreating={isCreating}
-      onCreateGuide={handleCreateGuide}
-      onViewGuide={onViewGuide}
-    />
+    <div className="mx-auto w-full max-w-5xl space-y-6">
+      <ListPageHeader
+        title={t('title')}
+        description={t('description')}
+        action={
+          guides.length > 0 && (
+            <Button onClick={handleCreateGuide} disabled={isCreating} className="group">
+              <Plus className="transition-transform duration-200 group-hover:rotate-90" />
+              {isCreating ? t('empty.creating') : t('empty.createNewButton')}
+            </Button>
+          )
+        }
+      />
+      {renderContent()}
+    </div>
   )
 }
