@@ -14,7 +14,6 @@ import {
   deleteInvitation,
   ensureDefaultTeam,
   removeMember,
-  SlugAlreadyExistsError,
   updateMemberRole,
 } from './mutations'
 import { getInvitationById, getInvitationByTokenHash, getTeamById, isTeamMember } from './queries'
@@ -22,23 +21,15 @@ import { ORG_ROLES, type OrgRole } from './schema'
 
 const createTeamSchema = z.object({
   name: z.string(),
-  slug: z.string().optional(),
 })
 
 export const createTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(createTeamSchema)
   .handler(async ({ context, data }) => {
-    try {
-      const team = await createTeam(db, data.name, context.user.id, data.slug)
-      setActiveTeamId(team.id)
-      return { success: true as const, team }
-    } catch (error) {
-      if (error instanceof SlugAlreadyExistsError) {
-        return { success: false as const, error: 'SLUG_EXISTS' as const }
-      }
-      throw error
-    }
+    const team = await createTeam(db, data.name, context.user.id)
+    setActiveTeamId(team.id)
+    return { success: true as const, team }
   })
 
 const inviteMemberSchema = z.object({
@@ -177,7 +168,7 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
 
     const isMember = await isTeamMember(db, invite.organizationId, context.user.id)
     if (isMember) {
-      return { success: true, slug: invite.organization.slug }
+      return { success: true }
     }
 
     if (invite.email.toLowerCase() !== (context.user.email || '').toLowerCase()) {
@@ -186,7 +177,7 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
 
     await acceptInvitation(db, invite.id, context.user.id)
     setActiveTeamId(invite.organizationId)
-    return { success: true, slug: invite.organization.slug }
+    return { success: true }
   })
 
 // ============================================================================
@@ -237,5 +228,5 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
 
     const team = await ensureDefaultTeam(db, context.user.id, displayName)
 
-    return { teamId: team.id, teamSlug: team.slug }
+    return { teamId: team.id }
   })

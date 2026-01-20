@@ -42,7 +42,7 @@ export const getGuidesFn = createServerFn({ method: 'GET' })
       const activeTeamId = context.activeOrgId
 
       if (activeTeamId) {
-        const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+        const team = userTeams.find((t: { id: string }) => t.id === activeTeamId)
         if (team) {
           targetOrganizationId = team.id
         }
@@ -79,7 +79,7 @@ export const getGuidesListFn = createServerFn({ method: 'GET' })
 
     const activeTeamId = context.activeOrgId
     if (activeTeamId) {
-      const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+      const team = userTeams.find((t: { id: string }) => t.id === activeTeamId)
       if (team) {
         targetOrganizationId = team.id
       }
@@ -107,7 +107,7 @@ export const getArchivedGuidesFn = createServerFn({ method: 'GET' })
     let targetOrganizationId = userTeams[0].id
 
     if (activeTeamId) {
-      const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+      const team = userTeams.find((t: { id: string }) => t.id === activeTeamId)
       if (team) {
         targetOrganizationId = team.id
       }
@@ -146,7 +146,7 @@ export const createGuideFn = createServerFn({ method: 'POST' })
         const activeTeamId = context.activeOrgId
 
         if (activeTeamId) {
-          const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+          const team = userTeams.find((t: { id: string }) => t.id === activeTeamId)
           if (team) {
             organizationId = team.id
           }

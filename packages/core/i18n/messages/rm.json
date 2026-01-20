@@ -1,1010 +1,1006 @@
 {
-  "emails": {
-    "vercelInviteUser": {
-      "preview": "Unischa a {invitedByUsername} sin Vercel",
-      "heading": "Unischa a <strong1>{teamName}</strong1> sin <strong2>Vercel</strong2>",
-      "greeting": "Allegra {username},",
-      "invitation": "<strong1>{invitedByUsername}</strong1> (<link>{invitedByEmail}</link>) t'ha envidà al team <strong2>{teamName}</strong2> sin <strong3>Vercel</strong3>.",
-      "button": "Unir al team",
-      "copyLink": "u copia e peglia questa URL en tes navigatur:",
-      "footer": {
-        "intendedFor": "Questa invitaziun era destinada per <span1>{username}</span1>. Questa invitaziun è vegnida tramessa da <span2>{inviteFromIp}</span2> da <span3>{inviteFromLocation}</span3>.",
-        "ignore": "Sche ti n'has betg spetgà questa invitaziun, pos ti ignorar quest e-mail.",
-        "concern": "Sche ti has preoccupaziuns concernent la segirezza da tes conto, respunda per plascher a quest e-mail."
-      }
-    }
-  },
-  "player": {
-    "play": "Far ir",
-    "pause": "Pausa",
-    "rewind": "10 secundas enavos",
-    "forward": "10 secundas enavant",
-    "transcript": "Transcripziun",
-    "transcriptAndMore": "Transcripziun & Dapli",
-    "noTranscript": "Nagina transcripziun disponibla per questa registraziun",
-    "close": "Serrar",
-    "language": "Lingua",
-    "save": "Memorisar",
-    "share": "Cundivider",
-    "minimize": "Minimisar"
-  },
-  "admin": {
-    "metadata": {
-      "title": "Admin - ValGuide",
-      "description": "Administrescha la plattafurma ValGuide"
+    "emails": {
+        "vercelInviteUser": {
+            "preview": "Unischa a {invitedByUsername} sin Vercel",
+            "heading": "Unischa a <strong1>{teamName}</strong1> sin <strong2>Vercel</strong2>",
+            "greeting": "Allegra {username},",
+            "invitation": "<strong1>{invitedByUsername}</strong1> (<link>{invitedByEmail}</link>) t'ha envidà al team <strong2>{teamName}</strong2> sin <strong3>Vercel</strong3>.",
+            "button": "Unir al team",
+            "copyLink": "u copia e peglia questa URL en tes navigatur:",
+            "footer": {
+                "intendedFor": "Questa invitaziun era destinada per <span1>{username}</span1>. Questa invitaziun è vegnida tramessa da <span2>{inviteFromIp}</span2> da <span3>{inviteFromLocation}</span3>.",
+                "ignore": "Sche ti n'has betg spetgà questa invitaziun, pos ti ignorar quest e-mail.",
+                "concern": "Sche ti has preoccupaziuns concernent la segirezza da tes conto, respunda per plascher a quest e-mail."
+            }
+        }
     },
-    "assets": {
-      "title": "Assets",
-      "comingSoon": "Administraziun dad assets vegn prest"
-    }
-  },
-  "studio": {
-    "metadata": {
-      "title": "Studio - ValGuide",
-      "description": "Creescha e designescha tes guids"
+    "player": {
+        "play": "Far ir",
+        "pause": "Pausa",
+        "rewind": "10 secundas enavos",
+        "forward": "10 secundas enavant",
+        "transcript": "Transcripziun",
+        "transcriptAndMore": "Transcripziun & Dapli",
+        "noTranscript": "Nagina transcripziun disponibla per questa registraziun",
+        "close": "Serrar",
+        "language": "Lingua",
+        "save": "Memorisar",
+        "share": "Cundivider",
+        "minimize": "Minimisar"
     },
-    "themeCustomizer": {
-      "title": "Persunalisaziun dal design",
-      "reset": "Reinizialisar",
-      "livePreview": "Prevista directa",
-      "customTheme": "Persunalisà",
-      "themePreset": "Model da design",
-      "radius": "Cunturn",
-      "radiusSquare": "Quadrat",
-      "radiusDefault": "Standard",
-      "radiusRounded": "Radund",
-      "radiusExtra": "Extra",
-      "primaryColors": "Colurs primaras",
-      "backgroundColors": "Colurs dal fund",
-      "otherColors": "Autras colurs",
-      "customize": "Persunalisar",
-      "preview": "Prevista",
-      "library": "Biblioteca",
-      "startFromPreset": "Cumenzar cun in model",
-      "savedThemes": "Tes designs memorisads ({count})",
-      "formElementsPreview": "Prevista dals elements da formular",
-      "inputField": "Champ d'endataziun",
-      "toggleSwitch": "Cumitar",
-      "primary": "Primara",
-      "secondary": "Secundara",
-      "outline": "Cuntur",
-      "destructive": "Destructiv",
-      "playerPreview": {
-        "tourTitle": "Tur tras la citad",
-        "tourInfo": "12 staziuns • 2h 30min",
-        "stopBadge": "Staziun 1 da 12",
-        "stopTitle": "Plazza istorica",
-        "stopDescription": "Il cor da la citad veglia dapi 1250"
-      },
-      "colorPicker": {
-        "pickColor": "Tscherner colur per {label}",
-        "hexInput": "Valur hex da colur {label}",
-        "eyeDropper": "Tscherner colur dal visur"
-      },
-      "themeLibrary": {
-        "title": "Tes designs",
-        "newTheme": "Nov design",
-        "noThemes": "Anc nagins designs. Creescha in per cumenzar.",
-        "presets": "Cumenzar cun ina basa",
-        "basedOn": "Basà sin {preset}",
-        "delete": "Stizzar",
-        "edit": "Modifitgar"
-      },
-      "saveDialog": {
-        "title": "Memorisar design",
-        "name": "Num dal design",
-        "namePlaceholder": "p.ex. Design primari",
-        "saveAsNew": "Memorisar sco nov design",
-        "updateExisting": "Actualisar design existent",
-        "save": "Memorisar design",
-        "cancel": "Annullar",
-        "nameRequired": "Il num dal design è necessari",
-        "nameTaken": "In design cun quest num exista gia"
-      },
-      "deleteDialog": {
-        "title": "Stizzar design",
-        "message": "Es ti segir che ti vuls stizzar \"{name}\"? Questa acziun na po betg vegnir revocada.",
-        "confirm": "Stizzar",
-        "cancel": "Annullar"
-      },
-      "editor": {
-        "editing": "Modifitgar: {name}",
-        "unsavedChanges": "Midadas betg memorisadas",
-        "saveTheme": "Memorisar design"
-      },
-      "toast": {
-        "created": "Design creà cun success",
-        "updated": "Design actualisà cun success",
-        "deleted": "Design stizzà cun success"
-      }
-    }
-  },
-  "app": {
-    "metadata": {
-      "title": "ValGuide",
-      "description": "Scuvra guids interactivas"
-    }
-  },
-  "links": {
-    "metadata": {
-      "title": "Links - ValGuide",
-      "description": "Administrescha tes links da guids"
-    }
-  },
-  "www": {
-    "metadata": {
-      "title": "ValGuide",
-      "description": "Creescha guids multimedials interactivas"
-    }
-  },
-  "common": {
-    "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>.",
-    "save": "Memorisar",
-    "saving": "Memorisar...",
-    "saved": "Memorisà",
-    "saveError": "Errur cun memorisar",
-    "loading": "...",
-    "tryAgain": "Empruvar danovamain"
-  },
-  "comingSoon": {
-    "title": "Prest disponibel",
-    "description": "Restei attents. Nus lantschein prest \uD83D\uDE80"
-  },
-  "login": {
-    "submit": "Trametter",
-    "serverError": "S'annunziar fallì. Empruvei per plascher aunc inagada",
-    "welcome": "Beinvegni",
-    "otpTitle": "Verifichei vies e-mail",
-    "loginPrompt": "S'annunziai tar vies conto",
-    "emailLabel": "Adressa d'e-mail",
-    "emailPlaceholder": "Endatei vies e-mail",
-    "sendCode": "Trametter code d'annunzia",
-    "sending": "Tramettend...",
-    "otpSent": "Controllei vies e-mail per il code d'annunzia",
-    "otpError": "Errur cun trametter il code d'annunzia. Empruvei per plascher aunc inagada",
-    "verifyEmail": "Endatei per plascher il code da verificaziun che nus avain tramess a",
-    "checkEmail": "Controllei vies e-mail per il code da verificaziun",
-    "otpPlaceholder": "Endatei il code da 6 cefras",
-    "verifyCode": "Verificar",
-    "verifying": "Verifichend...",
-    "resendCode": "Trametter danovamain",
-    "verificationSuccess": "Verificaziun reussida! Redirecziun...",
-    "verificationError": "Code da verificaziun nunvalid. Empruvei per plascher aunc inagada",
-    "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
-    "emailRequired": "Adressa d'e-mail è necessaria",
-    "didntReceiveEmail": "Code betg retschavì?",
-    "noAccount": "Nagin conto?",
-    "signupLink": "Registrar",
-    "email": {
-      "message": "Sto esser in e-mail valid",
-      "placeholder": "E-mail"
-    }
-  },
-  "signup": {
-    "submit": "Trametter",
-    "serverError": "Registraziun fallida. Empruvei per plascher aunc inagada",
-    "welcome": "Beinvegni",
-    "otpTitle": "Verifichei vies e-mail",
-    "signupPrompt": "Creei vies conto",
-    "emailLabel": "Adressa d'e-mail",
-    "emailPlaceholder": "Endatei vies e-mail",
-    "sendCode": "Trametter code da verificaziun",
-    "sending": "Tramettend...",
-    "otpSent": "Controllei vies e-mail per il code da verificaziun",
-    "otpError": "Errur cun trametter il code da verificaziun. Empruvei per plascher aunc inagada",
-    "verifyEmail": "Endatei per plascher il code da verificaziun che nus avain tramess a",
-    "checkEmail": "Controllei vies e-mail per il code da verificaziun",
-    "otpPlaceholder": "Endatei il code da 6 cefras",
-    "verifyCode": "Verificar",
-    "verifying": "Verifichend...",
-    "resendCode": "Trametter danovamain",
-    "verificationSuccess": "Verificaziun reussida! Redirecziun...",
-    "verificationError": "Code da verificaziun nunvalid. Empruvei per plascher aunc inagada",
-    "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
-    "emailRequired": "Adressa d'e-mail è necessaria",
-    "didntReceiveEmail": "Code betg retschavì?",
-    "termsRequired": "Vus stueis acceptar las cundiziuns d'utilisaziun",
-    "termsText": "Jeu acceptel las",
-    "haveAccount": "Gia in conto?",
-    "loginLink": "S'annunziar",
-    "email": {
-      "message": "Sto esser in e-mail valid",
-      "placeholder": "E-mail"
-    }
-  },
-  "auth": {
-    "layout": {
-      "tagline": "Voss cumpogn per museums e spazis culturals."
-    }
-  },
-  "notFound": {
-    "title": "404 – Eis vus sepiars?",
-    "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga.",
+    "admin": {
+        "metadata": {
+            "title": "Admin - ValGuide",
+            "description": "Administrescha la plattafurma ValGuide"
+        },
+        "assets": {
+            "title": "Assets",
+            "comingSoon": "Administraziun dad assets vegn prest"
+        }
+    },
+    "studio": {
+        "metadata": {
+            "title": "Studio - ValGuide",
+            "description": "Creescha e designescha tes guids"
+        },
+        "themeCustomizer": {
+            "title": "Persunalisaziun dal design",
+            "reset": "Reinizialisar",
+            "livePreview": "Prevista directa",
+            "customTheme": "Persunalisà",
+            "themePreset": "Model da design",
+            "radius": "Cunturn",
+            "radiusSquare": "Quadrat",
+            "radiusDefault": "Standard",
+            "radiusRounded": "Radund",
+            "radiusExtra": "Extra",
+            "primaryColors": "Colurs primaras",
+            "backgroundColors": "Colurs dal fund",
+            "otherColors": "Autras colurs",
+            "customize": "Persunalisar",
+            "preview": "Prevista",
+            "library": "Biblioteca",
+            "startFromPreset": "Cumenzar cun in model",
+            "savedThemes": "Tes designs memorisads ({count})",
+            "formElementsPreview": "Prevista dals elements da formular",
+            "inputField": "Champ d'endataziun",
+            "toggleSwitch": "Cumitar",
+            "primary": "Primara",
+            "secondary": "Secundara",
+            "outline": "Cuntur",
+            "destructive": "Destructiv",
+            "playerPreview": {
+                "tourTitle": "Tur tras la citad",
+                "tourInfo": "12 staziuns • 2h 30min",
+                "stopBadge": "Staziun 1 da 12",
+                "stopTitle": "Plazza istorica",
+                "stopDescription": "Il cor da la citad veglia dapi 1250"
+            },
+            "colorPicker": {
+                "pickColor": "Tscherner colur per {label}",
+                "hexInput": "Valur hex da colur {label}",
+                "eyeDropper": "Tscherner colur dal visur"
+            },
+            "themeLibrary": {
+                "title": "Tes designs",
+                "newTheme": "Nov design",
+                "noThemes": "Anc nagins designs. Creescha in per cumenzar.",
+                "presets": "Cumenzar cun ina basa",
+                "basedOn": "Basà sin {preset}",
+                "delete": "Stizzar",
+                "edit": "Modifitgar"
+            },
+            "saveDialog": {
+                "title": "Memorisar design",
+                "name": "Num dal design",
+                "namePlaceholder": "p.ex. Design primari",
+                "saveAsNew": "Memorisar sco nov design",
+                "updateExisting": "Actualisar design existent",
+                "save": "Memorisar design",
+                "cancel": "Annullar",
+                "nameRequired": "Il num dal design è necessari",
+                "nameTaken": "In design cun quest num exista gia"
+            },
+            "deleteDialog": {
+                "title": "Stizzar design",
+                "message": "Es ti segir che ti vuls stizzar \"{name}\"? Questa acziun na po betg vegnir revocada.",
+                "confirm": "Stizzar",
+                "cancel": "Annullar"
+            },
+            "editor": {
+                "editing": "Modifitgar: {name}",
+                "unsavedChanges": "Midadas betg memorisadas",
+                "saveTheme": "Memorisar design"
+            },
+            "toast": {
+                "created": "Design creà cun success",
+                "updated": "Design actualisà cun success",
+                "deleted": "Design stizzà cun success"
+            }
+        }
+    },
+    "app": {
+        "metadata": {
+            "title": "ValGuide",
+            "description": "Scuvra guids interactivas"
+        }
+    },
+    "links": {
+        "metadata": {
+            "title": "Links - ValGuide",
+            "description": "Administrescha tes links da guids"
+        }
+    },
+    "www": {
+        "metadata": {
+            "title": "ValGuide",
+            "description": "Creescha guids multimedials interactivas"
+        }
+    },
+    "common": {
+        "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>.",
+        "save": "Memorisar",
+        "saving": "Memorisar...",
+        "saved": "Memorisà",
+        "saveError": "Errur cun memorisar",
+        "loading": "...",
+        "tryAgain": "Empruvar danovamain"
+    },
+    "comingSoon": {
+        "title": "Prest disponibel",
+        "description": "Restei attents. Nus lantschein prest \uD83D\uDE80"
+    },
+    "login": {
+        "submit": "Trametter",
+        "serverError": "S'annunziar fallì. Empruvei per plascher aunc inagada",
+        "welcome": "Beinvegni",
+        "otpTitle": "Verifichei vies e-mail",
+        "loginPrompt": "S'annunziai tar vies conto",
+        "emailLabel": "Adressa d'e-mail",
+        "emailPlaceholder": "Endatei vies e-mail",
+        "sendCode": "Trametter code d'annunzia",
+        "sending": "Tramettend...",
+        "otpSent": "Controllei vies e-mail per il code d'annunzia",
+        "otpError": "Errur cun trametter il code d'annunzia. Empruvei per plascher aunc inagada",
+        "verifyEmail": "Endatei per plascher il code da verificaziun che nus avain tramess a",
+        "checkEmail": "Controllei vies e-mail per il code da verificaziun",
+        "otpPlaceholder": "Endatei il code da 6 cefras",
+        "verifyCode": "Verificar",
+        "verifying": "Verifichend...",
+        "resendCode": "Trametter danovamain",
+        "verificationSuccess": "Verificaziun reussida! Redirecziun...",
+        "verificationError": "Code da verificaziun nunvalid. Empruvei per plascher aunc inagada",
+        "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+        "emailRequired": "Adressa d'e-mail è necessaria",
+        "didntReceiveEmail": "Code betg retschavì?",
+        "noAccount": "Nagin conto?",
+        "signupLink": "Registrar",
+        "email": {
+            "message": "Sto esser in e-mail valid",
+            "placeholder": "E-mail"
+        }
+    },
+    "signup": {
+        "submit": "Trametter",
+        "serverError": "Registraziun fallida. Empruvei per plascher aunc inagada",
+        "welcome": "Beinvegni",
+        "otpTitle": "Verifichei vies e-mail",
+        "signupPrompt": "Creei vies conto",
+        "emailLabel": "Adressa d'e-mail",
+        "emailPlaceholder": "Endatei vies e-mail",
+        "sendCode": "Trametter code da verificaziun",
+        "sending": "Tramettend...",
+        "otpSent": "Controllei vies e-mail per il code da verificaziun",
+        "otpError": "Errur cun trametter il code da verificaziun. Empruvei per plascher aunc inagada",
+        "verifyEmail": "Endatei per plascher il code da verificaziun che nus avain tramess a",
+        "checkEmail": "Controllei vies e-mail per il code da verificaziun",
+        "otpPlaceholder": "Endatei il code da 6 cefras",
+        "verifyCode": "Verificar",
+        "verifying": "Verifichend...",
+        "resendCode": "Trametter danovamain",
+        "verificationSuccess": "Verificaziun reussida! Redirecziun...",
+        "verificationError": "Code da verificaziun nunvalid. Empruvei per plascher aunc inagada",
+        "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+        "emailRequired": "Adressa d'e-mail è necessaria",
+        "didntReceiveEmail": "Code betg retschavì?",
+        "termsRequired": "Vus stueis acceptar las cundiziuns d'utilisaziun",
+        "termsText": "Jeu acceptel las",
+        "haveAccount": "Gia in conto?",
+        "loginLink": "S'annunziar",
+        "email": {
+            "message": "Sto esser in e-mail valid",
+            "placeholder": "E-mail"
+        }
+    },
+    "auth": {
+        "layout": {
+            "tagline": "Voss cumpogn per museums e spazis culturals."
+        }
+    },
+    "notFound": {
+        "title": "404 – Eis vus sepiars?",
+        "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga.",
+        "guide": {
+            "title": "Guide betg chattà",
+            "description": "Quest guide n'exista betg u Vus n'avais betg access.",
+            "backToGuides": "Enavos als guides",
+            "createGuide": "Crear guide"
+        },
+        "stop": {
+            "title": "Fermada betg chattada",
+            "description": "Questa fermada n'exista betg u Vus n'avais betg access.",
+            "backToGuide": "Enavos al guide"
+        }
+    },
     "guide": {
-      "title": "Guide betg chattà",
-      "description": "Quest guide n'exista betg u Vus n'avais betg access.",
-      "backToGuides": "Enavos als guides",
-      "createGuide": "Crear guide"
+        "previewCard": {
+            "viewDetails": "Mussar detagls",
+            "loading": "Avrir...",
+            "author": "Autur",
+            "created": "Creà",
+            "updated": "Actualisà",
+            "authorInfo": "Infurmaziuns davart l'autur",
+            "coverImage": "Maletg da front",
+            "addCoverImage": "Agiuntai in maletg che representa questa exposiziun",
+            "noDescription": "Nagina descripziun",
+            "published": "Publitgà",
+            "draft": "Sboz"
+        },
+        "stops": "Staziuns",
+        "stop": "Staziun",
+        "stopNumber": "Staziun {number}",
+        "stopProgress": "{current} da {total}",
+        "transcription": "Transcripziun",
+        "showTranscription": "Mussar transcripziun",
+        "hideTranscription": "Zuppentar transcripziun",
+        "previous": "Enavos",
+        "next": "Vinavant",
+        "backToOverview": "Turnar a la survista",
+        "startTour": "Cumenzar la tura",
+        "of": "da",
+        "separator": "•",
+        "imageCounter": "{current} / {total}",
+        "videoNotSupported": "Voss navigatur na sustegna betg l'element video."
     },
-    "stop": {
-      "title": "Fermada betg chattada",
-      "description": "Questa fermada n'exista betg u Vus n'avais betg access.",
-      "backToGuide": "Enavos al guide"
-    }
-  },
-  "guide": {
-    "previewCard": {
-      "viewDetails": "Mussar detagls",
-      "loading": "Avrir...",
-      "author": "Autur",
-      "created": "Creà",
-      "updated": "Actualisà",
-      "authorInfo": "Infurmaziuns davart l'autur",
-      "coverImage": "Maletg da front",
-      "addCoverImage": "Agiuntai in maletg che representa questa exposiziun",
-      "noDescription": "Nagina descripziun",
-      "published": "Publitgà",
-      "draft": "Sboz"
+    "guides": {
+        "title": "Guids",
+        "description": "Crear e administrar voss guids multimedials",
+        "backToGuides": "Anavos als guids",
+        "editor": {
+            "bold": "Grass",
+            "italic": "Cursiv",
+            "strikethrough": "Stritgà tras",
+            "heading": "Titel",
+            "bulletList": "Glista cun puncts",
+            "orderedList": "Glista numerada",
+            "blockquote": "Citaziun",
+            "undo": "Revocar",
+            "redo": "Repeter",
+            "coverImageUpdated": "Maletg da front actualisà",
+            "preview": "Prevista",
+            "saving": "Memorisar...",
+            "save": "Memorisar",
+            "sharedContent": "Valid per tut las linguas",
+            "sharedContentDescription": "Midadas qua valan per tut las linguas",
+            "localeContent": "Cuntegn specific per lingua",
+            "guideDetails": "Detagls dal guid",
+            "localeIndicator": "({locale})",
+            "guideDetailsDescription": "Modifitgar las infurmaziuns dal guid per questa lingua",
+            "titleLabel": "Titel *",
+            "titlePlaceholder": "Endatar il titel dal guid",
+            "characterCount": "{current}/500 caracters",
+            "descriptionLabel": "Descripziun",
+            "descriptionPlaceholder": "Endatar la descripziun dal guid",
+            "coverImageLabel": "Maletg da front",
+            "coverImageAlt": "Maletg da front",
+            "selectCoverImage": "Tscherner maletg da front",
+            "guideProgress": "Progress dal guid",
+            "stopProgress": "Progress dal stop",
+            "progress": {
+                "label": "Cumplettaziun",
+                "guideTitle": "Titel dal guid",
+                "guideDescription": "Descripziun dal guid",
+                "coverImage": "Maletg da front",
+                "hasStops": "Almain in stop",
+                "allStopTitles": "Tut ils stops han in titel"
+            },
+            "backToGuide": "Enavos al guid",
+            "edit": "Modifitgar"
+        },
+        "breadcrumb": {
+            "stops": "Stops",
+            "toggleMenu": "Avrir menu"
+        },
+        "empty": {
+            "title": "Anc nagins guids",
+            "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",
+            "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-guids immersivs che dattan vita a vossas exposiziuns.",
+            "createButton": "Cumenzar",
+            "createNewButton": "Crear nov guid",
+            "creating": "Vegn creà...",
+            "step1": "Dar num",
+            "step2": "Agiuntar stops",
+            "step3": "Publitgar",
+            "feature1": "Structurai turas tenor stanzas, temas u artists",
+            "feature2": "Agiuntai audio, maletgs e text per mintga staziun",
+            "feature3": "Publitgai per voss visitaders cun in clic",
+            "quote": "In guid è dapli che infurmaziun – el è il fil cotschen da vossa exposiziun."
+        },
+        "create": {
+            "error": "Errur cun crear il guid",
+            "errorDescription": "In errur è succedì cun crear il guid. Empruvei per plascher aunc inagada."
+        },
+        "defaults": {
+            "newGuideTitle": "Nov Guid",
+            "newGuideDescription": "Cumenzai a crear il cuntegn da tes guid"
+        },
+        "loading": {
+            "opening": "Avrir il guid...",
+            "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
+        },
+        "editGuide": "Modifitgar il guid",
+        "viewInApp": "Mussar en app",
+        "delete": {
+            "button": "Stizzar il guid",
+            "confirmTitle": "Stizzar il guid",
+            "confirmDescription": "Vulais Vus propi stizzar quest guid? Quest'acziun na po betg vegnir annullada.",
+            "confirmButton": "Stizzar",
+            "cancelButton": "Interrumper",
+            "success": "Guid stizzà",
+            "successDescription": "Il guid è vegnì stizzà cun success",
+            "error": "Errur tar stizzar il guid",
+            "errorDescription": "In errur è succedì tar stizzar il guid. Empruvai per plaschair anc ina giada."
+        },
+        "archive": {
+            "button": "Archivar la guida",
+            "confirmTitle": "Archivar questa guida?",
+            "confirmDescription": "Questa guida vegn archivada. Ti la pos restaurar pli tard.",
+            "confirmButton": "Archivar",
+            "cancelButton": "Interrumper",
+            "success": "Guida archivada cun success",
+            "successDescription": "La guida è vegnida archivada",
+            "error": "Errur tar archivar la guida",
+            "errorDescription": "In errur è succedì tar archivar la guida. Empruvai per plaschair anc ina giada."
+        },
+        "recover": {
+            "button": "Restaurar la guida",
+            "success": "Guida restaurada cun success",
+            "successDescription": "La guida è vegnida restaurada tar tias guidas activas",
+            "error": "Errur tar restaurar la guida",
+            "errorDescription": "In errur è succedì tar restaurar la guida. Empruvai per plaschair anc ina giada."
+        },
+        "archived": {
+            "title": "Archivà",
+            "description": "Guardar e administrar las guidas archivadas",
+            "empty": {
+                "title": "Naginas guidas archivadas",
+                "description": "Guidas archivadas cumparan qua. Ti las pos restaurar da tut temp."
+            }
+        },
+        "archivedStatus": "Archivà",
+        "archiveGuide": "Archivar la guida",
+        "recoverGuide": "Restaurar la guida",
+        "permanentlyDelete": "Stizzar definitivamain",
+        "archiveConfirmTitle": "Archivar questa guida?",
+        "archiveConfirmDescription": "Questa guida vegn archivada. Ti la pos restaurar pli tard.",
+        "recoverConfirmTitle": "Restaurar questa guida?",
+        "recoverConfirmDescription": "Questa guida vegn restaurada tar tias guidas activas.",
+        "deleteConfirmTitle": "Stizzar questa guida definitivamain?",
+        "deleteConfirmDescription": "Questa acziun na po betg vegnir revocada. La guida vegn stizzada definitivamain.",
+        "deleteConfirmDescriptionWithName": "Quai stizza definitivamain «{name}». Questa acziun na po betg vegnir revocada.",
+        "deleteConfirmInstruction": "Per confermar, scriva: {phrase}",
+        "deleteConfirmPhrase": "stizzar guida",
+        "archivedSuccessfully": "Guida archivada cun success",
+        "recoveredSuccessfully": "Guida restaurada cun success",
+        "deletedSuccessfully": "Guida stizzada cun success",
+        "archivedOn": "Archivà ils",
+        "archivedOnDate": "Archivà ils: {date}",
+        "noCoverImage": "Nagina maletg da titel",
+        "noDescription": "Nagina descripziun",
+        "publish": {
+            "button": "Publitgar",
+            "buttonWithLocale": "Publitgar {locale}",
+            "success": "Translaziun publichada cun success",
+            "error": "Errur tar publitgar la translaziun",
+            "confirmTitle": "Publitgar questa translaziun?",
+            "confirmTitleWithLocale": "Publitgar versiun {locale}?",
+            "confirmDescription": "Quai renda la versiun da sboz visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
+            "confirmDescriptionWithLocale": "Quai publitgescha la translaziun {locale}. La versiun actualmain publichada vegn remplazzada.",
+            "cancel": "Interrumper",
+            "confirm": "Publitgar",
+            "publishing": "Vegn publichà...",
+            "guidePublished": "Guid publichà",
+            "guidePublishError": "Errur cun publitgar il guid"
+        },
+        "localeSelector": {
+            "selectLanguage": "Tscherner linguatg",
+            "searchLanguages": "Tschertgar linguatgs...",
+            "noLanguageFound": "Nagin linguatg chattà",
+            "statusPublished": "Publichà",
+            "statusDraft": "Sboz",
+            "statusModified": "Modifitgà",
+            "statusEmpty": "Vid",
+            "enabledLanguages": "Linguatgs dal guid",
+            "addLanguage": "Agiuntar translaziun"
+        },
+        "progress": {
+            "title": "Progress dal guid",
+            "count": "{completed}/{total}",
+            "titleAdded": "Titel agiuntà",
+            "descriptionAdded": "Descripziun agiuntada",
+            "coverImageAdded": "Maletg da front agiuntà",
+            "atLeastOneStop": "Almain 1 stop creà",
+            "allStopsHaveTitles": "Tut ils stops han titels",
+            "unpublishedChanges": "Midadas betg publitgadas",
+            "stopsWithDrafts": "{count, plural, =1 {1 stop ha midadas betg publitgadas} other {# stops han midadas betg publitgadas}}",
+            "guideDraft": "Guid ha midadas betg publitgadas",
+            "allPublished": "Tut il cuntegn è publitgà",
+            "currentLanguage": "Translaziun {language}",
+            "guideStatus": "Status dal guid",
+            "status": {
+                "published": "Publichà",
+                "draft": "Sboz",
+                "empty": "Betg cumenzà"
+            },
+            "stopsBreakdown": "Stops ({total} total)",
+            "published": "Publichà",
+            "draft": "Sboz",
+            "notStarted": "Betg cumenzà",
+            "allLanguages": "Tut ils linguatgs",
+            "translatedCount": "{translated}/{total} translatà"
+        },
+        "versionHistory": {
+            "button": "Cronologia da versiuns",
+            "title": "Cronologia da translaziuns",
+            "titleWithLocale": "Cronologia da versiuns ({locale})",
+            "description": "Mussar e administrar versiuns pli veglias da questa translaziun",
+            "loading": "Chargiar versiuns...",
+            "noVersions": "Nagina cronologia da versiuns disponibla",
+            "versionLabel": "Versiun",
+            "created": "Creà: {date}",
+            "published": "Publichà: {date}",
+            "rollback": "Restaurar",
+            "rollbackSuccess": "Versiun restaurada sco sboz",
+            "rollbackError": "Errur tar restaurar la versiun",
+            "loadError": "Errur tar chargiar la cronologia da versiuns",
+            "rollbackConfirmTitle": "Restaurar questa versiun?",
+            "rollbackConfirmDescription": "Versiun {version} vegn restaurada sco nov sboz. Ti la pos lura repassar e publitgar.",
+            "cancel": "Interrumper",
+            "confirm": "Restaurar",
+            "rollingBack": "Vegn restaurà..."
+        },
+        "contentStatus": {
+            "draft": "Sboz",
+            "published": "Publitgà",
+            "modified": "Modifitgà"
+        },
+        "tabs": {
+            "draft": "Sboz",
+            "published": "Publitgà"
+        },
+        "actions": {
+            "publish": "Publitgar",
+            "publishing": "Vegn publitgà...",
+            "save": "Memorisar",
+            "saving": "Vegn memorisà...",
+            "unpublish": "Retrar",
+            "discardChanges": "Sbittar las midadas",
+            "moreActions": "Ulteriuras acziuns"
+        },
+        "readOnly": {
+            "banner": "Quai è la versiun publitgada. Mida al sboz per far midadas.",
+            "neverPublished": "Quest cuntegn n'è anc mai vegnì publitgà."
+        },
+        "confirmDiscard": {
+            "title": "Sbittar las midadas?",
+            "description": "Quai stizza tes sboz e restituescha la versiun publitgada. Questa acziun na po betg vegnir revocada.",
+            "confirm": "Sbittar",
+            "cancel": "Interrumper"
+        },
+        "confirmUnpublish": {
+            "title": "Retrar il cuntegn?",
+            "description": "Quai allontanescha il cuntegn da la pagina publica. Ti pos publitgar danovamain da tut temp.",
+            "confirm": "Retrar",
+            "cancel": "Interrumper"
+        },
+        "untitledGuide": "Guid senza num",
+        "unknownTitle": "Nunenconuschent",
+        "unsavedChanges": {
+            "title": "Midadas betg memorisadas",
+            "description": "Es ti segir che ti vuls bandunar questa pagina?",
+            "stay": "Cuntinuar da modifitgar",
+            "leave": "Sbittar las midadas"
+        },
+        "error": {
+            "failedToLoad": "Impussibel da chargiar ils guids",
+            "unexpected": "Ina errur nunspetgada è succedida"
+        },
+        "details": {
+            "title": "Detagls dal guid",
+            "guideId": "ID dal guid",
+            "guideCover": "Maletg da front dal guid",
+            "created": "Creà",
+            "lastUpdated": "Ultima actualisaziun",
+            "status": "Status",
+            "published": "Publichà",
+            "draft": "Sboz",
+            "translations": "Translaziuns",
+            "noCoverImage": "Maletg da front",
+            "addCoverImageHint": "Agiuntai in maletg da front en l'editur"
+        },
+        "assets": {
+            "attachError": "Errur cun agiuntar l'asset al guid",
+            "removeError": "Errur cun allontanar l'asset dal guid"
+        },
+        "localesManager": {
+            "addLanguage": "Agiuntar lingua",
+            "removeLanguage": "Allontanar {language}",
+            "searchLanguages": "Tschertgar linguas...",
+            "noLanguageFound": "Nagina lingua chattada.",
+            "confirmRemoveTitle": "Allontanar lingua?",
+            "confirmRemoveDescription": "Quest guid ha cuntegn en {language}. L'allontanament da la lingua va a zuppentar quel ord il guid. Il cuntegn na vegn betg stizzà, ma na po betg pli vegnir modifitgà da quest guid.",
+            "cancel": "Interrumper",
+            "confirmRemove": "Allontanar"
+        },
+        "locales": {
+            "updateSuccess": "Linguas actualisadas",
+            "updateError": "Errur cun actualisar las linguas"
+        }
     },
-    "stops": "Staziuns",
-    "stop": "Staziun",
-    "stopNumber": "Staziun {number}",
-    "stopProgress": "{current} da {total}",
-    "transcription": "Transcripziun",
-    "showTranscription": "Mussar transcripziun",
-    "hideTranscription": "Zuppentar transcripziun",
-    "previous": "Enavos",
-    "next": "Vinavant",
-    "backToOverview": "Turnar a la survista",
-    "startTour": "Cumenzar la tura",
-    "of": "da",
-    "separator": "•",
-    "imageCounter": "{current} / {total}",
-    "videoNotSupported": "Voss navigatur na sustegna betg l'element video."
-  },
-  "guides": {
-    "title": "Guids",
-    "description": "Crear e administrar voss guids multimedials",
-    "backToGuides": "Anavos als guids",
-    "editor": {
-      "bold": "Grass",
-      "italic": "Cursiv",
-      "strikethrough": "Stritgà tras",
-      "heading": "Titel",
-      "bulletList": "Glista cun puncts",
-      "orderedList": "Glista numerada",
-      "blockquote": "Citaziun",
-      "undo": "Revocar",
-      "redo": "Repeter",
-      "coverImageUpdated": "Maletg da front actualisà",
-      "preview": "Prevista",
-      "saving": "Memorisar...",
-      "save": "Memorisar",
-      "sharedContent": "Valid per tut las linguas",
-      "sharedContentDescription": "Midadas qua valan per tut las linguas",
-      "localeContent": "Cuntegn specific per lingua",
-      "guideDetails": "Detagls dal guid",
-      "localeIndicator": "({locale})",
-      "guideDetailsDescription": "Modifitgar las infurmaziuns dal guid per questa lingua",
-      "titleLabel": "Titel *",
-      "titlePlaceholder": "Endatar il titel dal guid",
-      "characterCount": "{current}/500 caracters",
-      "descriptionLabel": "Descripziun",
-      "descriptionPlaceholder": "Endatar la descripziun dal guid",
-      "coverImageLabel": "Maletg da front",
-      "coverImageAlt": "Maletg da front",
-      "selectCoverImage": "Tscherner maletg da front",
-      "guideProgress": "Progress dal guid",
-      "stopProgress": "Progress dal stop",
-      "progress": {
-        "label": "Cumplettaziun",
-        "guideTitle": "Titel dal guid",
-        "guideDescription": "Descripziun dal guid",
-        "coverImage": "Maletg da front",
-        "hasStops": "Almain in stop",
-        "allStopTitles": "Tut ils stops han in titel"
-      },
-      "backToGuide": "Enavos al guid",
-      "edit": "Modifitgar"
-    },
-    "breadcrumb": {
-      "stops": "Stops",
-      "toggleMenu": "Avrir menu"
-    },
-    "empty": {
-      "title": "Anc nagins guids",
-      "description": "Crear guids multimedials fascinants cun text, maletgs, audio e video per voss museum u vossa instituziun da furmaziun.",
-      "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-guids immersivs che dattan vita a vossas exposiziuns.",
-      "createButton": "Cumenzar",
-      "createNewButton": "Crear nov guid",
-      "creating": "Vegn creà...",
-      "step1": "Dar num",
-      "step2": "Agiuntar stops",
-      "step3": "Publitgar",
-      "feature1": "Structurai turas tenor stanzas, temas u artists",
-      "feature2": "Agiuntai audio, maletgs e text per mintga staziun",
-      "feature3": "Publitgai per voss visitaders cun in clic",
-      "quote": "In guid è dapli che infurmaziun – el è il fil cotschen da vossa exposiziun."
-    },
-    "create": {
-      "error": "Errur cun crear il guid",
-      "errorDescription": "In errur è succedì cun crear il guid. Empruvei per plascher aunc inagada."
-    },
-    "defaults": {
-      "newGuideTitle": "Nov Guid",
-      "newGuideDescription": "Cumenzai a crear il cuntegn da tes guid"
-    },
-    "loading": {
-      "opening": "Avrir il guid...",
-      "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
-    },
-    "editGuide": "Modifitgar il guid",
-    "viewInApp": "Mussar en app",
-    "delete": {
-      "button": "Stizzar il guid",
-      "confirmTitle": "Stizzar il guid",
-      "confirmDescription": "Vulais Vus propi stizzar quest guid? Quest'acziun na po betg vegnir annullada.",
-      "confirmButton": "Stizzar",
-      "cancelButton": "Interrumper",
-      "success": "Guid stizzà",
-      "successDescription": "Il guid è vegnì stizzà cun success",
-      "error": "Errur tar stizzar il guid",
-      "errorDescription": "In errur è succedì tar stizzar il guid. Empruvai per plaschair anc ina giada."
-    },
-    "archive": {
-      "button": "Archivar la guida",
-      "confirmTitle": "Archivar questa guida?",
-      "confirmDescription": "Questa guida vegn archivada. Ti la pos restaurar pli tard.",
-      "confirmButton": "Archivar",
-      "cancelButton": "Interrumper",
-      "success": "Guida archivada cun success",
-      "successDescription": "La guida è vegnida archivada",
-      "error": "Errur tar archivar la guida",
-      "errorDescription": "In errur è succedì tar archivar la guida. Empruvai per plaschair anc ina giada."
-    },
-    "recover": {
-      "button": "Restaurar la guida",
-      "success": "Guida restaurada cun success",
-      "successDescription": "La guida è vegnida restaurada tar tias guidas activas",
-      "error": "Errur tar restaurar la guida",
-      "errorDescription": "In errur è succedì tar restaurar la guida. Empruvai per plaschair anc ina giada."
-    },
-    "archived": {
-      "title": "Archivà",
-      "description": "Guardar e administrar las guidas archivadas",
-      "empty": {
-        "title": "Naginas guidas archivadas",
-        "description": "Guidas archivadas cumparan qua. Ti las pos restaurar da tut temp."
-      }
-    },
-    "archivedStatus": "Archivà",
-    "archiveGuide": "Archivar la guida",
-    "recoverGuide": "Restaurar la guida",
-    "permanentlyDelete": "Stizzar definitivamain",
-    "archiveConfirmTitle": "Archivar questa guida?",
-    "archiveConfirmDescription": "Questa guida vegn archivada. Ti la pos restaurar pli tard.",
-    "recoverConfirmTitle": "Restaurar questa guida?",
-    "recoverConfirmDescription": "Questa guida vegn restaurada tar tias guidas activas.",
-    "deleteConfirmTitle": "Stizzar questa guida definitivamain?",
-    "deleteConfirmDescription": "Questa acziun na po betg vegnir revocada. La guida vegn stizzada definitivamain.",
-    "deleteConfirmDescriptionWithName": "Quai stizza definitivamain «{name}». Questa acziun na po betg vegnir revocada.",
-    "deleteConfirmInstruction": "Per confermar, scriva: {phrase}",
-    "deleteConfirmPhrase": "stizzar guida",
-    "archivedSuccessfully": "Guida archivada cun success",
-    "recoveredSuccessfully": "Guida restaurada cun success",
-    "deletedSuccessfully": "Guida stizzada cun success",
-    "archivedOn": "Archivà ils",
-    "archivedOnDate": "Archivà ils: {date}",
-    "noCoverImage": "Nagina maletg da titel",
-    "noDescription": "Nagina descripziun",
-    "publish": {
-      "button": "Publitgar",
-      "buttonWithLocale": "Publitgar {locale}",
-      "success": "Translaziun publichada cun success",
-      "error": "Errur tar publitgar la translaziun",
-      "confirmTitle": "Publitgar questa translaziun?",
-      "confirmTitleWithLocale": "Publitgar versiun {locale}?",
-      "confirmDescription": "Quai renda la versiun da sboz visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
-      "confirmDescriptionWithLocale": "Quai publitgescha la translaziun {locale}. La versiun actualmain publichada vegn remplazzada.",
-      "cancel": "Interrumper",
-      "confirm": "Publitgar",
-      "publishing": "Vegn publichà...",
-      "guidePublished": "Guid publichà",
-      "guidePublishError": "Errur cun publitgar il guid"
-    },
-    "localeSelector": {
-      "selectLanguage": "Tscherner linguatg",
-      "searchLanguages": "Tschertgar linguatgs...",
-      "noLanguageFound": "Nagin linguatg chattà",
-      "statusPublished": "Publichà",
-      "statusDraft": "Sboz",
-      "statusModified": "Modifitgà",
-      "statusEmpty": "Vid",
-      "enabledLanguages": "Linguatgs dal guid",
-      "addLanguage": "Agiuntar translaziun"
-    },
-    "progress": {
-      "title": "Progress dal guid",
-      "count": "{completed}/{total}",
-      "titleAdded": "Titel agiuntà",
-      "descriptionAdded": "Descripziun agiuntada",
-      "coverImageAdded": "Maletg da front agiuntà",
-      "atLeastOneStop": "Almain 1 stop creà",
-      "allStopsHaveTitles": "Tut ils stops han titels",
-      "unpublishedChanges": "Midadas betg publitgadas",
-      "stopsWithDrafts": "{count, plural, =1 {1 stop ha midadas betg publitgadas} other {# stops han midadas betg publitgadas}}",
-      "guideDraft": "Guid ha midadas betg publitgadas",
-      "allPublished": "Tut il cuntegn è publitgà",
-      "currentLanguage": "Translaziun {language}",
-      "guideStatus": "Status dal guid",
-      "status": {
-        "published": "Publichà",
-        "draft": "Sboz",
-        "empty": "Betg cumenzà"
-      },
-      "stopsBreakdown": "Stops ({total} total)",
-      "published": "Publichà",
-      "draft": "Sboz",
-      "notStarted": "Betg cumenzà",
-      "allLanguages": "Tut ils linguatgs",
-      "translatedCount": "{translated}/{total} translatà"
-    },
-    "versionHistory": {
-      "button": "Cronologia da versiuns",
-      "title": "Cronologia da translaziuns",
-      "titleWithLocale": "Cronologia da versiuns ({locale})",
-      "description": "Mussar e administrar versiuns pli veglias da questa translaziun",
-      "loading": "Chargiar versiuns...",
-      "noVersions": "Nagina cronologia da versiuns disponibla",
-      "versionLabel": "Versiun",
-      "created": "Creà: {date}",
-      "published": "Publichà: {date}",
-      "rollback": "Restaurar",
-      "rollbackSuccess": "Versiun restaurada sco sboz",
-      "rollbackError": "Errur tar restaurar la versiun",
-      "loadError": "Errur tar chargiar la cronologia da versiuns",
-      "rollbackConfirmTitle": "Restaurar questa versiun?",
-      "rollbackConfirmDescription": "Versiun {version} vegn restaurada sco nov sboz. Ti la pos lura repassar e publitgar.",
-      "cancel": "Interrumper",
-      "confirm": "Restaurar",
-      "rollingBack": "Vegn restaurà..."
-    },
-    "contentStatus": {
-      "draft": "Sboz",
-      "published": "Publitgà",
-      "modified": "Modifitgà"
-    },
-    "tabs": {
-      "draft": "Sboz",
-      "published": "Publitgà"
-    },
-    "actions": {
-      "publish": "Publitgar",
-      "publishing": "Vegn publitgà...",
-      "save": "Memorisar",
-      "saving": "Vegn memorisà...",
-      "unpublish": "Retrar",
-      "discardChanges": "Sbittar las midadas",
-      "moreActions": "Ulteriuras acziuns"
-    },
-    "readOnly": {
-      "banner": "Quai è la versiun publitgada. Mida al sboz per far midadas.",
-      "neverPublished": "Quest cuntegn n'è anc mai vegnì publitgà."
-    },
-    "confirmDiscard": {
-      "title": "Sbittar las midadas?",
-      "description": "Quai stizza tes sboz e restituescha la versiun publitgada. Questa acziun na po betg vegnir revocada.",
-      "confirm": "Sbittar",
-      "cancel": "Interrumper"
-    },
-    "confirmUnpublish": {
-      "title": "Retrar il cuntegn?",
-      "description": "Quai allontanescha il cuntegn da la pagina publica. Ti pos publitgar danovamain da tut temp.",
-      "confirm": "Retrar",
-      "cancel": "Interrumper"
-    },
-    "untitledGuide": "Guid senza num",
-    "unknownTitle": "Nunenconuschent",
-    "unsavedChanges": {
-      "title": "Midadas betg memorisadas",
-      "description": "Es ti segir che ti vuls bandunar questa pagina?",
-      "stay": "Cuntinuar da modifitgar",
-      "leave": "Sbittar las midadas"
-    },
-    "error": {
-      "failedToLoad": "Impussibel da chargiar ils guids",
-      "unexpected": "Ina errur nunspetgada è succedida"
-    },
-    "details": {
-      "title": "Detagls dal guid",
-      "guideId": "ID dal guid",
-      "guideCover": "Maletg da front dal guid",
-      "created": "Creà",
-      "lastUpdated": "Ultima actualisaziun",
-      "status": "Status",
-      "published": "Publichà",
-      "draft": "Sboz",
-      "translations": "Translaziuns",
-      "noCoverImage": "Maletg da front",
-      "addCoverImageHint": "Agiuntai in maletg da front en l'editur"
+    "stops": {
+        "title": "Stops",
+        "description": "Puncts dal cuntegn en voss guid",
+        "add": "Agiuntar stop",
+        "edit": "Modifitgar",
+        "untitled": "Stop senza titel",
+        "unknownTitle": "Nunenconuschent",
+        "backToStops": "Enavos tar ils stops",
+        "stopNumber": "Staziun {number}",
+        "stopTitle": "{number}: {title}",
+        "empty": {
+            "title": "Anc nagins stops",
+            "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas.",
+            "heroDescription": "Stops èn ils elements da construcziun da voss guids. Mintga stop raquinta ina part da vossa istorgia.",
+            "hint": "Creai stops en in editur da guids per cumenzar."
+        },
+        "list": {
+            "description": "Administrescha tut ils stops en voss guids",
+            "error": "Betg pussaivel da chargiar ils stops",
+            "emptyDescription": "Stops èn puncts dal cuntegn che pon vegnir duvrads en plirs guids.",
+            "emptyHint": "Creai stops en in editur da guids per cumenzar.",
+            "usedIn": "Duvrà en {count, plural, =1 {# guid} other {# guids}}",
+            "moreGuides": "+{count}"
+        },
+        "editor": {
+            "title": "Detagls dal stop",
+            "sharedContent": "Valid per tut las linguas",
+            "sharedContentDescription": "Midadas qua valan per tut las linguas",
+            "localeContent": "Cuntegn specific per lingua",
+            "localeContentDescription": "Modifitgar il cuntegn dal stop per questa lingua",
+            "titleLabel": "Titel",
+            "titlePlaceholder": "Endatar titel dal stop",
+            "descriptionLabel": "Descripziun",
+            "descriptionPlaceholder": "Endatar descripziun dal stop",
+            "transcriptionLabel": "Transcripziun",
+            "transcriptionPlaceholder": "Transcripziun audio/video",
+            "imagesLabel": "Maletgs",
+            "audioLabel": "Audio-Guid",
+            "videoLabel": "Video",
+            "addImage": "Agiuntar maletg",
+            "addAudio": "Agiuntar audio",
+            "addVideo": "Agiuntar video",
+            "noImages": "Nagins maletgs",
+            "noAudio": "Nagin audio",
+            "noVideo": "Nagin video",
+            "autoTranscribe": "Generar automaticamain dall'audio",
+            "audioFile": "Datoteca audio",
+            "dropzoneText": "Cliccar per chargiar si u metter cun drag & drop",
+            "audioHint": "Datotecas MP3 fin 50MB",
+            "browseLibrary": "Tschertgar en la biblioteca d'assets...",
+            "autoGenerate": "Generar automaticamain dall'audio",
+            "boldButton": "Grass",
+            "italicButton": "Cursiv",
+            "listButton": "Glista",
+            "galleryLabel": "Galaria (Maletgs & Video)",
+            "galleryHint": "Maletgs e videos fin 50MB per datoteca"
+        },
+        "actions": {
+            "delete": "Stizzar stop",
+            "deleteConfirm": "Vulais vus propi stizzar quest stop?",
+            "deleteSuccess": "Stop stizzà",
+            "deleteError": "Errur cun stizzar il stop",
+            "save": "Memorisar stop",
+            "saving": "Vegn memorisà...",
+            "cancel": "Interrumper",
+            "addError": "Errur cun agiuntar il stop",
+            "reorderSuccess": "Stops rearranschads",
+            "reorderError": "Errur cun rearranschar ils stops"
+        },
+        "assets": {
+            "attachError": "Errur cun agiuntar l'asset",
+            "removeError": "Errur cun allontanar l'asset"
+        },
+        "publish": {
+            "button": "Publitgar",
+            "buttonWithLocale": "Publitgar {locale}",
+            "success": "Translaziun dal stop publichada cun success",
+            "error": "Errur tar publitgar la translaziun dal stop",
+            "confirmTitle": "Publitgar translaziun dal stop?",
+            "confirmTitleWithLocale": "Publitgar stop en {locale}?",
+            "confirmDescription": "Quai renda la versiun da sboz da quest stop visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
+            "confirmDescriptionWithLocale": "Quai publitgescha la translaziun {locale} da quest stop. La versiun actualmain publichada vegn remplazzada.",
+            "cancel": "Interrumper",
+            "confirm": "Publitgar",
+            "publishing": "Vegn publichà..."
+        },
+        "translationStatus": {
+            "published": "Publichà",
+            "draft": "Sboz",
+            "empty": "Betg cumenzà"
+        },
+        "versionHistory": {
+            "button": "Cronologia da versiuns",
+            "title": "Cronologia da translaziuns dal stop",
+            "titleWithLocale": "Cronologia da versiuns ({locale})",
+            "description": "Mussar e administrar versiuns pli veglias da questa translaziun dal stop",
+            "loading": "Chargiar versiuns...",
+            "noVersions": "Nagina cronologia da versiuns disponibla",
+            "versionLabel": "Versiun",
+            "created": "Creà: {date}",
+            "published": "Publichà: {date}",
+            "rollback": "Restaurar",
+            "rollbackSuccess": "Versiun restaurada sco sboz",
+            "rollbackError": "Errur tar restaurar la versiun",
+            "loadError": "Errur tar chargiar la cronologia da versiuns",
+            "rollbackConfirmTitle": "Restaurar questa versiun?",
+            "rollbackConfirmDescription": "Versiun {version} vegn restaurada sco nov sboz. Ti la pos lura repassar e publitgar.",
+            "cancel": "Interrumper",
+            "confirm": "Restaurar",
+            "rollingBack": "Vegn restaurà..."
+        },
+        "status": {
+            "draft": "Sboz",
+            "published": "Publichà",
+            "draftChanges": "Midadas da sboz"
+        }
     },
     "assets": {
-      "attachError": "Errur cun agiuntar l'asset al guid",
-      "removeError": "Errur cun allontanar l'asset dal guid"
+        "title": "Assets",
+        "description": "Administrar vossa biblioteca da medias",
+        "types": {
+            "image": "maletg",
+            "audio": "audio",
+            "video": "video"
+        },
+        "empty": {
+            "title": "Anc nagins assets",
+            "description": "Chargiai si maletgs, audio e videos per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
+            "uploadButton": "Chargiar si voss emprim asset",
+            "uploadImage": "Chargiar si maletg",
+            "uploadAudio": "Chargiar si audio",
+            "uploadVideo": "Chargiar si video"
+        },
+        "picker": {
+            "title": "Tscherner {type}",
+            "titleWithLocale": "Tscherner {type} ({locale})",
+            "tabs": {
+                "library": "Biblioteca",
+                "upload": "Chargiar si"
+            },
+            "select": "Tscherner",
+            "selected": "{count} tschernì",
+            "cancel": "Interrumper",
+            "noAssets": "Nagins {type}-assets chattads",
+            "multiSelect": "Tscherner plirs",
+            "empty": {
+                "description": "Chargiai si assets per cumenzar"
+            }
+        },
+        "upload": {
+            "button": "Chargiar si",
+            "title": "Chargiar si {type}",
+            "error": "Errur cun chargiar si",
+            "errorDescription": "In errur è succedì durant la chargiada si",
+            "restricted": "Chargiada si limitada",
+            "restrictedDescription": "La datoteca na cumplescha betg las pretensiuns da chargiada si",
+            "dropzone": "Metter {type} qua u cliccar per tschertgar",
+            "dropzoneGeneric": "Metter maletg, audio u video qua u cliccar per tschertgar",
+            "sizeLimits": "Maletgs fin 10MB, audio fin 50MB, video fin 500MB",
+            "unsupportedType": "Tip da datoteca betg sustegnì. Chargiai si per plaschair in maletg, audio u video.",
+            "maxSize": "Grondezza maximala: {size}MB",
+            "uploadComplete": "Chargiada si cumpletta!",
+            "uploading": "{progress}% chargià si",
+            "uploadButton": "Chargiar si {type}",
+            "invalidFileType": "Tip da datoteca nunvalid. Tscherna per plaschair ina datoteca {type}.",
+            "fileSizeExceeded": "La grondezza da la datoteca surpassa il limit da {size}MB"
+        },
+        "filter": {
+            "all": "Tut tips",
+            "allLocales": "Tut linguas",
+            "noLocale": "Nagina lingua",
+            "localeEn": "Englais",
+            "localeDe": "Tudestg",
+            "localeRm": "Rumantsch",
+            "image": "Maletgs",
+            "audio": "Audio",
+            "video": "Video",
+            "search": "Tschertgar assets...",
+            "searchPlaceholder": "Tschertgar tenor num da datoteca...",
+            "noResults": "Nagins assets chattads che correspundan a voss filters"
+        },
+        "error": {
+            "failedToLoad": "Errur cun chargiar ils assets",
+            "unexpected": "In errur nunspetgà è succedì",
+            "tryAgain": "Empruvar danovamain"
+        },
+        "card": {
+            "uploaded": "Chargià si",
+            "size": "Grondezza",
+            "sizeValue": "Grondezza: {size}",
+            "locale": "Lingua",
+            "delete": "Stizzar",
+            "deleting": "Vegn stizzà...",
+            "deleteConfirm": "Vulais vus propi stizzar quest asset?",
+            "deleteSuccess": "Asset stizzà",
+            "deleteError": "Errur cun stizzar l'asset",
+            "preview": "Prevista",
+            "download": "Chargiar giu",
+            "cancel": "Interrumper"
+        },
+        "usage": {
+            "title": "Utilisaziun",
+            "notUsed": "Betg utilisà",
+            "guidesCount": "{count, plural, one {# guide} other {# guides}}",
+            "stopsCount": "{count, plural, one {# stop} other {# stops}}",
+            "guidesAndStops": "{guides}, {stops}",
+            "role": {
+                "cover": "Maletg da titel",
+                "gallery": "Galaria",
+                "audio": "Audioguide"
+            }
+        },
+        "deleteWithUsage": {
+            "title": "Stizzar l'asset",
+            "warningTitle": "Quest asset vegn utilisà",
+            "description": "\"{fileName}\" vegn utilisà en:",
+            "guidesSection": "Guides",
+            "stopsSection": "Stops",
+            "warning": "Stizzar vegn a allontanar quest asset da tut quests lieus permanentamain.",
+            "confirmButton": "Stizzar tuttina",
+            "loadingUsage": "Controllar l'utilisaziun..."
+        },
+        "limits": {
+            "maxSize": "Grondezza maximala da datoteca: {size}",
+            "maxFiles": "Fin {count} datotecas"
+        },
+        "mediaPicker": {
+            "dropzoneDesktop": "Tira qua u clicca per transferir",
+            "dropzoneMobile": "Tucca per transferir",
+            "dropHere": "Lascha cader qua",
+            "dropzoneAriaLabel": "Transferir datotecas",
+            "browseLibrary": "Sfuglia biblioteca",
+            "replace": "Remplazzar",
+            "remove": "Allontanar",
+            "addMore": "Agiuntar dapli",
+            "noPreview": "Nagina prevista",
+            "uploading": "{progress}% vegn transferì..."
+        }
     },
-    "localesManager": {
-      "addLanguage": "Agiuntar lingua",
-      "removeLanguage": "Allontanar {language}",
-      "searchLanguages": "Tschertgar linguas...",
-      "noLanguageFound": "Nagina lingua chattada.",
-      "confirmRemoveTitle": "Allontanar lingua?",
-      "confirmRemoveDescription": "Quest guid ha cuntegn en {language}. L'allontanament da la lingua va a zuppentar quel ord il guid. Il cuntegn na vegn betg stizzà, ma na po betg pli vegnir modifitgà da quest guid.",
-      "cancel": "Interrumper",
-      "confirmRemove": "Allontanar"
+    "sidebar": {
+        "nav": {
+            "profile": "Profil",
+            "tours": "Turas",
+            "collections": "Collecziuns",
+            "brandKit": "Brand Kit",
+            "workspace": "Plaz da lavur",
+            "guides": "Guids",
+            "stops": "Stops",
+            "archived": "Archivà",
+            "assets": "Assets",
+            "design": "Design",
+            "analytics": "Analytics",
+            "teamAndMembers": "Team & Commembers",
+            "settings": "Parameters",
+            "support": "Support",
+            "feedback": "Feedback",
+            "recentGuides": "Guids novs",
+            "more": "Dapli",
+            "viewProject": "Mussar project",
+            "shareProject": "Cundivider project",
+            "deleteProject": "Stizzar project"
+        },
+        "appName": "Valguide Studio",
+        "sections": {
+            "content": "Cuntegn",
+            "performance": "Prestaziun",
+            "library": "Biblioteca",
+            "settings": "Parameters"
+        },
+        "pages": {
+            "guides": {
+                "description": "Crear e administrar vossas guidas interactivas."
+            },
+            "assets": {
+                "description": "Administrar vossa biblioteca da medias cun maletgs, audio e videos."
+            },
+            "design": {
+                "description": "Persunalisar l'apparientscha da vossas guidas."
+            },
+            "analytics": {
+                "description": "Vesair ed analisar las metrickas da prestaziun da vossas guidas."
+            },
+            "teamAndMembers": {
+                "description": "Administrar voss commembers da team e lur permissiuns."
+            },
+            "settings": {
+                "description": "Configurar vossas preferenzas ed parameters da l'applicaziun."
+            },
+            "support": {
+                "description": "Survegnir agid e support per vossas dumondas."
+            },
+            "feedback": {
+                "description": "Cundivider voss feedback e vossas propostas cun nus."
+            }
+        },
+        "feedback": {
+            "title": "Cundivider feedback",
+            "description": "Gidai nus a meglierar Valguide Studio. Nus ans legrain da voss pissers, propostas u problems.",
+            "placeholder": "Tge pensais? Cundividai voss feedback, ideas u annunziai problems...",
+            "cancel": "Interrumper",
+            "submit": "Trametter feedback",
+            "feedbackRequired": "Per plaschair endatai voss feedback",
+            "submitError": "Impussibel da trametter il feedback. Empruvai anc ina giada.",
+            "success": "Grazia fitg per voss feedback!"
+        },
+        "user": {
+            "myProfile": "Mes profil",
+            "billing": "Facturaziun",
+            "notifications": "Notificaziuns",
+            "language": "Lingua",
+            "logout": "S'annunziar ora",
+            "upgradeToPro": "Actualisar a Pro"
+        },
+        "team": {
+            "teams": "Teams",
+            "addTeam": "Agiuntar team"
+        }
     },
-    "locales": {
-      "updateSuccess": "Linguas actualisadas",
-      "updateError": "Errur cun actualisar las linguas"
+    "orgs": {
+        "teamSwitcher": {
+            "teams": "Teams",
+            "createTeam": "Crear team",
+            "teamSettings": "Parameters dal team",
+            "current": "Actual",
+            "success": "Team midà",
+            "error": "Errur cun midar il team"
+        },
+        "members": {
+            "title": "Team & Commembers",
+            "description": "Administrescha ils commembers da tes team e lur permissiuns.",
+            "member": "Commember",
+            "role": "Rolla",
+            "joined": "Uniua",
+            "actions": "Acziuns",
+            "you": "Ti",
+            "noMembers": "Nagins commembers chattads",
+            "changeRoleTo": "Midar a {role}",
+            "resendInvite": "Trametter invitaziun danovamain",
+            "removeMember": "Allontanar commember",
+            "removeError": "Errur cun allontanar il commember",
+            "roleUpdateSuccess": "Rolla actualisada",
+            "roleUpdateError": "Errur cun actualisar la rolla"
+        },
+        "inviteDialog": {
+            "inviteMember": "Envidar commember",
+            "inviteDescription": "Trametter ina invitaziun per participar a voss team via e-mail.",
+            "email": "Adressa d'e-mail",
+            "role": "Rolla",
+            "cancel": "Interrumper",
+            "sendInvite": "Trametter invitaziun",
+            "sending": "Vegn tramess...",
+            "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
+            "inviteError": "Errur tar trametter l'invitaziun. Empruvei per plascher aunc inagada.",
+            "success": "Invitaziun tramessa"
+        },
+        "pendingInvites": {
+            "title": "Invitaziuns pendantas",
+            "description": "Invitaziuns che èn vegnidas tramessas ma anc betg acceptadas.",
+            "email": "E-mail",
+            "role": "Rolla",
+            "invitedBy": "Envidà da",
+            "status": "Status",
+            "sent": "Tramess",
+            "actions": "Acziuns",
+            "resend": "Trametter invitaziun danovamain",
+            "cancel": "Annullar invitaziun",
+            "resendSuccess": "Invitaziun tramessa danovamain",
+            "resendError": "Errur cun trametter l'invitaziun danovamain",
+            "cancelSuccess": "Invitaziun annullada",
+            "cancelError": "Errur cun annullar l'invitaziun"
+        },
+        "noTeam": {
+            "welcome": "Beinvegni tar ValGuide",
+            "description": "Vus essas aunc buca en in team. Creei vies emprim team per administrar voss guids e cuntegn.",
+            "createButton": "Crear team"
+        },
+        "createTeam": {
+            "title": "Crear team",
+            "description": "Agiuntei in nov team per administrar voss guids.",
+            "nameLabel": "Num dal team",
+            "namePlaceholder": "Acme Museum",
+            "cancel": "Interrumper",
+            "submit": "Crear team",
+            "submitting": "Vegn creà...",
+            "error": "Errur cun crear il team",
+            "triggerButton": "Crear team"
+        }
+    },
+    "joinTeam": {
+        "invalid": {
+            "title": "Invitaziun nunvalida",
+            "description": "Quest link d'invitaziun è nunvalid, scrudà u annullà.",
+            "action": "Dumandai per plascher l'administratur dal team da trametter ina nova invitaziun.",
+            "homeButton": "Ir a la pagina principala"
+        },
+        "public": {
+            "title": "Unir a {teamName}",
+            "description": "Ti es vegnì envidà da unir a <strong1>{teamName}</strong1> sin ValGuide.",
+            "invitationFor": "Invitaziun per:",
+            "instruction": "Per acceptar questa invitaziun, s'annunziai u creei in conto cun questa adressa d'e-mail.",
+            "createAccount": "Crear conto",
+            "haveAccount": "Jau hai gia in conto"
+        },
+        "wrongAccount": {
+            "title": "Conto fauss",
+            "description": "Ti es actualmain s'annunzià sco <strong>{email}</strong>.",
+            "intendedFor": "Questa invitaziun è destinada per <strong>{email}</strong>.",
+            "instruction": "S'annunziai ora e s'annunziai cun il conto correct per acceptar questa invitaziun.",
+            "signOutButton": "S'annunziar ora & midar conto",
+            "cancelButton": "Interrumper"
+        },
+        "joining": {
+            "title": "Unir al team...",
+            "description": "Acceptar invitaziun per {teamName}",
+            "error": "Igl ha dà in problem cun unir al team.",
+            "dashboardButton": "Ir al dashboard"
+        }
+    },
+    "theme": {
+        "toggleTheme": "Midar tema",
+        "switchToDark": "Modus stgir",
+        "switchToLight": "Modus cler",
+        "light": "Cler",
+        "dark": "Stgir",
+        "system": "System"
+    },
+    "profile": {
+        "title": "Profil",
+        "description": "Administrescha tias infurmaziuns da profil publicas.",
+        "username": "Num d'utilisader",
+        "usernameDescription": "Quai è tes num che vegn mussà publicamain.",
+        "firstName": "Prenum",
+        "lastName": "Num da famiglia",
+        "save": "Memorisar midadas",
+        "saving": "Vegn memorisà...",
+        "actions": {
+            "updateSuccess": "Profil actualisà cun success",
+            "updateError": "Errur tar actualisar il profil",
+            "invalidData": "Datas nunvalidas"
+        }
+    },
+    "fileDropzone": {
+        "dragAndDrop": "Tira datotecas qua",
+        "orClickToBrowse": "u clicca per tschertgar",
+        "dropFilesHere": "Depona datotecas qua",
+        "maxFileSize": "Grondezza max. da datoteca",
+        "upTo": "Fin a",
+        "files": "datotecas",
+        "file": "datoteca",
+        "filesSelected": "tschernidas",
+        "clearAll": "Stizzar tut",
+        "complete": "Terminà",
+        "fileSizeExceeds": "Grondezza da datoteca surpassa",
+        "limit": "limit",
+        "fileTypeNotAccepted": "Tip da datoteca betg acceptà"
     }
-  },
-  "stops": {
-    "title": "Stops",
-    "description": "Puncts dal cuntegn en voss guid",
-    "add": "Agiuntar stop",
-    "edit": "Modifitgar",
-    "untitled": "Stop senza titel",
-    "unknownTitle": "Nunenconuschent",
-    "backToStops": "Enavos tar ils stops",
-    "stopNumber": "Staziun {number}",
-    "stopTitle": "{number}: {title}",
-    "empty": {
-      "title": "Anc nagins stops",
-      "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas.",
-      "heroDescription": "Stops èn ils elements da construcziun da voss guids. Mintga stop raquinta ina part da vossa istorgia.",
-      "hint": "Creai stops en in editur da guids per cumenzar."
-    },
-    "list": {
-      "description": "Administrescha tut ils stops en voss guids",
-      "error": "Betg pussaivel da chargiar ils stops",
-      "emptyDescription": "Stops èn puncts dal cuntegn che pon vegnir duvrads en plirs guids.",
-      "emptyHint": "Creai stops en in editur da guids per cumenzar.",
-      "usedIn": "Duvrà en {count, plural, =1 {# guid} other {# guids}}",
-      "moreGuides": "+{count}"
-    },
-    "editor": {
-      "title": "Detagls dal stop",
-      "sharedContent": "Valid per tut las linguas",
-      "sharedContentDescription": "Midadas qua valan per tut las linguas",
-      "localeContent": "Cuntegn specific per lingua",
-      "localeContentDescription": "Modifitgar il cuntegn dal stop per questa lingua",
-      "titleLabel": "Titel",
-      "titlePlaceholder": "Endatar titel dal stop",
-      "descriptionLabel": "Descripziun",
-      "descriptionPlaceholder": "Endatar descripziun dal stop",
-      "transcriptionLabel": "Transcripziun",
-      "transcriptionPlaceholder": "Transcripziun audio/video",
-      "imagesLabel": "Maletgs",
-      "audioLabel": "Audio-Guid",
-      "videoLabel": "Video",
-      "addImage": "Agiuntar maletg",
-      "addAudio": "Agiuntar audio",
-      "addVideo": "Agiuntar video",
-      "noImages": "Nagins maletgs",
-      "noAudio": "Nagin audio",
-      "noVideo": "Nagin video",
-      "autoTranscribe": "Generar automaticamain dall'audio",
-      "audioFile": "Datoteca audio",
-      "dropzoneText": "Cliccar per chargiar si u metter cun drag & drop",
-      "audioHint": "Datotecas MP3 fin 50MB",
-      "browseLibrary": "Tschertgar en la biblioteca d'assets...",
-      "autoGenerate": "Generar automaticamain dall'audio",
-      "boldButton": "Grass",
-      "italicButton": "Cursiv",
-      "listButton": "Glista",
-      "galleryLabel": "Galaria (Maletgs & Video)",
-      "galleryHint": "Maletgs e videos fin 50MB per datoteca"
-    },
-    "actions": {
-      "delete": "Stizzar stop",
-      "deleteConfirm": "Vulais vus propi stizzar quest stop?",
-      "deleteSuccess": "Stop stizzà",
-      "deleteError": "Errur cun stizzar il stop",
-      "save": "Memorisar stop",
-      "saving": "Vegn memorisà...",
-      "cancel": "Interrumper",
-      "addError": "Errur cun agiuntar il stop",
-      "reorderSuccess": "Stops rearranschads",
-      "reorderError": "Errur cun rearranschar ils stops"
-    },
-    "assets": {
-      "attachError": "Errur cun agiuntar l'asset",
-      "removeError": "Errur cun allontanar l'asset"
-    },
-    "publish": {
-      "button": "Publitgar",
-      "buttonWithLocale": "Publitgar {locale}",
-      "success": "Translaziun dal stop publichada cun success",
-      "error": "Errur tar publitgar la translaziun dal stop",
-      "confirmTitle": "Publitgar translaziun dal stop?",
-      "confirmTitleWithLocale": "Publitgar stop en {locale}?",
-      "confirmDescription": "Quai renda la versiun da sboz da quest stop visibla per utilisaders. La versiun actualmain publichada vegn remplazzada.",
-      "confirmDescriptionWithLocale": "Quai publitgescha la translaziun {locale} da quest stop. La versiun actualmain publichada vegn remplazzada.",
-      "cancel": "Interrumper",
-      "confirm": "Publitgar",
-      "publishing": "Vegn publichà..."
-    },
-    "translationStatus": {
-      "published": "Publichà",
-      "draft": "Sboz",
-      "empty": "Betg cumenzà"
-    },
-    "versionHistory": {
-      "button": "Cronologia da versiuns",
-      "title": "Cronologia da translaziuns dal stop",
-      "titleWithLocale": "Cronologia da versiuns ({locale})",
-      "description": "Mussar e administrar versiuns pli veglias da questa translaziun dal stop",
-      "loading": "Chargiar versiuns...",
-      "noVersions": "Nagina cronologia da versiuns disponibla",
-      "versionLabel": "Versiun",
-      "created": "Creà: {date}",
-      "published": "Publichà: {date}",
-      "rollback": "Restaurar",
-      "rollbackSuccess": "Versiun restaurada sco sboz",
-      "rollbackError": "Errur tar restaurar la versiun",
-      "loadError": "Errur tar chargiar la cronologia da versiuns",
-      "rollbackConfirmTitle": "Restaurar questa versiun?",
-      "rollbackConfirmDescription": "Versiun {version} vegn restaurada sco nov sboz. Ti la pos lura repassar e publitgar.",
-      "cancel": "Interrumper",
-      "confirm": "Restaurar",
-      "rollingBack": "Vegn restaurà..."
-    },
-    "status": {
-      "draft": "Sboz",
-      "published": "Publichà",
-      "draftChanges": "Midadas da sboz"
-    }
-  },
-  "assets": {
-    "title": "Assets",
-    "description": "Administrar vossa biblioteca da medias",
-    "types": {
-      "image": "maletg",
-      "audio": "audio",
-      "video": "video"
-    },
-    "empty": {
-      "title": "Anc nagins assets",
-      "description": "Chargiai si maletgs, audio e videos per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
-      "uploadButton": "Chargiar si voss emprim asset",
-      "uploadImage": "Chargiar si maletg",
-      "uploadAudio": "Chargiar si audio",
-      "uploadVideo": "Chargiar si video"
-    },
-    "picker": {
-      "title": "Tscherner {type}",
-      "titleWithLocale": "Tscherner {type} ({locale})",
-      "tabs": {
-        "library": "Biblioteca",
-        "upload": "Chargiar si"
-      },
-      "select": "Tscherner",
-      "selected": "{count} tschernì",
-      "cancel": "Interrumper",
-      "noAssets": "Nagins {type}-assets chattads",
-      "multiSelect": "Tscherner plirs",
-      "empty": {
-        "description": "Chargiai si assets per cumenzar"
-      }
-    },
-    "upload": {
-      "button": "Chargiar si",
-      "title": "Chargiar si {type}",
-      "error": "Errur cun chargiar si",
-      "errorDescription": "In errur è succedì durant la chargiada si",
-      "restricted": "Chargiada si limitada",
-      "restrictedDescription": "La datoteca na cumplescha betg las pretensiuns da chargiada si",
-      "dropzone": "Metter {type} qua u cliccar per tschertgar",
-      "dropzoneGeneric": "Metter maletg, audio u video qua u cliccar per tschertgar",
-      "sizeLimits": "Maletgs fin 10MB, audio fin 50MB, video fin 500MB",
-      "unsupportedType": "Tip da datoteca betg sustegnì. Chargiai si per plaschair in maletg, audio u video.",
-      "maxSize": "Grondezza maximala: {size}MB",
-      "uploadComplete": "Chargiada si cumpletta!",
-      "uploading": "{progress}% chargià si",
-      "uploadButton": "Chargiar si {type}",
-      "invalidFileType": "Tip da datoteca nunvalid. Tscherna per plaschair ina datoteca {type}.",
-      "fileSizeExceeded": "La grondezza da la datoteca surpassa il limit da {size}MB"
-    },
-    "filter": {
-      "all": "Tut tips",
-      "allLocales": "Tut linguas",
-      "noLocale": "Nagina lingua",
-      "localeEn": "Englais",
-      "localeDe": "Tudestg",
-      "localeRm": "Rumantsch",
-      "image": "Maletgs",
-      "audio": "Audio",
-      "video": "Video",
-      "search": "Tschertgar assets...",
-      "searchPlaceholder": "Tschertgar tenor num da datoteca...",
-      "noResults": "Nagins assets chattads che correspundan a voss filters"
-    },
-    "error": {
-      "failedToLoad": "Errur cun chargiar ils assets",
-      "unexpected": "In errur nunspetgà è succedì",
-      "tryAgain": "Empruvar danovamain"
-    },
-    "card": {
-      "uploaded": "Chargià si",
-      "size": "Grondezza",
-      "sizeValue": "Grondezza: {size}",
-      "locale": "Lingua",
-      "delete": "Stizzar",
-      "deleting": "Vegn stizzà...",
-      "deleteConfirm": "Vulais vus propi stizzar quest asset?",
-      "deleteSuccess": "Asset stizzà",
-      "deleteError": "Errur cun stizzar l'asset",
-      "preview": "Prevista",
-      "download": "Chargiar giu",
-      "cancel": "Interrumper"
-    },
-    "usage": {
-      "title": "Utilisaziun",
-      "notUsed": "Betg utilisà",
-      "guidesCount": "{count, plural, one {# guide} other {# guides}}",
-      "stopsCount": "{count, plural, one {# stop} other {# stops}}",
-      "guidesAndStops": "{guides}, {stops}",
-      "role": {
-        "cover": "Maletg da titel",
-        "gallery": "Galaria",
-        "audio": "Audioguide"
-      }
-    },
-    "deleteWithUsage": {
-      "title": "Stizzar l'asset",
-      "warningTitle": "Quest asset vegn utilisà",
-      "description": "\"{fileName}\" vegn utilisà en:",
-      "guidesSection": "Guides",
-      "stopsSection": "Stops",
-      "warning": "Stizzar vegn a allontanar quest asset da tut quests lieus permanentamain.",
-      "confirmButton": "Stizzar tuttina",
-      "loadingUsage": "Controllar l'utilisaziun..."
-    },
-    "limits": {
-      "maxSize": "Grondezza maximala da datoteca: {size}",
-      "maxFiles": "Fin {count} datotecas"
-    },
-    "mediaPicker": {
-      "dropzoneDesktop": "Tira qua u clicca per transferir",
-      "dropzoneMobile": "Tucca per transferir",
-      "dropHere": "Lascha cader qua",
-      "dropzoneAriaLabel": "Transferir datotecas",
-      "browseLibrary": "Sfuglia biblioteca",
-      "replace": "Remplazzar",
-      "remove": "Allontanar",
-      "addMore": "Agiuntar dapli",
-      "noPreview": "Nagina prevista",
-      "uploading": "{progress}% vegn transferì..."
-    }
-  },
-  "sidebar": {
-    "nav": {
-      "profile": "Profil",
-      "tours": "Turas",
-      "collections": "Collecziuns",
-      "brandKit": "Brand Kit",
-      "workspace": "Plaz da lavur",
-      "guides": "Guids",
-      "stops": "Stops",
-      "archived": "Archivà",
-      "assets": "Assets",
-      "design": "Design",
-      "analytics": "Analytics",
-      "teamAndMembers": "Team & Commembers",
-      "settings": "Parameters",
-      "support": "Support",
-      "feedback": "Feedback",
-      "recentGuides": "Guids novs",
-      "more": "Dapli",
-      "viewProject": "Mussar project",
-      "shareProject": "Cundivider project",
-      "deleteProject": "Stizzar project"
-    },
-    "appName": "Valguide Studio",
-    "sections": {
-      "content": "Cuntegn",
-      "performance": "Prestaziun",
-      "library": "Biblioteca",
-      "settings": "Parameters"
-    },
-    "pages": {
-      "guides": {
-        "description": "Crear e administrar vossas guidas interactivas."
-      },
-      "assets": {
-        "description": "Administrar vossa biblioteca da medias cun maletgs, audio e videos."
-      },
-      "design": {
-        "description": "Persunalisar l'apparientscha da vossas guidas."
-      },
-      "analytics": {
-        "description": "Vesair ed analisar las metrickas da prestaziun da vossas guidas."
-      },
-      "teamAndMembers": {
-        "description": "Administrar voss commembers da team e lur permissiuns."
-      },
-      "settings": {
-        "description": "Configurar vossas preferenzas ed parameters da l'applicaziun."
-      },
-      "support": {
-        "description": "Survegnir agid e support per vossas dumondas."
-      },
-      "feedback": {
-        "description": "Cundivider voss feedback e vossas propostas cun nus."
-      }
-    },
-    "feedback": {
-      "title": "Cundivider feedback",
-      "description": "Gidai nus a meglierar Valguide Studio. Nus ans legrain da voss pissers, propostas u problems.",
-      "placeholder": "Tge pensais? Cundividai voss feedback, ideas u annunziai problems...",
-      "cancel": "Interrumper",
-      "submit": "Trametter feedback",
-      "feedbackRequired": "Per plaschair endatai voss feedback",
-      "submitError": "Impussibel da trametter il feedback. Empruvai anc ina giada.",
-      "success": "Grazia fitg per voss feedback!"
-    },
-    "user": {
-      "myProfile": "Mes profil",
-      "billing": "Facturaziun",
-      "notifications": "Notificaziuns",
-      "language": "Lingua",
-      "logout": "S'annunziar ora",
-      "upgradeToPro": "Actualisar a Pro"
-    },
-    "team": {
-      "teams": "Teams",
-      "addTeam": "Agiuntar team"
-    }
-  },
-  "orgs": {
-    "teamSwitcher": {
-      "teams": "Teams",
-      "createTeam": "Crear team",
-      "teamSettings": "Parameters dal team",
-      "current": "Actual",
-      "success": "Team midà",
-      "error": "Errur cun midar il team"
-    },
-    "members": {
-      "title": "Team & Commembers",
-      "description": "Administrescha ils commembers da tes team e lur permissiuns.",
-      "member": "Commember",
-      "role": "Rolla",
-      "joined": "Uniua",
-      "actions": "Acziuns",
-      "you": "Ti",
-      "noMembers": "Nagins commembers chattads",
-      "changeRoleTo": "Midar a {role}",
-      "resendInvite": "Trametter invitaziun danovamain",
-      "removeMember": "Allontanar commember",
-      "removeError": "Errur cun allontanar il commember",
-      "roleUpdateSuccess": "Rolla actualisada",
-      "roleUpdateError": "Errur cun actualisar la rolla"
-    },
-    "inviteDialog": {
-      "inviteMember": "Envidar commember",
-      "inviteDescription": "Trametter ina invitaziun per participar a voss team via e-mail.",
-      "email": "Adressa d'e-mail",
-      "role": "Rolla",
-      "cancel": "Interrumper",
-      "sendInvite": "Trametter invitaziun",
-      "sending": "Vegn tramess...",
-      "invalidEmail": "Endatei per plascher ina adressa d'e-mail valida",
-      "inviteError": "Errur tar trametter l'invitaziun. Empruvei per plascher aunc inagada.",
-      "success": "Invitaziun tramessa"
-    },
-    "pendingInvites": {
-      "title": "Invitaziuns pendantas",
-      "description": "Invitaziuns che èn vegnidas tramessas ma anc betg acceptadas.",
-      "email": "E-mail",
-      "role": "Rolla",
-      "invitedBy": "Envidà da",
-      "status": "Status",
-      "sent": "Tramess",
-      "actions": "Acziuns",
-      "resend": "Trametter invitaziun danovamain",
-      "cancel": "Annullar invitaziun",
-      "resendSuccess": "Invitaziun tramessa danovamain",
-      "resendError": "Errur cun trametter l'invitaziun danovamain",
-      "cancelSuccess": "Invitaziun annullada",
-      "cancelError": "Errur cun annullar l'invitaziun"
-    },
-    "noTeam": {
-      "welcome": "Beinvegni tar ValGuide",
-      "description": "Vus essas aunc buca en in team. Creei vies emprim team per administrar voss guids e cuntegn.",
-      "createButton": "Crear team"
-    },
-    "createTeam": {
-      "title": "Crear team",
-      "description": "Agiuntei in nov team per administrar voss guids.",
-      "nameLabel": "Num dal team",
-      "namePlaceholder": "Acme Museum",
-      "slugLabel": "Slug (Opziunal)",
-      "slugPlaceholder": "acme-museum",
-      "slugDescription": "Identificatur unic per vossa URL dal team.",
-      "slugExists": "Quest slug è gia duvrà. Tschernai per plaschair in auter.",
-      "cancel": "Interrumper",
-      "submit": "Crear team",
-      "submitting": "Vegn creà...",
-      "error": "Errur cun crear il team",
-      "triggerButton": "Crear team"
-    }
-  },
-  "joinTeam": {
-    "invalid": {
-      "title": "Invitaziun nunvalida",
-      "description": "Quest link d'invitaziun è nunvalid, scrudà u annullà.",
-      "action": "Dumandai per plascher l'administratur dal team da trametter ina nova invitaziun.",
-      "homeButton": "Ir a la pagina principala"
-    },
-    "public": {
-      "title": "Unir a {teamName}",
-      "description": "Ti es vegnì envidà da unir a <strong1>{teamName}</strong1> sin ValGuide.",
-      "invitationFor": "Invitaziun per:",
-      "instruction": "Per acceptar questa invitaziun, s'annunziai u creei in conto cun questa adressa d'e-mail.",
-      "createAccount": "Crear conto",
-      "haveAccount": "Jau hai gia in conto"
-    },
-    "wrongAccount": {
-      "title": "Conto fauss",
-      "description": "Ti es actualmain s'annunzià sco <strong>{email}</strong>.",
-      "intendedFor": "Questa invitaziun è destinada per <strong>{email}</strong>.",
-      "instruction": "S'annunziai ora e s'annunziai cun il conto correct per acceptar questa invitaziun.",
-      "signOutButton": "S'annunziar ora & midar conto",
-      "cancelButton": "Interrumper"
-    },
-    "joining": {
-      "title": "Unir al team...",
-      "description": "Acceptar invitaziun per {teamName}",
-      "error": "Igl ha dà in problem cun unir al team.",
-      "dashboardButton": "Ir al dashboard"
-    }
-  },
-  "theme": {
-    "toggleTheme": "Midar tema",
-    "switchToDark": "Modus stgir",
-    "switchToLight": "Modus cler",
-    "light": "Cler",
-    "dark": "Stgir",
-    "system": "System"
-  },
-  "profile": {
-    "title": "Profil",
-    "description": "Administrescha tias infurmaziuns da profil publicas.",
-    "username": "Num d'utilisader",
-    "usernameDescription": "Quai è tes num che vegn mussà publicamain.",
-    "firstName": "Prenum",
-    "lastName": "Num da famiglia",
-    "save": "Memorisar midadas",
-    "saving": "Vegn memorisà...",
-    "actions": {
-      "updateSuccess": "Profil actualisà cun success",
-      "updateError": "Errur tar actualisar il profil",
-      "invalidData": "Datas nunvalidas"
-    }
-  },
-  "fileDropzone": {
-    "dragAndDrop": "Tira datotecas qua",
-    "orClickToBrowse": "u clicca per tschertgar",
-    "dropFilesHere": "Depona datotecas qua",
-    "maxFileSize": "Grondezza max. da datoteca",
-    "upTo": "Fin a",
-    "files": "datotecas",
-    "file": "datoteca",
-    "filesSelected": "tschernidas",
-    "clearAll": "Stizzar tut",
-    "complete": "Terminà",
-    "fileSizeExceeds": "Grondezza da datoteca surpassa",
-    "limit": "limit",
-    "fileTypeNotAccepted": "Tip da datoteca betg acceptà"
-  }
 }

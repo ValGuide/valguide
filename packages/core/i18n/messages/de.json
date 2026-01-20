@@ -1,1011 +1,1007 @@
 {
-  "emails": {
-    "vercelInviteUser": {
-      "preview": "Tritt {invitedByUsername} auf Vercel bei",
-      "heading": "Tritt <strong1>{teamName}</strong1> auf <strong2>Vercel</strong2> bei",
-      "greeting": "Hallo {username},",
-      "invitation": "<strong1>{invitedByUsername}</strong1> (<link>{invitedByEmail}</link>) hat dich zum Team <strong2>{teamName}</strong2> auf <strong3>Vercel</strong3> eingeladen.",
-      "button": "Dem Team beitreten",
-      "copyLink": "oder kopiere und füge diese URL in deinen Browser ein:",
-      "footer": {
-        "intendedFor": "Diese Einladung war für <span1>{username}</span1> bestimmt. Diese Einladung wurde von <span2>{inviteFromIp}</span2> aus <span3>{inviteFromLocation}</span3> gesendet.",
-        "ignore": "Falls du diese Einladung nicht erwartet hast, kannst du diese E-Mail ignorieren.",
-        "concern": "Falls du Bedenken bezüglich der Sicherheit deines Kontos hast, antworte bitte auf diese E-Mail."
-      }
-    }
-  },
-  "player": {
-    "play": "Abspielen",
-    "pause": "Pause",
-    "rewind": "10 Sekunden zurück",
-    "forward": "10 Sekunden vor",
-    "transcript": "Transkript",
-    "transcriptAndMore": "Transkript & Mehr",
-    "noTranscript": "Kein Transkript für diesen Track verfügbar",
-    "close": "Schließen",
-    "language": "Sprache",
-    "save": "Speichern",
-    "share": "Teilen",
-    "minimize": "Minimieren"
-  },
-  "admin": {
-    "metadata": {
-      "title": "Admin - ValGuide",
-      "description": "Verwalte die ValGuide-Plattform"
+    "emails": {
+        "vercelInviteUser": {
+            "preview": "Tritt {invitedByUsername} auf Vercel bei",
+            "heading": "Tritt <strong1>{teamName}</strong1> auf <strong2>Vercel</strong2> bei",
+            "greeting": "Hallo {username},",
+            "invitation": "<strong1>{invitedByUsername}</strong1> (<link>{invitedByEmail}</link>) hat dich zum Team <strong2>{teamName}</strong2> auf <strong3>Vercel</strong3> eingeladen.",
+            "button": "Dem Team beitreten",
+            "copyLink": "oder kopiere und füge diese URL in deinen Browser ein:",
+            "footer": {
+                "intendedFor": "Diese Einladung war für <span1>{username}</span1> bestimmt. Diese Einladung wurde von <span2>{inviteFromIp}</span2> aus <span3>{inviteFromLocation}</span3> gesendet.",
+                "ignore": "Falls du diese Einladung nicht erwartet hast, kannst du diese E-Mail ignorieren.",
+                "concern": "Falls du Bedenken bezüglich der Sicherheit deines Kontos hast, antworte bitte auf diese E-Mail."
+            }
+        }
     },
-    "assets": {
-      "title": "Assets",
-      "comingSoon": "Asset-Verwaltung kommt bald"
-    }
-  },
-  "studio": {
-    "metadata": {
-      "title": "Studio - ValGuide",
-      "description": "Erstelle und gestalte deine Guides"
+    "player": {
+        "play": "Abspielen",
+        "pause": "Pause",
+        "rewind": "10 Sekunden zurück",
+        "forward": "10 Sekunden vor",
+        "transcript": "Transkript",
+        "transcriptAndMore": "Transkript & Mehr",
+        "noTranscript": "Kein Transkript für diesen Track verfügbar",
+        "close": "Schließen",
+        "language": "Sprache",
+        "save": "Speichern",
+        "share": "Teilen",
+        "minimize": "Minimieren"
     },
-    "themeCustomizer": {
-      "title": "Design-Anpassung",
-      "reset": "Zurücksetzen",
-      "livePreview": "Live-Vorschau",
-      "customTheme": "Benutzerdefiniert",
-      "themePreset": "Design-Vorlage",
-      "radius": "Rundung",
-      "radiusSquare": "Eckig",
-      "radiusDefault": "Standard",
-      "radiusRounded": "Gerundet",
-      "radiusExtra": "Extra",
-      "primaryColors": "Primärfarben",
-      "backgroundColors": "Hintergrundfarben",
-      "otherColors": "Weitere Farben",
-      "customize": "Anpassen",
-      "preview": "Vorschau",
-      "library": "Bibliothek",
-      "startFromPreset": "Mit einer Vorlage beginnen",
-      "savedThemes": "Deine gespeicherten Designs ({count})",
-      "formElementsPreview": "Formularelemente-Vorschau",
-      "inputField": "Eingabefeld",
-      "toggleSwitch": "Schalter",
-      "primary": "Primär",
-      "secondary": "Sekundär",
-      "outline": "Umriss",
-      "destructive": "Destruktiv",
-      "playerPreview": {
-        "tourTitle": "Stadtführung",
-        "tourInfo": "12 Stationen • 2h 30min",
-        "stopBadge": "Station 1 von 12",
-        "stopTitle": "Historischer Marktplatz",
-        "stopDescription": "Das Herz der Altstadt seit 1250"
-      },
-      "colorPicker": {
-        "pickColor": "Farbe für {label} auswählen",
-        "hexInput": "{label} Hex-Farbwert",
-        "eyeDropper": "Farbe vom Bildschirm auswählen"
-      },
-      "themeLibrary": {
-        "title": "Deine Designs",
-        "newTheme": "Neues Design",
-        "noThemes": "Noch keine Designs. Erstelle eines zum Starten.",
-        "presets": "Mit einer Vorlage beginnen",
-        "basedOn": "Basierend auf {preset}",
-        "delete": "Löschen",
-        "edit": "Bearbeiten"
-      },
-      "saveDialog": {
-        "title": "Design speichern",
-        "name": "Design-Name",
-        "namePlaceholder": "z.B. Marken-Primär",
-        "saveAsNew": "Als neues Design speichern",
-        "updateExisting": "Bestehendes Design aktualisieren",
-        "save": "Design speichern",
-        "cancel": "Abbrechen",
-        "nameRequired": "Design-Name ist erforderlich",
-        "nameTaken": "Ein Design mit diesem Namen existiert bereits"
-      },
-      "deleteDialog": {
-        "title": "Design löschen",
-        "message": "Möchtest du \"{name}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-        "confirm": "Löschen",
-        "cancel": "Abbrechen"
-      },
-      "editor": {
-        "editing": "Bearbeiten: {name}",
-        "unsavedChanges": "Ungespeicherte Änderungen",
-        "saveTheme": "Design speichern"
-      },
-      "toast": {
-        "created": "Design erfolgreich erstellt",
-        "updated": "Design erfolgreich aktualisiert",
-        "deleted": "Design erfolgreich gelöscht"
-      }
-    }
-  },
-  "app": {
-    "metadata": {
-      "title": "ValGuide",
-      "description": "Entdecke interaktive Guides"
-    }
-  },
-  "links": {
-    "metadata": {
-      "title": "Links - ValGuide",
-      "description": "Verwalte deine Guide-Links"
-    }
-  },
-  "www": {
-    "metadata": {
-      "title": "ValGuide",
-      "description": "Erstelle ansprechende Multimedia-Guides"
-    }
-  },
-  "common": {
-    "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu.",
-    "save": "Speichern",
-    "saving": "Speichern...",
-    "saved": "Gespeichert",
-    "saveError": "Speichern fehlgeschlagen",
-    "loading": "...",
-    "tryAgain": "Erneut versuchen"
-  },
-  "comingSoon": {
-    "title": "Bald verfügbar",
-    "description": "Bleib gespannt! Wir starten bald \uD83D\uDE80"
-  },
-  "login": {
-    "submit": "Absenden",
-    "serverError": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut",
-    "welcome": "Willkommen zurück",
-    "otpTitle": "Bestätigen Sie Ihre E-Mail",
-    "loginPrompt": "Melden Sie sich bei Ihrem Konto an",
-    "emailLabel": "E-Mail-Adresse",
-    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
-    "sendCode": "Anmeldecode senden",
-    "sending": "Wird gesendet...",
-    "otpSent": "Überprüfen Sie Ihre E-Mail für den Anmeldecode",
-    "otpError": "Fehler beim Senden des Bestätigungscodes. Bitte versuchen Sie es erneut",
-    "verifyEmail": "Bitte geben Sie den Bestätigungscode ein, den wir gesendet haben an",
-    "checkEmail": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
-    "otpPlaceholder": "Geben Sie den 6-stelligen Code ein",
-    "verifyCode": "Bestätigen",
-    "verifying": "Wird überprüft...",
-    "resendCode": "Erneut senden",
-    "verificationSuccess": "Erfolgreich verifiziert! Weiterleitung...",
-    "verificationError": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut",
-    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "emailRequired": "E-Mail-Adresse ist erforderlich",
-    "didntReceiveEmail": "Code nicht erhalten?",
-    "noAccount": "Kein Konto?",
-    "signupLink": "Registrieren",
-    "email": {
-      "message": "Email-Adresse ist ungültig",
-      "placeholder": "Email"
-    }
-  },
-  "signup": {
-    "submit": "Absenden",
-    "serverError": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut",
-    "welcome": "Willkommen",
-    "otpTitle": "Bestätigen Sie Ihre E-Mail",
-    "signupPrompt": "Erstellen Sie Ihr Konto",
-    "emailLabel": "E-Mail-Adresse",
-    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
-    "sendCode": "Bestätigungscode senden",
-    "sending": "Wird gesendet...",
-    "otpSent": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
-    "otpError": "Fehler beim Senden des Bestätigungscodes. Bitte versuchen Sie es erneut",
-    "verifyEmail": "Bitte geben Sie den Bestätigungscode ein, den wir gesendet haben an",
-    "checkEmail": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
-    "otpPlaceholder": "Geben Sie den 6-stelligen Code ein",
-    "verifyCode": "Bestätigen",
-    "verifying": "Wird überprüft...",
-    "resendCode": "Erneut senden",
-    "verificationSuccess": "Erfolgreich verifiziert! Weiterleitung...",
-    "verificationError": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut",
-    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "emailRequired": "E-Mail-Adresse ist erforderlich",
-    "didntReceiveEmail": "Code nicht erhalten?",
-    "termsRequired": "Sie müssen den Nutzungsbedingungen zustimmen",
-    "termsText": "Ich stimme den",
-    "haveAccount": "Haben Sie bereits ein Konto?",
-    "loginLink": "Anmelden",
-    "email": {
-      "message": "Email-Adresse ist ungültig",
-      "placeholder": "Email"
-    }
-  },
-  "auth": {
-    "layout": {
-      "tagline": "Ihr Begleiter für Museen und kulturelle Räume."
-    }
-  },
-  "notFound": {
-    "title": "404 – Verirrt?",
-    "description": "Sieht so aus, als würde dieser Pfad ins Nichts führen",
+    "admin": {
+        "metadata": {
+            "title": "Admin - ValGuide",
+            "description": "Verwalte die ValGuide-Plattform"
+        },
+        "assets": {
+            "title": "Assets",
+            "comingSoon": "Asset-Verwaltung kommt bald"
+        }
+    },
+    "studio": {
+        "metadata": {
+            "title": "Studio - ValGuide",
+            "description": "Erstelle und gestalte deine Guides"
+        },
+        "themeCustomizer": {
+            "title": "Design-Anpassung",
+            "reset": "Zurücksetzen",
+            "livePreview": "Live-Vorschau",
+            "customTheme": "Benutzerdefiniert",
+            "themePreset": "Design-Vorlage",
+            "radius": "Rundung",
+            "radiusSquare": "Eckig",
+            "radiusDefault": "Standard",
+            "radiusRounded": "Gerundet",
+            "radiusExtra": "Extra",
+            "primaryColors": "Primärfarben",
+            "backgroundColors": "Hintergrundfarben",
+            "otherColors": "Weitere Farben",
+            "customize": "Anpassen",
+            "preview": "Vorschau",
+            "library": "Bibliothek",
+            "startFromPreset": "Mit einer Vorlage beginnen",
+            "savedThemes": "Deine gespeicherten Designs ({count})",
+            "formElementsPreview": "Formularelemente-Vorschau",
+            "inputField": "Eingabefeld",
+            "toggleSwitch": "Schalter",
+            "primary": "Primär",
+            "secondary": "Sekundär",
+            "outline": "Umriss",
+            "destructive": "Destruktiv",
+            "playerPreview": {
+                "tourTitle": "Stadtführung",
+                "tourInfo": "12 Stationen • 2h 30min",
+                "stopBadge": "Station 1 von 12",
+                "stopTitle": "Historischer Marktplatz",
+                "stopDescription": "Das Herz der Altstadt seit 1250"
+            },
+            "colorPicker": {
+                "pickColor": "Farbe für {label} auswählen",
+                "hexInput": "{label} Hex-Farbwert",
+                "eyeDropper": "Farbe vom Bildschirm auswählen"
+            },
+            "themeLibrary": {
+                "title": "Deine Designs",
+                "newTheme": "Neues Design",
+                "noThemes": "Noch keine Designs. Erstelle eines zum Starten.",
+                "presets": "Mit einer Vorlage beginnen",
+                "basedOn": "Basierend auf {preset}",
+                "delete": "Löschen",
+                "edit": "Bearbeiten"
+            },
+            "saveDialog": {
+                "title": "Design speichern",
+                "name": "Design-Name",
+                "namePlaceholder": "z.B. Marken-Primär",
+                "saveAsNew": "Als neues Design speichern",
+                "updateExisting": "Bestehendes Design aktualisieren",
+                "save": "Design speichern",
+                "cancel": "Abbrechen",
+                "nameRequired": "Design-Name ist erforderlich",
+                "nameTaken": "Ein Design mit diesem Namen existiert bereits"
+            },
+            "deleteDialog": {
+                "title": "Design löschen",
+                "message": "Möchtest du \"{name}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+                "confirm": "Löschen",
+                "cancel": "Abbrechen"
+            },
+            "editor": {
+                "editing": "Bearbeiten: {name}",
+                "unsavedChanges": "Ungespeicherte Änderungen",
+                "saveTheme": "Design speichern"
+            },
+            "toast": {
+                "created": "Design erfolgreich erstellt",
+                "updated": "Design erfolgreich aktualisiert",
+                "deleted": "Design erfolgreich gelöscht"
+            }
+        }
+    },
+    "app": {
+        "metadata": {
+            "title": "ValGuide",
+            "description": "Entdecke interaktive Guides"
+        }
+    },
+    "links": {
+        "metadata": {
+            "title": "Links - ValGuide",
+            "description": "Verwalte deine Guide-Links"
+        }
+    },
+    "www": {
+        "metadata": {
+            "title": "ValGuide",
+            "description": "Erstelle ansprechende Multimedia-Guides"
+        }
+    },
+    "common": {
+        "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu.",
+        "save": "Speichern",
+        "saving": "Speichern...",
+        "saved": "Gespeichert",
+        "saveError": "Speichern fehlgeschlagen",
+        "loading": "...",
+        "tryAgain": "Erneut versuchen"
+    },
+    "comingSoon": {
+        "title": "Bald verfügbar",
+        "description": "Bleib gespannt! Wir starten bald \uD83D\uDE80"
+    },
+    "login": {
+        "submit": "Absenden",
+        "serverError": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut",
+        "welcome": "Willkommen zurück",
+        "otpTitle": "Bestätigen Sie Ihre E-Mail",
+        "loginPrompt": "Melden Sie sich bei Ihrem Konto an",
+        "emailLabel": "E-Mail-Adresse",
+        "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+        "sendCode": "Anmeldecode senden",
+        "sending": "Wird gesendet...",
+        "otpSent": "Überprüfen Sie Ihre E-Mail für den Anmeldecode",
+        "otpError": "Fehler beim Senden des Bestätigungscodes. Bitte versuchen Sie es erneut",
+        "verifyEmail": "Bitte geben Sie den Bestätigungscode ein, den wir gesendet haben an",
+        "checkEmail": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
+        "otpPlaceholder": "Geben Sie den 6-stelligen Code ein",
+        "verifyCode": "Bestätigen",
+        "verifying": "Wird überprüft...",
+        "resendCode": "Erneut senden",
+        "verificationSuccess": "Erfolgreich verifiziert! Weiterleitung...",
+        "verificationError": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut",
+        "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+        "emailRequired": "E-Mail-Adresse ist erforderlich",
+        "didntReceiveEmail": "Code nicht erhalten?",
+        "noAccount": "Kein Konto?",
+        "signupLink": "Registrieren",
+        "email": {
+            "message": "Email-Adresse ist ungültig",
+            "placeholder": "Email"
+        }
+    },
+    "signup": {
+        "submit": "Absenden",
+        "serverError": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut",
+        "welcome": "Willkommen",
+        "otpTitle": "Bestätigen Sie Ihre E-Mail",
+        "signupPrompt": "Erstellen Sie Ihr Konto",
+        "emailLabel": "E-Mail-Adresse",
+        "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+        "sendCode": "Bestätigungscode senden",
+        "sending": "Wird gesendet...",
+        "otpSent": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
+        "otpError": "Fehler beim Senden des Bestätigungscodes. Bitte versuchen Sie es erneut",
+        "verifyEmail": "Bitte geben Sie den Bestätigungscode ein, den wir gesendet haben an",
+        "checkEmail": "Überprüfen Sie Ihre E-Mail für den Bestätigungscode",
+        "otpPlaceholder": "Geben Sie den 6-stelligen Code ein",
+        "verifyCode": "Bestätigen",
+        "verifying": "Wird überprüft...",
+        "resendCode": "Erneut senden",
+        "verificationSuccess": "Erfolgreich verifiziert! Weiterleitung...",
+        "verificationError": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut",
+        "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+        "emailRequired": "E-Mail-Adresse ist erforderlich",
+        "didntReceiveEmail": "Code nicht erhalten?",
+        "termsRequired": "Sie müssen den Nutzungsbedingungen zustimmen",
+        "termsText": "Ich stimme den",
+        "haveAccount": "Haben Sie bereits ein Konto?",
+        "loginLink": "Anmelden",
+        "email": {
+            "message": "Email-Adresse ist ungültig",
+            "placeholder": "Email"
+        }
+    },
+    "auth": {
+        "layout": {
+            "tagline": "Ihr Begleiter für Museen und kulturelle Räume."
+        }
+    },
+    "notFound": {
+        "title": "404 – Verirrt?",
+        "description": "Sieht so aus, als würde dieser Pfad ins Nichts führen",
+        "guide": {
+            "title": "Guide nicht gefunden",
+            "description": "Dieser Guide existiert nicht oder Sie haben keinen Zugriff darauf.",
+            "backToGuides": "Zurück zu Guides",
+            "createGuide": "Guide erstellen"
+        },
+        "stop": {
+            "title": "Stopp nicht gefunden",
+            "description": "Dieser Stopp existiert nicht oder Sie haben keinen Zugriff darauf.",
+            "backToGuide": "Zurück zum Guide"
+        }
+    },
     "guide": {
-      "title": "Guide nicht gefunden",
-      "description": "Dieser Guide existiert nicht oder Sie haben keinen Zugriff darauf.",
-      "backToGuides": "Zurück zu Guides",
-      "createGuide": "Guide erstellen"
+        "previewCard": {
+            "viewDetails": "Details anzeigen",
+            "loading": "Wird geöffnet...",
+            "author": "Autor",
+            "created": "Erstellt",
+            "updated": "Aktualisiert",
+            "authorInfo": "Autorinformationen",
+            "coverImage": "Titelbild",
+            "addCoverImage": "Fügen Sie ein Bild hinzu, das diese Ausstellung einfängt",
+            "noDescription": "Keine Beschreibung",
+            "published": "Veröffentlicht",
+            "draft": "Entwurf"
+        },
+        "stops": "Stationen",
+        "stop": "Station",
+        "stopNumber": "Station {number}",
+        "stopProgress": "{current} von {total}",
+        "transcription": "Transkription",
+        "showTranscription": "Transkription anzeigen",
+        "hideTranscription": "Transkription ausblenden",
+        "previous": "Zurück",
+        "next": "Weiter",
+        "backToOverview": "Zurück zur Übersicht",
+        "startTour": "Tour starten",
+        "of": "von",
+        "separator": "•",
+        "imageCounter": "{current} / {total}",
+        "videoNotSupported": "Ihr Browser unterstützt das Video-Element nicht."
     },
-    "stop": {
-      "title": "Stopp nicht gefunden",
-      "description": "Dieser Stopp existiert nicht oder Sie haben keinen Zugriff darauf.",
-      "backToGuide": "Zurück zum Guide"
-    }
-  },
-  "guide": {
-    "previewCard": {
-      "viewDetails": "Details anzeigen",
-      "loading": "Wird geöffnet...",
-      "author": "Autor",
-      "created": "Erstellt",
-      "updated": "Aktualisiert",
-      "authorInfo": "Autorinformationen",
-      "coverImage": "Titelbild",
-      "addCoverImage": "Fügen Sie ein Bild hinzu, das diese Ausstellung einfängt",
-      "noDescription": "Keine Beschreibung",
-      "published": "Veröffentlicht",
-      "draft": "Entwurf"
+    "guides": {
+        "title": "Guides",
+        "description": "Erstellen und verwalten Sie Ihre Multimedia-Guides",
+        "backToGuides": "Zurück zu Guides",
+        "editor": {
+            "bold": "Fett",
+            "italic": "Kursiv",
+            "strikethrough": "Durchgestrichen",
+            "heading": "Überschrift",
+            "bulletList": "Aufzählungsliste",
+            "orderedList": "Nummerierte Liste",
+            "blockquote": "Zitat",
+            "undo": "Rückgängig",
+            "redo": "Wiederholen",
+            "coverImageUpdated": "Titelbild aktualisiert",
+            "preview": "Vorschau",
+            "saving": "Speichern...",
+            "save": "Speichern",
+            "sharedContent": "Für alle Sprachen gültig",
+            "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
+            "localeContent": "Sprachspezifischer Inhalt",
+            "guideDetails": "Guide-Details",
+            "localeIndicator": "({locale})",
+            "guideDetailsDescription": "Bearbeiten Sie die Guide-Informationen für diese Sprache",
+            "titleLabel": "Titel *",
+            "titlePlaceholder": "Guide-Titel eingeben",
+            "characterCount": "{current}/500 Zeichen",
+            "descriptionLabel": "Beschreibung",
+            "descriptionPlaceholder": "Guide-Beschreibung eingeben",
+            "coverImageLabel": "Titelbild",
+            "coverImageAlt": "Titelbild",
+            "selectCoverImage": "Titelbild auswählen",
+            "guideProgress": "Guide-Fortschritt",
+            "stopProgress": "Stop-Fortschritt",
+            "progress": {
+                "label": "Vollständigkeit",
+                "guideTitle": "Guide-Titel",
+                "guideDescription": "Guide-Beschreibung",
+                "coverImage": "Titelbild",
+                "hasStops": "Mindestens ein Stop",
+                "allStopTitles": "Alle Stops haben Titel"
+            },
+            "backToGuide": "Zurück zum Guide",
+            "edit": "Bearbeiten"
+        },
+        "breadcrumb": {
+            "stops": "Stops",
+            "toggleMenu": "Menü umschalten"
+        },
+        "empty": {
+            "title": "Noch keine Guides",
+            "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",
+            "heroDescription": "Ihre Besucher verdienen mehr als eine Broschüre. Erstellen Sie immersive Audio-Guides, die Ihre Ausstellungen zum Leben erwecken.",
+            "createButton": "Jetzt starten",
+            "createNewButton": "Neuen Guide erstellen",
+            "creating": "Wird erstellt...",
+            "step1": "Benennen",
+            "step2": "Stops hinzufügen",
+            "step3": "Veröffentlichen",
+            "feature1": "Strukturieren Sie Touren nach Räumen, Themen oder Künstlern",
+            "feature2": "Fügen Sie Audio, Bilder und Text für jede Station hinzu",
+            "feature3": "Veröffentlichen Sie mit einem Klick für Ihre Besucher",
+            "quote": "Ein Guide ist mehr als Information – er ist der rote Faden Ihrer Ausstellung."
+        },
+        "create": {
+            "error": "Guide konnte nicht erstellt werden",
+            "errorDescription": "Beim Erstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        },
+        "defaults": {
+            "newGuideTitle": "Neuer Guide",
+            "newGuideDescription": "Beginnen Sie mit der Erstellung Ihres Guide-Inhalts"
+        },
+        "loading": {
+            "opening": "Guide wird geöffnet...",
+            "openingDescription": "Bitte warten Sie, während wir Ihren Guide laden"
+        },
+        "editGuide": "Guide bearbeiten",
+        "viewInApp": "In App anzeigen",
+        "delete": {
+            "button": "Guide löschen",
+            "confirmTitle": "Guide löschen",
+            "confirmDescription": "Möchten Sie diesen Guide wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "confirmButton": "Löschen",
+            "cancelButton": "Abbrechen",
+            "success": "Guide gelöscht",
+            "successDescription": "Der Guide wurde erfolgreich gelöscht",
+            "error": "Fehler beim Löschen des Guides",
+            "errorDescription": "Beim Löschen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        },
+        "archive": {
+            "button": "Guide archivieren",
+            "confirmTitle": "Diesen Guide archivieren?",
+            "confirmDescription": "Dieser Guide wird archiviert. Sie können ihn später wiederherstellen.",
+            "confirmButton": "Archivieren",
+            "cancelButton": "Abbrechen",
+            "success": "Guide erfolgreich archiviert",
+            "successDescription": "Der Guide wurde archiviert",
+            "error": "Fehler beim Archivieren des Guides",
+            "errorDescription": "Beim Archivieren des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        },
+        "recover": {
+            "button": "Guide wiederherstellen",
+            "success": "Guide erfolgreich wiederhergestellt",
+            "successDescription": "Der Guide wurde zu Ihren aktiven Guides wiederhergestellt",
+            "error": "Fehler beim Wiederherstellen des Guides",
+            "errorDescription": "Beim Wiederherstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        },
+        "archived": {
+            "title": "Archiviert",
+            "description": "Archivierte Guides anzeigen und verwalten",
+            "empty": {
+                "title": "Keine archivierten Guides",
+                "description": "Archivierte Guides erscheinen hier. Sie können sie jederzeit wiederherstellen."
+            }
+        },
+        "archivedStatus": "Archiviert",
+        "archiveGuide": "Guide archivieren",
+        "recoverGuide": "Guide wiederherstellen",
+        "permanentlyDelete": "Endgültig löschen",
+        "archiveConfirmTitle": "Diesen Guide archivieren?",
+        "archiveConfirmDescription": "Dieser Guide wird archiviert. Sie können ihn später wiederherstellen.",
+        "recoverConfirmTitle": "Diesen Guide wiederherstellen?",
+        "recoverConfirmDescription": "Dieser Guide wird zu Ihren aktiven Guides wiederhergestellt.",
+        "deleteConfirmTitle": "Diesen Guide endgültig löschen?",
+        "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Der Guide wird endgültig gelöscht.",
+        "deleteConfirmDescriptionWithName": "Dadurch wird \"{name}\" endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "deleteConfirmInstruction": "Zur Bestätigung eingeben: {phrase}",
+        "deleteConfirmPhrase": "Guide löschen",
+        "archivedSuccessfully": "Guide erfolgreich archiviert",
+        "recoveredSuccessfully": "Guide erfolgreich wiederhergestellt",
+        "deletedSuccessfully": "Guide erfolgreich gelöscht",
+        "archivedOn": "Archiviert am",
+        "archivedOnDate": "Archiviert am: {date}",
+        "noCoverImage": "Kein Titelbild",
+        "noDescription": "Keine Beschreibung",
+        "publish": {
+            "button": "Veröffentlichen",
+            "buttonWithLocale": "{locale} veröffentlichen",
+            "success": "Übersetzung erfolgreich veröffentlicht",
+            "error": "Fehler beim Veröffentlichen der Übersetzung",
+            "confirmTitle": "Übersetzung veröffentlichen?",
+            "confirmTitleWithLocale": "{locale} Version veröffentlichen?",
+            "confirmDescription": "Dies wird die Entwurfsversion für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
+            "confirmDescriptionWithLocale": "Dies wird die {locale} Übersetzung veröffentlichen. Die aktuelle veröffentlichte Version wird ersetzt.",
+            "cancel": "Abbrechen",
+            "confirm": "Veröffentlichen",
+            "publishing": "Wird veröffentlicht...",
+            "guidePublished": "Guide veröffentlicht",
+            "guidePublishError": "Fehler beim Veröffentlichen des Guides"
+        },
+        "localeSelector": {
+            "selectLanguage": "Sprache auswählen",
+            "searchLanguages": "Sprachen suchen...",
+            "noLanguageFound": "Keine Sprache gefunden",
+            "statusPublished": "Veröffentlicht",
+            "statusDraft": "Entwurf",
+            "statusModified": "Geändert",
+            "statusEmpty": "Leer",
+            "enabledLanguages": "Guide-Sprachen",
+            "addLanguage": "Übersetzung hinzufügen"
+        },
+        "progress": {
+            "title": "Guide-Fortschritt",
+            "count": "{completed}/{total}",
+            "titleAdded": "Titel hinzugefügt",
+            "descriptionAdded": "Beschreibung hinzugefügt",
+            "coverImageAdded": "Titelbild hinzugefügt",
+            "atLeastOneStop": "Mindestens 1 Stop erstellt",
+            "allStopsHaveTitles": "Alle Stops haben Titel",
+            "unpublishedChanges": "Unveröffentlichte Änderungen",
+            "stopsWithDrafts": "{count, plural, =1 {1 Stop hat unveröffentlichte Änderungen} other {# Stops haben unveröffentlichte Änderungen}}",
+            "guideDraft": "Guide hat unveröffentlichte Änderungen",
+            "allPublished": "Alle Inhalte sind veröffentlicht",
+            "currentLanguage": "{language} Übersetzung",
+            "guideStatus": "Guide-Status",
+            "status": {
+                "published": "Veröffentlicht",
+                "draft": "Entwurf",
+                "empty": "Nicht begonnen"
+            },
+            "stopsBreakdown": "Stops ({total} insgesamt)",
+            "published": "Veröffentlicht",
+            "draft": "Entwurf",
+            "notStarted": "Nicht begonnen",
+            "allLanguages": "Alle Sprachen",
+            "translatedCount": "{translated}/{total} übersetzt"
+        },
+        "versionHistory": {
+            "button": "Versionsverlauf",
+            "title": "Übersetzungsverlauf",
+            "titleWithLocale": "Versionsverlauf ({locale})",
+            "description": "Vorherige Versionen dieser Übersetzung anzeigen und verwalten",
+            "loading": "Versionen werden geladen...",
+            "noVersions": "Kein Versionsverlauf verfügbar",
+            "versionLabel": "Version",
+            "created": "Erstellt: {date}",
+            "published": "Veröffentlicht: {date}",
+            "rollback": "Wiederherstellen",
+            "rollbackSuccess": "Version als Entwurf wiederhergestellt",
+            "rollbackError": "Fehler beim Wiederherstellen der Version",
+            "loadError": "Fehler beim Laden des Versionsverlaufs",
+            "rollbackConfirmTitle": "Diese Version wiederherstellen?",
+            "rollbackConfirmDescription": "Version {version} wird als neuer Entwurf wiederhergestellt. Sie können sie dann überprüfen und veröffentlichen.",
+            "cancel": "Abbrechen",
+            "confirm": "Wiederherstellen",
+            "rollingBack": "Wird wiederhergestellt..."
+        },
+        "contentStatus": {
+            "draft": "Entwurf",
+            "published": "Veröffentlicht",
+            "modified": "Geändert"
+        },
+        "tabs": {
+            "draft": "Entwurf",
+            "published": "Veröffentlicht"
+        },
+        "actions": {
+            "publish": "Veröffentlichen",
+            "publishing": "Wird veröffentlicht...",
+            "save": "Speichern",
+            "saving": "Wird gespeichert...",
+            "unpublish": "Zurückziehen",
+            "discardChanges": "Änderungen verwerfen",
+            "moreActions": "Weitere Aktionen"
+        },
+        "readOnly": {
+            "banner": "Dies ist die veröffentlichte Version. Wechsle zum Entwurf, um Änderungen vorzunehmen.",
+            "neverPublished": "Dieser Inhalt wurde noch nie veröffentlicht."
+        },
+        "confirmDiscard": {
+            "title": "Änderungen verwerfen?",
+            "description": "Dies löscht deinen Entwurf und stellt die veröffentlichte Version wieder her. Diese Aktion kann nicht rückgängig gemacht werden.",
+            "confirm": "Verwerfen",
+            "cancel": "Abbrechen"
+        },
+        "confirmUnpublish": {
+            "title": "Inhalt zurückziehen?",
+            "description": "Dies entfernt den Inhalt von der öffentlichen Seite. Du kannst ihn jederzeit erneut veröffentlichen.",
+            "confirm": "Zurückziehen",
+            "cancel": "Abbrechen"
+        },
+        "untitledGuide": "Unbenannter Guide",
+        "unknownTitle": "Unbekannt",
+        "unsavedChanges": {
+            "title": "Ungespeicherte Änderungen",
+            "description": "Möchtest du diese Seite wirklich verlassen?",
+            "stay": "Weiter bearbeiten",
+            "leave": "Änderungen verwerfen"
+        },
+        "error": {
+            "failedToLoad": "Guides konnten nicht geladen werden",
+            "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
+        },
+        "details": {
+            "title": "Guide-Details",
+            "guideId": "Guide-ID",
+            "guideCover": "Guide-Titelbild",
+            "created": "Erstellt",
+            "lastUpdated": "Zuletzt aktualisiert",
+            "status": "Status",
+            "published": "Veröffentlicht",
+            "draft": "Entwurf",
+            "translations": "Übersetzungen",
+            "noCoverImage": "Titelbild",
+            "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
+        },
+        "assets": {
+            "attachSuccess": "Asset zum Guide hinzugefügt",
+            "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
+            "removeError": "Fehler beim Entfernen des Assets vom Guide"
+        },
+        "localesManager": {
+            "addLanguage": "Sprache hinzufügen",
+            "removeLanguage": "{language} entfernen",
+            "searchLanguages": "Sprachen suchen...",
+            "noLanguageFound": "Keine Sprache gefunden.",
+            "confirmRemoveTitle": "Sprache entfernen?",
+            "confirmRemoveDescription": "Dieser Guide hat Inhalte in {language}. Das Entfernen der Sprache wird sie aus dem Guide ausblenden. Die Inhalte werden nicht gelöscht, sind aber nicht mehr von diesem Guide aus bearbeitbar.",
+            "cancel": "Abbrechen",
+            "confirmRemove": "Entfernen"
+        },
+        "locales": {
+            "updateSuccess": "Sprachen aktualisiert",
+            "updateError": "Fehler beim Aktualisieren der Sprachen"
+        }
     },
-    "stops": "Stationen",
-    "stop": "Station",
-    "stopNumber": "Station {number}",
-    "stopProgress": "{current} von {total}",
-    "transcription": "Transkription",
-    "showTranscription": "Transkription anzeigen",
-    "hideTranscription": "Transkription ausblenden",
-    "previous": "Zurück",
-    "next": "Weiter",
-    "backToOverview": "Zurück zur Übersicht",
-    "startTour": "Tour starten",
-    "of": "von",
-    "separator": "•",
-    "imageCounter": "{current} / {total}",
-    "videoNotSupported": "Ihr Browser unterstützt das Video-Element nicht."
-  },
-  "guides": {
-    "title": "Guides",
-    "description": "Erstellen und verwalten Sie Ihre Multimedia-Guides",
-    "backToGuides": "Zurück zu Guides",
-    "editor": {
-      "bold": "Fett",
-      "italic": "Kursiv",
-      "strikethrough": "Durchgestrichen",
-      "heading": "Überschrift",
-      "bulletList": "Aufzählungsliste",
-      "orderedList": "Nummerierte Liste",
-      "blockquote": "Zitat",
-      "undo": "Rückgängig",
-      "redo": "Wiederholen",
-      "coverImageUpdated": "Titelbild aktualisiert",
-      "preview": "Vorschau",
-      "saving": "Speichern...",
-      "save": "Speichern",
-      "sharedContent": "Für alle Sprachen gültig",
-      "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
-      "localeContent": "Sprachspezifischer Inhalt",
-      "guideDetails": "Guide-Details",
-      "localeIndicator": "({locale})",
-      "guideDetailsDescription": "Bearbeiten Sie die Guide-Informationen für diese Sprache",
-      "titleLabel": "Titel *",
-      "titlePlaceholder": "Guide-Titel eingeben",
-      "characterCount": "{current}/500 Zeichen",
-      "descriptionLabel": "Beschreibung",
-      "descriptionPlaceholder": "Guide-Beschreibung eingeben",
-      "coverImageLabel": "Titelbild",
-      "coverImageAlt": "Titelbild",
-      "selectCoverImage": "Titelbild auswählen",
-      "guideProgress": "Guide-Fortschritt",
-      "stopProgress": "Stop-Fortschritt",
-      "progress": {
-        "label": "Vollständigkeit",
-        "guideTitle": "Guide-Titel",
-        "guideDescription": "Guide-Beschreibung",
-        "coverImage": "Titelbild",
-        "hasStops": "Mindestens ein Stop",
-        "allStopTitles": "Alle Stops haben Titel"
-      },
-      "backToGuide": "Zurück zum Guide",
-      "edit": "Bearbeiten"
-    },
-    "breadcrumb": {
-      "stops": "Stops",
-      "toggleMenu": "Menü umschalten"
-    },
-    "empty": {
-      "title": "Noch keine Guides",
-      "description": "Erstellen Sie ansprechende Multimedia-Guides mit Text, Bildern, Audio und Video für Ihr Museum oder Ihre Bildungseinrichtung.",
-      "heroDescription": "Ihre Besucher verdienen mehr als eine Broschüre. Erstellen Sie immersive Audio-Guides, die Ihre Ausstellungen zum Leben erwecken.",
-      "createButton": "Jetzt starten",
-      "createNewButton": "Neuen Guide erstellen",
-      "creating": "Wird erstellt...",
-      "step1": "Benennen",
-      "step2": "Stops hinzufügen",
-      "step3": "Veröffentlichen",
-      "feature1": "Strukturieren Sie Touren nach Räumen, Themen oder Künstlern",
-      "feature2": "Fügen Sie Audio, Bilder und Text für jede Station hinzu",
-      "feature3": "Veröffentlichen Sie mit einem Klick für Ihre Besucher",
-      "quote": "Ein Guide ist mehr als Information – er ist der rote Faden Ihrer Ausstellung."
-    },
-    "create": {
-      "error": "Guide konnte nicht erstellt werden",
-      "errorDescription": "Beim Erstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
-    },
-    "defaults": {
-      "newGuideTitle": "Neuer Guide",
-      "newGuideDescription": "Beginnen Sie mit der Erstellung Ihres Guide-Inhalts"
-    },
-    "loading": {
-      "opening": "Guide wird geöffnet...",
-      "openingDescription": "Bitte warten Sie, während wir Ihren Guide laden"
-    },
-    "editGuide": "Guide bearbeiten",
-    "viewInApp": "In App anzeigen",
-    "delete": {
-      "button": "Guide löschen",
-      "confirmTitle": "Guide löschen",
-      "confirmDescription": "Möchten Sie diesen Guide wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-      "confirmButton": "Löschen",
-      "cancelButton": "Abbrechen",
-      "success": "Guide gelöscht",
-      "successDescription": "Der Guide wurde erfolgreich gelöscht",
-      "error": "Fehler beim Löschen des Guides",
-      "errorDescription": "Beim Löschen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
-    },
-    "archive": {
-      "button": "Guide archivieren",
-      "confirmTitle": "Diesen Guide archivieren?",
-      "confirmDescription": "Dieser Guide wird archiviert. Sie können ihn später wiederherstellen.",
-      "confirmButton": "Archivieren",
-      "cancelButton": "Abbrechen",
-      "success": "Guide erfolgreich archiviert",
-      "successDescription": "Der Guide wurde archiviert",
-      "error": "Fehler beim Archivieren des Guides",
-      "errorDescription": "Beim Archivieren des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
-    },
-    "recover": {
-      "button": "Guide wiederherstellen",
-      "success": "Guide erfolgreich wiederhergestellt",
-      "successDescription": "Der Guide wurde zu Ihren aktiven Guides wiederhergestellt",
-      "error": "Fehler beim Wiederherstellen des Guides",
-      "errorDescription": "Beim Wiederherstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
-    },
-    "archived": {
-      "title": "Archiviert",
-      "description": "Archivierte Guides anzeigen und verwalten",
-      "empty": {
-        "title": "Keine archivierten Guides",
-        "description": "Archivierte Guides erscheinen hier. Sie können sie jederzeit wiederherstellen."
-      }
-    },
-    "archivedStatus": "Archiviert",
-    "archiveGuide": "Guide archivieren",
-    "recoverGuide": "Guide wiederherstellen",
-    "permanentlyDelete": "Endgültig löschen",
-    "archiveConfirmTitle": "Diesen Guide archivieren?",
-    "archiveConfirmDescription": "Dieser Guide wird archiviert. Sie können ihn später wiederherstellen.",
-    "recoverConfirmTitle": "Diesen Guide wiederherstellen?",
-    "recoverConfirmDescription": "Dieser Guide wird zu Ihren aktiven Guides wiederhergestellt.",
-    "deleteConfirmTitle": "Diesen Guide endgültig löschen?",
-    "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Der Guide wird endgültig gelöscht.",
-    "deleteConfirmDescriptionWithName": "Dadurch wird \"{name}\" endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
-    "deleteConfirmInstruction": "Zur Bestätigung eingeben: {phrase}",
-    "deleteConfirmPhrase": "Guide löschen",
-    "archivedSuccessfully": "Guide erfolgreich archiviert",
-    "recoveredSuccessfully": "Guide erfolgreich wiederhergestellt",
-    "deletedSuccessfully": "Guide erfolgreich gelöscht",
-    "archivedOn": "Archiviert am",
-    "archivedOnDate": "Archiviert am: {date}",
-    "noCoverImage": "Kein Titelbild",
-    "noDescription": "Keine Beschreibung",
-    "publish": {
-      "button": "Veröffentlichen",
-      "buttonWithLocale": "{locale} veröffentlichen",
-      "success": "Übersetzung erfolgreich veröffentlicht",
-      "error": "Fehler beim Veröffentlichen der Übersetzung",
-      "confirmTitle": "Übersetzung veröffentlichen?",
-      "confirmTitleWithLocale": "{locale} Version veröffentlichen?",
-      "confirmDescription": "Dies wird die Entwurfsversion für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
-      "confirmDescriptionWithLocale": "Dies wird die {locale} Übersetzung veröffentlichen. Die aktuelle veröffentlichte Version wird ersetzt.",
-      "cancel": "Abbrechen",
-      "confirm": "Veröffentlichen",
-      "publishing": "Wird veröffentlicht...",
-      "guidePublished": "Guide veröffentlicht",
-      "guidePublishError": "Fehler beim Veröffentlichen des Guides"
-    },
-    "localeSelector": {
-      "selectLanguage": "Sprache auswählen",
-      "searchLanguages": "Sprachen suchen...",
-      "noLanguageFound": "Keine Sprache gefunden",
-      "statusPublished": "Veröffentlicht",
-      "statusDraft": "Entwurf",
-      "statusModified": "Geändert",
-      "statusEmpty": "Leer",
-      "enabledLanguages": "Guide-Sprachen",
-      "addLanguage": "Übersetzung hinzufügen"
-    },
-    "progress": {
-      "title": "Guide-Fortschritt",
-      "count": "{completed}/{total}",
-      "titleAdded": "Titel hinzugefügt",
-      "descriptionAdded": "Beschreibung hinzugefügt",
-      "coverImageAdded": "Titelbild hinzugefügt",
-      "atLeastOneStop": "Mindestens 1 Stop erstellt",
-      "allStopsHaveTitles": "Alle Stops haben Titel",
-      "unpublishedChanges": "Unveröffentlichte Änderungen",
-      "stopsWithDrafts": "{count, plural, =1 {1 Stop hat unveröffentlichte Änderungen} other {# Stops haben unveröffentlichte Änderungen}}",
-      "guideDraft": "Guide hat unveröffentlichte Änderungen",
-      "allPublished": "Alle Inhalte sind veröffentlicht",
-      "currentLanguage": "{language} Übersetzung",
-      "guideStatus": "Guide-Status",
-      "status": {
-        "published": "Veröffentlicht",
-        "draft": "Entwurf",
-        "empty": "Nicht begonnen"
-      },
-      "stopsBreakdown": "Stops ({total} insgesamt)",
-      "published": "Veröffentlicht",
-      "draft": "Entwurf",
-      "notStarted": "Nicht begonnen",
-      "allLanguages": "Alle Sprachen",
-      "translatedCount": "{translated}/{total} übersetzt"
-    },
-    "versionHistory": {
-      "button": "Versionsverlauf",
-      "title": "Übersetzungsverlauf",
-      "titleWithLocale": "Versionsverlauf ({locale})",
-      "description": "Vorherige Versionen dieser Übersetzung anzeigen und verwalten",
-      "loading": "Versionen werden geladen...",
-      "noVersions": "Kein Versionsverlauf verfügbar",
-      "versionLabel": "Version",
-      "created": "Erstellt: {date}",
-      "published": "Veröffentlicht: {date}",
-      "rollback": "Wiederherstellen",
-      "rollbackSuccess": "Version als Entwurf wiederhergestellt",
-      "rollbackError": "Fehler beim Wiederherstellen der Version",
-      "loadError": "Fehler beim Laden des Versionsverlaufs",
-      "rollbackConfirmTitle": "Diese Version wiederherstellen?",
-      "rollbackConfirmDescription": "Version {version} wird als neuer Entwurf wiederhergestellt. Sie können sie dann überprüfen und veröffentlichen.",
-      "cancel": "Abbrechen",
-      "confirm": "Wiederherstellen",
-      "rollingBack": "Wird wiederhergestellt..."
-    },
-    "contentStatus": {
-      "draft": "Entwurf",
-      "published": "Veröffentlicht",
-      "modified": "Geändert"
-    },
-    "tabs": {
-      "draft": "Entwurf",
-      "published": "Veröffentlicht"
-    },
-    "actions": {
-      "publish": "Veröffentlichen",
-      "publishing": "Wird veröffentlicht...",
-      "save": "Speichern",
-      "saving": "Wird gespeichert...",
-      "unpublish": "Zurückziehen",
-      "discardChanges": "Änderungen verwerfen",
-      "moreActions": "Weitere Aktionen"
-    },
-    "readOnly": {
-      "banner": "Dies ist die veröffentlichte Version. Wechsle zum Entwurf, um Änderungen vorzunehmen.",
-      "neverPublished": "Dieser Inhalt wurde noch nie veröffentlicht."
-    },
-    "confirmDiscard": {
-      "title": "Änderungen verwerfen?",
-      "description": "Dies löscht deinen Entwurf und stellt die veröffentlichte Version wieder her. Diese Aktion kann nicht rückgängig gemacht werden.",
-      "confirm": "Verwerfen",
-      "cancel": "Abbrechen"
-    },
-    "confirmUnpublish": {
-      "title": "Inhalt zurückziehen?",
-      "description": "Dies entfernt den Inhalt von der öffentlichen Seite. Du kannst ihn jederzeit erneut veröffentlichen.",
-      "confirm": "Zurückziehen",
-      "cancel": "Abbrechen"
-    },
-    "untitledGuide": "Unbenannter Guide",
-    "unknownTitle": "Unbekannt",
-    "unsavedChanges": {
-      "title": "Ungespeicherte Änderungen",
-      "description": "Möchtest du diese Seite wirklich verlassen?",
-      "stay": "Weiter bearbeiten",
-      "leave": "Änderungen verwerfen"
-    },
-    "error": {
-      "failedToLoad": "Guides konnten nicht geladen werden",
-      "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
-    },
-    "details": {
-      "title": "Guide-Details",
-      "guideId": "Guide-ID",
-      "guideCover": "Guide-Titelbild",
-      "created": "Erstellt",
-      "lastUpdated": "Zuletzt aktualisiert",
-      "status": "Status",
-      "published": "Veröffentlicht",
-      "draft": "Entwurf",
-      "translations": "Übersetzungen",
-      "noCoverImage": "Titelbild",
-      "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
+    "stops": {
+        "title": "Stops",
+        "description": "Inhaltspunkte in Ihrem Guide",
+        "add": "Stop hinzufügen",
+        "edit": "Bearbeiten",
+        "untitled": "Unbenannter Stop",
+        "unknownTitle": "Unbekannt",
+        "backToStops": "Zurück zu Stops",
+        "stopNumber": "Station {number}",
+        "stopTitle": "{number}: {title}",
+        "empty": {
+            "title": "Noch keine Stops",
+            "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben.",
+            "heroDescription": "Stops sind die Bausteine Ihrer Guides. Jeder Stop erzählt einen Teil Ihrer Geschichte.",
+            "hint": "Erstellen Sie Stops innerhalb eines Guide-Editors, um zu beginnen."
+        },
+        "list": {
+            "description": "Verwalten Sie alle Stops in Ihren Guides",
+            "error": "Stops konnten nicht geladen werden",
+            "emptyDescription": "Stops sind Inhaltspunkte, die in mehreren Guides wiederverwendet werden können.",
+            "emptyHint": "Erstellen Sie Stops innerhalb eines Guide-Editors, um zu beginnen.",
+            "usedIn": "Verwendet in {count, plural, =1 {# Guide} other {# Guides}}",
+            "moreGuides": "+{count}"
+        },
+        "editor": {
+            "title": "Stop-Details",
+            "sharedContent": "Für alle Sprachen gültig",
+            "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
+            "localeContent": "Sprachspezifischer Inhalt",
+            "localeContentDescription": "Bearbeiten Sie den Stop-Inhalt für diese Sprache",
+            "titleLabel": "Titel",
+            "titlePlaceholder": "Stop-Titel eingeben",
+            "descriptionLabel": "Beschreibung",
+            "descriptionPlaceholder": "Stop-Beschreibung eingeben",
+            "transcriptionLabel": "Transkription",
+            "transcriptionPlaceholder": "Audio-/Videotranskription",
+            "imagesLabel": "Bilder",
+            "audioLabel": "Audio-Guide",
+            "videoLabel": "Video",
+            "addImage": "Bild hinzufügen",
+            "addAudio": "Audio hinzufügen",
+            "addVideo": "Video hinzufügen",
+            "noImages": "Keine Bilder",
+            "noAudio": "Kein Audio",
+            "noVideo": "Kein Video",
+            "autoTranscribe": "Automatisch aus Audio generieren",
+            "audioFile": "Audiodatei",
+            "dropzoneText": "Klicken zum Hochladen oder per Drag & Drop",
+            "audioHint": "MP3-Dateien bis 50MB",
+            "browseLibrary": "Asset-Bibliothek durchsuchen...",
+            "autoGenerate": "Automatisch aus Audio generieren",
+            "boldButton": "Fett",
+            "italicButton": "Kursiv",
+            "listButton": "Liste",
+            "galleryLabel": "Galerie (Bilder & Video)",
+            "galleryHint": "Bilder und Videos bis 50MB pro Datei"
+        },
+        "actions": {
+            "delete": "Stop löschen",
+            "deleteConfirm": "Möchten Sie diesen Stop wirklich löschen?",
+            "deleteSuccess": "Stop gelöscht",
+            "deleteError": "Stop konnte nicht gelöscht werden",
+            "save": "Stop speichern",
+            "saving": "Wird gespeichert...",
+            "cancel": "Abbrechen",
+            "addError": "Fehler beim Hinzufügen des Stops",
+            "reorderSuccess": "Stops neu angeordnet",
+            "reorderError": "Fehler beim Neuanordnen der Stops"
+        },
+        "assets": {
+            "attachError": "Fehler beim Anhängen des Assets",
+            "removeError": "Fehler beim Entfernen des Assets"
+        },
+        "publish": {
+            "button": "Veröffentlichen",
+            "buttonWithLocale": "{locale} veröffentlichen",
+            "success": "Stop-Übersetzung erfolgreich veröffentlicht",
+            "error": "Fehler beim Veröffentlichen der Stop-Übersetzung",
+            "confirmTitle": "Stop-Übersetzung veröffentlichen?",
+            "confirmTitleWithLocale": "Stop auf {locale} veröffentlichen?",
+            "confirmDescription": "Dies wird die Entwurfsversion dieses Stops für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
+            "confirmDescriptionWithLocale": "Dies wird die {locale} Übersetzung dieses Stops veröffentlichen. Die aktuelle veröffentlichte Version wird ersetzt.",
+            "cancel": "Abbrechen",
+            "confirm": "Veröffentlichen",
+            "publishing": "Wird veröffentlicht..."
+        },
+        "translationStatus": {
+            "published": "Veröffentlicht",
+            "draft": "Entwurf",
+            "empty": "Nicht begonnen"
+        },
+        "versionHistory": {
+            "button": "Versionsverlauf",
+            "title": "Stop-Übersetzungsverlauf",
+            "titleWithLocale": "Versionsverlauf ({locale})",
+            "description": "Vorherige Versionen dieser Stop-Übersetzung anzeigen und verwalten",
+            "loading": "Versionen werden geladen...",
+            "noVersions": "Kein Versionsverlauf verfügbar",
+            "versionLabel": "Version",
+            "created": "Erstellt: {date}",
+            "published": "Veröffentlicht: {date}",
+            "rollback": "Wiederherstellen",
+            "rollbackSuccess": "Version als Entwurf wiederhergestellt",
+            "rollbackError": "Fehler beim Wiederherstellen der Version",
+            "loadError": "Fehler beim Laden des Versionsverlaufs",
+            "rollbackConfirmTitle": "Diese Version wiederherstellen?",
+            "rollbackConfirmDescription": "Version {version} wird als neuer Entwurf wiederhergestellt. Sie können sie dann überprüfen und veröffentlichen.",
+            "cancel": "Abbrechen",
+            "confirm": "Wiederherstellen",
+            "rollingBack": "Wird wiederhergestellt..."
+        },
+        "status": {
+            "draft": "Entwurf",
+            "published": "Veröffentlicht",
+            "draftChanges": "Entwurfsänderungen"
+        }
     },
     "assets": {
-      "attachSuccess": "Asset zum Guide hinzugefügt",
-      "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
-      "removeError": "Fehler beim Entfernen des Assets vom Guide"
+        "title": "Assets",
+        "description": "Verwalten Sie Ihre Medienbibliothek",
+        "types": {
+            "image": "Bild",
+            "audio": "Audio",
+            "video": "Video"
+        },
+        "empty": {
+            "title": "Noch keine Assets",
+            "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Guides zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Guides wiederverwendet werden.",
+            "uploadButton": "Ihr erstes Asset hochladen",
+            "uploadImage": "Bild hochladen",
+            "uploadAudio": "Audio hochladen",
+            "uploadVideo": "Video hochladen"
+        },
+        "picker": {
+            "title": "{type} auswählen",
+            "titleWithLocale": "{type} auswählen ({locale})",
+            "tabs": {
+                "library": "Bibliothek",
+                "upload": "Hochladen"
+            },
+            "select": "Auswählen",
+            "selected": "{count} ausgewählt",
+            "cancel": "Abbrechen",
+            "noAssets": "Keine {type}-Assets gefunden",
+            "multiSelect": "Mehrere auswählen",
+            "empty": {
+                "description": "Laden Sie Assets hoch, um loszulegen"
+            }
+        },
+        "upload": {
+            "button": "Hochladen",
+            "title": "{type} hochladen",
+            "error": "Upload fehlgeschlagen",
+            "errorDescription": "Beim Upload ist ein Fehler aufgetreten",
+            "restricted": "Upload eingeschränkt",
+            "restrictedDescription": "Datei erfüllt nicht die Upload-Anforderungen",
+            "dropzone": "{type} hier ablegen oder klicken zum Durchsuchen",
+            "dropzoneGeneric": "Bild, Audio oder Video hier ablegen oder klicken zum Durchsuchen",
+            "sizeLimits": "Bilder bis 10MB, Audio bis 50MB, Video bis 500MB",
+            "unsupportedType": "Nicht unterstützter Dateityp. Bitte laden Sie ein Bild, Audio oder Video hoch.",
+            "maxSize": "Maximale Größe: {size}MB",
+            "uploadComplete": "Upload abgeschlossen!",
+            "uploading": "{progress}% hochgeladen",
+            "uploadButton": "{type} hochladen",
+            "invalidFileType": "Ungültiger Dateityp. Bitte wählen Sie eine {type}-Datei.",
+            "fileSizeExceeded": "Dateigröße überschreitet {size}MB-Limit"
+        },
+        "filter": {
+            "all": "Alle Typen",
+            "allLocales": "Alle Sprachen",
+            "noLocale": "Keine Sprache",
+            "localeEn": "Englisch",
+            "localeDe": "Deutsch",
+            "localeRm": "Rätoromanisch",
+            "image": "Bilder",
+            "audio": "Audio",
+            "video": "Video",
+            "search": "Assets suchen...",
+            "searchPlaceholder": "Nach Dateinamen suchen...",
+            "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen"
+        },
+        "error": {
+            "failedToLoad": "Assets konnten nicht geladen werden",
+            "unexpected": "Ein unerwarteter Fehler ist aufgetreten",
+            "tryAgain": "Erneut versuchen"
+        },
+        "card": {
+            "uploaded": "Hochgeladen",
+            "size": "Größe",
+            "sizeValue": "Größe: {size}",
+            "locale": "Sprache",
+            "delete": "Löschen",
+            "deleting": "Wird gelöscht...",
+            "deleteConfirm": "Möchten Sie dieses Asset wirklich löschen?",
+            "deleteSuccess": "Asset gelöscht",
+            "deleteError": "Asset konnte nicht gelöscht werden",
+            "preview": "Vorschau",
+            "download": "Herunterladen",
+            "cancel": "Abbrechen"
+        },
+        "usage": {
+            "title": "Verwendung",
+            "notUsed": "Nicht verwendet",
+            "guidesCount": "{count, plural, one {# Guide} other {# Guides}}",
+            "stopsCount": "{count, plural, one {# Stopp} other {# Stopps}}",
+            "guidesAndStops": "{guides}, {stops}",
+            "role": {
+                "cover": "Titelbild",
+                "gallery": "Galerie",
+                "audio": "Audioguide"
+            }
+        },
+        "deleteWithUsage": {
+            "title": "Asset löschen",
+            "warningTitle": "Dieses Asset wird verwendet",
+            "description": "\"{fileName}\" wird verwendet in:",
+            "guidesSection": "Guides",
+            "stopsSection": "Stopps",
+            "warning": "Das Löschen entfernt dieses Asset dauerhaft von allen diesen Orten.",
+            "confirmButton": "Trotzdem löschen",
+            "loadingUsage": "Verwendung wird geprüft..."
+        },
+        "limits": {
+            "maxSize": "Max. Dateigröße: {size}",
+            "maxFiles": "Bis zu {count} Dateien"
+        },
+        "mediaPicker": {
+            "dropzoneDesktop": "Hierher ziehen oder klicken zum Hochladen",
+            "dropzoneMobile": "Tippen zum Hochladen",
+            "dropHere": "Dateien hier ablegen",
+            "dropzoneAriaLabel": "Dateien hochladen",
+            "browseLibrary": "Bibliothek durchsuchen",
+            "replace": "Ersetzen",
+            "remove": "Entfernen",
+            "addMore": "Mehr hinzufügen",
+            "noPreview": "Keine Vorschau",
+            "uploading": "{progress}% werden hochgeladen..."
+        }
     },
-    "localesManager": {
-      "addLanguage": "Sprache hinzufügen",
-      "removeLanguage": "{language} entfernen",
-      "searchLanguages": "Sprachen suchen...",
-      "noLanguageFound": "Keine Sprache gefunden.",
-      "confirmRemoveTitle": "Sprache entfernen?",
-      "confirmRemoveDescription": "Dieser Guide hat Inhalte in {language}. Das Entfernen der Sprache wird sie aus dem Guide ausblenden. Die Inhalte werden nicht gelöscht, sind aber nicht mehr von diesem Guide aus bearbeitbar.",
-      "cancel": "Abbrechen",
-      "confirmRemove": "Entfernen"
+    "sidebar": {
+        "nav": {
+            "profile": "Profil",
+            "tours": "Touren",
+            "collections": "Sammlungen",
+            "brandKit": "Brand Kit",
+            "workspace": "Arbeitsbereich",
+            "guides": "Guides",
+            "stops": "Stopps",
+            "archived": "Archiviert",
+            "assets": "Assets",
+            "design": "Design",
+            "analytics": "Analytics",
+            "teamAndMembers": "Team & Mitglieder",
+            "settings": "Einstellungen",
+            "support": "Support",
+            "feedback": "Feedback",
+            "recentGuides": "Neueste Guides",
+            "more": "Mehr",
+            "viewProject": "Projekt anzeigen",
+            "shareProject": "Projekt teilen",
+            "deleteProject": "Projekt löschen"
+        },
+        "appName": "Valguide Studio",
+        "sections": {
+            "content": "Inhalt",
+            "performance": "Leistung",
+            "library": "Bibliothek",
+            "settings": "Einstellungen"
+        },
+        "pages": {
+            "guides": {
+                "description": "Erstellen und verwalten Sie Ihre interaktiven Guides."
+            },
+            "assets": {
+                "description": "Verwalten Sie Ihre Medienbibliothek mit Bildern, Audio und Videos."
+            },
+            "design": {
+                "description": "Passen Sie das Aussehen Ihrer Guides an."
+            },
+            "analytics": {
+                "description": "Zeigen Sie die Leistungsmetriken Ihrer Guides an und analysieren Sie diese."
+            },
+            "teamAndMembers": {
+                "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen."
+            },
+            "settings": {
+                "description": "Konfigurieren Sie Ihre Anwendungseinstellungen."
+            },
+            "support": {
+                "description": "Erhalten Sie Hilfe und Unterstützung für Ihre Fragen."
+            },
+            "feedback": {
+                "description": "Teilen Sie uns Ihr Feedback und Ihre Vorschläge mit."
+            }
+        },
+        "feedback": {
+            "title": "Feedback teilen",
+            "description": "Helfen Sie uns, Valguide Studio zu verbessern. Wir freuen uns über Ihre Gedanken, Vorschläge oder Probleme.",
+            "placeholder": "Was liegt Ihnen auf dem Herzen? Teilen Sie Ihr Feedback, Ideen oder melden Sie Probleme...",
+            "cancel": "Abbrechen",
+            "submit": "Feedback senden",
+            "feedbackRequired": "Bitte geben Sie Ihr Feedback ein",
+            "submitError": "Feedback konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+            "success": "Vielen Dank für Ihr Feedback!"
+        },
+        "user": {
+            "myProfile": "Mein Profil",
+            "billing": "Abrechnung",
+            "notifications": "Benachrichtigungen",
+            "language": "Sprache",
+            "logout": "Abmelden",
+            "upgradeToPro": "Auf Pro upgraden"
+        },
+        "team": {
+            "teams": "Teams",
+            "addTeam": "Team hinzufügen"
+        }
     },
-    "locales": {
-      "updateSuccess": "Sprachen aktualisiert",
-      "updateError": "Fehler beim Aktualisieren der Sprachen"
+    "orgs": {
+        "teamSwitcher": {
+            "teams": "Teams",
+            "createTeam": "Team erstellen",
+            "teamSettings": "Team-Einstellungen",
+            "current": "Aktuell",
+            "success": "Team gewechselt",
+            "error": "Fehler beim Wechseln des Teams"
+        },
+        "members": {
+            "title": "Team & Mitglieder",
+            "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen.",
+            "member": "Mitglied",
+            "role": "Rolle",
+            "joined": "Beigetreten",
+            "actions": "Aktionen",
+            "you": "Du",
+            "noMembers": "Keine Mitglieder gefunden",
+            "changeRoleTo": "Ändern zu {role}",
+            "resendInvite": "Einladung erneut senden",
+            "removeMember": "Mitglied entfernen",
+            "removeError": "Fehler beim Entfernen des Mitglieds",
+            "roleUpdateSuccess": "Rolle aktualisiert",
+            "roleUpdateError": "Fehler beim Aktualisieren der Rolle"
+        },
+        "inviteDialog": {
+            "inviteMember": "Mitglied einladen",
+            "inviteDescription": "Senden Sie eine Einladung zum Beitritt zu Ihrem Team per E-Mail.",
+            "email": "E-Mail-Adresse",
+            "role": "Rolle",
+            "cancel": "Abbrechen",
+            "sendInvite": "Einladung senden",
+            "sending": "Wird gesendet...",
+            "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+            "inviteError": "Fehler beim Senden der Einladung. Bitte versuchen Sie es erneut.",
+            "success": "Einladung gesendet"
+        },
+        "pendingInvites": {
+            "title": "Ausstehende Einladungen",
+            "description": "Einladungen, die gesendet, aber noch nicht akzeptiert wurden.",
+            "email": "E-Mail",
+            "role": "Rolle",
+            "invitedBy": "Eingeladen von",
+            "status": "Status",
+            "sent": "Gesendet",
+            "actions": "Aktionen",
+            "resend": "Einladung erneut senden",
+            "cancel": "Einladung abbrechen",
+            "resendSuccess": "Einladung erneut gesendet",
+            "resendError": "Fehler beim erneuten Senden der Einladung",
+            "cancelSuccess": "Einladung abgebrochen",
+            "cancelError": "Fehler beim Abbrechen der Einladung"
+        },
+        "noTeam": {
+            "welcome": "Willkommen bei ValGuide",
+            "description": "Sie gehören noch keinem Team an. Erstellen Sie Ihr erstes Team, um Ihre Guides und Inhalte zu verwalten.",
+            "createButton": "Team erstellen"
+        },
+        "createTeam": {
+            "title": "Team erstellen",
+            "description": "Fügen Sie ein neues Team hinzu, um Ihre Guides zu verwalten.",
+            "nameLabel": "Teamname",
+            "namePlaceholder": "Acme Museum",
+            "cancel": "Abbrechen",
+            "submit": "Team erstellen",
+            "submitting": "Wird erstellt...",
+            "error": "Fehler beim Erstellen des Teams",
+            "triggerButton": "Team erstellen"
+        }
+    },
+    "joinTeam": {
+        "invalid": {
+            "title": "Einladung ungültig",
+            "description": "Dieser Einladungslink ist ungültig, abgelaufen oder wurde storniert.",
+            "action": "Bitte bitten Sie den Teamadministrator, Ihnen eine neue Einladung zu senden.",
+            "homeButton": "Zur Startseite"
+        },
+        "public": {
+            "title": "Tritt {teamName} bei",
+            "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",
+            "invitationFor": "Einladung für:",
+            "instruction": "Um diese Einladung anzunehmen, melde dich bitte an oder erstelle ein Konto mit dieser E-Mail-Adresse.",
+            "createAccount": "Konto erstellen",
+            "haveAccount": "Ich habe bereits ein Konto"
+        },
+        "wrongAccount": {
+            "title": "Falsches Konto",
+            "description": "Du bist derzeit als <strong>{email}</strong> angemeldet.",
+            "intendedFor": "Diese Einladung ist für <strong>{email}</strong> bestimmt.",
+            "instruction": "Bitte melde dich ab und mit dem richtigen Konto an, um diese Einladung anzunehmen.",
+            "signOutButton": "Abmelden & Konto wechseln",
+            "cancelButton": "Abbrechen"
+        },
+        "joining": {
+            "title": "Team wird beigetreten...",
+            "description": "Einladung für {teamName} wird angenommen",
+            "error": "Es gab ein Problem beim Beitritt zum Team.",
+            "dashboardButton": "Zum Dashboard"
+        }
+    },
+    "theme": {
+        "toggleTheme": "Theme wechseln",
+        "switchToDark": "Dunkelmodus",
+        "switchToLight": "Hellmodus",
+        "light": "Hell",
+        "dark": "Dunkel",
+        "system": "System"
+    },
+    "profile": {
+        "title": "Profil",
+        "description": "Verwalten Sie Ihre öffentlichen Profilinformationen.",
+        "username": "Benutzername",
+        "usernameDescription": "Dies ist Ihr öffentlicher Anzeigename.",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "save": "Änderungen speichern",
+        "saving": "Wird gespeichert...",
+        "actions": {
+            "updateSuccess": "Profil erfolgreich aktualisiert",
+            "updateError": "Fehler beim Aktualisieren des Profils",
+            "invalidData": "Ungültige Daten"
+        }
+    },
+    "fileDropzone": {
+        "dragAndDrop": "Ziehe Dateien hierher",
+        "orClickToBrowse": "oder klicke zum Durchsuchen",
+        "dropFilesHere": "Dateien hier ablegen",
+        "maxFileSize": "Max. Dateigröße",
+        "upTo": "Bis zu",
+        "files": "Dateien",
+        "file": "Datei",
+        "filesSelected": "ausgewählt",
+        "clearAll": "Alle löschen",
+        "complete": "Abgeschlossen",
+        "fileSizeExceeds": "Dateigröße überschreitet",
+        "limit": "Limit",
+        "fileTypeNotAccepted": "Dateityp nicht akzeptiert"
     }
-  },
-  "stops": {
-    "title": "Stops",
-    "description": "Inhaltspunkte in Ihrem Guide",
-    "add": "Stop hinzufügen",
-    "edit": "Bearbeiten",
-    "untitled": "Unbenannter Stop",
-    "unknownTitle": "Unbekannt",
-    "backToStops": "Zurück zu Stops",
-    "stopNumber": "Station {number}",
-    "stopTitle": "{number}: {title}",
-    "empty": {
-      "title": "Noch keine Stops",
-      "description": "Fügen Sie Stops hinzu, um die Reise durch Ihren Guide zu erstellen. Jeder Stop kann eigene Inhalte in mehreren Sprachen haben.",
-      "heroDescription": "Stops sind die Bausteine Ihrer Guides. Jeder Stop erzählt einen Teil Ihrer Geschichte.",
-      "hint": "Erstellen Sie Stops innerhalb eines Guide-Editors, um zu beginnen."
-    },
-    "list": {
-      "description": "Verwalten Sie alle Stops in Ihren Guides",
-      "error": "Stops konnten nicht geladen werden",
-      "emptyDescription": "Stops sind Inhaltspunkte, die in mehreren Guides wiederverwendet werden können.",
-      "emptyHint": "Erstellen Sie Stops innerhalb eines Guide-Editors, um zu beginnen.",
-      "usedIn": "Verwendet in {count, plural, =1 {# Guide} other {# Guides}}",
-      "moreGuides": "+{count}"
-    },
-    "editor": {
-      "title": "Stop-Details",
-      "sharedContent": "Für alle Sprachen gültig",
-      "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
-      "localeContent": "Sprachspezifischer Inhalt",
-      "localeContentDescription": "Bearbeiten Sie den Stop-Inhalt für diese Sprache",
-      "titleLabel": "Titel",
-      "titlePlaceholder": "Stop-Titel eingeben",
-      "descriptionLabel": "Beschreibung",
-      "descriptionPlaceholder": "Stop-Beschreibung eingeben",
-      "transcriptionLabel": "Transkription",
-      "transcriptionPlaceholder": "Audio-/Videotranskription",
-      "imagesLabel": "Bilder",
-      "audioLabel": "Audio-Guide",
-      "videoLabel": "Video",
-      "addImage": "Bild hinzufügen",
-      "addAudio": "Audio hinzufügen",
-      "addVideo": "Video hinzufügen",
-      "noImages": "Keine Bilder",
-      "noAudio": "Kein Audio",
-      "noVideo": "Kein Video",
-      "autoTranscribe": "Automatisch aus Audio generieren",
-      "audioFile": "Audiodatei",
-      "dropzoneText": "Klicken zum Hochladen oder per Drag & Drop",
-      "audioHint": "MP3-Dateien bis 50MB",
-      "browseLibrary": "Asset-Bibliothek durchsuchen...",
-      "autoGenerate": "Automatisch aus Audio generieren",
-      "boldButton": "Fett",
-      "italicButton": "Kursiv",
-      "listButton": "Liste",
-      "galleryLabel": "Galerie (Bilder & Video)",
-      "galleryHint": "Bilder und Videos bis 50MB pro Datei"
-    },
-    "actions": {
-      "delete": "Stop löschen",
-      "deleteConfirm": "Möchten Sie diesen Stop wirklich löschen?",
-      "deleteSuccess": "Stop gelöscht",
-      "deleteError": "Stop konnte nicht gelöscht werden",
-      "save": "Stop speichern",
-      "saving": "Wird gespeichert...",
-      "cancel": "Abbrechen",
-      "addError": "Fehler beim Hinzufügen des Stops",
-      "reorderSuccess": "Stops neu angeordnet",
-      "reorderError": "Fehler beim Neuanordnen der Stops"
-    },
-    "assets": {
-      "attachError": "Fehler beim Anhängen des Assets",
-      "removeError": "Fehler beim Entfernen des Assets"
-    },
-    "publish": {
-      "button": "Veröffentlichen",
-      "buttonWithLocale": "{locale} veröffentlichen",
-      "success": "Stop-Übersetzung erfolgreich veröffentlicht",
-      "error": "Fehler beim Veröffentlichen der Stop-Übersetzung",
-      "confirmTitle": "Stop-Übersetzung veröffentlichen?",
-      "confirmTitleWithLocale": "Stop auf {locale} veröffentlichen?",
-      "confirmDescription": "Dies wird die Entwurfsversion dieses Stops für Benutzer sichtbar machen. Die aktuelle veröffentlichte Version wird ersetzt.",
-      "confirmDescriptionWithLocale": "Dies wird die {locale} Übersetzung dieses Stops veröffentlichen. Die aktuelle veröffentlichte Version wird ersetzt.",
-      "cancel": "Abbrechen",
-      "confirm": "Veröffentlichen",
-      "publishing": "Wird veröffentlicht..."
-    },
-    "translationStatus": {
-      "published": "Veröffentlicht",
-      "draft": "Entwurf",
-      "empty": "Nicht begonnen"
-    },
-    "versionHistory": {
-      "button": "Versionsverlauf",
-      "title": "Stop-Übersetzungsverlauf",
-      "titleWithLocale": "Versionsverlauf ({locale})",
-      "description": "Vorherige Versionen dieser Stop-Übersetzung anzeigen und verwalten",
-      "loading": "Versionen werden geladen...",
-      "noVersions": "Kein Versionsverlauf verfügbar",
-      "versionLabel": "Version",
-      "created": "Erstellt: {date}",
-      "published": "Veröffentlicht: {date}",
-      "rollback": "Wiederherstellen",
-      "rollbackSuccess": "Version als Entwurf wiederhergestellt",
-      "rollbackError": "Fehler beim Wiederherstellen der Version",
-      "loadError": "Fehler beim Laden des Versionsverlaufs",
-      "rollbackConfirmTitle": "Diese Version wiederherstellen?",
-      "rollbackConfirmDescription": "Version {version} wird als neuer Entwurf wiederhergestellt. Sie können sie dann überprüfen und veröffentlichen.",
-      "cancel": "Abbrechen",
-      "confirm": "Wiederherstellen",
-      "rollingBack": "Wird wiederhergestellt..."
-    },
-    "status": {
-      "draft": "Entwurf",
-      "published": "Veröffentlicht",
-      "draftChanges": "Entwurfsänderungen"
-    }
-  },
-  "assets": {
-    "title": "Assets",
-    "description": "Verwalten Sie Ihre Medienbibliothek",
-    "types": {
-      "image": "Bild",
-      "audio": "Audio",
-      "video": "Video"
-    },
-    "empty": {
-      "title": "Noch keine Assets",
-      "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Guides zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Guides wiederverwendet werden.",
-      "uploadButton": "Ihr erstes Asset hochladen",
-      "uploadImage": "Bild hochladen",
-      "uploadAudio": "Audio hochladen",
-      "uploadVideo": "Video hochladen"
-    },
-    "picker": {
-      "title": "{type} auswählen",
-      "titleWithLocale": "{type} auswählen ({locale})",
-      "tabs": {
-        "library": "Bibliothek",
-        "upload": "Hochladen"
-      },
-      "select": "Auswählen",
-      "selected": "{count} ausgewählt",
-      "cancel": "Abbrechen",
-      "noAssets": "Keine {type}-Assets gefunden",
-      "multiSelect": "Mehrere auswählen",
-      "empty": {
-        "description": "Laden Sie Assets hoch, um loszulegen"
-      }
-    },
-    "upload": {
-      "button": "Hochladen",
-      "title": "{type} hochladen",
-      "error": "Upload fehlgeschlagen",
-      "errorDescription": "Beim Upload ist ein Fehler aufgetreten",
-      "restricted": "Upload eingeschränkt",
-      "restrictedDescription": "Datei erfüllt nicht die Upload-Anforderungen",
-      "dropzone": "{type} hier ablegen oder klicken zum Durchsuchen",
-      "dropzoneGeneric": "Bild, Audio oder Video hier ablegen oder klicken zum Durchsuchen",
-      "sizeLimits": "Bilder bis 10MB, Audio bis 50MB, Video bis 500MB",
-      "unsupportedType": "Nicht unterstützter Dateityp. Bitte laden Sie ein Bild, Audio oder Video hoch.",
-      "maxSize": "Maximale Größe: {size}MB",
-      "uploadComplete": "Upload abgeschlossen!",
-      "uploading": "{progress}% hochgeladen",
-      "uploadButton": "{type} hochladen",
-      "invalidFileType": "Ungültiger Dateityp. Bitte wählen Sie eine {type}-Datei.",
-      "fileSizeExceeded": "Dateigröße überschreitet {size}MB-Limit"
-    },
-    "filter": {
-      "all": "Alle Typen",
-      "allLocales": "Alle Sprachen",
-      "noLocale": "Keine Sprache",
-      "localeEn": "Englisch",
-      "localeDe": "Deutsch",
-      "localeRm": "Rätoromanisch",
-      "image": "Bilder",
-      "audio": "Audio",
-      "video": "Video",
-      "search": "Assets suchen...",
-      "searchPlaceholder": "Nach Dateinamen suchen...",
-      "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen"
-    },
-    "error": {
-      "failedToLoad": "Assets konnten nicht geladen werden",
-      "unexpected": "Ein unerwarteter Fehler ist aufgetreten",
-      "tryAgain": "Erneut versuchen"
-    },
-    "card": {
-      "uploaded": "Hochgeladen",
-      "size": "Größe",
-      "sizeValue": "Größe: {size}",
-      "locale": "Sprache",
-      "delete": "Löschen",
-      "deleting": "Wird gelöscht...",
-      "deleteConfirm": "Möchten Sie dieses Asset wirklich löschen?",
-      "deleteSuccess": "Asset gelöscht",
-      "deleteError": "Asset konnte nicht gelöscht werden",
-      "preview": "Vorschau",
-      "download": "Herunterladen",
-      "cancel": "Abbrechen"
-    },
-    "usage": {
-      "title": "Verwendung",
-      "notUsed": "Nicht verwendet",
-      "guidesCount": "{count, plural, one {# Guide} other {# Guides}}",
-      "stopsCount": "{count, plural, one {# Stopp} other {# Stopps}}",
-      "guidesAndStops": "{guides}, {stops}",
-      "role": {
-        "cover": "Titelbild",
-        "gallery": "Galerie",
-        "audio": "Audioguide"
-      }
-    },
-    "deleteWithUsage": {
-      "title": "Asset löschen",
-      "warningTitle": "Dieses Asset wird verwendet",
-      "description": "\"{fileName}\" wird verwendet in:",
-      "guidesSection": "Guides",
-      "stopsSection": "Stopps",
-      "warning": "Das Löschen entfernt dieses Asset dauerhaft von allen diesen Orten.",
-      "confirmButton": "Trotzdem löschen",
-      "loadingUsage": "Verwendung wird geprüft..."
-    },
-    "limits": {
-      "maxSize": "Max. Dateigröße: {size}",
-      "maxFiles": "Bis zu {count} Dateien"
-    },
-    "mediaPicker": {
-      "dropzoneDesktop": "Hierher ziehen oder klicken zum Hochladen",
-      "dropzoneMobile": "Tippen zum Hochladen",
-      "dropHere": "Dateien hier ablegen",
-      "dropzoneAriaLabel": "Dateien hochladen",
-      "browseLibrary": "Bibliothek durchsuchen",
-      "replace": "Ersetzen",
-      "remove": "Entfernen",
-      "addMore": "Mehr hinzufügen",
-      "noPreview": "Keine Vorschau",
-      "uploading": "{progress}% werden hochgeladen..."
-    }
-  },
-  "sidebar": {
-    "nav": {
-      "profile": "Profil",
-      "tours": "Touren",
-      "collections": "Sammlungen",
-      "brandKit": "Brand Kit",
-      "workspace": "Arbeitsbereich",
-      "guides": "Guides",
-      "stops": "Stopps",
-      "archived": "Archiviert",
-      "assets": "Assets",
-      "design": "Design",
-      "analytics": "Analytics",
-      "teamAndMembers": "Team & Mitglieder",
-      "settings": "Einstellungen",
-      "support": "Support",
-      "feedback": "Feedback",
-      "recentGuides": "Neueste Guides",
-      "more": "Mehr",
-      "viewProject": "Projekt anzeigen",
-      "shareProject": "Projekt teilen",
-      "deleteProject": "Projekt löschen"
-    },
-    "appName": "Valguide Studio",
-    "sections": {
-      "content": "Inhalt",
-      "performance": "Leistung",
-      "library": "Bibliothek",
-      "settings": "Einstellungen"
-    },
-    "pages": {
-      "guides": {
-        "description": "Erstellen und verwalten Sie Ihre interaktiven Guides."
-      },
-      "assets": {
-        "description": "Verwalten Sie Ihre Medienbibliothek mit Bildern, Audio und Videos."
-      },
-      "design": {
-        "description": "Passen Sie das Aussehen Ihrer Guides an."
-      },
-      "analytics": {
-        "description": "Zeigen Sie die Leistungsmetriken Ihrer Guides an und analysieren Sie diese."
-      },
-      "teamAndMembers": {
-        "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen."
-      },
-      "settings": {
-        "description": "Konfigurieren Sie Ihre Anwendungseinstellungen."
-      },
-      "support": {
-        "description": "Erhalten Sie Hilfe und Unterstützung für Ihre Fragen."
-      },
-      "feedback": {
-        "description": "Teilen Sie uns Ihr Feedback und Ihre Vorschläge mit."
-      }
-    },
-    "feedback": {
-      "title": "Feedback teilen",
-      "description": "Helfen Sie uns, Valguide Studio zu verbessern. Wir freuen uns über Ihre Gedanken, Vorschläge oder Probleme.",
-      "placeholder": "Was liegt Ihnen auf dem Herzen? Teilen Sie Ihr Feedback, Ideen oder melden Sie Probleme...",
-      "cancel": "Abbrechen",
-      "submit": "Feedback senden",
-      "feedbackRequired": "Bitte geben Sie Ihr Feedback ein",
-      "submitError": "Feedback konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
-      "success": "Vielen Dank für Ihr Feedback!"
-    },
-    "user": {
-      "myProfile": "Mein Profil",
-      "billing": "Abrechnung",
-      "notifications": "Benachrichtigungen",
-      "language": "Sprache",
-      "logout": "Abmelden",
-      "upgradeToPro": "Auf Pro upgraden"
-    },
-    "team": {
-      "teams": "Teams",
-      "addTeam": "Team hinzufügen"
-    }
-  },
-  "orgs": {
-    "teamSwitcher": {
-      "teams": "Teams",
-      "createTeam": "Team erstellen",
-      "teamSettings": "Team-Einstellungen",
-      "current": "Aktuell",
-      "success": "Team gewechselt",
-      "error": "Fehler beim Wechseln des Teams"
-    },
-    "members": {
-      "title": "Team & Mitglieder",
-      "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen.",
-      "member": "Mitglied",
-      "role": "Rolle",
-      "joined": "Beigetreten",
-      "actions": "Aktionen",
-      "you": "Du",
-      "noMembers": "Keine Mitglieder gefunden",
-      "changeRoleTo": "Ändern zu {role}",
-      "resendInvite": "Einladung erneut senden",
-      "removeMember": "Mitglied entfernen",
-      "removeError": "Fehler beim Entfernen des Mitglieds",
-      "roleUpdateSuccess": "Rolle aktualisiert",
-      "roleUpdateError": "Fehler beim Aktualisieren der Rolle"
-    },
-    "inviteDialog": {
-      "inviteMember": "Mitglied einladen",
-      "inviteDescription": "Senden Sie eine Einladung zum Beitritt zu Ihrem Team per E-Mail.",
-      "email": "E-Mail-Adresse",
-      "role": "Rolle",
-      "cancel": "Abbrechen",
-      "sendInvite": "Einladung senden",
-      "sending": "Wird gesendet...",
-      "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-      "inviteError": "Fehler beim Senden der Einladung. Bitte versuchen Sie es erneut.",
-      "success": "Einladung gesendet"
-    },
-    "pendingInvites": {
-      "title": "Ausstehende Einladungen",
-      "description": "Einladungen, die gesendet, aber noch nicht akzeptiert wurden.",
-      "email": "E-Mail",
-      "role": "Rolle",
-      "invitedBy": "Eingeladen von",
-      "status": "Status",
-      "sent": "Gesendet",
-      "actions": "Aktionen",
-      "resend": "Einladung erneut senden",
-      "cancel": "Einladung abbrechen",
-      "resendSuccess": "Einladung erneut gesendet",
-      "resendError": "Fehler beim erneuten Senden der Einladung",
-      "cancelSuccess": "Einladung abgebrochen",
-      "cancelError": "Fehler beim Abbrechen der Einladung"
-    },
-    "noTeam": {
-      "welcome": "Willkommen bei ValGuide",
-      "description": "Sie gehören noch keinem Team an. Erstellen Sie Ihr erstes Team, um Ihre Guides und Inhalte zu verwalten.",
-      "createButton": "Team erstellen"
-    },
-    "createTeam": {
-      "title": "Team erstellen",
-      "description": "Fügen Sie ein neues Team hinzu, um Ihre Guides zu verwalten.",
-      "nameLabel": "Teamname",
-      "namePlaceholder": "Acme Museum",
-      "slugLabel": "Slug (Optional)",
-      "slugPlaceholder": "acme-museum",
-      "slugDescription": "Eindeutige Kennung für Ihre Team-URL.",
-      "slugExists": "Dieser Slug ist bereits vergeben. Bitte wählen Sie einen anderen.",
-      "cancel": "Abbrechen",
-      "submit": "Team erstellen",
-      "submitting": "Wird erstellt...",
-      "error": "Fehler beim Erstellen des Teams",
-      "triggerButton": "Team erstellen"
-    }
-  },
-  "joinTeam": {
-    "invalid": {
-      "title": "Einladung ungültig",
-      "description": "Dieser Einladungslink ist ungültig, abgelaufen oder wurde storniert.",
-      "action": "Bitte bitten Sie den Teamadministrator, Ihnen eine neue Einladung zu senden.",
-      "homeButton": "Zur Startseite"
-    },
-    "public": {
-      "title": "Tritt {teamName} bei",
-      "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",
-      "invitationFor": "Einladung für:",
-      "instruction": "Um diese Einladung anzunehmen, melde dich bitte an oder erstelle ein Konto mit dieser E-Mail-Adresse.",
-      "createAccount": "Konto erstellen",
-      "haveAccount": "Ich habe bereits ein Konto"
-    },
-    "wrongAccount": {
-      "title": "Falsches Konto",
-      "description": "Du bist derzeit als <strong>{email}</strong> angemeldet.",
-      "intendedFor": "Diese Einladung ist für <strong>{email}</strong> bestimmt.",
-      "instruction": "Bitte melde dich ab und mit dem richtigen Konto an, um diese Einladung anzunehmen.",
-      "signOutButton": "Abmelden & Konto wechseln",
-      "cancelButton": "Abbrechen"
-    },
-    "joining": {
-      "title": "Team wird beigetreten...",
-      "description": "Einladung für {teamName} wird angenommen",
-      "error": "Es gab ein Problem beim Beitritt zum Team.",
-      "dashboardButton": "Zum Dashboard"
-    }
-  },
-  "theme": {
-    "toggleTheme": "Theme wechseln",
-    "switchToDark": "Dunkelmodus",
-    "switchToLight": "Hellmodus",
-    "light": "Hell",
-    "dark": "Dunkel",
-    "system": "System"
-  },
-  "profile": {
-    "title": "Profil",
-    "description": "Verwalten Sie Ihre öffentlichen Profilinformationen.",
-    "username": "Benutzername",
-    "usernameDescription": "Dies ist Ihr öffentlicher Anzeigename.",
-    "firstName": "Vorname",
-    "lastName": "Nachname",
-    "save": "Änderungen speichern",
-    "saving": "Wird gespeichert...",
-    "actions": {
-      "updateSuccess": "Profil erfolgreich aktualisiert",
-      "updateError": "Fehler beim Aktualisieren des Profils",
-      "invalidData": "Ungültige Daten"
-    }
-  },
-  "fileDropzone": {
-    "dragAndDrop": "Ziehe Dateien hierher",
-    "orClickToBrowse": "oder klicke zum Durchsuchen",
-    "dropFilesHere": "Dateien hier ablegen",
-    "maxFileSize": "Max. Dateigröße",
-    "upTo": "Bis zu",
-    "files": "Dateien",
-    "file": "Datei",
-    "filesSelected": "ausgewählt",
-    "clearAll": "Alle löschen",
-    "complete": "Abgeschlossen",
-    "fileSizeExceeds": "Dateigröße überschreitet",
-    "limit": "Limit",
-    "fileTypeNotAccepted": "Dateityp nicht akzeptiert"
-  }
 }

@@ -13,21 +13,21 @@ const mockUser = {
 const mockTeams: Team[] = [
   {
     id: 'team-1',
+    nanoId: 'abc123def1',
     name: 'Acme Corp',
-    slug: 'acme-corp',
     role: 'owner',
     logo: 'https://github.com/shadcn.png',
   },
   {
     id: 'team-2',
+    nanoId: 'abc123def2',
     name: 'Valerius Tech',
-    slug: 'valerius-tech',
     role: 'admin',
   },
   {
     id: 'team-3',
+    nanoId: 'abc123def3',
     name: 'Personal Projects',
-    slug: 'personal',
     role: 'viewer',
   },
 ]
@@ -59,7 +59,10 @@ const meta: Meta<typeof AppSidebar> = {
     currentTeam: mockTeams[0],
     onLogout: () => console.log('Logout clicked'),
     onTeamSwitch: (teamId: string) => console.log('Team switched to:', teamId),
-    onCreateTeam: async (name: string, slug?: string) => console.log('Create team:', { name, slug }),
+    onCreateTeam: async (name: string) => {
+      console.log('Create team:', { name })
+      return { success: true as const, team: { id: '123', name } }
+    },
   },
   decorators: [
     (Story) => (

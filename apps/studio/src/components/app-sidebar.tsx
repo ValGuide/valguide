@@ -1,5 +1,5 @@
 import { Link, type LinkOptions, useLocation, useRouter } from '@tanstack/react-router'
-import { CreateTeamDialog } from '@valguide/core/features/orgs/components/create-team-dialog'
+import { CreateTeamDialog, type CreateTeamResult } from '@valguide/core/features/orgs/components/create-team-dialog'
 import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
@@ -54,7 +54,7 @@ export function AppSidebar({
   currentTeam?: Team
   onTeamSwitch?: (teamId: string) => void
   onLogout?: () => void
-  onCreateTeam?: (name: string, slug?: string) => Promise<unknown>
+  onCreateTeam?: (name: string) => Promise<CreateTeamResult>
   onFeedback?: () => void
 }) {
   const { setOpenMobile, toggleSidebar, state, isMobile } = useSidebar()

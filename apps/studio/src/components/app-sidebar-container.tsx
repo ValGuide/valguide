@@ -80,7 +80,7 @@ export function AppSidebarContainer() {
         currentTeam={data.currentTeam}
         onTeamSwitch={handleTeamSwitch}
         onLogout={handleLogout}
-        onCreateTeam={async (name: string, slug?: string) => createTeamFn({ data: { name, slug } })}
+        onCreateTeam={async (name: string) => createTeamFn({ data: { name } })}
         onFeedback={() => setFeedbackOpen(true)}
       />
       <FeedbackDialog

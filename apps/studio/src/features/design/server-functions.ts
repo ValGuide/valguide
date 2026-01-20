@@ -42,7 +42,7 @@ export const getThemesFn = createServerFn({ method: 'GET' })
       if (!targetOrganizationId) {
         const activeTeamId = context.activeOrgId
         if (activeTeamId) {
-          const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+          const team = userTeams.find((t: { id: string }) => t.id === activeTeamId)
           if (team) {
             targetOrganizationId = team.id
           }

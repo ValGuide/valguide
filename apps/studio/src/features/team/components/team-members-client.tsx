@@ -19,7 +19,6 @@ interface TeamMembersClientProps {
   team: {
     id: string
     name: string
-    slug: string
   }
   members: TeamMember[]
   pendingInvites: PendingInvitation[]
