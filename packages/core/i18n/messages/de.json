@@ -219,7 +219,18 @@
   },
   "notFound": {
     "title": "404 – Verirrt?",
-    "description": "Sieht so aus, als würde dieser Pfad ins Nichts führen"
+    "description": "Sieht so aus, als würde dieser Pfad ins Nichts führen",
+    "guide": {
+      "title": "Guide nicht gefunden",
+      "description": "Dieser Guide existiert nicht oder Sie haben keinen Zugriff darauf.",
+      "backToGuides": "Zurück zu Guides",
+      "createGuide": "Guide erstellen"
+    },
+    "stop": {
+      "title": "Stopp nicht gefunden",
+      "description": "Dieser Stopp existiert nicht oder Sie haben keinen Zugriff darauf.",
+      "backToGuide": "Zurück zum Guide"
+    }
   },
   "guide": {
     "previewCard": {

@@ -219,7 +219,18 @@
   },
   "notFound": {
     "title": "404 – Lost Your Way?",
-    "description": "Looks like this trail doesn't lead anywhere! Let's get you back to where the adventure is."
+    "description": "Looks like this trail doesn't lead anywhere! Let's get you back to where the adventure is.",
+    "guide": {
+      "title": "Guide not found",
+      "description": "This guide doesn't exist or you don't have access to it.",
+      "backToGuides": "Back to Guides",
+      "createGuide": "Create Guide"
+    },
+    "stop": {
+      "title": "Stop not found",
+      "description": "This stop doesn't exist or you don't have access to it.",
+      "backToGuide": "Back to Guide"
+    }
   },
   "guide": {
     "previewCard": {

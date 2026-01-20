@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
 import {
   discardStopTranslationDraftFn,
   publishStopTranslationDraftFn,
@@ -7,6 +7,7 @@ import {
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleton'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
+import { StopNotFound } from '@/features/guides/components/stop-not-found'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { guideMetadataQueryOptions } from '@/features/guides/query-options'
@@ -20,9 +21,16 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
     locale: search.locale as string | undefined,
   }),
   loader: async ({ params, context }) => {
-    await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
+    const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
+    if (metadata) {
+      const stopExists = metadata.stops.some((s) => s.nanoId === params.stopId)
+      if (!stopExists) {
+        throw notFound()
+      }
+    }
     return { nanoId: params.nanoId, stopId: params.stopId }
   },
+  notFoundComponent: StopNotFound,
   component: GuideStopEditPage,
   pendingComponent: StopEditSkeleton,
 })

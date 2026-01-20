@@ -224,18 +224,8 @@ export const createStopFn = createServerFn({ method: 'POST' })
   .inputValidator(createStopSchema)
   .handler(async ({ context, data }) => {
     const { guideId, position, translations } = data
-    await requireGuideAccess(guideId, context.user.id)
+    const { organizationId } = await requireGuideAccess(guideId, context.user.id)
     const userId = context.user.id
-
-    const [guideData] = await db
-      .select({ organizationId: guide.organizationId })
-      .from(guide)
-      .where(eq(guide.id, guideId))
-      .limit(1)
-
-    if (!guideData) {
-      throw new NotFoundError('Guide')
-    }
 
     let finalPosition = position
     if (finalPosition === undefined) {
@@ -253,7 +243,7 @@ export const createStopFn = createServerFn({ method: 'POST' })
     const [newStop] = await db
       .insert(stop)
       .values({
-        organizationId: guideData.organizationId,
+        organizationId,
         nanoId,
         createdBy: userId,
         guideId,

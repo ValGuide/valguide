@@ -219,7 +219,18 @@
   },
   "notFound": {
     "title": "404 – Eis vus sepiars?",
-    "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga."
+    "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga.",
+    "guide": {
+      "title": "Guide betg chattà",
+      "description": "Quest guide n'exista betg u Vus n'avais betg access.",
+      "backToGuides": "Enavos als guides",
+      "createGuide": "Crear guide"
+    },
+    "stop": {
+      "title": "Fermada betg chattada",
+      "description": "Questa fermada n'exista betg u Vus n'avais betg access.",
+      "backToGuide": "Enavos al guide"
+    }
   },
   "guide": {
     "previewCard": {

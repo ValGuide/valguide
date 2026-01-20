@@ -24,16 +24,12 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
   }),
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
-    // Load metadata first
     const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
 
-    if (!metadata) {
-      throw new Error('Guide not found')
+    if (metadata) {
+      const activeLocale = deps.locale ?? defaultLocale
+      await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, activeLocale))
     }
-
-    // Prefetch locale data so it's cached when GuideEditorProvider mounts
-    const activeLocale = deps.locale ?? defaultLocale
-    await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, activeLocale))
 
     return { nanoId: params.nanoId }
   },
