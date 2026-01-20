@@ -322,7 +322,7 @@ export function UnifiedLocaleSelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[280px] p-0" align="end">
-          <Command>
+          <Command defaultValue={selectedLocaleName}>
             <CommandInput placeholder={t('searchLanguages')} />
             <CommandList className="max-h-[300px]">
               <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>

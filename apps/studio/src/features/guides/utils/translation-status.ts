@@ -38,7 +38,7 @@ export function getTranslationLocaleStatus(translation: TranslationLike | undefi
     return 'draft'
   }
   if (hasDraft && hasPublished) {
-    return 'draft'
+    return 'modified'
   }
   if (hasPublished) {
     return 'published'
