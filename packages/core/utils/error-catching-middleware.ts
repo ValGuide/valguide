@@ -24,11 +24,14 @@ export const errorCatchingMiddleware = createMiddleware({ type: 'function' }).se
     return await next()
   } catch (error) {
     if (error instanceof NotFoundError) {
+      console.info('NotFoundError caught in errorCatchingMiddleware:', error)
       throw notFound()
     }
     if (error instanceof ForbiddenError) {
+      console.info('ForbiddenError caught in errorCatchingMiddleware:', error)
       throw redirect({ to: '/' })
     }
+    console.error('Uncaught error in errorCatchingMiddleware:', error)
     throw error
   }
 })

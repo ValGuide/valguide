@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
 import {
+  NotFoundError,
   requireGuideAccess,
   requireStopAccess,
   requireStopAccessByNanoId,
@@ -58,8 +59,10 @@ export const getGuideViewDataFn = createServerFn({ method: 'GET' })
     const guideData = await getGuideViewData(data.nanoId)
     if (guideData) {
       await requireGuideAccess(guideData.id, context.user.id)
+      return guideData
     }
-    return guideData
+
+    throw new NotFoundError('Guide not found')
   })
 
 const getGuideDetailSchema = z.object({
@@ -74,8 +77,9 @@ export const getGuideDetailFn = createServerFn({ method: 'GET' })
     const guideData = await getGuideDetailByNanoId(db, data.nanoId, data.preferredLocale)
     if (guideData) {
       await requireGuideAccess(guideData.id, context.user.id)
+      return guideData
     }
-    return guideData
+    throw new NotFoundError('Guide not found')
   })
 
 const getStopByNanoIdQueriesSchema = z.object({ stopNanoId: z.string() })
@@ -87,8 +91,9 @@ export const getStopByNanoIdFn = createServerFn({ method: 'GET' })
     const stopData = await getStopByNanoId(data.stopNanoId)
     if (stopData) {
       await requireStopAccess(stopData.id, context.user.id)
+      return stopData
     }
-    return stopData
+    throw new NotFoundError('Stop not found')
   })
 
 // --- translation-queries.ts wrappers ---
