@@ -5,6 +5,10 @@ import { TeamSwitcher } from './team-switcher'
 const meta: Meta<typeof TeamSwitcher> = {
   title: 'Core/Orgs/TeamSwitcher',
   component: TeamSwitcher,
+  args: {
+    onCreateTeam: () => console.log('Create team clicked'),
+    onTeamSettings: (teamId) => console.log('Team settings clicked', teamId),
+  },
   parameters: {
     layout: 'centered',
     docs: {

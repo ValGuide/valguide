@@ -125,7 +125,7 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-xs text-foreground/70">{t('teams')}</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-xs text-muted-foreground">{t('teams')}</DropdownMenuLabel>
             {teams.map((team, _index) => (
               <DropdownMenuItem
                 key={team.id}
@@ -139,7 +139,7 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
                 </Avatar>
                 <div className="flex flex-1 flex-col gap-0.5">
                   <span className="font-medium">{team.name}</span>
-                  <span className="text-xs text-foreground/60">{roleLabels[team.role]}</span>
+                  <span className="text-xs text-muted-foreground">{roleLabels[team.role]}</span>
                 </div>
               </DropdownMenuItem>
             ))}
@@ -149,7 +149,7 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Plus className="size-4" />
                 </div>
-                <div className="font-medium text-foreground/70">{t('createTeam')}</div>
+                <div className="font-medium text-muted-foreground">{t('createTeam')}</div>
               </DropdownMenuItem>
             )}
             {onTeamSettings && (
@@ -157,7 +157,7 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Settings className="size-4" />
                 </div>
-                <div className="font-medium text-foreground/70">{t('teamSettings')}</div>
+                <div className="font-medium text-muted-foreground">{t('teamSettings')}</div>
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>
