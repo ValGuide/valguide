@@ -1,5 +1,3 @@
-import { Providers } from '@/components/providers'
-import { themeQueryOptions } from '@/features/theme/query-options'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
@@ -8,7 +6,10 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
+import { ErrorPage } from '@valguide/features/error/error-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
+import { Providers } from '@/components/providers'
+import { themeQueryOptions } from '@/features/theme/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -24,16 +25,35 @@ export const Route = createRootRouteWithContext<{
       title: messages?.studio?.metadata?.title ?? 'Studio - ValGuide',
       description: messages?.studio?.metadata?.description ?? 'Create and design your guides',
     }
-    return { locale, theme, metadata }
+    return { locale, theme, messages, metadata }
   },
-  notFoundComponent: () => (
-    <NotFoundPage
-      i18n={{
-        title: 'Page Not Found',
-        description: 'The page you are looking for does not exist.',
-      }}
-    />
-  ),
+  errorComponent: ({ error, reset }) => {
+    const { messages } = Route.useRouteContext()
+    return (
+      <ErrorPage
+        i18n={{
+          title: messages?.error?.title ?? 'Something went wrong',
+          description:
+            messages?.error?.description ??
+            'An unexpected error occurred. Please try again or return to the home page.',
+          tryAgain: messages?.error?.tryAgain ?? 'Try again',
+        }}
+        error={error}
+        reset={reset}
+      />
+    )
+  },
+  notFoundComponent: () => {
+    const { messages } = Route.useRouteContext()
+    return (
+      <NotFoundPage
+        i18n={{
+          title: messages?.notFound?.title ?? 'Page Not Found',
+          description: messages?.notFound?.description ?? 'The page you are looking for does not exist.',
+        }}
+      />
+    )
+  },
   head: ({ match }) => ({
     meta: [
       {
