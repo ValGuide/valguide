@@ -8,7 +8,6 @@ import {
 } from '@valguide/core/features/guides/queries'
 import { getUserTeams } from '@valguide/core/features/orgs/queries'
 import { supportedLocales } from '@valguide/core/i18n/i18n.config'
-import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { z } from 'zod'
 
@@ -20,46 +19,44 @@ const getGuidesInputSchema = z.object({
 export const getGuidesFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getGuidesInputSchema)
-  .handler(
-    handleError(async ({ data, context }) => {
-      const userId = context.user.id
-      const queryOrganizationId = data.organizationId
+  .handler(async ({ data, context }) => {
+    const userId = context.user.id
+    const queryOrganizationId = data.organizationId
 
-      const userTeams = await getUserTeams(db, userId)
+    const userTeams = await getUserTeams(db, userId)
 
-      if (userTeams.length === 0) {
-        return []
+    if (userTeams.length === 0) {
+      return []
+    }
+
+    let targetOrganizationId: string | undefined
+
+    if (queryOrganizationId) {
+      const hasAccess = userTeams.some((t: { id: string }) => t.id === queryOrganizationId)
+      if (hasAccess) {
+        targetOrganizationId = queryOrganizationId
       }
+    }
 
-      let targetOrganizationId: string | undefined
+    if (!targetOrganizationId) {
+      const activeTeamId = context.activeOrgId
 
-      if (queryOrganizationId) {
-        const hasAccess = userTeams.some((t: { id: string }) => t.id === queryOrganizationId)
-        if (hasAccess) {
-          targetOrganizationId = queryOrganizationId
+      if (activeTeamId) {
+        const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+        if (team) {
+          targetOrganizationId = team.id
         }
       }
+    }
 
-      if (!targetOrganizationId) {
-        const activeTeamId = context.activeOrgId
+    if (!targetOrganizationId) {
+      targetOrganizationId = userTeams[0].id
+    }
 
-        if (activeTeamId) {
-          const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
-          if (team) {
-            targetOrganizationId = team.id
-          }
-        }
-      }
+    const guides = await getGuidesByOrganizationId(db, targetOrganizationId as string)
 
-      if (!targetOrganizationId) {
-        targetOrganizationId = userTeams[0].id
-      }
-
-      const guides = await getGuidesByOrganizationId(db, targetOrganizationId as string)
-
-      return guides
-    }),
-  )
+    return guides
+  })
 
 // Get lightweight guides list for the current organization (optimized for list view)
 const getGuidesListInputSchema = z.object({
@@ -69,64 +66,60 @@ const getGuidesListInputSchema = z.object({
 export const getGuidesListFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getGuidesListInputSchema)
-  .handler(
-    handleError(async ({ data, context }) => {
-      const userId = context.user.id
+  .handler(async ({ data, context }) => {
+    const userId = context.user.id
 
-      const userTeams = await getUserTeams(db, userId)
+    const userTeams = await getUserTeams(db, userId)
 
-      if (userTeams.length === 0) {
-        return []
+    if (userTeams.length === 0) {
+      return []
+    }
+
+    let targetOrganizationId: string | undefined
+
+    const activeTeamId = context.activeOrgId
+    if (activeTeamId) {
+      const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+      if (team) {
+        targetOrganizationId = team.id
       }
+    }
 
-      let targetOrganizationId: string | undefined
+    if (!targetOrganizationId) {
+      targetOrganizationId = userTeams[0].id
+    }
 
-      const activeTeamId = context.activeOrgId
-      if (activeTeamId) {
-        const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
-        if (team) {
-          targetOrganizationId = team.id
-        }
-      }
-
-      if (!targetOrganizationId) {
-        targetOrganizationId = userTeams[0].id
-      }
-
-      return getGuidesListByOrganizationId(db, targetOrganizationId as string, data.preferredLocale)
-    }),
-  )
+    return getGuidesListByOrganizationId(db, targetOrganizationId as string, data.preferredLocale)
+  })
 
 // Get archived guides for the current organization
 export const getArchivedGuidesFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
-  .handler(
-    handleError(async ({ context }) => {
-      const userId = context.user.id
-      const userTeams = await getUserTeams(db, userId)
+  .handler(async ({ context }) => {
+    const userId = context.user.id
+    const userTeams = await getUserTeams(db, userId)
 
-      if (userTeams.length === 0) {
-        return { guides: [], userId }
+    if (userTeams.length === 0) {
+      return { guides: [], userId }
+    }
+
+    const activeTeamId = context.activeOrgId
+    let targetOrganizationId = userTeams[0].id
+
+    if (activeTeamId) {
+      const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+      if (team) {
+        targetOrganizationId = team.id
       }
+    }
 
-      const activeTeamId = context.activeOrgId
-      let targetOrganizationId = userTeams[0].id
+    const guides = await getArchivedGuidesWithCover(db, targetOrganizationId)
 
-      if (activeTeamId) {
-        const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
-        if (team) {
-          targetOrganizationId = team.id
-        }
-      }
-
-      const guides = await getArchivedGuidesWithCover(db, targetOrganizationId)
-
-      return {
-        guides,
-        userId,
-      }
-    }),
-  )
+    return {
+      guides,
+      userId,
+    }
+  })
 
 // Create guide
 const createGuideInputSchema = z.object({
@@ -143,57 +136,55 @@ const createGuideInputSchema = z.object({
 export const createGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(createGuideInputSchema)
-  .handler(
-    handleError(async ({ data, context }) => {
-      const userId = context.user.id
-      let { translations, organizationId } = data
+  .handler(async ({ data, context }) => {
+    const userId = context.user.id
+    let { translations, organizationId } = data
 
-      if (!organizationId) {
-        const userTeams = await getUserTeams(db, userId)
-        if (userTeams && userTeams.length > 0) {
-          const activeTeamId = context.activeOrgId
+    if (!organizationId) {
+      const userTeams = await getUserTeams(db, userId)
+      if (userTeams && userTeams.length > 0) {
+        const activeTeamId = context.activeOrgId
 
-          if (activeTeamId) {
-            const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
-            if (team) {
-              organizationId = team.id
-            }
-          }
-
-          if (!organizationId) {
-            organizationId = userTeams[0].id
+        if (activeTeamId) {
+          const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+          if (team) {
+            organizationId = team.id
           }
         }
-      }
 
-      if (!organizationId) {
-        throw new Error('Organization is required to create a guide. Please create an organization first.')
-      }
-
-      if (!translations || !Array.isArray(translations) || translations.length === 0) {
-        throw new Error('At least one translation is required')
-      }
-
-      for (const translation of translations) {
-        if (!translation.locale || !translation.title) {
-          throw new Error('Each translation must have a locale and title')
-        }
-
-        if (!(supportedLocales as readonly string[]).includes(translation.locale)) {
-          throw new Error(`Unsupported locale: ${translation.locale}`)
+        if (!organizationId) {
+          organizationId = userTeams[0].id
         }
       }
+    }
 
-      const newGuide = await createGuide(
-        db,
-        {
-          createdBy: userId,
-          updatedBy: userId,
-          organizationId,
-        },
-        translations,
-      )
+    if (!organizationId) {
+      throw new Error('Organization is required to create a guide. Please create an organization first.')
+    }
 
-      return newGuide
-    }),
-  )
+    if (!translations || !Array.isArray(translations) || translations.length === 0) {
+      throw new Error('At least one translation is required')
+    }
+
+    for (const translation of translations) {
+      if (!translation.locale || !translation.title) {
+        throw new Error('Each translation must have a locale and title')
+      }
+
+      if (!(supportedLocales as readonly string[]).includes(translation.locale)) {
+        throw new Error(`Unsupported locale: ${translation.locale}`)
+      }
+    }
+
+    const newGuide = await createGuide(
+      db,
+      {
+        createdBy: userId,
+        updatedBy: userId,
+        organizationId,
+      },
+      translations,
+    )
+
+    return newGuide
+  })

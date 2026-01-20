@@ -12,7 +12,6 @@ import {
 } from '@valguide/core/features/themes/mutations'
 import { getOrgThemes } from '@valguide/core/features/themes/queries'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
-import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { z } from 'zod'
 
 // Get themes for organization
@@ -21,44 +20,42 @@ const getThemesInputSchema = z.object({})
 export const getThemesFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getThemesInputSchema)
-  .handler(
-    handleError(async ({ context }) => {
-      const userId = context.user.id
-      const queryOrganizationId = context.activeOrgId
-      const userTeams = await getUserTeams(db, userId)
+  .handler(async ({ context }) => {
+    const userId = context.user.id
+    const queryOrganizationId = context.activeOrgId
+    const userTeams = await getUserTeams(db, userId)
 
-      if (userTeams.length === 0) {
-        return []
+    if (userTeams.length === 0) {
+      return []
+    }
+
+    let targetOrganizationId: string | undefined
+
+    if (queryOrganizationId) {
+      const hasAccess = userTeams.some((t: { id: string }) => t.id === queryOrganizationId)
+      if (hasAccess) {
+        targetOrganizationId = queryOrganizationId
       }
+    }
 
-      let targetOrganizationId: string | undefined
-
-      if (queryOrganizationId) {
-        const hasAccess = userTeams.some((t: { id: string }) => t.id === queryOrganizationId)
-        if (hasAccess) {
-          targetOrganizationId = queryOrganizationId
-        }
-      }
-
+    if (!targetOrganizationId) {
       if (!targetOrganizationId) {
-        if (!targetOrganizationId) {
-          const activeTeamId = context.activeOrgId
-          if (activeTeamId) {
-            const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
-            if (team) {
-              targetOrganizationId = team.id
-            }
+        const activeTeamId = context.activeOrgId
+        if (activeTeamId) {
+          const team = userTeams.find((t: { id: string; slug: string }) => t.id === activeTeamId)
+          if (team) {
+            targetOrganizationId = team.id
           }
         }
       }
+    }
 
-      if (!targetOrganizationId) {
-        targetOrganizationId = userTeams[0].id
-      }
+    if (!targetOrganizationId) {
+      targetOrganizationId = userTeams[0].id
+    }
 
-      return await getOrgThemes(targetOrganizationId as string)
-    }),
-  )
+    return await getOrgThemes(targetOrganizationId as string)
+  })
 
 // Create theme - uses any for colors/fonts since Zod can't validate complex types well
 const createThemeInputSchema = z.object({
@@ -72,26 +69,24 @@ const createThemeInputSchema = z.object({
 export const createThemeFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(createThemeInputSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      const organizationId = context.activeOrgId!
-      const { name, basePreset, colors, radius, fonts } = data
+  .handler(async ({ context, data }) => {
+    const organizationId = context.activeOrgId!
+    const { name, basePreset, colors, radius, fonts } = data
 
-      await requireOrgMember(organizationId, context.user.id)
+    await requireOrgMember(organizationId, context.user.id)
 
-      const input: CreateThemeInput = {
-        organizationId,
-        name: name.trim(),
-        basePreset: basePreset as ThemePreset,
-        colors: colors as ThemeColors,
-        radius,
-        fonts: fonts as ThemeFonts,
-        createdBy: context.user.id,
-      }
+    const input: CreateThemeInput = {
+      organizationId,
+      name: name.trim(),
+      basePreset: basePreset as ThemePreset,
+      colors: colors as ThemeColors,
+      radius,
+      fonts: fonts as ThemeFonts,
+      createdBy: context.user.id,
+    }
 
-      return await createTheme(input)
-    }),
-  )
+    return await createTheme(input)
+  })
 
 // Update theme
 const updateThemeInputSchema = z.object({
@@ -106,23 +101,21 @@ const updateThemeInputSchema = z.object({
 export const updateThemeFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateThemeInputSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      const { id, name, basePreset, colors, radius, fonts } = data
+  .handler(async ({ context, data }) => {
+    const { id, name, basePreset, colors, radius, fonts } = data
 
-      await requireThemeAccess(id, context.user.id)
+    await requireThemeAccess(id, context.user.id)
 
-      const input: UpdateThemeInput = { id }
+    const input: UpdateThemeInput = { id }
 
-      if (name !== undefined) input.name = name.trim()
-      if (basePreset !== undefined) input.basePreset = basePreset as ThemePreset
-      if (colors !== undefined) input.colors = colors as ThemeColors
-      if (radius !== undefined) input.radius = radius
-      if (fonts !== undefined) input.fonts = fonts as ThemeFonts
+    if (name !== undefined) input.name = name.trim()
+    if (basePreset !== undefined) input.basePreset = basePreset as ThemePreset
+    if (colors !== undefined) input.colors = colors as ThemeColors
+    if (radius !== undefined) input.radius = radius
+    if (fonts !== undefined) input.fonts = fonts as ThemeFonts
 
-      return await updateTheme(input)
-    }),
-  )
+    return await updateTheme(input)
+  })
 
 // Delete theme
 const deleteThemeInputSchema = z.object({
@@ -132,14 +125,12 @@ const deleteThemeInputSchema = z.object({
 export const deleteThemeFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(deleteThemeInputSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      const { id } = data
+  .handler(async ({ context, data }) => {
+    const { id } = data
 
-      await requireThemeAccess(id, context.user.id)
+    await requireThemeAccess(id, context.user.id)
 
-      await deleteTheme(id)
+    await deleteTheme(id)
 
-      return { success: true }
-    }),
-  )
+    return { success: true }
+  })

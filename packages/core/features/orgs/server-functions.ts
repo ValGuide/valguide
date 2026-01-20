@@ -1,7 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
-import { handleError } from '@valguide/core/utils/server-fn-error-handler'
 import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 import { sendEmail } from '@valguide/transactional'
 import { z } from 'zod'
@@ -28,13 +27,11 @@ const createTeamSchema = z.object({
 export const createTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(createTeamSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      const team = await createTeam(db, data.name, context.user.id, data.slug)
-      setActiveTeamId(team.id)
-      return team
-    }),
-  )
+  .handler(async ({ context, data }) => {
+    const team = await createTeam(db, data.name, context.user.id, data.slug)
+    setActiveTeamId(team.id)
+    return team
+  })
 
 const inviteMemberSchema = z.object({
   teamId: z.string(),
@@ -45,35 +42,33 @@ const inviteMemberSchema = z.object({
 export const inviteMemberFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(inviteMemberSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      await requireOrgRole(data.teamId, context.user.id, 'admin')
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
-      const team = await getTeamById(db, data.teamId)
-      if (!team) throw new Error('Team not found')
+    const team = await getTeamById(db, data.teamId)
+    if (!team) throw new Error('Team not found')
 
-      const token = randomBytes(32).toString('hex')
-      const tokenHash = createHash('sha256').update(token).digest('hex')
+    const token = randomBytes(32).toString('hex')
+    const tokenHash = createHash('sha256').update(token).digest('hex')
 
-      await createInvitation(db, data.teamId, data.email, data.role as OrgRole, context.user.id, tokenHash)
+    await createInvitation(db, data.teamId, data.email, data.role as OrgRole, context.user.id, tokenHash)
 
-      await sendEmail({
-        to: data.email,
-        subject: `Join ${team.name} on ValGuide`,
-        template: {
-          name: 'team-invite',
-          data: {
-            inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
-            teamName: team.name,
-            inviterName: context.user.email || 'A colleague',
-            logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
-          },
+    await sendEmail({
+      to: data.email,
+      subject: `Join ${team.name} on ValGuide`,
+      template: {
+        name: 'team-invite',
+        data: {
+          inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
+          teamName: team.name,
+          inviterName: context.user.email || 'A colleague',
+          logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
         },
-      })
+      },
+    })
 
-      console.log(`Invite link for ${data.email}: /join-team?token=${token}`)
-    }),
-  )
+    console.log(`Invite link for ${data.email}: /join-team?token=${token}`)
+  })
 
 const resendInviteSchema = z.object({
   inviteId: z.string(),
@@ -83,38 +78,36 @@ const resendInviteSchema = z.object({
 export const resendInviteFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(resendInviteSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      await requireOrgRole(data.teamId, context.user.id, 'admin')
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
-      const invite = await getInvitationById(db, data.inviteId)
-      if (!invite) throw new Error('Invitation not found')
+    const invite = await getInvitationById(db, data.inviteId)
+    if (!invite) throw new Error('Invitation not found')
 
-      const team = await getTeamById(db, data.teamId)
-      if (!team) throw new Error('Team not found')
+    const team = await getTeamById(db, data.teamId)
+    if (!team) throw new Error('Team not found')
 
-      const token = randomBytes(32).toString('hex')
-      const tokenHash = createHash('sha256').update(token).digest('hex')
+    const token = randomBytes(32).toString('hex')
+    const tokenHash = createHash('sha256').update(token).digest('hex')
 
-      await createInvitation(db, data.teamId, invite.email, invite.role as OrgRole, context.user.id, tokenHash)
+    await createInvitation(db, data.teamId, invite.email, invite.role as OrgRole, context.user.id, tokenHash)
 
-      await sendEmail({
-        to: invite.email,
-        subject: `Join ${team.name} on ValGuide`,
-        template: {
-          name: 'team-invite',
-          data: {
-            inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
-            teamName: team.name,
-            inviterName: context.user.email || 'A colleague',
-            logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
-          },
+    await sendEmail({
+      to: invite.email,
+      subject: `Join ${team.name} on ValGuide`,
+      template: {
+        name: 'team-invite',
+        data: {
+          inviteLink: `${serverEnv.VITE_STUDIO_URL}/join-team?token=${token}`,
+          teamName: team.name,
+          inviterName: context.user.email || 'A colleague',
+          logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
         },
-      })
+      },
+    })
 
-      console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
-    }),
-  )
+    console.log(`Resend invite link for ${invite.email}: /join-team?token=${token}`)
+  })
 
 const cancelInviteSchema = z.object({
   inviteId: z.string(),
@@ -124,13 +117,11 @@ const cancelInviteSchema = z.object({
 export const cancelInviteFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(cancelInviteSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      await requireOrgRole(data.teamId, context.user.id, 'admin')
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
-      await deleteInvitation(db, data.inviteId)
-    }),
-  )
+    await deleteInvitation(db, data.inviteId)
+  })
 
 const removeMemberSchema = z.object({
   memberId: z.string(),
@@ -140,13 +131,11 @@ const removeMemberSchema = z.object({
 export const removeMemberFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(removeMemberSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      await requireOrgRole(data.teamId, context.user.id, 'admin')
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
-      await removeMember(db, data.memberId)
-    }),
-  )
+    await removeMember(db, data.memberId)
+  })
 
 const updateMemberRoleSchema = z.object({
   memberId: z.string(),
@@ -157,13 +146,11 @@ const updateMemberRoleSchema = z.object({
 export const updateMemberRoleFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateMemberRoleSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      await requireOrgRole(data.teamId, context.user.id, 'admin')
+  .handler(async ({ context, data }) => {
+    await requireOrgRole(data.teamId, context.user.id, 'admin')
 
-      await updateMemberRole(db, data.memberId, data.newRole as OrgRole)
-    }),
-  )
+    await updateMemberRole(db, data.memberId, data.newRole as OrgRole)
+  })
 
 const joinTeamSchema = z.object({
   token: z.string(),
@@ -172,29 +159,27 @@ const joinTeamSchema = z.object({
 export const joinTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(joinTeamSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      const tokenHash = createHash('sha256').update(data.token).digest('hex')
-      const invite = await getInvitationByTokenHash(db, tokenHash)
+  .handler(async ({ context, data }) => {
+    const tokenHash = createHash('sha256').update(data.token).digest('hex')
+    const invite = await getInvitationByTokenHash(db, tokenHash)
 
-      if (!invite) {
-        throw new Error('Invalid or expired invitation')
-      }
+    if (!invite) {
+      throw new Error('Invalid or expired invitation')
+    }
 
-      const isMember = await isTeamMember(db, invite.organizationId, context.user.id)
-      if (isMember) {
-        return { success: true, slug: invite.organization.slug }
-      }
-
-      if (invite.email.toLowerCase() !== (context.user.email || '').toLowerCase()) {
-        throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${context.user.email}`)
-      }
-
-      await acceptInvitation(db, invite.id, context.user.id)
-      setActiveTeamId(invite.organizationId)
+    const isMember = await isTeamMember(db, invite.organizationId, context.user.id)
+    if (isMember) {
       return { success: true, slug: invite.organization.slug }
-    }),
-  )
+    }
+
+    if (invite.email.toLowerCase() !== (context.user.email || '').toLowerCase()) {
+      throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${context.user.email}`)
+    }
+
+    await acceptInvitation(db, invite.id, context.user.id)
+    setActiveTeamId(invite.organizationId)
+    return { success: true, slug: invite.organization.slug }
+  })
 
 // ============================================================================
 // Context Server Functions (POST) - from context-actions.ts
@@ -207,23 +192,21 @@ const switchTeamSchema = z.object({
 export const switchTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(switchTeamSchema)
-  .handler(
-    handleError(async ({ context, data }) => {
-      const team = await getTeamById(db, data.id)
-      if (!team) {
-        throw new NotFoundError('Team not found')
-      }
+  .handler(async ({ context, data }) => {
+    const team = await getTeamById(db, data.id)
+    if (!team) {
+      throw new NotFoundError('Team not found')
+    }
 
-      const isMember = await isTeamMember(db, team.id, context.user.id)
-      if (!isMember) {
-        throw new ForbiddenError('Not a member of this team')
-      }
+    const isMember = await isTeamMember(db, team.id, context.user.id)
+    if (!isMember) {
+      throw new ForbiddenError('Not a member of this team')
+    }
 
-      setActiveTeamId(team.id)
+    setActiveTeamId(team.id)
 
-      return { success: true }
-    }),
-  )
+    return { success: true }
+  })
 
 // ============================================================================
 // Ensure Default Team Server Function
@@ -236,17 +219,15 @@ export const switchTeamFn = createServerFn({ method: 'POST' })
  */
 export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
-  .handler(
-    handleError(async ({ context }) => {
-      // Get user's display name for team naming
-      const { getProfile } = await import('../profiles/queries')
-      const { getUserDisplayName } = await import('../profiles/utils')
+  .handler(async ({ context }) => {
+    // Get user's display name for team naming
+    const { getProfile } = await import('../profiles/queries')
+    const { getUserDisplayName } = await import('../profiles/utils')
 
-      const profile = await getProfile(context.user.id)
-      const displayName = getUserDisplayName(profile, context.user.email)
+    const profile = await getProfile(context.user.id)
+    const displayName = getUserDisplayName(profile, context.user.email)
 
-      const team = await ensureDefaultTeam(db, context.user.id, displayName)
+    const team = await ensureDefaultTeam(db, context.user.id, displayName)
 
-      return { teamId: team.id, teamSlug: team.slug }
-    }),
-  )
+    return { teamId: team.id, teamSlug: team.slug }
+  })
