@@ -17,6 +17,7 @@ export type { OrgRole }
 
 export interface Team {
   id: string
+  nanoId: string
   name: string
   slug: string
   logo?: string | null

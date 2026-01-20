@@ -842,6 +842,16 @@
         "description": "Cundivider voss feedback e vossas propostas cun nus."
       }
     },
+    "feedback": {
+      "title": "Cundivider feedback",
+      "description": "Gidai nus a meglierar Valguide Studio. Nus ans legrain da voss pissers, propostas u problems.",
+      "placeholder": "Tge pensais? Cundividai voss feedback, ideas u annunziai problems...",
+      "cancel": "Interrumper",
+      "submit": "Trametter feedback",
+      "feedbackRequired": "Per plaschair endatai voss feedback",
+      "submitError": "Impussibel da trametter il feedback. Empruvai anc ina giada.",
+      "success": "Grazia fitg per voss feedback!"
+    },
     "user": {
       "myProfile": "Mes profil",
       "billing": "Facturaziun",

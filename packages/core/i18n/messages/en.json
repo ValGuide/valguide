@@ -842,6 +842,16 @@
         "description": "Share your feedback and suggestions with us."
       }
     },
+    "feedback": {
+      "title": "Share Feedback",
+      "description": "Help us improve Valguide Studio. We'd love to hear your thoughts, suggestions, or issues.",
+      "placeholder": "What's on your mind? Share your feedback, ideas, or report any issues...",
+      "cancel": "Cancel",
+      "submit": "Send Feedback",
+      "feedbackRequired": "Please enter your feedback",
+      "submitError": "Failed to send feedback. Please try again.",
+      "success": "Thank you for your feedback!"
+    },
     "user": {
       "myProfile": "My Profile",
       "billing": "Billing",

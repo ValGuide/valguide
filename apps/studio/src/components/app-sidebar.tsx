@@ -24,6 +24,7 @@ import {
   BookOpen,
   Image,
   MapPin,
+  MessageSquare,
   PanelLeftClose,
   PanelLeftOpen,
   Settings2,
@@ -40,6 +41,7 @@ export function AppSidebar({
   onTeamSwitch,
   onLogout,
   onCreateTeam,
+  onFeedback,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   pathname?: string
@@ -53,6 +55,7 @@ export function AppSidebar({
   onTeamSwitch?: (teamId: string) => void
   onLogout?: () => void
   onCreateTeam?: (name: string, slug?: string) => Promise<unknown>
+  onFeedback?: () => void
 }) {
   const { setOpenMobile, toggleSidebar, state, isMobile } = useSidebar()
   const t = useTranslations('sidebar.nav')
@@ -219,6 +222,20 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {onFeedback && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    tooltip={t('feedback')}
+                    onClick={() => {
+                      onFeedback()
+                      setOpenMobile(false)
+                    }}
+                  >
+                    <MessageSquare />
+                    <span>{t('feedback')}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
