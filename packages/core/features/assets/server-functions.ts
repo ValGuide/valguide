@@ -1,5 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
-import { requireAssetAccess, requireOrgMember } from '@valguide/core/features/auth/authorization'
+import {
+  NotFoundError,
+  requireAssetAccess,
+  requireOrgMember,
+  UnauthenticatedError,
+} from '@valguide/core/features/auth/authorization'
 import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { db } from '@valguide/core/features/db'
 import { createClient } from '@valguide/supabase/server'
@@ -28,7 +33,7 @@ export const getUploadCredentialsFn = createServerFn({ method: 'GET' })
     } = await supabase.auth.getSession()
 
     if (!session) {
-      throw new Error('No active session')
+      throw new UnauthenticatedError()
     }
 
     const supabaseUrl = serverEnv.SUPABASE_URL
@@ -118,7 +123,7 @@ export const deleteAssetFn = createServerFn({ method: 'POST' })
       where: eq(asset.id, data.assetId),
     })
 
-    if (!assetData) throw new Error('Asset not found')
+    if (!assetData) throw new NotFoundError('Asset')
 
     const { error: storageError } = await supabase.storage.from('assets').remove([assetData.storagePath])
 

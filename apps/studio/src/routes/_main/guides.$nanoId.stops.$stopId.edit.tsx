@@ -20,12 +20,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
     locale: search.locale as string | undefined,
   }),
   loader: async ({ params, context }) => {
-    const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
-
-    if (!metadata) {
-      throw new Error('Guide not found')
-    }
-
+    await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
     return { nanoId: params.nanoId, stopId: params.stopId }
   },
   component: GuideStopEditPage,

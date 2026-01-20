@@ -134,8 +134,9 @@ export const getGuideMetadataFn = createServerFn({ method: 'GET' })
     const metadata = await getGuideMetadata(data.nanoId)
     if (metadata) {
       await requireGuideAccess(metadata.id, context.user.id)
+      return metadata
     }
-    return metadata
+    throw new NotFoundError('Guide not found')
   })
 
 const getGuideTranslationsForLocaleSchema = z.object({
@@ -233,7 +234,7 @@ export const createStopFn = createServerFn({ method: 'POST' })
       .limit(1)
 
     if (!guideData) {
-      throw new Error('Guide not found')
+      throw new NotFoundError('Guide')
     }
 
     let finalPosition = position
@@ -464,7 +465,7 @@ export const detachAssetFromGuideFn = createServerFn({ method: 'POST' })
       .limit(1)
 
     if (!asset) {
-      throw new Error('Asset attachment not found')
+      throw new NotFoundError('Asset attachment')
     }
 
     await requireGuideAccess(asset.guideId, context.user.id)
@@ -488,7 +489,7 @@ export const detachAssetFromStopFn = createServerFn({ method: 'POST' })
       .limit(1)
 
     if (!asset) {
-      throw new Error('Asset attachment not found')
+      throw new NotFoundError('Asset attachment')
     }
 
     await requireStopAccess(asset.stopId, context.user.id)

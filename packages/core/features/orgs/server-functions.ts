@@ -46,7 +46,7 @@ export const inviteMemberFn = createServerFn({ method: 'POST' })
     await requireOrgRole(data.teamId, context.user.id, 'admin')
 
     const team = await getTeamById(db, data.teamId)
-    if (!team) throw new Error('Team not found')
+    if (!team) throw new NotFoundError('Team')
 
     const token = randomBytes(32).toString('hex')
     const tokenHash = createHash('sha256').update(token).digest('hex')
@@ -82,10 +82,10 @@ export const resendInviteFn = createServerFn({ method: 'POST' })
     await requireOrgRole(data.teamId, context.user.id, 'admin')
 
     const invite = await getInvitationById(db, data.inviteId)
-    if (!invite) throw new Error('Invitation not found')
+    if (!invite) throw new NotFoundError('Invitation')
 
     const team = await getTeamById(db, data.teamId)
-    if (!team) throw new Error('Team not found')
+    if (!team) throw new NotFoundError('Team')
 
     const token = randomBytes(32).toString('hex')
     const tokenHash = createHash('sha256').update(token).digest('hex')
@@ -164,7 +164,7 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
     const invite = await getInvitationByTokenHash(db, tokenHash)
 
     if (!invite) {
-      throw new Error('Invalid or expired invitation')
+      throw new NotFoundError('Invitation')
     }
 
     const isMember = await isTeamMember(db, invite.organizationId, context.user.id)
@@ -173,7 +173,7 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
     }
 
     if (invite.email.toLowerCase() !== (context.user.email || '').toLowerCase()) {
-      throw new Error(`This invitation is for ${invite.email}, but you are signed in as ${context.user.email}`)
+      throw new ForbiddenError(`This invitation is for ${invite.email}, but you are signed in as ${context.user.email}`)
     }
 
     await acceptInvitation(db, invite.id, context.user.id)
