@@ -302,7 +302,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                   <span className="sr-only">{t('editor.guideProgress')}</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] p-6 sm:w-[350px]">
+              <SheetContent side="right" className="w-75 p-6 sm:w-87.5">
                 <SheetHeader>
                   <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
                 </SheetHeader>
@@ -335,7 +335,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink asChild className="block max-w-[180px] truncate">
+                  <BreadcrumbLink asChild className="block max-w-45 truncate">
                     <button type="button" onClick={handleNavigateToGuideDetail}>
                       {guideTitle}
                     </button>
@@ -369,7 +369,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         </div>
 
         {/* Status Badge and Tabs */}
-        <div className="sticky top-[57px] z-10 border-b bg-background px-4 py-3 sm:px-6">
+        <div className="sticky top-14.25 z-10 border-b bg-background px-4 py-3 sm:px-6">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <h1 className="text-lg sm:text-xl font-semibold truncate min-w-0">{guideTitle}</h1>
@@ -447,7 +447,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           </div>
 
           {/* Right Sidebar - Actions Panel (Desktop only) */}
-          <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
+          <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
             <div className="p-5 space-y-6">
               <EditorActionsPanel
                 hasDraft={hasDraft}

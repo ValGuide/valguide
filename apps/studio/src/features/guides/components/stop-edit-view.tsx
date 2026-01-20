@@ -52,7 +52,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
 
   const { buildUrl } = useLocaleUrl(activeLocale)
 
-  const guideDetailUrl = `/guides/${nanoId}`
+  const guideDetailLinkOptions = { to: '/guides/$nanoId', params: { nanoId } } as const
 
   // Get guide title from locale data
   const guideTitle = useMemo(() => {
@@ -138,7 +138,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem asChild>
-              <Link to={guideDetailUrl} preload="intent">
+              <Link {...guideDetailLinkOptions} preload="intent">
                 {guideTitle}
               </Link>
             </DropdownMenuItem>
@@ -149,8 +149,8 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
       <BreadcrumbSeparator className="xl:hidden" />
       {/* Expanded items on xl */}
       <BreadcrumbItem className="hidden xl:list-item">
-        <BreadcrumbLink asChild className="block max-w-[180px] truncate">
-          <Link to={guideDetailUrl} preload="intent">
+        <BreadcrumbLink asChild className="block max-w-45 truncate">
+          <Link {...guideDetailLinkOptions} preload="intent">
             {guideTitle}
           </Link>
         </BreadcrumbLink>

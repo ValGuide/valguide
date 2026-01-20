@@ -34,7 +34,7 @@ export function GuideStopList({ stops, guideNanoId, locale }: GuideStopListProps
               className="group border rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
             >
               {thumbnail && (
-                <div className="relative aspect-[16/9]">
+                <div className="relative aspect-video">
                   <Image
                     src={getAssetImageUrl(thumbnail)}
                     alt={title}

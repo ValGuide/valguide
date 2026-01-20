@@ -70,7 +70,7 @@ function GuidePage() {
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-5xl p-6 sm:p-8 space-y-6">
           {/* Hero Card with Cover Image - Reduced height with gradient overlay */}
-          <Card className="overflow-hidden shadow-[var(--shadow-md)]">
+          <Card className="overflow-hidden shadow-(--shadow-md)">
             {/* Cover Image Section - Reduced height */}
             <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted/30">
               {guide.coverImageUrl ? (
@@ -82,7 +82,7 @@ function GuidePage() {
                 />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
                     <ImageIcon className="h-8 w-8 text-amber-600 dark:text-amber-400" />
                   </div>
                   <p className="text-sm text-muted-foreground/70">{t('details.addCoverImageHint')}</p>

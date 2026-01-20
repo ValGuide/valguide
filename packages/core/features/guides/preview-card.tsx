@@ -36,7 +36,9 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
   const displayTitle = translation?.title || guide.title || 'Untitled Guide'
   const displayDescription = translation?.description || guide.description || ''
   const displayImage = guide.imageUrl ?? (guide.coverImage ? getAssetImageUrl(guide.coverImage) : undefined)
-  const guideUrl = guide.nanoId ? `/guides/${guide.nanoId}` : '#'
+  const guideLinkOptions = guide.nanoId
+    ? ({ to: '/guides/$nanoId', params: { nanoId: guide.nanoId } } as const)
+    : ({ to: '/' } as const)
 
   const isPublished = !!guide.published
   const status = isPublished ? 'published' : 'draft'
@@ -44,7 +46,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
   return (
     <Card
       className={cn(
-        'overflow-hidden flex flex-col h-full hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)] hover:border-primary/20',
+        'overflow-hidden flex flex-col h-full hover:-translate-y-0.5 hover:shadow-(--shadow-card-hover) hover:border-primary/20',
         className,
       )}
       {...props}
@@ -60,7 +62,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
               <ImageIcon className="h-7 w-7 text-amber-600 dark:text-amber-400" />
             </div>
             <p className="text-xs text-muted-foreground/70">{t('addCoverImage')}</p>
@@ -93,7 +95,7 @@ export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: 
       <CardFooter className="flex-col items-stretch gap-3 pt-0">
         <div className="flex items-center justify-between">
           <Button variant="outline" size="sm" asChild>
-            <Link to={guideUrl} preload="intent">
+            <Link {...guideLinkOptions} preload="intent">
               {t('viewDetails')}
             </Link>
           </Button>

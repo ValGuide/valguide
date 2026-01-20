@@ -65,7 +65,7 @@ export function MobileMoreMenu({
             <span className="sr-only">{t('moreActions')}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="min-w-[160px]">
+        <DropdownMenuContent align="start" className="min-w-40">
           {canUnpublish && (
             <DropdownMenuItem
               onClick={() => setUnpublishDialogOpen(true)}

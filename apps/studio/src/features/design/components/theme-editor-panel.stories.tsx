@@ -91,7 +91,7 @@ type Story = StoryObj<typeof ThemeEditorPanel>
 function ThemeEditorPanelWrapper({ themes = [], isLoading = false }: { themes?: Theme[]; isLoading?: boolean }) {
   const customizer = useThemeCustomizer('light')
   return (
-    <div className="w-[400px] h-[700px]">
+    <div className="w-100 h-175">
       <ThemeEditorPanel
         customizer={customizer}
         themes={themes}
