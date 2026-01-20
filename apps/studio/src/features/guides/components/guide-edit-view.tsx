@@ -3,6 +3,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { defaultLocale } from '@valguide/i18n/i18n.config'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,7 +27,6 @@ import { StopsList } from '@/features/guides/components/stops-list'
 import { getLocaleDisplayName, UnifiedLocaleSelector } from '@/features/guides/components/unified-locale-selector'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
-import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 import { getLocaleStatusMapFromStatuses } from '@/features/guides/utils/translation-status'
 
@@ -70,9 +70,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   const [isPublishing, setIsPublishing] = useState(false)
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
-  const { buildUrl } = useLocaleUrl(activeLocale)
-
-  const guideDetailUrl = `/guides/${nanoId}`
+  const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
 
   // Get title from locale data based on active tab
   const guideTitle = useMemo(() => {
@@ -168,7 +166,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   }, [formId, registerFormReset, unregisterForm])
 
   const handleSelectStop = (stopId: string) => {
-    router.navigate({ to: buildUrl(`/guides/${nanoId}/stops/${stopId}/edit`) })
+    router.navigate({ to: '/guides/$nanoId/stops/$stopId/edit', params: { nanoId, stopId }, search: localeSearch })
   }
 
   const handleNavigateToGuides = () => {
@@ -176,7 +174,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   }
 
   const handleNavigateToGuideDetail = () => {
-    confirmIfDirty(() => router.navigate({ to: guideDetailUrl }))
+    confirmIfDirty(() => router.navigate({ to: '/guides/$nanoId', params: { nanoId } }))
   }
 
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
@@ -437,7 +435,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                     onAdd={async () => {
                       const newStop = await addStop()
                       if (newStop) {
-                        router.navigate({ to: buildUrl(`/guides/${nanoId}/stops/${newStop.nanoId}/edit`) })
+                        router.navigate({
+                          to: '/guides/$nanoId/stops/$stopId/edit',
+                          params: { nanoId, stopId: newStop.nanoId },
+                          search: localeSearch,
+                        })
                       }
                     }}
                   />

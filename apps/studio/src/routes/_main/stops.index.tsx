@@ -17,8 +17,12 @@ function StopsPage() {
   const { stops, isLoading, error, refetch } = useStops()
 
   const handleEditStop = (stop: StopWithGuides) => {
-    if (stop.nanoId) {
-      router.navigate({ to: `/stops/${stop.nanoId}/edit` })
+    const firstGuide = stop.guideStops[0]?.guide
+    if (stop.nanoId && firstGuide) {
+      router.navigate({
+        to: '/guides/$nanoId/stops/$stopId/edit',
+        params: { nanoId: firstGuide.nanoId, stopId: stop.nanoId },
+      })
     }
   }
 

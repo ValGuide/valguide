@@ -26,12 +26,12 @@ function GuidesPage() {
 
   const handleViewGuide = (guide: GuideListItem) => {
     if (guide.nanoId) {
-      router.navigate({ to: `/guides/${guide.nanoId}/edit` })
+      router.navigate({ to: '/guides/$nanoId/edit', params: { nanoId: guide.nanoId } })
     }
   }
 
   const handleNavigateToGuide = (nanoId: string) => {
-    router.navigate({ to: `/guides/${nanoId}/edit` })
+    router.navigate({ to: '/guides/$nanoId/edit', params: { nanoId } })
   }
 
   return (

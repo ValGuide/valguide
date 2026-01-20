@@ -1,5 +1,6 @@
 import { Link, useRouter } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { defaultLocale } from '@valguide/i18n/i18n.config'
 import {
   BreadcrumbEllipsis,
   BreadcrumbItem,
@@ -17,7 +18,6 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
-import { useLocaleUrl } from '@/features/guides/hooks/use-locale-url'
 
 interface StopEditViewProps {
   stopId: string
@@ -50,7 +50,7 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     registerFormReset,
   } = useGuideEditor()
 
-  const { buildUrl } = useLocaleUrl(activeLocale)
+  const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
 
   const guideDetailLinkOptions = { to: '/guides/$nanoId', params: { nanoId } } as const
 
@@ -116,8 +116,8 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
   }, [formId, registerFormReset, unregisterForm])
 
   const handleBackToGuide = useCallback(() => {
-    router.navigate({ to: buildUrl(`/guides/${nanoId}/edit`) })
-  }, [router, buildUrl, nanoId])
+    router.navigate({ to: '/guides/$nanoId/edit', params: { nanoId }, search: localeSearch })
+  }, [router, nanoId, localeSearch])
 
   const breadcrumbContent = (
     <>
