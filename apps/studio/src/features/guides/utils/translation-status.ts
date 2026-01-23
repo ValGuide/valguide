@@ -15,6 +15,7 @@ type TranslationLike = {
 /**
  * Get locale status map from an array of translation statuses (lightweight, no content)
  * Used by the new editor context that doesn't have full translations
+ * locales parameter represents availableLocales - newly added languages without data show as 'draft'
  */
 export function getLocaleStatusMapFromStatuses(
   statuses: TranslationStatus[] | undefined,
@@ -23,13 +24,21 @@ export function getLocaleStatusMapFromStatuses(
   const statusMap: LocaleStatusMap = {}
   for (const locale of locales) {
     const tr = statuses?.find((t) => t.locale === locale)
-    statusMap[locale] = getTranslationLocaleStatus(tr)
+    // Pass true because locale is in availableLocales array
+    statusMap[locale] = getTranslationLocaleStatus(tr, true)
   }
   return statusMap
 }
 
-export function getTranslationLocaleStatus(translation: TranslationLike | undefined): TranslationLocaleStatus {
-  if (!translation) return 'empty'
+export function getTranslationLocaleStatus(
+  translation: TranslationLike | undefined,
+  isLocaleAvailable?: boolean,
+): TranslationLocaleStatus {
+  // If locale is in availableLocales but no translation data yet → show as 'draft'
+  // This handles newly-added languages ready to be edited
+  if (!translation) {
+    return isLocaleAvailable ? 'draft' : 'empty'
+  }
 
   const hasPublished = !!translation.currentVersionId
   const hasDraft = !!translation.draftVersionId
@@ -52,7 +61,8 @@ export function getGuideLocaleStatusMap(guide: GuideWithStops, locales?: string[
 
   for (const locale of localesToCheck) {
     const translation = guide.translations.find((t) => t.locale === locale)
-    statusMap[locale] = getTranslationLocaleStatus(translation)
+    // Pass true because locale is in availableLocales/localesToCheck
+    statusMap[locale] = getTranslationLocaleStatus(translation, true)
   }
 
   return statusMap
@@ -64,7 +74,8 @@ export function getStopLocaleStatusMap(stop: StopWithTranslations, locales?: str
 
   for (const locale of localesToCheck) {
     const translation = stop.translations.find((t) => t.locale === locale)
-    statusMap[locale] = getTranslationLocaleStatus(translation)
+    // Pass true because locale is in localesToCheck (typically availableLocales)
+    statusMap[locale] = getTranslationLocaleStatus(translation, true)
   }
 
   return statusMap
@@ -81,7 +92,8 @@ export type LocaleTranslationSummary = {
 
 export function getGuideLocaleSummary(guide: GuideWithStops, locale: string): LocaleTranslationSummary {
   const guideTranslation = guide.translations.find((t) => t.locale === locale)
-  const guideStatus = getTranslationLocaleStatus(guideTranslation)
+  const isLocaleAvailable = (guide.availableLocales ?? []).includes(locale)
+  const guideStatus = getTranslationLocaleStatus(guideTranslation, isLocaleAvailable)
 
   let stopsPublished = 0
   let stopsDraft = 0
@@ -89,7 +101,7 @@ export function getGuideLocaleSummary(guide: GuideWithStops, locale: string): Lo
 
   for (const stop of guide.stops) {
     const stopTranslation = stop.translations.find((t) => t.locale === locale)
-    const stopStatus = getTranslationLocaleStatus(stopTranslation)
+    const stopStatus = getTranslationLocaleStatus(stopTranslation, true)
 
     switch (stopStatus) {
       case 'published':
@@ -123,7 +135,7 @@ export function getOverallTranslationProgress(guide: GuideWithStops & { availabl
 
   for (const locale of locales) {
     const translation = guide.translations.find((t) => t.locale === locale)
-    const status = getTranslationLocaleStatus(translation)
+    const status = getTranslationLocaleStatus(translation, true)
     if (status !== 'empty') {
       translatedLocales++
     }
@@ -143,7 +155,7 @@ export function getStopsTranslationProgress(
 
   for (const stop of stops) {
     const translation = stop.translations.find((t) => t.locale === locale)
-    const status = getTranslationLocaleStatus(translation)
+    const status = getTranslationLocaleStatus(translation, true)
     if (status !== 'empty') {
       translated++
     }

@@ -48,7 +48,7 @@ export function TranslationStatusInline({
       const translation = translationStatuses.find((tr) => tr.locale === locale)
       return {
         locale,
-        status: getTranslationLocaleStatus(translation),
+        status: getTranslationLocaleStatus(translation, true),
       }
     })
   }, [locales, translationStatuses])
