@@ -295,14 +295,19 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           </div>
 
           {/* Row 2: Title + Status Badge */}
-          <div className="flex items-center gap-2 px-4 pb-3 sm:px-6">
-            <h1 className="min-w-0 truncate text-lg font-semibold">{guideTitle}</h1>
-            <GuideStatusBadge
-              status={statusDisplay.status}
-              indicator={statusDisplay.indicator}
-              size="sm"
-              className="shrink-0"
-            />
+          <div className="flex flex-col gap-1 px-4 pb-3 sm:px-6">
+            <div className="flex items-center gap-2">
+              <h1 className="min-w-0 truncate text-lg font-semibold">{guideTitle}</h1>
+              <GuideStatusBadge
+                status={statusDisplay.status}
+                indicator={statusDisplay.indicator}
+                size="sm"
+                className="shrink-0"
+              />
+            </div>
+            {statusDisplay.status === 'published' && statusDisplay.indicator === 'changed' && (
+              <p className="text-xs text-muted-foreground">{t('helper.changedExplanation')}</p>
+            )}
           </div>
 
           {/* Row 3: Draft/Published tabs */}
@@ -339,14 +344,19 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         {/* Desktop: Status Badge and Tabs */}
         <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guideTitle}</h1>
-              <GuideStatusBadge
-                status={statusDisplay.status}
-                indicator={statusDisplay.indicator}
-                size="lg"
-                className="shrink-0"
-              />
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guideTitle}</h1>
+                <GuideStatusBadge
+                  status={statusDisplay.status}
+                  indicator={statusDisplay.indicator}
+                  size="lg"
+                  className="shrink-0"
+                />
+              </div>
+              {statusDisplay.status === 'published' && statusDisplay.indicator === 'changed' && (
+                <p className="text-sm text-muted-foreground">{t('helper.changedExplanation')}</p>
+              )}
             </div>
             <DraftPublishedTabs
               activeTab={activeTab}
