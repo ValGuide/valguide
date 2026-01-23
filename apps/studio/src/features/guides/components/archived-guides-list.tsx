@@ -1,5 +1,4 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/server-functions'
 import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
@@ -22,11 +21,13 @@ import { ArchivedGuidesListContent } from './archived-guides-list-content'
 import { ArchivedGuidesListEmpty } from './archived-guides-list-empty'
 import { ArchivedGuidesListLoading } from './archived-guides-list-loading'
 
-interface ArchivedGuidesListProps {
+export interface ArchivedGuidesListProps {
   guides?: GuideWithTranslationsAndCover[]
   isLoading?: boolean
   error?: Error | null
   onRetry?: () => void
+  onRecover?: (guideId: string) => Promise<void>
+  onDelete?: (guideId: string) => Promise<void>
 }
 
 type DialogState = {
@@ -35,7 +36,14 @@ type DialogState = {
   guideName: string | null
 }
 
-export function ArchivedGuidesList({ guides = [], isLoading = false, error = null, onRetry }: ArchivedGuidesListProps) {
+export function ArchivedGuidesList({
+  guides = [],
+  isLoading = false,
+  error = null,
+  onRetry,
+  onRecover,
+  onDelete,
+}: ArchivedGuidesListProps) {
   const t = useTranslations('guides')
   const tCommon = useTranslations('common')
   const queryClient = useQueryClient()
@@ -54,11 +62,11 @@ export function ArchivedGuidesList({ guides = [], isLoading = false, error = nul
   }
 
   const handleRecover = async () => {
-    if (!dialogState.guideId) return
+    if (!dialogState.guideId || !onRecover) return
 
     setIsActionLoading(true)
     try {
-      await recoverGuideFn({ data: { id: dialogState.guideId } })
+      await onRecover(dialogState.guideId)
       toast.success(t('recover.success'), {
         description: t('recover.successDescription'),
       })
@@ -75,11 +83,11 @@ export function ArchivedGuidesList({ guides = [], isLoading = false, error = nul
   }
 
   const handleDelete = async () => {
-    if (!dialogState.guideId || !isConfirmationValid) return
+    if (!dialogState.guideId || !isConfirmationValid || !onDelete) return
 
     setIsActionLoading(true)
     try {
-      await deleteGuideFn({ data: { id: dialogState.guideId } })
+      await onDelete(dialogState.guideId)
       toast.success(t('delete.success'), {
         description: t('delete.successDescription'),
       })

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ArchivedGuidesList } from '@/features/guides/components/archived-guides-list'
+import { ArchivedGuidesListConnected } from '@/features/guides/components/archived-guides-list-connected'
 import { ArchivedGuidesListSkeleton } from '@/features/guides/components/archived-guides-list-skeleton'
 import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
 import { archivedGuidesQueryOptions } from '@/features/guides/query-options'
@@ -15,7 +15,7 @@ function ArchivedPage() {
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <ArchivedGuidesList guides={guides} isLoading={isLoading} error={error} onRetry={refetch} />
+      <ArchivedGuidesListConnected guides={guides} isLoading={isLoading} error={error} onRetry={refetch} />
     </main>
   )
 }

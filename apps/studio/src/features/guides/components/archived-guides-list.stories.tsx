@@ -1,7 +1,10 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
+import { fn } from 'storybook/test'
 import { ArchivedGuidesList } from './archived-guides-list'
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const meta: Meta<typeof ArchivedGuidesList> = {
   title: 'Studio/Guides/ArchivedGuidesList',
@@ -15,6 +18,14 @@ const meta: Meta<typeof ArchivedGuidesList> = {
     },
   },
   tags: ['autodocs'],
+  args: {
+    onRecover: fn(async () => {
+      await delay(500)
+    }),
+    onDelete: fn(async () => {
+      await delay(500)
+    }),
+  },
 }
 
 export default meta
@@ -42,7 +53,7 @@ const archivedGuides: GuideWithTranslationsAndCover[] = [
       fileSize: 150000,
       mimeType: 'image/jpeg',
       type: 'image',
-      storagePath: 'covers/egypt-cover.jpg',
+      storagePath: '',
       publicUrl: faker.image.urlLoremFlickr({ width: 600, height: 400, category: 'art' }),
       locale: null,
       width: 1200,
@@ -135,7 +146,7 @@ const archivedGuides: GuideWithTranslationsAndCover[] = [
       fileSize: 180000,
       mimeType: 'image/jpeg',
       type: 'image',
-      storagePath: 'covers/city-cover.jpg',
+      storagePath: '',
       publicUrl: faker.image.urlLoremFlickr({ width: 600, height: 400, category: 'museum' }),
       locale: null,
       width: 1200,
