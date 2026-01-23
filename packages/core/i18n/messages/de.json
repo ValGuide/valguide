@@ -288,7 +288,7 @@
       "sharedContent": "Für alle Sprachen gültig",
       "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
       "localeContent": "Sprachspezifischer Inhalt",
-      "guideDetails": "Guide-Details",
+      "guideDetails": "Guide-Übersicht",
       "localeIndicator": "({locale})",
       "guideDetailsDescription": "Bearbeiten Sie die Guide-Informationen für diese Sprache",
       "titleLabel": "Titel *",
@@ -521,7 +521,7 @@
       "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
     },
     "details": {
-      "title": "Guide-Details",
+      "title": "Guide-Übersicht",
       "guideId": "Guide-ID",
       "guideCover": "Guide-Titelbild",
       "created": "Erstellt",

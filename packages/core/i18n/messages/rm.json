@@ -288,7 +288,7 @@
       "sharedContent": "Valid per tut las linguas",
       "sharedContentDescription": "Midadas qua valan per tut las linguas",
       "localeContent": "Cuntegn specific per lingua",
-      "guideDetails": "Detagls dal guid",
+      "guideDetails": "Survista dal guid",
       "localeIndicator": "({locale})",
       "guideDetailsDescription": "Modifitgar las infurmaziuns dal guid per questa lingua",
       "titleLabel": "Titel *",
@@ -521,7 +521,7 @@
       "unexpected": "Ina errur nunspetgada è succedida"
     },
     "details": {
-      "title": "Detagls dal guid",
+      "title": "Survista dal guid",
       "guideId": "ID dal guid",
       "guideCover": "Maletg da front dal guid",
       "created": "Creà",
