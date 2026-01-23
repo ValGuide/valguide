@@ -169,6 +169,13 @@
       "when": 1768947837063,
       "tag": "0023_chunky_ravenous",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1769208439727,
+      "tag": "0024_red_skin",
+      "breakpoints": true
     }
   ]
 }

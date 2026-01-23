@@ -1,5 +1,6 @@
 import type { Asset } from '@valguide/core/features/assets/types'
-import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
+import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
+import { getStopTranslationStatusDisplay } from '@valguide/core/features/guides/status-utils'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 
@@ -92,7 +93,17 @@ export function StopEditLayout({
 
   const hasDraft = !!stopTranslation?.draftVersionId
   const hasPublished = !!stopTranslation?.currentVersionId
-  const contentStatus = getContentStatus(hasDraft, hasPublished)
+
+  // Stop translation status with change indicator
+  const statusDisplay = getStopTranslationStatusDisplay(
+    stopTranslation
+      ? {
+          currentVersionId: stopTranslation.currentVersionId,
+          draftVersionId: stopTranslation.draftVersionId,
+        }
+      : { currentVersionId: null, draftVersionId: null },
+    null,
+  )
 
   const isReadOnly = activeTab === 'published'
   const stopTitle = activeTab === 'published' ? publishedStopTitle : draftStopTitle
@@ -233,7 +244,12 @@ export function StopEditLayout({
           {/* Row 2: Title + Status Badge */}
           <div className="flex items-center gap-2 px-4 pb-3 sm:px-6">
             <h1 className="min-w-0 truncate text-lg font-semibold">{stopTitle}</h1>
-            <ContentStatusBadge status={contentStatus} size="sm" className="shrink-0" />
+            <GuideStatusBadge
+              status={statusDisplay.status}
+              indicator={statusDisplay.indicator}
+              size="sm"
+              className="shrink-0"
+            />
           </div>
 
           {/* Row 3: Draft/Published tabs */}
@@ -271,7 +287,12 @@ export function StopEditLayout({
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{stopTitle}</h1>
-              <ContentStatusBadge status={contentStatus} size="lg" className="shrink-0" />
+              <GuideStatusBadge
+                status={statusDisplay.status}
+                indicator={statusDisplay.indicator}
+                size="lg"
+                className="shrink-0"
+              />
             </div>
             <DraftPublishedTabs
               activeTab={activeTab}

@@ -7,8 +7,12 @@ export function ArchivedGuidesListConnected(props: ArchivedGuidesListConnectedPr
   return (
     <ArchivedGuidesList
       {...props}
-      onRecover={(guideId) => recoverGuideFn({ data: { id: guideId } })}
-      onDelete={(guideId) => deleteGuideFn({ data: { id: guideId } })}
+      onRecover={async (guideId) => {
+        await recoverGuideFn({ data: { id: guideId } })
+      }}
+      onDelete={async (guideId) => {
+        await deleteGuideFn({ data: { id: guideId } })
+      }}
     />
   )
 }

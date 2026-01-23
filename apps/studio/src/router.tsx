@@ -5,6 +5,7 @@ declare module '@tanstack/react-router' {
     focusMode?: boolean
   }
 }
+
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import { createQueryClient } from '@valguide/core/utils/query-client'
 import { DefaultError } from './components/default-error'

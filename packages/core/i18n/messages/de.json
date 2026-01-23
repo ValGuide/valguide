@@ -546,6 +546,22 @@
     "locales": {
       "updateSuccess": "Sprachen aktualisiert",
       "updateError": "Fehler beim Aktualisieren der Sprachen"
+    },
+    "status": {
+      "published": "Veröffentlicht",
+      "unpublished": "Unveröffentlicht",
+      "archived": "Archiviert"
+    },
+    "indicator": {
+      "up-to-date": "Aktuell",
+      "changed": "Geändert"
+    },
+    "helper": {
+      "changedExplanation": "Besucher sehen die zuletzt veröffentlichte Version in dieser Sprache."
+    },
+    "guideActions": {
+      "publishGuide": "Guide veröffentlichen",
+      "unpublishGuide": "Guide zurückziehen"
     }
   },
   "stops": {
@@ -663,6 +679,17 @@
       "draft": "Entwurf",
       "published": "Veröffentlicht",
       "draftChanges": "Entwurfsänderungen"
+    },
+    "visibility": {
+      "visible": "Sichtbar",
+      "hidden": "Ausgeblendet",
+      "hiddenIndicator": "Dieser Stopp ist für Besucher ausgeblendet"
+    },
+    "stopActions": {
+      "hideStop": "Stopp ausblenden",
+      "showStop": "Stopp einblenden",
+      "archiveStop": "Stopp archivieren",
+      "restoreStop": "Stopp wiederherstellen"
     }
   },
   "assets": {

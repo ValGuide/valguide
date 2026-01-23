@@ -717,9 +717,12 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
     where: and(eq(guide.nanoId, nanoId), isNull(guide.archivedAt), isNull(guide.deletedAt)),
     with: {
       guideStops: {
+        where: isNull(guideStop.archivedAt),
         orderBy: asc(guideStop.position),
         columns: {
           position: true,
+          visible: true,
+          archivedAt: true,
         },
         with: {
           stop: {
@@ -842,6 +845,8 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
       id: gs.stop.id,
       nanoId: gs.stop.nanoId,
       position: gs.position,
+      visible: gs.visible,
+      archivedAt: gs.archivedAt,
       assets: stopAssetsMap.get(gs.stop.id) ?? [],
       translationStatuses: stopTranslationStatusesMap.get(gs.stop.id) ?? [],
     })),
@@ -867,9 +872,9 @@ export async function getGuideTranslationsForLocale(guideId: string, locale: str
     },
   })
 
-  // Fetch all stops for this guide
+  // Fetch all non-archived stops for this guide
   const guideStopsResult = await db.query.guideStop.findMany({
-    where: eq(guideStop.guideId, guideId),
+    where: and(eq(guideStop.guideId, guideId), isNull(guideStop.archivedAt)),
     orderBy: asc(guideStop.position),
     columns: {
       stopId: true,

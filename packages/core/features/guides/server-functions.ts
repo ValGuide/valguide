@@ -568,6 +568,62 @@ export const replaceStopAssetsFn = createServerFn({ method: 'POST' })
     return { success: true }
   })
 
+// ============================================================================
+// Guide-Level Publish/Unpublish (visibility to visitors)
+// ============================================================================
+
+const publishGuideSchema = z.object({
+  guideId: z.string(),
+})
+
+export const publishGuideFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(publishGuideSchema)
+  .handler(async ({ context, data }) => {
+    const { guideId } = data
+    await requireGuideAccess(guideId, context.user.id)
+
+    const [publishedGuide] = await db
+      .update(guide)
+      .set({
+        published: new Date(),
+        updatedBy: context.user.id,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)))
+      .returning()
+
+    return publishedGuide
+  })
+
+const unpublishGuideSchema = z.object({
+  guideId: z.string(),
+})
+
+export const unpublishGuideFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(unpublishGuideSchema)
+  .handler(async ({ context, data }) => {
+    const { guideId } = data
+    await requireGuideAccess(guideId, context.user.id)
+
+    const [unpublishedGuide] = await db
+      .update(guide)
+      .set({
+        published: null,
+        updatedBy: context.user.id,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)))
+      .returning()
+
+    return unpublishedGuide
+  })
+
+// ============================================================================
+// Guide Archive/Recover
+// ============================================================================
+
 const archiveGuideSchema = z.object({
   id: z.string(),
 })
@@ -761,4 +817,92 @@ export const unpublishStopTranslationFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireStopAccess(data.stopId, context.user.id)
     return unpublishStopTranslation(data.stopId, data.locale)
+  })
+
+// ============================================================================
+// Stop Visibility (Hide/Show)
+// ============================================================================
+
+const hideStopSchema = z.object({
+  guideId: z.string(),
+  stopId: z.string(),
+})
+
+export const hideStopFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(hideStopSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+
+    const [updatedGuideStop] = await db
+      .update(guideStop)
+      .set({ visible: false })
+      .where(and(eq(guideStop.guideId, data.guideId), eq(guideStop.stopId, data.stopId)))
+      .returning()
+
+    return updatedGuideStop
+  })
+
+const showStopSchema = z.object({
+  guideId: z.string(),
+  stopId: z.string(),
+})
+
+export const showStopFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(showStopSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+
+    const [updatedGuideStop] = await db
+      .update(guideStop)
+      .set({ visible: true })
+      .where(and(eq(guideStop.guideId, data.guideId), eq(guideStop.stopId, data.stopId)))
+      .returning()
+
+    return updatedGuideStop
+  })
+
+// ============================================================================
+// Stop Archive/Restore
+// ============================================================================
+
+const archiveStopSchema = z.object({
+  guideId: z.string(),
+  stopId: z.string(),
+})
+
+export const archiveStopFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(archiveStopSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+
+    const [archivedGuideStop] = await db
+      .update(guideStop)
+      .set({ archivedAt: new Date() })
+      .where(and(eq(guideStop.guideId, data.guideId), eq(guideStop.stopId, data.stopId)))
+      .returning()
+
+    return archivedGuideStop
+  })
+
+const restoreStopSchema = z.object({
+  guideId: z.string(),
+  stopId: z.string(),
+})
+
+export const restoreStopFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(restoreStopSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+
+    const [restoredGuideStop] = await db
+      .update(guideStop)
+      .set({ archivedAt: null })
+      .where(and(eq(guideStop.guideId, data.guideId), eq(guideStop.stopId, data.stopId)))
+      .returning()
+
+    return restoredGuideStop
   })

@@ -1,6 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
+import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
+import { getGuideStatusDisplay } from '@valguide/core/features/guides/status-utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -80,15 +81,28 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   // Get status info from locale data
   const hasDraft = !!localeData?.guideTranslation?.draftVersionId
   const hasPublished = !!localeData?.guideTranslation?.currentVersionId
-  const computedStatus = getContentStatus(hasDraft, hasPublished)
+
+  // Guide-level status with change indicator based on translation state
+  const computedStatusDisplay = getGuideStatusDisplay(
+    {
+      published: metadata?.published ?? null,
+      archivedAt: null,
+    },
+    localeData?.guideTranslation
+      ? {
+          currentVersionId: localeData.guideTranslation.currentVersionId,
+          draftVersionId: localeData.guideTranslation.draftVersionId,
+        }
+      : null,
+  )
 
   // Store stable status during publishing to prevent flickering
   // Both badge and button update in the same render cycle
-  const stableStatusRef = useRef(computedStatus)
+  const stableStatusRef = useRef(computedStatusDisplay)
   if (!isPublishing) {
-    stableStatusRef.current = computedStatus
+    stableStatusRef.current = computedStatusDisplay
   }
-  const contentStatus = isPublishing ? stableStatusRef.current : computedStatus
+  const statusDisplay = isPublishing ? stableStatusRef.current : computedStatusDisplay
 
   const isReadOnly = activeTab === 'published'
 
@@ -283,7 +297,12 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           {/* Row 2: Title + Status Badge */}
           <div className="flex items-center gap-2 px-4 pb-3 sm:px-6">
             <h1 className="min-w-0 truncate text-lg font-semibold">{guideTitle}</h1>
-            <ContentStatusBadge status={contentStatus} size="sm" className="shrink-0" />
+            <GuideStatusBadge
+              status={statusDisplay.status}
+              indicator={statusDisplay.indicator}
+              size="sm"
+              className="shrink-0"
+            />
           </div>
 
           {/* Row 3: Draft/Published tabs */}
@@ -322,7 +341,12 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guideTitle}</h1>
-              <ContentStatusBadge status={contentStatus} size="lg" className="shrink-0" />
+              <GuideStatusBadge
+                status={statusDisplay.status}
+                indicator={statusDisplay.indicator}
+                size="lg"
+                className="shrink-0"
+              />
             </div>
             <DraftPublishedTabs
               activeTab={activeTab}
@@ -395,7 +419,13 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                   <StopsList
                     onReorder={handleReorderStops}
                     onEdit={handleSelectStop}
-                    onDelete={deleteStop}
+                    onHide={async (_stopId) => {
+                      // TODO: Implement stop hiding
+                    }}
+                    onShow={async (_stopId) => {
+                      // TODO: Implement stop showing
+                    }}
+                    onArchive={deleteStop}
                     onAdd={async () => {
                       const newStop = await addStop()
                       if (newStop) {

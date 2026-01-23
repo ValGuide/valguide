@@ -30,6 +30,13 @@ import {
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@valguide/ui/components/dropdown-menu'
+import {
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -37,7 +44,9 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@valguide/ui/components/empty'
-import { GripVertical, Plus, Trash2 } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
+import { cn } from '@valguide/ui/lib/utils'
+import { Archive, Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus } from 'lucide-react'
 import * as React from 'react'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { TranslationStatusInline } from './translation-status-inline'
@@ -45,8 +54,12 @@ import { TranslationStatusInline } from './translation-status-inline'
 export type StopsListProps = {
   onReorder: (updates: Array<{ id: string; order: number }>) => void
   onEdit: (stopId: string) => void
-  onDelete: (stopId: string) => Promise<void>
+  onHide: (stopId: string) => Promise<void>
+  onShow: (stopId: string) => Promise<void>
+  onArchive: (stopId: string) => Promise<void>
   onAdd: () => void | Promise<void>
+  /** @deprecated Use onArchive instead */
+  onDelete?: (stopId: string) => Promise<void>
 }
 
 type SortableStopItemProps = {
@@ -54,10 +67,12 @@ type SortableStopItemProps = {
   index: number
   title: string
   onEdit: (stopId: string) => void
-  onRequestDelete: (stop: StopMetadata) => void
+  onHide: (stopId: string) => Promise<void>
+  onShow: (stopId: string) => Promise<void>
+  onRequestArchive: (stop: StopMetadata) => void
 }
 
-function SortableStopItem({ stop, index, title, onEdit, onRequestDelete }: SortableStopItemProps) {
+function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onRequestArchive }: SortableStopItemProps) {
   const t = useTranslations('stops')
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: stop.id })
 
@@ -68,10 +83,11 @@ function SortableStopItem({ stop, index, title, onEdit, onRequestDelete }: Sorta
   }
 
   const thumbnailAsset = stop.assets?.find((a) => a.mimeType?.startsWith('image/'))
+  const isHidden = stop.visible === false
 
   return (
     <div ref={setNodeRef} style={style}>
-      <Card className="hover:shadow-md transition-shadow">
+      <Card className={cn('hover:shadow-md transition-shadow', isHidden && 'opacity-60')}>
         <CardContent className="flex items-center gap-4 p-4">
           <button
             className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors touch-none"
@@ -90,23 +106,52 @@ function SortableStopItem({ stop, index, title, onEdit, onRequestDelete }: Sorta
           </div>
 
           <div className="flex-1 min-w-0 space-y-1">
-            <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title })}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className={cn('font-medium truncate', isHidden && 'text-muted-foreground')}>
+                {t('stopTitle', { number: index + 1, title })}
+              </h3>
+              {isHidden && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <EyeOff className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>{t('visibility.hiddenIndicator')}</TooltipContent>
+                </Tooltip>
+              )}
+            </div>
             <TranslationStatusInline translationStatuses={stop.translationStatuses} />
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={() => onEdit(stop.nanoId)}>
-              {t('edit')}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-destructive hover:text-destructive"
-              onClick={() => onRequestDelete(stop)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(stop.nanoId)}>
+                  <Edit className="h-4 w-4" />
+                  {t('edit')}
+                </DropdownMenuItem>
+                {isHidden ? (
+                  <DropdownMenuItem onClick={() => onShow(stop.id)}>
+                    <Eye className="h-4 w-4" />
+                    {t('stopActions.showStop')}
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onClick={() => onHide(stop.id)}>
+                    <EyeOff className="h-4 w-4" />
+                    {t('stopActions.hideStop')}
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive" onClick={() => onRequestArchive(stop)}>
+                  <Archive className="h-4 w-4" />
+                  {t('stopActions.archiveStop')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardContent>
       </Card>
@@ -114,27 +159,32 @@ function SortableStopItem({ stop, index, title, onEdit, onRequestDelete }: Sorta
   )
 }
 
-export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps) {
+export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd, onDelete }: StopsListProps) {
   const t = useTranslations('stops')
   const { stops, localeData } = useGuideEditor()
   const [items, setItems] = React.useState(stops)
   const [isMounted, setIsMounted] = React.useState(false)
-  const [stopToDelete, setStopToDelete] = React.useState<StopMetadata | null>(null)
+  const [stopToArchive, setStopToArchive] = React.useState<StopMetadata | null>(null)
+
+  const archiveAction = onArchive ?? onDelete
+  if (!archiveAction) {
+    throw new Error('StopsList requires either onArchive or onDelete prop')
+  }
 
   const getStopTitle = React.useCallback(
     (stopId: string) => {
       const stopTranslation = localeData?.stopTranslations.find((st) => st.stopId === stopId)
       return stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title ?? t('untitled')
     },
-    [localeData, t],
+    [localeData],
   )
 
-  const handleConfirmDelete = React.useCallback(() => {
-    if (stopToDelete) {
-      onDelete(stopToDelete.id)
-      setStopToDelete(null)
+  const handleConfirmArchive = React.useCallback(() => {
+    if (stopToArchive) {
+      archiveAction(stopToArchive.id)
+      setStopToArchive(null)
     }
-  }, [stopToDelete, onDelete])
+  }, [stopToArchive, archiveAction])
 
   React.useEffect(() => {
     setIsMounted(true)
@@ -174,28 +224,28 @@ export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps
     }
   }
 
-  const stopToDeleteTitle = React.useMemo(() => {
-    if (!stopToDelete) return ''
-    return getStopTitle(stopToDelete.id)
-  }, [stopToDelete, getStopTitle])
+  const stopToArchiveTitle = React.useMemo(() => {
+    if (!stopToArchive) return ''
+    return getStopTitle(stopToArchive.id)
+  }, [stopToArchive, getStopTitle])
 
-  const deleteConfirmationDialog = (
-    <AlertDialog open={!!stopToDelete} onOpenChange={(open) => !open && setStopToDelete(null)}>
+  const archiveConfirmationDialog = (
+    <AlertDialog open={!!stopToArchive} onOpenChange={(open) => !open && setStopToArchive(null)}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('actions.delete')}</AlertDialogTitle>
+          <AlertDialogTitle>{t('stopActions.archiveStop')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('actions.deleteConfirm')}
-            <span className="mt-2 block font-medium text-foreground">{stopToDeleteTitle}</span>
+            {t('stopActions.archiveConfirm')}
+            <span className="mt-2 block font-medium text-foreground">{stopToArchiveTitle}</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleConfirmDelete}
+            onClick={handleConfirmArchive}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {t('actions.delete')}
+            {t('stopActions.archiveStop')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -228,9 +278,10 @@ export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps
         {items.map((stop, index) => {
           const displayTitle = getStopTitle(stop.id)
           const thumbnailAsset = stop.assets?.find((a) => a.mimeType?.startsWith('image/'))
+          const isHidden = stop.visible === false
 
           return (
-            <Card key={stop.id}>
+            <Card key={stop.id} className={cn(isHidden && 'opacity-60')}>
               <CardContent className="flex items-center gap-4 p-4">
                 <GripVertical className="h-5 w-5 text-muted-foreground" />
                 <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
@@ -241,21 +292,51 @@ export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps
                   )}
                 </div>
                 <div className="flex-1 min-w-0 space-y-1">
-                  <h3 className="font-medium truncate">{t('stopTitle', { number: index + 1, title: displayTitle })}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className={cn('font-medium truncate', isHidden && 'text-muted-foreground')}>
+                      {t('stopTitle', { number: index + 1, title: displayTitle })}
+                    </h3>
+                    {isHidden && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <EyeOff className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent>{t('visibility.hiddenIndicator')}</TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
                   <TranslationStatusInline translationStatuses={stop.translationStatuses} />
                 </div>
                 <div className="flex items-center gap-3">
-                  <Button variant="outline" size="sm" onClick={() => onEdit(stop.nanoId)}>
-                    {t('edit')}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-destructive hover:text-destructive"
-                    onClick={() => setStopToDelete(stop)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onEdit(stop.nanoId)}>
+                        <Edit className="h-4 w-4" />
+                        {t('edit')}
+                      </DropdownMenuItem>
+                      {isHidden ? (
+                        <DropdownMenuItem onClick={() => onShow(stop.id)}>
+                          <Eye className="h-4 w-4" />
+                          {t('stopActions.showStop')}
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={() => onHide(stop.id)}>
+                          <EyeOff className="h-4 w-4" />
+                          {t('stopActions.hideStop')}
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="destructive" onClick={() => setStopToArchive(stop)}>
+                        <Archive className="h-4 w-4" />
+                        {t('stopActions.archiveStop')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </CardContent>
             </Card>
@@ -265,7 +346,7 @@ export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps
           <Plus />
           {t('add')}
         </Button>
-        {deleteConfirmationDialog}
+        {archiveConfirmationDialog}
       </div>
     )
   }
@@ -282,7 +363,9 @@ export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps
                 index={index}
                 title={getStopTitle(stop.id)}
                 onEdit={onEdit}
-                onRequestDelete={setStopToDelete}
+                onHide={onHide}
+                onShow={onShow}
+                onRequestArchive={setStopToArchive}
               />
             ))}
           </div>
@@ -292,7 +375,7 @@ export function StopsList({ onReorder, onEdit, onDelete, onAdd }: StopsListProps
         <Plus />
         {t('add')}
       </Button>
-      {deleteConfirmationDialog}
+      {archiveConfirmationDialog}
     </div>
   )
 }

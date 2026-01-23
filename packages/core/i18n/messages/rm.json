@@ -545,6 +545,22 @@
     "locales": {
       "updateSuccess": "Linguas actualisadas",
       "updateError": "Errur cun actualisar las linguas"
+    },
+    "status": {
+      "published": "Publitgà",
+      "unpublished": "Betg publitgà",
+      "archived": "Archivà"
+    },
+    "indicator": {
+      "up-to-date": "Actual",
+      "changed": "Midà"
+    },
+    "helper": {
+      "changedExplanation": "Visitaders vesan la versiun publitgada l'ultima giada en questa lingua."
+    },
+    "guideActions": {
+      "publishGuide": "Publitgar guide",
+      "unpublishGuide": "Retrair guide"
     }
   },
   "stops": {
@@ -662,6 +678,17 @@
       "draft": "Sboz",
       "published": "Publichà",
       "draftChanges": "Midadas da sboz"
+    },
+    "visibility": {
+      "visible": "Visibel",
+      "hidden": "Zuppà",
+      "hiddenIndicator": "Quest stop è zuppà per visitaders"
+    },
+    "stopActions": {
+      "hideStop": "Zuppar stop",
+      "showStop": "Mussar stop",
+      "archiveStop": "Archivar stop",
+      "restoreStop": "Restabilir stop"
     }
   },
   "assets": {

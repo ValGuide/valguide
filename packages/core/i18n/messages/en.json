@@ -545,6 +545,22 @@
     "locales": {
       "updateSuccess": "Languages updated",
       "updateError": "Failed to update languages"
+    },
+    "status": {
+      "published": "Published",
+      "unpublished": "Unpublished",
+      "archived": "Archived"
+    },
+    "indicator": {
+      "up-to-date": "Up to date",
+      "changed": "Changed"
+    },
+    "helper": {
+      "changedExplanation": "Visitors are seeing the last published version in this language."
+    },
+    "guideActions": {
+      "publishGuide": "Publish guide",
+      "unpublishGuide": "Unpublish guide"
     }
   },
   "stops": {
@@ -662,6 +678,17 @@
       "draft": "Draft",
       "published": "Published",
       "draftChanges": "Draft changes"
+    },
+    "visibility": {
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "hiddenIndicator": "This stop is hidden from visitors"
+    },
+    "stopActions": {
+      "hideStop": "Hide stop",
+      "showStop": "Show stop",
+      "archiveStop": "Archive stop",
+      "restoreStop": "Restore stop"
     }
   },
   "assets": {

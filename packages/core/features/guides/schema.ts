@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { index, integer, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { boolean, index, integer, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
 
@@ -124,6 +124,8 @@ export const guideStop = studioSchema.table(
       .notNull()
       .references(() => stop.id, { onDelete: 'cascade' }),
     position: integer('position').notNull(),
+    visible: boolean('visible').notNull().default(true),
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({

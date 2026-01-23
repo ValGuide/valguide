@@ -1,6 +1,6 @@
 {
-  "id": "a6545286-0f29-4a1a-9ae3-9705d66e946d",
-  "prevId": "63f6150f-23fa-4aa3-b0e3-def041732967",
+  "id": "d15f9ad1-3aef-4c49-86e2-8a9d20b0c271",
+  "prevId": "a6545286-0f29-4a1a-9ae3-9705d66e946d",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -530,6 +530,19 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "visible": {
+          "name": "visible",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "archived_at": {
+          "name": "archived_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

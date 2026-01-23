@@ -1,12 +1,13 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
+import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { getGuideStatus } from '@valguide/core/features/guides/status-utils'
 import type { GuideDetailItem } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
-import { StatusBadge } from '@valguide/ui/components/status-badge'
 import { Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { EditorHeader } from './editor-header'
@@ -39,8 +40,10 @@ export function GuideDetailView({
 }: GuideDetailViewProps) {
   const t = useTranslations('guides')
 
-  const isPublished = !!guide.published
-  const status = isPublished ? 'published' : 'draft'
+  const guideStatus = getGuideStatus({
+    published: guide.published,
+    archivedAt: null,
+  })
 
   return (
     <main className="flex flex-1 flex-col bg-background">
@@ -50,7 +53,7 @@ export function GuideDetailView({
         actions={
           headerActions ?? (
             <>
-              <ViewInAppButton nanoId={nanoId} published={isPublished} appDomain={appDomain} />
+              <ViewInAppButton nanoId={nanoId} published={guideStatus === 'published'} appDomain={appDomain} />
               <ArchiveGuideButton guideId={guide.id} onArchived={onArchived} />
               <Button asChild>
                 <Link to="/guides/$nanoId/edit" params={{ nanoId }} preload="intent">
@@ -67,9 +70,7 @@ export function GuideDetailView({
       <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
           <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guide.displayTitle}</h1>
-          <StatusBadge status={status} size="lg" className="shrink-0">
-            {t(`details.${status}`)}
-          </StatusBadge>
+          <GuideStatusBadge status={guideStatus} size="lg" className="shrink-0" />
         </div>
       </div>
 
@@ -126,7 +127,7 @@ export function GuideDetailView({
                 />
                 <MetadataRow
                   label={t('details.status')}
-                  value={isPublished ? t('details.published') : t('details.draft')}
+                  value={guideStatus === 'published' ? t('details.published') : t('details.draft')}
                 />
               </MetadataGrid>
             </CardContent>

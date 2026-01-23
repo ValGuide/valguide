@@ -76,6 +76,8 @@ export type StopMetadata = {
   id: string
   nanoId: string
   position: number
+  visible: boolean
+  archivedAt: Date | null
   assets: AssetWithRole[]
   translationStatuses: TranslationStatus[]
 }

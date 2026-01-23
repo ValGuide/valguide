@@ -246,6 +246,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         id: newStopWithTranslations.id,
         nanoId: newStopWithTranslations.nanoId,
         position: stops.length,
+        visible: true,
+        archivedAt: null,
         assets: [],
         translationStatuses: [],
       }
