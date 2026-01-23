@@ -23,435 +23,433 @@ import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-chan
 import { getLocaleStatusMapFromStatuses } from '@/features/guides/utils/translation-status'
 
 interface GuideEditViewProps {
-    onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-    onUnpublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-    onDiscard?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-    MediaPicker: MediaPickerComponent
+  onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onUnpublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onDiscard?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  MediaPicker: MediaPickerComponent
 }
 
 export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }: GuideEditViewProps) {
-    const router = useRouter()
-    const t = useTranslations('guides')
-    const tStops = useTranslations('stops')
+  const router = useRouter()
+  const t = useTranslations('guides')
+  const tStops = useTranslations('stops')
 
-    const {
-        nanoId,
-        guideId,
-        metadata,
-        localeData,
-        activeLocale,
-        availableLocales,
-        isDirty,
-        isSaving,
-        lastSaved,
-        guideAssets,
-        setGuideCover,
-        addStop,
-        deleteStop,
-        reorderStops,
-        setActiveLocale,
-        updateAvailableLocales,
-        save,
-        refetch,
-        registerFormDirty,
-        unregisterForm,
-        registerFormReset,
-    } = useGuideEditor()
+  const {
+    nanoId,
+    guideId,
+    metadata,
+    localeData,
+    activeLocale,
+    availableLocales,
+    isDirty,
+    isSaving,
+    lastSaved,
+    guideAssets,
+    setGuideCover,
+    addStop,
+    deleteStop,
+    reorderStops,
+    setActiveLocale,
+    updateAvailableLocales,
+    save,
+    refetch,
+    registerFormDirty,
+    unregisterForm,
+    registerFormReset,
+  } = useGuideEditor()
 
-    const [activeTab, setActiveTab] = useState<EditorTab>('draft')
-    const [isPublishing, setIsPublishing] = useState(false)
+  const [activeTab, setActiveTab] = useState<EditorTab>('draft')
+  const [isPublishing, setIsPublishing] = useState(false)
 
-    const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
-    const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
+  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
+  const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
 
-    // Get title from locale data based on active tab
-    const guideTitle = useMemo(() => {
-        const translation = localeData?.guideTranslation
-        let title: string | null | undefined
-        if (activeTab === 'published') {
-            title = translation?.currentVersion?.title
-        } else {
-            title = translation?.draftVersion?.title ?? translation?.currentVersion?.title
-        }
-        return title?.trim() ? title : t('unknownTitle')
-    }, [localeData, activeTab, t])
-
-    useAutoSave(save, isDirty)
-
-    // Get status info from locale data
-    const hasDraft = !!localeData?.guideTranslation?.draftVersionId
-    const hasPublished = !!localeData?.guideTranslation?.currentVersionId
-    const computedStatus = getContentStatus(hasDraft, hasPublished)
-
-    // Store stable status during publishing to prevent flickering
-    // Both badge and button update in the same render cycle
-    const stableStatusRef = useRef(computedStatus)
-    if (!isPublishing) {
-        stableStatusRef.current = computedStatus
+  // Get title from locale data based on active tab
+  const guideTitle = useMemo(() => {
+    const translation = localeData?.guideTranslation
+    let title: string | null | undefined
+    if (activeTab === 'published') {
+      title = translation?.currentVersion?.title
+    } else {
+      title = translation?.draftVersion?.title ?? translation?.currentVersion?.title
     }
-    const contentStatus = isPublishing ? stableStatusRef.current : computedStatus
+    return title?.trim() ? title : t('unknownTitle')
+  }, [localeData, activeTab, t])
 
-    // Build locale status map from metadata translation statuses
-    const localeStatusMap = useMemo(() => {
-        return getLocaleStatusMapFromStatuses(metadata?.translationStatuses, availableLocales)
-    }, [metadata?.translationStatuses, availableLocales])
+  useAutoSave(save, isDirty)
 
-    const isReadOnly = activeTab === 'published'
+  // Get status info from locale data
+  const hasDraft = !!localeData?.guideTranslation?.draftVersionId
+  const hasPublished = !!localeData?.guideTranslation?.currentVersionId
+  const computedStatus = getContentStatus(hasDraft, hasPublished)
 
-    const draftVersionData = localeData?.guideTranslation?.draftVersion
-        ? {
-            title: localeData.guideTranslation.draftVersion.title,
-            description: localeData.guideTranslation.draftVersion.description,
-        }
-        : null
+  // Store stable status during publishing to prevent flickering
+  // Both badge and button update in the same render cycle
+  const stableStatusRef = useRef(computedStatus)
+  if (!isPublishing) {
+    stableStatusRef.current = computedStatus
+  }
+  const contentStatus = isPublishing ? stableStatusRef.current : computedStatus
 
-    const publishedVersionData = localeData?.guideTranslation?.currentVersion
-        ? {
-            title: localeData.guideTranslation.currentVersion.title,
-            description: localeData.guideTranslation.currentVersion.description,
-        }
-        : null
+  // Build locale status map from metadata translation statuses
+  const localeStatusMap = useMemo(() => {
+    return getLocaleStatusMapFromStatuses(metadata?.translationStatuses, availableLocales)
+  }, [metadata?.translationStatuses, availableLocales])
 
-    // For editing: use draft if available, otherwise fall back to published content
-    // This ensures users always see the current content when editing
-    const editableVersionData = draftVersionData ?? publishedVersionData ?? { title: '', description: '' }
+  const isReadOnly = activeTab === 'published'
 
-    // Convert null to undefined for component prop types
-    const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
+  const draftVersionData = localeData?.guideTranslation?.draftVersion
+    ? {
+        title: localeData.guideTranslation.draftVersion.title,
+        description: localeData.guideTranslation.draftVersion.description,
+      }
+    : null
 
-    const hasContentForLocale = useCallback(
-        (locale: string) => {
-            // For the active locale, check from localeData
-            if (locale === activeLocale) {
-                const t = localeData?.guideTranslation
-                return !!(t?.currentVersionId || t?.draftVersionId)
-            }
-            // For other locales, we'd need to fetch - assume true for now
-            return true
-        },
-        [activeLocale, localeData],
+  const publishedVersionData = localeData?.guideTranslation?.currentVersion
+    ? {
+        title: localeData.guideTranslation.currentVersion.title,
+        description: localeData.guideTranslation.currentVersion.description,
+      }
+    : null
+
+  // For editing: use draft if available, otherwise fall back to published content
+  // This ensures users always see the current content when editing
+  const editableVersionData = draftVersionData ?? publishedVersionData ?? { title: '', description: '' }
+
+  // Convert null to undefined for component prop types
+  const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
+
+  const hasContentForLocale = useCallback(
+    (locale: string) => {
+      // For the active locale, check from localeData
+      if (locale === activeLocale) {
+        const t = localeData?.guideTranslation
+        return !!(t?.currentVersionId || t?.draftVersionId)
+      }
+      // For other locales, we'd need to fetch - assume true for now
+      return true
+    },
+    [activeLocale, localeData],
+  )
+
+  const formRef = useRef<GuideMetadataFormRef>(null)
+  const formId = `guide-translation-${activeLocale}`
+
+  const handleDirtyChange = useCallback(
+    (formIsDirty: boolean) => {
+      registerFormDirty(formId, formIsDirty, () => formRef.current?.getValues() ?? { title: '', description: '' })
+    },
+    [formId, registerFormDirty],
+  )
+
+  useEffect(() => {
+    registerFormReset(
+      formId,
+      () => {
+        formRef.current?.resetToCurrentValues()
+      },
+      () => {
+        formRef.current?.resetToFormValues()
+      },
     )
-
-    const formRef = useRef<GuideMetadataFormRef>(null)
-    const formId = `guide-translation-${activeLocale}`
-
-    const handleDirtyChange = useCallback(
-        (formIsDirty: boolean) => {
-            registerFormDirty(formId, formIsDirty, () => formRef.current?.getValues() ?? { title: '', description: '' })
-        },
-        [formId, registerFormDirty],
-    )
-
-    useEffect(() => {
-        registerFormReset(
-            formId,
-            () => {
-                formRef.current?.resetToCurrentValues()
-            },
-            () => {
-                formRef.current?.resetToFormValues()
-            },
-        )
-        return () => {
-            unregisterForm(formId)
-        }
-    }, [formId, registerFormReset, unregisterForm])
-
-    const handleSelectStop = (stopId: string) => {
-        router.navigate({ to: '/guides/$nanoId/stops/$stopId/edit', params: { nanoId, stopId }, search: localeSearch })
+    return () => {
+      unregisterForm(formId)
     }
+  }, [formId, registerFormReset, unregisterForm])
 
-    const handleNavigateToGuides = () => {
-        confirmIfDirty(() => router.navigate({ to: '/' }))
+  const handleSelectStop = (stopId: string) => {
+    router.navigate({ to: '/guides/$nanoId/stops/$stopId/edit', params: { nanoId, stopId }, search: localeSearch })
+  }
+
+  const handleNavigateToGuides = () => {
+    confirmIfDirty(() => router.navigate({ to: '/' }))
+  }
+
+  const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
+    reorderStops(updates)
+  }
+
+  const coverAsset = useMemo(() => {
+    return guideAssets.find((a) => a.role === 'cover') ?? null
+  }, [guideAssets])
+
+  const handleCoverImageChange = useCallback(
+    (value: Asset | Asset[] | null) => {
+      if (value === null) {
+        setGuideCover(null)
+      } else if (!Array.isArray(value)) {
+        setGuideCover(value)
+      }
+    },
+    [setGuideCover],
+  )
+
+  const handlePublish = useCallback(async () => {
+    if (!onPublish) return
+    setIsPublishing(true)
+    try {
+      if (isDirty) {
+        await save()
+      }
+      const result = await onPublish(guideId, activeLocale)
+      if (result.success) {
+        toast.success(t('publish.success'))
+        await refetch()
+      } else {
+        toast.error(result.error ?? t('publish.error'))
+      }
+    } catch (error) {
+      console.error('Failed to publish:', error)
+      toast.error(t('publish.error'))
+    } finally {
+      setIsPublishing(false)
     }
+  }, [guideId, activeLocale, refetch, onPublish, isDirty, save, t])
 
-
-
-    const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
-        reorderStops(updates)
+  const handleUnpublish = useCallback(async () => {
+    if (!onUnpublish) return
+    try {
+      const result = await onUnpublish(guideId, activeLocale)
+      if (result.success) {
+        toast.success('Content unpublished')
+        refetch()
+      } else {
+        toast.error(result.error ?? 'Failed to unpublish')
+      }
+    } catch (error) {
+      console.error('Failed to unpublish:', error)
+      toast.error('Failed to unpublish')
     }
+  }, [guideId, activeLocale, refetch, onUnpublish])
 
-    const coverAsset = useMemo(() => {
-        return guideAssets.find((a) => a.role === 'cover') ?? null
-    }, [guideAssets])
-
-    const handleCoverImageChange = useCallback(
-        (value: Asset | Asset[] | null) => {
-            if (value === null) {
-                setGuideCover(null)
-            } else if (!Array.isArray(value)) {
-                setGuideCover(value)
-            }
-        },
-        [setGuideCover],
-    )
-
-    const handlePublish = useCallback(async () => {
-        if (!onPublish) return
-        setIsPublishing(true)
-        try {
-            if (isDirty) {
-                await save()
-            }
-            const result = await onPublish(guideId, activeLocale)
-            if (result.success) {
-                toast.success(t('publish.success'))
-                await refetch()
-            } else {
-                toast.error(result.error ?? t('publish.error'))
-            }
-        } catch (error) {
-            console.error('Failed to publish:', error)
-            toast.error(t('publish.error'))
-        } finally {
-            setIsPublishing(false)
-        }
-    }, [guideId, activeLocale, refetch, onPublish, isDirty, save, t])
-
-    const handleUnpublish = useCallback(async () => {
-        if (!onUnpublish) return
-        try {
-            const result = await onUnpublish(guideId, activeLocale)
-            if (result.success) {
-                toast.success('Content unpublished')
-                refetch()
-            } else {
-                toast.error(result.error ?? 'Failed to unpublish')
-            }
-        } catch (error) {
-            console.error('Failed to unpublish:', error)
-            toast.error('Failed to unpublish')
-        }
-    }, [guideId, activeLocale, refetch, onUnpublish])
-
-    const handleDiscard = useCallback(async () => {
-        if (!onDiscard) return
-        try {
-            const result = await onDiscard(guideId, activeLocale)
-            if (result.success) {
-                toast.success('Draft discarded')
-                refetch()
-            } else {
-                toast.error('Failed to discard draft')
-            }
-        } catch (error) {
-            console.error('Failed to discard:', error)
-            toast.error('Failed to discard draft')
-        }
-    }, [guideId, activeLocale, refetch, onDiscard])
-
-    const handleTabChange = useCallback(
-        (tab: EditorTab) => {
-            if (tab === 'published' && !hasPublished) return
-            if (isDirty && tab === 'published') {
-                confirmIfDirty(() => setActiveTab(tab))
-            } else {
-                setActiveTab(tab)
-            }
-        },
-        [hasPublished, isDirty, confirmIfDirty],
-    )
-
-    if (!metadata) {
-        return null
+  const handleDiscard = useCallback(async () => {
+    if (!onDiscard) return
+    try {
+      const result = await onDiscard(guideId, activeLocale)
+      if (result.success) {
+        toast.success('Draft discarded')
+        refetch()
+      } else {
+        toast.error('Failed to discard draft')
+      }
+    } catch (error) {
+      console.error('Failed to discard:', error)
+      toast.error('Failed to discard draft')
     }
+  }, [guideId, activeLocale, refetch, onDiscard])
 
-    return (
-        <>
-            {unsavedChangesDialog}
-            <div className="min-h-[calc(100vh-4rem)] bg-background pb-16 sm:pb-0">
-                {/* Header */}
-                <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
-                    {/* Mobile/Tablet: Back button left, actions right */}
-                    <div className="flex items-center justify-between gap-2 lg:hidden">
-                        <Button variant="ghost" size="sm" onClick={handleNavigateToGuides}>
-                            <ChevronLeft className="h-4 w-4" />
-                            {t('title')}
-                        </Button>
-                        <div className="flex flex-wrap items-center justify-end gap-2">
-                            <UnifiedLocaleSelector
-                                value={activeLocale}
-                                locales={availableLocales}
-                                onValueChange={setActiveLocale}
-                                localeStatus={localeStatusMap}
-                                onAddLocale={async (locale) => {
-                                    await updateAvailableLocales([...availableLocales, locale])
-                                }}
-                                onRemoveLocale={async (locale) => {
-                                    await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
-                                }}
-                                hasContentForLocale={hasContentForLocale}
-                            />
-                            <MobileMoreMenu
-                                hasDraft={hasDraft}
-                                hasPublished={hasPublished}
-                                onUnpublish={handleUnpublish}
-                                onDiscard={handleDiscard}
-                            />
-                            <Sheet>
-                                <SheetTrigger asChild>
-                                    <Button variant="outline" size="icon" className="h-8 w-8">
-                                        <ListChecks className="h-4 w-4" />
-                                        <span className="sr-only">{t('editor.guideProgress')}</span>
-                                    </Button>
-                                </SheetTrigger>
-                                <SheetContent side="right" className="w-75 p-6 sm:w-87.5">
-                                    <SheetHeader>
-                                        <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
-                                    </SheetHeader>
-                                    <div className="mt-6">
-                                        <GuideProgress />
-                                    </div>
-                                </SheetContent>
-                            </Sheet>
-                            {/* Save/Publish: inline on tablet (sm-lg), bottom bar on mobile handled separately */}
-                            <MobileSavePublish
-                                hasDraft={hasDraft}
-                                isDirty={isDirty}
-                                isSaving={isSaving}
-                                isPublishing={isPublishing}
-                                onSave={save}
-                                onPublish={handlePublish}
-                                disabled={isReadOnly}
-                            />
-                        </div>
-                    </div>
-                    {/* Desktop: Back button and locale selector */}
-                    <div className="hidden lg:flex items-center justify-between gap-2">
-                        <Button variant="ghost" size="sm" onClick={handleNavigateToGuides}>
-                            <ChevronLeft className="h-4 w-4" />
-                            {t('title')}
-                        </Button>
-                        <div className="flex shrink-0 items-center gap-2">
-                            <UnifiedLocaleSelector
-                                value={activeLocale}
-                                locales={availableLocales}
-                                onValueChange={setActiveLocale}
-                                localeStatus={localeStatusMap}
-                                onAddLocale={async (locale) => {
-                                    await updateAvailableLocales([...availableLocales, locale])
-                                }}
-                                onRemoveLocale={async (locale) => {
-                                    await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
-                                }}
-                                hasContentForLocale={hasContentForLocale}
-                            />
-                            <Button variant="ghost" size="sm">
-                                {t('editor.preview')}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+  const handleTabChange = useCallback(
+    (tab: EditorTab) => {
+      if (tab === 'published' && !hasPublished) return
+      if (isDirty && tab === 'published') {
+        confirmIfDirty(() => setActiveTab(tab))
+      } else {
+        setActiveTab(tab)
+      }
+    },
+    [hasPublished, isDirty, confirmIfDirty],
+  )
 
-                {/* Status Badge and Tabs */}
-                <div className="sticky top-14.25 z-10 border-b bg-background px-4 py-3 sm:px-6">
-                    <div className="flex flex-col gap-3">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <h1 className="text-lg sm:text-xl font-semibold truncate min-w-0">{guideTitle}</h1>
-                            <ContentStatusBadge status={contentStatus} size="lg" className="shrink-0" />
-                        </div>
-                        <DraftPublishedTabs
-                            activeTab={activeTab}
-                            onTabChange={handleTabChange}
-                            hasDraft={hasDraft}
-                            hasPublished={hasPublished}
-                        />
-                    </div>
-                </div>
+  if (!metadata) {
+    return null
+  }
 
-                {/* Main Content */}
-                <div className="flex min-w-0">
-                    <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
-                        <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-                            <div className="space-y-6 sm:space-y-8">
-                                {/* Locale-specific Content Section */}
-                                <div className="flex items-center justify-between gap-4">
-                                    <h2 className="text-sm sm:text-base font-semibold">
-                                        {t('editor.localeContent')} ({getLocaleDisplayName(activeLocale)})
-                                    </h2>
-                                </div>
-
-                                <GuideMetadataForm
-                                    ref={formRef}
-                                    key={`guide-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
-                                    locale={activeLocale}
-                                    versionData={displayVersionData}
-                                    readOnly={isReadOnly}
-                                    onDirtyChange={handleDirtyChange}
-                                    onSave={save}
-                                />
-
-                                {/* Shared Content Section */}
-                                <Card className={isReadOnly ? 'opacity-60' : ''}>
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                            <Globe className="h-4 w-4" />
-                                            {t('editor.sharedContent')}
-                                        </CardTitle>
-                                        <CardDescription>{t('editor.sharedContentDescription')}</CardDescription>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <MediaPicker
-                                            mode="single"
-                                            mediaTypes={['image']}
-                                            value={coverAsset}
-                                            onChange={handleCoverImageChange}
-                                            label={t('editor.coverImageLabel')}
-                                            disabled={isReadOnly}
-                                        />
-                                    </CardContent>
-                                </Card>
-
-                                {/* Stops Section */}
-                                <div className={isReadOnly ? 'opacity-60 pointer-events-none' : ''}>
-                                    <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
-                                    <StopsList
-                                        onReorder={handleReorderStops}
-                                        onEdit={handleSelectStop}
-                                        onDelete={deleteStop}
-                                        onAdd={async () => {
-                                            const newStop = await addStop()
-                                            if (newStop) {
-                                                router.navigate({
-                                                    to: '/guides/$nanoId/stops/$stopId/edit',
-                                                    params: { nanoId, stopId: newStop.nanoId },
-                                                    search: localeSearch,
-                                                })
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right Sidebar - Actions Panel (Desktop only) */}
-                    <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
-                        <div className="p-5 space-y-6">
-                            <EditorActionsPanel
-                                hasDraft={hasDraft}
-                                hasPublished={hasPublished}
-                                isDirty={isDirty}
-                                isSaving={isSaving}
-                                isPublishing={isPublishing}
-                                onSave={save}
-                                onPublish={handlePublish}
-                                onUnpublish={handleUnpublish}
-                                onDiscard={handleDiscard}
-                                onOpenVersionHistory={() => { }}
-                                disabled={isReadOnly}
-                            />
-
-                            <div className="border-t pt-5">
-                                <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                    {t('editor.guideProgress')}
-                                </h3>
-                                <GuideProgress />
-                            </div>
-                        </div>
-                    </aside>
-                </div>
+  return (
+    <>
+      {unsavedChangesDialog}
+      <div className="min-h-[calc(100vh-4rem)] bg-background pb-16 sm:pb-0">
+        {/* Header */}
+        <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
+          {/* Mobile/Tablet: Back button left, actions right */}
+          <div className="flex items-center justify-between gap-2 lg:hidden">
+            <Button variant="ghost" size="icon" onClick={handleNavigateToGuides} className="sm:size-auto sm:px-2">
+              <ChevronLeft className="h-4 w-4" />
+              <span className="hidden sm:inline ml-2">{t('title')}</span>
+            </Button>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <UnifiedLocaleSelector
+                value={activeLocale}
+                locales={availableLocales}
+                onValueChange={setActiveLocale}
+                localeStatus={localeStatusMap}
+                onAddLocale={async (locale) => {
+                  await updateAvailableLocales([...availableLocales, locale])
+                }}
+                onRemoveLocale={async (locale) => {
+                  await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
+                }}
+                hasContentForLocale={hasContentForLocale}
+              />
+              <MobileMoreMenu
+                hasDraft={hasDraft}
+                hasPublished={hasPublished}
+                onUnpublish={handleUnpublish}
+                onDiscard={handleDiscard}
+              />
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-8 w-8">
+                    <ListChecks className="h-4 w-4" />
+                    <span className="sr-only">{t('editor.guideProgress')}</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-75 p-6 sm:w-87.5">
+                  <SheetHeader>
+                    <SheetTitle>{t('editor.guideProgress')}</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <GuideProgress />
+                  </div>
+                </SheetContent>
+              </Sheet>
+              {/* Save/Publish: inline on tablet (sm-lg), bottom bar on mobile handled separately */}
+              <MobileSavePublish
+                hasDraft={hasDraft}
+                isDirty={isDirty}
+                isSaving={isSaving}
+                isPublishing={isPublishing}
+                onSave={save}
+                onPublish={handlePublish}
+                disabled={isReadOnly}
+              />
             </div>
-        </>
-    )
+          </div>
+          {/* Desktop: Back button and locale selector */}
+          <div className="hidden lg:flex items-center justify-between gap-2">
+            <Button variant="ghost" size="sm" onClick={handleNavigateToGuides}>
+              <ChevronLeft className="h-4 w-4" />
+              {t('title')}
+            </Button>
+            <div className="flex shrink-0 items-center gap-2">
+              <UnifiedLocaleSelector
+                value={activeLocale}
+                locales={availableLocales}
+                onValueChange={setActiveLocale}
+                localeStatus={localeStatusMap}
+                onAddLocale={async (locale) => {
+                  await updateAvailableLocales([...availableLocales, locale])
+                }}
+                onRemoveLocale={async (locale) => {
+                  await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
+                }}
+                hasContentForLocale={hasContentForLocale}
+              />
+              <Button variant="ghost" size="sm">
+                {t('editor.preview')}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Badge and Tabs */}
+        <div className="sticky top-14.25 z-10 border-b bg-background px-4 py-3 sm:px-6">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h1 className="text-lg sm:text-xl font-semibold truncate min-w-0">{guideTitle}</h1>
+              <ContentStatusBadge status={contentStatus} size="lg" className="shrink-0" />
+            </div>
+            <DraftPublishedTabs
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+            />
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex min-w-0">
+          <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
+            <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+              <div className="space-y-6 sm:space-y-8">
+                {/* Locale-specific Content Section */}
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="text-sm sm:text-base font-semibold">
+                    {t('editor.localeContent')} ({getLocaleDisplayName(activeLocale)})
+                  </h2>
+                </div>
+
+                <GuideMetadataForm
+                  ref={formRef}
+                  key={`guide-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
+                  locale={activeLocale}
+                  versionData={displayVersionData}
+                  readOnly={isReadOnly}
+                  onDirtyChange={handleDirtyChange}
+                  onSave={save}
+                />
+
+                {/* Shared Content Section */}
+                <Card className={isReadOnly ? 'opacity-60' : ''}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      {t('editor.sharedContent')}
+                    </CardTitle>
+                    <CardDescription>{t('editor.sharedContentDescription')}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <MediaPicker
+                      mode="single"
+                      mediaTypes={['image']}
+                      value={coverAsset}
+                      onChange={handleCoverImageChange}
+                      label={t('editor.coverImageLabel')}
+                      disabled={isReadOnly}
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Stops Section */}
+                <div className={isReadOnly ? 'opacity-60 pointer-events-none' : ''}>
+                  <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
+                  <StopsList
+                    onReorder={handleReorderStops}
+                    onEdit={handleSelectStop}
+                    onDelete={deleteStop}
+                    onAdd={async () => {
+                      const newStop = await addStop()
+                      if (newStop) {
+                        router.navigate({
+                          to: '/guides/$nanoId/stops/$stopId/edit',
+                          params: { nanoId, stopId: newStop.nanoId },
+                          search: localeSearch,
+                        })
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar - Actions Panel (Desktop only) */}
+          <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
+            <div className="p-5 space-y-6">
+              <EditorActionsPanel
+                hasDraft={hasDraft}
+                hasPublished={hasPublished}
+                isDirty={isDirty}
+                isSaving={isSaving}
+                isPublishing={isPublishing}
+                onSave={save}
+                onPublish={handlePublish}
+                onUnpublish={handleUnpublish}
+                onDiscard={handleDiscard}
+                onOpenVersionHistory={() => {}}
+                disabled={isReadOnly}
+              />
+
+              <div className="border-t pt-5">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {t('editor.guideProgress')}
+                </h3>
+                <GuideProgress />
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </>
+  )
 }
