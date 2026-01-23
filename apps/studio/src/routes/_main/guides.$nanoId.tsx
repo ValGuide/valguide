@@ -3,6 +3,7 @@ import { GuideNotFound } from '@/features/guides/components/guide-not-found'
 import { guideMetadataQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId')({
+  staticData: { focusMode: true },
   loader: async ({ params, context }) => {
     try {
       const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))

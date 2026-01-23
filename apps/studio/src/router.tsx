@@ -1,4 +1,10 @@
 import { createRouter } from '@tanstack/react-router'
+
+declare module '@tanstack/react-router' {
+  interface StaticDataRouteOption {
+    focusMode?: boolean
+  }
+}
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import { createQueryClient } from '@valguide/core/utils/query-client'
 import { DefaultError } from './components/default-error'

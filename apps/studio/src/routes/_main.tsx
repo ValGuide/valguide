@@ -30,19 +30,14 @@ function MainLayout() {
   const { defaultOpen } = Route.useRouteContext()
   const matches = useMatches()
 
-  // Hide top header on editor routes (Focus Mode) - editors have their own header
-  const isEditorRoute = matches.some(
-    (match) =>
-      match.routeId.includes('/guides/$nanoId') ||
-      match.routeId.includes('/guides/$nanoId/edit') ||
-      match.routeId.includes('/stops/$stopId/edit'),
-  )
+  // Hide top header on focus mode routes - they have their own header
+  const isFocusMode = matches.some((match) => match.staticData?.focusMode)
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebarContainer />
       <SidebarInset>
-        {!isEditorRoute && (
+        {!isFocusMode && (
           <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
             <div className="flex flex-1 items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1 md:hidden" />
