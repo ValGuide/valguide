@@ -234,7 +234,7 @@
     "stop": {
       "title": "Fermada betg chattada",
       "description": "Questa fermada n'exista betg u Vus n'avais betg access.",
-      "backToGuide": "Enavos al guide"
+      "backToGuide": "Guide"
     }
   },
   "guide": {
@@ -309,7 +309,7 @@
         "hasStops": "Almain in stop",
         "allStopTitles": "Tut ils stops han in titel"
       },
-      "backToGuide": "Enavos al guid",
+      "backToGuide": "Guide",
       "edit": "Modifitgar"
     },
     "breadcrumb": {

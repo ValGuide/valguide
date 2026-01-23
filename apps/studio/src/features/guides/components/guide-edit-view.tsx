@@ -258,20 +258,22 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     <>
       {unsavedChangesDialog}
       <div className="min-h-[calc(100vh-4rem)] bg-background pb-16 sm:pb-0">
-        {/* Header */}
-        <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
-          {/* Mobile/Tablet: Back button left, actions right */}
-          <div className="flex items-center justify-between gap-2 lg:hidden">
-            <Button variant="ghost" size="icon" onClick={handleNavigateToGuides} className="sm:size-auto sm:px-2">
+        {/* Mobile/Tablet Focus Mode Header */}
+        <div className="sticky top-0 z-10 border-b bg-background lg:hidden">
+          {/* Row 1: Back button left, actions right */}
+          <div className="flex items-center justify-between gap-2 px-4 py-2 sm:px-6 sm:py-3">
+            <Button variant="ghost" size="sm" onClick={handleNavigateToGuides} className="-ml-2 shrink-0">
               <ChevronLeft className="h-4 w-4" />
-              <span className="hidden sm:inline ml-2">{t('title')}</span>
+              <span>{t('title')}</span>
             </Button>
-            <div className="flex flex-wrap items-center justify-end gap-2">
+
+            <div className="flex shrink-0 items-center gap-1.5">
               <UnifiedLocaleSelector
                 value={activeLocale}
                 locales={availableLocales}
                 onValueChange={setActiveLocale}
                 localeStatus={localeStatusMap}
+                showStatusInTrigger={false}
                 onAddLocale={async (locale) => {
                   await updateAvailableLocales([...availableLocales, locale])
                 }}
@@ -288,7 +290,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
               />
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
                     <ListChecks className="h-4 w-4" />
                     <span className="sr-only">{t('editor.guideProgress')}</span>
                   </Button>
@@ -302,20 +304,29 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                   </div>
                 </SheetContent>
               </Sheet>
-              {/* Save/Publish: inline on tablet (sm-lg), bottom bar on mobile handled separately */}
-              <MobileSavePublish
-                hasDraft={hasDraft}
-                isDirty={isDirty}
-                isSaving={isSaving}
-                isPublishing={isPublishing}
-                onSave={save}
-                onPublish={handlePublish}
-                disabled={isReadOnly}
-              />
             </div>
           </div>
-          {/* Desktop: Back button and locale selector */}
-          <div className="hidden lg:flex items-center justify-between gap-2">
+
+          {/* Row 2: Title + Status Badge */}
+          <div className="flex items-center gap-2 px-4 pb-2 sm:px-6">
+            <h1 className="min-w-0 truncate text-lg font-semibold">{guideTitle}</h1>
+            <ContentStatusBadge status={contentStatus} size="sm" className="shrink-0" />
+          </div>
+
+          {/* Row 3: Draft/Published tabs */}
+          <div className="px-4 pb-2 sm:px-6">
+            <DraftPublishedTabs
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              hasDraft={hasDraft}
+              hasPublished={hasPublished}
+            />
+          </div>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="sticky top-0 z-10 hidden border-b bg-background px-4 py-2 sm:px-6 sm:py-3 lg:block">
+          <div className="flex items-center justify-between gap-2">
             <Button variant="ghost" size="sm" onClick={handleNavigateToGuides}>
               <ChevronLeft className="h-4 w-4" />
               {t('title')}
@@ -341,11 +352,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           </div>
         </div>
 
-        {/* Status Badge and Tabs */}
-        <div className="sticky top-14.25 z-10 border-b bg-background px-4 py-3 sm:px-6">
+        {/* Desktop: Status Badge and Tabs */}
+        <div className="sticky top-14.25 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 sm:gap-3">
-              <h1 className="text-lg sm:text-xl font-semibold truncate min-w-0">{guideTitle}</h1>
+              <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guideTitle}</h1>
               <ContentStatusBadge status={contentStatus} size="lg" className="shrink-0" />
             </div>
             <DraftPublishedTabs
@@ -355,6 +366,19 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
               hasPublished={hasPublished}
             />
           </div>
+        </div>
+
+        {/* Mobile Save/Publish - fixed bottom bar */}
+        <div className="lg:hidden">
+          <MobileSavePublish
+            hasDraft={hasDraft}
+            isDirty={isDirty}
+            isSaving={isSaving}
+            isPublishing={isPublishing}
+            onSave={save}
+            onPublish={handlePublish}
+            disabled={isReadOnly}
+          />
         </div>
 
         {/* Main Content */}

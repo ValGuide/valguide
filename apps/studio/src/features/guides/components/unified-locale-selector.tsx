@@ -214,6 +214,8 @@ export type UnifiedLocaleSelectorProps = {
   onAddLocale?: (locale: string) => Promise<void>
   onRemoveLocale?: (locale: string) => Promise<void>
   hasContentForLocale?: (locale: string) => boolean
+  /** Whether to show status badge in the trigger button. Default: true */
+  showStatusInTrigger?: boolean
 }
 
 export function UnifiedLocaleSelector({
@@ -225,6 +227,7 @@ export function UnifiedLocaleSelector({
   onAddLocale,
   onRemoveLocale,
   hasContentForLocale,
+  showStatusInTrigger = true,
 }: UnifiedLocaleSelectorProps) {
   const [open, setOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
@@ -316,7 +319,7 @@ export function UnifiedLocaleSelector({
             <span className="flex items-center gap-2">
               <Globe className="h-4 w-4 text-muted-foreground" />
               <span className="font-medium">{selectedLocaleName}</span>
-              {selectedStatus && <StatusBadge status={selectedStatus} t={t} />}
+              {showStatusInTrigger && selectedStatus && <StatusBadge status={selectedStatus} t={t} />}
             </span>
             <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>

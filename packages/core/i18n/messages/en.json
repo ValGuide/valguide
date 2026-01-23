@@ -234,7 +234,7 @@
     "stop": {
       "title": "Stop not found",
       "description": "This stop doesn't exist or you don't have access to it.",
-      "backToGuide": "Back to Guide"
+      "backToGuide": "Guide"
     }
   },
   "guide": {
@@ -309,7 +309,7 @@
         "hasStops": "At least one stop",
         "allStopTitles": "All stops have titles"
       },
-      "backToGuide": "Back to guide details",
+      "backToGuide": "Guide",
       "edit": "Edit"
     },
     "breadcrumb": {

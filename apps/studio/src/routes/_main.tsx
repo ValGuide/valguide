@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router'
 import { ensureDefaultTeamQueryOptions } from '@valguide/core/features/orgs/query-options'
 import { isAuthenticatedQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
@@ -28,17 +28,25 @@ export const Route = createFileRoute('/_main')({
 
 function MainLayout() {
   const { defaultOpen } = Route.useRouteContext()
+  const matches = useMatches()
+
+  // Hide top header on editor routes (Focus Mode) - editors have their own header
+  const isEditorRoute = matches.some(
+    (match) => match.routeId.includes('/guides/$nanoId/edit') || match.routeId.includes('/stops/$stopId/edit'),
+  )
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebarContainer />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex flex-1 items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1 md:hidden" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-          </div>
-        </header>
+        {!isEditorRoute && (
+          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 md:hidden">
+            <div className="flex flex-1 items-center gap-2 px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+            </div>
+          </header>
+        )}
         <Outlet />
       </SidebarInset>
     </SidebarProvider>

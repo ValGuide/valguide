@@ -24,6 +24,8 @@ export type LocaleSelectorProps = {
   onValueChange: (locale: ContentLocale) => void
   localeStatus?: LocaleStatusMap
   className?: string
+  /** Whether to show status icon in the trigger button. Default: true */
+  showStatusInTrigger?: boolean
 }
 
 const LOCALE_NAMES: Record<string, string> = {
@@ -103,7 +105,14 @@ function getStatusLabel(
   }
 }
 
-export function LocaleSelector({ value, locales, onValueChange, localeStatus, className }: LocaleSelectorProps) {
+export function LocaleSelector({
+  value,
+  locales,
+  onValueChange,
+  localeStatus,
+  className,
+  showStatusInTrigger = true,
+}: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const t = useTranslations('guides.localeSelector')
@@ -119,7 +128,7 @@ export function LocaleSelector({ value, locales, onValueChange, localeStatus, cl
     return (
       <Button variant="outline" disabled className={cn('w-[200px] justify-between', className)}>
         <span className="flex items-center gap-2">
-          {selectedStatus && getStatusIcon(selectedStatus)}
+          {showStatusInTrigger && selectedStatus && getStatusIcon(selectedStatus)}
           {selectedLocaleName}
         </span>
         <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -138,7 +147,7 @@ export function LocaleSelector({ value, locales, onValueChange, localeStatus, cl
           className={cn('w-[200px] justify-between', className)}
         >
           <span className="flex items-center gap-2">
-            {selectedStatus && getStatusIcon(selectedStatus)}
+            {showStatusInTrigger && selectedStatus && getStatusIcon(selectedStatus)}
             {selectedLocaleName}
           </span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

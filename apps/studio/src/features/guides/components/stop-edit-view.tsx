@@ -102,9 +102,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
   }, [router, nanoId, localeSearch])
 
   const breadcrumbContent = (
-    <Button variant="ghost" size="icon" onClick={handleBackToGuide} className="sm:size-auto sm:px-2">
+    <Button variant="ghost" size="sm" onClick={handleBackToGuide} className="-ml-2">
       <ChevronLeft className="h-4 w-4" />
-      <span className="hidden sm:inline ml-2">{t('editor.backToGuide')}</span>
+      <span>{t('editor.backToGuide')}</span>
     </Button>
   )
 
