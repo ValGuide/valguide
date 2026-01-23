@@ -689,6 +689,13 @@
     "stopActions": {
       "hideStop": "Zuppar stop",
       "showStop": "Mussar stop",
+      "hideDialogTitle": "Zuppar «{stopTitle}»?",
+      "hideDialogDescription": "Stops zuppads n'èn betg visibels als visitaders en l'app. Vus pudais far visibel quest stop da nov en tut temp.",
+      "hideConfirm": "Zuppar stop",
+      "showDialogTitle": "Mussar «{stopTitle}»?",
+      "showDialogDescription": "Quest stop vegn puspè visibel als visitaders en l'app.",
+      "showConfirm": "Mussar stop",
+      "cancel": "Annullar",
       "removeStop": "Allontanar dal guide",
       "removeDescription": "Quest stop vegn allontanà da quest guide. Il stop e tut ses cuntegn restan conservads e pon vegnir agiuntads pli tard ad in auter guide.",
       "removeConfirm": "Allontanar",

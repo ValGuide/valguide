@@ -54,8 +54,8 @@ import { TranslationStatusInline } from './translation-status-inline'
 export type StopsListProps = {
   onReorder: (updates: Array<{ id: string; order: number }>) => void
   onEdit: (stopId: string) => void
-  onHide: (stopId: string) => Promise<void>
-  onShow: (stopId: string) => Promise<void>
+  onHide: (stopId: string) => void | Promise<void>
+  onShow: (stopId: string) => void | Promise<void>
   onRemove: (stopId: string) => Promise<void>
   onAdd: () => void | Promise<void>
 }
@@ -65,8 +65,8 @@ type SortableStopItemProps = {
   index: number
   title: string
   onEdit: (stopId: string) => void
-  onHide: (stopId: string) => Promise<void>
-  onShow: (stopId: string) => Promise<void>
+  onHide: (stopId: string) => void | Promise<void>
+  onShow: (stopId: string) => void | Promise<void>
   onRequestRemove: (stop: StopMetadata) => void
 }
 

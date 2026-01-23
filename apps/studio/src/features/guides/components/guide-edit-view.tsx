@@ -17,8 +17,10 @@ import { EditorActionsPanel } from '@/features/guides/components/editor-actions-
 import { EditorHeader } from '@/features/guides/components/editor-header'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
+import { HideStopDialog } from '@/features/guides/components/hide-stop-dialog'
 import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
 import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
+import { ShowStopDialog } from '@/features/guides/components/show-stop-dialog'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
@@ -28,10 +30,19 @@ interface GuideEditViewProps {
   onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onUnpublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
   onDiscard?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onHideStop?: (guideId: string, stopId: string) => Promise<unknown>
+  onShowStop?: (guideId: string, stopId: string) => Promise<unknown>
   MediaPicker: MediaPickerComponent
 }
 
-export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }: GuideEditViewProps) {
+export function GuideEditView({
+  onPublish,
+  onUnpublish,
+  onDiscard,
+  onHideStop,
+  onShowStop,
+  MediaPicker,
+}: GuideEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -60,6 +71,8 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
 
   const [activeTab, setActiveTab] = useState<EditorTab>('draft')
   const [isPublishing, setIsPublishing] = useState(false)
+  const [stopToHide, setStopToHide] = useState<{ id: string; title: string } | null>(null)
+  const [stopToShow, setStopToShow] = useState<{ id: string; title: string } | null>(null)
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
@@ -163,6 +176,42 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
     reorderStops(updates)
   }
+
+  const getStopTitle = useCallback(
+    (stopId: string) => {
+      const stopTranslation = localeData?.stopTranslations.find((st) => st.stopId === stopId)
+      return stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title ?? tStops('untitled')
+    },
+    [localeData, tStops],
+  )
+
+  const handleHideStop = useCallback(
+    (stopId: string) => {
+      const title = getStopTitle(stopId)
+      setStopToHide({ id: stopId, title })
+    },
+    [getStopTitle],
+  )
+
+  const handleConfirmHide = useCallback(async () => {
+    if (!stopToHide || !guideId || !onHideStop) return
+    await onHideStop(guideId, stopToHide.id)
+    await refetch()
+  }, [stopToHide, guideId, onHideStop, refetch])
+
+  const handleShowStop = useCallback(
+    (stopId: string) => {
+      const title = getStopTitle(stopId)
+      setStopToShow({ id: stopId, title })
+    },
+    [getStopTitle],
+  )
+
+  const handleConfirmShow = useCallback(async () => {
+    if (!stopToShow || !guideId || !onShowStop) return
+    await onShowStop(guideId, stopToShow.id)
+    await refetch()
+  }, [stopToShow, guideId, onShowStop, refetch])
 
   const coverAsset = useMemo(() => {
     return guideAssets.find((a) => a.role === 'cover') ?? null
@@ -429,12 +478,8 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                   <StopsList
                     onReorder={handleReorderStops}
                     onEdit={handleSelectStop}
-                    onHide={async (_stopId) => {
-                      // TODO: Implement stop hiding
-                    }}
-                    onShow={async (_stopId) => {
-                      // TODO: Implement stop showing
-                    }}
+                    onHide={handleHideStop}
+                    onShow={handleShowStop}
                     onRemove={removeStop}
                     onAdd={async () => {
                       const newStop = await addStop()
@@ -479,6 +524,20 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           </aside>
         </div>
       </div>
+
+      <HideStopDialog
+        open={!!stopToHide}
+        onOpenChange={(open) => !open && setStopToHide(null)}
+        stopTitle={stopToHide?.title ?? ''}
+        onConfirm={handleConfirmHide}
+      />
+
+      <ShowStopDialog
+        open={!!stopToShow}
+        onOpenChange={(open) => !open && setStopToShow(null)}
+        stopTitle={stopToShow?.title ?? ''}
+        onConfirm={handleConfirmShow}
+      />
     </>
   )
 }

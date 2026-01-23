@@ -690,6 +690,13 @@
     "stopActions": {
       "hideStop": "Stopp ausblenden",
       "showStop": "Stopp einblenden",
+      "hideDialogTitle": "\"{stopTitle}\" ausblenden?",
+      "hideDialogDescription": "Ausgeblendete Stopps sind für Besucher in der App nicht sichtbar. Sie können diesen Stopp jederzeit wieder einblenden.",
+      "hideConfirm": "Stopp ausblenden",
+      "showDialogTitle": "\"{stopTitle}\" einblenden?",
+      "showDialogDescription": "Dieser Stopp wird für Besucher in der App wieder sichtbar.",
+      "showConfirm": "Stopp einblenden",
+      "cancel": "Abbrechen",
       "removeStop": "Aus Guide entfernen",
       "removeDescription": "Der Stopp wird aus diesem Guide entfernt. Der Stopp und alle Inhalte bleiben erhalten und können später zu einem anderen Guide hinzugefügt werden.",
       "removeConfirm": "Entfernen",

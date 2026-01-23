@@ -689,6 +689,13 @@
     "stopActions": {
       "hideStop": "Hide stop",
       "showStop": "Show stop",
+      "hideDialogTitle": "Hide \"{stopTitle}\"?",
+      "hideDialogDescription": "Hidden stops are not visible to visitors in the app. You can make this stop visible again at any time.",
+      "hideConfirm": "Hide stop",
+      "showDialogTitle": "Show \"{stopTitle}\"?",
+      "showDialogDescription": "This stop will become visible to visitors in the app again.",
+      "showConfirm": "Show stop",
+      "cancel": "Cancel",
       "removeStop": "Remove from guide",
       "removeDescription": "This will remove the stop from this guide. The stop and all its content will be preserved and can be added to another guide later.",
       "removeConfirm": "Remove",

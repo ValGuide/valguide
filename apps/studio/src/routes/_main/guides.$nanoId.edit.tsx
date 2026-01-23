@@ -1,7 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import {
   discardGuideTranslationDraftFn,
+  hideStopFn,
   publishGuideTranslationDraftFn,
+  showStopFn,
   unpublishGuideTranslationFn,
 } from '@valguide/core/features/guides/server-functions'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -67,6 +69,8 @@ function GuideEditContent() {
       onPublish={(guideId, locale) => publishGuideTranslationDraftFn({ data: { guideId, locale } })}
       onUnpublish={(guideId, locale) => unpublishGuideTranslationFn({ data: { guideId, locale } })}
       onDiscard={(guideId, locale) => discardGuideTranslationDraftFn({ data: { guideId, locale } })}
+      onHideStop={(guideId, stopId) => hideStopFn({ data: { guideId, stopId } })}
+      onShowStop={(guideId, stopId) => showStopFn({ data: { guideId, stopId } })}
       MediaPicker={MediaPickerConnected}
     />
   )
