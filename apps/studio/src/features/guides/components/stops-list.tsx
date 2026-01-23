@@ -101,7 +101,7 @@ function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onReques
             {thumbnailAsset?.publicUrl ? (
               <img src={thumbnailAsset.publicUrl} alt="" className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
+              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
             )}
           </div>
 
@@ -288,7 +288,7 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd,
                   {thumbnailAsset?.publicUrl ? (
                     <img src={thumbnailAsset.publicUrl} alt="" className="h-full w-full object-cover" />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10" />
+                    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0 space-y-1">

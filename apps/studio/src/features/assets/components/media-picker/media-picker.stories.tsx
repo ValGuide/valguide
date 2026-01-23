@@ -38,7 +38,7 @@ const meta = {
   decorators: [
     (Story) => (
       <MockAssetsProvider>
-        <div className="w-full max-w-[400px]">
+        <div className="w-full max-w-100">
           <Story />
         </div>
       </MockAssetsProvider>
@@ -222,7 +222,7 @@ export const VideoOnly: Story = {
 }
 
 export const MultipleFilledUploading: Story = {
-  render: (args) => {
+  render: () => {
     const { MediaPickerGallery } = require('./media-picker-gallery')
     return (
       <div className="space-y-2">
