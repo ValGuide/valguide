@@ -4,7 +4,6 @@ import { valguideId } from '../../utils/nanoid'
 import { getAssetImageUrl } from '../assets/image-url'
 import { asset, guideAsset, stopAsset } from '../assets/schema'
 import { guide, guideStop, guideTranslation, guideTranslationVersion, stop, stopTranslation } from './schema'
-import { upsertGuideTranslationDraft } from './translation-mutations'
 
 // Re-export types from types.ts for backward compatibility
 // IMPORTANT: Import types from '@valguide/core/features/guides/types' in client code
@@ -499,27 +498,6 @@ export async function getArchivedGuidesWithCover(
     ...g,
     coverImage: coverMap.get(g.id) ?? null,
   }))
-}
-
-/**
- * Update a guide translation for a specific locale
- * Creates a new translation if one doesn't exist
- */
-export async function updateGuideTranslation(
-  guideId: string,
-  locale: string,
-  data: { title?: string; description?: string },
-): Promise<typeof guideTranslation.$inferSelect> {
-  if (!data.title) {
-    throw new Error('Title is required')
-  }
-
-  const versionId = await upsertGuideTranslationDraft(guideId, locale, {
-    title: data.title,
-    description: data.description,
-  })
-
-  return { versionId } as unknown as typeof guideTranslation.$inferSelect
 }
 
 /**
