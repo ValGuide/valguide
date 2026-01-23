@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
+import { EditorHeader } from '@/features/guides/components/editor-header'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
@@ -325,13 +326,12 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         </div>
 
         {/* Desktop Header */}
-        <div className="sticky top-0 z-10 hidden h-14 border-b bg-background px-4 sm:px-6 lg:flex lg:items-center">
-          <div className="flex w-full items-center justify-between gap-2">
-            <Button variant="ghost" size="sm" onClick={handleNavigateToGuide} className="-ml-2">
-              <ChevronLeft className="h-4 w-4" />
-              <span>{t('editor.guideDetails')}</span>
-            </Button>
-            <div className="flex shrink-0 items-center gap-2">
+        <EditorHeader
+          backLabel={t('editor.guideDetails')}
+          onBack={handleNavigateToGuide}
+          className="hidden lg:flex"
+          actions={
+            <>
               <UnifiedLocaleSelector
                 value={activeLocale}
                 locales={availableLocales}
@@ -348,9 +348,9 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
               <Button variant="ghost" size="sm">
                 {t('editor.preview')}
               </Button>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+        />
 
         {/* Desktop: Status Badge and Tabs */}
         <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">

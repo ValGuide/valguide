@@ -32,7 +32,10 @@ function MainLayout() {
 
   // Hide top header on editor routes (Focus Mode) - editors have their own header
   const isEditorRoute = matches.some(
-    (match) => match.routeId.includes('/guides/$nanoId/edit') || match.routeId.includes('/stops/$stopId/edit'),
+    (match) =>
+      match.routeId.includes('/guides/$nanoId') ||
+      match.routeId.includes('/guides/$nanoId/edit') ||
+      match.routeId.includes('/stops/$stopId/edit'),
   )
 
   return (

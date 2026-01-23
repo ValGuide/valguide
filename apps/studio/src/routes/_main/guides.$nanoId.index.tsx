@@ -12,7 +12,8 @@ import { Card, CardContent } from '@valguide/ui/components/card'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
 
 import { StatusBadge } from '@valguide/ui/components/status-badge'
-import { Calendar, ChevronLeft, Clock, ImageIcon, Pencil } from 'lucide-react'
+import { Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
+import { EditorHeader } from '@/features/guides/components/editor-header'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
 import { guideDetailQueryOptions } from '@/features/guides/query-options'
 
@@ -42,16 +43,11 @@ function GuidePage() {
 
   return (
     <main className="flex flex-1 flex-col bg-background">
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-10 flex h-14 items-center border-b bg-background px-4 sm:px-6">
-        <div className="flex w-full items-center justify-between gap-2">
-          <Button variant="ghost" size="sm" asChild className="-ml-2">
-            <Link to="/" preload="intent">
-              <ChevronLeft className="h-4 w-4" />
-              <span>{t('title')}</span>
-            </Link>
-          </Button>
-          <div className="flex shrink-0 items-center gap-2">
+      <EditorHeader
+        backLabel={t('title')}
+        onBack={() => router.navigate({ to: '/' })}
+        actions={
+          <>
             <ViewInAppButton nanoId={nanoId} published={isPublished} appDomain={clientEnv.VITE_APP_DOMAIN} />
             <ArchiveGuideButton guideId={guide.id} onArchived={handleArchived} />
             <Button asChild>
@@ -60,11 +56,11 @@ function GuidePage() {
                 {t('editGuide')}
               </Link>
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
-      {/* Sticky Title Row */}
+      {/* Title Row */}
       <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
           <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guide.displayTitle}</h1>

@@ -22,6 +22,7 @@ import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
+import { EditorHeader } from '@/features/guides/components/editor-header'
 import { LocaleSelector } from '@/features/guides/components/locale-selector'
 import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
@@ -258,10 +259,11 @@ export function StopEditLayout({
         </div>
 
         {/* Desktop Header */}
-        <div className="sticky top-0 z-10 hidden h-14 border-b bg-background px-4 sm:px-6 lg:flex lg:items-center">
-          <div className="flex w-full items-center justify-between gap-2">
-            {breadcrumbContent}
-            <div className="flex shrink-0 items-center gap-2">
+        <EditorHeader
+          backContent={breadcrumbContent}
+          className="hidden lg:flex"
+          actions={
+            <>
               <LocaleSelector
                 value={activeLocale}
                 locales={locales ?? ['en', 'de', 'rm']}
@@ -271,9 +273,9 @@ export function StopEditLayout({
               <Button variant="ghost" size="sm">
                 {t('editor.preview')}
               </Button>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+        />
 
         {/* Desktop: Status Badge and Tabs */}
         <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
