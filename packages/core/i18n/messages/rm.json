@@ -630,7 +630,9 @@
       "cancel": "Interrumper",
       "addError": "Errur cun agiuntar il stop",
       "reorderSuccess": "Stops rearranschads",
-      "reorderError": "Errur cun rearranschar ils stops"
+      "reorderError": "Errur cun rearranschar ils stops",
+      "removeSuccess": "Stop allontanà dal guide",
+      "removeError": "Betg reussì dad allontanar il stop"
     },
     "assets": {
       "attachError": "Errur cun agiuntar l'asset",
@@ -687,9 +689,10 @@
     "stopActions": {
       "hideStop": "Zuppar stop",
       "showStop": "Mussar stop",
-      "archiveStop": "Archivar stop",
-      "restoreStop": "Restabilir stop",
-      "archiveConfirm": "Archivar"
+      "removeStop": "Allontanar dal guide",
+      "removeDescription": "Quest stop vegn allontanà da quest guide. Il stop e tut ses cuntegn restan conservads e pon vegnir agiuntads pli tard ad in auter guide.",
+      "removeConfirm": "Allontanar",
+      "restoreStop": "Restabilir stop"
     }
   },
   "assets": {

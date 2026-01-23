@@ -48,7 +48,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     guideAssets,
     setGuideCover,
     addStop,
-    deleteStop,
+    removeStop,
     reorderStops,
     setActiveLocale,
     save,
@@ -435,7 +435,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
                     onShow={async (_stopId) => {
                       // TODO: Implement stop showing
                     }}
-                    onArchive={deleteStop}
+                    onRemove={removeStop}
                     onAdd={async () => {
                       const newStop = await addStop()
                       if (newStop) {

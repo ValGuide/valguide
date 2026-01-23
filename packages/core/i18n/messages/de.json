@@ -631,7 +631,9 @@
       "cancel": "Abbrechen",
       "addError": "Fehler beim Hinzufügen des Stops",
       "reorderSuccess": "Stops neu angeordnet",
-      "reorderError": "Fehler beim Neuanordnen der Stops"
+      "reorderError": "Fehler beim Neuanordnen der Stops",
+      "removeSuccess": "Stopp aus Guide entfernt",
+      "removeError": "Stopp konnte nicht entfernt werden"
     },
     "assets": {
       "attachError": "Fehler beim Anhängen des Assets",
@@ -688,9 +690,10 @@
     "stopActions": {
       "hideStop": "Stopp ausblenden",
       "showStop": "Stopp einblenden",
-      "archiveStop": "Stopp archivieren",
-      "restoreStop": "Stopp wiederherstellen",
-      "archiveConfirm": "Archivieren"
+      "removeStop": "Aus Guide entfernen",
+      "removeDescription": "Der Stopp wird aus diesem Guide entfernt. Der Stopp und alle Inhalte bleiben erhalten und können später zu einem anderen Guide hinzugefügt werden.",
+      "removeConfirm": "Entfernen",
+      "restoreStop": "Stopp wiederherstellen"
     }
   },
   "assets": {

@@ -24,7 +24,7 @@ export interface GuideEditorContextValue {
   // Stop operations
   stops: StopMetadata[]
   addStop: () => Promise<StopMetadata | null>
-  deleteStop: (stopId: string) => Promise<void>
+  removeStop: (stopId: string) => Promise<void>
   reorderStops: (stops: Array<{ id: string; order: number }>) => Promise<void>
 
   // Asset state (in-memory, saved on save())

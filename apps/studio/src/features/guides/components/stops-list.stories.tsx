@@ -16,7 +16,7 @@ const meta = {
   argTypes: {
     onReorder: { action: 'reorder' },
     onEdit: { action: 'edit' },
-    onDelete: { action: 'delete' },
+    onRemove: { action: 'remove' },
     onAdd: { action: 'add' },
   },
 } satisfies Meta<typeof StopsList>
@@ -367,7 +367,7 @@ export const Empty: Story = {
     locale: 'en',
     onReorder: () => {},
     onEdit: () => {},
-    onDelete: () => {},
+    onRemove: async () => {},
     onAdd: () => {},
   },
 }
@@ -378,7 +378,7 @@ export const SingleStop: Story = {
     locale: 'en',
     onReorder: () => {},
     onEdit: () => {},
-    onDelete: () => {},
+    onRemove: async () => {},
     onAdd: () => {},
   },
 }
@@ -389,7 +389,7 @@ export const MultipleStops: Story = {
     locale: 'en',
     onReorder: () => {},
     onEdit: () => {},
-    onDelete: () => {},
+    onRemove: async () => {},
     onAdd: () => {},
   },
 }
@@ -400,7 +400,7 @@ export const ManyStops: Story = {
     locale: 'en',
     onReorder: () => {},
     onEdit: () => {},
-    onDelete: () => {},
+    onRemove: async () => {},
     onAdd: () => {},
   },
 }
@@ -411,7 +411,7 @@ export const WithDraftChanges: Story = {
     locale: 'en',
     onReorder: () => {},
     onEdit: () => {},
-    onDelete: () => {},
+    onRemove: async () => {},
     onAdd: () => {},
   },
 }
@@ -456,7 +456,7 @@ export const MissingTranslation: Story = {
     locale: 'de',
     onReorder: () => {},
     onEdit: () => {},
-    onDelete: () => {},
+    onRemove: async () => {},
     onAdd: () => {},
   },
 }

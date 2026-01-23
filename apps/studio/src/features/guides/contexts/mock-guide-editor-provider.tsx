@@ -50,8 +50,8 @@ export function MockGuideEditorProvider({
       console.log('Mock: addStop')
       return null
     },
-    deleteStop: async (stopId: string) => {
-      console.log('Mock: deleteStop', stopId)
+    removeStop: async (stopId: string) => {
+      console.log('Mock: removeStop', stopId)
     },
     reorderStops: async (stopsData: Array<{ id: string; order: number }>) => {
       console.log('Mock: reorderStops', stopsData.length)

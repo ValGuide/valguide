@@ -3,7 +3,7 @@ import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import {
   createStopFn,
-  deleteStopFn,
+  removeStopFromGuideFn,
   reorderStopsFn,
   replaceGuideAssetsFn,
   replaceStopAssetsFn,
@@ -258,16 +258,16 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     }
   }, [guideId, metadata, stops.length, queryClient, nanoId])
 
-  const deleteStop = useCallback(
+  const removeStop = useCallback(
     async (stopId: string) => {
       try {
-        await deleteStopFn({ data: { stopId } })
+        await removeStopFromGuideFn({ data: { guideId, stopId } })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
         await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
-        toast.success(t('stops.actions.deleteSuccess'))
+        toast.success(t('stops.actions.removeSuccess'))
       } catch (error) {
-        console.error('Failed to delete stop:', error)
-        toast.error(t('stops.actions.deleteError'))
+        console.error('Failed to remove stop:', error)
+        toast.error(t('stops.actions.removeError'))
       }
     },
     [guideId, nanoId, queryClient],
@@ -487,7 +487,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     isLoadingLocale,
     stops,
     addStop,
-    deleteStop,
+    removeStop,
     reorderStops,
     guideAssets,
     getStopAssets,

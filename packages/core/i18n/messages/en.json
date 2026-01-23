@@ -630,7 +630,9 @@
       "saving": "Saving...",
       "cancel": "Cancel",
       "reorderSuccess": "Stops reordered",
-      "reorderError": "Failed to reorder stops"
+      "reorderError": "Failed to reorder stops",
+      "removeSuccess": "Stop removed from guide",
+      "removeError": "Failed to remove stop"
     },
     "assets": {
       "attachError": "Failed to attach asset",
@@ -687,9 +689,10 @@
     "stopActions": {
       "hideStop": "Hide stop",
       "showStop": "Show stop",
-      "archiveStop": "Archive stop",
-      "restoreStop": "Restore stop",
-      "archiveConfirm": "Archive"
+      "removeStop": "Remove from guide",
+      "removeDescription": "This will remove the stop from this guide. The stop and all its content will be preserved and can be added to another guide later.",
+      "removeConfirm": "Remove",
+      "restoreStop": "Restore stop"
     }
   },
   "assets": {

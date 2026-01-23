@@ -864,27 +864,23 @@ export const showStopFn = createServerFn({ method: 'POST' })
   })
 
 // ============================================================================
-// Stop Archive/Restore
+// Stop Remove/Restore
 // ============================================================================
 
-const archiveStopSchema = z.object({
+const removeStopFromGuideSchema = z.object({
   guideId: z.string(),
   stopId: z.string(),
 })
 
-export const archiveStopFn = createServerFn({ method: 'POST' })
+export const removeStopFromGuideFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
-  .inputValidator(archiveStopSchema)
+  .inputValidator(removeStopFromGuideSchema)
   .handler(async ({ context, data }) => {
     await requireGuideAccess(data.guideId, context.user.id)
 
-    const [archivedGuideStop] = await db
-      .update(guideStop)
-      .set({ archivedAt: new Date() })
-      .where(and(eq(guideStop.guideId, data.guideId), eq(guideStop.stopId, data.stopId)))
-      .returning()
+    await db.delete(guideStop).where(and(eq(guideStop.guideId, data.guideId), eq(guideStop.stopId, data.stopId)))
 
-    return archivedGuideStop
+    return { success: true }
   })
 
 const restoreStopSchema = z.object({

@@ -46,7 +46,7 @@ import {
 } from '@valguide/ui/components/empty'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { cn } from '@valguide/ui/lib/utils'
-import { Archive, Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus } from 'lucide-react'
+import { Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus, Unlink } from 'lucide-react'
 import * as React from 'react'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { TranslationStatusInline } from './translation-status-inline'
@@ -56,10 +56,8 @@ export type StopsListProps = {
   onEdit: (stopId: string) => void
   onHide: (stopId: string) => Promise<void>
   onShow: (stopId: string) => Promise<void>
-  onArchive: (stopId: string) => Promise<void>
+  onRemove: (stopId: string) => Promise<void>
   onAdd: () => void | Promise<void>
-  /** @deprecated Use onArchive instead */
-  onDelete?: (stopId: string) => Promise<void>
 }
 
 type SortableStopItemProps = {
@@ -69,10 +67,10 @@ type SortableStopItemProps = {
   onEdit: (stopId: string) => void
   onHide: (stopId: string) => Promise<void>
   onShow: (stopId: string) => Promise<void>
-  onRequestArchive: (stop: StopMetadata) => void
+  onRequestRemove: (stop: StopMetadata) => void
 }
 
-function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onRequestArchive }: SortableStopItemProps) {
+function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onRequestRemove }: SortableStopItemProps) {
   const t = useTranslations('stops')
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: stop.id })
 
@@ -146,9 +144,9 @@ function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onReques
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onClick={() => onRequestArchive(stop)}>
-                  <Archive className="h-4 w-4" />
-                  {t('stopActions.archiveStop')}
+                <DropdownMenuItem variant="destructive" onClick={() => onRequestRemove(stop)}>
+                  <Unlink className="h-4 w-4" />
+                  {t('stopActions.removeStop')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -159,17 +157,12 @@ function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onReques
   )
 }
 
-export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd, onDelete }: StopsListProps) {
+export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }: StopsListProps) {
   const t = useTranslations('stops')
   const { stops, localeData } = useGuideEditor()
   const [items, setItems] = React.useState(stops)
   const [isMounted, setIsMounted] = React.useState(false)
-  const [stopToArchive, setStopToArchive] = React.useState<StopMetadata | null>(null)
-
-  const archiveAction = onArchive ?? onDelete
-  if (!archiveAction) {
-    throw new Error('StopsList requires either onArchive or onDelete prop')
-  }
+  const [stopToRemove, setStopToRemove] = React.useState<StopMetadata | null>(null)
 
   const getStopTitle = React.useCallback(
     (stopId: string) => {
@@ -179,12 +172,12 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd,
     [localeData],
   )
 
-  const handleConfirmArchive = React.useCallback(() => {
-    if (stopToArchive) {
-      archiveAction(stopToArchive.id)
-      setStopToArchive(null)
+  const handleConfirmRemove = React.useCallback(() => {
+    if (stopToRemove) {
+      onRemove(stopToRemove.id)
+      setStopToRemove(null)
     }
-  }, [stopToArchive, archiveAction])
+  }, [stopToRemove, onRemove])
 
   React.useEffect(() => {
     setIsMounted(true)
@@ -224,28 +217,28 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd,
     }
   }
 
-  const stopToArchiveTitle = React.useMemo(() => {
-    if (!stopToArchive) return ''
-    return getStopTitle(stopToArchive.id)
-  }, [stopToArchive, getStopTitle])
+  const stopToRemoveTitle = React.useMemo(() => {
+    if (!stopToRemove) return ''
+    return getStopTitle(stopToRemove.id)
+  }, [stopToRemove, getStopTitle])
 
-  const archiveConfirmationDialog = (
-    <AlertDialog open={!!stopToArchive} onOpenChange={(open) => !open && setStopToArchive(null)}>
+  const removeConfirmationDialog = (
+    <AlertDialog open={!!stopToRemove} onOpenChange={(open) => !open && setStopToRemove(null)}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('stopActions.archiveStop')}</AlertDialogTitle>
+          <AlertDialogTitle>{t('stopActions.removeStop')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('stopActions.archiveConfirm')}
-            <span className="mt-2 block font-medium text-foreground">{stopToArchiveTitle}</span>
+            {t('stopActions.removeDescription')}
+            <span className="mt-2 block font-medium text-foreground">{stopToRemoveTitle}</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleConfirmArchive}
+            onClick={handleConfirmRemove}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {t('stopActions.archiveStop')}
+            {t('stopActions.removeConfirm')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -331,9 +324,9 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd,
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem variant="destructive" onClick={() => setStopToArchive(stop)}>
-                        <Archive className="h-4 w-4" />
-                        {t('stopActions.archiveStop')}
+                      <DropdownMenuItem variant="destructive" onClick={() => setStopToRemove(stop)}>
+                        <Unlink className="h-4 w-4" />
+                        {t('stopActions.removeStop')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -346,7 +339,7 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd,
           <Plus />
           {t('add')}
         </Button>
-        {archiveConfirmationDialog}
+        {removeConfirmationDialog}
       </div>
     )
   }
@@ -365,7 +358,7 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd,
                 onEdit={onEdit}
                 onHide={onHide}
                 onShow={onShow}
-                onRequestArchive={setStopToArchive}
+                onRequestRemove={setStopToRemove}
               />
             ))}
           </div>
@@ -375,7 +368,7 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onArchive, onAdd,
         <Plus />
         {t('add')}
       </Button>
-      {archiveConfirmationDialog}
+      {removeConfirmationDialog}
     </div>
   )
 }
