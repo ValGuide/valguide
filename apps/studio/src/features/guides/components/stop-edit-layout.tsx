@@ -16,6 +16,7 @@ export type StopTranslationData = {
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+
 import { Globe } from 'lucide-react'
 import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
@@ -215,7 +216,7 @@ export function StopEditLayout({
   return (
     <>
       {unsavedChangesDialog}
-      <div className="min-h-[calc(100vh-4rem)] bg-background pb-16 sm:pb-0">
+      <div className="bg-background pb-16 sm:pb-0">
         {/* Mobile/Tablet Focus Mode Header */}
         <div className="sticky top-0 z-10 border-b bg-background lg:hidden">
           {/* Row 1: Breadcrumb/Back left, actions right */}
@@ -257,8 +258,8 @@ export function StopEditLayout({
         </div>
 
         {/* Desktop Header */}
-        <div className="sticky top-0 z-10 hidden border-b bg-background px-4 py-2 sm:px-6 sm:py-3 lg:block">
-          <div className="flex items-center justify-between gap-2">
+        <div className="sticky top-0 z-10 hidden h-14 border-b bg-background px-4 sm:px-6 lg:flex lg:items-center">
+          <div className="flex w-full items-center justify-between gap-2">
             {breadcrumbContent}
             <div className="flex shrink-0 items-center gap-2">
               <LocaleSelector
@@ -275,7 +276,7 @@ export function StopEditLayout({
         </div>
 
         {/* Desktop: Status Badge and Tabs */}
-        <div className="sticky top-[57px] z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
+        <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{stopTitle}</h1>
@@ -351,7 +352,7 @@ export function StopEditLayout({
           </div>
 
           {/* Right Sidebar - Actions Panel (Desktop only) */}
-          <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
+          <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
             <div className="p-5 space-y-6">
               <EditorActionsPanel
                 hasDraft={hasDraft}

@@ -7,6 +7,7 @@ import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
+
 import { ChevronLeft, Globe, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
@@ -33,7 +34,6 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
-
   const {
     nanoId,
     guideId,
@@ -161,8 +161,8 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     router.navigate({ to: '/guides/$nanoId/stops/$stopId/edit', params: { nanoId, stopId }, search: localeSearch })
   }
 
-  const handleNavigateToGuides = () => {
-    confirmIfDirty(() => router.navigate({ to: '/' }))
+  const handleNavigateToGuide = () => {
+    confirmIfDirty(() => router.navigate({ to: '/guides/$nanoId', params: { nanoId } }))
   }
 
   const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
@@ -257,14 +257,14 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   return (
     <>
       {unsavedChangesDialog}
-      <div className="min-h-[calc(100vh-4rem)] bg-background pb-16 sm:pb-0">
+      <div className="bg-background pb-16 sm:pb-0">
         {/* Mobile/Tablet Focus Mode Header */}
         <div className="sticky top-0 z-10 border-b bg-background lg:hidden">
           {/* Row 1: Back button left, actions right */}
           <div className="flex items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
-            <Button variant="ghost" size="sm" onClick={handleNavigateToGuides} className="-ml-2 shrink-0">
+            <Button variant="ghost" size="sm" onClick={handleNavigateToGuide} className="-ml-2 shrink-0">
               <ChevronLeft className="h-4 w-4" />
-              <span>{t('title')}</span>
+              <span>{t('editor.guideDetails')}</span>
             </Button>
 
             <div className="flex shrink-0 items-center gap-2">
@@ -325,11 +325,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         </div>
 
         {/* Desktop Header */}
-        <div className="sticky top-0 z-10 hidden border-b bg-background px-4 py-2 sm:px-6 sm:py-3 lg:block">
-          <div className="flex items-center justify-between gap-2">
-            <Button variant="ghost" size="sm" onClick={handleNavigateToGuides}>
+        <div className="sticky top-0 z-10 hidden h-14 border-b bg-background px-4 sm:px-6 lg:flex lg:items-center">
+          <div className="flex w-full items-center justify-between gap-2">
+            <Button variant="ghost" size="sm" onClick={handleNavigateToGuide} className="-ml-2">
               <ChevronLeft className="h-4 w-4" />
-              {t('title')}
+              <span>{t('editor.guideDetails')}</span>
             </Button>
             <div className="flex shrink-0 items-center gap-2">
               <UnifiedLocaleSelector
@@ -353,7 +353,7 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         </div>
 
         {/* Desktop: Status Badge and Tabs */}
-        <div className="sticky top-14.25 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
+        <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guideTitle}</h1>

@@ -10,8 +10,9 @@ import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
+
 import { StatusBadge } from '@valguide/ui/components/status-badge'
-import { ArrowLeft, Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
+import { Calendar, ChevronLeft, Clock, ImageIcon, Pencil } from 'lucide-react'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
 import { guideDetailQueryOptions } from '@/features/guides/query-options'
 
@@ -29,7 +30,6 @@ function GuidePage() {
   const { data: guide } = useQuery(guideDetailQueryOptions(nanoId, preferredLocale))
   const t = useTranslations('guides')
   const router = useRouter()
-
   const handleArchived = async () => {
     await router.invalidate()
     router.navigate({ to: '/' })
@@ -41,19 +41,17 @@ function GuidePage() {
   const status = isPublished ? 'published' : 'draft'
 
   return (
-    <main className="flex flex-1 flex-col">
-      {/* Header */}
-      <div className="border-b bg-background px-4 py-3 sm:px-6">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">
-          <Link
-            to="/"
-            preload="intent"
-            className="inline-flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
-          >
-            <ArrowLeft className="h-4 w-4 shrink-0" />
-            <span className="hidden sm:inline">{t('backToGuides')}</span>
-          </Link>
-          <div className="flex gap-2">
+    <main className="flex flex-1 flex-col bg-background">
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-10 flex h-14 items-center border-b bg-background px-4 sm:px-6">
+        <div className="flex w-full items-center justify-between gap-2">
+          <Button variant="ghost" size="sm" asChild className="-ml-2">
+            <Link to="/" preload="intent">
+              <ChevronLeft className="h-4 w-4" />
+              <span>{t('title')}</span>
+            </Link>
+          </Button>
+          <div className="flex shrink-0 items-center gap-2">
             <ViewInAppButton nanoId={nanoId} published={isPublished} appDomain={clientEnv.VITE_APP_DOMAIN} />
             <ArchiveGuideButton guideId={guide.id} onArchived={handleArchived} />
             <Button asChild>
@@ -66,8 +64,18 @@ function GuidePage() {
         </div>
       </div>
 
+      {/* Sticky Title Row */}
+      <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{guide.displayTitle}</h1>
+          <StatusBadge status={status} size="lg" className="shrink-0">
+            {t(`details.${status}`)}
+          </StatusBadge>
+        </div>
+      </div>
+
       {/* Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 bg-muted/30 dark:bg-background">
         <div className="mx-auto max-w-5xl p-6 sm:p-8 space-y-6">
           {/* Hero Card with Cover Image - Reduced height with gradient overlay */}
           <Card className="overflow-hidden shadow-(--shadow-md)">
@@ -90,22 +98,14 @@ function GuidePage() {
               )}
             </div>
 
-            {/* Title and Description - More compact */}
-            <CardContent className="p-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex-1 space-y-2">
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{guide.displayTitle}</h1>
-                  {guide.displayDescription && (
-                    <div className="text-sm text-muted-foreground line-clamp-3">
-                      <RichTextDisplay content={guide.displayDescription} />
-                    </div>
-                  )}
+            {/* Description */}
+            {guide.displayDescription && (
+              <CardContent className="p-6">
+                <div className="text-sm text-muted-foreground">
+                  <RichTextDisplay content={guide.displayDescription} />
                 </div>
-                <StatusBadge status={status} size="lg" className="shrink-0">
-                  {t(`details.${status}`)}
-                </StatusBadge>
-              </div>
-            </CardContent>
+              </CardContent>
+            )}
           </Card>
 
           {/* Details Card - Using MetadataGrid */}

@@ -8,7 +8,7 @@ export function StopEditSkeleton() {
       <div className="sticky top-0 z-10 border-b bg-background px-4 py-2 sm:px-6 sm:py-3">
         {/* Mobile/Tablet: Wrapping flex layout */}
         <div className="flex flex-wrap items-center justify-end gap-2 lg:hidden">
-          <Skeleton className="h-8 w-[120px]" /> {/* Locale selector */}
+          <Skeleton className="h-8 w-30" /> {/* Locale selector */}
           <Skeleton className="h-8 w-8" /> {/* Three dots menu */}
           {/* Inline save/publish on tablet */}
           <Skeleton className="hidden h-8 w-16 sm:block" /> {/* Save */}
@@ -18,14 +18,14 @@ export function StopEditSkeleton() {
         <div className="hidden lg:flex items-center justify-between gap-2">
           <Skeleton className="h-5 w-72" /> {/* Breadcrumb */}
           <div className="flex shrink-0 items-center gap-2">
-            <Skeleton className="h-8 w-[120px]" /> {/* Locale selector */}
+            <Skeleton className="h-8 w-30" /> {/* Locale selector */}
             <Skeleton className="h-8 w-16" /> {/* Preview button */}
           </div>
         </div>
       </div>
 
       {/* Status Badge and Tabs */}
-      <div className="sticky top-[57px] z-10 border-b bg-background px-4 py-3 sm:px-6">
+      <div className="sticky top-14.25 z-10 border-b bg-background px-4 py-3 sm:px-6">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2 sm:gap-3">
             <Skeleton className="h-8 w-8 shrink-0" /> {/* Back arrow */}
@@ -118,7 +118,7 @@ export function StopEditSkeleton() {
         </div>
 
         {/* Right Sidebar - Actions Panel (Desktop only) */}
-        <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-[140px]">
+        <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
           <div className="p-5 space-y-6">
             {/* Editor Actions Panel */}
             <div className="space-y-3">
