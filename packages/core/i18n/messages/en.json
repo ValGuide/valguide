@@ -688,7 +688,8 @@
       "hideStop": "Hide stop",
       "showStop": "Show stop",
       "archiveStop": "Archive stop",
-      "restoreStop": "Restore stop"
+      "restoreStop": "Restore stop",
+      "archiveConfirm": "Archive"
     }
   },
   "assets": {

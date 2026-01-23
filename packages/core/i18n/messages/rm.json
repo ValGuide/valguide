@@ -688,7 +688,8 @@
       "hideStop": "Zuppar stop",
       "showStop": "Mussar stop",
       "archiveStop": "Archivar stop",
-      "restoreStop": "Restabilir stop"
+      "restoreStop": "Restabilir stop",
+      "archiveConfirm": "Archivar"
     }
   },
   "assets": {

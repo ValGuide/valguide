@@ -689,7 +689,8 @@
       "hideStop": "Stopp ausblenden",
       "showStop": "Stopp einblenden",
       "archiveStop": "Stopp archivieren",
-      "restoreStop": "Stopp wiederherstellen"
+      "restoreStop": "Stopp wiederherstellen",
+      "archiveConfirm": "Archivieren"
     }
   },
   "assets": {
