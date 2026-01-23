@@ -30,7 +30,7 @@ export const clientEnvSchema = z.object({
   VITE_POSTHOG_KEY: z.string().optional(),
   VITE_POSTHOG_HOST: z.string().optional(),
   VITE_STUDIO_URL: z.string().optional(),
-  VITE_APP_DOMAIN: z.string().optional(),
+  VITE_APP_DOMAIN: z.string().optional().default('app.valguide.com'),
   VITE_IMAGEKIT_URL: z.string().optional().default('https://ik.imagekit.io/valguide'),
 })
 
