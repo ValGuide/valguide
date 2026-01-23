@@ -261,13 +261,13 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
         {/* Mobile/Tablet Focus Mode Header */}
         <div className="sticky top-0 z-10 border-b bg-background lg:hidden">
           {/* Row 1: Back button left, actions right */}
-          <div className="flex items-center justify-between gap-2 px-4 py-2 sm:px-6 sm:py-3">
+          <div className="flex items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
             <Button variant="ghost" size="sm" onClick={handleNavigateToGuides} className="-ml-2 shrink-0">
               <ChevronLeft className="h-4 w-4" />
               <span>{t('title')}</span>
             </Button>
 
-            <div className="flex shrink-0 items-center gap-1.5">
+            <div className="flex shrink-0 items-center gap-2">
               <UnifiedLocaleSelector
                 value={activeLocale}
                 locales={availableLocales}
@@ -308,13 +308,13 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           </div>
 
           {/* Row 2: Title + Status Badge */}
-          <div className="flex items-center gap-2 px-4 pb-2 sm:px-6">
+          <div className="flex items-center gap-2 px-4 pb-3 sm:px-6">
             <h1 className="min-w-0 truncate text-lg font-semibold">{guideTitle}</h1>
             <ContentStatusBadge status={contentStatus} size="sm" className="shrink-0" />
           </div>
 
           {/* Row 3: Draft/Published tabs */}
-          <div className="px-4 pb-2 sm:px-6">
+          <div className="px-4 pb-3 sm:px-6">
             <DraftPublishedTabs
               activeTab={activeTab}
               onTabChange={handleTabChange}
