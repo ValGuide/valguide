@@ -421,12 +421,7 @@
       "selectLanguage": "Sprache auswählen",
       "searchLanguages": "Sprachen suchen...",
       "noLanguageFound": "Keine Sprache gefunden",
-      "statusPublished": "Veröffentlicht",
-      "statusDraft": "Entwurf",
-      "statusModified": "Geändert",
-      "statusEmpty": "Leer",
-      "enabledLanguages": "Guide-Sprachen",
-      "addLanguage": "Übersetzung hinzufügen"
+      "manageTranslations": "Übersetzungen verwalten..."
     },
     "progress": {
       "title": "Guide-Fortschritt",
@@ -544,7 +539,7 @@
       "searchLanguages": "Sprachen suchen...",
       "noLanguageFound": "Keine Sprache gefunden.",
       "confirmRemoveTitle": "Sprache entfernen?",
-      "confirmRemoveDescription": "Dieser Guide hat Inhalte in {language}. Das Entfernen der Sprache wird sie aus dem Guide ausblenden. Die Inhalte werden nicht gelöscht, sind aber nicht mehr von diesem Guide aus bearbeitbar.",
+      "confirmRemoveDescription": "{language} entfernen? Der Übersetzungsinhalt wird beibehalten und kann durch erneutes Hinzufügen der Sprache wiederhergestellt werden.",
       "cancel": "Abbrechen",
       "confirmRemove": "Entfernen"
     },

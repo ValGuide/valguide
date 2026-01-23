@@ -421,12 +421,7 @@
       "selectLanguage": "Tscherner linguatg",
       "searchLanguages": "Tschertgar linguatgs...",
       "noLanguageFound": "Nagin linguatg chattà",
-      "statusPublished": "Publichà",
-      "statusDraft": "Sboz",
-      "statusModified": "Modifitgà",
-      "statusEmpty": "Vid",
-      "enabledLanguages": "Linguatgs dal guid",
-      "addLanguage": "Agiuntar translaziun"
+      "manageTranslations": "Administrar translaziuns..."
     },
     "progress": {
       "title": "Progress dal guid",
@@ -543,7 +538,7 @@
       "searchLanguages": "Tschertgar linguas...",
       "noLanguageFound": "Nagina lingua chattada.",
       "confirmRemoveTitle": "Allontanar lingua?",
-      "confirmRemoveDescription": "Quest guid ha cuntegn en {language}. L'allontanament da la lingua va a zuppentar quel ord il guid. Il cuntegn na vegn betg stizzà, ma na po betg pli vegnir modifitgà da quest guid.",
+      "confirmRemoveDescription": "Allontanar {language}? Il cuntegn da la translaziun vegn mantegnì e po vegnir restaurà cun agiuntar danovamain la lingua.",
       "cancel": "Interrumper",
       "confirmRemove": "Allontanar"
     },

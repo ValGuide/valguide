@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -7,14 +8,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from '@valguide/ui/components/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
-import { Check, ChevronDown, Circle } from 'lucide-react'
+import { Check, ChevronDown, Globe } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import type { LocaleStatusMap, TranslationLocaleStatus } from '../utils/translation-status'
-
-export type { LocaleStatusMap, TranslationLocaleStatus }
 
 export type ContentLocale = string
 
@@ -22,10 +21,8 @@ export type LocaleSelectorProps = {
   value: ContentLocale
   locales: ContentLocale[]
   onValueChange: (locale: ContentLocale) => void
-  localeStatus?: LocaleStatusMap
+  guideNanoId?: string
   className?: string
-  /** Whether to show status icon in the trigger button. Default: true */
-  showStatusInTrigger?: boolean
 }
 
 const LOCALE_NAMES: Record<string, string> = {
@@ -76,43 +73,9 @@ export function getLocaleDisplayName(locale: string): string {
   return locale.toUpperCase()
 }
 
-function getStatusIcon(status: TranslationLocaleStatus) {
-  switch (status) {
-    case 'published':
-      return <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-    case 'draft':
-      return <Circle className="h-2 w-2 fill-amber-500 text-amber-500" />
-    case 'modified':
-      return <Circle className="h-2 w-2 fill-warning text-warning" />
-    case 'empty':
-      return <Circle className="h-2 w-2 fill-muted-foreground/30 text-muted-foreground/30" />
-  }
-}
+const SEARCH_THRESHOLD = 8
 
-function getStatusLabel(
-  status: TranslationLocaleStatus,
-  t: ReturnType<typeof useTranslations<'guides.localeSelector'>>,
-) {
-  switch (status) {
-    case 'published':
-      return t('statusPublished')
-    case 'draft':
-      return t('statusDraft')
-    case 'modified':
-      return t('statusModified')
-    case 'empty':
-      return t('statusEmpty')
-  }
-}
-
-export function LocaleSelector({
-  value,
-  locales,
-  onValueChange,
-  localeStatus,
-  className,
-  showStatusInTrigger = true,
-}: LocaleSelectorProps) {
+export function LocaleSelector({ value, locales, onValueChange, guideNanoId, className }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const t = useTranslations('guides.localeSelector')
@@ -122,13 +85,13 @@ export function LocaleSelector({
   }, [])
 
   const selectedLocaleName = getLocaleDisplayName(value)
-  const selectedStatus = localeStatus?.[value]
+  const showSearch = locales.length >= SEARCH_THRESHOLD
 
   if (!isMounted) {
     return (
       <Button variant="outline" disabled className={cn('w-[200px] justify-between', className)}>
         <span className="flex items-center gap-2">
-          {showStatusInTrigger && selectedStatus && getStatusIcon(selectedStatus)}
+          <Globe className="h-4 w-4" />
           {selectedLocaleName}
         </span>
         <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -147,7 +110,7 @@ export function LocaleSelector({
           className={cn('w-[200px] justify-between', className)}
         >
           <span className="flex items-center gap-2">
-            {showStatusInTrigger && selectedStatus && getStatusIcon(selectedStatus)}
+            <Globe className="h-4 w-4" />
             {selectedLocaleName}
           </span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -155,13 +118,12 @@ export function LocaleSelector({
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={t('searchLanguages')} />
+          {showSearch && <CommandInput placeholder={t('searchLanguages')} />}
           <CommandList>
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
               {locales.map((locale) => {
                 const localeName = getLocaleDisplayName(locale)
-                const status = localeStatus?.[locale]
                 return (
                   <CommandItem
                     key={locale}
@@ -172,18 +134,29 @@ export function LocaleSelector({
                     }}
                     className="flex items-center justify-between"
                   >
-                    <span className="flex items-center gap-2">
-                      {status && getStatusIcon(status)}
-                      {localeName}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      {status && <span className="text-xs text-muted-foreground">{getStatusLabel(status, t)}</span>}
-                      {value === locale && <Check className="h-4 w-4" />}
-                    </span>
+                    <span>{localeName}</span>
+                    {value === locale && <Check className="h-4 w-4" />}
                   </CommandItem>
                 )
               })}
             </CommandGroup>
+            {guideNanoId && (
+              <>
+                <CommandSeparator />
+                <CommandGroup>
+                  <CommandItem asChild>
+                    <Link
+                      to="/guides/$nanoId"
+                      params={{ nanoId: guideNanoId }}
+                      className="cursor-pointer text-muted-foreground"
+                      onClick={() => setOpen(false)}
+                    >
+                      {t('manageTranslations')}
+                    </Link>
+                  </CommandItem>
+                </CommandGroup>
+              </>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

@@ -35,7 +35,7 @@ export type { LocaleStatusMap, TranslationLocaleStatus }
 
 export type ContentLocale = string
 
-const AVAILABLE_LANGUAGES = [
+export const AVAILABLE_LANGUAGES = [
   'en',
   'de',
   'rm',

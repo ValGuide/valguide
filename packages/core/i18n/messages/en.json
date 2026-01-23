@@ -421,12 +421,7 @@
       "selectLanguage": "Select language",
       "searchLanguages": "Search languages...",
       "noLanguageFound": "No language found",
-      "statusPublished": "Published",
-      "statusDraft": "Draft",
-      "statusModified": "Modified",
-      "statusEmpty": "Empty",
-      "enabledLanguages": "Guide Languages",
-      "addLanguage": "Add Translation"
+      "manageTranslations": "Manage translations..."
     },
     "progress": {
       "title": "Guide Completion",
@@ -543,7 +538,7 @@
       "searchLanguages": "Search languages...",
       "noLanguageFound": "No language found.",
       "confirmRemoveTitle": "Remove Language?",
-      "confirmRemoveDescription": "This guide has content in {language}. Removing the language will hide it from the guide. The content will not be deleted but will no longer be editable from this guide.",
+      "confirmRemoveDescription": "Remove {language}? The translation content will be preserved and can be restored by adding the language again.",
       "cancel": "Cancel",
       "confirmRemove": "Remove"
     },

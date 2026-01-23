@@ -115,9 +115,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
   return (
     <StopEditLayout
       stopId={stopMetadata.id}
+      guideNanoId={nanoId}
       stopTranslation={stopTranslation ?? null}
       stopAssets={stopAssets}
-      stopTranslationStatuses={stopMetadata.translationStatuses}
       activeLocale={activeLocale}
       isDirty={isDirty}
       isSaving={isSaving}

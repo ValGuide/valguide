@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { LocaleSelector, type LocaleStatusMap } from './locale-selector'
+import { LocaleSelector } from './locale-selector'
 
 const meta = {
   title: 'Studio/Guides/LocaleSelector',
@@ -11,7 +11,7 @@ const meta = {
   argTypes: {
     value: {
       control: 'select',
-      options: ['en', 'de', 'rm'],
+      options: ['en', 'de', 'rm', 'fr', 'it', 'es', 'pt', 'nl'],
     },
     onValueChange: { action: 'onValueChange' },
   },
@@ -28,54 +28,20 @@ export const Default: Story = {
   },
 }
 
-export const WithStatusIndicators: Story = {
+export const WithManageLink: Story = {
   args: {
     value: 'en',
     locales: ['en', 'de', 'rm'],
     onValueChange: () => {},
-    localeStatus: {
-      en: 'published',
-      de: 'draft',
-      rm: 'empty',
-    } as LocaleStatusMap,
+    guideNanoId: 'abc123xyz',
   },
 }
 
-export const AllPublished: Story = {
-  args: {
-    value: 'de',
-    locales: ['en', 'de', 'rm'],
-    onValueChange: () => {},
-    localeStatus: {
-      en: 'published',
-      de: 'published',
-      rm: 'published',
-    } as LocaleStatusMap,
-  },
-}
-
-export const AllDrafts: Story = {
-  args: {
-    value: 'rm',
-    locales: ['en', 'de', 'rm'],
-    onValueChange: () => {},
-    localeStatus: {
-      en: 'draft',
-      de: 'draft',
-      rm: 'draft',
-    } as LocaleStatusMap,
-  },
-}
-
-export const AllEmpty: Story = {
+export const ManyLocales: Story = {
   args: {
     value: 'en',
-    locales: ['en', 'de', 'rm'],
+    locales: ['en', 'de', 'rm', 'fr', 'it', 'es', 'pt', 'nl'],
     onValueChange: () => {},
-    localeStatus: {
-      en: 'empty',
-      de: 'empty',
-      rm: 'empty',
-    } as LocaleStatusMap,
+    guideNanoId: 'abc123xyz',
   },
 }

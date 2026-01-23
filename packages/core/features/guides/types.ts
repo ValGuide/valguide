@@ -209,4 +209,6 @@ export type GuideDetailItem = {
   displayLocale: string
   /** Summary of all available translations for locale tabs */
   translationSummaries: TranslationSummary[]
+  /** Available locales for this guide (for translations management) */
+  availableLocales: string[]
 }

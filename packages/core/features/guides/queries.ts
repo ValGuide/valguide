@@ -286,6 +286,7 @@ export async function getGuideDetailByNanoId(
       published: true,
       createdAt: true,
       updatedAt: true,
+      availableLocales: true,
     },
     with: {
       translations: {
@@ -352,6 +353,7 @@ export async function getGuideDetailByNanoId(
     displayDescription: resolved.description,
     displayLocale: resolved.locale,
     translationSummaries,
+    availableLocales: result.availableLocales,
   }
 }
 

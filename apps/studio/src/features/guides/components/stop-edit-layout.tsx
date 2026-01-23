@@ -1,6 +1,6 @@
 import type { Asset } from '@valguide/core/features/assets/types'
 import { ContentStatusBadge, getContentStatus } from '@valguide/core/features/guides/components/content-status-badge'
-import type { AssetWithRole, TranslationStatus } from '@valguide/core/features/guides/types'
+import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 
 // Type for stop translation from locale data
@@ -18,7 +18,7 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 
 import { Globe } from 'lucide-react'
-import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
@@ -29,13 +29,11 @@ import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/co
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
-import { getLocaleStatusMapFromStatuses, type LocaleStatusMap } from '@/features/guides/utils/translation-status'
-
 export interface StopEditLayoutProps {
   stopId: string
+  guideNanoId: string
   stopTranslation: StopTranslationData | null
   stopAssets: AssetWithRole[]
-  stopTranslationStatuses: TranslationStatus[]
   activeLocale: string
   isDirty: boolean
   isSaving: boolean
@@ -59,9 +57,9 @@ export interface StopEditLayoutProps {
 
 export function StopEditLayout({
   stopId,
+  guideNanoId,
   stopTranslation,
   stopAssets,
-  stopTranslationStatuses,
   activeLocale,
   isDirty,
   isSaving,
@@ -95,14 +93,6 @@ export function StopEditLayout({
   const hasDraft = !!stopTranslation?.draftVersionId
   const hasPublished = !!stopTranslation?.currentVersionId
   const contentStatus = getContentStatus(hasDraft, hasPublished)
-
-  const localeStatusMap: LocaleStatusMap = useMemo(() => {
-    const baseMap = getLocaleStatusMapFromStatuses(stopTranslationStatuses, locales ?? ['en', 'de', 'rm'])
-    return {
-      ...baseMap,
-      [activeLocale]: contentStatus,
-    }
-  }, [stopTranslationStatuses, locales, activeLocale, contentStatus])
 
   const isReadOnly = activeTab === 'published'
   const stopTitle = activeTab === 'published' ? publishedStopTitle : draftStopTitle
@@ -229,8 +219,7 @@ export function StopEditLayout({
                 value={activeLocale}
                 locales={locales ?? ['en', 'de', 'rm']}
                 onValueChange={onLocaleChange}
-                localeStatus={localeStatusMap}
-                showStatusInTrigger={false}
+                guideNanoId={guideNanoId}
               />
               <MobileMoreMenu
                 hasDraft={hasDraft}
@@ -268,7 +257,7 @@ export function StopEditLayout({
                 value={activeLocale}
                 locales={locales ?? ['en', 'de', 'rm']}
                 onValueChange={onLocaleChange}
-                localeStatus={localeStatusMap}
+                guideNanoId={guideNanoId}
               />
               <Button variant="ghost" size="sm">
                 {t('editor.preview')}

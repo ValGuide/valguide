@@ -16,13 +16,12 @@ import { EditorActionsPanel } from '@/features/guides/components/editor-actions-
 import { EditorHeader } from '@/features/guides/components/editor-header'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
+import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
 import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
 import { StopsList } from '@/features/guides/components/stops-list'
-import { getLocaleDisplayName, UnifiedLocaleSelector } from '@/features/guides/components/unified-locale-selector'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
-import { getLocaleStatusMapFromStatuses } from '@/features/guides/utils/translation-status'
 
 interface GuideEditViewProps {
   onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
@@ -51,7 +50,6 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
     deleteStop,
     reorderStops,
     setActiveLocale,
-    updateAvailableLocales,
     save,
     refetch,
     registerFormDirty,
@@ -92,11 +90,6 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
   }
   const contentStatus = isPublishing ? stableStatusRef.current : computedStatus
 
-  // Build locale status map from metadata translation statuses
-  const localeStatusMap = useMemo(() => {
-    return getLocaleStatusMapFromStatuses(metadata?.translationStatuses, availableLocales)
-  }, [metadata?.translationStatuses, availableLocales])
-
   const isReadOnly = activeTab === 'published'
 
   const draftVersionData = localeData?.guideTranslation?.draftVersion
@@ -119,19 +112,6 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
 
   // Convert null to undefined for component prop types
   const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
-
-  const hasContentForLocale = useCallback(
-    (locale: string) => {
-      // For the active locale, check from localeData
-      if (locale === activeLocale) {
-        const t = localeData?.guideTranslation
-        return !!(t?.currentVersionId || t?.draftVersionId)
-      }
-      // For other locales, we'd need to fetch - assume true for now
-      return true
-    },
-    [activeLocale, localeData],
-  )
 
   const formRef = useRef<GuideMetadataFormRef>(null)
   const formId = `guide-translation-${activeLocale}`
@@ -269,19 +249,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
             </Button>
 
             <div className="flex shrink-0 items-center gap-2">
-              <UnifiedLocaleSelector
+              <LocaleSelector
                 value={activeLocale}
                 locales={availableLocales}
                 onValueChange={setActiveLocale}
-                localeStatus={localeStatusMap}
-                showStatusInTrigger={false}
-                onAddLocale={async (locale) => {
-                  await updateAvailableLocales([...availableLocales, locale])
-                }}
-                onRemoveLocale={async (locale) => {
-                  await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
-                }}
-                hasContentForLocale={hasContentForLocale}
+                guideNanoId={nanoId}
               />
               <MobileMoreMenu
                 hasDraft={hasDraft}
@@ -332,18 +304,11 @@ export function GuideEditView({ onPublish, onUnpublish, onDiscard, MediaPicker }
           className="hidden lg:flex"
           actions={
             <>
-              <UnifiedLocaleSelector
+              <LocaleSelector
                 value={activeLocale}
                 locales={availableLocales}
                 onValueChange={setActiveLocale}
-                localeStatus={localeStatusMap}
-                onAddLocale={async (locale) => {
-                  await updateAvailableLocales([...availableLocales, locale])
-                }}
-                onRemoveLocale={async (locale) => {
-                  await updateAvailableLocales(availableLocales.filter((l) => l !== locale))
-                }}
-                hasContentForLocale={hasContentForLocale}
+                guideNanoId={nanoId}
               />
               <Button variant="ghost" size="sm">
                 {t('editor.preview')}

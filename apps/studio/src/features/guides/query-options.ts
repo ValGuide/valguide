@@ -3,17 +3,15 @@ import {
   getGuideDetailFn,
   getGuideMetadataFn,
   getGuideTranslationsForLocaleFn,
-  getGuideViewDataFn,
 } from '@valguide/core/features/guides/server-functions'
 import type {
   GuideDetailItem,
   GuideListItem,
   GuideLocaleData,
   GuideMetadata,
-  GuideViewData,
   GuideWithTranslationsAndCover,
 } from '@valguide/core/features/guides/types'
-import { getArchivedGuidesFn, getGuidesFn, getGuidesListFn } from './server-functions'
+import { getArchivedGuidesFn, getGuidesListFn } from './server-functions'
 
 export interface ArchivedGuidesResponse {
   guides: GuideWithTranslationsAndCover[]

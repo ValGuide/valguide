@@ -1,20 +1,23 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { clientEnv } from '@valguide/core/env/client'
 import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { updateGuideFn } from '@valguide/core/features/guides/server-functions'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { Badge } from '@valguide/ui/components/badge'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
 
 import { StatusBadge } from '@valguide/ui/components/status-badge'
 import { Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
+import { useCallback } from 'react'
 import { EditorHeader } from '@/features/guides/components/editor-header'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
+import { TranslationsManager } from '@/features/guides/components/translations-manager'
 import { guideDetailQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId/')({
@@ -29,12 +32,44 @@ export const Route = createFileRoute('/_main/guides/$nanoId/')({
 function GuidePage() {
   const { nanoId, preferredLocale } = Route.useLoaderData()
   const { data: guide } = useQuery(guideDetailQueryOptions(nanoId, preferredLocale))
+  const queryClient = useQueryClient()
   const t = useTranslations('guides')
+  const tLocales = useTranslations('guides.locales')
   const router = useRouter()
   const handleArchived = async () => {
     await router.invalidate()
     router.navigate({ to: '/' })
   }
+
+  const handleAddLanguage = useCallback(
+    async (locale: string) => {
+      if (!guide) return
+      const newLocales = [...guide.availableLocales, locale]
+      try {
+        await updateGuideFn({ data: { id: guide.id, availableLocales: newLocales } })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
+        toast.success(tLocales('updateSuccess'))
+      } catch {
+        toast.error(tLocales('updateError'))
+      }
+    },
+    [guide, queryClient, nanoId, tLocales],
+  )
+
+  const handleRemoveLanguage = useCallback(
+    async (locale: string) => {
+      if (!guide) return
+      const newLocales = guide.availableLocales.filter((l) => l !== locale)
+      try {
+        await updateGuideFn({ data: { id: guide.id, availableLocales: newLocales } })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
+        toast.success(tLocales('updateSuccess'))
+      } catch {
+        toast.error(tLocales('updateError'))
+      }
+    },
+    [guide, queryClient, nanoId, tLocales],
+  )
 
   if (!guide) return null
 
@@ -131,27 +166,13 @@ function GuidePage() {
             </CardContent>
           </Card>
 
-          {/* Translations Card */}
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-base font-semibold mb-4">{t('details.translations')}</h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {guide.translationSummaries.map((trans) => (
-                  <div
-                    key={trans.locale}
-                    className="rounded-lg border bg-muted/20 p-4 transition-all duration-200 hover:bg-muted/30 hover:border-primary/20"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary" className="text-[10px] font-medium uppercase tracking-wider">
-                        {trans.locale}
-                      </Badge>
-                    </div>
-                    <h3 className="font-medium line-clamp-1 text-sm">{trans.title}</h3>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Translations Management */}
+          <TranslationsManager
+            guideNanoId={nanoId}
+            locales={guide.availableLocales}
+            onAddLanguage={handleAddLanguage}
+            onRemoveLanguage={handleRemoveLanguage}
+          />
         </div>
       </div>
     </main>
