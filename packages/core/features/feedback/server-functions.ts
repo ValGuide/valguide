@@ -73,13 +73,19 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     const supabase = await createClient()
 
-    // Get screenshot public URL if path provided
+    // Get screenshot signed URL if path provided (bucket is private)
     // Gracefully handle storage lookup failures - feedback should still be submitted
     let screenshotUrl: string | null = null
     if (data.screenshotPath) {
       try {
-        const { data: urlData } = supabase.storage.from('studio-feedback').getPublicUrl(data.screenshotPath)
-        screenshotUrl = urlData.publicUrl
+        // Create signed URL valid for 1 year (31536000 seconds)
+        // Signed URLs don't require the bucket to be public
+        const { data: urlData, error } = await supabase.storage
+          .from('studio-feedback')
+          .createSignedUrl(data.screenshotPath, 31536000)
+
+        if (error) throw error
+        screenshotUrl = urlData?.signedUrl ?? null
       } catch (storageErr) {
         // Log but don't fail - screenshot is optional
         console.error('Failed to get screenshot URL:', storageErr)
