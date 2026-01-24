@@ -74,7 +74,7 @@ export function AppSidebar({
 
   React.useEffect(() => {
     setOpenMobile(false)
-  }, [pathnameFromRouter])
+  }, [setOpenMobile])
 
   const handleNavClick = () => {
     setOpenMobile(false)

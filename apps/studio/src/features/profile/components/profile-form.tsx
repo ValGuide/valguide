@@ -130,9 +130,8 @@ export function ProfileForm({
           }}
           className="space-y-4"
         >
-          <form.Field
-            name="username"
-            children={(field) => {
+          <form.Field name="username">
+            {(field) => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
               return (
                 <Field data-invalid={isInvalid}>
@@ -150,11 +149,10 @@ export function ProfileForm({
                 </Field>
               )
             }}
-          />
+          </form.Field>
           <div className="grid grid-cols-2 gap-4">
-            <form.Field
-              name="firstName"
-              children={(field) => {
+            <form.Field name="firstName">
+              {(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
@@ -171,10 +169,9 @@ export function ProfileForm({
                   </Field>
                 )
               }}
-            />
-            <form.Field
-              name="lastName"
-              children={(field) => {
+            </form.Field>
+            <form.Field name="lastName">
+              {(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
@@ -191,7 +188,7 @@ export function ProfileForm({
                   </Field>
                 )
               }}
-            />
+            </form.Field>
           </div>
           <Button type="submit" disabled={isPending}>
             {isPending ? t('saving') : t('save')}

@@ -28,7 +28,7 @@ export const Success: Story = {
   render: () => <Button onClick={() => toast.success('Operation completed successfully')}>Show Success</Button>,
 }
 
-export const Error: Story = {
+export const ErrorToast: Story = {
   render: () => <Button onClick={() => toast.error('Something went wrong')}>Show Error</Button>,
 }
 

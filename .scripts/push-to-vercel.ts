@@ -77,7 +77,7 @@ async function runWithConcurrency<T>(tasks: (() => Promise<T>)[], concurrency: n
       // Remove completed promises
       for (let i = executing.length - 1; i >= 0; i--) {
         // Check if promise is settled by racing with an immediately resolved promise
-        const settled = await Promise.race([executing[i]!.then(() => true), Promise.resolve(false)])
+        const settled = await Promise.race([executing[i]?.then(() => true), Promise.resolve(false)])
         if (settled) {
           executing.splice(i, 1)
         }

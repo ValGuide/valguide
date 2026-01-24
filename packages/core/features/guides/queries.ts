@@ -129,11 +129,11 @@ const LOCALE_FALLBACK_ORDER = ['en', 'de', 'rm']
 function resolveBestTranslation(
   translations: Array<{
     locale: string
-    draftVersion: { title: string; description: string | null } | null
-    currentVersion: { title: string; description: string | null } | null
+    draftVersion: { title: string | null; description: string | null } | null
+    currentVersion: { title: string | null; description: string | null } | null
   }>,
   preferredLocale: string,
-): { title: string; description: string | null; locale: string } {
+): { title: string | null; description: string | null; locale: string } {
   // Try preferred locale first
   const preferred = translations.find((t) => t.locale === preferredLocale)
   if (preferred?.draftVersion?.title) {
@@ -399,7 +399,7 @@ export async function getGuideDetailByNanoId(
 export async function createGuide(
   db: DB,
   guideData: Omit<typeof guide.$inferInsert, 'nanoId'> & { nanoId?: string },
-  translations: Array<{ locale: string; title: string; description?: string }>,
+  translations: Array<{ locale: string; title: string | null | undefined; description?: string | null | undefined }>,
 ) {
   return await db.transaction(async (tx: DB) => {
     // Insert guide with auto-generated nanoId if not provided

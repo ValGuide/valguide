@@ -52,6 +52,7 @@ export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
               className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
             >
               <svg
+                role="presentation"
                 className={`size-3 transition-transform ${showDetails ? 'rotate-90' : ''}`}
                 fill="none"
                 stroke="currentColor"

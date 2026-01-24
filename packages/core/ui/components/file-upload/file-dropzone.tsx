@@ -90,7 +90,7 @@ export function FileDropzone({
 
       return null
     },
-    [maxFileSize, acceptedFileTypes],
+    [maxFileSize, acceptedFileTypes, t.fileSizeExceeds, t.fileTypeNotAccepted, t.limit],
   )
 
   const processFiles = React.useCallback(

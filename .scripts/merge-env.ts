@@ -134,7 +134,7 @@ export function mergeAndWrite(env: Environment, silent = false): Map<string, str
   writeFileSync(outputPath, content, 'utf-8')
 
   if (!silent) {
-    console.log(chalk.green(`\n✓ Merged ${merged.size} variables to ${outputPath.replace(ROOT_DIR + '/', '')}\n`))
+    console.log(chalk.green(`\n✓ Merged ${merged.size} variables to ${outputPath.replace(`${ROOT_DIR}/`, '')}\n`))
   }
 
   return merged

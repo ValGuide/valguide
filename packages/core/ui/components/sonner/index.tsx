@@ -163,7 +163,7 @@ const Toast = (props: ToastProps) => {
       setHeights((h) => [{ toastId: toast.id, height, position: toast.position }, ...h])
       return () => setHeights((h) => h.filter((height) => height.toastId !== toast.id))
     }
-  }, [setHeights, toast.id])
+  }, [setHeights, toast.id, toast.position])
 
   React.useLayoutEffect(() => {
     // Keep height up to date with the content in case it updates
@@ -186,7 +186,7 @@ const Toast = (props: ToastProps) => {
         return heights.map((height) => (height.toastId === toast.id ? { ...height, height: newHeight } : height))
       }
     })
-  }, [mounted, toast.title, toast.description, setHeights, toast.id, toast.jsx, toast.action, toast.cancel])
+  }, [mounted, setHeights, toast.id, toast.position])
 
   const deleteToast = React.useCallback(() => {
     // Save the offset for the exit swipe animation
@@ -197,7 +197,7 @@ const Toast = (props: ToastProps) => {
     setTimeout(() => {
       removeToast(toast)
     }, TIME_BEFORE_UNMOUNT)
-  }, [toast, removeToast, setHeights, offset])
+  }, [toast, removeToast, setHeights])
 
   React.useEffect(() => {
     if ((toast.promise && toastType === 'loading') || toast.duration === Infinity || toast.type === 'loading') return
@@ -207,12 +207,12 @@ const Toast = (props: ToastProps) => {
     const pauseTimer = () => {
       if (lastCloseTimerStartTimeRef.current < closeTimerStartTimeRef.current) {
         // Get the elapsed time since the timer started
-        const elapsedTime = new Date().getTime() - closeTimerStartTimeRef.current
+        const elapsedTime = Date.now() - closeTimerStartTimeRef.current
 
         remainingTime.current = remainingTime.current - elapsedTime
       }
 
-      lastCloseTimerStartTimeRef.current = new Date().getTime()
+      lastCloseTimerStartTimeRef.current = Date.now()
     }
 
     const startTimer = () => {
@@ -221,7 +221,7 @@ const Toast = (props: ToastProps) => {
       // See: https://github.com/denysdovhan/wtfjs?tab=readme-ov-file#an-infinite-timeout
       if (remainingTime.current === Infinity) return
 
-      closeTimerStartTimeRef.current = new Date().getTime()
+      closeTimerStartTimeRef.current = Date.now()
 
       // Let the toast know it has started
       timeoutId = setTimeout(() => {
@@ -244,7 +244,7 @@ const Toast = (props: ToastProps) => {
       deleteToast()
       toast.onDismiss?.(toast)
     }
-  }, [deleteToast, toast.delete])
+  }, [deleteToast, toast.delete, toast])
 
   function getLoadingIcon() {
     if (icons?.loading) {
@@ -266,7 +266,6 @@ const Toast = (props: ToastProps) => {
 
   return (
     <li
-      tabIndex={0}
       ref={toastRef}
       className={cn(
         className,
@@ -334,7 +333,7 @@ const Toast = (props: ToastProps) => {
         const swipeAmountY = Number(
           toastRef.current?.style.getPropertyValue('--swipe-amount-y')?.replace('px', '') ?? 0,
         )
-        const timeTaken = new Date().getTime() - (dragStartTime.current?.getTime() ?? 0)
+        const timeTaken = Date.now() - (dragStartTime.current?.getTime() ?? 0)
 
         const swipeAmount = swipeDirection === 'x' ? swipeAmountX : swipeAmountY
         const velocity = Math.abs(swipeAmount) / timeTaken
@@ -648,7 +647,7 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
     theme !== 'system'
       ? theme
       : typeof window !== 'undefined'
-        ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? window.matchMedia?.('(prefers-color-scheme: dark)').matches
           ? 'dark'
           : 'light'
         : 'light',
@@ -700,7 +699,7 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
         })
       })
     })
-  }, [toasts])
+  }, [])
 
   React.useEffect(() => {
     if (theme !== 'system') {
@@ -710,7 +709,7 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
 
     if (theme === 'system') {
       // check if current preference is dark
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
         // it's currently dark
         setActualTheme('dark')
       } else {
@@ -731,7 +730,7 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
           setActualTheme('light')
         }
       })
-    } catch (error) {
+    } catch (_error) {
       // Safari < 14
       darkMediaQuery.addListener(({ matches }) => {
         try {
@@ -785,7 +784,7 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
         }
       }
     }
-  }, [listRef.current])
+  }, [])
 
   return (
     // Remove item from normal navigation flow, only available via hotkey
@@ -886,8 +885,8 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
                   actionButtonStyle={toastOptions?.actionButtonStyle}
                   closeButtonAriaLabel={toastOptions?.closeButtonAriaLabel}
                   removeToast={removeToast}
-                  toasts={filteredToasts.filter((t) => t.position == toast.position)}
-                  heights={heights.filter((h) => h.position == toast.position)}
+                  toasts={filteredToasts.filter((t) => t.position === toast.position)}
+                  heights={heights.filter((h) => h.position === toast.position)}
                   setHeights={setHeights}
                   expandByDefault={expand ?? false}
                   gap={gap}

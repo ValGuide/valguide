@@ -1,6 +1,6 @@
 {
-  "id": "e64ddd7e-2622-4d64-8543-0da0a7b5a0d2",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "e6b9a982-6c73-4265-a299-fd4733a7aee4",
+  "prevId": "3f653bbd-475d-48af-8533-fccb11dc0354",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1046,7 +1046,7 @@
           "name": "title",
           "type": "varchar(500)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "description": {
           "name": "description",
@@ -1182,6 +1182,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "available_locales": {
+          "name": "available_locales",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{\"en\",\"de\",\"rm\"}'"
         },
         "guide_id": {
           "name": "guide_id",
@@ -1397,7 +1404,7 @@
           "name": "title",
           "type": "varchar(500)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "description": {
           "name": "description",

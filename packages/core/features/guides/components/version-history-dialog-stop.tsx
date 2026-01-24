@@ -31,7 +31,7 @@ export type StopVersionHistoryItemRaw = {
   id: string
   translationId: string
   version: number
-  title: string
+  title: string | null
   description: string | null
   createdAt: Date
   createdBy: string | null

@@ -84,7 +84,12 @@ export async function createStop({
 }: {
   guideId: string
   userId: string
-  translations: Array<{ locale: string; title: string; description?: string; transcription?: string }>
+  translations: Array<{
+    locale: string
+    title: string | null | undefined
+    description?: string | null | undefined
+    transcription?: string | null | undefined
+  }>
   position?: number
 }) {
   return await db.transaction(async (tx: typeof db) => {
@@ -166,8 +171,8 @@ const LOCALE_FALLBACK_ORDER = ['en', 'de', 'rm']
 function resolveBestTitle(
   translations: Array<{
     locale: string
-    draftVersion: { title: string } | null
-    currentVersion: { title: string } | null
+    draftVersion: { title: string | null } | null
+    currentVersion: { title: string | null } | null
   }>,
   preferredLocale: string,
 ): string {
@@ -199,11 +204,11 @@ function resolveBestTitle(
 function resolveBestStopTranslation(
   translations: Array<{
     locale: string
-    draftVersion: { title: string; description: string | null } | null
-    currentVersion: { title: string; description: string | null } | null
+    draftVersion: { title: string | null; description: string | null } | null
+    currentVersion: { title: string | null; description: string | null } | null
   }>,
   preferredLocale: string,
-): { title: string; description: string | null; locale: string } {
+): { title: string | null; description: string | null; locale: string } {
   // Try preferred locale first
   const preferred = translations.find((t) => t.locale === preferredLocale)
   if (preferred?.draftVersion?.title) {

@@ -126,8 +126,8 @@ const createGuideInputSchema = z.object({
   translations: z.array(
     z.object({
       locale: z.string(),
-      title: z.string(),
-      description: z.string().optional(),
+      title: z.string().nullable(),
+      description: z.string().nullable(),
     }),
   ),
   organizationId: z.string().optional(),
@@ -167,8 +167,8 @@ export const createGuideFn = createServerFn({ method: 'POST' })
     }
 
     for (const translation of translations) {
-      if (!translation.locale || !translation.title) {
-        throw new Error('Each translation must have a locale and title')
+      if (!translation.locale) {
+        throw new Error('Each translation must have a locale')
       }
 
       if (!(supportedLocales as readonly string[]).includes(translation.locale)) {

@@ -169,7 +169,7 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
       const stopTranslation = localeData?.stopTranslations.find((st) => st.stopId === stopId)
       return stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title ?? t('untitled')
     },
-    [localeData],
+    [localeData, t],
   )
 
   const handleConfirmRemove = React.useCallback(() => {

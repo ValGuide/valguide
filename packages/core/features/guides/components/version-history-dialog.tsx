@@ -31,7 +31,7 @@ export type VersionHistoryItemRaw = {
   id: string
   translationId: string
   version: number
-  title: string
+  title: string | null
   description: string | null
   createdAt: Date
   createdBy: string | null
@@ -106,7 +106,7 @@ export function VersionHistoryDialog({
       setIsLoading(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- t changes on every render, causing infinite loops
-  }, [guideId, locale, onGetHistory])
+  }, [guideId, locale, onGetHistory, t])
 
   useEffect(() => {
     if (isOpen) {

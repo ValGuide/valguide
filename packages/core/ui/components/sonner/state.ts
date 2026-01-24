@@ -35,7 +35,9 @@ class Observer {
   }
 
   publish = (data: ToastT) => {
-    this.subscribers.forEach((subscriber) => subscriber(data))
+    this.subscribers.forEach((subscriber) => {
+      subscriber(data)
+    })
   }
 
   addToast = (data: ToastT) => {
@@ -89,10 +91,16 @@ class Observer {
   dismiss = (id?: number | string) => {
     if (id) {
       this.dismissedToasts.add(id)
-      requestAnimationFrame(() => this.subscribers.forEach((subscriber) => subscriber({ id, dismiss: true })))
+      requestAnimationFrame(() => {
+        this.subscribers.forEach((subscriber) => {
+          subscriber({ id, dismiss: true })
+        })
+      })
     } else {
       this.toasts.forEach((toast) => {
-        this.subscribers.forEach((subscriber) => subscriber({ id: toast.id, dismiss: true }))
+        this.subscribers.forEach((subscriber) => {
+          subscriber({ id: toast.id, dismiss: true })
+        })
       })
     }
 

@@ -106,14 +106,14 @@ export type GuideMetadata = {
 // Translation version content
 export type TranslationVersionContent = {
   id: string
-  title: string
+  title: string | null
   description: string | null
 }
 
 // Stop translation version content (has transcription)
 export type StopTranslationVersionContent = {
   id: string
-  title: string
+  title: string | null
   description: string | null
   transcription: string | null
 }
@@ -177,7 +177,7 @@ export type GuideListItem = {
   /** Resolved cover image URL (ImageKit or public URL) */
   coverImageUrl: string | null
   /** Resolved title from best available translation */
-  displayTitle: string
+  displayTitle: string | null
   /** Resolved description from best available translation */
   displayDescription: string | null
   /** Which locale was used for display (for debugging/UI hints) */
@@ -210,7 +210,7 @@ export type GuideDetailItem = {
   /** Resolved cover image URL (ImageKit or public URL) */
   coverImageUrl: string | null
   /** Resolved title from best available translation */
-  displayTitle: string
+  displayTitle: string | null
   /** Resolved description from best available translation (rich text) */
   displayDescription: string | null
   /** Which locale was used for display */
@@ -302,7 +302,7 @@ export type StopDetailItem = {
   createdAt: Date
   updatedAt: Date
   /** Resolved title from best available translation */
-  displayTitle: string
+  displayTitle: string | null
   /** Resolved description from best available translation */
   displayDescription: string | null
   /** Which locale was used for display */

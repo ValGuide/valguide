@@ -31,14 +31,10 @@ type AppName = keyof typeof VERCEL_APPS
  * Execute a shell command and return output (sync version for listing)
  */
 function execCommand(command: string, silent = false): string {
-  try {
-    return execSync(command, {
-      encoding: 'utf-8',
-      stdio: silent ? 'pipe' : 'inherit',
-    })
-  } catch (error) {
-    throw error
-  }
+  return execSync(command, {
+    encoding: 'utf-8',
+    stdio: silent ? 'pipe' : 'inherit',
+  })
 }
 
 /**
@@ -189,7 +185,7 @@ async function runWithConcurrency<T>(tasks: (() => Promise<T>)[], concurrency: n
       await Promise.race(executing)
       // Remove completed promises
       for (let i = executing.length - 1; i >= 0; i--) {
-        const settled = await Promise.race([executing[i]!.then(() => true), Promise.resolve(false)])
+        const settled = await Promise.race([executing[i]?.then(() => true), Promise.resolve(false)])
         if (settled) {
           executing.splice(i, 1)
         }

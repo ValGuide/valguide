@@ -52,8 +52,8 @@ export function GuidesList({
         translations: [
           {
             locale,
-            title: t('newGuideTitle'),
-            description: t('newGuideDescription'),
+            title: null,
+            description: null,
           },
         ],
       })
@@ -70,7 +70,7 @@ export function GuidesList({
     } finally {
       setIsCreating(false)
     }
-  }, [onCreateGuide, onNavigateToGuide, locale])
+  }, [onCreateGuide, onNavigateToGuide, locale, t])
 
   const renderContent = () => {
     if (isLoading) {

@@ -172,7 +172,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         toast.error(t('guides.locales.updateError'))
       }
     },
-    [guideId, metadata?.organizationId, nanoId, queryClient, activeLocale],
+    [guideId, metadata?.organizationId, nanoId, queryClient, activeLocale, t],
   )
 
   // Form registration
@@ -268,7 +268,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
       toast.error(t('stops.actions.addError'))
       return null
     }
-  }, [guideId, metadata, stops.length, queryClient, nanoId, activeLocale])
+  }, [guideId, metadata, stops.length, queryClient, nanoId, activeLocale, t])
 
   const removeStop = useCallback(
     async (stopId: string) => {
@@ -282,7 +282,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         toast.error(t('stops.actions.removeError'))
       }
     },
-    [guideId, nanoId, queryClient],
+    [guideId, nanoId, queryClient, t],
   )
 
   const reorderStops = useCallback(
@@ -296,7 +296,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         toast.error(t('stops.actions.reorderError'))
       }
     },
-    [nanoId, queryClient],
+    [nanoId, queryClient, t],
   )
 
   // Asset operations (in-memory, saved on save())
@@ -455,6 +455,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     guideAssets,
     stopAssetsMap,
     nanoId,
+    t,
   ])
 
   // Publish
@@ -487,7 +488,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guideId, metadata, nanoId, queryClient, save, stops])
+  }, [guideId, metadata, nanoId, queryClient, save, stops, t])
 
   // Refetch
   const refetch = useCallback(async () => {

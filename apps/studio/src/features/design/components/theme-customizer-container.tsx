@@ -86,7 +86,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
         setIsSaving(false)
       }
     },
-    [customizer, createTheme, updateTheme],
+    [customizer, createTheme, updateTheme, t],
   )
 
   const handleDelete = useCallback(async () => {
@@ -110,7 +110,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
     } finally {
       setIsDeleting(false)
     }
-  }, [themeToDelete, deleteTheme, customizer])
+  }, [themeToDelete, deleteTheme, customizer, t])
 
   const currentThemeLabel =
     customizer.config.name ??
