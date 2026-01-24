@@ -239,8 +239,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
           position: stops.length,
           translations: [
             {
-              locale: 'en',
-              title: 'New Stop',
+              locale: activeLocale,
+              title: t('stops.newStopTitle'),
               description: '',
               transcription: '',
             },
@@ -268,7 +268,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
       toast.error(t('stops.actions.addError'))
       return null
     }
-  }, [guideId, metadata, stops.length, queryClient, nanoId])
+  }, [guideId, metadata, stops.length, queryClient, nanoId, activeLocale])
 
   const removeStop = useCallback(
     async (stopId: string) => {

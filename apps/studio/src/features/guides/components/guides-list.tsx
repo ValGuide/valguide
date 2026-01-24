@@ -1,6 +1,6 @@
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import type { GuideListItem } from '@valguide/core/features/guides/types'
-import { useTranslations } from '@valguide/core/i18n/client'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import { Plus } from 'lucide-react'
@@ -35,6 +35,7 @@ export function GuidesList({
   onRetry,
 }: GuidesListProps) {
   const t = useTranslations('guides')
+  const locale = useLocale()
   const [isCreating, setIsCreating] = React.useState(false)
 
   const handleCreateGuide = React.useCallback(async () => {
@@ -46,23 +47,13 @@ export function GuidesList({
     try {
       setIsCreating(true)
 
-      // Create a new guide with default translations in all supported languages
+      // Create a new guide with translation in the current studio language
       const newGuide = await onCreateGuide({
         translations: [
           {
-            locale: 'en',
-            title: 'New Guide',
-            description: 'Start creating your guide content',
-          },
-          {
-            locale: 'de',
-            title: 'Neuer Guide',
-            description: 'Beginnen Sie mit der Erstellung Ihres Guide-Inhalts',
-          },
-          {
-            locale: 'rm',
-            title: 'Nova Guida',
-            description: 'Cumenzai a crear il cuntegn da tia guida',
+            locale,
+            title: t('newGuideTitle'),
+            description: t('newGuideDescription'),
           },
         ],
       })
@@ -79,7 +70,7 @@ export function GuidesList({
     } finally {
       setIsCreating(false)
     }
-  }, [onCreateGuide, onNavigateToGuide])
+  }, [onCreateGuide, onNavigateToGuide, locale])
 
   const renderContent = () => {
     if (isLoading) {

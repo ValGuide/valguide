@@ -577,6 +577,7 @@
     "edit": "Bearbeiten",
     "untitled": "Unbenannter Stop",
     "unknownTitle": "Unbekannt",
+    "newStopTitle": "Neuer Stop",
     "backToStops": "Zurück zu Stops",
     "stopNumber": "Station {number}",
     "stopTitle": "{number}: {title}",
