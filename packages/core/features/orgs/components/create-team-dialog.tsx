@@ -64,7 +64,7 @@ export function CreateTeamDialog({
       window.location.href = '/'
       handleOpenChange(false)
     } catch (err) {
-      console.error(err)
+      console.error('Error creating team:', err)
       toast.error(t('error'))
     } finally {
       setIsSubmitting(false)

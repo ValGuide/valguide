@@ -50,7 +50,7 @@ export function AppSidebarContainer() {
         window.location.reload()
       }
     } catch (error) {
-      console.error(error)
+      console.error('Error switching team:', error)
       toast.error(t('error'))
     }
   }

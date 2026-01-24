@@ -45,7 +45,7 @@ export function TeamMembersClient({
       toast.success(tInvite('success'))
       onAction?.()
     } catch (error) {
-      console.error(error)
+      console.error('Error inviting member:', error)
       toast.error(tInvite('inviteError'))
       throw error
     }
@@ -56,7 +56,7 @@ export function TeamMembersClient({
       await removeMemberFn({ data: { memberId, teamId: team.id } })
       onAction?.()
     } catch (error) {
-      console.error(error)
+      console.error('Error removing member:', error)
       toast.error(t('removeError'))
     }
   }
@@ -69,7 +69,7 @@ export function TeamMembersClient({
       toast.success(t('roleUpdateSuccess'))
       onAction?.()
     } catch (error) {
-      console.error(error)
+      console.error('Error updating member role:', error)
       toast.error(t('roleUpdateError'))
     }
   }
@@ -80,7 +80,7 @@ export function TeamMembersClient({
       toast.success(tPending('resendSuccess'))
       onAction?.()
     } catch (error) {
-      console.error(error)
+      console.error('Error resending invite:', error)
       toast.error(tPending('resendError'))
     }
   }
@@ -91,7 +91,7 @@ export function TeamMembersClient({
       toast.success(tPending('cancelSuccess'))
       onAction?.()
     } catch (error) {
-      console.error(error)
+      console.error('Error canceling invite:', error)
       toast.error(tPending('cancelError'))
     }
   }

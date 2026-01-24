@@ -740,7 +740,7 @@ const Toaster = React.forwardRef<HTMLElement, ToasterProps>(function Toaster(pro
             setActualTheme('light')
           }
         } catch (e) {
-          console.error(e)
+          console.error('Error changing theme:', e)
         }
       })
     }
