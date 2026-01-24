@@ -233,6 +233,7 @@ export function StopEditLayout({
                 guideNanoId={guideNanoId}
               />
               <MobileMoreMenu
+                contentType="stop"
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
                 onUnpublish={handleUnpublish}
@@ -377,6 +378,7 @@ export function StopEditLayout({
           <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
             <div className="p-5 space-y-6">
               <EditorActionsPanel
+                contentType="stop"
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
                 isDirty={isDirty}

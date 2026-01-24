@@ -8,6 +8,7 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
+import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
 interface StopEditViewProps {
   stopId: string
@@ -41,6 +42,8 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
   } = useGuideEditor()
 
   const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
+
+  const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   // Get stop metadata (has both id and nanoId)
   const stopMetadata = useMemo(() => {
@@ -98,8 +101,8 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
   }, [formId, registerFormReset, unregisterForm])
 
   const handleBackToGuide = useCallback(() => {
-    router.navigate({ to: '/guides/$nanoId/edit', params: { nanoId }, search: localeSearch })
-  }, [router, nanoId, localeSearch])
+    confirmIfDirty(() => router.navigate({ to: '/guides/$nanoId/edit', params: { nanoId }, search: localeSearch }))
+  }, [router, nanoId, localeSearch, confirmIfDirty])
 
   const breadcrumbContent = (
     <Button variant="ghost" size="sm" onClick={handleBackToGuide} className="-ml-2">
@@ -113,55 +116,58 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
   }
 
   return (
-    <StopEditLayout
-      stopId={stopMetadata.id}
-      guideNanoId={nanoId}
-      stopTranslation={stopTranslation ?? null}
-      stopAssets={stopAssets}
-      activeLocale={activeLocale}
-      isDirty={isDirty}
-      isSaving={isSaving}
-      draftStopTitle={draftStopTitle}
-      publishedStopTitle={publishedStopTitle}
-      locales={availableLocales}
-      onLocaleChange={setActiveLocale}
-      onDirtyChange={handleDirtyChange}
-      onSave={save}
-      onRefetch={refetch}
-      stopEditorRef={stopEditorRef}
-      breadcrumbContent={breadcrumbContent}
-      MediaPicker={MediaPicker}
-      onPublish={onPublish}
-      onUnpublish={onUnpublish}
-      onDiscard={onDiscard}
-      lastSaved={lastSaved}
-      onImageChange={(assets) => {
-        // Replace all media assets (images/videos) with the new list
-        // Keep audio assets unchanged
-        const audioAssets = stopAssets.filter((a) => a.role === 'audio')
-        const newMediaAssets = assets.map((asset, index) => ({
-          ...asset,
-          role: asset.type?.startsWith('video/') ? 'video' : 'image',
-          order: index,
-          locale: null,
-        }))
-        updateStopAssets(stopMetadata.id, [...newMediaAssets, ...audioAssets])
-      }}
-      onAudioChange={(asset) => {
-        // Update audio for current locale
-        const nonAudioAssets = stopAssets.filter((a) => a.role !== 'audio' || a.locale !== activeLocale)
-        if (asset) {
-          const audioAsset = {
+    <>
+      {unsavedChangesDialog}
+      <StopEditLayout
+        stopId={stopMetadata.id}
+        guideNanoId={nanoId}
+        stopTranslation={stopTranslation ?? null}
+        stopAssets={stopAssets}
+        activeLocale={activeLocale}
+        isDirty={isDirty}
+        isSaving={isSaving}
+        draftStopTitle={draftStopTitle}
+        publishedStopTitle={publishedStopTitle}
+        locales={availableLocales}
+        onLocaleChange={setActiveLocale}
+        onDirtyChange={handleDirtyChange}
+        onSave={save}
+        onRefetch={refetch}
+        stopEditorRef={stopEditorRef}
+        breadcrumbContent={breadcrumbContent}
+        MediaPicker={MediaPicker}
+        onPublish={onPublish}
+        onUnpublish={onUnpublish}
+        onDiscard={onDiscard}
+        lastSaved={lastSaved}
+        onImageChange={(assets) => {
+          // Replace all media assets (images/videos) with the new list
+          // Keep audio assets unchanged
+          const audioAssets = stopAssets.filter((a) => a.role === 'audio')
+          const newMediaAssets = assets.map((asset, index) => ({
             ...asset,
-            role: 'audio',
-            order: nonAudioAssets.length,
-            locale: activeLocale,
+            role: asset.type?.startsWith('video/') ? 'video' : 'image',
+            order: index,
+            locale: null,
+          }))
+          updateStopAssets(stopMetadata.id, [...newMediaAssets, ...audioAssets])
+        }}
+        onAudioChange={(asset) => {
+          // Update audio for current locale
+          const nonAudioAssets = stopAssets.filter((a) => a.role !== 'audio' || a.locale !== activeLocale)
+          if (asset) {
+            const audioAsset = {
+              ...asset,
+              role: 'audio',
+              order: nonAudioAssets.length,
+              locale: activeLocale,
+            }
+            updateStopAssets(stopMetadata.id, [...nonAudioAssets, audioAsset])
+          } else {
+            updateStopAssets(stopMetadata.id, nonAudioAssets)
           }
-          updateStopAssets(stopMetadata.id, [...nonAudioAssets, audioAsset])
-        } else {
-          updateStopAssets(stopMetadata.id, nonAudioAssets)
-        }
-      }}
-    />
+        }}
+      />
+    </>
   )
 }

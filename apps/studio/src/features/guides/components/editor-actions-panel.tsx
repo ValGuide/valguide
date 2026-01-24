@@ -21,6 +21,7 @@ import { History, MoreHorizontal, Trash2, Upload, X } from 'lucide-react'
 import { useState } from 'react'
 
 export interface EditorActionsPanelProps {
+  contentType: 'guide' | 'stop'
   hasDraft: boolean
   hasPublished: boolean
   isDirty: boolean
@@ -35,6 +36,7 @@ export interface EditorActionsPanelProps {
 }
 
 export function EditorActionsPanel({
+  contentType,
   hasDraft,
   hasPublished,
   isDirty,
@@ -49,7 +51,9 @@ export function EditorActionsPanel({
 }: EditorActionsPanelProps) {
   const t = useTranslations('guides.actions')
   const tDiscard = useTranslations('guides.confirmDiscard')
-  const tUnpublish = useTranslations('guides.confirmUnpublish')
+  const tUnpublishGuide = useTranslations('guides.confirmUnpublishGuide')
+  const tUnpublishStop = useTranslations('guides.confirmUnpublishStop')
+  const tUnpublish = contentType === 'guide' ? tUnpublishGuide : tUnpublishStop
 
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
   const [unpublishDialogOpen, setUnpublishDialogOpen] = useState(false)

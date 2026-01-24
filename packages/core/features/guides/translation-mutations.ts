@@ -492,6 +492,30 @@ export async function unpublishGuideTranslation(
   }
 
   await db.transaction(async (tx: typeof db) => {
+    // If no draft exists, create one from the published version's content
+    // This ensures users have editable content after unpublishing
+    let newDraftId: string | null = null
+    if (!currentTranslation.draftVersionId && currentTranslation.currentVersionId) {
+      const [publishedVersion] = await tx
+        .select()
+        .from(guideTranslationVersion)
+        .where(eq(guideTranslationVersion.id, currentTranslation.currentVersionId))
+
+      if (publishedVersion) {
+        const [newDraft] = await tx
+          .insert(guideTranslationVersion)
+          .values({
+            translationId: currentTranslation.id,
+            title: publishedVersion.title,
+            description: publishedVersion.description,
+            version: publishedVersion.version + 1,
+            status: 'draft',
+          })
+          .returning()
+        newDraftId = newDraft?.id ?? null
+      }
+    }
+
     // Archive the published version
     if (currentTranslation.currentVersionId) {
       await tx
@@ -500,11 +524,12 @@ export async function unpublishGuideTranslation(
         .where(eq(guideTranslationVersion.id, currentTranslation.currentVersionId))
     }
 
-    // Clear the current version pointer
+    // Clear the current version pointer, set draft if created
     await tx
       .update(guideTranslation)
       .set({
         currentVersionId: null,
+        ...(newDraftId ? { draftVersionId: newDraftId } : {}),
       })
       .where(eq(guideTranslation.id, currentTranslation.id))
   })
@@ -537,6 +562,30 @@ export async function unpublishStopTranslation(
   }
 
   await db.transaction(async (tx: typeof db) => {
+    // If no draft exists, create one from the published version's content
+    // This ensures users have editable content after unpublishing
+    let newDraftId: string | null = null
+    if (!currentTranslation.draftVersionId && currentTranslation.currentVersionId) {
+      const [publishedVersion] = await tx
+        .select()
+        .from(stopTranslationVersion)
+        .where(eq(stopTranslationVersion.id, currentTranslation.currentVersionId))
+
+      if (publishedVersion) {
+        const [newDraft] = await tx
+          .insert(stopTranslationVersion)
+          .values({
+            translationId: currentTranslation.id,
+            title: publishedVersion.title,
+            description: publishedVersion.description,
+            version: publishedVersion.version + 1,
+            status: 'draft',
+          })
+          .returning()
+        newDraftId = newDraft?.id ?? null
+      }
+    }
+
     // Archive the published version
     if (currentTranslation.currentVersionId) {
       await tx
@@ -545,11 +594,12 @@ export async function unpublishStopTranslation(
         .where(eq(stopTranslationVersion.id, currentTranslation.currentVersionId))
     }
 
-    // Clear the current version pointer
+    // Clear the current version pointer, set draft if created
     await tx
       .update(stopTranslation)
       .set({
         currentVersionId: null,
+        ...(newDraftId ? { draftVersionId: newDraftId } : {}),
       })
       .where(eq(stopTranslation.id, currentTranslation.id))
   })

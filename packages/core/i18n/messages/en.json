@@ -497,11 +497,17 @@
       "confirm": "Discard",
       "cancel": "Cancel"
     },
-    "confirmUnpublish": {
-      "title": "Unpublish content?",
-      "description": "This will remove the content from the public site. You can republish anytime.",
-      "confirm": "Unpublish",
-      "cancel": "Cancel"
+    "confirmUnpublishGuide": {
+      "title": "Unpublish this translation?",
+      "description": "Visitors will no longer see this language version of the guide. The guide remains available in other languages. Nothing is deleted—you can republish anytime.",
+      "confirm": "Unpublish translation",
+      "cancel": "Keep published"
+    },
+    "confirmUnpublishStop": {
+      "title": "Unpublish this translation?",
+      "description": "Visitors will no longer see this language version of the stop. The stop remains available in other languages. Nothing is deleted—you can republish anytime.",
+      "confirm": "Unpublish translation",
+      "cancel": "Keep published"
     },
     "untitledGuide": "Untitled Guide",
     "unknownTitle": "Unknown",

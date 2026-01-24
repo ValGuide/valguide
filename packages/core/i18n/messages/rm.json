@@ -497,11 +497,17 @@
       "confirm": "Sbittar",
       "cancel": "Interrumper"
     },
-    "confirmUnpublish": {
-      "title": "Retrar il cuntegn?",
-      "description": "Quai allontanescha il cuntegn da la pagina publica. Ti pos publitgar danovamain da tut temp.",
-      "confirm": "Retrar",
-      "cancel": "Interrumper"
+    "confirmUnpublishGuide": {
+      "title": "Retrar questa translaziun?",
+      "description": "Visitaders na vesan betg pli questa versiun linguistica dal guid. Il guid resta disponibel en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
+      "confirm": "Retrar translaziun",
+      "cancel": "Laschar publitgà"
+    },
+    "confirmUnpublishStop": {
+      "title": "Retrar questa translaziun?",
+      "description": "Visitaders na vesan betg pli questa versiun linguistica dal stop. Il stop resta disponibel en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
+      "confirm": "Retrar translaziun",
+      "cancel": "Laschar publitgà"
     },
     "untitledGuide": "Guid senza num",
     "unknownTitle": "Nunenconuschent",

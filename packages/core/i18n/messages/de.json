@@ -497,11 +497,17 @@
       "confirm": "Verwerfen",
       "cancel": "Abbrechen"
     },
-    "confirmUnpublish": {
-      "title": "Inhalt zurückziehen?",
-      "description": "Dies entfernt den Inhalt von der öffentlichen Seite. Du kannst ihn jederzeit erneut veröffentlichen.",
-      "confirm": "Zurückziehen",
-      "cancel": "Abbrechen"
+    "confirmUnpublishGuide": {
+      "title": "Diese Übersetzung zurückziehen?",
+      "description": "Besucher sehen diese Sprachversion des Guides nicht mehr. Der Guide bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
+      "confirm": "Übersetzung zurückziehen",
+      "cancel": "Veröffentlicht lassen"
+    },
+    "confirmUnpublishStop": {
+      "title": "Diese Übersetzung zurückziehen?",
+      "description": "Besucher sehen diese Sprachversion des Stops nicht mehr. Der Stop bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
+      "confirm": "Übersetzung zurückziehen",
+      "cancel": "Veröffentlicht lassen"
     },
     "untitledGuide": "Unbenannter Guide",
     "unknownTitle": "Unbekannt",

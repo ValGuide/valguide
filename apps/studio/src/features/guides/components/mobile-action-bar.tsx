@@ -21,6 +21,7 @@ import { History, MoreHorizontal, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
 
 export interface MobileMoreMenuProps {
+  contentType: 'guide' | 'stop'
   hasDraft: boolean
   hasPublished: boolean
   onUnpublish: () => void
@@ -30,6 +31,7 @@ export interface MobileMoreMenuProps {
 
 /** Mobile dropdown menu with secondary actions (unpublish, discard, version history) */
 export function MobileMoreMenu({
+  contentType,
   hasDraft,
   hasPublished,
   onUnpublish,
@@ -38,7 +40,9 @@ export function MobileMoreMenu({
 }: MobileMoreMenuProps) {
   const t = useTranslations('guides.actions')
   const tDiscard = useTranslations('guides.confirmDiscard')
-  const tUnpublish = useTranslations('guides.confirmUnpublish')
+  const tUnpublishGuide = useTranslations('guides.confirmUnpublishGuide')
+  const tUnpublishStop = useTranslations('guides.confirmUnpublishStop')
+  const tUnpublish = contentType === 'guide' ? tUnpublishGuide : tUnpublishStop
 
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
   const [unpublishDialogOpen, setUnpublishDialogOpen] = useState(false)
@@ -204,6 +208,7 @@ export function MobileSavePublish({
 }
 
 export interface MobileActionBarProps {
+  contentType: 'guide' | 'stop'
   hasDraft: boolean
   hasPublished: boolean
   isDirty: boolean
@@ -219,6 +224,7 @@ export interface MobileActionBarProps {
 
 /** Combined mobile action bar (for backwards compatibility) */
 export function MobileActionBar({
+  contentType,
   hasDraft,
   hasPublished,
   isDirty,
@@ -234,6 +240,7 @@ export function MobileActionBar({
   return (
     <>
       <MobileMoreMenu
+        contentType={contentType}
         hasDraft={hasDraft}
         hasPublished={hasPublished}
         onUnpublish={onUnpublish}
