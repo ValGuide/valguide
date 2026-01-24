@@ -1,11 +1,3 @@
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
-import type { Asset } from '@valguide/core/features/assets/types'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
-import { useTranslations } from '@valguide/core/i18n/client'
-import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { Button } from '@valguide/ui/components/button'
-import { ChevronLeft, Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditLayout, type StopTranslationData } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
@@ -13,6 +5,13 @@ import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-chan
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 import { stopLocaleDataQueryOptions, stopMetadataQueryOptions } from '@/features/stops/query-options'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
+import type { Asset } from '@valguide/core/features/assets/types'
+import type { AssetWithRole } from '@valguide/core/features/guides/types'
+import { useTranslations } from '@valguide/core/i18n/client'
+import { Button } from '@valguide/ui/components/button'
+import { ChevronLeft, Loader2 } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 type SearchParams = {
   locale?: string
@@ -22,16 +21,15 @@ export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
     locale: search.locale as string | undefined,
   }),
-  loaderDeps: ({ search }) => ({ locale: search.locale }),
+  loaderDeps: ({ search }) => ({ locale: search.locale! }),
   loader: async ({ params, context, deps }) => {
     const metadata = await context.queryClient.ensureQueryData(stopMetadataQueryOptions(params.nanoId))
 
     if (metadata) {
-      const activeLocale = deps.locale ?? defaultLocale
-      await context.queryClient.ensureQueryData(stopLocaleDataQueryOptions(metadata.id, activeLocale))
+      await context.queryClient.ensureQueryData(stopLocaleDataQueryOptions(metadata.id, deps.locale))
     }
 
-    return { nanoId: params.nanoId }
+    return { nanoId: params.nanoId, locale: deps.locale }
   },
   component: StopEditPage,
   pendingComponent: StopEditSkeleton,
@@ -46,20 +44,10 @@ function StopEditSkeleton() {
 }
 
 function StopEditPage() {
-  const { nanoId } = Route.useLoaderData()
-  const { locale: editorLocale } = Route.useSearch()
-
-  // Ensure locale is always in search params
-  if (!editorLocale) {
-    throw redirect({
-      to: '/stops/$nanoId/edit',
-      params: { nanoId },
-      search: { locale: defaultLocale },
-    })
-  }
+  const { nanoId, locale } = Route.useLoaderData()
 
   return (
-    <StopEditorProvider nanoId={nanoId} initialLocale={editorLocale}>
+    <StopEditorProvider nanoId={nanoId} initialLocale={locale}>
       <StopEditContent />
     </StopEditorProvider>
   )

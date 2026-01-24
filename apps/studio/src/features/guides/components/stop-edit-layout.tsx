@@ -1,7 +1,7 @@
 import type { Asset } from '@valguide/core/features/assets/types'
 import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
 import { getStopTranslationStatusDisplay } from '@valguide/core/features/guides/status-utils'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
+import type { AssetWithRole, StopTranslationVersionContent } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 
 // Type for stop translation from locale data
@@ -10,8 +10,8 @@ export type StopTranslationData = {
   translationId: string
   currentVersionId: string | null
   draftVersionId: string | null
-  currentVersion: { id: string; title: string; description: string | null; transcription: string | null } | null
-  draftVersion: { id: string; title: string; description: string | null; transcription: string | null } | null
+  currentVersion: StopTranslationVersionContent| null
+  draftVersion: StopTranslationVersionContent| null
 }
 
 import { toast } from '@valguide/core/ui/components/sonner/state'

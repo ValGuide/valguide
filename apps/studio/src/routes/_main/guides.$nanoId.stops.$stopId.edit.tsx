@@ -1,10 +1,3 @@
-import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
-import {
-  discardStopTranslationDraftFn,
-  publishStopTranslationDraftFn,
-  unpublishStopTranslationFn,
-} from '@valguide/core/features/guides/server-functions'
-import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleton'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
@@ -12,6 +5,12 @@ import { StopNotFound } from '@/features/guides/components/stop-not-found'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { guideMetadataQueryOptions } from '@/features/guides/query-options'
+import { createFileRoute, notFound } from '@tanstack/react-router'
+import {
+  discardStopTranslationDraftFn,
+  publishStopTranslationDraftFn,
+  unpublishStopTranslationFn,
+} from '@valguide/core/features/guides/server-functions'
 
 type SearchParams = {
   locale?: string
@@ -38,19 +37,10 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
 
 function GuideStopEditPage() {
   const { nanoId, stopId } = Route.useLoaderData()
-  const { locale: editorLocale } = Route.useSearch()
-
-  // Ensure locale is always in search params
-  if (!editorLocale) {
-    throw redirect({
-      to: '/guides/$nanoId/stops/$stopId/edit',
-      params: { nanoId, stopId },
-      search: { locale: defaultLocale },
-    })
-  }
+  const { locale } = Route.useSearch()
 
   return (
-    <GuideEditorProvider nanoId={nanoId} initialLocale={editorLocale}>
+    <GuideEditorProvider nanoId={nanoId} initialLocale={locale!}>
       <StopEditContent stopId={stopId} />
     </GuideEditorProvider>
   )

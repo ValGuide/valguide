@@ -1,4 +1,10 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
+import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
+import { GuideEditView } from '@/features/guides/components/guide-edit-view'
+import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
+import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
+import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '@/features/guides/query-options'
+import { createFileRoute } from '@tanstack/react-router'
 import {
   discardGuideTranslationDraftFn,
   hideStopFn,
@@ -6,13 +12,6 @@ import {
   showStopFn,
   unpublishGuideTranslationFn,
 } from '@valguide/core/features/guides/server-functions'
-import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
-import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
-import { GuideEditView } from '@/features/guides/components/guide-edit-view'
-import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
-import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
-import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '@/features/guides/query-options'
 
 type SearchParams = {
   stop?: string
@@ -24,13 +23,12 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
     stop: search.stop as string | undefined,
     locale: search.locale as string | undefined,
   }),
-  loaderDeps: ({ search }) => ({ locale: search.locale }),
+  loaderDeps: ({ search }) => ({ locale: search.locale! }),
   loader: async ({ params, context, deps }) => {
     const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
 
     if (metadata) {
-      const activeLocale = deps.locale ?? defaultLocale
-      await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, activeLocale))
+      await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, deps.locale))
     }
 
     return { nanoId: params.nanoId }
@@ -41,27 +39,10 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
 
 function GuideEditPage() {
   const { nanoId } = Route.useLoaderData()
-  const { stop: stopId, locale: editorLocale } = Route.useSearch()
-
-  // Ensure locale is always in search params
-  if (!editorLocale) {
-    throw redirect({
-      to: '/guides/$nanoId/edit',
-      params: { nanoId },
-      search: { locale: defaultLocale },
-    })
-  }
-
-  if (stopId) {
-    throw redirect({
-      to: '/guides/$nanoId/stops/$stopId/edit',
-      params: { nanoId, stopId },
-      search: { locale: editorLocale },
-    })
-  }
+  const { locale } = Route.useSearch()
 
   return (
-    <GuideEditorProvider nanoId={nanoId} initialLocale={editorLocale}>
+    <GuideEditorProvider nanoId={nanoId} initialLocale={locale!}>
       <GuideEditContent />
     </GuideEditorProvider>
   )
