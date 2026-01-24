@@ -49,10 +49,17 @@ export async function getDraftGuideTranslation(
   return result[0]?.version || null
 }
 
+export type TranslationHistoryResult = {
+  versions: GuideTranslationVersion[]
+  currentVersionId: string | null
+  draftVersionId: string | null
+}
+
 /**
  * Get all translation versions for a guide locale (for history view)
+ * Includes pointer IDs so UI can derive display status
  */
-export async function getGuideTranslationHistory(guideId: string, locale: string): Promise<GuideTranslationVersion[]> {
+export async function getGuideTranslationHistory(guideId: string, locale: string): Promise<TranslationHistoryResult> {
   const translation = await db
     .select()
     .from(guideTranslation)
@@ -60,7 +67,7 @@ export async function getGuideTranslationHistory(guideId: string, locale: string
     .limit(1)
 
   if (!translation[0]) {
-    return []
+    return { versions: [], currentVersionId: null, draftVersionId: null }
   }
 
   const versions = await db
@@ -69,7 +76,11 @@ export async function getGuideTranslationHistory(guideId: string, locale: string
     .where(eq(guideTranslationVersion.translationId, translation[0].id))
     .orderBy(desc(guideTranslationVersion.version))
 
-  return versions
+  return {
+    versions,
+    currentVersionId: translation[0].currentVersionId,
+    draftVersionId: translation[0].draftVersionId,
+  }
 }
 
 /**
@@ -143,10 +154,17 @@ export async function getDraftStopTranslation(stopId: string, locale: string): P
   return result[0]?.version || null
 }
 
+export type StopTranslationHistoryResult = {
+  versions: StopTranslationVersion[]
+  currentVersionId: string | null
+  draftVersionId: string | null
+}
+
 /**
  * Get all translation versions for a stop locale (for history view)
+ * Includes pointer IDs so UI can derive display status
  */
-export async function getStopTranslationHistory(stopId: string, locale: string): Promise<StopTranslationVersion[]> {
+export async function getStopTranslationHistory(stopId: string, locale: string): Promise<StopTranslationHistoryResult> {
   const translation = await db
     .select()
     .from(stopTranslation)
@@ -154,7 +172,7 @@ export async function getStopTranslationHistory(stopId: string, locale: string):
     .limit(1)
 
   if (!translation[0]) {
-    return []
+    return { versions: [], currentVersionId: null, draftVersionId: null }
   }
 
   const versions = await db
@@ -163,7 +181,11 @@ export async function getStopTranslationHistory(stopId: string, locale: string):
     .where(eq(stopTranslationVersion.translationId, translation[0].id))
     .orderBy(desc(stopTranslationVersion.version))
 
-  return versions
+  return {
+    versions,
+    currentVersionId: translation[0].currentVersionId,
+    draftVersionId: translation[0].draftVersionId,
+  }
 }
 
 /**

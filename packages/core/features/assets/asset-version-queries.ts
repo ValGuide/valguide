@@ -1,6 +1,5 @@
 import { db } from '@valguide/core/features/db'
 import { asc, eq } from 'drizzle-orm'
-import { guide, stop } from '../guides/schema'
 import { type Asset, guideAsset, guideAssetVersion, stopAsset, stopAssetVersion } from './schema'
 
 export type AssetVersionItem = {
@@ -17,31 +16,30 @@ export type AssetVersionItem = {
 // ============================================================================
 
 /**
- * Get guide assets for a specific version (draft or published)
- * If version is 'draft' and no draft exists, falls back to published
+ * Get guide assets for a specific version (draft or published).
+ * If version is 'draft' and no draft exists, falls back to published.
  */
 export async function getGuideAssetsByVersion(
   guideId: string,
   version: 'draft' | 'published',
 ): Promise<AssetVersionItem[]> {
-  const guideData = await db.query.guide.findFirst({
-    where: eq(guide.id, guideId),
-    columns: { currentAssetVersionId: true, draftAssetVersionId: true },
+  const guideAssetRecord = await db.query.guideAsset.findFirst({
+    where: eq(guideAsset.guideId, guideId),
   })
 
-  if (!guideData) return []
+  if (!guideAssetRecord) return []
 
-  // For draft, use draftAssetVersionId, fall back to currentAssetVersionId
-  // For published, only use currentAssetVersionId
+  // For draft, use draftVersionId, fall back to currentVersionId
+  // For published, only use currentVersionId
   const versionId =
     version === 'draft'
-      ? (guideData.draftAssetVersionId ?? guideData.currentAssetVersionId)
-      : guideData.currentAssetVersionId
+      ? (guideAssetRecord.draftVersionId ?? guideAssetRecord.currentVersionId)
+      : guideAssetRecord.currentVersionId
 
   if (!versionId) return []
 
   const items = await db.query.guideAssetVersion.findMany({
-    where: eq(guideAssetVersion.guideAssetId, versionId),
+    where: eq(guideAssetVersion.versionId, versionId),
     with: { asset: true },
     orderBy: [asc(guideAssetVersion.order)],
   })
@@ -57,53 +55,36 @@ export async function getGuideAssetsByVersion(
 }
 
 /**
- * Check if guide has asset changes (draft differs from published)
+ * Check if guide has asset changes (draft differs from published).
  */
 export async function hasGuideAssetChanges(guideId: string): Promise<boolean> {
-  const guideData = await db.query.guide.findFirst({
-    where: eq(guide.id, guideId),
-    columns: { currentAssetVersionId: true, draftAssetVersionId: true },
+  const guideAssetRecord = await db.query.guideAsset.findFirst({
+    where: eq(guideAsset.guideId, guideId),
   })
 
   // Has draft that's different from published
-  return !!guideData?.draftAssetVersionId
+  return !!guideAssetRecord?.draftVersionId
 }
 
 /**
- * Get guide asset version info (for status display)
+ * Get guide asset version info (for status display).
  */
 export async function getGuideAssetVersionInfo(guideId: string): Promise<{
-  currentAssetVersionId: string | null
-  draftAssetVersionId: string | null
+  currentVersionId: string | null
+  draftVersionId: string | null
   hasDraft: boolean
   hasPublished: boolean
 }> {
-  const guideData = await db.query.guide.findFirst({
-    where: eq(guide.id, guideId),
-    columns: { currentAssetVersionId: true, draftAssetVersionId: true },
+  const guideAssetRecord = await db.query.guideAsset.findFirst({
+    where: eq(guideAsset.guideId, guideId),
   })
 
   return {
-    currentAssetVersionId: guideData?.currentAssetVersionId ?? null,
-    draftAssetVersionId: guideData?.draftAssetVersionId ?? null,
-    hasDraft: !!guideData?.draftAssetVersionId,
-    hasPublished: !!guideData?.currentAssetVersionId,
+    currentVersionId: guideAssetRecord?.currentVersionId ?? null,
+    draftVersionId: guideAssetRecord?.draftVersionId ?? null,
+    hasDraft: !!guideAssetRecord?.draftVersionId,
+    hasPublished: !!guideAssetRecord?.currentVersionId,
   }
-}
-
-/**
- * Get guide asset version with full details
- */
-export async function getGuideAssetVersion(versionId: string) {
-  return db.query.guideAsset.findFirst({
-    where: eq(guideAsset.id, versionId),
-    with: {
-      versions: {
-        with: { asset: true },
-        orderBy: [asc(guideAssetVersion.order)],
-      },
-    },
-  })
 }
 
 // ============================================================================
@@ -111,29 +92,28 @@ export async function getGuideAssetVersion(versionId: string) {
 // ============================================================================
 
 /**
- * Get stop assets for a specific version (draft or published)
- * If version is 'draft' and no draft exists, falls back to published
+ * Get stop assets for a specific version (draft or published).
+ * If version is 'draft' and no draft exists, falls back to published.
  */
 export async function getStopAssetsByVersion(
   stopId: string,
   version: 'draft' | 'published',
 ): Promise<AssetVersionItem[]> {
-  const stopData = await db.query.stop.findFirst({
-    where: eq(stop.id, stopId),
-    columns: { currentAssetVersionId: true, draftAssetVersionId: true },
+  const stopAssetRecord = await db.query.stopAsset.findFirst({
+    where: eq(stopAsset.stopId, stopId),
   })
 
-  if (!stopData) return []
+  if (!stopAssetRecord) return []
 
   const versionId =
     version === 'draft'
-      ? (stopData.draftAssetVersionId ?? stopData.currentAssetVersionId)
-      : stopData.currentAssetVersionId
+      ? (stopAssetRecord.draftVersionId ?? stopAssetRecord.currentVersionId)
+      : stopAssetRecord.currentVersionId
 
   if (!versionId) return []
 
   const items = await db.query.stopAssetVersion.findMany({
-    where: eq(stopAssetVersion.stopAssetId, versionId),
+    where: eq(stopAssetVersion.versionId, versionId),
     with: { asset: true },
     orderBy: [asc(stopAssetVersion.order)],
   })
@@ -149,50 +129,33 @@ export async function getStopAssetsByVersion(
 }
 
 /**
- * Check if stop has asset changes (draft differs from published)
+ * Check if stop has asset changes (draft differs from published).
  */
 export async function hasStopAssetChanges(stopId: string): Promise<boolean> {
-  const stopData = await db.query.stop.findFirst({
-    where: eq(stop.id, stopId),
-    columns: { draftAssetVersionId: true },
+  const stopAssetRecord = await db.query.stopAsset.findFirst({
+    where: eq(stopAsset.stopId, stopId),
   })
 
-  return !!stopData?.draftAssetVersionId
+  return !!stopAssetRecord?.draftVersionId
 }
 
 /**
- * Get stop asset version info (for status display)
+ * Get stop asset version info (for status display).
  */
 export async function getStopAssetVersionInfo(stopId: string): Promise<{
-  currentAssetVersionId: string | null
-  draftAssetVersionId: string | null
+  currentVersionId: string | null
+  draftVersionId: string | null
   hasDraft: boolean
   hasPublished: boolean
 }> {
-  const stopData = await db.query.stop.findFirst({
-    where: eq(stop.id, stopId),
-    columns: { currentAssetVersionId: true, draftAssetVersionId: true },
+  const stopAssetRecord = await db.query.stopAsset.findFirst({
+    where: eq(stopAsset.stopId, stopId),
   })
 
   return {
-    currentAssetVersionId: stopData?.currentAssetVersionId ?? null,
-    draftAssetVersionId: stopData?.draftAssetVersionId ?? null,
-    hasDraft: !!stopData?.draftAssetVersionId,
-    hasPublished: !!stopData?.currentAssetVersionId,
+    currentVersionId: stopAssetRecord?.currentVersionId ?? null,
+    draftVersionId: stopAssetRecord?.draftVersionId ?? null,
+    hasDraft: !!stopAssetRecord?.draftVersionId,
+    hasPublished: !!stopAssetRecord?.currentVersionId,
   }
-}
-
-/**
- * Get stop asset version with full details
- */
-export async function getStopAssetVersion(versionId: string) {
-  return db.query.stopAsset.findFirst({
-    where: eq(stopAsset.id, versionId),
-    with: {
-      versions: {
-        with: { asset: true },
-        orderBy: [asc(stopAssetVersion.order)],
-      },
-    },
-  })
 }

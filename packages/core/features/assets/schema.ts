@@ -47,8 +47,14 @@ export const asset = studioSchema.table(
   }),
 )
 
-// Asset versioning tables for draft/published workflow
-// Guide assets with versioning (global, not per-locale)
+// =============================================================================
+// Guide Asset Versioning (matches guideTranslation pattern)
+// =============================================================================
+
+/**
+ * Intermediate table for guide assets (like guideTranslation but without locale).
+ * One row per guide. Points to current published and draft versions.
+ */
 export const guideAsset = studioSchema.table(
   'guide_asset',
   {
@@ -56,17 +62,25 @@ export const guideAsset = studioSchema.table(
     guideId: uuid('guide_id')
       .notNull()
       .references(() => guide.id, { onDelete: 'cascade' }),
-    version: integer('version').notNull(),
+    // Version pointers - UUIDv7 pointing to versionId in guideAssetVersion
+    currentVersionId: uuid('current_version_id'), // Published version
+    draftVersionId: uuid('draft_version_id'), // Active draft for editing
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (t) => ({
+    uniqueGuideAsset: uniqueIndex('unique_guide_asset').on(t.guideId),
     guideIdx: index('guide_asset_guide_idx').on(t.guideId),
-    uniqueVersion: uniqueIndex('unique_guide_asset').on(t.guideId, t.version),
   }),
 )
 
+/**
+ * Version content for guide assets. Multiple rows per version (one per asset item).
+ * All rows in same version share the same versionId (UUIDv7).
+ */
 export const guideAssetVersion = studioSchema.table(
   'guide_asset_version',
   {
@@ -74,19 +88,32 @@ export const guideAssetVersion = studioSchema.table(
     guideAssetId: uuid('guide_asset_id')
       .notNull()
       .references(() => guideAsset.id, { onDelete: 'cascade' }),
+    // UUIDv7 - shared by all items in same version, pointed to by currentVersionId/draftVersionId
+    versionId: uuid('version_id').notNull(),
     assetId: uuid('asset_id')
       .notNull()
       .references(() => asset.id, { onDelete: 'cascade' }),
     order: integer('order').notNull().default(0),
     role: varchar('role', { length: 50 }).notNull(),
     locale: varchar('locale', { length: 10 }), // null = shared across locales
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
   },
   (t) => ({
+    versionIdx: index('guide_asset_version_version_idx').on(t.versionId),
     guideAssetIdx: index('guide_asset_version_guide_asset_idx').on(t.guideAssetId),
   }),
 )
 
-// Stop assets with versioning (global, not per-locale)
+// =============================================================================
+// Stop Asset Versioning (matches stopTranslation pattern)
+// =============================================================================
+
+/**
+ * Intermediate table for stop assets (like stopTranslation but without locale).
+ * One row per stop. Points to current published and draft versions.
+ */
 export const stopAsset = studioSchema.table(
   'stop_asset',
   {
@@ -94,17 +121,25 @@ export const stopAsset = studioSchema.table(
     stopId: uuid('stop_id')
       .notNull()
       .references(() => stop.id, { onDelete: 'cascade' }),
-    version: integer('version').notNull(),
+    // Version pointers - UUIDv7 pointing to versionId in stopAssetVersion
+    currentVersionId: uuid('current_version_id'), // Published version
+    draftVersionId: uuid('draft_version_id'), // Active draft for editing
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (t) => ({
+    uniqueStopAsset: uniqueIndex('unique_stop_asset').on(t.stopId),
     stopIdx: index('stop_asset_stop_idx').on(t.stopId),
-    uniqueVersion: uniqueIndex('unique_stop_asset').on(t.stopId, t.version),
   }),
 )
 
+/**
+ * Version content for stop assets. Multiple rows per version (one per asset item).
+ * All rows in same version share the same versionId (UUIDv7).
+ */
 export const stopAssetVersion = studioSchema.table(
   'stop_asset_version',
   {
@@ -112,19 +147,28 @@ export const stopAssetVersion = studioSchema.table(
     stopAssetId: uuid('stop_asset_id')
       .notNull()
       .references(() => stopAsset.id, { onDelete: 'cascade' }),
+    // UUIDv7 - shared by all items in same version, pointed to by currentVersionId/draftVersionId
+    versionId: uuid('version_id').notNull(),
     assetId: uuid('asset_id')
       .notNull()
       .references(() => asset.id, { onDelete: 'cascade' }),
     order: integer('order').notNull().default(0),
     role: varchar('role', { length: 50 }).notNull(),
     locale: varchar('locale', { length: 10 }), // null = shared across locales
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
   },
   (t) => ({
+    versionIdx: index('stop_asset_version_version_idx').on(t.versionId),
     stopAssetIdx: index('stop_asset_version_stop_asset_idx').on(t.stopAssetId),
   }),
 )
 
+// =============================================================================
 // Relations
+// =============================================================================
+
 export const assetRelations = relations(asset, ({ one }) => ({
   uploader: one(authUsers, {
     fields: [asset.uploadedBy],
@@ -132,17 +176,12 @@ export const assetRelations = relations(asset, ({ one }) => ({
   }),
 }))
 
-// Guide asset relations
 export const guideAssetRelations = relations(guideAsset, ({ one, many }) => ({
   guide: one(guide, {
     fields: [guideAsset.guideId],
     references: [guide.id],
   }),
   versions: many(guideAssetVersion),
-  creator: one(authUsers, {
-    fields: [guideAsset.createdBy],
-    references: [authUsers.id],
-  }),
 }))
 
 export const guideAssetVersionRelations = relations(guideAssetVersion, ({ one }) => ({
@@ -154,19 +193,18 @@ export const guideAssetVersionRelations = relations(guideAssetVersion, ({ one })
     fields: [guideAssetVersion.assetId],
     references: [asset.id],
   }),
+  creator: one(authUsers, {
+    fields: [guideAssetVersion.createdBy],
+    references: [authUsers.id],
+  }),
 }))
 
-// Stop asset relations
 export const stopAssetRelations = relations(stopAsset, ({ one, many }) => ({
   stop: one(stop, {
     fields: [stopAsset.stopId],
     references: [stop.id],
   }),
   versions: many(stopAssetVersion),
-  creator: one(authUsers, {
-    fields: [stopAsset.createdBy],
-    references: [authUsers.id],
-  }),
 }))
 
 export const stopAssetVersionRelations = relations(stopAssetVersion, ({ one }) => ({
@@ -178,19 +216,24 @@ export const stopAssetVersionRelations = relations(stopAssetVersion, ({ one }) =
     fields: [stopAssetVersion.assetId],
     references: [asset.id],
   }),
+  creator: one(authUsers, {
+    fields: [stopAssetVersion.createdBy],
+    references: [authUsers.id],
+  }),
 }))
 
-// TypeScript types
+// =============================================================================
+// TypeScript Types
+// =============================================================================
+
 export type Asset = typeof asset.$inferSelect
 export type NewAsset = typeof asset.$inferInsert
 
-// Guide asset types
 export type GuideAsset = typeof guideAsset.$inferSelect
 export type NewGuideAsset = typeof guideAsset.$inferInsert
 export type GuideAssetVersion = typeof guideAssetVersion.$inferSelect
 export type NewGuideAssetVersion = typeof guideAssetVersion.$inferInsert
 
-// Stop asset types
 export type StopAsset = typeof stopAsset.$inferSelect
 export type NewStopAsset = typeof stopAsset.$inferInsert
 export type StopAssetVersion = typeof stopAssetVersion.$inferSelect

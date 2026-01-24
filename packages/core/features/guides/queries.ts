@@ -1,7 +1,13 @@
 import { type DB, db } from '@valguide/core/features/db'
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
-import { valguideId } from '../../utils/nanoid'
+import { valguideId, valguideVersionId } from '../../utils/nanoid'
 import { getAssetImageUrl } from '../assets/image-url'
+import {
+  getActiveVersionId,
+  getGuideAssetPointers,
+  getPublishedVersionId,
+  getStopAssetPointers,
+} from '../assets/pointer-helpers'
 import { asset, guideAsset, guideAssetVersion, stopAsset, stopAssetVersion } from '../assets/schema'
 import { guide, guideStop, guideTranslation, guideTranslationVersion, stop, stopTranslation } from './schema'
 
@@ -63,14 +69,17 @@ export async function getGuidesByOrganizationId(
 
   if (guides.length === 0) return []
 
-  // Fetch cover images for all guides using versioned asset tables
-  // Prefer draftAssetVersionId for editor context, fallback to currentAssetVersionId
-  const guideAssetIds = guides
-    .map((g) => g.draftAssetVersionId ?? g.currentAssetVersionId)
+  // Get asset pointers from guideAsset table
+  const guideIds = guides.map((g) => g.id)
+  const guideAssetPointers = await getGuideAssetPointers(guideIds, db)
+
+  // Prefer draftVersionId for editor context, fallback to currentVersionId
+  const guideAssetVersionIds = [...guideAssetPointers.entries()]
+    .map(([_, pointer]) => getActiveVersionId(pointer))
     .filter((id): id is string => id != null)
 
   const coverAssets =
-    guideAssetIds.length > 0
+    guideAssetVersionIds.length > 0
       ? await db
           .select({
             guideId: guideAsset.guideId,
@@ -83,7 +92,7 @@ export async function getGuidesByOrganizationId(
           .from(guideAssetVersion)
           .innerJoin(guideAsset, eq(guideAssetVersion.guideAssetId, guideAsset.id))
           .innerJoin(asset, eq(guideAssetVersion.assetId, asset.id))
-          .where(and(inArray(guideAsset.id, guideAssetIds), eq(guideAssetVersion.role, 'cover')))
+          .where(and(inArray(guideAssetVersion.versionId, guideAssetVersionIds), eq(guideAssetVersion.role, 'cover')))
       : []
 
   // Map cover assets by guide ID
@@ -201,8 +210,6 @@ export async function getGuidesListByOrganizationId(
       published: true,
       createdAt: true,
       updatedAt: true,
-      draftAssetVersionId: true,
-      currentAssetVersionId: true,
     },
     with: {
       translations: {
@@ -230,14 +237,17 @@ export async function getGuidesListByOrganizationId(
 
   if (guides.length === 0) return []
 
-  // Fetch cover images for all guides using versioned asset tables
-  // Prefer draftAssetVersionId for editor context, fallback to currentAssetVersionId
-  const guideAssetIds = guides
-    .map((g) => g.draftAssetVersionId ?? g.currentAssetVersionId)
+  // Get asset pointers from guideAsset table
+  const guideIds = guides.map((g) => g.id)
+  const guideAssetPointers = await getGuideAssetPointers(guideIds, db)
+
+  // Prefer draftVersionId for editor context, fallback to currentVersionId
+  const guideAssetVersionIds = [...guideAssetPointers.entries()]
+    .map(([_, pointer]) => getActiveVersionId(pointer))
     .filter((id): id is string => id != null)
 
   const coverAssets =
-    guideAssetIds.length > 0
+    guideAssetVersionIds.length > 0
       ? await db
           .select({
             guideId: guideAsset.guideId,
@@ -250,7 +260,7 @@ export async function getGuidesListByOrganizationId(
           .from(guideAssetVersion)
           .innerJoin(guideAsset, eq(guideAssetVersion.guideAssetId, guideAsset.id))
           .innerJoin(asset, eq(guideAssetVersion.assetId, asset.id))
-          .where(and(inArray(guideAsset.id, guideAssetIds), eq(guideAssetVersion.role, 'cover')))
+          .where(and(inArray(guideAssetVersion.versionId, guideAssetVersionIds), eq(guideAssetVersion.role, 'cover')))
       : []
 
   // Map cover assets by guide ID
@@ -304,8 +314,6 @@ export async function getGuideDetailByNanoId(
       createdAt: true,
       updatedAt: true,
       availableLocales: true,
-      draftAssetVersionId: true,
-      currentAssetVersionId: true,
     },
     with: {
       translations: {
@@ -332,10 +340,13 @@ export async function getGuideDetailByNanoId(
 
   if (!result) return null
 
-  // Fetch only cover image using versioned asset tables
-  // Prefer draftAssetVersionId for editor context, fallback to currentAssetVersionId
-  const guideAssetId = result.draftAssetVersionId ?? result.currentAssetVersionId
-  const coverAssets = guideAssetId
+  // Get asset pointers from guideAsset table
+  const guideAssetPointers = await getGuideAssetPointers([result.id], db)
+  const guideAssetPointer = guideAssetPointers.get(result.id)
+
+  // Prefer draftVersionId for editor context, fallback to currentVersionId
+  const guideAssetVersionId = getActiveVersionId(guideAssetPointer)
+  const coverAssets = guideAssetVersionId
     ? await db
         .select({
           guideAssetId: guideAssetVersion.id,
@@ -347,7 +358,7 @@ export async function getGuideDetailByNanoId(
         .from(guideAssetVersion)
         .innerJoin(guideAsset, eq(guideAssetVersion.guideAssetId, guideAsset.id))
         .innerJoin(asset, eq(guideAssetVersion.assetId, asset.id))
-        .where(and(eq(guideAsset.id, guideAssetId), eq(guideAssetVersion.role, 'cover')))
+        .where(and(eq(guideAssetVersion.versionId, guideAssetVersionId), eq(guideAssetVersion.role, 'cover')))
         .limit(1)
     : []
 
@@ -424,9 +435,9 @@ export async function createGuide(
       const [draftVersion] = await tx
         .insert(guideTranslationVersion)
         .values({
+          versionId: valguideVersionId(),
           translationId: newTranslation.id,
           version: 1,
-          status: 'draft',
           title: t.title,
           description: t.description ?? null,
           createdBy: guideData.createdBy,
@@ -492,13 +503,17 @@ export async function getArchivedGuidesWithCover(
 
   if (guides.length === 0) return []
 
-  // Fetch cover images using versioned asset tables
-  const guideAssetIds = guides
-    .map((g) => g.draftAssetVersionId ?? g.currentAssetVersionId)
+  // Get asset pointers from guideAsset table
+  const guideIds = guides.map((g) => g.id)
+  const guideAssetPointers = await getGuideAssetPointers(guideIds, db)
+
+  // Prefer draftVersionId for editor context, fallback to currentVersionId
+  const guideAssetVersionIds = [...guideAssetPointers.entries()]
+    .map(([_, pointer]) => getActiveVersionId(pointer))
     .filter((id): id is string => id != null)
 
   const coverAssets =
-    guideAssetIds.length > 0
+    guideAssetVersionIds.length > 0
       ? await db
           .select({
             guideId: guideAsset.guideId,
@@ -511,7 +526,7 @@ export async function getArchivedGuidesWithCover(
           .from(guideAssetVersion)
           .innerJoin(guideAsset, eq(guideAssetVersion.guideAssetId, guideAsset.id))
           .innerJoin(asset, eq(guideAssetVersion.assetId, asset.id))
-          .where(and(inArray(guideAsset.id, guideAssetIds), eq(guideAssetVersion.role, 'cover')))
+          .where(and(inArray(guideAssetVersion.versionId, guideAssetVersionIds), eq(guideAssetVersion.role, 'cover')))
       : []
 
   const coverMap = new Map<string, AssetWithRole>()
@@ -559,10 +574,15 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
 
   // Extract stops from guideStops junction
   const stops = result.guideStops.map((gs) => gs.stop)
+  const stopIds = stops.map((s) => s.id)
 
-  // Fetch guide assets using versioned tables (use currentAssetVersionId for published content)
-  const guideAssetId = result.currentAssetVersionId
-  const guideAssets = guideAssetId
+  // Get asset pointers from guideAsset and stopAsset tables
+  const guideAssetPointers = await getGuideAssetPointers([result.id], db)
+  const stopAssetPointers = await getStopAssetPointers(stopIds, db)
+
+  // Fetch guide assets using versioned tables (use currentVersionId for published content)
+  const guideAssetVersionId = getPublishedVersionId(guideAssetPointers.get(result.id))
+  const guideAssets = guideAssetVersionId
     ? await db
         .select({
           guideAssetId: guideAssetVersion.id,
@@ -573,29 +593,17 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
         })
         .from(guideAssetVersion)
         .innerJoin(asset, eq(guideAssetVersion.assetId, asset.id))
-        .where(eq(guideAssetVersion.guideAssetId, guideAssetId))
+        .where(eq(guideAssetVersion.versionId, guideAssetVersionId))
         .orderBy(asc(guideAssetVersion.order))
     : []
 
-  // Fetch all stop assets using versioned tables (use currentAssetVersionId for published content)
-  const stopIds = stops.map((s) => s.id)
-
-  // Get stop asset IDs (currentAssetVersionId for published)
-  const stopAssetPointers =
-    stopIds.length > 0
-      ? await db
-          .select({
-            stopId: stop.id,
-            currentAssetVersionId: stop.currentAssetVersionId,
-          })
-          .from(stop)
-          .where(inArray(stop.id, stopIds))
-      : []
-
-  const stopAssetIds = stopAssetPointers.map((s) => s.currentAssetVersionId).filter((id): id is string => id != null)
+  // Fetch all stop assets using versioned tables (use currentVersionId for published content)
+  const stopAssetVersionIds = [...stopAssetPointers.entries()]
+    .map(([_, pointer]) => getPublishedVersionId(pointer))
+    .filter((id): id is string => id != null)
 
   const stopAssetsData =
-    stopAssetIds.length > 0
+    stopAssetVersionIds.length > 0
       ? await db
           .select({
             stopId: stopAsset.stopId,
@@ -608,7 +616,7 @@ export async function getPublishedGuideByNanoId(db: DB, nanoId: string): Promise
           .from(stopAssetVersion)
           .innerJoin(stopAsset, eq(stopAssetVersion.stopAssetId, stopAsset.id))
           .innerJoin(asset, eq(stopAssetVersion.assetId, asset.id))
-          .where(inArray(stopAsset.id, stopAssetIds))
+          .where(inArray(stopAssetVersion.versionId, stopAssetVersionIds))
           .orderBy(asc(stopAssetVersion.order))
       : []
 
@@ -661,9 +669,12 @@ export async function getStopByNanoId(stopNanoId: string): Promise<StopWithAsset
 
   if (!result) return null
 
-  // Fetch stop assets using versioned tables (use currentAssetVersionId for published content)
-  const stopAssetId = result.currentAssetVersionId
-  const stopAssets = stopAssetId
+  // Get asset pointers from stopAsset table
+  const stopAssetPointers = await getStopAssetPointers([result.id])
+
+  // Fetch stop assets using versioned tables (use currentVersionId for published content)
+  const stopAssetVersionId = getPublishedVersionId(stopAssetPointers.get(result.id))
+  const stopAssets = stopAssetVersionId
     ? await db
         .select({
           stopAssetId: stopAssetVersion.id,
@@ -674,7 +685,7 @@ export async function getStopByNanoId(stopNanoId: string): Promise<StopWithAsset
         })
         .from(stopAssetVersion)
         .innerJoin(asset, eq(stopAssetVersion.assetId, asset.id))
-        .where(eq(stopAssetVersion.stopAssetId, stopAssetId))
+        .where(eq(stopAssetVersion.versionId, stopAssetVersionId))
         .orderBy(asc(stopAssetVersion.order))
     : []
 
@@ -773,10 +784,14 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
 
   if (!result) return null
 
-  // Fetch guide assets using versioned tables
-  // Prefer draftAssetVersionId for editor context, fallback to currentAssetVersionId
-  const guideAssetId = result.draftAssetVersionId ?? result.currentAssetVersionId
-  const guideAssets = guideAssetId
+  // Fetch guide asset intermediate record
+  const guideAssetRecord = await db.query.guideAsset.findFirst({
+    where: eq(guideAsset.guideId, result.id),
+  })
+
+  // Prefer draftVersionId for editor context, fallback to currentVersionId
+  const guideVersionId = guideAssetRecord?.draftVersionId ?? guideAssetRecord?.currentVersionId
+  const guideAssets = guideVersionId
     ? await db
         .select({
           guideAssetId: guideAssetVersion.id,
@@ -787,43 +802,47 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
         })
         .from(guideAssetVersion)
         .innerJoin(asset, eq(guideAssetVersion.assetId, asset.id))
-        .where(eq(guideAssetVersion.guideAssetId, guideAssetId))
+        .where(eq(guideAssetVersion.versionId, guideVersionId))
         .orderBy(asc(guideAssetVersion.order))
     : []
 
   // Fetch all stop assets using versioned tables
   const stopIds = result.guideStops.map((gs) => gs.stop.id)
 
-  // Get stop asset IDs (prefer draftAssetVersionId for editor)
-  const stopPointers =
+  // Get stop asset records (prefer draftVersionId for editor)
+  const stopAssetRecords =
     stopIds.length > 0
-      ? await db
-          .select({
-            stopId: stop.id,
-            draftAssetVersionId: stop.draftAssetVersionId,
-            currentAssetVersionId: stop.currentAssetVersionId,
-          })
-          .from(stop)
-          .where(inArray(stop.id, stopIds))
+      ? await db.query.stopAsset.findMany({
+          where: inArray(stopAsset.stopId, stopIds),
+        })
       : []
 
-  // Build map of stopId to stopAssetId (prefer draft)
-  const stopToAssetMap = new Map<string, string>()
-  for (const s of stopPointers) {
-    const assetId = s.draftAssetVersionId ?? s.currentAssetVersionId
-    if (assetId) {
-      stopToAssetMap.set(s.stopId, assetId)
+  // Build map of stopId to versionId (prefer draft)
+  const stopToVersionMap = new Map<string, string>()
+  const stopAssetVersionPointerMap = new Map<
+    string,
+    { currentVersionId: string | null; draftVersionId: string | null }
+  >()
+  for (const s of stopAssetRecords) {
+    const versionId = s.draftVersionId ?? s.currentVersionId
+    if (versionId) {
+      stopToVersionMap.set(s.stopId, versionId)
     }
+    stopAssetVersionPointerMap.set(s.stopId, {
+      currentVersionId: s.currentVersionId,
+      draftVersionId: s.draftVersionId,
+    })
   }
 
-  const stopAssetIds = [...stopToAssetMap.values()]
+  const stopVersionIds = [...stopToVersionMap.values()]
 
   const stopAssetsData =
-    stopAssetIds.length > 0
+    stopVersionIds.length > 0
       ? await db
           .select({
             stopId: stopAsset.stopId,
             stopAssetId: stopAssetVersion.id,
+            versionId: stopAssetVersion.versionId,
             asset: asset,
             role: stopAssetVersion.role,
             order: stopAssetVersion.order,
@@ -832,7 +851,7 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
           .from(stopAssetVersion)
           .innerJoin(stopAsset, eq(stopAssetVersion.stopAssetId, stopAsset.id))
           .innerJoin(asset, eq(stopAssetVersion.assetId, asset.id))
-          .where(inArray(stopAsset.id, stopAssetIds))
+          .where(inArray(stopAssetVersion.versionId, stopVersionIds))
           .orderBy(asc(stopAssetVersion.order))
       : []
 
@@ -891,30 +910,6 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
     .from(guideTranslation)
     .where(eq(guideTranslation.guideId, result.id))
 
-  // Get stop asset version pointers
-  const stopAssetVersionPointers =
-    stopIds.length > 0
-      ? await db
-          .select({
-            stopId: stop.id,
-            currentAssetVersionId: stop.currentAssetVersionId,
-            draftAssetVersionId: stop.draftAssetVersionId,
-          })
-          .from(stop)
-          .where(inArray(stop.id, stopIds))
-      : []
-
-  const stopAssetVersionMap = new Map<
-    string,
-    { currentAssetVersionId: string | null; draftAssetVersionId: string | null }
-  >()
-  for (const item of stopAssetVersionPointers) {
-    stopAssetVersionMap.set(item.stopId, {
-      currentAssetVersionId: item.currentAssetVersionId,
-      draftAssetVersionId: item.draftAssetVersionId,
-    })
-  }
-
   return {
     id: result.id,
     nanoId: result.nanoId,
@@ -923,8 +918,8 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
     published: result.published,
     createdAt: result.createdAt,
     updatedAt: result.updatedAt,
-    currentAssetVersionId: result.currentAssetVersionId,
-    draftAssetVersionId: result.draftAssetVersionId,
+    currentAssetVersionId: guideAssetRecord?.currentVersionId ?? null,
+    draftAssetVersionId: guideAssetRecord?.draftVersionId ?? null,
     assets: guideAssets.map((item) => ({
       ...item.asset,
       guideAssetId: item.guideAssetId,
@@ -933,7 +928,7 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
       locale: item.locale,
     })),
     stops: result.guideStops.map((gs) => {
-      const assetVersionInfo = stopAssetVersionMap.get(gs.stop.id)
+      const assetVersionInfo = stopAssetVersionPointerMap.get(gs.stop.id)
       return {
         id: gs.stop.id,
         nanoId: gs.stop.nanoId,
@@ -942,8 +937,8 @@ export async function getGuideMetadata(nanoId: string): Promise<GuideMetadata | 
         archivedAt: gs.archivedAt,
         assets: stopAssetsMap.get(gs.stop.id) ?? [],
         translationStatuses: stopTranslationStatusesMap.get(gs.stop.id) ?? [],
-        currentAssetVersionId: assetVersionInfo?.currentAssetVersionId ?? null,
-        draftAssetVersionId: assetVersionInfo?.draftAssetVersionId ?? null,
+        currentAssetVersionId: assetVersionInfo?.currentVersionId ?? null,
+        draftAssetVersionId: assetVersionInfo?.draftVersionId ?? null,
       }
     }),
     translationStatuses: guideTranslationStatuses.map((t) => ({
@@ -1064,10 +1059,12 @@ export async function getGuideViewData(nanoId: string): Promise<GuideViewData | 
 
   if (!result) return null
 
-  // Fetch guide assets using versioned tables
-  // Prefer draftAssetVersionId for editor context, fallback to currentAssetVersionId
-  const guideAssetId = result.draftAssetVersionId ?? result.currentAssetVersionId
-  const guideAssets = guideAssetId
+  // Get asset pointers from guideAsset table
+  const guideAssetPointers = await getGuideAssetPointers([result.id])
+
+  // Prefer draftVersionId for editor context, fallback to currentVersionId
+  const guideAssetVersionId = getActiveVersionId(guideAssetPointers.get(result.id))
+  const guideAssets = guideAssetVersionId
     ? await db
         .select({
           guideAssetId: guideAssetVersion.id,
@@ -1078,7 +1075,7 @@ export async function getGuideViewData(nanoId: string): Promise<GuideViewData | 
         })
         .from(guideAssetVersion)
         .innerJoin(asset, eq(guideAssetVersion.assetId, asset.id))
-        .where(eq(guideAssetVersion.guideAssetId, guideAssetId))
+        .where(eq(guideAssetVersion.versionId, guideAssetVersionId))
         .orderBy(asc(guideAssetVersion.order))
     : []
 

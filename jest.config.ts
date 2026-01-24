@@ -10,6 +10,9 @@ const config: Config = {
       },
     ],
   },
+  transformIgnorePatterns: [
+    '/node_modules/(?!(nanoid|uuidv7)/)',
+  ],
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/apps/app/$1',
     '@valguide/core/(.*)': '<rootDir>/packages/core/$1',

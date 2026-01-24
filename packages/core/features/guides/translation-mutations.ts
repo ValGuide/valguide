@@ -1,4 +1,5 @@
 import { db } from '@valguide/core/features/db'
+import { valguideVersionId } from '@valguide/core/utils/nanoid'
 import { and, eq, max } from 'drizzle-orm'
 import { guideTranslation, guideTranslationVersion, stopTranslation, stopTranslationVersion } from './schema'
 
@@ -69,9 +70,9 @@ export async function upsertGuideTranslationDraft(
   const [newVersion] = await db
     .insert(guideTranslationVersion)
     .values({
+      versionId: valguideVersionId(),
       translationId,
       version: nextVersion,
-      status: 'draft',
       title: data.title,
       description: data.description,
       createdBy: userId,
@@ -118,22 +119,12 @@ export async function publishGuideTranslationDraft(
   }
 
   const draftId = currentTranslation.draftVersionId
-  const oldCurrentVersionId = currentTranslation.currentVersionId
 
   await db.transaction(async (tx: typeof db) => {
-    // Archive the old published version (if any)
-    if (oldCurrentVersionId) {
-      await tx
-        .update(guideTranslationVersion)
-        .set({ status: 'archived' })
-        .where(eq(guideTranslationVersion.id, oldCurrentVersionId))
-    }
-
-    // Update draft version to published
+    // Set publishedAt timestamp on the now-current version
     await tx
       .update(guideTranslationVersion)
       .set({
-        status: 'published',
         publishedAt: new Date(),
       })
       .where(eq(guideTranslationVersion.id, draftId))
@@ -199,9 +190,9 @@ export async function rollbackGuideTranslation(
   const [newDraft] = await db
     .insert(guideTranslationVersion)
     .values({
+      versionId: valguideVersionId(),
       translationId: translation[0].id,
       version: nextVersion,
-      status: 'draft',
       title: targetVersionData[0].title,
       description: targetVersionData[0].description,
       createdBy: userId,
@@ -320,9 +311,9 @@ export async function upsertStopTranslationDraft(
   const [newVersion] = await db
     .insert(stopTranslationVersion)
     .values({
+      versionId: valguideVersionId(),
       translationId,
       version: nextVersion,
-      status: 'draft',
       title: data.title,
       description: data.description,
       transcription: data.transcription,
@@ -368,21 +359,12 @@ export async function publishStopTranslationDraft(
   }
 
   const draftId = currentTranslation.draftVersionId
-  const oldCurrentVersionId = currentTranslation.currentVersionId
 
   await db.transaction(async (tx: typeof db) => {
-    // Archive the old published version (if any)
-    if (oldCurrentVersionId) {
-      await tx
-        .update(stopTranslationVersion)
-        .set({ status: 'archived' })
-        .where(eq(stopTranslationVersion.id, oldCurrentVersionId))
-    }
-
+    // Set publishedAt timestamp on the now-current version
     await tx
       .update(stopTranslationVersion)
       .set({
-        status: 'published',
         publishedAt: new Date(),
       })
       .where(eq(stopTranslationVersion.id, draftId))
@@ -443,9 +425,9 @@ export async function rollbackStopTranslation(
   const [newDraft] = await db
     .insert(stopTranslationVersion)
     .values({
+      versionId: valguideVersionId(),
       translationId: translation[0].id,
       version: nextVersion,
-      status: 'draft',
       title: targetVersionData[0].title,
       description: targetVersionData[0].description,
       transcription: targetVersionData[0].transcription,
@@ -505,23 +487,15 @@ export async function unpublishGuideTranslation(
         const [newDraft] = await tx
           .insert(guideTranslationVersion)
           .values({
+            versionId: valguideVersionId(),
             translationId: currentTranslation.id,
             title: publishedVersion.title,
             description: publishedVersion.description,
             version: publishedVersion.version + 1,
-            status: 'draft',
           })
           .returning()
         newDraftId = newDraft?.id ?? null
       }
-    }
-
-    // Archive the published version
-    if (currentTranslation.currentVersionId) {
-      await tx
-        .update(guideTranslationVersion)
-        .set({ status: 'archived' })
-        .where(eq(guideTranslationVersion.id, currentTranslation.currentVersionId))
     }
 
     // Clear the current version pointer, set draft if created
@@ -575,23 +549,15 @@ export async function unpublishStopTranslation(
         const [newDraft] = await tx
           .insert(stopTranslationVersion)
           .values({
+            versionId: valguideVersionId(),
             translationId: currentTranslation.id,
             title: publishedVersion.title,
             description: publishedVersion.description,
             version: publishedVersion.version + 1,
-            status: 'draft',
           })
           .returning()
         newDraftId = newDraft?.id ?? null
       }
-    }
-
-    // Archive the published version
-    if (currentTranslation.currentVersionId) {
-      await tx
-        .update(stopTranslationVersion)
-        .set({ status: 'archived' })
-        .where(eq(stopTranslationVersion.id, currentTranslation.currentVersionId))
     }
 
     // Clear the current version pointer, set draft if created

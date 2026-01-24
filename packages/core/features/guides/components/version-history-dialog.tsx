@@ -21,16 +21,16 @@ import {
 } from '@valguide/ui/components/dialog'
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TranslationStatusBadge } from './translation-status-badge'
 
 export type RollbackResult = { success: true } | { success: false; error?: string }
 
-export type VersionHistoryItem = {
+// Raw version item from server
+export type VersionHistoryItemRaw = {
   id: string
   translationId: string
   version: number
-  status: 'draft' | 'in_review' | 'published' | 'archived'
   title: string
   description: string | null
   createdAt: Date
@@ -38,12 +38,24 @@ export type VersionHistoryItem = {
   publishedAt: Date | null
 }
 
+// History result from server includes pointer IDs for deriving display status
+export type VersionHistoryResult = {
+  versions: VersionHistoryItemRaw[]
+  currentVersionId: string | null
+  draftVersionId: string | null
+}
+
+// Display item with derived status for UI
+export type VersionHistoryItem = VersionHistoryItemRaw & {
+  status: 'draft' | 'published' | 'archived'
+}
+
 interface VersionHistoryDialogProps {
   guideId: string
   locale: string
   localeName?: string
   onRollback?: () => void
-  onGetHistory?: (guideId: string, locale: string) => Promise<VersionHistoryItem[]>
+  onGetHistory?: (guideId: string, locale: string) => Promise<VersionHistoryResult>
   onRollbackAction?: (guideId: string, locale: string, targetVersion: number) => Promise<RollbackResult>
 }
 
@@ -59,11 +71,23 @@ export function VersionHistoryDialog({
   const displayLocale = localeName ?? locale.toUpperCase()
   const [isMounted, setIsMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const [versions, setVersions] = useState<VersionHistoryItem[]>([])
+  const [historyResult, setHistoryResult] = useState<VersionHistoryResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedVersion, setSelectedVersion] = useState<number | null>(null)
   const [isRollbackOpen, setIsRollbackOpen] = useState(false)
   const [isRollingBack, setIsRollingBack] = useState(false)
+
+  // Derive display status for each version from pointers
+  const versions = useMemo<VersionHistoryItem[]>(() => {
+    if (!historyResult) return []
+    const { versions: rawVersions, currentVersionId, draftVersionId } = historyResult
+    return rawVersions.map((v) => {
+      let status: VersionHistoryItem['status'] = 'archived'
+      if (currentVersionId === v.id) status = 'published'
+      else if (draftVersionId === v.id) status = 'draft'
+      return { ...v, status }
+    })
+  }, [historyResult])
 
   useEffect(() => {
     setIsMounted(true)
@@ -74,7 +98,7 @@ export function VersionHistoryDialog({
     setIsLoading(true)
     try {
       const history = await onGetHistory(guideId, locale)
-      setVersions(history)
+      setHistoryResult(history)
     } catch (error) {
       console.error('Failed to load version history:', error)
       toast.error(t('loadError'))

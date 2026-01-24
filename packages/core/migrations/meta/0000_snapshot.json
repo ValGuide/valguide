@@ -1,5 +1,5 @@
 {
-  "id": "2bfd340f-21ce-4f0c-b458-45fd03d339f4",
+  "id": "e97ada7b-5f39-40a8-9908-b8a6b0043f96",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -187,11 +187,17 @@
           "primaryKey": false,
           "notNull": true
         },
-        "version": {
-          "name": "version",
-          "type": "integer",
+        "current_version_id": {
+          "name": "current_version_id",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "draft_version_id": {
+          "name": "draft_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -200,20 +206,30 @@
           "notNull": true,
           "default": "now()"
         },
-        "created_by": {
-          "name": "created_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "published_at": {
-          "name": "published_at",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
+        "unique_guide_asset": {
+          "name": "unique_guide_asset",
+          "columns": [
+            {
+              "expression": "guide_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "guide_asset_guide_idx": {
           "name": "guide_asset_guide_idx",
           "columns": [
@@ -228,27 +244,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "unique_guide_asset": {
-          "name": "unique_guide_asset",
-          "columns": [
-            {
-              "expression": "guide_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "version",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {
@@ -260,16 +255,6 @@
           "columnsFrom": ["guide_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "guide_asset_created_by_users_id_fk": {
-          "name": "guide_asset_created_by_users_id_fk",
-          "tableFrom": "guide_asset",
-          "tableTo": "users",
-          "schemaTo": "auth",
-          "columnsFrom": ["created_by"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -292,6 +277,12 @@
         },
         "guide_asset_id": {
           "name": "guide_asset_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version_id": {
+          "name": "version_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -320,9 +311,43 @@
           "type": "varchar(10)",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
+        "guide_asset_version_version_idx": {
+          "name": "guide_asset_version_version_idx",
+          "columns": [
+            {
+              "expression": "version_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "guide_asset_version_guide_asset_idx": {
           "name": "guide_asset_version_guide_asset_idx",
           "columns": [
@@ -359,6 +384,16 @@
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "guide_asset_version_created_by_users_id_fk": {
+          "name": "guide_asset_version_created_by_users_id_fk",
+          "tableFrom": "guide_asset_version",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -384,11 +419,17 @@
           "primaryKey": false,
           "notNull": true
         },
-        "version": {
-          "name": "version",
-          "type": "integer",
+        "current_version_id": {
+          "name": "current_version_id",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "draft_version_id": {
+          "name": "draft_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -397,20 +438,30 @@
           "notNull": true,
           "default": "now()"
         },
-        "created_by": {
-          "name": "created_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "published_at": {
-          "name": "published_at",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
+        "unique_stop_asset": {
+          "name": "unique_stop_asset",
+          "columns": [
+            {
+              "expression": "stop_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "stop_asset_stop_idx": {
           "name": "stop_asset_stop_idx",
           "columns": [
@@ -425,27 +476,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "unique_stop_asset": {
-          "name": "unique_stop_asset",
-          "columns": [
-            {
-              "expression": "stop_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "version",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {
@@ -457,16 +487,6 @@
           "columnsFrom": ["stop_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "stop_asset_created_by_users_id_fk": {
-          "name": "stop_asset_created_by_users_id_fk",
-          "tableFrom": "stop_asset",
-          "tableTo": "users",
-          "schemaTo": "auth",
-          "columnsFrom": ["created_by"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -489,6 +509,12 @@
         },
         "stop_asset_id": {
           "name": "stop_asset_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version_id": {
+          "name": "version_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -517,9 +543,43 @@
           "type": "varchar(10)",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
+        "stop_asset_version_version_idx": {
+          "name": "stop_asset_version_version_idx",
+          "columns": [
+            {
+              "expression": "version_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "stop_asset_version_stop_asset_idx": {
           "name": "stop_asset_version_stop_asset_idx",
           "columns": [
@@ -555,6 +615,16 @@
           "columnsFrom": ["asset_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "stop_asset_version_created_by_users_id_fk": {
+          "name": "stop_asset_version_created_by_users_id_fk",
+          "tableFrom": "stop_asset_version",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -643,18 +713,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'{\"en\",\"de\",\"rm\"}'"
-        },
-        "current_asset_version_id": {
-          "name": "current_asset_version_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "draft_asset_version_id": {
-          "name": "draft_asset_version_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {
@@ -972,19 +1030,17 @@
           "primaryKey": false,
           "notNull": true
         },
+        "version_id": {
+          "name": "version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "version": {
           "name": "version",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "translation_status",
-          "typeSchema": "studio",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'draft'"
         },
         "title": {
           "name": "title",
@@ -1040,17 +1096,11 @@
           "method": "btree",
           "with": {}
         },
-        "guide_translation_version_status_idx": {
-          "name": "guide_translation_version_status_idx",
+        "guide_translation_version_version_idx": {
+          "name": "guide_translation_version_version_idx",
           "columns": [
             {
-              "expression": "translation_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "status",
+              "expression": "version_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1132,18 +1182,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "current_asset_version_id": {
-          "name": "current_asset_version_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "draft_asset_version_id": {
-          "name": "draft_asset_version_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
         },
         "guide_id": {
           "name": "guide_id",
@@ -1343,19 +1381,17 @@
           "primaryKey": false,
           "notNull": true
         },
+        "version_id": {
+          "name": "version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "version": {
           "name": "version",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "translation_status",
-          "typeSchema": "studio",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'draft'"
         },
         "title": {
           "name": "title",
@@ -1417,17 +1453,11 @@
           "method": "btree",
           "with": {}
         },
-        "stop_translation_version_status_idx": {
-          "name": "stop_translation_version_status_idx",
+        "stop_translation_version_version_idx": {
+          "name": "stop_translation_version_version_idx",
           "columns": [
             {
-              "expression": "translation_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "status",
+              "expression": "version_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2284,11 +2314,6 @@
     }
   },
   "enums": {
-    "studio.translation_status": {
-      "name": "translation_status",
-      "schema": "studio",
-      "values": ["draft", "in_review", "published", "archived"]
-    },
     "studio.short_link_type": {
       "name": "short_link_type",
       "schema": "studio",

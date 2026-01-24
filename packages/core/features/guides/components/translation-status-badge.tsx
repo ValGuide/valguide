@@ -1,10 +1,11 @@
 import { Badge } from '@valguide/ui/components/badge'
 import { Archive, CheckCircle2, Clock, Edit3 } from 'lucide-react'
 
-type TranslationStatus = 'draft' | 'in_review' | 'published' | 'archived'
+// Display status includes derived values ('draft', 'published') for UI
+type TranslationDisplayStatus = 'draft' | 'in_review' | 'published' | 'archived'
 
 interface TranslationStatusBadgeProps {
-  status: TranslationStatus | null | undefined
+  status: TranslationDisplayStatus | null | undefined
   hasDraft?: boolean
   className?: string
 }

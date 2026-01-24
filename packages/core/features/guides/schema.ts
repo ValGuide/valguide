@@ -5,13 +5,6 @@ import { organization } from '../orgs/schema'
 
 const studioSchema = pgSchema('studio')
 
-export const translationStatus = studioSchema.enum('translation_status', [
-  'draft',
-  'in_review',
-  'published',
-  'archived',
-])
-
 export const guide = studioSchema.table(
   'guide',
   {
@@ -36,9 +29,6 @@ export const guide = studioSchema.table(
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
     availableLocales: text('available_locales').array().notNull().default(['en', 'de', 'rm']),
-    // Asset versioning pointers (global, not per-locale)
-    currentAssetVersionId: uuid('current_asset_version_id'), // Published assets
-    draftAssetVersionId: uuid('draft_asset_version_id'), // Draft assets being edited
   },
   (t) => ({
     orgIdx: index('guide_organization_id_idx').on(t.organizationId),
@@ -74,8 +64,8 @@ export const guideTranslationVersion = studioSchema.table(
     translationId: uuid('translation_id')
       .notNull()
       .references(() => guideTranslation.id, { onDelete: 'cascade' }),
+    versionId: uuid('version_id').notNull(),
     version: integer('version').notNull(),
-    status: translationStatus('status').notNull().default('draft'),
     title: varchar('title', { length: 500 }).notNull(),
     description: text('description'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -84,7 +74,7 @@ export const guideTranslationVersion = studioSchema.table(
   },
   (t) => ({
     uniqueVersion: uniqueIndex('unique_guide_translation_version').on(t.translationId, t.version),
-    statusIndex: index('guide_translation_version_status_idx').on(t.translationId, t.status),
+    versionIdx: index('guide_translation_version_version_idx').on(t.versionId),
   }),
 )
 
@@ -106,9 +96,6 @@ export const stop = studioSchema.table(
     createdBy: uuid('created_by')
       .notNull()
       .references(() => authUsers.id, { onDelete: 'cascade' }),
-    // Asset versioning pointers (global, not per-locale)
-    currentAssetVersionId: uuid('current_asset_version_id'), // Published assets
-    draftAssetVersionId: uuid('draft_asset_version_id'), // Draft assets being edited
     // Deprecated columns - kept for backward compatibility during migration
     guideId: uuid('guide_id').references(() => guide.id, { onDelete: 'set null' }),
     order: integer('order').default(0),
@@ -170,8 +157,8 @@ export const stopTranslationVersion = studioSchema.table(
     translationId: uuid('translation_id')
       .notNull()
       .references(() => stopTranslation.id, { onDelete: 'cascade' }),
+    versionId: uuid('version_id').notNull(),
     version: integer('version').notNull(),
-    status: translationStatus('status').notNull().default('draft'),
     title: varchar('title', { length: 500 }).notNull(),
     description: text('description'),
     transcription: text('transcription'),
@@ -181,7 +168,7 @@ export const stopTranslationVersion = studioSchema.table(
   },
   (t) => ({
     uniqueVersion: uniqueIndex('unique_stop_translation_version').on(t.translationId, t.version),
-    statusIndex: index('stop_translation_version_status_idx').on(t.translationId, t.status),
+    versionIdx: index('stop_translation_version_version_idx').on(t.versionId),
   }),
 )
 

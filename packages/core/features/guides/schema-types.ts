@@ -4,8 +4,6 @@
  * making them safe to import in browser/Storybook environments.
  */
 
-export type TranslationStatus = 'draft' | 'in_review' | 'published' | 'archived'
-
 export interface Guide {
   id: string
   nanoId: string
@@ -33,9 +31,9 @@ export interface GuideTranslation {
 
 export interface GuideTranslationVersion {
   id: string
+  versionId: string
   translationId: string
   version: number
-  status: TranslationStatus
   title: string
   description: string | null
   createdAt: Date
@@ -74,9 +72,9 @@ export interface StopTranslation {
 
 export interface StopTranslationVersion {
   id: string
+  versionId: string
   translationId: string
   version: number
-  status: TranslationStatus
   title: string
   description: string | null
   transcription: string | null

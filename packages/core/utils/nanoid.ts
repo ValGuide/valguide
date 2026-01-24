@@ -1,4 +1,5 @@
 import { customAlphabet } from 'nanoid'
+import { uuidv7 } from 'uuidv7'
 
 /**
  * Standard alphanumeric ID generator for ValGuide.
@@ -8,3 +9,14 @@ import { customAlphabet } from 'nanoid'
  * Do NOT use for auth tokens, API keys, or security-sensitive identifiers.
  */
 export const valguideId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10)
+
+/**
+ * Generate a UUIDv7 for versioning.
+ * UUIDv7 embeds timestamp in first 48 bits, providing:
+ * - Natural chronological ordering
+ * - Extractable creation time
+ * - Globally unique identifiers
+ *
+ * Use for version identifiers where ordering matters.
+ */
+export const valguideVersionId = uuidv7

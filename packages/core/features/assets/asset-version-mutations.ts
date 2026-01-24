@@ -1,6 +1,6 @@
 import { db } from '@valguide/core/features/db'
-import { eq, max } from 'drizzle-orm'
-import { guide, stop } from '../guides/schema'
+import { valguideVersionId } from '@valguide/core/utils/nanoid'
+import { eq } from 'drizzle-orm'
 import { guideAsset, guideAssetVersion, stopAsset, stopAssetVersion } from './schema'
 
 type AssetInput = {
@@ -15,9 +15,10 @@ type AssetInput = {
 // ============================================================================
 
 /**
- * Create or update a draft guide asset version
- * If no draft exists, creates a new version
- * If draft exists, replaces its items
+ * Create or update a draft guide asset version.
+ * If no guideAsset exists, creates one.
+ * If draft exists, replaces its items.
+ * If no draft exists, creates new version with UUIDv7 versionId.
  */
 export async function upsertGuideAssetVersionDraft(
   guideId: string,
@@ -25,62 +26,47 @@ export async function upsertGuideAssetVersionDraft(
   userId: string,
 ): Promise<string> {
   return db.transaction(async (tx) => {
-    // Get current draft pointer
-    const guideData = await tx.query.guide.findFirst({
-      where: eq(guide.id, guideId),
-      columns: { draftAssetVersionId: true },
+    // Find or create guideAsset intermediate record
+    let guideAssetRecord = await tx.query.guideAsset.findFirst({
+      where: eq(guideAsset.guideId, guideId),
     })
 
-    let versionId = guideData?.draftAssetVersionId
+    if (!guideAssetRecord) {
+      const [newRecord] = await tx.insert(guideAsset).values({ guideId }).returning()
 
-    if (!versionId) {
-      // Get next version number
-      const maxVersionResult = await tx
-        .select({ maxVer: max(guideAsset.version) })
-        .from(guideAsset)
-        .where(eq(guideAsset.guideId, guideId))
-
-      const nextVersion = (maxVersionResult[0]?.maxVer ?? 0) + 1
-
-      // Create new draft version
-      const [newVersion] = await tx
-        .insert(guideAsset)
-        .values({
-          guideId,
-          version: nextVersion,
-          createdBy: userId,
-        })
-        .returning()
-
-      if (!newVersion) {
-        throw new Error('Failed to create guide asset version')
+      if (!newRecord) {
+        throw new Error('Failed to create guide asset record')
       }
-
-      versionId = newVersion.id
-
-      // Update guide pointer to new draft
-      await tx.update(guide).set({ draftAssetVersionId: versionId }).where(eq(guide.id, guideId))
-    } else {
-      // Clear existing items in draft version
-      await tx.delete(guideAssetVersion).where(eq(guideAssetVersion.guideAssetId, versionId))
+      guideAssetRecord = newRecord
     }
 
-    // Insert new items
-    if (assets.length > 0 && versionId) {
-      const currentVersionId = versionId
+    const guideAssetId = guideAssetRecord.id
+    let versionId = guideAssetRecord.draftVersionId
+
+    if (versionId) {
+      // Draft exists - delete existing items for this version
+      await tx.delete(guideAssetVersion).where(eq(guideAssetVersion.versionId, versionId))
+    } else {
+      // No draft - generate new UUIDv7 versionId
+      versionId = valguideVersionId()
+
+      // Update pointer to new draft
+      await tx.update(guideAsset).set({ draftVersionId: versionId }).where(eq(guideAsset.id, guideAssetId))
+    }
+
+    // Insert new items (all sharing the same versionId)
+    if (assets.length > 0) {
       await tx.insert(guideAssetVersion).values(
         assets.map((a) => ({
-          guideAssetId: currentVersionId,
+          guideAssetId,
+          versionId,
           assetId: a.assetId,
           order: a.order,
           role: a.role,
           locale: a.locale ?? null,
+          createdBy: userId,
         })),
       )
-    }
-
-    if (!versionId) {
-      throw new Error('Failed to create or find guide asset version')
     }
 
     return versionId
@@ -88,128 +74,115 @@ export async function upsertGuideAssetVersionDraft(
 }
 
 /**
- * Publish guide asset draft
- * Sets publishedAt, promotes draft to current, clears draft pointer
+ * Publish guide asset draft.
+ * Sets publishedAt, promotes draft to current, clears draft pointer.
  */
 export async function publishGuideAssetVersion(guideId: string): Promise<{ success: boolean; error?: string }> {
   return db.transaction(async (tx) => {
-    const guideData = await tx.query.guide.findFirst({
-      where: eq(guide.id, guideId),
-      columns: { draftAssetVersionId: true },
+    const guideAssetRecord = await tx.query.guideAsset.findFirst({
+      where: eq(guideAsset.guideId, guideId),
     })
 
-    if (!guideData?.draftAssetVersionId) {
+    if (!guideAssetRecord?.draftVersionId) {
       return { success: false, error: 'No draft assets to publish' }
     }
 
-    const draftId = guideData.draftAssetVersionId
+    const draftVersionId = guideAssetRecord.draftVersionId
 
-    // Mark version as published
-    await tx.update(guideAsset).set({ publishedAt: new Date() }).where(eq(guideAsset.id, draftId))
+    // Set publishedAt timestamp on all items in this version
+    await tx
+      .update(guideAssetVersion)
+      .set({ publishedAt: new Date() })
+      .where(eq(guideAssetVersion.versionId, draftVersionId))
 
     // Update pointers: draft becomes current, clear draft
     await tx
-      .update(guide)
+      .update(guideAsset)
       .set({
-        currentAssetVersionId: draftId,
-        draftAssetVersionId: null,
+        currentVersionId: draftVersionId,
+        draftVersionId: null,
       })
-      .where(eq(guide.id, guideId))
+      .where(eq(guideAsset.id, guideAssetRecord.id))
 
     return { success: true }
   })
 }
 
 /**
- * Discard guide asset draft
- * Deletes the draft version and clears the pointer
+ * Discard guide asset draft.
+ * Deletes the draft version items and clears the pointer.
  */
 export async function discardGuideAssetVersionDraft(guideId: string): Promise<boolean> {
   return db.transaction(async (tx) => {
-    const guideData = await tx.query.guide.findFirst({
-      where: eq(guide.id, guideId),
-      columns: { draftAssetVersionId: true },
+    const guideAssetRecord = await tx.query.guideAsset.findFirst({
+      where: eq(guideAsset.guideId, guideId),
     })
 
-    if (!guideData?.draftAssetVersionId) {
+    if (!guideAssetRecord?.draftVersionId) {
       return false
     }
 
-    // Delete draft version (cascades to items)
-    await tx.delete(guideAsset).where(eq(guideAsset.id, guideData.draftAssetVersionId))
+    // Delete draft version items
+    await tx.delete(guideAssetVersion).where(eq(guideAssetVersion.versionId, guideAssetRecord.draftVersionId))
 
     // Clear pointer
-    await tx.update(guide).set({ draftAssetVersionId: null }).where(eq(guide.id, guideId))
+    await tx.update(guideAsset).set({ draftVersionId: null }).where(eq(guideAsset.id, guideAssetRecord.id))
 
     return true
   })
 }
 
 /**
- * Unpublish guide assets
- * Creates a draft from current published, clears current pointer
+ * Unpublish guide assets.
+ * Creates a draft from current published, clears current pointer.
  */
 export async function unpublishGuideAssetVersion(
   guideId: string,
   userId: string,
 ): Promise<{ success: boolean; error?: string }> {
   return db.transaction(async (tx) => {
-    const guideData = await tx.query.guide.findFirst({
-      where: eq(guide.id, guideId),
-      columns: { currentAssetVersionId: true, draftAssetVersionId: true },
+    const guideAssetRecord = await tx.query.guideAsset.findFirst({
+      where: eq(guideAsset.guideId, guideId),
     })
 
-    if (!guideData?.currentAssetVersionId) {
+    if (!guideAssetRecord?.currentVersionId) {
       return { success: false, error: 'No published assets to unpublish' }
     }
 
     // If no draft exists, create one from the published version's items
-    if (!guideData.draftAssetVersionId) {
+    if (!guideAssetRecord.draftVersionId) {
       const currentItems = await tx.query.guideAssetVersion.findMany({
-        where: eq(guideAssetVersion.guideAssetId, guideData.currentAssetVersionId),
+        where: eq(guideAssetVersion.versionId, guideAssetRecord.currentVersionId),
       })
 
-      // Get next version number
-      const maxVersionResult = await tx
-        .select({ maxVer: max(guideAsset.version) })
-        .from(guideAsset)
-        .where(eq(guideAsset.guideId, guideId))
+      // Generate new UUIDv7 for the draft
+      const newVersionId = valguideVersionId()
 
-      const nextVersion = (maxVersionResult[0]?.maxVer ?? 0) + 1
-
-      // Create new draft version with same items
-      const [newDraft] = await tx
-        .insert(guideAsset)
-        .values({
-          guideId,
-          version: nextVersion,
-          createdBy: userId,
-        })
-        .returning()
-
-      if (newDraft && currentItems.length > 0) {
+      if (currentItems.length > 0) {
         await tx.insert(guideAssetVersion).values(
           currentItems.map((item) => ({
-            guideAssetId: newDraft.id,
+            guideAssetId: guideAssetRecord.id,
+            versionId: newVersionId,
             assetId: item.assetId,
             order: item.order,
             role: item.role,
             locale: item.locale,
+            createdBy: userId,
           })),
         )
       }
 
       // Update pointers
       await tx
-        .update(guide)
+        .update(guideAsset)
         .set({
-          currentAssetVersionId: null,
-          draftAssetVersionId: newDraft?.id ?? null,
+          currentVersionId: null,
+          draftVersionId: newVersionId,
         })
-        .where(eq(guide.id, guideId))
+        .where(eq(guideAsset.id, guideAssetRecord.id))
     } else {
       // Draft exists, just clear current pointer
-      await tx.update(guide).set({ currentAssetVersionId: null }).where(eq(guide.id, guideId))
+      await tx.update(guideAsset).set({ currentVersionId: null }).where(eq(guideAsset.id, guideAssetRecord.id))
     }
 
     return { success: true }
@@ -221,7 +194,7 @@ export async function unpublishGuideAssetVersion(
 // ============================================================================
 
 /**
- * Create or update a draft stop asset version
+ * Create or update a draft stop asset version.
  */
 export async function upsertStopAssetVersionDraft(
   stopId: string,
@@ -229,62 +202,47 @@ export async function upsertStopAssetVersionDraft(
   userId: string,
 ): Promise<string> {
   return db.transaction(async (tx) => {
-    // Get current draft pointer
-    const stopData = await tx.query.stop.findFirst({
-      where: eq(stop.id, stopId),
-      columns: { draftAssetVersionId: true },
+    // Find or create stopAsset intermediate record
+    let stopAssetRecord = await tx.query.stopAsset.findFirst({
+      where: eq(stopAsset.stopId, stopId),
     })
 
-    let versionId = stopData?.draftAssetVersionId
+    if (!stopAssetRecord) {
+      const [newRecord] = await tx.insert(stopAsset).values({ stopId }).returning()
 
-    if (!versionId) {
-      // Get next version number
-      const maxVersionResult = await tx
-        .select({ maxVer: max(stopAsset.version) })
-        .from(stopAsset)
-        .where(eq(stopAsset.stopId, stopId))
-
-      const nextVersion = (maxVersionResult[0]?.maxVer ?? 0) + 1
-
-      // Create new draft version
-      const [newVersion] = await tx
-        .insert(stopAsset)
-        .values({
-          stopId,
-          version: nextVersion,
-          createdBy: userId,
-        })
-        .returning()
-
-      if (!newVersion) {
-        throw new Error('Failed to create stop asset version')
+      if (!newRecord) {
+        throw new Error('Failed to create stop asset record')
       }
-
-      versionId = newVersion.id
-
-      // Update stop pointer to new draft
-      await tx.update(stop).set({ draftAssetVersionId: versionId }).where(eq(stop.id, stopId))
-    } else {
-      // Clear existing items in draft version
-      await tx.delete(stopAssetVersion).where(eq(stopAssetVersion.stopAssetId, versionId))
+      stopAssetRecord = newRecord
     }
 
-    // Insert new items
-    if (assets.length > 0 && versionId) {
-      const currentVersionId = versionId
+    const stopAssetId = stopAssetRecord.id
+    let versionId = stopAssetRecord.draftVersionId
+
+    if (versionId) {
+      // Draft exists - delete existing items for this version
+      await tx.delete(stopAssetVersion).where(eq(stopAssetVersion.versionId, versionId))
+    } else {
+      // No draft - generate new UUIDv7 versionId
+      versionId = valguideVersionId()
+
+      // Update pointer to new draft
+      await tx.update(stopAsset).set({ draftVersionId: versionId }).where(eq(stopAsset.id, stopAssetId))
+    }
+
+    // Insert new items (all sharing the same versionId)
+    if (assets.length > 0) {
       await tx.insert(stopAssetVersion).values(
         assets.map((a) => ({
-          stopAssetId: currentVersionId,
+          stopAssetId,
+          versionId,
           assetId: a.assetId,
           order: a.order,
           role: a.role,
           locale: a.locale ?? null,
+          createdBy: userId,
         })),
       )
-    }
-
-    if (!versionId) {
-      throw new Error('Failed to create or find stop asset version')
     }
 
     return versionId
@@ -292,125 +250,112 @@ export async function upsertStopAssetVersionDraft(
 }
 
 /**
- * Publish stop asset draft
+ * Publish stop asset draft.
  */
 export async function publishStopAssetVersion(stopId: string): Promise<{ success: boolean; error?: string }> {
   return db.transaction(async (tx) => {
-    const stopData = await tx.query.stop.findFirst({
-      where: eq(stop.id, stopId),
-      columns: { draftAssetVersionId: true },
+    const stopAssetRecord = await tx.query.stopAsset.findFirst({
+      where: eq(stopAsset.stopId, stopId),
     })
 
-    if (!stopData?.draftAssetVersionId) {
+    if (!stopAssetRecord?.draftVersionId) {
       return { success: false, error: 'No draft assets to publish' }
     }
 
-    const draftId = stopData.draftAssetVersionId
+    const draftVersionId = stopAssetRecord.draftVersionId
 
-    // Mark version as published
-    await tx.update(stopAsset).set({ publishedAt: new Date() }).where(eq(stopAsset.id, draftId))
+    // Set publishedAt timestamp on all items in this version
+    await tx
+      .update(stopAssetVersion)
+      .set({ publishedAt: new Date() })
+      .where(eq(stopAssetVersion.versionId, draftVersionId))
 
     // Update pointers: draft becomes current, clear draft
     await tx
-      .update(stop)
+      .update(stopAsset)
       .set({
-        currentAssetVersionId: draftId,
-        draftAssetVersionId: null,
+        currentVersionId: draftVersionId,
+        draftVersionId: null,
       })
-      .where(eq(stop.id, stopId))
+      .where(eq(stopAsset.id, stopAssetRecord.id))
 
     return { success: true }
   })
 }
 
 /**
- * Discard stop asset draft
+ * Discard stop asset draft.
  */
 export async function discardStopAssetVersionDraft(stopId: string): Promise<boolean> {
   return db.transaction(async (tx) => {
-    const stopData = await tx.query.stop.findFirst({
-      where: eq(stop.id, stopId),
-      columns: { draftAssetVersionId: true },
+    const stopAssetRecord = await tx.query.stopAsset.findFirst({
+      where: eq(stopAsset.stopId, stopId),
     })
 
-    if (!stopData?.draftAssetVersionId) {
+    if (!stopAssetRecord?.draftVersionId) {
       return false
     }
 
-    // Delete draft version (cascades to items)
-    await tx.delete(stopAsset).where(eq(stopAsset.id, stopData.draftAssetVersionId))
+    // Delete draft version items
+    await tx.delete(stopAssetVersion).where(eq(stopAssetVersion.versionId, stopAssetRecord.draftVersionId))
 
     // Clear pointer
-    await tx.update(stop).set({ draftAssetVersionId: null }).where(eq(stop.id, stopId))
+    await tx.update(stopAsset).set({ draftVersionId: null }).where(eq(stopAsset.id, stopAssetRecord.id))
 
     return true
   })
 }
 
 /**
- * Unpublish stop assets
+ * Unpublish stop assets.
  */
 export async function unpublishStopAssetVersion(
   stopId: string,
   userId: string,
 ): Promise<{ success: boolean; error?: string }> {
   return db.transaction(async (tx) => {
-    const stopData = await tx.query.stop.findFirst({
-      where: eq(stop.id, stopId),
-      columns: { currentAssetVersionId: true, draftAssetVersionId: true },
+    const stopAssetRecord = await tx.query.stopAsset.findFirst({
+      where: eq(stopAsset.stopId, stopId),
     })
 
-    if (!stopData?.currentAssetVersionId) {
+    if (!stopAssetRecord?.currentVersionId) {
       return { success: false, error: 'No published assets to unpublish' }
     }
 
     // If no draft exists, create one from the published version's items
-    if (!stopData.draftAssetVersionId) {
+    if (!stopAssetRecord.draftVersionId) {
       const currentItems = await tx.query.stopAssetVersion.findMany({
-        where: eq(stopAssetVersion.stopAssetId, stopData.currentAssetVersionId),
+        where: eq(stopAssetVersion.versionId, stopAssetRecord.currentVersionId),
       })
 
-      // Get next version number
-      const maxVersionResult = await tx
-        .select({ maxVer: max(stopAsset.version) })
-        .from(stopAsset)
-        .where(eq(stopAsset.stopId, stopId))
+      // Generate new UUIDv7 for the draft
+      const newVersionId = valguideVersionId()
 
-      const nextVersion = (maxVersionResult[0]?.maxVer ?? 0) + 1
-
-      // Create new draft version with same items
-      const [newDraft] = await tx
-        .insert(stopAsset)
-        .values({
-          stopId,
-          version: nextVersion,
-          createdBy: userId,
-        })
-        .returning()
-
-      if (newDraft && currentItems.length > 0) {
+      if (currentItems.length > 0) {
         await tx.insert(stopAssetVersion).values(
           currentItems.map((item) => ({
-            stopAssetId: newDraft.id,
+            stopAssetId: stopAssetRecord.id,
+            versionId: newVersionId,
             assetId: item.assetId,
             order: item.order,
             role: item.role,
             locale: item.locale,
+            createdBy: userId,
           })),
         )
       }
 
       // Update pointers
       await tx
-        .update(stop)
+        .update(stopAsset)
         .set({
-          currentAssetVersionId: null,
-          draftAssetVersionId: newDraft?.id ?? null,
+          currentVersionId: null,
+          draftVersionId: newVersionId,
         })
-        .where(eq(stop.id, stopId))
+        .where(eq(stopAsset.id, stopAssetRecord.id))
     } else {
       // Draft exists, just clear current pointer
-      await tx.update(stop).set({ currentAssetVersionId: null }).where(eq(stop.id, stopId))
+      await tx.update(stopAsset).set({ currentVersionId: null }).where(eq(stopAsset.id, stopAssetRecord.id))
     }
 
     return { success: true }

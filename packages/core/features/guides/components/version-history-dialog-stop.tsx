@@ -21,16 +21,16 @@ import {
 } from '@valguide/ui/components/dialog'
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { History, RotateCcw } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TranslationStatusBadge } from './translation-status-badge'
 
 export type StopRollbackResult = { success: true } | { success: false; error?: string }
 
-export type StopVersionHistoryItem = {
+// Raw version item from server
+export type StopVersionHistoryItemRaw = {
   id: string
   translationId: string
   version: number
-  status: 'draft' | 'in_review' | 'published' | 'archived'
   title: string
   description: string | null
   createdAt: Date
@@ -38,12 +38,24 @@ export type StopVersionHistoryItem = {
   publishedAt: Date | null
 }
 
+// History result from server includes pointer IDs for deriving display status
+export type StopVersionHistoryResult = {
+  versions: StopVersionHistoryItemRaw[]
+  currentVersionId: string | null
+  draftVersionId: string | null
+}
+
+// Display item with derived status for UI
+export type StopVersionHistoryItem = StopVersionHistoryItemRaw & {
+  status: 'draft' | 'published' | 'archived'
+}
+
 interface VersionHistoryDialogStopProps {
   stopId: string
   locale: string
   localeName?: string
   onRollback?: () => void
-  onGetHistory?: (stopId: string, locale: string) => Promise<StopVersionHistoryItem[]>
+  onGetHistory?: (stopId: string, locale: string) => Promise<StopVersionHistoryResult>
   onRollbackAction?: (stopId: string, locale: string, targetVersion: number) => Promise<StopRollbackResult>
 }
 
@@ -59,11 +71,23 @@ export function VersionHistoryDialogStop({
   const displayLocale = localeName ?? locale.toUpperCase()
   const [isMounted, setIsMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const [versions, setVersions] = useState<StopVersionHistoryItem[]>([])
+  const [historyResult, setHistoryResult] = useState<StopVersionHistoryResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedVersion, setSelectedVersion] = useState<number | null>(null)
   const [isRollbackOpen, setIsRollbackOpen] = useState(false)
   const [isRollingBack, setIsRollingBack] = useState(false)
+
+  // Derive display status for each version from pointers
+  const versions = useMemo<StopVersionHistoryItem[]>(() => {
+    if (!historyResult) return []
+    const { versions: rawVersions, currentVersionId, draftVersionId } = historyResult
+    return rawVersions.map((v) => {
+      let status: StopVersionHistoryItem['status'] = 'archived'
+      if (currentVersionId === v.id) status = 'published'
+      else if (draftVersionId === v.id) status = 'draft'
+      return { ...v, status }
+    })
+  }, [historyResult])
 
   useEffect(() => {
     setIsMounted(true)
@@ -75,7 +99,7 @@ export function VersionHistoryDialogStop({
     setIsLoading(true)
     try {
       const history = await onGetHistory(stopId, locale)
-      setVersions(history)
+      setHistoryResult(history)
     } catch (error) {
       console.error('Failed to load version history:', error)
       toast.error(t('loadError'))

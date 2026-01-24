@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from 'storybook/test'
-import type { RollbackResult, VersionHistoryItem } from './version-history-dialog'
+import type { RollbackResult, VersionHistoryItemRaw, VersionHistoryResult } from './version-history-dialog'
 import { VersionHistoryDialog } from './version-history-dialog'
 
-const mockVersions: VersionHistoryItem[] = [
+const mockVersionsRaw: VersionHistoryItemRaw[] = [
   {
     id: 'v1',
     translationId: 't1',
     version: 3,
-    status: 'published',
     title: 'City Walking Tour',
     description: 'Explore the historic downtown area with expert guides.',
     createdAt: new Date('2024-01-15T10:00:00Z'),
@@ -19,7 +18,6 @@ const mockVersions: VersionHistoryItem[] = [
     id: 'v2',
     translationId: 't1',
     version: 2,
-    status: 'published',
     title: 'City Walking Tour',
     description: 'Explore the historic downtown area.',
     createdAt: new Date('2024-01-10T10:00:00Z'),
@@ -30,7 +28,6 @@ const mockVersions: VersionHistoryItem[] = [
     id: 'v3',
     translationId: 't1',
     version: 1,
-    status: 'draft',
     title: 'Downtown Tour',
     description: 'Initial draft',
     createdAt: new Date('2024-01-05T10:00:00Z'),
@@ -39,9 +36,13 @@ const mockVersions: VersionHistoryItem[] = [
   },
 ]
 
-const mockGetHistory = async (): Promise<VersionHistoryItem[]> => {
+const mockGetHistory = async (): Promise<VersionHistoryResult> => {
   await new Promise((resolve) => setTimeout(resolve, 500))
-  return mockVersions
+  return {
+    versions: mockVersionsRaw,
+    currentVersionId: 'v1', // v1 is published
+    draftVersionId: null, // No draft
+  }
 }
 
 const mockRollbackAction = async (): Promise<RollbackResult> => {
@@ -93,7 +94,7 @@ export const EmptyHistory: Story = {
     onRollback: fn(),
     onGetHistory: async () => {
       await new Promise((resolve) => setTimeout(resolve, 500))
-      return []
+      return { versions: [], currentVersionId: null, draftVersionId: null }
     },
   },
 }
@@ -105,14 +106,24 @@ export const WithDraftVersions: Story = {
     onRollback: fn(),
     onGetHistory: async () => {
       await new Promise((resolve) => setTimeout(resolve, 500))
-      return [
-        {
-          ...mockVersions[0],
-          status: 'draft' as const,
-          publishedAt: null,
-        },
-        ...mockVersions.slice(1),
-      ]
+      // Draft version is v4, no published version
+      return {
+        versions: [
+          {
+            id: 'v4',
+            translationId: 't1',
+            version: 4,
+            title: 'Draft version',
+            description: 'Work in progress',
+            createdAt: new Date('2024-01-20T10:00:00Z'),
+            createdBy: 'user-1',
+            publishedAt: null,
+          },
+          ...mockVersionsRaw.slice(0, 2),
+        ],
+        currentVersionId: null,
+        draftVersionId: 'v4',
+      }
     },
   },
 }

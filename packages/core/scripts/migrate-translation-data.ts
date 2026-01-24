@@ -13,6 +13,7 @@
 import { sql } from 'drizzle-orm'
 import { db } from '../features/db'
 import { guideTranslationVersion, stopTranslationVersion } from '../features/guides/schema'
+import { valguideVersionId } from '../utils/nanoid'
 
 async function migrateGuideTranslations() {
   console.log('🔄 Migrating guide translations...')
@@ -41,13 +42,13 @@ async function migrateGuideTranslations() {
 
   for (const row of guideRows) {
     try {
-      // Create version 1 with published status
+      // Create version 1 (publishedAt indicates it's published)
       const [version] = await db
         .insert(guideTranslationVersion)
         .values({
+          versionId: valguideVersionId(),
           translationId: row.id as string,
           version: 1,
-          status: 'published',
           title: row.title as string,
           description: row.description as string | null,
           createdAt: row.created_at as Date,
@@ -108,13 +109,13 @@ async function migrateStopTranslations() {
 
   for (const row of stopRows) {
     try {
-      // Create version 1 with published status
+      // Create version 1 (publishedAt indicates it's published)
       const [version] = await db
         .insert(stopTranslationVersion)
         .values({
+          versionId: valguideVersionId(),
           translationId: row.id as string,
           version: 1,
-          status: 'published',
           title: row.title as string,
           description: row.description as string | null,
           transcription: row.transcription as string | null,

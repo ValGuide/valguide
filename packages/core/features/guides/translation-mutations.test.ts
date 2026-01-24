@@ -67,7 +67,6 @@ describe.skip('Translation Versioning', () => {
     const draft = await getDraftGuideTranslation(testGuideId, 'en')
     expect(draft).toBeTruthy()
     expect(draft?.title).toBe('Test Guide')
-    expect(draft?.status).toBe('draft')
   })
 
   it('should publish a draft', async () => {
@@ -77,7 +76,6 @@ describe.skip('Translation Versioning', () => {
 
     const current = await getCurrentGuideTranslation(testGuideId, 'en')
     expect(current).toBeTruthy()
-    expect(current?.status).toBe('published')
     expect(current?.title).toBe('Test Guide')
 
     const draft = await getDraftGuideTranslation(testGuideId, 'en')
@@ -104,8 +102,8 @@ describe.skip('Translation Versioning', () => {
   it('should show version history', async () => {
     const history = await getGuideTranslationHistory(testGuideId, 'en')
 
-    expect(history.length).toBeGreaterThanOrEqual(2)
-    expect(history[0]?.version).toBeGreaterThan(history[1]?.version ?? 0) // Ordered by version desc
+    expect(history.versions.length).toBeGreaterThanOrEqual(2)
+    expect(history.versions[0]?.version).toBeGreaterThan(history.versions[1]?.version ?? 0) // Ordered by version desc
   })
 
   it('should rollback to a previous version', async () => {
