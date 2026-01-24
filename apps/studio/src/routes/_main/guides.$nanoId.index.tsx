@@ -38,7 +38,8 @@ function GuidePage() {
       const newLocales = [...guide.availableLocales, locale]
       try {
         await updateGuideFn({ data: { id: guide.id, availableLocales: newLocales } })
-        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
+        await queryClient.refetchQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'detail'] })
         toast.success(tLocales('updateSuccess'))
       } catch {
         toast.error(tLocales('updateError'))
@@ -53,7 +54,8 @@ function GuidePage() {
       const newLocales = guide.availableLocales.filter((l) => l !== locale)
       try {
         await updateGuideFn({ data: { id: guide.id, availableLocales: newLocales } })
-        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
+        await queryClient.refetchQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'detail'] })
         toast.success(tLocales('updateSuccess'))
       } catch {
         toast.error(tLocales('updateError'))

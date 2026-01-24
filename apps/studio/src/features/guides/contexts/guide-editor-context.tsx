@@ -55,6 +55,14 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   // Active locale state
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
 
+  // Sync active locale when metadata updates and initialLocale becomes valid
+  // This handles the case where a new language is added and we navigate to edit with that locale
+  useEffect(() => {
+    if (initialLocale && availableLocales.includes(initialLocale) && activeLocale !== initialLocale) {
+      setActiveLocaleState(initialLocale)
+    }
+  }, [initialLocale, availableLocales, activeLocale])
+
   // Fetch locale-specific translations
   const localeQuery = useQuery({
     ...guideLocaleQueryOptions(guideId, activeLocale),
