@@ -22,6 +22,7 @@ const mimeToExt: Record<string, string> = {
 }
 
 export function AppSidebarContainer() {
+
   const router = useRouter()
   const queryClient = useQueryClient()
   const t = useTranslations('orgs.teamSwitcher')
@@ -76,9 +77,10 @@ export function AppSidebarContainer() {
           // Get upload credentials
           const credentials = await getFeedbackUploadCredentialsFn()
 
-          // Generate unique filename with user ID prefix for organization
+          // Generate unique filename with user ID prefix (required by RLS policy)
+          // Path format: {userId}/{timestamp}-{nanoid}.{ext}
           const ext = mimeToExt[file.type] ?? file.name.split('.').pop() ?? 'png'
-          const uniqueFileName = `${Date.now()}-${valguideId()}.${ext}`
+          const uniqueFileName = `${data?.user?.userId}/${Date.now()}-${valguideId()}.${ext}`
 
           // Upload with TUS (resumable upload protocol)
           // - Handles large files efficiently via chunked uploads
@@ -107,8 +109,8 @@ export function AppSidebarContainer() {
           setUploadError(errorMessage)
           setFeedbackLoading(false)
           setUploadProgress(0)
-          // Don't throw - allow user to retry or submit without screenshot
-          return
+          // Throw to prevent dialog from closing - allow user to retry or submit without screenshot
+          throw new Error(errorMessage)
         }
       }
 

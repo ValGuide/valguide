@@ -70,36 +70,36 @@ USING (
   AND owner = auth.uid()
 );
 
--- =============================================================================
--- Feedback Attachments Bucket Policies
--- =============================================================================
+  -- =============================================================================
+  -- Feedback Attachments Bucket Policies
+  -- =============================================================================
 
--- Policy: Authenticated users can upload to their own folder
-DROP POLICY IF EXISTS "Feedback: users can upload to their folder" ON storage.objects;
-CREATE POLICY "Feedback: users can upload to their folder"
-ON storage.objects
-FOR INSERT
-TO authenticated
-WITH CHECK (
-  bucket_id = 'studio-feedback'
-  AND (storage.foldername(name))[1] = auth.uid()::text
-);
+  -- Policy: Authenticated users can upload to their own folder
+  DROP POLICY IF EXISTS "Feedback: users can upload to their folder" ON storage.objects;
+  CREATE POLICY "Feedback: users can upload to their folder"
+  ON storage.objects
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    bucket_id = 'studio-feedback'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+  );
 
--- Policy: Anyone can read (public bucket)
-DROP POLICY IF EXISTS "Feedback: public read access" ON storage.objects;
-CREATE POLICY "Feedback: public read access"
-ON storage.objects
-FOR SELECT
-TO public
-USING (bucket_id = 'studio-feedback');
+  -- Policy: Anyone can read (public bucket)
+  DROP POLICY IF EXISTS "Feedback: public read access" ON storage.objects;
+  CREATE POLICY "Feedback: public read access"
+  ON storage.objects
+  FOR SELECT
+  TO public
+  USING (bucket_id = 'studio-feedback');
 
--- Policy: Users can delete their own feedback attachments
-DROP POLICY IF EXISTS "Feedback: users can delete own uploads" ON storage.objects;
-CREATE POLICY "Feedback: users can delete own uploads"
-ON storage.objects
-FOR DELETE
-TO authenticated
-USING (
-  bucket_id = 'studio-feedback'
-  AND owner = auth.uid()
-);
+  -- Policy: Users can delete their own feedback attachments
+  DROP POLICY IF EXISTS "Feedback: users can delete own uploads" ON storage.objects;
+  CREATE POLICY "Feedback: users can delete own uploads"
+  ON storage.objects
+  FOR DELETE
+  TO authenticated
+  USING (
+    bucket_id = 'studio-feedback'
+    AND owner = auth.uid()
+  );

@@ -6,6 +6,19 @@ import { getProfile } from '@valguide/core/features/profiles/queries'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
+import type { Team } from '../team/types'
+
+export interface SidebarData {
+  user: {
+    userId: string
+    name: string
+    email: string
+    avatar: string
+  }
+  teams: Team[]
+  currentTeam: Team | undefined
+  wasAutoSelected: boolean
+}
 
 export const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(async () => {
   const sidebarState = getCookie('sidebar_state')
@@ -24,6 +37,7 @@ export const getSidebarDataFn = createServerFn({ method: 'GET' })
     const name = getUserDisplayName(profile, user.email, user.metadata)
 
     const sidebarUser = {
+      userId: user.id,
       name,
       email: user.email || '',
       avatar: user.metadata?.avatar_url || '',
