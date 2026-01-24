@@ -167,10 +167,10 @@ export function ScreenshotInput({
   if (selectedFile && preview) {
     return (
       <div className="space-y-2">
-        <div className="relative rounded-lg border border-border bg-muted/50 p-3">
+        <div className="relative rounded-lg border border-border bg-muted/50 p-3 overflow-hidden">
           <div className="flex items-start gap-3">
             {/* Thumbnail */}
-            <div className="relative flex-shrink-0">
+            <div className="relative shrink-0">
               <img src={preview} alt={t('uploadLabel')} className="h-16 w-16 rounded-md object-cover" />
               {isUploading && (
                 <div className="absolute inset-0 flex items-center justify-center rounded-md bg-black/50">

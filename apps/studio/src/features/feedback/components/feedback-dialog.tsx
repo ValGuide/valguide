@@ -71,7 +71,7 @@ export function FeedbackDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="min-w-0">
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
             <DialogDescription>{t('description')}</DialogDescription>

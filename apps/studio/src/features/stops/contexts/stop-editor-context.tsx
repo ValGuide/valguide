@@ -111,7 +111,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
   // Derived isDirty (forms OR assets)
   const isDirty = dirtyForms.size > 0 || isAssetsDirty
 
-  // Set active locale and update URL
+  // Set active locale and update URL (always include locale param)
   const setActiveLocale = useCallback(
     (locale: string) => {
       if (!availableLocales.includes(locale)) {
@@ -119,11 +119,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
         return
       }
       setActiveLocaleState(locale)
-      const newSearch =
-        locale === defaultLocale
-          ? { ...searchParams, [LOCALE_PARAM]: undefined }
-          : { ...searchParams, [LOCALE_PARAM]: locale }
-      router.navigate({ to: pathname, search: newSearch, replace: true })
+      router.navigate({ to: pathname, search: { ...searchParams, [LOCALE_PARAM]: locale }, replace: true })
     },
     [pathname, router, searchParams, availableLocales],
   )

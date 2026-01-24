@@ -43,10 +43,20 @@ function GuideEditPage() {
   const { nanoId } = Route.useLoaderData()
   const { stop: stopId, locale: editorLocale } = Route.useSearch()
 
+  // Ensure locale is always in search params
+  if (!editorLocale) {
+    throw redirect({
+      to: '/guides/$nanoId/edit',
+      params: { nanoId },
+      search: { locale: defaultLocale },
+    })
+  }
+
   if (stopId) {
     throw redirect({
       to: '/guides/$nanoId/stops/$stopId/edit',
       params: { nanoId, stopId },
+      search: { locale: editorLocale },
     })
   }
 

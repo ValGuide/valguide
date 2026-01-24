@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -48,6 +48,15 @@ function StopEditSkeleton() {
 function StopEditPage() {
   const { nanoId } = Route.useLoaderData()
   const { locale: editorLocale } = Route.useSearch()
+
+  // Ensure locale is always in search params
+  if (!editorLocale) {
+    throw redirect({
+      to: '/stops/$nanoId/edit',
+      params: { nanoId },
+      search: { locale: defaultLocale },
+    })
+  }
 
   return (
     <StopEditorProvider nanoId={nanoId} initialLocale={editorLocale}>
