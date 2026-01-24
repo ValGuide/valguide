@@ -1,2 +1,0 @@
-CREATE INDEX "guide_asset_guide_id_idx" ON "studio"."guide_asset" USING btree ("guide_id");--> statement-breakpoint
-CREATE INDEX "stop_asset_stop_id_idx" ON "studio"."stop_asset" USING btree ("stop_id");

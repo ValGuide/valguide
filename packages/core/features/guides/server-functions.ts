@@ -1,5 +1,21 @@
 import { createServerFn } from '@tanstack/react-start'
-import { guideAsset, stopAsset } from '@valguide/core/features/assets/schema'
+import {
+  discardGuideAssetVersionDraft,
+  discardStopAssetVersionDraft,
+  publishGuideAssetVersion,
+  publishStopAssetVersion,
+  unpublishGuideAssetVersion,
+  unpublishStopAssetVersion,
+  upsertGuideAssetVersionDraft,
+  upsertStopAssetVersionDraft,
+} from '@valguide/core/features/assets/asset-version-mutations'
+import {
+  getGuideAssetsByVersion,
+  getGuideAssetVersionInfo,
+  getStopAssetsByVersion,
+  getStopAssetVersionInfo,
+} from '@valguide/core/features/assets/asset-version-queries'
+
 import {
   NotFoundError,
   requireGuideAccess,
@@ -380,194 +396,6 @@ export const reorderStopsFn = createServerFn({ method: 'POST' })
     return { success: true }
   })
 
-// Asset attachment actions
-
-const attachAssetToGuideSchema = z.object({
-  guideId: z.string(),
-  assetId: z.string(),
-  role: z.string(),
-  locale: z.string().optional(),
-  order: z.number().optional(),
-})
-
-export const attachAssetToGuideFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(attachAssetToGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { guideId, assetId, role, locale, order = 0 } = data
-    await requireGuideAccess(guideId, context.user.id)
-
-    const [attachment] = await db
-      .insert(guideAsset)
-      .values({
-        guideId,
-        assetId,
-        role,
-        locale: locale || null,
-        order,
-      })
-      .returning()
-
-    return attachment
-  })
-
-const attachAssetToStopSchema = z.object({
-  stopId: z.string(),
-  assetId: z.string(),
-  role: z.string(),
-  locale: z.string().optional(),
-  order: z.number().optional(),
-})
-
-export const attachAssetToStopFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(attachAssetToStopSchema)
-  .handler(async ({ context, data }) => {
-    const { stopId, assetId, role, locale, order = 0 } = data
-    await requireStopAccess(stopId, context.user.id)
-
-    const [attachment] = await db
-      .insert(stopAsset)
-      .values({
-        stopId,
-        assetId,
-        role,
-        locale: locale || null,
-        order,
-      })
-      .returning()
-
-    return attachment
-  })
-
-const detachAssetFromGuideSchema = z.object({
-  guideAssetId: z.string(),
-})
-
-export const detachAssetFromGuideFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(detachAssetFromGuideSchema)
-  .handler(async ({ context, data }) => {
-    const [asset] = await db
-      .select({ guideId: guideAsset.guideId })
-      .from(guideAsset)
-      .where(eq(guideAsset.id, data.guideAssetId))
-      .limit(1)
-
-    if (!asset) {
-      throw new NotFoundError('Asset attachment')
-    }
-
-    await requireGuideAccess(asset.guideId, context.user.id)
-    await db.delete(guideAsset).where(eq(guideAsset.id, data.guideAssetId))
-
-    return { success: true }
-  })
-
-const detachAssetFromStopSchema = z.object({
-  stopAssetId: z.string(),
-})
-
-export const detachAssetFromStopFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(detachAssetFromStopSchema)
-  .handler(async ({ context, data }) => {
-    const [asset] = await db
-      .select({ stopId: stopAsset.stopId })
-      .from(stopAsset)
-      .where(eq(stopAsset.id, data.stopAssetId))
-      .limit(1)
-
-    if (!asset) {
-      throw new NotFoundError('Asset attachment')
-    }
-
-    await requireStopAccess(asset.stopId, context.user.id)
-    await db.delete(stopAsset).where(eq(stopAsset.id, data.stopAssetId))
-
-    return { success: true }
-  })
-
-// Replace all guide assets (delete all, insert new)
-const replaceGuideAssetsSchema = z.object({
-  guideId: z.string(),
-  assets: z.array(
-    z.object({
-      assetId: z.string(),
-      role: z.string(),
-      locale: z.string().nullable(),
-    }),
-  ),
-})
-
-export const replaceGuideAssetsFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(replaceGuideAssetsSchema)
-  .handler(async ({ context, data }) => {
-    const { guideId, assets } = data
-    await requireGuideAccess(guideId, context.user.id)
-
-    await db.transaction(async (tx) => {
-      // Delete all existing guide assets
-      await tx.delete(guideAsset).where(eq(guideAsset.guideId, guideId))
-
-      // Insert new assets with order from array index
-      if (assets.length > 0) {
-        await tx.insert(guideAsset).values(
-          assets.map((a, index) => ({
-            guideId,
-            assetId: a.assetId,
-            role: a.role,
-            locale: a.locale,
-            order: index,
-          })),
-        )
-      }
-    })
-
-    return { success: true }
-  })
-
-// Replace all stop assets (delete all, insert new)
-const replaceStopAssetsSchema = z.object({
-  stopId: z.string(),
-  assets: z.array(
-    z.object({
-      assetId: z.string(),
-      role: z.string(),
-      locale: z.string().nullable(),
-    }),
-  ),
-})
-
-export const replaceStopAssetsFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(replaceStopAssetsSchema)
-  .handler(async ({ context, data }) => {
-    const { stopId, assets } = data
-    await requireStopAccess(stopId, context.user.id)
-
-    await db.transaction(async (tx) => {
-      // Delete all existing stop assets
-      await tx.delete(stopAsset).where(eq(stopAsset.stopId, stopId))
-
-      // Insert new assets with order from array index
-      if (assets.length > 0) {
-        await tx.insert(stopAsset).values(
-          assets.map((a, index) => ({
-            stopId,
-            assetId: a.assetId,
-            role: a.role,
-            locale: a.locale,
-            order: index,
-          })),
-        )
-      }
-    })
-
-    return { success: true }
-  })
-
 // ============================================================================
 // Guide-Level Publish/Unpublish (visibility to visitors)
 // ============================================================================
@@ -901,4 +729,178 @@ export const restoreStopFn = createServerFn({ method: 'POST' })
       .returning()
 
     return restoredGuideStop
+  })
+
+// ============================================================================
+// Asset Version Server Functions
+// ============================================================================
+
+// --- Guide Asset Versions ---
+
+const getGuideAssetsByVersionSchema = z.object({
+  guideId: z.string(),
+  version: z.enum(['draft', 'published']),
+})
+
+export const getGuideAssetsByVersionFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getGuideAssetsByVersionSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+    return getGuideAssetsByVersion(data.guideId, data.version)
+  })
+
+const getGuideAssetVersionInfoSchema = z.object({
+  guideId: z.string(),
+})
+
+export const getGuideAssetVersionInfoFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getGuideAssetVersionInfoSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+    return getGuideAssetVersionInfo(data.guideId)
+  })
+
+const saveGuideAssetsDraftSchema = z.object({
+  guideId: z.string(),
+  assets: z.array(
+    z.object({
+      assetId: z.string(),
+      order: z.number(),
+      role: z.string(),
+      locale: z.string().nullable().optional(),
+    }),
+  ),
+})
+
+export const saveGuideAssetsDraftFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(saveGuideAssetsDraftSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+    const versionId = await upsertGuideAssetVersionDraft(data.guideId, data.assets, context.user.id)
+    return { success: true, versionId }
+  })
+
+const publishGuideAssetsSchema = z.object({
+  guideId: z.string(),
+})
+
+export const publishGuideAssetsFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(publishGuideAssetsSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+    return publishGuideAssetVersion(data.guideId)
+  })
+
+const discardGuideAssetsDraftSchema = z.object({
+  guideId: z.string(),
+})
+
+export const discardGuideAssetsDraftFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(discardGuideAssetsDraftSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+    const success = await discardGuideAssetVersionDraft(data.guideId)
+    return { success }
+  })
+
+const unpublishGuideAssetsSchema = z.object({
+  guideId: z.string(),
+})
+
+export const unpublishGuideAssetsFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(unpublishGuideAssetsSchema)
+  .handler(async ({ context, data }) => {
+    await requireGuideAccess(data.guideId, context.user.id)
+    return unpublishGuideAssetVersion(data.guideId, context.user.id)
+  })
+
+// --- Stop Asset Versions ---
+
+const getStopAssetsByVersionSchema = z.object({
+  stopId: z.string(),
+  version: z.enum(['draft', 'published']),
+})
+
+export const getStopAssetsByVersionFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getStopAssetsByVersionSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccess(data.stopId, context.user.id)
+    return getStopAssetsByVersion(data.stopId, data.version)
+  })
+
+const getStopAssetVersionInfoSchema = z.object({
+  stopId: z.string(),
+})
+
+export const getStopAssetVersionInfoFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getStopAssetVersionInfoSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccess(data.stopId, context.user.id)
+    return getStopAssetVersionInfo(data.stopId)
+  })
+
+const saveStopAssetsDraftSchema = z.object({
+  stopId: z.string(),
+  assets: z.array(
+    z.object({
+      assetId: z.string(),
+      order: z.number(),
+      role: z.string(),
+      locale: z.string().nullable().optional(),
+    }),
+  ),
+})
+
+export const saveStopAssetsDraftFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(saveStopAssetsDraftSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccess(data.stopId, context.user.id)
+    const versionId = await upsertStopAssetVersionDraft(data.stopId, data.assets, context.user.id)
+    return { success: true, versionId }
+  })
+
+const publishStopAssetsSchema = z.object({
+  stopId: z.string(),
+})
+
+export const publishStopAssetsFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(publishStopAssetsSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccess(data.stopId, context.user.id)
+    return publishStopAssetVersion(data.stopId)
+  })
+
+const discardStopAssetsDraftSchema = z.object({
+  stopId: z.string(),
+})
+
+export const discardStopAssetsDraftFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(discardStopAssetsDraftSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccess(data.stopId, context.user.id)
+    const success = await discardStopAssetVersionDraft(data.stopId)
+    return { success }
+  })
+
+const unpublishStopAssetsSchema = z.object({
+  stopId: z.string(),
+})
+
+export const unpublishStopAssetsFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(unpublishStopAssetsSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccess(data.stopId, context.user.id)
+    return unpublishStopAssetVersion(data.stopId, context.user.id)
   })

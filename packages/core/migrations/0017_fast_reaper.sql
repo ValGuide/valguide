@@ -1,1 +1,0 @@
-ALTER TABLE "studio"."guide" ADD COLUMN "available_locales" text[] DEFAULT '{"en","de","rm"}' NOT NULL;

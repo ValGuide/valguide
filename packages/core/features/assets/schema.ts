@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { index, integer, pgSchema, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import { index, integer, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { guide, stop } from '../guides/schema'
 
@@ -47,6 +47,8 @@ export const asset = studioSchema.table(
   }),
 )
 
+// Asset versioning tables for draft/published workflow
+// Guide assets with versioning (global, not per-locale)
 export const guideAsset = studioSchema.table(
   'guide_asset',
   {
@@ -54,19 +56,37 @@ export const guideAsset = studioSchema.table(
     guideId: uuid('guide_id')
       .notNull()
       .references(() => guide.id, { onDelete: 'cascade' }),
+    version: integer('version').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
+  },
+  (t) => ({
+    guideIdx: index('guide_asset_guide_idx').on(t.guideId),
+    uniqueVersion: uniqueIndex('unique_guide_asset').on(t.guideId, t.version),
+  }),
+)
+
+export const guideAssetVersion = studioSchema.table(
+  'guide_asset_version',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    guideAssetId: uuid('guide_asset_id')
+      .notNull()
+      .references(() => guideAsset.id, { onDelete: 'cascade' }),
     assetId: uuid('asset_id')
       .notNull()
       .references(() => asset.id, { onDelete: 'cascade' }),
     order: integer('order').notNull().default(0),
     role: varchar('role', { length: 50 }).notNull(),
-    locale: varchar('locale', { length: 10 }),
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    locale: varchar('locale', { length: 10 }), // null = shared across locales
   },
   (t) => ({
-    guideIdx: index('guide_asset_guide_id_idx').on(t.guideId),
+    guideAssetIdx: index('guide_asset_version_guide_asset_idx').on(t.guideAssetId),
   }),
 )
 
+// Stop assets with versioning (global, not per-locale)
 export const stopAsset = studioSchema.table(
   'stop_asset',
   {
@@ -74,47 +94,88 @@ export const stopAsset = studioSchema.table(
     stopId: uuid('stop_id')
       .notNull()
       .references(() => stop.id, { onDelete: 'cascade' }),
+    version: integer('version').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
+  },
+  (t) => ({
+    stopIdx: index('stop_asset_stop_idx').on(t.stopId),
+    uniqueVersion: uniqueIndex('unique_stop_asset').on(t.stopId, t.version),
+  }),
+)
+
+export const stopAssetVersion = studioSchema.table(
+  'stop_asset_version',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    stopAssetId: uuid('stop_asset_id')
+      .notNull()
+      .references(() => stopAsset.id, { onDelete: 'cascade' }),
     assetId: uuid('asset_id')
       .notNull()
       .references(() => asset.id, { onDelete: 'cascade' }),
     order: integer('order').notNull().default(0),
     role: varchar('role', { length: 50 }).notNull(),
-    locale: varchar('locale', { length: 10 }),
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    locale: varchar('locale', { length: 10 }), // null = shared across locales
   },
   (t) => ({
-    stopIdx: index('stop_asset_stop_id_idx').on(t.stopId),
+    stopAssetIdx: index('stop_asset_version_stop_asset_idx').on(t.stopAssetId),
   }),
 )
 
 // Relations
-export const assetRelations = relations(asset, ({ many, one }) => ({
-  guideAssets: many(guideAsset),
-  stopAssets: many(stopAsset),
+export const assetRelations = relations(asset, ({ one }) => ({
   uploader: one(authUsers, {
     fields: [asset.uploadedBy],
     references: [authUsers.id],
   }),
 }))
 
-export const guideAssetRelations = relations(guideAsset, ({ one }) => ({
+// Guide asset relations
+export const guideAssetRelations = relations(guideAsset, ({ one, many }) => ({
   guide: one(guide, {
     fields: [guideAsset.guideId],
     references: [guide.id],
   }),
+  versions: many(guideAssetVersion),
+  creator: one(authUsers, {
+    fields: [guideAsset.createdBy],
+    references: [authUsers.id],
+  }),
+}))
+
+export const guideAssetVersionRelations = relations(guideAssetVersion, ({ one }) => ({
+  guideAsset: one(guideAsset, {
+    fields: [guideAssetVersion.guideAssetId],
+    references: [guideAsset.id],
+  }),
   asset: one(asset, {
-    fields: [guideAsset.assetId],
+    fields: [guideAssetVersion.assetId],
     references: [asset.id],
   }),
 }))
 
-export const stopAssetRelations = relations(stopAsset, ({ one }) => ({
+// Stop asset relations
+export const stopAssetRelations = relations(stopAsset, ({ one, many }) => ({
   stop: one(stop, {
     fields: [stopAsset.stopId],
     references: [stop.id],
   }),
+  versions: many(stopAssetVersion),
+  creator: one(authUsers, {
+    fields: [stopAsset.createdBy],
+    references: [authUsers.id],
+  }),
+}))
+
+export const stopAssetVersionRelations = relations(stopAssetVersion, ({ one }) => ({
+  stopAsset: one(stopAsset, {
+    fields: [stopAssetVersion.stopAssetId],
+    references: [stopAsset.id],
+  }),
   asset: one(asset, {
-    fields: [stopAsset.assetId],
+    fields: [stopAssetVersion.assetId],
     references: [asset.id],
   }),
 }))
@@ -122,15 +183,26 @@ export const stopAssetRelations = relations(stopAsset, ({ one }) => ({
 // TypeScript types
 export type Asset = typeof asset.$inferSelect
 export type NewAsset = typeof asset.$inferInsert
+
+// Guide asset types
 export type GuideAsset = typeof guideAsset.$inferSelect
 export type NewGuideAsset = typeof guideAsset.$inferInsert
+export type GuideAssetVersion = typeof guideAssetVersion.$inferSelect
+export type NewGuideAssetVersion = typeof guideAssetVersion.$inferInsert
+
+// Stop asset types
 export type StopAsset = typeof stopAsset.$inferSelect
 export type NewStopAsset = typeof stopAsset.$inferInsert
-
-// Helper types
-export type AssetWithRelations = Asset & {
-  guideAssets: GuideAsset[]
-  stopAssets: StopAsset[]
-}
+export type StopAssetVersion = typeof stopAssetVersion.$inferSelect
+export type NewStopAssetVersion = typeof stopAssetVersion.$inferInsert
 
 export type AssetType = 'image' | 'audio' | 'video'
+
+// Asset with versions (for queries)
+export type GuideAssetWithVersions = GuideAsset & {
+  versions: (GuideAssetVersion & { asset: Asset })[]
+}
+
+export type StopAssetWithVersions = StopAsset & {
+  versions: (StopAssetVersion & { asset: Asset })[]
+}

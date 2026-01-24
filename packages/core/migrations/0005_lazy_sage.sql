@@ -1,1 +1,0 @@
-ALTER TABLE "studio"."guide" ADD COLUMN "archived_at" timestamp with time zone;

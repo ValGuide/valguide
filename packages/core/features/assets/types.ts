@@ -24,28 +24,3 @@ export interface Asset {
   createdAt: Date
   updatedAt: Date
 }
-
-export interface GuideAsset {
-  id: string
-  guideId: string
-  assetId: string
-  order: number
-  role: string
-  locale: string | null
-  createdAt: Date
-}
-
-export interface StopAsset {
-  id: string
-  stopId: string
-  assetId: string
-  order: number
-  role: string
-  locale: string | null
-  createdAt: Date
-}
-
-export type AssetWithRelations = Asset & {
-  guideAssets: GuideAsset[]
-  stopAssets: StopAsset[]
-}

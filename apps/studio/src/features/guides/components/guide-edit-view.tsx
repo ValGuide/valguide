@@ -95,7 +95,7 @@ export function GuideEditView({
   const hasDraft = !!localeData?.guideTranslation?.draftVersionId
   const hasPublished = !!localeData?.guideTranslation?.currentVersionId
 
-  // Guide-level status with change indicator based on translation state
+  // Guide-level status with change indicator based on translation and asset state
   const computedStatusDisplay = getGuideStatusDisplay(
     {
       published: metadata?.published ?? null,
@@ -105,6 +105,12 @@ export function GuideEditView({
       ? {
           currentVersionId: localeData.guideTranslation.currentVersionId,
           draftVersionId: localeData.guideTranslation.draftVersionId,
+        }
+      : null,
+    metadata
+      ? {
+          currentAssetVersionId: metadata.currentAssetVersionId,
+          draftAssetVersionId: metadata.draftAssetVersionId,
         }
       : null,
   )

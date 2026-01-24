@@ -11,7 +11,15 @@ import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
-import { asset } from './schema'
+import {
+  guide,
+  guideTranslation,
+  guideTranslationVersion,
+  stop,
+  stopTranslation,
+  stopTranslationVersion,
+} from '../guides/schema'
+import { asset, guideAsset, guideAssetVersion, stopAsset, stopAssetVersion } from './schema'
 
 export type AssetType = 'image' | 'audio' | 'video'
 
@@ -165,60 +173,67 @@ export const getAssetUsageDetailsFn = createServerFn({ method: 'GET' })
   .handler(async ({ context, data }): Promise<AssetUsageDetails> => {
     await requireAssetAccess(data.assetId, context.user.id)
 
-    const usage = await db.query.asset.findFirst({
-      where: eq(asset.id, data.assetId),
-      with: {
-        guideAssets: {
-          with: {
-            guide: {
-              columns: { id: true, nanoId: true },
-              with: {
-                translations: {
-                  with: {
-                    currentVersion: {
-                      columns: { title: true },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        stopAssets: {
-          with: {
-            stop: {
-              columns: { id: true, nanoId: true },
-              with: {
-                translations: {
-                  with: {
-                    currentVersion: {
-                      columns: { title: true },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    })
+    // Query guide usage from versioned tables
+    const guideUsage = await db
+      .select({
+        guideId: guide.id,
+        guideNanoId: guide.nanoId,
+        title: guideTranslationVersion.title,
+        role: guideAssetVersion.role,
+        locale: guideAssetVersion.locale,
+      })
+      .from(guideAssetVersion)
+      .innerJoin(guideAsset, eq(guideAssetVersion.guideAssetId, guideAsset.id))
+      .innerJoin(guide, eq(guideAsset.guideId, guide.id))
+      .leftJoin(guideTranslation, eq(guideTranslation.guideId, guide.id))
+      .leftJoin(guideTranslationVersion, eq(guideTranslation.currentVersionId, guideTranslationVersion.id))
+      .where(eq(guideAssetVersion.assetId, data.assetId))
+
+    // Query stop usage from versioned tables
+    const stopUsage = await db
+      .select({
+        stopId: stop.id,
+        stopNanoId: stop.nanoId,
+        title: stopTranslationVersion.title,
+        role: stopAssetVersion.role,
+        locale: stopAssetVersion.locale,
+      })
+      .from(stopAssetVersion)
+      .innerJoin(stopAsset, eq(stopAssetVersion.stopAssetId, stopAsset.id))
+      .innerJoin(stop, eq(stopAsset.stopId, stop.id))
+      .leftJoin(stopTranslation, eq(stopTranslation.stopId, stop.id))
+      .leftJoin(stopTranslationVersion, eq(stopTranslation.currentVersionId, stopTranslationVersion.id))
+      .where(eq(stopAssetVersion.assetId, data.assetId))
+
+    // Deduplicate by guide/stop id (multiple translations may exist)
+    const uniqueGuides = new Map<string, (typeof guideUsage)[0]>()
+    for (const g of guideUsage) {
+      if (!uniqueGuides.has(g.guideId)) {
+        uniqueGuides.set(g.guideId, g)
+      }
+    }
+
+    const uniqueStops = new Map<string, (typeof stopUsage)[0]>()
+    for (const s of stopUsage) {
+      if (!uniqueStops.has(s.stopId)) {
+        uniqueStops.set(s.stopId, s)
+      }
+    }
 
     return {
-      guides:
-        usage?.guideAssets.map((ga) => ({
-          id: ga.guide.id,
-          nanoId: ga.guide.nanoId,
-          name: ga.guide.translations[0]?.currentVersion?.title ?? 'Untitled',
-          role: ga.role,
-          locale: ga.locale,
-        })) ?? [],
-      stops:
-        usage?.stopAssets.map((sa) => ({
-          id: sa.stop.id,
-          nanoId: sa.stop.nanoId,
-          name: sa.stop.translations[0]?.currentVersion?.title ?? 'Untitled',
-          role: sa.role,
-          locale: sa.locale,
-        })) ?? [],
+      guides: Array.from(uniqueGuides.values()).map((g) => ({
+        id: g.guideId,
+        nanoId: g.guideNanoId,
+        name: g.title ?? 'Untitled',
+        role: g.role,
+        locale: g.locale,
+      })),
+      stops: Array.from(uniqueStops.values()).map((s) => ({
+        id: s.stopId,
+        nanoId: s.stopNanoId,
+        name: s.title ?? 'Untitled',
+        role: s.role,
+        locale: s.locale,
+      })),
     }
   })

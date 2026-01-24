@@ -36,6 +36,9 @@ export const guide = studioSchema.table(
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
     availableLocales: text('available_locales').array().notNull().default(['en', 'de', 'rm']),
+    // Asset versioning pointers (global, not per-locale)
+    currentAssetVersionId: uuid('current_asset_version_id'), // Published assets
+    draftAssetVersionId: uuid('draft_asset_version_id'), // Draft assets being edited
   },
   (t) => ({
     orgIdx: index('guide_organization_id_idx').on(t.organizationId),
@@ -103,6 +106,9 @@ export const stop = studioSchema.table(
     createdBy: uuid('created_by')
       .notNull()
       .references(() => authUsers.id, { onDelete: 'cascade' }),
+    // Asset versioning pointers (global, not per-locale)
+    currentAssetVersionId: uuid('current_asset_version_id'), // Published assets
+    draftAssetVersionId: uuid('draft_asset_version_id'), // Draft assets being edited
     // Deprecated columns - kept for backward compatibility during migration
     guideId: uuid('guide_id').references(() => guide.id, { onDelete: 'set null' }),
     order: integer('order').default(0),

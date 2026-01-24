@@ -55,6 +55,7 @@
     "links:build": "pnpm env:load turbo run build --filter ./apps/links --",
     "links:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/links --",
     "links:type-check": "pnpm turbo run type-check --filter ./apps/links",
+    "db:push": "turbo run db:push --",
     "db:generate": "turbo run db:generate --",
     "db:migrate": "turbo run db:migrate --",
     "db:studio": "turbo run db:studio --",

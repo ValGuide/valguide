@@ -1,6 +1,6 @@
 import { db } from '@valguide/core/features/db'
-import { and, count, desc, eq, getTableColumns, sql } from 'drizzle-orm'
-import { type AssetType, asset, guideAsset, stopAsset } from './schema'
+import { and, countDistinct, desc, eq, getTableColumns, sql } from 'drizzle-orm'
+import { type AssetType, asset, guideAsset, guideAssetVersion, stopAsset, stopAssetVersion } from './schema'
 
 export type GetAssetsFilters = {
   type?: AssetType
@@ -30,9 +30,17 @@ export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUs
     conditions.push(eq(asset.uploadedBy, filters.uploadedBy))
   }
 
-  const guideCountSq = db.select({ count: count() }).from(guideAsset).where(eq(guideAsset.assetId, asset.id))
+  const guideCountSq = db
+    .select({ count: countDistinct(guideAsset.guideId) })
+    .from(guideAssetVersion)
+    .innerJoin(guideAsset, eq(guideAssetVersion.guideAssetId, guideAsset.id))
+    .where(eq(guideAssetVersion.assetId, asset.id))
 
-  const stopCountSq = db.select({ count: count() }).from(stopAsset).where(eq(stopAsset.assetId, asset.id))
+  const stopCountSq = db
+    .select({ count: countDistinct(stopAsset.stopId) })
+    .from(stopAssetVersion)
+    .innerJoin(stopAsset, eq(stopAssetVersion.stopAssetId, stopAsset.id))
+    .where(eq(stopAssetVersion.assetId, asset.id))
 
   const query = db
     .select({
@@ -48,58 +56,4 @@ export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUs
   }
 
   return query
-}
-
-export async function attachAssetToGuide({
-  guideId,
-  assetId,
-  role,
-  locale,
-  order = 0,
-}: {
-  guideId: string
-  assetId: string
-  role: string
-  locale?: string
-  order?: number
-}) {
-  const [result] = await db
-    .insert(guideAsset)
-    .values({
-      guideId,
-      assetId,
-      role,
-      locale: locale || null,
-      order,
-    })
-    .returning()
-
-  return result
-}
-
-export async function attachAssetToStop({
-  stopId,
-  assetId,
-  role,
-  locale,
-  order = 0,
-}: {
-  stopId: string
-  assetId: string
-  role: string
-  locale?: string
-  order?: number
-}) {
-  const [result] = await db
-    .insert(stopAsset)
-    .values({
-      stopId,
-      assetId,
-      role,
-      locale: locale || null,
-      order,
-    })
-    .returning()
-
-  return result
 }

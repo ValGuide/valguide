@@ -11,6 +11,11 @@ export type TranslationInput = {
   draftVersionId: string | null
 }
 
+export type AssetVersionInput = {
+  currentAssetVersionId: string | null
+  draftAssetVersionId: string | null
+}
+
 export type GuideStatusDisplay = {
   status: GuideStatus
   indicator: ChangeIndicator | null
@@ -43,12 +48,26 @@ export function getChangeIndicator(translation: TranslationInput): ChangeIndicat
   return 'changed'
 }
 
+export function hasAssetChanges(assetVersion: AssetVersionInput | null): boolean {
+  if (!assetVersion) return false
+  return !!assetVersion.draftAssetVersionId
+}
+
 export function getGuideStatusDisplay(
   guide: GuideStatusInput,
   translation: TranslationInput | null,
+  assetVersion?: AssetVersionInput | null,
 ): GuideStatusDisplay {
   const status = getGuideStatus(guide)
-  const indicator = translation ? getChangeIndicator(translation) : null
+  const translationIndicator = translation ? getChangeIndicator(translation) : null
+  const assetHasChanges = hasAssetChanges(assetVersion ?? null)
+
+  // If either translation or assets have changes, show 'changed'
+  let indicator: ChangeIndicator | null = translationIndicator
+  if (status === 'published' && assetHasChanges && indicator !== 'changed') {
+    indicator = 'changed'
+  }
+
   return { status, indicator }
 }
 

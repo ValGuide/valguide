@@ -80,6 +80,9 @@ export type StopMetadata = {
   archivedAt: Date | null
   assets: AssetWithRole[]
   translationStatuses: TranslationStatus[]
+  // Asset versioning pointers
+  currentAssetVersionId: string | null
+  draftAssetVersionId: string | null
 }
 
 // Lightweight guide metadata (no translations, for editor shell)
@@ -95,6 +98,9 @@ export type GuideMetadata = {
   stops: StopMetadata[]
   // Guide translation statuses for all locales (just version IDs, no content)
   translationStatuses: TranslationStatus[]
+  // Asset versioning pointers
+  currentAssetVersionId: string | null
+  draftAssetVersionId: string | null
 }
 
 // Translation version content

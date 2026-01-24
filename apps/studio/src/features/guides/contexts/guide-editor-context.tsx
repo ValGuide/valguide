@@ -5,8 +5,8 @@ import {
   createStopFn,
   removeStopFromGuideFn,
   reorderStopsFn,
-  replaceGuideAssetsFn,
-  replaceStopAssetsFn,
+  saveGuideAssetsDraftFn,
+  saveStopAssetsDraftFn,
   updateGuideFn,
   updateGuideTranslationFn,
   updateStopByNanoIdFn,
@@ -258,6 +258,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         archivedAt: null,
         assets: [],
         translationStatuses: [],
+        currentAssetVersionId: null,
+        draftAssetVersionId: null,
       }
     } catch (error) {
       console.error('Failed to add stop:', error)
@@ -390,27 +392,29 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         }
       }
 
-      // Save assets if dirty (replace all)
+      // Save assets if dirty (save as draft versions)
       if (isAssetsDirty) {
-        // Save guide assets
-        await replaceGuideAssetsFn({
+        // Save guide assets as draft
+        await saveGuideAssetsDraftFn({
           data: {
             guideId,
-            assets: guideAssets.map((a) => ({
+            assets: guideAssets.map((a, index) => ({
               assetId: a.id,
+              order: index,
               role: a.role,
               locale: a.locale ?? null,
             })),
           },
         })
 
-        // Save stop assets
+        // Save stop assets as draft
         for (const [stopId, assets] of stopAssetsMap) {
-          await replaceStopAssetsFn({
+          await saveStopAssetsDraftFn({
             data: {
               stopId,
-              assets: assets.map((a) => ({
+              assets: assets.map((a, index) => ({
                 assetId: a.id,
+                order: index,
                 role: a.role,
                 locale: a.locale ?? null,
               })),
