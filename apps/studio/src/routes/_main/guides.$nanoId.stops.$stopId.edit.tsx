@@ -1,3 +1,9 @@
+import { createFileRoute, notFound } from '@tanstack/react-router'
+import {
+  discardStopTranslationDraftFn,
+  publishStopTranslationDraftFn,
+  unpublishStopTranslationFn,
+} from '@valguide/core/features/guides/server-functions'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleton'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
@@ -5,12 +11,6 @@ import { StopNotFound } from '@/features/guides/components/stop-not-found'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { guideMetadataQueryOptions } from '@/features/guides/query-options'
-import { createFileRoute, notFound } from '@tanstack/react-router'
-import {
-  discardStopTranslationDraftFn,
-  publishStopTranslationDraftFn,
-  unpublishStopTranslationFn,
-} from '@valguide/core/features/guides/server-functions'
 
 type SearchParams = {
   locale?: string
@@ -20,6 +20,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
     locale: search.locale as string | undefined,
   }),
+  loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context }) => {
     const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
     if (metadata) {
@@ -40,7 +41,7 @@ function GuideStopEditPage() {
   const { locale } = Route.useSearch()
 
   return (
-    <GuideEditorProvider nanoId={nanoId} initialLocale={locale!}>
+    <GuideEditorProvider nanoId={nanoId} initialLocale={locale}>
       <StopEditContent stopId={stopId} />
     </GuideEditorProvider>
   )

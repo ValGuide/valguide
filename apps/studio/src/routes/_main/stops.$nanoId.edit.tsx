@@ -1,10 +1,3 @@
-import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
-import { StopEditLayout, type StopTranslationData } from '@/features/guides/components/stop-edit-layout'
-import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
-import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
-import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
-import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
-import { stopLocaleDataQueryOptions, stopMetadataQueryOptions } from '@/features/stops/query-options'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
@@ -12,6 +5,13 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft, Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
+import { StopEditLayout, type StopTranslationData } from '@/features/guides/components/stop-edit-layout'
+import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
+import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
+import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
+import { stopLocaleDataQueryOptions, stopMetadataQueryOptions } from '@/features/stops/query-options'
 
 type SearchParams = {
   locale?: string
@@ -21,7 +21,7 @@ export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
     locale: search.locale as string | undefined,
   }),
-  loaderDeps: ({ search }) => ({ locale: search.locale! }),
+  loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
     const metadata = await context.queryClient.ensureQueryData(stopMetadataQueryOptions(params.nanoId))
 

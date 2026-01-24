@@ -23,7 +23,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
     stop: search.stop as string | undefined,
     locale: search.locale as string | undefined,
   }),
-  loaderDeps: ({ search }) => ({ locale: search.locale! }),
+  loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
     const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
 
@@ -42,7 +42,7 @@ function GuideEditPage() {
   const { locale } = Route.useSearch()
 
   return (
-    <GuideEditorProvider nanoId={nanoId} initialLocale={locale!}>
+    <GuideEditorProvider nanoId={nanoId} initialLocale={locale}>
       <GuideEditContent />
     </GuideEditorProvider>
   )
