@@ -279,7 +279,11 @@ export const stopTranslationVersionRelations = relations(stopTranslationVersion,
   }),
 }))
 
-// TypeScript types
+// ============================================================================
+// Drizzle-inferred Types (for use in internal queries/mutations)
+// ============================================================================
+
+// Base entity types (Drizzle-inferred)
 export type Guide = typeof guide.$inferSelect
 export type NewGuide = typeof guide.$inferInsert
 export type GuideTranslation = typeof guideTranslation.$inferSelect
@@ -297,7 +301,7 @@ export type NewStopTranslationVersion = typeof stopTranslationVersion.$inferInse
 export type GuideStop = typeof guideStop.$inferSelect
 export type NewGuideStop = typeof guideStop.$inferInsert
 
-// Helper types with versions
+// Composite types with relations (Drizzle-inferred, for internal use)
 export type GuideTranslationWithVersion = GuideTranslation & {
   currentVersion?: GuideTranslationVersion | null
   draftVersion?: GuideTranslationVersion | null
@@ -337,61 +341,12 @@ export type GuideWithStops = Guide & {
   availableLocales?: string[]
 }
 
-/**
- * Convert GuideWithGuideStops (junction table format) to GuideWithStops (flat stops array)
- * Use this for backward compatibility with UI components that expect flat stops array
- */
-export function toGuideWithStops(guide: GuideWithGuideStops): GuideWithStops {
-  return {
-    ...guide,
-    stops: guide.guideStops.map((gs) => ({
-      ...gs.stop,
-      // Include position from junction table as order for backward compatibility
-      order: gs.position,
-    })),
-  }
-}
+// ============================================================================
+// Helper functions re-exported from utils.ts for backward compatibility
+// ============================================================================
+export { getLocalizedGuideText, getLocalizedStopText, toGuideWithStops } from './utils'
 
-// Helper function to get localized text from current version with fallback
-export function getLocalizedGuideText(
-  guide: GuideWithTranslations,
-  field: 'title' | 'description',
-  locale: string,
-  fallbackLocale: string = 'en',
-): string {
-  const translation = guide.translations.find((t) => t.locale === locale)
-  if (translation?.currentVersion?.[field]) {
-    return translation.currentVersion[field] || ''
-  }
-
-  const fallbackTranslation = guide.translations.find((t) => t.locale === fallbackLocale)
-  if (fallbackTranslation?.currentVersion?.[field]) {
-    return fallbackTranslation.currentVersion[field] || ''
-  }
-
-  // Return the first available translation
-  const firstTranslation = guide.translations[0]
-  return firstTranslation?.currentVersion?.[field] || ''
-}
-
-// Helper function to get localized stop text from current version with fallback
-export function getLocalizedStopText(
-  stop: StopWithTranslations,
-  field: 'title' | 'description' | 'transcription',
-  locale: string,
-  fallbackLocale: string = 'en',
-): string {
-  const translation = stop.translations.find((t) => t.locale === locale)
-  if (translation?.currentVersion?.[field]) {
-    return translation.currentVersion[field] || ''
-  }
-
-  const fallbackTranslation = stop.translations.find((t) => t.locale === fallbackLocale)
-  if (fallbackTranslation?.currentVersion?.[field]) {
-    return fallbackTranslation.currentVersion[field] || ''
-  }
-
-  // Return the first available translation
-  const firstTranslation = stop.translations[0]
-  return firstTranslation?.currentVersion?.[field] || ''
-}
+// ============================================================================
+// NOTE: For Storybook-safe types, import from '@valguide/core/features/guides/types'
+// For helper functions like getLocalizedGuideText, toGuideWithStops, see utils.ts
+// ============================================================================

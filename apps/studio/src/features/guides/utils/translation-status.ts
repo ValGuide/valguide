@@ -9,7 +9,7 @@ type TranslationLike = {
   locale: string
   currentVersionId?: string | null
   draftVersionId?: string | null
-  currentVersion?: { status?: string | null } | null
+  // currentVersion is not used in status calculation - status is derived from pointers
 }
 
 /**

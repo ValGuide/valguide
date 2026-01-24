@@ -1,8 +1,149 @@
-import { z } from 'zod'
-import type { Asset } from '../assets/types'
-import type { GuideWithStops, GuideWithTranslations, StopWithTranslations } from './schema-types'
+/**
+ * Consolidated types for the guides feature.
+ * All public types should be imported from this file.
+ *
+ * These are pure TypeScript types that don't import from schema.ts,
+ * making them safe to import in browser/Storybook environments.
+ */
 
-// Extended types for app viewer (moved from queries.ts to avoid db.ts import in Storybook)
+import { z } from 'zod'
+import type { Asset } from '../../assets/types'
+
+// ============================================================================
+// Base Entity Types (Storybook-safe, mirror Drizzle-inferred types)
+// ============================================================================
+
+/**
+ * Base Guide entity type (mirrors Drizzle-inferred type from schema.ts)
+ * For Storybook and client-side use where schema.ts cannot be imported
+ */
+export interface GuideEntity {
+  id: string
+  nanoId: string
+  createdAt: Date
+  createdBy: string
+  updatedAt: Date
+  updatedBy: string
+  published: Date | null
+  organizationId: string
+  themeId: string | null
+  archivedAt: Date | null
+  deletedAt: Date | null
+  availableLocales: string[]
+}
+
+export interface GuideTranslation {
+  id: string
+  guideId: string
+  locale: string
+  currentVersionId: string | null
+  draftVersionId: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface GuideTranslationVersion {
+  id: string
+  versionId: string
+  translationId: string
+  version: number
+  title: string | null
+  description: string | null
+  createdAt: Date
+  createdBy: string | null
+  publishedAt: Date | null
+}
+
+export interface Stop {
+  id: string
+  nanoId: string
+  organizationId: string
+  createdAt: Date
+  updatedAt: Date
+  createdBy: string
+  availableLocales: string[]
+  guideId: string | null
+  order: number | null
+}
+
+export interface GuideStop {
+  id: string
+  guideId: string
+  stopId: string
+  position: number
+  visible: boolean
+  archivedAt: Date | null
+  createdAt: Date
+}
+
+export interface StopTranslation {
+  id: string
+  stopId: string
+  locale: string
+  currentVersionId: string | null
+  draftVersionId: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface StopTranslationVersion {
+  id: string
+  versionId: string
+  translationId: string
+  version: number
+  title: string | null
+  description: string | null
+  transcription: string | null
+  createdAt: Date
+  createdBy: string | null
+  publishedAt: Date | null
+}
+
+// ============================================================================
+// Composite Types (with relations)
+// ============================================================================
+
+// Helper types with versions
+export type GuideTranslationWithVersion = GuideTranslation & {
+  currentVersion?: GuideTranslationVersion | null
+  draftVersion?: GuideTranslationVersion | null
+  versions?: GuideTranslationVersion[]
+}
+
+export type StopTranslationWithVersion = StopTranslation & {
+  currentVersion?: StopTranslationVersion | null
+  draftVersion?: StopTranslationVersion | null
+  versions?: StopTranslationVersion[]
+}
+
+export type GuideWithTranslations = GuideEntity & {
+  translations: GuideTranslationWithVersion[]
+  availableLocales?: string[]
+}
+
+export type StopWithTranslations = Stop & {
+  translations: StopTranslationWithVersion[]
+}
+
+export type GuideStopWithStop = GuideStop & {
+  stop: StopWithTranslations
+}
+
+export type GuideWithGuideStops = GuideEntity & {
+  translations: GuideTranslationWithVersion[]
+  guideStops: GuideStopWithStop[]
+}
+
+export type GuideWithStops = GuideEntity & {
+  translations: GuideTranslationWithVersion[]
+  stops: StopWithTranslations[]
+  availableLocales?: string[]
+}
+
+// ============================================================================
+// Asset-Related Types
+// ============================================================================
+
 export type AssetWithRole = Asset & {
   guideAssetId?: string
   stopAssetId?: string
@@ -24,7 +165,11 @@ export type GuideWithTranslationsAndCover = GuideWithTranslations & {
   coverImage?: AssetWithRole | null
 }
 
-export const guideTranslationSchema = z.object({
+// ============================================================================
+// Zod Schemas (for forms and display/preview components)
+// ============================================================================
+
+export const guideTranslationFormSchema = z.object({
   id: z.string(),
   guideId: z.string(),
   locale: z.string(),
@@ -42,7 +187,12 @@ export const coverImageSchema = z
   .nullable()
   .optional()
 
-export const guideSchema = z.object({
+/**
+ * Zod schema for guide display/preview cards.
+ * This is NOT the same as the DB entity - it's a view model with resolved fields.
+ * Used in preview-card.tsx and similar display components.
+ */
+export const guideDisplaySchema = z.object({
   id: z.string(),
   nanoId: z.string(),
   title: z.string().optional(),
@@ -54,11 +204,21 @@ export const guideSchema = z.object({
   updatedAt: z.date().optional(),
   published: z.date().nullable().optional(),
   tags: z.array(z.string()).optional(),
-  translations: z.array(guideTranslationSchema).optional(),
+  translations: z.array(guideTranslationFormSchema).optional(),
 })
 
-export type GuideTranslation = z.infer<typeof guideTranslationSchema>
-export type Guide = z.infer<typeof guideSchema>
+// Zod-inferred types (for form validation etc.)
+export type GuideTranslationForm = z.infer<typeof guideTranslationFormSchema>
+export type GuideDisplay = z.infer<typeof guideDisplaySchema>
+
+// Legacy aliases for backward compatibility
+export const guideTranslationSchema = guideTranslationFormSchema
+export const guideSchema = guideDisplaySchema
+/**
+ * @deprecated Use GuideDisplay for display/preview components or import Guide from schema.ts for DB entity
+ * This is the Zod-inferred display type, kept for backward compatibility with preview-card.tsx
+ */
+export type Guide = GuideDisplay
 
 // ============================================================================
 // Lightweight Editor Types (Stage 2 - per-locale fetching)
