@@ -49,7 +49,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
   const metadataQuery = useQuery(stopMetadataQueryOptions(nanoId))
   const metadata = metadataQuery.data ?? null
   const stopId = metadata?.id ?? ''
-  const availableLocales = metadata?.availableLocales ?? ['en', 'de', 'rm']
+  const availableLocales = metadata?.availableLocales ?? ['en']
 
   // Active locale state
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))

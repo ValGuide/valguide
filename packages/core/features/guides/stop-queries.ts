@@ -163,7 +163,7 @@ export async function createStop({
 // ============================================================================
 
 // Locale priority for fallback (if preferred locale not available)
-const LOCALE_FALLBACK_ORDER = ['en', 'de', 'rm']
+const LOCALE_FALLBACK_ORDER = ['en']
 
 /**
  * Resolve the best title from guide translations (title only, for associations)

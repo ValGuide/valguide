@@ -228,7 +228,7 @@ export function StopEditLayout({
             <div className="flex shrink-0 items-center gap-2">
               <LocaleSelector
                 value={activeLocale}
-                locales={locales ?? ['en', 'de', 'rm']}
+                locales={locales ?? ['en']}
                 onValueChange={onLocaleChange}
                 guideNanoId={guideNanoId}
               />
@@ -277,7 +277,7 @@ export function StopEditLayout({
             <>
               <LocaleSelector
                 value={activeLocale}
-                locales={locales ?? ['en', 'de', 'rm']}
+                locales={locales ?? ['en']}
                 onValueChange={onLocaleChange}
                 guideNanoId={guideNanoId}
               />

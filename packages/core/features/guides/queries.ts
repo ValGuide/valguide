@@ -116,7 +116,7 @@ export async function getGuidesByOrganizationId(
 }
 
 // Locale priority for fallback (if preferred locale not available)
-const LOCALE_FALLBACK_ORDER = ['en', 'de', 'rm']
+const LOCALE_FALLBACK_ORDER = ['en']
 
 /**
  * Resolve the best available translation for display

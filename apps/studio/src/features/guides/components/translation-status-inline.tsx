@@ -39,7 +39,7 @@ function getStatusLabel(
 export function TranslationStatusInline({
   translationStatuses,
   maxVisible = 3,
-  locales = ['en', 'de', 'rm'],
+  locales = ['en'],
 }: TranslationStatusInlineProps) {
   const t = useTranslations('stops.translationStatus')
 

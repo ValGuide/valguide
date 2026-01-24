@@ -28,7 +28,7 @@ export const guide = studioSchema.table(
     themeId: uuid('theme_id'),
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
-    availableLocales: text('available_locales').array().notNull().default(['en', 'de', 'rm']),
+    availableLocales: text('available_locales').array().notNull().default(['en']),
   },
   (t) => ({
     orgIdx: index('guide_organization_id_idx').on(t.organizationId),
@@ -97,7 +97,7 @@ export const stop = studioSchema.table(
       .notNull()
       .references(() => authUsers.id, { onDelete: 'cascade' }),
     // Available locales for independent stop editing
-    availableLocales: text('available_locales').array().notNull().default(['en', 'de', 'rm']),
+    availableLocales: text('available_locales').array().notNull().default(['en']),
     // Deprecated columns - kept for backward compatibility during migration
     guideId: uuid('guide_id').references(() => guide.id, { onDelete: 'set null' }),
     order: integer('order').default(0),

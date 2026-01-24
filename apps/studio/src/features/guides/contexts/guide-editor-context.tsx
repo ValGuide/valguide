@@ -52,7 +52,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   const metadataQuery = useQuery(guideMetadataQueryOptions(nanoId))
   const metadata = metadataQuery.data ?? null
   const guideId = metadata?.id ?? ''
-  const availableLocales = metadata?.availableLocales ?? ['en', 'de', 'rm']
+  const availableLocales = metadata?.availableLocales ?? ['en']
 
   // Active locale state
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))

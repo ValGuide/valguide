@@ -7,7 +7,7 @@ export type LocaleTabsProps = {
   locales?: string[]
 }
 
-export function LocaleTabs({ value, onValueChange, locales = ['en', 'de', 'rm'] }: LocaleTabsProps) {
+export function LocaleTabs({ value, onValueChange, locales = ['en'] }: LocaleTabsProps) {
   const id = useId()
 
   return (
