@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import {
   discardStopTranslationDraftFn,
   publishStopTranslationDraftFn,
@@ -21,15 +21,34 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
     locale: search.locale as string | undefined,
   }),
   loaderDeps: ({ search }) => ({ locale: search.locale }),
-  loader: async ({ params, context }) => {
+  loader: async ({ params, context, deps }) => {
     const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
-    if (metadata) {
-      const stopExists = metadata.stops.some((s) => s.nanoId === params.stopId)
-      if (!stopExists) {
-        throw notFound()
-      }
+
+    if (!metadata) {
+      throw notFound()
     }
-    return { nanoId: params.nanoId, stopId: params.stopId }
+
+    const stopExists = metadata.stops.some((s) => s.nanoId === params.stopId)
+    if (!stopExists) {
+      throw notFound()
+    }
+
+    const requestedLocale = deps.locale
+    const { availableLocales } = metadata
+
+    // Redirect if locale missing or invalid
+    if (!requestedLocale || !availableLocales.includes(requestedLocale)) {
+      const defaultLocale = availableLocales[0]
+      if (!defaultLocale) throw notFound()
+      throw redirect({
+        to: '/guides/$nanoId/stops/$stopId/edit',
+        params: { nanoId: params.nanoId, stopId: params.stopId },
+        search: { locale: defaultLocale },
+        replace: true,
+      })
+    }
+
+    return { nanoId: params.nanoId, stopId: params.stopId, locale: requestedLocale }
   },
   notFoundComponent: StopNotFound,
   component: GuideStopEditPage,
@@ -37,8 +56,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
 })
 
 function GuideStopEditPage() {
-  const { nanoId, stopId } = Route.useLoaderData()
-  const { locale } = Route.useSearch()
+  const { nanoId, stopId, locale } = Route.useLoaderData()
 
   return (
     <GuideEditorProvider nanoId={nanoId} initialLocale={locale}>

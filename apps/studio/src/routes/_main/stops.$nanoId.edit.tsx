@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, notFound, redirect, useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -25,11 +25,28 @@ export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
   loader: async ({ params, context, deps }) => {
     const metadata = await context.queryClient.ensureQueryData(stopMetadataQueryOptions(params.nanoId))
 
-    if (metadata) {
-      await context.queryClient.ensureQueryData(stopLocaleDataQueryOptions(metadata.id, deps.locale))
+    if (!metadata) {
+      throw notFound()
     }
 
-    return { nanoId: params.nanoId, locale: deps.locale }
+    const requestedLocale = deps.locale
+    const { availableLocales } = metadata
+
+    // Redirect if locale missing or invalid
+    if (!requestedLocale || !availableLocales.includes(requestedLocale)) {
+      const defaultLocale = availableLocales[0]
+      if (!defaultLocale) throw notFound()
+      throw redirect({
+        to: '/stops/$nanoId/edit',
+        params: { nanoId: params.nanoId },
+        search: { locale: defaultLocale },
+        replace: true,
+      })
+    }
+
+    await context.queryClient.ensureQueryData(stopLocaleDataQueryOptions(metadata.id, requestedLocale))
+
+    return { nanoId: params.nanoId, locale: requestedLocale }
   },
   component: StopEditPage,
   pendingComponent: StopEditSkeleton,
