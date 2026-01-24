@@ -13,7 +13,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
 import { Check, ChevronDown, Globe } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export type ContentLocale = string
 
@@ -77,28 +77,9 @@ const SEARCH_THRESHOLD = 8
 
 export function LocaleSelector({ value, locales, onValueChange, guideNanoId, className }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
   const t = useTranslations('guides.localeSelector')
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
   const selectedLocaleName = getLocaleDisplayName(value)
   const showSearch = locales.length >= SEARCH_THRESHOLD
-
-  if (!isMounted) {
-    return (
-      <Button variant="outline" disabled className={cn('w-50 justify-between', className)}>
-        <span className="flex items-center gap-2">
-          <Globe className="h-4 w-4" />
-          {selectedLocaleName}
-        </span>
-        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      </Button>
-    )
-  }
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
