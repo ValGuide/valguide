@@ -11,23 +11,42 @@ import {
 import { Textarea } from '@valguide/ui/components/textarea'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { ScreenshotInput } from './screenshot-input'
 
 export interface FeedbackDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (feedback: string) => Promise<void>
+  onSubmit: (feedback: string, file: File | null, pageUrl: string) => Promise<void>
   isLoading?: boolean
+  uploadProgress?: number
+  /** Error from upload (allows retry without closing dialog) */
+  uploadError?: string | null
+  /** Clear upload error for retry */
+  onClearUploadError?: () => void
 }
 
-export function FeedbackDialog({ open, onOpenChange, onSubmit, isLoading = false }: FeedbackDialogProps) {
+export function FeedbackDialog({
+  open,
+  onOpenChange,
+  onSubmit,
+  isLoading = false,
+  uploadProgress = 0,
+  uploadError = null,
+  onClearUploadError,
+}: FeedbackDialogProps) {
   const t = useTranslations('sidebar.feedback')
   const [feedback, setFeedback] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [pageUrl, setPageUrl] = useState('')
 
+  // Reset state when dialog opens/closes
   useEffect(() => {
     if (open) {
       setFeedback('')
       setError(null)
+      setSelectedFile(null)
+      setPageUrl(window.location.href)
     }
   }, [open])
 
@@ -42,7 +61,7 @@ export function FeedbackDialog({ open, onOpenChange, onSubmit, isLoading = false
 
     setError(null)
     try {
-      await onSubmit(trimmedFeedback)
+      await onSubmit(trimmedFeedback, selectedFile, pageUrl)
       onOpenChange(false)
     } catch {
       setError(t('submitError'))
@@ -67,6 +86,15 @@ export function FeedbackDialog({ open, onOpenChange, onSubmit, isLoading = false
               rows={5}
               className="max-h-[40vh] resize-none"
               autoFocus
+            />
+
+            <ScreenshotInput
+              onFileSelect={setSelectedFile}
+              disabled={isLoading}
+              uploadProgress={uploadProgress}
+              isUploading={isLoading && selectedFile !== null}
+              uploadError={uploadError}
+              onClearError={onClearUploadError}
             />
 
             {error && <p className="text-sm text-destructive">{error}</p>}

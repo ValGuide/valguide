@@ -924,7 +924,18 @@
       "submit": "Trametter feedback",
       "feedbackRequired": "Per plaschair endatai voss feedback",
       "submitError": "Impussibel da trametter il feedback. Empruvai anc ina giada.",
-      "success": "Grazia fitg per voss feedback!"
+      "success": "Grazia fitg per voss feedback!",
+      "screenshot": {
+        "addScreenshot": "Agiuntar screenshot",
+        "pasteOrDrag": "Encolar, drag & drop u cliccar per chargiar si",
+        "dropHere": "Deponer maletg qua",
+        "remove": "Allontanar screenshot",
+        "uploadLabel": "Chargiar si screenshot",
+        "invalidType": "Per plaschair chargia in maletg PNG, JPG, WebP u GIF",
+        "fileTooLarge": "La grondezza da la datoteca sto esser sut 5MB",
+        "uploadFailed": "Chargiar si n'è betg reussì. Controllai vossa connexiun e empruvai anc ina giada.",
+        "uploadTimeout": "Chargiar si ha surpassà il temp. Empruvai anc ina giada."
+      }
     },
     "user": {
       "myProfile": "Mes profil",

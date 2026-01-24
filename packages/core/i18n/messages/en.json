@@ -924,7 +924,18 @@
       "submit": "Send Feedback",
       "feedbackRequired": "Please enter your feedback",
       "submitError": "Failed to send feedback. Please try again.",
-      "success": "Thank you for your feedback!"
+      "success": "Thank you for your feedback!",
+      "screenshot": {
+        "addScreenshot": "Add screenshot",
+        "pasteOrDrag": "Paste, drag & drop, or click to upload",
+        "dropHere": "Drop image here",
+        "remove": "Remove screenshot",
+        "uploadLabel": "Upload screenshot",
+        "invalidType": "Please upload a PNG, JPG, WebP, or GIF image",
+        "fileTooLarge": "File size must be less than 5MB",
+        "uploadFailed": "Upload failed. Please check your connection and try again.",
+        "uploadTimeout": "Upload timed out. Please try again."
+      }
     },
     "user": {
       "myProfile": "My Profile",

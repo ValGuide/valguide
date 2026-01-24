@@ -1,4 +1,33 @@
+/**
+ * TUS (Resumable Upload Protocol) client for Supabase Storage
+ *
+ * This module handles file uploads to Supabase Storage using the TUS protocol,
+ * which provides:
+ * - Resumable uploads: If a connection fails, uploads can be resumed from where they stopped
+ * - Progress tracking: Real-time upload progress for UI feedback
+ * - Chunked uploads: Large files are split into 6MB chunks (Supabase requirement)
+ * - Auto-retry: Failed uploads are automatically retried with exponential backoff
+ *
+ * Usage:
+ * ```ts
+ * const result = await uploadFileWithTUS({
+ *   bucketName: 'studio-feedback',
+ *   fileName: 'screenshot.png',
+ *   file: myFile,
+ *   onProgress: (percent) => setProgress(percent),
+ *   credentials: { accessToken, projectId },
+ * })
+ * ```
+ *
+ * @see https://tus.io/ - TUS Protocol specification
+ * @see https://supabase.com/docs/guides/storage/uploads/resumable-uploads - Supabase TUS docs
+ */
 import * as tus from 'tus-js-client'
+
+export type UploadCredentials = {
+  accessToken: string
+  projectId: string
+}
 
 export type TUSUploadOptions = {
   bucketName: string
@@ -7,6 +36,8 @@ export type TUSUploadOptions = {
   onProgress?: (percentage: number) => void
   onError?: (error: Error) => void
   metadata?: Record<string, string>
+  /** Pre-fetched credentials (if not provided, will fetch from getUploadCredentialsFn) */
+  credentials?: UploadCredentials
 }
 
 export async function uploadFileWithTUS({
@@ -16,10 +47,21 @@ export async function uploadFileWithTUS({
   onProgress,
   onError,
   metadata = {},
+  credentials,
 }: TUSUploadOptions): Promise<{ path: string }> {
-  // Get secure upload credentials from server action
-  const { getUploadCredentialsFn } = await import('@valguide/core/features/assets/server-functions')
-  const { accessToken, projectId } = await getUploadCredentialsFn()
+  // Use provided credentials or fetch from server action
+  let accessToken: string
+  let projectId: string
+
+  if (credentials) {
+    accessToken = credentials.accessToken
+    projectId = credentials.projectId
+  } else {
+    const { getUploadCredentialsFn } = await import('@valguide/core/features/assets/server-functions')
+    const creds = await getUploadCredentialsFn()
+    accessToken = creds.accessToken
+    projectId = creds.projectId
+  }
 
   return new Promise((resolve, reject) => {
     const upload = new tus.Upload(file, {

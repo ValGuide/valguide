@@ -6,6 +6,8 @@ type Props = {
   userName?: string
   teamName?: string
   teamNanoId?: string
+  pageUrl?: string
+  screenshotUrl?: string
 }
 
 export const studioFeedbackMessage = ({
@@ -14,6 +16,8 @@ export const studioFeedbackMessage = ({
   userName,
   teamName,
   teamNanoId,
+  pageUrl,
+  screenshotUrl,
 }: Props): SlackMessage => ({
   channel: 'studio-feedback',
   text: `💬 New Studio Feedback from ${userName ?? userEmail}`,
@@ -66,6 +70,28 @@ export const studioFeedbackMessage = ({
         text: `*Feedback:*\n${feedback}`,
       },
     },
+    ...(screenshotUrl
+      ? [
+          {
+            type: 'image' as const,
+            image_url: screenshotUrl,
+            alt_text: 'User feedback screenshot',
+          },
+        ]
+      : []),
+    ...(pageUrl
+      ? [
+          {
+            type: 'context' as const,
+            elements: [
+              {
+                type: 'mrkdwn' as const,
+                text: `*Page:* <${pageUrl}|${pageUrl}>`,
+              },
+            ],
+          },
+        ]
+      : []),
     {
       type: 'context',
       elements: [

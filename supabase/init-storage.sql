@@ -6,6 +6,20 @@ ON CONFLICT (id) DO UPDATE SET
   public = EXCLUDED.public,
   file_size_limit = EXCLUDED.file_size_limit;
 
+-- 2. Create the 'studio-feedback' bucket (public for direct URL access)
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'studio-feedback', 
+  'studio-feedback', 
+  true,  -- Public bucket for direct URLs
+  5242880,  -- 5MB limit
+  ARRAY['image/png', 'image/jpeg', 'image/webp', 'image/gif']
+)
+ON CONFLICT (id) DO UPDATE SET
+  public = EXCLUDED.public,
+  file_size_limit = EXCLUDED.file_size_limit,
+  allowed_mime_types = EXCLUDED.allowed_mime_types;
+
 -- 2. Enable Row Level Security on the objects table
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 
@@ -53,5 +67,39 @@ FOR DELETE
 TO authenticated
 USING (
   bucket_id = 'assets'
+  AND owner = auth.uid()
+);
+
+-- =============================================================================
+-- Feedback Attachments Bucket Policies
+-- =============================================================================
+
+-- Policy: Authenticated users can upload to their own folder
+DROP POLICY IF EXISTS "Feedback: users can upload to their folder" ON storage.objects;
+CREATE POLICY "Feedback: users can upload to their folder"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+  bucket_id = 'studio-feedback'
+  AND (storage.foldername(name))[1] = auth.uid()::text
+);
+
+-- Policy: Anyone can read (public bucket)
+DROP POLICY IF EXISTS "Feedback: public read access" ON storage.objects;
+CREATE POLICY "Feedback: public read access"
+ON storage.objects
+FOR SELECT
+TO public
+USING (bucket_id = 'studio-feedback');
+
+-- Policy: Users can delete their own feedback attachments
+DROP POLICY IF EXISTS "Feedback: users can delete own uploads" ON storage.objects;
+CREATE POLICY "Feedback: users can delete own uploads"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (
+  bucket_id = 'studio-feedback'
   AND owner = auth.uid()
 );

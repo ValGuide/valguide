@@ -9,13 +9,15 @@ const submitFeedbackSchema = z.object({
   userName: z.string().optional(),
   teamName: z.string().optional(),
   teamNanoId: z.string().optional(),
+  pageUrl: z.string().optional(),
+  screenshotUrl: z.string().optional(),
 })
 
 export const submitFeedbackFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(submitFeedbackSchema)
   .handler(async ({ context, data }) => {
-    const { feedback, userName, teamName, teamNanoId } = data
+    const { feedback, userName, teamName, teamNanoId, pageUrl, screenshotUrl } = data
     const { user } = context
 
     await postMessage(
@@ -25,6 +27,8 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
         userName,
         teamName,
         teamNanoId,
+        pageUrl,
+        screenshotUrl,
       }),
     )
 
