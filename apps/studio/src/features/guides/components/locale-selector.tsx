@@ -13,7 +13,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
 import { Check, ChevronDown, Globe } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export type ContentLocale = string
 
@@ -75,11 +75,39 @@ export function getLocaleDisplayName(locale: string): string {
 
 const SEARCH_THRESHOLD = 8
 
+function isTextKey(e: React.KeyboardEvent) {
+  // blocks letters/numbers/punctuation/space that would go into the input
+  if (e.key.length !== 1) return false
+  if (e.ctrlKey || e.metaKey || e.altKey) return false
+  return true
+}
+
 export function LocaleSelector({ value, locales, onValueChange, guideNanoId, className }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
   const t = useTranslations('guides.localeSelector')
   const selectedLocaleName = getLocaleDisplayName(value)
   const showSearch = locales.length >= SEARCH_THRESHOLD
+
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  // cmdk "active" item value (what arrows move)
+  const [active, setActive] = useState(() => getLocaleDisplayName(value))
+
+  useEffect(() => {
+    // keep highlight in sync if parent value changes
+    setActive(getLocaleDisplayName(value))
+  }, [value])
+
+  useEffect(() => {
+    if (!open) return
+
+    // when opening: highlight current selection
+    setActive(getLocaleDisplayName(value))
+
+    // focus behavior (your existing approach)
+    requestAnimationFrame(() => inputRef.current?.focus())
+  }, [open, value])
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -98,8 +126,28 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-62.5 p-0" align="start">
-        <Command>
-          {showSearch && <CommandInput placeholder={t('searchLanguages')} />}
+        <Command
+          value={active}
+          className={cn(
+            !showSearch &&
+            "**:data-[slot=command-input-wrapper]:sr-only"
+          )}
+          onKeyDownCapture={(e) => {
+            if (!showSearch && isTextKey(e)) {
+              e.preventDefault()
+              e.stopPropagation()
+            }
+
+            // optional: also block Backspace/Delete from affecting cmdk input
+            if (!showSearch && (e.key === "Backspace" || e.key === "Delete")) {
+              e.preventDefault()
+              e.stopPropagation()
+            }
+          }}>
+          <CommandInput
+            aria-hidden={!showSearch} // screen readers ignore it
+            placeholder={t('searchLanguages')}
+          />
           <CommandList>
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
