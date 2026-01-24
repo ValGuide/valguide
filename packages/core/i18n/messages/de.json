@@ -628,6 +628,7 @@
       "galleryHint": "Bilder und Videos bis 50MB pro Datei"
     },
     "actions": {
+      "edit": "Stopp bearbeiten",
       "delete": "Stop löschen",
       "deleteConfirm": "Möchten Sie diesen Stop wirklich löschen?",
       "deleteSuccess": "Stop gelöscht",
@@ -692,6 +693,34 @@
       "visible": "Sichtbar",
       "hidden": "Ausgeblendet",
       "hiddenIndicator": "Dieser Stopp ist für Besucher ausgeblendet"
+    },
+    "detail": {
+      "translations": "Übersetzungen",
+      "translationsDescription": "Verwalten Sie Stopp-Inhalte in verschiedenen Sprachen",
+      "noTranslations": "Noch keine Übersetzungen",
+      "guides": "In Guides verwendet",
+      "guidesDescription": "Dieser Stopp erscheint in folgenden Guides",
+      "noGuides": "Dieser Stopp wird noch in keinem Guide verwendet",
+      "position": "Position {position}",
+      "hidden": "Ausgeblendet",
+      "viewGuide": "Guide anzeigen"
+    },
+    "locales": {
+      "updateSuccess": "Sprachen aktualisiert",
+      "updateError": "Sprachen konnten nicht aktualisiert werden"
+    },
+    "notFound": {
+      "title": "Stopp nicht gefunden",
+      "description": "Der gesuchte Stopp existiert nicht oder wurde gelöscht.",
+      "backToStops": "Zurück zu Stopps"
+    },
+    "unpublish": {
+      "success": "Stopp-Übersetzung zurückgezogen",
+      "error": "Stopp-Übersetzung konnte nicht zurückgezogen werden"
+    },
+    "discard": {
+      "success": "Entwurf verworfen",
+      "error": "Entwurf konnte nicht verworfen werden"
     },
     "stopActions": {
       "hideStop": "Stopp ausblenden",

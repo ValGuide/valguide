@@ -627,6 +627,7 @@
       "galleryHint": "Images and videos up to 50MB each"
     },
     "actions": {
+      "edit": "Edit Stop",
       "addError": "Failed to add stop",
       "delete": "Delete Stop",
       "deleteConfirm": "Are you sure you want to delete this stop?",
@@ -691,6 +692,34 @@
       "visible": "Visible",
       "hidden": "Hidden",
       "hiddenIndicator": "This stop is hidden from visitors"
+    },
+    "detail": {
+      "translations": "Translations",
+      "translationsDescription": "Manage stop content in different languages",
+      "noTranslations": "No translations yet",
+      "guides": "Used in Guides",
+      "guidesDescription": "This stop appears in the following guides",
+      "noGuides": "This stop is not used in any guide yet",
+      "position": "Position {position}",
+      "hidden": "Hidden",
+      "viewGuide": "View Guide"
+    },
+    "locales": {
+      "updateSuccess": "Languages updated",
+      "updateError": "Failed to update languages"
+    },
+    "notFound": {
+      "title": "Stop not found",
+      "description": "The stop you are looking for does not exist or has been deleted.",
+      "backToStops": "Back to Stops"
+    },
+    "unpublish": {
+      "success": "Stop translation unpublished",
+      "error": "Failed to unpublish stop translation"
+    },
+    "discard": {
+      "success": "Draft discarded",
+      "error": "Failed to discard draft"
     },
     "stopActions": {
       "hideStop": "Hide stop",

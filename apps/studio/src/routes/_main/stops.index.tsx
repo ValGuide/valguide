@@ -17,11 +17,11 @@ function StopsPage() {
   const { stops, isLoading, error, refetch } = useStops()
 
   const handleEditStop = (stop: StopWithGuides) => {
-    const firstGuide = stop.guideStops[0]?.guide
-    if (stop.nanoId && firstGuide) {
+    if (stop.nanoId) {
+      // Navigate to independent stop detail page
       router.navigate({
-        to: '/guides/$nanoId/stops/$stopId/edit',
-        params: { nanoId: firstGuide.nanoId, stopId: stop.nanoId },
+        to: '/stops/$nanoId',
+        params: { nanoId: stop.nanoId },
       })
     }
   }

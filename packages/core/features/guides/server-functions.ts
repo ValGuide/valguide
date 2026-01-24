@@ -349,6 +349,20 @@ export const updateStopByNanoIdFn = createServerFn({ method: 'POST' })
     return { versionId }
   })
 
+const updateStopAvailableLocalesSchema = z.object({
+  stopId: z.string(),
+  availableLocales: z.array(z.string()),
+})
+
+export const updateStopAvailableLocalesFn = createServerFn({ method: 'POST' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(updateStopAvailableLocalesSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccess(data.stopId, context.user.id)
+    await db.update(stop).set({ availableLocales: data.availableLocales }).where(eq(stop.id, data.stopId))
+    return { success: true }
+  })
+
 const deleteStopSchema = z.object({
   stopId: z.string(),
 })

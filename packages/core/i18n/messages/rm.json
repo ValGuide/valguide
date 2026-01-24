@@ -627,6 +627,7 @@
       "galleryHint": "Maletgs e videos fin 50MB per datoteca"
     },
     "actions": {
+      "edit": "Modifitgar stop",
       "delete": "Stizzar stop",
       "deleteConfirm": "Vulais vus propi stizzar quest stop?",
       "deleteSuccess": "Stop stizzà",
@@ -691,6 +692,34 @@
       "visible": "Visibel",
       "hidden": "Zuppà",
       "hiddenIndicator": "Quest stop è zuppà per visitaders"
+    },
+    "detail": {
+      "translations": "Translaziuns",
+      "translationsDescription": "Administrar cuntegn dal stop en diversas linguas",
+      "noTranslations": "Anc naginas translaziuns",
+      "guides": "Duvrà en guides",
+      "guidesDescription": "Quest stop cumpara en ils suandants guides",
+      "noGuides": "Quest stop n'è anc en nagin guide",
+      "position": "Posiziun {position}",
+      "hidden": "Zuppà",
+      "viewGuide": "Mussar guide"
+    },
+    "locales": {
+      "updateSuccess": "Linguas actualisadas",
+      "updateError": "Impussibel dad actualisar las linguas"
+    },
+    "notFound": {
+      "title": "Stop betg chattà",
+      "description": "Il stop tschertgà n'exista betg u è vegnì stizzà.",
+      "backToStops": "Enavos als stops"
+    },
+    "unpublish": {
+      "success": "Translaziun dal stop retratta",
+      "error": "Impussibel da retrar la translaziun dal stop"
+    },
+    "discard": {
+      "success": "Sboz refusà",
+      "error": "Impussibel da refusar il sboz"
     },
     "stopActions": {
       "hideStop": "Zuppar stop",

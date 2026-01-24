@@ -31,8 +31,11 @@ import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainStopsIndexRouteImport } from './routes/_main/stops.index'
 import { Route as MainGuidesIndexRouteImport } from './routes/_main/guides.index'
+import { Route as MainStopsNanoIdRouteImport } from './routes/_main/stops.$nanoId'
 import { Route as MainGuidesNanoIdRouteImport } from './routes/_main/guides.$nanoId'
+import { Route as MainStopsNanoIdIndexRouteImport } from './routes/_main/stops.$nanoId.index'
 import { Route as MainGuidesNanoIdIndexRouteImport } from './routes/_main/guides.$nanoId.index'
+import { Route as MainStopsNanoIdEditRouteImport } from './routes/_main/stops.$nanoId.edit'
 import { Route as MainGuidesNanoIdEditRouteImport } from './routes/_main/guides.$nanoId.edit'
 import { Route as MainGuidesNanoIdStopsStopIdEditRouteImport } from './routes/_main/guides.$nanoId.stops.$stopId.edit'
 
@@ -144,15 +147,30 @@ const MainGuidesIndexRoute = MainGuidesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainGuidesRoute,
 } as any)
+const MainStopsNanoIdRoute = MainStopsNanoIdRouteImport.update({
+  id: '/$nanoId',
+  path: '/$nanoId',
+  getParentRoute: () => MainStopsRoute,
+} as any)
 const MainGuidesNanoIdRoute = MainGuidesNanoIdRouteImport.update({
   id: '/$nanoId',
   path: '/$nanoId',
   getParentRoute: () => MainGuidesRoute,
 } as any)
+const MainStopsNanoIdIndexRoute = MainStopsNanoIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainStopsNanoIdRoute,
+} as any)
 const MainGuidesNanoIdIndexRoute = MainGuidesNanoIdIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MainGuidesNanoIdRoute,
+} as any)
+const MainStopsNanoIdEditRoute = MainStopsNanoIdEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => MainStopsNanoIdRoute,
 } as any)
 const MainGuidesNanoIdEditRoute = MainGuidesNanoIdEditRouteImport.update({
   id: '/edit',
@@ -186,10 +204,13 @@ export interface FileRoutesByFullPath {
   '/support': typeof MainSupportRoute
   '/team': typeof MainTeamRoute
   '/guides/$nanoId': typeof MainGuidesNanoIdRouteWithChildren
+  '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/guides/': typeof MainGuidesIndexRoute
   '/stops/': typeof MainStopsIndexRoute
   '/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
+  '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/guides/$nanoId/': typeof MainGuidesNanoIdIndexRoute
+  '/stops/$nanoId/': typeof MainStopsNanoIdIndexRoute
   '/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
 export interface FileRoutesByTo {
@@ -212,7 +233,9 @@ export interface FileRoutesByTo {
   '/guides': typeof MainGuidesIndexRoute
   '/stops': typeof MainStopsIndexRoute
   '/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
+  '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/guides/$nanoId': typeof MainGuidesNanoIdIndexRoute
+  '/stops/$nanoId': typeof MainStopsNanoIdIndexRoute
   '/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
 export interface FileRoutesById {
@@ -238,10 +261,13 @@ export interface FileRoutesById {
   '/_main/support': typeof MainSupportRoute
   '/_main/team': typeof MainTeamRoute
   '/_main/guides/$nanoId': typeof MainGuidesNanoIdRouteWithChildren
+  '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/guides/': typeof MainGuidesIndexRoute
   '/_main/stops/': typeof MainStopsIndexRoute
   '/_main/guides/$nanoId/edit': typeof MainGuidesNanoIdEditRoute
+  '/_main/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/_main/guides/$nanoId/': typeof MainGuidesNanoIdIndexRoute
+  '/_main/stops/$nanoId/': typeof MainStopsNanoIdIndexRoute
   '/_main/guides/$nanoId/stops/$stopId/edit': typeof MainGuidesNanoIdStopsStopIdEditRoute
 }
 export interface FileRouteTypes {
@@ -266,10 +292,13 @@ export interface FileRouteTypes {
     | '/support'
     | '/team'
     | '/guides/$nanoId'
+    | '/stops/$nanoId'
     | '/guides/'
     | '/stops/'
     | '/guides/$nanoId/edit'
+    | '/stops/$nanoId/edit'
     | '/guides/$nanoId/'
+    | '/stops/$nanoId/'
     | '/guides/$nanoId/stops/$stopId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -292,7 +321,9 @@ export interface FileRouteTypes {
     | '/guides'
     | '/stops'
     | '/guides/$nanoId/edit'
+    | '/stops/$nanoId/edit'
     | '/guides/$nanoId'
+    | '/stops/$nanoId'
     | '/guides/$nanoId/stops/$stopId/edit'
   id:
     | '__root__'
@@ -317,10 +348,13 @@ export interface FileRouteTypes {
     | '/_main/support'
     | '/_main/team'
     | '/_main/guides/$nanoId'
+    | '/_main/stops/$nanoId'
     | '/_main/guides/'
     | '/_main/stops/'
     | '/_main/guides/$nanoId/edit'
+    | '/_main/stops/$nanoId/edit'
     | '/_main/guides/$nanoId/'
+    | '/_main/stops/$nanoId/'
     | '/_main/guides/$nanoId/stops/$stopId/edit'
   fileRoutesById: FileRoutesById
 }
@@ -489,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainGuidesIndexRouteImport
       parentRoute: typeof MainGuidesRoute
     }
+    '/_main/stops/$nanoId': {
+      id: '/_main/stops/$nanoId'
+      path: '/$nanoId'
+      fullPath: '/stops/$nanoId'
+      preLoaderRoute: typeof MainStopsNanoIdRouteImport
+      parentRoute: typeof MainStopsRoute
+    }
     '/_main/guides/$nanoId': {
       id: '/_main/guides/$nanoId'
       path: '/$nanoId'
@@ -496,12 +537,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainGuidesNanoIdRouteImport
       parentRoute: typeof MainGuidesRoute
     }
+    '/_main/stops/$nanoId/': {
+      id: '/_main/stops/$nanoId/'
+      path: '/'
+      fullPath: '/stops/$nanoId/'
+      preLoaderRoute: typeof MainStopsNanoIdIndexRouteImport
+      parentRoute: typeof MainStopsNanoIdRoute
+    }
     '/_main/guides/$nanoId/': {
       id: '/_main/guides/$nanoId/'
       path: '/'
       fullPath: '/guides/$nanoId/'
       preLoaderRoute: typeof MainGuidesNanoIdIndexRouteImport
       parentRoute: typeof MainGuidesNanoIdRoute
+    }
+    '/_main/stops/$nanoId/edit': {
+      id: '/_main/stops/$nanoId/edit'
+      path: '/edit'
+      fullPath: '/stops/$nanoId/edit'
+      preLoaderRoute: typeof MainStopsNanoIdEditRouteImport
+      parentRoute: typeof MainStopsNanoIdRoute
     }
     '/_main/guides/$nanoId/edit': {
       id: '/_main/guides/$nanoId/edit'
@@ -561,11 +616,27 @@ const MainGuidesRouteWithChildren = MainGuidesRoute._addFileChildren(
   MainGuidesRouteChildren,
 )
 
+interface MainStopsNanoIdRouteChildren {
+  MainStopsNanoIdEditRoute: typeof MainStopsNanoIdEditRoute
+  MainStopsNanoIdIndexRoute: typeof MainStopsNanoIdIndexRoute
+}
+
+const MainStopsNanoIdRouteChildren: MainStopsNanoIdRouteChildren = {
+  MainStopsNanoIdEditRoute: MainStopsNanoIdEditRoute,
+  MainStopsNanoIdIndexRoute: MainStopsNanoIdIndexRoute,
+}
+
+const MainStopsNanoIdRouteWithChildren = MainStopsNanoIdRoute._addFileChildren(
+  MainStopsNanoIdRouteChildren,
+)
+
 interface MainStopsRouteChildren {
+  MainStopsNanoIdRoute: typeof MainStopsNanoIdRouteWithChildren
   MainStopsIndexRoute: typeof MainStopsIndexRoute
 }
 
 const MainStopsRouteChildren: MainStopsRouteChildren = {
+  MainStopsNanoIdRoute: MainStopsNanoIdRouteWithChildren,
   MainStopsIndexRoute: MainStopsIndexRoute,
 }
 

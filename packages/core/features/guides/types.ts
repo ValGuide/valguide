@@ -220,3 +220,97 @@ export type GuideDetailItem = {
   /** Available locales for this guide (for translations management) */
   availableLocales: string[]
 }
+
+// ============================================================================
+// Independent Stop Editing Types
+// ============================================================================
+
+/**
+ * Guide association for a stop (for display in stop overview)
+ */
+export type StopGuideAssociation = {
+  guideId: string
+  guideNanoId: string
+  position: number
+  visible: boolean
+  /** Display title resolved from guide translations */
+  displayTitle: string
+}
+
+/**
+ * Independent stop metadata (for stop editor and overview)
+ * Similar to GuideMetadata but for a single stop edited independently
+ */
+export type IndependentStopMetadata = {
+  id: string
+  nanoId: string
+  organizationId: string
+  availableLocales: string[]
+  createdAt: Date
+  updatedAt: Date
+  assets: AssetWithRole[]
+  translationStatuses: TranslationStatus[]
+  /** Asset versioning pointers */
+  currentAssetVersionId: string | null
+  draftAssetVersionId: string | null
+  /** Which guides this stop belongs to */
+  guideAssociations: StopGuideAssociation[]
+}
+
+/**
+ * Per-locale translation data for a single stop (independent editing)
+ */
+export type StopLocaleData = {
+  locale: string
+  stopTranslation: {
+    translationId: string
+    currentVersionId: string | null
+    draftVersionId: string | null
+    currentVersion: StopTranslationVersionContent | null
+    draftVersion: StopTranslationVersionContent | null
+  } | null
+}
+
+/**
+ * Lightweight stop list item (for stop library)
+ */
+export type StopListItem = {
+  id: string
+  nanoId: string
+  createdAt: Date
+  updatedAt: Date
+  /** Resolved title from best available translation */
+  displayTitle: string
+  /** Resolved description from best available translation */
+  displayDescription: string | null
+  /** Which locale was used for display */
+  displayLocale: string
+  /** Number of guides this stop belongs to */
+  guideCount: number
+  /** Translation statuses for all locales */
+  translationStatuses: TranslationStatus[]
+}
+
+/**
+ * Lightweight stop detail for overview page
+ */
+export type StopDetailItem = {
+  id: string
+  nanoId: string
+  organizationId: string
+  availableLocales: string[]
+  createdAt: Date
+  updatedAt: Date
+  /** Resolved title from best available translation */
+  displayTitle: string
+  /** Resolved description from best available translation */
+  displayDescription: string | null
+  /** Which locale was used for display */
+  displayLocale: string
+  /** Summary of all available translations for locale tabs */
+  translationSummaries: TranslationSummary[]
+  /** Guides this stop belongs to */
+  guideAssociations: StopGuideAssociation[]
+  /** Assets for this stop */
+  assets: AssetWithRole[]
+}

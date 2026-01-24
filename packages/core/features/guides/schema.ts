@@ -96,6 +96,8 @@ export const stop = studioSchema.table(
     createdBy: uuid('created_by')
       .notNull()
       .references(() => authUsers.id, { onDelete: 'cascade' }),
+    // Available locales for independent stop editing
+    availableLocales: text('available_locales').array().notNull().default(['en', 'de', 'rm']),
     // Deprecated columns - kept for backward compatibility during migration
     guideId: uuid('guide_id').references(() => guide.id, { onDelete: 'set null' }),
     order: integer('order').default(0),

@@ -65,3 +65,7 @@ export function useGuideEditor() {
   }
   return context
 }
+
+export function useGuideEditorOptional() {
+  return useContext(GuideEditorContext)
+}
