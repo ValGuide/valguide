@@ -126,8 +126,6 @@ const createGuideInputSchema = z.object({
   translations: z.array(
     z.object({
       locale: z.string(),
-      title: z.string().nullable(),
-      description: z.string().nullable(),
     }),
   ),
   organizationId: z.string().optional(),
@@ -182,6 +180,7 @@ export const createGuideFn = createServerFn({ method: 'POST' })
         createdBy: userId,
         updatedBy: userId,
         organizationId,
+        availableLocales: translations.map((t) => t.locale),
       },
       translations,
     )

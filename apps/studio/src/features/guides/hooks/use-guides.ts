@@ -6,7 +6,7 @@ import { guidesListQueryOptions } from '../query-options'
 import { createGuideFn } from '../server-functions'
 
 interface CreateGuideData {
-  translations: Array<{ locale: string; title: string; description?: string }>
+  translations: Array<{ locale: string }>
   organizationId?: string
 }
 

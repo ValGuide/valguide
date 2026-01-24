@@ -16,7 +16,7 @@ interface GuidesListProps {
   isLoading?: boolean
   error?: Error | null
   onCreateGuide?: (data: {
-    translations: Array<{ locale: string; title: string; description?: string }>
+    translations: Array<{ locale: string }>
     organizationId?: string
     coverImage?: string
   }) => Promise<GuideWithTranslations>
@@ -52,8 +52,6 @@ export function GuidesList({
         translations: [
           {
             locale,
-            title: null,
-            description: null,
           },
         ],
       })

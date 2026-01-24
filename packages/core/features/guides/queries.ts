@@ -399,7 +399,7 @@ export async function getGuideDetailByNanoId(
 export async function createGuide(
   db: DB,
   guideData: Omit<typeof guide.$inferInsert, 'nanoId'> & { nanoId?: string },
-  translations: Array<{ locale: string; title: string | null | undefined; description?: string | null | undefined }>,
+  translations: Array<{ locale: string; title?: string | null | undefined; description?: string | null | undefined }>,
 ) {
   return await db.transaction(async (tx: DB) => {
     // Insert guide with auto-generated nanoId if not provided
