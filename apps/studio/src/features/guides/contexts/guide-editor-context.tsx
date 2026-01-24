@@ -3,6 +3,8 @@ import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import {
   createStopFn,
+  publishGuideAssetsFn,
+  publishStopAssetsFn,
   removeStopFromGuideFn,
   reorderStopsFn,
   saveGuideAssetsDraftFn,
@@ -462,6 +464,15 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     if (!guideId || !metadata) return
 
     try {
+      // Publish guide assets (promote draft to current)
+      await publishGuideAssetsFn({ data: { guideId } })
+
+      // Publish all stop assets
+      for (const stopMeta of stops) {
+        await publishStopAssetsFn({ data: { stopId: stopMeta.id } })
+      }
+
+      // Update guide published timestamp
       await updateGuideFn({
         data: {
           id: guideId,
@@ -476,7 +487,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guideId, metadata, nanoId, queryClient, save])
+  }, [guideId, metadata, nanoId, queryClient, save, stops])
 
   // Refetch
   const refetch = useCallback(async () => {
