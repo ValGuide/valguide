@@ -9,7 +9,6 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "env:load": "pnpm dlx tsx ../../.scripts/load-env.ts",
-    "db:push": "pnpm env:load drizzle-kit push",
     "db:generate": "pnpm env:load drizzle-kit generate",
     "db:migrate": "pnpm env:load drizzle-kit migrate",
     "db:pull": "pnpm env:load drizzle-kit pull",
