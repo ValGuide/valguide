@@ -13,20 +13,12 @@
 export {
   archiveGuideFn,
   deleteGuideFn,
-  discardGuideAssetsDraftFn,
-  getGuideAssetsByVersionFn,
-  getGuideAssetVersionInfoFn,
-  getGuideByIdFn,
   getGuideDetailFn,
   getGuideMetadataFn,
   getGuideTranslationsForLocaleFn,
-  getGuideViewDataFn,
   publishGuideAssetsFn,
-  publishGuideFn,
   recoverGuideFn,
   saveGuideAssetsDraftFn,
-  unpublishGuideAssetsFn,
-  unpublishGuideFn,
   updateGuideFn,
 } from './guide/server-functions'
 

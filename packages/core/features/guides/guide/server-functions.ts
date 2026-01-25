@@ -1,53 +1,19 @@
 import { createServerFn } from '@tanstack/react-start'
 import {
-  discardGuideAssetVersionDraft,
   publishGuideAssetVersion,
-  unpublishGuideAssetVersion,
   upsertGuideAssetVersionDraft,
 } from '@valguide/core/features/assets/asset-version-mutations'
-import { getGuideAssetsByVersion, getGuideAssetVersionInfo } from '@valguide/core/features/assets/asset-version-queries'
 import { NotFoundError, requireGuideAccess } from '@valguide/core/features/auth/authorization'
 import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { db } from '@valguide/core/features/db'
 import { and, eq, isNotNull, isNull } from 'drizzle-orm'
 import { z } from 'zod'
-import {
-  getGuideById,
-  getGuideDetailByNanoId,
-  getGuideMetadata,
-  getGuideTranslationsForLocale,
-  getGuideViewData,
-} from '../internal/queries'
+import { getGuideDetailByNanoId, getGuideMetadata, getGuideTranslationsForLocale } from '../internal/queries'
 import { guide } from '../schema'
 
 // ============================================================================
 // Query Server Functions (GET)
 // ============================================================================
-
-const getGuideByIdSchema = z.object({ guideId: z.string() })
-
-export const getGuideByIdFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getGuideByIdSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return getGuideById(db, data.guideId)
-  })
-
-const getGuideViewDataSchema = z.object({ nanoId: z.string() })
-
-export const getGuideViewDataFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getGuideViewDataSchema)
-  .handler(async ({ context, data }) => {
-    const guideData = await getGuideViewData(data.nanoId)
-    if (guideData) {
-      await requireGuideAccess(guideData.id, context.user.id)
-      return guideData
-    }
-
-    throw new NotFoundError('Guide not found')
-  })
 
 const getGuideDetailSchema = z.object({
   nanoId: z.string(),
@@ -129,54 +95,6 @@ export const updateGuideFn = createServerFn({ method: 'POST' })
 // ============================================================================
 // Guide-Level Publish/Unpublish (visibility to visitors)
 // ============================================================================
-
-const publishGuideSchema = z.object({
-  guideId: z.string(),
-})
-
-export const publishGuideFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(publishGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { guideId } = data
-    await requireGuideAccess(guideId, context.user.id)
-
-    const [publishedGuide] = await db
-      .update(guide)
-      .set({
-        published: new Date(),
-        updatedBy: context.user.id,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)))
-      .returning()
-
-    return publishedGuide
-  })
-
-const unpublishGuideSchema = z.object({
-  guideId: z.string(),
-})
-
-export const unpublishGuideFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(unpublishGuideSchema)
-  .handler(async ({ context, data }) => {
-    const { guideId } = data
-    await requireGuideAccess(guideId, context.user.id)
-
-    const [unpublishedGuide] = await db
-      .update(guide)
-      .set({
-        published: null,
-        updatedBy: context.user.id,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(guide.id, guideId), isNull(guide.archivedAt), isNull(guide.deletedAt)))
-      .returning()
-
-    return unpublishedGuide
-  })
 
 // ============================================================================
 // Guide Archive/Recover
@@ -261,31 +179,6 @@ export const deleteGuideFn = createServerFn({ method: 'POST' })
 // Guide Asset Version Server Functions
 // ============================================================================
 
-const getGuideAssetsByVersionSchema = z.object({
-  guideId: z.string(),
-  version: z.enum(['draft', 'published']),
-})
-
-export const getGuideAssetsByVersionFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getGuideAssetsByVersionSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return getGuideAssetsByVersion(data.guideId, data.version)
-  })
-
-const getGuideAssetVersionInfoSchema = z.object({
-  guideId: z.string(),
-})
-
-export const getGuideAssetVersionInfoFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getGuideAssetVersionInfoSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return getGuideAssetVersionInfo(data.guideId)
-  })
-
 const saveGuideAssetsDraftSchema = z.object({
   guideId: z.string(),
   assets: z.array(
@@ -317,29 +210,4 @@ export const publishGuideAssetsFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireGuideAccess(data.guideId, context.user.id)
     return publishGuideAssetVersion(data.guideId)
-  })
-
-const discardGuideAssetsDraftSchema = z.object({
-  guideId: z.string(),
-})
-
-export const discardGuideAssetsDraftFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(discardGuideAssetsDraftSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    const success = await discardGuideAssetVersionDraft(data.guideId)
-    return { success }
-  })
-
-const unpublishGuideAssetsSchema = z.object({
-  guideId: z.string(),
-})
-
-export const unpublishGuideAssetsFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(unpublishGuideAssetsSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return unpublishGuideAssetVersion(data.guideId, context.user.id)
   })
