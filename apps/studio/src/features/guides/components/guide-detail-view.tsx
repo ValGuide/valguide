@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
-import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { RichTextDisplay } from '@valguide/core/features/guides/components/rich-text-display'
 import { getGuideStatus } from '@valguide/core/features/guides/status-utils'
 import type { GuideDetailItem } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'

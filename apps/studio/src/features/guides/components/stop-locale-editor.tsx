@@ -1,7 +1,7 @@
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { useForm, useStore } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/types'
-import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
+import { RichTextEditor } from '@valguide/core/features/guides/components/rich-text-editor'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
 import { StopTranslationVersionContent } from '@valguide/features/guides/types'

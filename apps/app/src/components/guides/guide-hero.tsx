@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import type { AssetWithRole } from '@valguide/core/features/guides/queries'
-import { RichTextDisplay } from '@valguide/core/features/guides/rich-text-display'
+import { RichTextDisplay } from '@valguide/core/features/guides/components/rich-text-display'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { ImageGallery } from './image-gallery'
 

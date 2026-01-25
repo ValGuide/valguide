@@ -1,5 +1,5 @@
 import { useForm, useStore } from '@tanstack/react-form'
-import { RichTextEditor } from '@valguide/core/features/guides/rich-text-editor'
+import { RichTextEditor } from '@valguide/core/features/guides/components/rich-text-editor'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'

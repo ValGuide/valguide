@@ -9,9 +9,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valgu
 import { cn } from '@valguide/core/ui/lib/utils'
 import { ImageIcon, LucideInfo } from 'lucide-react'
 import * as React from 'react'
-import { RichTextDisplay } from './rich-text-display'
 
 import type { Guide } from './types'
+import { RichTextDisplay } from './components/rich-text-display'
 
 export interface GuidePreviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
   guide: Guide
