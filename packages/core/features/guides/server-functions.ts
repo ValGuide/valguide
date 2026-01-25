@@ -55,12 +55,8 @@ export {
 export {
   discardGuideTranslationDraftFn,
   discardStopTranslationDraftFn,
-  getGuideTranslationHistoryFn,
-  getStopTranslationHistoryFn,
   publishGuideTranslationDraftFn,
   publishStopTranslationDraftFn,
-  rollbackGuideTranslationFn,
-  rollbackStopTranslationFn,
   unpublishGuideTranslationFn,
   unpublishStopTranslationFn,
   updateGuideTranslationFn,

@@ -7,44 +7,11 @@ import {
   deleteStopTranslationDraft,
   publishGuideTranslationDraft,
   publishStopTranslationDraft,
-  rollbackGuideTranslation,
-  rollbackStopTranslation,
   unpublishGuideTranslation,
   unpublishStopTranslation,
   upsertGuideTranslationDraft,
   upsertStopTranslationDraft,
 } from './internal-mutations'
-import { getGuideTranslationHistory, getStopTranslationHistory } from './internal-queries'
-
-// ============================================================================
-// Query Server Functions (GET)
-// ============================================================================
-
-const getGuideTranslationHistorySchema = z.object({
-  guideId: z.string(),
-  locale: z.string(),
-})
-
-export const getGuideTranslationHistoryFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getGuideTranslationHistorySchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return getGuideTranslationHistory(data.guideId, data.locale)
-  })
-
-const getStopTranslationHistorySchema = z.object({
-  stopId: z.string(),
-  locale: z.string(),
-})
-
-export const getStopTranslationHistoryFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getStopTranslationHistorySchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return getStopTranslationHistory(data.stopId, data.locale)
-  })
 
 // ============================================================================
 // Mutation Server Functions (POST) - Guide Translation
@@ -80,20 +47,6 @@ export const publishGuideTranslationDraftFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireGuideAccess(data.guideId, context.user.id)
     return publishGuideTranslationDraft(data.guideId, data.locale)
-  })
-
-const rollbackGuideTranslationSchema = z.object({
-  guideId: z.string(),
-  locale: z.string(),
-  targetVersion: z.number(),
-})
-
-export const rollbackGuideTranslationFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(rollbackGuideTranslationSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-    return rollbackGuideTranslation(data.guideId, data.locale, data.targetVersion, context.user.id)
   })
 
 const discardGuideTranslationDraftSchema = z.object({
@@ -158,20 +111,6 @@ export const publishStopTranslationDraftFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireStopAccess(data.stopId, context.user.id)
     return publishStopTranslationDraft(data.stopId, data.locale)
-  })
-
-const rollbackStopTranslationSchema = z.object({
-  stopId: z.string(),
-  locale: z.string(),
-  targetVersion: z.number(),
-})
-
-export const rollbackStopTranslationFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(rollbackStopTranslationSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return rollbackStopTranslation(data.stopId, data.locale, data.targetVersion, context.user.id)
   })
 
 const discardStopTranslationDraftSchema = z.object({

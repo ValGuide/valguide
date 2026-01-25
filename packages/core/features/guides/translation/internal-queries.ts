@@ -49,40 +49,6 @@ export async function getDraftGuideTranslation(
   return result[0]?.version || null
 }
 
-export type TranslationHistoryResult = {
-  versions: GuideTranslationVersion[]
-  currentVersionId: string | null
-  draftVersionId: string | null
-}
-
-/**
- * Get all translation versions for a guide locale (for history view)
- * Includes pointer IDs so UI can derive display status
- */
-export async function getGuideTranslationHistory(guideId: string, locale: string): Promise<TranslationHistoryResult> {
-  const translation = await db
-    .select()
-    .from(guideTranslation)
-    .where(and(eq(guideTranslation.guideId, guideId), eq(guideTranslation.locale, locale)))
-    .limit(1)
-
-  if (!translation[0]) {
-    return { versions: [], currentVersionId: null, draftVersionId: null }
-  }
-
-  const versions = await db
-    .select()
-    .from(guideTranslationVersion)
-    .where(eq(guideTranslationVersion.translationId, translation[0].id))
-    .orderBy(desc(guideTranslationVersion.version))
-
-  return {
-    versions,
-    currentVersionId: translation[0].currentVersionId,
-    draftVersionId: translation[0].draftVersionId,
-  }
-}
-
 /**
  * Get guide translation with current and draft versions
  */
@@ -152,40 +118,6 @@ export async function getDraftStopTranslation(stopId: string, locale: string): P
     .limit(1)
 
   return result[0]?.version || null
-}
-
-export type StopTranslationHistoryResult = {
-  versions: StopTranslationVersion[]
-  currentVersionId: string | null
-  draftVersionId: string | null
-}
-
-/**
- * Get all translation versions for a stop locale (for history view)
- * Includes pointer IDs so UI can derive display status
- */
-export async function getStopTranslationHistory(stopId: string, locale: string): Promise<StopTranslationHistoryResult> {
-  const translation = await db
-    .select()
-    .from(stopTranslation)
-    .where(and(eq(stopTranslation.stopId, stopId), eq(stopTranslation.locale, locale)))
-    .limit(1)
-
-  if (!translation[0]) {
-    return { versions: [], currentVersionId: null, draftVersionId: null }
-  }
-
-  const versions = await db
-    .select()
-    .from(stopTranslationVersion)
-    .where(eq(stopTranslationVersion.translationId, translation[0].id))
-    .orderBy(desc(stopTranslationVersion.version))
-
-  return {
-    versions,
-    currentVersionId: translation[0].currentVersionId,
-    draftVersionId: translation[0].draftVersionId,
-  }
 }
 
 /**
