@@ -89,22 +89,13 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
   const showSearch = locales.length >= SEARCH_THRESHOLD
 
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const [active, setActive] = useState<ContentLocale>(value)
 
-  // cmdk "active" item value (what arrows move)
-  const [active, setActive] = useState(() => getLocaleDisplayName(value))
-
-  useEffect(() => {
-    // keep highlight in sync if parent value changes
-    setActive(getLocaleDisplayName(value))
-  }, [value])
+  useEffect(() => setActive(value), [value])
 
   useEffect(() => {
     if (!open) return
-
-    // when opening: highlight current selection
     setActive(getLocaleDisplayName(value))
-
-    // focus behavior (your existing approach)
     requestAnimationFrame(() => inputRef.current?.focus())
   }, [open, value])
 
@@ -127,7 +118,8 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
       </PopoverTrigger>
       <PopoverContent className="w-62.5 p-0" align="start">
         <Command
-          defaultValue={active}
+          value={active}
+          onValueChange={setActive}
           className={cn(
             !showSearch &&
             "**:data-[slot=command-input-wrapper]:sr-only"
@@ -137,8 +129,6 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
               e.preventDefault()
               e.stopPropagation()
             }
-
-            // optional: also block Backspace/Delete from affecting cmdk input
             if (!showSearch && (e.key === "Backspace" || e.key === "Delete")) {
               e.preventDefault()
               e.stopPropagation()
