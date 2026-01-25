@@ -133,7 +133,7 @@ export function InviteMemberDialog({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="max-w-[95vw] sm:max-w-[500px]">
+      <DialogContent className="max-w-[95vw] sm:max-w-125">
         <DialogHeader>
           <DialogTitle className="pr-8 text-left">{t('inviteMember')}</DialogTitle>
           <DialogDescription className="text-left">{t('inviteDescription')}</DialogDescription>

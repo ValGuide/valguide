@@ -201,7 +201,7 @@ export function ScreenshotInput({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="size-8 flex-shrink-0"
+                className="size-8 shrink-0"
                 onClick={handleClear}
                 disabled={isDisabled}
               >
