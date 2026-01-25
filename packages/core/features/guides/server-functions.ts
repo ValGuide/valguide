@@ -26,21 +26,15 @@ export {
 export {
   createStopFn,
   deleteStopFn,
-  discardStopAssetsDraftFn,
-  getStopAssetsByVersionFn,
-  getStopAssetVersionInfoFn,
   getStopByNanoIdFn,
   hideStopFn,
   publishStopAssetsFn,
   removeStopFromGuideFn,
   reorderStopsFn,
-  restoreStopFn,
   saveStopAssetsDraftFn,
   showStopFn,
-  unpublishStopAssetsFn,
   updateStopAvailableLocalesFn,
   updateStopByNanoIdFn,
-  updateStopFn,
 } from './stop/server-functions'
 
 // Re-export all translation server functions

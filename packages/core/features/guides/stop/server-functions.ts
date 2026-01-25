@@ -1,11 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 import {
-  discardStopAssetVersionDraft,
   publishStopAssetVersion,
-  unpublishStopAssetVersion,
   upsertStopAssetVersionDraft,
 } from '@valguide/core/features/assets/asset-version-mutations'
-import { getStopAssetsByVersion, getStopAssetVersionInfo } from '@valguide/core/features/assets/asset-version-queries'
 import {
   NotFoundError,
   requireGuideAccess,
@@ -128,26 +125,6 @@ export const createStopFn = createServerFn({ method: 'POST' })
     }
 
     return fullStop
-  })
-
-const updateStopSchema = z.object({
-  stopId: z.string(),
-  locale: z.string(),
-  title: z.string(),
-  description: z.string(),
-  transcription: z.string(),
-})
-
-export const updateStopFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(updateStopSchema)
-  .handler(async ({ context, data }) => {
-    const { stopId, locale, title, description, transcription } = data
-    await requireStopAccess(stopId, context.user.id)
-
-    const versionId = await upsertStopTranslationDraft(stopId, locale, { title, description, transcription })
-
-    return { versionId }
   })
 
 const updateStopByNanoIdSchema = z.object({
@@ -295,54 +272,9 @@ export const removeStopFromGuideFn = createServerFn({ method: 'POST' })
     return { success: true }
   })
 
-const restoreStopSchema = z.object({
-  guideId: z.string(),
-  stopId: z.string(),
-})
-
-export const restoreStopFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(restoreStopSchema)
-  .handler(async ({ context, data }) => {
-    await requireGuideAccess(data.guideId, context.user.id)
-
-    const [restoredGuideStop] = await db
-      .update(guideStop)
-      .set({ archivedAt: null })
-      .where(and(eq(guideStop.guideId, data.guideId), eq(guideStop.stopId, data.stopId)))
-      .returning()
-
-    return restoredGuideStop
-  })
-
 // ============================================================================
 // Stop Asset Version Server Functions
 // ============================================================================
-
-const getStopAssetsByVersionSchema = z.object({
-  stopId: z.string(),
-  version: z.enum(['draft', 'published']),
-})
-
-export const getStopAssetsByVersionFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getStopAssetsByVersionSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return getStopAssetsByVersion(data.stopId, data.version)
-  })
-
-const getStopAssetVersionInfoSchema = z.object({
-  stopId: z.string(),
-})
-
-export const getStopAssetVersionInfoFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getStopAssetVersionInfoSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return getStopAssetVersionInfo(data.stopId)
-  })
 
 const saveStopAssetsDraftSchema = z.object({
   stopId: z.string(),
@@ -375,29 +307,4 @@ export const publishStopAssetsFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireStopAccess(data.stopId, context.user.id)
     return publishStopAssetVersion(data.stopId)
-  })
-
-const discardStopAssetsDraftSchema = z.object({
-  stopId: z.string(),
-})
-
-export const discardStopAssetsDraftFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(discardStopAssetsDraftSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    const success = await discardStopAssetVersionDraft(data.stopId)
-    return { success }
-  })
-
-const unpublishStopAssetsSchema = z.object({
-  stopId: z.string(),
-})
-
-export const unpublishStopAssetsFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(unpublishStopAssetsSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    return unpublishStopAssetVersion(data.stopId, context.user.id)
   })
