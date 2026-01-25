@@ -1,11 +1,10 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
+import { hideStopFn, showStopFn } from '@valguide/core/features/guides/stop/server-functions'
 import {
   discardGuideTranslationDraftFn,
-  hideStopFn,
   publishGuideTranslationDraftFn,
-  showStopFn,
   unpublishGuideTranslationFn,
-} from '@valguide/core/features/guides/server-functions'
+} from '@valguide/core/features/guides/translation/server-functions'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'

@@ -9,7 +9,7 @@ import {
   unpublishStopTranslationFn,
   updateStopAvailableLocalesFn,
   updateStopByNanoIdFn,
-} from '@valguide/core/features/guides/server-functions'
+} from '@valguide/core/features/guides/stop/server-functions'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'

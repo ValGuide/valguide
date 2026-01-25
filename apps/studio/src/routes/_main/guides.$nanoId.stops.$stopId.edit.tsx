@@ -3,7 +3,7 @@ import {
   discardStopTranslationDraftFn,
   publishStopTranslationDraftFn,
   unpublishStopTranslationFn,
-} from '@valguide/core/features/guides/server-functions'
+} from '@valguide/core/features/guides/translation/server-functions'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleton'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'

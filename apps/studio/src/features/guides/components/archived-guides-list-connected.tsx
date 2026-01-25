@@ -1,4 +1,4 @@
-import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/server-functions'
+import { deleteGuideFn, recoverGuideFn } from '@valguide/core/features/guides/guide/server-functions'
 import { ArchivedGuidesList, type ArchivedGuidesListProps } from './archived-guides-list'
 
 type ArchivedGuidesListConnectedProps = Omit<ArchivedGuidesListProps, 'onRecover' | 'onDelete'>

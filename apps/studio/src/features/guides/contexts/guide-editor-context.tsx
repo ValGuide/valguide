@@ -2,17 +2,19 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import {
-  createStopFn,
   publishGuideAssetsFn,
+  saveGuideAssetsDraftFn,
+  updateGuideFn,
+} from '@valguide/core/features/guides/guide/server-functions'
+import {
+  createStopFn,
   publishStopAssetsFn,
   removeStopFromGuideFn,
   reorderStopsFn,
-  saveGuideAssetsDraftFn,
   saveStopAssetsDraftFn,
-  updateGuideFn,
-  updateGuideTranslationFn,
   updateStopByNanoIdFn,
-} from '@valguide/core/features/guides/server-functions'
+} from '@valguide/core/features/guides/stop/server-functions'
+import { updateGuideTranslationFn } from '@valguide/core/features/guides/translation/server-functions'
 import type { AssetWithRole, StopMetadata } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'

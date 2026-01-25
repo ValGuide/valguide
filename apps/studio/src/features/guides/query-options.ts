@@ -3,7 +3,7 @@ import {
   getGuideDetailFn,
   getGuideMetadataFn,
   getGuideTranslationsForLocaleFn,
-} from '@valguide/core/features/guides/server-functions'
+} from '@valguide/core/features/guides/guide/server-functions'
 import type {
   GuideDetailItem,
   GuideListItem,
