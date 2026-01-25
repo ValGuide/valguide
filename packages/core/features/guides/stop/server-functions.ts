@@ -4,7 +4,6 @@ import {
   upsertStopAssetVersionDraft,
 } from '@valguide/core/features/assets/asset-version-mutations'
 import {
-  NotFoundError,
   requireGuideAccess,
   requireStopAccess,
   requireStopAccessByNanoId,
@@ -16,25 +15,6 @@ import { and, eq, inArray } from 'drizzle-orm'
 import { z } from 'zod'
 import { guideStop, stop } from '../schema'
 import { upsertStopTranslationDraft } from '../translation/internal-mutations'
-import { getStopByNanoId } from './internal-queries'
-
-// ============================================================================
-// Query Server Functions (GET)
-// ============================================================================
-
-const getStopByNanoIdQueriesSchema = z.object({ stopNanoId: z.string() })
-
-export const getStopByNanoIdFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(getStopByNanoIdQueriesSchema)
-  .handler(async ({ context, data }) => {
-    const stopData = await getStopByNanoId(data.stopNanoId)
-    if (stopData) {
-      await requireStopAccess(stopData.id, context.user.id)
-      return stopData
-    }
-    throw new NotFoundError('Stop not found')
-  })
 
 // ============================================================================
 // Stop CRUD Server Functions
@@ -158,20 +138,6 @@ export const updateStopAvailableLocalesFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireStopAccess(data.stopId, context.user.id)
     await db.update(stop).set({ availableLocales: data.availableLocales }).where(eq(stop.id, data.stopId))
-    return { success: true }
-  })
-
-const deleteStopSchema = z.object({
-  stopId: z.string(),
-})
-
-export const deleteStopFn = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware])
-  .inputValidator(deleteStopSchema)
-  .handler(async ({ context, data }) => {
-    await requireStopAccess(data.stopId, context.user.id)
-    await db.delete(stop).where(eq(stop.id, data.stopId))
-
     return { success: true }
   })
 

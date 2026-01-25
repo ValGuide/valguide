@@ -5,8 +5,6 @@ export const getGuideByIdFn = async () => null
 
 export const getGuideByNanoIdWithAssetsFn = async () => null
 
-export const getStopByNanoIdFn = async () => null
-
 export const getGuideTranslationHistoryFn = async () => []
 
 export const getStopTranslationHistoryFn = async () => []
@@ -31,8 +29,6 @@ export const createStopFn = async () => ({
 })
 
 export const updateStopFn = async () => ({ success: true })
-
-export const deleteStopFn = async () => ({ success: true })
 
 export const reorderStopsFn = async () => ({ success: true })
 

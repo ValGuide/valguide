@@ -8,8 +8,6 @@
  */
 
 export {
-  createStop,
-  getGuideStopsOrdered,
   getStopByNanoId,
   getStopDetailByNanoId,
   getStopMetadataByNanoId,
