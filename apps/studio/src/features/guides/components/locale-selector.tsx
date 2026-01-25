@@ -127,7 +127,7 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
       </PopoverTrigger>
       <PopoverContent className="w-62.5 p-0" align="start">
         <Command
-          value={active}
+          defaultValue={active}
           className={cn(
             !showSearch &&
             "**:data-[slot=command-input-wrapper]:sr-only"
@@ -169,24 +169,25 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
                 )
               })}
             </CommandGroup>
-            {guideNanoId && (
-              <>
-                <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem asChild>
-                    <Link
-                      to="/guides/$nanoId"
-                      params={{ nanoId: guideNanoId }}
-                      className="cursor-pointer text-muted-foreground"
-                      onClick={() => setOpen(false)}
-                    >
-                      {t('manageTranslations')}
-                    </Link>
-                  </CommandItem>
-                </CommandGroup>
-              </>
-            )}
           </CommandList>
+
+          {guideNanoId && (
+            <>
+              <CommandSeparator />
+              <CommandGroup>
+                <CommandItem asChild>
+                  <Link
+                    to="/guides/$nanoId"
+                    params={{ nanoId: guideNanoId }}
+                    className="cursor-pointer text-muted-foreground"
+                    onClick={() => setOpen(false)}
+                  >
+                    {t('manageTranslations')}
+                  </Link>
+                </CommandItem>
+              </CommandGroup>
+            </>
+          )}
         </Command>
       </PopoverContent>
     </Popover>
