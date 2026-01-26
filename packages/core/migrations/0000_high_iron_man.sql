@@ -21,63 +21,6 @@ CREATE TABLE "studio"."asset" (
 	CONSTRAINT "unique_asset_nano_id" UNIQUE("nano_id")
 );
 --> statement-breakpoint
-CREATE TABLE "studio"."asset_set_draft" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"scope_table" varchar(20) NOT NULL,
-	"scope_id" uuid NOT NULL,
-	"revision" integer DEFAULT 0 NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_by" uuid
-);
---> statement-breakpoint
-CREATE TABLE "studio"."asset_set_draft_item" (
-	"draft_set_id" uuid NOT NULL,
-	"asset_id" uuid NOT NULL,
-	"position" integer NOT NULL,
-	CONSTRAINT "pk_asset_set_draft_item" PRIMARY KEY("draft_set_id","asset_id","position")
-);
---> statement-breakpoint
-CREATE TABLE "studio"."asset_set_version" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"scope_table" varchar(20) NOT NULL,
-	"scope_id" uuid NOT NULL,
-	"version" integer NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"created_by" uuid,
-	"published_at" timestamp with time zone
-);
---> statement-breakpoint
-CREATE TABLE "studio"."asset_set_version_item" (
-	"version_set_id" uuid NOT NULL,
-	"asset_id" uuid NOT NULL,
-	"position" integer NOT NULL,
-	CONSTRAINT "pk_asset_set_version_item" PRIMARY KEY("version_set_id","asset_id","position")
-);
---> statement-breakpoint
-CREATE TABLE "studio"."guide_asset_scope" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"guide_id" uuid NOT NULL,
-	"locale" varchar(10),
-	"channel" varchar(120) NOT NULL,
-	"draft_set_id" uuid NOT NULL,
-	"published_set_id" uuid,
-	"last_published_draft_revision" integer,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE "studio"."stop_asset_scope" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"stop_id" uuid NOT NULL,
-	"locale" varchar(10),
-	"channel" varchar(120) NOT NULL,
-	"draft_set_id" uuid NOT NULL,
-	"published_set_id" uuid,
-	"last_published_draft_revision" integer,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE "studio"."feedback" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -106,43 +49,27 @@ CREATE TABLE "studio"."guide" (
 	"archived_at" timestamp with time zone,
 	"deleted_at" timestamp with time zone,
 	"available_locales" text[] DEFAULT '{"en"}' NOT NULL,
-	"theme_id" uuid,
 	CONSTRAINT "unique_guide_nano_id" UNIQUE("nano_id")
 );
 --> statement-breakpoint
-CREATE TABLE "studio"."guide_core" (
+CREATE TABLE "studio"."guide_asset" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"guide_id" uuid NOT NULL,
-	"draft_id" uuid NOT NULL,
-	"published_version_id" uuid,
-	"last_published_draft_revision" integer,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+	"asset_id" uuid NOT NULL,
+	"channel" varchar(50) NOT NULL,
+	"locale" varchar(10),
+	"position" integer DEFAULT 0 NOT NULL,
+	"published_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "studio"."guide_core_draft" (
+CREATE TABLE "studio"."guide_asset_draft" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"guide_core_id" uuid NOT NULL,
-	"audience_tags" text[],
-	"duration_seconds" integer,
-	"difficulty" varchar(50),
-	"settings_json" text,
-	"revision" integer DEFAULT 0 NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_by" uuid
-);
---> statement-breakpoint
-CREATE TABLE "studio"."guide_core_version" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"guide_core_id" uuid NOT NULL,
-	"version" integer NOT NULL,
-	"audience_tags" text[],
-	"duration_seconds" integer,
-	"difficulty" varchar(50),
-	"settings_json" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"created_by" uuid,
-	"published_at" timestamp with time zone
+	"guide_id" uuid NOT NULL,
+	"asset_id" uuid NOT NULL,
+	"channel" varchar(50) NOT NULL,
+	"locale" varchar(10),
+	"position" integer DEFAULT 0 NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."guide_locale" (
@@ -177,13 +104,39 @@ CREATE TABLE "studio"."guide_locale_version" (
 	"published_at" timestamp with time zone
 );
 --> statement-breakpoint
+CREATE TABLE "studio"."guide_settings" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"guide_id" uuid NOT NULL,
+	"theme_id" uuid,
+	"settings_json" text,
+	"published_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"published_by" uuid
+);
+--> statement-breakpoint
+CREATE TABLE "studio"."guide_settings_draft" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"guide_id" uuid NOT NULL,
+	"theme_id" uuid,
+	"settings_json" text,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_by" uuid
+);
+--> statement-breakpoint
 CREATE TABLE "studio"."guide_stop" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"guide_id" uuid NOT NULL,
 	"stop_id" uuid NOT NULL,
 	"position" integer NOT NULL,
 	"visible" boolean DEFAULT true NOT NULL,
-	"archived_at" timestamp with time zone,
+	"published_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "studio"."guide_stop_draft" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"guide_id" uuid NOT NULL,
+	"stop_id" uuid NOT NULL,
+	"position" integer NOT NULL,
+	"visible" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -201,35 +154,24 @@ CREATE TABLE "studio"."stop" (
 	CONSTRAINT "unique_stop_nano_id" UNIQUE("nano_id")
 );
 --> statement-breakpoint
-CREATE TABLE "studio"."stop_core" (
+CREATE TABLE "studio"."stop_asset" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"stop_id" uuid NOT NULL,
-	"draft_id" uuid NOT NULL,
-	"published_version_id" uuid,
-	"last_published_draft_revision" integer,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+	"asset_id" uuid NOT NULL,
+	"channel" varchar(50) NOT NULL,
+	"locale" varchar(10),
+	"position" integer DEFAULT 0 NOT NULL,
+	"published_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "studio"."stop_core_draft" (
+CREATE TABLE "studio"."stop_asset_draft" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"stop_core_id" uuid NOT NULL,
-	"coordinates" varchar(100),
-	"settings_json" text,
-	"revision" integer DEFAULT 0 NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_by" uuid
-);
---> statement-breakpoint
-CREATE TABLE "studio"."stop_core_version" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"stop_core_id" uuid NOT NULL,
-	"version" integer NOT NULL,
-	"coordinates" varchar(100),
-	"settings_json" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"created_by" uuid,
-	"published_at" timestamp with time zone
+	"stop_id" uuid NOT NULL,
+	"asset_id" uuid NOT NULL,
+	"channel" varchar(50) NOT NULL,
+	"locale" varchar(10),
+	"position" integer DEFAULT 0 NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."stop_locale" (
@@ -264,6 +206,24 @@ CREATE TABLE "studio"."stop_locale_version" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_by" uuid,
 	"published_at" timestamp with time zone
+);
+--> statement-breakpoint
+CREATE TABLE "studio"."stop_settings" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"stop_id" uuid NOT NULL,
+	"coordinates" varchar(100),
+	"settings_json" text,
+	"published_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"published_by" uuid
+);
+--> statement-breakpoint
+CREATE TABLE "studio"."stop_settings_draft" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"stop_id" uuid NOT NULL,
+	"coordinates" varchar(100),
+	"settings_json" text,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_by" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."short_links" (
@@ -344,44 +304,40 @@ CREATE TABLE "studio"."theme" (
 --> statement-breakpoint
 ALTER TABLE "studio"."asset" ADD CONSTRAINT "asset_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."asset" ADD CONSTRAINT "asset_uploaded_by_users_id_fk" FOREIGN KEY ("uploaded_by") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."asset_set_draft" ADD CONSTRAINT "asset_set_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."asset_set_draft_item" ADD CONSTRAINT "asset_set_draft_item_draft_set_id_asset_set_draft_id_fk" FOREIGN KEY ("draft_set_id") REFERENCES "studio"."asset_set_draft"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."asset_set_draft_item" ADD CONSTRAINT "asset_set_draft_item_asset_id_asset_id_fk" FOREIGN KEY ("asset_id") REFERENCES "studio"."asset"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."asset_set_version" ADD CONSTRAINT "asset_set_version_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."asset_set_version_item" ADD CONSTRAINT "asset_set_version_item_version_set_id_asset_set_version_id_fk" FOREIGN KEY ("version_set_id") REFERENCES "studio"."asset_set_version"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."asset_set_version_item" ADD CONSTRAINT "asset_set_version_item_asset_id_asset_id_fk" FOREIGN KEY ("asset_id") REFERENCES "studio"."asset"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_asset_scope" ADD CONSTRAINT "guide_asset_scope_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_asset_scope" ADD CONSTRAINT "stop_asset_scope_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."feedback" ADD CONSTRAINT "feedback_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."feedback" ADD CONSTRAINT "feedback_team_id_organization_id_fk" FOREIGN KEY ("team_id") REFERENCES "studio"."organization"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide" ADD CONSTRAINT "guide_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide" ADD CONSTRAINT "guide_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide" ADD CONSTRAINT "guide_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_core" ADD CONSTRAINT "guide_core_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_core_draft" ADD CONSTRAINT "guide_core_draft_guide_core_id_guide_core_id_fk" FOREIGN KEY ("guide_core_id") REFERENCES "studio"."guide_core"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_core_draft" ADD CONSTRAINT "guide_core_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_core_version" ADD CONSTRAINT "guide_core_version_guide_core_id_guide_core_id_fk" FOREIGN KEY ("guide_core_id") REFERENCES "studio"."guide_core"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_core_version" ADD CONSTRAINT "guide_core_version_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_asset" ADD CONSTRAINT "guide_asset_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_asset_draft" ADD CONSTRAINT "guide_asset_draft_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_locale" ADD CONSTRAINT "guide_locale_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_locale_draft" ADD CONSTRAINT "guide_locale_draft_guide_locale_id_guide_locale_id_fk" FOREIGN KEY ("guide_locale_id") REFERENCES "studio"."guide_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_locale_draft" ADD CONSTRAINT "guide_locale_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_locale_version" ADD CONSTRAINT "guide_locale_version_guide_locale_id_guide_locale_id_fk" FOREIGN KEY ("guide_locale_id") REFERENCES "studio"."guide_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_locale_version" ADD CONSTRAINT "guide_locale_version_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_settings" ADD CONSTRAINT "guide_settings_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_settings" ADD CONSTRAINT "guide_settings_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_settings_draft" ADD CONSTRAINT "guide_settings_draft_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_settings_draft" ADD CONSTRAINT "guide_settings_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_stop" ADD CONSTRAINT "guide_stop_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_stop" ADD CONSTRAINT "guide_stop_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_stop_draft" ADD CONSTRAINT "guide_stop_draft_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_stop_draft" ADD CONSTRAINT "guide_stop_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_core" ADD CONSTRAINT "stop_core_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_core_draft" ADD CONSTRAINT "stop_core_draft_stop_core_id_stop_core_id_fk" FOREIGN KEY ("stop_core_id") REFERENCES "studio"."stop_core"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_core_draft" ADD CONSTRAINT "stop_core_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_core_version" ADD CONSTRAINT "stop_core_version_stop_core_id_stop_core_id_fk" FOREIGN KEY ("stop_core_id") REFERENCES "studio"."stop_core"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_core_version" ADD CONSTRAINT "stop_core_version_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_asset" ADD CONSTRAINT "stop_asset_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_asset_draft" ADD CONSTRAINT "stop_asset_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale" ADD CONSTRAINT "stop_locale_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_stop_locale_id_stop_locale_id_fk" FOREIGN KEY ("stop_locale_id") REFERENCES "studio"."stop_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale_version" ADD CONSTRAINT "stop_locale_version_stop_locale_id_stop_locale_id_fk" FOREIGN KEY ("stop_locale_id") REFERENCES "studio"."stop_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale_version" ADD CONSTRAINT "stop_locale_version_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_settings" ADD CONSTRAINT "stop_settings_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_settings" ADD CONSTRAINT "stop_settings_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_settings_draft" ADD CONSTRAINT "stop_settings_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_settings_draft" ADD CONSTRAINT "stop_settings_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."organization_invitation" ADD CONSTRAINT "organization_invitation_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."organization_invitation" ADD CONSTRAINT "organization_invitation_invited_by_users_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."organization_member" ADD CONSTRAINT "organization_member_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -391,51 +347,48 @@ ALTER TABLE "studio"."theme" ADD CONSTRAINT "theme_organization_id_organization_
 ALTER TABLE "studio"."theme" ADD CONSTRAINT "theme_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "asset_org_idx" ON "studio"."asset" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "asset_type_org_idx" ON "studio"."asset" USING btree ("type","organization_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_asset_set_draft_per_scope" ON "studio"."asset_set_draft" USING btree ("scope_table","scope_id");--> statement-breakpoint
-CREATE INDEX "asset_set_draft_scope_idx" ON "studio"."asset_set_draft" USING btree ("scope_table","scope_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_asset_set_draft_item_position" ON "studio"."asset_set_draft_item" USING btree ("draft_set_id","position");--> statement-breakpoint
-CREATE INDEX "asset_set_draft_item_draft_idx" ON "studio"."asset_set_draft_item" USING btree ("draft_set_id");--> statement-breakpoint
-CREATE INDEX "asset_set_draft_item_asset_idx" ON "studio"."asset_set_draft_item" USING btree ("asset_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_asset_set_version_per_scope" ON "studio"."asset_set_version" USING btree ("scope_table","scope_id","version");--> statement-breakpoint
-CREATE INDEX "asset_set_version_scope_idx" ON "studio"."asset_set_version" USING btree ("scope_table","scope_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_asset_set_version_item_position" ON "studio"."asset_set_version_item" USING btree ("version_set_id","position");--> statement-breakpoint
-CREATE INDEX "asset_set_version_item_version_idx" ON "studio"."asset_set_version_item" USING btree ("version_set_id");--> statement-breakpoint
-CREATE INDEX "asset_set_version_item_asset_idx" ON "studio"."asset_set_version_item" USING btree ("asset_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_guide_asset_scope" ON "studio"."guide_asset_scope" USING btree ("guide_id","locale","channel");--> statement-breakpoint
-CREATE INDEX "guide_asset_scope_guide_idx" ON "studio"."guide_asset_scope" USING btree ("guide_id");--> statement-breakpoint
-CREATE INDEX "guide_asset_scope_channel_idx" ON "studio"."guide_asset_scope" USING btree ("channel");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_stop_asset_scope" ON "studio"."stop_asset_scope" USING btree ("stop_id","locale","channel");--> statement-breakpoint
-CREATE INDEX "stop_asset_scope_stop_idx" ON "studio"."stop_asset_scope" USING btree ("stop_id");--> statement-breakpoint
-CREATE INDEX "stop_asset_scope_channel_idx" ON "studio"."stop_asset_scope" USING btree ("channel");--> statement-breakpoint
 CREATE INDEX "guide_org_idx" ON "studio"."guide" USING btree ("organization_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_guide_core" ON "studio"."guide_core" USING btree ("guide_id");--> statement-breakpoint
-CREATE INDEX "guide_core_guide_idx" ON "studio"."guide_core" USING btree ("guide_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_guide_core_draft" ON "studio"."guide_core_draft" USING btree ("guide_core_id");--> statement-breakpoint
-CREATE INDEX "guide_core_draft_core_idx" ON "studio"."guide_core_draft" USING btree ("guide_core_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_guide_core_version" ON "studio"."guide_core_version" USING btree ("guide_core_id","version");--> statement-breakpoint
-CREATE INDEX "guide_core_version_core_idx" ON "studio"."guide_core_version" USING btree ("guide_core_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_guide_asset" ON "studio"."guide_asset" USING btree ("guide_id","asset_id","channel","locale");--> statement-breakpoint
+CREATE INDEX "guide_asset_guide_idx" ON "studio"."guide_asset" USING btree ("guide_id");--> statement-breakpoint
+CREATE INDEX "guide_asset_channel_idx" ON "studio"."guide_asset" USING btree ("guide_id","channel");--> statement-breakpoint
+CREATE INDEX "guide_asset_asset_idx" ON "studio"."guide_asset" USING btree ("asset_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_guide_asset_draft" ON "studio"."guide_asset_draft" USING btree ("guide_id","asset_id","channel","locale");--> statement-breakpoint
+CREATE INDEX "guide_asset_draft_guide_idx" ON "studio"."guide_asset_draft" USING btree ("guide_id");--> statement-breakpoint
+CREATE INDEX "guide_asset_draft_channel_idx" ON "studio"."guide_asset_draft" USING btree ("guide_id","channel");--> statement-breakpoint
+CREATE INDEX "guide_asset_draft_asset_idx" ON "studio"."guide_asset_draft" USING btree ("asset_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_locale" ON "studio"."guide_locale" USING btree ("guide_id","locale");--> statement-breakpoint
 CREATE INDEX "guide_locale_guide_idx" ON "studio"."guide_locale" USING btree ("guide_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_locale_draft" ON "studio"."guide_locale_draft" USING btree ("guide_locale_id");--> statement-breakpoint
 CREATE INDEX "guide_locale_draft_locale_idx" ON "studio"."guide_locale_draft" USING btree ("guide_locale_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_locale_version" ON "studio"."guide_locale_version" USING btree ("guide_locale_id","version");--> statement-breakpoint
 CREATE INDEX "guide_locale_version_locale_idx" ON "studio"."guide_locale_version" USING btree ("guide_locale_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_guide_settings" ON "studio"."guide_settings" USING btree ("guide_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_guide_settings_draft" ON "studio"."guide_settings_draft" USING btree ("guide_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_stop" ON "studio"."guide_stop" USING btree ("guide_id","stop_id");--> statement-breakpoint
 CREATE INDEX "guide_stop_guide_idx" ON "studio"."guide_stop" USING btree ("guide_id");--> statement-breakpoint
 CREATE INDEX "guide_stop_stop_idx" ON "studio"."guide_stop" USING btree ("stop_id");--> statement-breakpoint
+CREATE INDEX "guide_stop_position_idx" ON "studio"."guide_stop" USING btree ("guide_id","position");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_guide_stop_draft" ON "studio"."guide_stop_draft" USING btree ("guide_id","stop_id");--> statement-breakpoint
+CREATE INDEX "guide_stop_draft_guide_idx" ON "studio"."guide_stop_draft" USING btree ("guide_id");--> statement-breakpoint
+CREATE INDEX "guide_stop_draft_stop_idx" ON "studio"."guide_stop_draft" USING btree ("stop_id");--> statement-breakpoint
+CREATE INDEX "guide_stop_draft_position_idx" ON "studio"."guide_stop_draft" USING btree ("guide_id","position");--> statement-breakpoint
 CREATE INDEX "stop_org_idx" ON "studio"."stop" USING btree ("organization_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_stop_core" ON "studio"."stop_core" USING btree ("stop_id");--> statement-breakpoint
-CREATE INDEX "stop_core_stop_idx" ON "studio"."stop_core" USING btree ("stop_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_stop_core_draft" ON "studio"."stop_core_draft" USING btree ("stop_core_id");--> statement-breakpoint
-CREATE INDEX "stop_core_draft_core_idx" ON "studio"."stop_core_draft" USING btree ("stop_core_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_stop_core_version" ON "studio"."stop_core_version" USING btree ("stop_core_id","version");--> statement-breakpoint
-CREATE INDEX "stop_core_version_core_idx" ON "studio"."stop_core_version" USING btree ("stop_core_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_stop_asset" ON "studio"."stop_asset" USING btree ("stop_id","asset_id","channel","locale");--> statement-breakpoint
+CREATE INDEX "stop_asset_stop_idx" ON "studio"."stop_asset" USING btree ("stop_id");--> statement-breakpoint
+CREATE INDEX "stop_asset_channel_idx" ON "studio"."stop_asset" USING btree ("stop_id","channel");--> statement-breakpoint
+CREATE INDEX "stop_asset_asset_idx" ON "studio"."stop_asset" USING btree ("asset_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_stop_asset_draft" ON "studio"."stop_asset_draft" USING btree ("stop_id","asset_id","channel","locale");--> statement-breakpoint
+CREATE INDEX "stop_asset_draft_stop_idx" ON "studio"."stop_asset_draft" USING btree ("stop_id");--> statement-breakpoint
+CREATE INDEX "stop_asset_draft_channel_idx" ON "studio"."stop_asset_draft" USING btree ("stop_id","channel");--> statement-breakpoint
+CREATE INDEX "stop_asset_draft_asset_idx" ON "studio"."stop_asset_draft" USING btree ("asset_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_stop_locale" ON "studio"."stop_locale" USING btree ("stop_id","locale");--> statement-breakpoint
 CREATE INDEX "stop_locale_stop_idx" ON "studio"."stop_locale" USING btree ("stop_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_stop_locale_draft" ON "studio"."stop_locale_draft" USING btree ("stop_locale_id");--> statement-breakpoint
 CREATE INDEX "stop_locale_draft_locale_idx" ON "studio"."stop_locale_draft" USING btree ("stop_locale_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_stop_locale_version" ON "studio"."stop_locale_version" USING btree ("stop_locale_id","version");--> statement-breakpoint
 CREATE INDEX "stop_locale_version_locale_idx" ON "studio"."stop_locale_version" USING btree ("stop_locale_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_stop_settings" ON "studio"."stop_settings" USING btree ("stop_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_stop_settings_draft" ON "studio"."stop_settings_draft" USING btree ("stop_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_code_uq" ON "studio"."short_links" USING btree ("code");--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_guide_target_uq" ON "studio"."short_links" USING btree ("type","guide_nano_id","locale") WHERE "studio"."short_links"."type" = 'guide';--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_stop_target_uq" ON "studio"."short_links" USING btree ("type","guide_nano_id","stop_nano_id","locale") WHERE "studio"."short_links"."type" = 'stop';--> statement-breakpoint
