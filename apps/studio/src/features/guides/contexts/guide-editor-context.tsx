@@ -1,29 +1,28 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import {
-  publishGuideAssetsFn,
-  saveGuideAssetsDraftFn,
-  updateGuideFn,
-} from '@valguide/core/features/guides/guide/server-functions'
-import {
-  createStopFn,
-  publishStopAssetsFn,
-  removeStopFromGuideFn,
-  reorderStopsFn,
-  saveStopAssetsDraftFn,
-  updateStopByNanoIdFn,
-} from '@valguide/core/features/guides/stop/server-functions'
-import { updateGuideTranslationFn } from '@valguide/core/features/guides/translation/server-functions'
-import type { AssetWithRole, StopMetadata } from '@valguide/core/features/guides/types'
+import { assignGuideAssetFn } from '@valguide/core/features/guides/guide/asset/assign-guide-asset'
+import { removeGuideAssetFn } from '@valguide/core/features/guides/guide/asset/remove-guide-asset'
+import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/publish-guide-locale'
+import { updateGuideLocaleDraftFn } from '@valguide/core/features/guides/guide/locale/update-guide-locale-draft'
+import { updateGuideFn } from '@valguide/core/features/guides/guide/update-guide'
+import { createStopFn } from '@valguide/core/features/guides/stop/create-stop'
+import { updateStopLocaleDraftFn } from '@valguide/core/features/guides/stop/locale/update-stop-locale-draft'
+import { addStopToGuideFn } from '@valguide/core/features/guides/structure/add-stop'
+import { removeStopFromGuideFn } from '@valguide/core/features/guides/structure/remove-stop'
+import { reorderStopsFn } from '@valguide/core/features/guides/structure/reorder-stops'
+import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '../query-options'
+import {
+  guideDetailQueryOptions,
+  guideLocaleDraftQueryOptions,
+  guideStructureDraftQueryOptions,
+} from '../query-options'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
 
-// Type for form value getters
 type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
 type FormRegistry = Map<string, { getValues: FormValueGetter; isDirty: boolean }>
 
@@ -50,90 +49,71 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   const searchParams = useSearch({ strict: false })
   const queryClient = useQueryClient()
 
-  // Fetch metadata (no translations)
-  const metadataQuery = useQuery(guideMetadataQueryOptions(nanoId))
-  const metadata = metadataQuery.data ?? null
-  const guideId = metadata?.id ?? ''
-  const availableLocales = metadata?.availableLocales ?? ['en']
+  // Fetch guide detail (no embedded stops/assets)
+  const detailQuery = useQuery(guideDetailQueryOptions(nanoId))
+  const guideDetail = detailQuery.data ?? null
+  const guideId = guideDetail?.id ?? ''
+  const availableLocales = guideDetail?.availableLocales ?? ['en']
 
   // Active locale state
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
 
-  // Sync active locale when metadata updates and initialLocale becomes valid
-  // This handles the case where a new language is added and we navigate to edit with that locale
+  // Sync active locale when detail updates and initialLocale becomes valid
   useEffect(() => {
     if (initialLocale && availableLocales.includes(initialLocale) && activeLocale !== initialLocale) {
       setActiveLocaleState(initialLocale)
     }
   }, [initialLocale, availableLocales, activeLocale])
 
-  // Fetch locale-specific translations
-  const localeQuery = useQuery({
-    ...guideLocaleQueryOptions(guideId, activeLocale),
-    enabled: !!guideId,
+  // Fetch locale-specific draft
+  const localeDraftQuery = useQuery({
+    ...guideLocaleDraftQueryOptions(nanoId, activeLocale),
+    enabled: !!nanoId,
   })
-  const localeData = localeQuery.data ?? null
-  const isLoadingLocale = localeQuery.isLoading
+  const localeDraft = localeDraftQuery.data ?? null
+  const isLoadingLocale = localeDraftQuery.isLoading
+
+  // Fetch stops from structure
+  const structureQuery = useQuery({
+    ...guideStructureDraftQueryOptions(nanoId, activeLocale),
+    enabled: !!nanoId,
+  })
+  const stops = structureQuery.data?.stops ?? []
 
   // Prefetch adjacent locales for instant switching
   useEffect(() => {
-    if (!guideId || availableLocales.length <= 1) return
+    if (!nanoId || availableLocales.length <= 1) return
 
-    // Prefetch all other locales in background
     const otherLocales = availableLocales.filter((l) => l !== activeLocale)
     for (const locale of otherLocales) {
-      queryClient.prefetchQuery(guideLocaleQueryOptions(guideId, locale))
+      queryClient.prefetchQuery(guideLocaleDraftQueryOptions(nanoId, locale))
     }
-  }, [guideId, activeLocale, availableLocales, queryClient])
+  }, [nanoId, activeLocale, availableLocales, queryClient])
 
   // Form dirty tracking and value collection
   const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())
   const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
-  const formSaveResetFnsRef = useRef<Map<string, () => void>>(new Map())
   const formValueGettersRef = useRef<FormRegistry>(new Map())
 
-  // Asset state (in-memory, saved on save())
+  // Asset state (in-memory, saved on save()) - simplified
   const [guideAssets, setGuideAssets] = useState<AssetWithRole[]>([])
-  const [stopAssetsMap, setStopAssetsMap] = useState<Map<string, AssetWithRole[]>>(new Map())
   const initialGuideAssetsRef = useRef<AssetWithRole[]>([])
-  const initialStopAssetsRef = useRef<Map<string, AssetWithRole[]>>(new Map())
-
-  // Initialize asset state from metadata
-  useEffect(() => {
-    if (metadata) {
-      const guideAssetsFromMetadata = metadata.assets
-      const stopAssetsFromMetadata = new Map(metadata.stops.map((s) => [s.id, s.assets]))
-
-      setGuideAssets(guideAssetsFromMetadata)
-      setStopAssetsMap(stopAssetsFromMetadata)
-      initialGuideAssetsRef.current = guideAssetsFromMetadata
-      initialStopAssetsRef.current = stopAssetsFromMetadata
-    }
-  }, [metadata])
 
   // Asset dirty tracking
   const isAssetsDirty = useMemo(() => {
-    const guideAssetIds = guideAssets.map((a) => a.id).join(',')
-    const initialGuideAssetIds = initialGuideAssetsRef.current.map((a) => a.id).join(',')
-    if (guideAssetIds !== initialGuideAssetIds) return true
-
-    for (const [stopId, assets] of stopAssetsMap) {
-      const initial = initialStopAssetsRef.current.get(stopId) ?? []
-      const assetIds = assets.map((a) => a.id).join(',')
-      const initialIds = initial.map((a) => a.id).join(',')
-      if (assetIds !== initialIds) return true
-    }
-    return false
-  }, [guideAssets, stopAssetsMap])
+    const ids = guideAssets.map((a) => a.id).join(',')
+    const initialIds = initialGuideAssetsRef.current.map((a) => a.id).join(',')
+    return ids !== initialIds
+  }, [guideAssets])
 
   // Save state
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Derived isDirty (forms OR assets)
+  // Derived isDirty
   const isDirty = dirtyForms.size > 0 || isAssetsDirty
 
-  // Set active locale and update URL (always include locale param)
+  // Set active locale and update URL
   const setActiveLocale = useCallback(
     (locale: string) => {
       if (!availableLocales.includes(locale)) {
@@ -149,16 +129,10 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   // Update available locales
   const updateAvailableLocales = useCallback(
     async (locales: string[]) => {
-      if (!guideId) return
+      if (!nanoId) return
       try {
-        await updateGuideFn({
-          data: {
-            id: guideId,
-            availableLocales: locales,
-            organizationId: metadata?.organizationId,
-          },
-        })
-        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+        await updateGuideFn({ data: { nanoId, availableLocales: locales } })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'detail'] })
 
         if (!locales.includes(activeLocale)) {
           setActiveLocaleState(locales[0] ?? defaultLocale)
@@ -170,21 +144,17 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         toast.error(t('guides.locales.updateError'))
       }
     },
-    [guideId, metadata?.organizationId, nanoId, queryClient, activeLocale, t],
+    [nanoId, queryClient, activeLocale, t],
   )
 
   // Form registration
   const registerFormDirty = useCallback((formId: string, formIsDirty: boolean, getValues?: FormValueGetter) => {
     setDirtyForms((prev) => {
       const next = new Set(prev)
-      if (formIsDirty) {
-        next.add(formId)
-      } else {
-        next.delete(formId)
-      }
+      if (formIsDirty) next.add(formId)
+      else next.delete(formId)
       return next
     })
-    // Update the value getter in the registry
     if (getValues) {
       formValueGettersRef.current.set(formId, { getValues, isDirty: formIsDirty })
     }
@@ -197,15 +167,11 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
       return next
     })
     formResetFnsRef.current.delete(formId)
-    formSaveResetFnsRef.current.delete(formId)
     formValueGettersRef.current.delete(formId)
   }, [])
 
-  const registerFormReset = useCallback((formId: string, resetFn: () => void, saveResetFn?: () => void) => {
+  const registerFormReset = useCallback((formId: string, resetFn: () => void) => {
     formResetFnsRef.current.set(formId, resetFn)
-    if (saveResetFn) {
-      formSaveResetFnsRef.current.set(formId, saveResetFn)
-    }
   }, [])
 
   const resetAllForms = useCallback(() => {
@@ -216,9 +182,6 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   }, [])
 
   const resetAllFormsAfterSave = useCallback(() => {
-    // Don't call form.reset() - it causes a visual flicker.
-    // Instead, we rely on the form key including lastSaved timestamp,
-    // which causes a clean remount with fresh data after save.
     setDirtyForms(new Set())
     for (const [formId, registration] of formValueGettersRef.current.entries()) {
       formValueGettersRef.current.set(formId, { ...registration, isDirty: false })
@@ -226,68 +189,47 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   }, [])
 
   // Stop operations
-  const stops = useMemo(() => metadata?.stops ?? [], [metadata?.stops])
-
-  const addStop = useCallback(async (): Promise<StopMetadata | null> => {
-    if (!guideId || !metadata) return null
+  const addStop = useCallback(async () => {
+    if (!nanoId) return null
     try {
-      const newStopWithTranslations = await createStopFn({
-        data: {
-          guideId,
-          position: stops.length,
-          translations: [
-            {
-              locale: activeLocale,
-              title: t('stops.newStopTitle'),
-              description: '',
-              transcription: '',
-            },
-          ],
-        },
-      })
+      const newStop = await createStopFn({ data: { title: t('stops.newStopTitle'), locale: activeLocale } })
 
-      // Refetch metadata to ensure cache has new stop before navigation
-      await queryClient.refetchQueries({ queryKey: ['guide', nanoId, 'metadata'] })
-      await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
+      // Add to guide structure
+      await addStopToGuideFn({ data: { guideNanoId: nanoId, stopNanoId: newStop.nanoId } })
 
-      return {
-        id: newStopWithTranslations.id,
-        nanoId: newStopWithTranslations.nanoId,
-        position: stops.length,
-        visible: true,
-        archivedAt: null,
-        assets: [],
-        translationStatuses: [],
-        currentAssetVersionId: null,
-        draftAssetVersionId: null,
-      }
+      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'structure'] })
+
+      const structureResult = await queryClient.fetchQuery(guideStructureDraftQueryOptions(nanoId, activeLocale))
+      const addedStop = structureResult?.stops.find((s) => s.stopNanoId === newStop.nanoId)
+      return addedStop ?? null
     } catch (error) {
       console.error('Failed to add stop:', error)
       toast.error(t('stops.actions.addError'))
       return null
     }
-  }, [guideId, metadata, stops.length, queryClient, nanoId, activeLocale, t])
+  }, [nanoId, activeLocale, queryClient, t])
 
   const removeStop = useCallback(
-    async (stopId: string) => {
+    async (stopNanoId: string) => {
+      if (!nanoId) return
       try {
-        await removeStopFromGuideFn({ data: { guideId, stopId } })
-        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
-        await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
+        await removeStopFromGuideFn({ data: { guideNanoId: nanoId, stopNanoId } })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'structure'] })
         toast.success(t('stops.actions.removeSuccess'))
       } catch (error) {
         console.error('Failed to remove stop:', error)
         toast.error(t('stops.actions.removeError'))
       }
     },
-    [guideId, nanoId, queryClient, t],
+    [nanoId, queryClient, t],
   )
 
   const reorderStops = useCallback(
-    async (updates: Array<{ id: string; order: number }>) => {
+    async (stopOrder: string[]) => {
+      if (!nanoId) return
       try {
-        await reorderStopsFn({ data: updates })
-        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+        await reorderStopsFn({ data: { guideNanoId: nanoId, stopNanoIds: stopOrder } })
+        await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'structure'] })
         toast.success(t('stops.actions.reorderSuccess'))
       } catch (error) {
         console.error('Failed to reorder stops:', error)
@@ -297,91 +239,62 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     [nanoId, queryClient, t],
   )
 
-  // Asset operations (in-memory, saved on save())
+  // Asset operations (in-memory)
   const setGuideCover = useCallback((asset: Asset | null) => {
     if (asset) {
-      const assetWithRole: AssetWithRole = {
-        ...asset,
-        role: 'cover',
-        order: 0,
-        locale: null,
-      }
+      const assetWithRole: AssetWithRole = { ...asset, role: 'cover', order: 0, locale: null }
       setGuideAssets([assetWithRole])
     } else {
       setGuideAssets([])
     }
   }, [])
 
-  const getStopAssets = useCallback(
-    (stopId: string): AssetWithRole[] => {
-      return stopAssetsMap.get(stopId) ?? []
-    },
-    [stopAssetsMap],
-  )
-
-  const updateStopAssets = useCallback((stopId: string, assets: AssetWithRole[]) => {
-    setStopAssetsMap((prev) => new Map(prev).set(stopId, assets))
+  const getStopAssets = useCallback((_stopNanoId: string): AssetWithRole[] => {
+    // TODO: Implement when stop assets are fetched separately
+    return []
   }, [])
 
-  const addStopAsset = useCallback(
-    (stopId: string, asset: Asset, role: string, locale: string | null) => {
-      const current = stopAssetsMap.get(stopId) ?? []
-      const assetWithRole: AssetWithRole = {
-        ...asset,
-        role,
-        order: current.length,
-        locale,
-      }
-      setStopAssetsMap((prev) => new Map(prev).set(stopId, [...current, assetWithRole]))
-    },
-    [stopAssetsMap],
-  )
+  const updateStopAssets = useCallback((_stopNanoId: string, _assets: AssetWithRole[]) => {
+    // TODO: Implement when stop assets are stored separately
+  }, [])
 
-  const removeStopAsset = useCallback(
-    (stopId: string, assetId: string) => {
-      const current = stopAssetsMap.get(stopId) ?? []
-      setStopAssetsMap((prev) =>
-        new Map(prev).set(
-          stopId,
-          current.filter((a) => a.id !== assetId),
-        ),
-      )
-    },
-    [stopAssetsMap],
-  )
+  const addStopAsset = useCallback((_stopNanoId: string, _asset: Asset, _role: string, _locale: string | null) => {
+    // TODO: Implement when stop assets are stored separately
+  }, [])
 
-  // Save orchestration - collects form values and saves to server
+  const removeStopAsset = useCallback((_stopNanoId: string, _assetId: string) => {
+    // TODO: Implement when stop assets are stored separately
+  }, [])
+
+  // Save orchestration
   const save = useCallback(async () => {
-    if (!isDirty || !guideId) return
+    if (!isDirty || !nanoId) return
 
     setIsSaving(true)
     try {
-      // Collect values from all dirty forms and save them
+      // Save all dirty forms
       for (const [formId, registration] of formValueGettersRef.current.entries()) {
         if (!registration.isDirty) continue
 
         const values = registration.getValues()
 
-        // Determine if this is a guide translation or stop translation based on formId
-        // Format: guide-translation-{locale} or stop-translation-{stopId}-{locale}
         if (formId.startsWith('guide-translation-')) {
-          // Save guide translation
-          await updateGuideTranslationFn({
+          await updateGuideLocaleDraftFn({
             data: {
-              guideId,
+              nanoId,
               locale: activeLocale,
               title: values.title ?? '',
               description: values.description ?? '',
             },
           })
         } else if (formId.startsWith('stop-translation-')) {
-          // Extract stopNanoId from formId: stop-translation-{stopNanoId}-{locale}
+          // Format: stop-translation-{stopNanoId}-{locale}
           const parts = formId.split('-')
-          const stopNanoId = parts[2] // stop-translation-{stopNanoId}-{locale}
+          const stopNanoId = parts[2]
           if (stopNanoId) {
-            await updateStopByNanoIdFn({
+            await updateStopLocaleDraftFn({
               data: {
-                stopNanoId,
+                nanoId: stopNanoId,
                 locale: activeLocale,
                 title: values.title ?? '',
                 description: values.description ?? '',
@@ -392,47 +305,26 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
         }
       }
 
-      // Save assets if dirty (save as draft versions)
+      // Save assets if dirty (using new channel-based API)
       if (isAssetsDirty) {
-        // Save guide assets as draft
-        await saveGuideAssetsDraftFn({
-          data: {
-            guideId,
-            assets: guideAssets.map((a, index) => ({
-              assetId: a.id,
-              order: index,
-              role: a.role,
-              locale: a.locale ?? null,
-            })),
-          },
-        })
-
-        // Save stop assets as draft
-        for (const [stopId, assets] of stopAssetsMap) {
-          await saveStopAssetsDraftFn({
-            data: {
-              stopId,
-              assets: assets.map((a, index) => ({
-                assetId: a.id,
-                order: index,
-                role: a.role,
-                locale: a.locale ?? null,
-              })),
-            },
+        // Remove old assets
+        for (const asset of initialGuideAssetsRef.current) {
+          await removeGuideAssetFn({
+            data: { nanoId, assetId: asset.id, channel: 'images.cover', locale: null },
           })
         }
-
-        // Update initial refs to current state (no longer dirty)
+        // Add new assets
+        for (const asset of guideAssets) {
+          await assignGuideAssetFn({
+            data: { nanoId, assetId: asset.id, channel: 'images.cover', locale: null },
+          })
+        }
         initialGuideAssetsRef.current = guideAssets
-        initialStopAssetsRef.current = new Map(stopAssetsMap)
       }
 
-      // Reset all forms after successful save
       resetAllFormsAfterSave()
 
-      // Invalidate queries to get fresh data
-      await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale', activeLocale] })
-      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
       await queryClient.invalidateQueries({ queryKey: ['guides'] })
 
       setLastSaved(new Date())
@@ -443,59 +335,28 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     } finally {
       setIsSaving(false)
     }
-  }, [
-    isDirty,
-    guideId,
-    activeLocale,
-    queryClient,
-    resetAllFormsAfterSave,
-    isAssetsDirty,
-    guideAssets,
-    stopAssetsMap,
-    nanoId,
-    t,
-  ])
+  }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, isAssetsDirty, guideAssets, t])
 
-  // Publish
+  // Publish locale
   const publish = useCallback(async () => {
     await save()
-
-    if (!guideId || !metadata) return
+    if (!nanoId) return
 
     try {
-      // Publish guide assets (promote draft to current)
-      await publishGuideAssetsFn({ data: { guideId } })
-
-      // Publish all stop assets
-      for (const stopMeta of stops) {
-        await publishStopAssetsFn({ data: { stopId: stopMeta.id } })
-      }
-
-      // Update guide published timestamp
-      await updateGuideFn({
-        data: {
-          id: guideId,
-          published: new Date(),
-          organizationId: metadata.organizationId,
-        },
-      })
-
-      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+      await publishGuideLocaleFn({ data: { nanoId, locale: activeLocale } })
+      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
       toast.success(t('guides.publish.guidePublished'))
     } catch (error) {
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
     }
-  }, [guideId, metadata, nanoId, queryClient, save, stops, t])
+  }, [nanoId, activeLocale, queryClient, save, t])
 
   // Refetch
   const refetch = useCallback(async () => {
-    await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'metadata'] })
-    if (guideId) {
-      await queryClient.invalidateQueries({ queryKey: ['guide', guideId, 'locale'] })
-    }
+    await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
     resetAllForms()
-  }, [guideId, nanoId, queryClient, resetAllForms])
+  }, [nanoId, queryClient, resetAllForms])
 
   const value: GuideEditorContextValue = {
     nanoId,
@@ -504,8 +365,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     availableLocales,
     setActiveLocale,
     updateAvailableLocales,
-    metadata,
-    localeData,
+    guideDetail,
+    localeDraft,
     isLoadingLocale,
     stops,
     addStop,

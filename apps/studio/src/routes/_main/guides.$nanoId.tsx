@@ -1,16 +1,16 @@
 import { createFileRoute, notFound, Outlet } from '@tanstack/react-router'
 import { GuideNotFound } from '@/features/guides/components/guide-not-found'
-import { guideMetadataQueryOptions } from '@/features/guides/query-options'
+import { guideDetailQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId')({
   staticData: { focusMode: true },
   loader: async ({ params, context }) => {
     try {
-      const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
-      if (!metadata) {
+      const guideDetail = await context.queryClient.ensureQueryData(guideDetailQueryOptions(params.nanoId))
+      if (!guideDetail) {
         throw notFound()
       }
-      return { metadata }
+      return { guideDetail }
     } catch (error) {
       if (error instanceof Error && error.message.includes('not found')) {
         throw notFound()

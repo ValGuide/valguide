@@ -1,6 +1,4 @@
 {
   "extends": "@valguide/typescript-config/base.json",
-  "include": [
-    ".scripts/**/*.ts"
-  ],
+  "include": [".scripts/**/*.ts"]
 }

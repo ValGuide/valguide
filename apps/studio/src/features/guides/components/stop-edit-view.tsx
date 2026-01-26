@@ -5,27 +5,28 @@ import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
-import { StopEditLayout } from '@/features/guides/components/stop-edit-layout'
+import { StopEditLayout, type StopTranslationData } from '@/features/guides/components/stop-edit-layout'
 import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
 interface StopEditViewProps {
-  stopId: string
+  stopNanoId: string
   MediaPicker: MediaPickerComponent
-  onPublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-  onUnpublish: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-  onDiscard: (stopId: string, locale: string) => Promise<{ success: boolean; error?: string }>
+  onPublish: (nanoId: string, locale: string) => Promise<unknown>
+  onUnpublish: (nanoId: string, locale: string) => Promise<unknown>
+  onDiscard: (nanoId: string, locale: string) => Promise<unknown>
 }
 
-export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDiscard }: StopEditViewProps) {
+export function StopEditView({ stopNanoId, MediaPicker, onPublish, onUnpublish, onDiscard }: StopEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
   const {
     nanoId,
-    metadata,
-    localeData,
+    guideDetail,
+    localeDraft,
+    stops,
     activeLocale,
     availableLocales,
     isDirty,
@@ -45,34 +46,48 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
-  // Get stop metadata (has both id and nanoId)
-  const stopMetadata = useMemo(() => {
-    return metadata?.stops.find((s) => s.nanoId === stopId)
-  }, [metadata, stopId])
+  // Get stop from structure
+  const stop = useMemo(() => {
+    return stops.find((s) => s.stopNanoId === stopNanoId)
+  }, [stops, stopNanoId])
 
-  // Get stop title from locale data (using stopId UUID from metadata)
-  const stopTranslation = useMemo(() => {
-    if (!stopMetadata) return undefined
-    return localeData?.stopTranslations.find((st) => st.stopId === stopMetadata.id)
-  }, [localeData, stopMetadata])
+  // Build StopTranslationData for StopEditLayout (legacy interface)
+  // The new schema doesn't have separate current/draft versions in the same shape,
+  // so we adapt the localeDraft data
+  const stopTranslation: StopTranslationData | null = useMemo(() => {
+    if (!stop) return null
+    // The StopEditLayout expects a specific shape - we pass minimal data
+    // TODO: This interface should be updated to use the new flat schema
+    return {
+      stopId: stop.stopId,
+      translationId: '', // Not used
+      currentVersionId: null, // Not used in the new flow
+      draftVersionId: null, // Not used in the new flow
+      currentVersion: null, // Published version - would need separate query
+      draftVersion: {
+        title: stop.title ?? '',
+        description: null, // Not in StructureDraftStop
+        transcription: null, // Not in StructureDraftStop
+      },
+    }
+  }, [stop])
 
   const draftStopTitle = useMemo(() => {
-    const title = stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title
-    return title?.trim() ? title : tStops('unknownTitle')
-  }, [stopTranslation, tStops])
+    return stop?.title?.trim() || tStops('unknownTitle')
+  }, [stop, tStops])
 
   const publishedStopTitle = useMemo(() => {
-    const title = stopTranslation?.currentVersion?.title
-    return title?.trim() ? title : tStops('unknownTitle')
-  }, [stopTranslation, tStops])
+    // Would need published version data
+    return stop?.title?.trim() || tStops('unknownTitle')
+  }, [stop, tStops])
 
   const stopAssets = useMemo(() => {
-    if (!stopMetadata) return []
-    return getStopAssets(stopMetadata.id)
-  }, [stopMetadata, getStopAssets])
+    if (!stop) return []
+    return getStopAssets(stop.stopNanoId)
+  }, [stop, getStopAssets])
 
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
-  const formId = `stop-translation-${stopId}-${activeLocale}`
+  const formId = `stop-translation-${stopNanoId}-${activeLocale}`
 
   const handleDirtyChange = useCallback(
     (formIsDirty: boolean) => {
@@ -86,15 +101,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
   )
 
   useEffect(() => {
-    registerFormReset(
-      formId,
-      () => {
-        stopEditorRef.current?.resetToCurrentValues()
-      },
-      () => {
-        stopEditorRef.current?.resetToFormValues()
-      },
-    )
+    registerFormReset(formId, () => {
+      stopEditorRef.current?.resetToCurrentValues()
+    })
     return () => {
       unregisterForm(formId)
     }
@@ -111,17 +120,45 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
     </Button>
   )
 
-  if (!metadata || !stopMetadata) {
+  if (!guideDetail || !stop) {
     return null
+  }
+
+  // Wrap server function calls to match expected signature
+  const handlePublish = async (stopId: string, locale: string) => {
+    try {
+      await onPublish(stopNanoId, locale)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+    }
+  }
+
+  const handleUnpublish = async (stopId: string, locale: string) => {
+    try {
+      await onUnpublish(stopNanoId, locale)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+    }
+  }
+
+  const handleDiscard = async (stopId: string, locale: string) => {
+    try {
+      await onDiscard(stopNanoId, locale)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+    }
   }
 
   return (
     <>
       {unsavedChangesDialog}
       <StopEditLayout
-        stopId={stopMetadata.id}
+        stopId={stop.stopId}
         guideNanoId={nanoId}
-        stopTranslation={stopTranslation ?? null}
+        stopTranslation={stopTranslation}
         stopAssets={stopAssets}
         activeLocale={activeLocale}
         isDirty={isDirty}
@@ -136,13 +173,11 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
         stopEditorRef={stopEditorRef}
         breadcrumbContent={breadcrumbContent}
         MediaPicker={MediaPicker}
-        onPublish={onPublish}
-        onUnpublish={onUnpublish}
-        onDiscard={onDiscard}
+        onPublish={handlePublish}
+        onUnpublish={handleUnpublish}
+        onDiscard={handleDiscard}
         lastSaved={lastSaved}
         onImageChange={(assets) => {
-          // Replace all media assets (images/videos) with the new list
-          // Keep audio assets unchanged
           const audioAssets = stopAssets.filter((a) => a.role === 'audio')
           const newMediaAssets = assets.map((asset, index) => ({
             ...asset,
@@ -150,10 +185,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
             order: index,
             locale: null,
           }))
-          updateStopAssets(stopMetadata.id, [...newMediaAssets, ...audioAssets])
+          updateStopAssets(stop.stopNanoId, [...newMediaAssets, ...audioAssets])
         }}
         onAudioChange={(asset) => {
-          // Update audio for current locale
           const nonAudioAssets = stopAssets.filter((a) => a.role !== 'audio' || a.locale !== activeLocale)
           if (asset) {
             const audioAsset = {
@@ -162,9 +196,9 @@ export function StopEditView({ stopId, MediaPicker, onPublish, onUnpublish, onDi
               order: nonAudioAssets.length,
               locale: activeLocale,
             }
-            updateStopAssets(stopMetadata.id, [...nonAudioAssets, audioAsset])
+            updateStopAssets(stop.stopNanoId, [...nonAudioAssets, audioAsset])
           } else {
-            updateStopAssets(stopMetadata.id, nonAudioAssets)
+            updateStopAssets(stop.stopNanoId, nonAudioAssets)
           }
         }}
       />

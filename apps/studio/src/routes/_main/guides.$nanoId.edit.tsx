@@ -1,16 +1,13 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
-import { hideStopFn, showStopFn } from '@valguide/core/features/guides/stop/server-functions'
-import {
-  discardGuideTranslationDraftFn,
-  publishGuideTranslationDraftFn,
-  unpublishGuideTranslationFn,
-} from '@valguide/core/features/guides/translation/server-functions'
+import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/publish-guide-locale'
+import { unpublishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/unpublish-guide-locale'
+import { updateStopVisibilityFn } from '@valguide/core/features/guides/structure/update-stop-visibility'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
 import { GuideEditView } from '@/features/guides/components/guide-edit-view'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
-import { guideLocaleQueryOptions, guideMetadataQueryOptions } from '@/features/guides/query-options'
+import { guideDetailQueryOptions, guideLocaleDraftQueryOptions } from '@/features/guides/query-options'
 
 type SearchParams = {
   stop?: string
@@ -24,14 +21,14 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
   }),
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
-    const metadata = await context.queryClient.ensureQueryData(guideMetadataQueryOptions(params.nanoId))
+    const guideDetail = await context.queryClient.ensureQueryData(guideDetailQueryOptions(params.nanoId))
 
-    if (!metadata) {
+    if (!guideDetail) {
       throw notFound()
     }
 
     const requestedLocale = deps.locale
-    const { availableLocales } = metadata
+    const { availableLocales } = guideDetail
 
     // Redirect if locale missing or invalid
     if (!requestedLocale || !availableLocales.includes(requestedLocale)) {
@@ -45,7 +42,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
       })
     }
 
-    await context.queryClient.ensureQueryData(guideLocaleQueryOptions(metadata.id, requestedLocale))
+    await context.queryClient.ensureQueryData(guideLocaleDraftQueryOptions(params.nanoId, requestedLocale))
 
     return { nanoId: params.nanoId, locale: requestedLocale }
   },
@@ -64,19 +61,22 @@ function GuideEditPage() {
 }
 
 function GuideEditContent() {
-  const { metadata } = useGuideEditor()
+  const { guideDetail, nanoId } = useGuideEditor()
 
-  if (!metadata) {
+  if (!guideDetail) {
     return <GuideEditSkeleton />
   }
 
   return (
     <GuideEditView
-      onPublish={(guideId, locale) => publishGuideTranslationDraftFn({ data: { guideId, locale } })}
-      onUnpublish={(guideId, locale) => unpublishGuideTranslationFn({ data: { guideId, locale } })}
-      onDiscard={(guideId, locale) => discardGuideTranslationDraftFn({ data: { guideId, locale } })}
-      onHideStop={(guideId, stopId) => hideStopFn({ data: { guideId, stopId } })}
-      onShowStop={(guideId, stopId) => showStopFn({ data: { guideId, stopId } })}
+      onPublish={(_guideId, locale) => publishGuideLocaleFn({ data: { nanoId, locale } })}
+      onUnpublish={(_guideId, locale) => unpublishGuideLocaleFn({ data: { nanoId, locale } })}
+      onHideStop={(_guideId, stopNanoId) =>
+        updateStopVisibilityFn({ data: { guideNanoId: nanoId, stopNanoId, visible: false } })
+      }
+      onShowStop={(_guideId, stopNanoId) =>
+        updateStopVisibilityFn({ data: { guideNanoId: nanoId, stopNanoId, visible: true } })
+      }
       MediaPicker={MediaPickerConnected}
     />
   )

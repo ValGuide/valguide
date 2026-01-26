@@ -1,8 +1,9 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { AssetWithRole, IndependentStopMetadata, StopLocaleData } from '@valguide/core/features/guides/types'
+import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail'
+import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft'
+import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 
-// Type for form value getters
 type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
 
 export interface StopEditorContextValue {
@@ -17,8 +18,8 @@ export interface StopEditorContextValue {
   updateAvailableLocales: (locales: string[]) => Promise<void>
 
   // Data accessors (from React Query cache)
-  metadata: IndependentStopMetadata | null
-  localeData: StopLocaleData | null
+  stopDetail: StopDetail | null
+  localeDraft: StopLocaleDraftResult | null
   isLoadingLocale: boolean
 
   // Asset state (in-memory, saved on save())
@@ -33,7 +34,7 @@ export interface StopEditorContextValue {
   isDirty: boolean
   registerFormDirty: (formId: string, isDirty: boolean, getValues?: FormValueGetter) => void
   unregisterForm: (formId: string) => void
-  registerFormReset: (formId: string, resetFn: () => void, saveResetFn?: () => void) => void
+  registerFormReset: (formId: string, resetFn: () => void) => void
   resetAllForms: () => void
 
   // Save orchestration
@@ -44,7 +45,6 @@ export interface StopEditorContextValue {
   // Publishing actions (per-locale)
   publish: (locale: string) => Promise<void>
   unpublish: (locale: string) => Promise<void>
-  discard: (locale: string) => Promise<void>
 
   // Refetch data
   refetch: () => Promise<void>

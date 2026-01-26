@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { StopMetadata } from '@valguide/core/features/guides/types'
+import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
@@ -49,30 +49,30 @@ import { cn } from '@valguide/ui/lib/utils'
 import { Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus, Unlink } from 'lucide-react'
 import * as React from 'react'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
-import { TranslationStatusInline } from './translation-status-inline'
 
 export type StopsListProps = {
-  onReorder: (updates: Array<{ id: string; order: number }>) => void
-  onEdit: (stopId: string) => void
-  onHide: (stopId: string) => void | Promise<void>
-  onShow: (stopId: string) => void | Promise<void>
-  onRemove: (stopId: string) => Promise<void>
+  onReorder: (stopNanoIds: string[]) => void
+  onEdit: (stopNanoId: string) => void
+  onHide: (stopNanoId: string) => void | Promise<void>
+  onShow: (stopNanoId: string) => void | Promise<void>
+  onRemove: (stopNanoId: string) => Promise<void>
   onAdd: () => void | Promise<void>
 }
 
 type SortableStopItemProps = {
-  stop: StopMetadata
+  stop: StructureDraftStop
   index: number
-  title: string
-  onEdit: (stopId: string) => void
-  onHide: (stopId: string) => void | Promise<void>
-  onShow: (stopId: string) => void | Promise<void>
-  onRequestRemove: (stop: StopMetadata) => void
+  onEdit: (stopNanoId: string) => void
+  onHide: (stopNanoId: string) => void | Promise<void>
+  onShow: (stopNanoId: string) => void | Promise<void>
+  onRequestRemove: (stop: StructureDraftStop) => void
 }
 
-function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onRequestRemove }: SortableStopItemProps) {
+function SortableStopItem({ stop, index, onEdit, onHide, onShow, onRequestRemove }: SortableStopItemProps) {
   const t = useTranslations('stops')
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: stop.id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: stop.stopNanoId,
+  })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -80,8 +80,8 @@ function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onReques
     opacity: isDragging ? 0.5 : 1,
   }
 
-  const thumbnailAsset = stop.assets?.find((a) => a.mimeType?.startsWith('image/'))
   const isHidden = stop.visible === false
+  const displayTitle = stop.title?.trim() || t('untitled')
 
   return (
     <div ref={setNodeRef} style={style}>
@@ -96,17 +96,13 @@ function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onReques
           </button>
 
           <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-            {thumbnailAsset?.publicUrl ? (
-              <img src={thumbnailAsset.publicUrl} alt="" className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
-            )}
+            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
           </div>
 
           <div className="flex-1 min-w-0 space-y-1">
             <div className="flex items-center gap-2">
               <h3 className={cn('font-medium truncate', isHidden && 'text-muted-foreground')}>
-                {t('stopTitle', { number: index + 1, title })}
+                {t('stopTitle', { number: index + 1, title: displayTitle })}
               </h3>
               {isHidden && (
                 <Tooltip>
@@ -117,40 +113,37 @@ function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onReques
                 </Tooltip>
               )}
             </div>
-            <TranslationStatusInline translationStatuses={stop.translationStatuses} />
           </div>
 
-          <div className="flex items-center gap-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onEdit(stop.nanoId)}>
-                  <Edit className="h-4 w-4" />
-                  {t('edit')}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onEdit(stop.stopNanoId)}>
+                <Edit className="h-4 w-4" />
+                {t('edit')}
+              </DropdownMenuItem>
+              {isHidden ? (
+                <DropdownMenuItem onClick={() => onShow(stop.stopNanoId)}>
+                  <Eye className="h-4 w-4" />
+                  {t('stopActions.showStop')}
                 </DropdownMenuItem>
-                {isHidden ? (
-                  <DropdownMenuItem onClick={() => onShow(stop.id)}>
-                    <Eye className="h-4 w-4" />
-                    {t('stopActions.showStop')}
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem onClick={() => onHide(stop.id)}>
-                    <EyeOff className="h-4 w-4" />
-                    {t('stopActions.hideStop')}
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onClick={() => onRequestRemove(stop)}>
-                  <Unlink className="h-4 w-4" />
-                  {t('stopActions.removeStop')}
+              ) : (
+                <DropdownMenuItem onClick={() => onHide(stop.stopNanoId)}>
+                  <EyeOff className="h-4 w-4" />
+                  {t('stopActions.hideStop')}
                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive" onClick={() => onRequestRemove(stop)}>
+                <Unlink className="h-4 w-4" />
+                {t('stopActions.removeStop')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </CardContent>
       </Card>
     </div>
@@ -159,22 +152,14 @@ function SortableStopItem({ stop, index, title, onEdit, onHide, onShow, onReques
 
 export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }: StopsListProps) {
   const t = useTranslations('stops')
-  const { stops, localeData } = useGuideEditor()
+  const { stops } = useGuideEditor()
   const [items, setItems] = React.useState(stops)
   const [isMounted, setIsMounted] = React.useState(false)
-  const [stopToRemove, setStopToRemove] = React.useState<StopMetadata | null>(null)
-
-  const getStopTitle = React.useCallback(
-    (stopId: string) => {
-      const stopTranslation = localeData?.stopTranslations.find((st) => st.stopId === stopId)
-      return stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title ?? t('untitled')
-    },
-    [localeData, t],
-  )
+  const [stopToRemove, setStopToRemove] = React.useState<StructureDraftStop | null>(null)
 
   const handleConfirmRemove = React.useCallback(() => {
     if (stopToRemove) {
-      onRemove(stopToRemove.id)
+      onRemove(stopToRemove.stopNanoId)
       setStopToRemove(null)
     }
   }, [stopToRemove, onRemove])
@@ -188,39 +173,22 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
   }, [stops])
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
-
     if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex((item) => item.id === active.id)
-      const newIndex = items.findIndex((item) => item.id === over.id)
-
+      const oldIndex = items.findIndex((item) => item.stopNanoId === active.id)
+      const newIndex = items.findIndex((item) => item.stopNanoId === over.id)
       const reorderedItems = arrayMove(items, oldIndex, newIndex)
-
-      const updates = reorderedItems.map((item, index) => ({
-        id: item.id,
-        order: index,
-      }))
-
       setItems(reorderedItems)
-      onReorder(updates)
+      onReorder(reorderedItems.map((item) => item.stopNanoId))
     }
   }
 
-  const stopToRemoveTitle = React.useMemo(() => {
-    if (!stopToRemove) return ''
-    return getStopTitle(stopToRemove.id)
-  }, [stopToRemove, getStopTitle])
+  const stopToRemoveTitle = stopToRemove?.title?.trim() || t('untitled')
 
   const removeConfirmationDialog = (
     <AlertDialog open={!!stopToRemove} onOpenChange={(open) => !open && setStopToRemove(null)}>
@@ -269,67 +237,19 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
     return (
       <div className="space-y-3">
         {items.map((stop, index) => {
-          const displayTitle = getStopTitle(stop.id)
-          const thumbnailAsset = stop.assets?.find((a) => a.mimeType?.startsWith('image/'))
+          const displayTitle = stop.title?.trim() || t('untitled')
           const isHidden = stop.visible === false
-
           return (
-            <Card key={stop.id} className={cn(isHidden && 'opacity-60')}>
+            <Card key={stop.stopNanoId} className={cn(isHidden && 'opacity-60')}>
               <CardContent className="flex items-center gap-4 p-4">
                 <GripVertical className="h-5 w-5 text-muted-foreground" />
                 <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-                  {thumbnailAsset?.publicUrl ? (
-                    <img src={thumbnailAsset.publicUrl} alt="" className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
-                  )}
+                  <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
                 </div>
-                <div className="flex-1 min-w-0 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className={cn('font-medium truncate', isHidden && 'text-muted-foreground')}>
-                      {t('stopTitle', { number: index + 1, title: displayTitle })}
-                    </h3>
-                    {isHidden && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <EyeOff className="h-4 w-4 shrink-0 text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent>{t('visibility.hiddenIndicator')}</TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                  <TranslationStatusInline translationStatuses={stop.translationStatuses} />
-                </div>
-                <div className="flex items-center gap-3">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => onEdit(stop.nanoId)}>
-                        <Edit className="h-4 w-4" />
-                        {t('edit')}
-                      </DropdownMenuItem>
-                      {isHidden ? (
-                        <DropdownMenuItem onClick={() => onShow(stop.id)}>
-                          <Eye className="h-4 w-4" />
-                          {t('stopActions.showStop')}
-                        </DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem onClick={() => onHide(stop.id)}>
-                          <EyeOff className="h-4 w-4" />
-                          {t('stopActions.hideStop')}
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem variant="destructive" onClick={() => setStopToRemove(stop)}>
-                        <Unlink className="h-4 w-4" />
-                        {t('stopActions.removeStop')}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <div className="flex-1 min-w-0">
+                  <h3 className={cn('font-medium truncate', isHidden && 'text-muted-foreground')}>
+                    {t('stopTitle', { number: index + 1, title: displayTitle })}
+                  </h3>
                 </div>
               </CardContent>
             </Card>
@@ -347,14 +267,13 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
   return (
     <div className="space-y-3">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={items.map((item) => item.stopNanoId)} strategy={verticalListSortingStrategy}>
           <div className="space-y-3">
             {items.map((stop, index) => (
               <SortableStopItem
-                key={stop.id}
+                key={stop.stopNanoId}
                 stop={stop}
                 index={index}
-                title={getStopTitle(stop.id)}
                 onEdit={onEdit}
                 onHide={onHide}
                 onShow={onShow}

@@ -1,24 +1,20 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import {
-  discardStopTranslationDraftFn,
-  publishStopAssetsFn,
-  publishStopTranslationDraftFn,
-  saveStopAssetsDraftFn,
-  unpublishStopTranslationFn,
-  updateStopAvailableLocalesFn,
-  updateStopByNanoIdFn,
-} from '@valguide/core/features/guides/stop/server-functions'
+import { assignStopAssetFn } from '@valguide/core/features/guides/stop/asset/assign-stop-asset'
+import { removeStopAssetFn } from '@valguide/core/features/guides/stop/asset/remove-stop-asset'
+import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale'
+import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale'
+import { updateStopLocaleDraftFn } from '@valguide/core/features/guides/stop/locale/update-stop-locale-draft'
+import { updateStopFn } from '@valguide/core/features/guides/stop/update-stop'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { stopLocaleDataQueryOptions, stopMetadataQueryOptions } from '../query-options'
+import { stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '../query-options'
 import { StopEditorContext, type StopEditorContextValue } from './stop-editor-types'
 
-// Type for form value getters
 type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
 type FormRegistry = Map<string, { getValues: FormValueGetter; isDirty: boolean }>
 
@@ -45,57 +41,48 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
   const searchParams = useSearch({ strict: false })
   const queryClient = useQueryClient()
 
-  // Fetch metadata (no translations)
-  const metadataQuery = useQuery(stopMetadataQueryOptions(nanoId))
-  const metadata = metadataQuery.data ?? null
-  const stopId = metadata?.id ?? ''
-  const availableLocales = metadata?.availableLocales ?? ['en']
+  // Fetch stop detail
+  const detailQuery = useQuery(stopDetailQueryOptions(nanoId))
+  const stopDetail = detailQuery.data ?? null
+  const stopId = stopDetail?.id ?? ''
+  const availableLocales = stopDetail?.availableLocales ?? ['en']
 
   // Active locale state
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
 
-  // Sync active locale when metadata updates and initialLocale becomes valid
+  // Sync active locale when detail updates and initialLocale becomes valid
   useEffect(() => {
     if (initialLocale && availableLocales.includes(initialLocale) && activeLocale !== initialLocale) {
       setActiveLocaleState(initialLocale)
     }
   }, [initialLocale, availableLocales, activeLocale])
 
-  // Fetch locale-specific translations
-  const localeQuery = useQuery({
-    ...stopLocaleDataQueryOptions(stopId, activeLocale),
-    enabled: !!stopId,
+  // Fetch locale-specific draft
+  const localeDraftQuery = useQuery({
+    ...stopLocaleDraftQueryOptions(nanoId, activeLocale),
+    enabled: !!nanoId,
   })
-  const localeData = localeQuery.data ?? null
-  const isLoadingLocale = localeQuery.isLoading
+  const localeDraft = localeDraftQuery.data ?? null
+  const isLoadingLocale = localeDraftQuery.isLoading
 
   // Prefetch adjacent locales for instant switching
   useEffect(() => {
-    if (!stopId || availableLocales.length <= 1) return
+    if (!nanoId || availableLocales.length <= 1) return
 
     const otherLocales = availableLocales.filter((l) => l !== activeLocale)
     for (const locale of otherLocales) {
-      queryClient.prefetchQuery(stopLocaleDataQueryOptions(stopId, locale))
+      queryClient.prefetchQuery(stopLocaleDraftQueryOptions(nanoId, locale))
     }
-  }, [stopId, activeLocale, availableLocales, queryClient])
+  }, [nanoId, activeLocale, availableLocales, queryClient])
 
   // Form dirty tracking and value collection
   const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())
   const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
-  const formSaveResetFnsRef = useRef<Map<string, () => void>>(new Map())
   const formValueGettersRef = useRef<FormRegistry>(new Map())
 
   // Asset state (in-memory, saved on save())
   const [assets, setAssets] = useState<AssetWithRole[]>([])
   const initialAssetsRef = useRef<AssetWithRole[]>([])
-
-  // Initialize asset state from metadata
-  useEffect(() => {
-    if (metadata) {
-      setAssets(metadata.assets)
-      initialAssetsRef.current = metadata.assets
-    }
-  }, [metadata])
 
   // Asset dirty tracking
   const isAssetsDirty = useMemo(() => {
@@ -108,10 +95,10 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Derived isDirty (forms OR assets)
+  // Derived isDirty
   const isDirty = dirtyForms.size > 0 || isAssetsDirty
 
-  // Set active locale and update URL (always include locale param)
+  // Set active locale and update URL
   const setActiveLocale = useCallback(
     (locale: string) => {
       if (!availableLocales.includes(locale)) {
@@ -127,15 +114,10 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
   // Update available locales
   const updateAvailableLocales = useCallback(
     async (locales: string[]) => {
-      if (!stopId) return
+      if (!nanoId) return
       try {
-        await updateStopAvailableLocalesFn({
-          data: {
-            stopId,
-            availableLocales: locales,
-          },
-        })
-        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'metadata'] })
+        await updateStopFn({ data: { nanoId, availableLocales: locales } })
+        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'detail'] })
 
         if (!locales.includes(activeLocale)) {
           setActiveLocaleState(locales[0] ?? defaultLocale)
@@ -147,18 +129,15 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
         toast.error(t('stops.locales.updateError'))
       }
     },
-    [stopId, nanoId, queryClient, activeLocale, t],
+    [nanoId, queryClient, activeLocale, t],
   )
 
   // Form registration
   const registerFormDirty = useCallback((formId: string, formIsDirty: boolean, getValues?: FormValueGetter) => {
     setDirtyForms((prev) => {
       const next = new Set(prev)
-      if (formIsDirty) {
-        next.add(formId)
-      } else {
-        next.delete(formId)
-      }
+      if (formIsDirty) next.add(formId)
+      else next.delete(formId)
       return next
     })
     if (getValues) {
@@ -173,15 +152,11 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
       return next
     })
     formResetFnsRef.current.delete(formId)
-    formSaveResetFnsRef.current.delete(formId)
     formValueGettersRef.current.delete(formId)
   }, [])
 
-  const registerFormReset = useCallback((formId: string, resetFn: () => void, saveResetFn?: () => void) => {
+  const registerFormReset = useCallback((formId: string, resetFn: () => void) => {
     formResetFnsRef.current.set(formId, resetFn)
-    if (saveResetFn) {
-      formSaveResetFnsRef.current.set(formId, saveResetFn)
-    }
   }, [])
 
   const resetAllForms = useCallback(() => {
@@ -205,12 +180,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
 
   const addAsset = useCallback(
     (asset: Asset, role: string, locale: string | null) => {
-      const assetWithRole: AssetWithRole = {
-        ...asset,
-        role,
-        order: assets.length,
-        locale,
-      }
+      const assetWithRole: AssetWithRole = { ...asset, role, order: assets.length, locale }
       setAssets((prev) => [...prev, assetWithRole])
     },
     [assets.length],
@@ -222,21 +192,20 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
 
   // Save orchestration
   const save = useCallback(async () => {
-    if (!isDirty || !stopId) return
+    if (!isDirty || !nanoId) return
 
     setIsSaving(true)
     try {
-      // Collect values from all dirty forms and save them
+      // Save all dirty forms
       for (const [formId, registration] of formValueGettersRef.current.entries()) {
         if (!registration.isDirty) continue
 
         const values = registration.getValues()
 
-        // Save stop translation
         if (formId.startsWith('stop-translation-')) {
-          await updateStopByNanoIdFn({
+          await updateStopLocaleDraftFn({
             data: {
-              stopNanoId: nanoId,
+              nanoId,
               locale: activeLocale,
               title: values.title ?? '',
               description: values.description ?? '',
@@ -246,28 +215,26 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
         }
       }
 
-      // Save assets if dirty
+      // Save assets if dirty (using new channel-based API)
       if (isAssetsDirty) {
-        await saveStopAssetsDraftFn({
-          data: {
-            stopId,
-            assets: assets.map((a, index) => ({
-              assetId: a.id,
-              order: index,
-              role: a.role,
-              locale: a.locale ?? null,
-            })),
-          },
-        })
+        // Remove old assets
+        for (const asset of initialAssetsRef.current) {
+          await removeStopAssetFn({
+            data: { nanoId, assetId: asset.id, channel: 'images.gallery', locale: null },
+          })
+        }
+        // Add new assets
+        for (const asset of assets) {
+          await assignStopAssetFn({
+            data: { nanoId, assetId: asset.id, channel: 'images.gallery', locale: null },
+          })
+        }
         initialAssetsRef.current = assets
       }
 
-      // Reset all forms after successful save
       resetAllFormsAfterSave()
 
-      // Invalidate queries to get fresh data
-      await queryClient.invalidateQueries({ queryKey: ['stop', stopId, 'locale', activeLocale] })
-      await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'metadata'] })
+      await queryClient.invalidateQueries({ queryKey: ['stop', nanoId] })
       await queryClient.invalidateQueries({ queryKey: ['stops'] })
 
       setLastSaved(new Date())
@@ -278,86 +245,48 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     } finally {
       setIsSaving(false)
     }
-  }, [isDirty, stopId, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, isAssetsDirty, assets, t])
+  }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, isAssetsDirty, assets, t])
 
-  // Publish translation for a specific locale
+  // Publish locale
   const publish = useCallback(
     async (locale: string) => {
-      if (!stopId) return
+      await save()
+      if (!nanoId) return
 
       try {
-        // Save first to ensure draft exists
-        await save()
-
-        // Publish translation
-        await publishStopTranslationDraftFn({ data: { stopId, locale } })
-
-        // Publish assets
-        await publishStopAssetsFn({ data: { stopId } })
-
-        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'metadata'] })
-        await queryClient.invalidateQueries({ queryKey: ['stop', stopId, 'locale', locale] })
-        await queryClient.invalidateQueries({ queryKey: ['stops'] })
-
+        await publishStopLocaleFn({ data: { nanoId, locale } })
+        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId] })
         toast.success(t('stops.publish.success'))
       } catch (error) {
         console.error('Failed to publish:', error)
         toast.error(t('stops.publish.error'))
       }
     },
-    [stopId, nanoId, queryClient, save, t],
+    [nanoId, queryClient, save, t],
   )
 
-  // Unpublish translation for a specific locale
+  // Unpublish locale
   const unpublish = useCallback(
     async (locale: string) => {
-      if (!stopId) return
+      if (!nanoId) return
 
       try {
-        await unpublishStopTranslationFn({ data: { stopId, locale } })
-
-        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'metadata'] })
-        await queryClient.invalidateQueries({ queryKey: ['stop', stopId, 'locale', locale] })
-        await queryClient.invalidateQueries({ queryKey: ['stops'] })
-
+        await unpublishStopLocaleFn({ data: { nanoId, locale } })
+        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId] })
         toast.success(t('stops.unpublish.success'))
       } catch (error) {
         console.error('Failed to unpublish:', error)
         toast.error(t('stops.unpublish.error'))
       }
     },
-    [stopId, nanoId, queryClient, t],
-  )
-
-  // Discard draft for a specific locale
-  const discard = useCallback(
-    async (locale: string) => {
-      if (!stopId) return
-
-      try {
-        await discardStopTranslationDraftFn({ data: { stopId, locale } })
-
-        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'metadata'] })
-        await queryClient.invalidateQueries({ queryKey: ['stop', stopId, 'locale', locale] })
-
-        resetAllForms()
-        toast.success(t('stops.discard.success'))
-      } catch (error) {
-        console.error('Failed to discard draft:', error)
-        toast.error(t('stops.discard.error'))
-      }
-    },
-    [stopId, nanoId, queryClient, resetAllForms, t],
+    [nanoId, queryClient, t],
   )
 
   // Refetch
   const refetch = useCallback(async () => {
-    await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'metadata'] })
-    if (stopId) {
-      await queryClient.invalidateQueries({ queryKey: ['stop', stopId, 'locale'] })
-    }
+    await queryClient.invalidateQueries({ queryKey: ['stop', nanoId] })
     resetAllForms()
-  }, [stopId, nanoId, queryClient, resetAllForms])
+  }, [nanoId, queryClient, resetAllForms])
 
   const value: StopEditorContextValue = {
     nanoId,
@@ -366,8 +295,8 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     availableLocales,
     setActiveLocale,
     updateAvailableLocales,
-    metadata,
-    localeData,
+    stopDetail,
+    localeDraft,
     isLoadingLocale,
     assets,
     updateAssets,
@@ -383,7 +312,6 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     lastSaved,
     publish,
     unpublish,
-    discard,
     refetch,
     backPath: '/stops',
     backLabel: t('stops.backToStops'),

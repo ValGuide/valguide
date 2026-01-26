@@ -11,7 +11,7 @@ import type { StopLocaleEditorRef } from '@/features/guides/components/stop-loca
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
-import { stopLocaleDataQueryOptions, stopMetadataQueryOptions } from '@/features/stops/query-options'
+import { stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '@/features/stops/query-options'
 
 type SearchParams = {
   locale?: string
@@ -23,14 +23,14 @@ export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
   }),
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
-    const metadata = await context.queryClient.ensureQueryData(stopMetadataQueryOptions(params.nanoId))
+    const stopDetail = await context.queryClient.ensureQueryData(stopDetailQueryOptions(params.nanoId))
 
-    if (!metadata) {
+    if (!stopDetail) {
       throw notFound()
     }
 
     const requestedLocale = deps.locale
-    const { availableLocales } = metadata
+    const { availableLocales } = stopDetail
 
     // Redirect if locale missing or invalid
     if (!requestedLocale || !availableLocales.includes(requestedLocale)) {
@@ -44,7 +44,7 @@ export const Route = createFileRoute('/_main/stops/$nanoId/edit')({
       })
     }
 
-    await context.queryClient.ensureQueryData(stopLocaleDataQueryOptions(metadata.id, requestedLocale))
+    await context.queryClient.ensureQueryData(stopLocaleDraftQueryOptions(params.nanoId, requestedLocale))
 
     return { nanoId: params.nanoId, locale: requestedLocale }
   },
@@ -76,8 +76,8 @@ function StopEditContent() {
   const {
     nanoId,
     stopId,
-    metadata,
-    localeData,
+    stopDetail,
+    localeDraft,
     activeLocale,
     availableLocales,
     isDirty,
@@ -89,7 +89,6 @@ function StopEditContent() {
     refetch,
     publish,
     unpublish,
-    discard,
     updateAssets,
     registerFormDirty,
     unregisterForm,
@@ -98,30 +97,39 @@ function StopEditContent() {
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
-  // Build stop translation data from locale data
+  // Build stop translation data from locale draft
   const stopTranslation: StopTranslationData | null = useMemo(() => {
-    if (!localeData?.stopTranslation || !stopId) return null
-    const { stopTranslation: st } = localeData
+    if (!localeDraft || !stopId) return null
     return {
       stopId,
-      translationId: st.translationId,
-      currentVersionId: st.currentVersionId,
-      draftVersionId: st.draftVersionId,
-      currentVersion: st.currentVersion,
-      draftVersion: st.draftVersion,
+      translationId: '', // Not used
+      currentVersionId: localeDraft.publishedVersionId,
+      draftVersionId: null, // Not used
+      currentVersion: localeDraft.publishedVersionId
+        ? {
+            title: localeDraft.title ?? '',
+            description: localeDraft.description,
+            transcription: localeDraft.transcription,
+          }
+        : null,
+      draftVersion: {
+        title: localeDraft.title ?? '',
+        description: localeDraft.description,
+        transcription: localeDraft.transcription,
+      },
     }
-  }, [localeData, stopId])
+  }, [localeDraft, stopId])
 
-  // Get stop title
   const draftStopTitle = useMemo(() => {
-    const title = stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title
+    const title = localeDraft?.title
     return title?.trim() ? title : tStops('unknownTitle')
-  }, [stopTranslation, tStops])
+  }, [localeDraft, tStops])
 
   const publishedStopTitle = useMemo(() => {
-    const title = stopTranslation?.currentVersion?.title
+    // Use draft title as fallback since we don't have separate published data
+    const title = localeDraft?.title
     return title?.trim() ? title : tStops('unknownTitle')
-  }, [stopTranslation, tStops])
+  }, [localeDraft, tStops])
 
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   const formId = `stop-translation-${nanoId}-${activeLocale}`
@@ -138,15 +146,9 @@ function StopEditContent() {
   )
 
   useEffect(() => {
-    registerFormReset(
-      formId,
-      () => {
-        stopEditorRef.current?.resetToCurrentValues()
-      },
-      () => {
-        stopEditorRef.current?.resetToFormValues()
-      },
-    )
+    registerFormReset(formId, () => {
+      stopEditorRef.current?.resetToCurrentValues()
+    })
     return () => {
       unregisterForm(formId)
     }
@@ -156,7 +158,6 @@ function StopEditContent() {
     confirmIfDirty(() => router.navigate({ to: '/stops' }))
   }, [router, confirmIfDirty])
 
-  // Publishing handlers that wrap the context methods
   const handlePublish = useCallback(
     async (_stopId: string, locale: string) => {
       try {
@@ -182,15 +183,16 @@ function StopEditContent() {
   )
 
   const handleDiscard = useCallback(
-    async (_stopId: string, locale: string) => {
+    async (_stopId: string, _locale: string) => {
+      // Discard = refetch to reset to server state
       try {
-        await discard(locale)
+        await refetch()
         return { success: true }
       } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
       }
     },
-    [discard],
+    [refetch],
   )
 
   const breadcrumbContent = (
@@ -200,7 +202,7 @@ function StopEditContent() {
     </Button>
   )
 
-  if (!metadata) {
+  if (!stopDetail) {
     return <StopEditSkeleton />
   }
 
@@ -209,7 +211,7 @@ function StopEditContent() {
       {unsavedChangesDialog}
       <StopEditLayout
         stopId={stopId}
-        guideNanoId="" // Empty for independent editing
+        guideNanoId=""
         stopTranslation={stopTranslation}
         stopAssets={assets}
         activeLocale={activeLocale}
@@ -230,8 +232,6 @@ function StopEditContent() {
         onDiscard={handleDiscard}
         lastSaved={lastSaved}
         onImageChange={(newAssets: Asset[]) => {
-          // Replace all media assets (images/videos) with the new list
-          // Keep audio assets unchanged
           const audioAssets = assets.filter((a) => a.role === 'audio')
           const newMediaAssets: AssetWithRole[] = newAssets.map((asset, index) => ({
             ...asset,
@@ -242,7 +242,6 @@ function StopEditContent() {
           updateAssets([...newMediaAssets, ...audioAssets])
         }}
         onAudioChange={(asset: Asset | null) => {
-          // Update audio for current locale
           const nonAudioAssets = assets.filter((a) => a.role !== 'audio' || a.locale !== activeLocale)
           if (asset) {
             const audioAsset: AssetWithRole = {

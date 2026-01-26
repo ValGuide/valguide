@@ -1,7 +1,6 @@
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
-import { getGuideStatusDisplay } from '@valguide/core/features/guides/status-utils'
+import { type GuideStatus, GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -27,30 +26,21 @@ import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
 interface GuideEditViewProps {
-  onPublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-  onUnpublish?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-  onDiscard?: (guideId: string, locale: string) => Promise<{ success: boolean; error?: string }>
-  onHideStop?: (guideId: string, stopId: string) => Promise<unknown>
-  onShowStop?: (guideId: string, stopId: string) => Promise<unknown>
+  onPublish?: (guideId: string, locale: string) => Promise<unknown>
+  onUnpublish?: (guideId: string, locale: string) => Promise<unknown>
+  onHideStop?: (guideId: string, stopNanoId: string) => Promise<unknown>
+  onShowStop?: (guideId: string, stopNanoId: string) => Promise<unknown>
   MediaPicker: MediaPickerComponent
 }
 
-export function GuideEditView({
-  onPublish,
-  onUnpublish,
-  onDiscard,
-  onHideStop,
-  onShowStop,
-  MediaPicker,
-}: GuideEditViewProps) {
+export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, MediaPicker }: GuideEditViewProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
   const {
     nanoId,
-    guideId,
-    metadata,
-    localeData,
+    guideDetail,
+    localeDraft,
     activeLocale,
     availableLocales,
     isDirty,
@@ -61,6 +51,7 @@ export function GuideEditView({
     addStop,
     removeStop,
     reorderStops,
+    stops,
     setActiveLocale,
     save,
     refetch,
@@ -77,43 +68,27 @@ export function GuideEditView({
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
 
-  // Get title from locale data based on active tab
+  // Get title from locale draft (draft tab always shows draft content)
   const guideTitle = useMemo(() => {
-    const translation = localeData?.guideTranslation
-    let title: string | null | undefined
-    if (activeTab === 'published') {
-      title = translation?.currentVersion?.title
-    } else {
-      title = translation?.draftVersion?.title ?? translation?.currentVersion?.title
-    }
+    const title = localeDraft?.title
     return title?.trim() ? title : t('unknownTitle')
-  }, [localeData, activeTab, t])
+  }, [localeDraft, t])
 
   useAutoSave(save, isDirty)
 
-  // Get status info from locale data
-  const hasDraft = !!localeData?.guideTranslation?.draftVersionId
-  const hasPublished = !!localeData?.guideTranslation?.currentVersionId
+  // Get status info from locale draft using new schema
+  const hasDraft = true // Draft always exists in new schema
+  const hasPublished = !!localeDraft?.publishedVersionId
+  const hasUnpublishedChanges = localeDraft?.hasUnpublishedChanges ?? false
 
-  // Guide-level status with change indicator based on translation and asset state
-  const computedStatusDisplay = getGuideStatusDisplay(
-    {
-      published: metadata?.published ?? null,
-      archivedAt: null,
-    },
-    localeData?.guideTranslation
-      ? {
-          currentVersionId: localeData.guideTranslation.currentVersionId,
-          draftVersionId: localeData.guideTranslation.draftVersionId,
-        }
-      : null,
-    metadata
-      ? {
-          currentAssetVersionId: metadata.currentAssetVersionId,
-          draftAssetVersionId: metadata.draftAssetVersionId,
-        }
-      : null,
-  )
+  // Simplified status display
+  type StatusDisplay = { status: GuideStatus; indicator: 'none' | 'modified' | 'new' }
+  const computedStatusDisplay: StatusDisplay = useMemo(() => {
+    if (!localeDraft) return { status: 'unpublished', indicator: 'none' }
+    const status: GuideStatus = hasPublished ? 'published' : 'unpublished'
+    const indicator = hasUnpublishedChanges ? 'modified' : 'none'
+    return { status, indicator }
+  }, [localeDraft, hasPublished, hasUnpublishedChanges])
 
   // Store stable status during publishing to prevent flickering
   // Both badge and button update in the same render cycle
@@ -125,26 +100,13 @@ export function GuideEditView({
 
   const isReadOnly = activeTab === 'published'
 
-  const draftVersionData = localeData?.guideTranslation?.draftVersion
-    ? {
-        title: localeData.guideTranslation.draftVersion.title,
-        description: localeData.guideTranslation.draftVersion.description,
-      }
-    : null
+  // Use draft content for editing (the new schema always has draft content)
+  const editableVersionData = {
+    title: localeDraft?.title ?? '',
+    description: localeDraft?.description ?? '',
+  }
 
-  const publishedVersionData = localeData?.guideTranslation?.currentVersion
-    ? {
-        title: localeData.guideTranslation.currentVersion.title,
-        description: localeData.guideTranslation.currentVersion.description,
-      }
-    : null
-
-  // For editing: use draft if available, otherwise fall back to published content
-  // This ensures users always see the current content when editing
-  const editableVersionData = draftVersionData ?? publishedVersionData ?? { title: '', description: '' }
-
-  // Convert null to undefined for component prop types
-  const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
+  const displayVersionData = editableVersionData
 
   const formRef = useRef<GuideMetadataFormRef>(null)
   const formId = `guide-translation-${activeLocale}`
@@ -157,67 +119,65 @@ export function GuideEditView({
   )
 
   useEffect(() => {
-    registerFormReset(
-      formId,
-      () => {
-        formRef.current?.resetToCurrentValues()
-      },
-      () => {
-        formRef.current?.resetToFormValues()
-      },
-    )
+    registerFormReset(formId, () => {
+      formRef.current?.resetToCurrentValues()
+    })
     return () => {
       unregisterForm(formId)
     }
   }, [formId, registerFormReset, unregisterForm])
 
-  const handleSelectStop = (stopId: string) => {
-    router.navigate({ to: '/guides/$nanoId/stops/$stopId/edit', params: { nanoId, stopId }, search: localeSearch })
+  const handleSelectStop = (stopNanoId: string) => {
+    router.navigate({
+      to: '/guides/$nanoId/stops/$stopId/edit',
+      params: { nanoId, stopId: stopNanoId },
+      search: localeSearch,
+    })
   }
 
   const handleNavigateToGuide = () => {
     confirmIfDirty(() => router.navigate({ to: '/guides/$nanoId', params: { nanoId } }))
   }
 
-  const handleReorderStops = (updates: Array<{ id: string; order: number }>) => {
-    reorderStops(updates)
+  const handleReorderStops = (stopNanoIds: string[]) => {
+    reorderStops(stopNanoIds)
   }
 
   const getStopTitle = useCallback(
-    (stopId: string) => {
-      const stopTranslation = localeData?.stopTranslations.find((st) => st.stopId === stopId)
-      return stopTranslation?.draftVersion?.title ?? stopTranslation?.currentVersion?.title ?? tStops('untitled')
+    (stopNanoId: string) => {
+      const stop = stops.find((s) => s.stopNanoId === stopNanoId)
+      return stop?.title ?? tStops('untitled')
     },
-    [localeData, tStops],
+    [stops, tStops],
   )
 
   const handleHideStop = useCallback(
-    (stopId: string) => {
-      const title = getStopTitle(stopId)
-      setStopToHide({ id: stopId, title })
+    (stopNanoId: string) => {
+      const title = getStopTitle(stopNanoId)
+      setStopToHide({ id: stopNanoId, title })
     },
     [getStopTitle],
   )
 
   const handleConfirmHide = useCallback(async () => {
-    if (!stopToHide || !guideId || !onHideStop) return
-    await onHideStop(guideId, stopToHide.id)
+    if (!stopToHide || !nanoId || !onHideStop) return
+    await onHideStop(nanoId, stopToHide.id)
     await refetch()
-  }, [stopToHide, guideId, onHideStop, refetch])
+  }, [stopToHide, nanoId, onHideStop, refetch])
 
   const handleShowStop = useCallback(
-    (stopId: string) => {
-      const title = getStopTitle(stopId)
-      setStopToShow({ id: stopId, title })
+    (stopNanoId: string) => {
+      const title = getStopTitle(stopNanoId)
+      setStopToShow({ id: stopNanoId, title })
     },
     [getStopTitle],
   )
 
   const handleConfirmShow = useCallback(async () => {
-    if (!stopToShow || !guideId || !onShowStop) return
-    await onShowStop(guideId, stopToShow.id)
+    if (!stopToShow || !nanoId || !onShowStop) return
+    await onShowStop(nanoId, stopToShow.id)
     await refetch()
-  }, [stopToShow, guideId, onShowStop, refetch])
+  }, [stopToShow, nanoId, onShowStop, refetch])
 
   const coverAsset = useMemo(() => {
     return guideAssets.find((a) => a.role === 'cover') ?? null
@@ -241,52 +201,28 @@ export function GuideEditView({
       if (isDirty) {
         await save()
       }
-      const result = await onPublish(guideId, activeLocale)
-      if (result.success) {
-        toast.success(t('publish.success'))
-        await refetch()
-      } else {
-        toast.error(result.error ?? t('publish.error'))
-      }
+      await onPublish(nanoId, activeLocale)
+      toast.success(t('publish.success'))
+      await refetch()
     } catch (error) {
       console.error('Failed to publish:', error)
       toast.error(t('publish.error'))
     } finally {
       setIsPublishing(false)
     }
-  }, [guideId, activeLocale, refetch, onPublish, isDirty, save, t])
+  }, [nanoId, activeLocale, refetch, onPublish, isDirty, save, t])
 
   const handleUnpublish = useCallback(async () => {
     if (!onUnpublish) return
     try {
-      const result = await onUnpublish(guideId, activeLocale)
-      if (result.success) {
-        toast.success('Content unpublished')
-        refetch()
-      } else {
-        toast.error(result.error ?? 'Failed to unpublish')
-      }
+      await onUnpublish(nanoId, activeLocale)
+      toast.success('Content unpublished')
+      await refetch()
     } catch (error) {
       console.error('Failed to unpublish:', error)
       toast.error('Failed to unpublish')
     }
-  }, [guideId, activeLocale, refetch, onUnpublish])
-
-  const handleDiscard = useCallback(async () => {
-    if (!onDiscard) return
-    try {
-      const result = await onDiscard(guideId, activeLocale)
-      if (result.success) {
-        toast.success('Draft discarded')
-        refetch()
-      } else {
-        toast.error('Failed to discard draft')
-      }
-    } catch (error) {
-      console.error('Failed to discard:', error)
-      toast.error('Failed to discard draft')
-    }
-  }, [guideId, activeLocale, refetch, onDiscard])
+  }, [nanoId, activeLocale, refetch, onUnpublish])
 
   const handleTabChange = useCallback(
     (tab: EditorTab) => {
@@ -300,7 +236,7 @@ export function GuideEditView({
     [hasPublished, isDirty, confirmIfDirty],
   )
 
-  if (!metadata) {
+  if (!guideDetail) {
     return null
   }
 
@@ -329,7 +265,7 @@ export function GuideEditView({
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
                 onUnpublish={handleUnpublish}
-                onDiscard={handleDiscard}
+                onDiscard={() => Promise.resolve()}
               />
               <Sheet>
                 <SheetTrigger asChild>
@@ -495,7 +431,7 @@ export function GuideEditView({
                       if (newStop) {
                         router.navigate({
                           to: '/guides/$nanoId/stops/$stopId/edit',
-                          params: { nanoId, stopId: newStop.nanoId },
+                          params: { nanoId, stopId: newStop.stopNanoId },
                           search: localeSearch,
                         })
                       }
@@ -519,7 +455,7 @@ export function GuideEditView({
                 onSave={save}
                 onPublish={handlePublish}
                 onUnpublish={handleUnpublish}
-                onDiscard={handleDiscard}
+                onDiscard={() => Promise.resolve()}
                 onOpenVersionHistory={() => {}}
                 disabled={isReadOnly}
               />

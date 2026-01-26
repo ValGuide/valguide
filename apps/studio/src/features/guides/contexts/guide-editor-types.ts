@@ -1,8 +1,13 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { AssetWithRole, GuideLocaleData, GuideMetadata, StopMetadata } from '@valguide/core/features/guides/types'
+import type { GuideDetail, LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail'
+import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft'
+import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft'
+import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 
-// Type for form value getters
+// Re-export types for consumers
+export type { GuideDetail, LocaleDraftInfo, GuideLocaleDraftResult, StructureDraftStop }
+
 type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
 
 export interface GuideEditorContextValue {
@@ -17,31 +22,31 @@ export interface GuideEditorContextValue {
   updateAvailableLocales: (locales: string[]) => Promise<void>
 
   // Data accessors (from React Query cache)
-  metadata: GuideMetadata | null
-  localeData: GuideLocaleData | null
+  guideDetail: GuideDetail | null
+  localeDraft: GuideLocaleDraftResult | null
   isLoadingLocale: boolean
 
-  // Stop operations
-  stops: StopMetadata[]
-  addStop: () => Promise<StopMetadata | null>
-  removeStop: (stopId: string) => Promise<void>
-  reorderStops: (stops: Array<{ id: string; order: number }>) => Promise<void>
+  // Stop operations - uses stopNanoId for identification
+  stops: StructureDraftStop[]
+  addStop: () => Promise<StructureDraftStop | null>
+  removeStop: (stopNanoId: string) => Promise<void>
+  reorderStops: (stopNanoIds: string[]) => Promise<void>
 
   // Asset state (in-memory, saved on save())
   guideAssets: AssetWithRole[]
-  getStopAssets: (stopId: string) => AssetWithRole[]
+  getStopAssets: (stopNanoId: string) => AssetWithRole[]
 
   // Asset operations (update in-memory state, saved on save())
   setGuideCover: (asset: Asset | null) => void
-  updateStopAssets: (stopId: string, assets: AssetWithRole[]) => void
-  addStopAsset: (stopId: string, asset: Asset, role: string, locale: string | null) => void
-  removeStopAsset: (stopId: string, assetId: string) => void
+  updateStopAssets: (stopNanoId: string, assets: AssetWithRole[]) => void
+  addStopAsset: (stopNanoId: string, asset: Asset, role: string, locale: string | null) => void
+  removeStopAsset: (stopNanoId: string, assetId: string) => void
 
   // Form dirty registration
   isDirty: boolean
   registerFormDirty: (formId: string, isDirty: boolean, getValues?: FormValueGetter) => void
   unregisterForm: (formId: string) => void
-  registerFormReset: (formId: string, resetFn: () => void, saveResetFn?: () => void) => void
+  registerFormReset: (formId: string, resetFn: () => void) => void
   resetAllForms: () => void
 
   // Save orchestration

@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import type { StopWithGuides } from '@/features/stops/api/fetchers'
+import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops'
 import { StopsList } from '@/features/stops/components/stops-list'
 import { StopsListSkeleton } from '@/features/stops/components/stops-list-skeleton'
 import { useStops } from '@/features/stops/hooks/use-stops'
@@ -16,14 +16,11 @@ function StopsPage() {
 
   const { stops, isLoading, error, refetch } = useStops()
 
-  const handleEditStop = (stop: StopWithGuides) => {
-    if (stop.nanoId) {
-      // Navigate to independent stop detail page
-      router.navigate({
-        to: '/stops/$nanoId',
-        params: { nanoId: stop.nanoId },
-      })
-    }
+  const handleEditStop = (stop: StopListItem) => {
+    router.navigate({
+      to: '/stops/$nanoId',
+      params: { nanoId: stop.nanoId },
+    })
   }
 
   return (

@@ -9,6 +9,10 @@ import {
   type GuideLocaleDraftResult,
   getGuideLocaleDraftFn,
 } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft'
+import {
+  getStructureDraftFn,
+  type StructureDraftResult,
+} from '@valguide/core/features/guides/structure/get-structure-draft'
 
 /**
  * Lightweight query options for guides list view
@@ -52,5 +56,15 @@ export const guideLocaleDraftQueryOptions = (nanoId: string, locale: string) =>
   queryOptions<GuideLocaleDraftResult | null>({
     queryKey: ['guide', nanoId, 'locale', locale],
     queryFn: () => getGuideLocaleDraftFn({ data: { nanoId, locale } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for guide structure draft (stops in guide)
+ */
+export const guideStructureDraftQueryOptions = (nanoId: string, locale: string) =>
+  queryOptions<StructureDraftResult | null>({
+    queryKey: ['guide', nanoId, 'structure', { locale }],
+    queryFn: () => getStructureDraftFn({ data: { nanoId, locale } }),
     staleTime: 30 * 1000,
   })

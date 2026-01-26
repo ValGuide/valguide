@@ -1,19 +1,19 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { clientEnv } from '@valguide/core/env/client'
-import { ArchiveGuideButton } from '@valguide/core/features/guides/components/archive-guide-button'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
-import { updateGuideFn } from '@valguide/core/features/guides/guide/server-functions'
+import { updateGuideFn } from '@valguide/core/features/guides/guide/update-guide'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useCallback } from 'react'
+import { ArchiveGuideButton } from '@/features/guides/components/archive-guide-button'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
 import { GuideDetailView } from '@/features/guides/components/guide-detail-view'
 import { guideDetailQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId/')({
   loader: async ({ params, context }) => {
-    await context.queryClient.ensureQueryData(guideDetailQueryOptions(params.nanoId, context.locale))
+    await context.queryClient.ensureQueryData(guideDetailQueryOptions(params.nanoId))
     return { nanoId: params.nanoId, preferredLocale: context.locale }
   },
   component: GuidePage,
@@ -22,7 +22,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/')({
 
 function GuidePage() {
   const { nanoId, preferredLocale } = Route.useLoaderData()
-  const { data: guide } = useQuery(guideDetailQueryOptions(nanoId, preferredLocale))
+  const { data: guide } = useQuery(guideDetailQueryOptions(nanoId))
   const queryClient = useQueryClient()
   const tLocales = useTranslations('guides.locales')
   const router = useRouter()
@@ -35,10 +35,8 @@ function GuidePage() {
   const handleAddLanguage = useCallback(
     async (locale: string) => {
       if (!guide) return
-      const newLocales = [...guide.availableLocales, locale]
       try {
-        await updateGuideFn({ data: { id: guide.id, availableLocales: newLocales } })
-        await queryClient.refetchQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+        await updateGuideFn({ data: { nanoId: guide.nanoId, addLocale: locale } })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'detail'] })
         toast.success(tLocales('updateSuccess'))
       } catch {
@@ -51,10 +49,8 @@ function GuidePage() {
   const handleRemoveLanguage = useCallback(
     async (locale: string) => {
       if (!guide) return
-      const newLocales = guide.availableLocales.filter((l) => l !== locale)
       try {
-        await updateGuideFn({ data: { id: guide.id, availableLocales: newLocales } })
-        await queryClient.refetchQueries({ queryKey: ['guide', nanoId, 'metadata'] })
+        await updateGuideFn({ data: { nanoId: guide.nanoId, removeLocale: locale } })
         await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'detail'] })
         toast.success(tLocales('updateSuccess'))
       } catch {
@@ -70,6 +66,7 @@ function GuidePage() {
     <GuideDetailView
       guide={guide}
       nanoId={nanoId}
+      preferredLocale={preferredLocale}
       appDomain={clientEnv.VITE_APP_DOMAIN}
       onBack={() => router.navigate({ to: '/' })}
       onArchived={handleArchived}

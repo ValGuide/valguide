@@ -1,64 +1,68 @@
-import type { AssetWithRole, GuideLocaleData, GuideMetadata, StopMetadata } from '@valguide/core/features/guides/types'
+import type { Asset } from '@valguide/core/features/assets/schema'
+import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail'
+import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft'
+import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft'
+import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { type ReactNode, useCallback, useState } from 'react'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
 
-type ContentLocale = string
-
 export interface MockGuideEditorProviderProps {
   children: ReactNode
-  metadata: GuideMetadata
-  localeData?: GuideLocaleData | null
+  guideDetail: GuideDetail
+  localeDraft?: GuideLocaleDraftResult | null
+  stops?: StructureDraftStop[]
 }
 
 export function MockGuideEditorProvider({
   children,
-  metadata: initialMetadata,
-  localeData: initialLocaleData = null,
+  guideDetail,
+  localeDraft = null,
+  stops: initialStops = [],
 }: MockGuideEditorProviderProps) {
-  const [metadata, setMetadata] = useState(initialMetadata)
-  const [activeLocale, setActiveLocale] = useState<ContentLocale>(initialMetadata.availableLocales[0] ?? 'en')
+  const [activeLocale, setActiveLocale] = useState<string>(guideDetail.availableLocales[0] ?? 'en')
   const [isDirty, setIsDirty] = useState(false)
-  const [guideAssets, setGuideAssets] = useState<AssetWithRole[]>(initialMetadata.assets)
-  const [stopAssetsMap, setStopAssetsMap] = useState<Map<string, AssetWithRole[]>>(
-    new Map(initialMetadata.stops.map((s) => [s.id, s.assets])),
-  )
-
-  const stops: StopMetadata[] = metadata.stops
+  const [guideAssets, setGuideAssets] = useState<AssetWithRole[]>([])
+  const [stopAssetsMap, setStopAssetsMap] = useState<Map<string, AssetWithRole[]>>(new Map())
+  const [stops, setStops] = useState<StructureDraftStop[]>(initialStops)
 
   const getStopAssets = useCallback(
-    (stopId: string): AssetWithRole[] => {
-      return stopAssetsMap.get(stopId) ?? []
+    (stopNanoId: string): AssetWithRole[] => {
+      return stopAssetsMap.get(stopNanoId) ?? []
     },
     [stopAssetsMap],
   )
 
   const value: GuideEditorContextValue = {
-    nanoId: metadata.nanoId,
-    guideId: metadata.id,
+    nanoId: guideDetail.nanoId,
+    guideId: guideDetail.id,
     activeLocale,
-    availableLocales: metadata.availableLocales,
+    availableLocales: guideDetail.availableLocales,
     setActiveLocale,
     updateAvailableLocales: async (locales: string[]) => {
       console.log('Mock: updateAvailableLocales', locales)
-      setMetadata((prev) => ({ ...prev, availableLocales: locales }))
     },
-    metadata,
-    localeData: initialLocaleData,
+    guideDetail,
+    localeDraft,
     isLoadingLocale: false,
     stops,
     addStop: async () => {
       console.log('Mock: addStop')
       return null
     },
-    removeStop: async (stopId: string) => {
-      console.log('Mock: removeStop', stopId)
+    removeStop: async (stopNanoId: string) => {
+      console.log('Mock: removeStop', stopNanoId)
+      setStops((prev) => prev.filter((s) => s.stopNanoId !== stopNanoId))
     },
-    reorderStops: async (stopsData: Array<{ id: string; order: number }>) => {
-      console.log('Mock: reorderStops', stopsData.length)
+    reorderStops: async (stopNanoIds: string[]) => {
+      console.log('Mock: reorderStops', stopNanoIds)
+      setStops((prev) => {
+        const byNanoId = new Map(prev.map((s) => [s.stopNanoId, s]))
+        return stopNanoIds.map((id, index) => ({ ...byNanoId.get(id)!, position: index }))
+      })
     },
     guideAssets,
     getStopAssets,
-    setGuideCover: (asset) => {
+    setGuideCover: (asset: Asset | null) => {
       console.log('Mock: setGuideCover', asset?.id)
       if (asset) {
         setGuideAssets([{ ...asset, role: 'cover', order: 0, locale: null }])
@@ -67,36 +71,36 @@ export function MockGuideEditorProvider({
       }
       setIsDirty(true)
     },
-    updateStopAssets: (stopId, assets) => {
-      console.log('Mock: updateStopAssets', stopId, assets.length)
-      setStopAssetsMap((prev) => new Map(prev).set(stopId, assets))
+    updateStopAssets: (stopNanoId: string, assets: AssetWithRole[]) => {
+      console.log('Mock: updateStopAssets', stopNanoId, assets.length)
+      setStopAssetsMap((prev) => new Map(prev).set(stopNanoId, assets))
       setIsDirty(true)
     },
-    addStopAsset: (stopId, asset, role, locale) => {
-      console.log('Mock: addStopAsset', stopId, asset.id, role, locale)
-      const current = stopAssetsMap.get(stopId) ?? []
+    addStopAsset: (stopNanoId: string, asset: Asset, role: string, locale: string | null) => {
+      console.log('Mock: addStopAsset', stopNanoId, asset.id, role, locale)
+      const current = stopAssetsMap.get(stopNanoId) ?? []
       setStopAssetsMap((prev) =>
-        new Map(prev).set(stopId, [...current, { ...asset, role, order: current.length, locale }]),
+        new Map(prev).set(stopNanoId, [...current, { ...asset, role, order: current.length, locale }]),
       )
       setIsDirty(true)
     },
-    removeStopAsset: (stopId, assetId) => {
-      console.log('Mock: removeStopAsset', stopId, assetId)
-      const current = stopAssetsMap.get(stopId) ?? []
+    removeStopAsset: (stopNanoId: string, assetId: string) => {
+      console.log('Mock: removeStopAsset', stopNanoId, assetId)
+      const current = stopAssetsMap.get(stopNanoId) ?? []
       setStopAssetsMap((prev) =>
         new Map(prev).set(
-          stopId,
+          stopNanoId,
           current.filter((a) => a.id !== assetId),
         ),
       )
       setIsDirty(true)
     },
     isDirty,
-    registerFormDirty: (_formId, formIsDirty) => {
+    registerFormDirty: (_formId: string, formIsDirty: boolean) => {
       setIsDirty(formIsDirty)
     },
-    unregisterForm: (_formId) => {},
-    registerFormReset: (_formId, _resetFn, _saveResetFn) => {},
+    unregisterForm: (_formId: string) => {},
+    registerFormReset: (_formId: string, _resetFn: () => void) => {},
     resetAllForms: () => {
       setIsDirty(false)
     },
