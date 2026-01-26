@@ -7,7 +7,7 @@ import { createStop } from './create-stop.server'
 export type { CreateStopInput, CreateStopResult } from './create-stop.server'
 
 const createStopSchema = z.object({
-  title: z.string().min(1),
+  title: z.string().optional(),
   locale: z.string().optional(),
 })
 

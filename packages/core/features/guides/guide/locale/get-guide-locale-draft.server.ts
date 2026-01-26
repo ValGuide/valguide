@@ -34,7 +34,7 @@ export async function getGuideLocaleDraft(guideNanoId: string, locale: string): 
       lastPublishedDraftRevision: guideLocale.lastPublishedDraftRevision,
     })
     .from(guideLocale)
-    .innerJoin(guideLocaleDraft, eq(guideLocaleDraft.id, guideLocale.draftId))
+    .innerJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
     .where(and(eq(guideLocale.guideId, foundGuide.id), eq(guideLocale.locale, locale)))
     .limit(1)
 

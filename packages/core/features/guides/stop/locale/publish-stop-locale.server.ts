@@ -32,7 +32,6 @@ export async function publishStopLocale(
     const [localeRow] = await tx
       .select({
         id: stopLocale.id,
-        draftId: stopLocale.draftId,
       })
       .from(stopLocale)
       .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
@@ -51,7 +50,7 @@ export async function publishStopLocale(
         revision: stopLocaleDraft.revision,
       })
       .from(stopLocaleDraft)
-      .where(eq(stopLocaleDraft.id, localeRow.draftId))
+      .where(eq(stopLocaleDraft.stopLocaleId, localeRow.id))
 
     if (!draft) {
       throw new NotFoundError('Stop locale draft')

@@ -55,7 +55,7 @@ export async function getStopDetail(nanoId: string): Promise<StopDetail | null> 
       lastPublishedDraftRevision: stopLocale.lastPublishedDraftRevision,
     })
     .from(stopLocale)
-    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.id, stopLocale.draftId))
+    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
     .where(eq(stopLocale.stopId, foundStop.id))
 
   const locales: StopLocaleDraftInfo[] = localeRows.map((row) => ({

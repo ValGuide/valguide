@@ -53,7 +53,7 @@ export async function getGuideDetail(nanoId: string): Promise<GuideDetail | null
       lastPublishedDraftRevision: guideLocale.lastPublishedDraftRevision,
     })
     .from(guideLocale)
-    .innerJoin(guideLocaleDraft, eq(guideLocaleDraft.id, guideLocale.draftId))
+    .innerJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
     .where(eq(guideLocale.guideId, foundGuide.id))
 
   const locales: LocaleDraftInfo[] = localeRows.map((row) => ({

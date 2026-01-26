@@ -151,11 +151,7 @@ export const guideLocaleRelations = relations(guideLocale, ({ one, many }) => ({
     fields: [guideLocale.guideId],
     references: [guide.id],
   }),
-  draft: one(guideLocaleDraft, {
-    fields: [guideLocale.draftId],
-    references: [guideLocaleDraft.id],
-    relationName: 'guide_locale_draft_ptr',
-  }),
+  draft: one(guideLocaleDraft),
   publishedVersion: one(guideLocaleVersion, {
     fields: [guideLocale.publishedVersionId],
     references: [guideLocaleVersion.id],
@@ -191,11 +187,7 @@ export const stopLocaleRelations = relations(stopLocale, ({ one, many }) => ({
     fields: [stopLocale.stopId],
     references: [stop.id],
   }),
-  draft: one(stopLocaleDraft, {
-    fields: [stopLocale.draftId],
-    references: [stopLocaleDraft.id],
-    relationName: 'stop_locale_draft_ptr',
-  }),
+  draft: one(stopLocaleDraft),
   publishedVersion: one(stopLocaleVersion, {
     fields: [stopLocale.publishedVersionId],
     references: [stopLocaleVersion.id],

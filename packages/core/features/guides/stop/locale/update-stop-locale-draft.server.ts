@@ -34,7 +34,7 @@ export async function updateStopLocaleDraft(
   }
 
   const [localeRow] = await db
-    .select({ draftId: stopLocale.draftId })
+    .select({ id: stopLocale.id })
     .from(stopLocale)
     .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
     .limit(1)
@@ -55,7 +55,7 @@ export async function updateStopLocaleDraft(
   const [updated] = await db
     .update(stopLocaleDraft)
     .set(updateData)
-    .where(eq(stopLocaleDraft.id, localeRow.draftId))
+    .where(eq(stopLocaleDraft.stopLocaleId, localeRow.id))
     .returning({ revision: stopLocaleDraft.revision })
 
   return { revision: updated.revision }

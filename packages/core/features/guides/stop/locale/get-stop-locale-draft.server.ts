@@ -36,7 +36,7 @@ export async function getStopLocaleDraft(stopNanoId: string, locale: string): Pr
       lastPublishedDraftRevision: stopLocale.lastPublishedDraftRevision,
     })
     .from(stopLocale)
-    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.id, stopLocale.draftId))
+    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
     .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
     .limit(1)
 

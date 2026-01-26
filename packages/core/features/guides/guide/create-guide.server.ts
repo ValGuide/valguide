@@ -7,7 +7,7 @@ import { guide, guideLocale, guideLocaleDraft, guideSettingsDraft } from '../sch
 // =============================================================================
 
 export type CreateGuideInput = {
-  title: string
+  title?: string
   locale?: string
 }
 
@@ -41,19 +41,20 @@ export async function createGuide(
       })
       .returning()
 
-    const [draft] = await tx
-      .insert(guideLocaleDraft)
+    // Create guideLocale first
+    const [newLocale] = await tx
+      .insert(guideLocale)
       .values({
-        guideLocaleId: newGuide.id,
-        title: input.title,
-        updatedBy: userId,
+        guideId: newGuide.id,
+        locale,
       })
       .returning()
 
-    await tx.insert(guideLocale).values({
-      guideId: newGuide.id,
-      locale,
-      draftId: draft.id,
+    // Create draft with reference to the locale
+    await tx.insert(guideLocaleDraft).values({
+      guideLocaleId: newLocale.id,
+      title: input.title,
+      updatedBy: userId,
     })
 
     await tx.insert(guideSettingsDraft).values({

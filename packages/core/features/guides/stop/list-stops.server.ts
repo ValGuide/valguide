@@ -46,7 +46,7 @@ export async function listStops(organizationId: string, filters: ListStopsFilter
     })
     .from(stop)
     .leftJoin(stopLocale, and(eq(stopLocale.stopId, stop.id), eq(stopLocale.locale, locale)))
-    .leftJoin(stopLocaleDraft, eq(stopLocaleDraft.id, stopLocale.draftId))
+    .leftJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
     .where(and(...conditions))
     .orderBy(desc(stop.updatedAt))
 

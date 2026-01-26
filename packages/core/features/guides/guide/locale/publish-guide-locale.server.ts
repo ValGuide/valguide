@@ -32,7 +32,6 @@ export async function publishGuideLocale(
     const [localeRow] = await tx
       .select({
         id: guideLocale.id,
-        draftId: guideLocale.draftId,
       })
       .from(guideLocale)
       .where(and(eq(guideLocale.guideId, foundGuide.id), eq(guideLocale.locale, locale)))
@@ -50,7 +49,7 @@ export async function publishGuideLocale(
         revision: guideLocaleDraft.revision,
       })
       .from(guideLocaleDraft)
-      .where(eq(guideLocaleDraft.id, localeRow.draftId))
+      .where(eq(guideLocaleDraft.guideLocaleId, localeRow.id))
 
     if (!draft) {
       throw new NotFoundError('Guide locale draft')

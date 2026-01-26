@@ -45,7 +45,7 @@ export async function getStructureDraft(guideNanoId: string, locale: string): Pr
     .from(guideStopDraft)
     .innerJoin(stop, eq(stop.id, guideStopDraft.stopId))
     .innerJoin(stopLocale, eq(stopLocale.stopId, stop.id))
-    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.id, stopLocale.draftId))
+    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
     .where(eq(guideStopDraft.guideId, foundGuide.id))
     .orderBy(asc(guideStopDraft.position))
 

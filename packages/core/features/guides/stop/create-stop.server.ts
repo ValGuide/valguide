@@ -7,7 +7,7 @@ import { stop, stopLocale, stopLocaleDraft, stopSettingsDraft } from '../schema'
 // =============================================================================
 
 export type CreateStopInput = {
-  title: string
+  title?: string
   locale?: string
 }
 
@@ -41,19 +41,20 @@ export async function createStop(
       })
       .returning()
 
-    const [draft] = await tx
-      .insert(stopLocaleDraft)
+    // Create stopLocale first
+    const [newLocale] = await tx
+      .insert(stopLocale)
       .values({
-        stopLocaleId: newStop.id,
-        title: input.title,
-        updatedBy: userId,
+        stopId: newStop.id,
+        locale,
       })
       .returning()
 
-    await tx.insert(stopLocale).values({
-      stopId: newStop.id,
-      locale,
-      draftId: draft.id,
+    // Create draft with reference to the locale
+    await tx.insert(stopLocaleDraft).values({
+      stopLocaleId: newLocale.id,
+      title: input.title,
+      updatedBy: userId,
     })
 
     await tx.insert(stopSettingsDraft).values({

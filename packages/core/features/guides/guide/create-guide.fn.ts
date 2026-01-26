@@ -11,7 +11,7 @@ export type { CreateGuideInput, CreateGuideResult } from './create-guide.server'
 // =============================================================================
 
 const createGuideSchema = z.object({
-  title: z.string().min(1),
+  title: z.string().optional(),
   locale: z.string().optional(),
 })
 

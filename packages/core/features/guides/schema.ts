@@ -97,7 +97,6 @@ export const guideLocale = studioSchema.table(
       .references(() => guide.id, { onDelete: 'cascade' }),
     locale: varchar('locale', { length: 10 }).notNull(),
 
-    draftId: uuid('draft_id').notNull(),
     publishedVersionId: uuid('published_version_id'),
 
     lastPublishedDraftRevision: integer('last_published_draft_revision'),
@@ -171,7 +170,6 @@ export const stopLocale = studioSchema.table(
       .references(() => stop.id, { onDelete: 'cascade' }),
     locale: varchar('locale', { length: 10 }).notNull(),
 
-    draftId: uuid('draft_id').notNull(),
     publishedVersionId: uuid('published_version_id'),
 
     lastPublishedDraftRevision: integer('last_published_draft_revision'),

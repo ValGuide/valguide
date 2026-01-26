@@ -33,7 +33,7 @@ export async function updateGuideLocaleDraft(
   }
 
   const [localeRow] = await db
-    .select({ draftId: guideLocale.draftId })
+    .select({ id: guideLocale.id })
     .from(guideLocale)
     .where(and(eq(guideLocale.guideId, foundGuide.id), eq(guideLocale.locale, locale)))
     .limit(1)
@@ -53,7 +53,7 @@ export async function updateGuideLocaleDraft(
   const [updated] = await db
     .update(guideLocaleDraft)
     .set(updateData)
-    .where(eq(guideLocaleDraft.id, localeRow.draftId))
+    .where(eq(guideLocaleDraft.guideLocaleId, localeRow.id))
     .returning({ revision: guideLocaleDraft.revision })
 
   return { revision: updated.revision }

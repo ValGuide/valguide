@@ -46,7 +46,7 @@ export async function listGuides(organizationId: string, filters: ListGuidesFilt
     })
     .from(guide)
     .leftJoin(guideLocale, and(eq(guideLocale.guideId, guide.id), eq(guideLocale.locale, locale)))
-    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.id, guideLocale.draftId))
+    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
     .where(and(...conditions))
     .orderBy(desc(guide.updatedAt))
 

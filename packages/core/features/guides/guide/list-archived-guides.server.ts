@@ -36,7 +36,7 @@ export async function listArchivedGuides(
     })
     .from(guide)
     .leftJoin(guideLocale, and(eq(guideLocale.guideId, guide.id), eq(guideLocale.locale, locale)))
-    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.id, guideLocale.draftId))
+    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
     .where(and(eq(guide.organizationId, organizationId), isNull(guide.deletedAt), isNotNull(guide.archivedAt)))
     .orderBy(desc(guide.archivedAt))
 
