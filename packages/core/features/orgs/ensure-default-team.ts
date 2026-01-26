@@ -2,6 +2,8 @@ import { createServerFn } from '@tanstack/react-start'
 import { type DB, db } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
 import { requireAuthMiddleware } from '../auth/middleware'
+import { getProfile } from '../profiles/get-profile'
+import { getUserDisplayName } from '../profiles/utils'
 import { createTeam } from './create-team'
 import { organizationMember } from './schema'
 import type { Organization } from './types'
@@ -53,8 +55,6 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .handler(async ({ context }): Promise<EnsureDefaultTeamResult> => {
     // Get user's display name for team naming
-    const { getProfile } = await import('../profiles/get-profile')
-    const { getUserDisplayName } = await import('../profiles/utils')
 
     const profile = await getProfile(context.user.id)
     const displayName = getUserDisplayName(profile, context.user.email)

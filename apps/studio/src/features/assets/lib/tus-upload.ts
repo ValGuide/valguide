@@ -24,6 +24,9 @@
  */
 import * as tus from 'tus-js-client'
 
+import { getUploadCredentialsFn } from '@valguide/core/features/assets/get-upload-credentials'
+
+
 export type UploadCredentials = {
   accessToken: string
   projectId: string
@@ -57,7 +60,6 @@ export async function uploadFileWithTUS({
     accessToken = credentials.accessToken
     projectId = credentials.projectId
   } else {
-    const { getUploadCredentialsFn } = await import('@valguide/core/features/assets/get-upload-credentials')
     const creds = await getUploadCredentialsFn()
     accessToken = creds.accessToken
     projectId = creds.projectId

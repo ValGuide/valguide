@@ -3,7 +3,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import { detectAssetType } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
-
+import { confirmAssetUploadFn } from '@valguide/core/features/assets/confirm-upload'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { uploadFileWithTUS } from '../../lib/tus-upload'
 import { AssetPickerModalConnected } from '../asset-picker-modal-connected'
@@ -43,7 +43,6 @@ export function MediaPickerConnected({
         },
       })
 
-      const { confirmAssetUploadFn } = await import('@valguide/core/features/assets/confirm-upload')
       const asset = await confirmAssetUploadFn({
         data: {
           assetId,
