@@ -13,7 +13,7 @@ import { StopNavigation } from '@/components/stops/stop-navigation'
 const getStopDataFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ nanoId: z.string(), stopNanoId: z.string() }))
   .handler(async ({ data }) => {
-    const stop = await getStopByNanoId(data.stopNanoId)
+    const stop = await getStopByNanoId(db, data.stopNanoId)
     if (!stop) return null
 
     const guideId = await getGuideIdByStopNanoId(db, data.stopNanoId)

@@ -1,8 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { StopWithAssets } from '@valguide/core/features/guides/queries'
-import { getLocalizedStopText } from '@valguide/core/features/guides/schema'
+import { getLocalizedStopText, type StopWithAssets } from '@valguide/core/features/guides/queries'
 import { useTranslations } from '@valguide/core/i18n/client'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 
