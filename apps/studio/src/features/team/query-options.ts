@@ -1,18 +1,9 @@
 import { queryOptions } from '@tanstack/react-query'
-import { getTeamDataFn, type TeamData } from './get-team-data'
+import { getTeamDataFn, type TeamData } from '@valguide/core/features/orgs/get-team-data'
 
 export const teamQueryOptions = () =>
   queryOptions<TeamData | null>({
     queryKey: ['team'],
-    queryFn: async () => {
-      try {
-        const data = await getTeamDataFn()
-        return data as TeamData | null
-      } catch (error) {
-        if (error instanceof Error && error.message === 'Unauthorized') {
-          throw error
-        }
-        throw error
-      }
-    },
+    queryFn: () => getTeamDataFn({ data: {} }),
+    staleTime: 30 * 1000,
   })

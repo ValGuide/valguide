@@ -1,11 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams'
+import type { Organization as Team } from '@valguide/core/features/orgs/types'
 import { getProfile } from '@valguide/core/features/profiles/get-profile'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
-import type { Team } from '../team/types'
 
 // ============================================================================
 // TYPES

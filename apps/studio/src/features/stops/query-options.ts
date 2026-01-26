@@ -1,66 +1,38 @@
 import { queryOptions } from '@tanstack/react-query'
-import type { IndependentStopMetadata, StopDetailItem, StopLocaleData } from '@valguide/core/features/guides/types'
-import type { StopWithGuides } from './api/fetchers'
-import { getStopDetailFn } from './get-stop-detail'
-import { getStopLocaleDataFn } from './get-stop-locale-data'
-import { getStopMetadataFn } from './get-stop-metadata'
-import { getStopsFn } from './get-stops'
+import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail'
+import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops'
+import {
+  getStopLocaleDraftFn,
+  type StopLocaleDraftResult,
+} from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft'
 
 /**
  * Query options for stop library list
  */
-export const stopsQueryOptions = () =>
-  queryOptions<StopWithGuides[]>({
-    queryKey: ['stops'],
-    queryFn: async () => {
-      try {
-        const data = await getStopsFn({ data: {} })
-        return data as StopWithGuides[]
-      } catch (error) {
-        if (error instanceof Error && error.message === 'Unauthorized') {
-          throw new Error('You must be logged in to view stops')
-        }
-        throw error
-      }
-    },
-    staleTime: 30 * 1000, // 30 seconds
+export const stopsQueryOptions = (locale: string = 'en') =>
+  queryOptions<StopListItem[]>({
+    queryKey: ['stops', { locale }],
+    queryFn: () => listStopsFn({ data: { locale } }),
+    staleTime: 30 * 1000,
   })
 
 /**
- * Query options for independent stop metadata (for editor shell)
+ * Query options for stop detail (editor shell)
+ * Returns all locales and settings
  */
-export const stopMetadataQueryOptions = (nanoId: string) =>
-  queryOptions<IndependentStopMetadata>({
-    queryKey: ['stop', nanoId, 'metadata'],
-    queryFn: async () => {
-      const data = await getStopMetadataFn({ data: { nanoId } })
-      return data
-    },
-    staleTime: 30 * 1000, // 30 seconds
+export const stopDetailQueryOptions = (nanoId: string) =>
+  queryOptions<StopDetail | null>({
+    queryKey: ['stop', nanoId, 'detail'],
+    queryFn: () => getStopDetailFn({ data: { nanoId } }),
+    staleTime: 30 * 1000,
   })
 
 /**
- * Query options for stop locale data (per-locale fetching in editor)
+ * Query options for stop locale draft (per-locale editing)
  */
-export const stopLocaleDataQueryOptions = (stopId: string, locale: string) =>
-  queryOptions<StopLocaleData>({
-    queryKey: ['stop', stopId, 'locale', locale],
-    queryFn: async () => {
-      const data = await getStopLocaleDataFn({ data: { stopId, locale } })
-      return data
-    },
-    staleTime: 30 * 1000, // 30 seconds
-  })
-
-/**
- * Query options for stop detail (overview page)
- */
-export const stopDetailQueryOptions = (nanoId: string, preferredLocale?: string) =>
-  queryOptions<StopDetailItem>({
-    queryKey: ['stop', nanoId, 'detail', { preferredLocale }],
-    queryFn: async () => {
-      const data = await getStopDetailFn({ data: { nanoId, preferredLocale } })
-      return data
-    },
-    staleTime: 30 * 1000, // 30 seconds
+export const stopLocaleDraftQueryOptions = (nanoId: string, locale: string) =>
+  queryOptions<StopLocaleDraftResult | null>({
+    queryKey: ['stop', nanoId, 'locale', locale],
+    queryFn: () => getStopLocaleDraftFn({ data: { nanoId, locale } }),
+    staleTime: 30 * 1000,
   })

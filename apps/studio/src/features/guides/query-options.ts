@@ -1,23 +1,14 @@
 import { queryOptions } from '@tanstack/react-query'
+import { type GuideDetail, getGuideDetailFn } from '@valguide/core/features/guides/guide/get-guide-detail'
 import {
-  getGuideDetailFn,
-  getGuideMetadataFn,
-  getGuideTranslationsForLocaleFn,
-} from '@valguide/core/features/guides/guide/server-functions'
-import type {
-  GuideDetailItem,
-  GuideListItem,
-  GuideLocaleData,
-  GuideMetadata,
-  GuideWithTranslationsAndCover,
-} from '@valguide/core/features/guides/types'
-import { getArchivedGuidesFn } from './get-archived-guides'
-import { getGuidesListFn } from './get-guides-list'
-
-export interface ArchivedGuidesResponse {
-  guides: GuideWithTranslationsAndCover[]
-  userId: string
-}
+  type ArchivedGuideListItem,
+  listArchivedGuidesFn,
+} from '@valguide/core/features/guides/guide/list-archived-guides'
+import { type GuideListItem, listGuidesFn } from '@valguide/core/features/guides/guide/list-guides'
+import {
+  type GuideLocaleDraftResult,
+  getGuideLocaleDraftFn,
+} from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft'
 
 /**
  * Lightweight query options for guides list view
@@ -25,53 +16,41 @@ export interface ArchivedGuidesResponse {
  */
 export const guidesListQueryOptions = (preferredLocale: string) =>
   queryOptions<GuideListItem[]>({
-    queryKey: ['guides'],
-    queryFn: () => getGuidesListFn({ data: { preferredLocale } }),
+    queryKey: ['guides', { locale: preferredLocale }],
+    queryFn: () => listGuidesFn({ data: { locale: preferredLocale } }),
     staleTime: 30_000,
     gcTime: 5 * 60 * 1000,
   })
 
 export const archivedGuidesQueryOptions = () =>
-  queryOptions<ArchivedGuidesResponse>({
+  queryOptions<ArchivedGuideListItem[]>({
     queryKey: ['archived-guides'],
-    queryFn: () => getArchivedGuidesFn(),
+    queryFn: () => listArchivedGuidesFn(),
     staleTime: 30 * 1000,
   })
 
 /**
- * Lightweight query options for guide detail view page
- * Fetches only data needed for detail view with translation fallback applied server-side
+ * Query options for guide detail view page (editor shell)
+ * Returns all locales and settings
  */
-export const guideDetailQueryOptions = (nanoId: string, preferredLocale: string) =>
-  queryOptions<GuideDetailItem | null>({
+export const guideDetailQueryOptions = (nanoId: string) =>
+  queryOptions<GuideDetail | null>({
     queryKey: ['guide', nanoId, 'detail'],
-    queryFn: () => getGuideDetailFn({ data: { nanoId, preferredLocale } }),
+    queryFn: () => getGuideDetailFn({ data: { nanoId } }),
     staleTime: 30_000,
     gcTime: 5 * 60 * 1000,
   })
 
 // ============================================================================
-// Lightweight Editor Query Options (Stage 2 - per-locale fetching)
+// Per-locale Editor Query Options
 // ============================================================================
 
 /**
- * Query options for guide metadata (no translations)
- * Use for editor shell: guide base data, stops, assets
+ * Query options for guide locale draft (per-locale editing)
  */
-export const guideMetadataQueryOptions = (nanoId: string) =>
-  queryOptions<GuideMetadata | null>({
-    queryKey: ['guide', nanoId, 'metadata'],
-    queryFn: () => getGuideMetadataFn({ data: { nanoId } }),
-    staleTime: 30 * 1000,
-  })
-
-/**
- * Query options for guide translations for a single locale
- * Use for editor content: guide + stop translations for active locale only
- */
-export const guideLocaleQueryOptions = (guideId: string, locale: string) =>
-  queryOptions<GuideLocaleData>({
-    queryKey: ['guide', guideId, 'locale', locale],
-    queryFn: () => getGuideTranslationsForLocaleFn({ data: { guideId, locale } }),
+export const guideLocaleDraftQueryOptions = (nanoId: string, locale: string) =>
+  queryOptions<GuideLocaleDraftResult | null>({
+    queryKey: ['guide', nanoId, 'locale', locale],
+    queryFn: () => getGuideLocaleDraftFn({ data: { nanoId, locale } }),
     staleTime: 30 * 1000,
   })

@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { signOutFn } from '@valguide/core/features/auth/sign-out'
+import { getInvitationDataFn } from '@valguide/core/features/orgs/get-invitation-data'
 import { joinTeamFn } from '@valguide/core/features/orgs/join-team'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { JoinTeamCard } from '../features/join-team/components/join-team-card'
-import { getJoinTeamDataFn } from '../features/join-team/get-join-team-data'
 
 const searchSchema = z.object({
   token: z.string().optional(),
@@ -15,7 +15,7 @@ export const Route = createFileRoute('/join-team')({
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ token: search.token }),
   loader: async ({ deps }) => {
-    return getJoinTeamDataFn({ data: { token: deps.token } })
+    return getInvitationDataFn({ data: { token: deps.token } })
   },
   component: JoinTeamPage,
 })
