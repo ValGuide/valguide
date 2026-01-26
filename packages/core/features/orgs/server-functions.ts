@@ -220,7 +220,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .handler(async ({ context }) => {
     // Get user's display name for team naming
-    const { getProfile } = await import('../profiles/queries')
+    const { getProfile } = await import('../profiles/get-profile')
     const { getUserDisplayName } = await import('../profiles/utils')
 
     const profile = await getProfile(context.user.id)

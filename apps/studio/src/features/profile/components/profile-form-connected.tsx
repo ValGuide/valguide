@@ -1,4 +1,4 @@
-import { updateProfileFn } from '../actions'
+import { updateProfileFn } from '@valguide/core/features/profiles/update-profile'
 import { useProfile } from '../hooks/use-profile'
 import { ProfileForm } from './profile-form'
 
@@ -10,8 +10,12 @@ export function ProfileFormConnected() {
       profile={profile}
       isLoading={isLoading}
       onSubmit={async (data) => {
-        const result = await updateProfileFn({ data })
-        return result
+        try {
+          await updateProfileFn({ data })
+          return { success: true }
+        } catch {
+          return { success: false }
+        }
       }}
       onSuccess={refetch}
     />
