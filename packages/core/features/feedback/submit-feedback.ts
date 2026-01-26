@@ -1,6 +1,4 @@
 import { createServerFn } from '@tanstack/react-start'
-import { serverEnv } from '@valguide/core/env/server'
-import { UnauthenticatedError } from '@valguide/core/features/auth/authorization'
 import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { db } from '@valguide/core/features/db'
 import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.message'
@@ -11,46 +9,33 @@ import { z } from 'zod'
 import { organization } from '../orgs/schema'
 import { feedback } from './schema'
 
-// Re-export UploadCredentials type for consistency
-export type { UploadCredentials } from '../assets/get-upload-credentials'
-
-import type { UploadCredentials } from '../assets/get-upload-credentials'
+// =============================================================================
+// TYPES
+// =============================================================================
 
 // Allowed MIME types for screenshot uploads (validated on both client and server)
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'] as const
 
-// ============================================================================
-// Upload Credentials for Feedback Screenshots (GET)
-// ============================================================================
+export type SubmitFeedbackInput = {
+  feedback: string
+  screenshotPath?: string
+  fileName?: string
+  fileSize?: number
+  mimeType?: (typeof ALLOWED_MIME_TYPES)[number]
+  pageUrl?: string
+  userName?: string
+  teamName?: string
+  teamNanoId?: string
+}
 
-export const getFeedbackUploadCredentialsFn = createServerFn({ method: 'GET' })
-  .middleware([requireAuthMiddleware])
-  .handler(async (): Promise<UploadCredentials> => {
-    const supabase = await createClient()
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+export type SubmitFeedbackResult = {
+  success: boolean
+  feedbackId: string
+}
 
-    if (!session) {
-      throw new UnauthenticatedError()
-    }
-
-    const supabaseUrl = serverEnv.SUPABASE_URL
-    const projectId = new URL(supabaseUrl).hostname.split('.')[0]
-
-    if (!projectId) {
-      throw new Error('Could not extract project ID from Supabase URL')
-    }
-
-    return {
-      accessToken: session.access_token,
-      projectId,
-    }
-  })
-
-// ============================================================================
-// Submit Feedback (POST)
-// ============================================================================
+// =============================================================================
+// SERVER FUNCTION
+// =============================================================================
 
 const submitFeedbackSchema = z.object({
   feedback: z.string().min(1).max(5000),
@@ -70,7 +55,7 @@ const submitFeedbackSchema = z.object({
 export const submitFeedbackFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(submitFeedbackSchema)
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<SubmitFeedbackResult> => {
     const supabase = await createClient()
 
     // Get screenshot signed URL if path provided (bucket is private)

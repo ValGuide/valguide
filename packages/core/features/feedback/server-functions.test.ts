@@ -1,5 +1,5 @@
 /**
- * Tests for feedback server functions validation schemas
+ * Tests for submit feedback validation schema
  */
 
 import { z } from 'zod'
@@ -7,7 +7,7 @@ import { z } from 'zod'
 // Allowed MIME types for screenshot uploads
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'] as const
 
-// Schema that mirrors submitFeedbackSchema in server-functions.ts
+// Schema that mirrors submitFeedbackSchema in submit-feedback.ts
 const submitFeedbackSchema = z.object({
   feedback: z.string().min(1).max(5000),
   screenshotPath: z.string().optional(),
