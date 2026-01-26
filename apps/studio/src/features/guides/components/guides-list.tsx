@@ -1,5 +1,4 @@
-import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import type { GuideListItem } from '@valguide/core/features/guides/types'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
@@ -19,7 +18,7 @@ interface GuidesListProps {
     translations: Array<{ locale: string }>
     organizationId?: string
     coverImage?: string
-  }) => Promise<GuideWithTranslations>
+  }) => Promise<{ nanoId: string }>
   onViewGuide?: (guide: GuideListItem) => void
   onNavigateToGuide?: (nanoId: string) => void
   onRetry?: () => void

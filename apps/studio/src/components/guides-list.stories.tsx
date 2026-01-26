@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
-import type { GuideListItem } from '@valguide/core/features/guides/types'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides'
 import { GuidesList } from '@/features/guides/components/guides-list'
 
 const meta: Meta<typeof GuidesList> = {
@@ -27,26 +26,22 @@ type Story = StoryObj<typeof meta>
 // Sample guides data using the lightweight GuideListItem type
 const sampleGuides: GuideListItem[] = [
   {
-    id: '1',
-    nanoId: '1',
-    published: null,
+    nanoId: 'guide1abc',
+    title: 'Ancient Egypt Exhibition',
+    locale: 'en',
+    availableLocales: ['en', 'de'],
+    archivedAt: null,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20'),
-    coverImageUrl: null,
-    displayTitle: 'Ancient Egypt Exhibition',
-    displayDescription: 'Explore the wonders of Ancient Egypt.',
-    displayLocale: 'en',
   },
   {
-    id: '2',
-    nanoId: '2',
-    published: null,
+    nanoId: 'guide2xyz',
+    title: 'Modern Art Gallery Tour',
+    locale: 'en',
+    availableLocales: ['en'],
+    archivedAt: null,
     createdAt: new Date('2024-02-01'),
     updatedAt: new Date('2024-02-10'),
-    coverImageUrl: null,
-    displayTitle: 'Modern Art Gallery Tour',
-    displayDescription: 'A comprehensive multimedia guide.',
-    displayLocale: 'en',
   },
 ]
 
@@ -98,7 +93,7 @@ export const WithCreateHandler: Story = {
     onCreateGuide: async () => {
       console.log('Create guide clicked!')
       alert('Create guide clicked!')
-      return {} as GuideWithTranslations
+      return { nanoId: 'new-guide' }
     },
   },
 }

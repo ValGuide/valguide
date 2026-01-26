@@ -1,16 +1,17 @@
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
-import type { Guide, GuideListItem } from '@valguide/core/features/guides/types'
+import type { Guide } from '@valguide/core/features/guides/types'
 
 function toGuideForPreview(guide: GuideListItem): Guide {
   return {
-    id: guide.id,
+    id: guide.nanoId,
     nanoId: guide.nanoId,
-    title: guide.displayTitle,
-    description: guide.displayDescription ?? undefined,
-    imageUrl: guide.coverImageUrl ?? undefined,
+    title: guide.title ?? undefined,
+    description: undefined,
+    imageUrl: undefined,
     createdAt: guide.createdAt,
     updatedAt: guide.updatedAt,
-    published: guide.published,
+    published: null,
   }
 }
 
@@ -23,7 +24,11 @@ export function GuidesListContent({ guides, onViewGuide }: GuidesListContentProp
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {guides.map((guide) => (
-        <GuidePreviewCard key={guide.id} guide={toGuideForPreview(guide)} onViewDetails={() => onViewGuide?.(guide)} />
+        <GuidePreviewCard
+          key={guide.nanoId}
+          guide={toGuideForPreview(guide)}
+          onViewDetails={() => onViewGuide?.(guide)}
+        />
       ))}
     </div>
   )

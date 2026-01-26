@@ -83,7 +83,7 @@ export function GuideDetailView({
               {guide.coverImageUrl ? (
                 <Image
                   src={guide.coverImageUrl}
-                  alt={guide.displayTitle}
+                  alt={guide.displayTitle ?? undefined}
                   layout="fullWidth"
                   className="h-full w-full object-cover"
                 />

@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import type { GuideWithTranslationsAndCover } from '@valguide/core/features/guides/types'
+import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import {
@@ -22,12 +22,12 @@ import { ArchivedGuidesListEmpty } from './archived-guides-list-empty'
 import { ArchivedGuidesListLoading } from './archived-guides-list-loading'
 
 export interface ArchivedGuidesListProps {
-  guides?: GuideWithTranslationsAndCover[]
+  guides?: ArchivedGuideListItem[]
   isLoading?: boolean
   error?: Error | null
   onRetry?: () => void
-  onRecover?: (guideId: string) => Promise<void>
-  onDelete?: (guideId: string) => Promise<void>
+  onRecover?: (nanoId: string) => Promise<void>
+  onDelete?: (nanoId: string) => Promise<void>
 }
 
 type DialogState = {

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import type { StopWithGuides } from '../api/fetchers'
+import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops'
 import { stopsQueryOptions } from '../query-options'
 
 interface UseStopsReturn {
-  stops: StopWithGuides[]
+  stops: StopListItem[]
   isLoading: boolean
   error: Error | null
   refetch: () => Promise<void>

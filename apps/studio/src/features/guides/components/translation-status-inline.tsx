@@ -1,4 +1,5 @@
-import type { TranslationStatus } from '@valguide/core/features/guides/types'
+import type { LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail'
+import type { StopLocaleDraftInfo } from '@valguide/core/features/guides/stop/get-stop-detail'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { Circle } from 'lucide-react'
@@ -6,7 +7,7 @@ import { useMemo } from 'react'
 import { getTranslationLocaleStatus, type TranslationLocaleStatus } from '../utils/translation-status'
 
 interface TranslationStatusInlineProps {
-  translationStatuses: TranslationStatus[]
+  translationStatuses: (LocaleDraftInfo | StopLocaleDraftInfo)[]
   maxVisible?: number
   locales?: string[]
 }

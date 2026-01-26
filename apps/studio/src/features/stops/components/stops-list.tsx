@@ -1,16 +1,16 @@
+import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { ListError } from '@/components/list-error'
 import { ListPageHeader } from '@/components/list-page-header'
-import type { StopWithGuides } from '../api/fetchers'
 import { StopsListContent } from './stops-list-content'
 import { StopsListEmpty } from './stops-list-empty'
 import { StopsListLoading } from './stops-list-loading'
 
 interface StopsListProps {
-  stops?: StopWithGuides[]
+  stops?: StopListItem[]
   isLoading?: boolean
   error?: Error | null
-  onEditStop?: (stop: StopWithGuides) => void
+  onEditStop?: (stop: StopListItem) => void
   onRetry?: () => void
 }
 

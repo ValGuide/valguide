@@ -452,7 +452,9 @@ export function GuideEditView({
                   ref={formRef}
                   key={`guide-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
                   locale={activeLocale}
-                  versionData={displayVersionData}
+                  versionData={
+                    displayVersionData ? { ...displayVersionData, title: displayVersionData.title ?? '' } : undefined
+                  }
                   readOnly={isReadOnly}
                   onDirtyChange={handleDirtyChange}
                   onSave={save}
