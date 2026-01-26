@@ -4,6 +4,8 @@ import { requireGuideAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { setGuideTheme } from './set-guide-theme.server'
 
+export type { GuideSettingsDraft } from './set-guide-theme.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

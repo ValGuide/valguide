@@ -4,6 +4,8 @@ import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { setOrgDefaultTheme } from './set-org-default-theme.server'
 
+export type { Organization } from './set-org-default-theme.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

@@ -4,6 +4,8 @@ import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getOrgThemes } from './get-org-themes.server'
 
+export type { Theme } from './get-org-themes.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

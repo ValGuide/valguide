@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { CreateGuideInput, CreateGuideResult } from '@valguide/core/features/guides/guide/create-guide.fn'
 import { createGuideFn } from '@valguide/core/features/guides/guide/create-guide.fn'
-import type { CreateGuideInput, CreateGuideResult } from '@valguide/core/features/guides/guide/create-guide.server'
-import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.server'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.fn'
 import { useLocale } from '@valguide/core/i18n/client'
 import { guidesListQueryOptions } from '../query-options'
 

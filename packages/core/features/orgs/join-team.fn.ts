@@ -6,6 +6,9 @@ import { z } from 'zod'
 import { ForbiddenError, NotFoundError } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { acceptInvitation, type JoinTeamResult } from './join-team.server'
+
+export type { JoinTeamResult } from './join-team.server'
+
 import { getInvitationByTokenHash, isTeamMember } from './utils'
 
 const joinTeamSchema = z.object({

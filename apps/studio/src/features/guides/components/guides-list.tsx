@@ -1,4 +1,4 @@
-import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.server'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.fn'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'

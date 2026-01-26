@@ -4,6 +4,8 @@ import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getTeamData } from './get-team-data.server'
 
+export type { TeamData } from './get-team-data.server'
+
 const getTeamDataSchema = z.object({})
 
 export const getTeamDataFn = createServerFn({ method: 'GET' })

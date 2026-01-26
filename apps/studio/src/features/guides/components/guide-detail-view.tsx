@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
 import { RichTextDisplay } from '@valguide/core/features/guides/components/rich-text-display'
-import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.server'
+import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import { getGuideStatus } from '@valguide/core/features/guides/status-utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'

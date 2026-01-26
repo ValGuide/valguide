@@ -5,6 +5,8 @@ import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getTeamMembers } from './get-team-members.server'
 
+export type { TeamMemberWithDetails } from './get-team-members.server'
+
 const getTeamMembersSchema = z.object({
   teamId: z.string(),
 })

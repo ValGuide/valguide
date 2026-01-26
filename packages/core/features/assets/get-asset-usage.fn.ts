@@ -4,6 +4,8 @@ import { requireAssetAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type AssetUsageDetails, getAssetUsage } from './get-asset-usage.server'
 
+export type { AssetUsageDetails } from './get-asset-usage.server'
+
 const getAssetUsageSchema = z.object({
   assetId: z.string(),
 })

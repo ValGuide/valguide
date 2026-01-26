@@ -4,6 +4,8 @@ import { requireAssetAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { deleteAsset } from './delete-asset.server'
 
+export type { DeleteAssetResult } from './delete-asset.server'
+
 const deleteAssetSchema = z.object({
   assetId: z.string(),
 })

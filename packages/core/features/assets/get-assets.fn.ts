@@ -4,6 +4,8 @@ import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type GetAssetsFilters, getAssets } from './get-assets.server'
 
+export type { AssetWithUsage, GetAssetsFilters } from './get-assets.server'
+
 const getAssetsSchema = z.object({
   type: z.enum(['image', 'audio', 'video']).optional(),
 })

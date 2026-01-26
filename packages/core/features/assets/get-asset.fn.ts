@@ -4,6 +4,8 @@ import { NotFoundError, requireAssetAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getAssetByNanoId } from './get-asset.server'
 
+export type { Asset } from './get-asset.server'
+
 const getAssetSchema = z.object({
   nanoId: z.string(),
 })

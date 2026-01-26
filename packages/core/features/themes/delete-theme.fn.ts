@@ -4,6 +4,8 @@ import { requireThemeAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { deleteTheme } from './delete-theme.server'
 
+export type { Theme } from './delete-theme.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

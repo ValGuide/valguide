@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.server'
+import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
 import { fn } from 'storybook/test'
 import { ArchivedGuidesList } from './archived-guides-list'
 

@@ -2,6 +2,8 @@ import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { getInvitationData } from './get-invitation-data.server'
 
+export type { InvitationData } from './get-invitation-data.server'
+
 const getInvitationDataSchema = z.object({
   token: z.string().optional(),
 })

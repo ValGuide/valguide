@@ -4,6 +4,8 @@ import { requireThemeAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getThemeById } from './get-theme.server'
 
+export type { Theme } from './get-theme.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

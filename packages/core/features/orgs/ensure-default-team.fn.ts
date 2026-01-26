@@ -5,6 +5,8 @@ import { getProfile } from '../profiles/get-profile.server'
 import { getUserDisplayName } from '../profiles/utils'
 import { type EnsureDefaultTeamResult, ensureDefaultTeam } from './ensure-default-team.server'
 
+export type { EnsureDefaultTeamResult } from './ensure-default-team.server'
+
 /**
  * Ensures the current user has at least one team.
  * Creates a default team if they don't have any.

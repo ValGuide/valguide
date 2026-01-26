@@ -8,6 +8,9 @@ import { NotFoundError, requireOrgRole } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getTeamById } from './get-team.server'
 import { createInvitation } from './invite-member.server'
+
+export type { InviteMemberInput } from './invite-member.server'
+
 import { ORG_ROLES, type OrgRole } from './schema'
 
 const inviteMemberSchema = z.object({

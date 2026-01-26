@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.server'
+import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
 import { archivedGuidesQueryOptions } from '../query-options'
 
 interface UseArchivedGuidesReturn {

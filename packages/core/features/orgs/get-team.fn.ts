@@ -3,6 +3,9 @@ import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getTeamById } from './get-team.server'
+
+export type { Organization } from './get-team.server'
+
 import { isTeamMember } from './utils'
 
 const getTeamSchema = z.object({

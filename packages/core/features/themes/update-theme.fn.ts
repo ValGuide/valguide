@@ -5,6 +5,8 @@ import { requireAuthMiddleware } from '../auth/middleware'
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
 import { type UpdateThemeInput, updateTheme } from './update-theme.server'
 
+export type { Theme } from './update-theme.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

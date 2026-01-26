@@ -3,6 +3,8 @@ import { z } from 'zod'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { updateProfile } from './update-profile.server'
 
+export type { UpdateProfileInput, UpdateProfileResult } from './update-profile.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

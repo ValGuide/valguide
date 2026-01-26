@@ -4,6 +4,8 @@ import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { confirmUpload } from './confirm-upload.server'
 
+export type { ConfirmUploadInput, ConfirmUploadResult } from './confirm-upload.server'
+
 const confirmUploadSchema = z.object({
   assetId: z.string(),
   fileName: z.string(),

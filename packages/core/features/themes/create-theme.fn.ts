@@ -3,6 +3,9 @@ import { z } from 'zod'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type CreateThemeInput, createTheme } from './create-theme.server'
+
+export type { Theme } from './create-theme.server'
+
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
 
 // =============================================================================

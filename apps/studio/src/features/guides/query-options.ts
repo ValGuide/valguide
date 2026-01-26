@@ -1,12 +1,12 @@
 import { queryOptions } from '@tanstack/react-query'
+import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import { getGuideDetailFn } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
-import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.server'
+import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
 import { listArchivedGuidesFn } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
-import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.server'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.fn'
 import { listGuidesFn } from '@valguide/core/features/guides/guide/list-guides.fn'
-import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.server'
+import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
 import { getGuideLocaleDraftFn } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
-import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.server'
 import {
   getStructureDraftFn,
   type StructureDraftResult,

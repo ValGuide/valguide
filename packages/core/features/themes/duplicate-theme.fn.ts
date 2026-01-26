@@ -4,6 +4,8 @@ import { requireThemeAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { duplicateTheme } from './duplicate-theme.server'
 
+export type { Theme } from './duplicate-theme.server'
+
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================

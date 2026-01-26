@@ -5,6 +5,8 @@ import { z } from 'zod'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type CreateTeamResult, createTeam } from './create-team.server'
 
+export type { CreateTeamResult } from './create-team.server'
+
 const createTeamSchema = z.object({
   name: z.string(),
 })

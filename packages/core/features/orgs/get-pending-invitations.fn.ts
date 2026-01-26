@@ -5,6 +5,8 @@ import { requireOrgRole } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getPendingInvitations } from './get-pending-invitations.server'
 
+export type { PendingInvitationWithDetails } from './get-pending-invitations.server'
+
 const getPendingInvitationsSchema = z.object({
   teamId: z.string(),
 })

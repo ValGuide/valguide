@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import type { AssetUsageDetails } from '@valguide/core/features/assets/get-asset-usage.server'
+import type { AssetUsageDetails } from '@valguide/core/features/assets/get-asset-usage.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
