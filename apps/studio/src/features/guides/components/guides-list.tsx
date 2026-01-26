@@ -14,11 +14,7 @@ interface GuidesListProps {
   guides?: GuideListItem[]
   isLoading?: boolean
   error?: Error | null
-  onCreateGuide?: (data: {
-    translations: Array<{ locale: string }>
-    organizationId?: string
-    coverImage?: string
-  }) => Promise<{ nanoId: string }>
+  onCreateGuide?: (data: { title: string; locale?: string }) => Promise<{ nanoId: string }>
   onViewGuide?: (guide: GuideListItem) => void
   onNavigateToGuide?: (nanoId: string) => void
   onRetry?: () => void
@@ -48,11 +44,8 @@ export function GuidesList({
 
       // Create a new guide with translation in the current studio language
       const newGuide = await onCreateGuide({
-        translations: [
-          {
-            locale,
-          },
-        ],
+        title: t('empty.newGuideTitle'),
+        locale,
       })
 
       // Navigate to guide editor if handler provided

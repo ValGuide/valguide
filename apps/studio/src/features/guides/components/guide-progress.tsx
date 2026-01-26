@@ -4,9 +4,9 @@ import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 
 export function GuideProgress() {
   const t = useTranslations('guides.editor')
-  const { metadata, localeData, stops } = useGuideEditor()
+  const { guideDetail, localeDraft, stops, guideAssets } = useGuideEditor()
 
-  if (!metadata) {
+  if (!guideDetail) {
     return null
   }
 
@@ -20,20 +20,15 @@ export function GuideProgress() {
   const items = [
     {
       label: t('progress.guideTitle'),
-      complete: !!(
-        localeData?.guideTranslation?.draftVersion?.title || localeData?.guideTranslation?.currentVersion?.title
-      ),
+      complete: !!localeDraft?.title,
     },
     {
       label: t('progress.guideDescription'),
-      complete: !!(
-        localeData?.guideTranslation?.draftVersion?.description ||
-        localeData?.guideTranslation?.currentVersion?.description
-      ),
+      complete: !!localeDraft?.description,
     },
     {
       label: t('progress.coverImage'),
-      complete: metadata.assets.some((a) => a.role === 'cover'),
+      complete: guideAssets.some((a) => a.role === 'cover'),
     },
     {
       label: t('progress.hasStops'),
@@ -41,9 +36,7 @@ export function GuideProgress() {
     },
     {
       label: t('progress.allStopTitles'),
-      complete:
-        stops.length > 0 &&
-        localeData?.stopTranslations.every((st) => !!(st.draftVersion?.title || st.currentVersion?.title)),
+      complete: stops.length > 0 && stops.every((stop) => !!stop.title),
     },
   ]
 
@@ -58,8 +51,8 @@ export function GuideProgress() {
       </div>
       <Progress value={progressPercent} className="h-2" />
       <ul className="space-y-2 text-sm">
-        {items.map((item, index) => (
-          <li key={index} className="flex items-center gap-2">
+        {items.map((item) => (
+          <li key={item.label} className="flex items-center gap-2">
             <span className={`h-2 w-2 rounded-full ${item.complete ? 'bg-green-500' : 'bg-muted-foreground/30'}`} />
             <span className={item.complete ? 'text-foreground' : 'text-muted-foreground'}>{item.label}</span>
           </li>

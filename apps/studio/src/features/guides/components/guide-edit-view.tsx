@@ -1,6 +1,10 @@
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { type GuideStatus, GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
+import {
+  type GuideIndicator,
+  type GuideStatus,
+  GuideStatusBadge,
+} from '@valguide/core/features/guides/components/guide-status-badge'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -81,12 +85,12 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
   const hasPublished = !!localeDraft?.publishedVersionId
   const hasUnpublishedChanges = localeDraft?.hasUnpublishedChanges ?? false
 
-  // Simplified status display
-  type StatusDisplay = { status: GuideStatus; indicator: 'none' | 'modified' | 'new' }
+  // Simplified status display using GuideIndicator type
+  type StatusDisplay = { status: GuideStatus; indicator: GuideIndicator }
   const computedStatusDisplay: StatusDisplay = useMemo(() => {
-    if (!localeDraft) return { status: 'unpublished', indicator: 'none' }
+    if (!localeDraft) return { status: 'unpublished', indicator: null }
     const status: GuideStatus = hasPublished ? 'published' : 'unpublished'
-    const indicator = hasUnpublishedChanges ? 'modified' : 'none'
+    const indicator: GuideIndicator = hasUnpublishedChanges ? 'changed' : 'up-to-date'
     return { status, indicator }
   }, [localeDraft, hasPublished, hasUnpublishedChanges])
 

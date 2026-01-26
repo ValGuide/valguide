@@ -25,7 +25,6 @@ export function StopEditView({ stopNanoId, MediaPicker, onPublish, onUnpublish, 
   const {
     nanoId,
     guideDetail,
-    localeDraft,
     stops,
     activeLocale,
     availableLocales,
@@ -125,7 +124,7 @@ export function StopEditView({ stopNanoId, MediaPicker, onPublish, onUnpublish, 
   }
 
   // Wrap server function calls to match expected signature
-  const handlePublish = async (stopId: string, locale: string) => {
+  const handlePublish = async (_stopId: string, locale: string) => {
     try {
       await onPublish(stopNanoId, locale)
       return { success: true }
@@ -134,7 +133,7 @@ export function StopEditView({ stopNanoId, MediaPicker, onPublish, onUnpublish, 
     }
   }
 
-  const handleUnpublish = async (stopId: string, locale: string) => {
+  const handleUnpublish = async (_stopId: string, locale: string) => {
     try {
       await onUnpublish(stopNanoId, locale)
       return { success: true }
@@ -143,7 +142,7 @@ export function StopEditView({ stopNanoId, MediaPicker, onPublish, onUnpublish, 
     }
   }
 
-  const handleDiscard = async (stopId: string, locale: string) => {
+  const handleDiscard = async (_stopId: string, locale: string) => {
     try {
       await onDiscard(stopNanoId, locale)
       return { success: true }

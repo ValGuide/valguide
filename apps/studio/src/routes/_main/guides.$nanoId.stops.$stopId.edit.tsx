@@ -1,6 +1,5 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale'
-import { rollbackStopLocaleFn } from '@valguide/core/features/guides/stop/locale/rollback-stop-locale'
 import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleton'
@@ -79,7 +78,10 @@ function StopEditContent({ stopNanoId }: { stopNanoId: string }) {
       MediaPicker={MediaPickerConnected}
       onPublish={(nanoId, locale) => publishStopLocaleFn({ data: { nanoId, locale } })}
       onUnpublish={(nanoId, locale) => unpublishStopLocaleFn({ data: { nanoId, locale } })}
-      onDiscard={(nanoId, locale) => rollbackStopLocaleFn({ data: { nanoId, locale } })}
+      onDiscard={async () => {
+        // Discard is handled by refetching in StopEditView
+        // No server-side discard needed since draft state is local
+      }}
     />
   )
 }
