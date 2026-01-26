@@ -120,20 +120,18 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
         <Command
           value={active}
           onValueChange={setActive}
-          className={cn(
-            !showSearch &&
-            "**:data-[slot=command-input-wrapper]:sr-only"
-          )}
+          className={cn(!showSearch && '**:data-[slot=command-input-wrapper]:sr-only')}
           onKeyDownCapture={(e) => {
             if (!showSearch && isTextKey(e)) {
               e.preventDefault()
               e.stopPropagation()
             }
-            if (!showSearch && (e.key === "Backspace" || e.key === "Delete")) {
+            if (!showSearch && (e.key === 'Backspace' || e.key === 'Delete')) {
               e.preventDefault()
               e.stopPropagation()
             }
-          }}>
+          }}
+        >
           <CommandInput
             aria-hidden={!showSearch} // screen readers ignore it
             placeholder={t('searchLanguages')}

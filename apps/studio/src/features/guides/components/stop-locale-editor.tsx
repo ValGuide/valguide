@@ -1,15 +1,15 @@
-import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { useForm, useStore } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { RichTextEditor } from '@valguide/core/features/guides/components/rich-text-editor'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
-import { StopTranslationVersionContent } from '@valguide/features/guides/types'
+import type { StopTranslationVersionContent } from '@valguide/features/guides/types'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
 import { Mic } from 'lucide-react'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
 
 export type StopLocaleEditorProps = {

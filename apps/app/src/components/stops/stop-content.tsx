@@ -1,5 +1,5 @@
-import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { RichTextDisplay } from '@valguide/core/features/guides/components/rich-text-display'
+import type { StopWithAssets } from '@valguide/core/features/guides/queries'
 import { getLocalizedStopText } from '@valguide/core/features/guides/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'

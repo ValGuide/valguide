@@ -10,8 +10,8 @@ export type StopTranslationData = {
   translationId: string
   currentVersionId: string | null
   draftVersionId: string | null
-  currentVersion: StopTranslationVersionContent| null
-  draftVersion: StopTranslationVersionContent| null
+  currentVersion: StopTranslationVersionContent | null
+  draftVersion: StopTranslationVersionContent | null
 }
 
 import { toast } from '@valguide/core/ui/components/sonner/state'

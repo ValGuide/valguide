@@ -22,7 +22,6 @@ const mimeToExt: Record<string, string> = {
 }
 
 export function AppSidebarContainer() {
-
   const router = useRouter()
   const queryClient = useQueryClient()
   const t = useTranslations('orgs.teamSwitcher')

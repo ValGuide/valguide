@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { serverEnv } from '@valguide/core/env/server'
+import { getShortLinkByCode } from '@valguide/core/features/links/get-short-link'
 import { buildPathFromShortLink, isAbsoluteUrl } from '@valguide/core/features/links/paths'
-import { getShortLinkByCode } from '@valguide/core/features/links/queries'
 import { CACHE_TTL, getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/redis'
 import { z } from 'zod'
 
