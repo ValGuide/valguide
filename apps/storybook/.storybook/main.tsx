@@ -102,23 +102,7 @@ const config: StorybookConfig = {
             find: '@valguide/core/features/guides/actions',
             replacement: path.resolve(__dirname, './__mocks__/guide-actions.ts'),
           },
-          {
-            find: '@valguide/core/features/guides/server-functions',
-            replacement: path.resolve(__dirname, './__mocks__/guide-server-functions.ts'),
-          },
           { find: '@valguide/core/features/db', replacement: path.resolve(__dirname, './__mocks__/db.ts') },
-          {
-            find: '@valguide/core/features/assets/server-functions',
-            replacement: path.resolve(__dirname, './__mocks__/asset-server-functions.ts'),
-          },
-          {
-            find: '@valguide/core/features/auth/server-functions',
-            replacement: path.resolve(__dirname, './__mocks__/auth-server-functions.ts'),
-          },
-          {
-            find: '@valguide/core/features/orgs/server-functions',
-            replacement: path.resolve(__dirname, './__mocks__/orgs-server-functions.ts'),
-          },
           {
             find: '@valguide/core/i18n/resolve-locale',
             replacement: path.resolve(__dirname, './__mocks__/i18n-resolve-locale.ts'),
@@ -142,10 +126,6 @@ const config: StorybookConfig = {
             replacement: path.resolve(__dirname, './__mocks__/studio-set-theme.ts'),
           },
           // Profile
-          {
-            find: /^@\/features\/profile\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-profile-server-functions.ts'),
-          },
           {
             find: /^@\/features\/profile\/actions$/,
             replacement: path.resolve(__dirname, './__mocks__/studio-profile-actions.ts'),
