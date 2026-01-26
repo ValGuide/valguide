@@ -1,73 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { valguideId } from '../../../utils/nanoid'
 import { requireOrgMember } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
-import { db } from '../../db'
-import { guide, guideLocale, guideLocaleDraft, guideSettingsDraft } from '../schema'
+import { createGuide } from './create-guide.server'
 
-// =============================================================================
-// TYPES
-// =============================================================================
-
-export type CreateGuideInput = {
-  title: string
-  locale?: string
-}
-
-export type CreateGuideResult = {
-  nanoId: string
-  locale: string
-}
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
-
-export async function createGuide(
-  input: CreateGuideInput,
-  organizationId: string,
-  userId: string,
-): Promise<CreateGuideResult> {
-  const locale = input.locale ?? 'en'
-
-  return db.transaction(async (tx) => {
-    const nanoId = valguideId()
-
-    const [newGuide] = await tx
-      .insert(guide)
-      .values({
-        nanoId,
-        organizationId,
-        createdBy: userId,
-        updatedBy: userId,
-        availableLocales: [locale],
-      })
-      .returning()
-
-    const [draft] = await tx
-      .insert(guideLocaleDraft)
-      .values({
-        guideLocaleId: newGuide.id,
-        title: input.title,
-        updatedBy: userId,
-      })
-      .returning()
-
-    await tx.insert(guideLocale).values({
-      guideId: newGuide.id,
-      locale,
-      draftId: draft.id,
-    })
-
-    await tx.insert(guideSettingsDraft).values({
-      guideId: newGuide.id,
-      updatedBy: userId,
-    })
-
-    return { nanoId, locale }
-  })
-}
+export type { CreateGuideInput, CreateGuideResult } from './create-guide.server'
 
 // =============================================================================
 // SERVER FUNCTION

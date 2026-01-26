@@ -1,52 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
-import { eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { NotFoundError, requireStopAccessByNanoId } from '../../auth/authorization'
+import { requireStopAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
-import { db } from '../../db'
-import { stop } from '../schema'
+import { deleteStop } from './delete-stop.server'
 
-// =============================================================================
-// TYPES
-// =============================================================================
-
-export type DeleteStopResult = {
-  nanoId: string
-  deletedAt: Date
-}
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
-
-export async function deleteStop(stopId: string, userId: string): Promise<DeleteStopResult> {
-  const now = new Date()
-
-  const [updated] = await db
-    .update(stop)
-    .set({
-      deletedAt: now,
-      updatedBy: userId,
-    })
-    .where(eq(stop.id, stopId))
-    .returning({
-      nanoId: stop.nanoId,
-      deletedAt: stop.deletedAt,
-    })
-
-  if (!updated || !updated.deletedAt) {
-    throw new NotFoundError('Stop')
-  }
-
-  return {
-    nanoId: updated.nanoId,
-    deletedAt: updated.deletedAt,
-  }
-}
-
-// =============================================================================
-// SERVER FUNCTION
-// =============================================================================
+export type { DeleteStopResult } from './delete-stop.server'
 
 const deleteStopSchema = z.object({
   nanoId: z.string(),

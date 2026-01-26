@@ -1,6 +1,6 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
-import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
+import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.server'
+import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.server'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { type ReactNode, useCallback, useState } from 'react'

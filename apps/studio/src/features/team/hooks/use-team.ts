@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
+import type { TeamData } from '@valguide/core/features/orgs/get-team-data.server'
 import { teamQueryOptions } from '../query-options'
 
 interface UseTeamReturn {

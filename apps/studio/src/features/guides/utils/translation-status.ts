@@ -1,4 +1,4 @@
-import type { LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
+import type { LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail.server'
 import type { StopLocaleDraftInfo } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 
 export type TranslationLocaleStatus = 'published' | 'draft' | 'empty' | 'modified'

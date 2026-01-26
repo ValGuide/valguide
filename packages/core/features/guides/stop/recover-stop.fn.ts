@@ -1,47 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
-import { eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { NotFoundError, requireStopAccessByNanoId } from '../../auth/authorization'
+import { requireStopAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
-import { db } from '../../db'
-import { stop } from '../schema'
+import { recoverStop } from './recover-stop.server'
 
-// =============================================================================
-// TYPES
-// =============================================================================
-
-export type RecoverStopResult = {
-  nanoId: string
-}
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
-
-export async function recoverStop(stopId: string, userId: string): Promise<RecoverStopResult> {
-  const [updated] = await db
-    .update(stop)
-    .set({
-      archivedAt: null,
-      updatedBy: userId,
-    })
-    .where(eq(stop.id, stopId))
-    .returning({
-      nanoId: stop.nanoId,
-    })
-
-  if (!updated) {
-    throw new NotFoundError('Stop')
-  }
-
-  return {
-    nanoId: updated.nanoId,
-  }
-}
-
-// =============================================================================
-// SERVER FUNCTION
-// =============================================================================
+export type { RecoverStopResult } from './recover-stop.server'
 
 const recoverStopSchema = z.object({
   nanoId: z.string(),

@@ -1,5 +1,5 @@
 import { Image as UnpicImage } from '@unpic/react'
-import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.server'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'

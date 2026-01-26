@@ -1,4 +1,4 @@
-import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
+import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.server'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'

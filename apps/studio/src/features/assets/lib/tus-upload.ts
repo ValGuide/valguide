@@ -22,10 +22,9 @@
  * @see https://tus.io/ - TUS Protocol specification
  * @see https://supabase.com/docs/guides/storage/uploads/resumable-uploads - Supabase TUS docs
  */
-import * as tus from 'tus-js-client'
 
 import { getUploadCredentialsFn } from '@valguide/core/features/assets/get-upload-credentials.fn'
-
+import * as tus from 'tus-js-client'
 
 export type UploadCredentials = {
   accessToken: string

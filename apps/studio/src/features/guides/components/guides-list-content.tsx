@@ -1,4 +1,4 @@
-import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.fn'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.server'
 import { GuidePreviewCard } from '@valguide/core/features/guides/preview-card'
 import type { Guide } from '@valguide/core/features/guides/types'
 

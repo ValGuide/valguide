@@ -1,25 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { type DB, db } from '@valguide/core/features/db'
-import { eq } from 'drizzle-orm'
+import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
 import { requireOrgRole } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { organizationMember } from './schema'
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
-
-/**
- * Remove a member from a team
- */
-export async function removeMember(dbClient: DB, memberId: string) {
-  return dbClient.delete(organizationMember).where(eq(organizationMember.id, memberId))
-}
-
-// =============================================================================
-// SERVER FUNCTION
-// =============================================================================
+import { removeMember } from './remove-member.server'
 
 const removeMemberSchema = z.object({
   memberId: z.string(),
