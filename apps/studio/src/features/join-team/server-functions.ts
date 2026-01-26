@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
-import { getInvitationByTokenHash } from '@valguide/core/features/orgs/queries'
+import { getInvitationByTokenHash } from '@valguide/core/features/orgs/utils'
 import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
 

@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getCookie } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
-import { getUserTeams } from '@valguide/core/features/orgs/queries'
+import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams'
 import { getProfile } from '@valguide/core/features/profiles/get-profile'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'

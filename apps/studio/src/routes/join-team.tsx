@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { signOutFn } from '@valguide/core/features/auth/sign-out'
-import { joinTeamFn } from '@valguide/core/features/orgs/server-functions'
+import { joinTeamFn } from '@valguide/core/features/orgs/join-team'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { JoinTeamCard } from '../features/join-team/components/join-team-card'

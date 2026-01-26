@@ -1,16 +1,14 @@
+import { cancelInviteFn } from '@valguide/core/features/orgs/cancel-invite'
 import { InviteMemberDialog } from '@valguide/core/features/orgs/components/invite-member-dialog'
 import { MembersTable, type OrgRole, type TeamMember } from '@valguide/core/features/orgs/components/members-table'
 import {
   type PendingInvitation,
   PendingInvitesList,
 } from '@valguide/core/features/orgs/components/pending-invites-list'
-import {
-  cancelInviteFn,
-  inviteMemberFn,
-  removeMemberFn,
-  resendInviteFn,
-  updateMemberRoleFn,
-} from '@valguide/core/features/orgs/server-functions'
+import { inviteMemberFn } from '@valguide/core/features/orgs/invite-member'
+import { removeMemberFn } from '@valguide/core/features/orgs/remove-member'
+import { resendInviteFn } from '@valguide/core/features/orgs/resend-invite'
+import { updateMemberRoleFn } from '@valguide/core/features/orgs/update-member-role'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { PageTitle } from '@valguide/ui/components/page-title'

@@ -6,7 +6,7 @@ import {
   getStopsByOrganizationId,
   getStopTranslationForLocale,
 } from '@valguide/core/features/guides/stop-queries'
-import { getUserTeams } from '@valguide/core/features/orgs/queries'
+import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { z } from 'zod'
 

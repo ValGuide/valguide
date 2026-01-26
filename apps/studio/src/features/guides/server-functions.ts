@@ -6,7 +6,7 @@ import {
   getGuidesByOrganizationId,
   getGuidesListByOrganizationId,
 } from '@valguide/core/features/guides/queries'
-import { getUserTeams } from '@valguide/core/features/orgs/queries'
+import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams'
 import { supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { z } from 'zod'
