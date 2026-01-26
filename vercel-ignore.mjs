@@ -26,10 +26,10 @@ console.log(`Branch: ${branch}`)
 console.log(`Project: ${project} (short: ${shortName})`)
 
 // Always build production branch
-if (branch === 'main' || branch === 'production') {
-  console.log('✅ Production branch - proceeding with build')
-  process.exit(1)
-}
+// if (branch === 'main' || branch === 'production') {
+//  console.log('✅ Production branch - proceeding with build')
+//  process.exit(1)
+//}
 
 // Check for [build vercel] - build all apps
 if (commitMsg.includes('[build vercel]')) {
