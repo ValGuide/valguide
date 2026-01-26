@@ -1,7 +1,7 @@
 import { db } from '@valguide/core/features/db'
 import { and, eq } from 'drizzle-orm'
 import { valguideId } from '../../utils/nanoid'
-import { guide } from '../guides/schema'
+import { guide, guideSettingsDraft } from '../guides/schema'
 import { organization } from '../orgs/schema'
 import { type NewTheme, theme as themeTable } from './schema'
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
@@ -60,7 +60,8 @@ export async function updateTheme(input: UpdateThemeInput) {
 export async function deleteTheme(themeId: string) {
   await db.update(organization).set({ defaultThemeId: null }).where(eq(organization.defaultThemeId, themeId))
 
-  await db.update(guide).set({ themeId: null }).where(eq(guide.themeId, themeId))
+  // Clear themeId from guide settings drafts (themeId moved from guide to guideSettingsDraft)
+  await db.update(guideSettingsDraft).set({ themeId: null }).where(eq(guideSettingsDraft.themeId, themeId))
 
   const [deleted] = await db.delete(themeTable).where(eq(themeTable.id, themeId)).returning()
 
@@ -112,9 +113,14 @@ export async function setGuideTheme(guideId: string, themeId: string | null) {
     }
   }
 
-  const [updatedGuide] = await db.update(guide).set({ themeId }).where(eq(guide.id, guideId)).returning()
+  // Update themeId in guide settings draft (themeId moved from guide to guideSettingsDraft)
+  const [updatedSettings] = await db
+    .update(guideSettingsDraft)
+    .set({ themeId })
+    .where(eq(guideSettingsDraft.guideId, guideId))
+    .returning()
 
-  return updatedGuide
+  return updatedSettings
 }
 
 export async function duplicateTheme(themeId: string, newName: string, createdBy?: string) {

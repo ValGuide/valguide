@@ -11,15 +11,8 @@ import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
-import {
-  guide,
-  guideTranslation,
-  guideTranslationVersion,
-  stop,
-  stopTranslation,
-  stopTranslationVersion,
-} from '../guides/schema'
-import { asset, guideAsset, guideAssetVersion, stopAsset, stopAssetVersion } from './schema'
+import { guide, guideAsset, guideLocaleDraft, stop, stopAsset, stopLocaleDraft } from '../guides/schema'
+import { asset } from './schema'
 
 export type AssetType = 'image' | 'audio' | 'video'
 
@@ -67,7 +60,6 @@ const confirmAssetUploadSchema = z.object({
   fileSize: z.number(),
   mimeType: z.string(),
   type: z.enum(['image', 'audio', 'video']),
-  locale: z.string().optional(),
   storagePath: z.string(),
   width: z.number().optional(),
   height: z.number().optional(),
@@ -83,7 +75,7 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
 
     const supabase = await createClient()
 
-    const { assetId, fileName, fileSize, mimeType, type, locale, storagePath, width, height, duration } = data
+    const { assetId, fileName, fileSize, mimeType, type, storagePath, width, height, duration } = data
 
     const {
       data: { publicUrl },
@@ -99,7 +91,6 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
         type,
         storagePath,
         publicUrl,
-        locale: locale ?? null,
         organizationId,
         uploadedBy: context.user.id,
         width: width ?? null,
@@ -155,14 +146,14 @@ export type AssetUsageDetails = {
     id: string
     nanoId: string
     name: string
-    role: string
+    channel: string
     locale: string | null
   }>
   stops: Array<{
     id: string
     nanoId: string
     name: string
-    role: string
+    channel: string
     locale: string | null
   }>
 }
@@ -173,39 +164,35 @@ export const getAssetUsageDetailsFn = createServerFn({ method: 'GET' })
   .handler(async ({ context, data }): Promise<AssetUsageDetails> => {
     await requireAssetAccess(data.assetId, context.user.id)
 
-    // Query guide usage from versioned tables
+    // Query guide usage from live asset assignments
     const guideUsage = await db
       .select({
         guideId: guide.id,
         guideNanoId: guide.nanoId,
-        title: guideTranslationVersion.title,
-        role: guideAssetVersion.role,
-        locale: guideAssetVersion.locale,
+        title: guideLocaleDraft.title,
+        channel: guideAsset.channel,
+        locale: guideAsset.locale,
       })
-      .from(guideAssetVersion)
-      .innerJoin(guideAsset, eq(guideAssetVersion.guideAssetId, guideAsset.id))
+      .from(guideAsset)
       .innerJoin(guide, eq(guideAsset.guideId, guide.id))
-      .leftJoin(guideTranslation, eq(guideTranslation.guideId, guide.id))
-      .leftJoin(guideTranslationVersion, eq(guideTranslation.currentVersionId, guideTranslationVersion.id))
-      .where(eq(guideAssetVersion.assetId, data.assetId))
+      .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guide.id))
+      .where(eq(guideAsset.assetId, data.assetId))
 
-    // Query stop usage from versioned tables
+    // Query stop usage from live asset assignments
     const stopUsage = await db
       .select({
         stopId: stop.id,
         stopNanoId: stop.nanoId,
-        title: stopTranslationVersion.title,
-        role: stopAssetVersion.role,
-        locale: stopAssetVersion.locale,
+        title: stopLocaleDraft.title,
+        channel: stopAsset.channel,
+        locale: stopAsset.locale,
       })
-      .from(stopAssetVersion)
-      .innerJoin(stopAsset, eq(stopAssetVersion.stopAssetId, stopAsset.id))
+      .from(stopAsset)
       .innerJoin(stop, eq(stopAsset.stopId, stop.id))
-      .leftJoin(stopTranslation, eq(stopTranslation.stopId, stop.id))
-      .leftJoin(stopTranslationVersion, eq(stopTranslation.currentVersionId, stopTranslationVersion.id))
-      .where(eq(stopAssetVersion.assetId, data.assetId))
+      .leftJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stop.id))
+      .where(eq(stopAsset.assetId, data.assetId))
 
-    // Deduplicate by guide/stop id (multiple translations may exist)
+    // Deduplicate by guide/stop id (multiple locales may exist)
     const uniqueGuides = new Map<string, (typeof guideUsage)[0]>()
     for (const g of guideUsage) {
       if (!uniqueGuides.has(g.guideId)) {
@@ -225,14 +212,14 @@ export const getAssetUsageDetailsFn = createServerFn({ method: 'GET' })
         id: g.guideId,
         nanoId: g.guideNanoId,
         name: g.title ?? 'Untitled',
-        role: g.role,
+        channel: g.channel,
         locale: g.locale,
       })),
       stops: Array.from(uniqueStops.values()).map((s) => ({
         id: s.stopId,
         nanoId: s.stopNanoId,
         name: s.title ?? 'Untitled',
-        role: s.role,
+        channel: s.channel,
         locale: s.locale,
       })),
     }

@@ -1,32 +1,23 @@
-import {
-  boolean,
-  index,
-  integer,
-  pgSchema,
-  text,
-  timestamp,
-  uniqueIndex,
-  uuid,
-  varchar
-} from 'drizzle-orm/pg-core'
+import { boolean, index, integer, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
 
 /**
- * ValGuide – Final Bulletproof Schema (Locales + Cores + Assets)
- * - _locale = localized publishable unit (guide/stop per locale)
- * - _core = unlocalized publishable unit (guide/stop global attributes)
- * - _draft = single mutable working copy
- * - _version = immutable published snapshots (history)
- * - assets are immutable; only lists are versioned via scopes + set drafts/versions (see assets/schema.ts)
+ * ValGuide – Simplified Schema v2.1 (January 2026)
+ *
+ * Architecture:
+ * - Full versioning (with rollback) for locale text only
+ * - Staging only (draft → live copy, no history) for settings, structure, and assets
+ * - Consistent UX: everything has draft/publish
+ *
+ * See: docs/guide-stop-asset/decisions-locked.md
  */
 
 const studioSchema = pgSchema('studio')
 
 // =============================================================================
-// Core entities (not versioned)
+// BASE ENTITIES
 // =============================================================================
-
 
 export const guide = studioSchema.table(
   'guide',
@@ -38,7 +29,6 @@ export const guide = studioSchema.table(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
 
-    // Operational metadata (not part of content versioning)
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     createdBy: uuid('created_by')
       .notNull()
@@ -54,9 +44,7 @@ export const guide = studioSchema.table(
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
 
-    // Convenience (not lifecycle)
     availableLocales: text('available_locales').array().notNull().default(['en']),
-    themeId: uuid('theme_id'),
   },
   (t) => ({
     guideOrgIdx: index('guide_org_idx').on(t.organizationId),
@@ -96,35 +84,8 @@ export const stop = studioSchema.table(
 )
 
 // =============================================================================
-// Structural relation (not versioned): guide_stop
-// =============================================================================
-
-export const guideStop = studioSchema.table(
-  'guide_stop',
-  {
-    id: uuid('id').defaultRandom().primaryKey(),
-    guideId: uuid('guide_id')
-      .notNull()
-      .references(() => guide.id, { onDelete: 'cascade' }),
-    stopId: uuid('stop_id')
-      .notNull()
-      .references(() => stop.id, { onDelete: 'cascade' }),
-
-    position: integer('position').notNull(),
-    visible: boolean('visible').notNull().default(true),
-
-    archivedAt: timestamp('archived_at', { withTimezone: true }),
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-  },
-  (t) => ({
-    uniqGuideStop: uniqueIndex('uniq_guide_stop').on(t.guideId, t.stopId),
-    guideIdx: index('guide_stop_guide_idx').on(t.guideId),
-    stopIdx: index('guide_stop_stop_idx').on(t.stopId),
-  }),
-)
-
-// =============================================================================
-// TEXT (localized): *_locale + *_locale_draft + *_locale_version
+// LOCALE TEXT (Full Versioning with Rollback)
+// Pattern: identity → draft → version[]
 // =============================================================================
 
 export const guideLocale = studioSchema.table(
@@ -136,11 +97,9 @@ export const guideLocale = studioSchema.table(
       .references(() => guide.id, { onDelete: 'cascade' }),
     locale: varchar('locale', { length: 10 }).notNull(),
 
-    // Pointers
-    draftId: uuid('draft_id').notNull(), // eager created; FK added via relations
-    publishedVersionId: uuid('published_version_id'), // nullable
+    draftId: uuid('draft_id').notNull(),
+    publishedVersionId: uuid('published_version_id'),
 
-    // Optional: helps "unpublished changes" without diffing
     lastPublishedDraftRevision: integer('last_published_draft_revision'),
 
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -163,11 +122,9 @@ export const guideLocaleDraft = studioSchema.table(
       .notNull()
       .references(() => guideLocale.id, { onDelete: 'cascade' }),
 
-    // Draft fields (localized text)
     title: varchar('title', { length: 500 }),
     description: text('description'),
 
-    // Optimistic locking
     revision: integer('revision').notNull().default(0),
 
     updatedAt: timestamp('updated_at', { withTimezone: true })
@@ -190,9 +147,8 @@ export const guideLocaleVersion = studioSchema.table(
       .notNull()
       .references(() => guideLocale.id, { onDelete: 'cascade' }),
 
-    version: integer('version').notNull(), // monotonic per locale
+    version: integer('version').notNull(),
 
-    // Snapshot fields
     title: varchar('title', { length: 500 }),
     description: text('description'),
 
@@ -283,51 +239,21 @@ export const stopLocaleVersion = studioSchema.table(
 )
 
 // =============================================================================
-// GLOBAL ATTRIBUTES (unlocalized): *_core + *_core_draft + *_core_version
+// SETTINGS (Staging Only - Draft → Live Copy)
+// Pattern: draft + live pair, publish = DELETE live + INSERT FROM draft
 // =============================================================================
 
-export const guideCore = studioSchema.table(
-  'guide_core',
+export const guideSettingsDraft = studioSchema.table(
+  'guide_settings_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
+
     guideId: uuid('guide_id')
       .notNull()
       .references(() => guide.id, { onDelete: 'cascade' }),
 
-    draftId: uuid('draft_id').notNull(),
-    publishedVersionId: uuid('published_version_id'),
-
-    lastPublishedDraftRevision: integer('last_published_draft_revision'),
-
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
-      .$onUpdate(() => new Date()),
-  },
-  (t) => ({
-    uniqGuideCore: uniqueIndex('uniq_guide_core').on(t.guideId),
-    guideIdx: index('guide_core_guide_idx').on(t.guideId),
-  }),
-)
-
-export const guideCoreDraft = studioSchema.table(
-  'guide_core_draft',
-  {
-    id: uuid('id').defaultRandom().primaryKey(),
-    guideCoreId: uuid('guide_core_id')
-      .notNull()
-      .references(() => guideCore.id, { onDelete: 'cascade' }),
-
-    // Unlocalized draft fields (examples; adjust as needed)
-    // Keep this small and explicit; add JSON later only if necessary.
-    // Example: audience tags as string array, duration in seconds, etc.
-    audienceTags: text('audience_tags').array(),
-    durationSeconds: integer('duration_seconds'),
-    difficulty: varchar('difficulty', { length: 50 }),
-    settingsJson: text('settings_json'), // optional: JSON string if you want flexibility
-
-    revision: integer('revision').notNull().default(0),
+    themeId: uuid('theme_id'),
+    settingsJson: text('settings_json'),
 
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
@@ -336,74 +262,41 @@ export const guideCoreDraft = studioSchema.table(
     updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqDraftPerCore: uniqueIndex('uniq_guide_core_draft').on(t.guideCoreId),
-    coreIdx: index('guide_core_draft_core_idx').on(t.guideCoreId),
+    uniqGuideSettingsDraft: uniqueIndex('uniq_guide_settings_draft').on(t.guideId),
   }),
 )
 
-export const guideCoreVersion = studioSchema.table(
-  'guide_core_version',
+export const guideSettings = studioSchema.table(
+  'guide_settings',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    guideCoreId: uuid('guide_core_id')
+
+    guideId: uuid('guide_id')
       .notNull()
-      .references(() => guideCore.id, { onDelete: 'cascade' }),
+      .references(() => guide.id, { onDelete: 'cascade' }),
 
-    version: integer('version').notNull(),
-
-    audienceTags: text('audience_tags').array(),
-    durationSeconds: integer('duration_seconds'),
-    difficulty: varchar('difficulty', { length: 50 }),
+    themeId: uuid('theme_id'),
     settingsJson: text('settings_json'),
 
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
+    publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
+    publishedBy: uuid('published_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqVersionPerCore: uniqueIndex('uniq_guide_core_version').on(t.guideCoreId, t.version),
-    coreIdx: index('guide_core_version_core_idx').on(t.guideCoreId),
+    uniqGuideSettings: uniqueIndex('uniq_guide_settings').on(t.guideId),
   }),
 )
 
-export const stopCore = studioSchema.table(
-  'stop_core',
+export const stopSettingsDraft = studioSchema.table(
+  'stop_settings_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
+
     stopId: uuid('stop_id')
       .notNull()
       .references(() => stop.id, { onDelete: 'cascade' }),
 
-    draftId: uuid('draft_id').notNull(),
-    publishedVersionId: uuid('published_version_id'),
-
-    lastPublishedDraftRevision: integer('last_published_draft_revision'),
-
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
-      .$onUpdate(() => new Date()),
-  },
-  (t) => ({
-    uniqStopCore: uniqueIndex('uniq_stop_core').on(t.stopId),
-    stopIdx: index('stop_core_stop_idx').on(t.stopId),
-  }),
-)
-
-export const stopCoreDraft = studioSchema.table(
-  'stop_core_draft',
-  {
-    id: uuid('id').defaultRandom().primaryKey(),
-    stopCoreId: uuid('stop_core_id')
-      .notNull()
-      .references(() => stopCore.id, { onDelete: 'cascade' }),
-
-    // Unlocalized draft fields (examples)
-    coordinates: varchar('coordinates', { length: 100 }), // e.g. "lat,lng" or replace with numeric columns
+    coordinates: varchar('coordinates', { length: 100 }),
     settingsJson: text('settings_json'),
-
-    revision: integer('revision').notNull().default(0),
 
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
@@ -412,57 +305,218 @@ export const stopCoreDraft = studioSchema.table(
     updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqDraftPerCore: uniqueIndex('uniq_stop_core_draft').on(t.stopCoreId),
-    coreIdx: index('stop_core_draft_core_idx').on(t.stopCoreId),
+    uniqStopSettingsDraft: uniqueIndex('uniq_stop_settings_draft').on(t.stopId),
   }),
 )
 
-export const stopCoreVersion = studioSchema.table(
-  'stop_core_version',
+export const stopSettings = studioSchema.table(
+  'stop_settings',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    stopCoreId: uuid('stop_core_id')
-      .notNull()
-      .references(() => stopCore.id, { onDelete: 'cascade' }),
 
-    version: integer('version').notNull(),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
 
     coordinates: varchar('coordinates', { length: 100 }),
     settingsJson: text('settings_json'),
 
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
+    publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
+    publishedBy: uuid('published_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqVersionPerCore: uniqueIndex('uniq_stop_core_version').on(t.stopCoreId, t.version),
-    coreIdx: index('stop_core_version_core_idx').on(t.stopCoreId),
+    uniqStopSettings: uniqueIndex('uniq_stop_settings').on(t.stopId),
   }),
 )
 
 // =============================================================================
-// Types
+// STRUCTURE (Staging Only - Draft → Live Copy)
+// Links stops to guides with position and visibility
 // =============================================================================
 
+export const guideStopDraft = studioSchema.table(
+  'guide_stop_draft',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+
+    guideId: uuid('guide_id')
+      .notNull()
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+
+    position: integer('position').notNull(),
+    visible: boolean('visible').notNull().default(true),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqGuideStopDraft: uniqueIndex('uniq_guide_stop_draft').on(t.guideId, t.stopId),
+    guideIdx: index('guide_stop_draft_guide_idx').on(t.guideId),
+    stopIdx: index('guide_stop_draft_stop_idx').on(t.stopId),
+    positionIdx: index('guide_stop_draft_position_idx').on(t.guideId, t.position),
+  }),
+)
+
+export const guideStop = studioSchema.table(
+  'guide_stop',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+
+    guideId: uuid('guide_id')
+      .notNull()
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+
+    position: integer('position').notNull(),
+    visible: boolean('visible').notNull().default(true),
+
+    publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqGuideStop: uniqueIndex('uniq_guide_stop').on(t.guideId, t.stopId),
+    guideIdx: index('guide_stop_guide_idx').on(t.guideId),
+    stopIdx: index('guide_stop_stop_idx').on(t.stopId),
+    positionIdx: index('guide_stop_position_idx').on(t.guideId, t.position),
+  }),
+)
+
+// =============================================================================
+// ASSETS (Staging Only - Draft → Live Copy)
+// Channels: images.hero, images.gallery, audio.narration, audio.background, video.main
+// Locale on assignment, not on asset file
+// =============================================================================
+
+export const guideAssetDraft = studioSchema.table(
+  'guide_asset_draft',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+
+    guideId: uuid('guide_id')
+      .notNull()
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id').notNull(),
+    // FK to asset added in assets/schema.ts to avoid circular dependency
+
+    channel: varchar('channel', { length: 50 }).notNull(),
+    locale: varchar('locale', { length: 10 }),
+    position: integer('position').notNull().default(0),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqGuideAssetDraft: uniqueIndex('uniq_guide_asset_draft').on(t.guideId, t.assetId, t.channel, t.locale),
+    guideIdx: index('guide_asset_draft_guide_idx').on(t.guideId),
+    channelIdx: index('guide_asset_draft_channel_idx').on(t.guideId, t.channel),
+    assetIdx: index('guide_asset_draft_asset_idx').on(t.assetId),
+  }),
+)
+
+export const guideAsset = studioSchema.table(
+  'guide_asset',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+
+    guideId: uuid('guide_id')
+      .notNull()
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id').notNull(),
+
+    channel: varchar('channel', { length: 50 }).notNull(),
+    locale: varchar('locale', { length: 10 }),
+    position: integer('position').notNull().default(0),
+
+    publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqGuideAsset: uniqueIndex('uniq_guide_asset').on(t.guideId, t.assetId, t.channel, t.locale),
+    guideIdx: index('guide_asset_guide_idx').on(t.guideId),
+    channelIdx: index('guide_asset_channel_idx').on(t.guideId, t.channel),
+    assetIdx: index('guide_asset_asset_idx').on(t.assetId),
+  }),
+)
+
+export const stopAssetDraft = studioSchema.table(
+  'stop_asset_draft',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id').notNull(),
+
+    channel: varchar('channel', { length: 50 }).notNull(),
+    locale: varchar('locale', { length: 10 }),
+    position: integer('position').notNull().default(0),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqStopAssetDraft: uniqueIndex('uniq_stop_asset_draft').on(t.stopId, t.assetId, t.channel, t.locale),
+    stopIdx: index('stop_asset_draft_stop_idx').on(t.stopId),
+    channelIdx: index('stop_asset_draft_channel_idx').on(t.stopId, t.channel),
+    assetIdx: index('stop_asset_draft_asset_idx').on(t.assetId),
+  }),
+)
+
+export const stopAsset = studioSchema.table(
+  'stop_asset',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id').notNull(),
+
+    channel: varchar('channel', { length: 50 }).notNull(),
+    locale: varchar('locale', { length: 10 }),
+    position: integer('position').notNull().default(0),
+
+    publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqStopAsset: uniqueIndex('uniq_stop_asset').on(t.stopId, t.assetId, t.channel, t.locale),
+    stopIdx: index('stop_asset_stop_idx').on(t.stopId),
+    channelIdx: index('stop_asset_channel_idx').on(t.stopId, t.channel),
+    assetIdx: index('stop_asset_asset_idx').on(t.assetId),
+  }),
+)
+
+// =============================================================================
+// TYPES
+// =============================================================================
+
+// Base entities
 export type Guide = typeof guide.$inferSelect
 export type NewGuide = typeof guide.$inferInsert
 export type Stop = typeof stop.$inferSelect
 export type NewStop = typeof stop.$inferInsert
 
+// Locale text (versioned)
 export type GuideLocale = typeof guideLocale.$inferSelect
 export type GuideLocaleDraft = typeof guideLocaleDraft.$inferSelect
 export type GuideLocaleVersion = typeof guideLocaleVersion.$inferSelect
-
 export type StopLocale = typeof stopLocale.$inferSelect
 export type StopLocaleDraft = typeof stopLocaleDraft.$inferSelect
 export type StopLocaleVersion = typeof stopLocaleVersion.$inferSelect
 
-export type GuideCore = typeof guideCore.$inferSelect
-export type GuideCoreDraft = typeof guideCoreDraft.$inferSelect
-export type GuideCoreVersion = typeof guideCoreVersion.$inferSelect
+// Settings (staging)
+export type GuideSettingsDraft = typeof guideSettingsDraft.$inferSelect
+export type GuideSettings = typeof guideSettings.$inferSelect
+export type StopSettingsDraft = typeof stopSettingsDraft.$inferSelect
+export type StopSettings = typeof stopSettings.$inferSelect
 
-export type StopCore = typeof stopCore.$inferSelect
-export type StopCoreDraft = typeof stopCoreDraft.$inferSelect
-export type StopCoreVersion = typeof stopCoreVersion.$inferSelect
-
+// Structure (staging)
+export type GuideStopDraft = typeof guideStopDraft.$inferSelect
 export type GuideStop = typeof guideStop.$inferSelect
+
+// Assets (staging)
+export type GuideAssetDraft = typeof guideAssetDraft.$inferSelect
+export type GuideAsset = typeof guideAsset.$inferSelect
+export type StopAssetDraft = typeof stopAssetDraft.$inferSelect
+export type StopAsset = typeof stopAsset.$inferSelect
