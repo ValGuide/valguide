@@ -1,11 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
-import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
-import { db } from '@valguide/core/features/db'
 import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { requireAuthMiddleware } from '../auth/middleware'
+import { db } from '../db'
 import { organization } from '../orgs/schema'
 import { feedback } from './schema'
 

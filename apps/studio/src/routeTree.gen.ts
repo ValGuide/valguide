@@ -21,7 +21,6 @@ import { Route as MainStopsRouteImport } from './routes/_main/stops'
 import { Route as MainSettingsRouteImport } from './routes/_main/settings'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
 import { Route as MainGuidesRouteImport } from './routes/_main/guides'
-import { Route as MainFeedbackRouteImport } from './routes/_main/feedback'
 import { Route as MainDesignRouteImport } from './routes/_main/design'
 import { Route as MainDashboardRouteImport } from './routes/_main/dashboard'
 import { Route as MainAssetsRouteImport } from './routes/_main/assets'
@@ -95,11 +94,6 @@ const MainProfileRoute = MainProfileRouteImport.update({
 const MainGuidesRoute = MainGuidesRouteImport.update({
   id: '/guides',
   path: '/guides',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainFeedbackRoute = MainFeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
   getParentRoute: () => MainRoute,
 } as any)
 const MainDesignRoute = MainDesignRouteImport.update({
@@ -196,7 +190,6 @@ export interface FileRoutesByFullPath {
   '/assets': typeof MainAssetsRoute
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
-  '/feedback': typeof MainFeedbackRoute
   '/guides': typeof MainGuidesRouteWithChildren
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
@@ -225,7 +218,6 @@ export interface FileRoutesByTo {
   '/assets': typeof MainAssetsRoute
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
-  '/feedback': typeof MainFeedbackRoute
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
@@ -253,7 +245,6 @@ export interface FileRoutesById {
   '/_main/assets': typeof MainAssetsRoute
   '/_main/dashboard': typeof MainDashboardRoute
   '/_main/design': typeof MainDesignRoute
-  '/_main/feedback': typeof MainFeedbackRoute
   '/_main/guides': typeof MainGuidesRouteWithChildren
   '/_main/profile': typeof MainProfileRoute
   '/_main/settings': typeof MainSettingsRoute
@@ -284,7 +275,6 @@ export interface FileRouteTypes {
     | '/assets'
     | '/dashboard'
     | '/design'
-    | '/feedback'
     | '/guides'
     | '/profile'
     | '/settings'
@@ -313,7 +303,6 @@ export interface FileRouteTypes {
     | '/assets'
     | '/dashboard'
     | '/design'
-    | '/feedback'
     | '/profile'
     | '/settings'
     | '/support'
@@ -340,7 +329,6 @@ export interface FileRouteTypes {
     | '/_main/assets'
     | '/_main/dashboard'
     | '/_main/design'
-    | '/_main/feedback'
     | '/_main/guides'
     | '/_main/profile'
     | '/_main/settings'
@@ -451,13 +439,6 @@ declare module '@tanstack/react-router' {
       path: '/guides'
       fullPath: '/guides'
       preLoaderRoute: typeof MainGuidesRouteImport
-      parentRoute: typeof MainRoute
-    }
-    '/_main/feedback': {
-      id: '/_main/feedback'
-      path: '/feedback'
-      fullPath: '/feedback'
-      preLoaderRoute: typeof MainFeedbackRouteImport
       parentRoute: typeof MainRoute
     }
     '/_main/design': {
@@ -650,7 +631,6 @@ interface MainRouteChildren {
   MainAssetsRoute: typeof MainAssetsRoute
   MainDashboardRoute: typeof MainDashboardRoute
   MainDesignRoute: typeof MainDesignRoute
-  MainFeedbackRoute: typeof MainFeedbackRoute
   MainGuidesRoute: typeof MainGuidesRouteWithChildren
   MainProfileRoute: typeof MainProfileRoute
   MainSettingsRoute: typeof MainSettingsRoute
@@ -665,7 +645,6 @@ const MainRouteChildren: MainRouteChildren = {
   MainAssetsRoute: MainAssetsRoute,
   MainDashboardRoute: MainDashboardRoute,
   MainDesignRoute: MainDesignRoute,
-  MainFeedbackRoute: MainFeedbackRoute,
   MainGuidesRoute: MainGuidesRouteWithChildren,
   MainProfileRoute: MainProfileRoute,
   MainSettingsRoute: MainSettingsRoute,

@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
-import { serverEnv } from '@valguide/core/env/server'
-import { UnauthenticatedError } from '@valguide/core/features/auth/authorization'
-import { requireAuthMiddleware } from '@valguide/core/features/auth/middleware'
 import { createClient } from '@valguide/supabase/server'
+import { serverEnv } from '../../env/server'
+import { UnauthenticatedError } from '../auth/authorization'
+import { requireAuthMiddleware } from '../auth/middleware'
 
 // =============================================================================
 // TYPES
@@ -12,8 +12,6 @@ export type UploadCredentials = {
   accessToken: string
   projectId: string
 }
-
-export type GetFeedbackUploadCredentialsResult = UploadCredentials
 
 // =============================================================================
 // SERVER FUNCTION
