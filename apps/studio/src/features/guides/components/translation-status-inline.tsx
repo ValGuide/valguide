@@ -1,5 +1,5 @@
-import type { LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail'
-import type { StopLocaleDraftInfo } from '@valguide/core/features/guides/stop/get-stop-detail'
+import type { LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
+import type { StopLocaleDraftInfo } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { Circle } from 'lucide-react'

@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { createThemeFn } from '@valguide/core/features/themes/create-theme'
-import { deleteThemeFn } from '@valguide/core/features/themes/delete-theme'
+import { createThemeFn } from '@valguide/core/features/themes/create-theme.fn'
+import { deleteThemeFn } from '@valguide/core/features/themes/delete-theme.fn'
 import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
-import { updateThemeFn } from '@valguide/core/features/themes/update-theme'
+import { updateThemeFn } from '@valguide/core/features/themes/update-theme.fn'
 import { themesQueryKey, themesQueryOptions } from '../query-options'
 
 export interface CreateThemeData {

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops'
+import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
 import { useLocale } from '@valguide/core/i18n/client'
 import { stopsQueryOptions } from '../query-options'
 

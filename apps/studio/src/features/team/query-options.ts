@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { getTeamDataFn, type TeamData } from '@valguide/core/features/orgs/get-team-data'
+import { getTeamDataFn, type TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
 
 export const teamQueryOptions = () =>
   queryOptions<TeamData | null>({

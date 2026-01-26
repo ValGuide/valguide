@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { listThemesFn, type Theme } from '@valguide/core/features/themes/list-themes'
+import { listThemesFn, type Theme } from '@valguide/core/features/themes/list-themes.fn'
 
 export const themesQueryKey = () => ['themes'] as const
 

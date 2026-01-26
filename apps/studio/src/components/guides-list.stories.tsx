@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.fn'
 import { GuidesList } from '@/features/guides/components/guides-list'
 
 const meta: Meta<typeof GuidesList> = {

@@ -1,4 +1,4 @@
-import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops'
+import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { ListError } from '@/components/list-error'
 import { ListPageHeader } from '@/components/list-page-header'

@@ -1,4 +1,4 @@
-import { updateProfileFn } from '@valguide/core/features/profiles/update-profile'
+import { updateProfileFn } from '@valguide/core/features/profiles/update-profile.fn'
 import { useProfile } from '../hooks/use-profile'
 import { ProfileForm } from './profile-form'
 

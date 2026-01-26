@@ -1,4 +1,4 @@
-import { archiveGuideFn } from '@valguide/core/features/guides/guide/archive-guide'
+import { archiveGuideFn } from '@valguide/core/features/guides/guide/archive-guide.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import {

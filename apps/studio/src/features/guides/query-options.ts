@@ -1,18 +1,18 @@
 import { queryOptions } from '@tanstack/react-query'
-import { type GuideDetail, getGuideDetailFn } from '@valguide/core/features/guides/guide/get-guide-detail'
+import { type GuideDetail, getGuideDetailFn } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import {
   type ArchivedGuideListItem,
   listArchivedGuidesFn,
-} from '@valguide/core/features/guides/guide/list-archived-guides'
-import { type GuideListItem, listGuidesFn } from '@valguide/core/features/guides/guide/list-guides'
+} from '@valguide/core/features/guides/guide/list-archived-guides.fn'
+import { type GuideListItem, listGuidesFn } from '@valguide/core/features/guides/guide/list-guides.fn'
 import {
   type GuideLocaleDraftResult,
   getGuideLocaleDraftFn,
-} from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft'
+} from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
 import {
   getStructureDraftFn,
   type StructureDraftResult,
-} from '@valguide/core/features/guides/structure/get-structure-draft'
+} from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 
 /**
  * Lightweight query options for guides list view

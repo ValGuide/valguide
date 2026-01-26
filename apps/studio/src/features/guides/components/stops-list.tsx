@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft'
+import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,

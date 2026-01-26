@@ -104,15 +104,15 @@ const config: StorybookConfig = {
           },
           { find: '@valguide/core/features/db', replacement: path.resolve(__dirname, './__mocks__/db.ts') },
           {
-            find: '@valguide/core/i18n/resolve-locale',
+            find: '@valguide/core/i18n/resolve-locale.fn',
             replacement: path.resolve(__dirname, './__mocks__/i18n-resolve-locale.ts'),
           },
           {
-            find: '@valguide/core/i18n/get-messages',
+            find: '@valguide/core/i18n/get-messages.fn',
             replacement: path.resolve(__dirname, './__mocks__/i18n-get-messages.ts'),
           },
           {
-            find: '@valguide/core/i18n/set-locale',
+            find: '@valguide/core/i18n/set-locale.fn',
             replacement: path.resolve(__dirname, './__mocks__/i18n-set-locale.ts'),
           },
           // Studio app server functions (use @/ alias pattern - split files)

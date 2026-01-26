@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { requireThemeAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
-import { type CreateThemeInput, createTheme } from './create-theme'
+import { type CreateThemeInput, createTheme } from './create-theme.fn'
 import { theme as themeTable } from './schema'
 
 // =============================================================================

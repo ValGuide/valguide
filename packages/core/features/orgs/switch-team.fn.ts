@@ -4,7 +4,7 @@ import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
 import { ForbiddenError, NotFoundError } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { getTeamById } from './get-team'
+import { getTeamById } from './get-team.fn'
 import { isTeamMember } from './utils'
 
 // =============================================================================

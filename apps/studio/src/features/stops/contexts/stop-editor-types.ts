@@ -1,6 +1,6 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail'
-import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft'
+import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
+import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 

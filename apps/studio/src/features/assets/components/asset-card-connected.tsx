@@ -1,4 +1,4 @@
-import { deleteAssetFn } from '@valguide/core/features/assets/delete-asset'
+import { deleteAssetFn } from '@valguide/core/features/assets/delete-asset.fn'
 import { AssetCard, type AssetCardProps } from './asset-card'
 import { DeleteAssetDialogConnected } from './delete-asset-dialog-connected'
 

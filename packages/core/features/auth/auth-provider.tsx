@@ -5,8 +5,8 @@ import { withLeadingSlash } from '@valguide/i18n/route.utils'
 import { createLogger } from '@valguide/logger'
 import type React from 'react'
 import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
-import { signInWithOtpFn } from './sign-in-with-otp'
-import { verifyOtpFn } from './verify-otp'
+import { signInWithOtpFn } from './sign-in-with-otp.fn'
+import { verifyOtpFn } from './verify-otp.fn'
 
 const log = createLogger('auth-provider')
 

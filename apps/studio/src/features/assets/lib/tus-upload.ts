@@ -24,7 +24,7 @@
  */
 import * as tus from 'tus-js-client'
 
-import { getUploadCredentialsFn } from '@valguide/core/features/assets/get-upload-credentials'
+import { getUploadCredentialsFn } from '@valguide/core/features/assets/get-upload-credentials.fn'
 
 
 export type UploadCredentials = {

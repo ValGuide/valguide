@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { ensureDefaultTeamFn } from './ensure-default-team'
+import { ensureDefaultTeamFn } from './ensure-default-team.fn'
 
 /**
  * Query options for ensuring user has a default team.

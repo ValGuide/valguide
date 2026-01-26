@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops'
+import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
 import { StopsList } from '@/features/stops/components/stops-list'
 import { StopsListSkeleton } from '@/features/stops/components/stops-list-skeleton'
 import { useStops } from '@/features/stops/hooks/use-stops'

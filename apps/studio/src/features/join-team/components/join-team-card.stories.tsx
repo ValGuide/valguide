@@ -35,7 +35,7 @@ export const Public: Story = {
   args: {
     variant: 'public',
     invite: mockInvite,
-    nextUrl: '/join-team',
+    nextUrl: '/join-team.fn',
   },
 }
 

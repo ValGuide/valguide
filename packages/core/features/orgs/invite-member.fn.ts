@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { serverEnv } from '../../env/server'
 import { NotFoundError, requireOrgRole } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { getTeamById } from './get-team'
+import { getTeamById } from './get-team.fn'
 import { ORG_ROLES, type OrgRole, organizationInvitation } from './schema'
 
 // =============================================================================

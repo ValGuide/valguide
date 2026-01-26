@@ -1,10 +1,10 @@
 import { queryOptions } from '@tanstack/react-query'
-import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail'
-import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops'
+import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
+import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
 import {
   getStopLocaleDraftFn,
   type StopLocaleDraftResult,
-} from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft'
+} from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
 
 /**
  * Query options for stop library list

@@ -1,13 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { getOrgThemes } from './get-org-themes'
+import { getOrgThemes } from './get-org-themes.fn'
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-export type { Theme } from './get-org-themes'
+export type { Theme } from './get-org-themes.fn'
 
 // =============================================================================
 // SERVER FUNCTION

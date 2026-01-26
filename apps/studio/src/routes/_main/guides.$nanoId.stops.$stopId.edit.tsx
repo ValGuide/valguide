@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
-import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale'
-import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale'
+import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale.fn'
+import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale.fn'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleton'
 import { StopEditView } from '@/features/guides/components/stop-edit-view'

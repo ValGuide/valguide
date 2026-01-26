@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides'
+import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import {

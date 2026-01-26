@@ -1,7 +1,7 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { GuideDetail, LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail'
-import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft'
-import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft'
+import type { GuideDetail, LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
+import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
+import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 

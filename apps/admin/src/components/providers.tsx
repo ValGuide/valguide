@@ -2,7 +2,7 @@ import { Providers as CoreProviders } from '@valguide/core/features/app-provider
 import type { Theme } from '@valguide/core/features/app-theme/types'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import type { PropsWithChildren } from 'react'
-import { setThemeFn } from '@/features/theme/set-theme'
+import { setThemeFn } from '@/features/theme/set-theme.fn'
 
 type ProvidersProps = PropsWithChildren<{
   locale: SupportedLocale

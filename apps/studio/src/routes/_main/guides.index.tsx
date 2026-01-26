@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides'
+import type { GuideListItem } from '@valguide/core/features/guides/guide/list-guides.fn'
 import { GuidesList } from '@/features/guides/components/guides-list'
 import { GuidesListSkeleton } from '@/features/guides/components/guides-list-skeleton'
 import { useGuides } from '@/features/guides/hooks/use-guides'
