@@ -166,11 +166,6 @@ const config: StorybookConfig = {
             find: /^@\/features\/guides\/create-guide$/,
             replacement: path.resolve(__dirname, './__mocks__/studio-create-guide.ts'),
           },
-          // Assets (still using server-functions)
-          {
-            find: /^@\/features\/assets\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-assets-server-functions.ts'),
-          },
           // Stops
           {
             find: /^@\/features\/stops\/get-stops$/,
