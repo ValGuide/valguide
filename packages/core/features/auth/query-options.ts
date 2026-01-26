@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
-import type { AuthUser } from './server-functions'
-import { getCurrentUserFn, isAuthenticatedFn } from './server-functions'
+import { type AuthUser, getCurrentUserFn } from './get-current-user'
+import { isAuthenticatedFn } from './is-authenticated'
 
 export const currentUserQueryOptions = () =>
   queryOptions<AuthUser | null>({

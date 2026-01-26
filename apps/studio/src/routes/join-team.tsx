@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { signOutFn } from '@valguide/core/features/auth/server-functions'
+import { signOutFn } from '@valguide/core/features/auth/sign-out'
 import { joinTeamFn } from '@valguide/core/features/orgs/server-functions'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'

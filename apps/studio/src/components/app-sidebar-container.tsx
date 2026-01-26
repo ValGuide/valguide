@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
-import { signOutFn } from '@valguide/core/features/auth/server-functions'
+import { signOutFn } from '@valguide/core/features/auth/sign-out'
 import { getFeedbackUploadCredentialsFn } from '@valguide/core/features/feedback/get-feedback-upload-credentials'
 import { submitFeedbackFn } from '@valguide/core/features/feedback/submit-feedback'
 import { createTeamFn, switchTeamFn } from '@valguide/core/features/orgs/server-functions'
