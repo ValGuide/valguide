@@ -1,8 +1,8 @@
 import { useTranslations } from '@valguide/core/i18n/client'
-import { AuthForm } from '../auth-form'
-import { Consent } from '../consent'
 import { OtpVerificationForm } from '../otp/otp-verification-form'
+import { AuthForm } from './auth-form'
 import { AuthLayout } from './auth-layout'
+import { Consent } from './consent'
 import { MessageAlert } from './message-alert'
 
 export interface AuthContainerProps {
