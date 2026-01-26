@@ -1,5 +1,5 @@
+import { confirmAssetUploadFn } from '@valguide/core/features/assets/confirm-upload'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
-import { confirmAssetUploadFn } from '@valguide/core/features/assets/server-functions'
 import {
   detectAssetType,
   formatFileSize,
@@ -25,7 +25,7 @@ export type AssetUploadInlineProps = {
   onUploadComplete?: (asset: Asset) => void
 }
 
-export function AssetUploadInline({ organizationId, allowedTypes, locale, onUploadComplete }: AssetUploadInlineProps) {
+export function AssetUploadInline({ organizationId, allowedTypes, onUploadComplete }: AssetUploadInlineProps) {
   const t = useTranslations('assets')
   const [file, setFile] = useState<File | null>(null)
   const [detectedType, setDetectedType] = useState<AssetType | null>(null)
@@ -133,7 +133,6 @@ export function AssetUploadInline({ organizationId, allowedTypes, locale, onUplo
           fileSize: file.size,
           mimeType: file.type,
           type: detectedType,
-          locale,
           storagePath: fileName,
         },
       })

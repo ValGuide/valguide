@@ -222,11 +222,6 @@ export function AssetPickerModal({
                             {asset.fileName}
                           </h4>
                           <div className="flex flex-wrap gap-1">
-                            {asset.locale && (
-                              <Badge variant="outline" className="uppercase text-xs">
-                                {asset.locale}
-                              </Badge>
-                            )}
                             <Badge variant="secondary" className="text-xs">
                               {formatFileSize(asset.fileSize)}
                             </Badge>

@@ -12,14 +12,13 @@ export interface Asset {
   fileName: string
   fileSize: number
   mimeType: string
-  type: string
+  type: AssetType
   storagePath: string
   publicUrl: string | null
-  locale: string | null
   width: number | null
   height: number | null
   duration: number | null
-  organizationId: string | null
+  organizationId: string
   uploadedBy: string
   createdAt: Date
   updatedAt: Date

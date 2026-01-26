@@ -57,7 +57,7 @@ export async function uploadFileWithTUS({
     accessToken = credentials.accessToken
     projectId = credentials.projectId
   } else {
-    const { getUploadCredentialsFn } = await import('@valguide/core/features/assets/server-functions')
+    const { getUploadCredentialsFn } = await import('@valguide/core/features/assets/get-upload-credentials')
     const creds = await getUploadCredentialsFn()
     accessToken = creds.accessToken
     projectId = creds.projectId

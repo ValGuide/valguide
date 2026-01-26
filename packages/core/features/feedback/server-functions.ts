@@ -12,9 +12,9 @@ import { organization } from '../orgs/schema'
 import { feedback } from './schema'
 
 // Re-export UploadCredentials type for consistency
-export type { UploadCredentials } from '../assets/server-functions'
+export type { UploadCredentials } from '../assets/get-upload-credentials'
 
-import type { UploadCredentials } from '../assets/server-functions'
+import type { UploadCredentials } from '../assets/get-upload-credentials'
 
 // Allowed MIME types for screenshot uploads (validated on both client and server)
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'] as const

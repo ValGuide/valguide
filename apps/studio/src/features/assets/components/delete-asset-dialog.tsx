@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import type { AssetUsageDetails } from '@valguide/core/features/assets/server-functions'
+import type { AssetUsageDetails } from '@valguide/core/features/assets/get-asset-usage'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
@@ -93,9 +93,7 @@ export function DeleteAssetDialog({
                             >
                               {guide.name}
                             </Link>
-                            <span className="text-muted-foreground">
-                              ({t(`usage.role.${guide.role}` as 'usage.role.cover')})
-                            </span>
+                            <span className="text-muted-foreground">({guide.channel})</span>
                           </li>
                         ))}
                       </ul>
@@ -109,9 +107,7 @@ export function DeleteAssetDialog({
                         {usage.stops.map((stop) => (
                           <li key={stop.id}>
                             <span className="text-foreground">{stop.name}</span>
-                            <span className="text-muted-foreground">
-                              ({t(`usage.role.${stop.role}` as 'usage.role.cover')})
-                            </span>
+                            <span className="text-muted-foreground">({stop.channel})</span>
                           </li>
                         ))}
                       </ul>

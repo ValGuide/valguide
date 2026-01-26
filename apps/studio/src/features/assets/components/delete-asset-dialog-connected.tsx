@@ -1,4 +1,4 @@
-import { getAssetUsageDetailsFn } from '@valguide/core/features/assets/server-functions'
+import { getAssetUsageDetailsFn } from '@valguide/core/features/assets/get-asset-usage'
 import type { DeleteAssetDialogComponentProps } from './asset-card'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
-import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 
@@ -39,7 +39,6 @@ const baseAsset: AssetWithUsage = {
   type: 'image',
   storagePath: '',
   publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'art' }),
-  locale: null,
   width: 1920,
   height: 1080,
   duration: null,
@@ -57,11 +56,10 @@ export const ImageAsset: Story = {
   },
 }
 
-export const ImageAssetWithLocale: Story = {
+export const ImageAssetGerman: Story = {
   args: {
     asset: {
       ...baseAsset,
-      locale: 'de',
       fileName: 'german-exhibit.jpg',
     },
   },
@@ -76,7 +74,6 @@ export const AudioAsset: Story = {
       fileName: 'narration-en.mp3',
       fileSize: 5242880, // 5MB
       mimeType: 'audio/mpeg',
-      locale: 'en',
       publicUrl: null,
       width: null,
       height: null,
@@ -94,7 +91,6 @@ export const VideoAsset: Story = {
       fileName: 'intro-video.mp4',
       fileSize: 52428800, // 50MB
       mimeType: 'video/mp4',
-      locale: 'rm',
       publicUrl: null,
       width: 1920,
       height: 1080,
@@ -174,10 +170,10 @@ function MockDeleteDialogWithUsage(props: DeleteAssetDialogComponentProps) {
     <DeleteAssetDialog
       {...props}
       onGetUsage={async () => ({
-        guides: [{ id: 'g1', nanoId: 'guide1', name: 'City Tour Guide', role: 'cover', locale: 'en' }],
+        guides: [{ id: 'g1', nanoId: 'guide1', name: 'City Tour Guide', channel: 'cover', locale: 'en' }],
         stops: [
-          { id: 's1', nanoId: 'stop1', name: 'Museum Entrance', role: 'media', locale: 'en' },
-          { id: 's2', nanoId: 'stop2', name: 'Art Gallery', role: 'media', locale: null },
+          { id: 's1', nanoId: 'stop1', name: 'Museum Entrance', channel: 'media', locale: 'en' },
+          { id: 's2', nanoId: 'stop2', name: 'Art Gallery', channel: 'media', locale: null },
         ],
       })}
     />

@@ -1,4 +1,4 @@
-import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets'
 import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
@@ -54,18 +54,15 @@ export function AssetsList({
   const t = useTranslations('assets')
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
   const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all')
-  const [localeFilter, setLocaleFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredAssets = useMemo(() => {
     return (assets ?? []).filter((asset) => {
       const matchesType = typeFilter === 'all' || asset.type === typeFilter
-      const matchesLocale =
-        localeFilter === 'all' || asset.locale === localeFilter || (!asset.locale && localeFilter === 'none')
       const matchesSearch = !searchQuery || asset.fileName.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesType && matchesLocale && matchesSearch
+      return matchesType && matchesSearch
     })
-  }, [assets, typeFilter, localeFilter, searchQuery])
+  }, [assets, typeFilter, searchQuery])
 
   const handleUploadComplete = (asset: Asset) => {
     onUploadComplete?.(asset)
@@ -135,19 +132,6 @@ export function AssetsList({
                 <SelectItem value="image">{t('filter.image')}</SelectItem>
                 <SelectItem value="audio">{t('filter.audio')}</SelectItem>
                 <SelectItem value="video">{t('filter.video')}</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={localeFilter} onValueChange={setLocaleFilter}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('filter.allLocales')}</SelectItem>
-                <SelectItem value="en">{t('filter.localeEn')}</SelectItem>
-                <SelectItem value="de">{t('filter.localeDe')}</SelectItem>
-                <SelectItem value="rm">{t('filter.localeRm')}</SelectItem>
-                <SelectItem value="none">{t('filter.noLocale')}</SelectItem>
               </SelectContent>
             </Select>
           </div>

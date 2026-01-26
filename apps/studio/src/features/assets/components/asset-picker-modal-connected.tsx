@@ -13,7 +13,7 @@ export function AssetPickerModalConnected({ type, locale, ...props }: AssetPicke
     assets: assetsFromHook,
     isLoading: isLoadingFromHook,
     refetch: refetchFromHook,
-  } = useAssets({ type, locale, enabled: shouldFetchAssets })
+  } = useAssets({ type, enabled: shouldFetchAssets })
 
   const assets = contextValue?.assets ?? assetsFromHook
   const isLoading = contextValue?.isLoading ?? isLoadingFromHook

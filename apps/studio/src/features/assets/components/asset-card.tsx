@@ -1,6 +1,6 @@
 import { Image as UnpicImage } from '@unpic/react'
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
@@ -138,11 +138,6 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
 
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">{t(`types.${asset.type}`)}</Badge>
-              {asset.locale && (
-                <Badge variant="outline" className="uppercase">
-                  {asset.locale}
-                </Badge>
-              )}
               {(asset.guideCount > 0 || asset.stopCount > 0) && (
                 <Badge variant="outline" className="text-muted-foreground">
                   {asset.guideCount > 0 && asset.stopCount > 0

@@ -43,7 +43,7 @@ export function MediaPickerConnected({
         },
       })
 
-      const { confirmAssetUploadFn } = await import('@valguide/core/features/assets/server-functions')
+      const { confirmAssetUploadFn } = await import('@valguide/core/features/assets/confirm-upload')
       const asset = await confirmAssetUploadFn({
         data: {
           assetId,
@@ -51,7 +51,6 @@ export function MediaPickerConnected({
           fileSize: file.size,
           mimeType: file.type,
           type: detected,
-          locale,
           storagePath: fileName,
         },
       })
@@ -61,7 +60,7 @@ export function MediaPickerConnected({
 
       return asset
     },
-    [organizationId, locale, queryClient],
+    [organizationId, queryClient],
   )
 
   const handleLibrarySelect = useCallback(

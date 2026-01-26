@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
-import type { AssetWithUsage } from '@valguide/core/features/assets/queries'
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { type AssetCardComponentProps, AssetsList } from './assets-list'
 import { AssetsListSkeleton } from './assets-list-skeleton'
@@ -62,7 +62,6 @@ const mockAssets: AssetWithUsage[] = [
     type: 'image',
     storagePath: '',
     publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'art' }),
-    locale: null,
     width: 1920,
     height: 1080,
     duration: null,
@@ -82,7 +81,6 @@ const mockAssets: AssetWithUsage[] = [
     type: 'image',
     storagePath: '',
     publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'museum' }),
-    locale: 'de',
     width: 1920,
     height: 1080,
     duration: null,
@@ -102,7 +100,6 @@ const mockAssets: AssetWithUsage[] = [
     type: 'audio',
     storagePath: '',
     publicUrl: null,
-    locale: 'en',
     width: null,
     height: null,
     duration: 180,
@@ -122,7 +119,6 @@ const mockAssets: AssetWithUsage[] = [
     type: 'audio',
     storagePath: '',
     publicUrl: null,
-    locale: 'de',
     width: null,
     height: null,
     duration: 185,
@@ -142,7 +138,6 @@ const mockAssets: AssetWithUsage[] = [
     type: 'video',
     storagePath: '',
     publicUrl: null,
-    locale: 'en',
     width: 1920,
     height: 1080,
     duration: 120,
@@ -162,7 +157,6 @@ const mockAssets: AssetWithUsage[] = [
     type: 'image',
     storagePath: '',
     publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'sculpture' }),
-    locale: null,
     width: 2560,
     height: 1440,
     duration: null,
