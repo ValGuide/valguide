@@ -103,7 +103,7 @@ export function OtpVerificationForm({
           </Button>
         </Field>
         <div className="text-center text-sm">
-          {t('didntReceiveEmail')}{' '}
+          {t('didntReceiveEmail')}
           <button type="button" className="font-medium hover:underline" onClick={onResendClick}>
             {t('resendCode')}
           </button>

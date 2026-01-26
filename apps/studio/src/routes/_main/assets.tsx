@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_main/assets')({
   component: AssetsPage,
   pendingComponent: () => (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <AssetsListSkeleton />{' '}
+      <AssetsListSkeleton />
     </main>
   ),
 })

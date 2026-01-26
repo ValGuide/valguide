@@ -94,7 +94,6 @@ export function DeleteAssetDialog({
                               {guide.name}
                             </Link>
                             <span className="text-muted-foreground">
-                              {' '}
                               ({t(`usage.role.${guide.role}` as 'usage.role.cover')})
                             </span>
                           </li>
@@ -111,7 +110,6 @@ export function DeleteAssetDialog({
                           <li key={stop.id}>
                             <span className="text-foreground">{stop.name}</span>
                             <span className="text-muted-foreground">
-                              {' '}
                               ({t(`usage.role.${stop.role}` as 'usage.role.cover')})
                             </span>
                           </li>

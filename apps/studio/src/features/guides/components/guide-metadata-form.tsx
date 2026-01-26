@@ -79,7 +79,7 @@ export const GuideMetadataForm = forwardRef<GuideMetadataFormRef, GuideMetadataF
       <Card className={readOnly ? 'opacity-60' : undefined}>
         <CardHeader>
           <CardTitle>
-            {t('editor.guideDetails')}{' '}
+            {t('editor.guideDetails')}
             <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">
               {t('editor.localeIndicator', { locale })}
             </span>

@@ -112,7 +112,7 @@ export function AuthForm({
 
           <div className="text-center">
             <p className="text-sm">
-              {isLogin ? t('noAccount') : t('haveAccount')}{' '}
+              {isLogin ? t('noAccount') : t('haveAccount')}
               <Link
                 to={isLogin ? '/signup' : '/login'}
                 preload="intent"
