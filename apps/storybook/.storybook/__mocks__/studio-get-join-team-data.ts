@@ -1,4 +1,4 @@
-// Mock for @/features/join-team/server-functions (studio app)
+// Mock for @/features/join-team/get-join-team-data (studio app)
 
 export type JoinTeamData = {
   variant: 'invalid' | 'public' | 'wrong-account' | 'joining'

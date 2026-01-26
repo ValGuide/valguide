@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
-import { setLocaleFn } from '@valguide/core/i18n/server-functions'
+import { setLocaleFn } from '@valguide/core/i18n/set-locale'
 import {
   DropdownMenuItem,
   DropdownMenuSub,

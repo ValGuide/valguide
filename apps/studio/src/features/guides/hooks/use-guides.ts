@@ -2,8 +2,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import type { GuideWithTranslations } from '@valguide/core/features/guides/schema'
 import type { GuideListItem } from '@valguide/core/features/guides/types'
 import { useLocale } from '@valguide/core/i18n/client'
+import { createGuideFn } from '../create-guide'
 import { guidesListQueryOptions } from '../query-options'
-import { createGuideFn } from '../server-functions'
 
 interface CreateGuideData {
   translations: Array<{ locale: string }>

@@ -4,6 +4,10 @@ import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { z } from 'zod'
 
+// ============================================================================
+// SERVER FUNCTION
+// ============================================================================
+
 const submitFeedbackSchema = z.object({
   feedback: z.string().min(1).max(5000),
   userName: z.string().optional(),

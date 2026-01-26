@@ -120,14 +120,28 @@ const config: StorybookConfig = {
             replacement: path.resolve(__dirname, './__mocks__/orgs-server-functions.ts'),
           },
           {
-            find: '@valguide/core/i18n/server-functions',
-            replacement: path.resolve(__dirname, './__mocks__/i18n-server-functions.ts'),
+            find: '@valguide/core/i18n/resolve-locale',
+            replacement: path.resolve(__dirname, './__mocks__/i18n-resolve-locale.ts'),
           },
-          // Studio app server functions (use @/ alias pattern)
           {
-            find: /^@\/features\/theme\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-theme-server-functions.ts'),
+            find: '@valguide/core/i18n/get-messages',
+            replacement: path.resolve(__dirname, './__mocks__/i18n-get-messages.ts'),
           },
+          {
+            find: '@valguide/core/i18n/set-locale',
+            replacement: path.resolve(__dirname, './__mocks__/i18n-set-locale.ts'),
+          },
+          // Studio app server functions (use @/ alias pattern - split files)
+          // Theme
+          {
+            find: /^@\/features\/theme\/get-theme$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-theme.ts'),
+          },
+          {
+            find: /^@\/features\/theme\/set-theme$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-set-theme.ts'),
+          },
+          // Profile
           {
             find: /^@\/features\/profile\/server-functions$/,
             replacement: path.resolve(__dirname, './__mocks__/studio-profile-server-functions.ts'),
@@ -136,33 +150,63 @@ const config: StorybookConfig = {
             find: /^@\/features\/profile\/actions$/,
             replacement: path.resolve(__dirname, './__mocks__/studio-profile-actions.ts'),
           },
+          // Sidebar
           {
-            find: /^@\/features\/sidebar\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-sidebar-server-functions.ts'),
+            find: /^@\/features\/sidebar\/get-sidebar-state$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-sidebar-state.ts'),
           },
           {
-            find: /^@\/features\/team\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-team-server-functions.ts'),
+            find: /^@\/features\/sidebar\/get-sidebar-data$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-sidebar-data.ts'),
+          },
+          // Team
+          {
+            find: /^@\/features\/team\/get-team-data$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-team-data.ts'),
+          },
+          // Join-team
+          {
+            find: /^@\/features\/join-team\/get-join-team-data$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-join-team-data.ts'),
+          },
+          // Guides
+          {
+            find: /^@\/features\/guides\/get-guides$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-guides.ts'),
           },
           {
-            find: /^@\/features\/guides\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-guides-server-functions.ts'),
+            find: /^@\/features\/guides\/get-guides-list$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-guides-list.ts'),
           },
+          {
+            find: /^@\/features\/guides\/get-archived-guides$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-archived-guides.ts'),
+          },
+          {
+            find: /^@\/features\/guides\/create-guide$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-create-guide.ts'),
+          },
+          // Assets (still using server-functions)
           {
             find: /^@\/features\/assets\/server-functions$/,
             replacement: path.resolve(__dirname, './__mocks__/studio-assets-server-functions.ts'),
           },
+          // Stops
           {
-            find: /^@\/features\/stops\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-stops-server-functions.ts'),
+            find: /^@\/features\/stops\/get-stops$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-stops.ts'),
           },
           {
-            find: /^@\/features\/join-team\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-join-team-server-functions.ts'),
+            find: /^@\/features\/stops\/get-stop-metadata$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-stop-metadata.ts'),
           },
           {
-            find: /^@\/features\/design\/server-functions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-design-server-functions.ts'),
+            find: /^@\/features\/stops\/get-stop-locale-data$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-stop-locale-data.ts'),
+          },
+          {
+            find: /^@\/features\/stops\/get-stop-detail$/,
+            replacement: path.resolve(__dirname, './__mocks__/studio-get-stop-detail.ts'),
           },
           { find: 'crypto', replacement: path.resolve(__dirname, './__mocks__/crypto.ts') },
         ],

@@ -1,10 +1,10 @@
-// Mock for @/features/team/server-functions (studio app)
+// Mock for @/features/team/get-team-data (studio app)
 
 export const getTeamDataFn = async () => ({
   team: {
     id: 'mock-team-id',
     name: 'Mock Team',
-    slug: 'mock-team',
+    nanoId: 'mockteam01',
   },
   members: [
     {
@@ -22,3 +22,20 @@ export const getTeamDataFn = async () => ({
   currentUserRole: 'owner',
   currentUserId: 'mock-user-id',
 })
+
+export interface TeamData {
+  team: { id: string; name: string; nanoId: string }
+  members: Array<{
+    id: string
+    userId: string
+    email: string
+    firstName?: string
+    lastName?: string
+    role: string
+    joinedAt: string
+    isOwner: boolean
+  }>
+  pendingInvites: Array<unknown>
+  currentUserRole: string
+  currentUserId: string
+}

@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query'
+import { getMessagesFn } from './get-messages'
 import type { SupportedLocale } from './i18n.config'
-import { getMessagesFn, resolveLocaleFn } from './server-functions'
+import { resolveLocaleFn } from './resolve-locale'
 
 export const localeQueryOptions = () =>
   queryOptions<SupportedLocale>({

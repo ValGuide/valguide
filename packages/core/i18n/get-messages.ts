@@ -1,11 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { defaultLocale, supportedLocales } from './i18n.config'
-import { resolveServerLocale, setServerLocale } from './server'
 
-export const resolveLocaleFn = createServerFn({ method: 'GET' }).handler(async () => {
-  return resolveServerLocale()
-})
+// ============================================================================
+// SERVER FUNCTION
+// ============================================================================
 
 export const getMessagesFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ locale: z.enum(supportedLocales) }))
@@ -16,11 +15,4 @@ export const getMessagesFn = createServerFn({ method: 'GET' })
     } catch {
       return (await import(`./messages/${defaultLocale}.json`)).default
     }
-  })
-
-export const setLocaleFn = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ locale: z.enum(supportedLocales) }))
-  .handler(async ({ data }) => {
-    setServerLocale(data.locale)
-    return { success: true }
   })

@@ -5,7 +5,7 @@ import { joinTeamFn } from '@valguide/core/features/orgs/join-team'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { JoinTeamCard } from '../features/join-team/components/join-team-card'
-import { getJoinTeamDataFn } from '../features/join-team/server-functions'
+import { getJoinTeamDataFn } from '../features/join-team/get-join-team-data'
 
 const searchSchema = z.object({
   token: z.string().optional(),

@@ -1,7 +1,10 @@
 import { queryOptions } from '@tanstack/react-query'
 import type { IndependentStopMetadata, StopDetailItem, StopLocaleData } from '@valguide/core/features/guides/types'
 import type { StopWithGuides } from './api/fetchers'
-import { getStopDetailFn, getStopLocaleDataFn, getStopMetadataFn, getStopsFn } from './server-functions'
+import { getStopDetailFn } from './get-stop-detail'
+import { getStopLocaleDataFn } from './get-stop-locale-data'
+import { getStopMetadataFn } from './get-stop-metadata'
+import { getStopsFn } from './get-stops'
 
 /**
  * Query options for stop library list

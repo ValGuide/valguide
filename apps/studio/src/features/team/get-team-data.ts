@@ -11,6 +11,10 @@ import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import type { Team } from './types'
 
+// ============================================================================
+// TYPES
+// ============================================================================
+
 export interface TeamData {
   team: Team
   members: TeamMember[]
@@ -18,6 +22,10 @@ export interface TeamData {
   currentUserRole: OrgRole
   currentUserId: string
 }
+
+// ============================================================================
+// SERVER FUNCTION
+// ============================================================================
 
 export const getTeamDataFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])

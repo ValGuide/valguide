@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
-import { getSidebarDataFn, getSidebarStateFn, type SidebarData } from './server-functions'
+import { getSidebarDataFn, type SidebarData } from './get-sidebar-data'
+import { getSidebarStateFn } from './get-sidebar-state'
 
 export const sidebarStateQueryOptions = () =>
   queryOptions<boolean>({

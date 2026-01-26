@@ -5,9 +5,9 @@ import { getInvitationByTokenHash } from '@valguide/core/features/orgs/utils'
 import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
 
-const getJoinTeamDataSchema = z.object({
-  token: z.string().optional(),
-})
+// ============================================================================
+// TYPES
+// ============================================================================
 
 export type JoinTeamData = {
   variant: 'invalid' | 'public' | 'wrong-account' | 'joining'
@@ -18,6 +18,14 @@ export type JoinTeamData = {
   userEmail?: string
   nextUrl?: string
 }
+
+// ============================================================================
+// SERVER FUNCTION
+// ============================================================================
+
+const getJoinTeamDataSchema = z.object({
+  token: z.string().optional(),
+})
 
 export const getJoinTeamDataFn = createServerFn({ method: 'GET' })
   .inputValidator(getJoinTeamDataSchema)

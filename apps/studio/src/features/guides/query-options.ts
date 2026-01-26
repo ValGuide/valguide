@@ -11,7 +11,8 @@ import type {
   GuideMetadata,
   GuideWithTranslationsAndCover,
 } from '@valguide/core/features/guides/types'
-import { getArchivedGuidesFn, getGuidesListFn } from './server-functions'
+import { getArchivedGuidesFn } from './get-archived-guides'
+import { getGuidesListFn } from './get-guides-list'
 
 export interface ArchivedGuidesResponse {
   guides: GuideWithTranslationsAndCover[]

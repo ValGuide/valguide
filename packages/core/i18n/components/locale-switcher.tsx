@@ -3,7 +3,7 @@
 import { useRouter } from '@tanstack/react-router'
 import { useLocale } from 'use-intl'
 import { type SupportedLocale, supportedLocales } from '../i18n.config'
-import { setLocaleFn } from '../server-functions'
+import { setLocaleFn } from '../set-locale'
 
 const localeNames: Record<SupportedLocale, string> = {
   en: 'English',

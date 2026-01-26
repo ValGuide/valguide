@@ -1,5 +1,4 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getCookie } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams'
 import { getProfile } from '@valguide/core/features/profiles/get-profile'
@@ -7,6 +6,10 @@ import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 import type { Team } from '../team/types'
+
+// ============================================================================
+// TYPES
+// ============================================================================
 
 export interface SidebarData {
   user: {
@@ -20,10 +23,9 @@ export interface SidebarData {
   wasAutoSelected: boolean
 }
 
-export const getSidebarStateFn = createServerFn({ method: 'GET' }).handler(async () => {
-  const sidebarState = getCookie('sidebar_state')
-  return sidebarState !== 'false'
-})
+// ============================================================================
+// SERVER FUNCTION
+// ============================================================================
 
 export const getSidebarDataFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
