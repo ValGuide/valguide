@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import type { StopWithAssets } from '@valguide/core/features/guides/queries'
+import type { StopWithAssets } from '@valguide/core/features/guides/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight, List } from 'lucide-react'

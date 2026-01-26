@@ -1,11 +1,8 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { db } from '@valguide/core/features/db'
-import {
-  getGuideIdByStopNanoId,
-  getPublishedGuideByNanoId,
-  getStopByNanoId,
-} from '@valguide/core/features/guides/queries'
+import { getGuideIdByStopNanoId } from '@valguide/core/features/guides/public/get-guide-by-stop'
+import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public/get-published-guide'
+import { getStopByNanoId } from '@valguide/core/features/guides/public/get-published-stop'
 import { z } from 'zod'
 import { StopContent } from '@/components/stops/stop-content'
 import { StopNavigation } from '@/components/stops/stop-navigation'
@@ -13,13 +10,13 @@ import { StopNavigation } from '@/components/stops/stop-navigation'
 const getStopDataFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ nanoId: z.string(), stopNanoId: z.string() }))
   .handler(async ({ data }) => {
-    const stop = await getStopByNanoId(db, data.stopNanoId)
+    const stop = await getStopByNanoId(data.stopNanoId)
     if (!stop) return null
 
-    const guideId = await getGuideIdByStopNanoId(db, data.stopNanoId)
+    const guideId = await getGuideIdByStopNanoId(data.stopNanoId)
     if (!guideId) return null
 
-    const guide = await getPublishedGuideByNanoId(db, data.nanoId)
+    const guide = await getPublishedGuideByNanoId(data.nanoId)
     if (!guide) return null
 
     const currentIndex = guide.stops.findIndex((s) => s.nanoId === data.stopNanoId)

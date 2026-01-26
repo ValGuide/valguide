@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { AssetWithRole } from '@valguide/core/features/guides/queries'
+import type { AssetWithRole } from '@valguide/core/features/guides/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'

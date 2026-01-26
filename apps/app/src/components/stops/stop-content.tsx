@@ -1,5 +1,6 @@
 import { RichTextDisplay } from '@valguide/core/features/guides/components/rich-text-display'
-import { getLocalizedStopText, type StopWithAssets } from '@valguide/core/features/guides/queries'
+import { getLocalizedStopText } from '@valguide/core/features/guides/public/localization-helpers'
+import type { StopWithAssets } from '@valguide/core/features/guides/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { AudioPlayer } from './audio-player'
