@@ -1,16 +1,16 @@
 import { createServerFn } from '@tanstack/react-start'
 import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { ForbiddenError, NotFoundError, requireGuideAccessByNanoId } from '../../auth/authorization'
-import { requireAuthMiddleware } from '../../auth/middleware'
-import { db } from '../../db'
-import { guide, guideLocale, guideLocaleVersion } from '../schema'
+import { ForbiddenError, NotFoundError, requireStopAccessByNanoId } from '../../../auth/authorization'
+import { requireAuthMiddleware } from '../../../auth/middleware'
+import { db } from '../../../db'
+import { stop, stopLocale, stopLocaleVersion } from '../../schema'
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-export type RollbackGuideLocaleResult = {
+export type RollbackStopLocaleResult = {
   versionId: string
   version: number
 }
@@ -19,37 +19,37 @@ export type RollbackGuideLocaleResult = {
 // INTERNAL FUNCTION
 // =============================================================================
 
-export async function rollbackGuideLocale(
-  guideNanoId: string,
+export async function rollbackStopLocale(
+  stopNanoId: string,
   locale: string,
   targetVersionId: string,
-): Promise<RollbackGuideLocaleResult> {
-  const [foundGuide] = await db.select({ id: guide.id }).from(guide).where(eq(guide.nanoId, guideNanoId)).limit(1)
+): Promise<RollbackStopLocaleResult> {
+  const [foundStop] = await db.select({ id: stop.id }).from(stop).where(eq(stop.nanoId, stopNanoId)).limit(1)
 
-  if (!foundGuide) {
-    throw new NotFoundError('Guide')
+  if (!foundStop) {
+    throw new NotFoundError('Stop')
   }
 
   return db.transaction(async (tx) => {
     // 1. Get locale row
     const [localeRow] = await tx
-      .select({ id: guideLocale.id })
-      .from(guideLocale)
-      .where(and(eq(guideLocale.guideId, foundGuide.id), eq(guideLocale.locale, locale)))
+      .select({ id: stopLocale.id })
+      .from(stopLocale)
+      .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
       .for('update')
 
     if (!localeRow) {
-      throw new NotFoundError('Guide locale')
+      throw new NotFoundError('Stop locale')
     }
 
     // 2. Verify target version belongs to this locale
     const [targetVersion] = await tx
       .select({
-        id: guideLocaleVersion.id,
-        version: guideLocaleVersion.version,
+        id: stopLocaleVersion.id,
+        version: stopLocaleVersion.version,
       })
-      .from(guideLocaleVersion)
-      .where(and(eq(guideLocaleVersion.id, targetVersionId), eq(guideLocaleVersion.guideLocaleId, localeRow.id)))
+      .from(stopLocaleVersion)
+      .where(and(eq(stopLocaleVersion.id, targetVersionId), eq(stopLocaleVersion.stopLocaleId, localeRow.id)))
       .limit(1)
 
     if (!targetVersion) {
@@ -58,11 +58,11 @@ export async function rollbackGuideLocale(
 
     // 3. Update pointer to target version
     await tx
-      .update(guideLocale)
+      .update(stopLocale)
       .set({
         publishedVersionId: targetVersion.id,
       })
-      .where(eq(guideLocale.id, localeRow.id))
+      .where(eq(stopLocale.id, localeRow.id))
 
     return { versionId: targetVersion.id, version: targetVersion.version }
   })
@@ -72,17 +72,17 @@ export async function rollbackGuideLocale(
 // SERVER FUNCTION
 // =============================================================================
 
-const rollbackGuideLocaleSchema = z.object({
+const rollbackStopLocaleSchema = z.object({
   nanoId: z.string(),
   locale: z.string(),
   targetVersionId: z.string(),
 })
 
-export const rollbackGuideLocaleFn = createServerFn({ method: 'POST' })
+export const rollbackStopLocaleFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
-  .inputValidator(rollbackGuideLocaleSchema)
+  .inputValidator(rollbackStopLocaleSchema)
   .handler(async ({ context, data }) => {
-    await requireGuideAccessByNanoId(data.nanoId, context.user.id)
+    await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
-    return rollbackGuideLocale(data.nanoId, data.locale, data.targetVersionId)
+    return rollbackStopLocale(data.nanoId, data.locale, data.targetVersionId)
   })

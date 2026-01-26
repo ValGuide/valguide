@@ -1,10 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { and, desc, eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { NotFoundError, requireGuideAccessByNanoId } from '../../auth/authorization'
-import { requireAuthMiddleware } from '../../auth/middleware'
-import { db } from '../../db'
-import { guide, guideLocale, guideLocaleVersion } from '../schema'
+import { NotFoundError, requireGuideAccessByNanoId } from '../../../auth/authorization'
+import { requireAuthMiddleware } from '../../../auth/middleware'
+import { db } from '../../../db'
+import { guide, guideLocale, guideLocaleVersion } from '../../schema'
 
 // =============================================================================
 // TYPES
