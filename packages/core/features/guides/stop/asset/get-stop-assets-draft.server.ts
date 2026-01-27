@@ -1,4 +1,6 @@
 import { asc, eq } from 'drizzle-orm'
+import type { Asset } from '../../../assets/schema'
+import { asset } from '../../../assets/schema'
 import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
 import { stop, stopAssetDraft } from '../../schema'
@@ -9,7 +11,7 @@ import { stop, stopAssetDraft } from '../../schema'
 
 export type StopAssetDraftItem = {
   id: string
-  assetId: string
+  asset: Asset
   channel: string
   locale: string | null
   position: number
@@ -35,21 +37,22 @@ export async function getStopAssetsDraft(
     throw new NotFoundError('Stop')
   }
 
-  const assets = await db
+  const rows = await db
     .select({
       id: stopAssetDraft.id,
-      assetId: stopAssetDraft.assetId,
+      asset: asset,
       channel: stopAssetDraft.channel,
       locale: stopAssetDraft.locale,
       position: stopAssetDraft.position,
       createdAt: stopAssetDraft.createdAt,
     })
     .from(stopAssetDraft)
+    .innerJoin(asset, eq(stopAssetDraft.assetId, asset.id))
     .where(eq(stopAssetDraft.stopId, foundStop.id))
     .orderBy(asc(stopAssetDraft.position))
 
   // Filter by channel and locale if provided
-  const filtered = assets.filter((a) => {
+  const filtered = rows.filter((a) => {
     if (channel && a.channel !== channel) return false
     if (locale !== undefined && a.locale !== locale) return false
     return true

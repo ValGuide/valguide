@@ -11,11 +11,10 @@ import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '../query-options'
-import { StopEditorContext, type StopEditorContextValue } from './stop-editor-types'
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { stopAssetsDraftQueryOptions, stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '../query-options'
+import { type FormValueGetter, StopEditorContext, type StopEditorContextValue } from './stop-editor-types'
 
-type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
 type FormRegistry = Map<string, { getValues: FormValueGetter; isDirty: boolean }>
 
 const LOCALE_PARAM = 'locale'
@@ -80,23 +79,28 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
   const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
   const formValueGettersRef = useRef<FormRegistry>(new Map())
 
-  // Asset state (in-memory, saved on save())
-  const [assets, setAssets] = useState<AssetWithRole[]>([])
-  const initialAssetsRef = useRef<AssetWithRole[]>([])
+  // Stop assets from server (immediate operations, no local state)
+  const assetsQuery = useQuery({
+    ...stopAssetsDraftQueryOptions(nanoId),
+    enabled: !!nanoId,
+  })
+  const assetsRaw = assetsQuery.data?.assets ?? []
+  const isLoadingAssets = assetsQuery.isLoading
 
-  // Asset dirty tracking
-  const isAssetsDirty = useMemo(() => {
-    const assetIds = assets.map((a) => a.id).join(',')
-    const initialAssetIds = initialAssetsRef.current.map((a) => a.id).join(',')
-    return assetIds !== initialAssetIds
-  }, [assets])
+  // Transform to AssetWithRole format
+  const assets: AssetWithRole[] = assetsRaw.map((item) => ({
+    ...item.asset,
+    role: item.channel.startsWith('audio.') ? 'audio' : item.channel === 'images.gallery' ? 'gallery' : item.channel,
+    order: item.position,
+    locale: item.locale,
+  }))
 
   // Save state
   const [isSaving, setIsSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Derived isDirty
-  const isDirty = dirtyForms.size > 0 || isAssetsDirty
+  // Derived isDirty (no longer includes assets - they're saved immediately)
+  const isDirty = dirtyForms.size > 0
 
   // Set active locale and update URL
   const setActiveLocale = useCallback(
@@ -173,22 +177,79 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     }
   }, [])
 
-  // Asset operations
-  const updateAssets = useCallback((newAssets: AssetWithRole[]) => {
-    setAssets(newAssets)
-  }, [])
+  // Asset operations (immediate server calls)
+  const updateAssets = useCallback(
+    async (newAssets: AssetWithRole[]) => {
+      if (!nanoId) return
 
-  const addAsset = useCallback(
-    (asset: Asset, role: string, locale: string | null) => {
-      const assetWithRole: AssetWithRole = { ...asset, role, order: assets.length, locale }
-      setAssets((prev) => [...prev, assetWithRole])
+      try {
+        // Remove assets that are no longer in the list
+        for (const current of assets) {
+          if (!newAssets.find((a) => a.id === current.id)) {
+            const channel = current.role === 'audio' ? 'audio.narration' : 'images.gallery'
+            await removeStopAssetFn({
+              data: { nanoId, assetId: current.id, channel, locale: current.locale },
+            })
+          }
+        }
+
+        // Add new assets
+        for (let i = 0; i < newAssets.length; i++) {
+          const asset = newAssets[i]
+          if (!assets.find((c) => c.id === asset.id)) {
+            const channel = asset.role === 'audio' ? 'audio.narration' : 'images.gallery'
+            await assignStopAssetFn({
+              data: { nanoId, assetId: asset.id, channel, locale: asset.locale, position: i },
+            })
+          }
+        }
+
+        // Invalidate assets query to refetch
+        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'assets'] })
+      } catch (error) {
+        console.error('Failed to update stop assets:', error)
+        toast.error(t('stops.assets.updateError'))
+      }
     },
-    [assets.length],
+    [nanoId, assets, queryClient, t],
   )
 
-  const removeAsset = useCallback((assetId: string) => {
-    setAssets((prev) => prev.filter((a) => a.id !== assetId))
-  }, [])
+  const addAsset = useCallback(
+    async (asset: Asset, role: string, locale: string | null) => {
+      if (!nanoId) return
+
+      try {
+        const channel = role === 'audio' ? 'audio.narration' : 'images.gallery'
+        await assignStopAssetFn({
+          data: { nanoId, assetId: asset.id, channel, locale, position: assets.length },
+        })
+        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'assets'] })
+      } catch (error) {
+        console.error('Failed to add stop asset:', error)
+        toast.error(t('stops.assets.addError'))
+      }
+    },
+    [nanoId, assets.length, queryClient, t],
+  )
+
+  const removeAsset = useCallback(
+    async (assetId: string) => {
+      if (!nanoId) return
+
+      try {
+        const asset = assets.find((a) => a.id === assetId)
+        const channel = asset?.role === 'audio' ? 'audio.narration' : 'images.gallery'
+        await removeStopAssetFn({
+          data: { nanoId, assetId, channel, locale: asset?.locale ?? null },
+        })
+        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'assets'] })
+      } catch (error) {
+        console.error('Failed to remove stop asset:', error)
+        toast.error(t('stops.assets.removeError'))
+      }
+    },
+    [nanoId, assets, queryClient, t],
+  )
 
   // Save orchestration
   const save = useCallback(async () => {
@@ -215,22 +276,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
         }
       }
 
-      // Save assets if dirty (using new channel-based API)
-      if (isAssetsDirty) {
-        // Remove old assets
-        for (const asset of initialAssetsRef.current) {
-          await removeStopAssetFn({
-            data: { nanoId, assetId: asset.id, channel: 'images.gallery', locale: null },
-          })
-        }
-        // Add new assets
-        for (const asset of assets) {
-          await assignStopAssetFn({
-            data: { nanoId, assetId: asset.id, channel: 'images.gallery', locale: null },
-          })
-        }
-        initialAssetsRef.current = assets
-      }
+      // Assets are saved immediately via updateAssets/addAsset/removeAsset - no batching needed
 
       resetAllFormsAfterSave()
 
@@ -245,7 +291,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     } finally {
       setIsSaving(false)
     }
-  }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, isAssetsDirty, assets, t])
+  }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, t])
 
   // Publish locale
   const publish = useCallback(
@@ -299,6 +345,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     localeDraft,
     isLoadingLocale,
     assets,
+    isLoadingAssets,
     updateAssets,
     addAsset,
     removeAsset,

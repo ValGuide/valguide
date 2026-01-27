@@ -8,7 +8,8 @@ import { createContext, useContext } from 'react'
 // Re-export types for consumers
 export type { GuideDetail, LocaleDraftInfo, GuideLocaleDraftResult, StructureDraftStop }
 
-type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
+export type FormValues = { title?: string; description?: string | null; transcription?: string | null }
+export type FormValueGetter = () => FormValues
 
 export interface GuideEditorContextValue {
   // Core identifiers
@@ -32,15 +33,18 @@ export interface GuideEditorContextValue {
   removeStop: (stopNanoId: string) => Promise<void>
   reorderStops: (stopNanoIds: string[]) => Promise<void>
 
-  // Asset state (in-memory, saved on save())
+  // Guide asset state (from React Query cache)
   guideAssets: AssetWithRole[]
-  getStopAssets: (stopNanoId: string) => AssetWithRole[]
+  isLoadingGuideAssets: boolean
 
-  // Asset operations (update in-memory state, saved on save())
-  setGuideCover: (asset: Asset | null) => void
-  updateStopAssets: (stopNanoId: string, assets: AssetWithRole[]) => void
-  addStopAsset: (stopNanoId: string, asset: Asset, role: string, locale: string | null) => void
-  removeStopAsset: (stopNanoId: string, assetId: string) => void
+  // Guide asset operations (immediate server calls)
+  setGuideCover: (asset: Asset | null) => Promise<void>
+
+  // Stop asset operations (immediate server calls)
+  getStopAssets: (stopNanoId: string) => AssetWithRole[]
+  updateStopAssets: (stopNanoId: string, assets: AssetWithRole[]) => Promise<void>
+  addStopAsset: (stopNanoId: string, asset: Asset, role: string, locale: string | null) => Promise<void>
+  removeStopAsset: (stopNanoId: string, assetId: string) => Promise<void>
 
   // Form dirty registration
   isDirty: boolean

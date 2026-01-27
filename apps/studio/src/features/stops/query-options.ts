@@ -1,4 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
+import {
+  type GetStopAssetsDraftResult,
+  getStopAssetsDraftFn,
+} from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
 import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
 import {
@@ -34,5 +38,15 @@ export const stopLocaleDraftQueryOptions = (nanoId: string, locale: string) =>
   queryOptions<StopLocaleDraftResult | null>({
     queryKey: ['stop', nanoId, 'locale', locale],
     queryFn: () => getStopLocaleDraftFn({ data: { nanoId, locale } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for stop assets draft (all channels)
+ */
+export const stopAssetsDraftQueryOptions = (nanoId: string) =>
+  queryOptions<GetStopAssetsDraftResult>({
+    queryKey: ['stop', nanoId, 'assets'],
+    queryFn: () => getStopAssetsDraftFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
   })

@@ -1,4 +1,6 @@
 import { asc, eq } from 'drizzle-orm'
+import type { Asset } from '../../../assets/schema'
+import { asset } from '../../../assets/schema'
 import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
 import { guide, guideAssetDraft } from '../../schema'
@@ -9,7 +11,7 @@ import { guide, guideAssetDraft } from '../../schema'
 
 export type GuideAssetDraftItem = {
   id: string
-  assetId: string
+  asset: Asset
   channel: string
   locale: string | null
   position: number
@@ -35,24 +37,22 @@ export async function getGuideAssetsDraft(
     throw new NotFoundError('Guide')
   }
 
-  const query = db
+  const rows = await db
     .select({
       id: guideAssetDraft.id,
-      assetId: guideAssetDraft.assetId,
+      asset: asset,
       channel: guideAssetDraft.channel,
       locale: guideAssetDraft.locale,
       position: guideAssetDraft.position,
       createdAt: guideAssetDraft.createdAt,
     })
     .from(guideAssetDraft)
+    .innerJoin(asset, eq(guideAssetDraft.assetId, asset.id))
     .where(eq(guideAssetDraft.guideId, foundGuide.id))
     .orderBy(asc(guideAssetDraft.position))
-    .$dynamic()
-
-  const assets = await query
 
   // Filter by channel and locale if provided
-  const filtered = assets.filter((a) => {
+  const filtered = rows.filter((a) => {
     if (channel && a.channel !== channel) return false
     if (locale !== undefined && a.locale !== locale) return false
     return true

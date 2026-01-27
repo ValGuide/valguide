@@ -1,4 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
+import type { GetGuideAssetsDraftResult } from '@valguide/core/features/guides/guide/asset/get-guide-assets-draft.fn'
+import { getGuideAssetsDraftFn } from '@valguide/core/features/guides/guide/asset/get-guide-assets-draft.fn'
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import { getGuideDetailFn } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
@@ -64,5 +66,15 @@ export const guideStructureDraftQueryOptions = (nanoId: string, locale: string) 
   queryOptions<StructureDraftResult | null>({
     queryKey: ['guide', nanoId, 'structure', { locale }],
     queryFn: () => getStructureDraftFn({ data: { nanoId, locale } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for guide assets draft (all channels)
+ */
+export const guideAssetsDraftQueryOptions = (nanoId: string) =>
+  queryOptions<GetGuideAssetsDraftResult>({
+    queryKey: ['guide', nanoId, 'assets'],
+    queryFn: () => getGuideAssetsDraftFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
   })

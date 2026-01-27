@@ -4,7 +4,8 @@ import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 
-type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
+export type FormValues = { title?: string; description?: string | null; transcription?: string | null }
+export type FormValueGetter = () => FormValues
 
 export interface StopEditorContextValue {
   // Core identifiers
@@ -22,13 +23,14 @@ export interface StopEditorContextValue {
   localeDraft: StopLocaleDraftResult | null
   isLoadingLocale: boolean
 
-  // Asset state (in-memory, saved on save())
+  // Asset state (from React Query cache)
   assets: AssetWithRole[]
+  isLoadingAssets: boolean
 
-  // Asset operations (update in-memory state, saved on save())
-  updateAssets: (assets: AssetWithRole[]) => void
-  addAsset: (asset: Asset, role: string, locale: string | null) => void
-  removeAsset: (assetId: string) => void
+  // Asset operations (immediate server calls)
+  updateAssets: (assets: AssetWithRole[]) => Promise<void>
+  addAsset: (asset: Asset, role: string, locale: string | null) => Promise<void>
+  removeAsset: (assetId: string) => Promise<void>
 
   // Form dirty registration
   isDirty: boolean
