@@ -1,11 +1,18 @@
 ---
 name: reviewing-ux
 description: Reviews UI designs and implementations using the Status/Scope/Action model. Use when evaluating UX, reviewing component designs, or assessing user flows.
+resources:
+  - docs/ux/ux-guide.md
+  - docs/ux/ux-emotional-safety.md
 ---
 
 # UX Review Skill
 
-Apply the Status/Scope/Action model and supporting UX principles to evaluate designs and implementations.
+Apply the Status/Scope/Action model, supporting UX principles, and ValGuide's emotional safety guidelines to evaluate designs and implementations.
+
+**Reference documents:**
+- [UX Guide](docs/ux/ux-guide.md) — Status/Scope/Action model and best practices
+- [Emotional Safety Guidelines](docs/ux/ux-emotional-safety.md) — ValGuide-specific principles for safe, calm, trustworthy UI
 
 ## Quick Review Framework
 
@@ -53,6 +60,36 @@ Check these when the model feels broken:
 - [ ] If feature needs explanation, question the placement
 - [ ] Obvious structure > clever copy
 
+## Emotional Safety Checklist (ValGuide-Specific)
+
+### Core Principles
+- [ ] **Clarity over cleverness** — Plain language, predictable navigation, obvious next steps
+- [ ] **User control** — Undo, back, cancel, draft states available; consequences explained before committing
+- [ ] **Non-judgmental microcopy** — No "invalid/failed/incorrect" without explanation; never imply user fault
+- [ ] **Gentle error handling** — Inline validation, preserve user input, clear recovery path
+- [ ] **Transparency** — Pricing/limits/permissions visible just-in-time; no hidden behavior
+
+### Reduce Overwhelm
+- [ ] Progressive disclosure instead of showing everything
+- [ ] Sensible defaults and templates
+- [ ] Onboarding can be skipped or revisited
+- [ ] No aggressive modals or alert storms
+
+### ValGuide-Specific
+- [ ] **Private by default** — Creation starts in draft; publishing is deliberate and explained
+- [ ] **Visibility indicator** — Clear where content is visible (draft / team / visitors)
+- [ ] **AI as collaborator** — AI content labeled, defaults to draft, easy to reject/modify
+
+### High-Impact Touchpoints (Extra Care Required)
+- Onboarding and first-run experience
+- Empty states and first success moments
+- Publishing and unpublishing flows
+- Billing, upgrades, downgrades, cancellation
+- Data deletion and workspace removal
+- Permissions, invites, role changes
+- Import/export and migration flows
+- Error states (auth, payments, integrations, rate limits)
+
 ## Litmus Test
 
 For every interaction ask:
@@ -79,12 +116,20 @@ When reviewing, structure feedback as:
 ### Issues Found
 1. [Issue]: [Why it violates principle] → [Recommendation]
 
+### Emotional Safety Assessment
+- User control: [findings]
+- Error handling: [findings]
+- Transparency: [findings]
+- Private by default: [findings]
+
 ### Recommendations
 - [Specific actionable improvements]
 ```
 
-## Guiding Principle
+## Guiding Principles
 
 > Good UX is not clever. It's calm.
 
-If users feel confident, oriented, and unafraid — the system is working.
+> Would a careful, slightly anxious user feel safe doing this?
+
+If the answer is not a clear yes, the design needs adjustment.
