@@ -17,6 +17,7 @@ import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import {
   guideAssetsDraftQueryOptions,
+  guideAssetsPublishedQueryOptions,
   guideDetailQueryOptions,
   guideLocaleDraftQueryOptions,
   guideLocalePublishedQueryOptions,
@@ -114,6 +115,22 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
 
   // Transform to AssetWithRole format
   const guideAssets: AssetWithRole[] = guideAssetsRaw.map((item) => ({
+    ...item.asset,
+    role: item.channel === 'images.hero' ? 'cover' : item.channel,
+    order: item.position,
+    locale: item.locale,
+  }))
+
+  // Published guide assets
+  const guideAssetsPublishedQuery = useQuery({
+    ...guideAssetsPublishedQueryOptions(nanoId),
+    enabled: !!nanoId,
+  })
+  const guideAssetsPublishedRaw = guideAssetsPublishedQuery.data?.assets ?? []
+  const isLoadingGuideAssetsPublished = guideAssetsPublishedQuery.isLoading
+
+  // Transform published assets to AssetWithRole format
+  const guideAssetsPublished: AssetWithRole[] = guideAssetsPublishedRaw.map((item) => ({
     ...item.asset,
     role: item.channel === 'images.hero' ? 'cover' : item.channel,
     order: item.position,
@@ -362,6 +379,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     reorderStops,
     guideAssets,
     isLoadingGuideAssets,
+    guideAssetsPublished,
+    isLoadingGuideAssetsPublished,
     setGuideCover,
     isDirty,
     registerFormDirty,

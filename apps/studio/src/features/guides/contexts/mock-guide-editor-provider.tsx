@@ -59,6 +59,8 @@ export function MockGuideEditorProvider({
     },
     guideAssets,
     isLoadingGuideAssets: false,
+    guideAssetsPublished: [],
+    isLoadingGuideAssetsPublished: false,
     setGuideCover: async (asset: Asset | null) => {
       console.log('Mock: setGuideCover', asset?.id)
       if (asset) {

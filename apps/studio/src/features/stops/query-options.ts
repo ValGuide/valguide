@@ -3,6 +3,10 @@ import {
   type GetStopAssetsDraftResult,
   getStopAssetsDraftFn,
 } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
+import {
+  type GetStopAssetsPublishedResult,
+  getStopAssetsPublishedFn,
+} from '@valguide/core/features/guides/stop/asset/get-stop-assets-published.fn'
 import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
 import {
@@ -61,7 +65,18 @@ export const stopLocalePublishedQueryOptions = (nanoId: string, locale: string) 
  */
 export const stopAssetsDraftQueryOptions = (nanoId: string) =>
   queryOptions<GetStopAssetsDraftResult>({
-    queryKey: ['stop', nanoId, 'assets'],
+    queryKey: ['stop', nanoId, 'assets', 'draft'],
     queryFn: () => getStopAssetsDraftFn({ data: { nanoId } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for stop assets published (all channels)
+ * Returns empty array if stop has never been published
+ */
+export const stopAssetsPublishedQueryOptions = (nanoId: string) =>
+  queryOptions<GetStopAssetsPublishedResult>({
+    queryKey: ['stop', nanoId, 'assets', 'published'],
+    queryFn: () => getStopAssetsPublishedFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
   })

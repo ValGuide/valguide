@@ -45,6 +45,7 @@ export interface StopEditLayoutProps {
   guideNanoId: string
   stopTranslation: StopTranslationData | null
   stopAssets: AssetWithRole[]
+  stopAssetsPublished: AssetWithRole[]
   activeLocale: string
   isDirty: boolean
   isSaving: boolean
@@ -71,6 +72,7 @@ export function StopEditLayout({
   guideNanoId,
   stopTranslation,
   stopAssets,
+  stopAssetsPublished,
   activeLocale,
   isDirty,
   isSaving,
@@ -151,8 +153,11 @@ export function StopEditLayout({
   // Convert null to undefined for component prop types
   const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
 
-  const stopImages = stopAssets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
-  const stopAudio = stopAssets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
+  // Use draft assets for editing, published assets for viewing
+  const displayAssets = isReadOnly ? stopAssetsPublished : stopAssets
+
+  const stopImages = displayAssets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
+  const stopAudio = displayAssets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
 
   useAutoSave(onSave, isDirty)
 

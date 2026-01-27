@@ -55,6 +55,7 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
     isSaving,
     lastSaved,
     guideAssets,
+    guideAssetsPublished,
     setGuideCover,
     addStop,
     removeStop,
@@ -199,9 +200,12 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
     await refetch()
   }, [stopToShow, nanoId, onShowStop, refetch])
 
+  // Use draft assets for editing, published assets for viewing
+  const displayAssets = isReadOnly ? guideAssetsPublished : guideAssets
+
   const coverAsset = useMemo(() => {
-    return guideAssets.find((a) => a.role === 'cover') ?? null
-  }, [guideAssets])
+    return displayAssets.find((a) => a.role === 'cover') ?? null
+  }, [displayAssets])
 
   const handleCoverImageChange = useCallback(
     (value: Asset | Asset[] | null) => {

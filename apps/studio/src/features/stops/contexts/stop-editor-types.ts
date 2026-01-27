@@ -38,6 +38,8 @@ export interface StopEditorContextValue {
   // Asset state (from React Query cache)
   assets: AssetWithRole[]
   isLoadingAssets: boolean
+  assetsPublished: AssetWithRole[]
+  isLoadingAssetsPublished: boolean
 
   // Asset operations (immediate server calls)
   updateAssets: (assets: AssetWithRole[]) => Promise<void>

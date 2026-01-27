@@ -39,6 +39,8 @@ export interface GuideEditorContextValue {
   // Guide asset state (from React Query cache)
   guideAssets: AssetWithRole[]
   isLoadingGuideAssets: boolean
+  guideAssetsPublished: AssetWithRole[]
+  isLoadingGuideAssetsPublished: boolean
 
   // Guide asset operations (immediate server calls)
   setGuideCover: (asset: Asset | null) => Promise<void>

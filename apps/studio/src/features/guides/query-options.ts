@@ -1,6 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
 import type { GetGuideAssetsDraftResult } from '@valguide/core/features/guides/guide/asset/get-guide-assets-draft.fn'
 import { getGuideAssetsDraftFn } from '@valguide/core/features/guides/guide/asset/get-guide-assets-draft.fn'
+import type { GetGuideAssetsPublishedResult } from '@valguide/core/features/guides/guide/asset/get-guide-assets-published.fn'
+import { getGuideAssetsPublishedFn } from '@valguide/core/features/guides/guide/asset/get-guide-assets-published.fn'
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import { getGuideDetailFn } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
@@ -87,7 +89,18 @@ export const guideStructureDraftQueryOptions = (nanoId: string, locale: string) 
  */
 export const guideAssetsDraftQueryOptions = (nanoId: string) =>
   queryOptions<GetGuideAssetsDraftResult>({
-    queryKey: ['guide', nanoId, 'assets'],
+    queryKey: ['guide', nanoId, 'assets', 'draft'],
     queryFn: () => getGuideAssetsDraftFn({ data: { nanoId } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for guide assets published (all channels)
+ * Returns empty array if guide has never been published
+ */
+export const guideAssetsPublishedQueryOptions = (nanoId: string) =>
+  queryOptions<GetGuideAssetsPublishedResult>({
+    queryKey: ['guide', nanoId, 'assets', 'published'],
+    queryFn: () => getGuideAssetsPublishedFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
   })

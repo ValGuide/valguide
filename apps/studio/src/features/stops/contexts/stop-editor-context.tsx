@@ -14,6 +14,7 @@ import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import {
   stopAssetsDraftQueryOptions,
+  stopAssetsPublishedQueryOptions,
   stopDetailQueryOptions,
   stopLocaleDraftQueryOptions,
   stopLocalePublishedQueryOptions,
@@ -108,6 +109,22 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
 
   // Transform to AssetWithRole format
   const assets: AssetWithRole[] = assetsRaw.map((item) => ({
+    ...item.asset,
+    role: item.channel.startsWith('audio.') ? 'audio' : item.channel === 'images.gallery' ? 'gallery' : item.channel,
+    order: item.position,
+    locale: item.locale,
+  }))
+
+  // Published stop assets
+  const assetsPublishedQuery = useQuery({
+    ...stopAssetsPublishedQueryOptions(nanoId),
+    enabled: !!nanoId,
+  })
+  const assetsPublishedRaw = assetsPublishedQuery.data?.assets ?? []
+  const isLoadingAssetsPublished = assetsPublishedQuery.isLoading
+
+  // Transform published assets to AssetWithRole format
+  const assetsPublished: AssetWithRole[] = assetsPublishedRaw.map((item) => ({
     ...item.asset,
     role: item.channel.startsWith('audio.') ? 'audio' : item.channel === 'images.gallery' ? 'gallery' : item.channel,
     order: item.position,
@@ -372,6 +389,8 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     isLoadingLocalePublished,
     assets,
     isLoadingAssets,
+    assetsPublished,
+    isLoadingAssetsPublished,
     updateAssets,
     addAsset,
     removeAsset,

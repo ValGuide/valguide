@@ -29,6 +29,7 @@ export function StopEditPage({ guideNanoId }: StopEditPageProps) {
     isSaving,
     lastSaved,
     assets,
+    assetsPublished,
     setActiveLocale,
     save,
     refetch,
@@ -162,6 +163,7 @@ export function StopEditPage({ guideNanoId }: StopEditPageProps) {
         guideNanoId={guideNanoId ?? ''}
         stopTranslation={stopTranslation}
         stopAssets={assets}
+        stopAssetsPublished={assetsPublished}
         activeLocale={activeLocale}
         isDirty={isDirty}
         isSaving={isSaving}
