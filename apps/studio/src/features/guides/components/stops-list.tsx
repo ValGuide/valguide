@@ -17,16 +17,6 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@valguide/ui/components/alert-dialog'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import {
@@ -49,6 +39,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus, Unlink } from 'lucide-react'
 import * as React from 'react'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
+import { RemoveStopDialog } from './remove-stop-dialog'
 
 export type StopsListProps = {
   onReorder: (stopNanoIds: string[]) => void
@@ -190,29 +181,6 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
 
   const stopToRemoveTitle = stopToRemove?.title?.trim() || t('untitled')
 
-  const removeConfirmationDialog = (
-    <AlertDialog open={!!stopToRemove} onOpenChange={(open) => !open && setStopToRemove(null)}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('stopActions.removeStop')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('stopActions.removeDescription')}
-            <span className="mt-2 block font-medium text-foreground">{stopToRemoveTitle}</span>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleConfirmRemove}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {t('stopActions.removeConfirm')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  )
-
   if (stops.length === 0) {
     return (
       <Empty className="border">
@@ -259,7 +227,12 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
           <Plus />
           {t('add')}
         </Button>
-        {removeConfirmationDialog}
+        <RemoveStopDialog
+          open={!!stopToRemove}
+          onOpenChange={(open) => !open && setStopToRemove(null)}
+          stopTitle={stopToRemoveTitle}
+          onConfirm={handleConfirmRemove}
+        />
       </div>
     )
   }
@@ -287,7 +260,12 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
         <Plus />
         {t('add')}
       </Button>
-      {removeConfirmationDialog}
+      <RemoveStopDialog
+        open={!!stopToRemove}
+        onOpenChange={(open) => !open && setStopToRemove(null)}
+        stopTitle={stopToRemoveTitle}
+        onConfirm={handleConfirmRemove}
+      />
     </div>
   )
 }

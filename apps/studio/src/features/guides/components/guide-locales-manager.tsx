@@ -1,14 +1,4 @@
 import { useTranslations } from '@valguide/core/i18n/client'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@valguide/ui/components/alert-dialog'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -23,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components
 import { Check, Plus, X } from 'lucide-react'
 import { useState } from 'react'
 import { getLocaleDisplayName } from './locale-selector'
+import { RemoveLocaleDialog } from './remove-locale-dialog'
 
 // TODO: unify with supportedLocales
 const AVAILABLE_LANGUAGES = [
@@ -225,24 +216,13 @@ export function GuideLocalesManager({
         </PopoverContent>
       </Popover>
 
-      <AlertDialog open={!!localeToRemove} onOpenChange={(open) => !open && setLocaleToRemove(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmRemoveTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('confirmRemoveDescription', {
-                language: localeToRemove ? getLocaleDisplayName(localeToRemove) : '',
-              })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isLoading}>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmRemove} disabled={isLoading}>
-              {t('confirmRemove')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RemoveLocaleDialog
+        open={!!localeToRemove}
+        onOpenChange={(open) => !open && setLocaleToRemove(null)}
+        localeName={localeToRemove ? getLocaleDisplayName(localeToRemove) : ''}
+        isLoading={isLoading}
+        onConfirm={handleConfirmRemove}
+      />
     </div>
   )
 }

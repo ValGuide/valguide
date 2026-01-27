@@ -1,23 +1,12 @@
 import { useBlocker } from '@tanstack/react-router'
-import { useTranslations } from '@valguide/core/i18n/client'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@valguide/ui/components/alert-dialog'
 import { useCallback, useState } from 'react'
+import { UnsavedChangesDialog } from './unsaved-changes-dialog'
 
 interface UseUnsavedChangesGuardOptions {
   isDirty: boolean
 }
 
 export function useUnsavedChangesGuard({ isDirty }: UseUnsavedChangesGuardOptions) {
-  const t = useTranslations('guides.unsavedChanges')
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null)
   const [manualDialogOpen, setManualDialogOpen] = useState(false)
 
@@ -46,41 +35,25 @@ export function useUnsavedChangesGuard({ isDirty }: UseUnsavedChangesGuardOption
   const dialog = (
     <>
       {/* Router-level navigation blocking dialog */}
-      <AlertDialog open={isBlocked} onOpenChange={(open) => !open && reset?.()}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('title')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('description')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => reset?.()}>{t('stay')}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => proceed?.()}>{t('leave')}</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <UnsavedChangesDialog
+        open={isBlocked}
+        onOpenChange={(open) => !open && reset?.()}
+        onStay={() => reset?.()}
+        onLeave={() => proceed?.()}
+      />
 
       {/* Manual confirmation dialog (for programmatic navigation via confirmIfDirty) */}
-      <AlertDialog open={manualDialogOpen} onOpenChange={setManualDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('title')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('description')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('stay')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                const action = pendingAction
-                setManualDialogOpen(false)
-                setPendingAction(null)
-                action?.()
-              }}
-            >
-              {t('leave')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <UnsavedChangesDialog
+        open={manualDialogOpen}
+        onOpenChange={setManualDialogOpen}
+        onStay={() => setManualDialogOpen(false)}
+        onLeave={() => {
+          const action = pendingAction
+          setManualDialogOpen(false)
+          setPendingAction(null)
+          action?.()
+        }}
+      />
     </>
   )
 

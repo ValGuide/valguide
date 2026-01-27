@@ -1,14 +1,4 @@
 import { useTranslations } from '@valguide/core/i18n/client'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@valguide/ui/components/alert-dialog'
 import { Button } from '@valguide/ui/components/button'
 import {
   Command,
@@ -30,6 +20,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { Check, ChevronDown, Globe, MoreHorizontal, Plus, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { LocaleStatusMap, TranslationLocaleStatus } from '../utils/translation-status'
+import { RemoveLocaleDialogUnified } from './remove-locale-dialog-unified'
 
 export type { LocaleStatusMap, TranslationLocaleStatus }
 
@@ -408,28 +399,13 @@ export function UnifiedLocaleSelector({
         </PopoverContent>
       </Popover>
 
-      <AlertDialog open={!!localeToRemove} onOpenChange={(open) => !open && setLocaleToRemove(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{tManager('confirmRemoveTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {tManager('confirmRemoveDescription', {
-                language: localeToRemove ? getLocaleDisplayName(localeToRemove) : '',
-              })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isLoading}>{tManager('cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirmRemove}
-              disabled={isLoading}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {tManager('confirmRemove')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RemoveLocaleDialogUnified
+        open={!!localeToRemove}
+        onOpenChange={(open) => !open && setLocaleToRemove(null)}
+        localeName={localeToRemove ? getLocaleDisplayName(localeToRemove) : ''}
+        isLoading={isLoading}
+        onConfirm={handleConfirmRemove}
+      />
     </>
   )
 }

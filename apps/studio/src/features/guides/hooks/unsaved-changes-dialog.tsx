@@ -10,26 +10,15 @@ import {
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
 
-interface PublishConfirmationDialogProps {
+interface UnsavedChangesDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  isPublishing?: boolean
-  onConfirm: () => void
+  onStay: () => void
+  onLeave: () => void
 }
 
-export function PublishConfirmationDialog({
-  open,
-  onOpenChange,
-  isPublishing,
-  onConfirm,
-}: PublishConfirmationDialogProps) {
-  const t = useTranslations('guides.confirmPublish')
-  const tActions = useTranslations('guides.actions')
-
-  const handleConfirm = () => {
-    onConfirm()
-    onOpenChange(false)
-  }
+export function UnsavedChangesDialog({ open, onOpenChange, onStay, onLeave }: UnsavedChangesDialogProps) {
+  const t = useTranslations('guides.unsavedChanges')
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -39,10 +28,8 @@ export function PublishConfirmationDialog({
           <AlertDialogDescription>{t('description')}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPublishing}>{t('cancel')}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm} disabled={isPublishing}>
-            {isPublishing ? tActions('publishing') : t('confirm')}
-          </AlertDialogAction>
+          <AlertDialogCancel onClick={onStay}>{t('stay')}</AlertDialogCancel>
+          <AlertDialogAction onClick={onLeave}>{t('leave')}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

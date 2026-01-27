@@ -1,25 +1,13 @@
-import { useQueryClient } from '@tanstack/react-query'
 import type { ArchivedGuideListItem } from '@valguide/core/features/guides/guide/list-archived-guides.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { toast } from '@valguide/core/ui/components/sonner/state'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@valguide/ui/components/alert-dialog'
-import { Input } from '@valguide/ui/components/input'
-import { Label } from '@valguide/ui/components/label'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { ListError } from '@/components/list-error'
 import { ListPageHeader } from '@/components/list-page-header'
 import { ArchivedGuidesListContent } from './archived-guides-list-content'
 import { ArchivedGuidesListEmpty } from './archived-guides-list-empty'
 import { ArchivedGuidesListLoading } from './archived-guides-list-loading'
+import { DeleteGuideDialog } from './delete-guide-dialog'
+import { RecoverGuideDialog } from './recover-guide-dialog'
 
 export interface ArchivedGuidesListProps {
   guides?: ArchivedGuideListItem[]
@@ -45,16 +33,9 @@ export function ArchivedGuidesList({
   onDelete,
 }: ArchivedGuidesListProps) {
   const t = useTranslations('guides')
-  const tCommon = useTranslations('common')
-  const queryClient = useQueryClient()
   const [dialogState, setDialogState] = useState<DialogState>({ type: null, guideId: null, guideName: null })
   const [isActionLoading, setIsActionLoading] = useState(false)
   const [confirmationInput, setConfirmationInput] = useState('')
-
-  const confirmationPhrase = t('deleteConfirmPhrase')
-  const isConfirmationValid = useMemo(() => {
-    return confirmationInput.trim().toLowerCase() === confirmationPhrase.trim().toLowerCase()
-  }, [confirmationInput, confirmationPhrase])
 
   const handleDialogClose = () => {
     setDialogState({ type: null, guideId: null, guideName: null })
@@ -63,42 +44,23 @@ export function ArchivedGuidesList({
 
   const handleRecover = async () => {
     if (!dialogState.guideId || !onRecover) return
-
     setIsActionLoading(true)
     try {
       await onRecover(dialogState.guideId)
-      toast.success(t('recover.success'), {
-        description: t('recover.successDescription'),
-      })
-      await queryClient.invalidateQueries({ queryKey: ['guides'] })
-      await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
-    } catch (_error) {
-      toast.error(t('recover.error'), {
-        description: t('recover.errorDescription'),
-      })
+      handleDialogClose()
     } finally {
       setIsActionLoading(false)
-      handleDialogClose()
     }
   }
 
   const handleDelete = async () => {
-    if (!dialogState.guideId || !isConfirmationValid || !onDelete) return
-
+    if (!dialogState.guideId || !onDelete) return
     setIsActionLoading(true)
     try {
       await onDelete(dialogState.guideId)
-      toast.success(t('delete.success'), {
-        description: t('delete.successDescription'),
-      })
-      await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
-    } catch (_error) {
-      toast.error(t('delete.error'), {
-        description: t('delete.errorDescription'),
-      })
+      handleDialogClose()
     } finally {
       setIsActionLoading(false)
-      handleDialogClose()
     }
   }
 
@@ -139,52 +101,22 @@ export function ArchivedGuidesList({
 
       {renderContent()}
 
-      <AlertDialog open={dialogState.type === 'recover'} onOpenChange={handleDialogClose}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('recoverConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('recoverConfirmDescription')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isActionLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRecover} disabled={isActionLoading}>
-              {isActionLoading ? tCommon('loading') : t('recoverGuide')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RecoverGuideDialog
+        open={dialogState.type === 'recover'}
+        onOpenChange={() => handleDialogClose()}
+        isLoading={isActionLoading}
+        onConfirm={handleRecover}
+      />
 
-      <AlertDialog open={dialogState.type === 'delete'} onOpenChange={handleDialogClose}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('deleteConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('deleteConfirmDescriptionWithName', { name: dialogState.guideName ?? '' })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="delete-confirmation">{t('deleteConfirmInstruction', { phrase: confirmationPhrase })}</Label>
-            <Input
-              id="delete-confirmation"
-              value={confirmationInput}
-              onChange={(e) => setConfirmationInput(e.target.value)}
-              placeholder={confirmationPhrase}
-              disabled={isActionLoading}
-              autoComplete="off"
-            />
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isActionLoading}>{t('archive.cancelButton')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isActionLoading || !isConfirmationValid}
-              variant="destructive"
-            >
-              {isActionLoading ? tCommon('loading') : t('permanentlyDelete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteGuideDialog
+        open={dialogState.type === 'delete'}
+        onOpenChange={() => handleDialogClose()}
+        guideName={dialogState.guideName}
+        confirmationInput={confirmationInput}
+        onConfirmationInputChange={setConfirmationInput}
+        isLoading={isActionLoading}
+        onConfirm={handleDelete}
+      />
     </div>
   )
 }
