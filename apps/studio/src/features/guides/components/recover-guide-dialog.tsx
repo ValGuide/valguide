@@ -30,8 +30,10 @@ export function RecoverGuideDialog({ open, onOpenChange, isLoading, onConfirm }:
       toast.success(t('recover.success'), {
         description: t('recover.successDescription'),
       })
-      await queryClient.invalidateQueries({ queryKey: ['guides'] })
-      await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['guides'] }),
+        queryClient.invalidateQueries({ queryKey: ['archived-guides'] }),
+      ])
       onOpenChange(false)
     } catch (_error) {
       toast.error(t('recover.error'), {

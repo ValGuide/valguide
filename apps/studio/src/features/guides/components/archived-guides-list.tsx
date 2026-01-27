@@ -47,7 +47,7 @@ export function ArchivedGuidesList({
     setIsActionLoading(true)
     try {
       await onRecover(dialogState.guideId)
-      handleDialogClose()
+      // Dialog closes itself via onOpenChange after invalidation completes
     } finally {
       setIsActionLoading(false)
     }
@@ -58,7 +58,7 @@ export function ArchivedGuidesList({
     setIsActionLoading(true)
     try {
       await onDelete(dialogState.guideId)
-      handleDialogClose()
+      // Dialog closes itself via onOpenChange after invalidation completes
     } finally {
       setIsActionLoading(false)
     }
