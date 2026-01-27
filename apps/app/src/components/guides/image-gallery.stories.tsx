@@ -29,8 +29,8 @@ const mockImages = [
     uploadedBy: 'user1',
     createdAt: new Date(),
     updatedAt: new Date(),
-    role: 'gallery',
-    order: 0,
+    channel: 'images.gallery',
+    position: 0,
   },
   {
     id: '2',
@@ -49,8 +49,8 @@ const mockImages = [
     uploadedBy: 'user1',
     createdAt: new Date(),
     updatedAt: new Date(),
-    role: 'gallery',
-    order: 1,
+    channel: 'images.gallery',
+    position: 1,
   },
   {
     id: '3',
@@ -69,8 +69,8 @@ const mockImages = [
     uploadedBy: 'user1',
     createdAt: new Date(),
     updatedAt: new Date(),
-    role: 'gallery',
-    order: 2,
+    channel: 'images.gallery',
+    position: 2,
   },
 ]
 

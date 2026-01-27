@@ -10,22 +10,6 @@ import { stop, stopAsset, stopLocale, stopLocaleVersion } from '../schema'
 import type { StopWithAssets } from './types'
 
 // ============================================================================
-// Internal Helpers
-// ============================================================================
-
-/**
- * Map channel names to legacy role names for backward compatibility.
- */
-function mapChannelToRole(channel: string): string {
-  if (channel === 'images.hero') return 'cover'
-  if (channel === 'images.gallery') return 'gallery'
-  if (channel === 'images.thumbnail') return 'thumbnail'
-  if (channel.startsWith('audio.')) return 'audio'
-  if (channel.startsWith('video.')) return 'video'
-  return channel
-}
-
-// ============================================================================
 // Query Function
 // ============================================================================
 
@@ -88,8 +72,8 @@ export async function getPublishedStopByNanoId(nanoId: string): Promise<StopWith
     })),
     assets: stopAssetsData.map((item) => ({
       ...item.asset,
-      role: mapChannelToRole(item.channel),
-      order: item.position,
+      channel: item.channel,
+      position: item.position,
       locale: item.locale,
     })),
   }

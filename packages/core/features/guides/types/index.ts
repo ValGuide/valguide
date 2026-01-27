@@ -7,7 +7,6 @@
  */
 
 import { z } from 'zod'
-import type { Asset } from '../../assets/types'
 
 // ============================================================================
 // Base Entity Types (Storybook-safe, mirror Drizzle-inferred types)
@@ -144,25 +143,20 @@ export type GuideWithStops = GuideEntity & {
 // Asset-Related Types
 // ============================================================================
 
-export type AssetWithRole = Asset & {
-  guideAssetId?: string
-  stopAssetId?: string
-  role: string
-  order: number
-  locale?: string | null
-}
+/** Re-export AssetItem from public types for consistency */
+export type { AssetItem } from '../public/types'
 
 export type StopWithAssets = StopWithTranslations & {
-  assets: AssetWithRole[]
+  assets: import('../public/types').AssetItem[]
 }
 
 export type GuideWithStopsAndAssets = Omit<GuideWithStops, 'stops'> & {
-  assets: AssetWithRole[]
+  assets: import('../public/types').AssetItem[]
   stops: StopWithAssets[]
 }
 
 export type GuideWithTranslationsAndCover = GuideWithTranslations & {
-  coverImage?: AssetWithRole | null
+  coverImage?: import('../public/types').AssetItem | null
 }
 
 // ============================================================================
@@ -238,7 +232,7 @@ export type StopMetadata = {
   position: number
   visible: boolean
   archivedAt: Date | null
-  assets: AssetWithRole[]
+  assets: import('../public/types').AssetItem[]
   translationStatuses: TranslationStatus[]
   // Asset versioning pointers
   currentAssetVersionId: string | null
@@ -254,7 +248,7 @@ export type GuideMetadata = {
   published: Date | null
   createdAt: Date
   updatedAt: Date
-  assets: AssetWithRole[]
+  assets: import('../public/types').AssetItem[]
   stops: StopMetadata[]
   // Guide translation statuses for all locales (just version IDs, no content)
   translationStatuses: TranslationStatus[]
@@ -316,7 +310,7 @@ export type GuideViewData = {
   published: Date | null
   createdAt: Date
   updatedAt: Date
-  assets: AssetWithRole[]
+  assets: import('../public/types').AssetItem[]
   translations: GuideTranslationData[]
 }
 
@@ -408,7 +402,7 @@ export type IndependentStopMetadata = {
   availableLocales: string[]
   createdAt: Date
   updatedAt: Date
-  assets: AssetWithRole[]
+  assets: import('../public/types').AssetItem[]
   translationStatuses: TranslationStatus[]
   /** Asset versioning pointers */
   currentAssetVersionId: string | null
@@ -472,5 +466,5 @@ export type StopDetailItem = {
   /** Guides this stop belongs to */
   guideAssociations: StopGuideAssociation[]
   /** Assets for this stop */
-  assets: AssetWithRole[]
+  assets: import('../public/types').AssetItem[]
 }

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { assignStopAssetFn } from '@valguide/core/features/guides/stop/asset/assign-stop-asset.fn'
+import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
 import { removeStopAssetFn } from '@valguide/core/features/guides/stop/asset/remove-stop-asset.fn'
 import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
@@ -9,7 +10,6 @@ import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/
 import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale.fn'
 import { updateStopLocaleDraftFn } from '@valguide/core/features/guides/stop/locale/update-stop-locale-draft.fn'
 import { updateStopFn } from '@valguide/core/features/guides/stop/update-stop.fn'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -75,32 +75,16 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     ...stopAssetsDraftQueryOptions(nanoId),
     enabled: !!nanoId,
   })
-  const assetsRaw = assetsQuery.data?.assets ?? []
+  const assets = assetsQuery.data?.assets ?? []
   const isLoadingAssets = assetsQuery.isLoading
-
-  // Transform to AssetWithRole format
-  const assets: AssetWithRole[] = assetsRaw.map((item) => ({
-    ...item.asset,
-    role: item.channel.startsWith('audio.') ? 'audio' : item.channel === 'images.gallery' ? 'gallery' : item.channel,
-    order: item.position,
-    locale: item.locale,
-  }))
 
   // Published stop assets
   const assetsPublishedQuery = useQuery({
     ...stopAssetsPublishedQueryOptions(nanoId),
     enabled: !!nanoId,
   })
-  const assetsPublishedRaw = assetsPublishedQuery.data?.assets ?? []
+  const assetsPublished = assetsPublishedQuery.data?.assets ?? []
   const isLoadingAssetsPublished = assetsPublishedQuery.isLoading
-
-  // Transform published assets to AssetWithRole format
-  const assetsPublished: AssetWithRole[] = assetsPublishedRaw.map((item) => ({
-    ...item.asset,
-    role: item.channel.startsWith('audio.') ? 'audio' : item.channel === 'images.gallery' ? 'gallery' : item.channel,
-    order: item.position,
-    locale: item.locale,
-  }))
 
   // Update available locales
   const updateAvailableLocales = useCallback(
@@ -125,25 +109,23 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
 
   // Asset operations (immediate server calls)
   const updateAssets = useCallback(
-    async (newAssets: AssetWithRole[]) => {
+    async (newAssets: StopAssetDraftItem[]) => {
       if (!nanoId) return
 
       try {
         for (const current of assets) {
-          if (!newAssets.find((a) => a.id === current.id)) {
-            const channel = current.role === 'audio' ? 'audio.narration' : 'images.gallery'
+          if (!newAssets.find((a) => a.asset.id === current.asset.id)) {
             await removeStopAssetFn({
-              data: { nanoId, assetId: current.id, channel, locale: current.locale },
+              data: { nanoId, assetId: current.asset.id, channel: current.channel, locale: current.locale },
             })
           }
         }
 
         for (let i = 0; i < newAssets.length; i++) {
-          const asset = newAssets[i]
-          if (!assets.find((c) => c.id === asset.id)) {
-            const channel = asset.role === 'audio' ? 'audio.narration' : 'images.gallery'
+          const item = newAssets[i]
+          if (!assets.find((c) => c.asset.id === item.asset.id)) {
             await assignStopAssetFn({
-              data: { nanoId, assetId: asset.id, channel, locale: asset.locale, position: i },
+              data: { nanoId, assetId: item.asset.id, channel: item.channel, locale: item.locale, position: i },
             })
           }
         }
@@ -158,11 +140,10 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
   )
 
   const addAsset = useCallback(
-    async (asset: Asset, role: string, locale: string | null) => {
+    async (asset: Asset, channel: string, locale: string | null) => {
       if (!nanoId) return
 
       try {
-        const channel = role === 'audio' ? 'audio.narration' : 'images.gallery'
         await assignStopAssetFn({
           data: { nanoId, assetId: asset.id, channel, locale, position: assets.length },
         })
@@ -180,10 +161,9 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
       if (!nanoId) return
 
       try {
-        const asset = assets.find((a) => a.id === assetId)
-        const channel = asset?.role === 'audio' ? 'audio.narration' : 'images.gallery'
+        const item = assets.find((a) => a.asset.id === assetId)
         await removeStopAssetFn({
-          data: { nanoId, assetId, channel, locale: asset?.locale ?? null },
+          data: { nanoId, assetId, channel: item?.channel ?? 'images.gallery', locale: item?.locale ?? null },
         })
         await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'assets'] })
       } catch (error) {

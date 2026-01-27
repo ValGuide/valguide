@@ -1,8 +1,8 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
+import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
 import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
 import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { type ReactNode, useState } from 'react'
 import { StopEditorContext, type StopEditorContextValue, type StopEditorNavigation } from './stop-editor-types'
 
@@ -11,7 +11,7 @@ export interface MockStopEditorProviderProps {
   stopDetail: StopDetail
   localeDraft?: StopLocaleDraftResult | null
   localePublished?: StopLocalePublishedResult | null
-  assets?: AssetWithRole[]
+  assets?: StopAssetDraftItem[]
   navigation?: StopEditorNavigation
 }
 
@@ -25,7 +25,7 @@ export function MockStopEditorProvider({
 }: MockStopEditorProviderProps) {
   const [activeLocale, setActiveLocale] = useState<string>(stopDetail.availableLocales[0] ?? 'en')
   const [isDirty, setIsDirty] = useState(false)
-  const [assets, setAssets] = useState<AssetWithRole[]>(initialAssets)
+  const [assets, setAssets] = useState<StopAssetDraftItem[]>(initialAssets)
 
   const value: StopEditorContextValue = {
     nanoId: stopDetail.nanoId,
@@ -46,19 +46,22 @@ export function MockStopEditorProvider({
     isLoadingAssets: false,
     assetsPublished: [],
     isLoadingAssetsPublished: false,
-    updateAssets: async (newAssets: AssetWithRole[]) => {
+    updateAssets: async (newAssets: StopAssetDraftItem[]) => {
       console.log('Mock: updateAssets', newAssets.length)
       setAssets(newAssets)
       setIsDirty(true)
     },
-    addAsset: async (asset: Asset, role: string, locale: string | null) => {
-      console.log('Mock: addAsset', asset.id, role, locale)
-      setAssets((prev) => [...prev, { ...asset, role, order: prev.length, locale } as AssetWithRole])
+    addAsset: async (asset: Asset, channel: string, locale: string | null) => {
+      console.log('Mock: addAsset', asset.id, channel, locale)
+      setAssets((prev) => [
+        ...prev,
+        { id: `mock-${asset.id}`, asset, channel, position: prev.length, locale, createdAt: new Date() },
+      ])
       setIsDirty(true)
     },
     removeAsset: async (assetId: string) => {
       console.log('Mock: removeAsset', assetId)
-      setAssets((prev) => prev.filter((a) => a.id !== assetId))
+      setAssets((prev) => prev.filter((a) => a.asset.id !== assetId))
       setIsDirty(true)
     },
     isDirty,

@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import { RichTextDisplay } from '@valguide/core/features/guides/components/rich-text-display'
-import type { AssetWithRole } from '@valguide/core/features/guides/public/types'
+import type { AssetItem } from '@valguide/core/features/guides/public/types'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { ImageGallery } from './image-gallery'
 
@@ -8,11 +8,11 @@ type GuideHeroProps = {
   title: string
   description: string | null
   coverImage: string | null
-  assets: AssetWithRole[]
+  assets: AssetItem[]
 }
 
 export function GuideHero({ title, description, coverImage, assets }: GuideHeroProps) {
-  const galleryImages = assets.filter((a) => a.role === 'gallery' && a.type === 'image')
+  const galleryImages = assets.filter((a) => a.channel === 'images.gallery' && a.type === 'image')
 
   return (
     <div className="space-y-6">

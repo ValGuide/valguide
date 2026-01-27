@@ -156,7 +156,9 @@ export function GuideEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, 
   }, [stopToShow, nanoId, onShowStop, refetch])
 
   const displayAssets = isReadOnly ? guideAssetsPublished : guideAssets
-  const coverAsset = useMemo(() => displayAssets.find((a) => a.role === 'cover') ?? null, [displayAssets])
+  const coverAssetItem = useMemo(() => displayAssets.find((a) => a.channel === 'images.hero') ?? null, [displayAssets])
+  // Extract asset for MediaPicker (which expects Asset, not *Item)
+  const coverAsset = coverAssetItem?.asset ?? null
 
   const handleCoverImageChange = useCallback(
     (value: Asset | Asset[] | null) => {

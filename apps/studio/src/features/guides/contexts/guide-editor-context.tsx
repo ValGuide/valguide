@@ -12,7 +12,6 @@ import { createStopFn } from '@valguide/core/features/guides/stop/create-stop.fn
 import { addStopToGuideFn } from '@valguide/core/features/guides/structure/add-stop.fn'
 import { removeStopFromGuideFn } from '@valguide/core/features/guides/structure/remove-stop.fn'
 import { reorderStopsFn } from '@valguide/core/features/guides/structure/reorder-stops.fn'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -85,32 +84,16 @@ export function GuideEditorProvider({ children, nanoId, initialLocale, navigatio
     ...guideAssetsDraftQueryOptions(nanoId),
     enabled: !!nanoId,
   })
-  const guideAssetsRaw = guideAssetsQuery.data?.assets ?? []
+  const guideAssets = guideAssetsQuery.data?.assets ?? []
   const isLoadingGuideAssets = guideAssetsQuery.isLoading
-
-  // Transform to AssetWithRole format
-  const guideAssets: AssetWithRole[] = guideAssetsRaw.map((item) => ({
-    ...item.asset,
-    role: item.channel === 'images.hero' ? 'cover' : item.channel,
-    order: item.position,
-    locale: item.locale,
-  }))
 
   // Published guide assets
   const guideAssetsPublishedQuery = useQuery({
     ...guideAssetsPublishedQueryOptions(nanoId),
     enabled: !!nanoId,
   })
-  const guideAssetsPublishedRaw = guideAssetsPublishedQuery.data?.assets ?? []
+  const guideAssetsPublished = guideAssetsPublishedQuery.data?.assets ?? []
   const isLoadingGuideAssetsPublished = guideAssetsPublishedQuery.isLoading
-
-  // Transform published assets to AssetWithRole format
-  const guideAssetsPublished: AssetWithRole[] = guideAssetsPublishedRaw.map((item) => ({
-    ...item.asset,
-    role: item.channel === 'images.hero' ? 'cover' : item.channel,
-    order: item.position,
-    locale: item.locale,
-  }))
 
   // Update available locales
   const updateAvailableLocales = useCallback(
@@ -186,10 +169,10 @@ export function GuideEditorProvider({ children, nanoId, initialLocale, navigatio
       if (!nanoId) return
 
       try {
-        const existingCovers = guideAssets.filter((a) => a.role === 'cover')
+        const existingCovers = guideAssets.filter((a) => a.channel === 'images.hero')
         for (const cover of existingCovers) {
           await removeGuideAssetFn({
-            data: { nanoId, assetId: cover.id, channel: 'images.hero', locale: null },
+            data: { nanoId, assetId: cover.asset.id, channel: 'images.hero', locale: null },
           })
         }
 

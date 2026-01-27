@@ -1,8 +1,9 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
+import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
+import type { StopAssetPublishedItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-published.fn'
 import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
 import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 
 // Re-export types for consumers
@@ -36,14 +37,14 @@ export interface StopEditorContextValue {
   isLoadingLocalePublished: boolean
 
   // Asset state (from React Query cache)
-  assets: AssetWithRole[]
+  assets: StopAssetDraftItem[]
   isLoadingAssets: boolean
-  assetsPublished: AssetWithRole[]
+  assetsPublished: StopAssetPublishedItem[]
   isLoadingAssetsPublished: boolean
 
   // Asset operations (immediate server calls)
-  updateAssets: (assets: AssetWithRole[]) => Promise<void>
-  addAsset: (asset: Asset, role: string, locale: string | null) => Promise<void>
+  updateAssets: (assets: StopAssetDraftItem[]) => Promise<void>
+  addAsset: (asset: Asset, channel: string, locale: string | null) => Promise<void>
   removeAsset: (assetId: string) => Promise<void>
 
   // Form dirty registration

@@ -1,9 +1,9 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
+import type { GuideAssetDraftItem } from '@valguide/core/features/guides/guide/asset/get-guide-assets-draft.fn'
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
 import type { GuideLocalePublishedResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-published.fn'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { type ReactNode, useState } from 'react'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
 
@@ -24,7 +24,7 @@ export function MockGuideEditorProvider({
 }: MockGuideEditorProviderProps) {
   const [activeLocale, setActiveLocale] = useState<string>(guideDetail.availableLocales[0] ?? 'en')
   const [isDirty, setIsDirty] = useState(false)
-  const [guideAssets, setGuideAssets] = useState<AssetWithRole[]>([])
+  const [guideAssets, setGuideAssets] = useState<GuideAssetDraftItem[]>([])
   const [stops, setStops] = useState<StructureDraftStop[]>(initialStops)
 
   const value: GuideEditorContextValue = {
@@ -65,7 +65,9 @@ export function MockGuideEditorProvider({
     setGuideCover: async (asset: Asset | null) => {
       console.log('Mock: setGuideCover', asset?.id)
       if (asset) {
-        setGuideAssets([{ ...asset, role: 'cover', order: 0, locale: null }])
+        setGuideAssets([
+          { id: `mock-${asset.id}`, asset, channel: 'images.hero', position: 0, locale: null, createdAt: new Date() },
+        ])
       } else {
         setGuideAssets([])
       }

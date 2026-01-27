@@ -6,13 +6,13 @@
 import type { Asset } from '../../assets/types'
 
 /**
- * Asset with role/channel info for display purposes.
- * Maps the new channel-based schema to the legacy role-based API.
+ * Asset with channel info for display purposes.
+ * Channels: 'images.hero', 'images.gallery', 'audio.narration'
  */
-export interface AssetWithRole extends Asset {
-  role: string
-  order: number
-  locale?: string | null
+export interface AssetItem extends Asset {
+  channel: string
+  position: number
+  locale: string | null
 }
 
 /**
@@ -42,7 +42,7 @@ export interface StopWithAssets {
   updatedAt: Date
   availableLocales: string[]
   translations: PublishedStopTranslation[]
-  assets: AssetWithRole[]
+  assets: AssetItem[]
 }
 
 /**
@@ -56,6 +56,6 @@ export interface GuideWithStopsAndAssets {
   updatedAt: Date
   availableLocales: string[]
   translations: PublishedTranslation[]
-  assets: AssetWithRole[]
+  assets: AssetItem[]
   stops: StopWithAssets[]
 }

@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
@@ -30,19 +29,20 @@ const createMockGuideDetail = (overrides: Partial<GuideDetail> = {}): GuideDetai
   nanoId: 'abc123xyz',
   organizationId: 'org-1',
   availableLocales: ['en', 'de'],
+  archivedAt: null,
   createdAt: new Date('2025-01-01T10:00:00Z'),
   updatedAt: new Date('2025-01-15T14:30:00Z'),
-  archivedAt: null,
-  published: null,
-  themeNanoId: null,
+  locales: [],
+  settings: null,
   ...overrides,
 })
 
 const createMockLocaleDraft = (overrides: Partial<GuideLocaleDraftResult> = {}): GuideLocaleDraftResult => ({
-  id: 'gv1',
+  locale: 'en',
   title: 'City Art Museum Audio Tour',
   description:
     'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
+  revision: 1,
   publishedVersionId: null,
   hasUnpublishedChanges: false,
   ...overrides,
@@ -51,22 +51,22 @@ const createMockLocaleDraft = (overrides: Partial<GuideLocaleDraftResult> = {}):
 const createMockLocalePublished = (
   overrides: Partial<GuideLocalePublishedResult> = {},
 ): GuideLocalePublishedResult => ({
-  id: 'gv-pub-1',
+  locale: 'en',
   title: 'City Art Museum Audio Tour',
   description:
     'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
+  version: 1,
+  publishedAt: new Date('2025-01-10T10:00:00Z'),
   ...overrides,
 })
 
 const createMockStops = (count: number): StructureDraftStop[] =>
   Array.from({ length: count }, (_, i) => ({
+    stopId: `stop-${i + 1}`,
     stopNanoId: `stop${i + 1}nano`,
     position: i,
-    hidden: false,
+    visible: true,
     title: `Stop ${i + 1}: ${['Gallery', 'Exhibition', 'Courtyard', 'Hall', 'Room'][i % 5]} ${Math.floor(i / 5) + 1}`,
-    isPublished: i % 2 === 0,
-    hasUnpublishedChanges: i % 3 === 0,
-    coverImageUrl: i % 2 === 0 ? faker.image.url({ width: 400, height: 300 }) : null,
     locale: 'en',
   }))
 
@@ -91,18 +91,21 @@ const meta = {
     MediaPicker: StoryMediaPicker,
   },
   decorators: [
-    (Story, { args }) => (
-      <MockAssetsProvider>
-        <MockGuideEditorProvider
-          guideDetail={args.guideDetail ?? createMockGuideDetail()}
-          localeDraft={args.localeDraft ?? createMockLocaleDraft()}
-          localePublished={args.localePublished ?? null}
-          stops={args.stops ?? createMockStops(3)}
-        >
-          <Story />
-        </MockGuideEditorProvider>
-      </MockAssetsProvider>
-    ),
+    (Story, context) => {
+      const { guideDetail, localeDraft, localePublished, stops } = context.args as StoryArgs
+      return (
+        <MockAssetsProvider>
+          <MockGuideEditorProvider
+            guideDetail={guideDetail ?? createMockGuideDetail()}
+            localeDraft={localeDraft ?? createMockLocaleDraft()}
+            localePublished={localePublished ?? null}
+            stops={stops ?? createMockStops(3)}
+          >
+            <Story />
+          </MockGuideEditorProvider>
+        </MockAssetsProvider>
+      )
+    },
   ],
 } satisfies Meta<typeof GuideEditPage & StoryArgs>
 
@@ -114,7 +117,7 @@ export const Default: Story = {
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(3),
-  },
+  } as any,
 }
 
 export const Unpublished: Story = {
@@ -122,21 +125,21 @@ export const Unpublished: Story = {
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(2),
-  },
+  } as any,
 }
 
 export const Published: Story = {
   args: {
-    guideDetail: createMockGuideDetail({ published: new Date('2025-01-10T10:00:00Z') }),
+    guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft({ publishedVersionId: 'gv-pub-1', hasUnpublishedChanges: false }),
     localePublished: createMockLocalePublished(),
     stops: createMockStops(3),
-  },
+  } as any,
 }
 
 export const WithUnpublishedChanges: Story = {
   args: {
-    guideDetail: createMockGuideDetail({ published: new Date('2025-01-10T10:00:00Z') }),
+    guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft({
       publishedVersionId: 'gv-pub-1',
       hasUnpublishedChanges: true,
@@ -145,7 +148,7 @@ export const WithUnpublishedChanges: Story = {
     }),
     localePublished: createMockLocalePublished(),
     stops: createMockStops(3),
-  },
+  } as any,
 }
 
 export const EmptyGuide: Story = {
@@ -153,7 +156,7 @@ export const EmptyGuide: Story = {
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft({ title: '', description: '' }),
     stops: [],
-  },
+  } as any,
 }
 
 export const ManyStops: Story = {
@@ -161,7 +164,7 @@ export const ManyStops: Story = {
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(10),
-  },
+  } as any,
 }
 
 export const MultipleLocales: Story = {
@@ -169,5 +172,5 @@ export const MultipleLocales: Story = {
     guideDetail: createMockGuideDetail({ availableLocales: ['en', 'de', 'fr', 'it'] }),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(3),
-  },
+  } as any,
 }

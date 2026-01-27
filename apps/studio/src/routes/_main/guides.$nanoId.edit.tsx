@@ -1,4 +1,5 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
+import { publishGuideAssetsFn } from '@valguide/core/features/guides/guide/asset/publish-guide-assets.fn'
 import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/publish-guide-locale.fn'
 import { unpublishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/unpublish-guide-locale.fn'
 import { updateStopVisibilityFn } from '@valguide/core/features/guides/structure/update-stop-visibility.fn'
@@ -65,9 +66,15 @@ function GuideEditRoute() {
 function GuideEditPageContent() {
   const { nanoId } = useGuideEditor()
 
+  const handlePublish = async (_guideId: string, locale: string) => {
+    await publishGuideLocaleFn({ data: { nanoId, locale } })
+    // Publish locale-independent assets (cover image)
+    await publishGuideAssetsFn({ data: { nanoId, channel: 'images.hero', locale: null } })
+  }
+
   return (
     <GuideEditPage
-      onPublish={(_guideId, locale) => publishGuideLocaleFn({ data: { nanoId, locale } })}
+      onPublish={handlePublish}
       onUnpublish={(_guideId, locale) => unpublishGuideLocaleFn({ data: { nanoId, locale } })}
       onHideStop={(_guideId, stopNanoId) =>
         updateStopVisibilityFn({ data: { guideNanoId: nanoId, stopNanoId, visible: false } })

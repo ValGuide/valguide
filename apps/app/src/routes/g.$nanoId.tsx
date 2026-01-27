@@ -34,7 +34,7 @@ function GuidePage() {
 
   const title = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
   const description = getLocalizedGuideText(guide, 'description', locale as SupportedLocale)
-  const coverAsset = guide.assets?.find((a) => a.role === 'cover')
+  const coverAsset = guide.assets?.find((a) => a.channel === 'images.hero')
   const coverImageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
 
   return (

@@ -28,7 +28,7 @@ export function GuideProgress() {
     },
     {
       label: t('progress.coverImage'),
-      complete: guideAssets.some((a) => a.role === 'cover'),
+      complete: guideAssets.some((a) => a.channel === 'images.hero'),
     },
     {
       label: t('progress.hasStops'),

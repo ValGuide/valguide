@@ -17,25 +17,7 @@ import {
   stopLocale,
   stopLocaleVersion,
 } from '../schema'
-import type { AssetWithRole, GuideWithStopsAndAssets, PublishedStopTranslation, StopWithAssets } from './types'
-
-// ============================================================================
-// Internal Helpers
-// ============================================================================
-
-/**
- * Map channel names to legacy role names for backward compatibility.
- * Channels: images.hero, images.gallery, audio.narration, etc.
- * Roles: cover, gallery, thumbnail, audio, video
- */
-function mapChannelToRole(channel: string): string {
-  if (channel === 'images.hero') return 'cover'
-  if (channel === 'images.gallery') return 'gallery'
-  if (channel === 'images.thumbnail') return 'thumbnail'
-  if (channel.startsWith('audio.')) return 'audio'
-  if (channel.startsWith('video.')) return 'video'
-  return channel
-}
+import type { AssetItem, GuideWithStopsAndAssets, PublishedStopTranslation, StopWithAssets } from './types'
 
 // ============================================================================
 // Query Function
@@ -149,15 +131,15 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
       : []
 
   // Group stop assets by stop ID
-  const stopAssetsMap = new Map<string, AssetWithRole[]>()
+  const stopAssetsMap = new Map<string, AssetItem[]>()
   for (const item of stopAssetsData) {
     if (!stopAssetsMap.has(item.stopId)) {
       stopAssetsMap.set(item.stopId, [])
     }
     stopAssetsMap.get(item.stopId)?.push({
       ...item.asset,
-      role: mapChannelToRole(item.channel),
-      order: item.position,
+      channel: item.channel,
+      position: item.position,
       locale: item.locale,
     })
   }
@@ -199,8 +181,8 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
     })),
     assets: guideAssetsData.map((item) => ({
       ...item.asset,
-      role: mapChannelToRole(item.channel),
-      order: item.position,
+      channel: item.channel,
+      position: item.position,
       locale: item.locale,
     })),
     stops,

@@ -28,7 +28,6 @@ function findDuplicateKeys(jsonString: string, filename: string): string[] {
   // Track seen keys at each nesting level using line-by-line parsing
   // This is a simplified approach that looks for keys at the same indent level
   const keysByIndent: Map<number, Map<string, number>> = new Map()
-  const currentIndent = 0
 
   for (let lineNum = 0; lineNum < lines.length; lineNum++) {
     const line = lines[lineNum]

@@ -1,4 +1,4 @@
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
+import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 
 type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }
@@ -28,11 +28,11 @@ export interface StopEditAdapter {
 
   // Stop content from locale draft
   stopLocaleData: StopLocaleData | null
-  assets: AssetWithRole[]
+  assets: StopAssetDraftItem[]
 
   save: () => Promise<void>
   refetch: () => Promise<void>
-  updateAssets: (assets: AssetWithRole[]) => Promise<void>
+  updateAssets: (assets: StopAssetDraftItem[]) => Promise<void>
   registerFormDirty: (formId: string, isDirty: boolean, getValues?: FormValueGetter) => void
   unregisterForm: (formId: string) => void
   registerFormReset: (formId: string, resetFn: () => void) => void

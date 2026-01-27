@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { getStopTranslationStatusDisplay } from '@valguide/core/features/guides/status-utils'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
+import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
@@ -101,8 +101,11 @@ export function StopEditPage() {
   const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
 
   const displayAssets = isReadOnly ? assetsPublished : assets
-  const stopImages = displayAssets.filter((a) => (a.role === 'image' || a.role === 'video') && a.locale === null)
-  const stopAudio = displayAssets.find((a) => a.role === 'audio' && a.locale === activeLocale) ?? null
+  const stopImageItems = displayAssets.filter((a) => a.channel === 'images.gallery' && a.locale === null)
+  const stopAudioItem = displayAssets.find((a) => a.channel === 'audio.narration' && a.locale === activeLocale) ?? null
+  // Extract assets for MediaPicker (which expects Asset, not *Item)
+  const stopImages = stopImageItems.map((item) => item.asset)
+  const stopAudio = stopAudioItem?.asset ?? null
 
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   const formId = `stop-translation-${nanoId}-${activeLocale}`
@@ -137,13 +140,15 @@ export function StopEditPage() {
 
   const handleImagesChange = useCallback(
     (value: Asset | Asset[] | null) => {
-      const audioAssets = assets.filter((a) => a.role === 'audio')
+      const audioAssets = assets.filter((a) => a.channel === 'audio.narration')
       if (Array.isArray(value)) {
-        const newMediaAssets: AssetWithRole[] = value.map((asset, index) => ({
-          ...asset,
-          role: asset.type?.startsWith('video/') ? 'video' : 'image',
-          order: index,
+        const newMediaAssets: StopAssetDraftItem[] = value.map((asset, index) => ({
+          id: `temp-${asset.id}`,
+          asset,
+          channel: 'images.gallery',
+          position: index,
           locale: null,
+          createdAt: new Date(),
         }))
         updateAssets([...newMediaAssets, ...audioAssets])
       } else if (value === null) {
@@ -155,15 +160,17 @@ export function StopEditPage() {
 
   const handleAudioChange = useCallback(
     (asset: Asset | null) => {
-      const nonAudioAssets = assets.filter((a) => a.role !== 'audio' || a.locale !== activeLocale)
+      const nonAudioAssets = assets.filter((a) => a.channel !== 'audio.narration' || a.locale !== activeLocale)
       if (asset) {
-        const audioAsset: AssetWithRole = {
-          ...asset,
-          role: 'audio',
-          order: nonAudioAssets.length,
+        const audioItem: StopAssetDraftItem = {
+          id: `temp-${asset.id}`,
+          asset,
+          channel: 'audio.narration',
+          position: nonAudioAssets.length,
           locale: activeLocale,
+          createdAt: new Date(),
         }
-        updateAssets([...nonAudioAssets, audioAsset])
+        updateAssets([...nonAudioAssets, audioItem])
       } else {
         updateAssets(nonAudioAssets)
       }

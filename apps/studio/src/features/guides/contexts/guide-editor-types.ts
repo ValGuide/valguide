@@ -1,9 +1,10 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
+import type { GuideAssetDraftItem } from '@valguide/core/features/guides/guide/asset/get-guide-assets-draft.fn'
+import type { GuideAssetPublishedItem } from '@valguide/core/features/guides/guide/asset/get-guide-assets-published.fn'
 import type { GuideDetail, LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
 import type { GuideLocalePublishedResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-published.fn'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
-import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 
 // Re-export types for consumers
@@ -45,9 +46,9 @@ export interface GuideEditorContextValue {
   reorderStops: (stopNanoIds: string[]) => Promise<void>
 
   // Guide asset state (from React Query cache)
-  guideAssets: AssetWithRole[]
+  guideAssets: GuideAssetDraftItem[]
   isLoadingGuideAssets: boolean
-  guideAssetsPublished: AssetWithRole[]
+  guideAssetsPublished: GuideAssetPublishedItem[]
   isLoadingGuideAssetsPublished: boolean
 
   // Guide asset operations (immediate server calls)

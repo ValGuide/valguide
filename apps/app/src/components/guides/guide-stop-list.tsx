@@ -24,7 +24,7 @@ export function GuideStopList({ stops, guideNanoId, locale }: GuideStopListProps
       <div className="grid gap-4 sm:grid-cols-2">
         {stops.map((stop, index) => {
           const title = getLocalizedStopText(stop, 'title', locale as SupportedLocale)
-          const thumbnail = stop.assets.find((a) => a.role === 'thumbnail' || a.type === 'image')
+          const thumbnail = stop.assets.find((a) => a.type === 'image')
 
           return (
             <Link
