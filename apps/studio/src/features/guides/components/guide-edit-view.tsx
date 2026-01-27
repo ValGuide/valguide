@@ -45,6 +45,7 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
     nanoId,
     guideDetail,
     localeDraft,
+    localePublished,
     activeLocale,
     availableLocales,
     isDirty,
@@ -104,13 +105,20 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
 
   const isReadOnly = activeTab === 'published'
 
-  // Use draft content for editing (the new schema always has draft content)
-  const editableVersionData = {
+  // Use draft content for editing, published content for viewing
+  const draftVersionData = {
     title: localeDraft?.title ?? '',
     description: localeDraft?.description ?? '',
   }
 
-  const displayVersionData = editableVersionData
+  const publishedVersionData = localePublished
+    ? {
+        title: localePublished.title ?? '',
+        description: localePublished.description ?? '',
+      }
+    : null
+
+  const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
 
   const formRef = useRef<GuideMetadataFormRef>(null)
   const formId = `guide-translation-${activeLocale}`

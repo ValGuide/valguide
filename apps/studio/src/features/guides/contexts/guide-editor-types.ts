@@ -1,12 +1,13 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { GuideDetail, LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
+import type { GuideLocalePublishedResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-published.fn'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
 
 // Re-export types for consumers
-export type { GuideDetail, LocaleDraftInfo, GuideLocaleDraftResult, StructureDraftStop }
+export type { GuideDetail, LocaleDraftInfo, GuideLocaleDraftResult, GuideLocalePublishedResult, StructureDraftStop }
 
 export type FormValues = { title?: string; description?: string | null }
 export type FormValueGetter = () => FormValues
@@ -26,6 +27,8 @@ export interface GuideEditorContextValue {
   guideDetail: GuideDetail
   localeDraft: GuideLocaleDraftResult | null
   isLoadingLocale: boolean
+  localePublished: GuideLocalePublishedResult | null
+  isLoadingLocalePublished: boolean
 
   // Stop operations - uses stopNanoId for identification
   stops: StructureDraftStop[]

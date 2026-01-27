@@ -22,6 +22,7 @@ export function StopEditPage({ guideNanoId }: StopEditPageProps) {
     nanoId,
     stopId,
     localeDraft,
+    localePublished,
     activeLocale,
     availableLocales,
     isDirty,
@@ -49,11 +50,11 @@ export function StopEditPage({ guideNanoId }: StopEditPageProps) {
       translationId: '',
       currentVersionId: localeDraft.publishedVersionId,
       draftVersionId: null,
-      currentVersion: localeDraft.publishedVersionId
+      currentVersion: localePublished
         ? {
-            title: localeDraft.title ?? '',
-            description: localeDraft.description,
-            transcription: localeDraft.transcription,
+            title: localePublished.title ?? '',
+            description: localePublished.description,
+            transcription: localePublished.transcription,
           }
         : null,
       draftVersion: {
@@ -62,7 +63,7 @@ export function StopEditPage({ guideNanoId }: StopEditPageProps) {
         transcription: localeDraft.transcription,
       },
     }
-  }, [localeDraft, stopId])
+  }, [localeDraft, localePublished, stopId])
 
   const draftStopTitle = useMemo(() => {
     const title = localeDraft?.title
@@ -70,9 +71,9 @@ export function StopEditPage({ guideNanoId }: StopEditPageProps) {
   }, [localeDraft, tStops])
 
   const publishedStopTitle = useMemo(() => {
-    const title = localeDraft?.title
+    const title = localePublished?.title
     return title?.trim() ? title : tStops('unknownTitle')
-  }, [localeDraft, tStops])
+  }, [localePublished, tStops])
 
   const stopEditorRef = useRef<StopLocaleEditorRef>(null)
   const formId = `stop-translation-${nanoId}-${activeLocale}`

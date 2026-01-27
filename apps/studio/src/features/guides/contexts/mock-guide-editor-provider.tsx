@@ -1,6 +1,7 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
+import type { GuideLocalePublishedResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-published.fn'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { type ReactNode, useState } from 'react'
@@ -10,6 +11,7 @@ export interface MockGuideEditorProviderProps {
   children: ReactNode
   guideDetail: GuideDetail
   localeDraft?: GuideLocaleDraftResult | null
+  localePublished?: GuideLocalePublishedResult | null
   stops?: StructureDraftStop[]
 }
 
@@ -17,6 +19,7 @@ export function MockGuideEditorProvider({
   children,
   guideDetail,
   localeDraft = null,
+  localePublished = null,
   stops: initialStops = [],
 }: MockGuideEditorProviderProps) {
   const [activeLocale, setActiveLocale] = useState<string>(guideDetail.availableLocales[0] ?? 'en')
@@ -36,6 +39,8 @@ export function MockGuideEditorProvider({
     guideDetail,
     localeDraft,
     isLoadingLocale: false,
+    localePublished,
+    isLoadingLocalePublished: false,
     stops,
     addStop: async () => {
       console.log('Mock: addStop')

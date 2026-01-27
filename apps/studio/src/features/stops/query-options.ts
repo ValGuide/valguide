@@ -9,6 +9,10 @@ import {
   getStopLocaleDraftFn,
   type StopLocaleDraftResult,
 } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
+import {
+  getStopLocalePublishedFn,
+  type StopLocalePublishedResult,
+} from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
 
 /**
  * Query options for stop library list
@@ -36,8 +40,19 @@ export const stopDetailQueryOptions = (nanoId: string) =>
  */
 export const stopLocaleDraftQueryOptions = (nanoId: string, locale: string) =>
   queryOptions<StopLocaleDraftResult | null>({
-    queryKey: ['stop', nanoId, 'locale', locale],
+    queryKey: ['stop', nanoId, 'locale', locale, 'draft'],
     queryFn: () => getStopLocaleDraftFn({ data: { nanoId, locale } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for stop locale published version (per-locale published content)
+ * Returns null if locale has never been published
+ */
+export const stopLocalePublishedQueryOptions = (nanoId: string, locale: string) =>
+  queryOptions<StopLocalePublishedResult | null>({
+    queryKey: ['stop', nanoId, 'locale', locale, 'published'],
+    queryFn: () => getStopLocalePublishedFn({ data: { nanoId, locale } }),
     staleTime: 30 * 1000,
   })
 

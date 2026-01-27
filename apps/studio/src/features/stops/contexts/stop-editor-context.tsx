@@ -12,7 +12,12 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
-import { stopAssetsDraftQueryOptions, stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '../query-options'
+import {
+  stopAssetsDraftQueryOptions,
+  stopDetailQueryOptions,
+  stopLocaleDraftQueryOptions,
+  stopLocalePublishedQueryOptions,
+} from '../query-options'
 import { type FormValueGetter, StopEditorContext, type StopEditorContextValue } from './stop-editor-types'
 
 type FormRegistry = Map<string, { getValues: FormValueGetter; isDirty: boolean }>
@@ -69,6 +74,14 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
   const localeDraft = localeDraftQuery.data ?? null
   const isLoadingLocale = localeDraftQuery.isLoading
 
+  // Fetch locale-specific published version
+  const localePublishedQuery = useQuery({
+    ...stopLocalePublishedQueryOptions(nanoId, activeLocale),
+    enabled: !!nanoId,
+  })
+  const localePublished = localePublishedQuery.data ?? null
+  const isLoadingLocalePublished = localePublishedQuery.isLoading
+
   // Prefetch adjacent locales for instant switching
   useEffect(() => {
     if (!nanoId || availableLocales.length <= 1) return
@@ -76,6 +89,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     const otherLocales = availableLocales.filter((l) => l !== activeLocale)
     for (const locale of otherLocales) {
       queryClient.prefetchQuery(stopLocaleDraftQueryOptions(nanoId, locale))
+      queryClient.prefetchQuery(stopLocalePublishedQueryOptions(nanoId, locale))
     }
   }, [nanoId, activeLocale, availableLocales, queryClient])
 
@@ -354,6 +368,8 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     stopDetail,
     localeDraft,
     isLoadingLocale,
+    localePublished,
+    isLoadingLocalePublished,
     assets,
     isLoadingAssets,
     updateAssets,

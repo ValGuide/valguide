@@ -1,8 +1,12 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
+import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { createContext, useContext } from 'react'
+
+// Re-export types for consumers
+export type { StopDetail, StopLocaleDraftResult, StopLocalePublishedResult }
 
 export type FormValues = { title?: string; description?: string | null; transcription?: string | null }
 export type FormValueGetter = () => FormValues
@@ -28,6 +32,8 @@ export interface StopEditorContextValue {
   stopDetail: StopDetail
   localeDraft: StopLocaleDraftResult | null
   isLoadingLocale: boolean
+  localePublished: StopLocalePublishedResult | null
+  isLoadingLocalePublished: boolean
 
   // Asset state (from React Query cache)
   assets: AssetWithRole[]

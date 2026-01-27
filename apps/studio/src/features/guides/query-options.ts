@@ -9,6 +9,8 @@ import type { GuideListItem } from '@valguide/core/features/guides/guide/list-gu
 import { listGuidesFn } from '@valguide/core/features/guides/guide/list-guides.fn'
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
 import { getGuideLocaleDraftFn } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
+import type { GuideLocalePublishedResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-published.fn'
+import { getGuideLocalePublishedFn } from '@valguide/core/features/guides/guide/locale/get-guide-locale-published.fn'
 import {
   getStructureDraftFn,
   type StructureDraftResult,
@@ -54,8 +56,19 @@ export const guideDetailQueryOptions = (nanoId: string) =>
  */
 export const guideLocaleDraftQueryOptions = (nanoId: string, locale: string) =>
   queryOptions<GuideLocaleDraftResult | null>({
-    queryKey: ['guide', nanoId, 'locale', locale],
+    queryKey: ['guide', nanoId, 'locale', locale, 'draft'],
     queryFn: () => getGuideLocaleDraftFn({ data: { nanoId, locale } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for guide locale published version (per-locale published content)
+ * Returns null if locale has never been published
+ */
+export const guideLocalePublishedQueryOptions = (nanoId: string, locale: string) =>
+  queryOptions<GuideLocalePublishedResult | null>({
+    queryKey: ['guide', nanoId, 'locale', locale, 'published'],
+    queryFn: () => getGuideLocalePublishedFn({ data: { nanoId, locale } }),
     staleTime: 30 * 1000,
   })
 

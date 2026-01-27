@@ -19,6 +19,7 @@ import {
   guideAssetsDraftQueryOptions,
   guideDetailQueryOptions,
   guideLocaleDraftQueryOptions,
+  guideLocalePublishedQueryOptions,
   guideStructureDraftQueryOptions,
 } from '../query-options'
 import { type FormValueGetter, GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
@@ -72,6 +73,14 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   const localeDraft = localeDraftQuery.data ?? null
   const isLoadingLocale = localeDraftQuery.isLoading
 
+  // Fetch locale-specific published version
+  const localePublishedQuery = useQuery({
+    ...guideLocalePublishedQueryOptions(nanoId, activeLocale),
+    enabled: !!nanoId,
+  })
+  const localePublished = localePublishedQuery.data ?? null
+  const isLoadingLocalePublished = localePublishedQuery.isLoading
+
   // Fetch stops from structure
   const structureQuery = useQuery({
     ...guideStructureDraftQueryOptions(nanoId, activeLocale),
@@ -86,6 +95,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     const otherLocales = availableLocales.filter((l) => l !== activeLocale)
     for (const locale of otherLocales) {
       queryClient.prefetchQuery(guideLocaleDraftQueryOptions(nanoId, locale))
+      queryClient.prefetchQuery(guideLocalePublishedQueryOptions(nanoId, locale))
     }
   }, [nanoId, activeLocale, availableLocales, queryClient])
 
@@ -344,6 +354,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     guideDetail,
     localeDraft,
     isLoadingLocale,
+    localePublished,
+    isLoadingLocalePublished,
     stops,
     addStop,
     removeStop,
