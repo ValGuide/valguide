@@ -3,12 +3,13 @@ import { cn } from '@valguide/ui/lib/utils'
 import { ChevronLeft } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-type EditorHeaderProps = {
+export type EditorHeaderProps = {
   actions?: ReactNode
   className?: string
 } & (
   | { backLabel: string; onBack: () => void; backContent?: never }
   | { backContent: ReactNode; backLabel?: never; onBack?: never }
+  | { backContent: ReactNode; backLabel?: string; onBack?: () => void }
 )
 
 export function EditorHeader({ backLabel, onBack, backContent, actions, className }: EditorHeaderProps) {
