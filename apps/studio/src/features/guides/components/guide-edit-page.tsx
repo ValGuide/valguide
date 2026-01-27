@@ -21,7 +21,7 @@ import { ShowStopDialog } from '@/features/guides/components/show-stop-dialog'
 import { StopsList } from '@/features/guides/components/stops-list'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 
-interface GuideEditPageProps {
+export interface GuideEditPageProps {
   onPublish?: (guideId: string, locale: string) => Promise<unknown>
   onUnpublish?: (guideId: string, locale: string) => Promise<unknown>
   onHideStop?: (guideId: string, stopNanoId: string) => Promise<unknown>

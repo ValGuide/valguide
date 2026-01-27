@@ -68,7 +68,8 @@ const createMockAssets = (count: number): StopAssetDraftItem[] =>
     createdAt: new Date('2025-01-10T10:00:00Z'),
   }))
 
-type StoryArgs = {
+/** Story-only context data, not component props */
+type StoryContextData = {
   stopDetail?: StopDetail
   localeDraft?: StopLocaleDraftResult | null
   localePublished?: StopLocalePublishedResult | null
@@ -83,7 +84,8 @@ const meta = {
   },
   decorators: [
     (Story, context) => {
-      const { stopDetail, localeDraft, localePublished, assets } = context.args as StoryArgs
+      const storyContext = context.args as StoryContextData
+      const { stopDetail, localeDraft, localePublished, assets } = storyContext
       return (
         <MockAssetsProvider>
           <MockStopEditorProvider
@@ -103,7 +105,7 @@ const meta = {
       )
     },
   ],
-} satisfies Meta<typeof StopEditPage & StoryArgs>
+} as Meta<typeof StopEditPage>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -112,7 +114,7 @@ export const Default: Story = {
   args: {
     stopDetail: createMockStopDetail(),
     localeDraft: createMockLocaleDraft(),
-  } as any,
+  } as StoryContextData,
 }
 
 export const Unpublished: Story = {
@@ -120,7 +122,7 @@ export const Unpublished: Story = {
     stopDetail: createMockStopDetail(),
     localeDraft: createMockLocaleDraft(),
     assets: createMockAssets(2),
-  } as any,
+  } as StoryContextData,
 }
 
 export const Published: Story = {
@@ -129,7 +131,7 @@ export const Published: Story = {
     localeDraft: createMockLocaleDraft({ publishedVersionId: 'sv-pub-1', hasUnpublishedChanges: false }),
     localePublished: createMockLocalePublished(),
     assets: createMockAssets(3),
-  } as any,
+  } as StoryContextData,
 }
 
 export const WithUnpublishedChanges: Story = {
@@ -143,7 +145,7 @@ export const WithUnpublishedChanges: Story = {
     }),
     localePublished: createMockLocalePublished(),
     assets: createMockAssets(2),
-  } as any,
+  } as StoryContextData,
 }
 
 export const WithGalleryImages: Story = {
@@ -151,7 +153,7 @@ export const WithGalleryImages: Story = {
     stopDetail: createMockStopDetail(),
     localeDraft: createMockLocaleDraft(),
     assets: createMockAssets(6),
-  } as any,
+  } as StoryContextData,
 }
 
 export const EmptyStop: Story = {
@@ -159,7 +161,7 @@ export const EmptyStop: Story = {
     stopDetail: createMockStopDetail(),
     localeDraft: createMockLocaleDraft({ title: '', description: '', transcription: '' }),
     assets: [],
-  } as any,
+  } as StoryContextData,
 }
 
 export const MultipleLocales: Story = {
@@ -167,7 +169,7 @@ export const MultipleLocales: Story = {
     stopDetail: createMockStopDetail({ availableLocales: ['en', 'de', 'fr', 'it'] }),
     localeDraft: createMockLocaleDraft(),
     assets: createMockAssets(2),
-  } as any,
+  } as StoryContextData,
 }
 
 export const StandaloneStop: Story = {
@@ -175,10 +177,11 @@ export const StandaloneStop: Story = {
     stopDetail: createMockStopDetail(),
     localeDraft: createMockLocaleDraft(),
     assets: createMockAssets(2),
-  } as any,
+  } as StoryContextData,
   decorators: [
     (Story, context) => {
-      const { stopDetail, localeDraft, localePublished, assets } = context.args as StoryArgs
+      const storyContext = context.args as StoryContextData
+      const { stopDetail, localeDraft, localePublished, assets } = storyContext
       return (
         <MockAssetsProvider>
           <MockStopEditorProvider

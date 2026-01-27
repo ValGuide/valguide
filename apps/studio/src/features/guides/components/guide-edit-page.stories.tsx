@@ -8,7 +8,7 @@ import { MediaPicker } from '@/features/assets/components/media-picker/media-pic
 import type { MediaPickerComponentProps } from '@/features/assets/components/media-picker/types'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
 import { MockGuideEditorProvider } from '@/features/guides/contexts/mock-guide-editor-provider'
-import { GuideEditPage } from './guide-edit-page'
+import { GuideEditPage, type GuideEditPageProps } from './guide-edit-page'
 
 const mockOnUpload = async (_file: File, onProgress: (p: number) => void) => {
   for (let i = 0; i <= 100; i += 20) {
@@ -70,7 +70,8 @@ const createMockStops = (count: number): StructureDraftStop[] =>
     locale: 'en',
   }))
 
-type StoryArgs = {
+/** Story-only context data, not component props */
+type StoryContextData = {
   guideDetail?: GuideDetail
   localeDraft?: GuideLocaleDraftResult | null
   localePublished?: GuideLocalePublishedResult | null
@@ -92,7 +93,8 @@ const meta = {
   },
   decorators: [
     (Story, context) => {
-      const { guideDetail, localeDraft, localePublished, stops } = context.args as StoryArgs
+      const storyContext = context.args as GuideEditPageProps & StoryContextData
+      const { guideDetail, localeDraft, localePublished, stops } = storyContext
       return (
         <MockAssetsProvider>
           <MockGuideEditorProvider
@@ -107,38 +109,58 @@ const meta = {
       )
     },
   ],
-} satisfies Meta<typeof GuideEditPage & StoryArgs>
+} as Meta<typeof GuideEditPage>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(3),
-  } as any,
+  } as GuideEditPageProps & StoryContextData,
 }
 
 export const Unpublished: Story = {
   args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(2),
-  } as any,
+  } as GuideEditPageProps & StoryContextData,
 }
 
 export const Published: Story = {
   args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft({ publishedVersionId: 'gv-pub-1', hasUnpublishedChanges: false }),
     localePublished: createMockLocalePublished(),
     stops: createMockStops(3),
-  } as any,
+  } as GuideEditPageProps & StoryContextData,
 }
 
 export const WithUnpublishedChanges: Story = {
   args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft({
       publishedVersionId: 'gv-pub-1',
@@ -148,29 +170,44 @@ export const WithUnpublishedChanges: Story = {
     }),
     localePublished: createMockLocalePublished(),
     stops: createMockStops(3),
-  } as any,
+  } as GuideEditPageProps & StoryContextData,
 }
 
 export const EmptyGuide: Story = {
   args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft({ title: '', description: '' }),
     stops: [],
-  } as any,
+  } as GuideEditPageProps & StoryContextData,
 }
 
 export const ManyStops: Story = {
   args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(10),
-  } as any,
+  } as GuideEditPageProps & StoryContextData,
 }
 
 export const MultipleLocales: Story = {
   args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail({ availableLocales: ['en', 'de', 'fr', 'it'] }),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(3),
-  } as any,
+  } as GuideEditPageProps & StoryContextData,
 }
