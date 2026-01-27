@@ -17,6 +17,9 @@
   "player": {
     "play": "Far ir",
     "pause": "Pausa",
+    "previous": "Enavos",
+    "next": "Enavant",
+    "playbackSpeed": "Spertadad da reproducziun",
     "rewind": "10 secundas enavos",
     "forward": "10 secundas enavant",
     "transcript": "Transcripziun",
@@ -144,7 +147,8 @@
     "saved": "Memorisà",
     "saveError": "Errur cun memorisar",
     "loading": "...",
-    "tryAgain": "Empruvar danovamain"
+    "tryAgain": "Empruvar danovamain",
+    "error": "Ina errur è capità"
   },
   "comingSoon": {
     "title": "Prest disponibel",
@@ -421,7 +425,13 @@
       "selectLanguage": "Tscherner linguatg",
       "searchLanguages": "Tschertgar linguatgs...",
       "noLanguageFound": "Nagin linguatg chattà",
-      "manageTranslations": "Administrar translaziuns..."
+      "manageTranslations": "Administrar translaziuns...",
+      "statusPublished": "Publitgà",
+      "statusDraft": "Sboz",
+      "statusModified": "Midà",
+      "statusEmpty": "Vid",
+      "enabledLanguages": "Linguatgs activads",
+      "addLanguage": "Agiuntar linguatg"
     },
     "progress": {
       "title": "Progress dal guid",
@@ -592,7 +602,8 @@
       "emptyDescription": "Stops èn puncts dal cuntegn che pon vegnir duvrads en plirs guids.",
       "emptyHint": "Creai stops en in editur da guids per cumenzar.",
       "usedIn": "Duvrà en {count, plural, =1 {# guid} other {# guids}}",
-      "moreGuides": "+{count}"
+      "moreGuides": "+{count}",
+      "locales": "{count, plural, =1 {# linguatg} other {# linguatgs}}"
     },
     "editor": {
       "title": "Detagls dal stop",
@@ -695,6 +706,7 @@
       "hiddenIndicator": "Quest stop è zuppà per visitaders"
     },
     "detail": {
+      "draft": "Sboz",
       "translations": "Translaziuns",
       "translationsDescription": "Administrar cuntegn dal stop en diversas linguas",
       "noTranslations": "Anc naginas translaziuns",

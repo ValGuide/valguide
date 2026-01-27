@@ -17,6 +17,9 @@
   "player": {
     "play": "Abspielen",
     "pause": "Pause",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "playbackSpeed": "Wiedergabegeschwindigkeit",
     "rewind": "10 Sekunden zurück",
     "forward": "10 Sekunden vor",
     "transcript": "Transkript",
@@ -144,7 +147,8 @@
     "saved": "Gespeichert",
     "saveError": "Speichern fehlgeschlagen",
     "loading": "...",
-    "tryAgain": "Erneut versuchen"
+    "tryAgain": "Erneut versuchen",
+    "error": "Ein Fehler ist aufgetreten"
   },
   "comingSoon": {
     "title": "Bald verfügbar",
@@ -421,7 +425,13 @@
       "selectLanguage": "Sprache auswählen",
       "searchLanguages": "Sprachen suchen...",
       "noLanguageFound": "Keine Sprache gefunden",
-      "manageTranslations": "Übersetzungen verwalten..."
+      "manageTranslations": "Übersetzungen verwalten...",
+      "statusPublished": "Veröffentlicht",
+      "statusDraft": "Entwurf",
+      "statusModified": "Geändert",
+      "statusEmpty": "Leer",
+      "enabledLanguages": "Aktivierte Sprachen",
+      "addLanguage": "Sprache hinzufügen"
     },
     "progress": {
       "title": "Guide-Fortschritt",
@@ -535,7 +545,6 @@
       "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
     },
     "assets": {
-      "attachSuccess": "Asset zum Guide hinzugefügt",
       "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
       "removeError": "Fehler beim Entfernen des Assets vom Guide"
     },
@@ -593,7 +602,8 @@
       "emptyDescription": "Stops sind Inhaltspunkte, die in mehreren Guides wiederverwendet werden können.",
       "emptyHint": "Erstellen Sie Stops innerhalb eines Guide-Editors, um zu beginnen.",
       "usedIn": "Verwendet in {count, plural, =1 {# Guide} other {# Guides}}",
-      "moreGuides": "+{count}"
+      "moreGuides": "+{count}",
+      "locales": "{count, plural, =1 {# Sprache} other {# Sprachen}}"
     },
     "editor": {
       "title": "Stop-Details",
@@ -696,6 +706,7 @@
       "hiddenIndicator": "Dieser Stopp ist für Besucher ausgeblendet"
     },
     "detail": {
+      "draft": "Entwurf",
       "translations": "Übersetzungen",
       "translationsDescription": "Verwalten Sie Stopp-Inhalte in verschiedenen Sprachen",
       "noTranslations": "Noch keine Übersetzungen",

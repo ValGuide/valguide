@@ -17,6 +17,9 @@
   "player": {
     "play": "Play",
     "pause": "Pause",
+    "previous": "Previous",
+    "next": "Next",
+    "playbackSpeed": "Playback speed",
     "rewind": "Rewind 10 seconds",
     "forward": "Forward 10 seconds",
     "transcript": "Transcript",
@@ -144,7 +147,8 @@
     "saved": "Saved",
     "saveError": "Failed to save",
     "loading": "...",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "error": "An error occurred"
   },
   "comingSoon": {
     "title": "Coming Soon",
@@ -421,7 +425,13 @@
       "selectLanguage": "Select language",
       "searchLanguages": "Search languages...",
       "noLanguageFound": "No language found",
-      "manageTranslations": "Manage translations..."
+      "manageTranslations": "Manage translations...",
+      "statusPublished": "Published",
+      "statusDraft": "Draft",
+      "statusModified": "Modified",
+      "statusEmpty": "Empty",
+      "enabledLanguages": "Enabled languages",
+      "addLanguage": "Add language"
     },
     "progress": {
       "title": "Guide Completion",
@@ -592,7 +602,8 @@
       "emptyDescription": "Stops are content points that can be reused across multiple guides.",
       "emptyHint": "Create stops from within a guide editor to get started.",
       "usedIn": "Used in {count, plural, =1 {# guide} other {# guides}}",
-      "moreGuides": "+{count}"
+      "moreGuides": "+{count}",
+      "locales": "{count, plural, =1 {# language} other {# languages}}"
     },
     "editor": {
       "title": "Stop Details",
@@ -695,6 +706,7 @@
       "hiddenIndicator": "This stop is hidden from visitors"
     },
     "detail": {
+      "draft": "Draft",
       "translations": "Translations",
       "translationsDescription": "Manage stop content in different languages",
       "noTranslations": "No translations yet",

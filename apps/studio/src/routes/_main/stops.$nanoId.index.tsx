@@ -89,7 +89,7 @@ function StopPage() {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground truncate max-w-[200px]">
+                          <p className="text-sm text-muted-foreground truncate max-w-50">
                             {localeInfo.title || t('unknownTitle')}
                           </p>
                         </div>
