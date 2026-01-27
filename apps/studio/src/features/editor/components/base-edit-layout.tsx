@@ -117,7 +117,7 @@ export function BaseEditLayout({
   mobileHeaderExtra,
   children,
   unsavedChangesDialog,
-}: EntityEditLayoutProps) {
+}: BaseEditLayoutProps) {
   const t = useTranslations('guides')
 
   // Dialog states

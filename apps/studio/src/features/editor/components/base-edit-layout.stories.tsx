@@ -117,7 +117,7 @@ const meta = {
     backLabel: 'Guide Details',
     children: <MockContent />,
   },
-} satisfies Meta<typeof EntityEditLayout>
+} satisfies Meta<typeof BaseEditLayout>
 
 export default meta
 type Story = StoryObj<typeof meta>

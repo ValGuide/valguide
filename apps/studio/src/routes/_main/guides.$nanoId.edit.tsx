@@ -3,8 +3,9 @@ import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/local
 import { unpublishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/unpublish-guide-locale.fn'
 import { updateStopVisibilityFn } from '@valguide/core/features/guides/structure/update-stop-visibility.fn'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
+import { GuideEditPage } from '@/features/guides/components/guide-edit-page'
 import { GuideEditSkeleton } from '@/features/guides/components/guide-edit-skeleton'
-import { GuideEditView } from '@/features/guides/components/guide-edit-view'
+import { GuideNotFound } from '@/features/guides/components/guide-not-found'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { guideDetailQueryOptions, guideLocaleDraftQueryOptions } from '@/features/guides/query-options'
@@ -46,25 +47,26 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
 
     return { nanoId: params.nanoId, locale: requestedLocale }
   },
-  component: GuideEditPage,
+  component: GuideEditRoute,
   pendingComponent: GuideEditSkeleton,
+  notFoundComponent: GuideNotFound,
 })
 
-function GuideEditPage() {
+function GuideEditRoute() {
   const { nanoId, locale } = Route.useLoaderData()
 
   return (
     <GuideEditorProvider nanoId={nanoId} initialLocale={locale}>
-      <GuideEditContent />
+      <GuideEditPageContent />
     </GuideEditorProvider>
   )
 }
 
-function GuideEditContent() {
+function GuideEditPageContent() {
   const { nanoId } = useGuideEditor()
 
   return (
-    <GuideEditView
+    <GuideEditPage
       onPublish={(_guideId, locale) => publishGuideLocaleFn({ data: { nanoId, locale } })}
       onUnpublish={(_guideId, locale) => unpublishGuideLocaleFn({ data: { nanoId, locale } })}
       onHideStop={(_guideId, stopNanoId) =>

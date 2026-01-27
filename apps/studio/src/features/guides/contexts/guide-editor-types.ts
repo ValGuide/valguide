@@ -12,10 +12,18 @@ export type { GuideDetail, LocaleDraftInfo, GuideLocaleDraftResult, GuideLocaleP
 export type FormValues = { title?: string; description?: string | null }
 export type FormValueGetter = () => FormValues
 
+export interface GuideEditorNavigation {
+  backPath: string
+  backLabel: string
+}
+
 export interface GuideEditorContextValue {
   // Core identifiers
   nanoId: string
   guideId: string
+
+  // Navigation (for back button)
+  navigation: GuideEditorNavigation
 
   // Locale management (synced to URL)
   activeLocale: string

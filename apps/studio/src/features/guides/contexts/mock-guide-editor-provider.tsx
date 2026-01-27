@@ -30,6 +30,7 @@ export function MockGuideEditorProvider({
   const value: GuideEditorContextValue = {
     nanoId: guideDetail.nanoId,
     guideId: guideDetail.id,
+    navigation: { backPath: `/guides/${guideDetail.nanoId}`, backLabel: 'guides.editor.guideDetails' },
     activeLocale,
     availableLocales: guideDetail.availableLocales,
     setActiveLocale,

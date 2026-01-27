@@ -40,9 +40,13 @@ interface GuideEditorProviderProps {
   children: ReactNode
   nanoId: string
   initialLocale?: string
+  navigation?: {
+    backPath: string
+    backLabel: string
+  }
 }
 
-export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEditorProviderProps) {
+export function GuideEditorProvider({ children, nanoId, initialLocale, navigation }: GuideEditorProviderProps) {
   const t = useTranslations()
   const router = useRouter()
   const location = useLocation()
@@ -361,9 +365,12 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     resetAllForms()
   }, [nanoId, queryClient, resetAllForms])
 
+  const defaultNavigation = { backPath: `/guides/${nanoId}`, backLabel: 'guides.editor.guideDetails' }
+
   const value: GuideEditorContextValue = {
     nanoId,
     guideId,
+    navigation: navigation ?? defaultNavigation,
     activeLocale,
     availableLocales,
     setActiveLocale,
