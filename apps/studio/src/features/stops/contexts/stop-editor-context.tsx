@@ -1,8 +1,10 @@
-import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { assignStopAssetFn } from '@valguide/core/features/guides/stop/asset/assign-stop-asset.fn'
 import { removeStopAssetFn } from '@valguide/core/features/guides/stop/asset/remove-stop-asset.fn'
+import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
+import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
+import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
 import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale.fn'
 import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale.fn'
 import { updateStopLocaleDraftFn } from '@valguide/core/features/guides/stop/locale/update-stop-locale-draft.fn'
@@ -11,7 +13,8 @@ import type { AssetWithRole } from '@valguide/core/features/guides/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { type ReactNode, useCallback } from 'react'
+import { useEditorBase } from '@/features/editor/hooks/use-editor-base'
 import {
   stopAssetsDraftQueryOptions,
   stopAssetsPublishedQueryOptions,
@@ -19,18 +22,7 @@ import {
   stopLocaleDraftQueryOptions,
   stopLocalePublishedQueryOptions,
 } from '../query-options'
-import { type FormValueGetter, StopEditorContext, type StopEditorContextValue } from './stop-editor-types'
-
-type FormRegistry = Map<string, { getValues: FormValueGetter; isDirty: boolean }>
-
-const LOCALE_PARAM = 'locale'
-
-function parseLocale(locale: string | undefined, availableLocales: string[]): string {
-  if (locale && availableLocales.includes(locale)) {
-    return locale
-  }
-  return availableLocales[0] ?? defaultLocale
-}
+import { StopEditorContext, type StopEditorContextValue } from './stop-editor-types'
 
 interface StopEditorProviderProps {
   children: ReactNode
@@ -45,59 +37,38 @@ interface StopEditorProviderProps {
 
 export function StopEditorProvider({ children, nanoId, initialLocale, navigation }: StopEditorProviderProps) {
   const t = useTranslations()
-  const router = useRouter()
-  const location = useLocation()
-  const pathname = location.pathname
-  const searchParams = useSearch({ strict: false })
-  const queryClient = useQueryClient()
 
-  // Fetch stop detail (uses Suspense - data guaranteed by route loader)
-  const detailQuery = useSuspenseQuery(stopDetailQueryOptions(nanoId))
-  const stopDetail = detailQuery.data
-  const stopId = stopDetail.id
-  const availableLocales = stopDetail.availableLocales
-
-  // Active locale state
-  const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
-
-  // Sync active locale when detail updates and initialLocale becomes valid
-  useEffect(() => {
-    if (initialLocale && availableLocales.includes(initialLocale) && activeLocale !== initialLocale) {
-      setActiveLocaleState(initialLocale)
-    }
-  }, [initialLocale, availableLocales, activeLocale])
-
-  // Fetch locale-specific draft
-  const localeDraftQuery = useQuery({
-    ...stopLocaleDraftQueryOptions(nanoId, activeLocale),
-    enabled: !!nanoId,
+  const base = useEditorBase<StopDetail, StopLocaleDraftResult, StopLocalePublishedResult>({
+    nanoId,
+    initialLocale,
+    detailQueryOptions: stopDetailQueryOptions,
+    localeDraftQueryOptions: stopLocaleDraftQueryOptions,
+    localePublishedQueryOptions: stopLocalePublishedQueryOptions,
   })
-  const localeDraft = localeDraftQuery.data ?? null
-  const isLoadingLocale = localeDraftQuery.isLoading
 
-  // Fetch locale-specific published version
-  const localePublishedQuery = useQuery({
-    ...stopLocalePublishedQueryOptions(nanoId, activeLocale),
-    enabled: !!nanoId,
-  })
-  const localePublished = localePublishedQuery.data ?? null
-  const isLoadingLocalePublished = localePublishedQuery.isLoading
-
-  // Prefetch adjacent locales for instant switching
-  useEffect(() => {
-    if (!nanoId || availableLocales.length <= 1) return
-
-    const otherLocales = availableLocales.filter((l) => l !== activeLocale)
-    for (const locale of otherLocales) {
-      queryClient.prefetchQuery(stopLocaleDraftQueryOptions(nanoId, locale))
-      queryClient.prefetchQuery(stopLocalePublishedQueryOptions(nanoId, locale))
-    }
-  }, [nanoId, activeLocale, availableLocales, queryClient])
-
-  // Form dirty tracking and value collection
-  const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())
-  const formResetFnsRef = useRef<Map<string, () => void>>(new Map())
-  const formValueGettersRef = useRef<FormRegistry>(new Map())
+  const {
+    entityId: stopId,
+    detail: stopDetail,
+    activeLocale,
+    availableLocales,
+    setActiveLocale,
+    localeDraft,
+    isLoadingLocale,
+    localePublished,
+    isLoadingLocalePublished,
+    isDirty,
+    isSaving,
+    lastSaved,
+    setIsSaving,
+    setLastSaved,
+    registerFormDirty,
+    unregisterForm,
+    registerFormReset,
+    resetAllForms,
+    resetAllFormsAfterSave,
+    getFormValues,
+    queryClient,
+  } = base
 
   // Stop assets from server (immediate operations, no local state)
   const assetsQuery = useQuery({
@@ -131,26 +102,6 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     locale: item.locale,
   }))
 
-  // Save state
-  const [isSaving, setIsSaving] = useState(false)
-  const [lastSaved, setLastSaved] = useState<Date | null>(null)
-
-  // Derived isDirty (no longer includes assets - they're saved immediately)
-  const isDirty = dirtyForms.size > 0
-
-  // Set active locale and update URL
-  const setActiveLocale = useCallback(
-    (locale: string) => {
-      if (!availableLocales.includes(locale)) {
-        console.warn(`Locale ${locale} not in available locales`)
-        return
-      }
-      setActiveLocaleState(locale)
-      router.navigate({ to: pathname, search: { ...searchParams, [LOCALE_PARAM]: locale }, replace: true })
-    },
-    [pathname, router, searchParams, availableLocales],
-  )
-
   // Update available locales
   const updateAvailableLocales = useCallback(
     async (locales: string[]) => {
@@ -160,7 +111,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
         await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'detail'] })
 
         if (!locales.includes(activeLocale)) {
-          setActiveLocaleState(locales[0] ?? defaultLocale)
+          setActiveLocale(locales[0] ?? defaultLocale)
         }
 
         toast.success(t('stops.locales.updateSuccess'))
@@ -169,49 +120,8 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
         toast.error(t('stops.locales.updateError'))
       }
     },
-    [nanoId, queryClient, activeLocale, t],
+    [nanoId, queryClient, activeLocale, setActiveLocale, t],
   )
-
-  // Form registration
-  const registerFormDirty = useCallback((formId: string, formIsDirty: boolean, getValues?: FormValueGetter) => {
-    setDirtyForms((prev) => {
-      const next = new Set(prev)
-      if (formIsDirty) next.add(formId)
-      else next.delete(formId)
-      return next
-    })
-    if (getValues) {
-      formValueGettersRef.current.set(formId, { getValues, isDirty: formIsDirty })
-    }
-  }, [])
-
-  const unregisterForm = useCallback((formId: string) => {
-    setDirtyForms((prev) => {
-      const next = new Set(prev)
-      next.delete(formId)
-      return next
-    })
-    formResetFnsRef.current.delete(formId)
-    formValueGettersRef.current.delete(formId)
-  }, [])
-
-  const registerFormReset = useCallback((formId: string, resetFn: () => void) => {
-    formResetFnsRef.current.set(formId, resetFn)
-  }, [])
-
-  const resetAllForms = useCallback(() => {
-    for (const resetFn of formResetFnsRef.current.values()) {
-      resetFn()
-    }
-    setDirtyForms(new Set())
-  }, [])
-
-  const resetAllFormsAfterSave = useCallback(() => {
-    setDirtyForms(new Set())
-    for (const [formId, registration] of formValueGettersRef.current.entries()) {
-      formValueGettersRef.current.set(formId, { ...registration, isDirty: false })
-    }
-  }, [])
 
   // Asset operations (immediate server calls)
   const updateAssets = useCallback(
@@ -219,7 +129,6 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
       if (!nanoId) return
 
       try {
-        // Remove assets that are no longer in the list
         for (const current of assets) {
           if (!newAssets.find((a) => a.id === current.id)) {
             const channel = current.role === 'audio' ? 'audio.narration' : 'images.gallery'
@@ -229,7 +138,6 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
           }
         }
 
-        // Add new assets
         for (let i = 0; i < newAssets.length; i++) {
           const asset = newAssets[i]
           if (!assets.find((c) => c.id === asset.id)) {
@@ -240,7 +148,6 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
           }
         }
 
-        // Invalidate assets query to refetch
         await queryClient.invalidateQueries({ queryKey: ['stop', nanoId, 'assets'] })
       } catch (error) {
         console.error('Failed to update stop assets:', error)
@@ -293,8 +200,8 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
 
     setIsSaving(true)
     try {
-      // Save all dirty forms
-      for (const [formId, registration] of formValueGettersRef.current.entries()) {
+      const formValues = getFormValues()
+      for (const [formId, registration] of formValues.entries()) {
         if (!registration.isDirty) continue
 
         const values = registration.getValues()
@@ -304,15 +211,13 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
             data: {
               nanoId,
               locale: activeLocale,
-              title: values.title ?? '',
-              description: values.description ?? '',
-              transcription: values.transcription ?? '',
+              title: (values.title as string) ?? '',
+              description: (values.description as string) ?? '',
+              transcription: (values.transcription as string) ?? '',
             },
           })
         }
       }
-
-      // Assets are saved immediately via updateAssets/addAsset/removeAsset - no batching needed
 
       resetAllFormsAfterSave()
 
@@ -327,7 +232,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     } finally {
       setIsSaving(false)
     }
-  }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, t])
+  }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, getFormValues, setIsSaving, setLastSaved, t])
 
   // Publish locale
   const publish = useCallback(
