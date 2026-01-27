@@ -7,21 +7,21 @@ import { removeStopAsset } from './remove-stop-asset.server'
 export type { RemoveStopAssetInput, RemoveStopAssetResult } from './remove-stop-asset.server'
 
 const removeStopAssetSchema = z.object({
-	nanoId: z.string(),
-	assetId: z.string(),
-	channel: z.string(),
-	locale: z.string().nullable().optional(),
+  nanoId: z.string(),
+  assetId: z.string(),
+  channel: z.string(),
+  locale: z.string().nullable().optional(),
 })
 
 export const removeStopAssetFn = createServerFn({ method: 'POST' })
-	.middleware([requireAuthMiddleware])
-	.inputValidator(removeStopAssetSchema)
-	.handler(async ({ context, data }) => {
-		await requireStopAccessByNanoId(data.nanoId, context.user.id)
+  .middleware([requireAuthMiddleware])
+  .inputValidator(removeStopAssetSchema)
+  .handler(async ({ context, data }) => {
+    await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
-		return removeStopAsset(data.nanoId, {
-			assetId: data.assetId,
-			channel: data.channel,
-			locale: data.locale,
-		})
-	})
+    return removeStopAsset(data.nanoId, {
+      assetId: data.assetId,
+      channel: data.channel,
+      locale: data.locale,
+    })
+  })

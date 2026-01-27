@@ -8,12 +8,12 @@ import { stop, stopAsset } from '../../schema'
 // =============================================================================
 
 export type PublishStopAssetsInput = {
-	channel: string
-	locale?: string | null
+  channel: string
+  locale?: string | null
 }
 
 export type PublishStopAssetsResult = {
-	published: number
+  published: number
 }
 
 // =============================================================================
@@ -21,30 +21,30 @@ export type PublishStopAssetsResult = {
 // =============================================================================
 
 export async function publishStopAssets(
-	stopNanoId: string,
-	input: PublishStopAssetsInput,
+  stopNanoId: string,
+  input: PublishStopAssetsInput,
 ): Promise<PublishStopAssetsResult> {
-	const [foundStop] = await db.select({ id: stop.id }).from(stop).where(eq(stop.nanoId, stopNanoId)).limit(1)
+  const [foundStop] = await db.select({ id: stop.id }).from(stop).where(eq(stop.nanoId, stopNanoId)).limit(1)
 
-	if (!foundStop) {
-		throw new NotFoundError('Stop')
-	}
+  if (!foundStop) {
+    throw new NotFoundError('Stop')
+  }
 
-	const locale = input.locale ?? null
+  const locale = input.locale ?? null
 
-	return db.transaction(async (tx) => {
-		// 1. Lock stop row
-		await tx.select({ id: stop.id }).from(stop).where(eq(stop.id, foundStop.id)).for('update')
+  return db.transaction(async (tx) => {
+    // 1. Lock stop row
+    await tx.select({ id: stop.id }).from(stop).where(eq(stop.id, foundStop.id)).for('update')
 
-		// 2. Delete live assets for this channel+locale
-		const localeCondition = locale === null ? isNull(stopAsset.locale) : eq(stopAsset.locale, locale)
+    // 2. Delete live assets for this channel+locale
+    const localeCondition = locale === null ? isNull(stopAsset.locale) : eq(stopAsset.locale, locale)
 
-		await tx
-			.delete(stopAsset)
-			.where(and(eq(stopAsset.stopId, foundStop.id), eq(stopAsset.channel, input.channel), localeCondition))
+    await tx
+      .delete(stopAsset)
+      .where(and(eq(stopAsset.stopId, foundStop.id), eq(stopAsset.channel, input.channel), localeCondition))
 
-		// 3. Copy draft → live
-		const result = await tx.execute<{ count: number }>(sql`
+    // 3. Copy draft → live
+    const result = await tx.execute<{ count: number }>(sql`
 			WITH inserted AS (
 				INSERT INTO studio.stop_asset (id, stop_id, asset_id, channel, locale, position, published_at)
 				SELECT gen_random_uuid(), stop_id, asset_id, channel, locale, position, NOW()
@@ -57,6 +57,6 @@ export async function publishStopAssets(
 			SELECT COUNT(*)::int AS count FROM inserted
 		`)
 
-		return { published: result[0]?.count ?? 0 }
-	})
+    return { published: result[0]?.count ?? 0 }
+  })
 }
