@@ -9,7 +9,7 @@ import { Card, CardContent } from '@valguide/ui/components/card'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
 import { Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { EditorHeader } from './editor-header'
+import { EditorHeader } from '@/features/editor/components/editor-header'
 import { TranslationsManager } from './translations-manager'
 
 export type GuideDetailViewProps = {

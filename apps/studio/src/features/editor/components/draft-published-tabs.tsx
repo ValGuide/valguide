@@ -1,7 +1,8 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
+import type { EditorTab } from '../types'
 
-export type EditorTab = 'draft' | 'published'
+export type { EditorTab }
 
 export interface DraftPublishedTabsProps {
   activeTab: EditorTab

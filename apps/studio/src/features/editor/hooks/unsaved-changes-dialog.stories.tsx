@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { UnsavedChangesDialog } from './unsaved-changes-dialog'
 
 const meta = {
-  title: 'Guides/Dialogs/UnsavedChangesDialog',
+  title: 'Studio/Editor/Dialogs/UnsavedChangesDialog',
   component: UnsavedChangesDialog,
   parameters: {
     layout: 'centered',

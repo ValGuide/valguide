@@ -1,7 +1,8 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { Loader2 } from 'lucide-react'
+import { StopNotFound } from '@/features/guides/components/stop-not-found'
 import { StopEditPage } from '@/features/stops/components/stop-edit-page'
+import { StopEditSkeleton } from '@/features/stops/components/stop-edit-skeleton'
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
 import { stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '@/features/stops/query-options'
 
@@ -44,26 +45,6 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
   pendingComponent: StopEditSkeleton,
 })
 
-function StopEditSkeleton() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-    </div>
-  )
-}
-
-function StopNotFound() {
-  const t = useTranslations('stops')
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold">{t('notFound.title')}</h1>
-        <p className="mt-2 text-muted-foreground">{t('notFound.description')}</p>
-      </div>
-    </div>
-  )
-}
-
 function GuideStopEditPage() {
   const { guideNanoId, stopNanoId, locale } = Route.useLoaderData()
   const t = useTranslations('guides')
@@ -78,7 +59,7 @@ function GuideStopEditPage() {
         backParams: { nanoId: guideNanoId },
       }}
     >
-      <StopEditPage guideNanoId={guideNanoId} />
+      <StopEditPage />
     </StopEditorProvider>
   )
 }

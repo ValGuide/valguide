@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { LocaleSelector } from './locale-selector'
 
 const meta = {
-  title: 'Studio/Guides/LocaleSelector',
+  title: 'Studio/Editor/LocaleSelector',
   component: LocaleSelector,
   parameters: {
     layout: 'centered',
@@ -28,20 +28,10 @@ export const Default: Story = {
   },
 }
 
-export const WithManageLink: Story = {
-  args: {
-    value: 'en',
-    locales: ['en', 'de', 'rm'],
-    onValueChange: () => {},
-    guideNanoId: 'abc123xyz',
-  },
-}
-
 export const ManyLocales: Story = {
   args: {
     value: 'en',
     locales: ['en', 'de', 'rm', 'fr', 'it', 'es', 'pt', 'nl'],
     onValueChange: () => {},
-    guideNanoId: 'abc123xyz',
   },
 }

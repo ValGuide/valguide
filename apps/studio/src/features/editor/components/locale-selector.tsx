@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -8,12 +7,11 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from '@valguide/ui/components/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
 import { Check, ChevronDown, Globe } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 
 export type ContentLocale = string
 
@@ -21,8 +19,8 @@ export type LocaleSelectorProps = {
   value: ContentLocale
   locales: ContentLocale[]
   onValueChange: (locale: ContentLocale) => void
-  guideNanoId?: string
   className?: string
+  footer?: ReactNode
 }
 
 const LOCALE_NAMES: Record<string, string> = {
@@ -76,13 +74,12 @@ export function getLocaleDisplayName(locale: string): string {
 const SEARCH_THRESHOLD = 8
 
 function isTextKey(e: React.KeyboardEvent) {
-  // blocks letters/numbers/punctuation/space that would go into the input
   if (e.key.length !== 1) return false
   if (e.ctrlKey || e.metaKey || e.altKey) return false
   return true
 }
 
-export function LocaleSelector({ value, locales, onValueChange, guideNanoId, className }: LocaleSelectorProps) {
+export function LocaleSelector({ value, locales, onValueChange, className, footer }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
   const t = useTranslations('guides.localeSelector')
   const selectedLocaleName = getLocaleDisplayName(value)
@@ -132,10 +129,7 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
             }
           }}
         >
-          <CommandInput
-            aria-hidden={!showSearch} // screen readers ignore it
-            placeholder={t('searchLanguages')}
-          />
+          <CommandInput aria-hidden={!showSearch} placeholder={t('searchLanguages')} />
           <CommandList>
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
@@ -159,23 +153,7 @@ export function LocaleSelector({ value, locales, onValueChange, guideNanoId, cla
             </CommandGroup>
           </CommandList>
 
-          {guideNanoId && (
-            <>
-              <CommandSeparator />
-              <CommandGroup>
-                <CommandItem asChild>
-                  <Link
-                    to="/guides/$nanoId"
-                    params={{ nanoId: guideNanoId }}
-                    className="cursor-pointer text-muted-foreground"
-                    onClick={() => setOpen(false)}
-                  >
-                    {t('manageTranslations')}
-                  </Link>
-                </CommandItem>
-              </CommandGroup>
-            </>
-          )}
+          {footer}
         </Command>
       </PopoverContent>
     </Popover>

@@ -12,7 +12,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { Check, Plus, X } from 'lucide-react'
 import { useState } from 'react'
-import { getLocaleDisplayName } from './locale-selector'
+import { getLocaleDisplayName } from '@/features/editor/components/locale-selector'
 import { RemoveLocaleDialog } from './remove-locale-dialog'
 
 // TODO: unify with supportedLocales

@@ -6,16 +6,12 @@ import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
-import { StopEditLayout, type StopTranslationData } from '@/features/guides/components/stop-edit-layout'
-import type { StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
-import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
+import { StopEditLayout, type StopTranslationData } from '@/features/stops/components/stop-edit-layout'
+import type { StopLocaleEditorRef } from '@/features/stops/components/stop-locale-editor'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 
-interface StopEditPageProps {
-  guideNanoId?: string
-}
-
-export function StopEditPage({ guideNanoId }: StopEditPageProps) {
+export function StopEditPage() {
   const router = useRouter()
   const tStops = useTranslations('stops')
   const {
@@ -160,7 +156,6 @@ export function StopEditPage({ guideNanoId }: StopEditPageProps) {
       {unsavedChangesDialog}
       <StopEditLayout
         stopId={stopId}
-        guideNanoId={guideNanoId ?? ''}
         stopTranslation={stopTranslation}
         stopAssets={assets}
         stopAssetsPublished={assetsPublished}

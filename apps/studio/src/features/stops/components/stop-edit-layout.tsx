@@ -28,21 +28,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valg
 import { Globe } from 'lucide-react'
 import { type ReactNode, useCallback, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
-import { DiscardConfirmationDialog } from '@/features/guides/components/discard-confirmation-dialog'
-import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
-import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
-import { EditorHeader } from '@/features/guides/components/editor-header'
-import { LocaleSelector } from '@/features/guides/components/locale-selector'
-import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
-import { PublishConfirmationDialog } from '@/features/guides/components/publish-confirmation-dialog'
-import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
-import { UnpublishConfirmationDialog } from '@/features/guides/components/unpublish-confirmation-dialog'
-import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
-import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
+import { DiscardConfirmationDialog } from '@/features/editor/components/discard-confirmation-dialog'
+import { DraftPublishedTabs, type EditorTab } from '@/features/editor/components/draft-published-tabs'
+import { EditorActionsPanel } from '@/features/editor/components/editor-actions-panel'
+import { EditorHeader } from '@/features/editor/components/editor-header'
+import { LocaleSelector } from '@/features/editor/components/locale-selector'
+import { MobileMoreMenu, MobileSavePublish } from '@/features/editor/components/mobile-action-bar'
+import { PublishConfirmationDialog } from '@/features/editor/components/publish-confirmation-dialog'
+import { UnpublishConfirmationDialog } from '@/features/editor/components/unpublish-confirmation-dialog'
+import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
+import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
+import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/stops/components/stop-locale-editor'
 
 export interface StopEditLayoutProps {
   stopId: string
-  guideNanoId: string
   stopTranslation: StopTranslationData | null
   stopAssets: AssetWithRole[]
   stopAssetsPublished: AssetWithRole[]
@@ -69,7 +68,6 @@ export interface StopEditLayoutProps {
 
 export function StopEditLayout({
   stopId,
-  guideNanoId,
   stopTranslation,
   stopAssets,
   stopAssetsPublished,
@@ -246,12 +244,7 @@ export function StopEditLayout({
             <div className="shrink-0">{breadcrumbContent}</div>
 
             <div className="flex shrink-0 items-center gap-2">
-              <LocaleSelector
-                value={activeLocale}
-                locales={locales ?? ['en']}
-                onValueChange={onLocaleChange}
-                guideNanoId={guideNanoId}
-              />
+              <LocaleSelector value={activeLocale} locales={locales ?? ['en']} onValueChange={onLocaleChange} />
               <MobileMoreMenu
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
@@ -294,12 +287,7 @@ export function StopEditLayout({
           className="hidden lg:flex"
           actions={
             <>
-              <LocaleSelector
-                value={activeLocale}
-                locales={locales ?? ['en']}
-                onValueChange={onLocaleChange}
-                guideNanoId={guideNanoId}
-              />
+              <LocaleSelector value={activeLocale} locales={locales ?? ['en']} onValueChange={onLocaleChange} />
               <Button variant="ghost" size="sm">
                 {t('editor.preview')}
               </Button>

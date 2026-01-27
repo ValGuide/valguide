@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { UnpublishConfirmationDialog } from './unpublish-confirmation-dialog'
 
 const meta = {
-  title: 'Guides/Dialogs/UnpublishConfirmationDialog',
+  title: 'Studio/Editor/Dialogs/UnpublishConfirmationDialog',
   component: UnpublishConfirmationDialog,
   parameters: {
     layout: 'centered',

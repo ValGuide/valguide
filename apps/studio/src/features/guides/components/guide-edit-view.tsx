@@ -15,22 +15,22 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@val
 import { ChevronLeft, Globe, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
-import { DiscardConfirmationDialog } from '@/features/guides/components/discard-confirmation-dialog'
-import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
-import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
-import { EditorHeader } from '@/features/guides/components/editor-header'
+import { DiscardConfirmationDialog } from '@/features/editor/components/discard-confirmation-dialog'
+import { DraftPublishedTabs, type EditorTab } from '@/features/editor/components/draft-published-tabs'
+import { EditorActionsPanel } from '@/features/editor/components/editor-actions-panel'
+import { EditorHeader } from '@/features/editor/components/editor-header'
+import { getLocaleDisplayName, LocaleSelector } from '@/features/editor/components/locale-selector'
+import { MobileMoreMenu, MobileSavePublish } from '@/features/editor/components/mobile-action-bar'
+import { PublishConfirmationDialog } from '@/features/editor/components/publish-confirmation-dialog'
+import { UnpublishConfirmationDialog } from '@/features/editor/components/unpublish-confirmation-dialog'
+import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
+import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
 import { GuideMetadataForm, type GuideMetadataFormRef } from '@/features/guides/components/guide-metadata-form'
 import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { HideStopDialog } from '@/features/guides/components/hide-stop-dialog'
-import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
-import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
-import { PublishConfirmationDialog } from '@/features/guides/components/publish-confirmation-dialog'
 import { ShowStopDialog } from '@/features/guides/components/show-stop-dialog'
 import { StopsList } from '@/features/guides/components/stops-list'
-import { UnpublishConfirmationDialog } from '@/features/guides/components/unpublish-confirmation-dialog'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
-import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
-import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
 interface GuideEditViewProps {
   onPublish?: (guideId: string, locale: string) => Promise<unknown>
@@ -278,12 +278,7 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
             </Button>
 
             <div className="flex shrink-0 items-center gap-2">
-              <LocaleSelector
-                value={activeLocale}
-                locales={availableLocales}
-                onValueChange={setActiveLocale}
-                guideNanoId={nanoId}
-              />
+              <LocaleSelector value={activeLocale} locales={availableLocales} onValueChange={setActiveLocale} />
               <MobileMoreMenu
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
@@ -343,12 +338,7 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
           className="hidden lg:flex"
           actions={
             <>
-              <LocaleSelector
-                value={activeLocale}
-                locales={availableLocales}
-                onValueChange={setActiveLocale}
-                guideNanoId={nanoId}
-              />
+              <LocaleSelector value={activeLocale} locales={availableLocales} onValueChange={setActiveLocale} />
               <Button variant="ghost" size="sm">
                 {t('editor.preview')}
               </Button>

@@ -10,7 +10,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Mic } from 'lucide-react'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
-import { type StopTranslationFormData, stopTranslationFormSchema } from '../schemas/guide-form'
+import { type StopTranslationFormData, stopTranslationFormSchema } from '@/features/guides/schemas/guide-form'
 
 export type StopLocaleEditorProps = {
   locale: string

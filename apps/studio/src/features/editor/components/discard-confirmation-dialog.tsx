@@ -1,3 +1,4 @@
+import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,24 +9,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
-import { useTranslations } from '@valguide/core/i18n/client'
 
-interface UnpublishConfirmationDialogProps {
+interface DiscardConfirmationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  contentType: 'guide' | 'stop'
   onConfirm: () => void
 }
 
-export function UnpublishConfirmationDialog({
-  open,
-  onOpenChange,
-  contentType,
-  onConfirm,
-}: UnpublishConfirmationDialogProps) {
-  const tGuide = useTranslations('guides.confirmUnpublishGuide')
-  const tStop = useTranslations('guides.confirmUnpublishStop')
-  const t = contentType === 'guide' ? tGuide : tStop
+export function DiscardConfirmationDialog({ open, onOpenChange, onConfirm }: DiscardConfirmationDialogProps) {
+  const t = useTranslations('guides.confirmDiscard')
 
   const handleConfirm = () => {
     onConfirm()

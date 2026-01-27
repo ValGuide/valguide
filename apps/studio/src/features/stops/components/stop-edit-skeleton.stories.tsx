@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { StopEditSkeleton } from './stop-edit-skeleton'
 
 const meta = {
-  title: 'Studio/Pages/Guides/Edit/StopEditSkeleton',
+  title: 'Studio/Pages/Stops/Edit/StopEditSkeleton',
   component: StopEditSkeleton,
   parameters: {
     layout: 'fullscreen',

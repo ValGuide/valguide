@@ -1,20 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from 'storybook/test'
-import { PublishConfirmationDialog } from './publish-confirmation-dialog'
+import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
 
 const meta = {
-  title: 'Guides/Dialogs/PublishConfirmationDialog',
-  component: PublishConfirmationDialog,
+  title: 'Studio/Editor/Dialogs/DiscardConfirmationDialog',
+  component: DiscardConfirmationDialog,
   parameters: {
     layout: 'centered',
   },
   args: {
     open: true,
     onOpenChange: fn(),
-    isPublishing: false,
     onConfirm: fn(),
   },
-} satisfies Meta<typeof PublishConfirmationDialog>
+} satisfies Meta<typeof DiscardConfirmationDialog>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -22,14 +21,6 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     open: true,
-    isPublishing: false,
-  },
-}
-
-export const Publishing: Story = {
-  args: {
-    open: true,
-    isPublishing: true,
   },
 }
 
