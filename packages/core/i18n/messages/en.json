@@ -613,6 +613,7 @@
       "sharedContentDescription": "Changes here will apply to all languages",
       "localeContent": "Language-specific content",
       "localeContentDescription": "Edit the stop content for this language",
+      "addTranslation": "Add translation",
       "titleLabel": "Title",
       "titlePlaceholder": "Enter stop title",
       "descriptionLabel": "Description",

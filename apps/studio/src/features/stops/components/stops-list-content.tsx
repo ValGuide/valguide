@@ -26,7 +26,7 @@ export function StopsListContent({ stops, onEditStop }: StopsListContentProps) {
             </CardHeader>
             <CardContent>
               <span className="text-xs text-muted-foreground">
-                {stop.availableLocales.length} {t('list.locales')}
+                {t('list.locales', { count: stop.availableLocales.length })}
               </span>
             </CardContent>
           </Card>

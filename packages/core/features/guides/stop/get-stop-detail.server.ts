@@ -20,6 +20,9 @@ export type StopDetail = {
   id: string
   nanoId: string
   organizationId: string
+  /** Locales derived from stopLocale records (locales that have been created for this stop) */
+  existingLocales: string[]
+  /** @deprecated Use existingLocales - kept for backward compatibility during migration */
   availableLocales: string[]
   archivedAt: Date | null
   createdAt: Date
@@ -68,6 +71,9 @@ export async function getStopDetail(nanoId: string): Promise<StopDetail | null> 
     publishedVersionId: row.publishedVersionId,
   }))
 
+  // Derive existingLocales from stopLocale records (the source of truth)
+  const existingLocales = locales.map((l) => l.locale)
+
   const [settings] = await db
     .select({
       coordinates: stopSettingsDraft.coordinates,
@@ -81,7 +87,8 @@ export async function getStopDetail(nanoId: string): Promise<StopDetail | null> 
     id: foundStop.id,
     nanoId: foundStop.nanoId,
     organizationId: foundStop.organizationId,
-    availableLocales: foundStop.availableLocales ?? [],
+    existingLocales,
+    availableLocales: existingLocales, // Deprecated: alias for backward compatibility
     archivedAt: foundStop.archivedAt,
     createdAt: foundStop.createdAt,
     updatedAt: foundStop.updatedAt,

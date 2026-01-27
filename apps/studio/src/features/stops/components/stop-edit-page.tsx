@@ -5,9 +5,10 @@ import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/ass
 import { publishStopAssetsFn } from '@valguide/core/features/guides/stop/asset/publish-stop-assets.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { Alert, AlertDescription } from '@valguide/ui/components/alert'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { ChevronLeft, Globe } from 'lucide-react'
+import { ChevronLeft, Globe, Info } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
@@ -28,6 +29,7 @@ export function StopEditPage() {
     localePublished,
     activeLocale,
     availableLocales,
+    existingLocales,
     isDirty,
     isSaving,
     lastSaved,
@@ -53,6 +55,12 @@ export function StopEditPage() {
   const hasDraft = !!localeDraft
   const hasPublished = !!localeDraft?.publishedVersionId
   const hasUnpublishedChanges = localeDraft?.hasUnpublishedChanges ?? false
+
+  // Get display name for the current locale
+  const localeDisplayName = useMemo(() => {
+    const dn = new Intl.DisplayNames(['en'], { type: 'language' })
+    return dn.of(activeLocale) ?? activeLocale
+  }, [activeLocale])
 
   const statusDisplay: StatusDisplay = useMemo(() => {
     const display = getStopTranslationStatusDisplay(

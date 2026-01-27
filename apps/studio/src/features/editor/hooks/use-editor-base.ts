@@ -19,6 +19,7 @@ function parseLocale(locale: string | undefined, availableLocales: string[]): st
 export interface EntityDetail {
   id: string
   availableLocales: string[]
+  existingLocales?: string[]
 }
 
 export interface UseEditorBaseOptions {
@@ -38,6 +39,7 @@ export interface EditorBaseResult<TDetail extends EntityDetail, TLocaleDraft, TL
   detail: TDetail
   activeLocale: string
   availableLocales: string[]
+  existingLocales: string[]
   setActiveLocale: (locale: string) => void
   localeDraft: TLocaleDraft | null
   isLoadingLocale: boolean
@@ -74,6 +76,7 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
   const detail = detailQuery.data as TDetail
   const entityId = detail.id
   const availableLocales = detail.availableLocales
+  const existingLocales = detail.existingLocales ?? detail.availableLocales
 
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
 
@@ -176,6 +179,7 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
     detail,
     activeLocale,
     availableLocales,
+    existingLocales,
     setActiveLocale,
     localeDraft,
     isLoadingLocale,

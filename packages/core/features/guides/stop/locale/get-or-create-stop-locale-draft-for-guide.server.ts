@@ -1,31 +1,38 @@
 import { and, eq } from 'drizzle-orm'
 import { db } from '../../../db'
-import { stop, stopLocale, stopLocaleDraft } from '../../schema'
-
-// =============================================================================
-// TYPES
-// =============================================================================
-
-export type StopLocaleDraftResult = {
-  locale: string
-  title: string | null
-  description: string | null
-  transcription: string | null
-  revision: number
-  hasUnpublishedChanges: boolean
-  publishedVersionId: string | null
-}
+import { guide, stop, stopLocale, stopLocaleDraft } from '../../schema'
+import type { StopLocaleDraftResult } from './get-stop-locale-draft.server'
 
 // =============================================================================
 // INTERNAL FUNCTION
 // =============================================================================
 
-export async function getStopLocaleDraft(stopNanoId: string, locale: string): Promise<StopLocaleDraftResult | null> {
+/**
+ * Get or create a stop locale draft for a stop within a guide context.
+ * Validates that the locale is in the guide's availableLocales.
+ * Auto-creates stopLocale + stopLocaleDraft if missing.
+ */
+export async function getOrCreateStopLocaleDraftForGuide(
+  guideNanoId: string,
+  stopNanoId: string,
+  locale: string,
+): Promise<StopLocaleDraftResult | null> {
+  // Fetch guide and validate locale is in availableLocales
+  const [foundGuide] = await db
+    .select({ id: guide.id, availableLocales: guide.availableLocales })
+    .from(guide)
+    .where(eq(guide.nanoId, guideNanoId))
+    .limit(1)
+
+  if (!foundGuide) return null
+  if (!foundGuide.availableLocales.includes(locale)) return null
+
+  // Fetch stop
   const [foundStop] = await db.select({ id: stop.id }).from(stop).where(eq(stop.nanoId, stopNanoId)).limit(1)
 
   if (!foundStop) return null
 
-  // Try to get locale with its draft (no longer checks stop.availableLocales - locales are derived from stopLocale records)
+  // Try to get locale with its draft
   const [row] = await db
     .select({
       localeId: stopLocale.id,
@@ -42,15 +49,28 @@ export async function getStopLocaleDraft(stopNanoId: string, locale: string): Pr
     .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
     .limit(1)
 
-  // Return null if locale doesn't exist - caller should use ensureStopLocaleExists first
+  // Auto-create missing locale + draft (like guide pattern)
   if (!row) {
-    return null
+    const [newLocale] = await db
+      .insert(stopLocale)
+      .values({ stopId: foundStop.id, locale })
+      .returning({ id: stopLocale.id })
+    await db.insert(stopLocaleDraft).values({ stopLocaleId: newLocale.id })
+    // Return empty draft values
+    return {
+      locale,
+      title: null,
+      description: null,
+      transcription: null,
+      revision: 0,
+      hasUnpublishedChanges: true,
+      publishedVersionId: null,
+    }
   }
 
   // Auto-create missing draft if locale exists but draft was deleted
   if (row.revision === null) {
     await db.insert(stopLocaleDraft).values({ stopLocaleId: row.localeId })
-    // Return empty draft values
     return {
       locale,
       title: null,

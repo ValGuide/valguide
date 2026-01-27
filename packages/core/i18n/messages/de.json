@@ -612,6 +612,7 @@
       "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
       "localeContent": "Sprachspezifischer Inhalt",
       "localeContentDescription": "Bearbeiten Sie den Stop-Inhalt für diese Sprache",
+      "addTranslation": "Übersetzung hinzufügen",
       "titleLabel": "Titel",
       "titlePlaceholder": "Stop-Titel eingeben",
       "descriptionLabel": "Beschreibung",

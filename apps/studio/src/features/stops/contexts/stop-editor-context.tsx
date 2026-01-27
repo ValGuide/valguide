@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
+import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { assignStopAssetFn } from '@valguide/core/features/guides/stop/asset/assign-stop-asset.fn'
 import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
 import { removeStopAssetFn } from '@valguide/core/features/guides/stop/asset/remove-stop-asset.fn'
 import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
+import { ensureStopLocaleExistsFn } from '@valguide/core/features/guides/stop/locale/ensure-stop-locale-exists.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
 import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
 import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale.fn'
@@ -13,7 +15,7 @@ import { updateStopFn } from '@valguide/core/features/guides/stop/update-stop.fn
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { type ReactNode, useCallback } from 'react'
+import { type ReactNode, useCallback, useMemo } from 'react'
 import { useEditorBase } from '@/features/editor/hooks/use-editor-base'
 import {
   stopAssetsDraftQueryOptions,
@@ -28,6 +30,9 @@ interface StopEditorProviderProps {
   children: ReactNode
   nanoId: string
   initialLocale?: string
+  /** When editing a stop within a guide context, pass the guide's available locales.
+   * This determines which locales are shown in the locale picker (guide's locales only). */
+  guideAvailableLocales?: string[]
   navigation?: {
     backPath: string
     backLabel: string
@@ -35,8 +40,15 @@ interface StopEditorProviderProps {
   }
 }
 
-export function StopEditorProvider({ children, nanoId, initialLocale, navigation }: StopEditorProviderProps) {
+export function StopEditorProvider({
+  children,
+  nanoId,
+  initialLocale,
+  guideAvailableLocales,
+  navigation,
+}: StopEditorProviderProps) {
   const t = useTranslations()
+  const router = useRouter()
 
   const base = useEditorBase<StopDetail, StopLocaleDraftResult, StopLocalePublishedResult>({
     nanoId,
@@ -50,8 +62,9 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     entityId: stopId,
     detail: stopDetail,
     activeLocale,
-    availableLocales,
-    setActiveLocale,
+    availableLocales: _baseAvailableLocales,
+    existingLocales,
+    setActiveLocale: baseSetActiveLocale,
     localeDraft,
     isLoadingLocale,
     localePublished,
@@ -69,6 +82,43 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     getFormValues,
     queryClient,
   } = base
+
+  // Compute effective available locales based on context:
+  // - Guide context: show only guide's locales (the "project languages")
+  // - Standalone: show only stop's existing locales
+  const effectiveAvailableLocales = useMemo(() => {
+    if (guideAvailableLocales) {
+      return guideAvailableLocales
+    }
+    return existingLocales
+  }, [guideAvailableLocales, existingLocales])
+
+  // Track which locales are "new" (in guide but not yet in stop)
+  const newLocales = useMemo(() => {
+    if (!guideAvailableLocales) return new Set<string>()
+    const existing = new Set(existingLocales)
+    return new Set(guideAvailableLocales.filter((l) => !existing.has(l)))
+  }, [guideAvailableLocales, existingLocales])
+
+  // Wrap setActiveLocale to create locale records on-demand for new guide locales
+  const setActiveLocale = useCallback(
+    async (locale: string) => {
+      if (newLocales.has(locale)) {
+        // Create stopLocale + stopLocaleDraft records immediately
+        await ensureStopLocaleExistsFn({ data: { nanoId, locale } })
+        // Invalidate and re-run the route loader by navigating with the new locale
+        // This bypasses baseSetActiveLocale's stale availableLocales check
+        await queryClient.invalidateQueries({ queryKey: ['stop', nanoId] })
+        router.navigate({ search: { locale }, replace: true })
+      } else {
+        baseSetActiveLocale(locale)
+      }
+    },
+    [nanoId, newLocales, baseSetActiveLocale, queryClient, router],
+  )
+
+  // Expose availableLocales as the effective locales (for backward compatibility)
+  const availableLocales = effectiveAvailableLocales
 
   // Stop assets from server (immediate operations, no local state)
   const assetsQuery = useQuery({
@@ -265,6 +315,8 @@ export function StopEditorProvider({ children, nanoId, initialLocale, navigation
     stopId,
     activeLocale,
     availableLocales,
+    existingLocales,
+    newLocales,
     setActiveLocale,
     updateAvailableLocales,
     stopDetail,

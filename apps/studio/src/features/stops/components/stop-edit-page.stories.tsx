@@ -12,6 +12,7 @@ const createMockStopDetail = (overrides: Partial<StopDetail> = {}): StopDetail =
   id: 'stop-1',
   nanoId: 'stop1abc',
   organizationId: 'org-1',
+  existingLocales: ['en', 'de'],
   availableLocales: ['en', 'de'],
   archivedAt: null,
   createdAt: new Date('2025-01-01T10:00:00Z'),
@@ -166,7 +167,10 @@ export const EmptyStop: Story = {
 
 export const MultipleLocales: Story = {
   args: {
-    stopDetail: createMockStopDetail({ availableLocales: ['en', 'de', 'fr', 'it'] }),
+    stopDetail: createMockStopDetail({
+      existingLocales: ['en', 'de', 'fr', 'it'],
+      availableLocales: ['en', 'de', 'fr', 'it'],
+    }),
     localeDraft: createMockLocaleDraft(),
     assets: createMockAssets(2),
   } as StoryContextData,

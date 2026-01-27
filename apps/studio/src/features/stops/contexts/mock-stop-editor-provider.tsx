@@ -33,6 +33,8 @@ export function MockStopEditorProvider({
     navigation,
     activeLocale,
     availableLocales: stopDetail.availableLocales,
+    existingLocales: stopDetail.existingLocales,
+    newLocales: new Set<string>(),
     setActiveLocale,
     updateAvailableLocales: async (locales: string[]) => {
       console.log('Mock: updateAvailableLocales', locales)

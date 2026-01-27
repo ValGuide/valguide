@@ -25,7 +25,12 @@ export interface StopEditorContextValue {
 
   // Locale management (synced to URL)
   activeLocale: string
+  /** Effective available locales (guide's locales in guide context, existing locales standalone) */
   availableLocales: string[]
+  /** Locales that have stopLocale records (translations created for this stop) */
+  existingLocales: string[]
+  /** Locales that are in guide but not yet in stop (will be created on switch) */
+  newLocales: Set<string>
   setActiveLocale: (locale: string) => void
   updateAvailableLocales: (locales: string[]) => Promise<void>
 

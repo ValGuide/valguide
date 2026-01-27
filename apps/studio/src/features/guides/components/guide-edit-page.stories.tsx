@@ -68,6 +68,7 @@ const createMockStops = (count: number): StructureDraftStop[] =>
     visible: true,
     title: `Stop ${i + 1}: ${['Gallery', 'Exhibition', 'Courtyard', 'Hall', 'Room'][i % 5]} ${Math.floor(i / 5) + 1}`,
     locale: 'en',
+    thumbnailUrl: null,
   }))
 
 /** Story-only context data, not component props */
