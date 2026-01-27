@@ -2,6 +2,7 @@ import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { getStopTranslationStatusDisplay } from '@valguide/core/features/guides/status-utils'
 import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
+import { publishStopAssetsFn } from '@valguide/core/features/guides/stop/asset/publish-stop-assets.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
@@ -183,6 +184,10 @@ export function StopEditPage() {
     try {
       if (isDirty) await save()
       await publish(activeLocale)
+      // Publish locale-independent assets (gallery images)
+      await publishStopAssetsFn({ data: { nanoId, channel: 'images.gallery', locale: null } })
+      // Publish locale-specific assets (audio narration)
+      await publishStopAssetsFn({ data: { nanoId, channel: 'audio.narration', locale: activeLocale } })
       toast.success(t('publish.success'))
       await refetch()
     } catch (error) {
@@ -191,7 +196,7 @@ export function StopEditPage() {
     } finally {
       setIsPublishing(false)
     }
-  }, [activeLocale, refetch, publish, isDirty, save, t])
+  }, [activeLocale, nanoId, refetch, publish, isDirty, save, t])
 
   const handleUnpublish = useCallback(async () => {
     try {

@@ -43,6 +43,9 @@ export interface BaseEditLayoutProps {
   /** Locale change handler */
   onLocaleChange: (locale: string) => void
 
+  /** Footer content for locale selector (e.g., "Manage Translations" link) */
+  localeSelectorFooter?: ReactNode
+
   /** Whether there are unsaved changes */
   isDirty: boolean
 
@@ -101,6 +104,7 @@ export function BaseEditLayout({
   activeLocale,
   availableLocales,
   onLocaleChange,
+  localeSelectorFooter,
   isDirty,
   isSaving,
   isPublishing,
@@ -149,7 +153,12 @@ export function BaseEditLayout({
             )}
 
             <div className="flex shrink-0 items-center gap-2">
-              <LocaleSelector value={activeLocale} locales={availableLocales} onValueChange={onLocaleChange} />
+              <LocaleSelector
+                value={activeLocale}
+                locales={availableLocales}
+                onValueChange={onLocaleChange}
+                footer={localeSelectorFooter}
+              />
               <MobileMoreMenu
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
@@ -187,7 +196,12 @@ export function BaseEditLayout({
             className="hidden lg:flex"
             actions={
               <>
-                <LocaleSelector value={activeLocale} locales={availableLocales} onValueChange={onLocaleChange} />
+                <LocaleSelector
+                  value={activeLocale}
+                  locales={availableLocales}
+                  onValueChange={onLocaleChange}
+                  footer={localeSelectorFooter}
+                />
                 <Button variant="ghost" size="sm">
                   {t('editor.preview')}
                 </Button>
@@ -201,7 +215,12 @@ export function BaseEditLayout({
             className="hidden lg:flex"
             actions={
               <>
-                <LocaleSelector value={activeLocale} locales={availableLocales} onValueChange={onLocaleChange} />
+                <LocaleSelector
+                  value={activeLocale}
+                  locales={availableLocales}
+                  onValueChange={onLocaleChange}
+                  footer={localeSelectorFooter}
+                />
                 <Button variant="ghost" size="sm">
                   {t('editor.preview')}
                 </Button>
