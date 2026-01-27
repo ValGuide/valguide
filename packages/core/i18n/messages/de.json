@@ -339,10 +339,6 @@
       "error": "Guide konnte nicht erstellt werden",
       "errorDescription": "Beim Erstellen des Guides ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     },
-    "defaults": {
-      "newGuideTitle": "Neuer Guide",
-      "newGuideDescription": "Beginnen Sie mit der Erstellung Ihres Guide-Inhalts"
-    },
     "loading": {
       "opening": "Guide wird geöffnet...",
       "openingDescription": "Bitte warten Sie, während wir Ihren Guide laden"
@@ -592,7 +588,6 @@
     "edit": "Bearbeiten",
     "untitled": "Unbenannter Stop",
     "unknownTitle": "Unbekannt",
-    "newStopTitle": "Neuer Stop",
     "backToStops": "Zurück zu Stops",
     "stopNumber": "Station {number}",
     "stopTitle": "{number}: {title}",

@@ -339,10 +339,6 @@
       "error": "Failed to create guide",
       "errorDescription": "An error occurred while creating the guide. Please try again."
     },
-    "defaults": {
-      "newGuideTitle": "New Guide",
-      "newGuideDescription": "Start creating your guide content"
-    },
     "loading": {
       "opening": "Opening guide...",
       "openingDescription": "Please wait while we load your guide"
@@ -593,7 +589,6 @@
     "edit": "Edit",
     "untitled": "Untitled Stop",
     "unknownTitle": "Unknown",
-    "newStopTitle": "New Stop",
     "backToStops": "Back to Stops",
     "stopNumber": "Stop {number}",
     "stopTitle": "{number}: {title}",

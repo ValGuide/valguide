@@ -339,10 +339,6 @@
       "error": "Errur cun crear il guid",
       "errorDescription": "In errur è succedì cun crear il guid. Empruvei per plascher aunc inagada."
     },
-    "defaults": {
-      "newGuideTitle": "Nov Guid",
-      "newGuideDescription": "Cumenzai a crear il cuntegn da tes guid"
-    },
     "loading": {
       "opening": "Avrir il guid...",
       "openingDescription": "Per plascher spetgar durant ch'ins chargiescha voss guid"
@@ -592,7 +588,6 @@
     "edit": "Modifitgar",
     "untitled": "Stop senza titel",
     "unknownTitle": "Nunenconuschent",
-    "newStopTitle": "Nov stop",
     "backToStops": "Enavos tar ils stops",
     "stopNumber": "Staziun {number}",
     "stopTitle": "{number}: {title}",

@@ -120,7 +120,7 @@ export function GuideEditorProvider({ children, nanoId, initialLocale, navigatio
   const addStop = useCallback(async () => {
     if (!nanoId) return null
     try {
-      const newStop = await createStopFn({ data: { title: t('stops.newStopTitle'), locale: activeLocale } })
+      const newStop = await createStopFn({ data: { locale: activeLocale } })
       await addStopToGuideFn({ data: { guideNanoId: nanoId, stopNanoId: newStop.nanoId } })
       await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'structure'] })
       const structureResult = await queryClient.fetchQuery(guideStructureDraftQueryOptions(nanoId, activeLocale))
