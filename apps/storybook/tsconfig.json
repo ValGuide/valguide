@@ -8,7 +8,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.css",
-    "next.config.mjs"
+    "next.config.mjs",
+    "../../packages/core/i18n/global.d.ts"
   ],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {

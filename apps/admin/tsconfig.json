@@ -16,6 +16,13 @@
       "@valguide/logger": ["../../packages/logger"]
     }
   },
-  "include": ["next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "next.config.mjs",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../../packages/core/i18n/global.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
