@@ -507,6 +507,12 @@
       "confirm": "Discard",
       "cancel": "Cancel"
     },
+    "confirmPublish": {
+      "title": "Publish this translation?",
+      "description": "This will make your changes visible to visitors in this language.",
+      "confirm": "Publish",
+      "cancel": "Cancel"
+    },
     "confirmUnpublishGuide": {
       "title": "Unpublish this translation?",
       "description": "Visitors will no longer see this language version of the guide. The guide remains available in other languages. Nothing is deleted—you can republish anytime.",

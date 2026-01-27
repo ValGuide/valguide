@@ -507,6 +507,12 @@
       "confirm": "Verwerfen",
       "cancel": "Abbrechen"
     },
+    "confirmPublish": {
+      "title": "Diese Übersetzung veröffentlichen?",
+      "description": "Dies macht deine Änderungen für Besucher in dieser Sprache sichtbar.",
+      "confirm": "Veröffentlichen",
+      "cancel": "Abbrechen"
+    },
     "confirmUnpublishGuide": {
       "title": "Diese Übersetzung zurückziehen?",
       "description": "Besucher sehen diese Sprachversion des Guides nicht mehr. Der Guide bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",

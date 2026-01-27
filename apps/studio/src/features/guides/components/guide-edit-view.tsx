@@ -15,6 +15,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@val
 import { ChevronLeft, Globe, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
+import { DiscardConfirmationDialog } from '@/features/guides/components/discard-confirmation-dialog'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { EditorHeader } from '@/features/guides/components/editor-header'
@@ -23,8 +24,10 @@ import { GuideProgress } from '@/features/guides/components/guide-progress'
 import { HideStopDialog } from '@/features/guides/components/hide-stop-dialog'
 import { getLocaleDisplayName, LocaleSelector } from '@/features/guides/components/locale-selector'
 import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
+import { PublishConfirmationDialog } from '@/features/guides/components/publish-confirmation-dialog'
 import { ShowStopDialog } from '@/features/guides/components/show-stop-dialog'
 import { StopsList } from '@/features/guides/components/stops-list'
+import { UnpublishConfirmationDialog } from '@/features/guides/components/unpublish-confirmation-dialog'
 import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
@@ -69,6 +72,11 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
   const [isPublishing, setIsPublishing] = useState(false)
   const [stopToHide, setStopToHide] = useState<{ id: string; title: string } | null>(null)
   const [stopToShow, setStopToShow] = useState<{ id: string; title: string } | null>(null)
+
+  // Confirmation dialog state (centralized for desktop + mobile action bars)
+  const [publishDialogOpen, setPublishDialogOpen] = useState(false)
+  const [unpublishDialogOpen, setUnpublishDialogOpen] = useState(false)
+  const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
@@ -273,11 +281,10 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
                 guideNanoId={nanoId}
               />
               <MobileMoreMenu
-                contentType="guide"
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
-                onUnpublish={handleUnpublish}
-                onDiscard={() => Promise.resolve()}
+                onUnpublishClick={() => setUnpublishDialogOpen(true)}
+                onDiscardClick={() => setDiscardDialogOpen(true)}
               />
               <Sheet>
                 <SheetTrigger asChild>
@@ -379,7 +386,7 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
             isSaving={isSaving}
             isPublishing={isPublishing}
             onSave={save}
-            onPublish={handlePublish}
+            onPublishClick={() => setPublishDialogOpen(true)}
             disabled={isReadOnly}
           />
         </div>
@@ -458,16 +465,15 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
           <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
             <div className="p-5 space-y-6">
               <EditorActionsPanel
-                contentType="guide"
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
                 isDirty={isDirty}
                 isSaving={isSaving}
                 isPublishing={isPublishing}
                 onSave={save}
-                onPublish={handlePublish}
-                onUnpublish={handleUnpublish}
-                onDiscard={() => Promise.resolve()}
+                onPublishClick={() => setPublishDialogOpen(true)}
+                onUnpublishClick={() => setUnpublishDialogOpen(true)}
+                onDiscardClick={() => setDiscardDialogOpen(true)}
                 onOpenVersionHistory={() => {}}
                 disabled={isReadOnly}
               />
@@ -495,6 +501,26 @@ export function GuideEditView({ onPublish, onUnpublish, onHideStop, onShowStop, 
         onOpenChange={(open) => !open && setStopToShow(null)}
         stopTitle={stopToShow?.title ?? ''}
         onConfirm={handleConfirmShow}
+      />
+
+      <PublishConfirmationDialog
+        open={publishDialogOpen}
+        onOpenChange={setPublishDialogOpen}
+        isPublishing={isPublishing}
+        onConfirm={handlePublish}
+      />
+
+      <UnpublishConfirmationDialog
+        open={unpublishDialogOpen}
+        onOpenChange={setUnpublishDialogOpen}
+        contentType="guide"
+        onConfirm={handleUnpublish}
+      />
+
+      <DiscardConfirmationDialog
+        open={discardDialogOpen}
+        onOpenChange={setDiscardDialogOpen}
+        onConfirm={() => Promise.resolve()}
       />
     </>
   )

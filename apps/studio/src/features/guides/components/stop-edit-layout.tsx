@@ -28,12 +28,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valg
 import { Globe } from 'lucide-react'
 import { type ReactNode, useCallback, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
+import { DiscardConfirmationDialog } from '@/features/guides/components/discard-confirmation-dialog'
 import { DraftPublishedTabs, type EditorTab } from '@/features/guides/components/draft-published-tabs'
 import { EditorActionsPanel } from '@/features/guides/components/editor-actions-panel'
 import { EditorHeader } from '@/features/guides/components/editor-header'
 import { LocaleSelector } from '@/features/guides/components/locale-selector'
 import { MobileMoreMenu, MobileSavePublish } from '@/features/guides/components/mobile-action-bar'
+import { PublishConfirmationDialog } from '@/features/guides/components/publish-confirmation-dialog'
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/guides/components/stop-locale-editor'
+import { UnpublishConfirmationDialog } from '@/features/guides/components/unpublish-confirmation-dialog'
 import { useAutoSave } from '@/features/guides/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/guides/hooks/use-unsaved-changes-guard'
 
@@ -95,6 +98,11 @@ export function StopEditLayout({
 
   const [activeTab, setActiveTab] = useState<EditorTab>('draft')
   const [isPublishing, setIsPublishing] = useState(false)
+
+  // Confirmation dialog state (centralized for desktop + mobile action bars)
+  const [publishDialogOpen, setPublishDialogOpen] = useState(false)
+  const [unpublishDialogOpen, setUnpublishDialogOpen] = useState(false)
+  const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
@@ -240,11 +248,10 @@ export function StopEditLayout({
                 guideNanoId={guideNanoId}
               />
               <MobileMoreMenu
-                contentType="stop"
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
-                onUnpublish={handleUnpublish}
-                onDiscard={handleDiscard}
+                onUnpublishClick={() => setUnpublishDialogOpen(true)}
+                onDiscardClick={() => setDiscardDialogOpen(true)}
               />
             </div>
           </div>
@@ -329,7 +336,7 @@ export function StopEditLayout({
             isSaving={isSaving}
             isPublishing={isPublishing}
             onSave={onSave}
-            onPublish={handlePublish}
+            onPublishClick={() => setPublishDialogOpen(true)}
             disabled={isReadOnly}
           />
         </div>
@@ -385,16 +392,15 @@ export function StopEditLayout({
           <aside className="hidden w-72 shrink-0 border-l bg-background lg:block self-start sticky top-35">
             <div className="p-5 space-y-6">
               <EditorActionsPanel
-                contentType="stop"
                 hasDraft={hasDraft}
                 hasPublished={hasPublished}
                 isDirty={isDirty}
                 isSaving={isSaving}
                 isPublishing={isPublishing}
                 onSave={onSave}
-                onPublish={handlePublish}
-                onUnpublish={handleUnpublish}
-                onDiscard={handleDiscard}
+                onPublishClick={() => setPublishDialogOpen(true)}
+                onUnpublishClick={() => setUnpublishDialogOpen(true)}
+                onDiscardClick={() => setDiscardDialogOpen(true)}
                 onOpenVersionHistory={() => {}}
                 disabled={isReadOnly}
               />
@@ -402,6 +408,26 @@ export function StopEditLayout({
           </aside>
         </div>
       </div>
+
+      <PublishConfirmationDialog
+        open={publishDialogOpen}
+        onOpenChange={setPublishDialogOpen}
+        isPublishing={isPublishing}
+        onConfirm={handlePublish}
+      />
+
+      <UnpublishConfirmationDialog
+        open={unpublishDialogOpen}
+        onOpenChange={setUnpublishDialogOpen}
+        contentType="stop"
+        onConfirm={handleUnpublish}
+      />
+
+      <DiscardConfirmationDialog
+        open={discardDialogOpen}
+        onOpenChange={setDiscardDialogOpen}
+        onConfirm={handleDiscard}
+      />
     </>
   )
 }

@@ -507,6 +507,12 @@
       "confirm": "Sbittar",
       "cancel": "Interrumper"
     },
+    "confirmPublish": {
+      "title": "Publitgar aquesta translaziun?",
+      "description": "Quai fa tes midadas visiblas per visitaders en questa lingua.",
+      "confirm": "Publitgar",
+      "cancel": "Interrumper"
+    },
     "confirmUnpublishGuide": {
       "title": "Retrar questa translaziun?",
       "description": "Visitaders na vesan betg pli questa versiun linguistica dal guid. Il guid resta disponibel en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",

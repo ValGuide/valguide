@@ -1,20 +1,8 @@
 import { archiveGuideFn } from '@valguide/core/features/guides/guide/archive-guide.fn'
-import { useTranslations } from '@valguide/core/i18n/client'
-import { toast } from '@valguide/core/ui/components/sonner/state'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@valguide/ui/components/alert-dialog'
 import { Button } from '@valguide/ui/components/button'
-import { Archive, Loader2 } from 'lucide-react'
+import { Archive } from 'lucide-react'
 import { useState } from 'react'
+import { ArchiveGuideDialog } from './archive-guide-dialog'
 
 interface ArchiveGuideButtonProps {
   guideNanoId: string
@@ -22,7 +10,6 @@ interface ArchiveGuideButtonProps {
 }
 
 export function ArchiveGuideButton({ guideNanoId, onArchived }: ArchiveGuideButtonProps) {
-  const t = useTranslations('guides')
   const [isOpen, setIsOpen] = useState(false)
   const [isArchiving, setIsArchiving] = useState(false)
 
@@ -30,37 +17,20 @@ export function ArchiveGuideButton({ guideNanoId, onArchived }: ArchiveGuideButt
     setIsArchiving(true)
     try {
       await archiveGuideFn({ data: { nanoId: guideNanoId } })
-      toast.success(t('archive.success'))
       setIsOpen(false)
       onArchived()
-    } catch (error) {
-      toast.error(t('archive.error'))
     } finally {
       setIsArchiving(false)
     }
   }
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline">
-          <Archive className="h-4 w-4" />
-          {t('archive.button')}
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('archive.confirmTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>{t('archive.confirmDescription')}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isArchiving}>{t('archive.cancelButton')}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleArchive} disabled={isArchiving}>
-            {isArchiving && <Loader2 className="h-4 w-4 animate-spin" />}
-            {t('archive.confirmButton')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+      <Button variant="outline" onClick={() => setIsOpen(true)}>
+        <Archive className="h-4 w-4" />
+        Archive
+      </Button>
+      <ArchiveGuideDialog open={isOpen} onOpenChange={setIsOpen} isArchiving={isArchiving} onConfirm={handleArchive} />
+    </>
   )
 }
