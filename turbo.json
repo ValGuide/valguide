@@ -10,6 +10,9 @@
       "cache": false
     },
     "type-check": {},
+    "i18n:check": {
+      "inputs": ["packages/core/i18n/messages/*.json"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

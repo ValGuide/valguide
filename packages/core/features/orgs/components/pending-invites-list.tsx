@@ -107,11 +107,11 @@ export function PendingInvitesList({ invitations, onResendInvite, onCancelInvite
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-[200px]">{t('email')}</TableHead>
+                  <TableHead className="min-w-50">{t('email')}</TableHead>
                   <TableHead>{t('role')}</TableHead>
                   <TableHead className="hidden md:table-cell">{t('invitedBy')}</TableHead>
                   <TableHead>{t('status')}</TableHead>
-                  <TableHead className="w-[70px]" />
+                  <TableHead className="w-17.5" />
                 </TableRow>
               </TableHeader>
               <TableBody>

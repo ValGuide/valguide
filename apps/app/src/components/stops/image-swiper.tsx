@@ -21,7 +21,7 @@ export function ImageSwiper({ images }: ImageSwiperProps) {
 
   return (
     <div className="space-y-4">
-      <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted">
+      <div className="relative aspect-4/3 w-full rounded-lg overflow-hidden bg-muted">
         <Image
           src={getAssetImageUrl(currentImage)}
           alt={currentImage.fileName}
