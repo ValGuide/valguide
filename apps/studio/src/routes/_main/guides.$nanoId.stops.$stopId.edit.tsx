@@ -41,11 +41,11 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
     return { guideNanoId: params.nanoId, stopNanoId: params.stopId, locale: requestedLocale }
   },
   notFoundComponent: StopNotFound,
-  component: GuideStopEditPage,
+  component: GuideStopEditRoute,
   pendingComponent: StopEditSkeleton,
 })
 
-function GuideStopEditPage() {
+function GuideStopEditRoute() {
   const { guideNanoId, stopNanoId, locale } = Route.useLoaderData()
   const t = useTranslations('guides')
 
