@@ -36,7 +36,7 @@ export const archivedGuidesQueryOptions = () =>
  * Returns all locales and settings
  */
 export const guideDetailQueryOptions = (nanoId: string) =>
-  queryOptions<GuideDetail | null>({
+  queryOptions<GuideDetail>({
     queryKey: ['guide', nanoId, 'detail'],
     queryFn: () => getGuideDetailFn({ data: { nanoId } }),
     staleTime: 30_000,

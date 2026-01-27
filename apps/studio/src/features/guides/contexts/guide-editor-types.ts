@@ -22,7 +22,7 @@ export interface GuideEditorContextValue {
   updateAvailableLocales: (locales: string[]) => Promise<void>
 
   // Data accessors (from React Query cache)
-  guideDetail: GuideDetail | null
+  guideDetail: GuideDetail
   localeDraft: GuideLocaleDraftResult | null
   isLoadingLocale: boolean
 

@@ -11,15 +11,7 @@ export const Route = createFileRoute('/_main/team')({
 })
 
 function TeamPage() {
-  const { data, isLoading, refetch } = useTeam()
-
-  if (isLoading) {
-    return <TeamPageSkeleton />
-  }
-
-  if (!data) {
-    return null
-  }
+  const { data, refetch } = useTeam()
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">

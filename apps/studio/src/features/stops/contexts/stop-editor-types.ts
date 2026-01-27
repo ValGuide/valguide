@@ -18,7 +18,7 @@ export interface StopEditorContextValue {
   updateAvailableLocales: (locales: string[]) => Promise<void>
 
   // Data accessors (from React Query cache)
-  stopDetail: StopDetail | null
+  stopDetail: StopDetail
   localeDraft: StopLocaleDraftResult | null
   isLoadingLocale: boolean
 

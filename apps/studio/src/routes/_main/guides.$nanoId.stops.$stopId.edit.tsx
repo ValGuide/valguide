@@ -6,7 +6,6 @@ import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleto
 import { StopEditView } from '@/features/guides/components/stop-edit-view'
 import { StopNotFound } from '@/features/guides/components/stop-not-found'
 import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
-import { useGuideEditor } from '@/features/guides/contexts/guide-editor-types'
 import { guideDetailQueryOptions, guideStructureDraftQueryOptions } from '@/features/guides/query-options'
 
 type SearchParams = {
@@ -23,10 +22,6 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
       context.queryClient.ensureQueryData(guideDetailQueryOptions(params.nanoId)),
       context.queryClient.ensureQueryData(guideStructureDraftQueryOptions(params.nanoId, deps.locale ?? 'en')),
     ])
-
-    if (!guideDetail) {
-      throw notFound()
-    }
 
     const stopExists = structure?.stops.some((s) => s.stopNanoId === params.stopId)
     if (!stopExists) {
@@ -66,12 +61,6 @@ function GuideStopEditPage() {
 }
 
 function StopEditContent({ stopNanoId }: { stopNanoId: string }) {
-  const { guideDetail } = useGuideEditor()
-
-  if (!guideDetail) {
-    return <StopEditSkeleton />
-  }
-
   return (
     <StopEditView
       stopNanoId={stopNanoId}

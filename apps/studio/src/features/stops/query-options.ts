@@ -21,7 +21,7 @@ export const stopsQueryOptions = (locale: string = 'en') =>
  * Returns all locales and settings
  */
 export const stopDetailQueryOptions = (nanoId: string) =>
-  queryOptions<StopDetail | null>({
+  queryOptions<StopDetail>({
     queryKey: ['stop', nanoId, 'detail'],
     queryFn: () => getStopDetailFn({ data: { nanoId } }),
     staleTime: 30 * 1000,

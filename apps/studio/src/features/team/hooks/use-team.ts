@@ -1,25 +1,25 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
 import { teamQueryOptions } from '../query-options'
 
 interface UseTeamReturn {
-  data: TeamData | null
-  isLoading: boolean
-  error: Error | null
+  data: TeamData
   refetch: () => Promise<void>
 }
 
 export function useTeam(): UseTeamReturn {
-  const { data, error, isLoading, refetch: queryRefetch } = useQuery(teamQueryOptions())
+  const { data, refetch: queryRefetch } = useSuspenseQuery(teamQueryOptions())
+
+  if (!data) {
+    throw new Error('Team data is required but not available')
+  }
 
   const refetch = async () => {
     await queryRefetch()
   }
 
   return {
-    data: data ?? null,
-    isLoading,
-    error: error ?? null,
+    data,
     refetch,
   }
 }

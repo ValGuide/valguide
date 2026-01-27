@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { assignStopAssetFn } from '@valguide/core/features/guides/stop/asset/assign-stop-asset.fn'
@@ -41,11 +41,11 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
   const searchParams = useSearch({ strict: false })
   const queryClient = useQueryClient()
 
-  // Fetch stop detail
-  const detailQuery = useQuery(stopDetailQueryOptions(nanoId))
-  const stopDetail = detailQuery.data ?? null
-  const stopId = stopDetail?.id ?? ''
-  const availableLocales = stopDetail?.availableLocales ?? ['en']
+  // Fetch stop detail (uses Suspense - data guaranteed by route loader)
+  const detailQuery = useSuspenseQuery(stopDetailQueryOptions(nanoId))
+  const stopDetail = detailQuery.data
+  const stopId = stopDetail.id
+  const availableLocales = stopDetail.availableLocales
 
   // Active locale state
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))

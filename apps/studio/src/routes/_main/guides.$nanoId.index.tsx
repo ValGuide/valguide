@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { clientEnv } from '@valguide/core/env/client'
 import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
@@ -22,7 +22,7 @@ export const Route = createFileRoute('/_main/guides/$nanoId/')({
 
 function GuidePage() {
   const { nanoId, preferredLocale } = Route.useLoaderData()
-  const { data: guide } = useQuery(guideDetailQueryOptions(nanoId))
+  const { data: guide } = useSuspenseQuery(guideDetailQueryOptions(nanoId))
   const queryClient = useQueryClient()
   const tLocales = useTranslations('guides.locales')
   const router = useRouter()
@@ -59,8 +59,6 @@ function GuidePage() {
     },
     [guide, queryClient, nanoId, tLocales],
   )
-
-  if (!guide) return null
 
   return (
     <GuideDetailView

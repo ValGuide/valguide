@@ -61,11 +61,7 @@ function GuideEditPage() {
 }
 
 function GuideEditContent() {
-  const { guideDetail, nanoId } = useGuideEditor()
-
-  if (!guideDetail) {
-    return <GuideEditSkeleton />
-  }
+  const { nanoId } = useGuideEditor()
 
   return (
     <GuideEditView

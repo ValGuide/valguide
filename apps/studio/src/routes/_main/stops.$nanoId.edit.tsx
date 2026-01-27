@@ -76,7 +76,6 @@ function StopEditContent() {
   const {
     nanoId,
     stopId,
-    stopDetail,
     localeDraft,
     activeLocale,
     availableLocales,
@@ -97,14 +96,13 @@ function StopEditContent() {
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
-  // Build stop translation data from locale draft
   const stopTranslation: StopTranslationData | null = useMemo(() => {
-    if (!localeDraft || !stopId) return null
+    if (!localeDraft) return null
     return {
       stopId,
-      translationId: '', // Not used
+      translationId: '',
       currentVersionId: localeDraft.publishedVersionId,
-      draftVersionId: null, // Not used
+      draftVersionId: null,
       currentVersion: localeDraft.publishedVersionId
         ? {
             title: localeDraft.title ?? '',
@@ -201,10 +199,6 @@ function StopEditContent() {
       <span>{tStops('backToStops')}</span>
     </Button>
   )
-
-  if (!stopDetail) {
-    return <StopEditSkeleton />
-  }
 
   return (
     <>

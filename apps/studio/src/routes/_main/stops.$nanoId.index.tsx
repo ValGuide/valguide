@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
@@ -18,21 +18,17 @@ export const Route = createFileRoute('/_main/stops/$nanoId/')({
 
 function StopPage() {
   const { nanoId, preferredLocale } = Route.useLoaderData()
-  const { data: stop } = useQuery(stopDetailQueryOptions(nanoId))
+  const { data: stop } = useSuspenseQuery(stopDetailQueryOptions(nanoId))
   const router = useRouter()
   const t = useTranslations('stops')
 
-  // Compute display values from locales array
   const { displayTitle, displayDescription } = useMemo(() => {
-    if (!stop) return { displayTitle: '', displayDescription: null }
     const preferredLocaleData = stop.locales.find((l) => l.locale === preferredLocale) ?? stop.locales[0]
     return {
       displayTitle: preferredLocaleData?.title?.trim() || t('unknownTitle'),
       displayDescription: preferredLocaleData?.description ?? null,
     }
   }, [stop, preferredLocale, t])
-
-  if (!stop) return null
 
   return (
     <div className="min-h-screen bg-background">

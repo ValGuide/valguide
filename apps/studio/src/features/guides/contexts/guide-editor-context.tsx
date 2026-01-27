@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { assignGuideAssetFn } from '@valguide/core/features/guides/guide/asset/assign-guide-asset.fn'
@@ -49,11 +49,11 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
   const searchParams = useSearch({ strict: false })
   const queryClient = useQueryClient()
 
-  // Fetch guide detail (no embedded stops/assets)
-  const detailQuery = useQuery(guideDetailQueryOptions(nanoId))
-  const guideDetail = detailQuery.data ?? null
-  const guideId = guideDetail?.id ?? ''
-  const availableLocales = guideDetail?.availableLocales ?? ['en']
+  // Fetch guide detail (uses Suspense - data guaranteed by route loader)
+  const detailQuery = useSuspenseQuery(guideDetailQueryOptions(nanoId))
+  const guideDetail = detailQuery.data
+  const guideId = guideDetail.id
+  const availableLocales = guideDetail.availableLocales
 
   // Active locale state
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
