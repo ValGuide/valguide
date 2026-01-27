@@ -6,10 +6,7 @@ import { removeGuideAssetFn } from '@valguide/core/features/guides/guide/asset/r
 import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/publish-guide-locale.fn'
 import { updateGuideLocaleDraftFn } from '@valguide/core/features/guides/guide/locale/update-guide-locale-draft.fn'
 import { updateGuideFn } from '@valguide/core/features/guides/guide/update-guide.fn'
-import { assignStopAssetFn } from '@valguide/core/features/guides/stop/asset/assign-stop-asset.fn'
-import { removeStopAssetFn } from '@valguide/core/features/guides/stop/asset/remove-stop-asset.fn'
 import { createStopFn } from '@valguide/core/features/guides/stop/create-stop.fn'
-import { updateStopLocaleDraftFn } from '@valguide/core/features/guides/stop/locale/update-stop-locale-draft.fn'
 import { addStopToGuideFn } from '@valguide/core/features/guides/structure/add-stop.fn'
 import { removeStopFromGuideFn } from '@valguide/core/features/guides/structure/remove-stop.fn'
 import { reorderStopsFn } from '@valguide/core/features/guides/structure/reorder-stops.fn'
@@ -277,95 +274,13 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     [nanoId, guideAssets, queryClient, t],
   )
 
-  // Stop asset operations (immediate server calls)
-  const getStopAssets = useCallback((_stopNanoId: string): AssetWithRole[] => {
-    // TODO: Fetch from stopAssetsDraftQueryOptions when implemented
-    return []
-  }, [])
-
-  const updateStopAssets = useCallback(
-    async (stopNanoId: string, assets: AssetWithRole[]) => {
-      if (!stopNanoId) return
-
-      try {
-        // Get current stop assets
-        const currentAssets = getStopAssets(stopNanoId)
-
-        // Remove assets that are no longer in the list
-        for (const current of currentAssets) {
-          if (!assets.find((a) => a.id === current.id)) {
-            await removeStopAssetFn({
-              data: { nanoId: stopNanoId, assetId: current.id, channel: 'images.gallery', locale: current.locale },
-            })
-          }
-        }
-
-        // Add new assets
-        for (let i = 0; i < assets.length; i++) {
-          const asset = assets[i]
-          if (!currentAssets.find((c) => c.id === asset.id)) {
-            const channel = asset.role === 'audio' ? 'audio.narration' : 'images.gallery'
-            await assignStopAssetFn({
-              data: { nanoId: stopNanoId, assetId: asset.id, channel, locale: asset.locale, position: i },
-            })
-          }
-        }
-
-        // Invalidate stop assets query
-        await queryClient.invalidateQueries({ queryKey: ['stop', stopNanoId, 'assets'] })
-      } catch (error) {
-        console.error('Failed to update stop assets:', error)
-        toast.error(t('stops.assets.updateError'))
-      }
-    },
-    [getStopAssets, queryClient, t],
-  )
-
-  const addStopAsset = useCallback(
-    async (stopNanoId: string, asset: Asset, role: string, locale: string | null) => {
-      if (!stopNanoId) return
-
-      try {
-        const channel = role === 'audio' ? 'audio.narration' : 'images.gallery'
-        await assignStopAssetFn({
-          data: { nanoId: stopNanoId, assetId: asset.id, channel, locale, position: 0 },
-        })
-        await queryClient.invalidateQueries({ queryKey: ['stop', stopNanoId, 'assets'] })
-      } catch (error) {
-        console.error('Failed to add stop asset:', error)
-        toast.error(t('stops.assets.addError'))
-      }
-    },
-    [queryClient, t],
-  )
-
-  const removeStopAsset = useCallback(
-    async (stopNanoId: string, assetId: string) => {
-      if (!stopNanoId) return
-
-      try {
-        const currentAssets = getStopAssets(stopNanoId)
-        const asset = currentAssets.find((a) => a.id === assetId)
-        const channel = asset?.role === 'audio' ? 'audio.narration' : 'images.gallery'
-        await removeStopAssetFn({
-          data: { nanoId: stopNanoId, assetId, channel, locale: asset?.locale ?? null },
-        })
-        await queryClient.invalidateQueries({ queryKey: ['stop', stopNanoId, 'assets'] })
-      } catch (error) {
-        console.error('Failed to remove stop asset:', error)
-        toast.error(t('stops.assets.removeError'))
-      }
-    },
-    [getStopAssets, queryClient, t],
-  )
-
-  // Save orchestration
+  // Save orchestration - only handles guide translation forms
   const save = useCallback(async () => {
     if (!isDirty || !nanoId) return
 
     setIsSaving(true)
     try {
-      // Save all dirty forms
+      // Save all dirty guide translation forms
       for (const [formId, registration] of formValueGettersRef.current.entries()) {
         if (!registration.isDirty) continue
 
@@ -380,25 +295,8 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
               description: values.description ?? '',
             },
           })
-        } else if (formId.startsWith('stop-translation-')) {
-          // Format: stop-translation-{stopNanoId}-{locale}
-          const parts = formId.split('-')
-          const stopNanoId = parts[2]
-          if (stopNanoId) {
-            await updateStopLocaleDraftFn({
-              data: {
-                nanoId: stopNanoId,
-                locale: activeLocale,
-                title: values.title ?? '',
-                description: values.description ?? '',
-                transcription: values.transcription ?? '',
-              },
-            })
-          }
         }
       }
-
-      // Assets are saved immediately via setGuideCover/updateStopAssets - no batching needed
 
       resetAllFormsAfterSave()
 
@@ -453,10 +351,6 @@ export function GuideEditorProvider({ children, nanoId, initialLocale }: GuideEd
     guideAssets,
     isLoadingGuideAssets,
     setGuideCover,
-    getStopAssets,
-    updateStopAssets,
-    addStopAsset,
-    removeStopAsset,
     isDirty,
     registerFormDirty,
     unregisterForm,

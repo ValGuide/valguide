@@ -3,7 +3,7 @@ import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import type { AssetWithRole } from '@valguide/core/features/guides/types'
-import { type ReactNode, useCallback, useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { GuideEditorContext, type GuideEditorContextValue } from './guide-editor-types'
 
 export interface MockGuideEditorProviderProps {
@@ -22,15 +22,7 @@ export function MockGuideEditorProvider({
   const [activeLocale, setActiveLocale] = useState<string>(guideDetail.availableLocales[0] ?? 'en')
   const [isDirty, setIsDirty] = useState(false)
   const [guideAssets, setGuideAssets] = useState<AssetWithRole[]>([])
-  const [stopAssetsMap, setStopAssetsMap] = useState<Map<string, AssetWithRole[]>>(new Map())
   const [stops, setStops] = useState<StructureDraftStop[]>(initialStops)
-
-  const getStopAssets = useCallback(
-    (stopNanoId: string): AssetWithRole[] => {
-      return stopAssetsMap.get(stopNanoId) ?? []
-    },
-    [stopAssetsMap],
-  )
 
   const value: GuideEditorContextValue = {
     nanoId: guideDetail.nanoId,
@@ -61,38 +53,14 @@ export function MockGuideEditorProvider({
       })
     },
     guideAssets,
-    getStopAssets,
-    setGuideCover: (asset: Asset | null) => {
+    isLoadingGuideAssets: false,
+    setGuideCover: async (asset: Asset | null) => {
       console.log('Mock: setGuideCover', asset?.id)
       if (asset) {
         setGuideAssets([{ ...asset, role: 'cover', order: 0, locale: null }])
       } else {
         setGuideAssets([])
       }
-      setIsDirty(true)
-    },
-    updateStopAssets: (stopNanoId: string, assets: AssetWithRole[]) => {
-      console.log('Mock: updateStopAssets', stopNanoId, assets.length)
-      setStopAssetsMap((prev) => new Map(prev).set(stopNanoId, assets))
-      setIsDirty(true)
-    },
-    addStopAsset: (stopNanoId: string, asset: Asset, role: string, locale: string | null) => {
-      console.log('Mock: addStopAsset', stopNanoId, asset.id, role, locale)
-      const current = stopAssetsMap.get(stopNanoId) ?? []
-      setStopAssetsMap((prev) =>
-        new Map(prev).set(stopNanoId, [...current, { ...asset, role, order: current.length, locale }]),
-      )
-      setIsDirty(true)
-    },
-    removeStopAsset: (stopNanoId: string, assetId: string) => {
-      console.log('Mock: removeStopAsset', stopNanoId, assetId)
-      const current = stopAssetsMap.get(stopNanoId) ?? []
-      setStopAssetsMap((prev) =>
-        new Map(prev).set(
-          stopNanoId,
-          current.filter((a) => a.id !== assetId),
-        ),
-      )
       setIsDirty(true)
     },
     isDirty,

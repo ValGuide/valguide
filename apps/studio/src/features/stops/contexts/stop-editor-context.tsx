@@ -30,9 +30,14 @@ interface StopEditorProviderProps {
   children: ReactNode
   nanoId: string
   initialLocale?: string
+  navigation?: {
+    backPath: string
+    backLabel: string
+    backParams?: Record<string, string>
+  }
 }
 
-export function StopEditorProvider({ children, nanoId, initialLocale }: StopEditorProviderProps) {
+export function StopEditorProvider({ children, nanoId, initialLocale, navigation }: StopEditorProviderProps) {
   const t = useTranslations()
   const router = useRouter()
   const location = useLocation()
@@ -334,6 +339,11 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     resetAllForms()
   }, [nanoId, queryClient, resetAllForms])
 
+  const defaultNavigation = {
+    backPath: '/stops',
+    backLabel: t('stops.backToStops'),
+  }
+
   const value: StopEditorContextValue = {
     nanoId,
     stopId,
@@ -360,8 +370,7 @@ export function StopEditorProvider({ children, nanoId, initialLocale }: StopEdit
     publish,
     unpublish,
     refetch,
-    backPath: '/stops',
-    backLabel: t('stops.backToStops'),
+    navigation: navigation ?? defaultNavigation,
   }
 
   return <StopEditorContext.Provider value={value}>{children}</StopEditorContext.Provider>

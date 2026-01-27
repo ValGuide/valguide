@@ -1,12 +1,9 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
-import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale.fn'
-import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale.fn'
-import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
-import { StopEditSkeleton } from '@/features/guides/components/stop-edit-skeleton'
-import { StopEditView } from '@/features/guides/components/stop-edit-view'
-import { StopNotFound } from '@/features/guides/components/stop-not-found'
-import { GuideEditorProvider } from '@/features/guides/contexts/guide-editor-context'
-import { guideDetailQueryOptions, guideStructureDraftQueryOptions } from '@/features/guides/query-options'
+import { useTranslations } from '@valguide/core/i18n/client'
+import { Loader2 } from 'lucide-react'
+import { StopEditPage } from '@/features/stops/components/stop-edit-page'
+import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
+import { stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '@/features/stops/query-options'
 
 type SearchParams = {
   locale?: string
@@ -18,20 +15,15 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
   }),
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
-    const [guideDetail, structure] = await Promise.all([
-      context.queryClient.ensureQueryData(guideDetailQueryOptions(params.nanoId)),
-      context.queryClient.ensureQueryData(guideStructureDraftQueryOptions(params.nanoId, deps.locale ?? 'en')),
-    ])
+    const stopDetail = await context.queryClient.ensureQueryData(stopDetailQueryOptions(params.stopId))
 
-    const stopExists = structure?.stops.some((s) => s.stopNanoId === params.stopId)
-    if (!stopExists) {
+    if (!stopDetail) {
       throw notFound()
     }
 
     const requestedLocale = deps.locale
-    const { availableLocales } = guideDetail
+    const { availableLocales } = stopDetail
 
-    // Redirect if locale missing or invalid
     if (!requestedLocale || !availableLocales.includes(requestedLocale)) {
       const defaultLocale = availableLocales[0]
       if (!defaultLocale) throw notFound()
@@ -43,34 +35,50 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
       })
     }
 
-    return { nanoId: params.nanoId, stopId: params.stopId, locale: requestedLocale }
+    await context.queryClient.ensureQueryData(stopLocaleDraftQueryOptions(params.stopId, requestedLocale))
+
+    return { guideNanoId: params.nanoId, stopNanoId: params.stopId, locale: requestedLocale }
   },
   notFoundComponent: StopNotFound,
   component: GuideStopEditPage,
   pendingComponent: StopEditSkeleton,
 })
 
-function GuideStopEditPage() {
-  const { nanoId, stopId, locale } = Route.useLoaderData()
-
+function StopEditSkeleton() {
   return (
-    <GuideEditorProvider nanoId={nanoId} initialLocale={locale}>
-      <StopEditContent stopNanoId={stopId} />
-    </GuideEditorProvider>
+    <div className="flex min-h-screen items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+    </div>
   )
 }
 
-function StopEditContent({ stopNanoId }: { stopNanoId: string }) {
+function StopNotFound() {
+  const t = useTranslations('stops')
   return (
-    <StopEditView
-      stopNanoId={stopNanoId}
-      MediaPicker={MediaPickerConnected}
-      onPublish={(nanoId, locale) => publishStopLocaleFn({ data: { nanoId, locale } })}
-      onUnpublish={(nanoId, locale) => unpublishStopLocaleFn({ data: { nanoId, locale } })}
-      onDiscard={async () => {
-        // Discard is handled by refetching in StopEditView
-        // No server-side discard needed since draft state is local
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-2xl font-semibold">{t('notFound.title')}</h1>
+        <p className="mt-2 text-muted-foreground">{t('notFound.description')}</p>
+      </div>
+    </div>
+  )
+}
+
+function GuideStopEditPage() {
+  const { guideNanoId, stopNanoId, locale } = Route.useLoaderData()
+  const t = useTranslations('guides')
+
+  return (
+    <StopEditorProvider
+      nanoId={stopNanoId}
+      initialLocale={locale}
+      navigation={{
+        backPath: '/guides/$nanoId/edit',
+        backLabel: t('editor.backToGuide'),
+        backParams: { nanoId: guideNanoId },
       }}
-    />
+    >
+      <StopEditPage guideNanoId={guideNanoId} />
+    </StopEditorProvider>
   )
 }

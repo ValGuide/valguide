@@ -7,6 +7,12 @@ import { createContext, useContext } from 'react'
 export type FormValues = { title?: string; description?: string | null; transcription?: string | null }
 export type FormValueGetter = () => FormValues
 
+export interface StopEditorNavigation {
+  backPath: string
+  backLabel: string
+  backParams?: Record<string, string>
+}
+
 export interface StopEditorContextValue {
   // Core identifiers
   nanoId: string
@@ -52,8 +58,7 @@ export interface StopEditorContextValue {
   refetch: () => Promise<void>
 
   // Navigation context
-  backPath: string
-  backLabel: string
+  navigation: StopEditorNavigation
 }
 
 export const StopEditorContext = createContext<StopEditorContextValue | null>(null)
