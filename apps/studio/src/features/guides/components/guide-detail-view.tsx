@@ -43,7 +43,7 @@ export function GuideDetailView({
 
   // Compute display values from locales
   const preferredLocaleData = guide.locales.find((l) => l.locale === preferredLocale) ?? guide.locales[0]
-  const displayTitle = preferredLocaleData?.title?.trim() || t('untitled')
+  const displayTitle = preferredLocaleData?.title?.trim() || t('untitledGuide')
   const displayDescription = preferredLocaleData?.description ?? null
   const isPublished = guide.locales.some((l) => l.publishedVersionId !== null)
 

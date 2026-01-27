@@ -50,14 +50,14 @@ export function ArchiveGuideButton({ guideNanoId, onArchived }: ArchiveGuideButt
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('archive.title')}</AlertDialogTitle>
-          <AlertDialogDescription>{t('archive.description')}</AlertDialogDescription>
+          <AlertDialogTitle>{t('archive.confirmTitle')}</AlertDialogTitle>
+          <AlertDialogDescription>{t('archive.confirmDescription')}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isArchiving}>{t('archive.cancel')}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isArchiving}>{t('archive.cancelButton')}</AlertDialogCancel>
           <AlertDialogAction onClick={handleArchive} disabled={isArchiving}>
             {isArchiving && <Loader2 className="h-4 w-4 animate-spin" />}
-            {t('archive.confirm')}
+            {t('archive.confirmButton')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
