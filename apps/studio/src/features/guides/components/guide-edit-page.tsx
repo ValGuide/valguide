@@ -1,4 +1,4 @@
-import { useRouter } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import type { GuideIndicator, GuideStatus } from '@valguide/core/features/guides/components/guide-status-badge'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -6,8 +6,9 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { CommandSeparator } from '@valguide/ui/components/command'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { Globe, ListChecks } from 'lucide-react'
+import { Globe, Languages, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
@@ -32,6 +33,7 @@ export interface GuideEditPageProps {
 export function GuideEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, MediaPicker }: GuideEditPageProps) {
   const router = useRouter()
   const t = useTranslations('guides')
+  const tLocaleSelector = useTranslations('guides.localeSelector')
   const tStops = useTranslations('stops')
   const {
     nanoId,
@@ -238,6 +240,22 @@ export function GuideEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, 
     </>
   )
 
+  const localeSelectorFooter = (
+    <>
+      <CommandSeparator />
+      <div className="p-1">
+        <Link
+          to="/guides/$nanoId"
+          params={{ nanoId }}
+          className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+        >
+          <Languages className="h-4 w-4" />
+          {tLocaleSelector('manageTranslations')}
+        </Link>
+      </div>
+    </>
+  )
+
   return (
     <>
       <BaseEditLayout
@@ -249,6 +267,7 @@ export function GuideEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, 
         activeLocale={activeLocale}
         availableLocales={availableLocales}
         onLocaleChange={setActiveLocale}
+        localeSelectorFooter={localeSelectorFooter}
         isDirty={isDirty}
         isSaving={isSaving}
         isPublishing={isPublishing}

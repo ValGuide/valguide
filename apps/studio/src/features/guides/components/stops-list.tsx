@@ -15,6 +15,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
@@ -73,6 +74,7 @@ function SortableStopItem({ stop, index, onEdit, onHide, onShow, onRequestRemove
 
   const isHidden = stop.visible === false
   const displayTitle = stop.title?.trim() || t('untitled')
+  const thumbnailUrl = stop.thumbnailUrl ? getImageKitUrl(stop.thumbnailUrl) : null
 
   return (
     <div ref={setNodeRef} style={style}>
@@ -87,7 +89,11 @@ function SortableStopItem({ stop, index, onEdit, onHide, onShow, onRequestRemove
           </button>
 
           <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
+            {thumbnailUrl ? (
+              <img src={thumbnailUrl} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
+            )}
           </div>
 
           <div className="flex-1 min-w-0 space-y-1">
@@ -207,12 +213,17 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
         {items.map((stop, index) => {
           const displayTitle = stop.title?.trim() || t('untitled')
           const isHidden = stop.visible === false
+          const thumbnailUrl = stop.thumbnailUrl ? getImageKitUrl(stop.thumbnailUrl) : null
           return (
             <Card key={stop.stopNanoId} className={cn(isHidden && 'opacity-60')}>
               <CardContent className="flex items-center gap-4 p-4">
                 <GripVertical className="h-5 w-5 text-muted-foreground" />
                 <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-                  <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
+                  {thumbnailUrl ? (
+                    <img src={thumbnailUrl} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className={cn('font-medium truncate', isHidden && 'text-muted-foreground')}>

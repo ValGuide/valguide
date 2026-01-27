@@ -1,6 +1,7 @@
-import { asc, eq } from 'drizzle-orm'
+import { and, asc, eq, inArray } from 'drizzle-orm'
+import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { guide, guideStopDraft, stop, stopLocale, stopLocaleDraft } from '../schema'
+import { guide, guideStopDraft, stop, stopAssetDraft, stopLocale, stopLocaleDraft } from '../schema'
 
 // =============================================================================
 // TYPES
@@ -13,6 +14,7 @@ export type StructureDraftStop = {
   visible: boolean
   title: string | null
   locale: string
+  thumbnailUrl: string | null
 }
 
 export type StructureDraftResult = {
@@ -49,6 +51,35 @@ export async function getStructureDraft(guideNanoId: string, locale: string): Pr
     .where(eq(guideStopDraft.guideId, foundGuide.id))
     .orderBy(asc(guideStopDraft.position))
 
+  // Fetch first gallery image for each stop as thumbnail
+  const stopIds = [...new Set(rows.map((r) => r.stopId))]
+  const thumbnailByStopId = new Map<string, string>()
+
+  if (stopIds.length > 0) {
+    const galleryAssets = await db
+      .select({
+        stopId: stopAssetDraft.stopId,
+        storagePath: asset.storagePath,
+        publicUrl: asset.publicUrl,
+      })
+      .from(stopAssetDraft)
+      .innerJoin(asset, eq(asset.id, stopAssetDraft.assetId))
+      .where(
+        and(
+          inArray(stopAssetDraft.stopId, stopIds),
+          eq(stopAssetDraft.channel, 'images.gallery'),
+          eq(asset.type, 'image'),
+        ),
+      )
+      .orderBy(asc(stopAssetDraft.position))
+
+    for (const ga of galleryAssets) {
+      if (!thumbnailByStopId.has(ga.stopId)) {
+        thumbnailByStopId.set(ga.stopId, ga.storagePath || ga.publicUrl || '')
+      }
+    }
+  }
+
   // Filter to requested locale, fallback to first available
   const stopsByStopId = new Map<string, StructureDraftStop>()
   for (const row of rows) {
@@ -61,6 +92,7 @@ export async function getStructureDraft(guideNanoId: string, locale: string): Pr
         visible: row.visible,
         title: row.title,
         locale: row.locale,
+        thumbnailUrl: thumbnailByStopId.get(row.stopId) || null,
       })
     }
   }
