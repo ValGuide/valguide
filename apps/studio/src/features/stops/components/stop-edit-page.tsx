@@ -2,15 +2,13 @@ import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { getStopTranslationStatusDisplay } from '@valguide/core/features/guides/status-utils'
 import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
-import { publishStopAssetsFn } from '@valguide/core/features/guides/stop/asset/publish-stop-assets.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
-import { Alert, AlertDescription } from '@valguide/ui/components/alert'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { ChevronLeft, Globe, Info } from 'lucide-react'
+import { ChevronLeft, Globe } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
+import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
 import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
@@ -18,7 +16,12 @@ import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-chan
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/stops/components/stop-locale-editor'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 
-export function StopEditPage() {
+export type StopEditPageProps = {
+  MediaPicker: MediaPickerComponent
+  onPublishAssets?: (nanoId: string, activeLocale: string) => Promise<void>
+}
+
+export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps) {
   const router = useRouter()
   const t = useTranslations('guides')
   const tStops = useTranslations('stops')
@@ -29,7 +32,6 @@ export function StopEditPage() {
     localePublished,
     activeLocale,
     availableLocales,
-    existingLocales,
     isDirty,
     isSaving,
     lastSaved,
@@ -55,12 +57,6 @@ export function StopEditPage() {
   const hasDraft = !!localeDraft
   const hasPublished = !!localeDraft?.publishedVersionId
   const hasUnpublishedChanges = localeDraft?.hasUnpublishedChanges ?? false
-
-  // Get display name for the current locale
-  const localeDisplayName = useMemo(() => {
-    const dn = new Intl.DisplayNames(['en'], { type: 'language' })
-    return dn.of(activeLocale) ?? activeLocale
-  }, [activeLocale])
 
   const statusDisplay: StatusDisplay = useMemo(() => {
     const display = getStopTranslationStatusDisplay(
@@ -192,10 +188,7 @@ export function StopEditPage() {
     try {
       if (isDirty) await save()
       await publish(activeLocale)
-      // Publish locale-independent assets (gallery images)
-      await publishStopAssetsFn({ data: { nanoId, channel: 'images.gallery', locale: null } })
-      // Publish locale-specific assets (audio narration)
-      await publishStopAssetsFn({ data: { nanoId, channel: 'audio.narration', locale: activeLocale } })
+      await onPublishAssets?.(nanoId, activeLocale)
       toast.success(t('publish.success'))
       await refetch()
     } catch (error) {
@@ -204,7 +197,7 @@ export function StopEditPage() {
     } finally {
       setIsPublishing(false)
     }
-  }, [activeLocale, nanoId, refetch, publish, isDirty, save, t])
+  }, [activeLocale, nanoId, refetch, publish, isDirty, save, t, onPublishAssets])
 
   const handleUnpublish = useCallback(async () => {
     try {
@@ -283,7 +276,7 @@ export function StopEditPage() {
           onDirtyChange={handleDirtyChange}
           onSave={save}
           onAudioChange={handleAudioChange}
-          MediaPicker={MediaPickerConnected}
+          MediaPicker={MediaPicker}
         />
 
         <Card className={isReadOnly ? 'opacity-60' : ''}>
@@ -295,7 +288,7 @@ export function StopEditPage() {
             <CardDescription>{tStops('editor.sharedContentDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <MediaPickerConnected
+            <MediaPicker
               mode="multiple"
               mediaTypes={['image', 'video']}
               value={stopImages}

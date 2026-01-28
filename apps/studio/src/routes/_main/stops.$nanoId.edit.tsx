@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { StopEditPage } from '@/features/stops/components/stop-edit-page'
+import { StopEditPageConnected } from '@/features/stops/components/stop-edit-page-connected'
 import { StopEditSkeleton } from '@/features/stops/components/stop-edit-skeleton'
 import { StopNotFound } from '@/features/stops/components/stop-not-found'
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
@@ -58,7 +58,7 @@ function StopEditRoute() {
         backLabel: t('backToStops'),
       }}
     >
-      <StopEditPage />
+      <StopEditPageConnected />
     </StopEditorProvider>
   )
 }

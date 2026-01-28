@@ -1,28 +1,38 @@
 // @ts-nocheck - Storybook types only available in storybook package
-import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
-import type { GuideDetailItem } from '@valguide/core/features/guides/types'
+import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import { Button } from '@valguide/ui/components/button'
 import { fn } from 'storybook/test'
 import { GuideDetailView } from './guide-detail-view'
 
-const mockGuide: GuideDetailItem = {
+const mockGuide: GuideDetail = {
   id: 'guide-uuid-123',
   nanoId: 'abc123xyz',
   organizationId: 'org-1',
-  published: null,
+  archivedAt: null,
   createdAt: new Date('2025-01-01T10:00:00Z'),
   updatedAt: new Date('2025-01-15T14:30:00Z'),
-  coverImageUrl: null,
-  displayTitle: 'City Art Museum Audio Tour',
-  displayDescription:
-    'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
-  displayLocale: 'en',
-  translationSummaries: [
-    { locale: 'en', hasPublished: true, hasDraft: false },
-    { locale: 'de', hasPublished: true, hasDraft: false },
-  ],
   availableLocales: ['en', 'de'],
+  locales: [
+    {
+      locale: 'en',
+      title: 'City Art Museum Audio Tour',
+      description:
+        'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
+      revision: 1,
+      hasUnpublishedChanges: false,
+      publishedVersionId: null,
+    },
+    {
+      locale: 'de',
+      title: 'Stadtkunstmuseum Audio Tour',
+      description: 'Entdecken Sie die reiche Geschichte und atemberaubende Kunstwerke des Stadtkunstmuseums.',
+      revision: 1,
+      hasUnpublishedChanges: false,
+      publishedVersionId: null,
+    },
+  ],
+  settings: null,
 }
 
 function MockViewInAppButton({ published }: { published: boolean }) {
@@ -49,6 +59,7 @@ const meta = {
   },
   args: {
     nanoId: 'abc123xyz',
+    preferredLocale: 'en',
     appDomain: 'https://app.valguide.io',
     onBack: fn(),
     onArchived: fn(),
@@ -68,21 +79,14 @@ export const Default: Story = {
   },
 }
 
-export const WithCoverImage: Story = {
-  args: {
-    guide: {
-      ...mockGuide,
-      coverImageUrl: faker.image.url({ width: 2070, height: 1380 }),
-    },
-  },
-}
-
 export const Published: Story = {
   args: {
     guide: {
       ...mockGuide,
-      published: new Date('2025-01-10T10:00:00Z'),
-      coverImageUrl: faker.image.url({ width: 2070, height: 1380 }),
+      locales: mockGuide.locales.map((l) => ({
+        ...l,
+        publishedVersionId: 'published-version-1',
+      })),
     },
   },
 }
@@ -91,8 +95,14 @@ export const WithLongTitle: Story = {
   args: {
     guide: {
       ...mockGuide,
-      displayTitle:
-        'The Complete History of the National Art Gallery and Its Permanent Collection of Renaissance Masterpieces',
+      locales: [
+        {
+          ...mockGuide.locales[0],
+          title:
+            'The Complete History of the National Art Gallery and Its Permanent Collection of Renaissance Masterpieces',
+        },
+        ...mockGuide.locales.slice(1),
+      ],
     },
   },
 }
@@ -101,7 +111,10 @@ export const WithRichDescription: Story = {
   args: {
     guide: {
       ...mockGuide,
-      displayDescription: `<p>Welcome to our <strong>comprehensive audio guide</strong> for the City Art Museum.</p>
+      locales: [
+        {
+          ...mockGuide.locales[0],
+          description: `<p>Welcome to our <strong>comprehensive audio guide</strong> for the City Art Museum.</p>
 <p>This tour covers:</p>
 <ul>
 <li>The main gallery featuring Renaissance masterpieces</li>
@@ -109,6 +122,9 @@ export const WithRichDescription: Story = {
 <li>The special exhibitions hall</li>
 </ul>
 <p>Duration: approximately <em>90 minutes</em></p>`,
+        },
+        ...mockGuide.locales.slice(1),
+      ],
     },
   },
 }
@@ -118,7 +134,7 @@ export const SingleLanguage: Story = {
     guide: {
       ...mockGuide,
       availableLocales: ['en'],
-      translationSummaries: [{ locale: 'en', hasPublished: true, hasDraft: false }],
+      locales: [mockGuide.locales[0]],
     },
   },
 }
@@ -128,13 +144,55 @@ export const ManyLanguages: Story = {
     guide: {
       ...mockGuide,
       availableLocales: ['en', 'de', 'fr', 'it', 'es', 'rm'],
-      translationSummaries: [
-        { locale: 'en', hasPublished: true, hasDraft: false },
-        { locale: 'de', hasPublished: true, hasDraft: false },
-        { locale: 'fr', hasPublished: false, hasDraft: true },
-        { locale: 'it', hasPublished: false, hasDraft: true },
-        { locale: 'es', hasPublished: false, hasDraft: false },
-        { locale: 'rm', hasPublished: true, hasDraft: true },
+      locales: [
+        {
+          locale: 'en',
+          title: 'English Title',
+          description: 'English description',
+          revision: 1,
+          hasUnpublishedChanges: false,
+          publishedVersionId: 'v1',
+        },
+        {
+          locale: 'de',
+          title: 'German Title',
+          description: 'German description',
+          revision: 1,
+          hasUnpublishedChanges: false,
+          publishedVersionId: 'v1',
+        },
+        {
+          locale: 'fr',
+          title: 'French Title',
+          description: 'French description',
+          revision: 2,
+          hasUnpublishedChanges: true,
+          publishedVersionId: null,
+        },
+        {
+          locale: 'it',
+          title: 'Italian Title',
+          description: 'Italian description',
+          revision: 2,
+          hasUnpublishedChanges: true,
+          publishedVersionId: null,
+        },
+        {
+          locale: 'es',
+          title: null,
+          description: null,
+          revision: 1,
+          hasUnpublishedChanges: false,
+          publishedVersionId: null,
+        },
+        {
+          locale: 'rm',
+          title: 'Romansh Title',
+          description: 'Romansh description',
+          revision: 3,
+          hasUnpublishedChanges: true,
+          publishedVersionId: 'v2',
+        },
       ],
     },
   },
@@ -144,7 +202,7 @@ export const NoDescription: Story = {
   args: {
     guide: {
       ...mockGuide,
-      displayDescription: null,
+      locales: [{ ...mockGuide.locales[0], description: null }, ...mockGuide.locales.slice(1)],
     },
   },
 }

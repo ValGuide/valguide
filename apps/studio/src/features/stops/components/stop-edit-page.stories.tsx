@@ -4,6 +4,7 @@ import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/ass
 import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
 import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
+import { MockMediaPicker } from '@/features/assets/components/media-picker/mock-media-picker'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
 import { MockStopEditorProvider } from '@/features/stops/contexts/mock-stop-editor-provider'
 import { StopEditPage } from './stop-edit-page'
@@ -106,6 +107,10 @@ const meta = {
       )
     },
   ],
+  args: {
+    MediaPicker: MockMediaPicker,
+    onPublishAssets: async () => {},
+  },
 } as Meta<typeof StopEditPage>
 
 export default meta

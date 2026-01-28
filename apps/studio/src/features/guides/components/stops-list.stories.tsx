@@ -1,462 +1,115 @@
-// @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import type { StopWithTranslations } from '@valguide/core/features/guides/schema'
+import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
+import type { StructureDraftStop } from '@valguide/core/features/guides/structure/get-structure-draft.fn'
+import { fn } from 'storybook/test'
+import { MockGuideEditorProvider } from '@/features/guides/contexts/mock-guide-editor-provider'
 import { StopsList } from './stops-list'
 
-const meta = {
-  title: 'Guides/StopsList',
+const createMockGuideDetail = (overrides: Partial<GuideDetail> = {}): GuideDetail => ({
+  id: 'guide-1',
+  nanoId: 'abc123xyz',
+  organizationId: 'org-1',
+  availableLocales: ['en', 'de', 'rm'],
+  archivedAt: null,
+  createdAt: new Date('2025-01-01T10:00:00Z'),
+  updatedAt: new Date('2025-01-15T14:30:00Z'),
+  locales: [],
+  settings: null,
+  ...overrides,
+})
+
+const createMockStops = (count: number): StructureDraftStop[] =>
+  Array.from({ length: count }, (_, i) => ({
+    stopId: `stop-${i + 1}`,
+    stopNanoId: `stop${i + 1}nano`,
+    position: i,
+    visible: true,
+    title: `Stop ${i + 1}: ${['Gallery', 'Exhibition', 'Courtyard', 'Hall', 'Room'][i % 5]}`,
+    locale: 'en',
+    thumbnailUrl: null,
+  }))
+
+/** Story-only context data, not component props */
+type StoryContextData = {
+  guideDetail?: GuideDetail
+  stops?: StructureDraftStop[]
+}
+
+const meta: Meta<typeof StopsList> = {
+  title: 'Studio/Guides/StopsList',
   component: StopsList,
   parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
     layout: 'padded',
   },
-  tags: ['autodocs'],
-  argTypes: {
-    onReorder: { action: 'reorder' },
-    onEdit: { action: 'edit' },
-    onRemove: { action: 'remove' },
-    onAdd: { action: 'add' },
+  args: {
+    onReorder: fn(),
+    onEdit: fn(),
+    onHide: fn(),
+    onShow: fn(),
+    onRemove: fn(),
+    onAdd: fn(),
   },
-} satisfies Meta<typeof StopsList>
+  decorators: [
+    (Story, context) => {
+      const storyContext = context.args as StoryContextData
+      const { guideDetail, stops } = storyContext
+      return (
+        <MockGuideEditorProvider guideDetail={guideDetail ?? createMockGuideDetail()} stops={stops ?? []}>
+          <Story />
+        </MockGuideEditorProvider>
+      )
+    },
+  ],
+  tags: ['autodocs'],
+}
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-const mockStops: StopWithTranslations[] = [
-  {
-    id: '1',
-    guideId: 'guide-1',
-    nanoId: 'stop1',
-    order: 0,
-    createdAt: new Date('2025-01-10T10:00:00Z'),
-    updatedAt: new Date('2025-01-10T10:00:00Z'),
-    createdBy: 'user-1',
-    translations: [
-      {
-        id: 't1',
-        stopId: '1',
-        locale: 'en',
-        currentVersionId: 'v1',
-        draftVersionId: null,
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        updatedAt: new Date('2025-01-10T10:00:00Z'),
-        currentVersion: {
-          id: 'v1',
-          translationId: 't1',
-          version: 1,
-          status: 'published',
-          title: 'Museum Entrance',
-          description: 'Welcome to the museum',
-          transcription: null,
-          createdAt: new Date('2025-01-10T10:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T10:00:00Z'),
-        },
-        draftVersion: null,
-      },
-      {
-        id: 't2',
-        stopId: '1',
-        locale: 'de',
-        currentVersionId: 'v2',
-        draftVersionId: null,
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        updatedAt: new Date('2025-01-10T10:00:00Z'),
-        currentVersion: {
-          id: 'v2',
-          translationId: 't2',
-          version: 1,
-          status: 'published',
-          title: 'Museumseingang',
-          description: 'Willkommen im Museum',
-          transcription: null,
-          createdAt: new Date('2025-01-10T10:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T10:00:00Z'),
-        },
-        draftVersion: null,
-      },
-    ],
-  },
-  {
-    id: '2',
-    guideId: 'guide-1',
-    nanoId: 'stop2',
-    order: 1,
-    createdAt: new Date('2025-01-10T11:00:00Z'),
-    updatedAt: new Date('2025-01-10T11:00:00Z'),
-    createdBy: 'user-1',
-    translations: [
-      {
-        id: 't3',
-        stopId: '2',
-        locale: 'en',
-        currentVersionId: 'v3',
-        draftVersionId: null,
-        createdAt: new Date('2025-01-10T11:00:00Z'),
-        updatedAt: new Date('2025-01-10T11:00:00Z'),
-        currentVersion: {
-          id: 'v3',
-          translationId: 't3',
-          version: 1,
-          status: 'published',
-          title: 'Ancient Artifacts Gallery',
-          description: 'Explore artifacts from ancient civilizations',
-          transcription: null,
-          createdAt: new Date('2025-01-10T11:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T11:00:00Z'),
-        },
-        draftVersion: null,
-      },
-      {
-        id: 't4',
-        stopId: '2',
-        locale: 'de',
-        currentVersionId: 'v4',
-        draftVersionId: null,
-        createdAt: new Date('2025-01-10T11:00:00Z'),
-        updatedAt: new Date('2025-01-10T11:00:00Z'),
-        currentVersion: {
-          id: 'v4',
-          translationId: 't4',
-          version: 1,
-          status: 'published',
-          title: 'Galerie antiker Artefakte',
-          description: 'Erkunden Sie Artefakte aus alten Zivilisationen',
-          transcription: null,
-          createdAt: new Date('2025-01-10T11:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T11:00:00Z'),
-        },
-        draftVersion: null,
-      },
-      {
-        id: 't5',
-        stopId: '2',
-        locale: 'rm',
-        currentVersionId: 'v5',
-        draftVersionId: null,
-        createdAt: new Date('2025-01-10T11:00:00Z'),
-        updatedAt: new Date('2025-01-10T11:00:00Z'),
-        currentVersion: {
-          id: 'v5',
-          translationId: 't5',
-          version: 1,
-          status: 'published',
-          title: 'Galaria dals artefacts antiqus',
-          description: 'Explorar artefacts da civilisaziuns antichas',
-          transcription: null,
-          createdAt: new Date('2025-01-10T11:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T11:00:00Z'),
-        },
-        draftVersion: null,
-      },
-    ],
-  },
-  {
-    id: '3',
-    guideId: 'guide-1',
-    nanoId: 'stop3',
-    order: 2,
-    createdAt: new Date('2025-01-10T12:00:00Z'),
-    updatedAt: new Date('2025-01-10T12:00:00Z'),
-    createdBy: 'user-1',
-    translations: [
-      {
-        id: 't6',
-        stopId: '3',
-        locale: 'en',
-        currentVersionId: 'v6',
-        draftVersionId: null,
-        createdAt: new Date('2025-01-10T12:00:00Z'),
-        updatedAt: new Date('2025-01-10T12:00:00Z'),
-        currentVersion: {
-          id: 'v6',
-          translationId: 't6',
-          version: 1,
-          status: 'published',
-          title: 'Renaissance Art Wing',
-          description: 'Masterpieces from the Renaissance period',
-          transcription: null,
-          createdAt: new Date('2025-01-10T12:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T12:00:00Z'),
-        },
-        draftVersion: null,
-      },
-    ],
-  },
-]
-
-const stopsWithDrafts: StopWithTranslations[] = [
-  {
-    id: '1',
-    guideId: 'guide-1',
-    nanoId: 'stop1',
-    order: 0,
-    createdAt: new Date('2025-01-10T10:00:00Z'),
-    updatedAt: new Date('2025-01-10T10:00:00Z'),
-    createdBy: 'user-1',
-    translations: [
-      {
-        id: 't1',
-        stopId: '1',
-        locale: 'en',
-        currentVersionId: 'v1',
-        draftVersionId: 'v1-draft',
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        updatedAt: new Date('2025-01-10T10:00:00Z'),
-        currentVersion: {
-          id: 'v1',
-          translationId: 't1',
-          version: 1,
-          status: 'published',
-          title: 'Museum Entrance',
-          description: 'Welcome to the museum',
-          transcription: null,
-          createdAt: new Date('2025-01-10T10:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T10:00:00Z'),
-        },
-        draftVersion: {
-          id: 'v1-draft',
-          translationId: 't1',
-          version: 2,
-          status: 'draft',
-          title: 'Museum Entrance - Updated',
-          description: 'Welcome to the amazing museum',
-          transcription: null,
-          createdAt: new Date('2025-01-15T10:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: null,
-        },
-      },
-    ],
-  },
-  {
-    id: '2',
-    guideId: 'guide-1',
-    nanoId: 'stop2',
-    order: 1,
-    createdAt: new Date('2025-01-10T11:00:00Z'),
-    updatedAt: new Date('2025-01-10T11:00:00Z'),
-    createdBy: 'user-1',
-    translations: [
-      {
-        id: 't3',
-        stopId: '2',
-        locale: 'en',
-        currentVersionId: 'v3',
-        draftVersionId: null,
-        createdAt: new Date('2025-01-10T11:00:00Z'),
-        updatedAt: new Date('2025-01-10T11:00:00Z'),
-        currentVersion: {
-          id: 'v3',
-          translationId: 't3',
-          version: 1,
-          status: 'published',
-          title: 'Ancient Artifacts Gallery',
-          description: 'Explore artifacts from ancient civilizations',
-          transcription: null,
-          createdAt: new Date('2025-01-10T11:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: new Date('2025-01-10T11:00:00Z'),
-        },
-        draftVersion: null,
-      },
-    ],
-  },
-  {
-    id: '3',
-    guideId: 'guide-1',
-    nanoId: 'stop3',
-    order: 2,
-    createdAt: new Date('2025-01-10T12:00:00Z'),
-    updatedAt: new Date('2025-01-10T12:00:00Z'),
-    createdBy: 'user-1',
-    translations: [
-      {
-        id: 't6',
-        stopId: '3',
-        locale: 'en',
-        currentVersionId: null,
-        draftVersionId: 'v6-draft',
-        createdAt: new Date('2025-01-10T12:00:00Z'),
-        updatedAt: new Date('2025-01-10T12:00:00Z'),
-        currentVersion: null,
-        draftVersion: {
-          id: 'v6-draft',
-          translationId: 't6',
-          version: 1,
-          status: 'draft',
-          title: 'New Stop - Draft Only',
-          description: 'This stop has never been published',
-          transcription: null,
-          createdAt: new Date('2025-01-10T12:00:00Z'),
-          createdBy: 'user-1',
-          publishedAt: null,
-        },
-      },
-    ],
-  },
-]
-
-const manyStops: StopWithTranslations[] = Array.from({ length: 15 }, (_, i) => ({
-  id: `stop-${i + 1}`,
-  guideId: 'guide-1',
-  nanoId: `stop${i + 1}`,
-  order: i,
-  createdAt: new Date('2025-01-10T10:00:00Z'),
-  updatedAt: new Date('2025-01-10T10:00:00Z'),
-  createdBy: 'user-1',
-  translations: [
-    {
-      id: `t-en-${i + 1}`,
-      stopId: `stop-${i + 1}`,
-      locale: 'en',
-      currentVersionId: `v-en-${i + 1}`,
-      draftVersionId: null,
-      createdAt: new Date('2025-01-10T10:00:00Z'),
-      updatedAt: new Date('2025-01-10T10:00:00Z'),
-      currentVersion: {
-        id: `v-en-${i + 1}`,
-        translationId: `t-en-${i + 1}`,
-        version: 1,
-        status: 'published',
-        title: `Stop ${i + 1}: Gallery ${String.fromCharCode(65 + (i % 26))}`,
-        description: `Description for stop ${i + 1}`,
-        transcription: null,
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        createdBy: 'user-1',
-        publishedAt: new Date('2025-01-10T10:00:00Z'),
-      },
-      draftVersion: null,
-    },
-    {
-      id: `t-de-${i + 1}`,
-      stopId: `stop-${i + 1}`,
-      locale: 'de',
-      currentVersionId: `v-de-${i + 1}`,
-      draftVersionId: null,
-      createdAt: new Date('2025-01-10T10:00:00Z'),
-      updatedAt: new Date('2025-01-10T10:00:00Z'),
-      currentVersion: {
-        id: `v-de-${i + 1}`,
-        translationId: `t-de-${i + 1}`,
-        version: 1,
-        status: 'published',
-        title: `Halt ${i + 1}: Galerie ${String.fromCharCode(65 + (i % 26))}`,
-        description: `Beschreibung für Halt ${i + 1}`,
-        transcription: null,
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        createdBy: 'user-1',
-        publishedAt: new Date('2025-01-10T10:00:00Z'),
-      },
-      draftVersion: null,
-    },
-  ],
-}))
-
 export const Empty: Story = {
   args: {
+    guideDetail: createMockGuideDetail(),
     stops: [],
-    locale: 'en',
-    onReorder: () => {},
-    onEdit: () => {},
-    onRemove: async () => {},
-    onAdd: () => {},
   },
 }
 
 export const SingleStop: Story = {
   args: {
-    stops: [mockStops[0]],
-    locale: 'en',
-    onReorder: () => {},
-    onEdit: () => {},
-    onRemove: async () => {},
-    onAdd: () => {},
+    guideDetail: createMockGuideDetail(),
+    stops: createMockStops(1),
   },
 }
 
 export const MultipleStops: Story = {
   args: {
-    stops: mockStops,
-    locale: 'en',
-    onReorder: () => {},
-    onEdit: () => {},
-    onRemove: async () => {},
-    onAdd: () => {},
+    guideDetail: createMockGuideDetail(),
+    stops: createMockStops(3),
   },
 }
 
 export const ManyStops: Story = {
   args: {
-    stops: manyStops,
-    locale: 'en',
-    onReorder: () => {},
-    onEdit: () => {},
-    onRemove: async () => {},
-    onAdd: () => {},
+    guideDetail: createMockGuideDetail(),
+    stops: createMockStops(15),
   },
 }
 
-export const WithDraftChanges: Story = {
+export const HiddenStop: Story = {
   args: {
-    stops: stopsWithDrafts,
-    locale: 'en',
-    onReorder: () => {},
-    onEdit: () => {},
-    onRemove: async () => {},
-    onAdd: () => {},
+    guideDetail: createMockGuideDetail(),
+    stops: createMockStops(3).map((stop, i) => ({
+      ...stop,
+      visible: i === 1 ? false : true,
+    })),
   },
 }
 
-export const MissingTranslation: Story = {
+export const UntitledStop: Story = {
   args: {
-    stops: [
-      {
-        id: '1',
-        guideId: 'guide-1',
-        nanoId: 'stop1',
-        order: 0,
-        createdAt: new Date('2025-01-10T10:00:00Z'),
-        updatedAt: new Date('2025-01-10T10:00:00Z'),
-        createdBy: 'user-1',
-        translations: [
-          {
-            id: 't1',
-            stopId: '1',
-            locale: 'en',
-            currentVersionId: 'v1',
-            draftVersionId: null,
-            createdAt: new Date('2025-01-10T10:00:00Z'),
-            updatedAt: new Date('2025-01-10T10:00:00Z'),
-            currentVersion: {
-              id: 'v1',
-              translationId: 't1',
-              version: 1,
-              status: 'published',
-              title: 'Only English Available',
-              description: 'This stop only has English translation',
-              transcription: null,
-              createdAt: new Date('2025-01-10T10:00:00Z'),
-              createdBy: 'user-1',
-              publishedAt: new Date('2025-01-10T10:00:00Z'),
-            },
-            draftVersion: null,
-          },
-        ],
-      },
-    ],
-    locale: 'de',
-    onReorder: () => {},
-    onEdit: () => {},
-    onRemove: async () => {},
-    onAdd: () => {},
+    guideDetail: createMockGuideDetail(),
+    stops: createMockStops(2).map((stop) => ({
+      ...stop,
+      title: undefined,
+    })),
   },
 }

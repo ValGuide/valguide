@@ -3,7 +3,7 @@ import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { StopNotFound } from '@/features/guides/components/stop-not-found'
 import { guideDetailQueryOptions } from '@/features/guides/query-options'
-import { StopEditPage } from '@/features/stops/components/stop-edit-page'
+import { StopEditPageConnected } from '@/features/stops/components/stop-edit-page-connected'
 import { StopEditSkeleton } from '@/features/stops/components/stop-edit-skeleton'
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
 import { stopDetailQueryOptions, stopLocaleDraftForGuideQueryOptions } from '@/features/stops/query-options'
@@ -73,7 +73,7 @@ function GuideStopEditRoute() {
         backParams: { nanoId: guideNanoId },
       }}
     >
-      <StopEditPage />
+      <StopEditPageConnected />
     </StopEditorProvider>
   )
 }
