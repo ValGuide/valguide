@@ -1,7 +1,6 @@
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { clientEnv } from '@valguide/core/env/client'
-import { ViewInAppButton } from '@valguide/core/features/guides/components/view-in-app-button'
 import { updateGuideFn } from '@valguide/core/features/guides/guide/update-guide.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
@@ -9,6 +8,7 @@ import { useCallback } from 'react'
 import { ArchiveGuideButton } from '@/features/guides/components/archive-guide-button'
 import { GuideDetailSkeleton } from '@/features/guides/components/guide-detail-skeleton'
 import { GuideDetailView } from '@/features/guides/components/guide-detail-view'
+import { ViewInAppButton } from '@/features/guides/components/view-in-app-button'
 import { guideDetailQueryOptions } from '@/features/guides/query-options'
 
 export const Route = createFileRoute('/_main/guides/$nanoId/')({

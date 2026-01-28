@@ -1,3 +1,4 @@
+import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -14,7 +15,6 @@ import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Crown, Edit3, Eye, Palette, Shield, UserPlus } from 'lucide-react'
 import * as React from 'react'
-import type { OrgRole } from '../schema'
 
 export type { OrgRole }
 

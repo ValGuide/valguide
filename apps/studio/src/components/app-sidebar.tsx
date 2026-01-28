@@ -1,6 +1,4 @@
 import { Link, type LinkOptions, useLocation, useRouter } from '@tanstack/react-router'
-import { CreateTeamDialog, type CreateTeamResult } from '@valguide/core/features/orgs/components/create-team-dialog'
-import { type Team, TeamSwitcher } from '@valguide/core/features/orgs/components/team-switcher'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { Button } from '@valguide/ui/components/button'
@@ -32,6 +30,8 @@ import {
 } from 'lucide-react'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
+import { CreateTeamDialog, type CreateTeamResult } from '@/features/orgs/components/create-team-dialog'
+import { type Team, TeamSwitcher } from '@/features/orgs/components/team-switcher'
 
 export function AppSidebar({
   pathname: pathnameProp,

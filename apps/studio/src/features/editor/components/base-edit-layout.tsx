@@ -1,9 +1,12 @@
-import type { GuideIndicator, GuideStatus } from '@valguide/core/features/guides/components/guide-status-badge'
-import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
 import { type ReactNode, useCallback, useState } from 'react'
+import {
+  type GuideIndicator,
+  type GuideStatus,
+  GuideStatusBadge,
+} from '@/features/guides/components/guide-status-badge'
 import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
 import { DraftPublishedTabs, type EditorTab } from './draft-published-tabs'
 import { EditorActionsPanel } from './editor-actions-panel'

@@ -1,4 +1,4 @@
-import type { organization, organizationInvitation, organizationMember } from './schema'
+import type { OrgRole, organization, organizationInvitation, organizationMember } from './schema'
 
 // =============================================================================
 // BASE TYPES (inferred from schema)
@@ -20,4 +20,30 @@ export type NewOrganizationInvitation = typeof organizationInvitation.$inferInse
 /** Organization with the user's role in it */
 export type OrganizationWithRole = Organization & {
   role: OrganizationMember['role']
+}
+
+export type { OrgRole }
+
+export interface TeamMember {
+  id: string
+  userId: string
+  email: string
+  firstName?: string | null
+  lastName?: string | null
+  avatar?: string | null
+  role: OrgRole
+  joinedAt: string
+  isOwner?: boolean
+}
+
+export interface PendingInvitation {
+  id: string
+  email: string
+  role: OrgRole
+  invitedBy: {
+    name: string
+    email: string
+  }
+  invitedAt: string
+  expiresAt: string
 }

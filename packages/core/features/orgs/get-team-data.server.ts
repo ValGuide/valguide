@@ -1,12 +1,10 @@
 import { db } from '../db'
 import { getUserDisplayName } from '../profiles/utils'
-import type { TeamMember } from './components/members-table'
-import type { PendingInvitation } from './components/pending-invites-list'
 import { getPendingInvitations } from './get-pending-invitations.server'
 import { getTeamById } from './get-team.server'
 import { getTeamMembers } from './get-team-members.server'
 import type { OrgRole } from './schema'
-import type { Organization } from './types'
+import type { Organization, PendingInvitation, TeamMember } from './types'
 import { getUserRole } from './utils'
 
 // =============================================================================

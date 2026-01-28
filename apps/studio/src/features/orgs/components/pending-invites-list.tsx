@@ -1,4 +1,6 @@
+import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
+import type { PendingInvitation } from '@valguide/features/orgs/types.ts'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
@@ -10,21 +12,6 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { Clock, Mail, MoreHorizontal, RefreshCw, X } from 'lucide-react'
-import type { OrgRole } from '../schema'
-
-export type { OrgRole }
-
-export interface PendingInvitation {
-  id: string
-  email: string
-  role: OrgRole
-  invitedBy: {
-    name: string
-    email: string
-  }
-  invitedAt: string
-  expiresAt: string
-}
 
 export interface PendingInvitesListProps {
   invitations: PendingInvitation[]

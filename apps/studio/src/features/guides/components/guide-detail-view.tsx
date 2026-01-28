@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import { GuideStatusBadge } from '@valguide/core/features/guides/components/guide-status-badge'
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import { getGuideStatus } from '@valguide/core/features/guides/status-utils'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -10,6 +9,7 @@ import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-dis
 import { Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { EditorHeader } from '@/features/editor/components/editor-header'
+import { GuideStatusBadge } from '@/features/guides/components/guide-status-badge'
 import { TranslationsManager } from './translations-manager'
 
 export type GuideDetailViewProps = {

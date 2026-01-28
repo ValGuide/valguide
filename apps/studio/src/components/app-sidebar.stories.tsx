@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { Team } from '@valguide/core/features/orgs/components/team-switcher'
 import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
+import type { Team } from '@/features/orgs/components/team-switcher'
 import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
 

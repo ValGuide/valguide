@@ -1,4 +1,6 @@
+import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
+import type { TeamMember } from '@valguide/features/orgs/types.ts'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
@@ -12,21 +14,8 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { Crown, Edit3, Eye, Mail, MoreHorizontal, Palette, Shield, Trash2 } from 'lucide-react'
 import type * as React from 'react'
-import type { OrgRole } from '../schema'
 
 export type { OrgRole }
-
-export interface TeamMember {
-  id: string
-  userId: string
-  email: string
-  firstName?: string | null
-  lastName?: string | null
-  avatar?: string | null
-  role: OrgRole
-  joinedAt: string
-  isOwner?: boolean
-}
 
 export interface MembersTableProps {
   members: TeamMember[]
@@ -137,10 +126,10 @@ export function MembersTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="min-w-[200px]">{t('member')}</TableHead>
+              <TableHead className="min-w-50">{t('member')}</TableHead>
               <TableHead>{t('role')}</TableHead>
               <TableHead className="hidden md:table-cell">{t('joined')}</TableHead>
-              <TableHead className="w-[70px]" />
+              <TableHead className="w-17.5" />
             </TableRow>
           </TableHeader>
           <TableBody>

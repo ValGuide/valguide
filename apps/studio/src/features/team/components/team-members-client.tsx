@@ -1,17 +1,15 @@
 import { cancelInviteFn } from '@valguide/core/features/orgs/cancel-invite.fn'
-import { InviteMemberDialog } from '@valguide/core/features/orgs/components/invite-member-dialog'
-import { MembersTable, type OrgRole, type TeamMember } from '@valguide/core/features/orgs/components/members-table'
-import {
-  type PendingInvitation,
-  PendingInvitesList,
-} from '@valguide/core/features/orgs/components/pending-invites-list'
 import { inviteMemberFn } from '@valguide/core/features/orgs/invite-member.fn'
 import { removeMemberFn } from '@valguide/core/features/orgs/remove-member.fn'
 import { resendInviteFn } from '@valguide/core/features/orgs/resend-invite.fn'
 import { updateMemberRoleFn } from '@valguide/core/features/orgs/update-member-role.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import type { PendingInvitation, TeamMember } from '@valguide/features/orgs/types.ts'
 import { PageTitle } from '@valguide/ui/components/page-title'
+import { InviteMemberDialog } from '@/features/orgs/components/invite-member-dialog'
+import { MembersTable, type OrgRole } from '@/features/orgs/components/members-table'
+import { PendingInvitesList } from '@/features/orgs/components/pending-invites-list'
 
 interface TeamMembersClientProps {
   team: {

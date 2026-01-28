@@ -1,3 +1,4 @@
+import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import {
@@ -11,7 +12,6 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
 import { ChevronsUpDown, Plus, Settings } from 'lucide-react'
 import * as React from 'react'
-import type { OrgRole } from '../schema'
 
 export type { OrgRole }
 
