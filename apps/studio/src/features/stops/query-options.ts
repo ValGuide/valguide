@@ -9,7 +9,6 @@ import {
 } from '@valguide/core/features/guides/stop/asset/get-stop-assets-published.fn'
 import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
-import { getOrCreateStopLocaleDraftForGuideFn } from '@valguide/core/features/guides/stop/locale/get-or-create-stop-locale-draft-for-guide.fn'
 import {
   getStopLocaleDraftFn,
   type StopLocaleDraftResult,
@@ -47,17 +46,6 @@ export const stopLocaleDraftQueryOptions = (nanoId: string, locale: string) =>
   queryOptions<StopLocaleDraftResult | null>({
     queryKey: ['stop', nanoId, 'locale', locale, 'draft'],
     queryFn: () => getStopLocaleDraftFn({ data: { nanoId, locale } }),
-    staleTime: 30 * 1000,
-  })
-
-/**
- * Query options for stop locale draft within a guide context.
- * Validates locale against guide's availableLocales and auto-creates if missing.
- */
-export const stopLocaleDraftForGuideQueryOptions = (guideNanoId: string, stopNanoId: string, locale: string) =>
-  queryOptions<StopLocaleDraftResult>({
-    queryKey: ['stop', stopNanoId, 'locale', locale, 'draft', { guideNanoId }],
-    queryFn: () => getOrCreateStopLocaleDraftForGuideFn({ data: { guideNanoId, stopNanoId, locale } }),
     staleTime: 30 * 1000,
   })
 

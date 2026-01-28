@@ -19,12 +19,7 @@ interface ArchiveGuideDialogProps {
   onConfirm: () => Promise<void>
 }
 
-export function ArchiveGuideDialog({
-  open,
-  onOpenChange,
-  isArchiving,
-  onConfirm,
-}: ArchiveGuideDialogProps) {
+export function ArchiveGuideDialog({ open, onOpenChange, isArchiving, onConfirm }: ArchiveGuideDialogProps) {
   const t = useTranslations('guides')
 
   const handleArchive = async () => {

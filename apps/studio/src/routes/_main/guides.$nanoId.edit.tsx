@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { publishGuideAssetsFn } from '@valguide/core/features/guides/guide/asset/publish-guide-assets.fn'
+import { ensureAllGuideLocalesFn } from '@valguide/core/features/guides/guide/locale/ensure-all-guide-locales.fn'
 import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/publish-guide-locale.fn'
 import { unpublishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/unpublish-guide-locale.fn'
 import { updateStopVisibilityFn } from '@valguide/core/features/guides/structure/update-stop-visibility.fn'
@@ -28,6 +29,9 @@ export const Route = createFileRoute('/_main/guides/$nanoId/edit')({
     if (!guideDetail) {
       throw notFound()
     }
+
+    // Ensure all locales have records upfront for instant locale switching
+    await ensureAllGuideLocalesFn({ data: { guideNanoId: params.nanoId } })
 
     const requestedLocale = deps.locale
     const { availableLocales } = guideDetail

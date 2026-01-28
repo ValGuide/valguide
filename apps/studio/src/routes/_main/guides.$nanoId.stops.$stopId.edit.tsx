@@ -1,12 +1,13 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
+import { ensureAllStopLocalesForGuideFn } from '@valguide/core/features/guides/stop/locale/ensure-all-stop-locales-for-guide.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { StopNotFound } from '@/features/guides/components/stop-not-found'
 import { guideDetailQueryOptions } from '@/features/guides/query-options'
 import { StopEditPageConnected } from '@/features/stops/components/stop-edit-page-connected'
 import { StopEditSkeleton } from '@/features/stops/components/stop-edit-skeleton'
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
-import { stopDetailQueryOptions, stopLocaleDraftForGuideQueryOptions } from '@/features/stops/query-options'
+import { stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '@/features/stops/query-options'
 
 type SearchParams = {
   locale?: string
@@ -43,10 +44,13 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
       })
     }
 
-    // Fetch or create the stop locale draft (validated against guide's availableLocales)
-    await context.queryClient.ensureQueryData(
-      stopLocaleDraftForGuideQueryOptions(params.nanoId, params.stopId, requestedLocale),
-    )
+    // Pre-create all missing stopLocale + stopLocaleDraft records for guide's locales
+    await ensureAllStopLocalesForGuideFn({
+      data: { guideNanoId: params.nanoId, stopNanoId: params.stopId },
+    })
+
+    // Fetch the stop locale draft (records guaranteed to exist after ensure)
+    await context.queryClient.ensureQueryData(stopLocaleDraftQueryOptions(params.stopId, requestedLocale))
 
     return { guideNanoId: params.nanoId, stopNanoId: params.stopId, locale: requestedLocale }
   },

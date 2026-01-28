@@ -46,7 +46,6 @@ export function StopEditorProvider({
   navigation,
 }: StopEditorProviderProps) {
   const t = useTranslations()
-  const router = useRouter()
 
   const base = useEditorBase<StopDetail, StopLocaleDraftResult, StopLocalePublishedResult>({
     nanoId,
