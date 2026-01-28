@@ -15,6 +15,7 @@
     "test": "turbo test",
     "type-check": "turbo type-check",
     "i18n:check": "pnpm --filter @valguide/core i18n:check",
+    "i18n:unused": "pnpm dlx tsx scripts/find-unused-i18n-keys.ts",
     "clean": "turbo clean --parallel && rm -rf node_modules pnpm-lock.yaml .turbo",
     "clean:vite": "turbo run clean:vite --parallel",
     "clean:install": "pnpm clean && pnpm install",
