@@ -34,21 +34,23 @@ function getNamespaceKeys(obj: Record<string, unknown>): Map<string, string[]> {
   return namespaces
 }
 
-function searchForKey(key: string, namespace: string): boolean {
-  // Search for the key in quotes (single or double)
-  // Escape special regex chars in the key
-  const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const pattern = `['"']${escapedKey}['"']`
+function extractAllStringsFromCodebase(): Set<string> {
+  // Use ripgrep to find all quoted strings in one pass
+  // This regex captures content inside single or double quotes
+  const result = execSync(
+    `rg -o "['\\"]([^'\\"]+)['\\"]" ${SEARCH_DIRS.join(' ')} --include='*.ts' --include='*.tsx' -I --no-filename 2>/dev/null || true`,
+    { encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024 },
+  )
 
-  try {
-    const result = execSync(
-      `grep -r -E "${pattern}" ${SEARCH_DIRS.join(' ')} --include='*.ts' --include='*.tsx' 2>/dev/null || true`,
-      { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
-    )
-    return result.trim().length > 0
-  } catch {
-    return false
+  const strings = new Set<string>()
+  for (const line of result.split('\n')) {
+    // Remove surrounding quotes
+    const match = line.match(/^['"](.+)['"]$/)
+    if (match) {
+      strings.add(match[1])
+    }
   }
+  return strings
 }
 
 async function main() {
@@ -56,24 +58,27 @@ async function main() {
   const messages = JSON.parse(fs.readFileSync(MESSAGES_PATH, 'utf-8'))
   const namespaces = getNamespaceKeys(messages)
 
-  console.log(`Found ${namespaces.size} namespaces\n`)
+  let totalKeys = 0
+  for (const keys of namespaces.values()) {
+    totalKeys += keys.length
+  }
+  console.log(`Found ${namespaces.size} namespaces with ${totalKeys} total keys\n`)
+
+  console.log('Scanning codebase for all strings (this is the slow part)...')
+  const codebaseStrings = extractAllStringsFromCodebase()
+  console.log(`Found ${codebaseStrings.size} unique strings in codebase\n`)
 
   const unusedKeys: { namespace: string; key: string }[] = []
-  let totalKeys = 0
 
   for (const [namespace, keys] of namespaces) {
-    console.log(`Checking namespace: ${namespace} (${keys.length} keys)`)
-    totalKeys += keys.length
-
     for (const key of keys) {
-      const found = searchForKey(key, namespace)
-      if (!found) {
+      if (!codebaseStrings.has(key)) {
         unusedKeys.push({ namespace, key })
       }
     }
   }
 
-  console.log('\n' + '='.repeat(60))
+  console.log('='.repeat(60))
   console.log(`Total keys: ${totalKeys}`)
   console.log(`Unused keys: ${unusedKeys.length}`)
   console.log('='.repeat(60) + '\n')
