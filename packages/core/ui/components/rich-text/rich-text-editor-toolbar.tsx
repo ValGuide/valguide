@@ -9,8 +9,8 @@ export interface EditorToolbarProps {
   disabled?: boolean
 }
 
-export function EditorToolbar({ editor, disabled }: EditorToolbarProps) {
-  const t = useTranslations('guides.editor')
+export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) {
+  const t = useTranslations('richTextEditor')
 
   if (!editor) return null
 

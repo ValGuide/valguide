@@ -1,6 +1,6 @@
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { EditorToolbar } from './editor-toolbar'
+import { RichTextEditorToolbar } from './rich-text-editor-toolbar'
 
 export interface RichTextEditorProps {
   'aria-labelledby'?: string
@@ -55,7 +55,7 @@ export function RichTextEditor({
   return (
     <div className={className}>
       <div className="overflow-hidden rounded-md border">
-        <EditorToolbar editor={editor} disabled={readOnly} />
+        <RichTextEditorToolbar editor={editor} disabled={readOnly} />
         <EditorContent editor={editor} />
       </div>
     </div>

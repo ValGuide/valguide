@@ -271,20 +271,22 @@
     "imageCounter": "{current} / {total}",
     "videoNotSupported": "Your browser does not support the video tag."
   },
+  "richTextEditor": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "heading": "Heading",
+    "bulletList": "Bullet List",
+    "orderedList": "Numbered List",
+    "blockquote": "Quote",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
   "guides": {
     "title": "Guides",
     "description": "Create and manage your multimedia guides",
     "backToGuides": "Back to guides",
     "editor": {
-      "bold": "Bold",
-      "italic": "Italic",
-      "strikethrough": "Strikethrough",
-      "heading": "Heading",
-      "bulletList": "Bullet List",
-      "orderedList": "Numbered List",
-      "blockquote": "Quote",
-      "undo": "Undo",
-      "redo": "Redo",
       "coverImageUpdated": "Cover image updated",
       "preview": "Preview",
       "saving": "Saving...",

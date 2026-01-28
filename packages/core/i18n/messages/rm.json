@@ -271,20 +271,22 @@
     "imageCounter": "{current} / {total}",
     "videoNotSupported": "Voss navigatur na sustegna betg l'element video."
   },
+  "richTextEditor": {
+    "bold": "Grass",
+    "italic": "Cursiv",
+    "strikethrough": "Stritgà tras",
+    "heading": "Titel",
+    "bulletList": "Glista cun puncts",
+    "orderedList": "Glista numerada",
+    "blockquote": "Citaziun",
+    "undo": "Revocar",
+    "redo": "Repeter"
+  },
   "guides": {
     "title": "Guids",
     "description": "Crear e administrar voss guids multimedials",
     "backToGuides": "Anavos als guids",
     "editor": {
-      "bold": "Grass",
-      "italic": "Cursiv",
-      "strikethrough": "Stritgà tras",
-      "heading": "Titel",
-      "bulletList": "Glista cun puncts",
-      "orderedList": "Glista numerada",
-      "blockquote": "Citaziun",
-      "undo": "Revocar",
-      "redo": "Repeter",
       "coverImageUpdated": "Maletg da front actualisà",
       "preview": "Prevista",
       "saving": "Memorisar...",

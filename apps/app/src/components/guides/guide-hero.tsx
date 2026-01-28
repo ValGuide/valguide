@@ -1,7 +1,7 @@
 import { Image } from '@unpic/react'
-import { RichTextDisplay } from '@valguide/core/features/guides/components/rich-text-display'
 import type { AssetItem } from '@valguide/core/features/guides/public/types'
 import { PageTitle } from '@valguide/ui/components/page-title'
+import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
 import { ImageGallery } from './image-gallery'
 
 type GuideHeroProps = {
@@ -17,7 +17,7 @@ export function GuideHero({ title, description, coverImage, assets }: GuideHeroP
   return (
     <div className="space-y-6">
       {coverImage && (
-        <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden">
+        <div className="relative aspect-video w-full rounded-lg overflow-hidden">
           <Image
             src={coverImage}
             alt={title}

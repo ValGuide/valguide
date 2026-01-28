@@ -7,9 +7,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/
 import { StatusBadge } from '@valguide/core/ui/components/status-badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 import { cn } from '@valguide/core/ui/lib/utils'
+import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
 import { ImageIcon, LucideInfo } from 'lucide-react'
 import * as React from 'react'
-import { RichTextDisplay } from './components/rich-text-display'
 import type { Guide } from './types'
 
 export interface GuidePreviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
