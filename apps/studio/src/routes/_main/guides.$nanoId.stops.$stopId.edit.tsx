@@ -45,9 +45,14 @@ export const Route = createFileRoute('/_main/guides/$nanoId/stops/$stopId/edit')
     }
 
     // Pre-create all missing stopLocale + stopLocaleDraft records for guide's locales
-    await ensureAllStopLocalesForGuideFn({
+    const ensureResult = await ensureAllStopLocalesForGuideFn({
       data: { guideNanoId: params.nanoId, stopNanoId: params.stopId },
     })
+
+    // If new locales were created, invalidate stop detail cache so useEditorBase sees them
+    if (ensureResult.createdLocales.length > 0) {
+      await context.queryClient.invalidateQueries({ queryKey: ['stop', params.stopId, 'detail'] })
+    }
 
     // Fetch the stop locale draft (records guaranteed to exist after ensure)
     await context.queryClient.ensureQueryData(stopLocaleDraftQueryOptions(params.stopId, requestedLocale))

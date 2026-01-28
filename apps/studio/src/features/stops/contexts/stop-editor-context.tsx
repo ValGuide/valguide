@@ -50,6 +50,8 @@ export function StopEditorProvider({
   const base = useEditorBase<StopDetail, StopLocaleDraftResult, StopLocalePublishedResult>({
     nanoId,
     initialLocale,
+    // When editing in guide context, use guide's locales for initial locale validation
+    availableLocalesOverride: guideAvailableLocales,
     detailQueryOptions: stopDetailQueryOptions,
     localeDraftQueryOptions: stopLocaleDraftQueryOptions,
     localePublishedQueryOptions: stopLocalePublishedQueryOptions,

@@ -25,6 +25,13 @@ export interface EntityDetail {
 export interface UseEditorBaseOptions {
   nanoId: string
   initialLocale?: string
+  /**
+   * Override available locales for initial locale validation.
+   * When editing a stop in guide context, pass guide's availableLocales here
+   * to ensure the initial locale is validated against the guide's locales,
+   * not the stop's existing locales.
+   */
+  availableLocalesOverride?: string[]
   // biome-ignore lint/suspicious/noExplicitAny: Query options return types vary by entity
   detailQueryOptions: (nanoId: string) => any
   // biome-ignore lint/suspicious/noExplicitAny: Query options return types vary by entity
@@ -62,6 +69,7 @@ export interface EditorBaseResult<TDetail extends EntityDetail, TLocaleDraft, TL
 export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocalePublished>({
   nanoId,
   initialLocale,
+  availableLocalesOverride,
   detailQueryOptions,
   localeDraftQueryOptions,
   localePublishedQueryOptions,
@@ -75,7 +83,8 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
   const detailQuery = useSuspenseQuery(detailQueryOptions(nanoId))
   const detail = detailQuery.data as TDetail
   const entityId = detail.id
-  const availableLocales = detail.availableLocales
+  // Use override if provided (e.g., guide's locales when editing stop in guide context)
+  const availableLocales = availableLocalesOverride ?? detail.availableLocales
   const existingLocales = detail.existingLocales ?? detail.availableLocales
 
   const [activeLocale, setActiveLocaleState] = useState<string>(() => parseLocale(initialLocale, availableLocales))
