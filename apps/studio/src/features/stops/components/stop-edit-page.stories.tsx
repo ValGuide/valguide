@@ -70,140 +70,196 @@ const createMockAssets = (count: number): StopAssetDraftItem[] =>
     createdAt: new Date('2025-01-10T10:00:00Z'),
   }))
 
-/** Story-only context data, not component props */
-type StoryContextData = {
-  stopDetail?: StopDetail
-  localeDraft?: StopLocaleDraftResult | null
-  localePublished?: StopLocalePublishedResult | null
-  assets?: StopAssetDraftItem[]
-}
-
-const meta = {
+const meta: Meta<typeof StopEditPage> = {
   title: 'Studio/Pages/Stops/Edit/StopEditPage',
   component: StopEditPage,
   parameters: {
     layout: 'fullscreen',
   },
   decorators: [
-    (Story, context) => {
-      const storyContext = context.args as StoryContextData
-      const { stopDetail, localeDraft, localePublished, assets } = storyContext
-      return (
-        <MockAssetsProvider>
-          <MockStopEditorProvider
-            stopDetail={stopDetail ?? createMockStopDetail()}
-            localeDraft={localeDraft ?? createMockLocaleDraft()}
-            localePublished={localePublished ?? null}
-            assets={assets ?? []}
-            navigation={{
-              backPath: '/guides/abc123xyz/edit',
-              backLabel: 'Art Museum Guide',
-              backParams: { nanoId: 'abc123xyz' },
-            }}
-          >
-            <Story />
-          </MockStopEditorProvider>
-        </MockAssetsProvider>
-      )
-    },
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft()}
+          localePublished={null}
+          assets={[]}
+          navigation={{
+            backPath: '/guides/abc123xyz/edit',
+            backLabel: 'Art Museum Guide',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
   ],
   args: {
     MediaPicker: MockMediaPicker,
     onPublishAssets: async () => {},
   },
-} as Meta<typeof StopEditPage>
+}
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
-  args: {
-    stopDetail: createMockStopDetail(),
-    localeDraft: createMockLocaleDraft(),
-  } as StoryContextData,
-}
+export const Default: Story = {}
 
 export const Unpublished: Story = {
-  args: {
-    stopDetail: createMockStopDetail(),
-    localeDraft: createMockLocaleDraft(),
-    assets: createMockAssets(2),
-  } as StoryContextData,
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft()}
+          localePublished={null}
+          assets={createMockAssets(2)}
+          navigation={{
+            backPath: '/guides/abc123xyz/edit',
+            backLabel: 'Art Museum Guide',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
 }
 
 export const Published: Story = {
-  args: {
-    stopDetail: createMockStopDetail(),
-    localeDraft: createMockLocaleDraft({ publishedVersionId: 'sv-pub-1', hasUnpublishedChanges: false }),
-    localePublished: createMockLocalePublished(),
-    assets: createMockAssets(3),
-  } as StoryContextData,
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft({ publishedVersionId: 'sv-pub-1', hasUnpublishedChanges: false })}
+          localePublished={createMockLocalePublished()}
+          assets={createMockAssets(3)}
+          navigation={{
+            backPath: '/guides/abc123xyz/edit',
+            backLabel: 'Art Museum Guide',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
 }
 
 export const WithUnpublishedChanges: Story = {
-  args: {
-    stopDetail: createMockStopDetail(),
-    localeDraft: createMockLocaleDraft({
-      publishedVersionId: 'sv-pub-1',
-      hasUnpublishedChanges: true,
-      title: 'The Starry Night - Updated',
-      description: 'Updated description with new information.',
-    }),
-    localePublished: createMockLocalePublished(),
-    assets: createMockAssets(2),
-  } as StoryContextData,
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft({
+            publishedVersionId: 'sv-pub-1',
+            hasUnpublishedChanges: true,
+            title: 'The Starry Night - Updated',
+            description: 'Updated description with new information.',
+          })}
+          localePublished={createMockLocalePublished()}
+          assets={createMockAssets(2)}
+          navigation={{
+            backPath: '/guides/abc123xyz/edit',
+            backLabel: 'Art Museum Guide',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
 }
 
 export const WithGalleryImages: Story = {
-  args: {
-    stopDetail: createMockStopDetail(),
-    localeDraft: createMockLocaleDraft(),
-    assets: createMockAssets(6),
-  } as StoryContextData,
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft()}
+          localePublished={null}
+          assets={createMockAssets(6)}
+          navigation={{
+            backPath: '/guides/abc123xyz/edit',
+            backLabel: 'Art Museum Guide',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
 }
 
 export const EmptyStop: Story = {
-  args: {
-    stopDetail: createMockStopDetail(),
-    localeDraft: createMockLocaleDraft({ title: '', description: '', transcription: '' }),
-    assets: [],
-  } as StoryContextData,
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft({ title: '', description: '', transcription: '' })}
+          localePublished={null}
+          assets={[]}
+          navigation={{
+            backPath: '/guides/abc123xyz/edit',
+            backLabel: 'Art Museum Guide',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
 }
 
 export const MultipleLocales: Story = {
-  args: {
-    stopDetail: createMockStopDetail({
-      existingLocales: ['en', 'de', 'fr', 'it'],
-      availableLocales: ['en', 'de', 'fr', 'it'],
-    }),
-    localeDraft: createMockLocaleDraft(),
-    assets: createMockAssets(2),
-  } as StoryContextData,
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail({
+            existingLocales: ['en', 'de', 'fr', 'it'],
+            availableLocales: ['en', 'de', 'fr', 'it'],
+          })}
+          localeDraft={createMockLocaleDraft()}
+          localePublished={null}
+          assets={createMockAssets(2)}
+          navigation={{
+            backPath: '/guides/abc123xyz/edit',
+            backLabel: 'Art Museum Guide',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
 }
 
 export const StandaloneStop: Story = {
-  args: {
-    stopDetail: createMockStopDetail(),
-    localeDraft: createMockLocaleDraft(),
-    assets: createMockAssets(2),
-  } as StoryContextData,
   decorators: [
-    (Story, context) => {
-      const storyContext = context.args as StoryContextData
-      const { stopDetail, localeDraft, localePublished, assets } = storyContext
-      return (
-        <MockAssetsProvider>
-          <MockStopEditorProvider
-            stopDetail={stopDetail ?? createMockStopDetail()}
-            localeDraft={localeDraft ?? createMockLocaleDraft()}
-            localePublished={localePublished ?? null}
-            assets={assets ?? []}
-            navigation={{ backPath: '/stops', backLabel: 'All Stops' }}
-          >
-            <Story />
-          </MockStopEditorProvider>
-        </MockAssetsProvider>
-      )
-    },
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft()}
+          localePublished={null}
+          assets={createMockAssets(2)}
+          navigation={{ backPath: '/stops', backLabel: 'All Stops' }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
   ],
 }

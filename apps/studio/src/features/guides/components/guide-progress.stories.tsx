@@ -20,8 +20,8 @@ const createMockGuideDetail = (overrides: Partial<GuideDetail> = {}): GuideDetai
 
 const createMockLocaleDraft = (overrides: Partial<GuideLocaleDraftResult> = {}): GuideLocaleDraftResult => ({
   locale: 'en',
-  title: undefined,
-  description: undefined,
+  title: null,
+  description: null,
   revision: 1,
   publishedVersionId: null,
   hasUnpublishedChanges: false,
@@ -34,17 +34,10 @@ const createMockStops = (count: number): StructureDraftStop[] =>
     stopNanoId: `stop${i + 1}nano`,
     position: i,
     visible: true,
-    title: i === 0 ? undefined : `Stop ${i + 1}`,
+    title: i === 0 ? null : `Stop ${i + 1}`,
     locale: 'en',
     thumbnailUrl: null,
   }))
-
-/** Story-only context data, not component props */
-type StoryContextData = {
-  guideDetail?: GuideDetail
-  localeDraft?: GuideLocaleDraftResult | null
-  stops?: StructureDraftStop[]
-}
 
 const meta: Meta<typeof GuideProgress> = {
   title: 'Studio/Guides/GuideProgress',
@@ -52,21 +45,6 @@ const meta: Meta<typeof GuideProgress> = {
   parameters: {
     layout: 'padded',
   },
-  decorators: [
-    (Story, context) => {
-      const storyContext = context.args as StoryContextData
-      const { guideDetail, localeDraft, stops } = storyContext
-      return (
-        <MockGuideEditorProvider
-          guideDetail={guideDetail ?? createMockGuideDetail()}
-          localeDraft={localeDraft ?? createMockLocaleDraft()}
-          stops={stops ?? []}
-        >
-          <Story />
-        </MockGuideEditorProvider>
-      )
-    },
-  ],
   tags: ['autodocs'],
 }
 
@@ -74,106 +52,126 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Empty: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft(),
-    stops: [],
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider guideDetail={createMockGuideDetail()} localeDraft={createMockLocaleDraft()} stops={[]}>
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const TitleOnly: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({ title: 'My Guide' }),
-    stops: [],
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({ title: 'My Guide' })}
+        stops={[]}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const TitleAndDescription: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({
-      title: 'My Guide',
-      description: 'An amazing guide to explore',
-    }),
-    stops: [],
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({ title: 'My Guide', description: 'An amazing guide to explore' })}
+        stops={[]}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const WithCoverImage: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({
-      title: 'My Guide',
-      description: 'An amazing guide to explore',
-    }),
-    stops: [],
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({ title: 'My Guide', description: 'An amazing guide to explore' })}
+        stops={[]}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const WithStopsButNoTitles: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({
-      title: 'My Guide',
-      description: 'An amazing guide to explore',
-    }),
-    stops: createMockStops(1),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({ title: 'My Guide', description: 'An amazing guide to explore' })}
+        stops={createMockStops(1)}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const Complete: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({
-      title: 'My Guide',
-      description: 'An amazing guide to explore',
-    }),
-    stops: createMockStops(2).map((stop, i) => ({
-      ...stop,
-      title: `Stop ${i + 1}`,
-    })),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({ title: 'My Guide', description: 'An amazing guide to explore' })}
+        stops={createMockStops(2).map((stop, i) => ({ ...stop, title: `Stop ${i + 1}` }))}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const WithUnpublishedGuideDraft: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({
-      title: 'My Guide - Updated',
-      description: 'An amazing guide to explore - with changes',
-    }),
-    stops: createMockStops(1).map((stop) => ({
-      ...stop,
-      title: 'Stop 1',
-    })),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({
+          title: 'My Guide - Updated',
+          description: 'An amazing guide to explore - with changes',
+        })}
+        stops={createMockStops(1).map((stop) => ({ ...stop, title: 'Stop 1' }))}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const WithUnpublishedStopDrafts: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({
-      title: 'My Guide',
-      description: 'An amazing guide to explore',
-    }),
-    stops: createMockStops(2).map((stop, i) => ({
-      ...stop,
-      title: `Stop ${i + 1}`,
-    })),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({ title: 'My Guide', description: 'An amazing guide to explore' })}
+        stops={createMockStops(2).map((stop, i) => ({ ...stop, title: `Stop ${i + 1}` }))}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const AllPublished: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({
-      title: 'My Guide',
-      description: 'An amazing guide to explore',
-    }),
-    stops: createMockStops(1).map((stop) => ({
-      ...stop,
-      title: 'Stop 1',
-    })),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        localeDraft={createMockLocaleDraft({ title: 'My Guide', description: 'An amazing guide to explore' })}
+        stops={createMockStops(1).map((stop) => ({ ...stop, title: 'Stop 1' }))}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }

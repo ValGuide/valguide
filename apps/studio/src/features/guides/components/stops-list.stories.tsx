@@ -29,12 +29,6 @@ const createMockStops = (count: number): StructureDraftStop[] =>
     thumbnailUrl: null,
   }))
 
-/** Story-only context data, not component props */
-type StoryContextData = {
-  guideDetail?: GuideDetail
-  stops?: StructureDraftStop[]
-}
-
 const meta: Meta<typeof StopsList> = {
   title: 'Studio/Guides/StopsList',
   component: StopsList,
@@ -49,17 +43,6 @@ const meta: Meta<typeof StopsList> = {
     onRemove: fn(),
     onAdd: fn(),
   },
-  decorators: [
-    (Story, context) => {
-      const storyContext = context.args as StoryContextData
-      const { guideDetail, stops } = storyContext
-      return (
-        <MockGuideEditorProvider guideDetail={guideDetail ?? createMockGuideDetail()} stops={stops ?? []}>
-          <Story />
-        </MockGuideEditorProvider>
-      )
-    },
-  ],
   tags: ['autodocs'],
 }
 
@@ -67,49 +50,73 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Empty: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    stops: [],
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider guideDetail={createMockGuideDetail()} stops={[]}>
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const SingleStop: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    stops: createMockStops(1),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider guideDetail={createMockGuideDetail()} stops={createMockStops(1)}>
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const MultipleStops: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    stops: createMockStops(3),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider guideDetail={createMockGuideDetail()} stops={createMockStops(3)}>
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const ManyStops: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    stops: createMockStops(15),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider guideDetail={createMockGuideDetail()} stops={createMockStops(15)}>
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const HiddenStop: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    stops: createMockStops(3).map((stop, i) => ({
-      ...stop,
-      visible: i === 1 ? false : true,
-    })),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        stops={createMockStops(3).map((stop, i) => ({
+          ...stop,
+          visible: i === 1 ? false : true,
+        }))}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
 
 export const UntitledStop: Story = {
-  args: {
-    guideDetail: createMockGuideDetail(),
-    stops: createMockStops(2).map((stop) => ({
-      ...stop,
-      title: undefined,
-    })),
-  },
+  decorators: [
+    (Story) => (
+      <MockGuideEditorProvider
+        guideDetail={createMockGuideDetail()}
+        stops={createMockStops(2).map((stop) => ({
+          ...stop,
+          title: null,
+        }))}
+      >
+        <Story />
+      </MockGuideEditorProvider>
+    ),
+  ],
 }
