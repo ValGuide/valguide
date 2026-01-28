@@ -38,6 +38,17 @@ function findFilesWithTranslations(): string[] {
   return result.trim().split('\n').filter(Boolean)
 }
 
+// Extract all string literals from a node (handles ternaries, nested expressions)
+function extractStringLiteralsFromNode(node: import('ts-morph').Node): string[] {
+  const literals: string[] = []
+  node.forEachDescendant((child) => {
+    if (child.getKind() === SyntaxKind.StringLiteral) {
+      literals.push(child.getText().slice(1, -1))
+    }
+  })
+  return literals
+}
+
 export function extractUsedKeys(): Set<string> {
   const files = findFilesWithTranslations()
   console.log(`Found ${files.length} files using translations`)
@@ -56,7 +67,17 @@ export function extractUsedKeys(): Set<string> {
   for (const file of project.getSourceFiles()) {
     const namespaceMap = new Map<string, string>()
 
-    // Track: const t = useTranslations('namespace')
+    // Check for i18n-used-keys comments: // i18n-used-keys: namespace.key1, namespace.key2
+    const sourceText = file.getFullText()
+    const commentMatches = sourceText.matchAll(/\/\/\s*i18n-used-keys:\s*(.+)/g)
+    for (const match of commentMatches) {
+      const keys = match[1].split(',').map((k) => k.trim())
+      for (const key of keys) {
+        usedKeys.add(key)
+      }
+    }
+
+    // Track: const t = useTranslations('namespace') or useTranslations(cond ? 'ns1' : 'ns2')
     file.forEachDescendant((node) => {
       if (node.getKind() === SyntaxKind.VariableDeclaration) {
         const init = node.asKind(SyntaxKind.VariableDeclaration)?.getInitializer()
@@ -68,18 +89,34 @@ export function extractUsedKeys(): Set<string> {
         const expr = call.getExpression().getText()
         if (expr === 'useTranslations' || expr === 'getTranslations') {
           const args = call.getArguments()
-          if (args.length > 0 && args[0].getKind() === SyntaxKind.StringLiteral) {
-            const ns = args[0].getText().slice(1, -1)
+          if (args.length > 0) {
             const varDecl = node.asKind(SyntaxKind.VariableDeclaration)
-            if (varDecl) {
+            if (!varDecl) return
+
+            const arg = args[0]
+            if (arg.getKind() === SyntaxKind.StringLiteral) {
+              // Simple: useTranslations('namespace')
+              const ns = arg.getText().slice(1, -1)
               namespaceMap.set(varDecl.getName(), ns)
+            } else if (arg.getKind() === SyntaxKind.ConditionalExpression) {
+              // Ternary: useTranslations(isLogin ? 'login' : 'signup')
+              const namespaces = extractStringLiteralsFromNode(arg)
+              for (const ns of namespaces) {
+                // Store multiple namespaces with same variable name using array
+                const existing = namespaceMap.get(varDecl.getName())
+                if (existing) {
+                  namespaceMap.set(varDecl.getName(), `${existing}|${ns}`)
+                } else {
+                  namespaceMap.set(varDecl.getName(), ns)
+                }
+              }
             }
           }
         }
       }
     })
 
-    // Match calls like t("key") or t.rich("key")
+    // Match calls like t("key") or t.rich("key") or t(cond ? "key1" : "key2")
     file.forEachDescendant((node) => {
       if (node.getKind() === SyntaxKind.CallExpression) {
         const call = node.asKind(SyntaxKind.CallExpression)
@@ -98,10 +135,27 @@ export function extractUsedKeys(): Set<string> {
           }
         }
 
-        if (varName && args.length > 0 && args[0].getKind() === SyntaxKind.StringLiteral) {
-          const key = args[0].getText().slice(1, -1)
-          const fullKey = `${namespaceMap.get(varName)}.${key}`
-          usedKeys.add(fullKey)
+        if (varName && args.length > 0) {
+          const arg = args[0]
+          const namespaceValue = namespaceMap.get(varName) ?? ''
+          // Handle multiple namespaces (from ternary in useTranslations)
+          const namespaces = namespaceValue.split('|')
+
+          if (arg.getKind() === SyntaxKind.StringLiteral) {
+            // Simple: t('key')
+            const key = arg.getText().slice(1, -1)
+            for (const ns of namespaces) {
+              usedKeys.add(`${ns}.${key}`)
+            }
+          } else if (arg.getKind() === SyntaxKind.ConditionalExpression) {
+            // Ternary: t(isLogin ? 'loginPrompt' : 'signupPrompt')
+            const keys = extractStringLiteralsFromNode(arg)
+            for (const key of keys) {
+              for (const ns of namespaces) {
+                usedKeys.add(`${ns}.${key}`)
+              }
+            }
+          }
         }
       }
     })

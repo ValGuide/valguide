@@ -1,19 +1,4 @@
 {
-  "emails": {
-    "vercelInviteUser": {
-      "preview": "Join {invitedByUsername} on Vercel",
-      "heading": "Join <strong1>{teamName}</strong1> on <strong2>Vercel</strong2>",
-      "greeting": "Hello {username},",
-      "invitation": "<strong1>{invitedByUsername}</strong1> (<link>{invitedByEmail}</link>) has invited you to the <strong2>{teamName}</strong2> team on <strong3>Vercel</strong3>.",
-      "button": "Join the team",
-      "copyLink": "or copy and paste this URL into your browser:",
-      "footer": {
-        "intendedFor": "This invitation was intended for <span1>{username}</span1>. This invite was sent from <span2>{inviteFromIp}</span2> located in <span3>{inviteFromLocation}</span3>.",
-        "ignore": "If you were not expecting this invitation, you can ignore this email.",
-        "concern": "If you are concerned about your account's safety, please reply to this email to get in touch with us."
-      }
-    }
-  },
   "player": {
     "play": "Play",
     "pause": "Pause",
@@ -25,32 +10,21 @@
     "transcript": "Transcript",
     "transcriptAndMore": "Transcript & More",
     "noTranscript": "No transcript available for this track",
-    "close": "Close",
     "language": "Language",
     "save": "Save",
-    "share": "Share",
-    "minimize": "Minimize"
+    "share": "Share"
   },
   "admin": {
-    "metadata": {
-      "title": "Admin - ValGuide",
-      "description": "Manage the ValGuide platform"
-    },
     "assets": {
       "title": "Assets",
       "comingSoon": "Asset management coming soon"
     }
   },
   "studio": {
-    "metadata": {
-      "title": "Studio - ValGuide",
-      "description": "Create and design your guides"
-    },
     "themeCustomizer": {
       "title": "Theme Customizer",
       "reset": "Reset",
       "livePreview": "Live Preview",
-      "customTheme": "Custom Theme",
       "themePreset": "Theme Preset",
       "radius": "Radius",
       "radiusSquare": "Square",
@@ -62,7 +36,6 @@
       "otherColors": "Other Colors",
       "customize": "Customize",
       "preview": "Preview",
-      "library": "Library",
       "startFromPreset": "Start from a preset",
       "savedThemes": "Your Saved Themes ({count})",
       "formElementsPreview": "Form Elements Preview",
@@ -85,13 +58,7 @@
         "eyeDropper": "Pick color from screen"
       },
       "themeLibrary": {
-        "title": "Your Themes",
-        "newTheme": "New Theme",
-        "noThemes": "No themes yet. Create one to get started.",
-        "presets": "Start from a preset",
-        "basedOn": "Based on {preset}",
-        "delete": "Delete",
-        "edit": "Edit"
+        "delete": "Delete"
       },
       "saveDialog": {
         "title": "Save Theme",
@@ -101,8 +68,7 @@
         "updateExisting": "Update existing theme",
         "save": "Save Theme",
         "cancel": "Cancel",
-        "nameRequired": "Theme name is required",
-        "nameTaken": "A theme with this name already exists"
+        "nameRequired": "Theme name is required"
       },
       "deleteDialog": {
         "title": "Delete Theme",
@@ -122,41 +88,17 @@
       }
     }
   },
-  "app": {
-    "metadata": {
-      "title": "ValGuide",
-      "description": "Explore interactive guides"
-    }
-  },
-  "links": {
-    "metadata": {
-      "title": "Links - ValGuide",
-      "description": "Manage your guide links"
-    }
-  },
-  "www": {
-    "metadata": {
-      "title": "ValGuide",
-      "description": "Create engaging multimedia guides"
-    }
-  },
   "common": {
     "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>.",
-    "save": "Save",
-    "saving": "Saving...",
-    "saved": "Saved",
-    "saveError": "Failed to save",
     "loading": "...",
     "tryAgain": "Try again",
     "error": "An error occurred"
   },
   "comingSoon": {
     "title": "Coming Soon",
-    "description": "Please stay tuned. We will launch soon \uD83D\uDE80"
+    "description": "Please stay tuned. We will launch soon 🚀"
   },
   "login": {
-    "submit": "Submit",
-    "serverError": "Failed to log in. Please try again",
     "welcome": "Welcome back",
     "otpTitle": "Verify Your Email",
     "loginPrompt": "Sign in to your account",
@@ -180,13 +122,10 @@
     "noAccount": "No account?",
     "signupLink": "Sign up",
     "email": {
-      "message": "Must be a valid email",
-      "placeholder": "Email"
+      "message": "Must be a valid email"
     }
   },
   "signup": {
-    "submit": "Submit",
-    "serverError": "Failed to sign up. Please try again",
     "welcome": "Welcome",
     "otpTitle": "Verify Your Email",
     "signupPrompt": "Create your account",
@@ -207,33 +146,14 @@
     "invalidEmail": "Please enter a valid email address",
     "emailRequired": "Email is required",
     "didntReceiveEmail": "Didn't receive the code?",
-    "termsRequired": "You must agree to the terms and conditions",
-    "termsText": "I agree to the",
     "haveAccount": "Have an account?",
-    "loginLink": "Log in",
-    "email": {
-      "message": "Must be a valid email",
-      "placeholder": "Email"
-    }
-  },
-  "auth": {
-    "layout": {
-      "tagline": "Your companion for museums and cultural spaces."
-    }
-  },
-  "error": {
-    "title": "Something went wrong",
-    "description": "An unexpected error occurred. Please try again or return to the home page.",
-    "tryAgain": "Try again"
+    "loginLink": "Log in"
   },
   "notFound": {
     "title": "404 – Lost Your Way?",
     "description": "Looks like this trail doesn't lead anywhere! Let's get you back to where the adventure is.",
     "guide": {
-      "title": "Guide not found",
-      "description": "This guide doesn't exist or you don't have access to it.",
-      "backToGuides": "Back to Guides",
-      "createGuide": "Create Guide"
+      "backToGuides": "Back to Guides"
     },
     "stop": {
       "title": "Stop not found",
@@ -244,12 +164,10 @@
   "guide": {
     "previewCard": {
       "viewDetails": "View Details",
-      "loading": "Opening...",
       "author": "Author",
       "created": "Created",
       "updated": "Updated",
       "authorInfo": "Author Information",
-      "coverImage": "Cover image",
       "addCoverImage": "Add an image that captures this exhibition",
       "noDescription": "No description",
       "published": "Published",
@@ -260,13 +178,9 @@
     "stopNumber": "Stop {number}",
     "stopProgress": "{current} of {total}",
     "transcription": "Transcription",
-    "showTranscription": "Show transcription",
-    "hideTranscription": "Hide transcription",
     "previous": "Previous",
     "next": "Next",
     "backToOverview": "Back to overview",
-    "startTour": "Start tour",
-    "of": "of",
     "separator": "•",
     "imageCounter": "{current} / {total}",
     "videoNotSupported": "Your browser does not support the video tag."
@@ -285,12 +199,8 @@
   "guides": {
     "title": "Guides",
     "description": "Create and manage your multimedia guides",
-    "backToGuides": "Back to guides",
     "editor": {
-      "coverImageUpdated": "Cover image updated",
       "preview": "Preview",
-      "saving": "Saving...",
-      "save": "Save",
       "sharedContent": "Shared across all languages",
       "sharedContentDescription": "Changes here will apply to all languages",
       "localeContent": "Language-specific content",
@@ -303,10 +213,7 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "e.g. A curated tour of the museum's most significant Roman artifacts",
       "coverImageLabel": "Cover Image",
-      "coverImageAlt": "Cover",
-      "selectCoverImage": "Select Cover Image",
       "guideProgress": "Guide Progress",
-      "stopProgress": "Stop Progress",
       "progress": {
         "label": "Completion",
         "guideTitle": "Guide title",
@@ -315,62 +222,36 @@
         "hasStops": "At least one stop",
         "allStopTitles": "All stops have titles"
       },
-      "backToGuide": "Guide",
-      "edit": "Edit"
-    },
-    "breadcrumb": {
-      "stops": "Stops",
-      "toggleMenu": "Toggle menu"
+      "backToGuide": "Guide"
     },
     "empty": {
       "title": "No guides yet",
-      "description": "Create engaging multimedia guides with text, images, audio, and video content for your museum or educational institution.",
       "heroDescription": "Your visitors deserve more than a brochure. Create immersive audio guides that bring your exhibitions to life.",
       "createButton": "Start creating",
       "createNewButton": "Create new guide",
-      "creating": "Creating...",
-      "step1": "Name",
-      "step2": "Add stops",
-      "step3": "Publish",
-      "feature1": "Structure tours by rooms, themes, or artists",
-      "feature2": "Add audio, images, and text for each stop",
-      "feature3": "Publish to your visitors in one click",
-      "quote": "A guide is more than information – it's the narrative thread of your exhibition."
+      "creating": "Creating..."
     },
     "create": {
       "error": "Failed to create guide",
       "errorDescription": "An error occurred while creating the guide. Please try again."
     },
-    "loading": {
-      "opening": "Opening guide...",
-      "openingDescription": "Please wait while we load your guide"
-    },
     "editGuide": "Edit Guide",
     "viewInApp": "View in App",
     "delete": {
-      "button": "Delete Guide",
-      "confirmTitle": "Delete Guide",
-      "confirmDescription": "Are you sure you want to delete this guide? This action cannot be undone.",
-      "confirmButton": "Delete",
-      "cancelButton": "Cancel",
       "success": "Guide deleted",
       "successDescription": "The guide has been deleted successfully",
       "error": "Failed to delete guide",
       "errorDescription": "An error occurred while deleting the guide. Please try again."
     },
     "archive": {
-      "button": "Archive Guide",
       "confirmTitle": "Archive this guide?",
       "confirmDescription": "This guide will be moved to archived. You can recover it later.",
       "confirmButton": "Archive",
       "cancelButton": "Cancel",
       "success": "Guide archived successfully",
-      "successDescription": "The guide has been moved to archived",
-      "error": "Failed to archive guide",
-      "errorDescription": "An error occurred while archiving the guide. Please try again."
+      "error": "Failed to archive guide"
     },
     "recover": {
-      "button": "Recover Guide",
       "success": "Guide recovered successfully",
       "successDescription": "The guide has been restored to your active guides",
       "error": "Failed to recover guide",
@@ -385,39 +266,19 @@
       }
     },
     "archivedStatus": "Archived",
-    "archiveGuide": "Archive Guide",
     "recoverGuide": "Recover Guide",
     "permanentlyDelete": "Permanently Delete",
-    "archiveConfirmTitle": "Archive this guide?",
-    "archiveConfirmDescription": "This guide will be moved to archived. You can recover it later.",
     "recoverConfirmTitle": "Recover this guide?",
     "recoverConfirmDescription": "This guide will be restored to your active guides.",
     "deleteConfirmTitle": "Permanently delete this guide?",
-    "deleteConfirmDescription": "This action cannot be undone. The guide will be permanently deleted.",
     "deleteConfirmDescriptionWithName": "This will permanently delete \"{name}\". This action cannot be undone.",
     "deleteConfirmInstruction": "To confirm, type: {phrase}",
     "deleteConfirmPhrase": "delete guide",
-    "archivedSuccessfully": "Guide archived successfully",
-    "recoveredSuccessfully": "Guide recovered successfully",
-    "deletedSuccessfully": "Guide deleted successfully",
-    "archivedOn": "Archived on",
     "archivedOnDate": "Archived on: {date}",
     "noCoverImage": "No cover image",
-    "noDescription": "No description",
     "publish": {
-      "button": "Publish",
-      "buttonWithLocale": "Publish {locale}",
       "success": "Translation published successfully",
-      "error": "Failed to publish translation",
-      "confirmTitle": "Publish translation?",
-      "confirmTitleWithLocale": "Publish {locale} version?",
-      "confirmDescription": "This will make the draft version visible to users. The current published version will be replaced.",
-      "confirmDescriptionWithLocale": "This will publish the {locale} translation. The current published version will be replaced.",
-      "cancel": "Cancel",
-      "confirm": "Publish",
-      "publishing": "Publishing...",
-      "guidePublished": "Guide published",
-      "guidePublishError": "Failed to publish guide"
+      "error": "Failed to publish translation"
     },
     "localeSelector": {
       "selectLanguage": "Select language",
@@ -430,57 +291,6 @@
       "statusEmpty": "Empty",
       "enabledLanguages": "Enabled languages",
       "addLanguage": "Add language"
-    },
-    "progress": {
-      "title": "Guide Completion",
-      "count": "{completed}/{total}",
-      "titleAdded": "Title added",
-      "descriptionAdded": "Description added",
-      "coverImageAdded": "Cover image added",
-      "atLeastOneStop": "At least 1 stop created",
-      "allStopsHaveTitles": "All stops have titles",
-      "unpublishedChanges": "Unpublished Changes",
-      "stopsWithDrafts": "{count, plural, =1 {1 stop has unpublished changes} other {# stops have unpublished changes}}",
-      "guideDraft": "Guide has unpublished changes",
-      "allPublished": "All content is published",
-      "currentLanguage": "{language} Translation",
-      "guideStatus": "Guide Status",
-      "status": {
-        "published": "Published",
-        "draft": "Draft",
-        "empty": "Not started"
-      },
-      "stopsBreakdown": "Stops ({total} total)",
-      "published": "Published",
-      "draft": "Draft",
-      "notStarted": "Not started",
-      "allLanguages": "All Languages",
-      "translatedCount": "{translated}/{total} translated"
-    },
-    "versionHistory": {
-      "button": "Version History",
-      "title": "Translation History",
-      "titleWithLocale": "Version History ({locale})",
-      "description": "View and manage previous versions of this translation",
-      "loading": "Loading versions...",
-      "noVersions": "No version history available",
-      "versionLabel": "Version",
-      "created": "Created: {date}",
-      "published": "Published: {date}",
-      "rollback": "Restore",
-      "rollbackSuccess": "Version restored as draft",
-      "rollbackError": "Failed to restore version",
-      "loadError": "Failed to load version history",
-      "rollbackConfirmTitle": "Restore this version?",
-      "rollbackConfirmDescription": "Version {version} will be restored as a new draft. You can then review and publish it.",
-      "cancel": "Cancel",
-      "confirm": "Restore",
-      "rollingBack": "Restoring..."
-    },
-    "contentStatus": {
-      "draft": "Draft",
-      "published": "Published",
-      "modified": "Modified"
     },
     "tabs": {
       "draft": "Draft",
@@ -495,10 +305,6 @@
       "discardChanges": "Discard changes",
       "moreActions": "More actions"
     },
-    "readOnly": {
-      "banner": "This is the published version. Switch to Draft to make changes.",
-      "neverPublished": "This content has never been published."
-    },
     "confirmDiscard": {
       "title": "Discard changes?",
       "description": "This will delete your draft and revert to the published version. This action cannot be undone.",
@@ -510,18 +316,6 @@
       "description": "This will make your changes visible to visitors in this language.",
       "confirm": "Publish",
       "cancel": "Cancel"
-    },
-    "confirmUnpublishGuide": {
-      "title": "Unpublish this translation?",
-      "description": "Visitors will no longer see this language version of the guide. The guide remains available in other languages. Nothing is deleted—you can republish anytime.",
-      "confirm": "Unpublish translation",
-      "cancel": "Keep published"
-    },
-    "confirmUnpublishStop": {
-      "title": "Unpublish this translation?",
-      "description": "Visitors will no longer see this language version of the stop. The stop remains available in other languages. Nothing is deleted—you can republish anytime.",
-      "confirm": "Unpublish translation",
-      "cancel": "Keep published"
     },
     "untitledGuide": "Untitled Guide",
     "unknownTitle": "Unknown",
@@ -538,20 +332,13 @@
     "details": {
       "title": "Guide Overview",
       "guideId": "Guide ID",
-      "guideCover": "Guide cover",
       "created": "Created",
       "lastUpdated": "Last Updated",
       "status": "Status",
       "published": "Published",
       "draft": "Draft",
       "translations": "Translations",
-      "noCoverImage": "Cover Image",
       "addCoverImageHint": "Add a cover image in the editor"
-    },
-    "assets": {
-      "attachError": "Failed to attach asset to guide",
-      "removeError": "Failed to remove asset from guide",
-      "updateError": "Failed to update guide assets"
     },
     "localesManager": {
       "addLanguage": "Add Language",
@@ -567,32 +354,17 @@
       "updateSuccess": "Languages updated",
       "updateError": "Failed to update languages"
     },
-    "status": {
-      "published": "Published",
-      "unpublished": "Unpublished",
-      "archived": "Archived"
-    },
-    "indicator": {
-      "up-to-date": "Up to date",
-      "changed": "Changed"
-    },
     "helper": {
       "changedExplanation": "Visitors are seeing the last published version in this language."
-    },
-    "guideActions": {
-      "publishGuide": "Publish guide",
-      "unpublishGuide": "Unpublish guide"
     }
   },
   "stops": {
     "title": "Stops",
-    "description": "Content points in your guide",
     "add": "Add Stop",
     "edit": "Edit",
     "untitled": "Untitled Stop",
     "unknownTitle": "Unknown",
     "backToStops": "Back to Stops",
-    "stopNumber": "Stop {number}",
     "stopTitle": "{number}: {title}",
     "empty": {
       "title": "No stops yet",
@@ -603,10 +375,6 @@
     "list": {
       "description": "Manage all stops across your guides",
       "error": "Failed to load stops",
-      "emptyDescription": "Stops are content points that can be reused across multiple guides.",
-      "emptyHint": "Create stops from within a guide editor to get started.",
-      "usedIn": "Used in {count, plural, =1 {# guide} other {# guides}}",
-      "moreGuides": "+{count}",
       "locales": "{count, plural, =1 {# language} other {# languages}}"
     },
     "editor": {
@@ -615,131 +383,36 @@
       "sharedContentDescription": "Changes here will apply to all languages",
       "localeContent": "Language-specific content",
       "localeContentDescription": "Edit the stop content for this language",
-      "addTranslation": "Add translation",
       "titleLabel": "Title",
       "titlePlaceholder": "Enter stop title",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Enter stop description",
-      "transcriptionLabel": "Transcription",
-      "transcriptionPlaceholder": "Audio/video transcription",
-      "imagesLabel": "Images",
       "audioLabel": "Audio Guide",
-      "videoLabel": "Video",
-      "addImage": "Add Image",
-      "addAudio": "Add Audio",
-      "addVideo": "Add Video",
-      "noImages": "No images",
-      "noAudio": "No audio",
-      "noVideo": "No video",
-      "autoTranscribe": "Auto-generate from audio",
-      "audioFile": "Audio file",
-      "dropzoneText": "Click to upload or drag and drop",
-      "audioHint": "MP3 files up to 50MB",
-      "browseLibrary": "Browse Asset Library...",
       "autoGenerate": "Auto-generate from audio",
-      "boldButton": "Bold",
-      "italicButton": "Italic",
-      "listButton": "List",
-      "galleryLabel": "Gallery (Images & Video)",
-      "galleryHint": "Images and videos up to 50MB each"
+      "galleryLabel": "Gallery (Images & Video)"
     },
     "actions": {
       "edit": "Edit Stop",
-      "addError": "Failed to add stop",
-      "delete": "Delete Stop",
-      "deleteConfirm": "Are you sure you want to delete this stop?",
-      "deleteSuccess": "Stop deleted",
-      "deleteError": "Failed to delete stop",
-      "save": "Save Stop",
-      "saving": "Saving...",
-      "cancel": "Cancel",
-      "reorderSuccess": "Stops reordered",
-      "reorderError": "Failed to reorder stops",
-      "removeSuccess": "Stop removed from guide",
-      "removeError": "Failed to remove stop"
-    },
-    "assets": {
-      "attachError": "Failed to attach asset",
-      "removeError": "Failed to remove asset",
-      "updateError": "Failed to update stop assets",
-      "addError": "Failed to add asset to stop"
-    },
-    "publish": {
-      "button": "Publish",
-      "buttonWithLocale": "Publish {locale}",
-      "success": "Stop translation published successfully",
-      "error": "Failed to publish stop translation",
-      "confirmTitle": "Publish stop translation?",
-      "confirmTitleWithLocale": "Publish stop in {locale}?",
-      "confirmDescription": "This will make the draft version of this stop visible to users. The current published version will be replaced.",
-      "confirmDescriptionWithLocale": "This will publish the {locale} translation of this stop. The current published version will be replaced.",
-      "cancel": "Cancel",
-      "confirm": "Publish",
-      "publishing": "Publishing..."
+      "cancel": "Cancel"
     },
     "translationStatus": {
       "published": "Published",
       "draft": "Draft",
       "empty": "Not started"
     },
-    "versionHistory": {
-      "button": "Version History",
-      "title": "Stop Translation History",
-      "titleWithLocale": "Version History ({locale})",
-      "description": "View and manage previous versions of this stop translation",
-      "loading": "Loading versions...",
-      "noVersions": "No version history available",
-      "versionLabel": "Version",
-      "created": "Created: {date}",
-      "published": "Published: {date}",
-      "rollback": "Restore",
-      "rollbackSuccess": "Version restored as draft",
-      "rollbackError": "Failed to restore version",
-      "loadError": "Failed to load version history",
-      "rollbackConfirmTitle": "Restore this version?",
-      "rollbackConfirmDescription": "Version {version} will be restored as a new draft. You can then review and publish it.",
-      "cancel": "Cancel",
-      "confirm": "Restore",
-      "rollingBack": "Restoring..."
-    },
-    "status": {
-      "draft": "Draft",
-      "published": "Published",
-      "draftChanges": "Draft changes"
-    },
     "visibility": {
-      "visible": "Visible",
-      "hidden": "Hidden",
       "hiddenIndicator": "This stop is hidden from visitors"
     },
     "detail": {
       "draft": "Draft",
       "translations": "Translations",
       "translationsDescription": "Manage stop content in different languages",
-      "noTranslations": "No translations yet",
-      "guides": "Used in Guides",
-      "guidesDescription": "This stop appears in the following guides",
-      "noGuides": "This stop is not used in any guide yet",
-      "position": "Position {position}",
-      "hidden": "Hidden",
-      "viewGuide": "View Guide"
-    },
-    "locales": {
-      "updateSuccess": "Languages updated",
-      "updateError": "Failed to update languages"
+      "noTranslations": "No translations yet"
     },
     "notFound": {
       "title": "Stop not found",
       "description": "The stop you are looking for does not exist or has been deleted.",
       "backToStops": "Back to Stops"
-    },
-    "unpublish": {
-      "success": "Stop translation unpublished",
-      "error": "Failed to unpublish stop translation"
-    },
-    "discard": {
-      "success": "Draft discarded",
-      "error": "Failed to discard draft"
     },
     "stopActions": {
       "hideStop": "Hide stop",
@@ -753,25 +426,16 @@
       "cancel": "Cancel",
       "removeStop": "Remove from guide",
       "removeDescription": "This will remove the stop from this guide. The stop and all its content will be preserved and can be added to another guide later.",
-      "removeConfirm": "Remove",
-      "restoreStop": "Restore stop"
+      "removeConfirm": "Remove"
     }
   },
   "assets": {
     "title": "Assets",
     "description": "Manage your media library",
-    "types": {
-      "image": "image",
-      "audio": "audio",
-      "video": "video"
-    },
     "empty": {
       "title": "No assets yet",
       "description": "Upload images, audio, and video files to use in your guides. All files are stored securely and can be reused across multiple guides.",
-      "uploadButton": "Upload your first asset",
-      "uploadImage": "Upload Image",
-      "uploadAudio": "Upload Audio",
-      "uploadVideo": "Upload Video"
+      "uploadButton": "Upload your first asset"
     },
     "picker": {
       "title": "Select {type}",
@@ -781,21 +445,14 @@
         "upload": "Upload"
       },
       "select": "Select",
-      "selected": "{count} selected",
       "cancel": "Cancel",
       "noAssets": "No {type} assets found",
-      "multiSelect": "Select multiple",
       "empty": {
         "description": "Upload assets to get started"
       }
     },
     "upload": {
-      "button": "Upload",
-      "title": "Upload {type}",
       "error": "Upload failed",
-      "errorDescription": "An error occurred during upload",
-      "restricted": "Upload restricted",
-      "restrictedDescription": "File does not meet upload requirements",
       "dropzone": "Drop {type} here or click to browse",
       "dropzoneGeneric": "Drop image, audio or video here, or click to browse",
       "sizeLimits": "Images up to 10MB, audio up to 50MB, video up to 500MB",
@@ -809,15 +466,9 @@
     },
     "filter": {
       "all": "All Types",
-      "allLocales": "All Languages",
-      "noLocale": "No locale",
-      "localeEn": "English",
-      "localeDe": "German",
-      "localeRm": "Romansh",
       "image": "Images",
       "audio": "Audio",
       "video": "Video",
-      "search": "Search assets...",
       "searchPlaceholder": "Search by filename...",
       "noResults": "No assets found matching your filters"
     },
@@ -828,9 +479,7 @@
     },
     "card": {
       "uploaded": "Uploaded",
-      "size": "Size",
       "sizeValue": "Size: {size}",
-      "locale": "Language",
       "delete": "Delete",
       "deleting": "Deleting...",
       "deleteConfirm": "Are you sure you want to delete this asset?",
@@ -841,16 +490,9 @@
       "cancel": "Cancel"
     },
     "usage": {
-      "title": "Usage",
-      "notUsed": "Not used",
       "guidesCount": "{count, plural, one {# guide} other {# guides}}",
       "stopsCount": "{count, plural, one {# stop} other {# stops}}",
-      "guidesAndStops": "{guides}, {stops}",
-      "role": {
-        "cover": "Cover image",
-        "gallery": "Gallery",
-        "audio": "Audio guide"
-      }
+      "guidesAndStops": "{guides}, {stops}"
     },
     "deleteWithUsage": {
       "title": "Delete Asset",
@@ -862,17 +504,12 @@
       "confirmButton": "Delete Anyway",
       "loadingUsage": "Checking usage..."
     },
-    "limits": {
-      "maxSize": "Max file size: {size}",
-      "maxFiles": "Up to {count} files"
-    },
     "mediaPicker": {
       "dropzoneDesktop": "Drag & drop or click to upload",
       "dropzoneMobile": "Tap to upload",
       "dropHere": "Drop files here",
       "dropzoneAriaLabel": "Upload files",
       "browseLibrary": "Browse Library",
-      "replace": "Replace",
       "remove": "Remove",
       "addMore": "Add more",
       "noPreview": "No preview",
@@ -881,9 +518,6 @@
   },
   "sidebar": {
     "nav": {
-      "profile": "Profile",
-      "tours": "Tours",
-      "collections": "Collections",
       "brandKit": "Brand Kit",
       "workspace": "Workspace",
       "guides": "Guides",
@@ -892,7 +526,6 @@
       "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",
-      "teamAndMembers": "Team & Members",
       "settings": "Settings",
       "support": "Support",
       "feedback": "Feedback",
@@ -910,29 +543,17 @@
       "settings": "Settings"
     },
     "pages": {
-      "guides": {
-        "description": "Create and manage your interactive guides."
-      },
-      "assets": {
-        "description": "Manage your media library of images, audio, and video."
-      },
       "design": {
         "description": "Customize the look and feel of your guides."
       },
       "analytics": {
         "description": "View and analyze your guide performance metrics."
       },
-      "teamAndMembers": {
-        "description": "Manage your team members and their permissions."
-      },
       "settings": {
         "description": "Configure your application preferences and settings."
       },
       "support": {
         "description": "Get help and support for your questions."
-      },
-      "feedback": {
-        "description": "Share your feedback and suggestions with us."
       }
     },
     "feedback": {
@@ -963,10 +584,6 @@
       "language": "Language",
       "logout": "Log out",
       "upgradeToPro": "Upgrade to Pro"
-    },
-    "team": {
-      "teams": "Teams",
-      "addTeam": "Add team"
     }
   },
   "orgs": {
@@ -974,8 +591,6 @@
       "teams": "Teams",
       "createTeam": "Create team",
       "teamSettings": "Team settings",
-      "current": "Current",
-      "success": "Switched team",
       "error": "Failed to switch team"
     },
     "members": {
@@ -1022,11 +637,6 @@
       "cancelSuccess": "Invitation cancelled",
       "cancelError": "Failed to cancel invitation"
     },
-    "noTeam": {
-      "welcome": "Welcome to ValGuide",
-      "description": "You don't belong to any team yet. Create your first team to start managing your guides and content.",
-      "createButton": "Create Team"
-    },
     "createTeam": {
       "title": "Create team",
       "description": "Add a new team to manage your guides.",
@@ -1070,12 +680,7 @@
     }
   },
   "theme": {
-    "toggleTheme": "Toggle theme",
-    "switchToDark": "Dark mode",
-    "switchToLight": "Light mode",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "toggleTheme": "Toggle theme"
   },
   "profile": {
     "title": "Profile",
@@ -1088,8 +693,7 @@
     "saving": "Saving...",
     "actions": {
       "updateSuccess": "Profile updated successfully",
-      "updateError": "Failed to update profile",
-      "invalidData": "Invalid data provided"
+      "updateError": "Failed to update profile"
     }
   },
   "fileDropzone": {
@@ -1099,7 +703,6 @@
     "maxFileSize": "Max file size",
     "upTo": "Up to",
     "files": "files",
-    "file": "file",
     "filesSelected": "selected",
     "clearAll": "Clear all",
     "complete": "Complete",

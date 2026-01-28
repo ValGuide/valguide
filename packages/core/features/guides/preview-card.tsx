@@ -19,6 +19,7 @@ export interface GuidePreviewCardProps extends React.HTMLAttributes<HTMLDivEleme
 }
 
 export function GuidePreviewCard({ guide, onViewDetails, className, ...props }: GuidePreviewCardProps) {
+  // i18n-used-keys: guide.previewCard.draft, guide.previewCard.published
   const t = useTranslations('guide.previewCard')
   const locale = useLocale()
 

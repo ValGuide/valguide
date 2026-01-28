@@ -108,7 +108,7 @@ async function main() {
     console.log(`  ✅ ${localeFile}: removed ${removedCount} keys`)
   }
 
-  console.log('\n✅ Done! Run `pnpm i18n:unused` to verify.')
+  console.log('\n✅ Done! Run `pnpm i18n:unused` and `pnpm type-check` to verify.')
 }
 
 main().catch(console.error)
