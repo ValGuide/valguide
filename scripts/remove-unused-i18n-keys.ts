@@ -4,55 +4,20 @@
  * Usage: npx tsx scripts/remove-unused-i18n-keys.ts [--dry-run]
  */
 
-import { execSync } from 'node:child_process'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-
-const MESSAGES_DIR = 'packages/core/i18n/messages'
-const LOCALE_FILES = ['en.json', 'de.json', 'rm.json']
-const SEARCH_DIRS = ['apps', 'packages']
+import {
+  extractUsedKeys,
+  findUnusedKeys,
+  flattenKeys,
+  LOCALE_FILES,
+  loadTranslations,
+  MESSAGES_DIR,
+  MESSAGES_PATH,
+  printUnusedKeys,
+} from './i18n-utils'
 
 const isDryRun = process.argv.includes('--dry-run')
-
-function flattenKeys(obj: Record<string, unknown>, prefix = ''): string[] {
-  const keys: string[] = []
-  for (const [key, value] of Object.entries(obj)) {
-    const fullKey = prefix ? `${prefix}.${key}` : key
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      keys.push(...flattenKeys(value as Record<string, unknown>, fullKey))
-    } else {
-      keys.push(fullKey)
-    }
-  }
-  return keys
-}
-
-function getNamespaceKeys(obj: Record<string, unknown>): Map<string, string[]> {
-  const namespaces = new Map<string, string[]>()
-  for (const [namespace, value] of Object.entries(obj)) {
-    if (value && typeof value === 'object') {
-      const keys = flattenKeys(value as Record<string, unknown>)
-      namespaces.set(namespace, keys)
-    }
-  }
-  return namespaces
-}
-
-function extractAllStringsFromCodebase(): Set<string> {
-  const result = execSync(
-    `rg -o "['\\"]([^'\\"]+)['\\"]" ${SEARCH_DIRS.join(' ')} --include='*.ts' --include='*.tsx' -I --no-filename 2>/dev/null || true`,
-    { encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024 },
-  )
-
-  const strings = new Set<string>()
-  for (const line of result.split('\n')) {
-    const match = line.match(/^['"](.+)['"]$/)
-    if (match) {
-      strings.add(match[1])
-    }
-  }
-  return strings
-}
 
 function removeKeyFromObject(obj: Record<string, unknown>, keyPath: string): boolean {
   const parts = keyPath.split('.')
@@ -90,49 +55,30 @@ function cleanEmptyObjects(obj: Record<string, unknown>): void {
 async function main() {
   console.log(isDryRun ? '🔍 DRY RUN - No files will be modified\n' : '')
 
-  const enPath = path.join(MESSAGES_DIR, 'en.json')
-  console.log('Loading translations from', enPath)
-  const enMessages = JSON.parse(fs.readFileSync(enPath, 'utf-8'))
-  const namespaces = getNamespaceKeys(enMessages)
+  console.log('Loading translations from', MESSAGES_PATH)
+  const messages = loadTranslations(MESSAGES_PATH)
+  const existingKeys = flattenKeys(messages)
+  console.log(`Found ${existingKeys.size} translation keys\n`)
 
-  let totalKeys = 0
-  for (const keys of namespaces.values()) {
-    totalKeys += keys.length
-  }
-  console.log(`Found ${namespaces.size} namespaces with ${totalKeys} total keys\n`)
+  console.log('Parsing source files with ts-morph...')
+  const usedKeys = extractUsedKeys()
+  console.log(`Found ${usedKeys.size} used translation keys\n`)
 
-  console.log('Scanning codebase for all strings...')
-  const codebaseStrings = extractAllStringsFromCodebase()
-  console.log(`Found ${codebaseStrings.size} unique strings in codebase\n`)
-
-  const unusedKeys: { namespace: string; key: string }[] = []
-  for (const [namespace, keys] of namespaces) {
-    for (const key of keys) {
-      if (!codebaseStrings.has(key)) {
-        unusedKeys.push({ namespace, key })
-      }
-    }
-  }
+  const unusedKeys = findUnusedKeys(existingKeys, usedKeys)
 
   console.log('='.repeat(60))
-  console.log(`Total keys: ${totalKeys}`)
+  console.log(`Total keys: ${existingKeys.size}`)
+  console.log(`Used keys: ${usedKeys.size}`)
   console.log(`Unused keys to remove: ${unusedKeys.length}`)
-  console.log('='.repeat(60) + '\n')
+  console.log('='.repeat(60))
 
   if (unusedKeys.length === 0) {
-    console.log('✅ No unused keys found!')
+    console.log('\n✅ No unused keys found!')
     return
   }
 
-  console.log('Keys to remove:')
-  let currentNamespace = ''
-  for (const { namespace, key } of unusedKeys) {
-    if (namespace !== currentNamespace) {
-      console.log(`\n[${namespace}]`)
-      currentNamespace = namespace
-    }
-    console.log(`  - ${key}`)
-  }
+  console.log('\nKeys to remove:')
+  printUnusedKeys(unusedKeys)
 
   if (isDryRun) {
     console.log('\n🔍 DRY RUN - Run without --dry-run to remove these keys')
@@ -148,18 +94,17 @@ async function main() {
       continue
     }
 
-    const messages = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+    const localeMessages = loadTranslations(filePath)
     let removedCount = 0
 
-    for (const { namespace, key } of unusedKeys) {
-      const fullPath = `${namespace}.${key}`
-      if (removeKeyFromObject(messages, fullPath)) {
+    for (const fullKey of unusedKeys) {
+      if (removeKeyFromObject(localeMessages, fullKey)) {
         removedCount++
       }
     }
 
-    cleanEmptyObjects(messages)
-    fs.writeFileSync(filePath, JSON.stringify(messages, null, 2) + '\n')
+    cleanEmptyObjects(localeMessages)
+    fs.writeFileSync(filePath, JSON.stringify(localeMessages, null, 2) + '\n')
     console.log(`  ✅ ${localeFile}: removed ${removedCount} keys`)
   }
 
