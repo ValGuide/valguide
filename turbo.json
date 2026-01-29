@@ -9,7 +9,9 @@
     "lint": {
       "cache": false
     },
-    "type-check": {},
+    "type-check": {
+      "cache": false
+    },
     "i18n:check": {
       "inputs": ["packages/core/i18n/messages/*.json"]
     },
