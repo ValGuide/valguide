@@ -92,7 +92,9 @@
     "consentMessage": "By continuing, you agree to our <termsLink>Terms of Service</termsLink> and <privacyLink>Privacy Policy</privacyLink>.",
     "loading": "...",
     "tryAgain": "Try again",
-    "error": "An error occurred"
+    "error": "An error occurred",
+    "saved": "Saved",
+    "saveError": "Failed to save"
   },
   "comingSoon": {
     "title": "Coming Soon",
@@ -276,9 +278,37 @@
     "deleteConfirmPhrase": "delete guide",
     "archivedOnDate": "Archived on: {date}",
     "noCoverImage": "No cover image",
+    "status": {
+      "published": "Published",
+      "unpublished": "Unpublished",
+      "archived": "Archived"
+    },
+    "indicator": {
+      "up-to-date": "Up to date",
+      "changed": "Changed"
+    },
     "publish": {
       "success": "Translation published successfully",
-      "error": "Failed to publish translation"
+      "error": "Failed to publish translation",
+      "guidePublished": "Guide published",
+      "guidePublishError": "Failed to publish guide"
+    },
+    "confirmUnpublishGuide": {
+      "title": "Unpublish this translation?",
+      "description": "Visitors will no longer see this language version of the guide. The guide remains available in other languages. Nothing is deleted—you can republish anytime.",
+      "confirm": "Unpublish translation",
+      "cancel": "Keep published"
+    },
+    "confirmUnpublishStop": {
+      "title": "Unpublish this translation?",
+      "description": "Visitors will no longer see this language version of the stop. The stop remains available in other languages. Nothing is deleted—you can republish anytime.",
+      "confirm": "Unpublish translation",
+      "cancel": "Keep published"
+    },
+    "assets": {
+      "attachError": "Failed to attach asset to guide",
+      "removeError": "Failed to remove asset from guide",
+      "updateError": "Failed to update guide assets"
     },
     "localeSelector": {
       "selectLanguage": "Select language",
@@ -393,7 +423,30 @@
     },
     "actions": {
       "edit": "Edit Stop",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "addError": "Failed to add stop",
+      "reorderSuccess": "Stops reordered",
+      "reorderError": "Failed to reorder stops",
+      "removeSuccess": "Stop removed from guide",
+      "removeError": "Failed to remove stop"
+    },
+    "locales": {
+      "updateSuccess": "Languages updated",
+      "updateError": "Failed to update languages"
+    },
+    "assets": {
+      "attachError": "Failed to attach asset",
+      "removeError": "Failed to remove asset",
+      "updateError": "Failed to update stop assets",
+      "addError": "Failed to add asset to stop"
+    },
+    "publish": {
+      "success": "Stop translation published successfully",
+      "error": "Failed to publish stop translation"
+    },
+    "unpublish": {
+      "success": "Stop translation unpublished",
+      "error": "Failed to unpublish stop translation"
     },
     "translationStatus": {
       "published": "Published",
@@ -471,6 +524,11 @@
       "video": "Video",
       "searchPlaceholder": "Search by filename...",
       "noResults": "No assets found matching your filters"
+    },
+    "types": {
+      "image": "image",
+      "audio": "audio",
+      "video": "video"
     },
     "error": {
       "failedToLoad": "Failed to load assets",
@@ -680,7 +738,10 @@
     }
   },
   "theme": {
-    "toggleTheme": "Toggle theme"
+    "toggleTheme": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   },
   "profile": {
     "title": "Profile",

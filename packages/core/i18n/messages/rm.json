@@ -92,7 +92,9 @@
     "consentMessage": "Cun cuntinuar acceptas ti las <termsLink>Cundiziuns d'utilisaziun</termsLink> e la <privacyLink>Declaraziun da protecziun da datas</privacyLink>.",
     "loading": "...",
     "tryAgain": "Empruvar danovamain",
-    "error": "Ina errur è capità"
+    "error": "Ina errur è capità",
+    "saved": "Memorisà",
+    "saveError": "Errur cun memorisar"
   },
   "comingSoon": {
     "title": "Prest disponibel",
@@ -276,9 +278,37 @@
     "deleteConfirmPhrase": "stizzar guida",
     "archivedOnDate": "Archivà ils: {date}",
     "noCoverImage": "Nagina maletg da titel",
+    "status": {
+      "published": "Publitgà",
+      "unpublished": "Betg publitgà",
+      "archived": "Archivà"
+    },
+    "indicator": {
+      "up-to-date": "Actual",
+      "changed": "Midà"
+    },
     "publish": {
       "success": "Translaziun publichada cun success",
-      "error": "Errur tar publitgar la translaziun"
+      "error": "Errur tar publitgar la translaziun",
+      "guidePublished": "Guid publichà",
+      "guidePublishError": "Errur cun publitgar il guid"
+    },
+    "confirmUnpublishGuide": {
+      "title": "Retrar questa translaziun?",
+      "description": "Visitaders na vesan betg pli questa versiun linguistica dal guid. Il guid resta disponibel en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
+      "confirm": "Retrar translaziun",
+      "cancel": "Laschar publitgà"
+    },
+    "confirmUnpublishStop": {
+      "title": "Retrar questa translaziun?",
+      "description": "Visitaders na vesan betg pli questa versiun linguistica dal stop. Il stop resta disponibel en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
+      "confirm": "Retrar translaziun",
+      "cancel": "Laschar publitgà"
+    },
+    "assets": {
+      "attachError": "Errur cun agiuntar l'asset al guid",
+      "removeError": "Errur cun allontanar l'asset dal guid",
+      "updateError": "Errur cun actualisar ils assets dal guid"
     },
     "localeSelector": {
       "selectLanguage": "Tscherner linguatg",
@@ -393,7 +423,30 @@
     },
     "actions": {
       "edit": "Modifitgar stop",
-      "cancel": "Interrumper"
+      "cancel": "Interrumper",
+      "addError": "Errur cun agiuntar il stop",
+      "reorderSuccess": "Stops rearranschads",
+      "reorderError": "Errur cun rearranschar ils stops",
+      "removeSuccess": "Stop allontanà dal guide",
+      "removeError": "Betg reussì dad allontanar il stop"
+    },
+    "locales": {
+      "updateSuccess": "Linguas actualisadas",
+      "updateError": "Impussibel dad actualisar las linguas"
+    },
+    "assets": {
+      "attachError": "Errur cun agiuntar l'asset",
+      "removeError": "Errur cun allontanar l'asset",
+      "updateError": "Errur cun actualisar ils assets dal stop",
+      "addError": "Errur cun agiuntar l'asset al stop"
+    },
+    "publish": {
+      "success": "Translaziun dal stop publichada cun success",
+      "error": "Errur tar publitgar la translaziun dal stop"
+    },
+    "unpublish": {
+      "success": "Translaziun dal stop retratta",
+      "error": "Impussibel da retrar la translaziun dal stop"
     },
     "translationStatus": {
       "published": "Publichà",
@@ -471,6 +524,11 @@
       "video": "Video",
       "searchPlaceholder": "Tschertgar tenor num da datoteca...",
       "noResults": "Nagins assets chattads che correspundan a voss filters"
+    },
+    "types": {
+      "image": "maletg",
+      "audio": "audio",
+      "video": "video"
     },
     "error": {
       "failedToLoad": "Errur cun chargiar ils assets",
@@ -680,7 +738,10 @@
     }
   },
   "theme": {
-    "toggleTheme": "Midar tema"
+    "toggleTheme": "Midar tema",
+    "light": "Cler",
+    "dark": "Stgir",
+    "system": "System"
   },
   "profile": {
     "title": "Profil",

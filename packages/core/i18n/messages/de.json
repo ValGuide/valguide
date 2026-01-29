@@ -92,7 +92,9 @@
     "consentMessage": "Durch Fortfahren stimmen Sie den <termsLink>Nutzungsbedingungen</termsLink> und der <privacyLink>Datenschutzerklärung</privacyLink> zu.",
     "loading": "...",
     "tryAgain": "Erneut versuchen",
-    "error": "Ein Fehler ist aufgetreten"
+    "error": "Ein Fehler ist aufgetreten",
+    "saved": "Gespeichert",
+    "saveError": "Speichern fehlgeschlagen"
   },
   "comingSoon": {
     "title": "Bald verfügbar",
@@ -276,9 +278,37 @@
     "deleteConfirmPhrase": "Guide löschen",
     "archivedOnDate": "Archiviert am: {date}",
     "noCoverImage": "Kein Titelbild",
+    "status": {
+      "published": "Veröffentlicht",
+      "unpublished": "Unveröffentlicht",
+      "archived": "Archiviert"
+    },
+    "indicator": {
+      "up-to-date": "Aktuell",
+      "changed": "Geändert"
+    },
     "publish": {
       "success": "Übersetzung erfolgreich veröffentlicht",
-      "error": "Fehler beim Veröffentlichen der Übersetzung"
+      "error": "Fehler beim Veröffentlichen der Übersetzung",
+      "guidePublished": "Guide veröffentlicht",
+      "guidePublishError": "Fehler beim Veröffentlichen des Guides"
+    },
+    "confirmUnpublishGuide": {
+      "title": "Diese Übersetzung zurückziehen?",
+      "description": "Besucher sehen diese Sprachversion des Guides nicht mehr. Der Guide bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
+      "confirm": "Übersetzung zurückziehen",
+      "cancel": "Veröffentlicht lassen"
+    },
+    "confirmUnpublishStop": {
+      "title": "Diese Übersetzung zurückziehen?",
+      "description": "Besucher sehen diese Sprachversion des Stops nicht mehr. Der Stop bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
+      "confirm": "Übersetzung zurückziehen",
+      "cancel": "Veröffentlicht lassen"
+    },
+    "assets": {
+      "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
+      "removeError": "Fehler beim Entfernen des Assets vom Guide",
+      "updateError": "Fehler beim Aktualisieren der Guide-Assets"
     },
     "localeSelector": {
       "selectLanguage": "Sprache auswählen",
@@ -393,7 +423,30 @@
     },
     "actions": {
       "edit": "Stopp bearbeiten",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "addError": "Fehler beim Hinzufügen des Stops",
+      "reorderSuccess": "Stops neu angeordnet",
+      "reorderError": "Fehler beim Neuanordnen der Stops",
+      "removeSuccess": "Stopp aus Guide entfernt",
+      "removeError": "Stopp konnte nicht entfernt werden"
+    },
+    "locales": {
+      "updateSuccess": "Sprachen aktualisiert",
+      "updateError": "Sprachen konnten nicht aktualisiert werden"
+    },
+    "assets": {
+      "attachError": "Fehler beim Anhängen des Assets",
+      "removeError": "Fehler beim Entfernen des Assets",
+      "updateError": "Fehler beim Aktualisieren der Stop-Assets",
+      "addError": "Fehler beim Hinzufügen des Assets zum Stop"
+    },
+    "publish": {
+      "success": "Stop-Übersetzung erfolgreich veröffentlicht",
+      "error": "Fehler beim Veröffentlichen der Stop-Übersetzung"
+    },
+    "unpublish": {
+      "success": "Stopp-Übersetzung zurückgezogen",
+      "error": "Stopp-Übersetzung konnte nicht zurückgezogen werden"
     },
     "translationStatus": {
       "published": "Veröffentlicht",
@@ -471,6 +524,11 @@
       "video": "Video",
       "searchPlaceholder": "Nach Dateinamen suchen...",
       "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen"
+    },
+    "types": {
+      "image": "Bild",
+      "audio": "Audio",
+      "video": "Video"
     },
     "error": {
       "failedToLoad": "Assets konnten nicht geladen werden",
@@ -680,7 +738,10 @@
     }
   },
   "theme": {
-    "toggleTheme": "Theme wechseln"
+    "toggleTheme": "Theme wechseln",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System"
   },
   "profile": {
     "title": "Profil",
