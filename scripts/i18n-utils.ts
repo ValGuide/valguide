@@ -26,6 +26,22 @@ export function flattenKeys(obj: Record<string, unknown>, prefix = ''): Set<stri
   return keys
 }
 
+export function findEmptyObjects(obj: Record<string, unknown>, prefix = ''): string[] {
+  const emptyPaths: string[] = []
+  for (const [key, value] of Object.entries(obj)) {
+    const fullKey = prefix ? `${prefix}.${key}` : key
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      const nested = value as Record<string, unknown>
+      if (Object.keys(nested).length === 0) {
+        emptyPaths.push(fullKey)
+      } else {
+        emptyPaths.push(...findEmptyObjects(nested, fullKey))
+      }
+    }
+  }
+  return emptyPaths
+}
+
 export function loadTranslations(filePath: string): Record<string, unknown> {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'))
 }
@@ -88,14 +104,17 @@ export function extractUsedKeys(): Set<string> {
 
         const expr = call.getExpression().getText()
         if (expr === 'useTranslations' || expr === 'getTranslations') {
-          const args = call.getArguments()
-          if (args.length > 0) {
-            const varDecl = node.asKind(SyntaxKind.VariableDeclaration)
-            if (!varDecl) return
+          const varDecl = node.asKind(SyntaxKind.VariableDeclaration)
+          if (!varDecl) return
 
+          const args = call.getArguments()
+          if (args.length === 0) {
+            // No namespace: useTranslations() - keys are full paths like 'stops.actions.addError'
+            namespaceMap.set(varDecl.getName(), '')
+          } else {
             const arg = args[0]
             if (arg.getKind() === SyntaxKind.StringLiteral) {
-              // Simple: useTranslations('namespace')
+              // Simple: useTranslations('namespace') or useTranslations('nested.namespace')
               const ns = arg.getText().slice(1, -1)
               namespaceMap.set(varDecl.getName(), ns)
             } else if (arg.getKind() === SyntaxKind.ConditionalExpression) {
@@ -141,18 +160,21 @@ export function extractUsedKeys(): Set<string> {
           // Handle multiple namespaces (from ternary in useTranslations)
           const namespaces = namespaceValue.split('|')
 
+          // Helper to build full key, handling empty namespace
+          const buildFullKey = (ns: string, key: string) => (ns ? `${ns}.${key}` : key)
+
           if (arg.getKind() === SyntaxKind.StringLiteral) {
-            // Simple: t('key')
+            // Simple: t('key') or t('nested.key')
             const key = arg.getText().slice(1, -1)
             for (const ns of namespaces) {
-              usedKeys.add(`${ns}.${key}`)
+              usedKeys.add(buildFullKey(ns, key))
             }
           } else if (arg.getKind() === SyntaxKind.ConditionalExpression) {
             // Ternary: t(isLogin ? 'loginPrompt' : 'signupPrompt')
             const keys = extractStringLiteralsFromNode(arg)
             for (const key of keys) {
               for (const ns of namespaces) {
-                usedKeys.add(`${ns}.${key}`)
+                usedKeys.add(buildFullKey(ns, key))
               }
             }
           }

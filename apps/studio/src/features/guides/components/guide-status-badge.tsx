@@ -40,7 +40,9 @@ const statusEmoji: Record<GuideStatus, string> = {
 }
 
 export function GuideStatusBadge({ status, indicator, size, className }: GuideStatusBadgeProps) {
+  // i18n-used-keys: guides.status.published, guides.status.unpublished, guides.status.archived
   const tStatus = useTranslations('guides.status')
+  // i18n-used-keys: guides.indicator.changed, guides.indicator.up-to-date
   const tIndicator = useTranslations('guides.indicator')
 
   const emoji = statusEmoji[status]

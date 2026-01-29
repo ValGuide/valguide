@@ -6,6 +6,7 @@
 
 import {
   extractUsedKeys,
+  findEmptyObjects,
   findUnusedKeys,
   flattenKeys,
   loadTranslations,
@@ -17,6 +18,7 @@ async function main() {
   console.log('Loading translations from', MESSAGES_PATH)
   const messages = loadTranslations(MESSAGES_PATH)
   const existingKeys = flattenKeys(messages)
+  const emptyObjects = findEmptyObjects(messages)
   console.log(`Found ${existingKeys.size} translation keys\n`)
 
   console.log('Parsing source files with ts-morph...')
@@ -29,13 +31,23 @@ async function main() {
   console.log(`Total keys: ${existingKeys.size}`)
   console.log(`Used keys: ${usedKeys.size}`)
   console.log(`Unused keys: ${unusedKeys.length}`)
+  console.log(`Empty objects: ${emptyObjects.length}`)
   console.log('='.repeat(60))
+
+  if (emptyObjects.length > 0) {
+    console.log('\nEmpty objects (will be removed):')
+    for (const path of emptyObjects) {
+      console.log(`  - ${path}`)
+    }
+  }
 
   if (unusedKeys.length > 0) {
     console.log('\nPotentially unused keys:')
     printUnusedKeys(unusedKeys)
-  } else {
-    console.log('\n✅ No unused keys found!')
+  }
+
+  if (unusedKeys.length === 0 && emptyObjects.length === 0) {
+    console.log('\n✅ No unused keys or empty objects found!')
   }
 }
 

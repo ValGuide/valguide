@@ -57,6 +57,7 @@ export function AssetPickerModal({
   UploadInline,
 }: AssetPickerModalProps) {
   const t = useTranslations('assets.picker')
+  // i18n-used-keys: assets.types.image, assets.types.audio, assets.types.video
   const tTypes = useTranslations('assets.types')
   const tFilter = useTranslations('assets.filter')
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')

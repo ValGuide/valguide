@@ -19,6 +19,7 @@ const themeOptions: { value: Theme; icon: typeof Sun }[] = [
 
 export function ThemeSwitcherDropdown() {
   const { theme, setTheme } = useTheme()
+  // i18n-used-keys: theme.light, theme.dark, theme.system
   const t = useTranslations('theme')
 
   const handleThemeChange = (newTheme: Theme) => {

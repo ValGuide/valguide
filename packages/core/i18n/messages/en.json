@@ -306,8 +306,6 @@
       "cancel": "Keep published"
     },
     "assets": {
-      "attachError": "Failed to attach asset to guide",
-      "removeError": "Failed to remove asset from guide",
       "updateError": "Failed to update guide assets"
     },
     "localeSelector": {
@@ -435,7 +433,6 @@
       "updateError": "Failed to update languages"
     },
     "assets": {
-      "attachError": "Failed to attach asset",
       "removeError": "Failed to remove asset",
       "updateError": "Failed to update stop assets",
       "addError": "Failed to add asset to stop"

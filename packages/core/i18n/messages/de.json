@@ -306,8 +306,6 @@
       "cancel": "Veröffentlicht lassen"
     },
     "assets": {
-      "attachError": "Fehler beim Hinzufügen des Assets zum Guide",
-      "removeError": "Fehler beim Entfernen des Assets vom Guide",
       "updateError": "Fehler beim Aktualisieren der Guide-Assets"
     },
     "localeSelector": {
@@ -435,7 +433,6 @@
       "updateError": "Sprachen konnten nicht aktualisiert werden"
     },
     "assets": {
-      "attachError": "Fehler beim Anhängen des Assets",
       "removeError": "Fehler beim Entfernen des Assets",
       "updateError": "Fehler beim Aktualisieren der Stop-Assets",
       "addError": "Fehler beim Hinzufügen des Assets zum Stop"

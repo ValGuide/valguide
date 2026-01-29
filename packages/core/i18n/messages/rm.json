@@ -306,8 +306,6 @@
       "cancel": "Laschar publitgà"
     },
     "assets": {
-      "attachError": "Errur cun agiuntar l'asset al guid",
-      "removeError": "Errur cun allontanar l'asset dal guid",
       "updateError": "Errur cun actualisar ils assets dal guid"
     },
     "localeSelector": {
@@ -435,7 +433,6 @@
       "updateError": "Impussibel dad actualisar las linguas"
     },
     "assets": {
-      "attachError": "Errur cun agiuntar l'asset",
       "removeError": "Errur cun allontanar l'asset",
       "updateError": "Errur cun actualisar ils assets dal stop",
       "addError": "Errur cun agiuntar l'asset al stop"

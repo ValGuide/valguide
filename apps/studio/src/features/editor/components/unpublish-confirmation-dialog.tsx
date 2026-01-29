@@ -23,7 +23,9 @@ export function UnpublishConfirmationDialog({
   contentType,
   onConfirm,
 }: UnpublishConfirmationDialogProps) {
+  // i18n-used-keys: guides.confirmUnpublishGuide.title, guides.confirmUnpublishGuide.description, guides.confirmUnpublishGuide.cancel, guides.confirmUnpublishGuide.confirm
   const tGuide = useTranslations('guides.confirmUnpublishGuide')
+  // i18n-used-keys: guides.confirmUnpublishStop.title, guides.confirmUnpublishStop.description, guides.confirmUnpublishStop.cancel, guides.confirmUnpublishStop.confirm
   const tStop = useTranslations('guides.confirmUnpublishStop')
   const t = contentType === 'guide' ? tGuide : tStop
 

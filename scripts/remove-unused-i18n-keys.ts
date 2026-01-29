@@ -8,6 +8,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import {
   extractUsedKeys,
+  findEmptyObjects,
   findUnusedKeys,
   flattenKeys,
   LOCALE_FILES,
@@ -58,6 +59,7 @@ async function main() {
   console.log('Loading translations from', MESSAGES_PATH)
   const messages = loadTranslations(MESSAGES_PATH)
   const existingKeys = flattenKeys(messages)
+  const emptyObjects = findEmptyObjects(messages)
   console.log(`Found ${existingKeys.size} translation keys\n`)
 
   console.log('Parsing source files with ts-morph...')
@@ -70,15 +72,25 @@ async function main() {
   console.log(`Total keys: ${existingKeys.size}`)
   console.log(`Used keys: ${usedKeys.size}`)
   console.log(`Unused keys to remove: ${unusedKeys.length}`)
+  console.log(`Empty objects to remove: ${emptyObjects.length}`)
   console.log('='.repeat(60))
 
-  if (unusedKeys.length === 0) {
-    console.log('\n✅ No unused keys found!')
+  if (emptyObjects.length > 0) {
+    console.log('\nEmpty objects to remove:')
+    for (const path of emptyObjects) {
+      console.log(`  - ${path}`)
+    }
+  }
+
+  if (unusedKeys.length === 0 && emptyObjects.length === 0) {
+    console.log('\n✅ No unused keys or empty objects found!')
     return
   }
 
-  console.log('\nKeys to remove:')
-  printUnusedKeys(unusedKeys)
+  if (unusedKeys.length > 0) {
+    console.log('\nKeys to remove:')
+    printUnusedKeys(unusedKeys)
+  }
 
   if (isDryRun) {
     console.log('\n🔍 DRY RUN - Run without --dry-run to remove these keys')
