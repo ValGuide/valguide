@@ -74,11 +74,7 @@ export function AppSidebar({
 
   React.useEffect(() => {
     setOpenMobile(false)
-  }, [setOpenMobile])
-
-  const handleNavClick = () => {
-    setOpenMobile(false)
-  }
+  }, [pathname, setOpenMobile])
 
   const handleLogout = async () => {
     if (onLogout) {
@@ -153,10 +149,7 @@ export function AppSidebar({
             teams={teams}
             activeTeamId={currentTeam?.id}
             onTeamSwitch={onTeamSwitch}
-            onCreateTeam={() => {
-              setCreateTeamOpen(true)
-              setOpenMobile(false)
-            }}
+            onCreateTeam={() => setCreateTeamOpen(true)}
             onTeamSettings={() => router.navigate({ to: '/team' })}
           />
         </SidebarHeader>
@@ -167,7 +160,7 @@ export function AppSidebar({
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -183,7 +176,7 @@ export function AppSidebar({
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -199,7 +192,7 @@ export function AppSidebar({
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -215,7 +208,7 @@ export function AppSidebar({
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={handleNavClick}>
+                    <Link {...item.linkOptions} preload="intent">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -240,7 +233,7 @@ export function AppSidebar({
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={user} onLogout={handleLogout} handleNavClick={handleNavClick} />
+          <NavUser user={user} onLogout={handleLogout} />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

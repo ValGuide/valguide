@@ -18,7 +18,6 @@ import { ThemeSwitcherDropdown } from './theme-switcher-dropdown'
 export function NavUser({
   user,
   onLogout,
-  handleNavClick,
 }: {
   user: {
     name: string
@@ -26,7 +25,6 @@ export function NavUser({
     avatar: string
   }
   onLogout?: () => void
-  handleNavClick?: (url: string) => void
 }) {
   const { isMobile } = useSidebar()
   const t = useTranslations('sidebar.user')
@@ -93,7 +91,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild className="cursor-pointer">
-                <Link to="/profile" preload="intent" onClick={() => handleNavClick?.('/profile')}>
+                <Link to="/profile" preload="intent">
                   <BadgeCheck />
                   {t('myProfile')}
                 </Link>
