@@ -20,6 +20,7 @@ export const getRouter = () => {
     routeTree,
     context: { queryClient },
     scrollRestoration: true,
+    scrollToTopSelectors: ['[data-slot="sidebar-inset"]'],
     defaultPreloadStaleTime: 30_000,
     defaultStaleTime: 30_000,
     defaultPendingComponent: DefaultPending,
