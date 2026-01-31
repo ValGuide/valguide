@@ -81,13 +81,15 @@ async function main() {
   })
 
   if (!userId) {
-    console.log('\n👤 Looking for existing user...')
+    console.log('\n👤 Looking for seed user...')
+    const SEED_USER_EMAIL = 'curator@museum-zurich.example'
     const { data: users } = await supabase.auth.admin.listUsers()
-    if (users?.users?.length) {
-      userId = users.users[0].id
-      console.log(`  Found user: ${users.users[0].email} (${userId})`)
+    const seedUser = users?.users?.find((u) => u.email === SEED_USER_EMAIL)
+    if (seedUser) {
+      userId = seedUser.id
+      console.log(`  Found seed user: ${seedUser.email} (${userId})`)
     } else {
-      console.error('❌ No users found. Please specify --user-id <uuid>')
+      console.error(`❌ Seed user ${SEED_USER_EMAIL} not found. Use --user-id <uuid> to override.`)
       process.exit(1)
     }
   }
