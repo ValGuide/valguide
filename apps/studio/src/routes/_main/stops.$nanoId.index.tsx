@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import { pickBestLocale } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
@@ -23,10 +24,10 @@ function StopPage() {
   const t = useTranslations('stops')
 
   const { displayTitle, displayDescription } = useMemo(() => {
-    const preferredLocaleData = stop.locales.find((l) => l.locale === preferredLocale) ?? stop.locales[0]
+    const bestLocale = pickBestLocale(preferredLocale, stop.locales)
     return {
-      displayTitle: preferredLocaleData?.title?.trim() || t('unknownTitle'),
-      displayDescription: preferredLocaleData?.description ?? null,
+      displayTitle: bestLocale?.title?.trim() || t('unknownTitle'),
+      displayDescription: bestLocale?.description ?? null,
     }
   }, [stop, preferredLocale, t])
 

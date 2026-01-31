@@ -1,6 +1,7 @@
-import { and, desc, eq, isNull } from 'drizzle-orm'
+import { and, desc, eq, isNotNull, isNull, sql } from 'drizzle-orm'
 import { db } from '../../db'
 import { stop, stopLocale, stopLocaleDraft } from '../schema'
+import { LOCALE_PRIORITY } from '../utils'
 
 // =============================================================================
 // TYPES
@@ -26,13 +27,33 @@ export type ListStopsFilters = {
 // =============================================================================
 
 export async function listStops(organizationId: string, filters: ListStopsFilters = {}): Promise<StopListItem[]> {
-  const locale = filters.locale ?? 'en'
+  const preferredLocale = filters.locale ?? 'en'
 
   const conditions = [eq(stop.organizationId, organizationId), isNull(stop.deletedAt)]
 
   if (!filters.includeArchived) {
     conditions.push(isNull(stop.archivedAt))
   }
+
+  const titleSubquery = db
+    .select({
+      title: stopLocaleDraft.title,
+      locale: stopLocale.locale,
+    })
+    .from(stopLocale)
+    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
+    .where(and(eq(stopLocale.stopId, stop.id), isNotNull(stopLocaleDraft.title)))
+    .orderBy(
+      sql`CASE ${stopLocale.locale}
+        WHEN ${preferredLocale} THEN 0
+        WHEN ${LOCALE_PRIORITY[0]} THEN 1
+        WHEN ${LOCALE_PRIORITY[1]} THEN 2
+        WHEN ${LOCALE_PRIORITY[2]} THEN 3
+        ELSE 4
+      END`,
+    )
+    .limit(1)
+    .as('best_title')
 
   const rows = await db
     .select({
@@ -41,19 +62,18 @@ export async function listStops(organizationId: string, filters: ListStopsFilter
       archivedAt: stop.archivedAt,
       createdAt: stop.createdAt,
       updatedAt: stop.updatedAt,
-      title: stopLocaleDraft.title,
-      locale: stopLocale.locale,
+      title: titleSubquery.title,
+      locale: titleSubquery.locale,
     })
     .from(stop)
-    .leftJoin(stopLocale, and(eq(stopLocale.stopId, stop.id), eq(stopLocale.locale, locale)))
-    .leftJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
+    .leftJoinLateral(titleSubquery, sql`true`)
     .where(and(...conditions))
     .orderBy(desc(stop.updatedAt))
 
   return rows.map((row) => ({
     nanoId: row.nanoId,
     title: row.title,
-    locale: row.locale ?? locale,
+    locale: row.locale ?? preferredLocale,
     availableLocales: row.availableLocales ?? [],
     archivedAt: row.archivedAt,
     createdAt: row.createdAt,

@@ -1,6 +1,7 @@
-import { and, desc, eq, isNull } from 'drizzle-orm'
+import { and, desc, eq, isNotNull, isNull, sql } from 'drizzle-orm'
 import { db } from '../../db'
 import { guide, guideLocale, guideLocaleDraft } from '../schema'
+import { LOCALE_PRIORITY } from '../utils'
 
 // =============================================================================
 // TYPES
@@ -26,13 +27,33 @@ export type ListGuidesFilters = {
 // =============================================================================
 
 export async function listGuides(organizationId: string, filters: ListGuidesFilters = {}): Promise<GuideListItem[]> {
-  const locale = filters.locale ?? 'en'
+  const preferredLocale = filters.locale ?? 'en'
 
   const conditions = [eq(guide.organizationId, organizationId), isNull(guide.deletedAt)]
 
   if (!filters.includeArchived) {
     conditions.push(isNull(guide.archivedAt))
   }
+
+  const titleSubquery = db
+    .select({
+      title: guideLocaleDraft.title,
+      locale: guideLocale.locale,
+    })
+    .from(guideLocale)
+    .innerJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
+    .where(and(eq(guideLocale.guideId, guide.id), isNotNull(guideLocaleDraft.title)))
+    .orderBy(
+      sql`CASE ${guideLocale.locale}
+        WHEN ${preferredLocale} THEN 0
+        WHEN ${LOCALE_PRIORITY[0]} THEN 1
+        WHEN ${LOCALE_PRIORITY[1]} THEN 2
+        WHEN ${LOCALE_PRIORITY[2]} THEN 3
+        ELSE 4
+      END`,
+    )
+    .limit(1)
+    .as('best_title')
 
   const rows = await db
     .select({
@@ -41,19 +62,18 @@ export async function listGuides(organizationId: string, filters: ListGuidesFilt
       archivedAt: guide.archivedAt,
       createdAt: guide.createdAt,
       updatedAt: guide.updatedAt,
-      title: guideLocaleDraft.title,
-      locale: guideLocale.locale,
+      title: titleSubquery.title,
+      locale: titleSubquery.locale,
     })
     .from(guide)
-    .leftJoin(guideLocale, and(eq(guideLocale.guideId, guide.id), eq(guideLocale.locale, locale)))
-    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
+    .leftJoinLateral(titleSubquery, sql`true`)
     .where(and(...conditions))
     .orderBy(desc(guide.updatedAt))
 
   return rows.map((row) => ({
     nanoId: row.nanoId,
     title: row.title,
-    locale: row.locale ?? locale,
+    locale: row.locale ?? preferredLocale,
     availableLocales: row.availableLocales ?? [],
     archivedAt: row.archivedAt,
     createdAt: row.createdAt,

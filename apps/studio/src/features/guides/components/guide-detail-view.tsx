@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import { getGuideStatus } from '@valguide/core/features/guides/status-utils'
+import { pickBestLocale } from '@valguide/core/features/guides/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
@@ -41,10 +42,10 @@ export function GuideDetailView({
 }: GuideDetailViewProps) {
   const t = useTranslations('guides')
 
-  // Compute display values from locales
-  const preferredLocaleData = guide.locales.find((l) => l.locale === preferredLocale) ?? guide.locales[0]
-  const displayTitle = preferredLocaleData?.title?.trim() || t('untitledGuide')
-  const displayDescription = preferredLocaleData?.description ?? null
+  // Compute display values from locales with fallback priority
+  const bestLocale = pickBestLocale(preferredLocale, guide.locales)
+  const displayTitle = bestLocale?.title?.trim() || t('untitledGuide')
+  const displayDescription = bestLocale?.description ?? null
   const isPublished = guide.locales.some((l) => l.publishedVersionId !== null)
 
   const guideStatus = getGuideStatus({
