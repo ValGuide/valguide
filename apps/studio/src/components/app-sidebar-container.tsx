@@ -58,7 +58,10 @@ export function AppSidebarContainer() {
 
   const handleLogout = async () => {
     await signOut({ data: { scope: 'global' } })
-    router.invalidate()
+    queryClient.removeQueries({ queryKey: ['is-authenticated'] })
+    queryClient.removeQueries({ queryKey: ['current-user'] })
+    await router.invalidate()
+    router.navigate({ to: '/login' })
   }
 
   const handleFeedbackSubmit = async (feedback: string, file: File | null, pageUrl: string) => {
