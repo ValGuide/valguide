@@ -1,13 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { AuthProvider } from '@valguide/features/auth/auth-provider'
-import SignupLoading from '@valguide/features/auth/signup/loading'
-import SignupContainer from '@valguide/features/auth/signup/signup-container'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/signup')({
-  component: () => (
-    <AuthProvider isLogin={false}>
-      <SignupContainer />
-    </AuthProvider>
-  ),
-  pendingComponent: SignupLoading,
+  beforeLoad: () => {
+    throw redirect({ to: '/login' })
+  },
 })

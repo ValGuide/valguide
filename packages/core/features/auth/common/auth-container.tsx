@@ -14,10 +14,10 @@ export interface AuthContainerProps {
   handleEmailAuth: (email: string) => void
   handleVerifyOtp: (e: React.FormEvent) => void
   handleResendOtp: () => void
+  handleChangeEmail: () => void
   loading: boolean
   message: { type: 'success' | 'error'; text: string } | null
   verifyingOtp: boolean
-  isLogin: boolean
 }
 
 export function AuthContainer({
@@ -29,29 +29,25 @@ export function AuthContainer({
   handleEmailAuth,
   handleVerifyOtp,
   handleResendOtp,
+  handleChangeEmail,
   loading,
   message,
   verifyingOtp,
-  isLogin,
 }: AuthContainerProps) {
-  const t = useTranslations(isLogin ? 'login' : 'signup')
+  const t = useTranslations('auth')
 
   return (
     <AuthLayout footer={<Consent />}>
       <div className="flex flex-1 flex-col justify-center gap-6">
         {verifyingOtp ? (
           <div className="text-center">
-            <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">ValGuide</p>
-            <h2 className="mt-3 text-3xl tracking-tight font-serif">{t('otpTitle')}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {email ? `${t('verifyEmail')} ${email}` : t('checkEmail')}
-            </p>
+            <h2 className="text-3xl tracking-tight font-serif">{t('otpTitle')}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{email ? t('otpSubtitle', { email }) : t('otpTitle')}</p>
           </div>
         ) : (
           <div className="text-center">
-            <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">ValGuide</p>
-            <h2 className="mt-3 text-3xl tracking-tight font-serif">{t('welcome')}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{t(isLogin ? 'loginPrompt' : 'signupPrompt')}</p>
+            <h2 className="text-3xl tracking-tight font-serif">{t('title')}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{t('subtitle')}</p>
           </div>
         )}
         {message && <MessageAlert type={message.type}>{message.text}</MessageAlert>}
@@ -61,21 +57,11 @@ export function AuthContainer({
             onOtpChange={(e) => setOtp(e.target.value)}
             onSubmit={handleVerifyOtp}
             onResendClick={handleResendOtp}
+            onChangeEmail={handleChangeEmail}
             loading={loading}
-            isLogin={isLogin}
           />
         ) : (
-          <AuthForm
-            email={email}
-            onEmailChange={setEmail}
-            onSubmit={handleEmailAuth}
-            loading={loading}
-            submitText={t('sendCode')}
-            loadingText={t('sending')}
-            emailLabel={t('emailLabel')}
-            emailPlaceholder={t('emailPlaceholder')}
-            isLogin={isLogin}
-          />
+          <AuthForm email={email} onEmailChange={setEmail} onSubmit={handleEmailAuth} loading={loading} />
         )}
       </div>
     </AuthLayout>

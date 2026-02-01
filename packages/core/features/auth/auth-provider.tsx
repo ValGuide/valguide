@@ -18,34 +18,32 @@ const Context = createContext<{
   handleEmailAuth: (email: string) => Promise<void>
   handleVerifyOtp: (e: React.FormEvent) => Promise<void>
   handleResendOtp: () => Promise<void>
+  handleChangeEmail: () => void
   otp: string
   setOtp: Dispatch<SetStateAction<string>>
   verifyingOtp: boolean
   email: string
   setEmail: Dispatch<SetStateAction<string>>
-  isLogin: boolean
 }>({
   loading: false,
   message: null,
   handleEmailAuth: async () => {},
   handleResendOtp: async () => {},
   handleVerifyOtp: async () => {},
+  handleChangeEmail: () => {},
   otp: '',
   email: '',
   setEmail: () => {},
   setOtp: () => {},
   verifyingOtp: false,
-  isLogin: false,
 })
 
 const defaultNextPath = '/'
 
-type AuthProviderProps = PropsWithChildren<{
-  isLogin?: boolean
-}>
+type AuthProviderProps = PropsWithChildren
 
-export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) => {
-  const t = useTranslations(isLogin ? 'login' : 'signup')
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const t = useTranslations('auth')
 
   const searchParams = useSearch({ strict: false }) as { next?: string; email?: string }
   const next = withLeadingSlash(searchParams.next ?? defaultNextPath)
@@ -158,6 +156,12 @@ export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) =
     }
   }
 
+  const handleChangeEmail = () => {
+    setValidatingOpt(false)
+    setOtp('')
+    setMessage(null)
+  }
+
   return (
     <Context.Provider
       value={{
@@ -166,12 +170,12 @@ export const AuthProvider = ({ children, isLogin = false }: AuthProviderProps) =
         handleResendOtp,
         handleEmailAuth,
         handleVerifyOtp,
+        handleChangeEmail,
         setOtp,
         otp,
         verifyingOtp,
         email,
         setEmail,
-        isLogin,
       }}
     >
       {children}

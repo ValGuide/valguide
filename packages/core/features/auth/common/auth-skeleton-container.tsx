@@ -22,7 +22,7 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
       <div
         className={cn(
           'absolute inset-0',
-          'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]',
+          'bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))]',
           'from-background via-muted to-muted',
           'dark:from-muted/50 dark:via-background dark:to-background',
         )}
@@ -46,7 +46,7 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
           'rounded-2xl',
         )}
       >
-        <CardContent className="pt-6">
+        <CardContent className="p-8">
           <div className="flex flex-1 flex-col justify-center gap-6">
             {showOtp ? <OtpSkeleton /> : <AuthSkeleton />}
           </div>

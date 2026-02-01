@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { AuthContainer } from '../common/auth-container'
 import LoginLoading from './loading'
 
-const LoginPageExample = () => {
-  const t = useTranslations('login')
+const AuthPageExample = () => {
+  const t = useTranslations('auth')
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,14 +16,13 @@ const LoginPageExample = () => {
     setLoading(true)
     setMessage(null)
 
-    // Simulate API call
     setTimeout(() => {
       setLoading(false)
       if (email.includes('@')) {
         setVerifyingOtp(true)
         setMessage({ type: 'success', text: t('otpSent') })
       } else {
-        setMessage({ type: 'error', text: t('email.message') })
+        setMessage({ type: 'error', text: t('invalidEmail') })
       }
     }, 1000)
   }
@@ -33,7 +32,6 @@ const LoginPageExample = () => {
     setLoading(true)
     setMessage(null)
 
-    // Simulate API call
     setTimeout(() => {
       setLoading(false)
       if (otp.length === 6) {
@@ -48,11 +46,16 @@ const LoginPageExample = () => {
     setLoading(true)
     setMessage(null)
 
-    // Simulate API call
     setTimeout(() => {
       setLoading(false)
       setMessage({ type: 'success', text: t('otpSent') })
     }, 1000)
+  }
+
+  const handleChangeEmail = () => {
+    setVerifyingOtp(false)
+    setOtp('')
+    setMessage(null)
   }
 
   return (
@@ -64,17 +67,17 @@ const LoginPageExample = () => {
       handleEmailAuth={handleEmailAuth}
       handleVerifyOtp={handleVerifyOtp}
       handleResendOtp={handleResendOtp}
+      handleChangeEmail={handleChangeEmail}
       loading={loading}
       message={message}
       verifyingOtp={verifyingOtp}
-      isLogin={true}
     />
   )
 }
 
 const meta: Meta = {
-  title: 'Auth/LoginPage',
-  component: LoginPageExample,
+  title: 'Auth/AuthPage',
+  component: AuthPageExample,
   parameters: {
     layout: 'fullscreen',
   },

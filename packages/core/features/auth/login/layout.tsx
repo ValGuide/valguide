@@ -5,7 +5,7 @@ import LoginLoading from './loading'
 export default function Layout({ children }: PropsWithChildren) {
   return (
     <Suspense fallback={<LoginLoading />}>
-      <AuthProvider isLogin={true}>{children}</AuthProvider>
+      <AuthProvider>{children}</AuthProvider>
     </Suspense>
   )
 }

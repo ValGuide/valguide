@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@valguide/ui/components/field'
@@ -22,44 +21,13 @@ export interface AuthFormProps {
    * Whether the form is in loading state
    */
   loading?: boolean
-  /**
-   * Text for the submit button
-   */
-  submitText: string
-  /**
-   * Text for the submit button when loading
-   */
-  loadingText: string
-  /**
-   * Label for the email input
-   */
-  emailLabel: string
-  /**
-   * Placeholder for the email input
-   */
-  emailPlaceholder: string
-  /**
-   * Whether this is a login form (true) or signup form (false)
-   */
-  isLogin?: boolean
 }
 
 /**
- * A form component for email authentication (login or signup)
+ * A form component for unified email authentication
  */
-export function AuthForm({
-  email: initialEmail,
-  onEmailChange,
-  onSubmit,
-  loading = false,
-  submitText,
-  loadingText,
-  emailLabel,
-  emailPlaceholder,
-  isLogin = false,
-}: AuthFormProps) {
-  // Get translations
-  const t = useTranslations(isLogin ? 'login' : 'signup')
+export function AuthForm({ email: initialEmail, onEmailChange, onSubmit, loading = false }: AuthFormProps) {
+  const t = useTranslations('auth')
 
   // Local state for validation
   const [error, setError] = useState<string | null>(null)
@@ -88,16 +56,16 @@ export function AuthForm({
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         <FieldGroup>
           <Field>
-            <FieldLabel htmlFor="email">{emailLabel}</FieldLabel>
+            <FieldLabel htmlFor="email">{t('emailLabel')}</FieldLabel>
             <Input
               id="email"
-              placeholder={emailPlaceholder}
+              placeholder={t('emailPlaceholder')}
               type="email"
               autoComplete="email"
               value={initialEmail}
               onChange={(e) => {
                 onEmailChange(e.target.value)
-                setError(null) // Clear error on change
+                setError(null)
               }}
               required
             />
@@ -106,22 +74,9 @@ export function AuthForm({
 
           <Field>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? loadingText : submitText}
+              {loading ? t('sending') : t('sendCode')}
             </Button>
           </Field>
-
-          <div className="text-center">
-            <p className="text-sm">
-              {isLogin ? t('noAccount') : t('haveAccount')}
-              <Link
-                to={isLogin ? '/signup' : '/login'}
-                preload="intent"
-                className="text-secondary-foreground hover:underline"
-              >
-                {isLogin ? t('signupLink') : t('loginLink')}
-              </Link>
-            </p>
-          </div>
         </FieldGroup>
       </form>
     </div>

@@ -7,11 +7,10 @@ export interface OtpSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 export function OtpSkeleton({ className, ...props }: OtpSkeletonProps) {
   return (
     <div className={cn('flex flex-col justify-center space-y-6', className)} {...props}>
-      {/* Brand cue, title and subtitle skeletons */}
+      {/* Title and subtitle skeletons */}
       <div className="text-center space-y-2">
-        <Skeleton className="h-3 w-16 mx-auto" /> {/* ValGuide brand */}
-        <Skeleton className="h-9 w-48 mx-auto mt-3" /> {/* Title: "Verify Your Email" */}
-        <Skeleton className="h-5 w-80 mx-auto" /> {/* Subtitle: "Please enter the verification code we sent to..." */}
+        <Skeleton className="h-9 w-48 mx-auto" /> {/* Title: "Check your email" */}
+        <Skeleton className="h-5 w-80 mx-auto" /> {/* Subtitle: "We sent a 6-digit code to..." */}
       </div>
 
       {/* OTP input skeleton - responsive sizes matching actual component */}
@@ -31,14 +30,12 @@ export function OtpSkeleton({ className, ...props }: OtpSkeletonProps) {
             <Skeleton className="h-12 w-10 sm:h-16 sm:w-12 rounded-md" />
           </div>
         </div>
-
         {/* Verify Button */}
         <Skeleton className="h-10 w-full rounded-md" />
-
+        {/* Delivery note */}
+        <Skeleton className="h-4 w-48 mx-auto" /> {/* "Usually arrives within 30 seconds" */}
         {/* Resend text below button */}
-        <div className="text-center">
-          <Skeleton className="h-4 w-56 mx-auto" /> {/* "Didn't receive the code? Resend" */}
-        </div>
+        <Skeleton className="h-4 w-64 mx-auto" /> {/* "Didn't receive the code? Resend · Change email" */}
       </div>
     </div>
   )

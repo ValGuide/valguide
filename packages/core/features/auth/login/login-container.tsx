@@ -8,6 +8,7 @@ export default function LoginContainer() {
     otp,
     setOtp,
     handleResendOtp,
+    handleChangeEmail,
     loading,
     message,
     verifyingOtp,
@@ -24,10 +25,10 @@ export default function LoginContainer() {
       handleEmailAuth={handleEmailAuth}
       handleVerifyOtp={handleVerifyOtp}
       handleResendOtp={handleResendOtp}
+      handleChangeEmail={handleChangeEmail}
       loading={loading}
       message={message}
       verifyingOtp={verifyingOtp}
-      isLogin={true}
     />
   )
 }

@@ -22,6 +22,10 @@ export interface OtpVerificationFormProps {
    */
   onResendClick: () => void
   /**
+   * Callback when change email button is clicked
+   */
+  onChangeEmail?: () => void
+  /**
    * Whether the form is in loading state
    */
   loading?: boolean
@@ -29,10 +33,6 @@ export interface OtpVerificationFormProps {
    * Title for the form
    */
   title?: string
-  /**
-   * Whether this is a login form (true) or signup form (false)
-   */
-  isLogin?: boolean
 }
 
 /**
@@ -43,12 +43,11 @@ export function OtpVerificationForm({
   onOtpChange,
   onSubmit,
   onResendClick,
+  onChangeEmail,
   loading = false,
   title,
-  isLogin = false,
 }: OtpVerificationFormProps) {
-  // Get translations based on isLogin prop
-  const t = useTranslations(isLogin ? 'login' : 'signup')
+  const t = useTranslations('auth')
   return (
     <form onSubmit={onSubmit}>
       <FieldGroup>
@@ -102,11 +101,20 @@ export function OtpVerificationForm({
             {loading ? t('verifying') : t('verifyCode')}
           </Button>
         </Field>
+        <p className="text-center text-xs text-muted-foreground">{t('deliveryNote')}</p>
         <div className="text-center text-sm">
-          {t('didntReceiveEmail')}
+          <span>{t('didntReceive')} </span>
           <button type="button" className="font-medium hover:underline" onClick={onResendClick}>
             {t('resendCode')}
           </button>
+          {onChangeEmail && (
+            <>
+              <span className="mx-2">·</span>
+              <button type="button" className="font-medium hover:underline" onClick={onChangeEmail}>
+                {t('changeEmail')}
+              </button>
+            </>
+          )}
         </div>
       </FieldGroup>
     </form>

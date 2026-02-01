@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import SignupContainer from '@valguide/features/auth/signup/signup-container'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/signup')({
-  component: SignupContainer,
+  beforeLoad: () => {
+    throw redirect({ to: '/login' })
+  },
 })

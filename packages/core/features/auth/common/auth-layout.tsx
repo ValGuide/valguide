@@ -25,7 +25,7 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
       <div
         className={cn(
           'absolute inset-0',
-          'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]',
+          'bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))]',
           'from-background via-muted to-muted',
           'dark:from-muted/50 dark:via-background dark:to-background',
         )}
@@ -49,7 +49,7 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
           'rounded-2xl',
         )}
       >
-        <CardContent className="pt-6">{children}</CardContent>
+        <CardContent className="p-8">{children}</CardContent>
       </Card>
 
       {footer && <div className="relative mt-6 text-center">{footer}</div>}
