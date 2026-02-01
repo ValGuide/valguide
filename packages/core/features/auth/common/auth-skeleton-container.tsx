@@ -54,8 +54,8 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
       </Card>
 
       {/* Footer - consent skeleton */}
-      <div className="relative mt-6 text-center">
-        <Skeleton className="h-4 w-80 mx-auto" />
+      <div className="relative mt-6 text-center px-4">
+        <Skeleton className="h-8 sm:h-4 w-full sm:w-80 max-w-xs sm:max-w-none mx-auto" />
       </div>
     </main>
   )

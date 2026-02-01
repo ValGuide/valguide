@@ -8,9 +8,9 @@ export function AuthSkeleton({ className, ...props }: AuthSkeletonProps) {
   return (
     <div className={cn('flex flex-col justify-center space-y-8', className)} {...props}>
       {/* Title and subtitle skeletons */}
-      <div className="text-center space-y-2">
-        <Skeleton className="h-9 w-40 mx-auto" /> {/* Title */}
-        <Skeleton className="h-5 w-64 mx-auto" /> {/* Subtitle */}
+      <div className="text-center space-y-3">
+        <Skeleton className="h-9 w-48 mx-auto" /> {/* Title: "Welcome to ValGuide" */}
+        <Skeleton className="h-10 sm:h-5 w-full sm:w-64 mx-auto" /> {/* Subtitle wraps on mobile */}
       </div>
 
       {/* Form skeleton */}

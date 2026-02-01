@@ -8,9 +8,9 @@ export function OtpSkeleton({ className, ...props }: OtpSkeletonProps) {
   return (
     <div className={cn('flex flex-col justify-center space-y-6', className)} {...props}>
       {/* Title and subtitle skeletons */}
-      <div className="text-center space-y-2">
-        <Skeleton className="h-9 w-48 mx-auto" /> {/* Title: "Check your email" */}
-        <Skeleton className="h-5 w-80 mx-auto" /> {/* Subtitle: "We sent a 6-digit code to..." */}
+      <div className="text-center space-y-3">
+        <Skeleton className="h-9 w-44 mx-auto" /> {/* Title: "Check your email" */}
+        <Skeleton className="h-10 sm:h-5 w-full sm:w-64 mx-auto" /> {/* Subtitle wraps on mobile */}
       </div>
 
       {/* OTP input skeleton - responsive sizes matching actual component */}
@@ -33,9 +33,9 @@ export function OtpSkeleton({ className, ...props }: OtpSkeletonProps) {
         {/* Verify Button */}
         <Skeleton className="h-10 w-full rounded-md" />
         {/* Delivery note */}
-        <Skeleton className="h-4 w-48 mx-auto" /> {/* "Usually arrives within 30 seconds" */}
-        {/* Resend text below button */}
-        <Skeleton className="h-4 w-64 mx-auto" /> {/* "Didn't receive the code? Resend · Change email" */}
+        <Skeleton className="h-4 w-52 mx-auto" /> {/* "Usually arrives within 30 seconds" */}
+        {/* Resend text - wraps to 2 lines on mobile */}
+        <Skeleton className="h-10 sm:h-4 w-full sm:w-64 mx-auto" />
       </div>
     </div>
   )
