@@ -206,10 +206,12 @@ max_frequency = "5s"
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
 # Send auth emails via Resend instead of Supabase's default SMTP
-[auth.hook.send_email]
-enabled = true
-uri = "http://host.docker.internal:54321/functions/v1/send-auth-email"
-secrets = ["RESEND_SENDING_API_KEY"]
+# Note: For production, configure this hook in Supabase Dashboard > Authentication > Hooks
+# For local dev, uncomment and set SEND_EMAIL_HOOK_SECRET
+# [auth.hook.send_email]
+# enabled = true
+# uri = "http://host.docker.internal:54321/functions/v1/resend"
+# secrets = "env(SEND_EMAIL_HOOK_SECRET)"
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
 [auth.sms.twilio]
@@ -280,6 +282,12 @@ enabled = false
 enabled = false
 # Obtain from https://clerk.com/setup/supabase
 # domain = "example.clerk.accounts.dev"
+
+[functions.resend]
+enabled = true
+verify_jwt = false
+import_map = "./functions/resend/deno.json"
+entrypoint = "./functions/resend/index.ts"
 
 [edge_runtime]
 enabled = true
