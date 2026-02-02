@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
-import { sendEmail } from '@valguide/transactional'
+import { sendEmail } from '@valguide/email'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
 import { NotFoundError, requireOrgRole } from '../auth/authorization'

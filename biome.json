@@ -69,7 +69,7 @@
       }
     },
     {
-      "includes": ["packages/transactional/**/*.tsx", "packages/transactional/**/*.ts"],
+      "includes": ["packages/email/**/*.tsx", "packages/email/**/*.ts"],
       "linter": {
         "rules": {
           "nursery": {

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.ns", "esnext"]
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-explicit-any"]
+    }
+  }
+}
