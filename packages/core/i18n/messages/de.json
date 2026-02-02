@@ -102,10 +102,10 @@
   },
   "auth": {
     "title": "Willkommen bei ValGuide",
-    "subtitle": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Einmalcode",
+    "subtitle": "Wir senden Ihnen einen Einmalcode zum Fortfahren",
     "emailLabel": "E-Mail-Adresse",
     "emailPlaceholder": "beispiel@email.com",
-    "sendCode": "Code senden",
+    "sendCode": "Weiter",
     "sending": "Wird gesendet...",
     "otpTitle": "Prüfen Sie Ihre E-Mails",
     "otpSubtitle": "Wir haben einen 6-stelligen Code an {email} gesendet",

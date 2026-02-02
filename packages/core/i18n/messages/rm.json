@@ -102,10 +102,10 @@
   },
   "auth": {
     "title": "Bainvegni tar ValGuide",
-    "subtitle": "Endatei vossa adressa d'e-mail e nus As tramettain in code unic",
+    "subtitle": "Nus As tramettain in code unic per cuntinuar",
     "emailLabel": "Adressa d'e-mail",
     "emailPlaceholder": "exempel@email.com",
-    "sendCode": "Trametter code",
+    "sendCode": "Cuntinuar",
     "sending": "Tramettend...",
     "otpTitle": "Controllei voss e-mail",
     "otpSubtitle": "Nus avain tramess in code da 6 cifras a {email}",
