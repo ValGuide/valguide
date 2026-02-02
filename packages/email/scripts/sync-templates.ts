@@ -21,6 +21,8 @@ if (!RESEND_API_KEY) {
 
 const resend = new Resend(RESEND_API_KEY)
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 async function syncTemplates() {
   console.log(`Syncing ${templates.length} templates to Resend...\n`)
 
@@ -33,8 +35,14 @@ async function syncTemplates() {
 
   const existingByAlias = new Map(existingTemplates?.data?.map((t) => [t.alias, t]) ?? [])
 
-  for (const template of templates) {
+  for (let i = 0; i < templates.length; i++) {
+    const template = templates[i]
     const { config, component, text } = template
+
+    // Rate limit: 2 requests per second, so wait 600ms between templates
+    if (i > 0) {
+      await delay(600)
+    }
 
     console.log(`Rendering template: ${config.name} (${config.alias})`)
     const html = await render(React.createElement(component))
@@ -60,6 +68,7 @@ async function syncTemplates() {
 
       console.log(`  ✓ Updated template`)
 
+      await delay(600)
       const { error: publishError } = await resend.templates.publish(existing.id)
       if (publishError) {
         console.error(`  ❌ Failed to publish: ${publishError.message}`)
@@ -87,6 +96,7 @@ async function syncTemplates() {
       console.log(`  ✓ Created template with ID: ${created?.id}`)
 
       if (created?.id) {
+        await delay(600)
         const { error: publishError } = await resend.templates.publish(created.id)
         if (publishError) {
           console.error(`  ❌ Failed to publish: ${publishError.message}`)

@@ -16,7 +16,7 @@ export const OtpLoginTemplate = () => {
   return (
     <Html>
       <Head />
-      <Preview>Use the code below to securely log in. Valid for {'{{MAX_VALID_MINUTES}}'} minutes.</Preview>
+      <Preview>Use the code below to securely log in. Valid for {'{{{MAX_VALID_MINUTES}}}'} minutes.</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
@@ -25,11 +25,11 @@ export const OtpLoginTemplate = () => {
             </Heading>
 
             <Section style={codeContainerStyle}>
-              <Text style={codeStyle}>{'{{CODE}}'}</Text>
+              <Text style={codeStyle}>{'{{{CODE}}}'}</Text>
             </Section>
 
             <Text className="pt-2 text-center text-[16px] leading-[26px]">
-              This code expires in {'{{MAX_VALID_MINUTES}}'} minutes.
+              This code expires in {'{{{MAX_VALID_MINUTES}}}'} minutes.
             </Text>
 
             <Text className="pt-2 text-center text-[12px] leading-[26px]">
@@ -67,8 +67,8 @@ const codeStyle = {
 
 export const otpLoginText = `Your login code for ValGuide
 
-{{CODE}}
+{{{CODE}}}
 
-This code expires in {{MAX_VALID_MINUTES}} minutes.
+This code expires in {{{MAX_VALID_MINUTES}}} minutes.
 
 If you didn't request this, please ignore this email.`
