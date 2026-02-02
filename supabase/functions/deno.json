@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "strict": true,
-    "lib": ["deno.ns", "esnext"]
+    "lib": ["deno.window"]
   },
-  "lint": {
-    "rules": {
-      "exclude": ["no-explicit-any"]
-    }
+  "imports": {
+    "resend": "npm:resend@^4.0.0",
+    "standardwebhooks": "npm:standardwebhooks@^1.0.0"
   }
 }

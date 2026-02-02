@@ -124,7 +124,8 @@
       "!**/growth",
       "!**/*.css",
       "!**/routeTree.gen.ts",
-      "!apps/storybook/.storybook/__mocks__"
+      "!apps/storybook/.storybook/__mocks__",
+      "!supabase/functions"
     ]
   }
 }
