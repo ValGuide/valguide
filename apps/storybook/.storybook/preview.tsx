@@ -62,6 +62,15 @@ const preview: Preview = {
     theme: defaultThemes.light,
   },
   globalTypes: {
+    locale: {
+      description: 'Internationalization locale',
+      toolbar: {
+        title: 'Locale',
+        icon: 'globe',
+        items: Object.entries(locales).map(([value, title]) => ({ value, title })),
+        dynamicTitle: true,
+      },
+    },
     theme: {
       description: 'Global theme for components',
       toolbar: {
