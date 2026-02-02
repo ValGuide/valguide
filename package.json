@@ -72,7 +72,9 @@
     "supabase:link:dev": "pnpm env:load pnpm supabase:link",
     "supabase:link:prod": "pnpm env:load pnpm supabase link",
     "seed:dev": "pnpm env:load --sb:dev pnpm dlx tsx scripts/seed-studio.ts",
-    "seed:prod": "pnpm env:load --sb:prod pnpm dlx tsx scripts/seed-studio.ts"
+    "seed:prod": "pnpm env:load --sb:prod pnpm dlx tsx scripts/seed-studio.ts",
+    "resend:sync": "pnpm env:load pnpm --filter @valguide/email sync-templates",
+    "email:dev": "pnpm --filter @valguide/email dev"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.0",
