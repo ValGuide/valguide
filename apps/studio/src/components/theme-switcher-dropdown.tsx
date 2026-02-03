@@ -1,5 +1,3 @@
-'use client'
-
 import { useTheme } from '@valguide/core/features/app-theme/theme-provider'
 import type { Theme } from '@valguide/core/features/app-theme/types'
 import { useTranslations } from '@valguide/core/i18n/client'

@@ -1,5 +1,3 @@
-'use client'
-
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { setLocaleFn } from '@valguide/core/i18n/set-locale.fn'
