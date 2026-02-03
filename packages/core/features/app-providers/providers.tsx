@@ -1,5 +1,3 @@
-'use client'
-
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Toaster } from '@valguide/ui/components/sonner'
 import type { PropsWithChildren } from 'react'

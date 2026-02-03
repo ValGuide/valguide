@@ -12,7 +12,10 @@
     "noTranscript": "Nagina transcripziun disponibla per questa registraziun",
     "language": "Lingua",
     "save": "Memorisar",
-    "share": "Cundivider"
+    "share": "Cundivider",
+    "stopOf": "Stop {current} da {total}",
+    "stopsCount": "{count, plural, one {# stop} other {# stops}}",
+    "totalDuration": "{minutes} min"
   },
   "admin": {
     "assets": {

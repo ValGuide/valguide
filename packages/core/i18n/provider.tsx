@@ -1,5 +1,3 @@
-'use client'
-
 import type { ReactNode } from 'react'
 import { IntlProvider as UseIntlProvider } from 'use-intl'
 import type { SupportedLocale } from './i18n.config'

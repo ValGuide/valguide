@@ -1,5 +1,3 @@
-'use client'
-
 import { Card, CardContent } from '@valguide/core/ui/components/card'
 import { cn } from '@valguide/ui/lib/utils'
 import type { ReactNode } from 'react'

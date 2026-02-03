@@ -12,7 +12,10 @@
     "noTranscript": "Kein Transkript für diesen Track verfügbar",
     "language": "Sprache",
     "save": "Speichern",
-    "share": "Teilen"
+    "share": "Teilen",
+    "stopOf": "Stop {current} von {total}",
+    "stopsCount": "{count, plural, one {# Stop} other {# Stops}}",
+    "totalDuration": "{minutes} Min."
   },
   "admin": {
     "assets": {
