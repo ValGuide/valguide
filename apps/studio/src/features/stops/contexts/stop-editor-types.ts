@@ -2,6 +2,7 @@ import type { Asset } from '@valguide/core/features/assets/schema'
 import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
 import type { StopAssetPublishedItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-published.fn'
 import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
+import type { StopGuideUsageResult } from '@valguide/core/features/guides/stop/get-stop-guide-usage.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
 import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
 import { createContext, useContext } from 'react'
@@ -49,6 +50,10 @@ export interface StopEditorContextValue {
   updateAssets: (assets: StopAssetDraftItem[]) => Promise<void>
   addAsset: (asset: Asset, channel: string, locale: string | null) => Promise<void>
   removeAsset: (assetId: string) => Promise<void>
+
+  // Guide usage (for shared stop indicator)
+  guideUsage: StopGuideUsageResult | null
+  isLoadingGuideUsage: boolean
 
   // Form dirty registration
   isDirty: boolean

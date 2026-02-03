@@ -13,6 +13,7 @@ import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components
 import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
+import { SharedStopBanner } from '@/features/stops/components/shared-stop-banner'
 import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/stops/components/stop-locale-editor'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 
@@ -47,6 +48,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
     unregisterForm,
     registerFormReset,
     navigation,
+    guideUsage,
   } = useStopEditor()
 
   const [activeTab, setActiveTab] = useState<EditorTab>('draft')
@@ -260,6 +262,8 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
       unsavedChangesDialog={unsavedChangesDialog}
     >
       <div className="space-y-6 sm:space-y-8">
+        {guideUsage && guideUsage.guideCount > 1 && <SharedStopBanner guideCount={guideUsage.guideCount} />}
+
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-sm font-semibold sm:text-base">{tStops('editor.localeContent')}</h2>
         </div>

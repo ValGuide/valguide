@@ -1,8 +1,7 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
-import { publishGuideAssetsFn } from '@valguide/core/features/guides/guide/asset/publish-guide-assets.fn'
 import { ensureAllGuideLocalesFn } from '@valguide/core/features/guides/guide/locale/ensure-all-guide-locales.fn'
-import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/publish-guide-locale.fn'
 import { unpublishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/unpublish-guide-locale.fn'
+import { publishGuideFn } from '@valguide/core/features/guides/guide/publish-guide.fn'
 import { updateStopVisibilityFn } from '@valguide/core/features/guides/structure/update-stop-visibility.fn'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { GuideEditPage } from '@/features/guides/components/guide-edit-page'
@@ -71,9 +70,8 @@ function GuideEditPageContent() {
   const { nanoId } = useGuideEditor()
 
   const handlePublish = async (_guideId: string, locale: string) => {
-    await publishGuideLocaleFn({ data: { nanoId, locale } })
-    // Publish locale-independent assets (cover image)
-    await publishGuideAssetsFn({ data: { nanoId, channel: 'images.hero', locale: null } })
+    // Unified publish: guide locale + structure + settings + assets + all stop translations
+    await publishGuideFn({ data: { nanoId, locale } })
   }
 
   return (

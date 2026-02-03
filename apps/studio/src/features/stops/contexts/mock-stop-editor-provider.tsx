@@ -65,6 +65,8 @@ export function MockStopEditorProvider({
       setAssets((prev) => prev.filter((a) => a.asset.id !== assetId))
       setIsDirty(true)
     },
+    guideUsage: { guideCount: 1, guides: [] },
+    isLoadingGuideUsage: false,
     isDirty,
     registerFormDirty: (_formId: string, formIsDirty: boolean) => {
       setIsDirty(formIsDirty)

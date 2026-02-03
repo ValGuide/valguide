@@ -324,7 +324,7 @@
     "publish": {
       "success": "Translaziun publichada cun success",
       "error": "Errur tar publitgar la translaziun",
-      "guidePublished": "Guid publichà",
+      "guidePublished": "Guid publichà cun {stopCount, plural, =0 {naginas posts} one {# post} other {# posts}}",
       "guidePublishError": "Errur cun publitgar il guid"
     },
     "confirmUnpublishGuide": {
@@ -451,7 +451,9 @@
       "descriptionPlaceholder": "Endatar descripziun dal stop",
       "audioLabel": "Audio-Guid",
       "autoGenerate": "Generar automaticamain dall'audio",
-      "galleryLabel": "Galaria (Maletgs & Video)"
+      "galleryLabel": "Galaria (Maletgs & Video)",
+      "usedInGuides": "Duvrà en {count, plural, one {# guid} other {# guids}}",
+      "sharedStopWarning": "Midadas tangeschan tut ils guids che dovran quest stop"
     },
     "actions": {
       "edit": "Modifitgar stop",

@@ -19,6 +19,7 @@ import {
   stopAssetsDraftQueryOptions,
   stopAssetsPublishedQueryOptions,
   stopDetailQueryOptions,
+  stopGuideUsageQueryOptions,
   stopLocaleDraftQueryOptions,
   stopLocalePublishedQueryOptions,
 } from '../query-options'
@@ -109,6 +110,14 @@ export function StopEditorProvider({
   })
   const assetsPublished = assetsPublishedQuery.data?.assets ?? []
   const isLoadingAssetsPublished = assetsPublishedQuery.isLoading
+
+  // Guide usage (for shared stop indicator)
+  const guideUsageQuery = useQuery({
+    ...stopGuideUsageQueryOptions(nanoId),
+    enabled: !!nanoId,
+  })
+  const guideUsage = guideUsageQuery.data ?? null
+  const isLoadingGuideUsage = guideUsageQuery.isLoading
 
   // Update available locales
   const updateAvailableLocales = useCallback(
@@ -304,6 +313,8 @@ export function StopEditorProvider({
     updateAssets,
     addAsset,
     removeAsset,
+    guideUsage,
+    isLoadingGuideUsage,
     isDirty,
     registerFormDirty,
     unregisterForm,

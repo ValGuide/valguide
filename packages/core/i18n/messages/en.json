@@ -324,7 +324,7 @@
     "publish": {
       "success": "Translation published successfully",
       "error": "Failed to publish translation",
-      "guidePublished": "Guide published",
+      "guidePublished": "Guide published with {stopCount, plural, =0 {no stops} one {# stop} other {# stops}}",
       "guidePublishError": "Failed to publish guide"
     },
     "confirmUnpublishGuide": {
@@ -451,7 +451,9 @@
       "descriptionPlaceholder": "Enter stop description",
       "audioLabel": "Audio Guide",
       "autoGenerate": "Auto-generate from audio",
-      "galleryLabel": "Gallery (Images & Video)"
+      "galleryLabel": "Gallery (Images & Video)",
+      "usedInGuides": "Used in {count, plural, one {# guide} other {# guides}}",
+      "sharedStopWarning": "Changes will affect all guides using this stop"
     },
     "actions": {
       "edit": "Edit Stop",

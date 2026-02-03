@@ -8,6 +8,10 @@ import {
   getStopAssetsPublishedFn,
 } from '@valguide/core/features/guides/stop/asset/get-stop-assets-published.fn'
 import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
+import {
+  getStopGuideUsageFn,
+  type StopGuideUsageResult,
+} from '@valguide/core/features/guides/stop/get-stop-guide-usage.fn'
 import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
 import {
   getStopLocaleDraftFn,
@@ -79,4 +83,15 @@ export const stopAssetsPublishedQueryOptions = (nanoId: string) =>
     queryKey: ['stop', nanoId, 'assets', 'published'],
     queryFn: () => getStopAssetsPublishedFn({ data: { nanoId } }),
     staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for stop guide usage (how many guides reference this stop)
+ * Used to show "Used in X guides" indicator when a stop is shared
+ */
+export const stopGuideUsageQueryOptions = (nanoId: string) =>
+  queryOptions<StopGuideUsageResult>({
+    queryKey: ['stop', nanoId, 'guide-usage'],
+    queryFn: () => getStopGuideUsageFn({ data: { nanoId } }),
+    staleTime: 60 * 1000,
   })
