@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import { createFileRoute, Link, notFound, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { clientEnv } from '@valguide/core/env/client'
 import { getGuideIdByStopNanoId } from '@valguide/core/features/guides/public/get-guide-by-stop'
@@ -6,11 +6,16 @@ import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public
 import { getStopByNanoId } from '@valguide/core/features/guides/public/get-published-stop'
 import { getLocalizedGuideText } from '@valguide/core/features/guides/public/localization-helpers'
 import { FullPlayer } from '@valguide/core/features/player/components/full-player'
+import { StopsList } from '@valguide/core/features/player/components/stops-list'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
 import { GuideThemeProvider } from '@valguide/core/features/player/theming/guide-theme-provider'
 import { toPlayerStops } from '@valguide/core/features/player/utils'
+import { useTranslations } from '@valguide/core/i18n/client'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
-import { ChevronLeft } from 'lucide-react'
+import { Button } from '@valguide/core/ui/components/button'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@valguide/core/ui/components/sheet'
+import { ChevronLeft, ListMusic } from 'lucide-react'
+import { useState } from 'react'
 import { z } from 'zod'
 
 const getStopDataFn = createServerFn({ method: 'GET' })
@@ -46,9 +51,20 @@ function StopPage() {
   const { guide } = Route.useLoaderData()
   const { locale } = Route.useRouteContext()
   const { nanoId, stopNanoId } = Route.useParams()
+  const navigate = useNavigate()
 
   const guideTitle = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
   const playerStops = toPlayerStops(guide.stops, locale)
+
+  const [stopsSheetOpen, setStopsSheetOpen] = useState(false)
+
+  const handleStopSelect = (selectedNanoId: string) => {
+    setStopsSheetOpen(false)
+    navigate({
+      to: '/g/$nanoId/s/$stopNanoId',
+      params: { nanoId, stopNanoId: selectedNanoId },
+    })
+  }
 
   return (
     <GuideThemeProvider
@@ -68,8 +84,32 @@ function StopPage() {
           </Link>
 
           <FullPlayer />
+
+          <ViewAllStopsButton onClick={() => setStopsSheetOpen(true)} />
+
+          <Sheet open={stopsSheetOpen} onOpenChange={setStopsSheetOpen}>
+            <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle>{guideTitle}</SheetTitle>
+              </SheetHeader>
+              <div className="py-4">
+                <StopsList showSearchBar={false} onStopSelect={handleStopSelect} />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </PlayerProvider>
     </GuideThemeProvider>
+  )
+}
+
+function ViewAllStopsButton({ onClick }: { onClick: () => void }) {
+  const t = useTranslations('player')
+
+  return (
+    <Button variant="outline" className="w-full" onClick={onClick}>
+      <ListMusic className="h-4 w-4 mr-2" />
+      {t('viewAllStops')}
+    </Button>
   )
 }

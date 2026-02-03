@@ -10,12 +10,17 @@ type StopsListProps = {
   onStopSelect?: (nanoId: string) => void
 }
 
-export function StopsList({ className = '', showSearchBar = true, onQrScanRequest }: StopsListProps) {
+export function StopsList({ className = '', showSearchBar = true, onQrScanRequest, onStopSelect }: StopsListProps) {
   const t = useTranslations('player')
   const stops = useStops()
   const currentStopNanoId = useCurrentStopNanoId()
   const isPlaying = useIsPlaying()
   const { setCurrentStop } = usePlayerActions()
+
+  const handleStopSelect = (nanoId: string) => {
+    setCurrentStop(nanoId)
+    onStopSelect?.(nanoId)
+  }
 
   if (stops.length === 0) {
     return null
@@ -40,7 +45,7 @@ export function StopsList({ className = '', showSearchBar = true, onQrScanReques
             index={index}
             isPlaying={isPlaying && currentStopNanoId === stop.nanoId}
             isCurrent={currentStopNanoId === stop.nanoId}
-            onSelect={setCurrentStop}
+            onSelect={handleStopSelect}
           />
         ))}
       </div>
