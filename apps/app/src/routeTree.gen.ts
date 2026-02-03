@@ -11,11 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
-import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GNanoIdRouteImport } from './routes/g.$nanoId'
-import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
-import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as GNanoIdSStopNanoIdRouteImport } from './routes/g.$nanoId.s.$stopNanoId'
 
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
@@ -28,10 +25,6 @@ const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/_auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -41,16 +34,6 @@ const GNanoIdRoute = GNanoIdRouteImport.update({
   id: '/g/$nanoId',
   path: '/g/$nanoId',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRoute,
 } as any)
 const GNanoIdSStopNanoIdRoute = GNanoIdSStopNanoIdRouteImport.update({
   id: '/s/$stopNanoId',
@@ -62,8 +45,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
-  '/login': typeof AuthLoginRoute
-  '/signup': typeof AuthSignupRoute
   '/g/$nanoId': typeof GNanoIdRouteWithChildren
   '/g/$nanoId/s/$stopNanoId': typeof GNanoIdSStopNanoIdRoute
 }
@@ -71,19 +52,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
-  '/login': typeof AuthLoginRoute
-  '/signup': typeof AuthSignupRoute
   '/g/$nanoId': typeof GNanoIdRouteWithChildren
   '/g/$nanoId/s/$stopNanoId': typeof GNanoIdSStopNanoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_auth': typeof AuthRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
-  '/_auth/login': typeof AuthLoginRoute
-  '/_auth/signup': typeof AuthSignupRoute
   '/g/$nanoId': typeof GNanoIdRouteWithChildren
   '/g/$nanoId/s/$stopNanoId': typeof GNanoIdSStopNanoIdRoute
 }
@@ -93,8 +69,6 @@ export interface FileRouteTypes {
     | '/'
     | '/privacy-policy'
     | '/terms-of-service'
-    | '/login'
-    | '/signup'
     | '/g/$nanoId'
     | '/g/$nanoId/s/$stopNanoId'
   fileRoutesByTo: FileRoutesByTo
@@ -102,25 +76,19 @@ export interface FileRouteTypes {
     | '/'
     | '/privacy-policy'
     | '/terms-of-service'
-    | '/login'
-    | '/signup'
     | '/g/$nanoId'
     | '/g/$nanoId/s/$stopNanoId'
   id:
     | '__root__'
     | '/'
-    | '/_auth'
     | '/privacy-policy'
     | '/terms-of-service'
-    | '/_auth/login'
-    | '/_auth/signup'
     | '/g/$nanoId'
     | '/g/$nanoId/s/$stopNanoId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRouteWithChildren
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   GNanoIdRoute: typeof GNanoIdRouteWithChildren
@@ -142,13 +110,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -163,20 +124,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GNanoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/signup': {
-      id: '/_auth/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/g/$nanoId/s/$stopNanoId': {
       id: '/g/$nanoId/s/$stopNanoId'
       path: '/s/$stopNanoId'
@@ -186,18 +133,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface AuthRouteChildren {
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface GNanoIdRouteChildren {
   GNanoIdSStopNanoIdRoute: typeof GNanoIdSStopNanoIdRoute
@@ -212,7 +147,6 @@ const GNanoIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRouteWithChildren,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   GNanoIdRoute: GNanoIdRouteWithChildren,

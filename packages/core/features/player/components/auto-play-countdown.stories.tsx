@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { useEffect } from 'react'
+import React from 'react'
 import { PlayerProvider, usePlayerStoreContext } from '../store/player-provider'
 import type { PlayerStop } from '../types'
 import { AutoPlayCountdown } from './auto-play-countdown'
@@ -32,7 +32,7 @@ const museumStops: PlayerStop[] = [
 function AutoPlayCountdownWithState({ hasEnded }: { hasEnded: boolean }) {
   const store = usePlayerStoreContext()
 
-  useEffect(() => {
+  React.useEffect(() => {
     store.setState({ hasEnded })
   }, [store, hasEnded])
 
@@ -59,37 +59,25 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const CountingDown: Story = {
-  decorators: [
-    () => (
-      <PlayerProvider stops={museumStops} initialStopNanoId="stop-1">
-        <div className="w-96">
-          <AutoPlayCountdownWithState hasEnded={true} />
-        </div>
-      </PlayerProvider>
-    ),
-  ],
+  render: () => (
+    <PlayerProvider stops={museumStops} initialStopNanoId="stop-1">
+      <AutoPlayCountdownWithState hasEnded={true} />
+    </PlayerProvider>
+  ),
 }
 
 export const Hidden: Story = {
-  decorators: [
-    () => (
-      <PlayerProvider stops={museumStops} initialStopNanoId="stop-1">
-        <div className="w-96">
-          <AutoPlayCountdownWithState hasEnded={false} />
-        </div>
-      </PlayerProvider>
-    ),
-  ],
+  render: () => (
+    <PlayerProvider stops={museumStops} initialStopNanoId="stop-1">
+      <AutoPlayCountdownWithState hasEnded={false} />
+    </PlayerProvider>
+  ),
 }
 
 export const LastStop: Story = {
-  decorators: [
-    () => (
-      <PlayerProvider stops={museumStops} initialStopNanoId="stop-3">
-        <div className="w-96">
-          <AutoPlayCountdownWithState hasEnded={true} />
-        </div>
-      </PlayerProvider>
-    ),
-  ],
+  render: () => (
+    <PlayerProvider stops={museumStops} initialStopNanoId="stop-3">
+      <AutoPlayCountdownWithState hasEnded={true} />
+    </PlayerProvider>
+  ),
 }

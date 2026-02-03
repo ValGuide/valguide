@@ -1,4 +1,5 @@
 import { useStore } from 'zustand'
+import { useShallow } from 'zustand/shallow'
 import type { PlayerStore } from '../types'
 import { usePlayerStoreContext } from './player-provider'
 
@@ -49,21 +50,26 @@ export const useCurrentStopIndex = () =>
     return s.stops.findIndex((stop) => stop.nanoId === s.currentStopNanoId)
   })
 
-// Actions (stable references)
-export const usePlayerActions = () =>
-  usePlayerStore((s) => ({
-    play: s.play,
-    pause: s.pause,
-    togglePlay: s.togglePlay,
-    seek: s.seek,
-    skip: s.skip,
-    setSpeed: s.setSpeed,
-    nextStop: s.nextStop,
-    prevStop: s.prevStop,
-    setCurrentStop: s.setCurrentStop,
-    setStops: s.setStops,
-    syncPlayback: s.syncPlayback,
-    reset: s.reset,
-    setHasEnded: s.setHasEnded,
-    setAutoPlayEnabled: s.setAutoPlayEnabled,
-  }))
+// Actions (stable references via useShallow)
+export const usePlayerActions = () => {
+  const store = usePlayerStoreContext()
+  return useStore(
+    store,
+    useShallow((s) => ({
+      play: s.play,
+      pause: s.pause,
+      togglePlay: s.togglePlay,
+      seek: s.seek,
+      skip: s.skip,
+      setSpeed: s.setSpeed,
+      nextStop: s.nextStop,
+      prevStop: s.prevStop,
+      setCurrentStop: s.setCurrentStop,
+      setStops: s.setStops,
+      syncPlayback: s.syncPlayback,
+      reset: s.reset,
+      setHasEnded: s.setHasEnded,
+      setAutoPlayEnabled: s.setAutoPlayEnabled,
+    })),
+  )
+}
