@@ -1,6 +1,6 @@
 import { and, desc, eq, isNotNull, isNull, sql } from 'drizzle-orm'
 import { db } from '../../db'
-import { guide, guideLocale, guideLocaleDraft } from '../schema'
+import { guide, guideLocaleDraft } from '../schema'
 import { LOCALE_PRIORITY } from '../utils'
 
 // =============================================================================
@@ -38,13 +38,12 @@ export async function listGuides(organizationId: string, filters: ListGuidesFilt
   const titleSubquery = db
     .select({
       title: guideLocaleDraft.title,
-      locale: guideLocale.locale,
+      locale: guideLocaleDraft.locale,
     })
-    .from(guideLocale)
-    .innerJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
-    .where(and(eq(guideLocale.guideId, guide.id), isNotNull(guideLocaleDraft.title)))
+    .from(guideLocaleDraft)
+    .where(and(eq(guideLocaleDraft.guideId, guide.id), isNotNull(guideLocaleDraft.title)))
     .orderBy(
-      sql`CASE ${guideLocale.locale}
+      sql`CASE ${guideLocaleDraft.locale}
         WHEN ${preferredLocale} THEN 0
         WHEN ${LOCALE_PRIORITY[0]} THEN 1
         WHEN ${LOCALE_PRIORITY[1]} THEN 2

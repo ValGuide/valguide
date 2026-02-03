@@ -80,7 +80,7 @@ function StopPage() {
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
                             <span className="font-medium uppercase">{localeInfo.locale}</span>
-                            {localeInfo.hasUnpublishedChanges && (
+                            {!localeInfo.hasPublished && (
                               <Badge variant="outline" className="text-xs">
                                 {t('detail.draft')}
                               </Badge>

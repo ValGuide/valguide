@@ -76,32 +76,21 @@ CREATE TABLE "studio"."guide_locale" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"guide_id" uuid NOT NULL,
 	"locale" varchar(10) NOT NULL,
-	"draft_id" uuid NOT NULL,
-	"published_version_id" uuid,
-	"last_published_draft_revision" integer,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+	"title" varchar(500),
+	"description" text,
+	"published_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"published_by" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."guide_locale_draft" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"guide_locale_id" uuid NOT NULL,
-	"title" varchar(500),
-	"description" text,
-	"revision" integer DEFAULT 0 NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_by" uuid
-);
---> statement-breakpoint
-CREATE TABLE "studio"."guide_locale_version" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"guide_locale_id" uuid NOT NULL,
-	"version" integer NOT NULL,
+	"guide_id" uuid NOT NULL,
+	"locale" varchar(10) NOT NULL,
 	"title" varchar(500),
 	"description" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"created_by" uuid,
-	"published_at" timestamp with time zone
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_by" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."guide_settings" (
@@ -178,34 +167,23 @@ CREATE TABLE "studio"."stop_locale" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"stop_id" uuid NOT NULL,
 	"locale" varchar(10) NOT NULL,
-	"draft_id" uuid NOT NULL,
-	"published_version_id" uuid,
-	"last_published_draft_revision" integer,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+	"title" varchar(500),
+	"description" text,
+	"transcription" text,
+	"published_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"published_by" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."stop_locale_draft" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"stop_locale_id" uuid NOT NULL,
-	"title" varchar(500),
-	"description" text,
-	"transcription" text,
-	"revision" integer DEFAULT 0 NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_by" uuid
-);
---> statement-breakpoint
-CREATE TABLE "studio"."stop_locale_version" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"stop_locale_id" uuid NOT NULL,
-	"version" integer NOT NULL,
+	"stop_id" uuid NOT NULL,
+	"locale" varchar(10) NOT NULL,
 	"title" varchar(500),
 	"description" text,
 	"transcription" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"created_by" uuid,
-	"published_at" timestamp with time zone
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_by" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."stop_settings" (
@@ -312,10 +290,9 @@ ALTER TABLE "studio"."guide" ADD CONSTRAINT "guide_updated_by_users_id_fk" FOREI
 ALTER TABLE "studio"."guide_asset" ADD CONSTRAINT "guide_asset_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_asset_draft" ADD CONSTRAINT "guide_asset_draft_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_locale" ADD CONSTRAINT "guide_locale_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_locale_draft" ADD CONSTRAINT "guide_locale_draft_guide_locale_id_guide_locale_id_fk" FOREIGN KEY ("guide_locale_id") REFERENCES "studio"."guide_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_locale" ADD CONSTRAINT "guide_locale_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."guide_locale_draft" ADD CONSTRAINT "guide_locale_draft_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_locale_draft" ADD CONSTRAINT "guide_locale_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_locale_version" ADD CONSTRAINT "guide_locale_version_guide_locale_id_guide_locale_id_fk" FOREIGN KEY ("guide_locale_id") REFERENCES "studio"."guide_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."guide_locale_version" ADD CONSTRAINT "guide_locale_version_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_settings" ADD CONSTRAINT "guide_settings_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_settings" ADD CONSTRAINT "guide_settings_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."guide_settings_draft" ADD CONSTRAINT "guide_settings_draft_guide_id_guide_id_fk" FOREIGN KEY ("guide_id") REFERENCES "studio"."guide"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -330,10 +307,9 @@ ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_updated_by_users_id_fk" FOREIGN
 ALTER TABLE "studio"."stop_asset" ADD CONSTRAINT "stop_asset_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_asset_draft" ADD CONSTRAINT "stop_asset_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale" ADD CONSTRAINT "stop_locale_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_stop_locale_id_stop_locale_id_fk" FOREIGN KEY ("stop_locale_id") REFERENCES "studio"."stop_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_locale" ADD CONSTRAINT "stop_locale_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_locale_version" ADD CONSTRAINT "stop_locale_version_stop_locale_id_stop_locale_id_fk" FOREIGN KEY ("stop_locale_id") REFERENCES "studio"."stop_locale"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_locale_version" ADD CONSTRAINT "stop_locale_version_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_settings" ADD CONSTRAINT "stop_settings_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_settings" ADD CONSTRAINT "stop_settings_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_settings_draft" ADD CONSTRAINT "stop_settings_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -358,10 +334,8 @@ CREATE INDEX "guide_asset_draft_channel_idx" ON "studio"."guide_asset_draft" USI
 CREATE INDEX "guide_asset_draft_asset_idx" ON "studio"."guide_asset_draft" USING btree ("asset_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_locale" ON "studio"."guide_locale" USING btree ("guide_id","locale");--> statement-breakpoint
 CREATE INDEX "guide_locale_guide_idx" ON "studio"."guide_locale" USING btree ("guide_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_guide_locale_draft" ON "studio"."guide_locale_draft" USING btree ("guide_locale_id");--> statement-breakpoint
-CREATE INDEX "guide_locale_draft_locale_idx" ON "studio"."guide_locale_draft" USING btree ("guide_locale_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_guide_locale_version" ON "studio"."guide_locale_version" USING btree ("guide_locale_id","version");--> statement-breakpoint
-CREATE INDEX "guide_locale_version_locale_idx" ON "studio"."guide_locale_version" USING btree ("guide_locale_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_guide_locale_draft" ON "studio"."guide_locale_draft" USING btree ("guide_id","locale");--> statement-breakpoint
+CREATE INDEX "guide_locale_draft_guide_idx" ON "studio"."guide_locale_draft" USING btree ("guide_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_settings" ON "studio"."guide_settings" USING btree ("guide_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_settings_draft" ON "studio"."guide_settings_draft" USING btree ("guide_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_guide_stop" ON "studio"."guide_stop" USING btree ("guide_id","stop_id");--> statement-breakpoint
@@ -383,10 +357,8 @@ CREATE INDEX "stop_asset_draft_channel_idx" ON "studio"."stop_asset_draft" USING
 CREATE INDEX "stop_asset_draft_asset_idx" ON "studio"."stop_asset_draft" USING btree ("asset_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_stop_locale" ON "studio"."stop_locale" USING btree ("stop_id","locale");--> statement-breakpoint
 CREATE INDEX "stop_locale_stop_idx" ON "studio"."stop_locale" USING btree ("stop_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_stop_locale_draft" ON "studio"."stop_locale_draft" USING btree ("stop_locale_id");--> statement-breakpoint
-CREATE INDEX "stop_locale_draft_locale_idx" ON "studio"."stop_locale_draft" USING btree ("stop_locale_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniq_stop_locale_version" ON "studio"."stop_locale_version" USING btree ("stop_locale_id","version");--> statement-breakpoint
-CREATE INDEX "stop_locale_version_locale_idx" ON "studio"."stop_locale_version" USING btree ("stop_locale_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_stop_locale_draft" ON "studio"."stop_locale_draft" USING btree ("stop_id","locale");--> statement-breakpoint
+CREATE INDEX "stop_locale_draft_stop_idx" ON "studio"."stop_locale_draft" USING btree ("stop_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_stop_settings" ON "studio"."stop_settings" USING btree ("stop_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniq_stop_settings_draft" ON "studio"."stop_settings_draft" USING btree ("stop_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_code_uq" ON "studio"."short_links" USING btree ("code");--> statement-breakpoint

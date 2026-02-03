@@ -8,8 +8,7 @@ export type StopLocaleData = {
   title: string | null
   description: string | null
   transcription: string | null
-  hasUnpublishedChanges: boolean
-  publishedVersionId: string | null
+  hasPublished: boolean
 }
 
 export interface StopEditAdapter {
@@ -70,8 +69,7 @@ export function useStopEditAdapter(): StopEditAdapter {
           title: stopCtx.localeDraft.title,
           description: stopCtx.localeDraft.description,
           transcription: stopCtx.localeDraft.transcription,
-          hasUnpublishedChanges: stopCtx.localeDraft.hasUnpublishedChanges,
-          publishedVersionId: stopCtx.localeDraft.publishedVersionId,
+          hasPublished: stopCtx.localeDraft.hasPublished,
         }
       : null,
     assets: stopCtx.assets,

@@ -74,15 +74,14 @@ export function GuideEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, 
   }, [localeDraft, t])
 
   const hasDraft = true
-  const hasPublished = !!localeDraft?.publishedVersionId
-  const hasUnpublishedChanges = localeDraft?.hasUnpublishedChanges ?? false
+  const hasPublished = localeDraft?.hasPublished ?? false
 
   const computedStatusDisplay: StatusDisplay = useMemo(() => {
     if (!localeDraft) return { status: 'unpublished', indicator: null }
     const status: GuideStatus = hasPublished ? 'published' : 'unpublished'
-    const indicator: GuideIndicator = hasUnpublishedChanges ? 'changed' : 'up-to-date'
+    const indicator: GuideIndicator = 'up-to-date'
     return { status, indicator }
-  }, [localeDraft, hasPublished, hasUnpublishedChanges])
+  }, [localeDraft, hasPublished])
 
   const stableStatusRef = useRef(computedStatusDisplay)
   if (!isPublishing) {

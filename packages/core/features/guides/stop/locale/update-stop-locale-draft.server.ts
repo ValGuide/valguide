@@ -1,7 +1,7 @@
-import { and, eq, sql } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
-import { stop, stopLocale, stopLocaleDraft } from '../../schema'
+import { stop, stopLocaleDraft } from '../../schema'
 
 // =============================================================================
 // TYPES
@@ -14,7 +14,7 @@ export type UpdateStopLocaleDraftInput = {
 }
 
 export type UpdateStopLocaleDraftResult = {
-  revision: number
+  success: boolean
 }
 
 // =============================================================================
@@ -33,30 +33,29 @@ export async function updateStopLocaleDraft(
     throw new NotFoundError('Stop')
   }
 
-  const [localeRow] = await db
-    .select({ id: stopLocale.id })
-    .from(stopLocale)
-    .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
+  // Check if draft exists
+  const [draftRow] = await db
+    .select({ id: stopLocaleDraft.id })
+    .from(stopLocaleDraft)
+    .where(and(eq(stopLocaleDraft.stopId, foundStop.id), eq(stopLocaleDraft.locale, locale)))
     .limit(1)
 
-  if (!localeRow) {
-    throw new NotFoundError('Stop locale')
+  if (!draftRow) {
+    throw new NotFoundError('Stop locale draft')
   }
 
   const updateData: Record<string, unknown> = {
     updatedBy: userId,
-    revision: sql`${stopLocaleDraft.revision} + 1`,
   }
 
   if (input.title !== undefined) updateData.title = input.title
   if (input.description !== undefined) updateData.description = input.description
   if (input.transcription !== undefined) updateData.transcription = input.transcription
 
-  const [updated] = await db
+  await db
     .update(stopLocaleDraft)
     .set(updateData)
-    .where(eq(stopLocaleDraft.stopLocaleId, localeRow.id))
-    .returning({ revision: stopLocaleDraft.revision })
+    .where(and(eq(stopLocaleDraft.stopId, foundStop.id), eq(stopLocaleDraft.locale, locale)))
 
-  return { revision: updated.revision }
+  return { success: true }
 }

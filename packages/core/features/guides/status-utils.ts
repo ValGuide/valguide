@@ -7,13 +7,7 @@ export type GuideStatusInput = {
 }
 
 export type TranslationInput = {
-  currentVersionId: string | null
-  draftVersionId: string | null
-}
-
-export type AssetVersionInput = {
-  currentAssetVersionId: string | null
-  draftAssetVersionId: string | null
+  hasPublished: boolean
 }
 
 export type GuideStatusDisplay = {
@@ -38,36 +32,9 @@ export function getGuideStatus(guide: GuideStatusInput): GuideStatus {
   return 'published'
 }
 
-export function getChangeIndicator(translation: TranslationInput): ChangeIndicator | null {
-  if (translation.currentVersionId === null) {
-    return null
-  }
-  if (translation.draftVersionId === null || translation.draftVersionId === translation.currentVersionId) {
-    return 'up-to-date'
-  }
-  return 'changed'
-}
-
-export function hasAssetChanges(assetVersion: AssetVersionInput | null): boolean {
-  if (!assetVersion) return false
-  return !!assetVersion.draftAssetVersionId
-}
-
-export function getGuideStatusDisplay(
-  guide: GuideStatusInput,
-  translation: TranslationInput | null,
-  assetVersion?: AssetVersionInput | null,
-): GuideStatusDisplay {
+export function getGuideStatusDisplay(guide: GuideStatusInput): GuideStatusDisplay {
   const status = getGuideStatus(guide)
-  const translationIndicator = translation ? getChangeIndicator(translation) : null
-  const assetHasChanges = hasAssetChanges(assetVersion ?? null)
-
-  // If either translation or assets have changes, show 'changed'
-  let indicator: ChangeIndicator | null = translationIndicator
-  if (status === 'published' && assetHasChanges && indicator !== 'changed') {
-    indicator = 'changed'
-  }
-
+  const indicator: ChangeIndicator | null = status === 'published' ? 'up-to-date' : null
   return { status, indicator }
 }
 
@@ -79,11 +46,8 @@ export function getStopTranslationStatusDisplay(
     return { status: 'archived', indicator: null }
   }
 
-  const hasPublished = translation.currentVersionId !== null
-  const indicator = getChangeIndicator(translation)
-
   return {
-    status: hasPublished ? 'published' : 'unpublished',
-    indicator,
+    status: translation.hasPublished ? 'published' : 'unpublished',
+    indicator: translation.hasPublished ? 'up-to-date' : null,
   }
 }

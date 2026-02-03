@@ -3,14 +3,15 @@ import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
 
 /**
- * ValGuide – Simplified Schema v2.1 (January 2026)
+ * ValGuide – Simplified Schema v3.0 (February 2026)
  *
  * Architecture:
- * - Full versioning (with rollback) for locale text only
- * - Staging only (draft → live copy, no history) for settings, structure, and assets
- * - Consistent UX: everything has draft/publish
+ * - Staging only (draft → live) for ALL aspects: locale, settings, structure, assets
+ * - No versioning for MVP (can be added later as append-only table)
+ * - Publish = upsert from draft to live
+ * - 17 tables total (removed 2 version tables)
  *
- * See: docs/guide-stop-asset/decisions-locked.md
+ * See: docs/guide-stop-asset/target-schema.md
  */
 
 const studioSchema = pgSchema('studio')
@@ -84,48 +85,24 @@ export const stop = studioSchema.table(
 )
 
 // =============================================================================
-// LOCALE TEXT (Full Versioning with Rollback)
-// Pattern: identity → draft → version[]
+// LOCALE TEXT (Staging Only - Draft → Live)
+// Pattern: draft + live pair, publish = UPSERT from draft
 // =============================================================================
-
-export const guideLocale = studioSchema.table(
-  'guide_locale',
-  {
-    id: uuid('id').defaultRandom().primaryKey(),
-    guideId: uuid('guide_id')
-      .notNull()
-      .references(() => guide.id, { onDelete: 'cascade' }),
-    locale: varchar('locale', { length: 10 }).notNull(),
-
-    publishedVersionId: uuid('published_version_id'),
-
-    lastPublishedDraftRevision: integer('last_published_draft_revision'),
-
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
-      .$onUpdate(() => new Date()),
-  },
-  (t) => ({
-    uniqGuideLocale: uniqueIndex('uniq_guide_locale').on(t.guideId, t.locale),
-    guideIdIdx: index('guide_locale_guide_idx').on(t.guideId),
-  }),
-)
 
 export const guideLocaleDraft = studioSchema.table(
   'guide_locale_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    guideLocaleId: uuid('guide_locale_id')
+
+    guideId: uuid('guide_id')
       .notNull()
-      .references(() => guideLocale.id, { onDelete: 'cascade' }),
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    locale: varchar('locale', { length: 10 }).notNull(),
 
     title: varchar('title', { length: 500 }),
     description: text('description'),
 
-    revision: integer('revision').notNull().default(0),
-
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
       .notNull()
@@ -133,56 +110,30 @@ export const guideLocaleDraft = studioSchema.table(
     updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqDraftPerLocale: uniqueIndex('uniq_guide_locale_draft').on(t.guideLocaleId),
-    localeIdx: index('guide_locale_draft_locale_idx').on(t.guideLocaleId),
+    uniqGuideLocaleDraft: uniqueIndex('uniq_guide_locale_draft').on(t.guideId, t.locale),
+    guideIdx: index('guide_locale_draft_guide_idx').on(t.guideId),
   }),
 )
 
-export const guideLocaleVersion = studioSchema.table(
-  'guide_locale_version',
+export const guideLocale = studioSchema.table(
+  'guide_locale',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    guideLocaleId: uuid('guide_locale_id')
-      .notNull()
-      .references(() => guideLocale.id, { onDelete: 'cascade' }),
 
-    version: integer('version').notNull(),
+    guideId: uuid('guide_id')
+      .notNull()
+      .references(() => guide.id, { onDelete: 'cascade' }),
+    locale: varchar('locale', { length: 10 }).notNull(),
 
     title: varchar('title', { length: 500 }),
     description: text('description'),
 
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
+    publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
+    publishedBy: uuid('published_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqVersionPerLocale: uniqueIndex('uniq_guide_locale_version').on(t.guideLocaleId, t.version),
-    localeIdx: index('guide_locale_version_locale_idx').on(t.guideLocaleId),
-  }),
-)
-
-export const stopLocale = studioSchema.table(
-  'stop_locale',
-  {
-    id: uuid('id').defaultRandom().primaryKey(),
-    stopId: uuid('stop_id')
-      .notNull()
-      .references(() => stop.id, { onDelete: 'cascade' }),
-    locale: varchar('locale', { length: 10 }).notNull(),
-
-    publishedVersionId: uuid('published_version_id'),
-
-    lastPublishedDraftRevision: integer('last_published_draft_revision'),
-
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
-      .$onUpdate(() => new Date()),
-  },
-  (t) => ({
-    uniqStopLocale: uniqueIndex('uniq_stop_locale').on(t.stopId, t.locale),
-    stopIdIdx: index('stop_locale_stop_idx').on(t.stopId),
+    uniqGuideLocale: uniqueIndex('uniq_guide_locale').on(t.guideId, t.locale),
+    guideIdx: index('guide_locale_guide_idx').on(t.guideId),
   }),
 )
 
@@ -190,16 +141,17 @@ export const stopLocaleDraft = studioSchema.table(
   'stop_locale_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    stopLocaleId: uuid('stop_locale_id')
+
+    stopId: uuid('stop_id')
       .notNull()
-      .references(() => stopLocale.id, { onDelete: 'cascade' }),
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    locale: varchar('locale', { length: 10 }).notNull(),
 
     title: varchar('title', { length: 500 }),
     description: text('description'),
     transcription: text('transcription'),
 
-    revision: integer('revision').notNull().default(0),
-
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
       .notNull()
@@ -207,38 +159,37 @@ export const stopLocaleDraft = studioSchema.table(
     updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqDraftPerLocale: uniqueIndex('uniq_stop_locale_draft').on(t.stopLocaleId),
-    localeIdx: index('stop_locale_draft_locale_idx').on(t.stopLocaleId),
+    uniqStopLocaleDraft: uniqueIndex('uniq_stop_locale_draft').on(t.stopId, t.locale),
+    stopIdx: index('stop_locale_draft_stop_idx').on(t.stopId),
   }),
 )
 
-export const stopLocaleVersion = studioSchema.table(
-  'stop_locale_version',
+export const stopLocale = studioSchema.table(
+  'stop_locale',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    stopLocaleId: uuid('stop_locale_id')
-      .notNull()
-      .references(() => stopLocale.id, { onDelete: 'cascade' }),
 
-    version: integer('version').notNull(),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    locale: varchar('locale', { length: 10 }).notNull(),
 
     title: varchar('title', { length: 500 }),
     description: text('description'),
     transcription: text('transcription'),
 
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
+    publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
+    publishedBy: uuid('published_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqVersionPerLocale: uniqueIndex('uniq_stop_locale_version').on(t.stopLocaleId, t.version),
-    localeIdx: index('stop_locale_version_locale_idx').on(t.stopLocaleId),
+    uniqStopLocale: uniqueIndex('uniq_stop_locale').on(t.stopId, t.locale),
+    stopIdx: index('stop_locale_stop_idx').on(t.stopId),
   }),
 )
 
 // =============================================================================
-// SETTINGS (Staging Only - Draft → Live Copy)
-// Pattern: draft + live pair, publish = DELETE live + INSERT FROM draft
+// SETTINGS (Staging Only - Draft → Live)
+// Pattern: draft + live pair, publish = UPSERT from draft
 // =============================================================================
 
 export const guideSettingsDraft = studioSchema.table(
@@ -328,7 +279,7 @@ export const stopSettings = studioSchema.table(
 )
 
 // =============================================================================
-// STRUCTURE (Staging Only - Draft → Live Copy)
+// STRUCTURE (Staging Only - Draft → Live)
 // Links stops to guides with position and visibility
 // =============================================================================
 
@@ -383,7 +334,7 @@ export const guideStop = studioSchema.table(
 )
 
 // =============================================================================
-// ASSETS (Staging Only - Draft → Live Copy)
+// ASSETS (Staging Only - Draft → Live)
 // Channels: images.hero, images.gallery, audio.narration, audio.background, video.main
 // Locale on assignment, not on asset file
 // =============================================================================
@@ -397,7 +348,6 @@ export const guideAssetDraft = studioSchema.table(
       .notNull()
       .references(() => guide.id, { onDelete: 'cascade' }),
     assetId: uuid('asset_id').notNull(),
-    // FK to asset added in assets/schema.ts to avoid circular dependency
 
     channel: varchar('channel', { length: 50 }).notNull(),
     locale: varchar('locale', { length: 10 }),
@@ -495,13 +445,15 @@ export type NewGuide = typeof guide.$inferInsert
 export type Stop = typeof stop.$inferSelect
 export type NewStop = typeof stop.$inferInsert
 
-// Locale text (versioned)
-export type GuideLocale = typeof guideLocale.$inferSelect
+// Locale text (staging)
 export type GuideLocaleDraft = typeof guideLocaleDraft.$inferSelect
-export type GuideLocaleVersion = typeof guideLocaleVersion.$inferSelect
-export type StopLocale = typeof stopLocale.$inferSelect
+export type NewGuideLocaleDraft = typeof guideLocaleDraft.$inferInsert
+export type GuideLocale = typeof guideLocale.$inferSelect
+export type NewGuideLocale = typeof guideLocale.$inferInsert
 export type StopLocaleDraft = typeof stopLocaleDraft.$inferSelect
-export type StopLocaleVersion = typeof stopLocaleVersion.$inferSelect
+export type NewStopLocaleDraft = typeof stopLocaleDraft.$inferInsert
+export type StopLocale = typeof stopLocale.$inferSelect
+export type NewStopLocale = typeof stopLocale.$inferInsert
 
 // Settings (staging)
 export type GuideSettingsDraft = typeof guideSettingsDraft.$inferSelect

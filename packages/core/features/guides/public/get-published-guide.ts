@@ -3,23 +3,12 @@
  * Used by the consumer-facing app to display published guides.
  */
 
-import { and, asc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
+import { and, asc, eq, inArray, isNull } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
 import { theme as themeTable } from '../../themes/schema'
 import type { ThemeConfig } from '../../themes/types'
-import {
-  guide,
-  guideAsset,
-  guideLocale,
-  guideLocaleVersion,
-  guideSettings,
-  guideStop,
-  stop,
-  stopAsset,
-  stopLocale,
-  stopLocaleVersion,
-} from '../schema'
+import { guide, guideAsset, guideLocale, guideSettings, guideStop, stop, stopAsset, stopLocale } from '../schema'
 import type { AssetItem, GuideWithStopsAndAssets, PublishedStopTranslation, StopWithAssets } from './types'
 
 // ============================================================================
@@ -38,16 +27,15 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
 
   if (!guideRow) return null
 
-  // 2. Get published locale versions for the guide
+  // 2. Get published locales for the guide (guideLocale IS the live/published table)
   const guideLocales = await db
     .select({
       locale: guideLocale.locale,
-      title: guideLocaleVersion.title,
-      description: guideLocaleVersion.description,
+      title: guideLocale.title,
+      description: guideLocale.description,
     })
     .from(guideLocale)
-    .innerJoin(guideLocaleVersion, eq(guideLocale.publishedVersionId, guideLocaleVersion.id))
-    .where(and(eq(guideLocale.guideId, guideRow.id), isNotNull(guideLocale.publishedVersionId)))
+    .where(eq(guideLocale.guideId, guideRow.id))
 
   // No published locales means guide isn't published
   if (guideLocales.length === 0) return null
@@ -69,26 +57,25 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
   const stopsData =
     stopIds.length > 0
       ? await db.query.stop.findMany({
-        where: and(inArray(stop.id, stopIds), isNull(stop.deletedAt), isNull(stop.archivedAt)),
-      })
+          where: and(inArray(stop.id, stopIds), isNull(stop.deletedAt), isNull(stop.archivedAt)),
+        })
       : []
 
   console.info('Retrieved stops data:', publishedStops) // Debug log for stops data
 
-  // 5. Get published translations for each stop
+  // 5. Get published translations for each stop (stopLocale IS the live/published table)
   const stopTranslationsData =
     stopIds.length > 0
       ? await db
-        .select({
-          stopId: stopLocale.stopId,
-          locale: stopLocale.locale,
-          title: stopLocaleVersion.title,
-          description: stopLocaleVersion.description,
-          transcription: stopLocaleVersion.transcription,
-        })
-        .from(stopLocale)
-        .innerJoin(stopLocaleVersion, eq(stopLocale.publishedVersionId, stopLocaleVersion.id))
-        .where(and(inArray(stopLocale.stopId, stopIds), isNotNull(stopLocale.publishedVersionId)))
+          .select({
+            stopId: stopLocale.stopId,
+            locale: stopLocale.locale,
+            title: stopLocale.title,
+            description: stopLocale.description,
+            transcription: stopLocale.transcription,
+          })
+          .from(stopLocale)
+          .where(inArray(stopLocale.stopId, stopIds))
       : []
 
   // Group stop translations by stop ID
@@ -122,17 +109,17 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
   const stopAssetsData =
     stopIds.length > 0
       ? await db
-        .select({
-          stopId: stopAsset.stopId,
-          asset: asset,
-          channel: stopAsset.channel,
-          position: stopAsset.position,
-          locale: stopAsset.locale,
-        })
-        .from(stopAsset)
-        .innerJoin(asset, eq(stopAsset.assetId, asset.id))
-        .where(inArray(stopAsset.stopId, stopIds))
-        .orderBy(asc(stopAsset.position))
+          .select({
+            stopId: stopAsset.stopId,
+            asset: asset,
+            channel: stopAsset.channel,
+            position: stopAsset.position,
+            locale: stopAsset.locale,
+          })
+          .from(stopAsset)
+          .innerJoin(asset, eq(stopAsset.assetId, asset.id))
+          .where(inArray(stopAsset.stopId, stopIds))
+          .orderBy(asc(stopAsset.position))
       : []
 
   // Group stop assets by stop ID

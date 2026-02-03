@@ -4,7 +4,7 @@ import { requireGuideAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { updateGuideLocaleDraft } from './update-guide-locale-draft.server'
 
-export type { UpdateGuideLocaleDraftInput, UpdateGuideLocaleDraftResult } from './update-guide-locale-draft.server'
+export type { UpdateGuideLocaleDraftInput } from './update-guide-locale-draft.server'
 
 const updateGuideLocaleDraftSchema = z.object({
   nanoId: z.string(),

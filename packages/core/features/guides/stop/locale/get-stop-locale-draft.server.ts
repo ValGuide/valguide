@@ -11,9 +11,7 @@ export type StopLocaleDraftResult = {
   title: string | null
   description: string | null
   transcription: string | null
-  revision: number
-  hasUnpublishedChanges: boolean
-  publishedVersionId: string | null
+  hasPublished: boolean
 }
 
 // =============================================================================
@@ -25,50 +23,35 @@ export async function getStopLocaleDraft(stopNanoId: string, locale: string): Pr
 
   if (!foundStop) return null
 
-  // Try to get locale with its draft (no longer checks stop.availableLocales - locales are derived from stopLocale records)
-  const [row] = await db
+  // Query stopLocaleDraft directly by stopId + locale
+  const [draft] = await db
     .select({
-      localeId: stopLocale.id,
-      locale: stopLocale.locale,
+      locale: stopLocaleDraft.locale,
       title: stopLocaleDraft.title,
       description: stopLocaleDraft.description,
       transcription: stopLocaleDraft.transcription,
-      revision: stopLocaleDraft.revision,
-      publishedVersionId: stopLocale.publishedVersionId,
-      lastPublishedDraftRevision: stopLocale.lastPublishedDraftRevision,
     })
-    .from(stopLocale)
-    .leftJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
-    .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
+    .from(stopLocaleDraft)
+    .where(and(eq(stopLocaleDraft.stopId, foundStop.id), eq(stopLocaleDraft.locale, locale)))
     .limit(1)
 
-  // Return null if locale doesn't exist - caller should use ensureStopLocaleExists first
-  if (!row) {
+  // Return null if draft doesn't exist - caller should use ensureStopLocaleExists first
+  if (!draft) {
     return null
   }
 
-  // Auto-create missing draft if locale exists but draft was deleted
-  if (row.revision === null) {
-    await db.insert(stopLocaleDraft).values({ stopLocaleId: row.localeId })
-    // Return empty draft values
-    return {
-      locale,
-      title: null,
-      description: null,
-      transcription: null,
-      revision: 0,
-      hasUnpublishedChanges: true,
-      publishedVersionId: row.publishedVersionId,
-    }
-  }
+  // Check if published version exists by querying stopLocale
+  const [published] = await db
+    .select({ id: stopLocale.id })
+    .from(stopLocale)
+    .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
+    .limit(1)
 
   return {
-    locale,
-    title: row.title,
-    description: row.description,
-    transcription: row.transcription,
-    revision: row.revision,
-    hasUnpublishedChanges: row.publishedVersionId === null || row.revision !== row.lastPublishedDraftRevision,
-    publishedVersionId: row.publishedVersionId,
+    locale: draft.locale,
+    title: draft.title,
+    description: draft.description,
+    transcription: draft.transcription,
+    hasPublished: !!published,
   }
 }

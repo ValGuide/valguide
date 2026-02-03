@@ -10,9 +10,7 @@ export type GuideLocaleDraftResult = {
   locale: string
   title: string | null
   description: string | null
-  revision: number
-  hasUnpublishedChanges: boolean
-  publishedVersionId: string | null
+  hasPublished: boolean
 }
 
 // =============================================================================
@@ -28,49 +26,37 @@ export async function getGuideLocaleDraft(guideNanoId: string, locale: string): 
 
   if (!foundGuide) return null
 
-  // Check if locale is in availableLocales
   if (!foundGuide.availableLocales.includes(locale)) return null
 
-  // Try to get locale with its draft
   const [row] = await db
     .select({
-      localeId: guideLocale.id,
-      locale: guideLocale.locale,
+      locale: guideLocaleDraft.locale,
       title: guideLocaleDraft.title,
       description: guideLocaleDraft.description,
-      revision: guideLocaleDraft.revision,
-      publishedVersionId: guideLocale.publishedVersionId,
-      lastPublishedDraftRevision: guideLocale.lastPublishedDraftRevision,
+      publishedLocaleId: guideLocale.id,
     })
-    .from(guideLocale)
-    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
-    .where(and(eq(guideLocale.guideId, foundGuide.id), eq(guideLocale.locale, locale)))
+    .from(guideLocaleDraft)
+    .leftJoin(
+      guideLocale,
+      and(eq(guideLocale.guideId, guideLocaleDraft.guideId), eq(guideLocale.locale, guideLocaleDraft.locale)),
+    )
+    .where(and(eq(guideLocaleDraft.guideId, foundGuide.id), eq(guideLocaleDraft.locale, locale)))
     .limit(1)
 
-  // Auto-create missing locale + draft
   if (!row) {
-    const [newLocale] = await db
-      .insert(guideLocale)
-      .values({ guideId: foundGuide.id, locale })
-      .returning({ id: guideLocale.id })
-    await db.insert(guideLocaleDraft).values({ guideLocaleId: newLocale.id })
-  } else if (row.revision === null) {
-    // Auto-create missing draft if locale exists but draft was deleted
-    await db.insert(guideLocaleDraft).values({ guideLocaleId: row.localeId })
+    await db.insert(guideLocaleDraft).values({ guideId: foundGuide.id, locale })
+    return {
+      locale,
+      title: null,
+      description: null,
+      hasPublished: false,
+    }
   }
 
-  const title = row?.title ?? null
-  const description = row?.description ?? null
-  const revision = row?.revision ?? 0
-  const publishedVersionId = row?.publishedVersionId ?? null
-  const lastPublishedDraftRevision = row?.lastPublishedDraftRevision ?? null
-
   return {
-    locale,
-    title,
-    description,
-    revision,
-    hasUnpublishedChanges: publishedVersionId === null || revision !== lastPublishedDraftRevision,
-    publishedVersionId,
+    locale: row.locale,
+    title: row.title,
+    description: row.description,
+    hasPublished: row.publishedLocaleId !== null,
   }
 }

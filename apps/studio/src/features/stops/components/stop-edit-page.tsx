@@ -55,21 +55,19 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   const hasDraft = !!localeDraft
-  const hasPublished = !!localeDraft?.publishedVersionId
-  const hasUnpublishedChanges = localeDraft?.hasUnpublishedChanges ?? false
+  const hasPublished = localeDraft?.hasPublished ?? false
 
   const statusDisplay: StatusDisplay = useMemo(() => {
     const display = getStopTranslationStatusDisplay(
       localeDraft
         ? {
-            currentVersionId: localeDraft.publishedVersionId,
-            draftVersionId: hasUnpublishedChanges ? 'has-draft' : null,
+            hasPublished: localeDraft.hasPublished,
           }
-        : { currentVersionId: null, draftVersionId: null },
+        : { hasPublished: false },
       null,
     )
     return { status: display.status, indicator: display.indicator }
-  }, [localeDraft, hasUnpublishedChanges])
+  }, [localeDraft])
 
   const isReadOnly = activeTab === 'published'
 

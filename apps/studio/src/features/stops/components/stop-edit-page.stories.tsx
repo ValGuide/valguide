@@ -28,9 +28,7 @@ const createMockLocaleDraft = (overrides: Partial<StopLocaleDraftResult> = {}): 
   title: 'The Starry Night',
   description: 'Vincent van Gogh painted this masterpiece in June 1889.',
   transcription: 'Welcome to our audio guide for The Starry Night...',
-  revision: 1,
-  publishedVersionId: null,
-  hasUnpublishedChanges: false,
+  hasPublished: false,
   ...overrides,
 })
 
@@ -39,7 +37,6 @@ const createMockLocalePublished = (overrides: Partial<StopLocalePublishedResult>
   title: 'The Starry Night',
   description: 'Vincent van Gogh painted this masterpiece in June 1889.',
   transcription: 'Welcome to our audio guide for The Starry Night...',
-  version: 1,
   publishedAt: new Date('2025-01-10T10:00:00Z'),
   ...overrides,
 })
@@ -134,7 +131,7 @@ export const Published: Story = {
       <MockAssetsProvider>
         <MockStopEditorProvider
           stopDetail={createMockStopDetail()}
-          localeDraft={createMockLocaleDraft({ publishedVersionId: 'sv-pub-1', hasUnpublishedChanges: false })}
+          localeDraft={createMockLocaleDraft({ hasPublished: true })}
           localePublished={createMockLocalePublished()}
           assets={createMockAssets(3)}
           navigation={{
@@ -157,8 +154,7 @@ export const WithUnpublishedChanges: Story = {
         <MockStopEditorProvider
           stopDetail={createMockStopDetail()}
           localeDraft={createMockLocaleDraft({
-            publishedVersionId: 'sv-pub-1',
-            hasUnpublishedChanges: true,
+            hasPublished: true,
             title: 'The Starry Night - Updated',
             description: 'Updated description with new information.',
           })}

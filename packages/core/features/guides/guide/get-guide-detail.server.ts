@@ -10,9 +10,7 @@ export type LocaleDraftInfo = {
   locale: string
   title: string | null
   description: string | null
-  revision: number
-  hasUnpublishedChanges: boolean
-  publishedVersionId: string | null
+  hasPublished: boolean
 }
 
 export type GuideDetail = {
@@ -45,24 +43,23 @@ export async function getGuideDetail(nanoId: string): Promise<GuideDetail | null
 
   const localeRows = await db
     .select({
-      locale: guideLocale.locale,
+      locale: guideLocaleDraft.locale,
       title: guideLocaleDraft.title,
       description: guideLocaleDraft.description,
-      revision: guideLocaleDraft.revision,
-      publishedVersionId: guideLocale.publishedVersionId,
-      lastPublishedDraftRevision: guideLocale.lastPublishedDraftRevision,
+      publishedLocaleId: guideLocale.id,
     })
-    .from(guideLocale)
-    .innerJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
-    .where(eq(guideLocale.guideId, foundGuide.id))
+    .from(guideLocaleDraft)
+    .leftJoin(
+      guideLocale,
+      and(eq(guideLocale.guideId, guideLocaleDraft.guideId), eq(guideLocale.locale, guideLocaleDraft.locale)),
+    )
+    .where(eq(guideLocaleDraft.guideId, foundGuide.id))
 
   const locales: LocaleDraftInfo[] = localeRows.map((row) => ({
     locale: row.locale,
     title: row.title,
     description: row.description,
-    revision: row.revision,
-    hasUnpublishedChanges: row.publishedVersionId === null || row.revision !== row.lastPublishedDraftRevision,
-    publishedVersionId: row.publishedVersionId,
+    hasPublished: row.publishedLocaleId !== null,
   }))
 
   const [settings] = await db

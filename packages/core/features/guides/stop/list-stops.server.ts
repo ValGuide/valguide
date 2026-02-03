@@ -1,6 +1,6 @@
 import { and, desc, eq, isNotNull, isNull, sql } from 'drizzle-orm'
 import { db } from '../../db'
-import { stop, stopLocale, stopLocaleDraft } from '../schema'
+import { stop, stopLocaleDraft } from '../schema'
 import { LOCALE_PRIORITY } from '../utils'
 
 // =============================================================================
@@ -38,13 +38,12 @@ export async function listStops(organizationId: string, filters: ListStopsFilter
   const titleSubquery = db
     .select({
       title: stopLocaleDraft.title,
-      locale: stopLocale.locale,
+      locale: stopLocaleDraft.locale,
     })
-    .from(stopLocale)
-    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
-    .where(and(eq(stopLocale.stopId, stop.id), isNotNull(stopLocaleDraft.title)))
+    .from(stopLocaleDraft)
+    .where(and(eq(stopLocaleDraft.stopId, stop.id), isNotNull(stopLocaleDraft.title)))
     .orderBy(
-      sql`CASE ${stopLocale.locale}
+      sql`CASE ${stopLocaleDraft.locale}
         WHEN ${preferredLocale} THEN 0
         WHEN ${LOCALE_PRIORITY[0]} THEN 1
         WHEN ${LOCALE_PRIORITY[1]} THEN 2

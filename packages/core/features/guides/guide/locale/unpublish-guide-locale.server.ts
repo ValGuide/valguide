@@ -3,17 +3,9 @@ import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
 import { guide, guideLocale } from '../../schema'
 
-// =============================================================================
-// TYPES
-// =============================================================================
-
 export type UnpublishGuideLocaleResult = {
   success: boolean
 }
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
 
 export async function unpublishGuideLocale(guideNanoId: string, locale: string): Promise<UnpublishGuideLocaleResult> {
   const [foundGuide] = await db.select({ id: guide.id }).from(guide).where(eq(guide.nanoId, guideNanoId)).limit(1)
@@ -23,11 +15,7 @@ export async function unpublishGuideLocale(guideNanoId: string, locale: string):
   }
 
   const result = await db
-    .update(guideLocale)
-    .set({
-      publishedVersionId: null,
-      lastPublishedDraftRevision: null,
-    })
+    .delete(guideLocale)
     .where(and(eq(guideLocale.guideId, foundGuide.id), eq(guideLocale.locale, locale)))
     .returning({ id: guideLocale.id })
 

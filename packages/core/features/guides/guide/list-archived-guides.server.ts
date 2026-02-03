@@ -1,6 +1,6 @@
 import { and, desc, eq, isNotNull, isNull } from 'drizzle-orm'
 import { db } from '../../db'
-import { guide, guideLocale, guideLocaleDraft } from '../schema'
+import { guide, guideLocaleDraft } from '../schema'
 
 // =============================================================================
 // TYPES
@@ -32,11 +32,10 @@ export async function listArchivedGuides(
       createdAt: guide.createdAt,
       updatedAt: guide.updatedAt,
       title: guideLocaleDraft.title,
-      locale: guideLocale.locale,
+      locale: guideLocaleDraft.locale,
     })
     .from(guide)
-    .leftJoin(guideLocale, and(eq(guideLocale.guideId, guide.id), eq(guideLocale.locale, locale)))
-    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guideLocale.id))
+    .leftJoin(guideLocaleDraft, and(eq(guideLocaleDraft.guideId, guide.id), eq(guideLocaleDraft.locale, locale)))
     .where(and(eq(guide.organizationId, organizationId), isNull(guide.deletedAt), isNotNull(guide.archivedAt)))
     .orderBy(desc(guide.archivedAt))
 

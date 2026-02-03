@@ -1,7 +1,7 @@
 import type { LocaleDraftInfo } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { StopLocaleDraftInfo } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
 
-export type TranslationLocaleStatus = 'published' | 'draft' | 'empty' | 'modified'
+export type TranslationLocaleStatus = 'published' | 'draft' | 'empty'
 
 export type LocaleStatusMap = Record<string, TranslationLocaleStatus>
 
@@ -13,12 +13,8 @@ export function getTranslationLocaleStatus(
     return isLocaleAvailable ? 'draft' : 'empty'
   }
 
-  if (!locale.publishedVersionId) {
+  if (!locale.hasPublished) {
     return 'draft'
-  }
-
-  if (locale.hasUnpublishedChanges) {
-    return 'modified'
   }
 
   return 'published'

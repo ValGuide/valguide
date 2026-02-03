@@ -1,5 +1,5 @@
 {
-  "id": "fbe2f4d4-3868-4d49-a15f-c7d5843b29e0",
+  "id": "7c130fca-e33e-4c12-8290-55f83fbf1e44",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -756,37 +756,30 @@
           "primaryKey": false,
           "notNull": true
         },
-        "draft_id": {
-          "name": "draft_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "published_version_id": {
-          "name": "published_version_id",
-          "type": "uuid",
+        "title": {
+          "name": "title",
+          "type": "varchar(500)",
           "primaryKey": false,
           "notNull": false
         },
-        "last_published_draft_revision": {
-          "name": "last_published_draft_revision",
-          "type": "integer",
+        "description": {
+          "name": "description",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
+        "published_at": {
+          "name": "published_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
+        "published_by": {
+          "name": "published_by",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
         }
       },
       "indexes": {
@@ -837,6 +830,16 @@
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "guide_locale_published_by_users_id_fk": {
+          "name": "guide_locale_published_by_users_id_fk",
+          "tableFrom": "guide_locale",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -856,125 +859,15 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "guide_locale_id": {
-          "name": "guide_locale_id",
+        "guide_id": {
+          "name": "guide_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "revision": {
-          "name": "revision",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "uniq_guide_locale_draft": {
-          "name": "uniq_guide_locale_draft",
-          "columns": [
-            {
-              "expression": "guide_locale_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "guide_locale_draft_locale_idx": {
-          "name": "guide_locale_draft_locale_idx",
-          "columns": [
-            {
-              "expression": "guide_locale_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "guide_locale_draft_guide_locale_id_guide_locale_id_fk": {
-          "name": "guide_locale_draft_guide_locale_id_guide_locale_id_fk",
-          "tableFrom": "guide_locale_draft",
-          "tableTo": "guide_locale",
-          "schemaTo": "studio",
-          "columnsFrom": ["guide_locale_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "guide_locale_draft_updated_by_users_id_fk": {
-          "name": "guide_locale_draft_updated_by_users_id_fk",
-          "tableFrom": "guide_locale_draft",
-          "tableTo": "users",
-          "schemaTo": "auth",
-          "columnsFrom": ["updated_by"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "studio.guide_locale_version": {
-      "name": "guide_locale_version",
-      "schema": "studio",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "guide_locale_id": {
-          "name": "guide_locale_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "version": {
-          "name": "version",
-          "type": "integer",
+        "locale": {
+          "name": "locale",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         },
@@ -997,31 +890,32 @@
           "notNull": true,
           "default": "now()"
         },
-        "created_by": {
-          "name": "created_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "published_at": {
-          "name": "published_at",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_by": {
+          "name": "updated_by",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {
-        "uniq_guide_locale_version": {
-          "name": "uniq_guide_locale_version",
+        "uniq_guide_locale_draft": {
+          "name": "uniq_guide_locale_draft",
           "columns": [
             {
-              "expression": "guide_locale_id",
+              "expression": "guide_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "version",
+              "expression": "locale",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1032,11 +926,11 @@
           "method": "btree",
           "with": {}
         },
-        "guide_locale_version_locale_idx": {
-          "name": "guide_locale_version_locale_idx",
+        "guide_locale_draft_guide_idx": {
+          "name": "guide_locale_draft_guide_idx",
           "columns": [
             {
-              "expression": "guide_locale_id",
+              "expression": "guide_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1049,22 +943,22 @@
         }
       },
       "foreignKeys": {
-        "guide_locale_version_guide_locale_id_guide_locale_id_fk": {
-          "name": "guide_locale_version_guide_locale_id_guide_locale_id_fk",
-          "tableFrom": "guide_locale_version",
-          "tableTo": "guide_locale",
+        "guide_locale_draft_guide_id_guide_id_fk": {
+          "name": "guide_locale_draft_guide_id_guide_id_fk",
+          "tableFrom": "guide_locale_draft",
+          "tableTo": "guide",
           "schemaTo": "studio",
-          "columnsFrom": ["guide_locale_id"],
+          "columnsFrom": ["guide_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "guide_locale_version_created_by_users_id_fk": {
-          "name": "guide_locale_version_created_by_users_id_fk",
-          "tableFrom": "guide_locale_version",
+        "guide_locale_draft_updated_by_users_id_fk": {
+          "name": "guide_locale_draft_updated_by_users_id_fk",
+          "tableFrom": "guide_locale_draft",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": ["created_by"],
+          "columnsFrom": ["updated_by"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -2005,37 +1899,36 @@
           "primaryKey": false,
           "notNull": true
         },
-        "draft_id": {
-          "name": "draft_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "published_version_id": {
-          "name": "published_version_id",
-          "type": "uuid",
+        "title": {
+          "name": "title",
+          "type": "varchar(500)",
           "primaryKey": false,
           "notNull": false
         },
-        "last_published_draft_revision": {
-          "name": "last_published_draft_revision",
-          "type": "integer",
+        "description": {
+          "name": "description",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
+        "transcription": {
+          "name": "transcription",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_at": {
+          "name": "published_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
+        "published_by": {
+          "name": "published_by",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
         }
       },
       "indexes": {
@@ -2086,6 +1979,16 @@
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "stop_locale_published_by_users_id_fk": {
+          "name": "stop_locale_published_by_users_id_fk",
+          "tableFrom": "stop_locale",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2105,131 +2008,15 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "stop_locale_id": {
-          "name": "stop_locale_id",
+        "stop_id": {
+          "name": "stop_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "transcription": {
-          "name": "transcription",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "revision": {
-          "name": "revision",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_by": {
-          "name": "updated_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "uniq_stop_locale_draft": {
-          "name": "uniq_stop_locale_draft",
-          "columns": [
-            {
-              "expression": "stop_locale_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "stop_locale_draft_locale_idx": {
-          "name": "stop_locale_draft_locale_idx",
-          "columns": [
-            {
-              "expression": "stop_locale_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "stop_locale_draft_stop_locale_id_stop_locale_id_fk": {
-          "name": "stop_locale_draft_stop_locale_id_stop_locale_id_fk",
-          "tableFrom": "stop_locale_draft",
-          "tableTo": "stop_locale",
-          "schemaTo": "studio",
-          "columnsFrom": ["stop_locale_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "stop_locale_draft_updated_by_users_id_fk": {
-          "name": "stop_locale_draft_updated_by_users_id_fk",
-          "tableFrom": "stop_locale_draft",
-          "tableTo": "users",
-          "schemaTo": "auth",
-          "columnsFrom": ["updated_by"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "studio.stop_locale_version": {
-      "name": "stop_locale_version",
-      "schema": "studio",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "stop_locale_id": {
-          "name": "stop_locale_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "version": {
-          "name": "version",
-          "type": "integer",
+        "locale": {
+          "name": "locale",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         },
@@ -2258,31 +2045,32 @@
           "notNull": true,
           "default": "now()"
         },
-        "created_by": {
-          "name": "created_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "published_at": {
-          "name": "published_at",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_by": {
+          "name": "updated_by",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {
-        "uniq_stop_locale_version": {
-          "name": "uniq_stop_locale_version",
+        "uniq_stop_locale_draft": {
+          "name": "uniq_stop_locale_draft",
           "columns": [
             {
-              "expression": "stop_locale_id",
+              "expression": "stop_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "version",
+              "expression": "locale",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2293,11 +2081,11 @@
           "method": "btree",
           "with": {}
         },
-        "stop_locale_version_locale_idx": {
-          "name": "stop_locale_version_locale_idx",
+        "stop_locale_draft_stop_idx": {
+          "name": "stop_locale_draft_stop_idx",
           "columns": [
             {
-              "expression": "stop_locale_id",
+              "expression": "stop_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2310,22 +2098,22 @@
         }
       },
       "foreignKeys": {
-        "stop_locale_version_stop_locale_id_stop_locale_id_fk": {
-          "name": "stop_locale_version_stop_locale_id_stop_locale_id_fk",
-          "tableFrom": "stop_locale_version",
-          "tableTo": "stop_locale",
+        "stop_locale_draft_stop_id_stop_id_fk": {
+          "name": "stop_locale_draft_stop_id_stop_id_fk",
+          "tableFrom": "stop_locale_draft",
+          "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": ["stop_locale_id"],
+          "columnsFrom": ["stop_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "stop_locale_version_created_by_users_id_fk": {
-          "name": "stop_locale_version_created_by_users_id_fk",
-          "tableFrom": "stop_locale_version",
+        "stop_locale_draft_updated_by_users_id_fk": {
+          "name": "stop_locale_draft_updated_by_users_id_fk",
+          "tableFrom": "stop_locale_draft",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": ["created_by"],
+          "columnsFrom": ["updated_by"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"

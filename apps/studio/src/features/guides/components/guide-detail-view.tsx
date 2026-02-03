@@ -46,7 +46,7 @@ export function GuideDetailView({
   const bestLocale = pickBestLocale(preferredLocale, guide.locales)
   const displayTitle = bestLocale?.title?.trim() || t('untitledGuide')
   const displayDescription = bestLocale?.description ?? null
-  const isPublished = guide.locales.some((l) => l.publishedVersionId !== null)
+  const isPublished = guide.locales.some((l) => l.hasPublished)
 
   const guideStatus = getGuideStatus({
     published: isPublished ? new Date() : null, // getGuideStatus expects Date | null

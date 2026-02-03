@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../../../db'
-import { guide, stop, stopLocale, stopLocaleDraft } from '../../schema'
+import { guide, stop, stopLocaleDraft } from '../../schema'
 
 // =============================================================================
 // TYPES
@@ -15,7 +15,7 @@ export type EnsureAllStopLocalesResult = {
 // =============================================================================
 
 /**
- * Ensures all guide's availableLocales have stopLocale + stopLocaleDraft records.
+ * Ensures all guide's availableLocales have stopLocaleDraft records.
  * Creates missing records for any locales that don't exist yet.
  */
 export async function ensureAllStopLocalesForGuide(
@@ -42,11 +42,11 @@ export async function ensureAllStopLocalesForGuide(
 
   const guideLocales = foundGuide.availableLocales
 
-  // Fetch existing stopLocale records for this stop
+  // Fetch existing stopLocaleDraft records for this stop
   const existingLocales = await db
-    .select({ locale: stopLocale.locale })
-    .from(stopLocale)
-    .where(eq(stopLocale.stopId, foundStop.id))
+    .select({ locale: stopLocaleDraft.locale })
+    .from(stopLocaleDraft)
+    .where(eq(stopLocaleDraft.stopId, foundStop.id))
 
   const existingLocaleSet = new Set(existingLocales.map((l) => l.locale))
 
@@ -57,14 +57,8 @@ export async function ensureAllStopLocalesForGuide(
     return { createdLocales: [] }
   }
 
-  // Create missing stopLocale records
-  const newLocales = await db
-    .insert(stopLocale)
-    .values(missingLocales.map((locale) => ({ stopId: foundStop.id, locale })))
-    .returning({ id: stopLocale.id, locale: stopLocale.locale })
+  // Create missing stopLocaleDraft records with stopId + locale
+  await db.insert(stopLocaleDraft).values(missingLocales.map((locale) => ({ stopId: foundStop.id, locale })))
 
-  // Create stopLocaleDraft for each new locale
-  await db.insert(stopLocaleDraft).values(newLocales.map((l) => ({ stopLocaleId: l.id })))
-
-  return { createdLocales: newLocales.map((l) => l.locale) }
+  return { createdLocales: missingLocales }
 }

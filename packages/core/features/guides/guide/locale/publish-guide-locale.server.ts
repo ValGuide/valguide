@@ -1,20 +1,11 @@
-import { and, eq, sql } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
-import { guide, guideLocale, guideLocaleDraft, guideLocaleVersion } from '../../schema'
-
-// =============================================================================
-// TYPES
-// =============================================================================
+import { guide, guideLocale, guideLocaleDraft } from '../../schema'
 
 export type PublishGuideLocaleResult = {
-  versionId: string
-  version: number
+  success: boolean
 }
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
 
 export async function publishGuideLocale(
   guideNanoId: string,
@@ -27,64 +18,38 @@ export async function publishGuideLocale(
     throw new NotFoundError('Guide')
   }
 
-  return db.transaction(async (tx) => {
-    // 1. Lock locale row
-    const [localeRow] = await tx
-      .select({
-        id: guideLocale.id,
-      })
-      .from(guideLocale)
-      .where(and(eq(guideLocale.guideId, foundGuide.id), eq(guideLocale.locale, locale)))
-      .for('update')
+  const [draft] = await db
+    .select({
+      title: guideLocaleDraft.title,
+      description: guideLocaleDraft.description,
+    })
+    .from(guideLocaleDraft)
+    .where(and(eq(guideLocaleDraft.guideId, foundGuide.id), eq(guideLocaleDraft.locale, locale)))
+    .limit(1)
 
-    if (!localeRow) {
-      throw new NotFoundError('Guide locale')
-    }
+  if (!draft) {
+    throw new NotFoundError('Guide locale draft')
+  }
 
-    // 2. Get draft content
-    const [draft] = await tx
-      .select({
-        title: guideLocaleDraft.title,
-        description: guideLocaleDraft.description,
-        revision: guideLocaleDraft.revision,
-      })
-      .from(guideLocaleDraft)
-      .where(eq(guideLocaleDraft.guideLocaleId, localeRow.id))
-
-    if (!draft) {
-      throw new NotFoundError('Guide locale draft')
-    }
-
-    // 3. Get next version number
-    const [{ max }] = await tx
-      .select({ max: sql<number>`COALESCE(MAX(${guideLocaleVersion.version}), 0)` })
-      .from(guideLocaleVersion)
-      .where(eq(guideLocaleVersion.guideLocaleId, localeRow.id))
-
-    const nextVersion = max + 1
-
-    // 4. Create immutable snapshot
-    const [version] = await tx
-      .insert(guideLocaleVersion)
-      .values({
-        guideLocaleId: localeRow.id,
-        version: nextVersion,
+  await db
+    .insert(guideLocale)
+    .values({
+      guideId: foundGuide.id,
+      locale,
+      title: draft.title,
+      description: draft.description,
+      publishedAt: new Date(),
+      publishedBy: userId,
+    })
+    .onConflictDoUpdate({
+      target: [guideLocale.guideId, guideLocale.locale],
+      set: {
         title: draft.title,
         description: draft.description,
-        createdBy: userId,
         publishedAt: new Date(),
-      })
-      .returning({ id: guideLocaleVersion.id, version: guideLocaleVersion.version })
+        publishedBy: userId,
+      },
+    })
 
-    // 5. Update pointer
-    await tx
-      .update(guideLocale)
-      .set({
-        publishedVersionId: version.id,
-        lastPublishedDraftRevision: draft.revision,
-      })
-      .where(eq(guideLocale.id, localeRow.id))
-
-    return { versionId: version.id, version: version.version }
-  })
+  return { success: true }
 }

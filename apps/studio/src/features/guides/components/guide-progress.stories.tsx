@@ -22,9 +22,7 @@ const createMockLocaleDraft = (overrides: Partial<GuideLocaleDraftResult> = {}):
   locale: 'en',
   title: null,
   description: null,
-  revision: 1,
-  publishedVersionId: null,
-  hasUnpublishedChanges: false,
+  hasPublished: false,
   ...overrides,
 })
 

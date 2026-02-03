@@ -3,10 +3,10 @@
  * Used by the consumer-facing app to display published stops.
  */
 
-import { and, asc, eq, isNotNull, isNull } from 'drizzle-orm'
+import { and, asc, eq, isNull } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { stop, stopAsset, stopLocale, stopLocaleVersion } from '../schema'
+import { stop, stopAsset, stopLocale } from '../schema'
 import type { StopWithAssets } from './types'
 
 // ============================================================================
@@ -25,17 +25,16 @@ export async function getPublishedStopByNanoId(nanoId: string): Promise<StopWith
 
   if (!stopRow) return null
 
-  // 2. Get published locale versions for the stop
+  // 2. Get published locales for the stop (stopLocale IS the live/published table)
   const stopLocales = await db
     .select({
       locale: stopLocale.locale,
-      title: stopLocaleVersion.title,
-      description: stopLocaleVersion.description,
-      transcription: stopLocaleVersion.transcription,
+      title: stopLocale.title,
+      description: stopLocale.description,
+      transcription: stopLocale.transcription,
     })
     .from(stopLocale)
-    .innerJoin(stopLocaleVersion, eq(stopLocale.publishedVersionId, stopLocaleVersion.id))
-    .where(and(eq(stopLocale.stopId, stopRow.id), isNotNull(stopLocale.publishedVersionId)))
+    .where(eq(stopLocale.stopId, stopRow.id))
 
   // No published locales means stop isn't published
   if (stopLocales.length === 0) return null

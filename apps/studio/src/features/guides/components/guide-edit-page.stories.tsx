@@ -42,9 +42,7 @@ const createMockLocaleDraft = (overrides: Partial<GuideLocaleDraftResult> = {}):
   title: 'City Art Museum Audio Tour',
   description:
     'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
-  revision: 1,
-  publishedVersionId: null,
-  hasUnpublishedChanges: false,
+  hasPublished: false,
   ...overrides,
 })
 
@@ -55,7 +53,6 @@ const createMockLocalePublished = (
   title: 'City Art Museum Audio Tour',
   description:
     'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
-  version: 1,
   publishedAt: new Date('2025-01-10T10:00:00Z'),
   ...overrides,
 })
@@ -149,7 +146,7 @@ export const Published: Story = {
     onShowStop: fn(),
     MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
-    localeDraft: createMockLocaleDraft({ publishedVersionId: 'gv-pub-1', hasUnpublishedChanges: false }),
+    localeDraft: createMockLocaleDraft({ hasPublished: true }),
     localePublished: createMockLocalePublished(),
     stops: createMockStops(3),
   } as GuideEditPageProps & StoryContextData,
@@ -164,8 +161,7 @@ export const WithUnpublishedChanges: Story = {
     MediaPicker: StoryMediaPicker,
     guideDetail: createMockGuideDetail(),
     localeDraft: createMockLocaleDraft({
-      publishedVersionId: 'gv-pub-1',
-      hasUnpublishedChanges: true,
+      hasPublished: true,
       title: 'City Art Museum Audio Tour - Updated',
       description: 'New description with updates.',
     }),

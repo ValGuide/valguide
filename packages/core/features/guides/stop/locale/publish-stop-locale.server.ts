@@ -1,20 +1,11 @@
-import { and, eq, sql } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
-import { stop, stopLocale, stopLocaleDraft, stopLocaleVersion } from '../../schema'
-
-// =============================================================================
-// TYPES
-// =============================================================================
+import { stop, stopLocale, stopLocaleDraft } from '../../schema'
 
 export type PublishStopLocaleResult = {
-  versionId: string
-  version: number
+  success: boolean
 }
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
 
 export async function publishStopLocale(
   stopNanoId: string,
@@ -27,66 +18,41 @@ export async function publishStopLocale(
     throw new NotFoundError('Stop')
   }
 
-  return db.transaction(async (tx) => {
-    // 1. Lock locale row
-    const [localeRow] = await tx
-      .select({
-        id: stopLocale.id,
-      })
-      .from(stopLocale)
-      .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
-      .for('update')
+  const [draft] = await db
+    .select({
+      title: stopLocaleDraft.title,
+      description: stopLocaleDraft.description,
+      transcription: stopLocaleDraft.transcription,
+    })
+    .from(stopLocaleDraft)
+    .where(and(eq(stopLocaleDraft.stopId, foundStop.id), eq(stopLocaleDraft.locale, locale)))
+    .limit(1)
 
-    if (!localeRow) {
-      throw new NotFoundError('Stop locale')
-    }
+  if (!draft) {
+    throw new NotFoundError('Stop locale draft')
+  }
 
-    // 2. Get draft content
-    const [draft] = await tx
-      .select({
-        title: stopLocaleDraft.title,
-        description: stopLocaleDraft.description,
-        transcription: stopLocaleDraft.transcription,
-        revision: stopLocaleDraft.revision,
-      })
-      .from(stopLocaleDraft)
-      .where(eq(stopLocaleDraft.stopLocaleId, localeRow.id))
-
-    if (!draft) {
-      throw new NotFoundError('Stop locale draft')
-    }
-
-    // 3. Get next version number
-    const [{ max }] = await tx
-      .select({ max: sql<number>`COALESCE(MAX(${stopLocaleVersion.version}), 0)` })
-      .from(stopLocaleVersion)
-      .where(eq(stopLocaleVersion.stopLocaleId, localeRow.id))
-
-    const nextVersion = max + 1
-
-    // 4. Create immutable snapshot
-    const [version] = await tx
-      .insert(stopLocaleVersion)
-      .values({
-        stopLocaleId: localeRow.id,
-        version: nextVersion,
+  await db
+    .insert(stopLocale)
+    .values({
+      stopId: foundStop.id,
+      locale,
+      title: draft.title,
+      description: draft.description,
+      transcription: draft.transcription,
+      publishedAt: new Date(),
+      publishedBy: userId,
+    })
+    .onConflictDoUpdate({
+      target: [stopLocale.stopId, stopLocale.locale],
+      set: {
         title: draft.title,
         description: draft.description,
         transcription: draft.transcription,
-        createdBy: userId,
         publishedAt: new Date(),
-      })
-      .returning({ id: stopLocaleVersion.id, version: stopLocaleVersion.version })
+        publishedBy: userId,
+      },
+    })
 
-    // 5. Update pointer
-    await tx
-      .update(stopLocale)
-      .set({
-        publishedVersionId: version.id,
-        lastPublishedDraftRevision: draft.revision,
-      })
-      .where(eq(stopLocale.id, localeRow.id))
-
-    return { versionId: version.id, version: version.version }
-  })
+  return { success: true }
 }

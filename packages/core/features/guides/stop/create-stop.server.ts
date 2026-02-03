@@ -1,6 +1,6 @@
 import { valguideId } from '../../../utils/nanoid'
 import { db } from '../../db'
-import { stop, stopLocale, stopLocaleDraft, stopSettingsDraft } from '../schema'
+import { stop, stopLocaleDraft, stopSettingsDraft } from '../schema'
 
 // =============================================================================
 // TYPES
@@ -41,18 +41,10 @@ export async function createStop(
       })
       .returning()
 
-    // Create stopLocale first
-    const [newLocale] = await tx
-      .insert(stopLocale)
-      .values({
-        stopId: newStop.id,
-        locale,
-      })
-      .returning()
-
-    // Create draft with reference to the locale
+    // Create draft with stopId and locale directly
     await tx.insert(stopLocaleDraft).values({
-      stopLocaleId: newLocale.id,
+      stopId: newStop.id,
+      locale,
       title: input.title,
       updatedBy: userId,
     })

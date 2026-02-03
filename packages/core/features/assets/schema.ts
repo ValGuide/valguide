@@ -7,7 +7,6 @@ import {
   guideAssetDraft,
   guideLocale,
   guideLocaleDraft,
-  guideLocaleVersion,
   guideSettings,
   guideSettingsDraft,
   guideStop,
@@ -17,19 +16,18 @@ import {
   stopAssetDraft,
   stopLocale,
   stopLocaleDraft,
-  stopLocaleVersion,
   stopSettings,
   stopSettingsDraft,
 } from '../guides/schema'
 import { organization } from '../orgs/schema'
 
 /**
- * ValGuide – Asset Schema v2.1 (January 2026)
+ * ValGuide – Asset Schema v3.0 (February 2026)
  *
  * Assets are immutable file records.
  * Locale is on the assignment tables (guide_asset_draft, stop_asset_draft), not on the asset.
  *
- * See: docs/guide-stop-asset/decisions-locked.md
+ * See: docs/guide-stop-asset/target-schema.md
  */
 
 const studioSchema = pgSchema('studio')
@@ -94,6 +92,7 @@ export const assetRelations = relations(asset, ({ one }) => ({
 }))
 
 export const guideRelations = relations(guide, ({ many, one }) => ({
+  localesDraft: many(guideLocaleDraft),
   locales: many(guideLocale),
   settingsDraft: one(guideSettingsDraft, {
     fields: [guide.id],
@@ -120,6 +119,7 @@ export const guideRelations = relations(guide, ({ many, one }) => ({
 }))
 
 export const stopRelations = relations(stop, ({ many, one }) => ({
+  localesDraft: many(stopLocaleDraft),
   locales: many(stopLocale),
   settingsDraft: one(stopSettingsDraft, {
     fields: [stop.id],
@@ -145,25 +145,11 @@ export const stopRelations = relations(stop, ({ many, one }) => ({
   }),
 }))
 
-// Locale relations
-export const guideLocaleRelations = relations(guideLocale, ({ one, many }) => ({
-  guide: one(guide, {
-    fields: [guideLocale.guideId],
-    references: [guide.id],
-  }),
-  draft: one(guideLocaleDraft),
-  publishedVersion: one(guideLocaleVersion, {
-    fields: [guideLocale.publishedVersionId],
-    references: [guideLocaleVersion.id],
-    relationName: 'guide_locale_published_ptr',
-  }),
-  versions: many(guideLocaleVersion),
-}))
-
+// Locale relations (simplified - no version table)
 export const guideLocaleDraftRelations = relations(guideLocaleDraft, ({ one }) => ({
-  locale: one(guideLocale, {
-    fields: [guideLocaleDraft.guideLocaleId],
-    references: [guideLocale.id],
+  guide: one(guide, {
+    fields: [guideLocaleDraft.guideId],
+    references: [guide.id],
   }),
   updater: one(authUsers, {
     fields: [guideLocaleDraft.updatedBy],
@@ -171,35 +157,21 @@ export const guideLocaleDraftRelations = relations(guideLocaleDraft, ({ one }) =
   }),
 }))
 
-export const guideLocaleVersionRelations = relations(guideLocaleVersion, ({ one }) => ({
-  locale: one(guideLocale, {
-    fields: [guideLocaleVersion.guideLocaleId],
-    references: [guideLocale.id],
+export const guideLocaleRelations = relations(guideLocale, ({ one }) => ({
+  guide: one(guide, {
+    fields: [guideLocale.guideId],
+    references: [guide.id],
   }),
-  creator: one(authUsers, {
-    fields: [guideLocaleVersion.createdBy],
+  publisher: one(authUsers, {
+    fields: [guideLocale.publishedBy],
     references: [authUsers.id],
   }),
 }))
 
-export const stopLocaleRelations = relations(stopLocale, ({ one, many }) => ({
-  stop: one(stop, {
-    fields: [stopLocale.stopId],
-    references: [stop.id],
-  }),
-  draft: one(stopLocaleDraft),
-  publishedVersion: one(stopLocaleVersion, {
-    fields: [stopLocale.publishedVersionId],
-    references: [stopLocaleVersion.id],
-    relationName: 'stop_locale_published_ptr',
-  }),
-  versions: many(stopLocaleVersion),
-}))
-
 export const stopLocaleDraftRelations = relations(stopLocaleDraft, ({ one }) => ({
-  locale: one(stopLocale, {
-    fields: [stopLocaleDraft.stopLocaleId],
-    references: [stopLocale.id],
+  stop: one(stop, {
+    fields: [stopLocaleDraft.stopId],
+    references: [stop.id],
   }),
   updater: one(authUsers, {
     fields: [stopLocaleDraft.updatedBy],
@@ -207,13 +179,13 @@ export const stopLocaleDraftRelations = relations(stopLocaleDraft, ({ one }) => 
   }),
 }))
 
-export const stopLocaleVersionRelations = relations(stopLocaleVersion, ({ one }) => ({
-  locale: one(stopLocale, {
-    fields: [stopLocaleVersion.stopLocaleId],
-    references: [stopLocale.id],
+export const stopLocaleRelations = relations(stopLocale, ({ one }) => ({
+  stop: one(stop, {
+    fields: [stopLocale.stopId],
+    references: [stop.id],
   }),
-  creator: one(authUsers, {
-    fields: [stopLocaleVersion.createdBy],
+  publisher: one(authUsers, {
+    fields: [stopLocale.publishedBy],
     references: [authUsers.id],
   }),
 }))

@@ -153,18 +153,21 @@ export function FullscreenImage({ src, alt, open, onOpenChange }: FullscreenImag
           onTouchEnd={handleTouchEnd}
           onWheel={handleWheel}
         >
-          <Image
-            src={src}
-            alt={alt}
-            layout="constrained"
-            width={1200}
-            height={1200}
-            className="max-w-full max-h-full object-contain select-none pointer-events-none"
+          <div
             style={{
               transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
               transition: isDragging ? 'none' : 'transform 0.2s ease-out',
             }}
-          />
+          >
+            <Image
+              src={src}
+              alt={alt}
+              layout="constrained"
+              width={1200}
+              height={1200}
+              className="max-w-full max-h-full object-contain select-none pointer-events-none"
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>

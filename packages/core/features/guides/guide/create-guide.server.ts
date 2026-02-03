@@ -1,6 +1,6 @@
 import { valguideId } from '../../../utils/nanoid'
 import { db } from '../../db'
-import { guide, guideLocale, guideLocaleDraft, guideSettingsDraft } from '../schema'
+import { guide, guideLocaleDraft, guideSettingsDraft } from '../schema'
 
 // =============================================================================
 // TYPES
@@ -41,18 +41,9 @@ export async function createGuide(
       })
       .returning()
 
-    // Create guideLocale first
-    const [newLocale] = await tx
-      .insert(guideLocale)
-      .values({
-        guideId: newGuide.id,
-        locale,
-      })
-      .returning()
-
-    // Create draft with reference to the locale
     await tx.insert(guideLocaleDraft).values({
-      guideLocaleId: newLocale.id,
+      guideId: newGuide.id,
+      locale,
       title: input.title,
       updatedBy: userId,
     })

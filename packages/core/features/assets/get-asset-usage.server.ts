@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { db } from '../db'
 import { guide, guideAsset, guideLocaleDraft, stop, stopAsset, stopLocaleDraft } from '../guides/schema'
 
@@ -38,7 +38,7 @@ export async function getAssetUsage(assetId: string): Promise<AssetUsageDetails>
     })
     .from(guideAsset)
     .innerJoin(guide, eq(guideAsset.guideId, guide.id))
-    .leftJoin(guideLocaleDraft, eq(guideLocaleDraft.guideLocaleId, guide.id))
+    .leftJoin(guideLocaleDraft, and(eq(guideLocaleDraft.guideId, guide.id), eq(guideLocaleDraft.locale, 'en')))
     .where(eq(guideAsset.assetId, assetId))
 
   const stopUsage = await db
@@ -51,7 +51,7 @@ export async function getAssetUsage(assetId: string): Promise<AssetUsageDetails>
     })
     .from(stopAsset)
     .innerJoin(stop, eq(stopAsset.stopId, stop.id))
-    .leftJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stop.id))
+    .leftJoin(stopLocaleDraft, and(eq(stopLocaleDraft.stopId, stop.id), eq(stopLocaleDraft.locale, 'en')))
     .where(eq(stopAsset.assetId, assetId))
 
   const uniqueGuides = new Map<string, (typeof guideUsage)[0]>()

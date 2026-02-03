@@ -3,17 +3,9 @@ import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
 import { stop, stopLocale } from '../../schema'
 
-// =============================================================================
-// TYPES
-// =============================================================================
-
 export type UnpublishStopLocaleResult = {
   success: boolean
 }
-
-// =============================================================================
-// INTERNAL FUNCTION
-// =============================================================================
 
 export async function unpublishStopLocale(stopNanoId: string, locale: string): Promise<UnpublishStopLocaleResult> {
   const [foundStop] = await db.select({ id: stop.id }).from(stop).where(eq(stop.nanoId, stopNanoId)).limit(1)
@@ -23,11 +15,7 @@ export async function unpublishStopLocale(stopNanoId: string, locale: string): P
   }
 
   const result = await db
-    .update(stopLocale)
-    .set({
-      publishedVersionId: null,
-      lastPublishedDraftRevision: null,
-    })
+    .delete(stopLocale)
     .where(and(eq(stopLocale.stopId, foundStop.id), eq(stopLocale.locale, locale)))
     .returning({ id: stopLocale.id })
 

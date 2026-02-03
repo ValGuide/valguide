@@ -11,16 +11,14 @@ export type StopLocaleDraftInfo = {
   title: string | null
   description: string | null
   transcription: string | null
-  revision: number
-  hasUnpublishedChanges: boolean
-  publishedVersionId: string | null
+  hasPublished: boolean
 }
 
 export type StopDetail = {
   id: string
   nanoId: string
   organizationId: string
-  /** Locales derived from stopLocale records (locales that have been created for this stop) */
+  /** Locales derived from stopLocaleDraft records (locales that have been created for this stop) */
   existingLocales: string[]
   /** @deprecated Use existingLocales - kept for backward compatibility during migration */
   availableLocales: string[]
@@ -47,31 +45,34 @@ export async function getStopDetail(nanoId: string): Promise<StopDetail | null> 
 
   if (!foundStop) return null
 
-  const localeRows = await db
+  // Get all draft locales
+  const draftRows = await db
     .select({
-      locale: stopLocale.locale,
+      locale: stopLocaleDraft.locale,
       title: stopLocaleDraft.title,
       description: stopLocaleDraft.description,
       transcription: stopLocaleDraft.transcription,
-      revision: stopLocaleDraft.revision,
-      publishedVersionId: stopLocale.publishedVersionId,
-      lastPublishedDraftRevision: stopLocale.lastPublishedDraftRevision,
     })
+    .from(stopLocaleDraft)
+    .where(eq(stopLocaleDraft.stopId, foundStop.id))
+
+  // Get published locales to determine hasPublished
+  const publishedRows = await db
+    .select({ locale: stopLocale.locale })
     .from(stopLocale)
-    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
     .where(eq(stopLocale.stopId, foundStop.id))
 
-  const locales: StopLocaleDraftInfo[] = localeRows.map((row) => ({
+  const publishedLocaleSet = new Set(publishedRows.map((r) => r.locale))
+
+  const locales: StopLocaleDraftInfo[] = draftRows.map((row) => ({
     locale: row.locale,
     title: row.title,
     description: row.description,
     transcription: row.transcription,
-    revision: row.revision,
-    hasUnpublishedChanges: row.publishedVersionId === null || row.revision !== row.lastPublishedDraftRevision,
-    publishedVersionId: row.publishedVersionId,
+    hasPublished: publishedLocaleSet.has(row.locale),
   }))
 
-  // Derive existingLocales from stopLocale records (the source of truth)
+  // Derive existingLocales from stopLocaleDraft records (the source of truth)
   const existingLocales = locales.map((l) => l.locale)
 
   const [settings] = await db

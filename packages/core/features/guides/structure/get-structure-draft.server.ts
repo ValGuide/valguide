@@ -1,7 +1,7 @@
 import { and, asc, eq, inArray } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { guide, guideStopDraft, stop, stopAssetDraft, stopLocale, stopLocaleDraft } from '../schema'
+import { guide, guideStopDraft, stop, stopAssetDraft, stopLocaleDraft } from '../schema'
 
 // =============================================================================
 // TYPES
@@ -42,12 +42,11 @@ export async function getStructureDraft(guideNanoId: string, locale: string): Pr
       position: guideStopDraft.position,
       visible: guideStopDraft.visible,
       title: stopLocaleDraft.title,
-      locale: stopLocale.locale,
+      locale: stopLocaleDraft.locale,
     })
     .from(guideStopDraft)
     .innerJoin(stop, eq(stop.id, guideStopDraft.stopId))
-    .innerJoin(stopLocale, eq(stopLocale.stopId, stop.id))
-    .innerJoin(stopLocaleDraft, eq(stopLocaleDraft.stopLocaleId, stopLocale.id))
+    .innerJoin(stopLocaleDraft, and(eq(stopLocaleDraft.stopId, stop.id), eq(stopLocaleDraft.locale, locale)))
     .where(eq(guideStopDraft.guideId, foundGuide.id))
     .orderBy(asc(guideStopDraft.position))
 

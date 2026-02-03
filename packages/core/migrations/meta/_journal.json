@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1769436272128,
-      "tag": "0000_high_iron_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1769466497679,
-      "tag": "0001_pale_tomas",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1769467779851,
-      "tag": "0002_woozy_inertia",
+      "when": 1770153562916,
+      "tag": "0000_curious_nextwave",
       "breakpoints": true
     }
   ]
