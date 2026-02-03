@@ -120,7 +120,7 @@ export function FullscreenImage({ src, alt, open, onOpenChange }: FullscreenImag
           >
             <Minus className="h-4 w-4" />
           </Button>
-          <span className="text-white text-sm min-w-[3rem] text-center" aria-live="polite">
+          <span className="text-white text-sm min-w-12 text-center" aria-live="polite">
             {Math.round(zoom * 100)}
             <span aria-hidden="true">%</span>
           </span>

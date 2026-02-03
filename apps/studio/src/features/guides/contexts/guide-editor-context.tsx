@@ -5,8 +5,8 @@ import { removeGuideAssetFn } from '@valguide/core/features/guides/guide/asset/r
 import type { GuideDetail } from '@valguide/core/features/guides/guide/get-guide-detail.fn'
 import type { GuideLocaleDraftResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-draft.fn'
 import type { GuideLocalePublishedResult } from '@valguide/core/features/guides/guide/locale/get-guide-locale-published.fn'
-import { publishGuideLocaleFn } from '@valguide/core/features/guides/guide/locale/publish-guide-locale.fn'
 import { updateGuideLocaleDraftFn } from '@valguide/core/features/guides/guide/locale/update-guide-locale-draft.fn'
+import { publishGuideFn } from '@valguide/core/features/guides/guide/publish-guide.fn'
 import { updateGuideFn } from '@valguide/core/features/guides/guide/update-guide.fn'
 import { createStopFn } from '@valguide/core/features/guides/stop/create-stop.fn'
 import { addStopToGuideFn } from '@valguide/core/features/guides/structure/add-stop.fn'
@@ -230,15 +230,18 @@ export function GuideEditorProvider({ children, nanoId, initialLocale, navigatio
     }
   }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, getFormValues, setIsSaving, setLastSaved, t])
 
-  // Publish locale
+  // Publish guide (locale, structure, settings, assets, and all stop translations)
   const publish = useCallback(async () => {
     await save()
     if (!nanoId) return
 
     try {
-      await publishGuideLocaleFn({ data: { nanoId, locale: activeLocale } })
+      const result = await publishGuideFn({ data: { nanoId, locale: activeLocale } })
       await queryClient.invalidateQueries({ queryKey: ['guide', nanoId] })
-      toast.success(t('guides.publish.guidePublished'))
+      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'structure'] })
+      await queryClient.invalidateQueries({ queryKey: ['guide', nanoId, 'assets'] })
+      await queryClient.invalidateQueries({ queryKey: ['stops'] })
+      toast.success(t('guides.publish.guidePublished', { stopCount: result.publishedStopCount }))
     } catch (error) {
       console.error('Failed to publish:', error)
       toast.error(t('guides.publish.guidePublishError'))
