@@ -15,7 +15,6 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
 
   return (
     <div className={`flex items-center justify-center gap-2 sm:gap-4 ${className}`}>
-      {/* Skip back 10s */}
       <Button
         variant="ghost"
         size="icon"
@@ -27,12 +26,10 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
         <span className="absolute text-[10px] font-medium">{DEFAULT_SKIP_SECONDS}</span>
       </Button>
 
-      {/* Previous stop */}
       <Button variant="ghost" size="icon" onClick={prevStop} disabled={!hasPrev} aria-label="Previous stop">
         <SkipBack className="h-5 w-5" />
       </Button>
 
-      {/* Play/Pause */}
       <Button
         variant="default"
         size="icon"
@@ -43,12 +40,10 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
         {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
       </Button>
 
-      {/* Next stop */}
       <Button variant="ghost" size="icon" onClick={nextStop} disabled={!hasNext} aria-label="Next stop">
         <SkipForward className="h-5 w-5" />
       </Button>
 
-      {/* Skip forward 10s */}
       <Button
         variant="ghost"
         size="icon"

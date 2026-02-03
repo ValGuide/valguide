@@ -21,13 +21,11 @@ export function MiniPlayer({ className = '', onExpand }: MiniPlayerProps) {
 
   return (
     <div className={`bg-background border-t ${className}`}>
-      {/* Progress bar at top */}
       <div className="h-1 bg-muted">
         <div className="h-full bg-primary transition-all duration-200" style={{ width: `${progress}%` }} />
       </div>
 
       <div className="flex items-center gap-3 p-3">
-        {/* Thumbnail - clickable to expand */}
         <button
           type="button"
           onClick={onExpand}
@@ -47,12 +45,10 @@ export function MiniPlayer({ className = '', onExpand }: MiniPlayerProps) {
           )}
         </button>
 
-        {/* Title - clickable to expand */}
         <button type="button" onClick={onExpand} className="flex-1 text-left truncate min-w-0">
           <span className="font-medium truncate block">{currentStop.title}</span>
         </button>
 
-        {/* Controls */}
         <div className="flex items-center gap-1 flex-shrink-0">
           <Button
             variant="ghost"

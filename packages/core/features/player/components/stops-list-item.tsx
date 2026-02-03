@@ -28,7 +28,6 @@ export function StopsListItem({ stop, index, isPlaying, isCurrent, onSelect }: S
         isCurrent ? 'bg-primary/10' : 'hover:bg-muted'
       }`}
     >
-      {/* Thumbnail */}
       <div className="relative h-12 w-12 flex-shrink-0 rounded-md overflow-hidden bg-muted">
         {stop.coverImageUrl ? (
           <Image src={stop.coverImageUrl} alt={stop.title} layout="fullWidth" className="w-full h-full object-cover" />
@@ -44,13 +43,10 @@ export function StopsListItem({ stop, index, isPlaying, isCurrent, onSelect }: S
         )}
       </div>
 
-      {/* Stop number */}
       <span className="text-sm text-muted-foreground w-6 flex-shrink-0">{stopNumber}</span>
 
-      {/* Title */}
       <span className={`flex-1 truncate ${isCurrent ? 'font-semibold' : ''}`}>{stop.title}</span>
 
-      {/* Duration */}
       <span className="text-sm text-muted-foreground flex-shrink-0">{formatDuration(stop.duration)}</span>
     </button>
   )

@@ -3,6 +3,7 @@ import { Button } from '@valguide/core/ui/components/button'
 import { X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { useCurrentStop, useHasEnded, useHasNext, usePlayerActions, useStops } from '../store/use-player-store'
+import { CountdownProgress } from './countdown-progress'
 
 type AutoPlayCountdownProps = {
   /** Countdown duration in seconds */
@@ -76,13 +77,7 @@ export function AutoPlayCountdown({ countdownSeconds = 5, className = '' }: Auto
         </div>
       </div>
 
-      {/* Progress bar */}
-      <div className="mt-3 h-1 w-full bg-background rounded-full overflow-hidden">
-        <div
-          className="h-full bg-primary transition-all duration-1000 ease-linear"
-          style={{ width: `${((countdownSeconds - secondsLeft) / countdownSeconds) * 100}%` }}
-        />
-      </div>
+      <CountdownProgress progress={((countdownSeconds - secondsLeft) / countdownSeconds) * 100} className="mt-3" />
     </div>
   )
 }

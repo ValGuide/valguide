@@ -23,24 +23,11 @@ export function FullPlayer({ className = '' }: FullPlayerProps) {
 
   return (
     <div className={`flex flex-col items-center space-y-6 ${className}`}>
-      {/* Cover Image */}
       <CoverImage src={currentStop.coverImageUrl} alt={currentStop.title} className="w-full max-w-sm" />
-
-      {/* Stop Info */}
       <StopInfo />
-
-      {/* Progress Bar */}
       <ProgressBar className="w-full" />
-
-      {/* Controls */}
       <PlayerControls />
-
-      {/* Speed Selector */}
-      <div className="flex items-center gap-4">
-        <SpeedSelector />
-      </div>
-
-      {/* Auto-play countdown (shows when track ends) */}
+      <SpeedSelector />
       <AutoPlayCountdown className="w-full" />
     </div>
   )
