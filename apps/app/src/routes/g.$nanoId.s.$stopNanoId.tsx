@@ -1,11 +1,15 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getGuideIdByStopNanoId } from '@valguide/core/features/guides/public/get-guide-by-stop'
 import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public/get-published-guide'
 import { getStopByNanoId } from '@valguide/core/features/guides/public/get-published-stop'
+import { getLocalizedGuideText } from '@valguide/core/features/guides/public/localization-helpers'
+import { FullPlayer } from '@valguide/core/features/player/components/full-player'
+import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
+import { toPlayerStops } from '@valguide/core/features/player/utils'
+import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
+import { ChevronLeft } from 'lucide-react'
 import { z } from 'zod'
-import { StopContent } from '@/components/stops/stop-content'
-import { StopNavigation } from '@/components/stops/stop-navigation'
 
 const getStopDataFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ nanoId: z.string(), stopNanoId: z.string() }))
@@ -37,14 +41,27 @@ export const Route = createFileRoute('/g/$nanoId/s/$stopNanoId')({
 })
 
 function StopPage() {
-  const { stop, guide, currentIndex } = Route.useLoaderData()
+  const { guide } = Route.useLoaderData()
   const { locale } = Route.useRouteContext()
-  const { nanoId } = Route.useParams()
+  const { nanoId, stopNanoId } = Route.useParams()
+
+  const guideTitle = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
+  const playerStops = toPlayerStops(guide.stops, locale)
 
   return (
-    <div className="container max-w-3xl py-8 space-y-8">
-      <StopContent stop={stop} locale={locale} stopNumber={currentIndex + 1} />
-      <StopNavigation guideNanoId={nanoId} currentIndex={currentIndex} stops={guide.stops} locale={locale} />
-    </div>
+    <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
+      <div className="container max-w-lg py-6 space-y-6">
+        <Link
+          to="/g/$nanoId"
+          params={{ nanoId }}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          {guideTitle}
+        </Link>
+
+        <FullPlayer />
+      </div>
+    </PlayerProvider>
   )
 }

@@ -1,13 +1,17 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, notFound, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public/get-published-guide'
 import { getLocalizedGuideText } from '@valguide/core/features/guides/public/localization-helpers'
+import { StopsList } from '@valguide/core/features/player/components/stops-list'
+import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
+import { usePlayerStore } from '@valguide/core/features/player/store/use-player-store'
+import { toPlayerStops } from '@valguide/core/features/player/utils'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { GuideHero } from '@/components/guides/guide-hero'
 import { GuideMetadata } from '@/components/guides/guide-metadata'
-import { GuideStopList } from '@/components/guides/guide-stop-list'
 
 const getGuideByNanoIdFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ nanoId: z.string() }))
@@ -36,12 +40,31 @@ function GuidePage() {
   const description = getLocalizedGuideText(guide, 'description', locale as SupportedLocale)
   const coverAsset = guide.assets?.find((a) => a.channel === 'images.hero')
   const coverImageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
+  const playerStops = toPlayerStops(guide.stops, locale)
 
   return (
-    <div className="container max-w-4xl py-8 space-y-8">
-      <GuideHero title={title} description={description} coverImage={coverImageUrl} assets={guide.assets} />
-      <GuideMetadata stopCount={guide.stops.length} createdAt={guide.createdAt} locale={locale} />
-      <GuideStopList stops={guide.stops} guideNanoId={nanoId} locale={locale} />
-    </div>
+    <PlayerProvider stops={playerStops}>
+      <div className="container max-w-lg py-6 space-y-6">
+        <GuideHero title={title} description={description} coverImage={coverImageUrl} assets={guide.assets} />
+        <GuideMetadata stopCount={guide.stops.length} createdAt={guide.createdAt} locale={locale} />
+        <StopsListWithNavigation guideNanoId={nanoId} />
+      </div>
+    </PlayerProvider>
   )
+}
+
+function StopsListWithNavigation({ guideNanoId }: { guideNanoId: string }) {
+  const navigate = useNavigate()
+  const currentStopNanoId = usePlayerStore((s) => s.currentStopNanoId)
+
+  useEffect(() => {
+    if (currentStopNanoId) {
+      navigate({
+        to: '/g/$nanoId/s/$stopNanoId',
+        params: { nanoId: guideNanoId, stopNanoId: currentStopNanoId },
+      })
+    }
+  }, [currentStopNanoId, guideNanoId, navigate])
+
+  return <StopsList />
 }
