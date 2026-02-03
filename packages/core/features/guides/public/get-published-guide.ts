@@ -6,11 +6,14 @@
 import { and, asc, eq, inArray, isNotNull, isNull } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
+import { theme as themeTable } from '../../themes/schema'
+import type { ThemeConfig } from '../../themes/types'
 import {
   guide,
   guideAsset,
   guideLocale,
   guideLocaleVersion,
+  guideSettings,
   guideStop,
   stop,
   stopAsset,
@@ -167,6 +170,27 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
   const publishedLocales = guideLocales.map((t) => t.locale)
   const availableLocales = guideRow.availableLocales.filter((locale) => publishedLocales.includes(locale))
 
+  // 10. Get guide theme from published settings
+  let themeConfig: ThemeConfig | null = null
+  const settings = await db.query.guideSettings.findFirst({
+    where: eq(guideSettings.guideId, guideRow.id),
+  })
+
+  if (settings?.themeId) {
+    const themeRow = await db.query.theme.findFirst({
+      where: eq(themeTable.id, settings.themeId),
+    })
+
+    if (themeRow) {
+      themeConfig = {
+        basePreset: themeRow.basePreset,
+        colors: themeRow.colors,
+        radius: Number(themeRow.radius),
+        fonts: themeRow.fonts,
+      }
+    }
+  }
+
   return {
     id: guideRow.id,
     nanoId: guideRow.nanoId,
@@ -186,5 +210,6 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
       locale: item.locale,
     })),
     stops,
+    theme: themeConfig,
   }
 }

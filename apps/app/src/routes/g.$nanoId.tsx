@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { clientEnv } from '@valguide/core/env/client'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public/get-published-guide'
 import { getLocalizedGuideText } from '@valguide/core/features/guides/public/localization-helpers'
@@ -7,6 +8,7 @@ import { QrScannerModal } from '@valguide/core/features/player/components/qr-sca
 import { StopsList } from '@valguide/core/features/player/components/stops-list'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
 import { usePlayerActions, usePlayerStore, useStops } from '@valguide/core/features/player/store/use-player-store'
+import { GuideThemeProvider } from '@valguide/core/features/player/theming/guide-theme-provider'
 import { toPlayerStops } from '@valguide/core/features/player/utils'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { useCallback, useEffect, useState } from 'react'
@@ -44,13 +46,19 @@ function GuidePage() {
   const playerStops = toPlayerStops(guide.stops, locale)
 
   return (
-    <PlayerProvider stops={playerStops}>
-      <div className="container max-w-lg py-6 space-y-6">
-        <GuideHero title={title} description={description} coverImage={coverImageUrl} assets={guide.assets} />
-        <GuideMetadata stopCount={guide.stops.length} createdAt={guide.createdAt} locale={locale} />
-        <StopsListWithNavigation guideNanoId={nanoId} />
-      </div>
-    </PlayerProvider>
+    <GuideThemeProvider
+      initialTheme={guide.theme}
+      enablePreview
+      allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
+    >
+      <PlayerProvider stops={playerStops}>
+        <div className="container max-w-lg py-6 space-y-6">
+          <GuideHero title={title} description={description} coverImage={coverImageUrl} assets={guide.assets} />
+          <GuideMetadata stopCount={guide.stops.length} createdAt={guide.createdAt} locale={locale} />
+          <StopsListWithNavigation guideNanoId={nanoId} />
+        </div>
+      </PlayerProvider>
+    </GuideThemeProvider>
   )
 }
 

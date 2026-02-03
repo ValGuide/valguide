@@ -4,6 +4,7 @@
  */
 
 import type { Asset } from '../../assets/types'
+import type { ThemeConfig } from '../../themes/types'
 
 /**
  * Asset with channel info for display purposes.
@@ -58,4 +59,5 @@ export interface GuideWithStopsAndAssets {
   translations: PublishedTranslation[]
   assets: AssetItem[]
   stops: StopWithAssets[]
+  theme: ThemeConfig | null
 }
