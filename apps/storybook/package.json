@@ -23,8 +23,8 @@
     "use-intl": "^4.3.3"
   },
   "devDependencies": {
-    "@storybook/addon-themes": "^10.1.11",
-    "@storybook/nextjs-vite": "^10.0.8",
+    "@storybook/addon-themes": "^10.2.4",
+    "@storybook/nextjs-vite": "^10.2.4",
     "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
     "@testing-library/dom": "^9.3.4",
@@ -36,7 +36,7 @@
     "msw": "^2.12.3",
     "msw-storybook-addon": "^2.0.6",
     "serve": "^14.2.5",
-    "storybook": "^10.0.8",
+    "storybook": "^10.2.4",
     "tailwindcss": "^4.1.16",
     "typescript": "^5.9.3",
     "vite": "^7.1.12",
