@@ -1,10 +1,10 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
+import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import type { TourAssetDraftItem } from '@valguide/core/features/tours/tour/asset/get-tour-assets-draft.fn'
 import type { TourAssetPublishedItem } from '@valguide/core/features/tours/tour/asset/get-tour-assets-published.fn'
-import type { TourDetail, LocaleDraftInfo } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
+import type { LocaleDraftInfo, TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
-import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import { createContext, useContext } from 'react'
 
 // Re-export types for consumers

@@ -2,11 +2,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
 import { type ReactNode, useCallback, useState } from 'react'
-import {
-  type TourIndicator,
-  type TourStatus,
-  TourStatusBadge,
-} from '@/features/tours/components/tour-status-badge'
+import { type TourIndicator, type TourStatus, TourStatusBadge } from '@/features/tours/components/tour-status-badge'
 import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
 import { DraftPublishedTabs, type EditorTab } from './draft-published-tabs'
 import { EditorActionsPanel } from './editor-actions-panel'

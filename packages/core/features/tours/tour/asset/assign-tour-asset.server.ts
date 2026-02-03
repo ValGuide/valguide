@@ -23,10 +23,7 @@ export type AssignTourAssetResult = {
 // INTERNAL FUNCTION
 // =============================================================================
 
-export async function assignTourAsset(
-  tourNanoId: string,
-  input: AssignTourAssetInput,
-): Promise<AssignTourAssetResult> {
+export async function assignTourAsset(tourNanoId: string, input: AssignTourAssetInput): Promise<AssignTourAssetResult> {
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
@@ -61,9 +58,7 @@ export async function assignTourAsset(
     const [{ maxPos }] = await db
       .select({ maxPos: sql<number>`COALESCE(MAX(position), -1)` })
       .from(tourAssetDraft)
-      .where(
-        and(eq(tourAssetDraft.tourId, foundTour.id), eq(tourAssetDraft.channel, input.channel), localeCondition),
-      )
+      .where(and(eq(tourAssetDraft.tourId, foundTour.id), eq(tourAssetDraft.channel, input.channel), localeCondition))
     position = maxPos + 1
   }
 

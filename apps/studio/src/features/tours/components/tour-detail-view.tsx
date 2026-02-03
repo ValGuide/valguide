@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { getTourStatus } from '@valguide/core/features/tours/status-utils'
+import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { pickBestLocale } from '@valguide/core/features/tours/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'

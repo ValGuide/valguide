@@ -1,5 +1,5 @@
-import type { LocaleDraftInfo } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import type { StopLocaleDraftInfo } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
+import type { LocaleDraftInfo } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 
 export type TranslationLocaleStatus = 'published' | 'draft' | 'empty'
 

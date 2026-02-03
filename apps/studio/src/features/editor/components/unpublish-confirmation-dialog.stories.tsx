@@ -11,7 +11,7 @@ const meta = {
   args: {
     open: true,
     onOpenChange: fn(),
-    contentType: 'guide',
+    contentType: 'tour',
     onConfirm: fn(),
   },
 } satisfies Meta<typeof UnpublishConfirmationDialog>
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>
 export const GuideDefault: Story = {
   args: {
     open: true,
-    contentType: 'guide',
+    contentType: 'tour',
   },
 }
 
@@ -36,7 +36,7 @@ export const StopDefault: Story = {
 export const GuideClosed: Story = {
   args: {
     open: false,
-    contentType: 'guide',
+    contentType: 'tour',
   },
 }
 

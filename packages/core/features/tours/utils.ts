@@ -1,4 +1,4 @@
-import type { TourWithTourStops, TourWithStops, TourWithTranslations, StopWithTranslations } from './types'
+import type { StopWithTranslations, TourWithStops, TourWithTourStops, TourWithTranslations } from './types'
 
 // =============================================================================
 // LOCALE FALLBACK PRIORITY

@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../../../db'
-import { tour, stop, stopLocaleDraft } from '../../schema'
+import { stop, stopLocaleDraft, tour } from '../../schema'
 
 // =============================================================================
 // TYPES

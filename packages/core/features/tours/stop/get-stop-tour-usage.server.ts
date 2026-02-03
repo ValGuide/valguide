@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../../db'
-import { tour, tourStopDraft, stop } from '../schema'
+import { stop, tour, tourStopDraft } from '../schema'
 
 export type StopTourUsageResult = {
   tourCount: number

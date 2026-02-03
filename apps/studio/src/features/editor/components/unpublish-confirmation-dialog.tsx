@@ -13,7 +13,7 @@ import {
 interface UnpublishConfirmationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  contentType: 'guide' | 'stop'
+  contentType: 'tour' | 'stop'
   onConfirm: () => void
 }
 

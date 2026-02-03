@@ -21,10 +21,7 @@ export type RemoveTourAssetResult = {
 // INTERNAL FUNCTION
 // =============================================================================
 
-export async function removeTourAsset(
-  tourNanoId: string,
-  input: RemoveTourAssetInput,
-): Promise<RemoveTourAssetResult> {
+export async function removeTourAsset(tourNanoId: string, input: RemoveTourAssetInput): Promise<RemoveTourAssetResult> {
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {

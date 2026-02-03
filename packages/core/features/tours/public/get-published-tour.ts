@@ -8,8 +8,8 @@ import { asset } from '../../assets/schema'
 import { db } from '../../db'
 import { theme as themeTable } from '../../themes/schema'
 import type { ThemeConfig } from '../../themes/types'
-import { tour, tourAsset, tourLocale, tourSettings, tourStop, stop, stopAsset, stopLocale } from '../schema'
-import type { AssetItem, TourWithStopsAndAssets, PublishedStopTranslation, StopWithAssets } from './types'
+import { stop, stopAsset, stopLocale, tour, tourAsset, tourLocale, tourSettings, tourStop } from '../schema'
+import type { AssetItem, PublishedStopTranslation, StopWithAssets, TourWithStopsAndAssets } from './types'
 
 // ============================================================================
 // Query Function

@@ -15,11 +15,7 @@ export type TourSettingsDraft = typeof tourSettingsDraft.$inferSelect
 
 export async function setTourTheme(tourId: string, themeId: string | null): Promise<TourSettingsDraft> {
   if (themeId) {
-    const [t] = await db
-      .select({ organizationId: tour.organizationId })
-      .from(tour)
-      .where(eq(tour.id, tourId))
-      .limit(1)
+    const [t] = await db.select({ organizationId: tour.organizationId }).from(tour).where(eq(tour.id, tourId)).limit(1)
 
     if (!t) {
       throw new Error('Tour not found')

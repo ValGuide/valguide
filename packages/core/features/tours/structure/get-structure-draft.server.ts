@@ -1,7 +1,7 @@
 import { and, asc, eq, inArray } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { tour, tourStopDraft, stop, stopAssetDraft, stopLocaleDraft } from '../schema'
+import { stop, stopAssetDraft, stopLocaleDraft, tour, tourStopDraft } from '../schema'
 
 // =============================================================================
 // TYPES

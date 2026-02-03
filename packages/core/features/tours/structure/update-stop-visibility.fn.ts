@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { requireTourAccessByNanoId, requireStopAccessByNanoId } from '../../auth/authorization'
+import { requireStopAccessByNanoId, requireTourAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { updateStopVisibility } from './update-stop-visibility.server'
 

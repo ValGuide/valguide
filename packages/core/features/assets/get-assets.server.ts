@@ -1,6 +1,6 @@
 import { and, countDistinct, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { db } from '../db'
-import { tourAsset, stopAsset } from '../tours/schema'
+import { stopAsset, tourAsset } from '../tours/schema'
 import { type AssetType, asset } from './schema'
 
 // =============================================================================

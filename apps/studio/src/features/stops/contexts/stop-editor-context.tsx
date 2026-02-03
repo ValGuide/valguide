@@ -19,9 +19,9 @@ import {
   stopAssetsDraftQueryOptions,
   stopAssetsPublishedQueryOptions,
   stopDetailQueryOptions,
-  stopTourUsageQueryOptions,
   stopLocaleDraftQueryOptions,
   stopLocalePublishedQueryOptions,
+  stopTourUsageQueryOptions,
 } from '../query-options'
 import { StopEditorContext, type StopEditorContextValue } from './stop-editor-types'
 

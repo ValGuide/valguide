@@ -2,12 +2,12 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { ensureAllStopLocalesForTourFn } from '@valguide/core/features/tours/stop/locale/ensure-all-stop-locales-for-tour.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { StopNotFound } from '@/features/tours/components/stop-not-found'
-import { tourDetailQueryOptions } from '@/features/tours/query-options'
 import { StopEditPageConnected } from '@/features/stops/components/stop-edit-page-connected'
 import { StopEditSkeleton } from '@/features/stops/components/stop-edit-skeleton'
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
 import { stopDetailQueryOptions, stopLocaleDraftQueryOptions } from '@/features/stops/query-options'
+import { StopNotFound } from '@/features/tours/components/stop-not-found'
+import { tourDetailQueryOptions } from '@/features/tours/query-options'
 
 type SearchParams = {
   locale?: string

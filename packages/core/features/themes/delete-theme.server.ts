@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../db'
-import { tourSettingsDraft } from '../tours/schema'
 import { organization } from '../orgs/schema'
+import { tourSettingsDraft } from '../tours/schema'
 import { theme as themeTable } from './schema'
 
 // =============================================================================

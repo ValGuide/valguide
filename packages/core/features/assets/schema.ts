@@ -1,7 +1,15 @@
 import { relations } from 'drizzle-orm'
 import { index, integer, pgEnum, pgSchema, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
+import { organization } from '../orgs/schema'
 import {
+  stop,
+  stopAsset,
+  stopAssetDraft,
+  stopLocale,
+  stopLocaleDraft,
+  stopSettings,
+  stopSettingsDraft,
   tour,
   tourAsset,
   tourAssetDraft,
@@ -11,15 +19,7 @@ import {
   tourSettingsDraft,
   tourStop,
   tourStopDraft,
-  stop,
-  stopAsset,
-  stopAssetDraft,
-  stopLocale,
-  stopLocaleDraft,
-  stopSettings,
-  stopSettingsDraft,
 } from '../tours/schema'
-import { organization } from '../orgs/schema'
 
 /**
  * ValGuide – Asset Schema v3.0 (February 2026)

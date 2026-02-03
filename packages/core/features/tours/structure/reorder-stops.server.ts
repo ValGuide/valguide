@@ -1,7 +1,7 @@
 import { and, eq, inArray } from 'drizzle-orm'
 import { NotFoundError } from '../../auth/authorization'
 import { db } from '../../db'
-import { tour, tourStopDraft, stop } from '../schema'
+import { stop, tour, tourStopDraft } from '../schema'
 
 // =============================================================================
 // TYPES

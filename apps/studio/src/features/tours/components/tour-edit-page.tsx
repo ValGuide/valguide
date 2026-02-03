@@ -14,12 +14,12 @@ import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components
 import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { getLocaleDisplayName } from '@/features/editor/components/locale-selector'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
-import { TourMetadataForm, type TourMetadataFormRef } from '@/features/tours/components/tour-metadata-form'
-import { TourProgress } from '@/features/tours/components/tour-progress'
-import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { HideStopDialog } from '@/features/tours/components/hide-stop-dialog'
 import { ShowStopDialog } from '@/features/tours/components/show-stop-dialog'
 import { StopsList } from '@/features/tours/components/stops-list'
+import { TourMetadataForm, type TourMetadataFormRef } from '@/features/tours/components/tour-metadata-form'
+import { TourProgress } from '@/features/tours/components/tour-progress'
+import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 
 export interface TourEditPageProps {

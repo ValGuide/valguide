@@ -1,10 +1,10 @@
 import { db } from '@valguide/core/features/db'
 import { and, eq } from 'drizzle-orm'
 import { asset } from '../assets/schema'
-import { stop, tour } from '../tours/schema'
 import { hasMinRole, type OrgRole } from '../orgs/permissions'
 import { organizationMember } from '../orgs/schema'
 import { theme } from '../themes/schema'
+import { stop, tour } from '../tours/schema'
 
 // ============================================================================
 // Error Classes

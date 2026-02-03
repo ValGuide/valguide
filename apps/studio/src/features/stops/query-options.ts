@@ -8,10 +8,7 @@ import {
   getStopAssetsPublishedFn,
 } from '@valguide/core/features/tours/stop/asset/get-stop-assets-published.fn'
 import { getStopDetailFn, type StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
-import {
-  getStopTourUsageFn,
-  type StopTourUsageResult,
-} from '@valguide/core/features/tours/stop/get-stop-tour-usage.fn'
+import { getStopTourUsageFn, type StopTourUsageResult } from '@valguide/core/features/tours/stop/get-stop-tour-usage.fn'
 import { listStopsFn, type StopListItem } from '@valguide/core/features/tours/stop/list-stops.fn'
 import {
   getStopLocaleDraftFn,

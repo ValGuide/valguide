@@ -5,7 +5,7 @@
 
 import { and, eq, isNull } from 'drizzle-orm'
 import { db } from '../../db'
-import { tour, tourStop, stop } from '../schema'
+import { stop, tour, tourStop } from '../schema'
 
 // ============================================================================
 // Query Function

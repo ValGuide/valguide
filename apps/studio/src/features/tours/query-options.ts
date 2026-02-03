@@ -1,4 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
+import {
+  getStructureDraftFn,
+  type StructureDraftResult,
+} from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import type { GetTourAssetsDraftResult } from '@valguide/core/features/tours/tour/asset/get-tour-assets-draft.fn'
 import { getTourAssetsDraftFn } from '@valguide/core/features/tours/tour/asset/get-tour-assets-draft.fn'
 import type { GetTourAssetsPublishedResult } from '@valguide/core/features/tours/tour/asset/get-tour-assets-published.fn'
@@ -13,10 +17,6 @@ import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/l
 import { getTourLocaleDraftFn } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
 import { getTourLocalePublishedFn } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
-import {
-  getStructureDraftFn,
-  type StructureDraftResult,
-} from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 
 /**
  * Lightweight query options for tours list view

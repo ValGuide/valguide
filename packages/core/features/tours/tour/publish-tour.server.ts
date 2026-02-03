@@ -2,6 +2,8 @@ import { and, eq } from 'drizzle-orm'
 import { NotFoundError } from '../../auth/authorization'
 import { type DB, db } from '../../db'
 import {
+  stopLocale,
+  stopLocaleDraft,
   tour,
   tourAsset,
   tourAssetDraft,
@@ -11,8 +13,6 @@ import {
   tourSettingsDraft,
   tourStop,
   tourStopDraft,
-  stopLocale,
-  stopLocaleDraft,
 } from '../schema'
 
 export type PublishTourInput = {

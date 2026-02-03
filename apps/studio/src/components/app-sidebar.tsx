@@ -101,7 +101,7 @@ export function AppSidebar({
     }))
 
   const contentItems = createNavItems([
-    { title: t('guides'), path: '/guides', icon: BookOpen },
+    { title: t('tours'), path: '/tours', icon: BookOpen },
     { title: t('stops'), path: '/stops', icon: MapPin },
     { title: t('archived'), path: '/archived', icon: Archive },
   ])

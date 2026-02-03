@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
-import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import { fn } from 'storybook/test'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 import type { MediaPickerComponentProps } from '@/features/assets/components/media-picker/types'
@@ -46,9 +46,7 @@ const createMockLocaleDraft = (overrides: Partial<TourLocaleDraftResult> = {}): 
   ...overrides,
 })
 
-const createMockLocalePublished = (
-  overrides: Partial<TourLocalePublishedResult> = {},
-): TourLocalePublishedResult => ({
+const createMockLocalePublished = (overrides: Partial<TourLocalePublishedResult> = {}): TourLocalePublishedResult => ({
   locale: 'en',
   title: 'City Art Museum Audio Tour',
   description:
