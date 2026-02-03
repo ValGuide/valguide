@@ -11,10 +11,10 @@ export const MAX_RETRIES = 5
  */
 export async function findShortLinkByTarget(input: CreateShortLinkInput) {
   switch (input.type) {
-    case 'guide':
-      return findGuideShortLink(input.guideNanoId, input.locale)
+    case 'tour':
+      return findTourShortLink(input.tourNanoId, input.locale)
     case 'stop':
-      return findStopShortLink(input.guideNanoId, input.stopNanoId, input.locale)
+      return findStopShortLink(input.tourNanoId, input.stopNanoId, input.locale)
     case 'campaign':
       return findCampaignShortLink(input.campaignId)
     case 'external':
@@ -26,18 +26,18 @@ export async function findShortLinkByTarget(input: CreateShortLinkInput) {
   }
 }
 
-async function findGuideShortLink(guideNanoId: string, locale: string) {
+async function findTourShortLink(tourNanoId: string, locale: string) {
   const result = await db.query.short_links.findFirst({
-    where: and(eq(short_links.type, 'guide'), eq(short_links.guideNanoId, guideNanoId), eq(short_links.locale, locale)),
+    where: and(eq(short_links.type, 'tour'), eq(short_links.tourNanoId, tourNanoId), eq(short_links.locale, locale)),
   })
   return result ?? null
 }
 
-async function findStopShortLink(guideNanoId: string, stopNanoId: string, locale: string) {
+async function findStopShortLink(tourNanoId: string, stopNanoId: string, locale: string) {
   const result = await db.query.short_links.findFirst({
     where: and(
       eq(short_links.type, 'stop'),
-      eq(short_links.guideNanoId, guideNanoId),
+      eq(short_links.tourNanoId, tourNanoId),
       eq(short_links.stopNanoId, stopNanoId),
       eq(short_links.locale, locale),
     ),
@@ -81,12 +81,12 @@ export function buildInsertValues(input: CreateShortLinkInput, code: string) {
   }
 
   switch (input.type) {
-    case 'guide':
-      return { ...base, guideNanoId: input.guideNanoId, locale: input.locale }
+    case 'tour':
+      return { ...base, tourNanoId: input.tourNanoId, locale: input.locale }
     case 'stop':
       return {
         ...base,
-        guideNanoId: input.guideNanoId,
+        tourNanoId: input.tourNanoId,
         stopNanoId: input.stopNanoId,
         locale: input.locale,
       }

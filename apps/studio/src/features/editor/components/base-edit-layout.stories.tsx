@@ -24,7 +24,7 @@ const MockContent = () => (
             id="mock-title"
             type="text"
             className="w-full rounded-md border px-3 py-2"
-            defaultValue="Sample Guide Title"
+            defaultValue="Sample Tour Title"
           />
         </div>
         <div className="space-y-2">
@@ -59,7 +59,7 @@ const MockContent = () => (
 
 const MockSidebar = () => (
   <>
-    <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Guide Progress</h3>
+    <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tour Progress</h3>
     <div className="space-y-3">
       <div className="flex items-center gap-2 text-sm">
         <span className="h-2 w-2 rounded-full bg-success" />
@@ -84,7 +84,7 @@ const MockSidebar = () => (
 const MockBreadcrumb = () => (
   <Button variant="ghost" size="sm" className="-ml-2 shrink-0">
     <ChevronLeft className="h-4 w-4" />
-    <span>Art Museum Guide</span>
+    <span>Art Museum Tour</span>
   </Button>
 )
 
@@ -114,7 +114,7 @@ const meta = {
     onUnpublish: fn(),
     onDiscard: fn(),
     onBack: fn(),
-    backLabel: 'Guide Details',
+    backLabel: 'Tour Details',
     children: <MockContent />,
   },
 } satisfies Meta<typeof BaseEditLayout>
@@ -122,7 +122,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const GuideUnpublished: Story = {
+export const TourUnpublished: Story = {
   args: {
     title: 'Introduction to Modern Art',
     status: { status: 'unpublished', indicator: null },
@@ -132,7 +132,7 @@ export const GuideUnpublished: Story = {
   },
 }
 
-export const GuidePublished: Story = {
+export const TourPublished: Story = {
   args: {
     title: 'Introduction to Modern Art',
     status: { status: 'published', indicator: 'up-to-date' },
@@ -142,7 +142,7 @@ export const GuidePublished: Story = {
   },
 }
 
-export const GuideWithChanges: Story = {
+export const TourWithChanges: Story = {
   args: {
     title: 'Introduction to Modern Art',
     status: { status: 'published', indicator: 'changed' },
@@ -153,7 +153,7 @@ export const GuideWithChanges: Story = {
   },
 }
 
-export const GuideSaving: Story = {
+export const TourSaving: Story = {
   args: {
     title: 'Introduction to Modern Art',
     status: { status: 'published', indicator: 'changed' },
@@ -165,7 +165,7 @@ export const GuideSaving: Story = {
   },
 }
 
-export const GuidePublishing: Story = {
+export const TourPublishing: Story = {
   args: {
     title: 'Introduction to Modern Art',
     status: { status: 'unpublished', indicator: null },

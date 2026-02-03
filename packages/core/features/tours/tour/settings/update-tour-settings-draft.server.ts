@@ -21,7 +21,7 @@ export async function updateTourSettingsDraft(
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
   const [updated] = await db
@@ -38,7 +38,7 @@ export async function updateTourSettingsDraft(
     })
 
   if (!updated) {
-    throw new NotFoundError('Guide settings draft')
+    throw new NotFoundError('Tour settings draft')
   }
 
   return updated

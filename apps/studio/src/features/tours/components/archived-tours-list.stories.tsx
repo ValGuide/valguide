@@ -12,7 +12,7 @@ const meta: Meta<typeof ArchivedToursList> = {
     layout: 'padded',
     docs: {
       description: {
-        component: 'Displays a list of archived guides with options to recover or permanently delete them.',
+        component: 'Displays a list of archived tours with options to recover or permanently delete them.',
       },
     },
   },
@@ -30,7 +30,7 @@ const meta: Meta<typeof ArchivedToursList> = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const archivedGuides: ArchivedTourListItem[] = [
+const archivedTours: ArchivedTourListItem[] = [
   {
     nanoId: 'abc123',
     title: 'Ancient Egypt Exhibition',
@@ -66,15 +66,15 @@ export const Empty: Story = {
   },
 }
 
-export const WithArchivedGuides: Story = {
+export const WithArchivedTours: Story = {
   args: {
-    tours: archivedGuides,
+    tours: archivedTours,
   },
 }
 
-export const SingleGuide: Story = {
+export const SingleTour: Story = {
   args: {
-    tours: archivedGuides.slice(0, 1),
+    tours: archivedTours.slice(0, 1),
   },
 }
 
@@ -86,7 +86,7 @@ export const Loading: Story = {
 
 export const ErrorState: Story = {
   args: {
-    error: new globalThis.Error('Failed to load archived guides'),
+    error: new globalThis.Error('Failed to load archived tours'),
     onRetry: () => {
       console.log('Retry clicked!')
     },

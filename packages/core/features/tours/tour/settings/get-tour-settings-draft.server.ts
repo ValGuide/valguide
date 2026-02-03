@@ -15,7 +15,7 @@ export async function getTourSettingsDraft(tourNanoId: string): Promise<TourSett
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
   const [draft] = await db
@@ -31,7 +31,7 @@ export async function getTourSettingsDraft(tourNanoId: string): Promise<TourSett
     .limit(1)
 
   if (!draft) {
-    throw new NotFoundError('Guide settings draft')
+    throw new NotFoundError('Tour settings draft')
   }
 
   return draft

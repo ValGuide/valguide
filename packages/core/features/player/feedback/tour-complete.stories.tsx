@@ -16,7 +16,7 @@ const meta = {
     ),
   ],
   args: {
-    guideTitle: 'Van Gogh Museum Audio Guide',
+    tourTitle: 'Van Gogh Museum Audio Guide',
     shareUrl: 'https://app.valguide.com/g/abc123',
     onFeedbackSubmit: fn(),
   },

@@ -25,9 +25,9 @@ import {
  * ValGuide – Asset Schema v3.0 (February 2026)
  *
  * Assets are immutable file records.
- * Locale is on the assignment tables (guide_asset_draft, stop_asset_draft), not on the asset.
+ * Locale is on the assignment tables (tour_asset_draft, stop_asset_draft), not on the asset.
  *
- * See: docs/guide-stop-asset/target-schema.md
+ * See: docs/tour-stop-asset/target-schema.md
  */
 
 const studioSchema = pgSchema('studio')

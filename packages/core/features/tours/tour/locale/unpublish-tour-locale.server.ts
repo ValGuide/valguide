@@ -11,7 +11,7 @@ export async function unpublishTourLocale(tourNanoId: string, locale: string): P
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
   const result = await db
@@ -20,7 +20,7 @@ export async function unpublishTourLocale(tourNanoId: string, locale: string): P
     .returning({ id: tourLocale.id })
 
   if (result.length === 0) {
-    throw new NotFoundError('Guide locale')
+    throw new NotFoundError('Tour locale')
   }
 
   return { success: true }

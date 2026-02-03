@@ -18,14 +18,14 @@ type Story = StoryObj<typeof meta>
 
 export const WithBackButton: Story = {
   args: {
-    backLabel: 'Guide Details',
+    backLabel: 'Tour Details',
     onBack: fn(),
   },
 }
 
 export const WithBackButtonAndActions: Story = {
   args: {
-    backLabel: 'Guide Details',
+    backLabel: 'Tour Details',
     onBack: fn(),
     actions: (
       <>
@@ -46,7 +46,7 @@ export const WithCustomBackContent: Story = {
     backContent: (
       <Button variant="ghost" size="sm" className="-ml-2">
         <ChevronLeft className="h-4 w-4" />
-        <span>Art Museum Guide</span>
+        <span>Art Museum Tour</span>
       </Button>
     ),
     actions: (
@@ -63,10 +63,10 @@ export const WithBreadcrumbStyle: Story = {
       <div className="flex items-center gap-1 text-sm">
         <Button variant="ghost" size="sm" className="-ml-2">
           <ChevronLeft className="h-4 w-4" />
-          <span>Guides</span>
+          <span>Tours</span>
         </Button>
         <span className="text-muted-foreground">/</span>
-        <span className="font-medium">Art Museum Guide</span>
+        <span className="font-medium">Art Museum Tour</span>
         <span className="text-muted-foreground">/</span>
         <span className="font-medium">Edit</span>
       </div>

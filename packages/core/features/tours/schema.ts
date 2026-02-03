@@ -11,7 +11,7 @@ import { organization } from '../orgs/schema'
  * - Publish = upsert from draft to live
  * - 17 tables total (removed 2 version tables)
  *
- * See: docs/guide-stop-asset/target-schema.md
+ * See: docs/tour-stop-asset/target-schema.md
  */
 
 const studioSchema = pgSchema('studio')
@@ -21,10 +21,10 @@ const studioSchema = pgSchema('studio')
 // =============================================================================
 
 export const tour = studioSchema.table(
-  'guide',
+  'tour',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_guide_nano_id'),
+    nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_tour_nano_id'),
 
     organizationId: uuid('organization_id')
       .notNull()
@@ -48,7 +48,7 @@ export const tour = studioSchema.table(
     availableLocales: text('available_locales').array().notNull().default(['en']),
   },
   (t) => ({
-    tourOrgIdx: index('guide_org_idx').on(t.organizationId),
+    tourOrgIdx: index('tour_org_idx').on(t.organizationId),
   }),
 )
 
@@ -90,11 +90,11 @@ export const stop = studioSchema.table(
 // =============================================================================
 
 export const tourLocaleDraft = studioSchema.table(
-  'guide_locale_draft',
+  'tour_locale_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
     locale: varchar('locale', { length: 10 }).notNull(),
@@ -110,17 +110,17 @@ export const tourLocaleDraft = studioSchema.table(
     updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqTourLocaleDraft: uniqueIndex('uniq_guide_locale_draft').on(t.tourId, t.locale),
-    tourIdx: index('guide_locale_draft_guide_idx').on(t.tourId),
+    uniqTourLocaleDraft: uniqueIndex('uniq_tour_locale_draft').on(t.tourId, t.locale),
+    tourIdx: index('tour_locale_draft_tour_idx').on(t.tourId),
   }),
 )
 
 export const tourLocale = studioSchema.table(
-  'guide_locale',
+  'tour_locale',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
     locale: varchar('locale', { length: 10 }).notNull(),
@@ -132,8 +132,8 @@ export const tourLocale = studioSchema.table(
     publishedBy: uuid('published_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqTourLocale: uniqueIndex('uniq_guide_locale').on(t.tourId, t.locale),
-    tourIdx: index('guide_locale_guide_idx').on(t.tourId),
+    uniqTourLocale: uniqueIndex('uniq_tour_locale').on(t.tourId, t.locale),
+    tourIdx: index('tour_locale_tour_idx').on(t.tourId),
   }),
 )
 
@@ -193,11 +193,11 @@ export const stopLocale = studioSchema.table(
 // =============================================================================
 
 export const tourSettingsDraft = studioSchema.table(
-  'guide_settings_draft',
+  'tour_settings_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
 
@@ -211,16 +211,16 @@ export const tourSettingsDraft = studioSchema.table(
     updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqTourSettingsDraft: uniqueIndex('uniq_guide_settings_draft').on(t.tourId),
+    uniqTourSettingsDraft: uniqueIndex('uniq_tour_settings_draft').on(t.tourId),
   }),
 )
 
 export const tourSettings = studioSchema.table(
-  'guide_settings',
+  'tour_settings',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
 
@@ -231,7 +231,7 @@ export const tourSettings = studioSchema.table(
     publishedBy: uuid('published_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (t) => ({
-    uniqTourSettings: uniqueIndex('uniq_guide_settings').on(t.tourId),
+    uniqTourSettings: uniqueIndex('uniq_tour_settings').on(t.tourId),
   }),
 )
 
@@ -284,11 +284,11 @@ export const stopSettings = studioSchema.table(
 // =============================================================================
 
 export const tourStopDraft = studioSchema.table(
-  'guide_stop_draft',
+  'tour_stop_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
     stopId: uuid('stop_id')
@@ -301,19 +301,19 @@ export const tourStopDraft = studioSchema.table(
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({
-    uniqTourStopDraft: uniqueIndex('uniq_guide_stop_draft').on(t.tourId, t.stopId),
-    tourIdx: index('guide_stop_draft_guide_idx').on(t.tourId),
-    stopIdx: index('guide_stop_draft_stop_idx').on(t.stopId),
-    positionIdx: index('guide_stop_draft_position_idx').on(t.tourId, t.position),
+    uniqTourStopDraft: uniqueIndex('uniq_tour_stop_draft').on(t.tourId, t.stopId),
+    tourIdx: index('tour_stop_draft_tour_idx').on(t.tourId),
+    stopIdx: index('tour_stop_draft_stop_idx').on(t.stopId),
+    positionIdx: index('tour_stop_draft_position_idx').on(t.tourId, t.position),
   }),
 )
 
 export const tourStop = studioSchema.table(
-  'guide_stop',
+  'tour_stop',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
     stopId: uuid('stop_id')
@@ -326,10 +326,10 @@ export const tourStop = studioSchema.table(
     publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({
-    uniqTourStop: uniqueIndex('uniq_guide_stop').on(t.tourId, t.stopId),
-    tourIdx: index('guide_stop_guide_idx').on(t.tourId),
-    stopIdx: index('guide_stop_stop_idx').on(t.stopId),
-    positionIdx: index('guide_stop_position_idx').on(t.tourId, t.position),
+    uniqTourStop: uniqueIndex('uniq_tour_stop').on(t.tourId, t.stopId),
+    tourIdx: index('tour_stop_tour_idx').on(t.tourId),
+    stopIdx: index('tour_stop_stop_idx').on(t.stopId),
+    positionIdx: index('tour_stop_position_idx').on(t.tourId, t.position),
   }),
 )
 
@@ -340,11 +340,11 @@ export const tourStop = studioSchema.table(
 // =============================================================================
 
 export const tourAssetDraft = studioSchema.table(
-  'guide_asset_draft',
+  'tour_asset_draft',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
     assetId: uuid('asset_id').notNull(),
@@ -356,19 +356,19 @@ export const tourAssetDraft = studioSchema.table(
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({
-    uniqTourAssetDraft: uniqueIndex('uniq_guide_asset_draft').on(t.tourId, t.assetId, t.channel, t.locale),
-    tourIdx: index('guide_asset_draft_guide_idx').on(t.tourId),
-    channelIdx: index('guide_asset_draft_channel_idx').on(t.tourId, t.channel),
-    assetIdx: index('guide_asset_draft_asset_idx').on(t.assetId),
+    uniqTourAssetDraft: uniqueIndex('uniq_tour_asset_draft').on(t.tourId, t.assetId, t.channel, t.locale),
+    tourIdx: index('tour_asset_draft_tour_idx').on(t.tourId),
+    channelIdx: index('tour_asset_draft_channel_idx').on(t.tourId, t.channel),
+    assetIdx: index('tour_asset_draft_asset_idx').on(t.assetId),
   }),
 )
 
 export const tourAsset = studioSchema.table(
-  'guide_asset',
+  'tour_asset',
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    tourId: uuid('guide_id')
+    tourId: uuid('tour_id')
       .notNull()
       .references(() => tour.id, { onDelete: 'cascade' }),
     assetId: uuid('asset_id').notNull(),
@@ -380,10 +380,10 @@ export const tourAsset = studioSchema.table(
     publishedAt: timestamp('published_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({
-    uniqTourAsset: uniqueIndex('uniq_guide_asset').on(t.tourId, t.assetId, t.channel, t.locale),
-    tourIdx: index('guide_asset_guide_idx').on(t.tourId),
-    channelIdx: index('guide_asset_channel_idx').on(t.tourId, t.channel),
-    assetIdx: index('guide_asset_asset_idx').on(t.assetId),
+    uniqTourAsset: uniqueIndex('uniq_tour_asset').on(t.tourId, t.assetId, t.channel, t.locale),
+    tourIdx: index('tour_asset_tour_idx').on(t.tourId),
+    channelIdx: index('tour_asset_channel_idx').on(t.tourId, t.channel),
+    assetIdx: index('tour_asset_asset_idx').on(t.assetId),
   }),
 )
 

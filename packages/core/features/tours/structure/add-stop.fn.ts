@@ -16,7 +16,7 @@ export const addStopToTourFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(addStopToTourSchema)
   .handler(async ({ context, data }) => {
-    // Verify access to both guide and stop
+    // Verify access to both tour and stop
     await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
     await requireStopAccessByNanoId(data.stopNanoId, context.user.id)
 

@@ -26,7 +26,7 @@ export interface StopEditorContextValue {
 
   // Locale management (synced to URL)
   activeLocale: string
-  /** Effective available locales (guide's locales in guide context, existing locales standalone) */
+  /** Effective available locales (tour's locales in tour context, existing locales standalone) */
   availableLocales: string[]
   /** Locales that have stopLocale records (translations created for this stop) */
   existingLocales: string[]

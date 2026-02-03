@@ -41,7 +41,7 @@ const createMockLocaleDraft = (overrides: Partial<TourLocaleDraftResult> = {}): 
   locale: 'en',
   title: 'City Art Museum Audio Tour',
   description:
-    'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
+    'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio tour.',
   hasPublished: false,
   ...overrides,
 })
@@ -50,7 +50,7 @@ const createMockLocalePublished = (overrides: Partial<TourLocalePublishedResult>
   locale: 'en',
   title: 'City Art Museum Audio Tour',
   description:
-    'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
+    'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio tour.',
   publishedAt: new Date('2025-01-10T10:00:00Z'),
   ...overrides,
 })
@@ -168,7 +168,7 @@ export const WithUnpublishedChanges: Story = {
   } as TourEditPageProps & StoryContextData,
 }
 
-export const EmptyGuide: Story = {
+export const EmptyTour: Story = {
   args: {
     onPublish: fn(),
     onUnpublish: fn(),

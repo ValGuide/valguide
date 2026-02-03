@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ThemeConfig } from '../../themes/types'
 import { themeToVars } from './theme-to-vars'
 
-type GuideThemeProviderProps = {
+type TourThemeProviderProps = {
   initialTheme: ThemeConfig | null
   children: React.ReactNode
   enablePreview?: boolean
@@ -12,15 +12,15 @@ type GuideThemeProviderProps = {
 type PreviewMessage = { type: 'valguide.preview.theme'; theme: ThemeConfig } | { type: 'valguide.preview.theme.reset' }
 
 /**
- * Provider that applies guide-specific theme CSS variables.
+ * Provider that applies tour-specific theme CSS variables.
  * Supports live theme updates via postMessage for studio preview.
  */
-export function GuideThemeProvider({
+export function TourThemeProvider({
   initialTheme,
   children,
   enablePreview = false,
   allowedOrigins = [],
-}: GuideThemeProviderProps) {
+}: TourThemeProviderProps) {
   const [theme, setTheme] = useState<ThemeConfig | null>(initialTheme)
 
   const handleMessage = useCallback(

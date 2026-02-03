@@ -27,7 +27,7 @@ export async function addStopToTour(input: AddStopToTourInput): Promise<AddStopT
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, input.tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
   const [foundStop] = await db.select({ id: stop.id }).from(stop).where(eq(stop.nanoId, input.stopNanoId)).limit(1)
@@ -37,7 +37,7 @@ export async function addStopToTour(input: AddStopToTourInput): Promise<AddStopT
   }
 
   return db.transaction(async (tx) => {
-    // Get max position for this guide
+    // Get max position for this tour
     const [{ max }] = await tx
       .select({ max: sql<number>`COALESCE(MAX(${tourStopDraft.position}), -1)` })
       .from(tourStopDraft)

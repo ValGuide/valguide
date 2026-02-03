@@ -29,8 +29,8 @@ interface StopEditorProviderProps {
   children: ReactNode
   nanoId: string
   initialLocale?: string
-  /** When editing a stop within a guide context, pass the guide's available locales.
-   * This determines which locales are shown in the locale picker (guide's locales only). */
+  /** When editing a stop within a tour context, pass the tour's available locales.
+   * This determines which locales are shown in the locale picker (tour's locales only). */
   tourAvailableLocales?: string[]
   navigation?: {
     backPath: string
@@ -51,7 +51,7 @@ export function StopEditorProvider({
   const base = useEditorBase<StopDetail, StopLocaleDraftResult, StopLocalePublishedResult>({
     nanoId,
     initialLocale,
-    // When editing in guide context, use guide's locales for initial locale validation
+    // When editing in tour context, use tour's locales for initial locale validation
     availableLocalesOverride: tourAvailableLocales,
     detailQueryOptions: stopDetailQueryOptions,
     localeDraftQueryOptions: stopLocaleDraftQueryOptions,
@@ -84,10 +84,10 @@ export function StopEditorProvider({
   } = base
 
   // Compute effective available locales based on context:
-  // - Guide context: show only guide's locales (the "project languages")
+  // - Tour context: show only tour's locales (the "project languages")
   // - Standalone: show only stop's existing locales
   // Note: When switching to a locale not yet in stop, the route loader's
-  // getOrCreateStopLocaleDraftForGuideFn creates records on-demand (like guides).
+  // getOrCreateStopLocaleDraftForTourFn creates records on-demand (like tours).
   const availableLocales = useMemo(() => {
     if (tourAvailableLocales) {
       return tourAvailableLocales

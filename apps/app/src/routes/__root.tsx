@@ -23,7 +23,7 @@ export const Route = createRootRouteWithContext<{
     const messages = await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
     const metadata = {
       title: messages?.app?.metadata?.title ?? 'ValGuide',
-      description: messages?.app?.metadata?.description ?? 'Explore guides',
+      description: messages?.app?.metadata?.description ?? 'Explore tours',
     }
     return { user, locale, theme, metadata }
   },

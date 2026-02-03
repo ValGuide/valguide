@@ -520,7 +520,7 @@
     "description": "Verwalten Sie Ihre Medienbibliothek",
     "empty": {
       "title": "Noch keine Assets",
-      "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Guides zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Guides wiederverwendet werden.",
+      "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Tours zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Tours wiederverwendet werden.",
       "uploadButton": "Ihr erstes Asset hochladen"
     },
     "picker": {

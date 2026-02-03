@@ -103,7 +103,7 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
   const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
 
   const formRef = useRef<TourMetadataFormRef>(null)
-  const formId = `guide-translation-${activeLocale}`
+  const formId = `tour-translation-${activeLocale}`
 
   const handleDirtyChange = useCallback(
     (formIsDirty: boolean) => {
@@ -125,7 +125,7 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
     })
   }
 
-  const handleNavigateToGuide = () => {
+  const handleNavigateToTour = () => {
     confirmIfDirty(() => router.navigate({ to: '/tours/$nanoId', params: { nanoId } }))
   }
 
@@ -277,7 +277,7 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
         onUnpublish={handleUnpublish}
         onDiscard={() => Promise.resolve()}
         backLabel={t('editor.tourDetails')}
-        onBack={handleNavigateToGuide}
+        onBack={handleNavigateToTour}
         sidebar={sidebarContent}
         mobileHeaderExtra={mobileProgressSheet}
         unsavedChangesDialog={unsavedChangesDialog}
@@ -291,7 +291,7 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
 
           <TourMetadataForm
             ref={formRef}
-            key={`guide-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
+            key={`tour-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
             locale={activeLocale}
             versionData={
               displayVersionData ? { ...displayVersionData, title: displayVersionData.title ?? '' } : undefined

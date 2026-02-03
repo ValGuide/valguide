@@ -19,7 +19,7 @@ export const getStructureDraftFn = createServerFn({ method: 'GET' })
 
     const result = await getStructureDraft(data.nanoId, data.locale)
     if (!result) {
-      throw new NotFoundError('Guide')
+      throw new NotFoundError('Tour')
     }
 
     return result

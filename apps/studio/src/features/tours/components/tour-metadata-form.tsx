@@ -7,12 +7,12 @@ import { RichTextEditor } from '@valguide/ui/components/rich-text/rich-text-edit
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
 import { z } from 'zod'
 
-const guideTranslationFormSchema = z.object({
+const tourTranslationFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(500),
   description: z.string(),
 })
 
-export type TourTranslationFormData = z.infer<typeof guideTranslationFormSchema>
+export type TourTranslationFormData = z.infer<typeof tourTranslationFormSchema>
 
 export type TourMetadataFormProps = {
   locale: string
@@ -40,7 +40,7 @@ export const TourMetadataForm = forwardRef<TourMetadataFormRef, TourMetadataForm
       description: versionData?.description ?? '',
     },
     validators: {
-      onSubmit: guideTranslationFormSchema,
+      onSubmit: tourTranslationFormSchema,
     },
   })
 

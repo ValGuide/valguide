@@ -27,8 +27,8 @@ export interface UseEditorBaseOptions {
   initialLocale?: string
   /**
    * Override available locales for initial locale validation.
-   * When editing a stop in guide context, pass guide's availableLocales here
-   * to ensure the initial locale is validated against the guide's locales,
+   * When editing a stop in tour context, pass tour's availableLocales here
+   * to ensure the initial locale is validated against the tour's locales,
    * not the stop's existing locales.
    */
   availableLocalesOverride?: string[]
@@ -83,7 +83,7 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
   const detailQuery = useSuspenseQuery(detailQueryOptions(nanoId))
   const detail = detailQuery.data as TDetail
   const entityId = detail.id
-  // Use override if provided (e.g., guide's locales when editing stop in guide context)
+  // Use override if provided (e.g., tour's locales when editing stop in tour context)
   const availableLocales = availableLocalesOverride ?? detail.availableLocales
   const existingLocales = detail.existingLocales ?? detail.availableLocales
 

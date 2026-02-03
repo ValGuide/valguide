@@ -38,7 +38,7 @@ type Story = StoryObj<typeof meta>
 
 const mockTranslationEN: TourTranslation = {
   id: '1',
-  tourId: 'guide-123',
+  tourId: 'tour-123',
   locale: 'en',
   title: 'Museum Tour 2025',
   description: 'Explore our newest exhibition featuring contemporary art and historical artifacts.',
@@ -81,9 +81,9 @@ export const LongContent: Story = {
     locale: 'en',
     translation: {
       ...mockTranslationEN,
-      title: 'This is a very long guide title that might need to be truncated or wrapped in the UI to fit properly',
+      title: 'This is a very long tour title that might need to be truncated or wrapped in the UI to fit properly',
       description:
-        'This is a very long description that spans multiple lines. It contains detailed information about the guide, including historical context, what visitors will see, how long it takes, and any special requirements or recommendations for the tour. This helps test the textarea component with substantial content.',
+        'This is a very long description that spans multiple lines. It contains detailed information about the tour, including historical context, what visitors will see, how long it takes, and any special requirements or recommendations for the tour. This helps test the textarea component with substantial content.',
     },
     coverImage: faker.image.urlLoremFlickr({ width: 800, height: 450, category: 'art' }),
   },

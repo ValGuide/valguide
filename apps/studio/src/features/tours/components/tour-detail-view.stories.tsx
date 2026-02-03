@@ -3,9 +3,9 @@ import type { Meta, StoryObj } from '@storybook/react'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { Button } from '@valguide/ui/components/button'
 import { fn } from 'storybook/test'
-import { TourDetailView } from './guide-detail-view'
+import { TourDetailView } from './tour-detail-view'
 
-const mockGuide: TourDetail = {
+const mockTour: TourDetail = {
   id: 'tour-uuid-123',
   nanoId: 'abc123xyz',
   organizationId: 'org-1',
@@ -71,15 +71,15 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    tour: mockGuide,
+    tour: mockTour,
   },
 }
 
 export const Published: Story = {
   args: {
     tour: {
-      ...mockGuide,
-      locales: mockGuide.locales.map((l) => ({
+      ...mockTour,
+      locales: mockTour.locales.map((l) => ({
         ...l,
         hasPublished: true,
       })),
@@ -90,14 +90,14 @@ export const Published: Story = {
 export const WithLongTitle: Story = {
   args: {
     tour: {
-      ...mockGuide,
+      ...mockTour,
       locales: [
         {
-          ...mockGuide.locales[0],
+          ...mockTour.locales[0],
           title:
             'The Complete History of the National Art Gallery and Its Permanent Collection of Renaissance Masterpieces',
         },
-        ...mockGuide.locales.slice(1),
+        ...mockTour.locales.slice(1),
       ],
     },
   },
@@ -106,10 +106,10 @@ export const WithLongTitle: Story = {
 export const WithRichDescription: Story = {
   args: {
     tour: {
-      ...mockGuide,
+      ...mockTour,
       locales: [
         {
-          ...mockGuide.locales[0],
+          ...mockTour.locales[0],
           description: `<p>Welcome to our <strong>comprehensive audio guide</strong> for the City Art Museum.</p>
 <p>This tour covers:</p>
 <ul>
@@ -119,7 +119,7 @@ export const WithRichDescription: Story = {
 </ul>
 <p>Duration: approximately <em>90 minutes</em></p>`,
         },
-        ...mockGuide.locales.slice(1),
+        ...mockTour.locales.slice(1),
       ],
     },
   },
@@ -128,9 +128,9 @@ export const WithRichDescription: Story = {
 export const SingleLanguage: Story = {
   args: {
     tour: {
-      ...mockGuide,
+      ...mockTour,
       availableLocales: ['en'],
-      locales: [mockGuide.locales[0]],
+      locales: [mockTour.locales[0]],
     },
   },
 }
@@ -138,7 +138,7 @@ export const SingleLanguage: Story = {
 export const ManyLanguages: Story = {
   args: {
     tour: {
-      ...mockGuide,
+      ...mockTour,
       availableLocales: ['en', 'de', 'fr', 'it', 'es', 'rm'],
       locales: [
         {
@@ -185,8 +185,8 @@ export const ManyLanguages: Story = {
 export const NoDescription: Story = {
   args: {
     tour: {
-      ...mockGuide,
-      locales: [{ ...mockGuide.locales[0], description: null }, ...mockGuide.locales.slice(1)],
+      ...mockTour,
+      locales: [{ ...mockTour.locales[0], description: null }, ...mockTour.locales.slice(1)],
     },
   },
 }

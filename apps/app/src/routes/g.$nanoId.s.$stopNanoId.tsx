@@ -4,7 +4,7 @@ import { clientEnv } from '@valguide/core/env/client'
 import { FullPlayer } from '@valguide/core/features/player/components/full-player'
 import { StopsList } from '@valguide/core/features/player/components/stops-list'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
-import { GuideThemeProvider } from '@valguide/core/features/player/theming/guide-theme-provider'
+import { TourThemeProvider } from '@valguide/core/features/player/theming/tour-theme-provider'
 import { toPlayerStops } from '@valguide/core/features/player/utils'
 import { getStopByNanoId } from '@valguide/core/features/tours/public/get-published-stop'
 import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-tour'
@@ -67,7 +67,7 @@ function StopPage() {
   }
 
   return (
-    <GuideThemeProvider
+    <TourThemeProvider
       initialTheme={tour.theme}
       enablePreview
       allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
@@ -99,7 +99,7 @@ function StopPage() {
           </Sheet>
         </div>
       </PlayerProvider>
-    </GuideThemeProvider>
+    </TourThemeProvider>
   )
 }
 

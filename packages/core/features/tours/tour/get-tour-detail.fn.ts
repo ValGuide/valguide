@@ -22,7 +22,7 @@ export const getTourDetailFn = createServerFn({ method: 'GET' })
 
     const detail = await getTourDetail(data.nanoId)
     if (!detail) {
-      throw new NotFoundError('Guide')
+      throw new NotFoundError('Tour')
     }
 
     return detail

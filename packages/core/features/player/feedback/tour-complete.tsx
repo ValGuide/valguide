@@ -13,13 +13,13 @@ type ThankYouSettings = {
 }
 
 type TourCompleteProps = {
-  guideTitle: string
+  tourTitle: string
   shareUrl: string
   onFeedbackSubmit?: (data: VisitorFeedbackData) => Promise<void>
   thankYou?: ThankYouSettings
 }
 
-export function TourComplete({ guideTitle, shareUrl, onFeedbackSubmit, thankYou }: TourCompleteProps) {
+export function TourComplete({ tourTitle, shareUrl, onFeedbackSubmit, thankYou }: TourCompleteProps) {
   const t = useTranslations('player.tourComplete')
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -60,7 +60,7 @@ export function TourComplete({ guideTitle, shareUrl, onFeedbackSubmit, thankYou 
       )}
 
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
-        <ShareButton url={shareUrl} title={guideTitle} />
+        <ShareButton url={shareUrl} title={tourTitle} />
         {thankYou?.buttonUrl && thankYou?.buttonLabel && (
           <Button asChild variant="default" size="sm">
             <a href={thankYou.buttonUrl} target="_blank" rel="noopener noreferrer">

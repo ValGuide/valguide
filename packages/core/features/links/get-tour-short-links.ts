@@ -7,17 +7,17 @@ import { short_links } from './schema'
 // TYPES
 // =============================================================================
 
-export type GetGuideShortLinksResult = ShortLink[]
+export type GetTourShortLinksResult = ShortLink[]
 
 // =============================================================================
 // INTERNAL FUNCTION
 // =============================================================================
 
 /**
- * Get all short links for a guide (any type - guide or stop level).
+ * Get all short links for a tour (any type - tour or stop level).
  */
-export async function getShortLinksForGuide(guideNanoId: string): Promise<ShortLink[]> {
+export async function getShortLinksForTour(tourNanoId: string): Promise<ShortLink[]> {
   return db.query.short_links.findMany({
-    where: eq(short_links.guideNanoId, guideNanoId),
+    where: eq(short_links.tourNanoId, tourNanoId),
   })
 }

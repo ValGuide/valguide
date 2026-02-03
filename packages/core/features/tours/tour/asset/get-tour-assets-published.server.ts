@@ -34,7 +34,7 @@ export async function getTourAssetsPublished(
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
   const rows = await db

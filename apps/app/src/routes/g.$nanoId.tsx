@@ -5,7 +5,7 @@ import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { QrScannerModal } from '@valguide/core/features/player/components/qr-scanner-modal'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
 import { usePlayerActions, useStops } from '@valguide/core/features/player/store/use-player-store'
-import { GuideThemeProvider } from '@valguide/core/features/player/theming/guide-theme-provider'
+import { TourThemeProvider } from '@valguide/core/features/player/theming/tour-theme-provider'
 import { toPlayerStops } from '@valguide/core/features/player/utils'
 import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-tour'
 import { getLocalizedTourText } from '@valguide/core/features/tours/public/localization-helpers'
@@ -48,7 +48,7 @@ function TourPage() {
   const playerStops = toPlayerStops(tour.stops, locale)
 
   return (
-    <GuideThemeProvider
+    <TourThemeProvider
       initialTheme={tour.theme}
       enablePreview
       allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
@@ -60,7 +60,7 @@ function TourPage() {
           <TourActions tourNanoId={nanoId} />
         </div>
       </PlayerProvider>
-    </GuideThemeProvider>
+    </TourThemeProvider>
   )
 }
 

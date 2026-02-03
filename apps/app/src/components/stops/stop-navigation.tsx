@@ -5,13 +5,13 @@ import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight, List } from 'lucide-react'
 
 type StopNavigationProps = {
-  guideNanoId: string
+  tourNanoId: string
   currentIndex: number
   stops: StopWithAssets[]
   locale: string
 }
 
-export function StopNavigation({ guideNanoId, currentIndex, stops }: StopNavigationProps) {
+export function StopNavigation({ tourNanoId, currentIndex, stops }: StopNavigationProps) {
   const t = useTranslations('tour')
   const prevStop = currentIndex > 0 ? stops[currentIndex - 1] : null
   const nextStop = currentIndex < stops.length - 1 ? stops[currentIndex + 1] : null
@@ -21,7 +21,7 @@ export function StopNavigation({ guideNanoId, currentIndex, stops }: StopNavigat
       <div className="flex items-center justify-between gap-4">
         {prevStop ? (
           <Button asChild variant="outline">
-            <Link to="/g/$nanoId/s/$stopNanoId" params={{ nanoId: guideNanoId, stopNanoId: prevStop.nanoId }}>
+            <Link to="/g/$nanoId/s/$stopNanoId" params={{ nanoId: tourNanoId, stopNanoId: prevStop.nanoId }}>
               <ChevronLeft className="h-4 w-4 mr-2" />
               {t('previous')}
             </Link>
@@ -31,7 +31,7 @@ export function StopNavigation({ guideNanoId, currentIndex, stops }: StopNavigat
         )}
 
         <Button asChild variant="outline">
-          <Link to="/g/$nanoId" params={{ nanoId: guideNanoId }}>
+          <Link to="/g/$nanoId" params={{ nanoId: tourNanoId }}>
             <List className="h-4 w-4 mr-2" />
             {t('backToOverview')}
           </Link>
@@ -39,7 +39,7 @@ export function StopNavigation({ guideNanoId, currentIndex, stops }: StopNavigat
 
         {nextStop ? (
           <Button asChild variant="outline">
-            <Link to="/g/$nanoId/s/$stopNanoId" params={{ nanoId: guideNanoId, stopNanoId: nextStop.nanoId }}>
+            <Link to="/g/$nanoId/s/$stopNanoId" params={{ nanoId: tourNanoId, stopNanoId: nextStop.nanoId }}>
               {t('next')}
               <ChevronRight className="h-4 w-4 ml-2" />
             </Link>

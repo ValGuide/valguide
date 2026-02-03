@@ -15,14 +15,14 @@ export type EnsureAllStopLocalesResult = {
 // =============================================================================
 
 /**
- * Ensures all guide's availableLocales have stopLocaleDraft records.
+ * Ensures all tour's availableLocales have stopLocaleDraft records.
  * Creates missing records for any locales that don't exist yet.
  */
 export async function ensureAllStopLocalesForTour(
   tourNanoId: string,
   stopNanoId: string,
 ): Promise<EnsureAllStopLocalesResult> {
-  // Fetch guide's availableLocales
+  // Fetch tour's availableLocales
   const [foundTour] = await db
     .select({ availableLocales: tour.availableLocales })
     .from(tour)

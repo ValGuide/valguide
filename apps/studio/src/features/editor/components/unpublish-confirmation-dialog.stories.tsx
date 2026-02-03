@@ -19,7 +19,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const GuideDefault: Story = {
+export const TourDefault: Story = {
   args: {
     open: true,
     contentType: 'tour',
@@ -33,7 +33,7 @@ export const StopDefault: Story = {
   },
 }
 
-export const GuideClosed: Story = {
+export const TourClosed: Story = {
   args: {
     open: false,
     contentType: 'tour',

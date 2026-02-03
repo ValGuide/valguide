@@ -11,9 +11,9 @@ export function TourProgress() {
   }
 
   // Calculate progress based on:
-  // 1. Guide has title
-  // 2. Guide has description
-  // 3. Guide has cover image
+  // 1. Tour has title
+  // 2. Tour has description
+  // 3. Tour has cover image
   // 4. At least one stop
   // 5. All stops have titles
 

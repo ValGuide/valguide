@@ -29,7 +29,7 @@ export async function updateStopVisibility(input: UpdateStopVisibilityInput): Pr
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
   const [foundStop] = await db.select({ id: stop.id }).from(stop).where(eq(stop.nanoId, stopNanoId)).limit(1)
@@ -45,7 +45,7 @@ export async function updateStopVisibility(input: UpdateStopVisibilityInput): Pr
     .limit(1)
 
   if (!existing) {
-    throw new NotFoundError('Stop not found in guide')
+    throw new NotFoundError('Stop not found in tour')
   }
 
   await db

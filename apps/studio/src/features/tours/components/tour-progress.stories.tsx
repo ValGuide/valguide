@@ -78,7 +78,7 @@ export const TitleAndDescription: Story = {
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
-        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing guide to explore' })}
+        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing tour to explore' })}
         stops={[]}
       >
         <Story />
@@ -92,7 +92,7 @@ export const WithCoverImage: Story = {
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
-        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing guide to explore' })}
+        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing tour to explore' })}
         stops={[]}
       >
         <Story />
@@ -106,7 +106,7 @@ export const WithStopsButNoTitles: Story = {
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
-        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing guide to explore' })}
+        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing tour to explore' })}
         stops={createMockStops(1)}
       >
         <Story />
@@ -120,7 +120,7 @@ export const Complete: Story = {
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
-        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing guide to explore' })}
+        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing tour to explore' })}
         stops={createMockStops(2).map((stop, i) => ({ ...stop, title: `Stop ${i + 1}` }))}
       >
         <Story />
@@ -129,14 +129,14 @@ export const Complete: Story = {
   ],
 }
 
-export const WithUnpublishedGuideDraft: Story = {
+export const WithUnpublishedTourDraft: Story = {
   decorators: [
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
         localeDraft={createMockLocaleDraft({
-          title: 'My Guide - Updated',
-          description: 'An amazing guide to explore - with changes',
+          title: 'My Tour - Updated',
+          description: 'An amazing tour to explore - with changes',
         })}
         stops={createMockStops(1).map((stop) => ({ ...stop, title: 'Stop 1' }))}
       >
@@ -151,7 +151,7 @@ export const WithUnpublishedStopDrafts: Story = {
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
-        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing guide to explore' })}
+        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing tour to explore' })}
         stops={createMockStops(2).map((stop, i) => ({ ...stop, title: `Stop ${i + 1}` }))}
       >
         <Story />
@@ -165,7 +165,7 @@ export const AllPublished: Story = {
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
-        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing guide to explore' })}
+        localeDraft={createMockLocaleDraft({ title: 'My Tour', description: 'An amazing tour to explore' })}
         stops={createMockStops(1).map((stop) => ({ ...stop, title: 'Stop 1' }))}
       >
         <Story />

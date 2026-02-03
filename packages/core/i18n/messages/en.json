@@ -520,7 +520,7 @@
     "description": "Manage your media library",
     "empty": {
       "title": "No assets yet",
-      "description": "Upload images, audio, and video files to use in your guides. All files are stored securely and can be reused across multiple guides.",
+      "description": "Upload images, audio, and video files to use in your tours. All files are stored securely and can be reused across multiple tours.",
       "uploadButton": "Upload your first asset"
     },
     "picker": {

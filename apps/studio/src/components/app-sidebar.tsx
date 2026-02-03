@@ -85,7 +85,7 @@ export function AppSidebar({
   // Helper to determine if a path is active
   const isActive = (path: string) => {
     if (path === '/') {
-      return pathnameWithoutLocale === '/' || pathnameWithoutLocale.startsWith('/guides')
+      return pathnameWithoutLocale === '/' || pathnameWithoutLocale.startsWith('/tours')
     }
     return pathnameWithoutLocale.startsWith(path)
   }

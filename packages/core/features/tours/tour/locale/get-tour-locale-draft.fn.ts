@@ -19,7 +19,7 @@ export const getTourLocaleDraftFn = createServerFn({ method: 'GET' })
 
     const draft = await getTourLocaleDraft(data.nanoId, data.locale)
     if (!draft) {
-      throw new NotFoundError('Guide locale')
+      throw new NotFoundError('Tour locale')
     }
 
     return draft

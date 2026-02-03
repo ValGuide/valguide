@@ -25,7 +25,7 @@ export async function updateTourLocaleDraft(
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
   const updateData: Record<string, unknown> = {
@@ -42,6 +42,6 @@ export async function updateTourLocaleDraft(
     .returning({ id: tourLocaleDraft.id })
 
   if (result.length === 0) {
-    throw new NotFoundError('Guide locale draft')
+    throw new NotFoundError('Tour locale draft')
   }
 }

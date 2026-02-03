@@ -98,10 +98,7 @@ const config: StorybookConfig = {
             find: '@valguide/core/features/orgs/actions',
             replacement: path.resolve(__dirname, './__mocks__/org-actions.ts'),
           },
-          {
-            find: '@valguide/core/features/guides/actions',
-            replacement: path.resolve(__dirname, './__mocks__/guide-actions.ts'),
-          },
+
           { find: '@valguide/core/features/db', replacement: path.resolve(__dirname, './__mocks__/db.ts') },
           {
             find: '@valguide/core/i18n/resolve-locale.fn',
@@ -149,23 +146,7 @@ const config: StorybookConfig = {
             find: /^@\/features\/join-team\/get-join-team-data$/,
             replacement: path.resolve(__dirname, './__mocks__/studio-get-join-team-data.ts'),
           },
-          // Guides
-          {
-            find: /^@\/features\/guides\/get-guides$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-guides.ts'),
-          },
-          {
-            find: /^@\/features\/guides\/get-guides-list$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-guides-list.ts'),
-          },
-          {
-            find: /^@\/features\/guides\/get-archived-guides$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-archived-guides.ts'),
-          },
-          {
-            find: /^@\/features\/guides\/create-guide$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-create-guide.ts'),
-          },
+
           // Stops
           {
             find: /^@\/features\/stops\/get-stops$/,

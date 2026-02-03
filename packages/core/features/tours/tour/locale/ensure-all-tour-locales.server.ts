@@ -15,7 +15,7 @@ export type EnsureAllTourLocalesResult = {
 // =============================================================================
 
 /**
- * Ensures all guide's availableLocales have tourLocaleDraft records.
+ * Ensures all tour's availableLocales have tourLocaleDraft records.
  * Creates missing draft records for any locales that don't exist yet.
  */
 export async function ensureAllTourLocales(tourNanoId: string): Promise<EnsureAllTourLocalesResult> {

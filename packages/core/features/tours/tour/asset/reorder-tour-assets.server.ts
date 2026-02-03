@@ -26,10 +26,10 @@ export async function reorderTourAssets(
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
 
   if (!foundTour) {
-    throw new NotFoundError('Guide')
+    throw new NotFoundError('Tour')
   }
 
-  // Verify all IDs belong to this guide
+  // Verify all IDs belong to this tour
   const existing = await db
     .select({ id: tourAssetDraft.id })
     .from(tourAssetDraft)

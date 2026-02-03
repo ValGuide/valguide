@@ -4,7 +4,7 @@ import { index, jsonb, pgSchema, serial, text, timestamp, uniqueIndex } from 'dr
 const studioSchema = pgSchema('studio')
 
 export const shortLinkTypeEnum = studioSchema.enum('short_link_type', [
-  'guide',
+  'tour',
   'stop',
   'campaign',
   'external',
@@ -20,7 +20,7 @@ export const short_links = studioSchema.table(
     locale: text('locale'),
 
     // Type-specific columns (nullable, used based on type)
-    guideNanoId: text('guide_nano_id'),
+    tourNanoId: text('tour_nano_id'),
     stopNanoId: text('stop_nano_id'),
     campaignId: text('campaign_id'),
     externalUrl: text('external_url'),
@@ -39,11 +39,11 @@ export const short_links = studioSchema.table(
     uniqueIndex('short_links_code_uq').on(table.code),
 
     // Partial unique indexes per type (one link per target)
-    uniqueIndex('short_links_guide_target_uq')
-      .on(table.type, table.guideNanoId, table.locale)
-      .where(sql`${table.type} = 'guide'`),
+    uniqueIndex('short_links_tour_target_uq')
+      .on(table.type, table.tourNanoId, table.locale)
+      .where(sql`${table.type} = 'tour'`),
     uniqueIndex('short_links_stop_target_uq')
-      .on(table.type, table.guideNanoId, table.stopNanoId, table.locale)
+      .on(table.type, table.tourNanoId, table.stopNanoId, table.locale)
       .where(sql`${table.type} = 'stop'`),
     uniqueIndex('short_links_campaign_target_uq')
       .on(table.type, table.campaignId)
@@ -55,8 +55,8 @@ export const short_links = studioSchema.table(
       .on(table.type, table.pageSlug, table.locale)
       .where(sql`${table.type} = 'landing_page'`),
 
-    // Index for querying by guide
-    index('short_links_guide_idx').on(table.guideNanoId),
+    // Index for querying by tour
+    index('short_links_tour_idx').on(table.tourNanoId),
   ],
 )
 

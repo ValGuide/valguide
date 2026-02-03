@@ -72,16 +72,16 @@ export interface BaseEditLayoutProps {
   /** Discard action - called after confirmation dialog */
   onDiscard: () => Promise<void>
 
-  /** Back button/breadcrumb content for header (use for stop editor with guide context) */
+  /** Back button/breadcrumb content for header (use for stop editor with tour context) */
   breadcrumbContent?: ReactNode
 
-  /** Simple back button label (use for guide editor) */
+  /** Simple back button label (use for tour editor) */
   backLabel?: string
 
   /** Simple back button handler */
   onBack?: () => void
 
-  /** Desktop sidebar content (GuideProgress for guides, null for stops) */
+  /** Desktop sidebar content (TourProgress for tours, null for stops) */
   sidebar?: ReactNode
 
   /** Mobile header extra actions (e.g., sheet trigger for progress) */

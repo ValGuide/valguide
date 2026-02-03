@@ -8,13 +8,13 @@ import type { ShortLink } from './schema'
  */
 export function buildPathFromShortLink(link: ShortLink): string | null {
   switch (link.type) {
-    case 'guide':
-      if (!link.guideNanoId || !link.locale) return null
-      return `/${link.locale}/g/${link.guideNanoId}`
+    case 'tour':
+      if (!link.tourNanoId || !link.locale) return null
+      return `/${link.locale}/g/${link.tourNanoId}`
 
     case 'stop':
-      if (!link.guideNanoId || !link.stopNanoId || !link.locale) return null
-      return `/${link.locale}/g/${link.guideNanoId}/s/${link.stopNanoId}`
+      if (!link.tourNanoId || !link.stopNanoId || !link.locale) return null
+      return `/${link.locale}/g/${link.tourNanoId}/s/${link.stopNanoId}`
 
     case 'campaign':
       if (!link.campaignId) return null

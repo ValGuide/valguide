@@ -37,8 +37,8 @@ function AssetsContent() {
 
   const handleAssetDeleted = async (_assetId: string) => {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
-    await queryClient.invalidateQueries({ queryKey: ['guides'] })
-    await queryClient.invalidateQueries({ queryKey: ['archived-guides'] })
+    await queryClient.invalidateQueries({ queryKey: ['tours'] })
+    await queryClient.invalidateQueries({ queryKey: ['archived-tours'] })
     await queryClient.invalidateQueries({ queryKey: ['stops'] })
   }
 
