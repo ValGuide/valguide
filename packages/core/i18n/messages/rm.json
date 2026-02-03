@@ -14,7 +14,7 @@
     "noTranscript": "Nagina transcripziun disponibla per questa registraziun",
     "language": "Lingua",
     "save": "Memorisar",
-    "share": "Cundivider",
+    "shareAction": "Cundivider",
     "stopOf": "Stop {current} da {total}",
     "stopsCount": "{count, plural, one {# stop} other {# stops}}",
     "totalDuration": "{minutes} min",
@@ -40,7 +40,33 @@
     "zoomIn": "Sgrandir",
     "zoomOut": "Reducir",
     "resetZoom": "Reinizialisar il zoom",
-    "close": "Serrar"
+    "close": "Serrar",
+    "feedback": {
+      "title": "Co è stada Vossa experientscha?",
+      "rateExperience": "Valitar Vossa experientscha",
+      "commentLabel": "Commentaris supplementars (opziunal)",
+      "commentPlaceholder": "Ditgai a nus tge che Vus ha plajì u co nus pudain meglierar...",
+      "characterCount": "{current}/{max}",
+      "submit": "Trametter feedback",
+      "submitting": "Tramessa...",
+      "thankYouTitle": "Grazia fitg!",
+      "thankYouMessage": "Voss feedback ans gida da meglierar.",
+      "shareExperience": "Cundivider Vossa experientscha"
+    },
+    "share": {
+      "title": "Cundivider quest guide",
+      "copyLink": "Copiar la colliaziun",
+      "linkCopied": "Colliaziun copiada!",
+      "shareVia": "Cundivider via",
+      "shareError": "Impussibel da cundivider. Copiar la colliaziun enstagl."
+    },
+    "tourComplete": {
+      "title": "Tour terminada!",
+      "message": "Vus avais terminà dad explorar quest guide.",
+      "ratePrompt": "Co è stada Vossa experientscha?",
+      "exploreMore": "Explorar dapli",
+      "learnMore": "Emprender dapli"
+    }
   },
   "admin": {
     "assets": {

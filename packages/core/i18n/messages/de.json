@@ -14,7 +14,7 @@
     "noTranscript": "Kein Transkript für diesen Track verfügbar",
     "language": "Sprache",
     "save": "Speichern",
-    "share": "Teilen",
+    "shareAction": "Teilen",
     "stopOf": "Stop {current} von {total}",
     "stopsCount": "{count, plural, one {# Stop} other {# Stops}}",
     "totalDuration": "{minutes} Min.",
@@ -40,7 +40,33 @@
     "zoomIn": "Vergrössern",
     "zoomOut": "Verkleinern",
     "resetZoom": "Zoom zurücksetzen",
-    "close": "Schliessen"
+    "close": "Schliessen",
+    "feedback": {
+      "title": "Wie war Ihr Erlebnis?",
+      "rateExperience": "Bewerten Sie Ihr Erlebnis",
+      "commentLabel": "Zusätzliche Kommentare (optional)",
+      "commentPlaceholder": "Sagen Sie uns, was Ihnen gefallen hat oder wie wir uns verbessern können...",
+      "characterCount": "{current}/{max}",
+      "submit": "Feedback senden",
+      "submitting": "Wird gesendet...",
+      "thankYouTitle": "Vielen Dank!",
+      "thankYouMessage": "Ihr Feedback hilft uns, uns zu verbessern.",
+      "shareExperience": "Teilen Sie Ihr Erlebnis"
+    },
+    "share": {
+      "title": "Guide teilen",
+      "copyLink": "Link kopieren",
+      "linkCopied": "Link kopiert!",
+      "shareVia": "Teilen via",
+      "shareError": "Teilen nicht möglich. Bitte kopieren Sie stattdessen den Link."
+    },
+    "tourComplete": {
+      "title": "Tour abgeschlossen!",
+      "message": "Sie haben diesen Guide vollständig erkundet.",
+      "ratePrompt": "Wie war Ihr Erlebnis?",
+      "exploreMore": "Mehr entdecken",
+      "learnMore": "Mehr erfahren"
+    }
   },
   "admin": {
     "assets": {

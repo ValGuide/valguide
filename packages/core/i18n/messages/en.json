@@ -14,7 +14,7 @@
     "noTranscript": "No transcript available for this track",
     "language": "Language",
     "save": "Save",
-    "share": "Share",
+    "shareAction": "Share",
     "stopOf": "Stop {current} of {total}",
     "stopsCount": "{count, plural, one {# stop} other {# stops}}",
     "totalDuration": "{minutes} min",
@@ -40,7 +40,33 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "resetZoom": "Reset zoom",
-    "close": "Close"
+    "close": "Close",
+    "feedback": {
+      "title": "How was your experience?",
+      "rateExperience": "Rate your experience",
+      "commentLabel": "Additional comments (optional)",
+      "commentPlaceholder": "Tell us what you liked or how we can improve...",
+      "characterCount": "{current}/{max}",
+      "submit": "Submit Feedback",
+      "submitting": "Submitting...",
+      "thankYouTitle": "Thank you!",
+      "thankYouMessage": "Your feedback helps us improve.",
+      "shareExperience": "Share your experience"
+    },
+    "share": {
+      "title": "Share this guide",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied!",
+      "shareVia": "Share via",
+      "shareError": "Could not share. Please try copying the link instead."
+    },
+    "tourComplete": {
+      "title": "Tour Complete!",
+      "message": "You've finished exploring this guide.",
+      "ratePrompt": "How was your experience?",
+      "exploreMore": "Explore more",
+      "learnMore": "Learn more"
+    }
   },
   "admin": {
     "assets": {
