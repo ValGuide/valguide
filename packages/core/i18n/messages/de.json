@@ -41,6 +41,8 @@
     "zoomOut": "Verkleinern",
     "resetZoom": "Zoom zurücksetzen",
     "close": "Schliessen",
+    "startTour": "Tour starten",
+    "viewAllStops": "Alle Stops anzeigen",
     "feedback": {
       "title": "Wie war Ihr Erlebnis?",
       "rateExperience": "Bewerten Sie Ihr Erlebnis",

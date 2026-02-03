@@ -6,23 +6,20 @@ import { ShareButton } from './share-button'
 import type { VisitorFeedbackData } from './visitor-feedback-form'
 import { VisitorFeedbackForm } from './visitor-feedback-form'
 
+type ThankYouSettings = {
+  title?: string | null
+  buttonLabel?: string | null
+  buttonUrl?: string | null
+}
+
 type TourCompleteProps = {
   guideTitle: string
   shareUrl: string
   onFeedbackSubmit?: (data: VisitorFeedbackData) => Promise<void>
-  thankYouTitle?: string | null
-  thankYouButtonLabel?: string | null
-  thankYouButtonUrl?: string | null
+  thankYou?: ThankYouSettings
 }
 
-export function TourComplete({
-  guideTitle,
-  shareUrl,
-  onFeedbackSubmit,
-  thankYouTitle,
-  thankYouButtonLabel,
-  thankYouButtonUrl,
-}: TourCompleteProps) {
+export function TourComplete({ guideTitle, shareUrl, onFeedbackSubmit, thankYou }: TourCompleteProps) {
   const t = useTranslations('player.tourComplete')
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -45,7 +42,7 @@ export function TourComplete({
       </div>
 
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold">{thankYouTitle ?? t('title')}</h1>
+        <h1 className="text-2xl font-semibold">{thankYou?.title ?? t('title')}</h1>
         <p className="text-muted-foreground">{t('message')}</p>
       </div>
 
@@ -64,10 +61,10 @@ export function TourComplete({
 
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
         <ShareButton url={shareUrl} title={guideTitle} />
-        {thankYouButtonUrl && thankYouButtonLabel && (
+        {thankYou?.buttonUrl && thankYou?.buttonLabel && (
           <Button asChild variant="default" size="sm">
-            <a href={thankYouButtonUrl} target="_blank" rel="noopener noreferrer">
-              {thankYouButtonLabel}
+            <a href={thankYou.buttonUrl} target="_blank" rel="noopener noreferrer">
+              {thankYou.buttonLabel}
               <ExternalLink className="h-4 w-4 ml-2" />
             </a>
           </Button>

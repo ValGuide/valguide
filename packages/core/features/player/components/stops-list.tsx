@@ -7,6 +7,7 @@ type StopsListProps = {
   className?: string
   showSearchBar?: boolean
   onQrScanRequest?: () => void
+  onStopSelect?: (nanoId: string) => void
 }
 
 export function StopsList({ className = '', showSearchBar = true, onQrScanRequest }: StopsListProps) {

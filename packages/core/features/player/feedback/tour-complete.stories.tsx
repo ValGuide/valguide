@@ -29,16 +29,20 @@ export const Default: Story = {}
 
 export const WithCustomThankYou: Story = {
   args: {
-    thankYouTitle: 'Thanks for visiting!',
-    thankYouButtonLabel: 'Visit our shop',
-    thankYouButtonUrl: 'https://shop.example.com',
+    thankYou: {
+      title: 'Thanks for visiting!',
+      buttonLabel: 'Visit our shop',
+      buttonUrl: 'https://shop.example.com',
+    },
   },
 }
 
 export const WithoutFeedback: Story = {
   args: {
     onFeedbackSubmit: undefined,
-    thankYouButtonLabel: 'Learn more about Van Gogh',
-    thankYouButtonUrl: 'https://vangoghmuseum.nl',
+    thankYou: {
+      buttonLabel: 'Learn more about Van Gogh',
+      buttonUrl: 'https://vangoghmuseum.nl',
+    },
   },
 }
