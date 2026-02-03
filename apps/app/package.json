@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "dev:local": "vite dev --port 3000 --host app.local.dev",
-    "dev:https": "pnpm dev:local & sleep 2 && caddy reverse-proxy --from https://app.local.dev --to localhost:3000 --internal-certs",
+    "dev:https": "pnpm dev:local & sleep 3 && caddy reverse-proxy --from https://app.local.dev --to localhost:3000 --internal-certs",
     "build": "vite build",
     "preview": "vite preview --port 3000",
     "start": "PORT=3000 node .output/server/index.mjs",
