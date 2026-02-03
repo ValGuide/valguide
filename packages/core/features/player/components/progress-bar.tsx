@@ -1,3 +1,4 @@
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Slider } from '@valguide/core/ui/components/slider'
 import { useCurrentTime, useDuration, usePlayerActions } from '../store/use-player-store'
 
@@ -13,6 +14,7 @@ type ProgressBarProps = {
 }
 
 export function ProgressBar({ className = '' }: ProgressBarProps) {
+  const t = useTranslations('player')
   const currentTime = useCurrentTime()
   const duration = useDuration()
   const { seek } = usePlayerActions()
@@ -29,9 +31,10 @@ export function ProgressBar({ className = '' }: ProgressBarProps) {
         max={duration || 100}
         step={1}
         onValueChange={handleValueChange}
-        aria-label="Playback progress"
+        aria-label={t('playbackProgress')}
+        aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
       />
-      <div className="flex justify-between text-xs text-muted-foreground">
+      <div className="flex justify-between text-xs text-muted-foreground" aria-hidden="true">
         <span>{formatTime(currentTime)}</span>
         <span>{formatTime(duration)}</span>
       </div>

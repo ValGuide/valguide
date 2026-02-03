@@ -4,9 +4,11 @@
     "pause": "Pausa",
     "previous": "Enavos",
     "next": "Enavant",
+    "playerControls": "Cumonds dal player audio",
     "playbackSpeed": "Spertadad da reproducziun",
     "rewind": "10 secundas enavos",
     "forward": "10 secundas enavant",
+    "playbackProgress": "Progress da reproducziun",
     "transcript": "Transcripziun",
     "transcriptAndMore": "Transcripziun & Dapli",
     "noTranscript": "Nagina transcripziun disponibla per questa registraziun",
@@ -25,7 +27,20 @@
     "tryAgain": "Empruvar danovamain",
     "autoPlayNext": "Proxim en {seconds}s",
     "playNow": "Far ir ussa",
-    "cancelAutoPlay": "Annullar"
+    "cancelAutoPlay": "Annullar",
+    "accessibility": "Opziuns dad accessibilitad",
+    "accessibilitySettings": "Opziuns dad accessibilitad",
+    "highContrast": "Aut cuntrast",
+    "reducedMotion": "Moviment reducì",
+    "textSize": "Grondezza dal text",
+    "decreaseTextSize": "Diminuir la grondezza dal text",
+    "increaseTextSize": "Augmentar la grondezza dal text",
+    "showTranscript": "Mussar la transcripziun",
+    "hideTranscript": "Zuppentar la transcripziun",
+    "zoomIn": "Sgrandir",
+    "zoomOut": "Reducir",
+    "resetZoom": "Reinizialisar il zoom",
+    "close": "Serrar"
   },
   "admin": {
     "assets": {

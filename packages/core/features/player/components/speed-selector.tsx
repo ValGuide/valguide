@@ -1,3 +1,4 @@
+import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/core/ui/components/popover'
 import { usePlayerActions, useSpeed } from '../store/use-player-store'
@@ -8,17 +9,19 @@ type SpeedSelectorProps = {
 }
 
 export function SpeedSelector({ className = '' }: SpeedSelectorProps) {
+  const t = useTranslations('player')
   const speed = useSpeed()
   const { setSpeed } = usePlayerActions()
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className={className} aria-label="Playback speed">
-          {speed}x
+        <Button variant="outline" size="sm" className={className} aria-label={t('playbackSpeed')}>
+          {speed}
+          <span aria-hidden="true">x</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-2" align="center">
+      <PopoverContent className="w-auto p-2" align="center" role="listbox" aria-label={t('playbackSpeed')}>
         <div className="flex flex-col gap-1">
           {PLAYBACK_SPEEDS.map((s) => (
             <Button
@@ -27,8 +30,11 @@ export function SpeedSelector({ className = '' }: SpeedSelectorProps) {
               size="sm"
               onClick={() => setSpeed(s)}
               className="justify-center"
+              role="option"
+              aria-selected={s === speed}
             >
-              {s}x
+              {s}
+              <span aria-hidden="true">x</span>
             </Button>
           ))}
         </div>

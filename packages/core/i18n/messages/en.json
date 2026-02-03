@@ -4,9 +4,11 @@
     "pause": "Pause",
     "previous": "Previous",
     "next": "Next",
+    "playerControls": "Audio player controls",
     "playbackSpeed": "Playback speed",
     "rewind": "Rewind 10 seconds",
     "forward": "Forward 10 seconds",
+    "playbackProgress": "Playback progress",
     "transcript": "Transcript",
     "transcriptAndMore": "Transcript & More",
     "noTranscript": "No transcript available for this track",
@@ -25,7 +27,20 @@
     "tryAgain": "Try again",
     "autoPlayNext": "Next in {seconds}s",
     "playNow": "Play Now",
-    "cancelAutoPlay": "Cancel"
+    "cancelAutoPlay": "Cancel",
+    "accessibility": "Accessibility options",
+    "accessibilitySettings": "Accessibility Settings",
+    "highContrast": "High contrast",
+    "reducedMotion": "Reduced motion",
+    "textSize": "Text size",
+    "decreaseTextSize": "Decrease text size",
+    "increaseTextSize": "Increase text size",
+    "showTranscript": "Show transcript",
+    "hideTranscript": "Hide transcript",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetZoom": "Reset zoom",
+    "close": "Close"
   },
   "admin": {
     "assets": {
