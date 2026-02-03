@@ -122,7 +122,6 @@
       "!**/postcss.config.mjs",
       "!**/tailwind.config.ts",
       "!**/growth",
-      "!**/docs/reference/nubart-raw",
       "!**/*.css",
       "!**/routeTree.gen.ts",
       "!apps/storybook/.storybook/__mocks__",
