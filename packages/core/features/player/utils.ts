@@ -1,6 +1,6 @@
 import { getAssetImageUrl } from '../assets/image-url'
-import { getLocalizedStopText } from '../guides/public/localization-helpers'
-import type { StopWithAssets } from '../guides/public/types'
+import { getLocalizedStopText } from '../tours/public/localization-helpers'
+import type { StopWithAssets } from '../tours/public/types'
 import type { PlayerStop } from './types'
 
 /**

@@ -2,15 +2,15 @@ import { relations } from 'drizzle-orm'
 import { index, integer, pgEnum, pgSchema, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import {
-  guide,
-  guideAsset,
-  guideAssetDraft,
-  guideLocale,
-  guideLocaleDraft,
-  guideSettings,
-  guideSettingsDraft,
-  guideStop,
-  guideStopDraft,
+  tour,
+  tourAsset,
+  tourAssetDraft,
+  tourLocale,
+  tourLocaleDraft,
+  tourSettings,
+  tourSettingsDraft,
+  tourStop,
+  tourStopDraft,
   stop,
   stopAsset,
   stopAssetDraft,
@@ -18,7 +18,7 @@ import {
   stopLocaleDraft,
   stopSettings,
   stopSettingsDraft,
-} from '../guides/schema'
+} from '../tours/schema'
 import { organization } from '../orgs/schema'
 
 /**
@@ -91,30 +91,30 @@ export const assetRelations = relations(asset, ({ one }) => ({
   }),
 }))
 
-export const guideRelations = relations(guide, ({ many, one }) => ({
-  localesDraft: many(guideLocaleDraft),
-  locales: many(guideLocale),
-  settingsDraft: one(guideSettingsDraft, {
-    fields: [guide.id],
-    references: [guideSettingsDraft.guideId],
+export const tourRelations = relations(tour, ({ many, one }) => ({
+  localesDraft: many(tourLocaleDraft),
+  locales: many(tourLocale),
+  settingsDraft: one(tourSettingsDraft, {
+    fields: [tour.id],
+    references: [tourSettingsDraft.tourId],
   }),
-  settings: one(guideSettings, {
-    fields: [guide.id],
-    references: [guideSettings.guideId],
+  settings: one(tourSettings, {
+    fields: [tour.id],
+    references: [tourSettings.tourId],
   }),
-  stopsDraft: many(guideStopDraft),
-  stops: many(guideStop),
-  assetsDraft: many(guideAssetDraft),
-  assets: many(guideAsset),
+  stopsDraft: many(tourStopDraft),
+  stops: many(tourStop),
+  assetsDraft: many(tourAssetDraft),
+  assets: many(tourAsset),
   creator: one(authUsers, {
-    fields: [guide.createdBy],
+    fields: [tour.createdBy],
     references: [authUsers.id],
-    relationName: 'guide_creator',
+    relationName: 'tour_creator',
   }),
   updater: one(authUsers, {
-    fields: [guide.updatedBy],
+    fields: [tour.updatedBy],
     references: [authUsers.id],
-    relationName: 'guide_updater',
+    relationName: 'tour_updater',
   }),
 }))
 
@@ -129,8 +129,8 @@ export const stopRelations = relations(stop, ({ many, one }) => ({
     fields: [stop.id],
     references: [stopSettings.stopId],
   }),
-  guideStopsDraft: many(guideStopDraft),
-  guideStops: many(guideStop),
+  tourStopsDraft: many(tourStopDraft),
+  tourStops: many(tourStop),
   assetsDraft: many(stopAssetDraft),
   assets: many(stopAsset),
   creator: one(authUsers, {
@@ -146,24 +146,24 @@ export const stopRelations = relations(stop, ({ many, one }) => ({
 }))
 
 // Locale relations (simplified - no version table)
-export const guideLocaleDraftRelations = relations(guideLocaleDraft, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideLocaleDraft.guideId],
-    references: [guide.id],
+export const tourLocaleDraftRelations = relations(tourLocaleDraft, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourLocaleDraft.tourId],
+    references: [tour.id],
   }),
   updater: one(authUsers, {
-    fields: [guideLocaleDraft.updatedBy],
+    fields: [tourLocaleDraft.updatedBy],
     references: [authUsers.id],
   }),
 }))
 
-export const guideLocaleRelations = relations(guideLocale, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideLocale.guideId],
-    references: [guide.id],
+export const tourLocaleRelations = relations(tourLocale, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourLocale.tourId],
+    references: [tour.id],
   }),
   publisher: one(authUsers, {
-    fields: [guideLocale.publishedBy],
+    fields: [tourLocale.publishedBy],
     references: [authUsers.id],
   }),
 }))
@@ -191,24 +191,24 @@ export const stopLocaleRelations = relations(stopLocale, ({ one }) => ({
 }))
 
 // Settings relations
-export const guideSettingsDraftRelations = relations(guideSettingsDraft, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideSettingsDraft.guideId],
-    references: [guide.id],
+export const tourSettingsDraftRelations = relations(tourSettingsDraft, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourSettingsDraft.tourId],
+    references: [tour.id],
   }),
   updater: one(authUsers, {
-    fields: [guideSettingsDraft.updatedBy],
+    fields: [tourSettingsDraft.updatedBy],
     references: [authUsers.id],
   }),
 }))
 
-export const guideSettingsRelations = relations(guideSettings, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideSettings.guideId],
-    references: [guide.id],
+export const tourSettingsRelations = relations(tourSettings, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourSettings.tourId],
+    references: [tour.id],
   }),
   publisher: one(authUsers, {
-    fields: [guideSettings.publishedBy],
+    fields: [tourSettings.publishedBy],
     references: [authUsers.id],
   }),
 }))
@@ -236,47 +236,47 @@ export const stopSettingsRelations = relations(stopSettings, ({ one }) => ({
 }))
 
 // Structure relations
-export const guideStopDraftRelations = relations(guideStopDraft, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideStopDraft.guideId],
-    references: [guide.id],
+export const tourStopDraftRelations = relations(tourStopDraft, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourStopDraft.tourId],
+    references: [tour.id],
   }),
   stop: one(stop, {
-    fields: [guideStopDraft.stopId],
+    fields: [tourStopDraft.stopId],
     references: [stop.id],
   }),
 }))
 
-export const guideStopRelations = relations(guideStop, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideStop.guideId],
-    references: [guide.id],
+export const tourStopRelations = relations(tourStop, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourStop.tourId],
+    references: [tour.id],
   }),
   stop: one(stop, {
-    fields: [guideStop.stopId],
+    fields: [tourStop.stopId],
     references: [stop.id],
   }),
 }))
 
 // Asset assignment relations
-export const guideAssetDraftRelations = relations(guideAssetDraft, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideAssetDraft.guideId],
-    references: [guide.id],
+export const tourAssetDraftRelations = relations(tourAssetDraft, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourAssetDraft.tourId],
+    references: [tour.id],
   }),
   asset: one(asset, {
-    fields: [guideAssetDraft.assetId],
+    fields: [tourAssetDraft.assetId],
     references: [asset.id],
   }),
 }))
 
-export const guideAssetRelations = relations(guideAsset, ({ one }) => ({
-  guide: one(guide, {
-    fields: [guideAsset.guideId],
-    references: [guide.id],
+export const tourAssetRelations = relations(tourAsset, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourAsset.tourId],
+    references: [tour.id],
   }),
   asset: one(asset, {
-    fields: [guideAsset.assetId],
+    fields: [tourAsset.assetId],
     references: [asset.id],
   }),
 }))

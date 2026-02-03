@@ -1,7 +1,7 @@
 import { db } from '@valguide/core/features/db'
 import { and, eq } from 'drizzle-orm'
 import { asset } from '../assets/schema'
-import { guide, stop } from '../guides/schema'
+import { stop, tour } from '../tours/schema'
 import { hasMinRole, type OrgRole } from '../orgs/permissions'
 import { organizationMember } from '../orgs/schema'
 import { theme } from '../themes/schema'
@@ -99,45 +99,45 @@ export async function requireOrgRole(organizationId: string, userId: string, min
 }
 
 // ============================================================================
-// Entity Access - Guide
+// Entity Access - Tour
 // ============================================================================
 
 /**
- * Require access to a guide by its UUID.
+ * Require access to a tour by its UUID.
  */
-export async function requireGuideAccess(guideId: string, userId: string): Promise<AuthResult> {
-  const [foundGuide] = await db
-    .select({ organizationId: guide.organizationId })
-    .from(guide)
-    .where(eq(guide.id, guideId))
+export async function requireTourAccess(tourId: string, userId: string): Promise<AuthResult> {
+  const [foundTour] = await db
+    .select({ organizationId: tour.organizationId })
+    .from(tour)
+    .where(eq(tour.id, tourId))
     .limit(1)
 
-  if (!foundGuide) {
-    throw new NotFoundError('Guide')
+  if (!foundTour) {
+    throw new NotFoundError('Tour')
   }
 
-  return requireOrgMember(foundGuide.organizationId, userId)
+  return requireOrgMember(foundTour.organizationId, userId)
 }
 
 /**
- * Require access to a guide by its nanoId.
+ * Require access to a tour by its nanoId.
  */
-export async function requireGuideAccessByNanoId(
+export async function requireTourAccessByNanoId(
   nanoId: string,
   userId: string,
-): Promise<AuthResult & { guideId: string }> {
-  const [foundGuide] = await db
-    .select({ id: guide.id, organizationId: guide.organizationId })
-    .from(guide)
-    .where(eq(guide.nanoId, nanoId))
+): Promise<AuthResult & { tourId: string }> {
+  const [foundTour] = await db
+    .select({ id: tour.id, organizationId: tour.organizationId })
+    .from(tour)
+    .where(eq(tour.nanoId, nanoId))
     .limit(1)
 
-  if (!foundGuide) {
-    throw new NotFoundError('Guide')
+  if (!foundTour) {
+    throw new NotFoundError('Tour')
   }
 
-  const result = await requireOrgMember(foundGuide.organizationId, userId)
-  return { ...result, guideId: foundGuide.id }
+  const result = await requireOrgMember(foundTour.organizationId, userId)
+  return { ...result, tourId: foundTour.id }
 }
 
 // ============================================================================

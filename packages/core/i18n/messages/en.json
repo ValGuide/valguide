@@ -56,7 +56,7 @@
       "shareExperience": "Share your experience"
     },
     "share": {
-      "title": "Share this guide",
+      "title": "Share this tour",
       "copyLink": "Copy link",
       "linkCopied": "Link copied!",
       "shareVia": "Share via",
@@ -64,7 +64,7 @@
     },
     "tourComplete": {
       "title": "Tour Complete!",
-      "message": "You've finished exploring this guide.",
+      "message": "You've finished exploring this tour.",
       "ratePrompt": "How was your experience?",
       "exploreMore": "Explore more",
       "learnMore": "Learn more"
@@ -188,16 +188,16 @@
   "notFound": {
     "title": "404 – Lost Your Way?",
     "description": "Looks like this trail doesn't lead anywhere! Let's get you back to where the adventure is.",
-    "guide": {
-      "backToGuides": "Back to Guides"
+    "tour": {
+      "backToTours": "Back to Tours"
     },
     "stop": {
       "title": "Stop not found",
       "description": "This stop doesn't exist or you don't have access to it.",
-      "backToGuide": "Guide"
+      "backToTour": "Tour"
     }
   },
-  "guide": {
+  "tour": {
     "previewCard": {
       "viewDetails": "View Details",
       "author": "Author",
@@ -232,84 +232,84 @@
     "undo": "Undo",
     "redo": "Redo"
   },
-  "guides": {
-    "title": "Guides",
-    "description": "Create and manage your multimedia guides",
+  "tours": {
+    "title": "Tours",
+    "description": "Create and manage your multimedia tours",
     "editor": {
       "preview": "Preview",
       "sharedContent": "Shared across all languages",
       "sharedContentDescription": "Changes here will apply to all languages",
       "localeContent": "Language-specific content",
-      "guideDetails": "Guide Overview",
+      "tourDetails": "Tour Overview",
       "localeIndicator": "({locale})",
-      "guideDetailsDescription": "Edit the guide information for this language",
+      "tourDetailsDescription": "Edit the tour information for this language",
       "titleLabel": "Title *",
       "titlePlaceholder": "e.g. Highlights of the Roman Collection",
       "characterCount": "{current}/500 characters",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "e.g. A curated tour of the museum's most significant Roman artifacts",
       "coverImageLabel": "Cover Image",
-      "guideProgress": "Guide Progress",
+      "tourProgress": "Tour Progress",
       "progress": {
         "label": "Completion",
-        "guideTitle": "Guide title",
-        "guideDescription": "Guide description",
+        "tourTitle": "Tour title",
+        "tourDescription": "Tour description",
         "coverImage": "Cover image",
         "hasStops": "At least one stop",
         "allStopTitles": "All stops have titles"
       },
-      "backToGuide": "Guide"
+      "backToTour": "Tour"
     },
     "empty": {
-      "title": "No guides yet",
-      "heroDescription": "Your visitors deserve more than a brochure. Create immersive audio guides that bring your exhibitions to life.",
+      "title": "No tours yet",
+      "heroDescription": "Your visitors deserve more than a brochure. Create immersive audio tours that bring your exhibitions to life.",
       "createButton": "Start creating",
-      "createNewButton": "Create new guide",
+      "createNewButton": "Create new tour",
       "creating": "Creating..."
     },
     "create": {
-      "error": "Failed to create guide",
-      "errorDescription": "An error occurred while creating the guide. Please try again."
+      "error": "Failed to create tour",
+      "errorDescription": "An error occurred while creating the tour. Please try again."
     },
-    "editGuide": "Edit Guide",
+    "editTour": "Edit Tour",
     "viewInApp": "View in App",
     "delete": {
-      "success": "Guide deleted",
-      "successDescription": "The guide has been deleted successfully",
-      "error": "Failed to delete guide",
-      "errorDescription": "An error occurred while deleting the guide. Please try again."
+      "success": "Tour deleted",
+      "successDescription": "The tour has been deleted successfully",
+      "error": "Failed to delete tour",
+      "errorDescription": "An error occurred while deleting the tour. Please try again."
     },
     "archive": {
-      "confirmTitle": "Archive this guide?",
-      "confirmDescription": "This guide will be moved to archived. You can recover it later.",
+      "confirmTitle": "Archive this tour?",
+      "confirmDescription": "This tour will be moved to archived. You can recover it later.",
       "confirmButton": "Archive",
       "cancelButton": "Cancel",
-      "success": "Guide archived successfully",
-      "error": "Failed to archive guide"
+      "success": "Tour archived successfully",
+      "error": "Failed to archive tour"
     },
     "recover": {
-      "success": "Guide recovered successfully",
-      "successDescription": "The guide has been restored to your active guides",
-      "error": "Failed to recover guide",
-      "errorDescription": "An error occurred while recovering the guide. Please try again."
+      "success": "Tour recovered successfully",
+      "successDescription": "The tour has been restored to your active tours",
+      "error": "Failed to recover tour",
+      "errorDescription": "An error occurred while recovering the tour. Please try again."
     },
     "archived": {
       "title": "Archived",
-      "description": "View and manage your archived guides",
+      "description": "View and manage your archived tours",
       "empty": {
-        "title": "No archived guides",
-        "description": "Archived guides will appear here. You can recover them anytime."
+        "title": "No archived tours",
+        "description": "Archived tours will appear here. You can recover them anytime."
       }
     },
     "archivedStatus": "Archived",
-    "recoverGuide": "Recover Guide",
+    "recoverTour": "Recover Tour",
     "permanentlyDelete": "Permanently Delete",
-    "recoverConfirmTitle": "Recover this guide?",
-    "recoverConfirmDescription": "This guide will be restored to your active guides.",
-    "deleteConfirmTitle": "Permanently delete this guide?",
+    "recoverConfirmTitle": "Recover this tour?",
+    "recoverConfirmDescription": "This tour will be restored to your active tours.",
+    "deleteConfirmTitle": "Permanently delete this tour?",
     "deleteConfirmDescriptionWithName": "This will permanently delete \"{name}\". This action cannot be undone.",
     "deleteConfirmInstruction": "To confirm, type: {phrase}",
-    "deleteConfirmPhrase": "delete guide",
+    "deleteConfirmPhrase": "delete tour",
     "archivedOnDate": "Archived on: {date}",
     "noCoverImage": "No cover image",
     "status": {
@@ -324,12 +324,12 @@
     "publish": {
       "success": "Translation published successfully",
       "error": "Failed to publish translation",
-      "guidePublished": "Guide published with {stopCount, plural, =0 {no stops} one {# stop} other {# stops}}",
-      "guidePublishError": "Failed to publish guide"
+      "tourPublished": "Tour published with {stopCount, plural, =0 {no stops} one {# stop} other {# stops}}",
+      "tourPublishError": "Failed to publish tour"
     },
-    "confirmUnpublishGuide": {
+    "confirmUnpublishTour": {
       "title": "Unpublish this translation?",
-      "description": "Visitors will no longer see this language version of the guide. The guide remains available in other languages. Nothing is deleted—you can republish anytime.",
+      "description": "Visitors will no longer see this language version of the tour. The tour remains available in other languages. Nothing is deleted—you can republish anytime.",
       "confirm": "Unpublish translation",
       "cancel": "Keep published"
     },
@@ -340,7 +340,7 @@
       "cancel": "Keep published"
     },
     "assets": {
-      "updateError": "Failed to update guide assets"
+      "updateError": "Failed to update tour assets"
     },
     "localeSelector": {
       "selectLanguage": "Select language",
@@ -379,7 +379,7 @@
       "confirm": "Publish",
       "cancel": "Cancel"
     },
-    "untitledGuide": "Untitled Guide",
+    "untitledTour": "Untitled Tour",
     "unknownTitle": "Unknown",
     "unsavedChanges": {
       "title": "Unsaved Changes",
@@ -388,12 +388,12 @@
       "leave": "Discard Changes"
     },
     "error": {
-      "failedToLoad": "Failed to load guides",
+      "failedToLoad": "Failed to load tours",
       "unexpected": "An unexpected error occurred"
     },
     "details": {
-      "title": "Guide Overview",
-      "guideId": "Guide ID",
+      "title": "Tour Overview",
+      "tourId": "Tour ID",
       "created": "Created",
       "lastUpdated": "Last Updated",
       "status": "Status",
@@ -430,12 +430,12 @@
     "stopTitle": "{number}: {title}",
     "empty": {
       "title": "No stops yet",
-      "description": "Add stops to create the journey through your guide. Each stop can have its own content in multiple languages.",
-      "heroDescription": "Stops are the building blocks of your guides. Each stop tells part of your story.",
-      "hint": "Create stops from within a guide editor to get started."
+      "description": "Add stops to create the journey through your tour. Each stop can have its own content in multiple languages.",
+      "heroDescription": "Stops are the building blocks of your tours. Each stop tells part of your story.",
+      "hint": "Create stops from within a tour editor to get started."
     },
     "list": {
-      "description": "Manage all stops across your guides",
+      "description": "Manage all stops across your tours",
       "error": "Failed to load stops",
       "locales": "{count, plural, =1 {# language} other {# languages}}"
     },
@@ -452,8 +452,8 @@
       "audioLabel": "Audio Guide",
       "autoGenerate": "Auto-generate from audio",
       "galleryLabel": "Gallery (Images & Video)",
-      "usedInGuides": "Used in {count, plural, one {# guide} other {# guides}}",
-      "sharedStopWarning": "Changes will affect all guides using this stop"
+      "usedInTours": "Used in {count, plural, one {# tour} other {# tours}}",
+      "sharedStopWarning": "Changes will affect all tours using this stop"
     },
     "actions": {
       "edit": "Edit Stop",
@@ -461,7 +461,7 @@
       "addError": "Failed to add stop",
       "reorderSuccess": "Stops reordered",
       "reorderError": "Failed to reorder stops",
-      "removeSuccess": "Stop removed from guide",
+      "removeSuccess": "Stop removed from tour",
       "removeError": "Failed to remove stop"
     },
     "locales": {
@@ -581,15 +581,15 @@
       "cancel": "Cancel"
     },
     "usage": {
-      "guidesCount": "{count, plural, one {# guide} other {# guides}}",
+      "toursCount": "{count, plural, one {# tour} other {# tours}}",
       "stopsCount": "{count, plural, one {# stop} other {# stops}}",
-      "guidesAndStops": "{guides}, {stops}"
+      "toursAndStops": "{tours}, {stops}"
     },
     "deleteWithUsage": {
       "title": "Delete Asset",
       "warningTitle": "This asset is in use",
       "description": "\"{fileName}\" is used in:",
-      "guidesSection": "Guides",
+      "toursSection": "Tours",
       "stopsSection": "Stops",
       "warning": "Deleting will remove this asset from all these locations permanently.",
       "confirmButton": "Delete Anyway",
@@ -611,7 +611,7 @@
     "nav": {
       "brandKit": "Brand Kit",
       "workspace": "Workspace",
-      "guides": "Guides",
+      "tours": "Tours",
       "stops": "Stops",
       "archived": "Archived",
       "assets": "Assets",
@@ -620,7 +620,7 @@
       "settings": "Settings",
       "support": "Support",
       "feedback": "Feedback",
-      "recentGuides": "Recent Guides",
+      "recentTours": "Recent Tours",
       "more": "More",
       "viewProject": "View Project",
       "shareProject": "Share Project",
@@ -635,10 +635,10 @@
     },
     "pages": {
       "design": {
-        "description": "Customize the look and feel of your guides."
+        "description": "Customize the look and feel of your tours."
       },
       "analytics": {
-        "description": "View and analyze your guide performance metrics."
+        "description": "View and analyze your tour performance metrics."
       },
       "settings": {
         "description": "Configure your application preferences and settings."
@@ -730,7 +730,7 @@
     },
     "createTeam": {
       "title": "Create team",
-      "description": "Add a new team to manage your guides.",
+      "description": "Add a new team to manage your tours.",
       "nameLabel": "Team Name",
       "namePlaceholder": "Acme Museum",
       "cancel": "Cancel",

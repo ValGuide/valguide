@@ -2,25 +2,25 @@ import { queryOptions } from '@tanstack/react-query'
 import {
   type GetStopAssetsDraftResult,
   getStopAssetsDraftFn,
-} from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
+} from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
 import {
   type GetStopAssetsPublishedResult,
   getStopAssetsPublishedFn,
-} from '@valguide/core/features/guides/stop/asset/get-stop-assets-published.fn'
-import { getStopDetailFn, type StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
+} from '@valguide/core/features/tours/stop/asset/get-stop-assets-published.fn'
+import { getStopDetailFn, type StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
 import {
-  getStopGuideUsageFn,
-  type StopGuideUsageResult,
-} from '@valguide/core/features/guides/stop/get-stop-guide-usage.fn'
-import { listStopsFn, type StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
+  getStopTourUsageFn,
+  type StopTourUsageResult,
+} from '@valguide/core/features/tours/stop/get-stop-tour-usage.fn'
+import { listStopsFn, type StopListItem } from '@valguide/core/features/tours/stop/list-stops.fn'
 import {
   getStopLocaleDraftFn,
   type StopLocaleDraftResult,
-} from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
+} from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.fn'
 import {
   getStopLocalePublishedFn,
   type StopLocalePublishedResult,
-} from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
+} from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.fn'
 
 /**
  * Query options for stop library list
@@ -89,9 +89,9 @@ export const stopAssetsPublishedQueryOptions = (nanoId: string) =>
  * Query options for stop guide usage (how many guides reference this stop)
  * Used to show "Used in X guides" indicator when a stop is shared
  */
-export const stopGuideUsageQueryOptions = (nanoId: string) =>
-  queryOptions<StopGuideUsageResult>({
+export const stopTourUsageQueryOptions = (nanoId: string) =>
+  queryOptions<StopTourUsageResult>({
     queryKey: ['stop', nanoId, 'guide-usage'],
-    queryFn: () => getStopGuideUsageFn({ data: { nanoId } }),
+    queryFn: () => getStopTourUsageFn({ data: { nanoId } }),
     staleTime: 60 * 1000,
   })

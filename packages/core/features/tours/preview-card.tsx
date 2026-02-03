@@ -1,0 +1,133 @@
+import { Link } from '@tanstack/react-router'
+import { Image } from '@unpic/react'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { Button } from '@valguide/core/ui/components/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
+import { StatusBadge } from '@valguide/core/ui/components/status-badge'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
+import { cn } from '@valguide/core/ui/lib/utils'
+import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
+import { ImageIcon, LucideInfo } from 'lucide-react'
+import * as React from 'react'
+import type { Tour } from './types'
+
+export interface TourPreviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  tour: Tour
+  onViewDetails?: (tour: Tour) => void
+  className?: string
+}
+
+export function TourPreviewCard({ tour, onViewDetails, className, ...props }: TourPreviewCardProps) {
+  // i18n-used-keys: tour.previewCard.draft, tour.previewCard.published
+  const t = useTranslations('tour.previewCard')
+  const locale = useLocale()
+
+  const formatDate = (date?: Date | string) => {
+    if (!date) return ''
+    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(date))
+  }
+
+  const translation = React.useMemo(() => {
+    const localeTranslation = tour.translations?.find((t) => t.locale === locale)
+    return localeTranslation || tour.translations?.[0]
+  }, [tour.translations, locale])
+
+  const displayTitle = translation?.title || tour.title || 'Untitled Tour'
+  const displayDescription = translation?.description || tour.description || ''
+  const displayImage = tour.imageUrl ?? (tour.coverImage ? getAssetImageUrl(tour.coverImage) : undefined)
+  const tourLinkOptions = tour.nanoId
+    ? ({ to: '/tours/$nanoId', params: { nanoId: tour.nanoId } } as const)
+    : ({ to: '/' } as const)
+
+  const isPublished = !!tour.published
+  const status = isPublished ? 'published' : 'draft'
+
+  return (
+    <Card
+      className={cn(
+        'overflow-hidden flex flex-col h-full hover:-translate-y-0.5 hover:shadow-(--shadow-card-hover) hover:border-primary/20',
+        className,
+      )}
+      {...props}
+    >
+      {/* Cover Image - Fixed Height */}
+      <div className="relative h-44 w-full overflow-hidden shrink-0">
+        {displayImage ? (
+          <Image
+            src={displayImage}
+            alt={displayTitle}
+            layout="fullWidth"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
+              <ImageIcon className="h-7 w-7 text-amber-600 dark:text-amber-400" />
+            </div>
+            <p className="text-xs text-muted-foreground/70">{t('addCoverImage')}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Header with Title and Badge */}
+      <CardHeader className="pb-0">
+        <CardTitle className="flex items-start justify-between gap-3">
+          <span className="line-clamp-2 text-base font-semibold leading-snug flex-1">{displayTitle}</span>
+          <StatusBadge status={status} size="sm" className="shrink-0 mt-0.5">
+            {t(status)}
+          </StatusBadge>
+        </CardTitle>
+      </CardHeader>
+
+      {/* Description - Clamped */}
+      <CardContent className="flex-1 py-3">
+        {displayDescription ? (
+          <div className="text-sm text-muted-foreground line-clamp-2">
+            <RichTextDisplay content={displayDescription} />
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground/50 italic">{t('noDescription')}</p>
+        )}
+      </CardContent>
+
+      {/* Footer - Consistent Position */}
+      <CardFooter className="flex-col items-stretch gap-3 pt-0">
+        <div className="flex items-center justify-between">
+          <Button variant="outline" size="sm" asChild>
+            <Link {...tourLinkOptions} preload="intent">
+              {t('viewDetails')}
+            </Link>
+          </Button>
+          {tour.author && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-7 w-7">
+                    <LucideInfo className="h-3.5 w-3.5" />
+                    <span className="sr-only">{t('authorInfo')}</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {t('author')}: {tour.author}
+                  </p>
+                  {tour.createdAt && (
+                    <p>
+                      {t('created')}: {formatDate(tour.createdAt)}
+                    </p>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+        {tour.updatedAt && (
+          <span className="text-xs text-muted-foreground/70">
+            {t('updated')}: {formatDate(tour.updatedAt)}
+          </span>
+        )}
+      </CardFooter>
+    </Card>
+  )
+}

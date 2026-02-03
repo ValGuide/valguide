@@ -1,6 +1,6 @@
 export * from './assets/schema'
 export * from './feedback/schema'
-export * from './guides/schema'
+export * from './tours/schema'
 export * from './links/schema'
 export * from './orgs/schema'
 export * from './profiles/schema'

@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Asset } from '@valguide/core/features/assets/schema'
-import { assignStopAssetFn } from '@valguide/core/features/guides/stop/asset/assign-stop-asset.fn'
-import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
-import { removeStopAssetFn } from '@valguide/core/features/guides/stop/asset/remove-stop-asset.fn'
-import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
-import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
-import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
-import { publishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/publish-stop-locale.fn'
-import { unpublishStopLocaleFn } from '@valguide/core/features/guides/stop/locale/unpublish-stop-locale.fn'
-import { updateStopLocaleDraftFn } from '@valguide/core/features/guides/stop/locale/update-stop-locale-draft.fn'
-import { updateStopFn } from '@valguide/core/features/guides/stop/update-stop.fn'
+import { assignStopAssetFn } from '@valguide/core/features/tours/stop/asset/assign-stop-asset.fn'
+import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
+import { removeStopAssetFn } from '@valguide/core/features/tours/stop/asset/remove-stop-asset.fn'
+import type { StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
+import type { StopLocaleDraftResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.fn'
+import type { StopLocalePublishedResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.fn'
+import { publishStopLocaleFn } from '@valguide/core/features/tours/stop/locale/publish-stop-locale.fn'
+import { unpublishStopLocaleFn } from '@valguide/core/features/tours/stop/locale/unpublish-stop-locale.fn'
+import { updateStopLocaleDraftFn } from '@valguide/core/features/tours/stop/locale/update-stop-locale-draft.fn'
+import { updateStopFn } from '@valguide/core/features/tours/stop/update-stop.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -19,7 +19,7 @@ import {
   stopAssetsDraftQueryOptions,
   stopAssetsPublishedQueryOptions,
   stopDetailQueryOptions,
-  stopGuideUsageQueryOptions,
+  stopTourUsageQueryOptions,
   stopLocaleDraftQueryOptions,
   stopLocalePublishedQueryOptions,
 } from '../query-options'
@@ -31,7 +31,7 @@ interface StopEditorProviderProps {
   initialLocale?: string
   /** When editing a stop within a guide context, pass the guide's available locales.
    * This determines which locales are shown in the locale picker (guide's locales only). */
-  guideAvailableLocales?: string[]
+  tourAvailableLocales?: string[]
   navigation?: {
     backPath: string
     backLabel: string
@@ -43,7 +43,7 @@ export function StopEditorProvider({
   children,
   nanoId,
   initialLocale,
-  guideAvailableLocales,
+  tourAvailableLocales,
   navigation,
 }: StopEditorProviderProps) {
   const t = useTranslations()
@@ -52,7 +52,7 @@ export function StopEditorProvider({
     nanoId,
     initialLocale,
     // When editing in guide context, use guide's locales for initial locale validation
-    availableLocalesOverride: guideAvailableLocales,
+    availableLocalesOverride: tourAvailableLocales,
     detailQueryOptions: stopDetailQueryOptions,
     localeDraftQueryOptions: stopLocaleDraftQueryOptions,
     localePublishedQueryOptions: stopLocalePublishedQueryOptions,
@@ -89,11 +89,11 @@ export function StopEditorProvider({
   // Note: When switching to a locale not yet in stop, the route loader's
   // getOrCreateStopLocaleDraftForGuideFn creates records on-demand (like guides).
   const availableLocales = useMemo(() => {
-    if (guideAvailableLocales) {
-      return guideAvailableLocales
+    if (tourAvailableLocales) {
+      return tourAvailableLocales
     }
     return existingLocales
-  }, [guideAvailableLocales, existingLocales])
+  }, [tourAvailableLocales, existingLocales])
 
   // Stop assets from server (immediate operations, no local state)
   const assetsQuery = useQuery({
@@ -113,7 +113,7 @@ export function StopEditorProvider({
 
   // Guide usage (for shared stop indicator)
   const guideUsageQuery = useQuery({
-    ...stopGuideUsageQueryOptions(nanoId),
+    ...stopTourUsageQueryOptions(nanoId),
     enabled: !!nanoId,
   })
   const guideUsage = guideUsageQuery.data ?? null

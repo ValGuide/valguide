@@ -56,15 +56,15 @@
       "shareExperience": "Cundivider Vossa experientscha"
     },
     "share": {
-      "title": "Cundivider quest guide",
+      "title": "Cundivider questa tura",
       "copyLink": "Copiar la colliaziun",
       "linkCopied": "Colliaziun copiada!",
       "shareVia": "Cundivider via",
       "shareError": "Impussibel da cundivider. Copiar la colliaziun enstagl."
     },
     "tourComplete": {
-      "title": "Tour terminada!",
-      "message": "Vus avais terminà dad explorar quest guide.",
+      "title": "Tura terminada!",
+      "message": "Vus avais terminà dad explorar questa tura.",
       "ratePrompt": "Co è stada Vossa experientscha?",
       "exploreMore": "Explorar dapli",
       "learnMore": "Emprender dapli"
@@ -188,16 +188,16 @@
   "notFound": {
     "title": "404 – Eis vus sepiars?",
     "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga.",
-    "guide": {
-      "backToGuides": "Enavos als guides"
+    "tour": {
+      "backToTours": "Enavos a las turas"
     },
     "stop": {
       "title": "Fermada betg chattada",
       "description": "Questa fermada n'exista betg u Vus n'avais betg access.",
-      "backToGuide": "Guide"
+      "backToTour": "Tura"
     }
   },
-  "guide": {
+  "tour": {
     "previewCard": {
       "viewDetails": "Mussar detagls",
       "author": "Autur",
@@ -232,84 +232,84 @@
     "undo": "Revocar",
     "redo": "Repeter"
   },
-  "guides": {
-    "title": "Guids",
-    "description": "Crear e administrar voss guids multimedials",
+  "tours": {
+    "title": "Turas",
+    "description": "Crear e administrar vossas turas multimedials",
     "editor": {
       "preview": "Prevista",
       "sharedContent": "Valid per tut las linguas",
       "sharedContentDescription": "Midadas qua valan per tut las linguas",
       "localeContent": "Cuntegn specific per lingua",
-      "guideDetails": "Survista dal guid",
+      "tourDetails": "Survista da la tura",
       "localeIndicator": "({locale})",
-      "guideDetailsDescription": "Modifitgar las infurmaziuns dal guid per questa lingua",
+      "tourDetailsDescription": "Modifitgar las infurmaziuns da la tura per questa lingua",
       "titleLabel": "Titel *",
       "titlePlaceholder": "p.ex. Highlights da la collecziun romana",
       "characterCount": "{current}/500 caracters",
       "descriptionLabel": "Descripziun",
       "descriptionPlaceholder": "p.ex. In tur curà tras ils artefacts romains ils pli significants dal museum",
       "coverImageLabel": "Maletg da front",
-      "guideProgress": "Progress dal guid",
+      "tourProgress": "Progress da la tura",
       "progress": {
         "label": "Cumplettaziun",
-        "guideTitle": "Titel dal guid",
-        "guideDescription": "Descripziun dal guid",
+        "tourTitle": "Titel da la tura",
+        "tourDescription": "Descripziun da la tura",
         "coverImage": "Maletg da front",
         "hasStops": "Almain in stop",
         "allStopTitles": "Tut ils stops han in titel"
       },
-      "backToGuide": "Guide"
+      "backToTour": "Tura"
     },
     "empty": {
-      "title": "Anc nagins guids",
-      "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-guids immersivs che dattan vita a vossas exposiziuns.",
+      "title": "Anc naginas turas",
+      "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-turas immersivsas che dattan vita a vossas exposiziuns.",
       "createButton": "Cumenzar",
-      "createNewButton": "Crear nov guid",
+      "createNewButton": "Crear nova tura",
       "creating": "Vegn creà..."
     },
     "create": {
-      "error": "Errur cun crear il guid",
-      "errorDescription": "In errur è succedì cun crear il guid. Empruvei per plascher aunc inagada."
+      "error": "Errur cun crear la tura",
+      "errorDescription": "In errur è succedì cun crear la tura. Empruvei per plascher aunc inagada."
     },
-    "editGuide": "Modifitgar il guid",
+    "editTour": "Modifitgar la tura",
     "viewInApp": "Mussar en app",
     "delete": {
-      "success": "Guid stizzà",
-      "successDescription": "Il guid è vegnì stizzà cun success",
-      "error": "Errur tar stizzar il guid",
-      "errorDescription": "In errur è succedì tar stizzar il guid. Empruvai per plaschair anc ina giada."
+      "success": "Tura stizzada",
+      "successDescription": "La tura è vegnida stizzada cun success",
+      "error": "Errur tar stizzar la tura",
+      "errorDescription": "In errur è succedì tar stizzar la tura. Empruvai per plaschair anc ina giada."
     },
     "archive": {
-      "confirmTitle": "Archivar questa guida?",
-      "confirmDescription": "Questa guida vegn archivada. Ti la pos restaurar pli tard.",
+      "confirmTitle": "Archivar questa tura?",
+      "confirmDescription": "Questa tura vegn archivada. Ti la pos restaurar pli tard.",
       "confirmButton": "Archivar",
       "cancelButton": "Interrumper",
-      "success": "Guida archivada cun success",
-      "error": "Errur tar archivar la guida"
+      "success": "Tura archivada cun success",
+      "error": "Errur tar archivar la tura"
     },
     "recover": {
-      "success": "Guida restaurada cun success",
-      "successDescription": "La guida è vegnida restaurada tar tias guidas activas",
-      "error": "Errur tar restaurar la guida",
-      "errorDescription": "In errur è succedì tar restaurar la guida. Empruvai per plaschair anc ina giada."
+      "success": "Tura restaurada cun success",
+      "successDescription": "La tura è vegnida restaurada tar tias turas activas",
+      "error": "Errur tar restaurar la tura",
+      "errorDescription": "In errur è succedì tar restaurar la tura. Empruvai per plaschair anc ina giada."
     },
     "archived": {
       "title": "Archivà",
-      "description": "Guardar e administrar las guidas archivadas",
+      "description": "Guardar e administrar las turas archivadas",
       "empty": {
-        "title": "Naginas guidas archivadas",
-        "description": "Guidas archivadas cumparan qua. Ti las pos restaurar da tut temp."
+        "title": "Naginas turas archivadas",
+        "description": "Turas archivadas cumparan qua. Ti las pos restaurar da tut temp."
       }
     },
     "archivedStatus": "Archivà",
-    "recoverGuide": "Restaurar la guida",
+    "recoverTour": "Restaurar la tura",
     "permanentlyDelete": "Stizzar definitivamain",
-    "recoverConfirmTitle": "Restaurar questa guida?",
-    "recoverConfirmDescription": "Questa guida vegn restaurada tar tias guidas activas.",
-    "deleteConfirmTitle": "Stizzar questa guida definitivamain?",
+    "recoverConfirmTitle": "Restaurar questa tura?",
+    "recoverConfirmDescription": "Questa tura vegn restaurada tar tias turas activas.",
+    "deleteConfirmTitle": "Stizzar questa tura definitivamain?",
     "deleteConfirmDescriptionWithName": "Quai stizza definitivamain «{name}». Questa acziun na po betg vegnir revocada.",
     "deleteConfirmInstruction": "Per confermar, scriva: {phrase}",
-    "deleteConfirmPhrase": "stizzar guida",
+    "deleteConfirmPhrase": "stizzar tura",
     "archivedOnDate": "Archivà ils: {date}",
     "noCoverImage": "Nagina maletg da titel",
     "status": {
@@ -324,12 +324,12 @@
     "publish": {
       "success": "Translaziun publichada cun success",
       "error": "Errur tar publitgar la translaziun",
-      "guidePublished": "Guid publichà cun {stopCount, plural, =0 {naginas posts} one {# post} other {# posts}}",
-      "guidePublishError": "Errur cun publitgar il guid"
+      "tourPublished": "Tura publichada cun {stopCount, plural, =0 {naginas posts} one {# post} other {# posts}}",
+      "tourPublishError": "Errur cun publitgar la tura"
     },
-    "confirmUnpublishGuide": {
+    "confirmUnpublishTour": {
       "title": "Retrar questa translaziun?",
-      "description": "Visitaders na vesan betg pli questa versiun linguistica dal guid. Il guid resta disponibel en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
+      "description": "Visitaders na vesan betg pli questa versiun linguistica da la tura. La tura resta disponibla en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
       "confirm": "Retrar translaziun",
       "cancel": "Laschar publitgà"
     },
@@ -340,7 +340,7 @@
       "cancel": "Laschar publitgà"
     },
     "assets": {
-      "updateError": "Errur cun actualisar ils assets dal guid"
+      "updateError": "Errur cun actualisar ils assets da la tura"
     },
     "localeSelector": {
       "selectLanguage": "Tscherner linguatg",
@@ -379,7 +379,7 @@
       "confirm": "Publitgar",
       "cancel": "Interrumper"
     },
-    "untitledGuide": "Guid senza num",
+    "untitledTour": "Tura senza num",
     "unknownTitle": "Nunenconuschent",
     "unsavedChanges": {
       "title": "Midadas betg memorisadas",
@@ -388,12 +388,12 @@
       "leave": "Sbittar las midadas"
     },
     "error": {
-      "failedToLoad": "Impussibel da chargiar ils guids",
+      "failedToLoad": "Impussibel da chargiar las turas",
       "unexpected": "Ina errur nunspetgada è succedida"
     },
     "details": {
-      "title": "Survista dal guid",
-      "guideId": "ID dal guid",
+      "title": "Survista da la tura",
+      "tourId": "ID da la tura",
       "created": "Creà",
       "lastUpdated": "Ultima actualisaziun",
       "status": "Status",
@@ -430,12 +430,12 @@
     "stopTitle": "{number}: {title}",
     "empty": {
       "title": "Anc nagins stops",
-      "description": "Agiuntai stops per crear il viadi tras voss guid. Mintga stop po avair ses agen cuntegn en pliras linguas.",
-      "heroDescription": "Stops èn ils elements da construcziun da voss guids. Mintga stop raquinta ina part da vossa istorgia.",
-      "hint": "Creai stops en in editur da guids per cumenzar."
+      "description": "Agiuntai stops per crear il viadi tras vossa tura. Mintga stop po avair ses agen cuntegn en pliras linguas.",
+      "heroDescription": "Stops èn ils elements da construcziun da vossas turas. Mintga stop raquinta ina part da vossa istorgia.",
+      "hint": "Creai stops en in editur da turas per cumenzar."
     },
     "list": {
-      "description": "Administrescha tut ils stops en voss guids",
+      "description": "Administrescha tut ils stops en vossas turas",
       "error": "Betg pussaivel da chargiar ils stops",
       "locales": "{count, plural, =1 {# linguatg} other {# linguatgs}}"
     },
@@ -452,8 +452,8 @@
       "audioLabel": "Audio-Guid",
       "autoGenerate": "Generar automaticamain dall'audio",
       "galleryLabel": "Galaria (Maletgs & Video)",
-      "usedInGuides": "Duvrà en {count, plural, one {# guid} other {# guids}}",
-      "sharedStopWarning": "Midadas tangeschan tut ils guids che dovran quest stop"
+      "usedInTours": "Duvrà en {count, plural, one {# tura} other {# turas}}",
+      "sharedStopWarning": "Midadas tangeschan tuttas turas che dovran quest stop"
     },
     "actions": {
       "edit": "Modifitgar stop",
@@ -461,7 +461,7 @@
       "addError": "Errur cun agiuntar il stop",
       "reorderSuccess": "Stops rearranschads",
       "reorderError": "Errur cun rearranschar ils stops",
-      "removeSuccess": "Stop allontanà dal guide",
+      "removeSuccess": "Stop allontanà da la tura",
       "removeError": "Betg reussì dad allontanar il stop"
     },
     "locales": {
@@ -581,15 +581,15 @@
       "cancel": "Interrumper"
     },
     "usage": {
-      "guidesCount": "{count, plural, one {# guide} other {# guides}}",
+      "toursCount": "{count, plural, one {# tura} other {# turas}}",
       "stopsCount": "{count, plural, one {# stop} other {# stops}}",
-      "guidesAndStops": "{guides}, {stops}"
+      "toursAndStops": "{tours}, {stops}"
     },
     "deleteWithUsage": {
       "title": "Stizzar l'asset",
       "warningTitle": "Quest asset vegn utilisà",
       "description": "\"{fileName}\" vegn utilisà en:",
-      "guidesSection": "Guides",
+      "toursSection": "Turas",
       "stopsSection": "Stops",
       "warning": "Stizzar vegn a allontanar quest asset da tut quests lieus permanentamain.",
       "confirmButton": "Stizzar tuttina",
@@ -611,7 +611,7 @@
     "nav": {
       "brandKit": "Brand Kit",
       "workspace": "Plaz da lavur",
-      "guides": "Guids",
+      "tours": "Turas",
       "stops": "Stops",
       "archived": "Archivà",
       "assets": "Assets",
@@ -620,7 +620,7 @@
       "settings": "Parameters",
       "support": "Support",
       "feedback": "Feedback",
-      "recentGuides": "Guids novs",
+      "recentTours": "Turas novas",
       "more": "Dapli",
       "viewProject": "Mussar project",
       "shareProject": "Cundivider project",
@@ -635,10 +635,10 @@
     },
     "pages": {
       "design": {
-        "description": "Persunalisar l'apparientscha da vossas guidas."
+        "description": "Persunalisar l'apparientscha da vossas turas."
       },
       "analytics": {
-        "description": "Vesair ed analisar las metrickas da prestaziun da vossas guidas."
+        "description": "Vesair ed analisar las metrickas da prestaziun da vossas turas."
       },
       "settings": {
         "description": "Configurar vossas preferenzas ed parameters da l'applicaziun."
@@ -730,7 +730,7 @@
     },
     "createTeam": {
       "title": "Crear team",
-      "description": "Agiuntei in nov team per administrar voss guids.",
+      "description": "Agiuntei in nov team per administrar vossas turas.",
       "nameLabel": "Num dal team",
       "namePlaceholder": "Acme Museum",
       "cancel": "Interrumper",

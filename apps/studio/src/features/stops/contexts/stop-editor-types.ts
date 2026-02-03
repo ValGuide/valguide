@@ -1,10 +1,10 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
-import type { StopAssetPublishedItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-published.fn'
-import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
-import type { StopGuideUsageResult } from '@valguide/core/features/guides/stop/get-stop-guide-usage.fn'
-import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
-import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
+import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
+import type { StopAssetPublishedItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-published.fn'
+import type { StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
+import type { StopTourUsageResult } from '@valguide/core/features/tours/stop/get-stop-tour-usage.fn'
+import type { StopLocaleDraftResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.fn'
+import type { StopLocalePublishedResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.fn'
 import { createContext, useContext } from 'react'
 
 // Re-export types for consumers
@@ -52,7 +52,7 @@ export interface StopEditorContextValue {
   removeAsset: (assetId: string) => Promise<void>
 
   // Guide usage (for shared stop indicator)
-  guideUsage: StopGuideUsageResult | null
+  guideUsage: StopTourUsageResult | null
   isLoadingGuideUsage: boolean
 
   // Form dirty registration

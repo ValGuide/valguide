@@ -1,6 +1,6 @@
 import { and, countDistinct, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { db } from '../db'
-import { guideAsset, stopAsset } from '../guides/schema'
+import { tourAsset, stopAsset } from '../tours/schema'
 import { type AssetType, asset } from './schema'
 
 // =============================================================================
@@ -14,7 +14,7 @@ export type GetAssetsFilters = {
 }
 
 export type AssetWithUsage = typeof asset.$inferSelect & {
-  guideCount: number
+  tourCount: number
   stopCount: number
 }
 
@@ -35,10 +35,10 @@ export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUs
     conditions.push(eq(asset.uploadedBy, filters.uploadedBy))
   }
 
-  const guideCountSq = db
-    .select({ count: countDistinct(guideAsset.guideId) })
-    .from(guideAsset)
-    .where(eq(guideAsset.assetId, asset.id))
+  const tourCountSq = db
+    .select({ count: countDistinct(tourAsset.tourId) })
+    .from(tourAsset)
+    .where(eq(tourAsset.assetId, asset.id))
 
   const stopCountSq = db
     .select({ count: countDistinct(stopAsset.stopId) })
@@ -48,7 +48,7 @@ export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUs
   const query = db
     .select({
       ...getTableColumns(asset),
-      guideCount: sql<number>`COALESCE(${guideCountSq}, 0)`.as('guide_count'),
+      tourCount: sql<number>`COALESCE(${tourCountSq}, 0)`.as('tour_count'),
       stopCount: sql<number>`COALESCE(${stopCountSq}, 0)`.as('stop_count'),
     })
     .from(asset)

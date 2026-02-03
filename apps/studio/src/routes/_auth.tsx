@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_auth')({
     const isAuthenticated = await context.queryClient.ensureQueryData(isAuthenticatedQueryOptions())
     if (isAuthenticated) {
       throw redirect({
-        to: search.next ?? '/guides',
+        to: search.next ?? '/tours',
       })
     }
   },

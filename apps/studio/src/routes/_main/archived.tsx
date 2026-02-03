@@ -1,21 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ArchivedGuidesListConnected } from '@/features/guides/components/archived-guides-list-connected'
-import { ArchivedGuidesListSkeleton } from '@/features/guides/components/archived-guides-list-skeleton'
-import { useArchivedGuides } from '@/features/guides/hooks/use-archived-guides'
-import { archivedGuidesQueryOptions } from '@/features/guides/query-options'
+import { ArchivedToursListConnected } from '@/features/tours/components/archived-tours-list-connected'
+import { ArchivedToursListSkeleton } from '@/features/tours/components/archived-tours-list-skeleton'
+import { useArchivedTours } from '@/features/tours/hooks/use-archived-tours'
+import { archivedToursQueryOptions } from '@/features/tours/query-options'
 
 export const Route = createFileRoute('/_main/archived')({
-  loader: ({ context }) => context.queryClient.ensureQueryData(archivedGuidesQueryOptions()),
+  loader: ({ context }) => context.queryClient.ensureQueryData(archivedToursQueryOptions()),
   component: ArchivedPage,
-  pendingComponent: ArchivedGuidesListSkeleton,
+  pendingComponent: ArchivedToursListSkeleton,
 })
 
 function ArchivedPage() {
-  const { guides, isLoading, error, refetch } = useArchivedGuides()
+  const { tours, isLoading, error, refetch } = useArchivedTours()
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <ArchivedGuidesListConnected guides={guides} isLoading={isLoading} error={error} onRetry={refetch} />
+      <ArchivedToursListConnected tours={tours} isLoading={isLoading} error={error} onRetry={refetch} />
     </main>
   )
 }

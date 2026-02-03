@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../db'
-import { guideSettingsDraft } from '../guides/schema'
+import { tourSettingsDraft } from '../tours/schema'
 import { organization } from '../orgs/schema'
 import { theme as themeTable } from './schema'
 
@@ -17,8 +17,8 @@ export type Theme = typeof themeTable.$inferSelect
 export async function deleteTheme(themeId: string): Promise<Theme> {
   await db.update(organization).set({ defaultThemeId: null }).where(eq(organization.defaultThemeId, themeId))
 
-  // Clear themeId from guide settings drafts
-  await db.update(guideSettingsDraft).set({ themeId: null }).where(eq(guideSettingsDraft.themeId, themeId))
+  // Clear themeId from tour settings drafts
+  await db.update(tourSettingsDraft).set({ themeId: null }).where(eq(tourSettingsDraft.themeId, themeId))
 
   const [deleted] = await db.delete(themeTable).where(eq(themeTable.id, themeId)).returning()
 

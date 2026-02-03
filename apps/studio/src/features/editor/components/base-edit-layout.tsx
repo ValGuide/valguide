@@ -3,10 +3,10 @@ import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
 import { type ReactNode, useCallback, useState } from 'react'
 import {
-  type GuideIndicator,
-  type GuideStatus,
-  GuideStatusBadge,
-} from '@/features/guides/components/guide-status-badge'
+  type TourIndicator,
+  type TourStatus,
+  TourStatusBadge,
+} from '@/features/tours/components/tour-status-badge'
 import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
 import { DraftPublishedTabs, type EditorTab } from './draft-published-tabs'
 import { EditorActionsPanel } from './editor-actions-panel'
@@ -17,8 +17,8 @@ import { PublishConfirmationDialog } from './publish-confirmation-dialog'
 import { UnpublishConfirmationDialog } from './unpublish-confirmation-dialog'
 
 export type StatusDisplay = {
-  status: GuideStatus
-  indicator: GuideIndicator
+  status: TourStatus
+  indicator: TourIndicator
 }
 
 export interface BaseEditLayoutProps {
@@ -35,7 +35,7 @@ export interface BaseEditLayoutProps {
   hasPublished: boolean
 
   /** Content type for unpublish dialog messaging */
-  contentType: 'guide' | 'stop'
+  contentType: 'tour' | 'stop'
 
   /** Currently active locale */
   activeLocale: string
@@ -125,7 +125,7 @@ export function BaseEditLayout({
   children,
   unsavedChangesDialog,
 }: BaseEditLayoutProps) {
-  const t = useTranslations('guides')
+  const t = useTranslations('tours')
 
   // Dialog states
   const [publishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -176,7 +176,7 @@ export function BaseEditLayout({
           <div className="flex flex-col gap-1 px-4 pb-3 sm:px-6">
             <div className="flex items-center gap-2">
               <h1 className="min-w-0 truncate text-lg font-semibold">{title}</h1>
-              <GuideStatusBadge status={status.status} indicator={status.indicator} size="sm" className="shrink-0" />
+              <TourStatusBadge status={status.status} indicator={status.indicator} size="sm" className="shrink-0" />
             </div>
             {showChangedHelper && <p className="text-xs text-muted-foreground">{t('helper.changedExplanation')}</p>}
           </div>
@@ -238,7 +238,7 @@ export function BaseEditLayout({
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2 sm:gap-3">
                 <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{title}</h1>
-                <GuideStatusBadge status={status.status} indicator={status.indicator} size="lg" className="shrink-0" />
+                <TourStatusBadge status={status.status} indicator={status.indicator} size="lg" className="shrink-0" />
               </div>
               {showChangedHelper && <p className="text-sm text-muted-foreground">{t('helper.changedExplanation')}</p>}
             </div>

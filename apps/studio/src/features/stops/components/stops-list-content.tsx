@@ -1,4 +1,4 @@
-import type { StopListItem } from '@valguide/core/features/guides/stop/list-stops.fn'
+import type { StopListItem } from '@valguide/core/features/tours/stop/list-stops.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 

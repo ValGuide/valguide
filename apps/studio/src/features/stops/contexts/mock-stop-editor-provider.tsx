@@ -1,8 +1,8 @@
 import type { Asset } from '@valguide/core/features/assets/schema'
-import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
-import type { StopDetail } from '@valguide/core/features/guides/stop/get-stop-detail.fn'
-import type { StopLocaleDraftResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-draft.fn'
-import type { StopLocalePublishedResult } from '@valguide/core/features/guides/stop/locale/get-stop-locale-published.fn'
+import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
+import type { StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
+import type { StopLocaleDraftResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.fn'
+import type { StopLocalePublishedResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.fn'
 import { type ReactNode, useState } from 'react'
 import { StopEditorContext, type StopEditorContextValue, type StopEditorNavigation } from './stop-editor-types'
 

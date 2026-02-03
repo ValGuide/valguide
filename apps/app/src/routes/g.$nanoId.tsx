@@ -2,8 +2,8 @@ import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { clientEnv } from '@valguide/core/env/client'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public/get-published-guide'
-import { getLocalizedGuideText } from '@valguide/core/features/guides/public/localization-helpers'
+import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-guide'
+import { getLocalizedTourText } from '@valguide/core/features/tours/public/localization-helpers'
 import { QrScannerModal } from '@valguide/core/features/player/components/qr-scanner-modal'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
 import { usePlayerActions, useStops } from '@valguide/core/features/player/store/use-player-store'
@@ -15,56 +15,56 @@ import { Button } from '@valguide/core/ui/components/button'
 import { Play, QrCode } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { z } from 'zod'
-import { GuideHero } from '@/components/guides/guide-hero'
-import { GuideMetadata } from '@/components/guides/guide-metadata'
+import { TourHero } from '@/components/tours/tour-hero'
+import { TourMetadata } from '@/components/tours/tour-metadata'
 
-const getGuideByNanoIdFn = createServerFn({ method: 'GET' })
+const getTourByNanoIdFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ nanoId: z.string() }))
   .handler(async ({ data }) => {
-    const guide = await getPublishedGuideByNanoId(data.nanoId)
-    return guide
+    const tour = await getPublishedTourByNanoId(data.nanoId)
+    return tour
   })
 
 export const Route = createFileRoute('/g/$nanoId')({
   loader: async ({ params }) => {
-    const guide = await getGuideByNanoIdFn({ data: { nanoId: params.nanoId } })
-    if (!guide) {
+    const tour = await getTourByNanoIdFn({ data: { nanoId: params.nanoId } })
+    if (!tour) {
       throw notFound()
     }
-    return { guide }
+    return { tour }
   },
-  component: GuidePage,
+  component: TourPage,
 })
 
-function GuidePage() {
-  const { guide } = Route.useLoaderData()
+function TourPage() {
+  const { tour } = Route.useLoaderData()
   const { locale } = Route.useRouteContext()
   const { nanoId } = Route.useParams()
 
-  const title = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
-  const description = getLocalizedGuideText(guide, 'description', locale as SupportedLocale)
-  const coverAsset = guide.assets?.find((a) => a.channel === 'images.hero')
+  const title = getLocalizedTourText(tour, 'title', locale as SupportedLocale)
+  const description = getLocalizedTourText(tour, 'description', locale as SupportedLocale)
+  const coverAsset = tour.assets?.find((a) => a.channel === 'images.hero')
   const coverImageUrl = coverAsset ? getAssetImageUrl(coverAsset) : null
-  const playerStops = toPlayerStops(guide.stops, locale)
+  const playerStops = toPlayerStops(tour.stops, locale)
 
   return (
     <GuideThemeProvider
-      initialTheme={guide.theme}
+      initialTheme={tour.theme}
       enablePreview
       allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
     >
       <PlayerProvider stops={playerStops}>
         <div className="container max-w-lg py-6 space-y-6">
-          <GuideHero title={title} description={description} coverImage={coverImageUrl} assets={guide.assets} />
-          <GuideMetadata stopCount={guide.stops.length} createdAt={guide.createdAt} locale={locale} />
-          <GuideActions guideNanoId={nanoId} />
+          <TourHero title={title} description={description} coverImage={coverImageUrl} assets={tour.assets} />
+          <TourMetadata stopCount={tour.stops.length} createdAt={tour.createdAt} locale={locale} />
+          <TourActions tourNanoId={nanoId} />
         </div>
       </PlayerProvider>
     </GuideThemeProvider>
   )
 }
 
-function GuideActions({ guideNanoId }: { guideNanoId: string }) {
+function TourActions({ tourNanoId }: { tourNanoId: string }) {
   const t = useTranslations('player')
   const stops = useStops()
   const { setCurrentStop } = usePlayerActions()
@@ -101,7 +101,7 @@ function GuideActions({ guideNanoId }: { guideNanoId: string }) {
     <>
       <div className="flex gap-3">
         <Button asChild size="lg" className="flex-1">
-          <Link to="/g/$nanoId/s/$stopNanoId" params={{ nanoId: guideNanoId, stopNanoId: firstStopNanoId }}>
+          <Link to="/g/$nanoId/s/$stopNanoId" params={{ nanoId: tourNanoId, stopNanoId: firstStopNanoId }}>
             <Play className="h-5 w-5 mr-2" />
             {t('startTour')}
           </Link>

@@ -1,4 +1,4 @@
-import type { StopAssetDraftItem } from '@valguide/core/features/guides/stop/asset/get-stop-assets-draft.fn'
+import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 
 type FormValueGetter = () => { title?: string; description?: string | null; transcription?: string | null }

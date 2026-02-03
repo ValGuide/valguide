@@ -1,4 +1,4 @@
-import { publishStopAssetsFn } from '@valguide/core/features/guides/stop/asset/publish-stop-assets.fn'
+import { publishStopAssetsFn } from '@valguide/core/features/tours/stop/asset/publish-stop-assets.fn'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
 import { StopEditPage } from './stop-edit-page'
 

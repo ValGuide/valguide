@@ -1,10 +1,10 @@
 import { createFileRoute, Link, notFound, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { clientEnv } from '@valguide/core/env/client'
-import { getGuideIdByStopNanoId } from '@valguide/core/features/guides/public/get-guide-by-stop'
-import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public/get-published-guide'
-import { getStopByNanoId } from '@valguide/core/features/guides/public/get-published-stop'
-import { getLocalizedGuideText } from '@valguide/core/features/guides/public/localization-helpers'
+import { getTourIdByStopNanoId } from '@valguide/core/features/tours/public/get-guide-by-stop'
+import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-guide'
+import { getStopByNanoId } from '@valguide/core/features/tours/public/get-published-stop'
+import { getLocalizedTourText } from '@valguide/core/features/tours/public/localization-helpers'
 import { FullPlayer } from '@valguide/core/features/player/components/full-player'
 import { StopsList } from '@valguide/core/features/player/components/stops-list'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
@@ -24,16 +24,16 @@ const getStopDataFn = createServerFn({ method: 'GET' })
     const stop = await getStopByNanoId(data.stopNanoId)
     if (!stop) return null
 
-    const guideId = await getGuideIdByStopNanoId(data.stopNanoId)
-    if (!guideId) return null
+    const tourId = await getTourIdByStopNanoId(data.stopNanoId)
+    if (!tourId) return null
 
-    const guide = await getPublishedGuideByNanoId(data.nanoId)
-    if (!guide) return null
+    const tour = await getPublishedTourByNanoId(data.nanoId)
+    if (!tour) return null
 
-    const currentIndex = guide.stops.findIndex((s) => s.nanoId === data.stopNanoId)
+    const currentIndex = tour.stops.findIndex((s) => s.nanoId === data.stopNanoId)
     if (currentIndex === -1) return null
 
-    return { stop, guide, currentIndex }
+    return { stop, tour, currentIndex }
   })
 
 export const Route = createFileRoute('/g/$nanoId/s/$stopNanoId')({
@@ -48,13 +48,13 @@ export const Route = createFileRoute('/g/$nanoId/s/$stopNanoId')({
 })
 
 function StopPage() {
-  const { guide } = Route.useLoaderData()
+  const { tour } = Route.useLoaderData()
   const { locale } = Route.useRouteContext()
   const { nanoId, stopNanoId } = Route.useParams()
   const navigate = useNavigate()
 
-  const guideTitle = getLocalizedGuideText(guide, 'title', locale as SupportedLocale)
-  const playerStops = toPlayerStops(guide.stops, locale)
+  const tourTitle = getLocalizedTourText(tour, 'title', locale as SupportedLocale)
+  const playerStops = toPlayerStops(tour.stops, locale)
 
   const [stopsSheetOpen, setStopsSheetOpen] = useState(false)
 
@@ -68,7 +68,7 @@ function StopPage() {
 
   return (
     <GuideThemeProvider
-      initialTheme={guide.theme}
+      initialTheme={tour.theme}
       enablePreview
       allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
     >
@@ -80,7 +80,7 @@ function StopPage() {
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
-            {guideTitle}
+            {tourTitle}
           </Link>
 
           <FullPlayer />
@@ -90,7 +90,7 @@ function StopPage() {
           <Sheet open={stopsSheetOpen} onOpenChange={setStopsSheetOpen}>
             <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto">
               <SheetHeader>
-                <SheetTitle>{guideTitle}</SheetTitle>
+                <SheetTitle>{tourTitle}</SheetTitle>
               </SheetHeader>
               <div className="py-4">
                 <StopsList showSearchBar={false} onStopSelect={handleStopSelect} />

@@ -1,13 +1,13 @@
 import { and, eq } from 'drizzle-orm'
 import { db } from '../db'
-import { guide, guideAsset, guideLocaleDraft, stop, stopAsset, stopLocaleDraft } from '../guides/schema'
+import { tour, tourAsset, tourLocaleDraft, stop, stopAsset, stopLocaleDraft } from '../tours/schema'
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
 export type AssetUsageDetails = {
-  guides: Array<{
+  tours: Array<{
     id: string
     nanoId: string
     name: string
@@ -28,18 +28,18 @@ export type AssetUsageDetails = {
 // =============================================================================
 
 export async function getAssetUsage(assetId: string): Promise<AssetUsageDetails> {
-  const guideUsage = await db
+  const tourUsage = await db
     .select({
-      guideId: guide.id,
-      guideNanoId: guide.nanoId,
-      title: guideLocaleDraft.title,
-      channel: guideAsset.channel,
-      locale: guideAsset.locale,
+      tourId: tour.id,
+      tourNanoId: tour.nanoId,
+      title: tourLocaleDraft.title,
+      channel: tourAsset.channel,
+      locale: tourAsset.locale,
     })
-    .from(guideAsset)
-    .innerJoin(guide, eq(guideAsset.guideId, guide.id))
-    .leftJoin(guideLocaleDraft, and(eq(guideLocaleDraft.guideId, guide.id), eq(guideLocaleDraft.locale, 'en')))
-    .where(eq(guideAsset.assetId, assetId))
+    .from(tourAsset)
+    .innerJoin(tour, eq(tourAsset.tourId, tour.id))
+    .leftJoin(tourLocaleDraft, and(eq(tourLocaleDraft.tourId, tour.id), eq(tourLocaleDraft.locale, 'en')))
+    .where(eq(tourAsset.assetId, assetId))
 
   const stopUsage = await db
     .select({
@@ -54,10 +54,10 @@ export async function getAssetUsage(assetId: string): Promise<AssetUsageDetails>
     .leftJoin(stopLocaleDraft, and(eq(stopLocaleDraft.stopId, stop.id), eq(stopLocaleDraft.locale, 'en')))
     .where(eq(stopAsset.assetId, assetId))
 
-  const uniqueGuides = new Map<string, (typeof guideUsage)[0]>()
-  for (const g of guideUsage) {
-    if (!uniqueGuides.has(g.guideId)) {
-      uniqueGuides.set(g.guideId, g)
+  const uniqueTours = new Map<string, (typeof tourUsage)[0]>()
+  for (const t of tourUsage) {
+    if (!uniqueTours.has(t.tourId)) {
+      uniqueTours.set(t.tourId, t)
     }
   }
 
@@ -69,12 +69,12 @@ export async function getAssetUsage(assetId: string): Promise<AssetUsageDetails>
   }
 
   return {
-    guides: Array.from(uniqueGuides.values()).map((g) => ({
-      id: g.guideId,
-      nanoId: g.guideNanoId,
-      name: g.title ?? 'Untitled',
-      channel: g.channel,
-      locale: g.locale,
+    tours: Array.from(uniqueTours.values()).map((t) => ({
+      id: t.tourId,
+      nanoId: t.tourNanoId,
+      name: t.title ?? 'Untitled',
+      channel: t.channel,
+      locale: t.locale,
     })),
     stops: Array.from(uniqueStops.values()).map((s) => ({
       id: s.stopId,
