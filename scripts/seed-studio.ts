@@ -22,7 +22,7 @@ import postgres from 'postgres'
 import * as schema from '../packages/core/features/schema'
 import { valguideId } from '../packages/core/utils/nanoid'
 import { SEED_CONFIG, TEST_MEDIA_DIR } from './seed-studio/config'
-import { getOrCreateSeedOrg, seedGuides } from './seed-studio/seed-database'
+import { getOrCreateSeedOrg, seedTours } from './seed-studio/seed-database'
 import { uploadAllTestMedia } from './seed-studio/upload-assets'
 
 async function main() {
@@ -98,7 +98,7 @@ async function main() {
     console.log('\n📋 Would create:')
     console.log(`  - Organization: "${SEED_CONFIG.orgName}"`)
     console.log(
-      `  - Guides: ${SEED_CONFIG.guideCounts.small} small, ${SEED_CONFIG.guideCounts.medium} medium, ${SEED_CONFIG.guideCounts.large} large`,
+      `  - Tours: ${SEED_CONFIG.tourCounts.small} small, ${SEED_CONFIG.tourCounts.medium} medium, ${SEED_CONFIG.tourCounts.large} large`,
     )
     console.log(`  - Assets: uploaded with deduplication`)
     console.log('\n✅ Dry run complete')
@@ -118,8 +118,8 @@ async function main() {
   const assets = await uploadAllTestMedia(db, supabase, org.nanoId, org.id, userId, valguideId)
   console.log(`\n  Summary: ${assets.stats.newUploads} new, ${assets.stats.existing} existing`)
 
-  console.log('\n📚 Creating guides and stops...')
-  const seedResult = await seedGuides({
+  console.log('\n📚 Creating tours and stops...')
+  const seedResult = await seedTours({
     db,
     valguideId,
     orgId: org.id,
@@ -132,7 +132,7 @@ async function main() {
   console.log('✅ Seeding complete!')
   console.log('='.repeat(50))
   console.log(`  Organization: ${SEED_CONFIG.orgName}`)
-  console.log(`  Guides: ${seedResult.totalGuides}`)
+  console.log(`  Tours: ${seedResult.totalTours}`)
   console.log(`  Stops: ${seedResult.totalStops}`)
   console.log(`  Assets: ${assets.stats.total} (${assets.stats.newUploads} new, ${assets.stats.existing} existing)`)
 
