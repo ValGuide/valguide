@@ -1,3 +1,5 @@
+import { useMediaSession } from '../hooks/use-media-session'
+import { usePositionPersistence } from '../hooks/use-position-persistence'
 import { useSyncAudioToStore } from '../hooks/use-sync-audio-to-store'
 import { CoverImage } from './cover-image'
 import { PlayerControls } from './player-controls'
@@ -11,6 +13,8 @@ type FullPlayerProps = {
 
 export function FullPlayer({ className = '' }: FullPlayerProps) {
   const { currentStop } = useSyncAudioToStore()
+  useMediaSession()
+  usePositionPersistence()
 
   if (!currentStop) {
     return null
