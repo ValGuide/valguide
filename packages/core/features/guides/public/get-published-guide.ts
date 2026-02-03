@@ -69,24 +69,26 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
   const stopsData =
     stopIds.length > 0
       ? await db.query.stop.findMany({
-          where: and(inArray(stop.id, stopIds), isNull(stop.deletedAt), isNull(stop.archivedAt)),
-        })
+        where: and(inArray(stop.id, stopIds), isNull(stop.deletedAt), isNull(stop.archivedAt)),
+      })
       : []
+
+  console.info('Retrieved stops data:', publishedStops) // Debug log for stops data
 
   // 5. Get published translations for each stop
   const stopTranslationsData =
     stopIds.length > 0
       ? await db
-          .select({
-            stopId: stopLocale.stopId,
-            locale: stopLocale.locale,
-            title: stopLocaleVersion.title,
-            description: stopLocaleVersion.description,
-            transcription: stopLocaleVersion.transcription,
-          })
-          .from(stopLocale)
-          .innerJoin(stopLocaleVersion, eq(stopLocale.publishedVersionId, stopLocaleVersion.id))
-          .where(and(inArray(stopLocale.stopId, stopIds), isNotNull(stopLocale.publishedVersionId)))
+        .select({
+          stopId: stopLocale.stopId,
+          locale: stopLocale.locale,
+          title: stopLocaleVersion.title,
+          description: stopLocaleVersion.description,
+          transcription: stopLocaleVersion.transcription,
+        })
+        .from(stopLocale)
+        .innerJoin(stopLocaleVersion, eq(stopLocale.publishedVersionId, stopLocaleVersion.id))
+        .where(and(inArray(stopLocale.stopId, stopIds), isNotNull(stopLocale.publishedVersionId)))
       : []
 
   // Group stop translations by stop ID
@@ -120,17 +122,17 @@ export async function getPublishedGuideByNanoId(nanoId: string): Promise<GuideWi
   const stopAssetsData =
     stopIds.length > 0
       ? await db
-          .select({
-            stopId: stopAsset.stopId,
-            asset: asset,
-            channel: stopAsset.channel,
-            position: stopAsset.position,
-            locale: stopAsset.locale,
-          })
-          .from(stopAsset)
-          .innerJoin(asset, eq(stopAsset.assetId, asset.id))
-          .where(inArray(stopAsset.stopId, stopIds))
-          .orderBy(asc(stopAsset.position))
+        .select({
+          stopId: stopAsset.stopId,
+          asset: asset,
+          channel: stopAsset.channel,
+          position: stopAsset.position,
+          locale: stopAsset.locale,
+        })
+        .from(stopAsset)
+        .innerJoin(asset, eq(stopAsset.assetId, asset.id))
+        .where(inArray(stopAsset.stopId, stopIds))
+        .orderBy(asc(stopAsset.position))
       : []
 
   // Group stop assets by stop ID
