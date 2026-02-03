@@ -25,7 +25,7 @@ export function MobileMoreMenu({
   onDiscardClick,
   onOpenVersionHistory,
 }: MobileMoreMenuProps) {
-  const t = useTranslations('guides.actions')
+  const t = useTranslations('tours.actions')
 
   const canUnpublish = hasPublished
   const canDiscard = hasDraft && hasPublished
@@ -83,7 +83,7 @@ export function MobileSavePublish({
   onPublishClick,
   disabled,
 }: MobileSavePublishProps) {
-  const t = useTranslations('guides.actions')
+  const t = useTranslations('tours.actions')
 
   const canPublish = hasDraft || isDirty
 

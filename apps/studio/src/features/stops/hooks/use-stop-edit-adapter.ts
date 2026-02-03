@@ -14,7 +14,7 @@ export type StopLocaleData = {
 export interface StopEditAdapter {
   stopId: string
   stopNanoId: string
-  guideNanoId: string | null
+  tourNanoId: string | null
 
   activeLocale: string
   availableLocales: string[]
@@ -53,7 +53,7 @@ export function useStopEditAdapter(): StopEditAdapter {
   return {
     stopId: stopCtx.stopId,
     stopNanoId: stopCtx.nanoId,
-    guideNanoId: null,
+    tourNanoId: null,
 
     activeLocale: stopCtx.activeLocale,
     availableLocales: stopCtx.availableLocales,

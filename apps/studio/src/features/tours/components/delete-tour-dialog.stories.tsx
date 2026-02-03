@@ -11,7 +11,7 @@ const meta = {
   args: {
     open: true,
     onOpenChange: fn(),
-    guideName: 'Ancient Rome Tour',
+    tourName: 'Ancient Rome Tour',
     confirmationInput: '',
     onConfirmationInputChange: fn(),
     isLoading: false,
@@ -27,14 +27,14 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     open: true,
-    guideName: 'Ancient Rome Tour',
+    tourName: 'Ancient Rome Tour',
   },
 }
 
 export const WithInputEntered: Story = {
   args: {
     open: true,
-    guideName: 'The Louvre Collection',
+    tourName: 'The Louvre Collection',
     confirmationInput: 'permanently delete',
   },
 }
@@ -42,7 +42,7 @@ export const WithInputEntered: Story = {
 export const Loading: Story = {
   args: {
     open: true,
-    guideName: 'Modern Art Exhibit',
+    tourName: 'Modern Art Exhibit',
     isLoading: true,
   },
 }
@@ -50,6 +50,6 @@ export const Loading: Story = {
 export const Closed: Story = {
   args: {
     open: false,
-    guideName: 'Medieval Times',
+    tourName: 'Medieval Times',
   },
 }

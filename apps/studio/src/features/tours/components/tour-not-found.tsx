@@ -15,9 +15,9 @@ export function TourNotFound() {
       <p className="mt-2 max-w-md text-center text-muted-foreground">{t('description')}</p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Button asChild>
-          <Link to="/guides">
+          <Link to="/tours">
             <Home className="mr-2 size-4" />
-            {t('guide.backToTours')}
+            {t('tour.backToTours')}
           </Link>
         </Button>
       </div>

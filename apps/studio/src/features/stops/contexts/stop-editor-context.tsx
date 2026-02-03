@@ -111,13 +111,13 @@ export function StopEditorProvider({
   const assetsPublished = assetsPublishedQuery.data?.assets ?? []
   const isLoadingAssetsPublished = assetsPublishedQuery.isLoading
 
-  // Guide usage (for shared stop indicator)
-  const guideUsageQuery = useQuery({
+  // Tour usage (for shared stop indicator)
+  const tourUsageQuery = useQuery({
     ...stopTourUsageQueryOptions(nanoId),
     enabled: !!nanoId,
   })
-  const guideUsage = guideUsageQuery.data ?? null
-  const isLoadingGuideUsage = guideUsageQuery.isLoading
+  const tourUsage = tourUsageQuery.data ?? null
+  const isLoadingTourUsage = tourUsageQuery.isLoading
 
   // Update available locales
   const updateAvailableLocales = useCallback(
@@ -313,8 +313,8 @@ export function StopEditorProvider({
     updateAssets,
     addAsset,
     removeAsset,
-    guideUsage,
-    isLoadingGuideUsage,
+    tourUsage,
+    isLoadingTourUsage,
     isDirty,
     registerFormDirty,
     unregisterForm,

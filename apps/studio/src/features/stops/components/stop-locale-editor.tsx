@@ -35,7 +35,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
   ref,
 ) {
   const t = useTranslations('stops.editor')
-  const tGuides = useTranslations('guides')
+  const tTours = useTranslations('tours')
 
   // Store initial values for reset functionality
   const initialValuesRef = useRef({
@@ -92,7 +92,7 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
           <CardTitle>
             {t('title')}
             <span className="ml-2 text-sm font-normal uppercase text-muted-foreground">
-              {tGuides('editor.localeIndicator', { locale })}
+              {tTours('editor.localeIndicator', { locale })}
             </span>
           </CardTitle>
           <CardDescription>{t('localeContentDescription')}</CardDescription>

@@ -5,7 +5,7 @@ import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 
 function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
-  return <DeleteAssetDialog {...props} onGetUsage={async () => ({ guides: [], stops: [] })} />
+  return <DeleteAssetDialog {...props} onGetUsage={async () => ({ tours: [], stops: [] })} />
 }
 
 const meta = {
@@ -46,7 +46,7 @@ const baseAsset: AssetWithUsage = {
   uploadedBy: 'user-456',
   createdAt: new Date('2025-01-10T10:00:00Z'),
   updatedAt: new Date('2025-01-10T10:00:00Z'),
-  guideCount: 0,
+  tourCount: 0,
   stopCount: 0,
 }
 
@@ -135,11 +135,11 @@ export const OldUpload: Story = {
   },
 }
 
-export const UsedInGuides: Story = {
+export const UsedInTours: Story = {
   args: {
     asset: {
       ...baseAsset,
-      guideCount: 2,
+      tourCount: 2,
       stopCount: 0,
     },
   },
@@ -149,7 +149,7 @@ export const UsedInStops: Story = {
   args: {
     asset: {
       ...baseAsset,
-      guideCount: 0,
+      tourCount: 0,
       stopCount: 3,
     },
   },
@@ -159,7 +159,7 @@ export const UsedInBoth: Story = {
   args: {
     asset: {
       ...baseAsset,
-      guideCount: 2,
+      tourCount: 2,
       stopCount: 1,
     },
   },
@@ -170,7 +170,7 @@ function MockDeleteDialogWithUsage(props: DeleteAssetDialogComponentProps) {
     <DeleteAssetDialog
       {...props}
       onGetUsage={async () => ({
-        guides: [{ id: 'g1', nanoId: 'guide1', name: 'City Tour Guide', channel: 'cover', locale: 'en' }],
+        tours: [{ id: 't1', nanoId: 'tour1', name: 'City Tour', channel: 'cover', locale: 'en' }],
         stops: [
           { id: 's1', nanoId: 'stop1', name: 'Museum Entrance', channel: 'media', locale: 'en' },
           { id: 's2', nanoId: 'stop2', name: 'Art Gallery', channel: 'media', locale: null },
@@ -184,7 +184,7 @@ export const WithUsageWarning: Story = {
   args: {
     asset: {
       ...baseAsset,
-      guideCount: 1,
+      tourCount: 1,
       stopCount: 2,
     },
     DeleteDialog: MockDeleteDialogWithUsage,

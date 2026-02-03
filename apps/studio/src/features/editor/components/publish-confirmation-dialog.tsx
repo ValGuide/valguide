@@ -23,8 +23,8 @@ export function PublishConfirmationDialog({
   isPublishing,
   onConfirm,
 }: PublishConfirmationDialogProps) {
-  const t = useTranslations('guides.confirmPublish')
-  const tActions = useTranslations('guides.actions')
+  const t = useTranslations('tours.confirmPublish')
+  const tActions = useTranslations('tours.actions')
 
   const handleConfirm = () => {
     onConfirm()

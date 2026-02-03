@@ -8,7 +8,7 @@ type TranscriptionProps = {
 }
 
 export function Transcription({ content }: TranscriptionProps) {
-  const t = useTranslations('guide')
+  const t = useTranslations('tour')
   const [isExpanded, setIsExpanded] = useState(false)
 
   if (!content) return null

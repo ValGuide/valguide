@@ -36,7 +36,7 @@ export function EditorActionsPanel({
   onOpenVersionHistory,
   disabled,
 }: EditorActionsPanelProps) {
-  const t = useTranslations('guides.actions')
+  const t = useTranslations('tours.actions')
 
   const canPublish = hasDraft || isDirty
   const canUnpublish = hasPublished

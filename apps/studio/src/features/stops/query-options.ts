@@ -86,12 +86,12 @@ export const stopAssetsPublishedQueryOptions = (nanoId: string) =>
   })
 
 /**
- * Query options for stop guide usage (how many guides reference this stop)
- * Used to show "Used in X guides" indicator when a stop is shared
+ * Query options for stop tour usage (how many tours reference this stop)
+ * Used to show "Used in X tours" indicator when a stop is shared
  */
 export const stopTourUsageQueryOptions = (nanoId: string) =>
   queryOptions<StopTourUsageResult>({
-    queryKey: ['stop', nanoId, 'guide-usage'],
+    queryKey: ['stop', nanoId, 'tour-usage'],
     queryFn: () => getStopTourUsageFn({ data: { nanoId } }),
     staleTime: 60 * 1000,
   })

@@ -57,7 +57,7 @@ export function DeleteAssetDialog({
     }
   }, [open])
 
-  const hasUsage = usage && (usage.guides.length > 0 || usage.stops.length > 0)
+  const hasUsage = usage && (usage.tours.length > 0 || usage.stops.length > 0)
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -78,22 +78,22 @@ export function DeleteAssetDialog({
                 <>
                   <p>{t('deleteWithUsage.description', { fileName })}</p>
 
-                  {usage.guides.length > 0 && (
+                  {usage.tours.length > 0 && (
                     <div>
-                      <p className="font-medium text-foreground">{t('deleteWithUsage.guidesSection')}</p>
+                      <p className="font-medium text-foreground">{t('deleteWithUsage.toursSection')}</p>
                       <ul className="mt-1 list-inside list-disc space-y-1 text-sm">
-                        {usage.guides.map((guide) => (
-                          <li key={guide.id}>
+                        {usage.tours.map((tour) => (
+                          <li key={tour.id}>
                             <Link
-                              to="/guides/$nanoId/edit"
-                              params={{ nanoId: guide.nanoId }}
+                              to="/tours/$nanoId/edit"
+                              params={{ nanoId: tour.nanoId }}
                               preload="intent"
                               className="text-primary hover:underline"
                               onClick={() => onOpenChange(false)}
                             >
-                              {guide.name}
+                              {tour.name}
                             </Link>
-                            <span className="text-muted-foreground">({guide.channel})</span>
+                            <span className="text-muted-foreground">({tour.channel})</span>
                           </li>
                         ))}
                       </ul>

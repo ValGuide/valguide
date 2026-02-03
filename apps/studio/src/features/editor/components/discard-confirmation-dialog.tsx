@@ -17,7 +17,7 @@ interface DiscardConfirmationDialogProps {
 }
 
 export function DiscardConfirmationDialog({ open, onOpenChange, onConfirm }: DiscardConfirmationDialogProps) {
-  const t = useTranslations('guides.confirmDiscard')
+  const t = useTranslations('tours.confirmDiscard')
 
   const handleConfirm = () => {
     onConfirm()

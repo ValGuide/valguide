@@ -20,7 +20,7 @@ export function DraftPublishedTabs({
   className,
 }: DraftPublishedTabsProps) {
   void _hasDraft
-  const t = useTranslations('guides.tabs')
+  const t = useTranslations('tours.tabs')
 
   return (
     <div className={cn('flex', className)}>

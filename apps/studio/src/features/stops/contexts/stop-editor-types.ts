@@ -51,9 +51,9 @@ export interface StopEditorContextValue {
   addAsset: (asset: Asset, channel: string, locale: string | null) => Promise<void>
   removeAsset: (assetId: string) => Promise<void>
 
-  // Guide usage (for shared stop indicator)
-  guideUsage: StopTourUsageResult | null
-  isLoadingGuideUsage: boolean
+  // Tour usage (for shared stop indicator)
+  tourUsage: StopTourUsageResult | null
+  isLoadingTourUsage: boolean
 
   // Form dirty registration
   isDirty: boolean

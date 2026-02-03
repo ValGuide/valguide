@@ -16,7 +16,7 @@ const meta = {
     isDeleting: false,
     onConfirmDelete: fn(),
     onGetUsage: fn(async () => ({
-      guides: [],
+      tours: [],
       stops: [],
     })),
   },
@@ -33,15 +33,15 @@ export const Default: Story = {
   },
 }
 
-export const WithUsageInGuides: Story = {
+export const WithUsageInTours: Story = {
   args: {
     open: true,
     assetId: 'asset-456',
     fileName: 'sculpture-photo.jpg',
     onGetUsage: fn(async () => ({
-      guides: [
-        { id: '1', nanoId: 'guide-001', name: 'Ancient Rome Tour', channel: 'en', locale: 'en' },
-        { id: '2', nanoId: 'guide-002', name: 'Louvre Collection', channel: 'de', locale: 'de' },
+      tours: [
+        { id: '1', nanoId: 'tour-001', name: 'Ancient Rome Tour', channel: 'en', locale: 'en' },
+        { id: '2', nanoId: 'tour-002', name: 'Louvre Collection', channel: 'de', locale: 'de' },
       ],
       stops: [],
     })),
@@ -54,7 +54,7 @@ export const WithUsageInStops: Story = {
     assetId: 'asset-789',
     fileName: 'painting.jpg',
     onGetUsage: fn(async () => ({
-      guides: [],
+      tours: [],
       stops: [
         { id: 'stop-1', nanoId: 'stop-001', name: 'The Mona Lisa', channel: 'en', locale: 'en' },
         { id: 'stop-2', nanoId: 'stop-002', name: 'Venus de Milo', channel: 'fr', locale: 'fr' },
@@ -69,7 +69,7 @@ export const WithUsageInBoth: Story = {
     assetId: 'asset-all',
     fileName: 'important-asset.mp3',
     onGetUsage: fn(async () => ({
-      guides: [{ id: '1', nanoId: 'guide-xyz', name: 'Main Exhibition', channel: 'en', locale: 'en' }],
+      tours: [{ id: '1', nanoId: 'tour-xyz', name: 'Main Exhibition', channel: 'en', locale: 'en' }],
       stops: [{ id: 'stop-abc', nanoId: 'stop-xyz', name: 'Featured Stop', channel: 'de', locale: 'de' }],
     })),
   },

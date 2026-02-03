@@ -23,11 +23,11 @@ export function UnpublishConfirmationDialog({
   contentType,
   onConfirm,
 }: UnpublishConfirmationDialogProps) {
-  // i18n-used-keys: guides.confirmUnpublishGuide.title, guides.confirmUnpublishGuide.description, guides.confirmUnpublishGuide.cancel, guides.confirmUnpublishGuide.confirm
-  const tGuide = useTranslations('guides.confirmUnpublishGuide')
-  // i18n-used-keys: guides.confirmUnpublishStop.title, guides.confirmUnpublishStop.description, guides.confirmUnpublishStop.cancel, guides.confirmUnpublishStop.confirm
-  const tStop = useTranslations('guides.confirmUnpublishStop')
-  const t = contentType === 'guide' ? tGuide : tStop
+  // i18n-used-keys: tours.confirmUnpublishTour.title, tours.confirmUnpublishTour.description, tours.confirmUnpublishTour.cancel, tours.confirmUnpublishTour.confirm
+  const tTour = useTranslations('tours.confirmUnpublishTour')
+  // i18n-used-keys: tours.confirmUnpublishStop.title, tours.confirmUnpublishStop.description, tours.confirmUnpublishStop.cancel, tours.confirmUnpublishStop.confirm
+  const tStop = useTranslations('tours.confirmUnpublishStop')
+  const t = contentType === 'tour' ? tTour : tStop
 
   const handleConfirm = () => {
     onConfirm()

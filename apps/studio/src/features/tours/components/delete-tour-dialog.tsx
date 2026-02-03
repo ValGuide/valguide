@@ -18,7 +18,7 @@ import { useMemo } from 'react'
 interface DeleteTourDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  guideName: string | null
+  tourName: string | null
   confirmationInput: string
   onConfirmationInputChange: (value: string) => void
   isLoading: boolean
@@ -28,7 +28,7 @@ interface DeleteTourDialogProps {
 export function DeleteTourDialog({
   open,
   onOpenChange,
-  guideName,
+  tourName,
   confirmationInput,
   onConfirmationInputChange,
   isLoading,
@@ -64,7 +64,7 @@ export function DeleteTourDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>{t('deleteConfirmTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('deleteConfirmDescriptionWithName', { name: guideName ?? '' })}
+            {t('deleteConfirmDescriptionWithName', { name: tourName ?? '' })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="space-y-2">

@@ -24,7 +24,7 @@ export type StopEditPageProps = {
 
 export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps) {
   const router = useRouter()
-  const t = useTranslations('guides')
+  const t = useTranslations('tours')
   const tStops = useTranslations('stops')
   const {
     nanoId,
@@ -48,7 +48,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
     unregisterForm,
     registerFormReset,
     navigation,
-    guideUsage,
+    tourUsage,
   } = useStopEditor()
 
   const [activeTab, setActiveTab] = useState<EditorTab>('draft')
@@ -136,7 +136,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
   const handleBack = useCallback(() => {
     confirmIfDirty(() => {
       if (navigation.backParams?.nanoId) {
-        router.navigate({ to: '/guides/$nanoId/edit', params: { nanoId: navigation.backParams.nanoId } })
+        router.navigate({ to: '/tours/$nanoId/edit', params: { nanoId: navigation.backParams.nanoId } })
       } else {
         router.navigate({ to: '/stops' })
       }
@@ -262,7 +262,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
       unsavedChangesDialog={unsavedChangesDialog}
     >
       <div className="space-y-6 sm:space-y-8">
-        {guideUsage && guideUsage.guideCount > 1 && <SharedStopBanner guideCount={guideUsage.guideCount} />}
+        {tourUsage && tourUsage.tourCount > 1 && <SharedStopBanner tourCount={tourUsage.tourCount} />}
 
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-sm font-semibold sm:text-base">{tStops('editor.localeContent')}</h2>

@@ -262,7 +262,7 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
         status={statusDisplay}
         hasDraft={hasDraft}
         hasPublished={hasPublished}
-        contentType="guide"
+        contentType="tour"
         activeLocale={activeLocale}
         availableLocales={availableLocales}
         onLocaleChange={setActiveLocale}

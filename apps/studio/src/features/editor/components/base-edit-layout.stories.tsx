@@ -100,7 +100,7 @@ const meta = {
     status: { status: 'unpublished', indicator: null },
     hasDraft: true,
     hasPublished: false,
-    contentType: 'guide',
+    contentType: 'tour',
     activeLocale: 'en',
     availableLocales: ['en', 'de', 'rm'],
     isDirty: false,

@@ -82,8 +82,8 @@ const meta: Meta<typeof StopEditPage> = {
           localePublished={null}
           assets={[]}
           navigation={{
-            backPath: '/guides/abc123xyz/edit',
-            backLabel: 'Art Museum Guide',
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
             backParams: { nanoId: 'abc123xyz' },
           }}
         >
@@ -113,8 +113,8 @@ export const Unpublished: Story = {
           localePublished={null}
           assets={createMockAssets(2)}
           navigation={{
-            backPath: '/guides/abc123xyz/edit',
-            backLabel: 'Art Museum Guide',
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
             backParams: { nanoId: 'abc123xyz' },
           }}
         >
@@ -135,8 +135,8 @@ export const Published: Story = {
           localePublished={createMockLocalePublished()}
           assets={createMockAssets(3)}
           navigation={{
-            backPath: '/guides/abc123xyz/edit',
-            backLabel: 'Art Museum Guide',
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
             backParams: { nanoId: 'abc123xyz' },
           }}
         >
@@ -161,8 +161,8 @@ export const WithUnpublishedChanges: Story = {
           localePublished={createMockLocalePublished()}
           assets={createMockAssets(2)}
           navigation={{
-            backPath: '/guides/abc123xyz/edit',
-            backLabel: 'Art Museum Guide',
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
             backParams: { nanoId: 'abc123xyz' },
           }}
         >
@@ -183,8 +183,8 @@ export const WithGalleryImages: Story = {
           localePublished={null}
           assets={createMockAssets(6)}
           navigation={{
-            backPath: '/guides/abc123xyz/edit',
-            backLabel: 'Art Museum Guide',
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
             backParams: { nanoId: 'abc123xyz' },
           }}
         >
@@ -205,8 +205,8 @@ export const EmptyStop: Story = {
           localePublished={null}
           assets={[]}
           navigation={{
-            backPath: '/guides/abc123xyz/edit',
-            backLabel: 'Art Museum Guide',
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
             backParams: { nanoId: 'abc123xyz' },
           }}
         >
@@ -230,8 +230,8 @@ export const MultipleLocales: Story = {
           localePublished={null}
           assets={createMockAssets(2)}
           navigation={{
-            backPath: '/guides/abc123xyz/edit',
-            backLabel: 'Art Museum Guide',
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
             backParams: { nanoId: 'abc123xyz' },
           }}
         >

@@ -8,7 +8,7 @@ import { MediaPicker } from '@/features/assets/components/media-picker/media-pic
 import type { MediaPickerComponentProps } from '@/features/assets/components/media-picker/types'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
 import { MockTourEditorProvider } from '@/features/tours/contexts/mock-tour-editor-provider'
-import { TourEditPage, type TourEditPageProps } from './guide-edit-page'
+import { TourEditPage, type TourEditPageProps } from './tour-edit-page'
 
 const mockOnUpload = async (_file: File, onProgress: (p: number) => void) => {
   for (let i = 0; i <= 100; i += 20) {

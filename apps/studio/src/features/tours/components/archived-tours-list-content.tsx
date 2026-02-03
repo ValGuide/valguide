@@ -7,11 +7,11 @@ import { ImageIcon, RotateCcw, Trash2 } from 'lucide-react'
 
 interface ArchivedToursListContentProps {
   tours: ArchivedTourListItem[]
-  onRecover: (nanoId: string, guideName: string) => void
-  onDelete: (nanoId: string, guideName: string) => void
+  onRecover: (nanoId: string, tourName: string) => void
+  onDelete: (nanoId: string, tourName: string) => void
 }
 
-export function ArchivedToursListContent({ guides, onRecover, onDelete }: ArchivedToursListContentProps) {
+export function ArchivedToursListContent({ tours, onRecover, onDelete }: ArchivedToursListContentProps) {
   const t = useTranslations('tours')
 
   const formatDate = (date?: Date | string) => {
@@ -21,11 +21,11 @@ export function ArchivedToursListContent({ guides, onRecover, onDelete }: Archiv
 
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {tours.map((guide) => {
-        const displayTitle = guide.title ?? t('untitledGuide')
+      {tours.map((tour) => {
+        const displayTitle = tour.title ?? t('untitledTour')
 
         return (
-          <Card key={guide.nanoId} className="flex h-full flex-col overflow-hidden">
+          <Card key={tour.nanoId} className="flex h-full flex-col overflow-hidden">
             <div className="relative h-44 w-full shrink-0 overflow-hidden">
               <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800/50">
@@ -49,7 +49,7 @@ export function ArchivedToursListContent({ guides, onRecover, onDelete }: Archiv
                 <Button
                   variant="default"
                   size="sm"
-                  onClick={() => onRecover(guide.nanoId, displayTitle)}
+                  onClick={() => onRecover(tour.nanoId, displayTitle)}
                   className="w-full"
                 >
                   <RotateCcw className="h-4 w-4 shrink-0" />
@@ -58,7 +58,7 @@ export function ArchivedToursListContent({ guides, onRecover, onDelete }: Archiv
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => onDelete(guide.nanoId, displayTitle)}
+                  onClick={() => onDelete(tour.nanoId, displayTitle)}
                   className="w-full text-muted-foreground hover:text-destructive"
                 >
                   <Trash2 className="h-4 w-4 shrink-0" />
@@ -66,7 +66,7 @@ export function ArchivedToursListContent({ guides, onRecover, onDelete }: Archiv
                 </Button>
               </div>
               <span className="text-xs text-muted-foreground/70">
-                {t('archivedOnDate', { date: formatDate(guide.archivedAt) })}
+                {t('archivedOnDate', { date: formatDate(tour.archivedAt) })}
               </span>
             </CardFooter>
           </Card>

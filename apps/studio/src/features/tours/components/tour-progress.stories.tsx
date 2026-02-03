@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { GuideDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
-import type { GuideLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
+import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
+import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import { MockTourEditorProvider } from '@/features/tours/contexts/mock-tour-editor-provider'
 import { TourProgress } from './tour-progress'
 
-const createMockTourDetail = (overrides: Partial<GuideDetail> = {}): GuideDetail => ({
+const createMockTourDetail = (overrides: Partial<TourDetail> = {}): TourDetail => ({
   id: 'tour-1',
   nanoId: 'abc123xyz',
   organizationId: 'org-1',
@@ -18,7 +18,7 @@ const createMockTourDetail = (overrides: Partial<GuideDetail> = {}): GuideDetail
   ...overrides,
 })
 
-const createMockLocaleDraft = (overrides: Partial<GuideLocaleDraftResult> = {}): GuideLocaleDraftResult => ({
+const createMockLocaleDraft = (overrides: Partial<TourLocaleDraftResult> = {}): TourLocaleDraftResult => ({
   locale: 'en',
   title: null,
   description: null,

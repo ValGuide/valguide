@@ -1,5 +1,5 @@
-import { getLocalizedStopText } from '@valguide/core/features/guides/public/localization-helpers'
-import type { StopWithAssets } from '@valguide/core/features/guides/public/types'
+import { getLocalizedStopText } from '@valguide/core/features/tours/public/localization-helpers'
+import type { StopWithAssets } from '@valguide/core/features/tours/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
@@ -15,7 +15,7 @@ type StopContentProps = {
 }
 
 export function StopContent({ stop, locale, stopNumber }: StopContentProps) {
-  const t = useTranslations('guide')
+  const t = useTranslations('tour')
   const title = getLocalizedStopText(stop, 'title', locale as SupportedLocale)
   const description = getLocalizedStopText(stop, 'description', locale as SupportedLocale)
   const transcription = getLocalizedStopText(stop, 'transcription', locale as SupportedLocale)

@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { AssetItem } from '@valguide/core/features/guides/public/types'
+import type { AssetItem } from '@valguide/core/features/tours/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -11,7 +11,7 @@ type ImageSwiperProps = {
 }
 
 export function ImageSwiper({ images }: ImageSwiperProps) {
-  const t = useTranslations('guide')
+  const t = useTranslations('tour')
   const [currentIndex, setCurrentIndex] = useState(0)
 
   if (images.length === 0) return null

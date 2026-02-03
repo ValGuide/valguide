@@ -81,7 +81,7 @@ function isTextKey(e: React.KeyboardEvent) {
 
 export function LocaleSelector({ value, locales, onValueChange, className, footer }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
-  const t = useTranslations('guides.localeSelector')
+  const t = useTranslations('tours.localeSelector')
   const selectedLocaleName = getLocaleDisplayName(value)
   const showSearch = locales.length >= SEARCH_THRESHOLD
 

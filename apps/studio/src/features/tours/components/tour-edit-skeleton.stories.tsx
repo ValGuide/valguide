@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { TourEditSkeleton } from './guide-edit-skeleton'
+import { TourEditSkeleton } from './tour-edit-skeleton'
 
 const meta = {
   title: 'Studio/Pages/Tours/Edit/TourEditSkeleton',

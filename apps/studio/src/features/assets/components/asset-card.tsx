@@ -135,15 +135,15 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
 
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">{t(`types.${asset.type}`)}</Badge>
-              {(asset.guideCount > 0 || asset.stopCount > 0) && (
+              {(asset.tourCount > 0 || asset.stopCount > 0) && (
                 <Badge variant="outline" className="text-muted-foreground">
-                  {asset.guideCount > 0 && asset.stopCount > 0
-                    ? t('usage.guidesAndStops', {
-                        guides: t('usage.guidesCount', { count: asset.guideCount }),
+                  {asset.tourCount > 0 && asset.stopCount > 0
+                    ? t('usage.toursAndStops', {
+                        tours: t('usage.toursCount', { count: asset.tourCount }),
                         stops: t('usage.stopsCount', { count: asset.stopCount }),
                       })
-                    : asset.guideCount > 0
-                      ? t('usage.guidesCount', { count: asset.guideCount })
+                    : asset.tourCount > 0
+                      ? t('usage.toursCount', { count: asset.tourCount })
                       : t('usage.stopsCount', { count: asset.stopCount })}
                 </Badge>
               )}

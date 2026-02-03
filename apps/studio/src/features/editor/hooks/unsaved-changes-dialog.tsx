@@ -18,7 +18,7 @@ interface UnsavedChangesDialogProps {
 }
 
 export function UnsavedChangesDialog({ open, onOpenChange, onStay, onLeave }: UnsavedChangesDialogProps) {
-  const t = useTranslations('guides.unsavedChanges')
+  const t = useTranslations('tours.unsavedChanges')
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>

@@ -10,7 +10,7 @@ import { DeleteTourDialog } from './delete-tour-dialog'
 import { RecoverTourDialog } from './recover-tour-dialog'
 
 export interface ArchivedToursListProps {
-  guides?: ArchivedTourListItem[]
+  tours?: ArchivedTourListItem[]
   isLoading?: boolean
   error?: Error | null
   onRetry?: () => void
@@ -21,11 +21,11 @@ export interface ArchivedToursListProps {
 type DialogState = {
   type: 'recover' | 'delete' | null
   tourId: string | null
-  guideName: string | null
+  tourName: string | null
 }
 
 export function ArchivedToursList({
-  guides = [],
+  tours = [],
   isLoading = false,
   error = null,
   onRetry,
@@ -33,12 +33,12 @@ export function ArchivedToursList({
   onDelete,
 }: ArchivedToursListProps) {
   const t = useTranslations('tours')
-  const [dialogState, setDialogState] = useState<DialogState>({ type: null, tourId: null, guideName: null })
+  const [dialogState, setDialogState] = useState<DialogState>({ type: null, tourId: null, tourName: null })
   const [isActionLoading, setIsActionLoading] = useState(false)
   const [confirmationInput, setConfirmationInput] = useState('')
 
   const handleDialogClose = () => {
-    setDialogState({ type: null, tourId: null, guideName: null })
+    setDialogState({ type: null, tourId: null, tourName: null })
     setConfirmationInput('')
   }
 
@@ -64,12 +64,12 @@ export function ArchivedToursList({
     }
   }
 
-  const openRecoverDialog = (tourId: string, guideName: string) => {
-    setDialogState({ type: 'recover', tourId, guideName })
+  const openRecoverDialog = (tourId: string, tourName: string) => {
+    setDialogState({ type: 'recover', tourId, tourName })
   }
 
-  const openDeleteDialog = (tourId: string, guideName: string) => {
-    setDialogState({ type: 'delete', tourId, guideName })
+  const openDeleteDialog = (tourId: string, tourName: string) => {
+    setDialogState({ type: 'delete', tourId, tourName })
   }
 
   const renderContent = () => {
@@ -92,7 +92,7 @@ export function ArchivedToursList({
       return <ArchivedToursListEmpty />
     }
 
-    return <ArchivedToursListContent guides={guides} onRecover={openRecoverDialog} onDelete={openDeleteDialog} />
+    return <ArchivedToursListContent tours={tours} onRecover={openRecoverDialog} onDelete={openDeleteDialog} />
   }
 
   return (
@@ -111,7 +111,7 @@ export function ArchivedToursList({
       <DeleteTourDialog
         open={dialogState.type === 'delete'}
         onOpenChange={() => handleDialogClose()}
-        guideName={dialogState.tourName}
+        tourName={dialogState.tourName}
         confirmationInput={confirmationInput}
         onConfirmationInputChange={setConfirmationInput}
         isLoading={isActionLoading}

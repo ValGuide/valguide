@@ -7,7 +7,7 @@ import { AssetsListSkeleton } from './assets-list-skeleton'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 
 function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
-  return <DeleteAssetDialog {...props} onGetUsage={async () => ({ guides: [], stops: [] })} />
+  return <DeleteAssetDialog {...props} onGetUsage={async () => ({ tours: [], stops: [] })} />
 }
 
 function MockAssetCard({ asset, onDelete }: AssetCardComponentProps) {
@@ -69,7 +69,7 @@ const mockAssets: AssetWithUsage[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-10T10:00:00Z'),
     updatedAt: new Date('2025-01-10T10:00:00Z'),
-    guideCount: 2,
+    tourCount: 2,
     stopCount: 1,
   },
   {
@@ -88,7 +88,7 @@ const mockAssets: AssetWithUsage[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-09T14:30:00Z'),
     updatedAt: new Date('2025-01-09T14:30:00Z'),
-    guideCount: 0,
+    tourCount: 0,
     stopCount: 3,
   },
   {
@@ -107,7 +107,7 @@ const mockAssets: AssetWithUsage[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-08T09:15:00Z'),
     updatedAt: new Date('2025-01-08T09:15:00Z'),
-    guideCount: 1,
+    tourCount: 1,
     stopCount: 0,
   },
   {
@@ -126,7 +126,7 @@ const mockAssets: AssetWithUsage[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-08T09:20:00Z'),
     updatedAt: new Date('2025-01-08T09:20:00Z'),
-    guideCount: 0,
+    tourCount: 0,
     stopCount: 0,
   },
   {
@@ -145,7 +145,7 @@ const mockAssets: AssetWithUsage[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-07T16:45:00Z'),
     updatedAt: new Date('2025-01-07T16:45:00Z'),
-    guideCount: 0,
+    tourCount: 0,
     stopCount: 2,
   },
   {
@@ -164,7 +164,7 @@ const mockAssets: AssetWithUsage[] = [
     uploadedBy: 'user-456',
     createdAt: new Date('2025-01-06T11:00:00Z'),
     updatedAt: new Date('2025-01-06T11:00:00Z'),
-    guideCount: 0,
+    tourCount: 0,
     stopCount: 0,
   },
 ]

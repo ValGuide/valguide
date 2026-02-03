@@ -28,7 +28,7 @@ export type TourDetailViewProps = {
 }
 
 export function TourDetailView({
-  guide,
+  tour,
   nanoId,
   preferredLocale,
   appDomain,
@@ -43,14 +43,14 @@ export function TourDetailView({
   const t = useTranslations('tours')
 
   // Compute display values from locales with fallback priority
-  const bestLocale = pickBestLocale(preferredLocale, guide.locales)
-  const displayTitle = bestLocale?.title?.trim() || t('untitledGuide')
+  const bestLocale = pickBestLocale(preferredLocale, tour.locales)
+  const displayTitle = bestLocale?.title?.trim() || t('untitledTour')
   const displayDescription = bestLocale?.description ?? null
-  const isPublished = guide.locales.some((l) => l.hasPublished)
+  const isPublished = tour.locales.some((l) => l.hasPublished)
 
-  const guideStatus = getTourStatus({
+  const tourStatus = getTourStatus({
     published: isPublished ? new Date() : null, // getTourStatus expects Date | null
-    archivedAt: guide.archivedAt,
+    archivedAt: tour.archivedAt,
   })
 
   return (
@@ -61,12 +61,12 @@ export function TourDetailView({
         actions={
           headerActions ?? (
             <>
-              <ViewInAppButton nanoId={nanoId} published={guideStatus === 'published'} appDomain={appDomain} />
-              <ArchiveTourButton tourNanoId={guide.nanoId} onArchived={onArchived} />
+              <ViewInAppButton nanoId={nanoId} published={tourStatus === 'published'} appDomain={appDomain} />
+              <ArchiveTourButton tourNanoId={tour.nanoId} onArchived={onArchived} />
               <Button asChild>
                 <Link to="/tours/$nanoId/edit" params={{ nanoId }} preload="intent">
                   <Pencil className="h-4 w-4" />
-                  {t('editGuide')}
+                  {t('editTour')}
                 </Link>
               </Button>
             </>
@@ -78,7 +78,7 @@ export function TourDetailView({
       <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
           <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{displayTitle}</h1>
-          <TourStatusBadge status={guideStatus} size="lg" className="shrink-0" />
+          <TourStatusBadge status={tourStatus} size="lg" className="shrink-0" />
         </div>
       </div>
 
@@ -112,21 +112,21 @@ export function TourDetailView({
               <MetadataGrid>
                 <MetadataRow
                   label={t('details.tourId')}
-                  value={<span className="font-mono text-xs">{guide.nanoId}</span>}
+                  value={<span className="font-mono text-xs">{tour.nanoId}</span>}
                 />
                 <MetadataRow
                   label={t('details.created')}
-                  value={new Date(guide.createdAt).toLocaleDateString()}
+                  value={new Date(tour.createdAt).toLocaleDateString()}
                   icon={<Calendar />}
                 />
                 <MetadataRow
                   label={t('details.lastUpdated')}
-                  value={new Date(guide.updatedAt).toLocaleDateString()}
+                  value={new Date(tour.updatedAt).toLocaleDateString()}
                   icon={<Clock />}
                 />
                 <MetadataRow
                   label={t('details.status')}
-                  value={guideStatus === 'published' ? t('details.published') : t('details.draft')}
+                  value={tourStatus === 'published' ? t('details.published') : t('details.draft')}
                 />
               </MetadataGrid>
             </CardContent>
@@ -135,7 +135,7 @@ export function TourDetailView({
           {/* Translations Management */}
           <TranslationsManager
             tourNanoId={nanoId}
-            locales={guide.availableLocales}
+            locales={tour.availableLocales}
             onAddLanguage={onAddLanguage}
             onRemoveLanguage={onRemoveLanguage}
           />

@@ -5,7 +5,7 @@ type VideoPlayerProps = {
 }
 
 export function VideoPlayer({ src }: VideoPlayerProps) {
-  const t = useTranslations('guide')
+  const t = useTranslations('tour')
 
   return (
     <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-black">

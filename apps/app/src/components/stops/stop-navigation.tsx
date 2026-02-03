@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import type { StopWithAssets } from '@valguide/core/features/guides/public/types'
+import type { StopWithAssets } from '@valguide/core/features/tours/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { ChevronLeft, ChevronRight, List } from 'lucide-react'
@@ -12,7 +12,7 @@ type StopNavigationProps = {
 }
 
 export function StopNavigation({ guideNanoId, currentIndex, stops }: StopNavigationProps) {
-  const t = useTranslations('guide')
+  const t = useTranslations('tour')
   const prevStop = currentIndex > 0 ? stops[currentIndex - 1] : null
   const nextStop = currentIndex < stops.length - 1 ? stops[currentIndex + 1] : null
 
