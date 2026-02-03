@@ -169,7 +169,6 @@ export function ScreenshotInput({
       <div className="space-y-2">
         <div className="relative rounded-lg border border-border bg-muted/50 p-3 overflow-hidden">
           <div className="flex items-start gap-3">
-            {/* Thumbnail */}
             <div className="relative shrink-0">
               <img src={preview} alt={t('uploadLabel')} className="h-16 w-16 rounded-md object-cover" />
               {isUploading && (
@@ -179,12 +178,10 @@ export function ScreenshotInput({
               )}
             </div>
 
-            {/* File info */}
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{selectedFile.name}</p>
               <p className="text-xs text-muted-foreground">{formatFileSize(selectedFile.size)}</p>
 
-              {/* Progress bar */}
               {isUploading && (
                 <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                   <div
@@ -195,7 +192,6 @@ export function ScreenshotInput({
               )}
             </div>
 
-            {/* Clear button */}
             {!isUploading && (
               <Button
                 type="button"

@@ -80,7 +80,6 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
     <>
       <Card className="group overflow-hidden transition-all hover:shadow-md">
         <CardContent className="p-4">
-          {/* Preview Area */}
           <button
             type="button"
             className="relative mb-3 flex h-48 w-full items-center justify-center overflow-hidden rounded-lg bg-muted cursor-pointer"
@@ -97,7 +96,6 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
               getIcon()
             )}
 
-            {/* Overlay on hover */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
               <span className="inline-flex items-center text-sm font-medium text-secondary bg-secondary-foreground/90 px-3 py-1.5 rounded-md">
                 <Eye className="mr-2 h-4 w-4" />
@@ -106,7 +104,6 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
             </div>
           </button>
 
-          {/* File Info */}
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-2">
               <h3 className="line-clamp-2 text-sm font-medium" title={asset.fileName}>

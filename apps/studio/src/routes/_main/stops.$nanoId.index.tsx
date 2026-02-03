@@ -33,7 +33,6 @@ function StopPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="border-b">
         <div className="mx-auto max-w-5xl px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
@@ -45,10 +44,8 @@ function StopPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-8">
-          {/* Title and Actions */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-2">
               <h1 className="text-2xl font-bold sm:text-3xl">{displayTitle}</h1>
@@ -64,7 +61,6 @@ function StopPage() {
             </div>
           </div>
 
-          {/* Translations Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

@@ -7,21 +7,17 @@ export interface AuthSkeletonProps extends React.HTMLAttributes<HTMLDivElement> 
 export function AuthSkeleton({ className, ...props }: AuthSkeletonProps) {
   return (
     <div className={cn('flex flex-col justify-center space-y-8', className)} {...props}>
-      {/* Title and subtitle skeletons */}
       <div className="text-center space-y-3">
-        <Skeleton className="h-9 w-48 mx-auto" /> {/* Title: "Welcome to ValGuide" */}
-        <Skeleton className="h-10 sm:h-5 w-full sm:w-64 mx-auto" /> {/* Subtitle wraps on mobile */}
+        <Skeleton className="h-9 w-48 mx-auto" />
+        <Skeleton className="h-10 sm:h-5 w-full sm:w-64 mx-auto" />
       </div>
 
-      {/* Form skeleton */}
       <div className="space-y-6">
-        {/* Label and input */}
         <div className="space-y-2">
-          <Skeleton className="h-5 w-32" /> {/* Label */}
-          <Skeleton className="h-10 w-full" /> {/* Input */}
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-10 w-full" />
         </div>
-        {/* Button */}
-        <Skeleton className="h-10 w-full" /> {/* Button */}
+        <Skeleton className="h-10 w-full" />
       </div>
     </div>
   )

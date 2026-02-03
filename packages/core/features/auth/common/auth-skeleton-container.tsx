@@ -18,7 +18,6 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
       className={cn('min-h-svh flex flex-col items-center justify-center p-4 relative overflow-hidden', className)}
       {...props}
     >
-      {/* Background with subtle gradient */}
       <div
         className={cn(
           'absolute inset-0',
@@ -28,7 +27,6 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
         )}
       />
 
-      {/* Subtle topography-style pattern overlay */}
       <div
         className="absolute inset-0 opacity-[0.025] dark:opacity-[0.03]"
         style={{
@@ -37,7 +35,6 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
         }}
       />
 
-      {/* Card */}
       <Card
         className={cn(
           'relative w-full max-w-md',
@@ -53,7 +50,6 @@ export function AuthSkeletonContainer({ className, showOtp = false, ...props }: 
         </CardContent>
       </Card>
 
-      {/* Footer - consent skeleton */}
       <div className="relative mt-6 text-center px-4">
         <Skeleton className="h-8 sm:h-4 w-full sm:w-80 max-w-xs sm:max-w-none mx-auto" />
       </div>

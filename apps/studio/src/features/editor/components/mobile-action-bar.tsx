@@ -89,7 +89,6 @@ export function MobileSavePublish({
 
   return (
     <>
-      {/* Fixed bottom bar on mobile only */}
       <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background p-3 sm:hidden">
         <div className="flex items-center gap-2">
           <Button
@@ -113,7 +112,6 @@ export function MobileSavePublish({
         </div>
       </div>
 
-      {/* Inline buttons on tablet/desktop (sm to lg) */}
       <div className="hidden sm:flex lg:hidden items-center gap-1.5">
         <Button
           variant="outline"

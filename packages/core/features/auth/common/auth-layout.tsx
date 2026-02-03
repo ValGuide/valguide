@@ -19,7 +19,6 @@ export interface AuthLayoutProps {
 export function AuthLayout({ children, footer }: AuthLayoutProps) {
   return (
     <main className="min-h-svh flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Background with subtle gradient */}
       <div
         className={cn(
           'absolute inset-0',
@@ -29,7 +28,6 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
         )}
       />
 
-      {/* Subtle topography-style pattern overlay */}
       <div
         className="absolute inset-0 opacity-[0.025] dark:opacity-[0.03]"
         style={{
@@ -38,7 +36,6 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
         }}
       />
 
-      {/* Card */}
       <Card
         className={cn(
           'relative w-full max-w-md',

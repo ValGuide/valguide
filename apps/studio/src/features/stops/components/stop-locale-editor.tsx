@@ -99,7 +99,6 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
         </CardHeader>
         <CardContent>
           <FieldGroup>
-            {/* Title */}
             <form.Field name="title">
               {(field) => (
                 <Field data-invalid={field.state.meta.errors.length > 0}>
@@ -126,7 +125,6 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
               )}
             </form.Field>
 
-            {/* Audio - locale-specific */}
             <MediaPicker
               mode="single"
               mediaTypes={['audio']}
@@ -137,7 +135,6 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
               disabled={readOnly}
             />
 
-            {/* Description */}
             <form.Field name="description">
               {(field) => (
                 <Field data-invalid={field.state.meta.errors.length > 0}>

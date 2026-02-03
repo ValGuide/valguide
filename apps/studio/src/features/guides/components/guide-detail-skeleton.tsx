@@ -4,7 +4,6 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 export function GuideDetailSkeleton() {
   return (
     <main className="flex flex-1 flex-col bg-background">
-      {/* Sticky Header */}
       <div className="sticky top-0 z-10 flex h-14 items-center border-b bg-background px-4 sm:px-6">
         <div className="flex w-full items-center justify-between gap-2">
           <Skeleton className="h-8 w-24" />
@@ -16,7 +15,6 @@ export function GuideDetailSkeleton() {
         </div>
       </div>
 
-      {/* Sticky Title Row */}
       <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
           <Skeleton className="h-7 w-64" />
@@ -24,10 +22,8 @@ export function GuideDetailSkeleton() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="flex-1 bg-muted/30 dark:bg-background">
         <div className="mx-auto max-w-5xl p-6 sm:p-8 space-y-6">
-          {/* Hero Card */}
           <Card className="overflow-hidden">
             <Skeleton className="h-48 sm:h-56 w-full" />
             <CardContent className="p-6">
@@ -35,7 +31,6 @@ export function GuideDetailSkeleton() {
             </CardContent>
           </Card>
 
-          {/* Details Card */}
           <Card>
             <CardContent className="p-6">
               <Skeleton className="h-6 w-32 mb-4" />
@@ -51,7 +46,6 @@ export function GuideDetailSkeleton() {
             </CardContent>
           </Card>
 
-          {/* Translations Card */}
           <Card>
             <CardContent className="p-6">
               <Skeleton className="h-6 w-28 mb-4" />

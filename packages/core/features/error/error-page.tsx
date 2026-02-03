@@ -18,7 +18,6 @@ export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
   return (
     <div className="min-h-svh flex flex-col items-center justify-center px-4 py-8">
       <div className="w-full max-w-md text-center">
-        {/* Icon */}
         <div className="flex items-center justify-center size-16 rounded-full bg-destructive/10 mx-auto mb-4">
           <svg
             aria-hidden="true"
@@ -37,13 +36,10 @@ export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
           </svg>
         </div>
 
-        {/* Title */}
         <h1 className="font-serif text-2xl sm:text-3xl mb-3">{i18n.title}</h1>
 
-        {/* Description */}
         <p className="text-sm sm:text-base text-muted-foreground mb-6">{i18n.description}</p>
 
-        {/* Error Details (Collapsible) */}
         {hasError && (
           <div className="mb-6">
             <button
@@ -70,7 +66,6 @@ export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
           </div>
         )}
 
-        {/* Action Buttons */}
         <div className="flex gap-2 justify-center flex-wrap">
           {reset && (
             <button

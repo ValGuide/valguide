@@ -5,7 +5,6 @@ export function TeamPageSkeleton() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="mx-auto w-full max-w-5xl space-y-8">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <Skeleton className="h-8 w-48" />
@@ -14,7 +13,6 @@ export function TeamPageSkeleton() {
           <Skeleton className="h-10 w-32" />
         </div>
 
-        {/* Members Table */}
         <div className="rounded-md border overflow-hidden">
           <div className="overflow-x-auto">
             <Table>
