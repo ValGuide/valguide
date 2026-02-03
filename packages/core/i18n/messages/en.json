@@ -18,6 +18,11 @@
     "totalDuration": "{minutes} min",
     "enterStopCode": "Enter stop code",
     "scanQrCode": "Scan QR code",
+    "pointAtQrCode": "Point camera at QR code",
+    "cameraPermissionDenied": "Camera access was denied. Please allow camera access to scan QR codes.",
+    "cameraNotFound": "No camera found on this device.",
+    "cameraError": "Could not access camera. Please try again.",
+    "tryAgain": "Try again",
     "autoPlayNext": "Next in {seconds}s",
     "playNow": "Play Now",
     "cancelAutoPlay": "Cancel"

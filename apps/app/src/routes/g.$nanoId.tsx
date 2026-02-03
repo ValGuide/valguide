@@ -3,12 +3,13 @@ import { createServerFn } from '@tanstack/react-start'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { getPublishedGuideByNanoId } from '@valguide/core/features/guides/public/get-published-guide'
 import { getLocalizedGuideText } from '@valguide/core/features/guides/public/localization-helpers'
+import { QrScannerModal } from '@valguide/core/features/player/components/qr-scanner-modal'
 import { StopsList } from '@valguide/core/features/player/components/stops-list'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
-import { usePlayerStore } from '@valguide/core/features/player/store/use-player-store'
+import { usePlayerActions, usePlayerStore, useStops } from '@valguide/core/features/player/store/use-player-store'
 import { toPlayerStops } from '@valguide/core/features/player/utils'
 import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { z } from 'zod'
 import { GuideHero } from '@/components/guides/guide-hero'
 import { GuideMetadata } from '@/components/guides/guide-metadata'
@@ -56,6 +57,9 @@ function GuidePage() {
 function StopsListWithNavigation({ guideNanoId }: { guideNanoId: string }) {
   const navigate = useNavigate()
   const currentStopNanoId = usePlayerStore((s) => s.currentStopNanoId)
+  const stops = useStops()
+  const { setCurrentStop } = usePlayerActions()
+  const [qrScannerOpen, setQrScannerOpen] = useState(false)
 
   useEffect(() => {
     if (currentStopNanoId) {
@@ -66,5 +70,31 @@ function StopsListWithNavigation({ guideNanoId }: { guideNanoId: string }) {
     }
   }, [currentStopNanoId, guideNanoId, navigate])
 
-  return <StopsList />
+  const handleQrScan = useCallback(
+    (scannedValue: string) => {
+      const stopNanoIdMatch = scannedValue.match(/\/s\/([a-zA-Z0-9]+)/)
+      if (stopNanoIdMatch) {
+        const stopNanoId = stopNanoIdMatch[1]
+        const matchingStop = stops.find((s) => s.nanoId === stopNanoId)
+        if (matchingStop) {
+          setCurrentStop(stopNanoId)
+          return
+        }
+      }
+
+      const stopNumber = Number.parseInt(scannedValue, 10)
+      if (!Number.isNaN(stopNumber) && stopNumber >= 1 && stopNumber <= stops.length) {
+        const stop = stops[stopNumber - 1]
+        setCurrentStop(stop.nanoId)
+      }
+    },
+    [stops, setCurrentStop],
+  )
+
+  return (
+    <>
+      <StopsList onQrScanRequest={() => setQrScannerOpen(true)} />
+      <QrScannerModal open={qrScannerOpen} onOpenChange={setQrScannerOpen} onScan={handleQrScan} />
+    </>
+  )
 }

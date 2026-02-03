@@ -18,6 +18,11 @@
     "totalDuration": "{minutes} min",
     "enterStopCode": "Endatar code da stop",
     "scanQrCode": "Scannar code QR",
+    "pointAtQrCode": "Drizzar la camera sin il code QR",
+    "cameraPermissionDenied": "L'access a la camera è vegnì refusà. Lubeschair l'access a la camera per scannar codes QR.",
+    "cameraNotFound": "Nagina camera chattada sin quest apparat.",
+    "cameraError": "Impussibel dad acceder a la camera. Empruvar anc ina giada.",
+    "tryAgain": "Empruvar danovamain",
     "autoPlayNext": "Proxim en {seconds}s",
     "playNow": "Far ir ussa",
     "cancelAutoPlay": "Annullar"

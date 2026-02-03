@@ -18,6 +18,11 @@
     "totalDuration": "{minutes} Min.",
     "enterStopCode": "Stop-Code eingeben",
     "scanQrCode": "QR-Code scannen",
+    "pointAtQrCode": "Kamera auf QR-Code richten",
+    "cameraPermissionDenied": "Kamerazugriff wurde verweigert. Bitte erlauben Sie den Kamerazugriff zum Scannen von QR-Codes.",
+    "cameraNotFound": "Keine Kamera auf diesem Gerät gefunden.",
+    "cameraError": "Kamera konnte nicht geöffnet werden. Bitte versuchen Sie es erneut.",
+    "tryAgain": "Erneut versuchen",
     "autoPlayNext": "Nächster in {seconds}s",
     "playNow": "Jetzt abspielen",
     "cancelAutoPlay": "Abbrechen"
