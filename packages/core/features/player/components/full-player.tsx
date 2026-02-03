@@ -1,6 +1,7 @@
 import { useMediaSession } from '../hooks/use-media-session'
 import { usePositionPersistence } from '../hooks/use-position-persistence'
 import { useSyncAudioToStore } from '../hooks/use-sync-audio-to-store'
+import { AutoPlayCountdown } from './auto-play-countdown'
 import { CoverImage } from './cover-image'
 import { PlayerControls } from './player-controls'
 import { ProgressBar } from './progress-bar'
@@ -38,6 +39,9 @@ export function FullPlayer({ className = '' }: FullPlayerProps) {
       <div className="flex items-center gap-4">
         <SpeedSelector />
       </div>
+
+      {/* Auto-play countdown (shows when track ends) */}
+      <AutoPlayCountdown className="w-full" />
     </div>
   )
 }

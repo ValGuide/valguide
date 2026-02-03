@@ -15,7 +15,12 @@
     "share": "Cundivider",
     "stopOf": "Stop {current} da {total}",
     "stopsCount": "{count, plural, one {# stop} other {# stops}}",
-    "totalDuration": "{minutes} min"
+    "totalDuration": "{minutes} min",
+    "enterStopCode": "Endatar code da stop",
+    "scanQrCode": "Scannar code QR",
+    "autoPlayNext": "Proxim en {seconds}s",
+    "playNow": "Far ir ussa",
+    "cancelAutoPlay": "Annullar"
   },
   "admin": {
     "assets": {

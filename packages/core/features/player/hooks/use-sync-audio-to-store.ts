@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import {
+  useAutoPlayEnabled,
   useCurrentStop,
   useCurrentTime,
   useDuration,
@@ -21,7 +22,8 @@ export function useSyncAudioToStore() {
   const storeCurrentTime = useCurrentTime()
   const storeDuration = useDuration()
   const hasNext = useHasNext()
-  const { syncPlayback, nextStop, pause } = usePlayerActions()
+  const autoPlayEnabled = useAutoPlayEnabled()
+  const { syncPlayback, pause, setHasEnded } = usePlayerActions()
 
   const lastSeekTimeRef = useRef<number | null>(null)
 
@@ -34,11 +36,16 @@ export function useSyncAudioToStore() {
 
   const handleEnded = useCallback(() => {
     if (hasNext) {
-      nextStop()
+      if (autoPlayEnabled) {
+        // Set hasEnded to trigger the countdown UI
+        setHasEnded(true)
+      }
+      // If auto-play disabled, just pause
+      pause()
     } else {
       pause()
     }
-  }, [hasNext, nextStop, pause])
+  }, [hasNext, autoPlayEnabled, setHasEnded, pause])
 
   const handleLoadedMetadata = useCallback(
     (duration: number) => {

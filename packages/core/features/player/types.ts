@@ -18,6 +18,10 @@ export type PlayerState = {
   speed: number
   currentStopNanoId: string | null
   stops: PlayerStop[]
+  /** Whether the current track has ended (for auto-play countdown) */
+  hasEnded: boolean
+  /** Whether to auto-play next stop after current ends */
+  autoPlayEnabled: boolean
 }
 
 export type PlayerActions = {
@@ -33,6 +37,8 @@ export type PlayerActions = {
   setStops: (stops: PlayerStop[]) => void
   syncPlayback: (time: number, duration: number) => void
   reset: () => void
+  setHasEnded: (hasEnded: boolean) => void
+  setAutoPlayEnabled: (enabled: boolean) => void
 }
 
 export type PlayerStore = PlayerState & PlayerActions

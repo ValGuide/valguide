@@ -15,7 +15,12 @@
     "share": "Teilen",
     "stopOf": "Stop {current} von {total}",
     "stopsCount": "{count, plural, one {# Stop} other {# Stops}}",
-    "totalDuration": "{minutes} Min."
+    "totalDuration": "{minutes} Min.",
+    "enterStopCode": "Stop-Code eingeben",
+    "scanQrCode": "QR-Code scannen",
+    "autoPlayNext": "Nächster in {seconds}s",
+    "playNow": "Jetzt abspielen",
+    "cancelAutoPlay": "Abbrechen"
   },
   "admin": {
     "assets": {

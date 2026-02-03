@@ -9,6 +9,8 @@ const initialState: PlayerState = {
   speed: 1,
   currentStopNanoId: null,
   stops: [],
+  hasEnded: false,
+  autoPlayEnabled: true,
 }
 
 export const createPlayerStore = () =>
@@ -47,6 +49,7 @@ export const createPlayerStore = () =>
               currentTime: 0,
               duration: nextStop.duration ?? 0,
               isPlaying: true,
+              hasEnded: false,
             })
           }
         },
@@ -57,7 +60,7 @@ export const createPlayerStore = () =>
 
           // If more than 3 seconds in, restart current track
           if (currentTime > 3) {
-            set({ currentTime: 0 })
+            set({ currentTime: 0, hasEnded: false })
             return
           }
 
@@ -68,6 +71,7 @@ export const createPlayerStore = () =>
               currentTime: 0,
               duration: prevStop.duration ?? 0,
               isPlaying: true,
+              hasEnded: false,
             })
           }
         },
@@ -80,6 +84,7 @@ export const createPlayerStore = () =>
             currentTime: 0,
             duration: stop?.duration ?? 0,
             isPlaying: true,
+            hasEnded: false,
           })
         },
 
@@ -92,6 +97,10 @@ export const createPlayerStore = () =>
           }),
 
         reset: () => set(initialState),
+
+        setHasEnded: (hasEnded: boolean) => set({ hasEnded }),
+
+        setAutoPlayEnabled: (autoPlayEnabled: boolean) => set({ autoPlayEnabled }),
       }),
       {
         name: 'valguide-player',

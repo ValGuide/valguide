@@ -14,6 +14,8 @@ export const useDuration = () => usePlayerStore((s) => s.duration)
 export const useSpeed = () => usePlayerStore((s) => s.speed)
 export const useCurrentStopNanoId = () => usePlayerStore((s) => s.currentStopNanoId)
 export const useStops = () => usePlayerStore((s) => s.stops)
+export const useHasEnded = () => usePlayerStore((s) => s.hasEnded)
+export const useAutoPlayEnabled = () => usePlayerStore((s) => s.autoPlayEnabled)
 
 export const useCurrentStop = () =>
   usePlayerStore((s) => {
@@ -62,4 +64,6 @@ export const usePlayerActions = () =>
     setStops: s.setStops,
     syncPlayback: s.syncPlayback,
     reset: s.reset,
+    setHasEnded: s.setHasEnded,
+    setAutoPlayEnabled: s.setAutoPlayEnabled,
   }))

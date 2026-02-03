@@ -1,12 +1,15 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { useCurrentStopNanoId, useIsPlaying, usePlayerActions, useStops } from '../store/use-player-store'
+import { StopSearchBar } from './stop-search-bar'
 import { StopsListItem } from './stops-list-item'
 
 type StopsListProps = {
   className?: string
+  showSearchBar?: boolean
+  onQrScanRequest?: () => void
 }
 
-export function StopsList({ className = '' }: StopsListProps) {
+export function StopsList({ className = '', showSearchBar = true, onQrScanRequest }: StopsListProps) {
   const t = useTranslations('player')
   const stops = useStops()
   const currentStopNanoId = useCurrentStopNanoId()
@@ -22,6 +25,8 @@ export function StopsList({ className = '' }: StopsListProps) {
 
   return (
     <div className={`space-y-4 ${className}`}>
+      {showSearchBar && <StopSearchBar onQrScanRequest={onQrScanRequest} showQrButton={!!onQrScanRequest} />}
+
       <div className="text-sm text-muted-foreground">
         {t('stopsCount', { count: stops.length })} · {t('totalDuration', { minutes: totalMinutes })}
       </div>
