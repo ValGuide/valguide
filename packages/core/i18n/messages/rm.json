@@ -426,6 +426,16 @@
     },
     "helper": {
       "changedExplanation": "Visitaders vesan la versiun publitgada l'ultima giada en questa lingua."
+    },
+    "diff": {
+      "toggleLabel": "{count, plural, =1 {# midada} other {# midadas}}",
+      "noChanges": "Naginas midadas dapi l'ultima publicaziun",
+      "neverPublished": "Mai publitgà",
+      "changesCount": "{count, plural, =1 {# champ midà} other {# champs midads}} dapi l'ultima publicaziun",
+      "showDiff": "Cumparegliar midadas",
+      "hideDiff": "Zuppentar midadas",
+      "fieldChanged": "Midà",
+      "fieldNew": "Nov"
     }
   },
   "stops": {

@@ -1,4 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
+import type { StopLocaleDiffResult } from '@valguide/core/features/tours/stop/locale/compare-stop-locale-diff.fn'
+import { compareStopLocaleDiffFn } from '@valguide/core/features/tours/stop/locale/compare-stop-locale-diff.fn'
 import {
   getStructureDraftFn,
   type StructureDraftResult,
@@ -13,6 +15,8 @@ import type { ArchivedTourListItem } from '@valguide/core/features/tours/tour/li
 import { listArchivedToursFn } from '@valguide/core/features/tours/tour/list-archived-tours.fn'
 import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours.fn'
 import { listToursFn } from '@valguide/core/features/tours/tour/list-tours.fn'
+import type { TourLocaleDiffResult } from '@valguide/core/features/tours/tour/locale/compare-tour-locale-diff.fn'
+import { compareTourLocaleDiffFn } from '@valguide/core/features/tours/tour/locale/compare-tour-locale-diff.fn'
 import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import { getTourLocaleDraftFn } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
@@ -102,5 +106,31 @@ export const tourAssetsPublishedQueryOptions = (nanoId: string) =>
   queryOptions<GetTourAssetsPublishedResult>({
     queryKey: ['tour', nanoId, 'assets', 'published'],
     queryFn: () => getTourAssetsPublishedFn({ data: { nanoId } }),
+    staleTime: 30 * 1000,
+  })
+
+// ============================================================================
+// Diff Query Options (Draft vs Published comparison)
+// ============================================================================
+
+/**
+ * Query options for tour locale diff (comparing draft vs published)
+ * Returns null if locale doesn't exist
+ */
+export const tourLocaleDiffQueryOptions = (nanoId: string, locale: string) =>
+  queryOptions<TourLocaleDiffResult>({
+    queryKey: ['tour', nanoId, 'locale', locale, 'diff'],
+    queryFn: () => compareTourLocaleDiffFn({ data: { nanoId, locale } }),
+    staleTime: 30 * 1000,
+  })
+
+/**
+ * Query options for stop locale diff (comparing draft vs published)
+ * Returns null if locale doesn't exist
+ */
+export const stopLocaleDiffQueryOptions = (nanoId: string, locale: string) =>
+  queryOptions<StopLocaleDiffResult>({
+    queryKey: ['stop', nanoId, 'locale', locale, 'diff'],
+    queryFn: () => compareStopLocaleDiffFn({ data: { nanoId, locale } }),
     staleTime: 30 * 1000,
   })

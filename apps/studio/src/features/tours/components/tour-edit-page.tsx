@@ -13,11 +13,15 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
 import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { getLocaleDisplayName } from '@/features/editor/components/locale-selector'
+import { useDiffView } from '@/features/editor/hooks/use-diff-view'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
 import { HideStopDialog } from '@/features/tours/components/hide-stop-dialog'
 import { ShowStopDialog } from '@/features/tours/components/show-stop-dialog'
 import { StopsList } from '@/features/tours/components/stops-list'
-import { TourMetadataForm, type TourMetadataFormRef } from '@/features/tours/components/tour-metadata-form'
+import {
+  TourMetadataFormWithDiff,
+  type TourMetadataFormWithDiffRef,
+} from '@/features/tours/components/tour-metadata-form-with-diff'
 import { TourProgress } from '@/features/tours/components/tour-progress'
 import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
@@ -67,6 +71,14 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
 
+  // Diff view state
+  const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
+    type: 'tour',
+    nanoId,
+    locale: activeLocale,
+    enabled: activeTab === 'draft',
+  })
+
   const tourTitle = useMemo(() => {
     const title = localeDraft?.title
     return title?.trim() ? title : t('unknownTitle')
@@ -101,7 +113,7 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
 
   const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
 
-  const formRef = useRef<TourMetadataFormRef>(null)
+  const formRef = useRef<TourMetadataFormWithDiffRef>(null)
   const formId = `tour-translation-${activeLocale}`
 
   const handleDirtyChange = useCallback(
@@ -288,7 +300,7 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
             </h2>
           </div>
 
-          <TourMetadataForm
+          <TourMetadataFormWithDiff
             ref={formRef}
             key={`tour-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
             locale={activeLocale}
@@ -298,6 +310,10 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
             readOnly={isReadOnly}
             onDirtyChange={handleDirtyChange}
             onSave={save}
+            diffEnabled={diffEnabled}
+            onDiffToggle={setDiffEnabled}
+            changedCount={changedCount}
+            getFieldDiff={getFieldDiff}
           />
 
           <Card className={isReadOnly ? 'opacity-60' : ''}>

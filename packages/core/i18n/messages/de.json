@@ -426,6 +426,16 @@
     },
     "helper": {
       "changedExplanation": "Besucher sehen die zuletzt veröffentlichte Version in dieser Sprache."
+    },
+    "diff": {
+      "toggleLabel": "{count, plural, =1 {# Änderung} other {# Änderungen}}",
+      "noChanges": "Keine Änderungen seit letzter Veröffentlichung",
+      "neverPublished": "Noch nie veröffentlicht",
+      "changesCount": "{count, plural, =1 {# Feld geändert} other {# Felder geändert}} seit letzter Veröffentlichung",
+      "showDiff": "Änderungen vergleichen",
+      "hideDiff": "Änderungen ausblenden",
+      "fieldChanged": "Geändert",
+      "fieldNew": "Neu"
     }
   },
   "stops": {

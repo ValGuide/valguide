@@ -12,9 +12,13 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
 import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
+import { useDiffView } from '@/features/editor/hooks/use-diff-view'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
 import { SharedStopBanner } from '@/features/stops/components/shared-stop-banner'
-import { StopLocaleEditor, type StopLocaleEditorRef } from '@/features/stops/components/stop-locale-editor'
+import {
+  StopLocaleEditorWithDiff,
+  type StopLocaleEditorWithDiffRef,
+} from '@/features/stops/components/stop-locale-editor-with-diff'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 
 export type StopEditPageProps = {
@@ -56,6 +60,14 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
   const [isPublishing, setIsPublishing] = useState(false)
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
+
+  // Diff view state
+  const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
+    type: 'stop',
+    nanoId,
+    locale: activeLocale,
+    enabled: activeTab === 'draft',
+  })
 
   const hasDraft = !!localeDraft
   const hasPublished = localeDraft?.hasPublished ?? false
@@ -113,7 +125,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
   const stopImages = stopImageItems.map((item) => item.asset)
   const stopAudio = stopAudioItem?.asset ?? null
 
-  const stopEditorRef = useRef<StopLocaleEditorRef>(null)
+  const stopEditorRef = useRef<StopLocaleEditorWithDiffRef>(null)
   const formId = `stop-translation-${nanoId}-${activeLocale}`
 
   useAutoSave(save, isDirty)
@@ -271,7 +283,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
           <h2 className="text-sm font-semibold sm:text-base">{tStops('editor.localeContent')}</h2>
         </div>
 
-        <StopLocaleEditor
+        <StopLocaleEditorWithDiff
           ref={stopEditorRef}
           key={`${stopId}-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
           locale={activeLocale}
@@ -282,6 +294,10 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
           onSave={save}
           onAudioChange={handleAudioChange}
           MediaPicker={MediaPicker}
+          diffEnabled={diffEnabled}
+          onDiffToggle={setDiffEnabled}
+          changedCount={changedCount}
+          getFieldDiff={getFieldDiff}
         />
 
         <Card className={isReadOnly ? 'opacity-60' : ''}>
