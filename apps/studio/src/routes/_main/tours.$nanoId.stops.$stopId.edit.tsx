@@ -1,8 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
-import { createStopFn } from '@valguide/core/features/tours/stop/create-stop.fn'
 import { ensureAllStopLocalesForTourFn } from '@valguide/core/features/tours/stop/locale/ensure-all-stop-locales-for-tour.fn'
-import { addStopToTourFn } from '@valguide/core/features/tours/structure/add-stop.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { z } from 'zod'
 import { StopEditPageConnected } from '@/features/stops/components/stop-edit-page-connected'
@@ -14,32 +12,14 @@ import { tourDetailQueryOptions } from '@/features/tours/query-options'
 
 const searchSchema = z.object({
   locale: z.string().optional(),
-  new: z.boolean().optional(),
 })
 
 export const Route = createFileRoute('/_main/tours/$nanoId/stops/$stopId/edit')({
   validateSearch: searchSchema,
-  loaderDeps: ({ search }) => ({ locale: search.locale, isNew: search.new }),
+  loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
     const tourDetail = await context.queryClient.ensureQueryData(tourDetailQueryOptions(params.nanoId))
-
-    const stopDetail = await context.queryClient
-      .ensureQueryData(stopDetailQueryOptions(params.stopId))
-      .catch(() => null)
-
-    if (!stopDetail && deps.isNew) {
-      const locale = deps.locale ?? tourDetail.availableLocales[0] ?? 'en'
-      await createStopFn({ data: { nanoId: params.stopId, locale } })
-      await addStopToTourFn({ data: { tourNanoId: params.nanoId, stopNanoId: params.stopId } })
-      await context.queryClient.invalidateQueries({ queryKey: ['tour', params.nanoId, 'structure'] })
-
-      throw redirect({
-        to: '/tours/$nanoId/stops/$stopId/edit',
-        params: { nanoId: params.nanoId, stopId: params.stopId },
-        search: { locale },
-        replace: true,
-      })
-    }
+    const stopDetail = await context.queryClient.ensureQueryData(stopDetailQueryOptions(params.stopId))
 
     if (!stopDetail) {
       throw notFound()

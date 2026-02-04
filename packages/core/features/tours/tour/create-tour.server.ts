@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm'
 import { valguideId } from '../../../utils/nanoid'
 import { db } from '../../db'
 import { tour, tourLocaleDraft, tourSettingsDraft } from '../schema'
@@ -27,10 +28,19 @@ export async function createTour(
   userId: string,
 ): Promise<CreateTourResult> {
   const locale = input.locale ?? 'en'
+  const nanoId = input.nanoId ?? valguideId()
+
+  // Check if tour with this nanoId already exists (idempotent creation)
+  if (input.nanoId) {
+    const existing = await db.query.tour.findFirst({
+      where: eq(tour.nanoId, input.nanoId),
+    })
+    if (existing) {
+      return { nanoId: existing.nanoId, locale }
+    }
+  }
 
   return db.transaction(async (tx) => {
-    const nanoId = input.nanoId ?? valguideId()
-
     const [newTour] = await tx
       .insert(tour)
       .values({

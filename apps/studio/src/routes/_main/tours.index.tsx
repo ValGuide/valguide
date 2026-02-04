@@ -30,12 +30,8 @@ function ToursPage() {
     }
   }
 
-  const handleNavigateToNewTour = (nanoId: string, locale: string) => {
-    router.navigate({
-      to: '/tours/$nanoId/edit',
-      params: { nanoId },
-      search: { new: true, locale },
-    })
+  const handleNavigateToNewTour = () => {
+    router.navigate({ to: '/tours/new' })
   }
 
   return (
@@ -45,7 +41,7 @@ function ToursPage() {
         isLoading={isLoading}
         error={error}
         onViewTour={handleViewTour}
-        onNavigateToNewTour={handleNavigateToNewTour}
+        onCreateTour={handleNavigateToNewTour}
         onRetry={refetch}
       />
     </main>

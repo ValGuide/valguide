@@ -30,12 +30,14 @@ import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainToursIndexRouteImport } from './routes/_main/tours.index'
 import { Route as MainStopsIndexRouteImport } from './routes/_main/stops.index'
+import { Route as MainToursNewRouteImport } from './routes/_main/tours.new'
 import { Route as MainToursNanoIdRouteImport } from './routes/_main/tours.$nanoId'
 import { Route as MainStopsNanoIdRouteImport } from './routes/_main/stops.$nanoId'
 import { Route as MainToursNanoIdIndexRouteImport } from './routes/_main/tours.$nanoId.index'
 import { Route as MainStopsNanoIdIndexRouteImport } from './routes/_main/stops.$nanoId.index'
 import { Route as MainToursNanoIdEditRouteImport } from './routes/_main/tours.$nanoId.edit'
 import { Route as MainStopsNanoIdEditRouteImport } from './routes/_main/stops.$nanoId.edit'
+import { Route as MainToursNanoIdStopsNewRouteImport } from './routes/_main/tours.$nanoId.stops.new'
 import { Route as MainToursNanoIdStopsStopIdEditRouteImport } from './routes/_main/tours.$nanoId.stops.$stopId.edit'
 
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
@@ -141,6 +143,11 @@ const MainStopsIndexRoute = MainStopsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainStopsRoute,
 } as any)
+const MainToursNewRoute = MainToursNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => MainToursRoute,
+} as any)
 const MainToursNanoIdRoute = MainToursNanoIdRouteImport.update({
   id: '/$nanoId',
   path: '/$nanoId',
@@ -171,6 +178,11 @@ const MainStopsNanoIdEditRoute = MainStopsNanoIdEditRouteImport.update({
   path: '/edit',
   getParentRoute: () => MainStopsNanoIdRoute,
 } as any)
+const MainToursNanoIdStopsNewRoute = MainToursNanoIdStopsNewRouteImport.update({
+  id: '/stops/new',
+  path: '/stops/new',
+  getParentRoute: () => MainToursNanoIdRoute,
+} as any)
 const MainToursNanoIdStopsStopIdEditRoute =
   MainToursNanoIdStopsStopIdEditRouteImport.update({
     id: '/stops/$stopId/edit',
@@ -198,12 +210,14 @@ export interface FileRoutesByFullPath {
   '/tours': typeof MainToursRouteWithChildren
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
+  '/tours/new': typeof MainToursNewRoute
   '/stops/': typeof MainStopsIndexRoute
   '/tours/': typeof MainToursIndexRoute
   '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/tours/$nanoId/edit': typeof MainToursNanoIdEditRoute
   '/stops/$nanoId/': typeof MainStopsNanoIdIndexRoute
   '/tours/$nanoId/': typeof MainToursNanoIdIndexRoute
+  '/tours/$nanoId/stops/new': typeof MainToursNanoIdStopsNewRoute
   '/tours/$nanoId/stops/$stopId/edit': typeof MainToursNanoIdStopsStopIdEditRoute
 }
 export interface FileRoutesByTo {
@@ -222,12 +236,14 @@ export interface FileRoutesByTo {
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
   '/team': typeof MainTeamRoute
+  '/tours/new': typeof MainToursNewRoute
   '/stops': typeof MainStopsIndexRoute
   '/tours': typeof MainToursIndexRoute
   '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/tours/$nanoId/edit': typeof MainToursNanoIdEditRoute
   '/stops/$nanoId': typeof MainStopsNanoIdIndexRoute
   '/tours/$nanoId': typeof MainToursNanoIdIndexRoute
+  '/tours/$nanoId/stops/new': typeof MainToursNanoIdStopsNewRoute
   '/tours/$nanoId/stops/$stopId/edit': typeof MainToursNanoIdStopsStopIdEditRoute
 }
 export interface FileRoutesById {
@@ -253,12 +269,14 @@ export interface FileRoutesById {
   '/_main/tours': typeof MainToursRouteWithChildren
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
+  '/_main/tours/new': typeof MainToursNewRoute
   '/_main/stops/': typeof MainStopsIndexRoute
   '/_main/tours/': typeof MainToursIndexRoute
   '/_main/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
   '/_main/tours/$nanoId/edit': typeof MainToursNanoIdEditRoute
   '/_main/stops/$nanoId/': typeof MainStopsNanoIdIndexRoute
   '/_main/tours/$nanoId/': typeof MainToursNanoIdIndexRoute
+  '/_main/tours/$nanoId/stops/new': typeof MainToursNanoIdStopsNewRoute
   '/_main/tours/$nanoId/stops/$stopId/edit': typeof MainToursNanoIdStopsStopIdEditRoute
 }
 export interface FileRouteTypes {
@@ -283,12 +301,14 @@ export interface FileRouteTypes {
     | '/tours'
     | '/stops/$nanoId'
     | '/tours/$nanoId'
+    | '/tours/new'
     | '/stops/'
     | '/tours/'
     | '/stops/$nanoId/edit'
     | '/tours/$nanoId/edit'
     | '/stops/$nanoId/'
     | '/tours/$nanoId/'
+    | '/tours/$nanoId/stops/new'
     | '/tours/$nanoId/stops/$stopId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -307,12 +327,14 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/team'
+    | '/tours/new'
     | '/stops'
     | '/tours'
     | '/stops/$nanoId/edit'
     | '/tours/$nanoId/edit'
     | '/stops/$nanoId'
     | '/tours/$nanoId'
+    | '/tours/$nanoId/stops/new'
     | '/tours/$nanoId/stops/$stopId/edit'
   id:
     | '__root__'
@@ -337,12 +359,14 @@ export interface FileRouteTypes {
     | '/_main/tours'
     | '/_main/stops/$nanoId'
     | '/_main/tours/$nanoId'
+    | '/_main/tours/new'
     | '/_main/stops/'
     | '/_main/tours/'
     | '/_main/stops/$nanoId/edit'
     | '/_main/tours/$nanoId/edit'
     | '/_main/stops/$nanoId/'
     | '/_main/tours/$nanoId/'
+    | '/_main/tours/$nanoId/stops/new'
     | '/_main/tours/$nanoId/stops/$stopId/edit'
   fileRoutesById: FileRoutesById
 }
@@ -504,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainStopsIndexRouteImport
       parentRoute: typeof MainStopsRoute
     }
+    '/_main/tours/new': {
+      id: '/_main/tours/new'
+      path: '/new'
+      fullPath: '/tours/new'
+      preLoaderRoute: typeof MainToursNewRouteImport
+      parentRoute: typeof MainToursRoute
+    }
     '/_main/tours/$nanoId': {
       id: '/_main/tours/$nanoId'
       path: '/$nanoId'
@@ -545,6 +576,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/stops/$nanoId/edit'
       preLoaderRoute: typeof MainStopsNanoIdEditRouteImport
       parentRoute: typeof MainStopsNanoIdRoute
+    }
+    '/_main/tours/$nanoId/stops/new': {
+      id: '/_main/tours/$nanoId/stops/new'
+      path: '/stops/new'
+      fullPath: '/tours/$nanoId/stops/new'
+      preLoaderRoute: typeof MainToursNanoIdStopsNewRouteImport
+      parentRoute: typeof MainToursNanoIdRoute
     }
     '/_main/tours/$nanoId/stops/$stopId/edit': {
       id: '/_main/tours/$nanoId/stops/$stopId/edit'
@@ -599,12 +637,14 @@ const MainStopsRouteWithChildren = MainStopsRoute._addFileChildren(
 interface MainToursNanoIdRouteChildren {
   MainToursNanoIdEditRoute: typeof MainToursNanoIdEditRoute
   MainToursNanoIdIndexRoute: typeof MainToursNanoIdIndexRoute
+  MainToursNanoIdStopsNewRoute: typeof MainToursNanoIdStopsNewRoute
   MainToursNanoIdStopsStopIdEditRoute: typeof MainToursNanoIdStopsStopIdEditRoute
 }
 
 const MainToursNanoIdRouteChildren: MainToursNanoIdRouteChildren = {
   MainToursNanoIdEditRoute: MainToursNanoIdEditRoute,
   MainToursNanoIdIndexRoute: MainToursNanoIdIndexRoute,
+  MainToursNanoIdStopsNewRoute: MainToursNanoIdStopsNewRoute,
   MainToursNanoIdStopsStopIdEditRoute: MainToursNanoIdStopsStopIdEditRoute,
 }
 
@@ -614,11 +654,13 @@ const MainToursNanoIdRouteWithChildren = MainToursNanoIdRoute._addFileChildren(
 
 interface MainToursRouteChildren {
   MainToursNanoIdRoute: typeof MainToursNanoIdRouteWithChildren
+  MainToursNewRoute: typeof MainToursNewRoute
   MainToursIndexRoute: typeof MainToursIndexRoute
 }
 
 const MainToursRouteChildren: MainToursRouteChildren = {
   MainToursNanoIdRoute: MainToursNanoIdRouteWithChildren,
+  MainToursNewRoute: MainToursNewRoute,
   MainToursIndexRoute: MainToursIndexRoute,
 }
 
@@ -667,13 +709,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
