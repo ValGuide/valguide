@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { ThemeProvider } from '@valguide/core/features/app-theme/theme-provider'
 import { SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import type { Team } from '@/features/orgs/components/team-switcher'
 import { AppSidebar } from './app-sidebar'
@@ -66,15 +67,17 @@ const meta: Meta<typeof AppSidebar> = {
   },
   decorators: [
     (Story) => (
-      <SidebarProvider defaultOpen={true}>
-        <div style={{ minWidth: '768px', width: '100%', height: '100vh', display: 'flex' }}>
-          <Story />
-          <main className="flex-1 p-4">
-            <SidebarTrigger className="mb-4" />
-            <div className="text-muted-foreground text-sm">Click the button above to toggle the sidebar</div>
-          </main>
-        </div>
-      </SidebarProvider>
+      <ThemeProvider initialTheme="light" setThemeFn={async ({ data }) => data}>
+        <SidebarProvider defaultOpen={true}>
+          <div style={{ minWidth: '768px', width: '100%', height: '100vh', display: 'flex' }}>
+            <Story />
+            <main className="flex-1 p-4">
+              <SidebarTrigger className="mb-4" />
+              <div className="text-muted-foreground text-sm">Click the button above to toggle the sidebar</div>
+            </main>
+          </div>
+        </SidebarProvider>
+      </ThemeProvider>
     ),
   ],
 }

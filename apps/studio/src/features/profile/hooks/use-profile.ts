@@ -1,17 +1,15 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import type { Profile } from '@valguide/features/profiles/types'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import type { Profile } from '@valguide/core/features/profiles/get-or-create-profile.fn'
 import { profileQueryOptions } from '../query-options'
 
 interface UseProfileReturn {
-  profile: Profile | null | undefined
-  isLoading: boolean
-  error: Error | null
+  profile: Profile
   refetch: () => Promise<void>
 }
 
 export function useProfile(): UseProfileReturn {
   const queryClient = useQueryClient()
-  const { data, error, isLoading } = useQuery(profileQueryOptions())
+  const { data } = useSuspenseQuery(profileQueryOptions())
 
   const refetch = async () => {
     await queryClient.invalidateQueries({ queryKey: ['profile'] })
@@ -19,8 +17,6 @@ export function useProfile(): UseProfileReturn {
 
   return {
     profile: data,
-    isLoading,
-    error: error ?? null,
     refetch,
   }
 }

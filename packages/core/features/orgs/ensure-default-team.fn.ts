@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getOrgMembership } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { getProfile } from '../profiles/get-profile.server'
+import { getOrCreateProfile } from '../profiles/get-or-create-profile.server'
 import { getUserDisplayName } from '../profiles/utils'
 import { getActiveTeamId, setActiveTeamId } from '../utils/cookies'
 import { type EnsureDefaultTeamResult, ensureDefaultTeam } from './ensure-default-team.server'
@@ -18,7 +18,7 @@ export type { EnsureDefaultTeamResult } from './ensure-default-team.server'
 export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .handler(async ({ context }): Promise<EnsureDefaultTeamResult> => {
-    const profile = await getProfile(context.user.id)
+    const profile = await getOrCreateProfile(context.user.id)
     const displayName = getUserDisplayName(profile, context.user.email)
 
     const team = await ensureDefaultTeam(db, context.user.id, displayName)

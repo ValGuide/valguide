@@ -12,8 +12,16 @@ export type Profile = typeof profiles.$inferSelect
 // DB LOGIC
 // =============================================================================
 
-export async function getProfile(userId: string): Promise<Profile | undefined> {
-  return db.query.profiles.findFirst({
+export async function getOrCreateProfile(userId: string): Promise<Profile> {
+  const existing = await db.query.profiles.findFirst({
     where: eq(profiles.id, userId),
   })
+
+  if (existing) {
+    return existing
+  }
+
+  const [created] = await db.insert(profiles).values({ id: userId }).onConflictDoNothing().returning()
+
+  return created ?? (await db.query.profiles.findFirst({ where: eq(profiles.id, userId) }))!
 }
