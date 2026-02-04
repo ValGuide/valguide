@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router'
+import type { LocaleDraftInfo } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
@@ -8,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react'
+import { MoreHorizontal, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { AddLanguageDialog } from './add-language-dialog'
 import { RemoveLanguageDialog } from './remove-language-dialog'
@@ -16,9 +18,11 @@ import { getLocaleDisplayName } from './unified-locale-selector'
 
 export type TranslationsManagerProps = {
   tourNanoId: string
-  locales: string[]
+  locales: LocaleDraftInfo[]
   onAddLanguage: (locale: string) => Promise<void>
   onRemoveLanguage: (locale: string) => Promise<void>
+  onPublish?: (locale: string) => Promise<void>
+  isPublishing?: boolean
 }
 
 export function TranslationsManager({
@@ -26,14 +30,20 @@ export function TranslationsManager({
   locales,
   onAddLanguage,
   onRemoveLanguage,
+  onPublish,
+  isPublishing,
 }: TranslationsManagerProps) {
   const t = useTranslations('tours.localesManager')
   const tDetails = useTranslations('tours.details')
   const tStops = useTranslations('stops')
+  const tActions = useTranslations('tours.actions')
+  const tLocaleSelector = useTranslations('tours.localeSelector')
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [localeToRemove, setLocaleToRemove] = useState<string | null>(null)
+  const [publishingLocale, setPublishingLocale] = useState<string | null>(null)
 
   const canRemove = locales.length > 1
+  const existingLocaleCodes = locales.map((l) => l.locale)
 
   const handleRemoveClick = (locale: string) => {
     if (!canRemove) return
@@ -44,6 +54,16 @@ export function TranslationsManager({
     if (localeToRemove) {
       await onRemoveLanguage(localeToRemove)
       setLocaleToRemove(null)
+    }
+  }
+
+  const handlePublish = async (locale: string) => {
+    if (!onPublish) return
+    setPublishingLocale(locale)
+    try {
+      await onPublish(locale)
+    } finally {
+      setPublishingLocale(null)
     }
   }
 
@@ -59,20 +79,37 @@ export function TranslationsManager({
         </CardHeader>
         <CardContent>
           <div className="divide-y">
-            {locales.map((locale) => {
-              const localeName = getLocaleDisplayName(locale)
+            {locales.map((localeInfo) => {
+              const localeName = getLocaleDisplayName(localeInfo.locale)
+              const isCurrentlyPublishing = publishingLocale === localeInfo.locale || isPublishing
               return (
-                <div key={locale} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+                <div key={localeInfo.locale} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{localeName}</span>
-                    <span className="text-xs text-muted-foreground">({locale})</span>
+                    <span className="text-xs text-muted-foreground">({localeInfo.locale})</span>
+                    <Badge variant={localeInfo.hasPublished ? 'default' : 'secondary'} className="ml-1">
+                      {localeInfo.hasPublished ? tLocaleSelector('statusPublished') : tLocaleSelector('statusDraft')}
+                    </Badge>
                   </div>
                   <div className="flex items-center gap-2">
+                    {onPublish && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handlePublish(localeInfo.locale)}
+                        disabled={isCurrentlyPublishing}
+                      >
+                        <Upload className="mr-1 h-4 w-4" />
+                        {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
+                      </Button>
+                    )}
                     <Button variant="ghost" size="sm" asChild>
                       <Link
                         to="/tours/$nanoId/edit"
                         params={{ nanoId: tourNanoId }}
-                        search={{ locale }}
+                        search={{
+                          locale: localeInfo.locale,
+                        }}
                         preload="intent"
                       >
                         <Pencil className="mr-1 h-4 w-4" />
@@ -89,11 +126,13 @@ export function TranslationsManager({
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive"
-                          onClick={() => handleRemoveClick(locale)}
+                          onClick={() => handleRemoveClick(localeInfo.locale)}
                           disabled={!canRemove}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          {t('removeLanguage', { language: localeName })}
+                          {t('removeLanguage', {
+                            language: localeName,
+                          })}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -108,7 +147,7 @@ export function TranslationsManager({
       <AddLanguageDialog
         open={showAddDialog}
         onOpenChange={setShowAddDialog}
-        existingLocales={locales}
+        existingLocales={existingLocaleCodes}
         onAddLanguage={onAddLanguage}
       />
 

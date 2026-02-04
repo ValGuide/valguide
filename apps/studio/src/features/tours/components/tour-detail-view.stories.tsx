@@ -61,6 +61,8 @@ const meta = {
     onArchived: fn(),
     onAddLanguage: fn(async () => {}),
     onRemoveLanguage: fn(async () => {}),
+    onPublish: fn(async () => {}),
+    isPublishing: false,
     ViewInAppButton: MockViewInAppButton,
     ArchiveTourButton: MockArchiveButton,
   },
