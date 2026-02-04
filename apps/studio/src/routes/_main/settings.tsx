@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_main/settings')({
 function SettingsPage() {
   const t = useTranslations('sidebar')
   return (
-    <main className="min-h-svh flex flex-col flex-1 items-center justify-center px-8">
+    <main className="min-h-full flex flex-1 flex-col items-center justify-center px-8">
       <article className="max-w-2xl items-center flex flex-col gap-4 text-center">
         <h1 className="text-6xl font-bold">{t('nav.settings')}</h1>
         <p>{t('pages.settings.description')}</p>

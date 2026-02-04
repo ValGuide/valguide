@@ -16,7 +16,7 @@ export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
   const hasError = error?.message && process.env.NODE_ENV === 'development'
 
   return (
-    <div className="min-h-svh flex flex-col items-center justify-center px-4 py-8">
+    <div className="min-h-full flex flex-1 flex-col items-center justify-center px-4 py-8">
       <div className="w-full max-w-md text-center">
         <div className="flex items-center justify-center size-16 rounded-full bg-destructive/10 mx-auto mb-4">
           <svg
