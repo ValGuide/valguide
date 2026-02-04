@@ -11,6 +11,7 @@ export type { CreateTourInput, CreateTourResult } from './create-tour.server'
 // =============================================================================
 
 const createTourSchema = z.object({
+  nanoId: z.string().optional(),
   title: z.string().optional(),
   locale: z.string().optional(),
 })

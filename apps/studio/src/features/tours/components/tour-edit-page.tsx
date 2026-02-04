@@ -2,6 +2,7 @@ import { Link, useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
@@ -48,7 +49,6 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
     tourAssets,
     tourAssetsPublished,
     setTourCover,
-    addStop,
     removeStop,
     reorderStops,
     stops,
@@ -329,15 +329,13 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
               onHide={handleHideStop}
               onShow={handleShowStop}
               onRemove={removeStop}
-              onAdd={async () => {
-                const newStop = await addStop()
-                if (newStop) {
-                  router.navigate({
-                    to: '/tours/$nanoId/stops/$stopId/edit',
-                    params: { nanoId, stopId: newStop.stopNanoId },
-                    search: localeSearch,
-                  })
-                }
+              onAdd={() => {
+                const stopId = valguideId()
+                router.navigate({
+                  to: '/tours/$nanoId/stops/$stopId/edit',
+                  params: { nanoId, stopId },
+                  search: { ...localeSearch, new: true },
+                })
               }}
             />
           </div>

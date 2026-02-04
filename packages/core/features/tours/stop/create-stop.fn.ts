@@ -7,6 +7,7 @@ import { createStop } from './create-stop.server'
 export type { CreateStopInput, CreateStopResult } from './create-stop.server'
 
 const createStopSchema = z.object({
+  nanoId: z.string().optional(),
   title: z.string().optional(),
   locale: z.string().optional(),
 })

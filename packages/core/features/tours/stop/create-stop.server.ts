@@ -7,6 +7,7 @@ import { stop, stopLocaleDraft, stopSettingsDraft } from '../schema'
 // =============================================================================
 
 export type CreateStopInput = {
+  nanoId?: string
   title?: string
   locale?: string
 }
@@ -28,7 +29,7 @@ export async function createStop(
   const locale = input.locale ?? 'en'
 
   return db.transaction(async (tx) => {
-    const nanoId = valguideId()
+    const nanoId = input.nanoId ?? valguideId()
 
     const [newStop] = await tx
       .insert(stop)

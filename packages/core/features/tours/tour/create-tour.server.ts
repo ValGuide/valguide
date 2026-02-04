@@ -7,6 +7,7 @@ import { tour, tourLocaleDraft, tourSettingsDraft } from '../schema'
 // =============================================================================
 
 export type CreateTourInput = {
+  nanoId?: string
   title?: string
   locale?: string
 }
@@ -28,7 +29,7 @@ export async function createTour(
   const locale = input.locale ?? 'en'
 
   return db.transaction(async (tx) => {
-    const nanoId = valguideId()
+    const nanoId = input.nanoId ?? valguideId()
 
     const [newTour] = await tx
       .insert(tour)

@@ -85,15 +85,14 @@ export const SingleTour: Story = {
   },
 }
 
-export const WithCreateHandler: Story = {
+export const WithNavigateHandler: Story = {
   args: {
     tours: [],
     isLoading: false,
     error: null,
-    onCreateTour: async () => {
-      console.log('Create tour clicked!')
-      alert('Create tour clicked!')
-      return { nanoId: 'new-tour' }
+    onNavigateToNewTour: (nanoId: string, locale: string) => {
+      console.log(`Navigate to new tour: ${nanoId}, locale: ${locale}`)
+      alert(`Navigate to new tour: ${nanoId}, locale: ${locale}`)
     },
   },
 }

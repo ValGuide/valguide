@@ -1,6 +1,6 @@
 import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours.fn'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
-import { toast } from '@valguide/core/ui/components/sonner/state'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { Button } from '@valguide/ui/components/button'
 import { Plus } from 'lucide-react'
 import * as React from 'react'
@@ -14,9 +14,8 @@ interface ToursListProps {
   tours?: TourListItem[]
   isLoading?: boolean
   error?: Error | null
-  onCreateTour?: (data: { title?: string; locale?: string }) => Promise<{ nanoId: string }>
   onViewTour?: (tour: TourListItem) => void
-  onNavigateToTour?: (nanoId: string) => void
+  onNavigateToNewTour?: (nanoId: string, locale: string) => void
   onRetry?: () => void
 }
 
@@ -24,42 +23,21 @@ export function ToursList({
   tours = [],
   isLoading = false,
   error = null,
-  onCreateTour,
   onViewTour,
-  onNavigateToTour,
+  onNavigateToNewTour,
   onRetry,
 }: ToursListProps) {
   const t = useTranslations('tours')
   const locale = useLocale()
-  const [isCreating, setIsCreating] = React.useState(false)
 
-  const handleCreateTour = React.useCallback(async () => {
-    if (!onCreateTour) {
-      console.error('onCreateTour handler not provided')
+  const handleCreateTour = React.useCallback(() => {
+    if (!onNavigateToNewTour) {
+      console.error('onNavigateToNewTour handler not provided')
       return
     }
-
-    try {
-      setIsCreating(true)
-
-      // Create a new tour with empty title in the current studio language
-      const newTour = await onCreateTour({
-        locale,
-      })
-
-      // Navigate to tour editor if handler provided
-      if (onNavigateToTour && newTour?.nanoId) {
-        onNavigateToTour(newTour.nanoId)
-      }
-    } catch (err) {
-      console.error('Failed to create tour:', err)
-      toast.error(t('create.error'), {
-        description: err instanceof Error ? err.message : t('create.errorDescription'),
-      })
-    } finally {
-      setIsCreating(false)
-    }
-  }, [onCreateTour, onNavigateToTour, locale, t])
+    const nanoId = valguideId()
+    onNavigateToNewTour(nanoId, locale)
+  }, [onNavigateToNewTour, locale])
 
   const renderContent = () => {
     if (isLoading) {
@@ -78,7 +56,7 @@ export function ToursList({
     }
 
     if (tours.length === 0) {
-      return <ToursListEmpty isCreating={isCreating} onCreateTour={handleCreateTour} />
+      return <ToursListEmpty onCreateTour={handleCreateTour} />
     }
 
     return <ToursListContent tours={tours} onViewTour={onViewTour} />
@@ -91,9 +69,9 @@ export function ToursList({
         description={t('description')}
         action={
           tours.length > 0 && (
-            <Button onClick={handleCreateTour} disabled={isCreating} className="group">
+            <Button onClick={handleCreateTour} className="group">
               <Plus className="transition-transform duration-200 group-hover:rotate-90" />
-              {isCreating ? t('empty.creating') : t('empty.createNewButton')}
+              {t('empty.createNewButton')}
             </Button>
           )
         }

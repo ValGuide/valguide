@@ -22,7 +22,7 @@ export const Route = createFileRoute('/_main/tours/')({
 
 function ToursPage() {
   const router = useRouter()
-  const { tours, isLoading, error, createTour, refetch } = useTours()
+  const { tours, isLoading, error, refetch } = useTours()
 
   const handleViewTour = (tour: TourListItem) => {
     if (tour.nanoId) {
@@ -30,8 +30,12 @@ function ToursPage() {
     }
   }
 
-  const handleNavigateToTour = (nanoId: string) => {
-    router.navigate({ to: '/tours/$nanoId/edit', params: { nanoId } })
+  const handleNavigateToNewTour = (nanoId: string, locale: string) => {
+    router.navigate({
+      to: '/tours/$nanoId/edit',
+      params: { nanoId },
+      search: { new: true, locale },
+    })
   }
 
   return (
@@ -40,9 +44,8 @@ function ToursPage() {
         tours={tours}
         isLoading={isLoading}
         error={error}
-        onCreateTour={createTour}
         onViewTour={handleViewTour}
-        onNavigateToTour={handleNavigateToTour}
+        onNavigateToNewTour={handleNavigateToNewTour}
         onRetry={refetch}
       />
     </main>
