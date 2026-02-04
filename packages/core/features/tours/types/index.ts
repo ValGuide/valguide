@@ -8,6 +8,9 @@
 
 import { z } from 'zod'
 
+import type { Asset } from '../../assets/types'
+import type { AssetItem } from '../public/types'
+
 // ============================================================================
 // Base Entity Types (Storybook-safe, mirror Drizzle-inferred types)
 // ============================================================================
@@ -147,16 +150,16 @@ export type TourWithStops = TourEntity & {
 export type { AssetItem } from '../public/types'
 
 export type StopWithAssets = StopWithTranslations & {
-  assets: import('../public/types').AssetItem[]
+  assets: AssetItem[]
 }
 
 export type TourWithStopsAndAssets = Omit<TourWithStops, 'stops'> & {
-  assets: import('../public/types').AssetItem[]
+  assets: AssetItem[]
   stops: StopWithAssets[]
 }
 
 export type TourWithTranslationsAndCover = TourWithTranslations & {
-  coverImage?: import('../public/types').AssetItem | null
+  coverImage?: AssetItem | null
 }
 
 // ============================================================================
@@ -232,7 +235,7 @@ export type StopMetadata = {
   position: number
   visible: boolean
   archivedAt: Date | null
-  assets: import('../public/types').AssetItem[]
+  assets: AssetItem[]
   translationStatuses: TranslationStatus[]
   // Asset versioning pointers
   currentAssetVersionId: string | null
@@ -466,7 +469,7 @@ export type StopDetailItem = {
   /** Tours this stop belongs to */
   tourAssociations: StopTourAssociation[]
   /** Assets for this stop */
-  assets: import('../public/types').AssetItem[]
+  assets: AssetItem[]
 }
 
 // ============================================================================
@@ -531,7 +534,7 @@ export type StopLocalePublishedResult = {
  */
 export type StopAssetDraftItem = {
   id: string
-  asset: import('../../assets/types').Asset
+  asset: Asset
   channel: string
   locale: string | null
   position: number
@@ -596,7 +599,7 @@ export type TourLocalePublishedResult = {
  */
 export type TourAssetDraftItem = {
   id: string
-  asset: import('../../assets/types').Asset
+  asset: Asset
   channel: string
   locale: string | null
   position: number
@@ -621,7 +624,7 @@ export type StructureDraftStop = {
  */
 export type TourAssetPublishedItem = {
   id: string
-  asset: import('../../assets/types').Asset
+  asset: Asset
   channel: string
   locale: string | null
   position: number
@@ -633,7 +636,7 @@ export type TourAssetPublishedItem = {
  */
 export type StopAssetPublishedItem = {
   id: string
-  asset: import('../../assets/types').Asset
+  asset: Asset
   channel: string
   locale: string | null
   position: number
