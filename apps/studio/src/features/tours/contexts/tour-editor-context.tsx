@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import { createStopFn } from '@valguide/core/features/tours/stop/create-stop.fn'
 import { addStopToTourFn } from '@valguide/core/features/tours/structure/add-stop.fn'
 import { removeStopFromTourFn } from '@valguide/core/features/tours/structure/remove-stop.fn'

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { ArchivedTourListItem } from '@valguide/core/features/tours/tour/list-archived-tours.fn'
+import type { ArchivedTourListItem } from '@valguide/core/features/tours/types'
 import { fn } from 'storybook/test'
 import { ArchivedToursList } from './archived-tours-list'
 

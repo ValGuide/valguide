@@ -1,5 +1,6 @@
+import type { QueryObserverOptions } from '@tanstack/react-query'
 import { Link, useRouter } from '@tanstack/react-router'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -13,6 +14,7 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
 import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { getLocaleDisplayName } from '@/features/editor/components/locale-selector'
+import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
 import { useDiffView } from '@/features/editor/hooks/use-diff-view'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
 import { HideStopDialog } from '@/features/tours/components/hide-stop-dialog'
@@ -32,9 +34,18 @@ export interface TourEditPageProps {
   onHideStop?: (tourId: string, stopNanoId: string) => Promise<unknown>
   onShowStop?: (tourId: string, stopNanoId: string) => Promise<unknown>
   MediaPicker: MediaPickerComponent
+  /** Query options for diff view - pass undefined for Storybook to skip the query */
+  diffQueryOptions?: QueryObserverOptions<DiffResult>
 }
 
-export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, MediaPicker }: TourEditPageProps) {
+export function TourEditPage({
+  onPublish,
+  onUnpublish,
+  onHideStop,
+  onShowStop,
+  MediaPicker,
+  diffQueryOptions,
+}: TourEditPageProps) {
   const router = useRouter()
   const t = useTranslations('tours')
   const tLocaleSelector = useTranslations('tours.localeSelector')
@@ -73,10 +84,8 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
 
   // Diff view state
   const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
-    type: 'tour',
-    nanoId,
-    locale: activeLocale,
     enabled: activeTab === 'draft',
+    queryOptions: diffQueryOptions,
   })
 
   const tourTitle = useMemo(() => {

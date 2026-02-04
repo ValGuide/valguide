@@ -1,4 +1,4 @@
-import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import type { ComponentType } from 'react'
 
 export type MediaPickerComponentProps = {

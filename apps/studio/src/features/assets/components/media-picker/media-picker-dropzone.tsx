@@ -1,4 +1,4 @@
-import type { AssetType } from '@valguide/core/features/assets/schema'
+import type { AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
 import { Image as ImageIcon, Music, Upload, Video } from 'lucide-react'

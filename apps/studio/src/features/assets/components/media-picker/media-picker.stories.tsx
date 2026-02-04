@@ -1,7 +1,7 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import { useState } from 'react'
 import { MockAssetsProvider } from '../../context/mock-assets-provider'
 import { MediaPicker } from './media-picker'

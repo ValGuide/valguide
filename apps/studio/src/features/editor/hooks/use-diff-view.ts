@@ -1,26 +1,32 @@
+import type { QueryObserverOptions } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
-import type { StopLocaleDiffResult } from '@valguide/core/features/tours/stop/locale/compare-stop-locale-diff.fn'
-import type {
-  FieldDiff,
-  TourLocaleDiffResult,
-} from '@valguide/core/features/tours/tour/locale/compare-tour-locale-diff.fn'
 import { useCallback, useEffect, useState } from 'react'
-import { stopLocaleDiffQueryOptions, tourLocaleDiffQueryOptions } from '@/features/tours/query-options'
 
-const DIFF_VIEW_STORAGE_KEY = 'valguide-diff-view-enabled'
+export type FieldDiff = {
+  field: string
+  draft: string | null
+  published: string | null
+  hasChanged: boolean
+}
 
 export type UseDiffViewOptions = {
-  type: 'tour' | 'stop'
-  nanoId: string
-  locale: string
   enabled?: boolean
+  /** Injectable query options - pass undefined for Storybook to skip the query */
+  queryOptions?: QueryObserverOptions<DiffResult>
+}
+
+export type DiffResult = {
+  hasChanges: boolean
+  changedFields: string[]
+  fieldDiffs: FieldDiff[]
+  publishedAt: Date | null
 }
 
 export type UseDiffViewResult = {
   diffEnabled: boolean
   setDiffEnabled: (enabled: boolean) => void
   toggleDiff: () => void
-  diffData: TourLocaleDiffResult | StopLocaleDiffResult | null | undefined
+  diffData: DiffResult | null | undefined
   isLoading: boolean
   hasChanges: boolean
   changedCount: number
@@ -28,6 +34,8 @@ export type UseDiffViewResult = {
   getFieldDiff: (field: string) => FieldDiff | undefined
   publishedAt: Date | null
 }
+
+const DIFF_VIEW_STORAGE_KEY = 'valguide-diff-view-enabled'
 
 function getStoredDiffEnabled(): boolean {
   if (typeof window === 'undefined') return false
@@ -47,7 +55,7 @@ function setStoredDiffEnabled(enabled: boolean): void {
   }
 }
 
-export function useDiffView({ type, nanoId, locale, enabled = true }: UseDiffViewOptions): UseDiffViewResult {
+export function useDiffView({ enabled = true, queryOptions }: UseDiffViewOptions): UseDiffViewResult {
   const [diffEnabled, setDiffEnabledState] = useState(getStoredDiffEnabled)
 
   const setDiffEnabled = useCallback((value: boolean) => {
@@ -72,22 +80,20 @@ export function useDiffView({ type, nanoId, locale, enabled = true }: UseDiffVie
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [toggleDiff])
 
-  const queryOptions =
-    type === 'tour' ? tourLocaleDiffQueryOptions(nanoId, locale) : stopLocaleDiffQueryOptions(nanoId, locale)
-
-  const { data: diffData, isLoading } = useQuery({
-    ...queryOptions,
-    enabled,
+  const { data: diffData, isLoading } = useQuery<DiffResult | null>({
+    queryKey: queryOptions?.queryKey ?? ['diff-view-disabled'],
+    queryFn: queryOptions?.queryFn as () => Promise<DiffResult | null>,
+    enabled: enabled && !!queryOptions,
   })
 
   const hasChanges = diffData?.hasChanges ?? false
-  const changedCount = diffData?.changedFields.length ?? 0
+  const changedCount = diffData?.changedFields?.length ?? 0
   const changedFields = diffData?.changedFields ?? []
   const publishedAt = diffData?.publishedAt ?? null
 
   const getFieldDiff = useCallback(
     (field: string): FieldDiff | undefined => {
-      return diffData?.fieldDiffs.find((f) => f.field === field)
+      return diffData?.fieldDiffs?.find((f: FieldDiff) => f.field === field)
     },
     [diffData],
   )

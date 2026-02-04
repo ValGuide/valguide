@@ -1,5 +1,5 @@
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
-import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {

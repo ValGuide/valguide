@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import { assignStopAssetFn } from '@valguide/core/features/tours/stop/asset/assign-stop-asset.fn'
 import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
 import { removeStopAssetFn } from '@valguide/core/features/tours/stop/asset/remove-stop-asset.fn'

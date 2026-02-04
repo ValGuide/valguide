@@ -1,4 +1,4 @@
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import type { ReactNode } from 'react'
 import { AssetsContext, type AssetsContextValue } from './assets-context'
 

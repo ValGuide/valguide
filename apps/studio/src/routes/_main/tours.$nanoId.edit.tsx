@@ -9,7 +9,11 @@ import { TourEditSkeleton } from '@/features/tours/components/tour-edit-skeleton
 import { TourNotFound } from '@/features/tours/components/tour-not-found'
 import { TourEditorProvider } from '@/features/tours/contexts/tour-editor-context'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
-import { tourDetailQueryOptions, tourLocaleDraftQueryOptions } from '@/features/tours/query-options'
+import {
+  tourDetailQueryOptions,
+  tourLocaleDiffQueryOptions,
+  tourLocaleDraftQueryOptions,
+} from '@/features/tours/query-options'
 
 type SearchParams = {
   stop?: string
@@ -67,7 +71,7 @@ function TourEditRoute() {
 }
 
 function TourEditPageContent() {
-  const { nanoId } = useTourEditor()
+  const { nanoId, activeLocale } = useTourEditor()
 
   const handlePublish = async (_tourId: string, locale: string) => {
     // Unified publish: tour locale + structure + settings + assets + all stop translations
@@ -85,6 +89,7 @@ function TourEditPageContent() {
         updateStopVisibilityFn({ data: { tourNanoId: nanoId, stopNanoId, visible: true } })
       }
       MediaPicker={MediaPickerConnected}
+      diffQueryOptions={tourLocaleDiffQueryOptions(nanoId, activeLocale)}
     />
   )
 }

@@ -1,14 +1,53 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
-import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
-import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
-import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
+import type { QueryObserverOptions } from '@tanstack/react-query'
+import type {
+  StructureDraftStop,
+  TourDetail,
+  TourLocaleDraftResult,
+  TourLocalePublishedResult,
+} from '@valguide/core/features/tours/types'
 import { fn } from 'storybook/test'
 import { MediaPicker } from '@/features/assets/components/media-picker/media-picker'
 import type { MediaPickerComponentProps } from '@/features/assets/components/media-picker/types'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
+import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
+
 import { MockTourEditorProvider } from '@/features/tours/contexts/mock-tour-editor-provider'
 import { TourEditPage, type TourEditPageProps } from './tour-edit-page'
+
+const createMockDiffQueryOptions = (diffResult: DiffResult): QueryObserverOptions<DiffResult> => ({
+  queryKey: ['mock-diff'],
+  queryFn: () => Promise.resolve(diffResult),
+  staleTime: Number.POSITIVE_INFINITY,
+})
+
+const noDiffResult: DiffResult = {
+  hasChanges: false,
+  changedFields: [],
+  fieldDiffs: [],
+  publishedAt: new Date('2025-01-10T10:00:00Z'),
+}
+
+const withChangesDiffResult: DiffResult = {
+  hasChanges: true,
+  changedFields: ['title', 'description'],
+  fieldDiffs: [
+    {
+      field: 'title',
+      draft: 'City Art Museum Audio Tour - Updated',
+      published: 'City Art Museum Audio Tour',
+      hasChanged: true,
+    },
+    {
+      field: 'description',
+      draft: 'New description with updates.',
+      published:
+        'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio tour.',
+      hasChanged: true,
+    },
+  ],
+  publishedAt: new Date('2025-01-10T10:00:00Z'),
+}
 
 const mockOnUpload = async (_file: File, onProgress: (p: number) => void) => {
   for (let i = 0; i <= 100; i += 20) {
@@ -143,6 +182,7 @@ export const Published: Story = {
     onHideStop: fn(),
     onShowStop: fn(),
     MediaPicker: StoryMediaPicker,
+    diffQueryOptions: createMockDiffQueryOptions(noDiffResult),
     tourDetail: createMockTourDetail(),
     localeDraft: createMockLocaleDraft({ hasPublished: true }),
     localePublished: createMockLocalePublished(),
@@ -157,6 +197,7 @@ export const WithUnpublishedChanges: Story = {
     onHideStop: fn(),
     onShowStop: fn(),
     MediaPicker: StoryMediaPicker,
+    diffQueryOptions: createMockDiffQueryOptions(withChangesDiffResult),
     tourDetail: createMockTourDetail(),
     localeDraft: createMockLocaleDraft({
       hasPublished: true,

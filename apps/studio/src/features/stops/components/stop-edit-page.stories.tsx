@@ -1,13 +1,51 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
-import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.server'
-import type { StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.server'
-import type { StopLocaleDraftResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.server'
-import type { StopLocalePublishedResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.server'
+import type { QueryObserverOptions } from '@tanstack/react-query'
+import type {
+  StopAssetDraftItem,
+  StopDetail,
+  StopLocaleDraftResult,
+  StopLocalePublishedResult,
+} from '@valguide/core/features/tours/types'
 import { MockMediaPicker } from '@/features/assets/components/media-picker/mock-media-picker'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
+import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
+
 import { MockStopEditorProvider } from '@/features/stops/contexts/mock-stop-editor-provider'
 import { StopEditPage } from './stop-edit-page'
+
+const createMockDiffQueryOptions = (diffResult: DiffResult): QueryObserverOptions<DiffResult> => ({
+  queryKey: ['mock-diff'],
+  queryFn: () => Promise.resolve(diffResult),
+  staleTime: Number.POSITIVE_INFINITY,
+})
+
+const noDiffResult: DiffResult = {
+  hasChanges: false,
+  changedFields: [],
+  fieldDiffs: [],
+  publishedAt: new Date('2025-01-10T10:00:00Z'),
+}
+
+const withChangesDiffResult: DiffResult = {
+  hasChanges: true,
+  changedFields: ['title', 'description'],
+  fieldDiffs: [
+    {
+      field: 'title',
+      draft: 'The Starry Night - Updated',
+      published: 'The Starry Night',
+      hasChanged: true,
+    },
+    {
+      field: 'description',
+      draft: 'Updated description with new information.',
+      published: 'Vincent van Gogh painted this masterpiece in June 1889.',
+      hasChanged: true,
+    },
+  ],
+  publishedAt: new Date('2025-01-10T10:00:00Z'),
+}
 
 const createMockStopDetail = (overrides: Partial<StopDetail> = {}): StopDetail => ({
   id: 'stop-1',
@@ -126,6 +164,9 @@ export const Unpublished: Story = {
 }
 
 export const Published: Story = {
+  args: {
+    diffQueryOptions: createMockDiffQueryOptions(noDiffResult),
+  },
   decorators: [
     (Story) => (
       <MockAssetsProvider>
@@ -148,6 +189,9 @@ export const Published: Story = {
 }
 
 export const WithUnpublishedChanges: Story = {
+  args: {
+    diffQueryOptions: createMockDiffQueryOptions(withChangesDiffResult),
+  },
   decorators: [
     (Story) => (
       <MockAssetsProvider>

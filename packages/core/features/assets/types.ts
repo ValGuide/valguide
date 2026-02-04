@@ -23,3 +23,11 @@ export interface Asset {
   createdAt: Date
   updatedAt: Date
 }
+
+/**
+ * Asset with usage counts (mirrors type in get-assets.server.ts)
+ */
+export interface AssetWithUsage extends Asset {
+  tourCount: number
+  stopCount: number
+}

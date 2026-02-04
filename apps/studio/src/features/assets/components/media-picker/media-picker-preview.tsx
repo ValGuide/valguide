@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Music, Trash2, Video } from 'lucide-react'

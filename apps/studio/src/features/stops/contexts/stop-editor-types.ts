@@ -1,10 +1,12 @@
-import type { Asset } from '@valguide/core/features/assets/schema'
-import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
-import type { StopAssetPublishedItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-published.fn'
-import type { StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
-import type { StopTourUsageResult } from '@valguide/core/features/tours/stop/get-stop-tour-usage.fn'
-import type { StopLocaleDraftResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.fn'
-import type { StopLocalePublishedResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.fn'
+import type { Asset } from '@valguide/core/features/assets/types'
+import type {
+  StopAssetDraftItem,
+  StopAssetPublishedItem,
+  StopDetail,
+  StopLocaleDraftResult,
+  StopLocalePublishedResult,
+  StopTourUsageResult,
+} from '@valguide/core/features/tours/types'
 import { createContext, useContext } from 'react'
 
 // Re-export types for consumers

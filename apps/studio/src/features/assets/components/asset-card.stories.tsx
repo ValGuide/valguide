@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
-import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
+import type { AssetWithUsage } from '@valguide/core/features/assets/types'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 

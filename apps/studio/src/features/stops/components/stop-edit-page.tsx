@@ -1,7 +1,8 @@
+import type { QueryObserverOptions } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { getStopTranslationStatusDisplay } from '@valguide/core/features/tours/status-utils'
-import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
+import type { StopAssetDraftItem } from '@valguide/core/features/tours/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
@@ -12,6 +13,7 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
 import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
+import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
 import { useDiffView } from '@/features/editor/hooks/use-diff-view'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
 import { SharedStopBanner } from '@/features/stops/components/shared-stop-banner'
@@ -24,9 +26,11 @@ import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 export type StopEditPageProps = {
   MediaPicker: MediaPickerComponent
   onPublishAssets?: (nanoId: string, activeLocale: string) => Promise<void>
+  /** Query options for diff view - pass undefined for Storybook to skip the query */
+  diffQueryOptions?: QueryObserverOptions<DiffResult>
 }
 
-export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps) {
+export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }: StopEditPageProps) {
   const router = useRouter()
   const t = useTranslations('tours')
   const tStops = useTranslations('stops')
@@ -63,10 +67,8 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
 
   // Diff view state
   const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
-    type: 'stop',
-    nanoId,
-    locale: activeLocale,
     enabled: activeTab === 'draft',
+    queryOptions: diffQueryOptions,
   })
 
   const hasDraft = !!localeDraft

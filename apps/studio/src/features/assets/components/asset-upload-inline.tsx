@@ -1,5 +1,5 @@
 import { confirmAssetUploadFn } from '@valguide/core/features/assets/confirm-upload.fn'
-import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import {
   detectAssetType,
   formatFileSize,

@@ -1,6 +1,6 @@
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { Asset, AssetType } from '@valguide/core/features/assets/schema'
+import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'

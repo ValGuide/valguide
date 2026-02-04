@@ -468,3 +468,198 @@ export type StopDetailItem = {
   /** Assets for this stop */
   assets: import('../public/types').AssetItem[]
 }
+
+// ============================================================================
+// Stop Detail Types (for stop editor - Storybook-safe)
+// ============================================================================
+
+/**
+ * Stop locale draft info (mirrors type in get-stop-detail.server.ts)
+ */
+export type StopLocaleDraftInfo = {
+  locale: string
+  title: string | null
+  description: string | null
+  transcription: string | null
+  hasPublished: boolean
+}
+
+/**
+ * Full stop detail type (mirrors type in get-stop-detail.server.ts)
+ * Safe for Storybook/browser imports
+ */
+export type StopDetail = {
+  id: string
+  nanoId: string
+  organizationId: string
+  existingLocales: string[]
+  availableLocales: string[]
+  archivedAt: Date | null
+  createdAt: Date
+  updatedAt: Date
+  locales: StopLocaleDraftInfo[]
+  settings: {
+    coordinates: string | null
+    settingsJson: string | null
+  } | null
+}
+
+/**
+ * Stop locale draft result (mirrors type in get-stop-locale-draft.server.ts)
+ */
+export type StopLocaleDraftResult = {
+  locale: string
+  title: string | null
+  description: string | null
+  transcription: string | null
+  hasPublished: boolean
+}
+
+/**
+ * Stop locale published result (mirrors type in get-stop-locale-published.server.ts)
+ */
+export type StopLocalePublishedResult = {
+  locale: string
+  title: string | null
+  description: string | null
+  transcription: string | null
+  publishedAt: Date | null
+}
+
+/**
+ * Stop asset draft item (mirrors type in get-stop-assets-draft.server.ts)
+ */
+export type StopAssetDraftItem = {
+  id: string
+  asset: import('../../assets/types').Asset
+  channel: string
+  locale: string | null
+  position: number
+  createdAt: Date
+}
+
+// ============================================================================
+// Tour Detail Types (for tour editor - Storybook-safe)
+// ============================================================================
+
+/**
+ * Tour locale draft info (mirrors type in get-tour-detail.server.ts)
+ */
+export type LocaleDraftInfo = {
+  locale: string
+  title: string | null
+  description: string | null
+  hasPublished: boolean
+}
+
+/**
+ * Full tour detail type (mirrors type in get-tour-detail.server.ts)
+ * Safe for Storybook/browser imports
+ */
+export type TourDetail = {
+  id: string
+  nanoId: string
+  organizationId: string
+  availableLocales: string[]
+  archivedAt: Date | null
+  createdAt: Date
+  updatedAt: Date
+  locales: LocaleDraftInfo[]
+  settings: {
+    themeId: string | null
+    settingsJson: string | null
+  } | null
+}
+
+/**
+ * Tour locale draft result (mirrors type in get-tour-locale-draft.server.ts)
+ */
+export type TourLocaleDraftResult = {
+  locale: string
+  title: string | null
+  description: string | null
+  hasPublished: boolean
+}
+
+/**
+ * Tour locale published result (mirrors type in get-tour-locale-published.server.ts)
+ */
+export type TourLocalePublishedResult = {
+  locale: string
+  title: string | null
+  description: string | null
+  publishedAt: Date
+}
+
+/**
+ * Tour asset draft item (mirrors type in get-tour-assets-draft.server.ts)
+ */
+export type TourAssetDraftItem = {
+  id: string
+  asset: import('../../assets/types').Asset
+  channel: string
+  locale: string | null
+  position: number
+  createdAt: Date
+}
+
+/**
+ * Structure draft stop (mirrors type in get-structure-draft.server.ts)
+ */
+export type StructureDraftStop = {
+  stopId: string
+  stopNanoId: string
+  position: number
+  visible: boolean
+  title: string | null
+  locale: string
+  thumbnailUrl: string | null
+}
+
+/**
+ * Tour asset published item (mirrors type in get-tour-assets-published.server.ts)
+ */
+export type TourAssetPublishedItem = {
+  id: string
+  asset: import('../../assets/types').Asset
+  channel: string
+  locale: string | null
+  position: number
+  publishedAt: Date
+}
+
+/**
+ * Stop asset published item (mirrors type in get-stop-assets-published.server.ts)
+ */
+export type StopAssetPublishedItem = {
+  id: string
+  asset: import('../../assets/types').Asset
+  channel: string
+  locale: string | null
+  position: number
+  publishedAt: Date
+}
+
+/**
+ * Stop tour usage result (mirrors type in get-stop-tour-usage.server.ts)
+ */
+export type StopTourUsageResult = {
+  tourCount: number
+  tours: Array<{
+    nanoId: string
+    title: string | null
+  }>
+}
+
+/**
+ * Archived tour list item (mirrors type in list-archived-tours.server.ts)
+ */
+export type ArchivedTourListItem = {
+  nanoId: string
+  title: string | null
+  locale: string
+  availableLocales: string[]
+  archivedAt: Date
+  createdAt: Date
+  updatedAt: Date
+}

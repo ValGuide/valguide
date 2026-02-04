@@ -1,6 +1,6 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
+import type { TourDetail } from '@valguide/core/features/tours/types'
 import { Button } from '@valguide/ui/components/button'
 import { fn } from 'storybook/test'
 import { TourDetailView } from './tour-detail-view'

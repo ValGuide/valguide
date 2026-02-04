@@ -1,9 +1,11 @@
-import type { Asset } from '@valguide/core/features/assets/schema'
-import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
-import type { TourAssetDraftItem } from '@valguide/core/features/tours/tour/asset/get-tour-assets-draft.fn'
-import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
-import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
-import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
+import type { Asset } from '@valguide/core/features/assets/types'
+import type {
+  StructureDraftStop,
+  TourAssetDraftItem,
+  TourDetail,
+  TourLocaleDraftResult,
+  TourLocalePublishedResult,
+} from '@valguide/core/features/tours/types'
 import { type ReactNode, useState } from 'react'
 import { TourEditorContext, type TourEditorContextValue } from './tour-editor-types'
 

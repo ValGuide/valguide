@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
-import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
+import type { StructureDraftStop, TourDetail } from '@valguide/core/features/tours/types'
 import { fn } from 'storybook/test'
 import { MockTourEditorProvider } from '@/features/tours/contexts/mock-tour-editor-provider'
 import { StopsList } from './stops-list'

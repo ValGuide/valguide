@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
-import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
-import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
+import type { StructureDraftStop, TourDetail, TourLocaleDraftResult } from '@valguide/core/features/tours/types'
 import { MockTourEditorProvider } from '@/features/tours/contexts/mock-tour-editor-provider'
 import { TourProgress } from './tour-progress'
 

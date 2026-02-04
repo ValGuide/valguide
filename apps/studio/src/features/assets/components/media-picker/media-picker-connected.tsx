@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { confirmAssetUploadFn } from '@valguide/core/features/assets/confirm-upload.fn'
-import type { Asset } from '@valguide/core/features/assets/schema'
+import type { Asset } from '@valguide/core/features/assets/types'
 import { detectAssetType } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
