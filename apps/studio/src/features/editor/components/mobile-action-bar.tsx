@@ -63,7 +63,6 @@ export interface MobileSavePublishProps {
   isPublishing: boolean
   onSave: () => void
   onPublishClick: () => void
-  disabled?: boolean
   /** Hide publish button (e.g., for stops in tour context) */
   publishingDisabled?: boolean
 }
@@ -76,7 +75,6 @@ export function MobileSavePublish({
   isPublishing,
   onSave,
   onPublishClick,
-  disabled,
   publishingDisabled,
 }: MobileSavePublishProps) {
   const t = useTranslations('tours.actions')
@@ -90,9 +88,9 @@ export function MobileSavePublish({
           <Button
             variant="outline"
             onClick={onSave}
-            disabled={!isDirty || isSaving || isPublishing || disabled}
+            disabled={!isDirty || isSaving || isPublishing}
             size="sm"
-            className={publishingDisabled ? 'flex-1' : 'flex-1'}
+            className="flex-1"
           >
             {isSaving && !isPublishing ? t('saving') : t('save')}
           </Button>
@@ -100,7 +98,7 @@ export function MobileSavePublish({
           {!publishingDisabled && (
             <Button
               onClick={onPublishClick}
-              disabled={!canPublish || isPublishing || isSaving || disabled}
+              disabled={!canPublish || isPublishing || isSaving}
               size="sm"
               className="flex-1"
             >
@@ -111,16 +109,11 @@ export function MobileSavePublish({
       </div>
 
       <div className="hidden sm:flex lg:hidden items-center gap-1.5">
-        <Button
-          variant="outline"
-          onClick={onSave}
-          disabled={!isDirty || isSaving || isPublishing || disabled}
-          size="sm"
-        >
+        <Button variant="outline" onClick={onSave} disabled={!isDirty || isSaving || isPublishing} size="sm">
           {isSaving && !isPublishing ? t('saving') : t('save')}
         </Button>
         {!publishingDisabled && (
-          <Button onClick={onPublishClick} disabled={!canPublish || isPublishing || isSaving || disabled} size="sm">
+          <Button onClick={onPublishClick} disabled={!canPublish || isPublishing || isSaving} size="sm">
             {isPublishing ? t('publishing') : t('publish')}
           </Button>
         )}
@@ -139,7 +132,6 @@ export interface MobileActionBarProps {
   onPublishClick: () => void
   onUnpublishClick: () => void
   onDiscardClick: () => void
-  disabled?: boolean
 }
 
 /** Combined mobile action bar (for backwards compatibility) */
@@ -153,7 +145,6 @@ export function MobileActionBar({
   onPublishClick,
   onUnpublishClick,
   onDiscardClick,
-  disabled,
 }: MobileActionBarProps) {
   return (
     <>
@@ -170,7 +161,6 @@ export function MobileActionBar({
         isPublishing={isPublishing}
         onSave={onSave}
         onPublishClick={onPublishClick}
-        disabled={disabled}
       />
     </>
   )

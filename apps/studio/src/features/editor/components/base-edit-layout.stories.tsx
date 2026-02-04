@@ -106,9 +106,7 @@ const meta = {
     isDirty: false,
     isSaving: false,
     isPublishing: false,
-    activeTab: 'draft',
     onLocaleChange: fn(),
-    onTabChange: fn(),
     onSave: fn(),
     onPublish: fn(),
     onUnpublish: fn(),
@@ -201,16 +199,5 @@ export const StopPublished: Story = {
     backLabel: undefined,
     onBack: undefined,
     sidebar: undefined,
-  },
-}
-
-export const PublishedTabActive: Story = {
-  args: {
-    title: 'Introduction to Modern Art',
-    status: { status: 'published', indicator: 'up-to-date' },
-    hasDraft: true,
-    hasPublished: true,
-    activeTab: 'published',
-    sidebar: <MockSidebar />,
   },
 }

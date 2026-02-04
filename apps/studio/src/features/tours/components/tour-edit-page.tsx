@@ -12,7 +12,6 @@ import { Globe, Languages, ListChecks } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
-import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { getLocaleDisplayName } from '@/features/editor/components/locale-selector'
 import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
 import { useDiffView } from '@/features/editor/hooks/use-diff-view'
@@ -54,14 +53,12 @@ export function TourEditPage({
     nanoId,
     tourDetail,
     localeDraft,
-    localePublished,
     activeLocale,
     availableLocales,
     isDirty,
     isSaving,
     lastSaved,
     tourAssets,
-    tourAssetsPublished,
     setTourCover,
     removeStop,
     reorderStops,
@@ -74,7 +71,6 @@ export function TourEditPage({
     registerFormReset,
   } = useTourEditor()
 
-  const [activeTab, setActiveTab] = useState<EditorTab>('draft')
   const [isPublishing, setIsPublishing] = useState(false)
   const [stopToHide, setStopToHide] = useState<{ id: string; title: string } | null>(null)
   const [stopToShow, setStopToShow] = useState<{ id: string; title: string } | null>(null)
@@ -84,7 +80,7 @@ export function TourEditPage({
 
   // Diff view state
   const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
-    enabled: activeTab === 'draft',
+    enabled: true,
     queryOptions: diffQueryOptions,
   })
 
@@ -109,18 +105,12 @@ export function TourEditPage({
   }
   const statusDisplay = isPublishing ? stableStatusRef.current : computedStatusDisplay
 
-  const isReadOnly = activeTab === 'published'
-
   const draftData = {
     title: localeDraft?.title ?? '',
     description: localeDraft?.description ?? '',
   }
 
-  const publishedData = localePublished
-    ? { title: localePublished.title ?? '', description: localePublished.description ?? '' }
-    : null
-
-  const displayData = isReadOnly ? publishedData : draftData
+  const displayData = draftData
 
   const formRef = useRef<TourMetadataFormWithDiffRef>(null)
   const formId = `tour-translation-${activeLocale}`
@@ -176,7 +166,7 @@ export function TourEditPage({
     await refetch()
   }, [stopToShow, nanoId, onShowStop, refetch])
 
-  const displayAssets = isReadOnly ? tourAssetsPublished : tourAssets
+  const displayAssets = tourAssets
   const coverAssetItem = useMemo(() => displayAssets.find((a) => a.channel === 'images.hero') ?? null, [displayAssets])
   // Extract asset for MediaPicker (which expects Asset, not *Item)
   const coverAsset = coverAssetItem?.asset ?? null
@@ -216,18 +206,6 @@ export function TourEditPage({
       toast.error(t('unpublish.error'))
     }
   }, [nanoId, activeLocale, refetch, onUnpublish])
-
-  const handleTabChange = useCallback(
-    (tab: EditorTab) => {
-      if (tab === 'published' && !hasPublished) return
-      if (isDirty && tab === 'published') {
-        confirmIfDirty(() => setActiveTab(tab))
-      } else {
-        setActiveTab(tab)
-      }
-    },
-    [hasPublished, isDirty, confirmIfDirty],
-  )
 
   if (!tourDetail) return null
 
@@ -290,8 +268,6 @@ export function TourEditPage({
         isDirty={isDirty}
         isSaving={isSaving}
         isPublishing={isPublishing}
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
         onSave={save}
         onPublish={handlePublish}
         onUnpublish={handleUnpublish}
@@ -311,10 +287,9 @@ export function TourEditPage({
 
           <TourMetadataFormWithDiff
             ref={formRef}
-            key={`tour-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
+            key={`tour-metadata-${activeLocale}-${lastSaved?.getTime() ?? 0}`}
             locale={activeLocale}
-            draftData={displayData ? { ...displayData, title: displayData.title ?? '' } : undefined}
-            readOnly={isReadOnly}
+            draftData={{ ...displayData, title: displayData.title ?? '' }}
             onDirtyChange={handleDirtyChange}
             onSave={save}
             diffEnabled={diffEnabled}
@@ -323,7 +298,7 @@ export function TourEditPage({
             getFieldDiff={getFieldDiff}
           />
 
-          <Card className={isReadOnly ? 'opacity-60' : ''}>
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Globe className="h-4 w-4" />
@@ -338,12 +313,11 @@ export function TourEditPage({
                 value={coverAsset}
                 onChange={handleCoverImageChange}
                 label={t('editor.coverImageLabel')}
-                disabled={isReadOnly}
               />
             </CardContent>
           </Card>
 
-          <div className={isReadOnly ? 'pointer-events-none opacity-60' : ''}>
+          <div>
             <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
             <StopsList
               onReorder={reorderStops}

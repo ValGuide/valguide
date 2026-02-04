@@ -18,7 +18,6 @@ export interface EditorActionsPanelProps {
   onPublishClick: () => void
   onUnpublishClick: () => void
   onDiscardClick: () => void
-  disabled?: boolean
   /** Hide publish/unpublish actions (e.g., for stops in tour context) */
   publishingDisabled?: boolean
   /** Message to show when publishing is disabled */
@@ -35,7 +34,6 @@ export function EditorActionsPanel({
   onPublishClick,
   onUnpublishClick,
   onDiscardClick,
-  disabled,
   publishingDisabled,
   publishingDisabledMessage,
 }: EditorActionsPanelProps) {
@@ -54,7 +52,7 @@ export function EditorActionsPanel({
       ) : (
         <Button
           onClick={onPublishClick}
-          disabled={!canPublish || isPublishing || isSaving || disabled}
+          disabled={!canPublish || isPublishing || isSaving}
           className="w-full shadow-[var(--shadow-sm)] transition-all duration-200 hover:shadow-[var(--shadow-md)]"
           size="default"
         >
@@ -67,7 +65,7 @@ export function EditorActionsPanel({
         <Button
           variant="outline"
           onClick={onSave}
-          disabled={!isDirty || isSaving || isPublishing || disabled}
+          disabled={!isDirty || isSaving || isPublishing}
           className="flex-1 transition-colors duration-150"
           size="sm"
         >

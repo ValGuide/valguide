@@ -11,7 +11,6 @@ import { ChevronLeft, Globe } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
-import type { EditorTab } from '@/features/editor/components/draft-published-tabs'
 import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
 import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
 import { useDiffView } from '@/features/editor/hooks/use-diff-view'
@@ -39,14 +38,12 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
     stopId,
     isInTourContext,
     localeDraft,
-    localePublished,
     activeLocale,
     availableLocales,
     isDirty,
     isSaving,
     lastSaved,
     assets,
-    assetsPublished,
     setActiveLocale,
     save,
     refetch,
@@ -60,14 +57,13 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
     tourUsage,
   } = useStopEditor()
 
-  const [activeTab, setActiveTab] = useState<EditorTab>('draft')
   const [isPublishing, setIsPublishing] = useState(false)
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   // Diff view state
   const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
-    enabled: activeTab === 'draft',
+    enabled: true,
     queryOptions: diffQueryOptions,
   })
 
@@ -86,19 +82,12 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
     return { status: display.status, indicator: display.indicator }
   }, [localeDraft])
 
-  const isReadOnly = activeTab === 'published'
-
   const draftStopTitle = useMemo(() => {
     const title = localeDraft?.title
     return title?.trim() ? title : tStops('unknownTitle')
   }, [localeDraft, tStops])
 
-  const publishedStopTitle = useMemo(() => {
-    const title = localePublished?.title
-    return title?.trim() ? title : tStops('unknownTitle')
-  }, [localePublished, tStops])
-
-  const stopTitle = activeTab === 'published' ? publishedStopTitle : draftStopTitle
+  const stopTitle = draftStopTitle
 
   const draftData = localeDraft
     ? {
@@ -108,18 +97,9 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       }
     : null
 
-  const publishedData = localePublished
-    ? {
-        title: localePublished.title ?? '',
-        description: localePublished.description ?? '',
-        transcription: localePublished.transcription ?? '',
-      }
-    : null
+  const displayData = draftData ?? { title: '', description: '', transcription: '' }
 
-  const editableData = draftData ?? publishedData ?? { title: '', description: '', transcription: '' }
-  const displayData = isReadOnly ? (publishedData ?? undefined) : editableData
-
-  const displayAssets = isReadOnly ? assetsPublished : assets
+  const displayAssets = assets
   const stopImageItems = displayAssets.filter((a) => a.channel === 'images.gallery' && a.locale === null)
   const stopAudioItem = displayAssets.find((a) => a.channel === 'audio.narration' && a.locale === activeLocale) ?? null
   // Extract assets for MediaPicker (which expects Asset, not *Item)
@@ -234,18 +214,6 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
     }
   }, [refetch])
 
-  const handleTabChange = useCallback(
-    (tab: EditorTab) => {
-      if (tab === 'published' && !hasPublished) return
-      if (isDirty && tab === 'published') {
-        confirmIfDirty(() => setActiveTab(tab))
-      } else {
-        setActiveTab(tab)
-      }
-    },
-    [hasPublished, isDirty, confirmIfDirty],
-  )
-
   const breadcrumbContent = (
     <Button variant="ghost" size="sm" onClick={handleBack} className="-ml-2">
       <ChevronLeft className="h-4 w-4" />
@@ -268,8 +236,6 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       isDirty={isDirty}
       isSaving={isSaving}
       isPublishing={isPublishing}
-      activeTab={activeTab}
-      onTabChange={handleTabChange}
       onSave={save}
       onPublish={handlePublish}
       onUnpublish={handleUnpublish}
@@ -286,11 +252,10 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
 
         <StopLocaleEditorWithDiff
           ref={stopEditorRef}
-          key={`${stopId}-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
+          key={`${stopId}-${activeLocale}-${lastSaved?.getTime() ?? 0}`}
           locale={activeLocale}
           audio={stopAudio}
           draftData={displayData}
-          readOnly={isReadOnly}
           onDirtyChange={handleDirtyChange}
           onSave={save}
           onAudioChange={handleAudioChange}
@@ -301,7 +266,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
           getFieldDiff={getFieldDiff}
         />
 
-        <Card className={isReadOnly ? 'opacity-60' : ''}>
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Globe className="h-4 w-4" />
@@ -316,7 +281,6 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
               value={stopImages}
               onChange={handleImagesChange}
               label={tStops('editor.galleryLabel')}
-              disabled={isReadOnly}
             />
           </CardContent>
         </Card>

@@ -4,7 +4,6 @@ import { ChevronLeft } from 'lucide-react'
 import { type ReactNode, useCallback, useState } from 'react'
 import { type TourIndicator, type TourStatus, TourStatusBadge } from '@/features/tours/components/tour-status-badge'
 import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
-import { DraftPublishedTabs, type EditorTab } from './draft-published-tabs'
 import { EditorActionsPanel } from './editor-actions-panel'
 import { EditorHeader } from './editor-header'
 import { getLocaleDisplayName, LocaleSelector } from './locale-selector'
@@ -60,12 +59,6 @@ export interface BaseEditLayoutProps {
   /** Whether publish is in progress */
   isPublishing: boolean
 
-  /** Currently active tab (draft/published) */
-  activeTab: EditorTab
-
-  /** Tab change handler - receives new tab, should handle dirty confirmation */
-  onTabChange: (tab: EditorTab) => void
-
   /** Save action */
   onSave: () => Promise<void>
 
@@ -115,8 +108,6 @@ export function BaseEditLayout({
   isDirty,
   isSaving,
   isPublishing,
-  activeTab,
-  onTabChange,
   onSave,
   onPublish,
   onUnpublish,
@@ -136,7 +127,6 @@ export function BaseEditLayout({
   const [unpublishDialogOpen, setUnpublishDialogOpen] = useState(false)
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
 
-  const isReadOnly = activeTab === 'published'
   const showChangedHelper = status.status === 'published' && status.indicator === 'changed'
 
   const handlePublishClick = useCallback(() => setPublishDialogOpen(true), [])
@@ -185,16 +175,6 @@ export function BaseEditLayout({
             </div>
             {showChangedHelper && <p className="text-xs text-muted-foreground">{t('helper.changedExplanation')}</p>}
           </div>
-
-          {/* Row 3: Draft/Published tabs */}
-          <div className="px-4 pb-3 sm:px-6">
-            <DraftPublishedTabs
-              activeTab={activeTab}
-              onTabChange={onTabChange}
-              hasDraft={hasDraft}
-              hasPublished={hasPublished}
-            />
-          </div>
         </div>
 
         {/* Desktop Header */}
@@ -227,22 +207,14 @@ export function BaseEditLayout({
           />
         )}
 
-        {/* Desktop: Status Badge and Tabs */}
+        {/* Desktop: Status Badge */}
         <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{title}</h1>
-                <TourStatusBadge status={status.status} indicator={status.indicator} size="lg" className="shrink-0" />
-              </div>
-              {showChangedHelper && <p className="text-sm text-muted-foreground">{t('helper.changedExplanation')}</p>}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{title}</h1>
+              <TourStatusBadge status={status.status} indicator={status.indicator} size="lg" className="shrink-0" />
             </div>
-            <DraftPublishedTabs
-              activeTab={activeTab}
-              onTabChange={onTabChange}
-              hasDraft={hasDraft}
-              hasPublished={hasPublished}
-            />
+            {showChangedHelper && <p className="text-sm text-muted-foreground">{t('helper.changedExplanation')}</p>}
           </div>
         </div>
 
@@ -255,7 +227,6 @@ export function BaseEditLayout({
             isPublishing={isPublishing}
             onSave={onSave}
             onPublishClick={handlePublishClick}
-            disabled={isReadOnly}
             publishingDisabled={publishingDisabled}
           />
         </div>
@@ -279,7 +250,6 @@ export function BaseEditLayout({
                 onPublishClick={handlePublishClick}
                 onUnpublishClick={handleUnpublishClick}
                 onDiscardClick={handleDiscardClick}
-                disabled={isReadOnly}
                 publishingDisabled={publishingDisabled}
                 publishingDisabledMessage={publishingDisabledMessage}
               />

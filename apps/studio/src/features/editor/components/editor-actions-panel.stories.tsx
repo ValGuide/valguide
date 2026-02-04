@@ -86,14 +86,3 @@ export const Publishing: Story = {
     isPublishing: true,
   },
 }
-
-export const Disabled: Story = {
-  args: {
-    hasDraft: true,
-    hasPublished: true,
-    isDirty: true,
-    isSaving: false,
-    isPublishing: false,
-    disabled: true,
-  },
-}
