@@ -119,8 +119,8 @@ export function AppSidebar({
     <>
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <div className="flex items-center justify-between px-2 py-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
-            <h1 className="text-lg font-medium px-2 truncate transition-[opacity,width,padding] duration-200 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:overflow-hidden">
+          <div className="flex h-12 items-center justify-between group-data-[collapsible=icon]:justify-center">
+            <h1 className="text-lg font-medium px-2.5 truncate transition-[opacity,width,padding] duration-200 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:overflow-hidden">
               {tSidebar('appName')}
             </h1>
             <Tooltip>
@@ -128,7 +128,7 @@ export function AppSidebar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-8 shrink-0 rounded-lg"
+                  className="size-8 shrink-0 rounded-lg mr-0.5"
                   onClick={toggleSidebar}
                   tabIndex={isMobile ? -1 : 0}
                   aria-label={isMobile || state === 'expanded' ? 'Collapse sidebar' : 'Expand sidebar'}
@@ -155,7 +155,7 @@ export function AppSidebar({
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('content')}</SidebarGroupLabel>
+            <SidebarGroupLabel className="px-2.5 uppercase">{tSections('content')}</SidebarGroupLabel>
             <SidebarMenu>
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
@@ -171,7 +171,7 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('performance')}</SidebarGroupLabel>
+            <SidebarGroupLabel className="px-2.5 uppercase">{tSections('performance')}</SidebarGroupLabel>
             <SidebarMenu>
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
@@ -187,7 +187,7 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('library')}</SidebarGroupLabel>
+            <SidebarGroupLabel className="px-2.5 uppercase">{tSections('library')}</SidebarGroupLabel>
             <SidebarMenu>
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
@@ -203,7 +203,7 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel className="uppercase">{tSections('settings')}</SidebarGroupLabel>
+            <SidebarGroupLabel className="px-2.5 uppercase">{tSections('settings')}</SidebarGroupLabel>
             <SidebarMenu>
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
