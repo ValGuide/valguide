@@ -1556,26 +1556,51 @@
 /* ========================
    VIEW TRANSITIONS
    Smooth page transitions for TanStack Router
+   
+   Strategy: Only animate the main content area, keep sidebar stable.
+   - sidebar-inset gets its own view-transition-name for scoped animation
+   - sidebar and other stable elements get view-transition-name: none
    ======================== */
 
-/* Default view transition: crossfade */
-::view-transition-old(root) {
+/* Stable elements excluded from view transitions */
+[data-slot="sidebar"],
+[data-slot="sidebar-wrapper"],
+[data-slot="sidebar-container"],
+[data-slot="sidebar-inner"],
+[data-slot="sidebar-gap"],
+[data-slot="sidebar-trigger"],
+[data-slot="sidebar-rail"] {
+    view-transition-name: none;
+}
+
+/* Main content area participates in view transitions */
+[data-slot="sidebar-inset"] {
+    view-transition-name: main-content;
+}
+
+/* Crossfade animation for main content only */
+::view-transition-old(main-content) {
     animation: fade-out 150ms ease-out both;
 }
 
-::view-transition-new(root) {
+::view-transition-new(main-content) {
     animation: fade-in 150ms ease-out both;
 }
 
-/* Prevent layout shift during transitions */
-::view-transition-group(root) {
+::view-transition-group(main-content) {
     animation-duration: 150ms;
+}
+
+/* Disable the default root transition (we're using scoped main-content instead) */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
 }
 
 /* Disable animations for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-        animation: none;
+    ::view-transition-old(main-content),
+    ::view-transition-new(main-content) {
+        animation: none !important;
     }
 }

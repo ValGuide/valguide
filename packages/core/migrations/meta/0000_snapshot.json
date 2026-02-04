@@ -147,12 +147,8 @@
           "tableFrom": "asset",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -161,12 +157,8 @@
           "tableFrom": "asset",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "uploaded_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["uploaded_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -176,9 +168,7 @@
         "unique_asset_nano_id": {
           "name": "unique_asset_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -283,12 +273,8 @@
           "tableFrom": "feedback",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -297,12 +283,8 @@
           "tableFrom": "feedback",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "team_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["team_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -624,9 +606,7 @@
         "unique_org_nano_id": {
           "name": "unique_org_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -740,12 +720,8 @@
           "tableFrom": "organization_invitation",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -754,12 +730,8 @@
           "tableFrom": "organization_invitation",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "invited_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invited_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -769,9 +741,7 @@
         "organization_invitation_token_hash_unique": {
           "name": "organization_invitation_token_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token_hash"
-          ]
+          "columns": ["token_hash"]
         }
       },
       "policies": {},
@@ -896,12 +866,8 @@
           "tableFrom": "organization_member",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -910,12 +876,8 @@
           "tableFrom": "organization_member",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -989,12 +951,8 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1124,12 +1082,8 @@
           "tableFrom": "theme",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1138,12 +1092,8 @@
           "tableFrom": "theme",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1153,9 +1103,7 @@
         "unique_theme_nano_id": {
           "name": "unique_theme_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -1254,12 +1202,8 @@
           "tableFrom": "stop",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1268,12 +1212,8 @@
           "tableFrom": "stop",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1282,12 +1222,8 @@
           "tableFrom": "stop",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1297,9 +1233,7 @@
         "unique_stop_nano_id": {
           "name": "unique_stop_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -1448,12 +1382,8 @@
           "tableFrom": "stop_asset",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1606,12 +1536,8 @@
           "tableFrom": "stop_asset_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1721,12 +1647,8 @@
           "tableFrom": "stop_locale",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1735,12 +1657,8 @@
           "tableFrom": "stop_locale",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1857,12 +1775,8 @@
           "tableFrom": "stop_locale_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1871,12 +1785,8 @@
           "tableFrom": "stop_locale_draft",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1953,12 +1863,8 @@
           "tableFrom": "stop_settings",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1967,12 +1873,8 @@
           "tableFrom": "stop_settings",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2049,12 +1951,8 @@
           "tableFrom": "stop_settings_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2063,12 +1961,8 @@
           "tableFrom": "stop_settings_draft",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2171,12 +2065,8 @@
           "tableFrom": "tour",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2185,12 +2075,8 @@
           "tableFrom": "tour",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2199,12 +2085,8 @@
           "tableFrom": "tour",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2214,9 +2096,7 @@
         "unique_tour_nano_id": {
           "name": "unique_tour_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -2365,12 +2245,8 @@
           "tableFrom": "tour_asset",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2523,12 +2399,8 @@
           "tableFrom": "tour_asset_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2632,12 +2504,8 @@
           "tableFrom": "tour_locale",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2646,12 +2514,8 @@
           "tableFrom": "tour_locale",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2762,12 +2626,8 @@
           "tableFrom": "tour_locale_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2776,12 +2636,8 @@
           "tableFrom": "tour_locale_draft",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2858,12 +2714,8 @@
           "tableFrom": "tour_settings",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2872,12 +2724,8 @@
           "tableFrom": "tour_settings",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2954,12 +2802,8 @@
           "tableFrom": "tour_settings_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2968,12 +2812,8 @@
           "tableFrom": "tour_settings_draft",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3108,12 +2948,8 @@
           "tableFrom": "tour_stop",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3122,12 +2958,8 @@
           "tableFrom": "tour_stop",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3262,12 +3094,8 @@
           "tableFrom": "tour_stop_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3276,12 +3104,8 @@
           "tableFrom": "tour_stop_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3297,33 +3121,17 @@
     "public.asset_type": {
       "name": "asset_type",
       "schema": "public",
-      "values": [
-        "image",
-        "audio",
-        "video"
-      ]
+      "values": ["image", "audio", "video"]
     },
     "studio.short_link_type": {
       "name": "short_link_type",
       "schema": "studio",
-      "values": [
-        "tour",
-        "stop",
-        "campaign",
-        "external",
-        "landing_page"
-      ]
+      "values": ["tour", "stop", "campaign", "external", "landing_page"]
     },
     "studio.org_role": {
       "name": "org_role",
       "schema": "studio",
-      "values": [
-        "owner",
-        "admin",
-        "curator",
-        "editor",
-        "viewer"
-      ]
+      "values": ["owner", "admin", "curator", "editor", "viewer"]
     },
     "studio.theme_preset": {
       "name": "theme_preset",
