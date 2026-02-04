@@ -4,10 +4,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { History, MoreHorizontal, Trash2, Upload, X } from 'lucide-react'
+import { MoreHorizontal, Trash2, Upload, X } from 'lucide-react'
 
 export interface EditorActionsPanelProps {
   hasDraft: boolean
@@ -19,7 +18,6 @@ export interface EditorActionsPanelProps {
   onPublishClick: () => void
   onUnpublishClick: () => void
   onDiscardClick: () => void
-  onOpenVersionHistory: () => void
   disabled?: boolean
   /** Hide publish/unpublish actions (e.g., for stops in tour context) */
   publishingDisabled?: boolean
@@ -37,7 +35,6 @@ export function EditorActionsPanel({
   onPublishClick,
   onUnpublishClick,
   onDiscardClick,
-  onOpenVersionHistory,
   disabled,
   publishingDisabled,
   publishingDisabledMessage,
@@ -96,11 +93,6 @@ export function EditorActionsPanel({
                 {t('discardChanges')}
               </DropdownMenuItem>
             )}
-            {((canUnpublish && !publishingDisabled) || canDiscard) && <DropdownMenuSeparator />}
-            <DropdownMenuItem onClick={onOpenVersionHistory}>
-              <History className="mr-2 h-4 w-4" />
-              Version History
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

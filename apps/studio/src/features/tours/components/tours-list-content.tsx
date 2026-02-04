@@ -1,6 +1,5 @@
-import { TourPreviewCard } from '@valguide/core/features/tours/preview-card'
+import { type Tour, TourPreviewCard } from '@valguide/core/features/tours/preview-card'
 import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours.fn'
-import type { Tour } from '@valguide/core/features/tours/types'
 
 function toTourForPreview(tour: TourListItem): Tour {
   return {

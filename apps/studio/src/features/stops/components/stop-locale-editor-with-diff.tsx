@@ -1,9 +1,9 @@
 import { useForm, useStore } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/types'
 import type { FieldDiff } from '@valguide/core/features/tours/stop/locale/compare-stop-locale-diff.fn'
+import type { StopTranslationContent } from '@valguide/core/features/tours/stop/locale/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
-import type { StopTranslationVersionContent } from '@valguide/features/tours/types'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
@@ -23,7 +23,7 @@ export type StopLocaleEditorWithDiffProps = {
   onSave?: () => void
   audio?: Asset | null
   readOnly?: boolean
-  versionData?: Omit<StopTranslationVersionContent, 'id'>
+  draftData?: Omit<StopTranslationContent, 'id'>
   MediaPicker: MediaPickerComponent
   diffEnabled: boolean
   onDiffToggle: (enabled: boolean) => void
@@ -47,7 +47,7 @@ export const StopLocaleEditorWithDiff = forwardRef<StopLocaleEditorWithDiffRef, 
       onSave,
       audio = null,
       readOnly = false,
-      versionData,
+      draftData,
       MediaPicker,
       diffEnabled,
       onDiffToggle,
@@ -60,9 +60,9 @@ export const StopLocaleEditorWithDiff = forwardRef<StopLocaleEditorWithDiffRef, 
     const tTours = useTranslations('tours')
 
     const initialValuesRef = useRef({
-      title: versionData?.title ?? '',
-      description: versionData?.description ?? '',
-      transcription: versionData?.transcription ?? '',
+      title: draftData?.title ?? '',
+      description: draftData?.description ?? '',
+      transcription: draftData?.transcription ?? '',
     })
 
     const form = useForm({

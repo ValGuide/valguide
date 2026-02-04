@@ -10,7 +10,51 @@ import { cn } from '@valguide/core/ui/lib/utils'
 import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
 import { ImageIcon, LucideInfo } from 'lucide-react'
 import * as React from 'react'
-import type { Tour } from './types'
+import { z } from 'zod'
+
+// ============================================================================
+// Tour Display Types (View Model for Preview Cards)
+// ============================================================================
+
+const tourTranslationFormSchema = z.object({
+  id: z.string(),
+  tourId: z.string(),
+  locale: z.string(),
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+const coverImageSchema = z
+  .object({
+    storagePath: z.string(),
+    publicUrl: z.string().nullable().optional(),
+  })
+  .nullable()
+  .optional()
+
+/**
+ * Zod schema for tour display/preview cards.
+ * This is NOT the same as the DB entity - it's a view model with resolved fields.
+ */
+export const tourDisplaySchema = z.object({
+  id: z.string(),
+  nanoId: z.string(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  imageUrl: z.string().optional(),
+  coverImage: coverImageSchema,
+  author: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+  published: z.date().nullable().optional(),
+  tags: z.array(z.string()).optional(),
+  translations: z.array(tourTranslationFormSchema).optional(),
+})
+
+/** Tour display type for preview cards (view model, not DB entity) */
+export type Tour = z.infer<typeof tourDisplaySchema>
 
 export interface TourPreviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
   tour: Tour

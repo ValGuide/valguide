@@ -16,7 +16,7 @@ export type TourTranslationFormData = z.infer<typeof tourTranslationFormSchema>
 
 export type TourMetadataFormProps = {
   locale: string
-  versionData?: { title: string; description: string | null }
+  draftData?: { title: string; description: string | null }
   onDirtyChange?: (isDirty: boolean) => void
   onSave?: () => void
   readOnly?: boolean
@@ -29,15 +29,15 @@ export type TourMetadataFormRef = {
 }
 
 export const TourMetadataForm = forwardRef<TourMetadataFormRef, TourMetadataFormProps>(function TourMetadataForm(
-  { locale, versionData, onDirtyChange, onSave, readOnly },
+  { locale, draftData, onDirtyChange, onSave, readOnly },
   ref,
 ) {
   const t = useTranslations('tours')
 
   const form = useForm({
     defaultValues: {
-      title: versionData?.title ?? '',
-      description: versionData?.description ?? '',
+      title: draftData?.title ?? '',
+      description: draftData?.description ?? '',
     },
     validators: {
       onSubmit: tourTranslationFormSchema,
@@ -57,15 +57,15 @@ export const TourMetadataForm = forwardRef<TourMetadataFormRef, TourMetadataForm
       getValues: () => form.state.values,
       resetToCurrentValues: () => {
         form.reset({
-          title: versionData?.title ?? '',
-          description: versionData?.description ?? '',
+          title: draftData?.title ?? '',
+          description: draftData?.description ?? '',
         })
       },
       resetToFormValues: () => {
         form.reset(form.state.values)
       },
     }),
-    [form, versionData],
+    [form, draftData],
   )
 
   useEffect(() => {

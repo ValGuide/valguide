@@ -13,7 +13,6 @@ const mobileMoreMenuMeta = {
   args: {
     onUnpublishClick: fn(),
     onDiscardClick: fn(),
-    onOpenVersionHistory: fn(),
   },
 } satisfies Meta<typeof MobileMoreMenu>
 
@@ -115,7 +114,6 @@ export const CombinedDefault: StoryObj<typeof MobileActionBar> = {
     onPublishClick: fn(),
     onUnpublishClick: fn(),
     onDiscardClick: fn(),
-    onOpenVersionHistory: fn(),
   },
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
@@ -134,7 +132,6 @@ export const CombinedPublished: StoryObj<typeof MobileActionBar> = {
     onPublishClick: fn(),
     onUnpublishClick: fn(),
     onDiscardClick: fn(),
-    onOpenVersionHistory: fn(),
   },
   parameters: {
     viewport: { defaultViewport: 'mobile1' },

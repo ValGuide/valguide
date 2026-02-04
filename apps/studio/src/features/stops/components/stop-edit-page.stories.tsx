@@ -1,12 +1,10 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { QueryObserverOptions } from '@tanstack/react-query'
-import type {
-  StopAssetDraftItem,
-  StopDetail,
-  StopLocaleDraftResult,
-  StopLocalePublishedResult,
-} from '@valguide/core/features/tours/types'
+import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
+import type { StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
+import type { StopLocaleDraftResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.fn'
+import type { StopLocalePublishedResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.fn'
 import { MockMediaPicker } from '@/features/assets/components/media-picker/mock-media-picker'
 import { MockAssetsProvider } from '@/features/assets/context/mock-assets-provider'
 import type { DiffResult } from '@/features/editor/hooks/use-diff-view'

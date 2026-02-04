@@ -21,7 +21,6 @@ const meta = {
     onPublishClick: fn(),
     onUnpublishClick: fn(),
     onDiscardClick: fn(),
-    onOpenVersionHistory: fn(),
   },
 } satisfies Meta<typeof EditorActionsPanel>
 

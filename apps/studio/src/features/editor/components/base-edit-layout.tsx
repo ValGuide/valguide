@@ -279,7 +279,6 @@ export function BaseEditLayout({
                 onPublishClick={handlePublishClick}
                 onUnpublishClick={handleUnpublishClick}
                 onDiscardClick={handleDiscardClick}
-                onOpenVersionHistory={() => {}}
                 disabled={isReadOnly}
                 publishingDisabled={publishingDisabled}
                 publishingDisabledMessage={publishingDisabledMessage}

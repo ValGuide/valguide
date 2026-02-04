@@ -2,7 +2,7 @@ import type { QueryObserverOptions } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { getStopTranslationStatusDisplay } from '@valguide/core/features/tours/status-utils'
-import type { StopAssetDraftItem } from '@valguide/core/features/tours/types'
+import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
@@ -100,7 +100,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
 
   const stopTitle = activeTab === 'published' ? publishedStopTitle : draftStopTitle
 
-  const draftVersionData = localeDraft
+  const draftData = localeDraft
     ? {
         title: localeDraft.title ?? '',
         description: localeDraft.description ?? '',
@@ -108,7 +108,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       }
     : null
 
-  const publishedVersionData = localePublished
+  const publishedData = localePublished
     ? {
         title: localePublished.title ?? '',
         description: localePublished.description ?? '',
@@ -116,9 +116,8 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       }
     : null
 
-  const editableVersionData = draftVersionData ??
-    publishedVersionData ?? { title: '', description: '', transcription: '' }
-  const displayVersionData = isReadOnly ? (publishedVersionData ?? undefined) : editableVersionData
+  const editableData = draftData ?? publishedData ?? { title: '', description: '', transcription: '' }
+  const displayData = isReadOnly ? (publishedData ?? undefined) : editableData
 
   const displayAssets = isReadOnly ? assetsPublished : assets
   const stopImageItems = displayAssets.filter((a) => a.channel === 'images.gallery' && a.locale === null)
@@ -290,7 +289,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
           key={`${stopId}-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
           locale={activeLocale}
           audio={stopAudio}
-          versionData={displayVersionData}
+          draftData={displayData}
           readOnly={isReadOnly}
           onDirtyChange={handleDirtyChange}
           onSave={save}

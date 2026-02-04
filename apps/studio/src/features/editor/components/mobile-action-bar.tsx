@@ -4,28 +4,25 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { History, MoreHorizontal, Trash2, X } from 'lucide-react'
+import { MoreHorizontal, Trash2, X } from 'lucide-react'
 
 export interface MobileMoreMenuProps {
   hasDraft: boolean
   hasPublished: boolean
   onUnpublishClick: () => void
   onDiscardClick: () => void
-  onOpenVersionHistory?: () => void
   /** Hide unpublish action (e.g., for stops in tour context) */
   publishingDisabled?: boolean
 }
 
-/** Mobile dropdown menu with secondary actions (unpublish, discard, version history) */
+/** Mobile dropdown menu with secondary actions (unpublish, discard) */
 export function MobileMoreMenu({
   hasDraft,
   hasPublished,
   onUnpublishClick,
   onDiscardClick,
-  onOpenVersionHistory,
   publishingDisabled,
 }: MobileMoreMenuProps) {
   const t = useTranslations('tours.actions')
@@ -52,13 +49,6 @@ export function MobileMoreMenu({
           <DropdownMenuItem onClick={onDiscardClick}>
             <Trash2 className="mr-2 h-4 w-4" />
             {t('discardChanges')}
-          </DropdownMenuItem>
-        )}
-        {(canUnpublish || canDiscard) && onOpenVersionHistory && <DropdownMenuSeparator />}
-        {onOpenVersionHistory && (
-          <DropdownMenuItem onClick={onOpenVersionHistory}>
-            <History className="mr-2 h-4 w-4" />
-            Version History
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
@@ -149,7 +139,6 @@ export interface MobileActionBarProps {
   onPublishClick: () => void
   onUnpublishClick: () => void
   onDiscardClick: () => void
-  onOpenVersionHistory?: () => void
   disabled?: boolean
 }
 
@@ -164,7 +153,6 @@ export function MobileActionBar({
   onPublishClick,
   onUnpublishClick,
   onDiscardClick,
-  onOpenVersionHistory,
   disabled,
 }: MobileActionBarProps) {
   return (
@@ -174,7 +162,6 @@ export function MobileActionBar({
         hasPublished={hasPublished}
         onUnpublishClick={onUnpublishClick}
         onDiscardClick={onDiscardClick}
-        onOpenVersionHistory={onOpenVersionHistory}
       />
       <MobileSavePublish
         hasDraft={hasDraft}

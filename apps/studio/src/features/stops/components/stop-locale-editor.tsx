@@ -1,8 +1,8 @@
 import { useForm, useStore } from '@tanstack/react-form'
 import type { Asset } from '@valguide/core/features/assets/types'
+import type { StopTranslationContent } from '@valguide/core/features/tours/stop/locale/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
-import type { StopTranslationVersionContent } from '@valguide/features/tours/types'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
@@ -19,7 +19,7 @@ export type StopLocaleEditorProps = {
   onSave?: () => void
   audio?: Asset | null
   readOnly?: boolean
-  versionData?: Omit<StopTranslationVersionContent, 'id'>
+  draftData?: Omit<StopTranslationContent, 'id'>
   MediaPicker: MediaPickerComponent
 }
 
@@ -31,7 +31,7 @@ export type StopLocaleEditorRef = {
 }
 
 export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditorProps>(function StopLocaleEditor(
-  { locale, onDirtyChange, onAudioChange, onSave, audio = null, readOnly = false, versionData, MediaPicker },
+  { locale, onDirtyChange, onAudioChange, onSave, audio = null, readOnly = false, draftData, MediaPicker },
   ref,
 ) {
   const t = useTranslations('stops.editor')
@@ -39,9 +39,9 @@ export const StopLocaleEditor = forwardRef<StopLocaleEditorRef, StopLocaleEditor
 
   // Store initial values for reset functionality
   const initialValuesRef = useRef({
-    title: versionData?.title ?? '',
-    description: versionData?.description ?? '',
-    transcription: versionData?.transcription ?? '',
+    title: draftData?.title ?? '',
+    description: draftData?.description ?? '',
+    transcription: draftData?.transcription ?? '',
   })
 
   const form = useForm({

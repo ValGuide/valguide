@@ -111,16 +111,16 @@ export function TourEditPage({
 
   const isReadOnly = activeTab === 'published'
 
-  const draftVersionData = {
+  const draftData = {
     title: localeDraft?.title ?? '',
     description: localeDraft?.description ?? '',
   }
 
-  const publishedVersionData = localePublished
+  const publishedData = localePublished
     ? { title: localePublished.title ?? '', description: localePublished.description ?? '' }
     : null
 
-  const displayVersionData = isReadOnly ? publishedVersionData : draftVersionData
+  const displayData = isReadOnly ? publishedData : draftData
 
   const formRef = useRef<TourMetadataFormWithDiffRef>(null)
   const formId = `tour-translation-${activeLocale}`
@@ -313,9 +313,7 @@ export function TourEditPage({
             ref={formRef}
             key={`tour-metadata-${activeLocale}-${activeTab}-${lastSaved?.getTime() ?? 0}`}
             locale={activeLocale}
-            versionData={
-              displayVersionData ? { ...displayVersionData, title: displayVersionData.title ?? '' } : undefined
-            }
+            draftData={displayData ? { ...displayData, title: displayData.title ?? '' } : undefined}
             readOnly={isReadOnly}
             onDirtyChange={handleDirtyChange}
             onSave={save}
