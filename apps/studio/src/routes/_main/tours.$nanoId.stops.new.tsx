@@ -11,6 +11,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute('/_main/tours/$nanoId/stops/new')({
   staticData: { focusMode: true },
+  viewTransition: false,
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   pendingComponent: StopEditSkeleton,
