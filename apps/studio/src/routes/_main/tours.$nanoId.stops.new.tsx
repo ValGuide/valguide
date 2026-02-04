@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createStopFn } from '@valguide/core/features/tours/stop/create-stop.fn'
 import { addStopToTourFn } from '@valguide/core/features/tours/structure/add-stop.fn'
 import { z } from 'zod'
+import { StopEditSkeleton } from '@/features/stops/components/stop-edit-skeleton'
 import { tourDetailQueryOptions } from '@/features/tours/query-options'
 
 const searchSchema = z.object({
@@ -11,6 +12,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/_main/tours/$nanoId/stops/new')({
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ locale: search.locale }),
+  pendingComponent: StopEditSkeleton,
   loader: async ({ params, context, deps }) => {
     const tourDetail = await context.queryClient.ensureQueryData(tourDetailQueryOptions(params.nanoId))
     const locale = deps.locale ?? tourDetail.availableLocales[0] ?? context.locale

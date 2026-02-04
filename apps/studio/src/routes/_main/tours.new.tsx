@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createTourFn } from '@valguide/core/features/tours/tour/create-tour.fn'
 import { z } from 'zod'
+import { TourEditSkeleton } from '@/features/tours/components/tour-edit-skeleton'
 
 const searchSchema = z.object({
   locale: z.string().optional(),
@@ -9,6 +10,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/_main/tours/new')({
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ locale: search.locale }),
+  pendingComponent: TourEditSkeleton,
   loader: async ({ context, deps }) => {
     const locale = deps.locale ?? context.locale
     const result = await createTourFn({ data: { locale } })
