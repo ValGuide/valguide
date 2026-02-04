@@ -9,7 +9,7 @@ const createMockStops = (count: number): PlayerStop[] =>
     nanoId: `stop-${i + 1}`,
     title: faker.lorem.words(3),
     audioUrl: 'https://example.com/audio.mp3',
-    coverImageUrl: faker.image.url({ width: 200, height: 200 }),
+    coverImageUrl: faker.image.urlLoremFlickr({ width: 200, height: 200, category: 'art' }),
     duration: 180 + i * 60,
   }))
 

@@ -21,7 +21,10 @@ export const Default: Story = {
       nanoId: 'getting-started-001',
       title: 'Getting Started with ValGuide',
       description: 'Learn the basics of ValGuide and how to create your first visit.',
-      coverImage: { publicUrl: faker.image.url({ width: 2070, height: 1380 }), storagePath: '' },
+      coverImage: {
+        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
+        storagePath: '',
+      },
       author: 'ValGuide Team',
       createdAt: new Date('2023-10-15'),
       updatedAt: new Date('2023-11-20'),
@@ -37,7 +40,10 @@ export const Intermediate: Story = {
       nanoId: 'advanced-tech-002',
       title: 'Advanced Techniques',
       description: 'Discover advanced techniques to create engaging tours.',
-      coverImage: { publicUrl: faker.image.url({ width: 2070, height: 1380 }), storagePath: '' },
+      coverImage: {
+        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
+        storagePath: '',
+      },
       author: 'ValGuide Pro',
       createdAt: new Date('2023-09-10'),
       updatedAt: new Date('2023-12-05'),
@@ -53,7 +59,10 @@ export const Advanced: Story = {
       nanoId: 'expert-creation-003',
       title: 'Expert Tour Creation',
       description: 'Master the art of creating professional tours with advanced features.',
-      coverImage: { publicUrl: faker.image.url({ width: 2070, height: 1380 }), storagePath: '' },
+      coverImage: {
+        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
+        storagePath: '',
+      },
       author: 'ValGuide Expert',
       createdAt: new Date('2023-08-05'),
       updatedAt: new Date('2024-01-15'),
@@ -82,7 +91,10 @@ export const MinimalInfo: Story = {
       id: '5',
       nanoId: 'minimal-005',
       title: 'Minimal Tour',
-      coverImage: { publicUrl: faker.image.url({ width: 2070, height: 1380 }), storagePath: '' },
+      coverImage: {
+        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
+        storagePath: '',
+      },
     },
   },
 }

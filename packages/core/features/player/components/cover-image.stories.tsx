@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>
 
 export const WithImage: Story = {
   args: {
-    src: faker.image.url({ width: 800, height: 800 }),
+    src: faker.image.urlLoremFlickr({ width: 800, height: 800, category: 'art' }),
     alt: 'The Starry Night by Vincent van Gogh',
     className: 'w-64',
   },
@@ -32,7 +32,7 @@ export const NoImage: Story = {
 
 export const SmallSize: Story = {
   args: {
-    src: faker.image.url({ width: 400, height: 400 }),
+    src: faker.image.urlLoremFlickr({ width: 400, height: 400, category: 'art' }),
     alt: 'Small cover image',
     className: 'w-32',
   },
@@ -40,7 +40,7 @@ export const SmallSize: Story = {
 
 export const LargeSize: Story = {
   args: {
-    src: faker.image.url({ width: 800, height: 800 }),
+    src: faker.image.urlLoremFlickr({ width: 800, height: 800, category: 'art' }),
     alt: 'Large cover image',
     className: 'w-96',
   },

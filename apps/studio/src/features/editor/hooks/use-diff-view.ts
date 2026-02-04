@@ -82,7 +82,7 @@ export function useDiffView({ enabled = true, queryOptions }: UseDiffViewOptions
 
   const { data: diffData, isLoading } = useQuery<DiffResult | null>({
     queryKey: queryOptions?.queryKey ?? ['diff-view-disabled'],
-    queryFn: queryOptions?.queryFn as () => Promise<DiffResult | null>,
+    queryFn: queryOptions?.queryFn ?? (() => Promise.resolve(null)),
     enabled: enabled && !!queryOptions,
   })
 

@@ -16,7 +16,7 @@ import { MockTourEditorProvider } from '@/features/tours/contexts/mock-tour-edit
 import { TourEditPage, type TourEditPageProps } from './tour-edit-page'
 
 const createMockDiffQueryOptions = (diffResult: DiffResult): QueryObserverOptions<DiffResult> => ({
-  queryKey: ['mock-diff'],
+  queryKey: ['mock-diff', diffResult.hasChanges, diffResult.changedFields.length],
   queryFn: () => Promise.resolve(diffResult),
   staleTime: Number.POSITIVE_INFINITY,
 })

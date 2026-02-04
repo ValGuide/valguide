@@ -21,6 +21,7 @@ export function DiffToggle({ enabled, onToggle, changedCount, disabled = false }
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
+          type="button"
           variant={enabled ? 'default' : 'outline'}
           size="sm"
           onClick={() => onToggle(!enabled)}

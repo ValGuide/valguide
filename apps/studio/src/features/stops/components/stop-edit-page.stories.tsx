@@ -15,7 +15,7 @@ import { MockStopEditorProvider } from '@/features/stops/contexts/mock-stop-edit
 import { StopEditPage } from './stop-edit-page'
 
 const createMockDiffQueryOptions = (diffResult: DiffResult): QueryObserverOptions<DiffResult> => ({
-  queryKey: ['mock-diff'],
+  queryKey: ['mock-diff', diffResult.hasChanges, diffResult.changedFields.length],
   queryFn: () => Promise.resolve(diffResult),
   staleTime: Number.POSITIVE_INFINITY,
 })
@@ -89,8 +89,8 @@ const createMockAssets = (count: number): StopAssetDraftItem[] =>
       fileName: `image-${i + 1}.jpg`,
       fileSize: 1024000,
       mimeType: 'image/jpeg',
-      storagePath: `assets/image-${i + 1}.jpg`,
-      publicUrl: faker.image.url({ width: 800, height: 600 }),
+      storagePath: '',
+      publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 600, category: 'art' }),
       width: 800,
       height: 600,
       duration: null,
