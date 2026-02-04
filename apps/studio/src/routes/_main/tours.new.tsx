@@ -8,6 +8,7 @@ const searchSchema = z.object({
 })
 
 export const Route = createFileRoute('/_main/tours/new')({
+  staticData: { focusMode: true },
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   pendingComponent: TourEditSkeleton,
