@@ -106,8 +106,6 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
         if (!locales.includes(activeLocale)) {
           setActiveLocale(locales[0] ?? defaultLocale)
         }
-
-        toast.success(t('tours.locales.updateSuccess'))
       } catch (error) {
         console.error('Failed to update available locales:', error)
         toast.error(t('tours.locales.updateError'))

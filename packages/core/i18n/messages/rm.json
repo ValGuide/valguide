@@ -383,7 +383,7 @@
     },
     "confirmPublish": {
       "title": "Publitgar la translaziun {language}?",
-      "description": "Quai fa la versiun {language} visibla per visitaders. Mo questa lingua vegn publitgada.",
+      "description": "Quai fa la versiun {language} visibla per visitaders.",
       "confirm": "Publitgar",
       "cancel": "Interrumper"
     },
@@ -415,13 +415,12 @@
       "removeLanguage": "Allontanar {language}",
       "searchLanguages": "Tschertgar linguas...",
       "noLanguageFound": "Nagina lingua chattada.",
-      "confirmRemoveTitle": "Allontanar lingua?",
-      "confirmRemoveDescription": "Allontanar {language}? Il cuntegn da la translaziun vegn mantegnì e po vegnir restaurà cun agiuntar danovamain la lingua.",
+      "confirmRemoveTitle": "Allontanar {language}?",
+      "confirmRemoveDescription": "Vossas translaziuns na vegnan betg stizzadas. Agiuntai questa lingua puspè per las restaurar.",
       "cancel": "Interrumper",
       "confirmRemove": "Allontanar"
     },
     "locales": {
-      "updateSuccess": "Linguas actualisadas",
       "updateError": "Errur cun actualisar las linguas"
     },
     "helper": {
@@ -484,7 +483,6 @@
       "removeError": "Betg reussì dad allontanar il stop"
     },
     "locales": {
-      "updateSuccess": "Linguas actualisadas",
       "updateError": "Impussibel dad actualisar las linguas"
     },
     "assets": {
@@ -530,7 +528,7 @@
       "showConfirm": "Mussar stop",
       "cancel": "Annullar",
       "removeStop": "Allontanar dal guide",
-      "removeDescription": "Quest stop vegn allontanà da quest guide. Il stop e tut ses cuntegn restan conservads e pon vegnir agiuntads pli tard ad in auter guide.",
+      "removeDescription": "Quest stop vegn allontanà da questa tura. Il stop e tut ses cuntegn restan conservads e pon vegnir agiuntads pli tard ad in'autra tura.",
       "removeConfirm": "Allontanar"
     }
   },

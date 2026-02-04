@@ -383,7 +383,7 @@
     },
     "confirmPublish": {
       "title": "Publish {language} translation?",
-      "description": "This will make the {language} version visible to visitors. Only this language will be published.",
+      "description": "This will make the {language} version visible to visitors.",
       "confirm": "Publish",
       "cancel": "Cancel"
     },
@@ -415,13 +415,12 @@
       "removeLanguage": "Remove {language}",
       "searchLanguages": "Search languages...",
       "noLanguageFound": "No language found.",
-      "confirmRemoveTitle": "Remove Language?",
-      "confirmRemoveDescription": "Remove {language}? The translation content will be preserved and can be restored by adding the language again.",
+      "confirmRemoveTitle": "Remove {language}?",
+      "confirmRemoveDescription": "Your translations won't be deleted. Add this language again to restore them.",
       "cancel": "Cancel",
       "confirmRemove": "Remove"
     },
     "locales": {
-      "updateSuccess": "Languages updated",
       "updateError": "Failed to update languages"
     },
     "helper": {
@@ -484,7 +483,6 @@
       "removeError": "Failed to remove stop"
     },
     "locales": {
-      "updateSuccess": "Languages updated",
       "updateError": "Failed to update languages"
     },
     "assets": {
@@ -530,7 +528,7 @@
       "showConfirm": "Show stop",
       "cancel": "Cancel",
       "removeStop": "Remove from guide",
-      "removeDescription": "This will remove the stop from this guide. The stop and all its content will be preserved and can be added to another guide later.",
+      "removeDescription": "This will remove the stop from this tour. The stop and all its content will be preserved and can be added to another tour later.",
       "removeConfirm": "Remove"
     }
   },

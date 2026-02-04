@@ -133,8 +133,6 @@ export function StopEditorProvider({
         if (!locales.includes(activeLocale)) {
           setActiveLocale(locales[0] ?? defaultLocale)
         }
-
-        toast.success(t('stops.locales.updateSuccess'))
       } catch (error) {
         console.error('Failed to update available locales:', error)
         toast.error(t('stops.locales.updateError'))

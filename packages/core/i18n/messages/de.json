@@ -383,7 +383,7 @@
     },
     "confirmPublish": {
       "title": "{language} Übersetzung veröffentlichen?",
-      "description": "Dies macht die {language} Version für Besucher sichtbar. Nur diese Sprache wird veröffentlicht.",
+      "description": "Dies macht die {language} Version für Besucher sichtbar.",
       "confirm": "Veröffentlichen",
       "cancel": "Abbrechen"
     },
@@ -415,13 +415,12 @@
       "removeLanguage": "{language} entfernen",
       "searchLanguages": "Sprachen suchen...",
       "noLanguageFound": "Keine Sprache gefunden.",
-      "confirmRemoveTitle": "Sprache entfernen?",
-      "confirmRemoveDescription": "{language} entfernen? Der Übersetzungsinhalt wird beibehalten und kann durch erneutes Hinzufügen der Sprache wiederhergestellt werden.",
+      "confirmRemoveTitle": "{language} entfernen?",
+      "confirmRemoveDescription": "Ihre Übersetzungen werden nicht gelöscht. Fügen Sie diese Sprache erneut hinzu, um sie wiederherzustellen.",
       "cancel": "Abbrechen",
       "confirmRemove": "Entfernen"
     },
     "locales": {
-      "updateSuccess": "Sprachen aktualisiert",
       "updateError": "Fehler beim Aktualisieren der Sprachen"
     },
     "helper": {
@@ -484,7 +483,6 @@
       "removeError": "Stopp konnte nicht entfernt werden"
     },
     "locales": {
-      "updateSuccess": "Sprachen aktualisiert",
       "updateError": "Sprachen konnten nicht aktualisiert werden"
     },
     "assets": {
@@ -530,7 +528,7 @@
       "showConfirm": "Stopp einblenden",
       "cancel": "Abbrechen",
       "removeStop": "Aus Guide entfernen",
-      "removeDescription": "Der Stopp wird aus diesem Guide entfernt. Der Stopp und alle Inhalte bleiben erhalten und können später zu einem anderen Guide hinzugefügt werden.",
+      "removeDescription": "Der Stopp wird aus dieser Tour entfernt. Der Stopp und alle Inhalte bleiben erhalten und können später zu einer anderen Tour hinzugefügt werden.",
       "removeConfirm": "Entfernen"
     }
   },

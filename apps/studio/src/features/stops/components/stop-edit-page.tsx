@@ -130,12 +130,16 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
   const handleBack = useCallback(() => {
     confirmIfDirty(() => {
       if (navigation.backParams?.nanoId) {
-        router.navigate({ to: '/tours/$nanoId/edit', params: { nanoId: navigation.backParams.nanoId } })
+        router.navigate({
+          to: '/tours/$nanoId/edit',
+          params: { nanoId: navigation.backParams.nanoId },
+          search: { locale: activeLocale },
+        })
       } else {
         router.navigate({ to: '/stops' })
       }
     })
-  }, [router, confirmIfDirty, navigation])
+  }, [router, confirmIfDirty, navigation, activeLocale])
 
   const handleImagesChange = useCallback(
     (value: Asset | Asset[] | null) => {

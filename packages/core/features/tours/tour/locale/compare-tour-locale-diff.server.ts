@@ -33,9 +33,11 @@ export async function compareTourLocaleDiff(nanoId: string, locale: string): Pro
 
   if (!published) {
     // Never published — all non-empty fields are "new"
+    // Treat empty strings as equivalent to null (no meaningful content)
+    const hasContent = (value: string | null) => value !== null && value.trim() !== ''
     const fieldDiffs: FieldDiff[] = [
-      { field: 'title', draft: draft.title, published: null, hasChanged: draft.title !== null },
-      { field: 'description', draft: draft.description, published: null, hasChanged: draft.description !== null },
+      { field: 'title', draft: draft.title, published: null, hasChanged: hasContent(draft.title) },
+      { field: 'description', draft: draft.description, published: null, hasChanged: hasContent(draft.description) },
     ]
 
     return {
@@ -46,19 +48,20 @@ export async function compareTourLocaleDiff(nanoId: string, locale: string): Pro
     }
   }
 
-  // Compare each field
+  // Compare each field (normalize empty strings to null for comparison)
+  const normalize = (value: string | null) => (value?.trim() === '' ? null : value)
   const fieldDiffs: FieldDiff[] = [
     {
       field: 'title',
       draft: draft.title,
       published: published.title,
-      hasChanged: draft.title !== published.title,
+      hasChanged: normalize(draft.title) !== normalize(published.title),
     },
     {
       field: 'description',
       draft: draft.description,
       published: published.description,
-      hasChanged: draft.description !== published.description,
+      hasChanged: normalize(draft.description) !== normalize(published.description),
     },
   ]
 

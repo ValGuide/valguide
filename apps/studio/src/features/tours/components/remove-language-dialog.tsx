@@ -39,8 +39,8 @@ export function RemoveLanguageDialog({ open, onOpenChange, locale, onConfirm }: 
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('confirmRemoveTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>{t('confirmRemoveDescription', { language: localeName })}</AlertDialogDescription>
+          <AlertDialogTitle>{t('confirmRemoveTitle', { language: localeName })}</AlertDialogTitle>
+          <AlertDialogDescription>{t('confirmRemoveDescription')}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading}>{t('cancel')}</AlertDialogCancel>

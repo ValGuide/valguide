@@ -160,7 +160,7 @@ export function AppSidebar({
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent">
+                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -176,7 +176,7 @@ export function AppSidebar({
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent">
+                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -192,7 +192,7 @@ export function AppSidebar({
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent">
+                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -208,7 +208,7 @@ export function AppSidebar({
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent">
+                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

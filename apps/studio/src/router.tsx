@@ -23,10 +23,10 @@ export const getRouter = () => {
     scrollToTopSelectors: ['[data-slot="sidebar-inset"]'],
     defaultPreloadStaleTime: 30_000,
     defaultStaleTime: 30_000,
-    // Show pending component immediately (0ms delay) to prevent layout shifts
-    defaultPendingMs: 0,
+    // Show pending component after small delay of 150ms
+    defaultPendingMs: 150,
     // Minimum time to show pending component to prevent flash (200ms feels instant but smooth)
-    defaultPendingMinMs: 500,
+    defaultPendingMinMs: 200,
     defaultPendingComponent: DefaultPending,
     defaultErrorComponent: DefaultError,
     defaultNotFoundComponent: DefaultNotFound,
