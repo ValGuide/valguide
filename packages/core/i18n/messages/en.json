@@ -382,8 +382,8 @@
       "cancel": "Cancel"
     },
     "confirmPublish": {
-      "title": "Publish this translation?",
-      "description": "This will make your changes visible to visitors in this language.",
+      "title": "Publish {language} translation?",
+      "description": "This will make the {language} version visible to visitors. Only this language will be published.",
       "confirm": "Publish",
       "cancel": "Cancel"
     },

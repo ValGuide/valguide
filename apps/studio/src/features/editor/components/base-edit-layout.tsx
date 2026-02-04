@@ -7,7 +7,7 @@ import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
 import { DraftPublishedTabs, type EditorTab } from './draft-published-tabs'
 import { EditorActionsPanel } from './editor-actions-panel'
 import { EditorHeader } from './editor-header'
-import { LocaleSelector } from './locale-selector'
+import { getLocaleDisplayName, LocaleSelector } from './locale-selector'
 import { MobileMoreMenu, MobileSavePublish } from './mobile-action-bar'
 import { PublishConfirmationDialog } from './publish-confirmation-dialog'
 import { UnpublishConfirmationDialog } from './unpublish-confirmation-dialog'
@@ -295,6 +295,7 @@ export function BaseEditLayout({
         onOpenChange={setPublishDialogOpen}
         isPublishing={isPublishing}
         onConfirm={onPublish}
+        languageName={getLocaleDisplayName(activeLocale)}
       />
 
       <UnpublishConfirmationDialog

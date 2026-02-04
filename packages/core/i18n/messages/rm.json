@@ -382,8 +382,8 @@
       "cancel": "Interrumper"
     },
     "confirmPublish": {
-      "title": "Publitgar aquesta translaziun?",
-      "description": "Quai fa tes midadas visiblas per visitaders en questa lingua.",
+      "title": "Publitgar la translaziun {language}?",
+      "description": "Quai fa la versiun {language} visibla per visitaders. Mo questa lingua vegn publitgada.",
       "confirm": "Publitgar",
       "cancel": "Interrumper"
     },

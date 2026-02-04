@@ -26,7 +26,7 @@ export const getRouter = () => {
     // Show pending component immediately (0ms delay) to prevent layout shifts
     defaultPendingMs: 0,
     // Minimum time to show pending component to prevent flash (200ms feels instant but smooth)
-    defaultPendingMinMs: 200,
+    defaultPendingMinMs: 500,
     defaultPendingComponent: DefaultPending,
     defaultErrorComponent: DefaultError,
     defaultNotFoundComponent: DefaultNotFound,

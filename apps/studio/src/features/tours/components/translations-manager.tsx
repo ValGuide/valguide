@@ -12,6 +12,7 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { MoreHorizontal, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useState } from 'react'
+import { PublishConfirmationDialog } from '../../editor/components/publish-confirmation-dialog'
 import { AddLanguageDialog } from './add-language-dialog'
 import { RemoveLanguageDialog } from './remove-language-dialog'
 import { getLocaleDisplayName } from './unified-locale-selector'
@@ -40,6 +41,7 @@ export function TranslationsManager({
   const tLocaleSelector = useTranslations('tours.localeSelector')
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [localeToRemove, setLocaleToRemove] = useState<string | null>(null)
+  const [localeToPublish, setLocaleToPublish] = useState<string | null>(null)
   const [publishingLocale, setPublishingLocale] = useState<string | null>(null)
 
   const canRemove = locales.length > 1
@@ -57,13 +59,19 @@ export function TranslationsManager({
     }
   }
 
-  const handlePublish = async (locale: string) => {
+  const handlePublishClick = (locale: string) => {
     if (!onPublish) return
-    setPublishingLocale(locale)
+    setLocaleToPublish(locale)
+  }
+
+  const handleConfirmPublish = async () => {
+    if (!localeToPublish || !onPublish) return
+    setPublishingLocale(localeToPublish)
     try {
-      await onPublish(locale)
+      await onPublish(localeToPublish)
     } finally {
       setPublishingLocale(null)
+      setLocaleToPublish(null)
     }
   }
 
@@ -96,7 +104,7 @@ export function TranslationsManager({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handlePublish(localeInfo.locale)}
+                        onClick={() => handlePublishClick(localeInfo.locale)}
                         disabled={isCurrentlyPublishing}
                       >
                         <Upload className="mr-1 h-4 w-4" />
@@ -156,6 +164,14 @@ export function TranslationsManager({
         onOpenChange={(open) => !open && setLocaleToRemove(null)}
         locale={localeToRemove}
         onConfirm={handleConfirmRemove}
+      />
+
+      <PublishConfirmationDialog
+        open={!!localeToPublish}
+        onOpenChange={(open) => !open && setLocaleToPublish(null)}
+        languageName={localeToPublish ? getLocaleDisplayName(localeToPublish) : ''}
+        isPublishing={!!publishingLocale}
+        onConfirm={handleConfirmPublish}
       />
     </>
   )

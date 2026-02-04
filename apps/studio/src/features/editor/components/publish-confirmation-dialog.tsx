@@ -15,6 +15,7 @@ interface PublishConfirmationDialogProps {
   onOpenChange: (open: boolean) => void
   isPublishing?: boolean
   onConfirm: () => void
+  languageName: string
 }
 
 export function PublishConfirmationDialog({
@@ -22,6 +23,7 @@ export function PublishConfirmationDialog({
   onOpenChange,
   isPublishing,
   onConfirm,
+  languageName,
 }: PublishConfirmationDialogProps) {
   const t = useTranslations('tours.confirmPublish')
   const tActions = useTranslations('tours.actions')
@@ -35,8 +37,8 @@ export function PublishConfirmationDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('title')}</AlertDialogTitle>
-          <AlertDialogDescription>{t('description')}</AlertDialogDescription>
+          <AlertDialogTitle>{t('title', { language: languageName })}</AlertDialogTitle>
+          <AlertDialogDescription>{t('description', { language: languageName })}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPublishing}>{t('cancel')}</AlertDialogCancel>

@@ -13,6 +13,7 @@ const meta = {
     onOpenChange: fn(),
     isPublishing: false,
     onConfirm: fn(),
+    languageName: 'English',
   },
 } satisfies Meta<typeof PublishConfirmationDialog>
 
