@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams.server'
 import type { OrganizationWithRole as Team } from '@valguide/core/features/orgs/types'
-import { getProfile } from '@valguide/core/features/profiles/get-profile.server'
+import { getOrCreateProfile } from '@valguide/core/features/profiles/get-or-create-profile.server'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
@@ -32,7 +32,7 @@ export const getSidebarDataFn = createServerFn({ method: 'GET' })
   .handler(async ({ context }) => {
     const user = context.user
     const activeTeamId = context.activeOrgId
-    const [teams, profile] = await Promise.all([getUserTeams(db, user.id), getProfile(user.id)])
+    const [teams, profile] = await Promise.all([getUserTeams(db, user.id), getOrCreateProfile(user.id)])
 
     let currentTeam = teams.find((t: any) => t.id === activeTeamId)
 

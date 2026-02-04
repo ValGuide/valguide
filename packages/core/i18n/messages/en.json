@@ -687,11 +687,8 @@
     },
     "user": {
       "myProfile": "My Profile",
-      "billing": "Billing",
-      "notifications": "Notifications",
       "language": "Language",
-      "logout": "Log out",
-      "upgradeToPro": "Upgrade to Pro"
+      "logout": "Log out"
     }
   },
   "orgs": {

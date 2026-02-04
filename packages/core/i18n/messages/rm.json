@@ -687,11 +687,8 @@
     },
     "user": {
       "myProfile": "Mes profil",
-      "billing": "Facturaziun",
-      "notifications": "Notificaziuns",
       "language": "Lingua",
-      "logout": "S'annunziar ora",
-      "upgradeToPro": "Actualisar a Pro"
+      "logout": "S'annunziar ora"
     }
   },
   "orgs": {

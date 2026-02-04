@@ -93,7 +93,6 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">{activeTeam.name}</span>
             </div>
-            <ChevronsUpDown className="ml-auto size-4" />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
@@ -116,7 +115,6 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{activeTeam.name}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
