@@ -327,6 +327,14 @@
       "tourPublished": "Tour published with {stopCount, plural, =0 {no stops} one {# stop} other {# stops}}",
       "tourPublishError": "Failed to publish tour"
     },
+    "unpublish": {
+      "success": "Content unpublished",
+      "error": "Failed to unpublish"
+    },
+    "discard": {
+      "success": "Draft discarded",
+      "error": "Failed to discard draft"
+    },
     "confirmUnpublishTour": {
       "title": "Unpublish this translation?",
       "description": "Visitors will no longer see this language version of the tour. The tour remains available in other languages. Nothing is deleted—you can republish anytime.",
@@ -453,7 +461,8 @@
       "autoGenerate": "Auto-generate from audio",
       "galleryLabel": "Gallery (Images & Video)",
       "usedInTours": "Used in {count, plural, one {# tour} other {# tours}}",
-      "sharedStopWarning": "Changes will affect all tours using this stop"
+      "sharedStopWarning": "Changes will affect all tours using this stop",
+      "publishFromTour": "This stop will be published when you publish the tour."
     },
     "actions": {
       "edit": "Edit Stop",

@@ -15,6 +15,8 @@ export interface MobileMoreMenuProps {
   onUnpublishClick: () => void
   onDiscardClick: () => void
   onOpenVersionHistory?: () => void
+  /** Hide unpublish action (e.g., for stops in tour context) */
+  publishingDisabled?: boolean
 }
 
 /** Mobile dropdown menu with secondary actions (unpublish, discard, version history) */
@@ -24,10 +26,11 @@ export function MobileMoreMenu({
   onUnpublishClick,
   onDiscardClick,
   onOpenVersionHistory,
+  publishingDisabled,
 }: MobileMoreMenuProps) {
   const t = useTranslations('tours.actions')
 
-  const canUnpublish = hasPublished
+  const canUnpublish = hasPublished && !publishingDisabled
   const canDiscard = hasDraft && hasPublished
 
   return (
@@ -71,6 +74,8 @@ export interface MobileSavePublishProps {
   onSave: () => void
   onPublishClick: () => void
   disabled?: boolean
+  /** Hide publish button (e.g., for stops in tour context) */
+  publishingDisabled?: boolean
 }
 
 /** Mobile save and publish buttons - fixed bottom bar on mobile, inline on tablet/desktop */
@@ -82,6 +87,7 @@ export function MobileSavePublish({
   onSave,
   onPublishClick,
   disabled,
+  publishingDisabled,
 }: MobileSavePublishProps) {
   const t = useTranslations('tours.actions')
 
@@ -96,19 +102,21 @@ export function MobileSavePublish({
             onClick={onSave}
             disabled={!isDirty || isSaving || isPublishing || disabled}
             size="sm"
-            className="flex-1"
+            className={publishingDisabled ? 'flex-1' : 'flex-1'}
           >
             {isSaving && !isPublishing ? t('saving') : t('save')}
           </Button>
 
-          <Button
-            onClick={onPublishClick}
-            disabled={!canPublish || isPublishing || isSaving || disabled}
-            size="sm"
-            className="flex-1"
-          >
-            {isPublishing ? t('publishing') : t('publish')}
-          </Button>
+          {!publishingDisabled && (
+            <Button
+              onClick={onPublishClick}
+              disabled={!canPublish || isPublishing || isSaving || disabled}
+              size="sm"
+              className="flex-1"
+            >
+              {isPublishing ? t('publishing') : t('publish')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -121,9 +129,11 @@ export function MobileSavePublish({
         >
           {isSaving && !isPublishing ? t('saving') : t('save')}
         </Button>
-        <Button onClick={onPublishClick} disabled={!canPublish || isPublishing || isSaving || disabled} size="sm">
-          {isPublishing ? t('publishing') : t('publish')}
-        </Button>
+        {!publishingDisabled && (
+          <Button onClick={onPublishClick} disabled={!canPublish || isPublishing || isSaving || disabled} size="sm">
+            {isPublishing ? t('publishing') : t('publish')}
+          </Button>
+        )}
       </div>
     </>
   )

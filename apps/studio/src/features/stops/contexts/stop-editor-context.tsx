@@ -83,6 +83,9 @@ export function StopEditorProvider({
     queryClient,
   } = base
 
+  // Whether editing within a tour context (vs standalone stop library)
+  const isInTourContext = !!tourAvailableLocales
+
   // Compute effective available locales based on context:
   // - Tour context: show only tour's locales (the "project languages")
   // - Standalone: show only stop's existing locales
@@ -296,6 +299,7 @@ export function StopEditorProvider({
   const value: StopEditorContextValue = {
     nanoId,
     stopId,
+    isInTourContext,
     activeLocale,
     availableLocales,
     existingLocales,

@@ -327,6 +327,14 @@
       "tourPublished": "Tour veröffentlicht mit {stopCount, plural, =0 {keinen Stopps} one {# Stopp} other {# Stopps}}",
       "tourPublishError": "Fehler beim Veröffentlichen der Tour"
     },
+    "unpublish": {
+      "success": "Inhalt zurückgezogen",
+      "error": "Fehler beim Zurückziehen"
+    },
+    "discard": {
+      "success": "Entwurf verworfen",
+      "error": "Fehler beim Verwerfen des Entwurfs"
+    },
     "confirmUnpublishTour": {
       "title": "Diese Übersetzung zurückziehen?",
       "description": "Besucher sehen diese Sprachversion der Tour nicht mehr. Die Tour bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
@@ -453,7 +461,8 @@
       "autoGenerate": "Automatisch aus Audio generieren",
       "galleryLabel": "Galerie (Bilder & Video)",
       "usedInTours": "Verwendet in {count, plural, one {# Tour} other {# Touren}}",
-      "sharedStopWarning": "Änderungen wirken sich auf alle Touren aus, die diesen Stopp verwenden"
+      "sharedStopWarning": "Änderungen wirken sich auf alle Touren aus, die diesen Stopp verwenden",
+      "publishFromTour": "Dieser Stopp wird veröffentlicht, wenn Sie die Tour veröffentlichen."
     },
     "actions": {
       "edit": "Stopp bearbeiten",

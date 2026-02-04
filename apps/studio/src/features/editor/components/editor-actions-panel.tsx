@@ -21,6 +21,10 @@ export interface EditorActionsPanelProps {
   onDiscardClick: () => void
   onOpenVersionHistory: () => void
   disabled?: boolean
+  /** Hide publish/unpublish actions (e.g., for stops in tour context) */
+  publishingDisabled?: boolean
+  /** Message to show when publishing is disabled */
+  publishingDisabledMessage?: string
 }
 
 export function EditorActionsPanel({
@@ -35,6 +39,8 @@ export function EditorActionsPanel({
   onDiscardClick,
   onOpenVersionHistory,
   disabled,
+  publishingDisabled,
+  publishingDisabledMessage,
 }: EditorActionsPanelProps) {
   const t = useTranslations('tours.actions')
 
@@ -46,15 +52,19 @@ export function EditorActionsPanel({
     <div className="space-y-4">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Entry</h3>
 
-      <Button
-        onClick={onPublishClick}
-        disabled={!canPublish || isPublishing || isSaving || disabled}
-        className="w-full shadow-[var(--shadow-sm)] transition-all duration-200 hover:shadow-[var(--shadow-md)]"
-        size="default"
-      >
-        <Upload className="mr-2 h-4 w-4" />
-        {isPublishing ? t('publishing') : t('publish')}
-      </Button>
+      {publishingDisabled ? (
+        <p className="text-sm text-muted-foreground">{publishingDisabledMessage}</p>
+      ) : (
+        <Button
+          onClick={onPublishClick}
+          disabled={!canPublish || isPublishing || isSaving || disabled}
+          className="w-full shadow-[var(--shadow-sm)] transition-all duration-200 hover:shadow-[var(--shadow-md)]"
+          size="default"
+        >
+          <Upload className="mr-2 h-4 w-4" />
+          {isPublishing ? t('publishing') : t('publish')}
+        </Button>
+      )}
 
       <div className="flex gap-2">
         <Button
@@ -74,7 +84,7 @@ export function EditorActionsPanel({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[160px]">
-            {canUnpublish && (
+            {canUnpublish && !publishingDisabled && (
               <DropdownMenuItem onClick={onUnpublishClick} className="text-destructive focus:text-destructive">
                 <X className="mr-2 h-4 w-4" />
                 {t('unpublish')}
@@ -86,7 +96,7 @@ export function EditorActionsPanel({
                 {t('discardChanges')}
               </DropdownMenuItem>
             )}
-            {(canUnpublish || canDiscard) && <DropdownMenuSeparator />}
+            {((canUnpublish && !publishingDisabled) || canDiscard) && <DropdownMenuSeparator />}
             <DropdownMenuItem onClick={onOpenVersionHistory}>
               <History className="mr-2 h-4 w-4" />
               Version History

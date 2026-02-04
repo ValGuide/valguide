@@ -189,11 +189,11 @@ export function TourEditPage({ onPublish, onUnpublish, onHideStop, onShowStop, M
     if (!onUnpublish) return
     try {
       await onUnpublish(nanoId, activeLocale)
-      toast.success('Content unpublished')
+      toast.success(t('unpublish.success'))
       await refetch()
     } catch (error) {
       console.error('Failed to unpublish:', error)
-      toast.error('Failed to unpublish')
+      toast.error(t('unpublish.error'))
     }
   }, [nanoId, activeLocale, refetch, onUnpublish])
 

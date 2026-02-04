@@ -33,6 +33,12 @@ export interface BaseEditLayoutProps {
   /** Content type for unpublish dialog messaging */
   contentType: 'tour' | 'stop'
 
+  /** Hide publish/unpublish actions (e.g., for stops in tour context) */
+  publishingDisabled?: boolean
+
+  /** Message to show when publishing is disabled */
+  publishingDisabledMessage?: string
+
   /** Currently active locale */
   activeLocale: string
 
@@ -100,6 +106,8 @@ export function BaseEditLayout({
   hasDraft,
   hasPublished,
   contentType,
+  publishingDisabled,
+  publishingDisabledMessage,
   activeLocale,
   availableLocales,
   onLocaleChange,
@@ -163,6 +171,7 @@ export function BaseEditLayout({
                 hasPublished={hasPublished}
                 onUnpublishClick={handleUnpublishClick}
                 onDiscardClick={handleDiscardClick}
+                publishingDisabled={publishingDisabled}
               />
               {mobileHeaderExtra}
             </div>
@@ -194,17 +203,12 @@ export function BaseEditLayout({
             backContent={breadcrumbContent}
             className="hidden lg:flex"
             actions={
-              <>
-                <LocaleSelector
-                  value={activeLocale}
-                  locales={availableLocales}
-                  onValueChange={onLocaleChange}
-                  footer={localeSelectorFooter}
-                />
-                <Button variant="ghost" size="sm">
-                  {t('editor.preview')}
-                </Button>
-              </>
+              <LocaleSelector
+                value={activeLocale}
+                locales={availableLocales}
+                onValueChange={onLocaleChange}
+                footer={localeSelectorFooter}
+              />
             }
           />
         ) : (
@@ -213,17 +217,12 @@ export function BaseEditLayout({
             onBack={onBack ?? (() => {})}
             className="hidden lg:flex"
             actions={
-              <>
-                <LocaleSelector
-                  value={activeLocale}
-                  locales={availableLocales}
-                  onValueChange={onLocaleChange}
-                  footer={localeSelectorFooter}
-                />
-                <Button variant="ghost" size="sm">
-                  {t('editor.preview')}
-                </Button>
-              </>
+              <LocaleSelector
+                value={activeLocale}
+                locales={availableLocales}
+                onValueChange={onLocaleChange}
+                footer={localeSelectorFooter}
+              />
             }
           />
         )}
@@ -257,6 +256,7 @@ export function BaseEditLayout({
             onSave={onSave}
             onPublishClick={handlePublishClick}
             disabled={isReadOnly}
+            publishingDisabled={publishingDisabled}
           />
         </div>
 
@@ -281,6 +281,8 @@ export function BaseEditLayout({
                 onDiscardClick={handleDiscardClick}
                 onOpenVersionHistory={() => {}}
                 disabled={isReadOnly}
+                publishingDisabled={publishingDisabled}
+                publishingDisabledMessage={publishingDisabledMessage}
               />
 
               {sidebar && <div className="border-t pt-5">{sidebar}</div>}

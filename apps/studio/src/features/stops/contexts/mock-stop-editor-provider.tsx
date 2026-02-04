@@ -13,6 +13,8 @@ export interface MockStopEditorProviderProps {
   localePublished?: StopLocalePublishedResult | null
   assets?: StopAssetDraftItem[]
   navigation?: StopEditorNavigation
+  /** Whether editing within a tour context (vs standalone stop library) */
+  isInTourContext?: boolean
 }
 
 export function MockStopEditorProvider({
@@ -22,6 +24,7 @@ export function MockStopEditorProvider({
   localePublished = null,
   assets: initialAssets = [],
   navigation = { backPath: '/stops', backLabel: 'All Stops' },
+  isInTourContext = false,
 }: MockStopEditorProviderProps) {
   const [activeLocale, setActiveLocale] = useState<string>(stopDetail.availableLocales[0] ?? 'en')
   const [isDirty, setIsDirty] = useState(false)
@@ -30,6 +33,7 @@ export function MockStopEditorProvider({
   const value: StopEditorContextValue = {
     nanoId: stopDetail.nanoId,
     stopId: stopDetail.id,
+    isInTourContext,
     navigation,
     activeLocale,
     availableLocales: stopDetail.availableLocales,

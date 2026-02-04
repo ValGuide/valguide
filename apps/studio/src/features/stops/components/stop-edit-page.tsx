@@ -29,6 +29,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
   const {
     nanoId,
     stopId,
+    isInTourContext,
     localeDraft,
     localePublished,
     activeLocale,
@@ -202,21 +203,21 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
   const handleUnpublish = useCallback(async () => {
     try {
       await unpublish(activeLocale)
-      toast.success('Content unpublished')
+      toast.success(t('unpublish.success'))
       await refetch()
     } catch (error) {
       console.error('Failed to unpublish:', error)
-      toast.error('Failed to unpublish')
+      toast.error(t('unpublish.error'))
     }
   }, [activeLocale, refetch, unpublish])
 
   const handleDiscard = useCallback(async () => {
     try {
       await refetch()
-      toast.success('Draft discarded')
+      toast.success(t('discard.success'))
     } catch (error) {
       console.error('Failed to discard:', error)
-      toast.error('Failed to discard draft')
+      toast.error(t('discard.error'))
     }
   }, [refetch])
 
@@ -246,6 +247,8 @@ export function StopEditPage({ MediaPicker, onPublishAssets }: StopEditPageProps
       hasDraft={hasDraft}
       hasPublished={hasPublished}
       contentType="stop"
+      publishingDisabled={isInTourContext}
+      publishingDisabledMessage={tStops('editor.publishFromTour')}
       activeLocale={activeLocale}
       availableLocales={availableLocales}
       onLocaleChange={setActiveLocale}

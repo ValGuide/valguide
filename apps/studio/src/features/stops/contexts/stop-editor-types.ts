@@ -24,6 +24,9 @@ export interface StopEditorContextValue {
   nanoId: string
   stopId: string
 
+  /** Whether editing within a tour context (vs standalone stop library) */
+  isInTourContext: boolean
+
   // Locale management (synced to URL)
   activeLocale: string
   /** Effective available locales (tour's locales in tour context, existing locales standalone) */

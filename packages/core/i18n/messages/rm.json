@@ -327,6 +327,14 @@
       "tourPublished": "Tura publichada cun {stopCount, plural, =0 {naginas posts} one {# post} other {# posts}}",
       "tourPublishError": "Errur cun publitgar la tura"
     },
+    "unpublish": {
+      "success": "Cuntegn retrà",
+      "error": "Errur cun retrar"
+    },
+    "discard": {
+      "success": "Sboz stizzà",
+      "error": "Errur cun stizzar il sboz"
+    },
     "confirmUnpublishTour": {
       "title": "Retrar questa translaziun?",
       "description": "Visitaders na vesan betg pli questa versiun linguistica da la tura. La tura resta disponibla en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
@@ -453,7 +461,8 @@
       "autoGenerate": "Generar automaticamain dall'audio",
       "galleryLabel": "Galaria (Maletgs & Video)",
       "usedInTours": "Duvrà en {count, plural, one {# tura} other {# turas}}",
-      "sharedStopWarning": "Midadas tangeschan tuttas turas che dovran quest stop"
+      "sharedStopWarning": "Midadas tangeschan tuttas turas che dovran quest stop",
+      "publishFromTour": "Quest stop vegn publitgà cura che Vus publitgais la tura."
     },
     "actions": {
       "edit": "Modifitgar stop",
