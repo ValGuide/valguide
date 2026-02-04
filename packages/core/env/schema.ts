@@ -6,6 +6,7 @@ export const serverEnvSchema = z.object({
   SUPABASE_PUBLISHABLE_KEY: z.string({
     required_error: 'Supabase publishable key is required',
   }),
+  SUPABASE_SECRET_KEY: z.string().optional(),
   SUPABASE_COOKIE_DOMAIN: z.string().optional(),
   KV_REST_API_URL: z.string().optional(),
   KV_REST_API_TOKEN: z.string().optional(),
