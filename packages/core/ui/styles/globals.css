@@ -1552,3 +1552,30 @@
         cursor: pointer;
     }
 }
+
+/* ========================
+   VIEW TRANSITIONS
+   Smooth page transitions for TanStack Router
+   ======================== */
+
+/* Default view transition: crossfade */
+::view-transition-old(root) {
+    animation: fade-out 150ms ease-out both;
+}
+
+::view-transition-new(root) {
+    animation: fade-in 150ms ease-out both;
+}
+
+/* Prevent layout shift during transitions */
+::view-transition-group(root) {
+    animation-duration: 150ms;
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none;
+    }
+}

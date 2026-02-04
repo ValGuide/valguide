@@ -23,9 +23,15 @@ export const getRouter = () => {
     scrollToTopSelectors: ['[data-slot="sidebar-inset"]'],
     defaultPreloadStaleTime: 30_000,
     defaultStaleTime: 30_000,
+    // Show pending component immediately (0ms delay) to prevent layout shifts
+    defaultPendingMs: 0,
+    // Minimum time to show pending component to prevent flash (200ms feels instant but smooth)
+    defaultPendingMinMs: 200,
     defaultPendingComponent: DefaultPending,
     defaultErrorComponent: DefaultError,
     defaultNotFoundComponent: DefaultNotFound,
+    // Enable view transitions for smooth page changes (Chrome 111+)
+    defaultViewTransition: true,
   })
 
   setupRouterSsrQueryIntegration({
