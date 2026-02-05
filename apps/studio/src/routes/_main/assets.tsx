@@ -10,6 +10,7 @@ import { assetsQueryOptions } from '@/features/assets/query-options'
 const Root = getRouteApi('/_main')
 
 export const Route = createFileRoute('/_main/assets')({
+  loader: ({ context }) => context.queryClient.ensureQueryData(assetsQueryOptions()),
   component: AssetsPage,
   pendingComponent: () => (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
