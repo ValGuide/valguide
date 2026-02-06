@@ -91,27 +91,33 @@ export function TranslationsManager({
               const localeName = getLocaleDisplayName(localeInfo.locale)
               const isCurrentlyPublishing = publishingLocale === localeInfo.locale || isPublishing
               return (
-                <div key={localeInfo.locale} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{localeName}</span>
-                    <span className="text-xs text-muted-foreground">({localeInfo.locale})</span>
-                    <Badge variant={localeInfo.hasPublished ? 'default' : 'secondary'} className="ml-1">
+                <div
+                  key={localeInfo.locale}
+                  className="flex items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                >
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span className="truncate font-medium">{localeName}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">({localeInfo.locale})</span>
+                    <Badge variant={localeInfo.hasPublished ? 'default' : 'secondary'} className="shrink-0">
                       {localeInfo.hasPublished ? tLocaleSelector('statusPublished') : tLocaleSelector('statusDraft')}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-1">
                     {onPublish && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
+                        className="h-8 w-8"
                         onClick={() => handlePublishClick(localeInfo.locale)}
                         disabled={isCurrentlyPublishing}
                       >
-                        <Upload className="mr-1 h-4 w-4" />
-                        {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
+                        <Upload className="h-4 w-4" />
+                        <span className="sr-only">
+                          {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
+                        </span>
                       </Button>
                     )}
-                    <Button variant="ghost" size="sm" asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                       <Link
                         to="/tours/$nanoId/edit"
                         params={{ nanoId: tourNanoId }}
@@ -120,8 +126,8 @@ export function TranslationsManager({
                         }}
                         preload="intent"
                       >
-                        <Pencil className="mr-1 h-4 w-4" />
-                        {tStops('edit')}
+                        <Pencil className="h-4 w-4" />
+                        <span className="sr-only">{tStops('edit')}</span>
                       </Link>
                     </Button>
                     <DropdownMenu>

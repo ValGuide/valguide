@@ -1,3 +1,4 @@
+import { relations, sql } from 'drizzle-orm'
 import { boolean, index, integer, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
@@ -470,3 +471,44 @@ export type TourAssetDraft = typeof tourAssetDraft.$inferSelect
 export type TourAsset = typeof tourAsset.$inferSelect
 export type StopAssetDraft = typeof stopAssetDraft.$inferSelect
 export type StopAsset = typeof stopAsset.$inferSelect
+
+// =============================================================================
+// SLUGS (No Draft/Published - Immediate Changes with History for Redirects)
+// =============================================================================
+
+export const tourSlug = studioSchema.table(
+  'tour_slug',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    tourId: uuid('tour_id')
+      .notNull()
+      .references(() => tour.id, { onDelete: 'cascade' }),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    slug: varchar('slug', { length: 200 }).notNull(),
+    isPrimary: boolean('is_primary').notNull().default(false),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqueOrgSlug: uniqueIndex('tour_slug_org_unique').on(t.organizationId, t.slug),
+    uniquePrimary: uniqueIndex('tour_slug_primary_unique').on(t.tourId).where(sql`${t.isPrimary} = true`),
+    tourIdx: index('tour_slug_tour_idx').on(t.tourId),
+    slugLookupIdx: index('tour_slug_lookup_idx').on(t.organizationId, t.slug),
+  }),
+)
+
+export const tourSlugRelations = relations(tourSlug, ({ one }) => ({
+  tour: one(tour, {
+    fields: [tourSlug.tourId],
+    references: [tour.id],
+  }),
+  organization: one(organization, {
+    fields: [tourSlug.organizationId],
+    references: [organization.id],
+  }),
+}))
+
+// Slug types
+export type TourSlug = typeof tourSlug.$inferSelect
+export type NewTourSlug = typeof tourSlug.$inferInsert

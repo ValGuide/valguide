@@ -258,7 +258,25 @@
         "hasStops": "At least one stop",
         "allStopTitles": "All stops have titles"
       },
-      "backToTour": "Tour"
+      "backToTour": "Tour",
+      "slug": {
+        "title": "URL Slug",
+        "description": "Human-readable identifier for this tour in URLs. {baseUrl}/{slug}",
+        "placeholder": "highlights-tour",
+        "available": "This slug is available",
+        "taken": "You already use this slug for another tour",
+        "reserved": "This slug is reserved",
+        "self": "This is your current slug",
+        "checking": "Checking availability...",
+        "save": "Save Slug",
+        "saving": "Saving...",
+        "saveSuccess": "Tour slug updated",
+        "saveError": "Failed to update slug",
+        "history": "Slug History",
+        "historyDescription": "Old slugs still redirect to this tour.",
+        "noHistory": "No previous slugs",
+        "autoGenerate": "Auto-generate"
+      }
     },
     "empty": {
       "title": "No tours yet",
@@ -752,6 +770,28 @@
       "submitting": "Creating...",
       "error": "Failed to create team",
       "triggerButton": "Create Team"
+    },
+    "teamSettings": {
+      "title": "Team Settings",
+      "description": "Configure your team's identity and URL.",
+      "nameLabel": "Team Name",
+      "slugLabel": "URL Slug",
+      "slugDescription": "Your team's unique identifier in URLs. valguide.com/{slug}",
+      "slugPlaceholder": "my-team",
+      "slugAvailable": "This slug is available",
+      "slugTaken": "This slug is already taken",
+      "slugReserved": "This slug is reserved",
+      "slugSelf": "This is your current slug",
+      "slugChecking": "Checking availability...",
+      "autoSuggest": "Auto-generate from name",
+      "save": "Save Slug",
+      "saving": "Saving...",
+      "saveSuccess": "Team slug updated",
+      "saveError": "Failed to update slug",
+      "slugHistory": "Slug History",
+      "slugHistoryDescription": "Old slugs still redirect to your team.",
+      "current": "Current",
+      "noHistory": "No previous slugs"
     }
   },
   "joinTeam": {

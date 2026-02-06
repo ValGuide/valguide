@@ -7,6 +7,7 @@ import { MediaPickerConnected } from '@/features/assets/components/media-picker/
 import { TourEditPage } from '@/features/tours/components/tour-edit-page'
 import { TourEditSkeleton } from '@/features/tours/components/tour-edit-skeleton'
 import { TourNotFound } from '@/features/tours/components/tour-not-found'
+import { TourSlugSettingsConnected } from '@/features/tours/components/tour-slug-settings-connected'
 import { TourEditorProvider } from '@/features/tours/contexts/tour-editor-context'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 import {
@@ -89,6 +90,7 @@ function TourEditPageContent() {
         updateStopVisibilityFn({ data: { tourNanoId: nanoId, stopNanoId, visible: true } })
       }
       MediaPicker={MediaPickerConnected}
+      TourSlugSettings={TourSlugSettingsConnected}
       diffQueryOptions={tourLocaleDiffQueryOptions(nanoId, activeLocale)}
     />
   )

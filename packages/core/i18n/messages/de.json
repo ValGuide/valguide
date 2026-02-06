@@ -258,7 +258,25 @@
         "hasStops": "Mindestens ein Stop",
         "allStopTitles": "Alle Stops haben Titel"
       },
-      "backToTour": "Tour"
+      "backToTour": "Tour",
+      "slug": {
+        "title": "URL-Slug",
+        "description": "Lesbare Kennung für diese Tour in URLs. {baseUrl}/{slug}",
+        "placeholder": "highlights-tour",
+        "available": "Dieser Slug ist verfügbar",
+        "taken": "Sie verwenden diesen Slug bereits für eine andere Tour",
+        "reserved": "Dieser Slug ist reserviert",
+        "self": "Dies ist Ihr aktueller Slug",
+        "checking": "Verfügbarkeit wird geprüft...",
+        "save": "Slug speichern",
+        "saving": "Wird gespeichert...",
+        "saveSuccess": "Tour-Slug aktualisiert",
+        "saveError": "Slug konnte nicht aktualisiert werden",
+        "history": "Slug-Verlauf",
+        "historyDescription": "Alte Slugs leiten weiterhin zu dieser Tour weiter.",
+        "noHistory": "Keine früheren Slugs",
+        "autoGenerate": "Auto-generieren"
+      }
     },
     "empty": {
       "title": "Noch keine Touren",
@@ -752,6 +770,28 @@
       "submitting": "Wird erstellt...",
       "error": "Fehler beim Erstellen des Teams",
       "triggerButton": "Team erstellen"
+    },
+    "teamSettings": {
+      "title": "Team-Einstellungen",
+      "description": "Konfigurieren Sie die Identität und URL Ihres Teams.",
+      "nameLabel": "Teamname",
+      "slugLabel": "URL-Slug",
+      "slugDescription": "Die eindeutige Kennung Ihres Teams in URLs. valguide.com/{slug}",
+      "slugPlaceholder": "mein-team",
+      "slugAvailable": "Dieser Slug ist verfügbar",
+      "slugTaken": "Dieser Slug ist bereits vergeben",
+      "slugReserved": "Dieser Slug ist reserviert",
+      "slugSelf": "Dies ist Ihr aktueller Slug",
+      "slugChecking": "Verfügbarkeit wird geprüft...",
+      "autoSuggest": "Automatisch aus Namen generieren",
+      "save": "Slug speichern",
+      "saving": "Wird gespeichert...",
+      "saveSuccess": "Team-Slug aktualisiert",
+      "saveError": "Fehler beim Aktualisieren des Slugs",
+      "slugHistory": "Slug-Verlauf",
+      "slugHistoryDescription": "Alte Slugs leiten weiterhin zu Ihrem Team weiter.",
+      "current": "Aktuell",
+      "noHistory": "Keine vorherigen Slugs"
     }
   },
   "joinTeam": {

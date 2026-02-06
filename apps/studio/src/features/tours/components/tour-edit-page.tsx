@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valg
 import { CommandSeparator } from '@valguide/ui/components/command'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
 import { Globe, Languages, ListChecks } from 'lucide-react'
+import type { ComponentType } from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
@@ -27,12 +28,19 @@ import { TourProgress } from '@/features/tours/components/tour-progress'
 import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 
+export type TourSlugSettingsComponentProps = {
+  tourNanoId: string
+  tourTitle: string
+}
+
 export interface TourEditPageProps {
   onPublish?: (tourId: string, locale: string) => Promise<unknown>
   onUnpublish?: (tourId: string, locale: string) => Promise<unknown>
   onHideStop?: (tourId: string, stopNanoId: string) => Promise<unknown>
   onShowStop?: (tourId: string, stopNanoId: string) => Promise<unknown>
   MediaPicker: MediaPickerComponent
+  /** Optional component for slug settings. Pass null to hide, undefined for Storybook default. */
+  TourSlugSettings?: ComponentType<TourSlugSettingsComponentProps> | null
   /** Query options for diff view - pass undefined for Storybook to skip the query */
   diffQueryOptions?: QueryObserverOptions<DiffResult>
 }
@@ -43,6 +51,7 @@ export function TourEditPage({
   onHideStop,
   onShowStop,
   MediaPicker,
+  TourSlugSettings,
   diffQueryOptions,
 }: TourEditPageProps) {
   const router = useRouter()
@@ -316,6 +325,8 @@ export function TourEditPage({
               />
             </CardContent>
           </Card>
+
+          {TourSlugSettings && <TourSlugSettings tourNanoId={nanoId} tourTitle={tourTitle} />}
 
           <div>
             <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>

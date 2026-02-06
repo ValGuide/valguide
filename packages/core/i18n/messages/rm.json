@@ -258,7 +258,25 @@
         "hasStops": "Almain in stop",
         "allStopTitles": "Tut ils stops han in titel"
       },
-      "backToTour": "Tura"
+      "backToTour": "Tura",
+      "slug": {
+        "title": "Slug da l'URL",
+        "description": "Identificatur legibel per questa tura en URLs. {baseUrl}/{slug}",
+        "placeholder": "highlights-tour",
+        "available": "Quest slug è disponibel",
+        "taken": "Vus utilisais gia quest slug per in'autra tura",
+        "reserved": "Quest slug è reservà",
+        "self": "Quai è voss slug actual",
+        "checking": "Vegn controllà la disponibladad...",
+        "save": "Memorisar il slug",
+        "saving": "Vegn memorisà...",
+        "saveSuccess": "Slug da la tura actualisà",
+        "saveError": "Errur cun actualisar il slug",
+        "history": "Istorgia dal slug",
+        "historyDescription": "Vegls slugs redirigeschan vinavant a questa tura.",
+        "noHistory": "Nagins slugs precedents",
+        "autoGenerate": "Generar automaticamain"
+      }
     },
     "empty": {
       "title": "Anc naginas turas",
@@ -752,6 +770,28 @@
       "submitting": "Vegn creà...",
       "error": "Errur cun crear il team",
       "triggerButton": "Crear team"
+    },
+    "teamSettings": {
+      "title": "Parameters dal team",
+      "description": "Configurar l'identitad e l'URL da voss team.",
+      "nameLabel": "Num dal team",
+      "slugLabel": "Slug da l'URL",
+      "slugDescription": "L'identificatur unic da voss team en URLs. valguide.com/{slug}",
+      "slugPlaceholder": "mieu-team",
+      "slugAvailable": "Quest slug è disponibel",
+      "slugTaken": "Quest slug è gia utilisà",
+      "slugReserved": "Quest slug è reservà",
+      "slugSelf": "Quai è voss slug actual",
+      "slugChecking": "Controllar la disponibilitad...",
+      "autoSuggest": "Generar automaticamain dal num",
+      "save": "Memorisar slug",
+      "saving": "Vegn memorisà...",
+      "saveSuccess": "Slug dal team actualisà",
+      "saveError": "Errur cun actualisar il slug",
+      "slugHistory": "Istorgia dal slug",
+      "slugHistoryDescription": "Slugs vegls redirigian anc adina a voss team.",
+      "current": "Actual",
+      "noHistory": "Nagins slugs precedents"
     }
   },
   "joinTeam": {

@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import { boolean, index, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 
@@ -94,3 +94,38 @@ export const organizationInvitationRelations = relations(organizationInvitation,
     references: [authUsers.id],
   }),
 }))
+
+// =============================================================================
+// SLUGS (No Draft/Published - Immediate Changes with History for Redirects)
+// =============================================================================
+
+export const organizationSlug = studioSchema.table(
+  'organization_slug',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    slug: varchar('slug', { length: 100 }).notNull(),
+    isPrimary: boolean('is_primary').notNull().default(false),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqueSlug: uniqueIndex('organization_slug_unique').on(t.slug),
+    uniquePrimary: uniqueIndex('organization_slug_primary_unique')
+      .on(t.organizationId)
+      .where(sql`${t.isPrimary} = true`),
+    orgIdx: index('organization_slug_org_idx').on(t.organizationId),
+  }),
+)
+
+export const organizationSlugRelations = relations(organizationSlug, ({ one }) => ({
+  organization: one(organization, {
+    fields: [organizationSlug.organizationId],
+    references: [organization.id],
+  }),
+}))
+
+// Types
+export type OrganizationSlug = typeof organizationSlug.$inferSelect
+export type NewOrganizationSlug = typeof organizationSlug.$inferInsert
