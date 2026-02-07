@@ -6,7 +6,7 @@ import { publishTourFn } from '@valguide/core/features/tours/tour/publish-tour.f
 import { updateTourFn } from '@valguide/core/features/tours/tour/update-tour.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { ArchiveTourButton } from '@/features/tours/components/archive-tour-button'
 import { TourDetailSkeleton } from '@/features/tours/components/tour-detail-skeleton'
 import { TourDetailView } from '@/features/tours/components/tour-detail-view'
@@ -30,8 +30,6 @@ function TourPage() {
   const tPublish = useTranslations('tours.publish')
   const tUnpublish = useTranslations('tours.unpublish')
   const router = useRouter()
-  const [isPublishing, setIsPublishing] = useState(false)
-
   const handleArchived = async () => {
     await router.invalidate()
     router.navigate({ to: '/' })
@@ -76,7 +74,6 @@ function TourPage() {
   const handlePublish = useCallback(
     async (locale: string) => {
       if (!tour) return
-      setIsPublishing(true)
       try {
         const result = await publishTourFn({
           data: { nanoId: tour.nanoId, locale },
@@ -91,8 +88,6 @@ function TourPage() {
         )
       } catch {
         toast.error(tPublish('tourPublishError'))
-      } finally {
-        setIsPublishing(false)
       }
     },
     [tour, queryClient, nanoId, tPublish],
@@ -128,7 +123,6 @@ function TourPage() {
       onRemoveLanguage={handleRemoveLanguage}
       onPublish={handlePublish}
       onUnpublish={handleUnpublish}
-      isPublishing={isPublishing}
       ViewInAppButton={ViewInAppButton}
       ArchiveTourButton={ArchiveTourButton}
     />

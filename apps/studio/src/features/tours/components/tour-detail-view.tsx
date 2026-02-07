@@ -26,7 +26,6 @@ export type TourDetailViewProps = {
   onRemoveLanguage: (locale: string) => Promise<void>
   onPublish?: (locale: string) => Promise<void>
   onUnpublish?: (locale: string) => Promise<void>
-  isPublishing?: boolean
   ViewInAppButton: React.ComponentType<{ nanoId: string; published: boolean; appDomain: string }>
   ArchiveTourButton: React.ComponentType<{ tourNanoId: string; onArchived: () => void }>
   headerActions?: ReactNode
@@ -43,7 +42,6 @@ export function TourDetailView({
   onRemoveLanguage,
   onPublish,
   onUnpublish,
-  isPublishing,
   ViewInAppButton,
   ArchiveTourButton,
   headerActions,
@@ -157,7 +155,6 @@ export function TourDetailView({
             onRemoveLanguage={onRemoveLanguage}
             onPublish={onPublish}
             onUnpublish={onUnpublish}
-            isPublishing={isPublishing}
           />
         </div>
       </div>

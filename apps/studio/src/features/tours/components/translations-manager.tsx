@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
+
 import { Download, MoreHorizontal, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { PublishConfirmationDialog } from '../../editor/components/publish-confirmation-dialog'
@@ -26,7 +26,6 @@ export type TranslationsManagerProps = {
   onRemoveLanguage: (locale: string) => Promise<void>
   onPublish?: (locale: string) => Promise<void>
   onUnpublish?: (locale: string) => Promise<void>
-  isPublishing?: boolean
 }
 
 export function TranslationsManager({
@@ -36,7 +35,6 @@ export function TranslationsManager({
   onRemoveLanguage,
   onPublish,
   onUnpublish,
-  isPublishing,
 }: TranslationsManagerProps) {
   const t = useTranslations('tours.localesManager')
   const tDetails = useTranslations('tours.details')
@@ -114,7 +112,7 @@ export function TranslationsManager({
           <div className="divide-y">
             {locales.map((localeInfo) => {
               const localeName = getLocaleDisplayName(localeInfo.locale)
-              const isCurrentlyPublishing = publishingLocale === localeInfo.locale || isPublishing
+              const isCurrentlyPublishing = publishingLocale === localeInfo.locale
               const isCurrentlyUnpublishing = unpublishingLocale === localeInfo.locale
               const showUnpublish = localeInfo.hasPublished && !localeInfo.hasChanges && onUnpublish
               return (
@@ -138,60 +136,50 @@ export function TranslationsManager({
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
                     {showUnpublish ? (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => handleUnpublishClick(localeInfo.locale)}
-                            disabled={isCurrentlyUnpublishing}
-                          >
-                            <Download className="h-4 w-4" />
-                            <span className="sr-only">{tActions('unpublish')}</span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>{tActions('unpublish')}</TooltipContent>
-                      </Tooltip>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleUnpublishClick(localeInfo.locale)}
+                        disabled={isCurrentlyUnpublishing}
+                      >
+                        <Download className="h-4 w-4" />
+                        <span className="hidden sm:inline">
+                          {isCurrentlyUnpublishing ? tActions('unpublishing') : tActions('unpublish')}
+                        </span>
+                        <span className="sr-only sm:hidden">
+                          {isCurrentlyUnpublishing ? tActions('unpublishing') : tActions('unpublish')}
+                        </span>
+                      </Button>
                     ) : onPublish ? (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => handlePublishClick(localeInfo.locale)}
-                            disabled={isCurrentlyPublishing}
-                          >
-                            <Upload className="h-4 w-4" />
-                            <span className="sr-only">
-                              {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handlePublishClick(localeInfo.locale)}
+                        disabled={isCurrentlyPublishing}
+                      >
+                        <Upload className="h-4 w-4" />
+                        <span className="hidden sm:inline">
                           {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
-                        </TooltipContent>
-                      </Tooltip>
+                        </span>
+                        <span className="sr-only sm:hidden">
+                          {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
+                        </span>
+                      </Button>
                     ) : null}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                          <Link
-                            to="/tours/$nanoId/edit"
-                            params={{ nanoId: tourNanoId }}
-                            search={{
-                              locale: localeInfo.locale,
-                            }}
-                            preload="intent"
-                          >
-                            <Pencil className="h-4 w-4" />
-                            <span className="sr-only">{tStops('edit')}</span>
-                          </Link>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>{tStops('edit')}</TooltipContent>
-                    </Tooltip>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link
+                        to="/tours/$nanoId/edit"
+                        params={{ nanoId: tourNanoId }}
+                        search={{
+                          locale: localeInfo.locale,
+                        }}
+                        preload="intent"
+                      >
+                        <Pencil className="h-4 w-4" />
+                        <span className="hidden sm:inline">{tStops('edit')}</span>
+                        <span className="sr-only sm:hidden">{tStops('edit')}</span>
+                      </Link>
+                    </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
