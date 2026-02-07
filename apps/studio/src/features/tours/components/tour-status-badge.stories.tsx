@@ -63,15 +63,15 @@ export const AllStatuses: Story = {
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <TourStatusBadge status="published" indicator="up-to-date" />
-        <span className="text-sm text-muted-foreground">Live (no pending edits)</span>
+        <span className="text-sm text-muted-foreground">Published (no pending edits)</span>
       </div>
       <div className="flex items-center gap-2">
         <TourStatusBadge status="published" indicator="changed" />
-        <span className="text-sm text-muted-foreground">Live with unpublished edits</span>
+        <span className="text-sm text-muted-foreground">Published with unpublished edits</span>
       </div>
       <div className="flex items-center gap-2">
         <TourStatusBadge status="unpublished" />
-        <span className="text-sm text-muted-foreground">Not live</span>
+        <span className="text-sm text-muted-foreground">Not published</span>
       </div>
       <div className="flex items-center gap-2">
         <TourStatusBadge status="archived" />

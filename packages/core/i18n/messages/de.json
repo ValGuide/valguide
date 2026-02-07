@@ -340,8 +340,8 @@
       "changed": "Geändert"
     },
     "visibility": {
-      "live": "Live",
-      "notLive": "Nicht live",
+      "live": "Veröffentlicht",
+      "notLive": "Nicht veröffentlicht",
       "archived": "Archiviert"
     },
     "edits": {
