@@ -10,12 +10,14 @@ import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import de from '@valguide/i18n/messages/de.json'
 import en from '@valguide/i18n/messages/en.json'
 import rm from '@valguide/i18n/messages/rm.json'
+import { createContext, useContext } from 'react'
 import { IntlProvider } from 'use-intl'
 
-const childrenRef = { current: null as React.ReactNode }
+const StoryChildrenContext = createContext<React.ReactNode>(null)
 
 function RootComponent() {
-  return <>{childrenRef.current}</>
+  const children = useContext(StoryChildrenContext)
+  return <>{children}</>
 }
 
 const rootRoute = createRootRoute({
@@ -34,8 +36,11 @@ const mockRouter = createRouter({
 })
 
 function MockRouterProvider({ children }: { children: React.ReactNode }) {
-  childrenRef.current = children
-  return <RouterProvider router={mockRouter} />
+  return (
+    <StoryChildrenContext.Provider value={children}>
+      <RouterProvider router={mockRouter} />
+    </StoryChildrenContext.Provider>
+  )
 }
 
 const queryClient = new QueryClient({
