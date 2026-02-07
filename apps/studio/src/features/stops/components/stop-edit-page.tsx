@@ -49,6 +49,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
     refetch,
     publish,
     unpublish,
+    discard,
     updateAssets,
     registerFormDirty,
     unregisterForm,
@@ -188,13 +189,14 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       await publish(activeLocale)
       await onPublishAssets?.(nanoId, activeLocale)
       await refetch()
+      setDiffEnabled(false)
     } catch (error) {
       console.error('Failed to publish:', error)
       toast.error(t('publish.error'))
     } finally {
       setIsPublishing(false)
     }
-  }, [activeLocale, nanoId, refetch, publish, isDirty, save, t, onPublishAssets])
+  }, [activeLocale, nanoId, refetch, publish, isDirty, save, t, onPublishAssets, setDiffEnabled])
 
   const handleUnpublish = useCallback(async () => {
     try {
@@ -208,12 +210,13 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
 
   const handleDiscard = useCallback(async () => {
     try {
+      await discard(activeLocale)
       await refetch()
     } catch (error) {
       console.error('Failed to discard:', error)
       toast.error(t('discard.error'))
     }
-  }, [refetch])
+  }, [discard, activeLocale, refetch])
 
   const breadcrumbContent = (
     <Button variant="ghost" size="sm" onClick={handleBack} className="-ml-2">

@@ -199,13 +199,14 @@ export function TourEditPage({
       if (isDirty) await save()
       await onPublish(nanoId, activeLocale)
       await refetch()
+      setDiffEnabled(false)
     } catch (error) {
       console.error('Failed to publish:', error)
       toast.error(t('publish.error'))
     } finally {
       setIsPublishing(false)
     }
-  }, [nanoId, activeLocale, refetch, onPublish, isDirty, save, t])
+  }, [nanoId, activeLocale, refetch, onPublish, isDirty, save, t, setDiffEnabled])
 
   const handleUnpublish = useCallback(async () => {
     if (!onUnpublish) return
