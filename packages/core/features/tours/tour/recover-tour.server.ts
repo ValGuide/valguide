@@ -22,6 +22,7 @@ export async function recoverTour(nanoId: string, userId: string): Promise<Recov
     .update(tour)
     .set({
       archivedAt: null,
+      publishedAt: null,
       updatedBy: userId,
     })
     .where(eq(tour.id, tourId))

@@ -10,7 +10,7 @@ function toTourForPreview(tour: TourListItem): Tour {
     coverImage: tour.coverImage ?? undefined,
     createdAt: tour.createdAt,
     updatedAt: tour.updatedAt,
-    published: null,
+    published: tour.publishedAt,
   }
 }
 

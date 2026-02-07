@@ -52,11 +52,10 @@ export function TourDetailView({
   const bestLocale = pickBestLocale(preferredLocale, tour.locales)
   const displayTitle = bestLocale?.title?.trim() || t('untitledTour')
   const displayDescription = bestLocale?.description ?? null
-  const isPublished = tour.locales.some((l) => l.hasPublished)
   const coverImageUrl = tour.coverImage ? getAssetImageUrl(tour.coverImage) : null
 
   const tourStatus = getTourStatus({
-    published: isPublished ? new Date() : null, // getTourStatus expects Date | null
+    publishedAt: tour.publishedAt,
     archivedAt: tour.archivedAt,
   })
 
@@ -140,10 +139,7 @@ export function TourDetailView({
                   value={new Date(tour.updatedAt).toLocaleDateString()}
                   icon={<Clock />}
                 />
-                <MetadataRow
-                  label={t('details.status')}
-                  value={tourStatus === 'published' ? t('details.published') : t('details.draft')}
-                />
+                <MetadataRow label={t('details.status')} value={t(`status.${tourStatus}`)} />
               </MetadataGrid>
             </CardContent>
           </Card>

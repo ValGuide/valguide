@@ -1,6 +1,7 @@
 import type { QueryObserverOptions } from '@tanstack/react-query'
 import { Link, useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
+import { getTourStatusDisplay } from '@valguide/core/features/tours/status-utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -25,7 +26,6 @@ import {
   type TourMetadataFormWithDiffRef,
 } from '@/features/tours/components/tour-metadata-form-with-diff'
 import { TourProgress } from '@/features/tours/components/tour-progress'
-import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 
 export type TourSlugSettingsComponentProps = {
@@ -102,11 +102,12 @@ export function TourEditPage({
   const hasPublished = localeDraft?.hasPublished ?? false
 
   const computedStatusDisplay: StatusDisplay = useMemo(() => {
-    if (!localeDraft) return { status: 'unpublished', indicator: null }
-    const status: TourStatus = hasPublished ? 'published' : 'unpublished'
-    const indicator: TourIndicator = 'up-to-date'
+    const { status, indicator } = getTourStatusDisplay(
+      { publishedAt: tourDetail?.publishedAt ?? null, archivedAt: tourDetail?.archivedAt ?? null },
+      changedCount > 0,
+    )
     return { status, indicator }
-  }, [localeDraft, hasPublished])
+  }, [tourDetail?.publishedAt, tourDetail?.archivedAt, changedCount])
 
   const stableStatusRef = useRef(computedStatusDisplay)
   if (!isPublishing) {

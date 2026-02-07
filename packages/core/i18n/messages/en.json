@@ -207,7 +207,7 @@
       "addCoverImage": "Add an image that captures this exhibition",
       "noDescription": "No description",
       "published": "Published",
-      "draft": "Draft"
+      "unpublished": "Unpublished"
     },
     "stops": "Stops",
     "stop": "Stop",

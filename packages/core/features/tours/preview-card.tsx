@@ -1,13 +1,13 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
+import { getTourStatus } from '@valguide/core/features/tours/status-utils'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
 import { StatusBadge } from '@valguide/core/ui/components/status-badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 import { cn } from '@valguide/core/ui/lib/utils'
-import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
 import { ImageIcon, LucideInfo } from 'lucide-react'
 import * as React from 'react'
 import { z } from 'zod'
@@ -63,7 +63,7 @@ export interface TourPreviewCardProps extends React.HTMLAttributes<HTMLDivElemen
 }
 
 export function TourPreviewCard({ tour, onViewDetails, className, ...props }: TourPreviewCardProps) {
-  // i18n-used-keys: tour.previewCard.draft, tour.previewCard.published
+  // i18n-used-keys: tour.previewCard.published, tour.previewCard.unpublished
   const t = useTranslations('tour.previewCard')
   const locale = useLocale()
 
@@ -78,14 +78,12 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
   }, [tour.translations, locale])
 
   const displayTitle = translation?.title || tour.title || 'Untitled Tour'
-  const displayDescription = translation?.description || tour.description || ''
   const displayImage = tour.imageUrl ?? (tour.coverImage ? getAssetImageUrl(tour.coverImage) : undefined)
   const tourLinkOptions = tour.nanoId
     ? ({ to: '/tours/$nanoId', params: { nanoId: tour.nanoId } } as const)
     : ({ to: '/' } as const)
 
-  const isPublished = !!tour.published
-  const status = isPublished ? 'published' : 'draft'
+  const tourStatus = getTourStatus({ publishedAt: tour.published ?? null, archivedAt: null })
 
   return (
     <Card
@@ -118,22 +116,17 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
       <CardHeader className="pb-0">
         <CardTitle className="flex items-start justify-between gap-3">
           <span className="line-clamp-2 text-base font-semibold leading-snug flex-1">{displayTitle}</span>
-          <StatusBadge status={status} size="sm" className="shrink-0 mt-0.5">
-            {t(status)}
+          <StatusBadge
+            status={tourStatus === 'unpublished' ? 'draft' : tourStatus}
+            size="sm"
+            className="shrink-0 mt-0.5"
+          >
+            {t(tourStatus === 'archived' ? 'unpublished' : tourStatus)}
           </StatusBadge>
         </CardTitle>
       </CardHeader>
 
-      {/* Description - Clamped */}
-      <CardContent className="flex-1 py-3">
-        {displayDescription ? (
-          <div className="text-sm text-muted-foreground line-clamp-2">
-            <RichTextDisplay content={displayDescription} />
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground/50 italic">{t('noDescription')}</p>
-        )}
-      </CardContent>
+      <CardContent className="flex-1 py-3" />
 
       {/* Footer - Consistent Position */}
       <CardFooter className="flex-col items-stretch gap-3 pt-0">

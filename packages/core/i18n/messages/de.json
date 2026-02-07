@@ -207,7 +207,7 @@
       "addCoverImage": "Fügen Sie ein Bild hinzu, das diese Ausstellung einfängt",
       "noDescription": "Keine Beschreibung",
       "published": "Veröffentlicht",
-      "draft": "Entwurf"
+      "unpublished": "Unveröffentlicht"
     },
     "stops": "Stationen",
     "stop": "Station",

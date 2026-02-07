@@ -2,7 +2,7 @@ export type TourStatus = 'published' | 'unpublished' | 'archived'
 export type ChangeIndicator = 'up-to-date' | 'changed'
 
 export type TourStatusInput = {
-  published: Date | null
+  publishedAt: Date | null
   archivedAt: Date | null
 }
 
@@ -26,15 +26,15 @@ export function getTourStatus(tour: TourStatusInput): TourStatus {
   if (tour.archivedAt !== null) {
     return 'archived'
   }
-  if (tour.published === null) {
+  if (tour.publishedAt === null) {
     return 'unpublished'
   }
   return 'published'
 }
 
-export function getTourStatusDisplay(tour: TourStatusInput): TourStatusDisplay {
+export function getTourStatusDisplay(tour: TourStatusInput, hasChanges?: boolean): TourStatusDisplay {
   const status = getTourStatus(tour)
-  const indicator: ChangeIndicator | null = status === 'published' ? 'up-to-date' : null
+  const indicator: ChangeIndicator | null = status === 'published' ? (hasChanges ? 'changed' : 'up-to-date') : null
   return { status, indicator }
 }
 

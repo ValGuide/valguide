@@ -25,6 +25,7 @@ export type TourDetail = {
   organizationId: string
   availableLocales: string[]
   archivedAt: Date | null
+  publishedAt: Date | null
   createdAt: Date
   updatedAt: Date
   locales: LocaleDraftInfo[]
@@ -94,6 +95,7 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     organizationId: foundTour.organizationId,
     availableLocales: foundTour.availableLocales ?? [],
     archivedAt: foundTour.archivedAt,
+    publishedAt: foundTour.publishedAt,
     createdAt: foundTour.createdAt,
     updatedAt: foundTour.updatedAt,
     locales,

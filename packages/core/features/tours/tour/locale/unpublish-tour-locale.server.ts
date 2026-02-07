@@ -23,5 +23,15 @@ export async function unpublishTourLocale(tourNanoId: string, locale: string): P
     throw new NotFoundError('Tour locale')
   }
 
+  const remaining = await db
+    .select({ id: tourLocale.id })
+    .from(tourLocale)
+    .where(eq(tourLocale.tourId, foundTour.id))
+    .limit(1)
+
+  if (remaining.length === 0) {
+    await db.update(tour).set({ publishedAt: null }).where(eq(tour.id, foundTour.id))
+  }
+
   return { success: true }
 }

@@ -19,6 +19,7 @@ export type TourListItem = {
   locale: string
   availableLocales: string[]
   archivedAt: Date | null
+  publishedAt: Date | null
   createdAt: Date
   updatedAt: Date
   coverImage: TourCoverImage | null
@@ -77,6 +78,7 @@ export async function listTours(organizationId: string, filters: ListToursFilter
       nanoId: tour.nanoId,
       availableLocales: tour.availableLocales,
       archivedAt: tour.archivedAt,
+      publishedAt: tour.publishedAt,
       createdAt: tour.createdAt,
       updatedAt: tour.updatedAt,
       title: titleSubquery.title,
@@ -96,6 +98,7 @@ export async function listTours(organizationId: string, filters: ListToursFilter
     locale: row.locale ?? preferredLocale,
     availableLocales: row.availableLocales ?? [],
     archivedAt: row.archivedAt,
+    publishedAt: row.publishedAt,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
     coverImage: row.coverStoragePath ? { storagePath: row.coverStoragePath, publicUrl: row.coverPublicUrl } : null,

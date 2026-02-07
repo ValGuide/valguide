@@ -207,7 +207,7 @@
       "addCoverImage": "Agiuntai in maletg che representa questa exposiziun",
       "noDescription": "Nagina descripziun",
       "published": "Publitgà",
-      "draft": "Sboz"
+      "unpublished": "Betg publitgà"
     },
     "stops": "Staziuns",
     "stop": "Staziun",

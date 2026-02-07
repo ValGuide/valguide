@@ -208,6 +208,8 @@ export async function publishTour(input: PublishTourInput, userId: string): Prom
     }
 
     publishedStopCount = stopIds.length
+
+    await tx.update(tour).set({ publishedAt: new Date() }).where(eq(tour.id, foundTour.id))
   })
 
   return { success: true, publishedStopCount }
