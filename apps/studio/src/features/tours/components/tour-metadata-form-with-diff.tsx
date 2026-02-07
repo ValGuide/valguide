@@ -10,6 +10,7 @@ import { z } from 'zod'
 import { DiffFieldLabel } from '@/features/editor/components/diff-aware-field'
 import { DiffToggle } from '@/features/editor/components/diff-toggle'
 import { InlineDiff } from '@/features/editor/components/inline-diff'
+import { RichTextInlineDiff } from '@/features/editor/components/rich-text-inline-diff'
 
 const tourTranslationFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(500),
@@ -156,8 +157,11 @@ export const TourMetadataFormWithDiff = forwardRef<TourMetadataFormWithDiffRef, 
                         <DiffFieldLabel fieldDiff={descriptionDiff}>{t('editor.descriptionLabel')}</DiffFieldLabel>
                       </FieldLabel>
                       {diffEnabled && descriptionDiff?.hasChanged ? (
-                        <div className="prose prose-sm max-w-none rounded-md border bg-muted/50 p-3 dark:prose-invert">
-                          <InlineDiff oldText={descriptionDiff.published} newText={descriptionDiff.draft} />
+                        <div className="rounded-md border bg-muted/50 p-3">
+                          <RichTextInlineDiff
+                            oldContent={descriptionDiff.published}
+                            newContent={descriptionDiff.draft}
+                          />
                         </div>
                       ) : (
                         <RichTextEditor

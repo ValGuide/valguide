@@ -14,6 +14,7 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { DiffFieldLabel } from '@/features/editor/components/diff-aware-field'
 import { DiffToggle } from '@/features/editor/components/diff-toggle'
 import { InlineDiff } from '@/features/editor/components/inline-diff'
+import { RichTextInlineDiff } from '@/features/editor/components/rich-text-inline-diff'
 import { type StopTranslationFormData, stopTranslationFormSchema } from '@/features/tours/schemas/tour-form'
 
 export type StopLocaleEditorWithDiffProps = {
@@ -189,8 +190,8 @@ export const StopLocaleEditorWithDiff = forwardRef<StopLocaleEditorWithDiffRef, 
                       </Button>
                     </div>
                     {diffEnabled && descriptionDiff?.hasChanged ? (
-                      <div className="prose prose-sm max-w-none rounded-md border bg-muted/50 p-3 dark:prose-invert">
-                        <InlineDiff oldText={descriptionDiff.published} newText={descriptionDiff.draft} />
+                      <div className="rounded-md border bg-muted/50 p-3">
+                        <RichTextInlineDiff oldContent={descriptionDiff.published} newContent={descriptionDiff.draft} />
                       </div>
                     ) : (
                       <RichTextEditor
