@@ -12,8 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as GNanoIdRouteImport } from './routes/g.$nanoId'
-import { Route as GNanoIdSStopNanoIdRouteImport } from './routes/g.$nanoId.s.$stopNanoId'
+import { Route as OrgSlugTourSlugRouteImport } from './routes/$orgSlug.$tourSlug'
+import { Route as OrgSlugTourSlugStopNanoIdRouteImport } from './routes/$orgSlug.$tourSlug.$stopNanoId'
 
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
   id: '/terms-of-service',
@@ -30,38 +30,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GNanoIdRoute = GNanoIdRouteImport.update({
-  id: '/g/$nanoId',
-  path: '/g/$nanoId',
+const OrgSlugTourSlugRoute = OrgSlugTourSlugRouteImport.update({
+  id: '/$orgSlug/$tourSlug',
+  path: '/$orgSlug/$tourSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GNanoIdSStopNanoIdRoute = GNanoIdSStopNanoIdRouteImport.update({
-  id: '/s/$stopNanoId',
-  path: '/s/$stopNanoId',
-  getParentRoute: () => GNanoIdRoute,
-} as any)
+const OrgSlugTourSlugStopNanoIdRoute =
+  OrgSlugTourSlugStopNanoIdRouteImport.update({
+    id: '/$stopNanoId',
+    path: '/$stopNanoId',
+    getParentRoute: () => OrgSlugTourSlugRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
-  '/g/$nanoId': typeof GNanoIdRouteWithChildren
-  '/g/$nanoId/s/$stopNanoId': typeof GNanoIdSStopNanoIdRoute
+  '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
+  '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
-  '/g/$nanoId': typeof GNanoIdRouteWithChildren
-  '/g/$nanoId/s/$stopNanoId': typeof GNanoIdSStopNanoIdRoute
+  '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
+  '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
-  '/g/$nanoId': typeof GNanoIdRouteWithChildren
-  '/g/$nanoId/s/$stopNanoId': typeof GNanoIdSStopNanoIdRoute
+  '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
+  '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -69,29 +70,29 @@ export interface FileRouteTypes {
     | '/'
     | '/privacy-policy'
     | '/terms-of-service'
-    | '/g/$nanoId'
-    | '/g/$nanoId/s/$stopNanoId'
+    | '/$orgSlug/$tourSlug'
+    | '/$orgSlug/$tourSlug/$stopNanoId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/privacy-policy'
     | '/terms-of-service'
-    | '/g/$nanoId'
-    | '/g/$nanoId/s/$stopNanoId'
+    | '/$orgSlug/$tourSlug'
+    | '/$orgSlug/$tourSlug/$stopNanoId'
   id:
     | '__root__'
     | '/'
     | '/privacy-policy'
     | '/terms-of-service'
-    | '/g/$nanoId'
-    | '/g/$nanoId/s/$stopNanoId'
+    | '/$orgSlug/$tourSlug'
+    | '/$orgSlug/$tourSlug/$stopNanoId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
-  GNanoIdRoute: typeof GNanoIdRouteWithChildren
+  OrgSlugTourSlugRoute: typeof OrgSlugTourSlugRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -117,39 +118,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/g/$nanoId': {
-      id: '/g/$nanoId'
-      path: '/g/$nanoId'
-      fullPath: '/g/$nanoId'
-      preLoaderRoute: typeof GNanoIdRouteImport
+    '/$orgSlug/$tourSlug': {
+      id: '/$orgSlug/$tourSlug'
+      path: '/$orgSlug/$tourSlug'
+      fullPath: '/$orgSlug/$tourSlug'
+      preLoaderRoute: typeof OrgSlugTourSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/g/$nanoId/s/$stopNanoId': {
-      id: '/g/$nanoId/s/$stopNanoId'
-      path: '/s/$stopNanoId'
-      fullPath: '/g/$nanoId/s/$stopNanoId'
-      preLoaderRoute: typeof GNanoIdSStopNanoIdRouteImport
-      parentRoute: typeof GNanoIdRoute
+    '/$orgSlug/$tourSlug/$stopNanoId': {
+      id: '/$orgSlug/$tourSlug/$stopNanoId'
+      path: '/$stopNanoId'
+      fullPath: '/$orgSlug/$tourSlug/$stopNanoId'
+      preLoaderRoute: typeof OrgSlugTourSlugStopNanoIdRouteImport
+      parentRoute: typeof OrgSlugTourSlugRoute
     }
   }
 }
 
-interface GNanoIdRouteChildren {
-  GNanoIdSStopNanoIdRoute: typeof GNanoIdSStopNanoIdRoute
+interface OrgSlugTourSlugRouteChildren {
+  OrgSlugTourSlugStopNanoIdRoute: typeof OrgSlugTourSlugStopNanoIdRoute
 }
 
-const GNanoIdRouteChildren: GNanoIdRouteChildren = {
-  GNanoIdSStopNanoIdRoute: GNanoIdSStopNanoIdRoute,
+const OrgSlugTourSlugRouteChildren: OrgSlugTourSlugRouteChildren = {
+  OrgSlugTourSlugStopNanoIdRoute: OrgSlugTourSlugStopNanoIdRoute,
 }
 
-const GNanoIdRouteWithChildren =
-  GNanoIdRoute._addFileChildren(GNanoIdRouteChildren)
+const OrgSlugTourSlugRouteWithChildren = OrgSlugTourSlugRoute._addFileChildren(
+  OrgSlugTourSlugRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
-  GNanoIdRoute: GNanoIdRouteWithChildren,
+  OrgSlugTourSlugRoute: OrgSlugTourSlugRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
