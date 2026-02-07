@@ -38,7 +38,7 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
         <CardContent className="p-8">{children}</CardContent>
       </Card>
 
-      {footer && <div className="relative mt-6 text-center">{footer}</div>}
+      {footer && <div className="relative mt-6 w-full max-w-md text-center">{footer}</div>}
     </main>
   )
 }
