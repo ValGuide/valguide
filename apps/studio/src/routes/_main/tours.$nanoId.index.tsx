@@ -1,6 +1,7 @@
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { clientEnv } from '@valguide/core/env/client'
+import { unpublishTourLocaleFn } from '@valguide/core/features/tours/tour/locale/unpublish-tour-locale.fn'
 import { publishTourFn } from '@valguide/core/features/tours/tour/publish-tour.fn'
 import { updateTourFn } from '@valguide/core/features/tours/tour/update-tour.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -27,6 +28,7 @@ function TourPage() {
   const queryClient = useQueryClient()
   const tLocales = useTranslations('tours.locales')
   const tPublish = useTranslations('tours.publish')
+  const tUnpublish = useTranslations('tours.unpublish')
   const router = useRouter()
   const [isPublishing, setIsPublishing] = useState(false)
 
@@ -96,6 +98,24 @@ function TourPage() {
     [tour, queryClient, nanoId, tPublish],
   )
 
+  const handleUnpublish = useCallback(
+    async (locale: string) => {
+      if (!tour) return
+      try {
+        await unpublishTourLocaleFn({
+          data: { nanoId: tour.nanoId, locale },
+        })
+        await queryClient.invalidateQueries({
+          queryKey: ['tour', nanoId],
+        })
+        toast.success(tUnpublish('success'))
+      } catch {
+        toast.error(tUnpublish('error'))
+      }
+    },
+    [tour, queryClient, nanoId, tUnpublish],
+  )
+
   return (
     <TourDetailView
       tour={tour}
@@ -107,6 +127,7 @@ function TourPage() {
       onAddLanguage={handleAddLanguage}
       onRemoveLanguage={handleRemoveLanguage}
       onPublish={handlePublish}
+      onUnpublish={handleUnpublish}
       isPublishing={isPublishing}
       ViewInAppButton={ViewInAppButton}
       ArchiveTourButton={ArchiveTourButton}

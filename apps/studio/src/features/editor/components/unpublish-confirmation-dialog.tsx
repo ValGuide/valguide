@@ -13,21 +13,19 @@ import {
 interface UnpublishConfirmationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  contentType: 'tour' | 'stop'
+  isUnpublishing?: boolean
   onConfirm: () => void
+  languageName: string
 }
 
 export function UnpublishConfirmationDialog({
   open,
   onOpenChange,
-  contentType,
+  isUnpublishing,
   onConfirm,
+  languageName,
 }: UnpublishConfirmationDialogProps) {
-  // i18n-used-keys: tours.confirmUnpublishTour.title, tours.confirmUnpublishTour.description, tours.confirmUnpublishTour.cancel, tours.confirmUnpublishTour.confirm
-  const tTour = useTranslations('tours.confirmUnpublishTour')
-  // i18n-used-keys: tours.confirmUnpublishStop.title, tours.confirmUnpublishStop.description, tours.confirmUnpublishStop.cancel, tours.confirmUnpublishStop.confirm
-  const tStop = useTranslations('tours.confirmUnpublishStop')
-  const t = contentType === 'tour' ? tTour : tStop
+  const t = useTranslations('tours.confirmUnpublishTour')
 
   const handleConfirm = () => {
     onConfirm()
@@ -38,13 +36,14 @@ export function UnpublishConfirmationDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('title')}</AlertDialogTitle>
-          <AlertDialogDescription>{t('description')}</AlertDialogDescription>
+          <AlertDialogTitle>{t('title', { language: languageName })}</AlertDialogTitle>
+          <AlertDialogDescription>{t('description', { language: languageName })}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isUnpublishing}>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
+            disabled={isUnpublishing}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {t('confirm')}

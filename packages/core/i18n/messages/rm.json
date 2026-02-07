@@ -362,8 +362,8 @@
       "error": "Errur cun stizzar il sboz"
     },
     "confirmUnpublishTour": {
-      "title": "Retrar questa translaziun?",
-      "description": "Visitaders na vesan betg pli questa versiun linguistica da la tura. La tura resta disponibla en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
+      "title": "Retrar la translaziun {language}?",
+      "description": "Visitaders na vesan betg pli la versiun {language} da la tura. La tura resta disponibla en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
       "confirm": "Retrar translaziun",
       "cancel": "Laschar publitgà"
     },

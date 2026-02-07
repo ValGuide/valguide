@@ -11,9 +11,10 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
-import { MoreHorizontal, Pencil, Plus, Trash2, Upload } from 'lucide-react'
+import { Download, MoreHorizontal, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { PublishConfirmationDialog } from '../../editor/components/publish-confirmation-dialog'
+import { UnpublishConfirmationDialog } from '../../editor/components/unpublish-confirmation-dialog'
 import { AddLanguageDialog } from './add-language-dialog'
 import { RemoveLanguageDialog } from './remove-language-dialog'
 import { getLocaleDisplayName } from './unified-locale-selector'
@@ -24,6 +25,7 @@ export type TranslationsManagerProps = {
   onAddLanguage: (locale: string) => Promise<void>
   onRemoveLanguage: (locale: string) => Promise<void>
   onPublish?: (locale: string) => Promise<void>
+  onUnpublish?: (locale: string) => Promise<void>
   isPublishing?: boolean
 }
 
@@ -33,6 +35,7 @@ export function TranslationsManager({
   onAddLanguage,
   onRemoveLanguage,
   onPublish,
+  onUnpublish,
   isPublishing,
 }: TranslationsManagerProps) {
   const t = useTranslations('tours.localesManager')
@@ -46,7 +49,9 @@ export function TranslationsManager({
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [localeToRemove, setLocaleToRemove] = useState<string | null>(null)
   const [localeToPublish, setLocaleToPublish] = useState<string | null>(null)
+  const [localeToUnpublish, setLocaleToUnpublish] = useState<string | null>(null)
   const [publishingLocale, setPublishingLocale] = useState<string | null>(null)
+  const [unpublishingLocale, setUnpublishingLocale] = useState<string | null>(null)
 
   const canRemove = locales.length > 1
   const existingLocaleCodes = locales.map((l) => l.locale)
@@ -79,6 +84,22 @@ export function TranslationsManager({
     }
   }
 
+  const handleUnpublishClick = (locale: string) => {
+    if (!onUnpublish) return
+    setLocaleToUnpublish(locale)
+  }
+
+  const handleConfirmUnpublish = async () => {
+    if (!localeToUnpublish || !onUnpublish) return
+    setUnpublishingLocale(localeToUnpublish)
+    try {
+      await onUnpublish(localeToUnpublish)
+    } finally {
+      setUnpublishingLocale(null)
+      setLocaleToUnpublish(null)
+    }
+  }
+
   return (
     <>
       <Card>
@@ -94,6 +115,8 @@ export function TranslationsManager({
             {locales.map((localeInfo) => {
               const localeName = getLocaleDisplayName(localeInfo.locale)
               const isCurrentlyPublishing = publishingLocale === localeInfo.locale || isPublishing
+              const isCurrentlyUnpublishing = unpublishingLocale === localeInfo.locale
+              const showUnpublish = localeInfo.hasPublished && !localeInfo.hasChanges && onUnpublish
               return (
                 <div
                   key={localeInfo.locale}
@@ -114,7 +137,23 @@ export function TranslationsManager({
                     </Badge>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
-                    {onPublish && (
+                    {showUnpublish ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handleUnpublishClick(localeInfo.locale)}
+                            disabled={isCurrentlyUnpublishing}
+                          >
+                            <Download className="h-4 w-4" />
+                            <span className="sr-only">{tActions('unpublish')}</span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{tActions('unpublish')}</TooltipContent>
+                      </Tooltip>
+                    ) : onPublish ? (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
@@ -134,7 +173,7 @@ export function TranslationsManager({
                           {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
                         </TooltipContent>
                       </Tooltip>
-                    )}
+                    ) : null}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -201,6 +240,14 @@ export function TranslationsManager({
         languageName={localeToPublish ? getLocaleDisplayName(localeToPublish) : ''}
         isPublishing={!!publishingLocale}
         onConfirm={handleConfirmPublish}
+      />
+
+      <UnpublishConfirmationDialog
+        open={!!localeToUnpublish}
+        onOpenChange={(open) => !open && setLocaleToUnpublish(null)}
+        languageName={localeToUnpublish ? getLocaleDisplayName(localeToUnpublish) : ''}
+        isUnpublishing={!!unpublishingLocale}
+        onConfirm={handleConfirmUnpublish}
       />
     </>
   )

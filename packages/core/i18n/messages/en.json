@@ -362,8 +362,8 @@
       "error": "Failed to discard draft"
     },
     "confirmUnpublishTour": {
-      "title": "Unpublish this translation?",
-      "description": "Visitors will no longer see this language version of the tour. The tour remains available in other languages. Nothing is deleted—you can republish anytime.",
+      "title": "Unpublish {language} translation?",
+      "description": "Visitors will no longer see the {language} version of the tour. The tour remains available in other languages. Nothing is deleted—you can republish anytime.",
       "confirm": "Unpublish translation",
       "cancel": "Keep published"
     },

@@ -362,8 +362,8 @@
       "error": "Fehler beim Verwerfen des Entwurfs"
     },
     "confirmUnpublishTour": {
-      "title": "Diese Übersetzung zurückziehen?",
-      "description": "Besucher sehen diese Sprachversion der Tour nicht mehr. Die Tour bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
+      "title": "{language}-Übersetzung zurückziehen?",
+      "description": "Besucher sehen die {language}-Version der Tour nicht mehr. Die Tour bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
       "confirm": "Übersetzung zurückziehen",
       "cancel": "Veröffentlicht lassen"
     },
