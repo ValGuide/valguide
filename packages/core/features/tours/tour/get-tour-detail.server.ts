@@ -1,6 +1,7 @@
 import { and, eq, isNull } from 'drizzle-orm'
+import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { tour, tourLocale, tourLocaleDraft, tourSettingsDraft } from '../schema'
+import { tour, tourAssetDraft, tourLocale, tourLocaleDraft, tourSettingsDraft } from '../schema'
 
 // =============================================================================
 // TYPES
@@ -11,6 +12,11 @@ export type LocaleDraftInfo = {
   title: string | null
   description: string | null
   hasPublished: boolean
+}
+
+export type TourCoverImage = {
+  storagePath: string
+  publicUrl: string | null
 }
 
 export type TourDetail = {
@@ -26,6 +32,7 @@ export type TourDetail = {
     themeId: string | null
     settingsJson: string | null
   } | null
+  coverImage: TourCoverImage | null
 }
 
 // =============================================================================
@@ -71,6 +78,16 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     .where(eq(tourSettingsDraft.tourId, foundTour.id))
     .limit(1)
 
+  const [coverImageRow] = await db
+    .select({
+      storagePath: asset.storagePath,
+      publicUrl: asset.publicUrl,
+    })
+    .from(tourAssetDraft)
+    .innerJoin(asset, eq(tourAssetDraft.assetId, asset.id))
+    .where(and(eq(tourAssetDraft.tourId, foundTour.id), eq(tourAssetDraft.channel, 'images.hero')))
+    .limit(1)
+
   return {
     id: foundTour.id,
     nanoId: foundTour.nanoId,
@@ -81,5 +98,6 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     updatedAt: foundTour.updatedAt,
     locales,
     settings: settings ?? null,
+    coverImage: coverImageRow ?? null,
   }
 }

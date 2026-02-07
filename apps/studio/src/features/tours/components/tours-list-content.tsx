@@ -7,7 +7,7 @@ function toTourForPreview(tour: TourListItem): Tour {
     nanoId: tour.nanoId,
     title: tour.title ?? undefined,
     description: undefined,
-    imageUrl: undefined,
+    coverImage: tour.coverImage ?? undefined,
     createdAt: tour.createdAt,
     updatedAt: tour.updatedAt,
     published: null,

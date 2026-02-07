@@ -4,7 +4,7 @@ import { requireOrgMember } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { listTours } from './list-tours.server'
 
-export type { ListToursFilters, TourListItem } from './list-tours.server'
+export type { ListToursFilters, TourCoverImage, TourListItem } from './list-tours.server'
 
 // =============================================================================
 // SERVER FUNCTION

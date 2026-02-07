@@ -71,6 +71,7 @@ const createMockTourDetail = (overrides: Partial<TourDetail> = {}): TourDetail =
   updatedAt: new Date('2025-01-15T14:30:00Z'),
   locales: [],
   settings: null,
+  coverImage: null,
   ...overrides,
 })
 

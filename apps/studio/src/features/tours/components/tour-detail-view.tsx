@@ -1,4 +1,6 @@
 import { Link } from '@tanstack/react-router'
+import { Image } from '@unpic/react'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { getTourStatus } from '@valguide/core/features/tours/status-utils'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { pickBestLocale } from '@valguide/core/features/tours/utils'
@@ -51,6 +53,7 @@ export function TourDetailView({
   const displayTitle = bestLocale?.title?.trim() || t('untitledTour')
   const displayDescription = bestLocale?.description ?? null
   const isPublished = tour.locales.some((l) => l.hasPublished)
+  const coverImageUrl = tour.coverImage ? getAssetImageUrl(tour.coverImage) : null
 
   const tourStatus = getTourStatus({
     published: isPublished ? new Date() : null, // getTourStatus expects Date | null
@@ -89,15 +92,24 @@ export function TourDetailView({
       {/* Content */}
       <div className="flex-1 bg-muted/30 dark:bg-background">
         <div className="mx-auto max-w-5xl p-6 sm:p-8 space-y-6">
-          {/* Hero Card with Cover Image placeholder */}
+          {/* Hero Card with Cover Image */}
           <Card className="overflow-hidden shadow-(--shadow-md)">
             <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted/30">
-              <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
-                  <ImageIcon className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+              {coverImageUrl ? (
+                <Image
+                  src={coverImageUrl}
+                  alt={displayTitle}
+                  layout="fullWidth"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
+                    <ImageIcon className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <p className="text-sm text-muted-foreground/70">{t('details.addCoverImageHint')}</p>
                 </div>
-                <p className="text-sm text-muted-foreground/70">{t('details.addCoverImageHint')}</p>
-              </div>
+              )}
             </div>
 
             {displayDescription && (

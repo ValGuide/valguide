@@ -61,6 +61,17 @@ export async function listTours(organizationId: string, filters: ListToursFilter
     .limit(1)
     .as('best_title')
 
+  const coverImageSubquery = db
+    .select({
+      storagePath: asset.storagePath,
+      publicUrl: asset.publicUrl,
+    })
+    .from(tourAssetDraft)
+    .innerJoin(asset, eq(tourAssetDraft.assetId, asset.id))
+    .where(and(eq(tourAssetDraft.tourId, tour.id), eq(tourAssetDraft.channel, 'images.hero')))
+    .limit(1)
+    .as('cover_image')
+
   const rows = await db
     .select({
       nanoId: tour.nanoId,
@@ -70,9 +81,12 @@ export async function listTours(organizationId: string, filters: ListToursFilter
       updatedAt: tour.updatedAt,
       title: titleSubquery.title,
       locale: titleSubquery.locale,
+      coverStoragePath: coverImageSubquery.storagePath,
+      coverPublicUrl: coverImageSubquery.publicUrl,
     })
     .from(tour)
     .leftJoinLateral(titleSubquery, sql`true`)
+    .leftJoinLateral(coverImageSubquery, sql`true`)
     .where(and(...conditions))
     .orderBy(desc(tour.updatedAt))
 
@@ -84,5 +98,6 @@ export async function listTours(organizationId: string, filters: ListToursFilter
     archivedAt: row.archivedAt,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+    coverImage: row.coverStoragePath ? { storagePath: row.coverStoragePath, publicUrl: row.coverPublicUrl } : null,
   }))
 }

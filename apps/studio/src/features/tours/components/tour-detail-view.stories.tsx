@@ -29,6 +29,7 @@ const mockTour: TourDetail = {
     },
   ],
   settings: null,
+  coverImage: null,
 }
 
 function MockViewInAppButton({ published }: { published: boolean }) {
@@ -74,6 +75,18 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     tour: mockTour,
+  },
+}
+
+export const WithCoverImage: Story = {
+  args: {
+    tour: {
+      ...mockTour,
+      coverImage: {
+        storagePath: 'tours/cover-art-museum.jpg',
+        publicUrl: 'https://images.unsplash.com/photo-1580060405669-fcb8ed2f91fa?w=800&h=450&fit=crop',
+      },
+    },
   },
 }
 

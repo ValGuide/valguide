@@ -4,7 +4,7 @@ import { NotFoundError, requireTourAccessByNanoId } from '../../auth/authorizati
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { getTourDetail } from './get-tour-detail.server'
 
-export type { LocaleDraftInfo, TourDetail } from './get-tour-detail.server'
+export type { LocaleDraftInfo, TourCoverImage, TourDetail } from './get-tour-detail.server'
 
 // =============================================================================
 // SERVER FUNCTION

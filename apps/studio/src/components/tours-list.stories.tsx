@@ -33,6 +33,7 @@ const sampleTours: TourListItem[] = [
     archivedAt: null,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20'),
+    coverImage: null,
   },
   {
     nanoId: 'tour2xyz',
@@ -42,6 +43,7 @@ const sampleTours: TourListItem[] = [
     archivedAt: null,
     createdAt: new Date('2024-02-01'),
     updatedAt: new Date('2024-02-10'),
+    coverImage: null,
   },
 ]
 
