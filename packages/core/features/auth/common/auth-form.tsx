@@ -5,38 +5,18 @@ import { Input } from '@valguide/ui/components/input'
 import { type FormEvent, useState } from 'react'
 
 export interface AuthFormProps {
-  /**
-   * The email value
-   */
   email: string
-  /**
-   * Callback when email changes
-   */
   onEmailChange: (email: string) => void
-  /**
-   * Callback when form is submitted
-   */
   onSubmit: (email: string) => void
-  /**
-   * Whether the form is in loading state
-   */
   loading?: boolean
 }
 
-/**
- * A form component for unified email authentication
- */
 export function AuthForm({ email: initialEmail, onEmailChange, onSubmit, loading = false }: AuthFormProps) {
   const t = useTranslations('auth')
-
-  // Local state for validation
   const [error, setError] = useState<string | null>(null)
 
-  // Handle form submission
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!initialEmail) {
       setError(t('emailRequired'))
@@ -46,7 +26,6 @@ export function AuthForm({ email: initialEmail, onEmailChange, onSubmit, loading
       setError(t('invalidEmail'))
       return
     }
-
     setError(null)
     onSubmit(initialEmail)
   }
@@ -78,6 +57,8 @@ export function AuthForm({ email: initialEmail, onEmailChange, onSubmit, loading
             </Button>
           </Field>
         </FieldGroup>
+
+        <p className="text-sm text-muted-foreground text-center">{t('loginCodeNote')}</p>
       </form>
     </div>
   )

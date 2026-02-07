@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { LocaleDraftInfo } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
@@ -17,6 +16,7 @@ import { PublishConfirmationDialog } from '../../editor/components/publish-confi
 import { UnpublishConfirmationDialog } from '../../editor/components/unpublish-confirmation-dialog'
 import { AddLanguageDialog } from './add-language-dialog'
 import { RemoveLanguageDialog } from './remove-language-dialog'
+import { TourStatusBadge } from './tour-status-badge'
 import { getLocaleDisplayName } from './unified-locale-selector'
 
 export type TranslationsManagerProps = {
@@ -40,10 +40,6 @@ export function TranslationsManager({
   const tDetails = useTranslations('tours.details')
   const tStops = useTranslations('stops')
   const tActions = useTranslations('tours.actions')
-  // i18n-used-keys: tours.status.published, tours.status.unpublished
-  const tStatus = useTranslations('tours.status')
-  // i18n-used-keys: tours.indicator.changed
-  const tIndicator = useTranslations('tours.indicator')
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [localeToRemove, setLocaleToRemove] = useState<string | null>(null)
   const [localeToPublish, setLocaleToPublish] = useState<string | null>(null)
@@ -123,16 +119,11 @@ export function TranslationsManager({
                   <div className="flex min-w-0 items-center gap-2">
                     <span className="truncate font-medium">{localeName}</span>
                     <span className="shrink-0 text-xs text-muted-foreground">({localeInfo.locale})</span>
-                    <Badge
-                      variant={localeInfo.hasPublished ? (localeInfo.hasChanges ? 'outline' : 'default') : 'secondary'}
-                      className="shrink-0"
-                    >
-                      {localeInfo.hasPublished
-                        ? localeInfo.hasChanges
-                          ? tIndicator('changed')
-                          : tStatus('published')
-                        : tStatus('unpublished')}
-                    </Badge>
+                    <TourStatusBadge
+                      status={localeInfo.hasPublished ? 'published' : 'unpublished'}
+                      indicator={localeInfo.hasPublished && localeInfo.hasChanges ? 'changed' : null}
+                      size="sm"
+                    />
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
                     {showUnpublish ? (

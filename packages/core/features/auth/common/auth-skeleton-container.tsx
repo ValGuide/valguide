@@ -6,9 +6,6 @@ import { AuthSkeleton } from './auth-skeleton'
 import { OtpSkeleton } from './otp-skeleton'
 
 export interface AuthSkeletonContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * Whether to show the OTP verification skeleton
-   */
   showOtp?: boolean
 }
 

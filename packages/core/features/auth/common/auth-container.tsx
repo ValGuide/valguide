@@ -6,7 +6,6 @@ import { Consent } from './consent'
 import { MessageAlert } from './message-alert'
 
 export interface AuthContainerProps {
-  // Auth state and handlers
   email: string
   setEmail: (email: string) => void
   otp: string
@@ -21,7 +20,6 @@ export interface AuthContainerProps {
 }
 
 export function AuthContainer({
-  // Auth state and handlers
   email,
   setEmail,
   otp,
@@ -42,7 +40,7 @@ export function AuthContainer({
         {verifyingOtp ? (
           <div className="text-center">
             <h2 className="text-3xl tracking-tight font-serif">{t('otpTitle')}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{email ? t('otpSubtitle', { email }) : t('otpTitle')}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('otpSubtitle', { email })}</p>
           </div>
         ) : (
           <div className="text-center">

@@ -29,10 +29,6 @@ export interface OtpVerificationFormProps {
    * Whether the form is in loading state
    */
   loading?: boolean
-  /**
-   * Title for the form
-   */
-  title?: string
 }
 
 /**
@@ -45,17 +41,11 @@ export function OtpVerificationForm({
   onResendClick,
   onChangeEmail,
   loading = false,
-  title,
 }: OtpVerificationFormProps) {
   const t = useTranslations('auth')
   return (
     <form onSubmit={onSubmit}>
       <FieldGroup>
-        {title && (
-          <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-xl font-bold">{title}</h1>
-          </div>
-        )}
         <Field>
           <FieldLabel htmlFor="otp" className="sr-only">
             {t('otpPlaceholder')}

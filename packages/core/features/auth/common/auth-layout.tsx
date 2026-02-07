@@ -3,19 +3,10 @@ import { cn } from '@valguide/ui/lib/utils'
 import type { ReactNode } from 'react'
 
 export interface AuthLayoutProps {
-  /**
-   * The form or content to display inside the card
-   */
   children: ReactNode
-  /**
-   * Optional footer content displayed below the card (e.g., terms/privacy)
-   */
   footer?: ReactNode
 }
 
-/**
- * A layout component for authentication pages with a centered card design.
- */
 export function AuthLayout({ children, footer }: AuthLayoutProps) {
   return (
     <main className="min-h-svh flex flex-col items-center justify-center p-4 relative overflow-hidden">
