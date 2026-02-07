@@ -17,7 +17,7 @@ import { z } from 'zod'
 
 export type SlugCheckResult = {
   available: boolean
-  takenBy?: 'other' | 'self' | 'reserved'
+  takenBy?: 'other' | 'self' | 'reserved' | 'nanoId'
 }
 
 export type UpdateSlugResult = {

@@ -96,7 +96,8 @@ export const organizationInvitationRelations = relations(organizationInvitation,
 }))
 
 // =============================================================================
-// SLUGS (No Draft/Published - Immediate Changes with History for Redirects)
+// SLUGS (Immediate Publish - No Draft State for Orgs)
+// publishedAt is always set on insert for consistency with tour slugs
 // =============================================================================
 
 export const organizationSlug = studioSchema.table(
@@ -109,6 +110,7 @@ export const organizationSlug = studioSchema.table(
     slug: varchar('slug', { length: 100 }).notNull(),
     isPrimary: boolean('is_primary').notNull().default(false),
     createdAt: timestamp('created_at').defaultNow().notNull(),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
   },
   (t) => ({
     uniqueSlug: uniqueIndex('organization_slug_unique').on(t.slug),

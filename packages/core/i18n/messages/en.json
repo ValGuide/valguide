@@ -267,6 +267,7 @@
         "taken": "You already use this slug for another tour",
         "reserved": "This slug is reserved",
         "self": "This is your current slug",
+        "selfDraft": "This is your current draft slug",
         "checking": "Checking availability...",
         "save": "Save Slug",
         "saving": "Saving...",

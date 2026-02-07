@@ -15,6 +15,13 @@
       "when": 1770305958222,
       "tag": "0001_unusual_mindworm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770452581581,
+      "tag": "0002_amusing_husk",
+      "breakpoints": true
     }
   ]
 }

@@ -267,6 +267,7 @@
         "taken": "Sie verwenden diesen Slug bereits für eine andere Tour",
         "reserved": "Dieser Slug ist reserviert",
         "self": "Dies ist Ihr aktueller Slug",
+        "selfDraft": "Dies ist Ihr aktueller Entwurfs-Slug",
         "checking": "Verfügbarkeit wird geprüft...",
         "save": "Slug speichern",
         "saving": "Wird gespeichert...",

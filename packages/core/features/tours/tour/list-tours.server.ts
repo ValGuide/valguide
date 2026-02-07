@@ -1,11 +1,17 @@
 import { and, desc, eq, isNotNull, isNull, sql } from 'drizzle-orm'
+import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { tour, tourLocaleDraft } from '../schema'
+import { tour, tourAssetDraft, tourLocaleDraft } from '../schema'
 import { LOCALE_PRIORITY } from '../utils'
 
 // =============================================================================
 // TYPES
 // =============================================================================
+
+export type TourCoverImage = {
+  storagePath: string
+  publicUrl: string | null
+}
 
 export type TourListItem = {
   nanoId: string
@@ -15,6 +21,7 @@ export type TourListItem = {
   archivedAt: Date | null
   createdAt: Date
   updatedAt: Date
+  coverImage: TourCoverImage | null
 }
 
 export type ListToursFilters = {

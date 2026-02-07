@@ -17,7 +17,7 @@ import { z } from 'zod'
 
 export type TourSlugCheckResult = {
   available: boolean
-  takenBy?: 'other' | 'self' | 'reserved'
+  takenBy?: 'other' | 'self' | 'selfDraft' | 'reserved' | 'nanoId'
 }
 
 export type UpdateTourSlugResult = {
@@ -53,7 +53,7 @@ export function TourSlugSettings({
   const t = useTranslations('tours.editor.slug')
   const [isPending, startTransition] = useTransition()
   const [slugCheckState, setSlugCheckState] = useState<
-    'idle' | 'checking' | 'available' | 'taken' | 'reserved' | 'self'
+    'idle' | 'checking' | 'available' | 'taken' | 'reserved' | 'self' | 'selfDraft'
   >('idle')
   const [historyOpen, setHistoryOpen] = useState(false)
 
@@ -102,6 +102,8 @@ export function TourSlugSettings({
           setSlugCheckState('available')
         } else if (result.takenBy === 'reserved') {
           setSlugCheckState('reserved')
+        } else if (result.takenBy === 'selfDraft') {
+          setSlugCheckState('selfDraft')
         } else if (result.takenBy === 'self') {
           setSlugCheckState('self')
         } else {
@@ -145,6 +147,7 @@ export function TourSlugSettings({
       case 'checking':
         return <Loader2 className="size-4 animate-spin text-muted-foreground" />
       case 'available':
+      case 'selfDraft':
         return <Check className="size-4 text-success" />
       case 'taken':
       case 'reserved':
@@ -161,6 +164,8 @@ export function TourSlugSettings({
         return <span className="text-muted-foreground">{t('checking')}</span>
       case 'available':
         return <span className="text-success">{t('available')}</span>
+      case 'selfDraft':
+        return <span className="text-success">{t('selfDraft')}</span>
       case 'taken':
         return <span className="text-destructive">{t('taken')}</span>
       case 'reserved':
@@ -173,7 +178,10 @@ export function TourSlugSettings({
   }
 
   const historyItems = slugHistory.filter((s) => !s.isPrimary)
-  const canSubmit = slugCheckState === 'available' && form.getFieldValue('slug') !== initialSlug && !isPending
+  const canSubmit =
+    (slugCheckState === 'available' || slugCheckState === 'selfDraft') &&
+    form.getFieldValue('slug') !== initialSlug &&
+    !isPending
 
   if (isLoading) {
     return (

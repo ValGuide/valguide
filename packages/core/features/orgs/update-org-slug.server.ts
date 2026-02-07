@@ -45,10 +45,11 @@ export async function updateOrgSlug(db: DB, organizationId: string, newSlug: str
           organizationId,
           slug: newSlug,
           isPrimary: true,
+          publishedAt: new Date(),
         })
         .onConflictDoUpdate({
           target: organizationSlug.slug,
-          set: { isPrimary: true },
+          set: { isPrimary: true, publishedAt: new Date() },
         })
     })
 

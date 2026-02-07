@@ -1,6 +1,6 @@
 import { checkTourSlugAvailableFn } from '@valguide/core/features/tours/tour/slug/check-tour-slug-available.fn'
 import { getTourSlugsFn } from '@valguide/core/features/tours/tour/slug/get-tour-slugs.fn'
-import { updateTourSlugFn } from '@valguide/core/features/tours/tour/slug/update-tour-slug.fn'
+import { upsertTourDraftSlugFn } from '@valguide/core/features/tours/tour/slug/upsert-tour-draft-slug.fn'
 import { useEffect, useState } from 'react'
 import { type TourSlugHistoryItem, TourSlugSettings } from './tour-slug-settings'
 
@@ -30,7 +30,7 @@ export function TourSlugSettingsConnected({ tourNanoId, tourTitle }: TourSlugSet
   }, [tourNanoId])
 
   const handleUpdateSlug = async (newSlug: string) => {
-    const result = await updateTourSlugFn({
+    const result = await upsertTourDraftSlugFn({
       data: { tourNanoId, newSlug },
     })
 

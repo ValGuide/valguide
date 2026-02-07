@@ -1,21 +1,21 @@
-import { eq } from 'drizzle-orm'
+import { and, eq, isNull } from 'drizzle-orm'
 import { slugSchema } from '../../../../utils/slug'
 import type { DB } from '../../../db'
 import { isUniqueViolation } from '../../../links/utils'
 import { tourSlug } from '../../schema'
 import { checkTourSlugAvailable } from './check-tour-slug-available.server'
 
-export type UpdateTourSlugResult =
+export type UpsertTourDraftSlugResult =
   | { success: true }
   | { success: false; error: 'SLUG_TAKEN'; message: string }
   | { success: false; error: 'VALIDATION_ERROR'; message: string }
 
-export async function updateTourSlug(
+export async function upsertTourDraftSlug(
   db: DB,
   tourId: string,
   organizationId: string,
   newSlug: string,
-): Promise<UpdateTourSlugResult> {
+): Promise<UpsertTourDraftSlugResult> {
   const validation = slugSchema.safeParse(newSlug)
   if (!validation.success) {
     return {
@@ -26,7 +26,7 @@ export async function updateTourSlug(
   }
 
   const availability = await checkTourSlugAvailable(db, newSlug, organizationId, tourId)
-  if (!availability.available && availability.takenBy !== 'self') {
+  if (!availability.available && availability.takenBy !== 'self' && availability.takenBy !== 'selfDraft') {
     return {
       success: false,
       error: 'SLUG_TAKEN',
@@ -36,22 +36,22 @@ export async function updateTourSlug(
   }
 
   try {
-    await db.transaction(async (tx) => {
-      await tx.update(tourSlug).set({ isPrimary: false }).where(eq(tourSlug.tourId, tourId))
-
-      await tx
-        .insert(tourSlug)
-        .values({
-          tourId,
-          organizationId,
-          slug: newSlug,
-          isPrimary: true,
-        })
-        .onConflictDoUpdate({
-          target: [tourSlug.organizationId, tourSlug.slug],
-          set: { isPrimary: true },
-        })
+    const existingDraft = await db.query.tourSlug.findFirst({
+      where: and(eq(tourSlug.tourId, tourId), isNull(tourSlug.publishedAt)),
+      columns: { id: true },
     })
+
+    if (existingDraft) {
+      await db.update(tourSlug).set({ slug: newSlug }).where(eq(tourSlug.id, existingDraft.id))
+    } else {
+      await db.insert(tourSlug).values({
+        tourId,
+        organizationId,
+        slug: newSlug,
+        isPrimary: false,
+        publishedAt: null,
+      })
+    }
 
     return { success: true }
   } catch (err) {

@@ -473,7 +473,9 @@ export type StopAssetDraft = typeof stopAssetDraft.$inferSelect
 export type StopAsset = typeof stopAsset.$inferSelect
 
 // =============================================================================
-// SLUGS (No Draft/Published - Immediate Changes with History for Redirects)
+// SLUGS (Draft/Published Pattern)
+// - Draft slug: publishedAt IS NULL (0-1 per tour, overwritten on each save)
+// - Published slugs: publishedAt IS NOT NULL (0-N per tour, one has isPrimary=true)
 // =============================================================================
 
 export const tourSlug = studioSchema.table(
@@ -489,6 +491,7 @@ export const tourSlug = studioSchema.table(
     slug: varchar('slug', { length: 200 }).notNull(),
     isPrimary: boolean('is_primary').notNull().default(false),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
   },
   (t) => ({
     uniqueOrgSlug: uniqueIndex('tour_slug_org_unique').on(t.organizationId, t.slug),

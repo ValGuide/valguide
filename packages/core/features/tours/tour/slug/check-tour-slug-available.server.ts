@@ -5,7 +5,7 @@ import { tour, tourSlug } from '../../schema'
 
 export type TourSlugAvailabilityResult = {
   available: boolean
-  takenBy?: 'other' | 'self' | 'reserved' | 'nanoId'
+  takenBy?: 'other' | 'self' | 'selfDraft' | 'reserved' | 'nanoId'
 }
 
 export async function checkTourSlugAvailable(
@@ -18,7 +18,6 @@ export async function checkTourSlugAvailable(
     return { available: false, takenBy: 'reserved' }
   }
 
-  // Check if slug matches any existing tour nanoId (prevents slug-nanoId collision)
   const matchingNanoId = await db.query.tour.findFirst({
     where: eq(tour.nanoId, slug),
     columns: { id: true },
@@ -30,7 +29,7 @@ export async function checkTourSlugAvailable(
 
   const existing = await db.query.tourSlug.findFirst({
     where: and(eq(tourSlug.organizationId, organizationId), eq(tourSlug.slug, slug)),
-    columns: { tourId: true },
+    columns: { tourId: true, publishedAt: true },
   })
 
   if (!existing) {
@@ -38,7 +37,8 @@ export async function checkTourSlugAvailable(
   }
 
   if (excludeTourId && existing.tourId === excludeTourId) {
-    return { available: false, takenBy: 'self' }
+    const isDraft = existing.publishedAt === null
+    return { available: false, takenBy: isDraft ? 'selfDraft' : 'self' }
   }
 
   return { available: false, takenBy: 'other' }
