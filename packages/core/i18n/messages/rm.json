@@ -404,7 +404,8 @@
     },
     "confirmDiscard": {
       "title": "Sbittar tut las midadas?",
-      "description": "Quai restituescha text, configuraziuns, successiun da posts e medias a la versiun publitgada. Questa acziun na po betg vegnir revocada.",
+      "descriptionTour": "Quai restituescha text, configuraziuns, successiun da posts e medias a la versiun publitgada. Questa acziun na po betg vegnir revocada.",
+      "descriptionStop": "Quai restituescha text, configuraziuns e medias a la versiun publitgada. Questa acziun na po betg vegnir revocada.",
       "confirm": "Sbittar tut",
       "cancel": "Interrumper"
     },

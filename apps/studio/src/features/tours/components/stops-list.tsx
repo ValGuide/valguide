@@ -24,7 +24,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import {
@@ -112,35 +111,61 @@ function SortableStopItem({ stop, index, onEdit, onHide, onShow, onRequestRemove
             </div>
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(stop.stopNanoId)}>
-                <Edit className="h-4 w-4" />
-                {t('edit')}
-              </DropdownMenuItem>
-              {isHidden ? (
-                <DropdownMenuItem onClick={() => onShow(stop.stopNanoId)}>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="sm:hidden" onClick={() => onEdit(stop.stopNanoId)}>
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => onEdit(stop.stopNanoId)}>
+              <Edit className="h-4 w-4" />
+              {t('edit')}
+            </Button>
+
+            {isHidden ? (
+              <>
+                <Button variant="ghost" size="icon" className="sm:hidden" onClick={() => onShow(stop.stopNanoId)}>
+                  <Eye className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden sm:inline-flex"
+                  onClick={() => onShow(stop.stopNanoId)}
+                >
                   <Eye className="h-4 w-4" />
                   {t('stopActions.showStop')}
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem onClick={() => onHide(stop.stopNanoId)}>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="icon" className="sm:hidden" onClick={() => onHide(stop.stopNanoId)}>
+                  <EyeOff className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden sm:inline-flex"
+                  onClick={() => onHide(stop.stopNanoId)}
+                >
                   <EyeOff className="h-4 w-4" />
                   {t('stopActions.hideStop')}
+                </Button>
+              </>
+            )}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem variant="destructive" onClick={() => onRequestRemove(stop)}>
+                  <Unlink className="h-4 w-4" />
+                  {t('stopActions.removeStop')}
                 </DropdownMenuItem>
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" onClick={() => onRequestRemove(stop)}>
-                <Unlink className="h-4 w-4" />
-                {t('stopActions.removeStop')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </CardContent>
       </Card>
     </div>

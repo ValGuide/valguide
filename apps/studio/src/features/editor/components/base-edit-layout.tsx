@@ -275,7 +275,12 @@ export function BaseEditLayout({
         onConfirm={onUnpublish}
       />
 
-      <DiscardConfirmationDialog open={discardDialogOpen} onOpenChange={setDiscardDialogOpen} onConfirm={onDiscard} />
+      <DiscardConfirmationDialog
+        open={discardDialogOpen}
+        onOpenChange={setDiscardDialogOpen}
+        onConfirm={onDiscard}
+        contentType={contentType}
+      />
     </>
   )
 }

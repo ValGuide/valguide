@@ -3,6 +3,7 @@ import type { Asset } from '@valguide/core/features/assets/types'
 import { assignStopAssetFn } from '@valguide/core/features/tours/stop/asset/assign-stop-asset.fn'
 import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
 import { removeStopAssetFn } from '@valguide/core/features/tours/stop/asset/remove-stop-asset.fn'
+import { discardAllStopChangesFn } from '@valguide/core/features/tours/stop/discard-all-stop-changes.fn'
 import type { StopDetail } from '@valguide/core/features/tours/stop/get-stop-detail.fn'
 import type { StopLocaleDraftResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-draft.fn'
 import type { StopLocalePublishedResult } from '@valguide/core/features/tours/stop/locale/get-stop-locale-published.fn'
@@ -280,6 +281,18 @@ export function StopEditorProvider({
     [nanoId, queryClient, t],
   )
 
+  // Discard all changes (revert drafts to published state)
+  const discard = useCallback(
+    async (locale: string) => {
+      if (!nanoId) return
+
+      await discardAllStopChangesFn({ data: { nanoId, locale } })
+      await queryClient.invalidateQueries({ queryKey: ['stop', nanoId] })
+      resetAllForms()
+    },
+    [nanoId, queryClient, resetAllForms],
+  )
+
   // Refetch
   const refetch = useCallback(async () => {
     await queryClient.invalidateQueries({ queryKey: ['stop', nanoId] })
@@ -324,6 +337,7 @@ export function StopEditorProvider({
     lastSaved,
     publish,
     unpublish,
+    discard,
     refetch,
     navigation: navigation ?? defaultNavigation,
   }

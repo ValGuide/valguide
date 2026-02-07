@@ -404,7 +404,8 @@
     },
     "confirmDiscard": {
       "title": "Alle Änderungen verwerfen?",
-      "description": "Dies stellt Text, Einstellungen, Stopp-Reihenfolge und Medien auf die letzte veröffentlichte Version zurück. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "descriptionTour": "Dies stellt Text, Einstellungen, Stopp-Reihenfolge und Medien auf die letzte veröffentlichte Version zurück. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "descriptionStop": "Dies stellt Text, Einstellungen und Medien auf die letzte veröffentlichte Version zurück. Diese Aktion kann nicht rückgängig gemacht werden.",
       "confirm": "Alle verwerfen",
       "cancel": "Abbrechen"
     },

@@ -9,10 +9,11 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
 import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
-import { Calendar, Clock, ImageIcon, Pencil } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { Calendar, Clock, ImageIcon, Link2, Pencil } from 'lucide-react'
+import { type ComponentType, type ReactNode, useState } from 'react'
 import { EditorHeader } from '@/features/editor/components/editor-header'
 import { TourStatusBadge } from '@/features/tours/components/tour-status-badge'
+import { EditSlugDialog } from './edit-slug-dialog'
 import { TranslationsManager } from './translations-manager'
 
 export type TourDetailViewProps = {
@@ -28,6 +29,8 @@ export type TourDetailViewProps = {
   onUnpublish?: (locale: string) => Promise<void>
   ViewInAppButton: React.ComponentType<{ nanoId: string; published: boolean; appDomain: string }>
   ArchiveTourButton: React.ComponentType<{ tourNanoId: string; onArchived: () => void }>
+  SlugSettings?: ComponentType<{ tourNanoId: string; tourTitle: string }>
+  currentSlug?: string
   headerActions?: ReactNode
 }
 
@@ -44,9 +47,12 @@ export function TourDetailView({
   onUnpublish,
   ViewInAppButton,
   ArchiveTourButton,
+  SlugSettings,
+  currentSlug,
   headerActions,
 }: TourDetailViewProps) {
   const t = useTranslations('tours')
+  const [slugDialogOpen, setSlugDialogOpen] = useState(false)
 
   // Compute display values from locales with fallback priority
   const bestLocale = pickBestLocale(preferredLocale, tour.locales)
@@ -143,6 +149,20 @@ export function TourDetailView({
                   label={t('details.status')}
                   value={<TourStatusBadge status={tourStatus} indicator={indicator} />}
                 />
+                <MetadataRow
+                  label={t('editor.slug.title')}
+                  value={
+                    <span className="flex items-center gap-1.5">
+                      <span className="font-mono text-xs">{currentSlug ?? '—'}</span>
+                      {SlugSettings && (
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setSlugDialogOpen(true)}>
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </span>
+                  }
+                  icon={<Link2 />}
+                />
               </MetadataGrid>
             </CardContent>
           </Card>
@@ -158,6 +178,16 @@ export function TourDetailView({
           />
         </div>
       </div>
+
+      {SlugSettings && (
+        <EditSlugDialog
+          open={slugDialogOpen}
+          onOpenChange={setSlugDialogOpen}
+          tourNanoId={nanoId}
+          tourTitle={displayTitle}
+          SlugSettings={SlugSettings}
+        />
+      )}
     </main>
   )
 }

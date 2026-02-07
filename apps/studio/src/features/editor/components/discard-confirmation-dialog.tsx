@@ -14,9 +14,15 @@ interface DiscardConfirmationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onConfirm: () => void
+  contentType: 'tour' | 'stop'
 }
 
-export function DiscardConfirmationDialog({ open, onOpenChange, onConfirm }: DiscardConfirmationDialogProps) {
+export function DiscardConfirmationDialog({
+  open,
+  onOpenChange,
+  onConfirm,
+  contentType,
+}: DiscardConfirmationDialogProps) {
   const t = useTranslations('tours.confirmDiscard')
 
   const handleConfirm = () => {
@@ -29,7 +35,9 @@ export function DiscardConfirmationDialog({ open, onOpenChange, onConfirm }: Dis
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{t('title')}</AlertDialogTitle>
-          <AlertDialogDescription>{t('description')}</AlertDialogDescription>
+          <AlertDialogDescription>
+            {contentType === 'tour' ? t('descriptionTour') : t('descriptionStop')}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>

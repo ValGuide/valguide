@@ -92,6 +92,9 @@ export function MockStopEditorProvider({
     unpublish: async (locale: string) => {
       console.log('Mock: unpublish', locale)
     },
+    discard: async (locale: string) => {
+      console.log('Mock: discard', locale)
+    },
     refetch: async () => {
       console.log('Mock: refetch')
     },

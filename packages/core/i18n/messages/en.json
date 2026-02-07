@@ -404,7 +404,8 @@
     },
     "confirmDiscard": {
       "title": "Discard all changes?",
-      "description": "This will revert text, settings, stop order, and media to the last published version. This action cannot be undone.",
+      "descriptionTour": "This will revert text, settings, stop order, and media to the last published version. This action cannot be undone.",
+      "descriptionStop": "This will revert text, settings, and media to the last published version. This action cannot be undone.",
       "confirm": "Discard all",
       "cancel": "Cancel"
     },

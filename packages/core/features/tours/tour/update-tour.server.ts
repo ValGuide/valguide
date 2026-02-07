@@ -69,6 +69,10 @@ export async function updateTour(input: UpdateTourInput, userId: string): Promis
 
       const locales = current?.availableLocales ?? []
       updateData.availableLocales = locales.filter((l) => l !== input.removeLocale)
+
+      await tx
+        .delete(tourLocaleDraft)
+        .where(and(eq(tourLocaleDraft.tourId, tourId), eq(tourLocaleDraft.locale, input.removeLocale)))
     }
 
     const [updated] = await tx

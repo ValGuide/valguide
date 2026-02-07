@@ -74,6 +74,9 @@ export interface StopEditorContextValue {
   publish: (locale: string) => Promise<void>
   unpublish: (locale: string) => Promise<void>
 
+  // Discard all changes (revert drafts to published state)
+  discard: (locale: string) => Promise<void>
+
   // Refetch data
   refetch: () => Promise<void>
 

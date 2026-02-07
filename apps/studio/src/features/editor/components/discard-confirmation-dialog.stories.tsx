@@ -12,6 +12,7 @@ const meta = {
     open: true,
     onOpenChange: fn(),
     onConfirm: fn(),
+    contentType: 'tour',
   },
 } satisfies Meta<typeof DiscardConfirmationDialog>
 
@@ -21,6 +22,12 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     open: true,
+  },
+}
+
+export const StopContext: Story = {
+  args: {
+    contentType: 'stop',
   },
 }
 

@@ -69,6 +69,7 @@ const meta = {
     onPublish: fn(async () => {}),
     ViewInAppButton: MockViewInAppButton,
     ArchiveTourButton: MockArchiveButton,
+    currentSlug: 'city-art-museum-tour',
   },
 } satisfies Meta<typeof TourDetailView>
 
