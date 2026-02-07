@@ -152,7 +152,6 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
       try {
         await reorderStopsFn({ data: { tourNanoId: nanoId, stopNanoIds: stopOrder } })
         await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
-        toast.success(t('stops.actions.reorderSuccess'))
       } catch (error) {
         console.error('Failed to reorder stops:', error)
         toast.error(t('stops.actions.reorderError'))
@@ -219,7 +218,6 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
       await queryClient.invalidateQueries({ queryKey: ['tours'] })
 
       setLastSaved(new Date())
-      toast.success(t('common.saved'))
     } catch (error) {
       console.error('Failed to save:', error)
       toast.error(t('common.saveError'))
@@ -239,7 +237,6 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'assets'] })
       await queryClient.invalidateQueries({ queryKey: ['stops'] })
-      toast.success(t('tours.publish.tourPublished', { stopCount: result.publishedStopCount }))
     } catch (error) {
       console.error('Failed to publish:', error)
       toast.error(t('tours.publish.tourPublishError'))

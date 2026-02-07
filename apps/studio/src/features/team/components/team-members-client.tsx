@@ -63,7 +63,6 @@ export function TeamMembersClient({
       await updateMemberRoleFn({
         data: { memberId, teamId: team.id, newRole },
       })
-      toast.success(t('roleUpdateSuccess'))
       onAction?.()
     } catch (error) {
       console.error('Error updating member role:', error)
@@ -85,7 +84,6 @@ export function TeamMembersClient({
   const handleCancelInvite = async (inviteId: string) => {
     try {
       await cancelInviteFn({ data: { inviteId, teamId: team.id } })
-      toast.success(tPending('cancelSuccess'))
       onAction?.()
     } catch (error) {
       console.error('Error canceling invite:', error)

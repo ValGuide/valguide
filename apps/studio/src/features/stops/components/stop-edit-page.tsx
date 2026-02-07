@@ -187,7 +187,6 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       if (isDirty) await save()
       await publish(activeLocale)
       await onPublishAssets?.(nanoId, activeLocale)
-      toast.success(t('publish.success'))
       await refetch()
     } catch (error) {
       console.error('Failed to publish:', error)
@@ -200,7 +199,6 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
   const handleUnpublish = useCallback(async () => {
     try {
       await unpublish(activeLocale)
-      toast.success(t('unpublish.success'))
       await refetch()
     } catch (error) {
       console.error('Failed to unpublish:', error)
@@ -211,7 +209,6 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
   const handleDiscard = useCallback(async () => {
     try {
       await refetch()
-      toast.success(t('discard.success'))
     } catch (error) {
       console.error('Failed to discard:', error)
       toast.error(t('discard.error'))

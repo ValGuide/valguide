@@ -74,7 +74,6 @@ export function TourSlugSettings({
       startTransition(async () => {
         const result = await onUpdateSlug(value.slug)
         if (result.success) {
-          toast.success(t('saveSuccess'))
           setSlugCheckState('idle')
         } else {
           toast.error(result.message ?? t('saveError'))

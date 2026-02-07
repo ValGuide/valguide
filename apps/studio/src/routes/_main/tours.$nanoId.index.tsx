@@ -45,7 +45,6 @@ function TourPage() {
         await queryClient.invalidateQueries({
           queryKey: ['tour', nanoId, 'detail'],
         })
-        toast.success(tLocales('updateSuccess'))
       } catch {
         toast.error(tLocales('updateError'))
       }
@@ -63,7 +62,6 @@ function TourPage() {
         await queryClient.invalidateQueries({
           queryKey: ['tour', nanoId, 'detail'],
         })
-        toast.success(tLocales('updateSuccess'))
       } catch {
         toast.error(tLocales('updateError'))
       }
@@ -75,17 +73,12 @@ function TourPage() {
     async (locale: string) => {
       if (!tour) return
       try {
-        const result = await publishTourFn({
+        await publishTourFn({
           data: { nanoId: tour.nanoId, locale },
         })
         await queryClient.invalidateQueries({
           queryKey: ['tour', nanoId],
         })
-        toast.success(
-          tPublish('tourPublished', {
-            stopCount: result.publishedStopCount,
-          }),
-        )
       } catch {
         toast.error(tPublish('tourPublishError'))
       }
@@ -103,7 +96,6 @@ function TourPage() {
         await queryClient.invalidateQueries({
           queryKey: ['tour', nanoId],
         })
-        toast.success(tUnpublish('success'))
       } catch {
         toast.error(tUnpublish('error'))
       }

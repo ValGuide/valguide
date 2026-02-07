@@ -66,7 +66,6 @@ export function ProfileForm({
       startTransition(async () => {
         const result = await onSubmit(value)
         if (result.success) {
-          toast.success(t('actions.updateSuccess'))
           router.invalidate()
           await onSuccess?.()
           await queryClient.invalidateQueries({ queryKey: ['sidebar'] })

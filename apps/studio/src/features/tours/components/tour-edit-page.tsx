@@ -198,7 +198,6 @@ export function TourEditPage({
     try {
       if (isDirty) await save()
       await onPublish(nanoId, activeLocale)
-      toast.success(t('publish.success'))
       await refetch()
     } catch (error) {
       console.error('Failed to publish:', error)
@@ -212,7 +211,6 @@ export function TourEditPage({
     if (!onUnpublish) return
     try {
       await onUnpublish(nanoId, activeLocale)
-      toast.success(t('unpublish.success'))
       await refetch()
     } catch (error) {
       console.error('Failed to unpublish:', error)
@@ -225,7 +223,6 @@ export function TourEditPage({
     try {
       await onDiscard(nanoId, activeLocale)
       await refetch()
-      toast.success(t('discard.success'))
     } catch (error) {
       console.error('Failed to discard:', error)
       toast.error(t('discard.error'))
