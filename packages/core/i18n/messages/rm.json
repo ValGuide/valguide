@@ -261,7 +261,8 @@
       "backToTour": "Tura",
       "slug": {
         "title": "Slug da l'URL",
-        "description": "Identificatur legibel per questa tura en URLs. {baseUrl}/{slug}",
+        "description": "{baseUrl}/{slug}",
+        "dialogDescription": "Tscherna in percurs URL curt e legibel per questa tura.",
         "placeholder": "highlights-tour",
         "available": "Quest slug è disponibel",
         "taken": "Vus utilisais gia quest slug per in'autra tura",

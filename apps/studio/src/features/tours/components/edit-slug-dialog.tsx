@@ -1,10 +1,12 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
+import { Link2 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
 type SlugSettingsComponentProps = {
   tourNanoId: string
   tourTitle: string
+  variant?: 'card' | 'plain'
 }
 
 export type EditSlugDialogProps = {
@@ -21,11 +23,14 @@ export function EditSlugDialog({ open, onOpenChange, tourNanoId, tourTitle, Slug
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
-        <DialogHeader className="sr-only">
-          <DialogTitle>{t('title')}</DialogTitle>
-          <DialogDescription>{t('title')}</DialogDescription>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Link2 className="size-4" />
+            {t('title')}
+          </DialogTitle>
+          <DialogDescription>{t('dialogDescription')}</DialogDescription>
         </DialogHeader>
-        <SlugSettings tourNanoId={tourNanoId} tourTitle={tourTitle} />
+        <SlugSettings tourNanoId={tourNanoId} tourTitle={tourTitle} variant="plain" />
       </DialogContent>
     </Dialog>
   )

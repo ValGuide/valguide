@@ -1,17 +1,22 @@
+import { getOrgSlugsFn } from '@valguide/core/features/orgs/get-org-slugs.fn'
 import { checkTourSlugAvailableFn } from '@valguide/core/features/tours/tour/slug/check-tour-slug-available.fn'
 import { getTourSlugsFn } from '@valguide/core/features/tours/tour/slug/get-tour-slugs.fn'
 import { upsertTourDraftSlugFn } from '@valguide/core/features/tours/tour/slug/upsert-tour-draft-slug.fn'
 import { useEffect, useState } from 'react'
+import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
 import { type TourSlugHistoryItem, TourSlugSettings } from './tour-slug-settings'
 
 interface TourSlugSettingsConnectedProps {
   tourNanoId: string
   tourTitle: string
+  variant?: 'card' | 'plain'
 }
 
-export function TourSlugSettingsConnected({ tourNanoId, tourTitle }: TourSlugSettingsConnectedProps) {
+export function TourSlugSettingsConnected({ tourNanoId, tourTitle, variant }: TourSlugSettingsConnectedProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [slugHistory, setSlugHistory] = useState<TourSlugHistoryItem[]>([])
+  const [orgSlug, setOrgSlug] = useState<string>()
+  const { data: sidebarData } = useSidebarData()
 
   useEffect(() => {
     async function loadSlugs() {
@@ -28,6 +33,15 @@ export function TourSlugSettingsConnected({ tourNanoId, tourTitle }: TourSlugSet
     }
     loadSlugs()
   }, [tourNanoId])
+
+  useEffect(() => {
+    const teamId = sidebarData?.currentTeam?.id
+    if (!teamId) return
+    getOrgSlugsFn({ data: { organizationId: teamId } }).then((slugs) => {
+      const primary = slugs.find((s) => s.isPrimary)
+      if (primary) setOrgSlug(primary.slug)
+    })
+  }, [sidebarData?.currentTeam?.id])
 
   const handleUpdateSlug = async (newSlug: string) => {
     const result = await upsertTourDraftSlugFn({
@@ -60,6 +74,8 @@ export function TourSlugSettingsConnected({ tourNanoId, tourTitle }: TourSlugSet
       initialSlug={currentSlug?.slug}
       slugHistory={slugHistory}
       isLoading={isLoading}
+      variant={variant}
+      orgSlug={orgSlug}
       onUpdateSlug={handleUpdateSlug}
       onCheckSlugAvailable={handleCheckSlugAvailable}
     />

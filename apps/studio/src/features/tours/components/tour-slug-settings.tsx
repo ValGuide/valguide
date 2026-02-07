@@ -4,7 +4,7 @@ import { Field, FieldDescription, FieldError, FieldLabel } from '@valguide/core/
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { generateSlug, slugSchema } from '@valguide/core/utils/slug'
 import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/ui/components/collapsible'
 import { Input } from '@valguide/ui/components/input'
 import { Skeleton } from '@valguide/ui/components/skeleton'
@@ -39,6 +39,8 @@ export interface TourSlugSettingsProps {
   initialSlug?: string
   slugHistory?: TourSlugHistoryItem[]
   isLoading?: boolean
+  variant?: 'card' | 'plain'
+  orgSlug?: string
   onUpdateSlug?: (newSlug: string) => Promise<UpdateTourSlugResult>
   onCheckSlugAvailable?: (slug: string) => Promise<TourSlugCheckResult>
 }
@@ -48,6 +50,8 @@ export function TourSlugSettings({
   initialSlug,
   slugHistory = [],
   isLoading,
+  variant = 'card',
+  orgSlug,
   onUpdateSlug,
   onCheckSlugAvailable,
 }: TourSlugSettingsProps) {
@@ -187,34 +191,40 @@ export function TourSlugSettings({
   const canSubmit =
     (slugCheckState === 'available' || slugCheckState === 'selfDraft') && currentSlug !== initialSlug && !isPending
 
+  const Wrapper = variant === 'card' ? Card : 'div'
+
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-4 w-64" />
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <Wrapper>
+        {variant === 'card' && (
+          <CardHeader>
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-4 w-64" />
+          </CardHeader>
+        )}
+        <div className={cn('space-y-4', variant === 'card' && 'p-6 pt-0')}>
           <div className="space-y-2">
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-4 w-48" />
           </div>
           <Skeleton className="h-10 w-24" />
-        </CardContent>
-      </Card>
+        </div>
+      </Wrapper>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Link2 className="h-4 w-4" />
-          {t('title')}
-        </CardTitle>
-        <CardDescription>{t('description', { baseUrl: 'valguide.com/en/team', slug: 'tour-name' })}</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Wrapper>
+      {variant === 'card' && (
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Link2 className="h-4 w-4" />
+            {t('title')}
+          </CardTitle>
+          <CardDescription>{t('dialogDescription')}</CardDescription>
+        </CardHeader>
+      )}
+      <div className={cn(variant === 'card' && 'p-6 pt-0')}>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -251,7 +261,10 @@ export function TourSlugSettings({
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">{slugStatusIcon()}</div>
                   </div>
                   <FieldDescription>
-                    {t('description', { baseUrl: 'valguide.com/en/team', slug: field.state.value || 'tour-slug' })}
+                    {t('description', {
+                      baseUrl: `valguide.com/${orgSlug ?? 'team'}`,
+                      slug: field.state.value || 'tour-slug',
+                    })}
                   </FieldDescription>
                   {slugStatusMessage() && <p className="text-sm">{slugStatusMessage()}</p>}
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -289,7 +302,7 @@ export function TourSlugSettings({
             {isPending ? t('saving') : t('save')}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </Wrapper>
   )
 }

@@ -261,7 +261,8 @@
       "backToTour": "Tour",
       "slug": {
         "title": "URL-Slug",
-        "description": "Lesbare Kennung für diese Tour in URLs. {baseUrl}/{slug}",
+        "description": "{baseUrl}/{slug}",
+        "dialogDescription": "Wähle einen kurzen, lesbaren URL-Pfad für diese Tour.",
         "placeholder": "highlights-tour",
         "available": "Dieser Slug ist verfügbar",
         "taken": "Sie verwenden diesen Slug bereits für eine andere Tour",
