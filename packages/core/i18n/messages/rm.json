@@ -339,6 +339,14 @@
       "up-to-date": "Actual",
       "changed": "Midà"
     },
+    "visibility": {
+      "live": "Live",
+      "notLive": "Betg live",
+      "archived": "Archivà"
+    },
+    "edits": {
+      "unpublishedEdits": "Midadas betg publitgadas"
+    },
     "publish": {
       "success": "Translaziun publichada cun success",
       "error": "Errur tar publitgar la translaziun",

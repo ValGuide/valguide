@@ -339,6 +339,14 @@
       "up-to-date": "Up to date",
       "changed": "Changed"
     },
+    "visibility": {
+      "live": "Live",
+      "notLive": "Not live",
+      "archived": "Archived"
+    },
+    "edits": {
+      "unpublishedEdits": "Unpublished edits"
+    },
     "publish": {
       "success": "Translation published successfully",
       "error": "Failed to publish translation",

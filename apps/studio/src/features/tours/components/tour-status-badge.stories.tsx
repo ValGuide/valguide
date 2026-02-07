@@ -13,28 +13,21 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const PublishedUpToDate: Story = {
+export const Live: Story = {
   args: {
     status: 'published',
     indicator: 'up-to-date',
   },
 }
 
-export const PublishedChanged: Story = {
+export const LiveWithUnpublishedEdits: Story = {
   args: {
     status: 'published',
     indicator: 'changed',
   },
 }
 
-export const PublishedNoIndicator: Story = {
-  args: {
-    status: 'published',
-    indicator: null,
-  },
-}
-
-export const Unpublished: Story = {
+export const NotLive: Story = {
   args: {
     status: 'unpublished',
   },
@@ -70,15 +63,15 @@ export const AllStatuses: Story = {
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <TourStatusBadge status="published" indicator="up-to-date" />
-        <span className="text-sm text-muted-foreground">Published · Up to date</span>
+        <span className="text-sm text-muted-foreground">Live (no pending edits)</span>
       </div>
       <div className="flex items-center gap-2">
         <TourStatusBadge status="published" indicator="changed" />
-        <span className="text-sm text-muted-foreground">Published · Changed</span>
+        <span className="text-sm text-muted-foreground">Live with unpublished edits</span>
       </div>
       <div className="flex items-center gap-2">
         <TourStatusBadge status="unpublished" />
-        <span className="text-sm text-muted-foreground">Unpublished</span>
+        <span className="text-sm text-muted-foreground">Not live</span>
       </div>
       <div className="flex items-center gap-2">
         <TourStatusBadge status="archived" />
@@ -93,10 +86,17 @@ export const AllSizes: Story = {
     status: 'published',
   },
   render: () => (
-    <div className="flex items-center gap-4">
-      <TourStatusBadge status="published" indicator="up-to-date" size="sm" />
-      <TourStatusBadge status="published" indicator="up-to-date" size="md" />
-      <TourStatusBadge status="published" indicator="up-to-date" size="lg" />
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-4">
+        <TourStatusBadge status="published" indicator="changed" size="sm" />
+        <TourStatusBadge status="published" indicator="changed" size="md" />
+        <TourStatusBadge status="published" indicator="changed" size="lg" />
+      </div>
+      <div className="flex items-center gap-4">
+        <TourStatusBadge status="published" indicator="up-to-date" size="sm" />
+        <TourStatusBadge status="published" indicator="up-to-date" size="md" />
+        <TourStatusBadge status="published" indicator="up-to-date" size="lg" />
+      </div>
     </div>
   ),
 }

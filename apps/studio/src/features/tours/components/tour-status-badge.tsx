@@ -2,65 +2,86 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-const tourStatusBadgeVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
+const visibilityBadgeVariants = cva('inline-flex items-center gap-1.5 rounded-full font-medium transition-colors', {
+  variants: {
+    status: {
+      published: 'bg-success text-success-foreground',
+      unpublished: 'border border-primary text-primary bg-transparent',
+      archived: 'bg-muted text-muted-foreground',
+    },
+    size: {
+      sm: 'px-2 py-0.5 text-xs',
+      md: 'px-2.5 py-0.5 text-xs',
+      lg: 'px-3 py-1 text-sm',
+    },
+  },
+  defaultVariants: {
+    status: 'unpublished',
+    size: 'md',
+  },
+})
+
+const changesBadgeVariants = cva(
+  'inline-flex items-center rounded-full border border-border text-muted-foreground bg-transparent font-medium',
   {
     variants: {
-      status: {
-        published: 'bg-success text-success-foreground',
-        unpublished: 'border border-primary text-primary bg-transparent',
-        archived: 'bg-muted text-muted-foreground',
-      },
       size: {
         sm: 'px-2 py-0.5 text-xs',
-        md: 'px-2.5 py-0.5 text-xs',
-        lg: 'px-3 py-1 text-sm',
+        md: 'px-2 py-0.5 text-xs',
+        lg: 'px-2.5 py-1 text-sm',
       },
     },
     defaultVariants: {
-      status: 'unpublished',
       size: 'md',
     },
   },
 )
 
+const dotSize: Record<string, string> = {
+  sm: 'h-1.5 w-1.5',
+  md: 'h-1.5 w-1.5',
+  lg: 'h-2 w-2',
+}
+
 export type TourStatus = 'published' | 'unpublished' | 'archived'
 export type TourIndicator = 'up-to-date' | 'changed' | null
 
-export interface TourStatusBadgeProps extends VariantProps<typeof tourStatusBadgeVariants> {
+export interface TourStatusBadgeProps extends VariantProps<typeof visibilityBadgeVariants> {
   status: TourStatus
   indicator?: TourIndicator
   className?: string
 }
 
-const statusEmoji: Record<TourStatus, string> = {
-  published: '🟢',
-  unpublished: '⚪',
-  archived: '⚫',
+const dotColor: Record<TourStatus, string> = {
+  published: 'bg-success-foreground/90',
+  unpublished: 'bg-primary',
+  archived: 'bg-muted-foreground',
 }
 
-export function TourStatusBadge({ status, indicator, size, className }: TourStatusBadgeProps) {
-  // i18n-used-keys: tours.status.published, tours.status.unpublished, tours.status.archived
-  const tStatus = useTranslations('tours.status')
-  // i18n-used-keys: tours.indicator.changed, tours.indicator.up-to-date
-  const tIndicator = useTranslations('tours.indicator')
+export function TourStatusBadge({ status, indicator, size = 'md', className }: TourStatusBadgeProps) {
+  // i18n-used-keys: tours.visibility.live, tours.visibility.notLive, tours.visibility.archived
+  const tVisibility = useTranslations('tours.visibility')
+  // i18n-used-keys: tours.edits.unpublishedEdits
+  const tEdits = useTranslations('tours.edits')
 
-  const emoji = statusEmoji[status]
-  const statusLabel = tStatus(status)
-  const showIndicator = status === 'published' && indicator
+  const visibilityLabel =
+    status === 'published'
+      ? tVisibility('live')
+      : status === 'unpublished'
+        ? tVisibility('notLive')
+        : tVisibility('archived')
+
+  const hasUnpublishedEdits = status === 'published' && indicator === 'changed'
+  const sizeKey = size ?? 'md'
 
   return (
-    <span className={cn(tourStatusBadgeVariants({ status, size }), className)}>
-      <span>{emoji}</span>
-      <span>{statusLabel}</span>
-      {showIndicator && (
-        <>
-          <span className="opacity-60" aria-hidden="true">
-            {'·'}
-          </span>
-          <span>{tIndicator(indicator)}</span>
-        </>
-      )}
+    <span className={cn('inline-flex items-center gap-2', className)}>
+      <span className={visibilityBadgeVariants({ status, size })}>
+        <span aria-hidden="true" className={cn('inline-block rounded-full', dotSize[sizeKey], dotColor[status])} />
+        <span>{visibilityLabel}</span>
+      </span>
+
+      {hasUnpublishedEdits && <span className={changesBadgeVariants({ size })}>{tEdits('unpublishedEdits')}</span>}
     </span>
   )
 }

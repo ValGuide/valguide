@@ -339,6 +339,14 @@
       "up-to-date": "Aktuell",
       "changed": "Geändert"
     },
+    "visibility": {
+      "live": "Live",
+      "notLive": "Nicht live",
+      "archived": "Archiviert"
+    },
+    "edits": {
+      "unpublishedEdits": "Unveröffentlichte Änderungen"
+    },
     "publish": {
       "success": "Übersetzung erfolgreich veröffentlicht",
       "error": "Fehler beim Veröffentlichen der Übersetzung",
