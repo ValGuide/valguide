@@ -394,9 +394,9 @@
       "moreActions": "Weitere Aktionen"
     },
     "confirmDiscard": {
-      "title": "Änderungen verwerfen?",
-      "description": "Dies löscht deinen Entwurf und stellt die veröffentlichte Version wieder her. Diese Aktion kann nicht rückgängig gemacht werden.",
-      "confirm": "Verwerfen",
+      "title": "Alle Änderungen verwerfen?",
+      "description": "Dies stellt Text, Einstellungen, Stopp-Reihenfolge und Medien auf die letzte veröffentlichte Version zurück. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirm": "Alle verwerfen",
       "cancel": "Abbrechen"
     },
     "confirmPublish": {
@@ -439,6 +439,7 @@
       "confirmRemove": "Entfernen"
     },
     "locales": {
+      "updateSuccess": "Sprachen aktualisiert",
       "updateError": "Fehler beim Aktualisieren der Sprachen"
     },
     "helper": {

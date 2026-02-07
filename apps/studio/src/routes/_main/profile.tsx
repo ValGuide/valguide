@@ -7,9 +7,7 @@ import { profileQueryOptions } from '@/features/profile/query-options'
 
 export const Route = createFileRoute('/_main/profile')({
   component: ProfilePage,
-  loader: ({ context }) => {
-    throw new Error('booom')
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(profileQueryOptions()),
   pendingComponent: ProfileSkeleton,
 })
 

@@ -394,9 +394,9 @@
       "moreActions": "Ulteriuras acziuns"
     },
     "confirmDiscard": {
-      "title": "Sbittar las midadas?",
-      "description": "Quai stizza tes sboz e restituescha la versiun publitgada. Questa acziun na po betg vegnir revocada.",
-      "confirm": "Sbittar",
+      "title": "Sbittar tut las midadas?",
+      "description": "Quai restituescha text, configuraziuns, successiun da posts e medias a la versiun publitgada. Questa acziun na po betg vegnir revocada.",
+      "confirm": "Sbittar tut",
       "cancel": "Interrumper"
     },
     "confirmPublish": {
@@ -439,6 +439,7 @@
       "confirmRemove": "Allontanar"
     },
     "locales": {
+      "updateSuccess": "Linguas actualisadas",
       "updateError": "Errur cun actualisar las linguas"
     },
     "helper": {

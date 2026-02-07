@@ -394,9 +394,9 @@
       "moreActions": "More actions"
     },
     "confirmDiscard": {
-      "title": "Discard changes?",
-      "description": "This will delete your draft and revert to the published version. This action cannot be undone.",
-      "confirm": "Discard",
+      "title": "Discard all changes?",
+      "description": "This will revert text, settings, stop order, and media to the last published version. This action cannot be undone.",
+      "confirm": "Discard all",
       "cancel": "Cancel"
     },
     "confirmPublish": {
@@ -439,6 +439,7 @@
       "confirmRemove": "Remove"
     },
     "locales": {
+      "updateSuccess": "Languages updated",
       "updateError": "Failed to update languages"
     },
     "helper": {
