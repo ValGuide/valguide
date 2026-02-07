@@ -88,10 +88,7 @@ export function TourDetailView({
 
       {/* Title Row */}
       <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{displayTitle}</h1>
-          <TourStatusBadge status={tourStatus} indicator={indicator} size="lg" className="shrink-0" />
-        </div>
+        <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{displayTitle}</h1>
       </div>
 
       {/* Content */}

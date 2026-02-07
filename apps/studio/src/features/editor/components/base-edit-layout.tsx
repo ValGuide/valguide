@@ -2,7 +2,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
 import { type ReactNode, useCallback, useState } from 'react'
-import { type TourIndicator, type TourStatus, TourStatusBadge } from '@/features/tours/components/tour-status-badge'
+import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
 import { EditorActionsPanel } from './editor-actions-panel'
 import { EditorHeader } from './editor-header'
@@ -167,12 +167,9 @@ export function BaseEditLayout({
             </div>
           </div>
 
-          {/* Row 2: Title + Status Badge */}
+          {/* Row 2: Title */}
           <div className="flex flex-col gap-1 px-4 pb-3 sm:px-6">
-            <div className="flex items-center gap-2">
-              <h1 className="min-w-0 truncate text-lg font-semibold">{title}</h1>
-              <TourStatusBadge status={status.status} indicator={status.indicator} size="sm" className="shrink-0" />
-            </div>
+            <h1 className="min-w-0 truncate text-lg font-semibold">{title}</h1>
             {showChangedHelper && <p className="text-xs text-muted-foreground">{t('helper.changedExplanation')}</p>}
           </div>
         </div>
@@ -207,13 +204,10 @@ export function BaseEditLayout({
           />
         )}
 
-        {/* Desktop: Status Badge */}
+        {/* Desktop: Title */}
         <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{title}</h1>
-              <TourStatusBadge status={status.status} indicator={status.indicator} size="lg" className="shrink-0" />
-            </div>
+            <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{title}</h1>
             {showChangedHelper && <p className="text-sm text-muted-foreground">{t('helper.changedExplanation')}</p>}
           </div>
         </div>
