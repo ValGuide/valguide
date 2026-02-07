@@ -2,6 +2,7 @@ import { and, eq, isNull } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
 import { tour, tourAssetDraft, tourLocale, tourLocaleDraft, tourSettingsDraft } from '../schema'
+import { getTourHasAnyChanges } from './get-tour-has-any-changes.server'
 
 // =============================================================================
 // TYPES
@@ -30,6 +31,7 @@ export type TourDetail = {
   createdAt: Date
   updatedAt: Date
   locales: LocaleDraftInfo[]
+  hasAnyChanges: boolean
   settings: {
     themeId: string | null
     settingsJson: string | null
@@ -100,6 +102,8 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     .where(and(eq(tourAssetDraft.tourId, foundTour.id), eq(tourAssetDraft.channel, 'images.hero')))
     .limit(1)
 
+  const hasAnyChanges = guideIsPublished ? await getTourHasAnyChanges(foundTour.id) : false
+
   return {
     id: foundTour.id,
     nanoId: foundTour.nanoId,
@@ -110,6 +114,7 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     createdAt: foundTour.createdAt,
     updatedAt: foundTour.updatedAt,
     locales,
+    hasAnyChanges,
     settings: settings ?? null,
     coverImage: coverImageRow ?? null,
   }

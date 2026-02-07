@@ -54,10 +54,9 @@ export function TourDetailView({
   const displayDescription = bestLocale?.description ?? null
   const coverImageUrl = tour.coverImage ? getAssetImageUrl(tour.coverImage) : null
 
-  const hasChanges = bestLocale?.hasChanges ?? false
   const { status: tourStatus, indicator } = getTourStatusDisplay(
     { publishedAt: tour.publishedAt, archivedAt: tour.archivedAt },
-    hasChanges,
+    tour.hasAnyChanges,
   )
 
   return (

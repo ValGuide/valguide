@@ -104,12 +104,13 @@ export function TourEditPage({
   const hasPublished = localeDraft?.hasPublished ?? false
 
   const computedStatusDisplay: StatusDisplay = useMemo(() => {
+    const hasAnyChanges = tourDetail?.hasAnyChanges ?? changedCount > 0
     const { status, indicator } = getTourStatusDisplay(
       { publishedAt: tourDetail?.publishedAt ?? null, archivedAt: tourDetail?.archivedAt ?? null },
-      changedCount > 0,
+      hasAnyChanges,
     )
     return { status, indicator }
-  }, [tourDetail?.publishedAt, tourDetail?.archivedAt, changedCount])
+  }, [tourDetail?.publishedAt, tourDetail?.archivedAt, tourDetail?.hasAnyChanges, changedCount])
 
   const stableStatusRef = useRef(computedStatusDisplay)
   if (!isPublishing) {
