@@ -6,6 +6,7 @@ export type TourSlugRecord = {
   id: string
   slug: string
   isPrimary: boolean
+  publishedAt: string | null
   createdAt: string
 }
 
@@ -15,6 +16,7 @@ export async function getTourSlugs(db: DB, tourId: string): Promise<TourSlugReco
       id: tourSlug.id,
       slug: tourSlug.slug,
       isPrimary: tourSlug.isPrimary,
+      publishedAt: tourSlug.publishedAt,
       createdAt: tourSlug.createdAt,
     })
     .from(tourSlug)
@@ -23,6 +25,7 @@ export async function getTourSlugs(db: DB, tourId: string): Promise<TourSlugReco
 
   return slugs.map((s) => ({
     ...s,
+    publishedAt: s.publishedAt?.toISOString() ?? null,
     createdAt: s.createdAt.toISOString(),
   }))
 }

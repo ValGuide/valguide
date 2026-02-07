@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { updateStopVisibilityFn } from '@valguide/core/features/tours/structure/update-stop-visibility.fn'
+import { discardTourLocaleDraftFn } from '@valguide/core/features/tours/tour/locale/discard-tour-locale-draft.fn'
 import { ensureAllTourLocalesFn } from '@valguide/core/features/tours/tour/locale/ensure-all-tour-locales.fn'
 import { unpublishTourLocaleFn } from '@valguide/core/features/tours/tour/locale/unpublish-tour-locale.fn'
 import { publishTourFn } from '@valguide/core/features/tours/tour/publish-tour.fn'
@@ -83,6 +84,7 @@ function TourEditPageContent() {
     <TourEditPage
       onPublish={handlePublish}
       onUnpublish={(_tourId, locale) => unpublishTourLocaleFn({ data: { nanoId, locale } })}
+      onDiscard={(_tourId, locale) => discardTourLocaleDraftFn({ data: { nanoId, locale } })}
       onHideStop={(_tourId, stopNanoId) =>
         updateStopVisibilityFn({ data: { tourNanoId: nanoId, stopNanoId, visible: false } })
       }

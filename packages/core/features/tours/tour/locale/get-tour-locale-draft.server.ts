@@ -19,7 +19,7 @@ export type TourLocaleDraftResult = {
 
 export async function getTourLocaleDraft(tourNanoId: string, locale: string): Promise<TourLocaleDraftResult | null> {
   const [foundTour] = await db
-    .select({ id: tour.id, availableLocales: tour.availableLocales })
+    .select({ id: tour.id, availableLocales: tour.availableLocales, publishedAt: tour.publishedAt })
     .from(tour)
     .where(eq(tour.nanoId, tourNanoId))
     .limit(1)
@@ -57,6 +57,6 @@ export async function getTourLocaleDraft(tourNanoId: string, locale: string): Pr
     locale: row.locale,
     title: row.title,
     description: row.description,
-    hasPublished: row.publishedLocaleId !== null,
+    hasPublished: foundTour.publishedAt !== null && row.publishedLocaleId !== null,
   }
 }

@@ -78,7 +78,7 @@ export function EditorActionsPanel({
               <span className="sr-only">{t('moreActions')}</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[160px]">
+          <DropdownMenuContent align="end" className="min-w-40">
             {canUnpublish && !publishingDisabled && (
               <DropdownMenuItem onClick={onUnpublishClick} className="text-destructive focus:text-destructive">
                 <X className="mr-2 h-4 w-4" />

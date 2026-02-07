@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import { getTourStatus } from '@valguide/core/features/tours/status-utils'
+import { getTourStatusDisplay } from '@valguide/core/features/tours/status-utils'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { pickBestLocale } from '@valguide/core/features/tours/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -54,10 +54,11 @@ export function TourDetailView({
   const displayDescription = bestLocale?.description ?? null
   const coverImageUrl = tour.coverImage ? getAssetImageUrl(tour.coverImage) : null
 
-  const tourStatus = getTourStatus({
-    publishedAt: tour.publishedAt,
-    archivedAt: tour.archivedAt,
-  })
+  const hasChanges = bestLocale?.hasChanges ?? false
+  const { status: tourStatus, indicator } = getTourStatusDisplay(
+    { publishedAt: tour.publishedAt, archivedAt: tour.archivedAt },
+    hasChanges,
+  )
 
   return (
     <main className="flex flex-1 flex-col bg-background">
@@ -84,7 +85,7 @@ export function TourDetailView({
       <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
           <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{displayTitle}</h1>
-          <TourStatusBadge status={tourStatus} size="lg" className="shrink-0" />
+          <TourStatusBadge status={tourStatus} indicator={indicator} size="lg" className="shrink-0" />
         </div>
       </div>
 
@@ -139,7 +140,10 @@ export function TourDetailView({
                   value={new Date(tour.updatedAt).toLocaleDateString()}
                   icon={<Clock />}
                 />
-                <MetadataRow label={t('details.status')} value={t(`status.${tourStatus}`)} />
+                <MetadataRow
+                  label={t('details.status')}
+                  value={<TourStatusBadge status={tourStatus} indicator={indicator} />}
+                />
               </MetadataGrid>
             </CardContent>
           </Card>

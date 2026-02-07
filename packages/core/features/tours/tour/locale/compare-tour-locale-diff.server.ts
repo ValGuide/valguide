@@ -32,17 +32,14 @@ export async function compareTourLocaleDiff(nanoId: string, locale: string): Pro
   if (!draft) return null
 
   if (!published) {
-    // Never published — all non-empty fields are "new"
-    // Treat empty strings as equivalent to null (no meaningful content)
-    const hasContent = (value: string | null) => value !== null && value.trim() !== ''
     const fieldDiffs: FieldDiff[] = [
-      { field: 'title', draft: draft.title, published: null, hasChanged: hasContent(draft.title) },
-      { field: 'description', draft: draft.description, published: null, hasChanged: hasContent(draft.description) },
+      { field: 'title', draft: draft.title, published: null, hasChanged: false },
+      { field: 'description', draft: draft.description, published: null, hasChanged: false },
     ]
 
     return {
-      hasChanges: fieldDiffs.some((f) => f.hasChanged),
-      changedFields: fieldDiffs.filter((f) => f.hasChanged).map((f) => f.field),
+      hasChanges: false,
+      changedFields: [],
       fieldDiffs,
       publishedAt: null,
     }

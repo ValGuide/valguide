@@ -50,12 +50,14 @@ export function TourSlugSettingsConnected({ tourNanoId, tourTitle }: TourSlugSet
     })
   }
 
+  const draftSlug = slugHistory.find((s) => !s.publishedAt)
   const primarySlug = slugHistory.find((s) => s.isPrimary)
+  const currentSlug = draftSlug ?? primarySlug
 
   return (
     <TourSlugSettings
       tourTitle={tourTitle}
-      initialSlug={primarySlug?.slug}
+      initialSlug={currentSlug?.slug}
       slugHistory={slugHistory}
       isLoading={isLoading}
       onUpdateSlug={handleUpdateSlug}

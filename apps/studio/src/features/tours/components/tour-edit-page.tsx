@@ -36,6 +36,7 @@ export type TourSlugSettingsComponentProps = {
 export interface TourEditPageProps {
   onPublish?: (tourId: string, locale: string) => Promise<unknown>
   onUnpublish?: (tourId: string, locale: string) => Promise<unknown>
+  onDiscard?: (tourId: string, locale: string) => Promise<unknown>
   onHideStop?: (tourId: string, stopNanoId: string) => Promise<unknown>
   onShowStop?: (tourId: string, stopNanoId: string) => Promise<unknown>
   MediaPicker: MediaPickerComponent
@@ -48,6 +49,7 @@ export interface TourEditPageProps {
 export function TourEditPage({
   onPublish,
   onUnpublish,
+  onDiscard,
   onHideStop,
   onShowStop,
   MediaPicker,
@@ -217,6 +219,18 @@ export function TourEditPage({
     }
   }, [nanoId, activeLocale, refetch, onUnpublish])
 
+  const handleDiscard = useCallback(async () => {
+    if (!onDiscard) return
+    try {
+      await onDiscard(nanoId, activeLocale)
+      await refetch()
+      toast.success(t('discard.success'))
+    } catch (error) {
+      console.error('Failed to discard:', error)
+      toast.error(t('discard.error'))
+    }
+  }, [nanoId, activeLocale, refetch, onDiscard, t])
+
   if (!tourDetail) return null
 
   const mobileProgressSheet = (
@@ -281,7 +295,7 @@ export function TourEditPage({
         onSave={save}
         onPublish={handlePublish}
         onUnpublish={handleUnpublish}
-        onDiscard={() => Promise.resolve()}
+        onDiscard={handleDiscard}
         backLabel={t('editor.tourDetails')}
         onBack={handleNavigateToTour}
         sidebar={sidebarContent}

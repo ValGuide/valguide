@@ -12,6 +12,7 @@ export type LocaleDraftInfo = {
   title: string | null
   description: string | null
   hasPublished: boolean
+  hasChanges: boolean
 }
 
 export type TourCoverImage = {
@@ -55,6 +56,8 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
       title: tourLocaleDraft.title,
       description: tourLocaleDraft.description,
       publishedLocaleId: tourLocale.id,
+      publishedTitle: tourLocale.title,
+      publishedDescription: tourLocale.description,
     })
     .from(tourLocaleDraft)
     .leftJoin(
@@ -63,12 +66,20 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     )
     .where(eq(tourLocaleDraft.tourId, foundTour.id))
 
-  const locales: LocaleDraftInfo[] = localeRows.map((row) => ({
-    locale: row.locale,
-    title: row.title,
-    description: row.description,
-    hasPublished: row.publishedLocaleId !== null,
-  }))
+  const guideIsPublished = foundTour.publishedAt !== null
+  const locales: LocaleDraftInfo[] = localeRows.map((row) => {
+    const hasPublished = guideIsPublished && row.publishedLocaleId !== null
+    const hasChanges = hasPublished
+      ? (row.title ?? '') !== (row.publishedTitle ?? '') || (row.description ?? '') !== (row.publishedDescription ?? '')
+      : false
+    return {
+      locale: row.locale,
+      title: row.title,
+      description: row.description,
+      hasPublished,
+      hasChanges,
+    }
+  })
 
   const [settings] = await db
     .select({

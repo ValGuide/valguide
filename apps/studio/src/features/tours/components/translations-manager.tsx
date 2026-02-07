@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { MoreHorizontal, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { PublishConfirmationDialog } from '../../editor/components/publish-confirmation-dialog'
@@ -38,7 +39,10 @@ export function TranslationsManager({
   const tDetails = useTranslations('tours.details')
   const tStops = useTranslations('stops')
   const tActions = useTranslations('tours.actions')
-  const tLocaleSelector = useTranslations('tours.localeSelector')
+  // i18n-used-keys: tours.status.published, tours.status.unpublished
+  const tStatus = useTranslations('tours.status')
+  // i18n-used-keys: tours.indicator.changed
+  const tIndicator = useTranslations('tours.indicator')
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [localeToRemove, setLocaleToRemove] = useState<string | null>(null)
   const [localeToPublish, setLocaleToPublish] = useState<string | null>(null)
@@ -98,38 +102,57 @@ export function TranslationsManager({
                   <div className="flex min-w-0 items-center gap-2">
                     <span className="truncate font-medium">{localeName}</span>
                     <span className="shrink-0 text-xs text-muted-foreground">({localeInfo.locale})</span>
-                    <Badge variant={localeInfo.hasPublished ? 'default' : 'secondary'} className="shrink-0">
-                      {localeInfo.hasPublished ? tLocaleSelector('statusPublished') : tLocaleSelector('statusDraft')}
+                    <Badge
+                      variant={localeInfo.hasPublished ? (localeInfo.hasChanges ? 'outline' : 'default') : 'secondary'}
+                      className="shrink-0"
+                    >
+                      {localeInfo.hasPublished
+                        ? localeInfo.hasChanges
+                          ? tIndicator('changed')
+                          : tStatus('published')
+                        : tStatus('unpublished')}
                     </Badge>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
                     {onPublish && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => handlePublishClick(localeInfo.locale)}
-                        disabled={isCurrentlyPublishing}
-                      >
-                        <Upload className="h-4 w-4" />
-                        <span className="sr-only">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handlePublishClick(localeInfo.locale)}
+                            disabled={isCurrentlyPublishing}
+                          >
+                            <Upload className="h-4 w-4" />
+                            <span className="sr-only">
+                              {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
+                            </span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
                           {isCurrentlyPublishing ? tActions('publishing') : tActions('publish')}
-                        </span>
-                      </Button>
+                        </TooltipContent>
+                      </Tooltip>
                     )}
-                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                      <Link
-                        to="/tours/$nanoId/edit"
-                        params={{ nanoId: tourNanoId }}
-                        search={{
-                          locale: localeInfo.locale,
-                        }}
-                        preload="intent"
-                      >
-                        <Pencil className="h-4 w-4" />
-                        <span className="sr-only">{tStops('edit')}</span>
-                      </Link>
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                          <Link
+                            to="/tours/$nanoId/edit"
+                            params={{ nanoId: tourNanoId }}
+                            search={{
+                              locale: localeInfo.locale,
+                            }}
+                            preload="intent"
+                          >
+                            <Pencil className="h-4 w-4" />
+                            <span className="sr-only">{tStops('edit')}</span>
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{tStops('edit')}</TooltipContent>
+                    </Tooltip>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">

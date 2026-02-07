@@ -21,12 +21,14 @@ const mockTour: TourDetail = {
       description:
         'Discover the rich history and stunning artworks of the City Art Museum through this comprehensive audio guide.',
       hasPublished: false,
+      hasChanges: false,
     },
     {
       locale: 'de',
       title: 'Stadtkunstmuseum Audio Tour',
       description: 'Entdecken Sie die reiche Geschichte und atemberaubende Kunstwerke des Stadtkunstmuseums.',
       hasPublished: false,
+      hasChanges: false,
     },
   ],
   settings: null,
@@ -95,10 +97,25 @@ export const Published: Story = {
   args: {
     tour: {
       ...mockTour,
+      publishedAt: new Date('2025-01-10T12:00:00Z'),
       locales: mockTour.locales.map((l) => ({
         ...l,
         hasPublished: true,
+        hasChanges: false,
       })),
+    },
+  },
+}
+
+export const PublishedWithChanges: Story = {
+  args: {
+    tour: {
+      ...mockTour,
+      publishedAt: new Date('2025-01-10T12:00:00Z'),
+      locales: [
+        { ...mockTour.locales[0], hasPublished: true, hasChanges: true },
+        { ...mockTour.locales[1], hasPublished: true, hasChanges: false },
+      ],
     },
   },
 }
@@ -162,36 +179,42 @@ export const ManyLanguages: Story = {
           title: 'English Title',
           description: 'English description',
           hasPublished: true,
+          hasChanges: false,
         },
         {
           locale: 'de',
           title: 'German Title',
           description: 'German description',
           hasPublished: true,
+          hasChanges: false,
         },
         {
           locale: 'fr',
           title: 'French Title',
           description: 'French description',
           hasPublished: false,
+          hasChanges: false,
         },
         {
           locale: 'it',
           title: 'Italian Title',
           description: 'Italian description',
           hasPublished: false,
+          hasChanges: false,
         },
         {
           locale: 'es',
           title: null,
           description: null,
           hasPublished: false,
+          hasChanges: false,
         },
         {
           locale: 'rm',
           title: 'Romansh Title',
           description: 'Romansh description',
           hasPublished: true,
+          hasChanges: false,
         },
       ],
     },
