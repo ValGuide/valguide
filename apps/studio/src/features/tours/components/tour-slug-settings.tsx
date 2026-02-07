@@ -1,4 +1,4 @@
-import { useForm } from '@tanstack/react-form'
+import { useForm, useStore } from '@tanstack/react-form'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldDescription, FieldError, FieldLabel } from '@valguide/core/ui/components/field'
 import { toast } from '@valguide/core/ui/components/sonner/state'
@@ -30,6 +30,7 @@ export type TourSlugHistoryItem = {
   id: string
   slug: string
   isPrimary: boolean
+  publishedAt: string | null
   createdAt: string
 }
 
@@ -120,19 +121,21 @@ export function TourSlugSettings({
 
   const handleSlugChange = useCallback(
     (newSlug: string) => {
-      if (newSlug) {
+      if (newSlug && newSlug !== initialSlug) {
+        setSlugCheckState('checking')
         debouncedCheck(newSlug)
       } else {
         setSlugCheckState('idle')
       }
     },
-    [debouncedCheck],
+    [debouncedCheck, initialSlug],
   )
 
   const handleAutoGenerate = useCallback(() => {
     if (!tourTitle) return
     const newSlug = generateSlug(tourTitle)
     form.setFieldValue('slug', newSlug)
+    setSlugCheckState('checking')
     debouncedCheck(newSlug)
   }, [tourTitle, form, debouncedCheck])
 
@@ -177,11 +180,13 @@ export function TourSlugSettings({
     }
   }
 
-  const historyItems = slugHistory.filter((s) => !s.isPrimary)
+  const draftSlug = slugHistory.find((s) => !s.publishedAt)
+  const primarySlug = slugHistory.find((s) => s.isPrimary)
+  const currentEditSlug = draftSlug ?? primarySlug
+  const historyItems = slugHistory.filter((s) => s.id !== currentEditSlug?.id)
+  const currentSlug = useStore(form.store, (state) => state.values.slug)
   const canSubmit =
-    (slugCheckState === 'available' || slugCheckState === 'selfDraft') &&
-    form.getFieldValue('slug') !== initialSlug &&
-    !isPending
+    (slugCheckState === 'available' || slugCheckState === 'selfDraft') && currentSlug !== initialSlug && !isPending
 
   if (isLoading) {
     return (
@@ -279,10 +284,6 @@ export function TourSlugSettings({
                 </ul>
               </CollapsibleContent>
             </Collapsible>
-          )}
-
-          {historyItems.length === 0 && initialSlug && (
-            <p className="text-sm text-muted-foreground">{t('noHistory')}</p>
           )}
 
           <Button type="submit" disabled={!canSubmit}>

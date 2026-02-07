@@ -275,7 +275,6 @@
         "saveError": "Errur cun actualisar il slug",
         "history": "Istorgia dal slug",
         "historyDescription": "Vegls slugs redirigeschan vinavant a questa tura.",
-        "noHistory": "Nagins slugs precedents",
         "autoGenerate": "Generar automaticamain"
       }
     },
@@ -791,8 +790,7 @@
       "saveError": "Errur cun actualisar il slug",
       "slugHistory": "Istorgia dal slug",
       "slugHistoryDescription": "Slugs vegls redirigian anc adina a voss team.",
-      "current": "Actual",
-      "noHistory": "Nagins slugs precedents"
+      "current": "Actual"
     }
   },
   "joinTeam": {

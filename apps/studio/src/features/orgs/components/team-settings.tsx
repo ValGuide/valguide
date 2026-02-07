@@ -302,10 +302,6 @@ export function TeamSettings({
             </Collapsible>
           )}
 
-          {historyItems.length === 0 && initialSlug && (
-            <p className="text-sm text-muted-foreground">{t('noHistory')}</p>
-          )}
-
           <Button type="submit" disabled={!canSubmit}>
             {isPending ? t('saving') : t('save')}
           </Button>

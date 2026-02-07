@@ -275,7 +275,6 @@
         "saveError": "Slug konnte nicht aktualisiert werden",
         "history": "Slug-Verlauf",
         "historyDescription": "Alte Slugs leiten weiterhin zu dieser Tour weiter.",
-        "noHistory": "Keine früheren Slugs",
         "autoGenerate": "Auto-generieren"
       }
     },
@@ -791,8 +790,7 @@
       "saveError": "Fehler beim Aktualisieren des Slugs",
       "slugHistory": "Slug-Verlauf",
       "slugHistoryDescription": "Alte Slugs leiten weiterhin zu Ihrem Team weiter.",
-      "current": "Aktuell",
-      "noHistory": "Keine vorherigen Slugs"
+      "current": "Aktuell"
     }
   },
   "joinTeam": {

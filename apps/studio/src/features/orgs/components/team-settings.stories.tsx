@@ -161,30 +161,6 @@ export const CurrentSlug: Story = {
   },
 }
 
-export const NoHistory: Story = {
-  args: {
-    team: mockTeam,
-    initialSlug: 'kunsthaus-zuerich',
-    slugHistory: [
-      {
-        id: 'slug-1',
-        slug: 'kunsthaus-zuerich',
-        isPrimary: true,
-        createdAt: new Date().toISOString(),
-      },
-    ],
-    onCheckSlugAvailable: createMockCheckSlugAvailable('available'),
-    onUpdateSlug: createMockUpdateSlug(true),
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Team with only one slug (no history to show).',
-      },
-    },
-  },
-}
-
 export const LongHistory: Story = {
   args: {
     team: mockTeam,

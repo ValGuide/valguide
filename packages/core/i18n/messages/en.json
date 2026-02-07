@@ -275,7 +275,6 @@
         "saveError": "Failed to update slug",
         "history": "Slug History",
         "historyDescription": "Old slugs still redirect to this tour.",
-        "noHistory": "No previous slugs",
         "autoGenerate": "Auto-generate"
       }
     },
@@ -791,8 +790,7 @@
       "saveError": "Failed to update slug",
       "slugHistory": "Slug History",
       "slugHistoryDescription": "Old slugs still redirect to your team.",
-      "current": "Current",
-      "noHistory": "No previous slugs"
+      "current": "Current"
     }
   },
   "joinTeam": {
