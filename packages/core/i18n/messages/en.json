@@ -435,7 +435,7 @@
       "status": "Status",
       "published": "Published",
       "draft": "Draft",
-      "translations": "Translations",
+      "translations": "Languages",
       "addCoverImageHint": "Add a cover image in the editor"
     },
     "localesManager": {

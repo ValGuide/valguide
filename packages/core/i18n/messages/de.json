@@ -435,7 +435,7 @@
       "status": "Status",
       "published": "Veröffentlicht",
       "draft": "Entwurf",
-      "translations": "Übersetzungen",
+      "translations": "Sprachen",
       "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
     },
     "localesManager": {
