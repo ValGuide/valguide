@@ -10,7 +10,6 @@ import { PageTitle } from '@valguide/ui/components/page-title'
 import { InviteMemberDialog } from '@/features/orgs/components/invite-member-dialog'
 import { MembersTable, type OrgRole } from '@/features/orgs/components/members-table'
 import { PendingInvitesList } from '@/features/orgs/components/pending-invites-list'
-import { TeamSettingsConnected } from '@/features/orgs/components/team-settings-connected'
 
 interface TeamMembersClientProps {
   team: {
@@ -93,8 +92,6 @@ export function TeamMembersClient({
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8">
-      <TeamSettingsConnected team={team} />
-
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <PageTitle as="h2">{t('title')}</PageTitle>
