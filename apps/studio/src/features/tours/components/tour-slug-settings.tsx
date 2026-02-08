@@ -268,12 +268,14 @@ export function TourSlugSettings({
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">{slugStatusIcon()}</div>
                   </div>
-                  <FieldDescription>
-                    {t('description', {
-                      baseUrl: `valguide.com/${orgSlug ?? '...'}`,
-                      slug: field.state.value || t('placeholder'),
-                    })}
-                  </FieldDescription>
+                  {orgSlug && (
+                    <FieldDescription>
+                      {t('description', {
+                        baseUrl: `valguide.com/${orgSlug}`,
+                        slug: field.state.value || t('placeholder'),
+                      })}
+                    </FieldDescription>
+                  )}
                   {slugStatusMessage() && <p className="text-sm">{slugStatusMessage()}</p>}
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
