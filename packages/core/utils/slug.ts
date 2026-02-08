@@ -129,6 +129,20 @@ export const slugSchema = z
   })
 
 /**
+ * Sanitize user input into a valid slug as they type.
+ * Auto-lowercases, replaces spaces with hyphens, strips invalid characters,
+ * and collapses consecutive hyphens. Does NOT trim trailing hyphens
+ * (the user may still be typing).
+ */
+export function sanitizeSlugInput(input: string): string {
+  return input
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-{2,}/g, '-')
+}
+
+/**
  * Check if a slug is valid without throwing.
  */
 export function isValidSlug(slug: string): boolean {

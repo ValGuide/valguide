@@ -277,7 +277,10 @@
         "saveError": "Errur cun actualisar il slug",
         "history": "Istorgia dal slug",
         "historyDescription": "Vegls slugs redirigeschan vinavant a questa tura.",
-        "autoGenerate": "Generar automaticamain"
+        "autoGenerate": "Generar automaticamain",
+        "validationTooShort": "Slugs ston avair almain 3 caracters",
+        "validationTooLong": "Slugs pon avair maximalmain 100 caracters",
+        "validationFormat": "Utilisai mo minusclas, cifras e stritgs (p.\u00a0ex. \"mia-tura\")"
       }
     },
     "empty": {

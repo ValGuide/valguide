@@ -277,7 +277,10 @@
         "saveError": "Slug konnte nicht aktualisiert werden",
         "history": "Slug-Verlauf",
         "historyDescription": "Alte Slugs leiten weiterhin zu dieser Tour weiter.",
-        "autoGenerate": "Auto-generieren"
+        "autoGenerate": "Auto-generieren",
+        "validationTooShort": "Slugs müssen mindestens 3 Zeichen haben",
+        "validationTooLong": "Slugs dürfen höchstens 100 Zeichen haben",
+        "validationFormat": "Verwende nur Kleinbuchstaben, Zahlen und Bindestriche (z.\u00a0B. \"meine-tour\")"
       }
     },
     "empty": {

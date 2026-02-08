@@ -2,7 +2,7 @@ import { useForm, useStore } from '@tanstack/react-form'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldDescription, FieldError, FieldLabel } from '@valguide/core/ui/components/field'
 import { toast } from '@valguide/core/ui/components/sonner/state'
-import { generateSlug, slugSchema } from '@valguide/core/utils/slug'
+import { generateSlug, sanitizeSlugInput, slugSchema } from '@valguide/core/utils/slug'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/ui/components/collapsible'
@@ -62,8 +62,14 @@ export function TourSlugSettings({
   >('idle')
   const [historyOpen, setHistoryOpen] = useState(false)
 
+  const slugFieldSchema = z
+    .string()
+    .min(3, t('validationTooShort'))
+    .max(100, t('validationTooLong'))
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t('validationFormat'))
+
   const tourSlugFormSchema = z.object({
-    slug: slugSchema,
+    slug: slugFieldSchema,
   })
 
   const form = useForm({
@@ -72,6 +78,7 @@ export function TourSlugSettings({
     },
     validators: {
       onSubmit: tourSlugFormSchema,
+      onChange: tourSlugFormSchema,
     },
     onSubmit: async ({ value }) => {
       if (!onUpdateSlug) return
@@ -251,8 +258,9 @@ export function TourSlugSettings({
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => {
-                        field.handleChange(e.target.value)
-                        handleSlugChange(e.target.value)
+                        const sanitized = sanitizeSlugInput(e.target.value)
+                        field.handleChange(sanitized)
+                        handleSlugChange(sanitized)
                       }}
                       aria-invalid={isInvalid}
                       placeholder={t('placeholder')}

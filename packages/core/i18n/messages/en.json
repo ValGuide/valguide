@@ -277,7 +277,10 @@
         "saveError": "Failed to update slug",
         "history": "Slug History",
         "historyDescription": "Old slugs still redirect to this tour.",
-        "autoGenerate": "Auto-generate"
+        "autoGenerate": "Auto-generate",
+        "validationTooShort": "Slugs need at least 3 characters",
+        "validationTooLong": "Slugs can be at most 100 characters",
+        "validationFormat": "Use only lowercase letters, numbers, and hyphens (e.g., \"my-tour-name\")"
       }
     },
     "empty": {
