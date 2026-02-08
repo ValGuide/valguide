@@ -187,8 +187,9 @@
     "otpError": "Failed to send login code. Please try again"
   },
   "notFound": {
-    "title": "404 – Lost Your Way?",
-    "description": "Looks like this trail doesn't lead anywhere! Let's get you back to where the adventure is.",
+    "title": "Page not found",
+    "description": "We couldn't find the page you're looking for. It may have been moved or no longer exists.",
+    "homeButton": "Back to Home",
     "tour": {
       "backToTours": "Back to Tours"
     },
@@ -729,7 +730,7 @@
     "teamSwitcher": {
       "teams": "Teams",
       "createTeam": "Create team",
-      "teamSettings": "Team settings",
+      "teamSettings": "Workspace settings",
       "error": "Failed to switch team"
     },
     "members": {
@@ -788,9 +789,18 @@
       "triggerButton": "Create Team"
     },
     "teamSettings": {
-      "title": "Team Settings",
-      "description": "Configure your team's identity and URL.",
+      "title": "Workspace",
+      "description": "Manage your workspace settings, team members, and permissions.",
+      "tabs": {
+        "general": "General",
+        "members": "Members"
+      },
       "nameLabel": "Team Name",
+      "namePlaceholder": "e.g. Acme Museum",
+      "nameSave": "Save",
+      "nameSaving": "Saving...",
+      "nameSaveSuccess": "Team name updated",
+      "nameSaveError": "Failed to update team name",
       "slugLabel": "URL Slug",
       "slugDescription": "Your team's unique identifier in URLs. valguide.com/{slug}",
       "slugPlaceholder": "my-team",
@@ -806,7 +816,17 @@
       "saveError": "Failed to update slug",
       "slugHistory": "Slug History",
       "slugHistoryDescription": "Old slugs still redirect to your team.",
-      "current": "Current"
+      "current": "Current",
+      "profileSectionTitle": "Organization Profile",
+      "profileSectionDescription": "Your organization's name and avatar are visible to all team members.",
+      "avatarLabel": "Team Avatar",
+      "avatarDescription": "PNG, JPG, WebP or GIF. Max 5MB.",
+      "avatarSave": "Save",
+      "avatarSaving": "Saving...",
+      "avatarSaveSuccess": "Team avatar updated",
+      "avatarSaveError": "Failed to update team avatar",
+      "avatarInvalidType": "Please upload a PNG, JPG, WebP, or GIF image",
+      "avatarTooLarge": "Image must be smaller than 5MB"
     }
   },
   "joinTeam": {

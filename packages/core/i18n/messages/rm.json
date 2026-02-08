@@ -187,8 +187,9 @@
     "otpError": "Errur cun trametter il code d'annunzia. Empruvei per plascher aunc inagada"
   },
   "notFound": {
-    "title": "404 – Eis vus sepiars?",
-    "description": "Quei trutg meina buca enzanua! Turnein anavos nua che l'aventura spetga.",
+    "title": "Pagina betg chattada",
+    "description": "Nus n'avain betg pudì chattar la pagina tschertgada. Ella è eventualmain vegnida spustada u n'exista betg pli.",
+    "homeButton": "Enavos a la pagina principala",
     "tour": {
       "backToTours": "Enavos a las turas"
     },
@@ -729,7 +730,7 @@
     "teamSwitcher": {
       "teams": "Teams",
       "createTeam": "Crear team",
-      "teamSettings": "Parameters dal team",
+      "teamSettings": "Parameters dal workspace",
       "error": "Errur cun midar il team"
     },
     "members": {
@@ -788,9 +789,18 @@
       "triggerButton": "Crear team"
     },
     "teamSettings": {
-      "title": "Parameters dal team",
-      "description": "Configurar l'identitad e l'URL da voss team.",
+      "title": "Arbeitsbereich",
+      "description": "Administrescha ils parameters dal workspace, ils commembers e las permissiuns.",
+      "tabs": {
+        "general": "General",
+        "members": "Commembers"
+      },
       "nameLabel": "Num dal team",
+      "namePlaceholder": "p.ex. Museum Acme",
+      "nameSave": "Memorisar",
+      "nameSaving": "Vegn memorisà...",
+      "nameSaveSuccess": "Num dal team actualisà",
+      "nameSaveError": "Errur cun actualisar il num dal team",
       "slugLabel": "Slug da l'URL",
       "slugDescription": "L'identificatur unic da voss team en URLs. valguide.com/{slug}",
       "slugPlaceholder": "mieu-team",
@@ -806,7 +816,17 @@
       "saveError": "Errur cun actualisar il slug",
       "slugHistory": "Istorgia dal slug",
       "slugHistoryDescription": "Slugs vegls redirigian anc adina a voss team.",
-      "current": "Actual"
+      "current": "Actual",
+      "profileSectionTitle": "Profil da l'organisaziun",
+      "profileSectionDescription": "Il num e l'avatar da vossa organisaziun èn visibels per tut ils commembers.",
+      "avatarLabel": "Avatar dal team",
+      "avatarDescription": "PNG, JPG, WebP u GIF. Max. 5 MB.",
+      "avatarSave": "Memorisar",
+      "avatarSaving": "Vegn memorisà...",
+      "avatarSaveSuccess": "Avatar dal team actualisà",
+      "avatarSaveError": "Errur cun actualisar l'avatar dal team",
+      "avatarInvalidType": "Chargiai si in maletg PNG, JPG, WebP u GIF",
+      "avatarTooLarge": "Il maletg sto esser pli pitschen che 5 MB"
     }
   },
   "joinTeam": {

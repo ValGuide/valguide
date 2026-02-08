@@ -187,8 +187,9 @@
     "otpError": "Fehler beim Senden des Bestätigungscodes. Bitte versuchen Sie es erneut"
   },
   "notFound": {
-    "title": "404 – Verirrt?",
-    "description": "Sieht so aus, als würde dieser Pfad ins Nichts führen",
+    "title": "Seite nicht gefunden",
+    "description": "Wir konnten die gesuchte Seite leider nicht finden. Sie wurde möglicherweise verschoben oder existiert nicht mehr.",
+    "homeButton": "Zur Startseite",
     "tour": {
       "backToTours": "Zurück zu Touren"
     },
@@ -729,7 +730,7 @@
     "teamSwitcher": {
       "teams": "Teams",
       "createTeam": "Team erstellen",
-      "teamSettings": "Team-Einstellungen",
+      "teamSettings": "Arbeitsbereich-Einstellungen",
       "error": "Fehler beim Wechseln des Teams"
     },
     "members": {
@@ -788,9 +789,18 @@
       "triggerButton": "Team erstellen"
     },
     "teamSettings": {
-      "title": "Team-Einstellungen",
-      "description": "Konfigurieren Sie die Identität und URL Ihres Teams.",
+      "title": "Arbeitsbereich",
+      "description": "Verwalten Sie Ihre Arbeitsbereich-Einstellungen, Teammitglieder und Berechtigungen.",
+      "tabs": {
+        "general": "Allgemein",
+        "members": "Mitglieder"
+      },
       "nameLabel": "Teamname",
+      "namePlaceholder": "z.B. Acme Museum",
+      "nameSave": "Speichern",
+      "nameSaving": "Wird gespeichert...",
+      "nameSaveSuccess": "Teamname aktualisiert",
+      "nameSaveError": "Fehler beim Aktualisieren des Teamnamens",
       "slugLabel": "URL-Slug",
       "slugDescription": "Die eindeutige Kennung Ihres Teams in URLs. valguide.com/{slug}",
       "slugPlaceholder": "mein-team",
@@ -806,7 +816,17 @@
       "saveError": "Fehler beim Aktualisieren des Slugs",
       "slugHistory": "Slug-Verlauf",
       "slugHistoryDescription": "Alte Slugs leiten weiterhin zu Ihrem Team weiter.",
-      "current": "Aktuell"
+      "current": "Aktuell",
+      "profileSectionTitle": "Organisationsprofil",
+      "profileSectionDescription": "Name und Avatar Ihrer Organisation sind für alle Teammitglieder sichtbar.",
+      "avatarLabel": "Team-Avatar",
+      "avatarDescription": "PNG, JPG, WebP oder GIF. Max. 5 MB.",
+      "avatarSave": "Speichern",
+      "avatarSaving": "Wird gespeichert...",
+      "avatarSaveSuccess": "Team-Avatar aktualisiert",
+      "avatarSaveError": "Fehler beim Aktualisieren des Team-Avatars",
+      "avatarInvalidType": "Bitte laden Sie ein PNG-, JPG-, WebP- oder GIF-Bild hoch",
+      "avatarTooLarge": "Das Bild darf nicht grösser als 5 MB sein"
     }
   },
   "joinTeam": {
