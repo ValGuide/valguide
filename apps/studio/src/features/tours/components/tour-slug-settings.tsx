@@ -62,14 +62,8 @@ export function TourSlugSettings({
   >('idle')
   const [historyOpen, setHistoryOpen] = useState(false)
 
-  const slugFieldSchema = z
-    .string()
-    .min(3, t('validationTooShort'))
-    .max(100, t('validationTooLong'))
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t('validationFormat'))
-
   const tourSlugFormSchema = z.object({
-    slug: slugFieldSchema,
+    slug: slugSchema,
   })
 
   const form = useForm({
@@ -78,7 +72,6 @@ export function TourSlugSettings({
     },
     validators: {
       onSubmit: tourSlugFormSchema,
-      onChange: tourSlugFormSchema,
     },
     onSubmit: async ({ value }) => {
       if (!onUpdateSlug) return
@@ -256,7 +249,14 @@ export function TourSlugSettings({
                     <Input
                       id={field.name}
                       value={field.state.value}
-                      onBlur={field.handleBlur}
+                      onBlur={() => {
+                        const trimmed = field.state.value.replace(/^-+|-+$/g, '')
+                        if (trimmed !== field.state.value) {
+                          field.handleChange(trimmed)
+                          handleSlugChange(trimmed)
+                        }
+                        field.handleBlur()
+                      }}
                       onChange={(e) => {
                         const sanitized = sanitizeSlugInput(e.target.value)
                         field.handleChange(sanitized)
