@@ -9,7 +9,7 @@ export type NotFoundPageProps = {
 
 export const NotFoundPage = ({ i18n }: NotFoundPageProps) => {
   return (
-    <div className="min-h-full flex flex-1 flex-col items-center justify-center px-8">
+    <div className="min-h-svh flex flex-1 flex-col items-center justify-center px-8">
       <h1 className="text-5xl font-bold text-center">{i18n.title}</h1>
       <p className="py-8 max-w-md text-center">{i18n.description}</p>
       <HomeButton />
