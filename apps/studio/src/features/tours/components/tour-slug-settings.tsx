@@ -270,8 +270,8 @@ export function TourSlugSettings({
                   </div>
                   <FieldDescription>
                     {t('description', {
-                      baseUrl: `valguide.com/${orgSlug ?? 'team'}`,
-                      slug: field.state.value || 'tour-slug',
+                      baseUrl: `valguide.com/${orgSlug ?? '...'}`,
+                      slug: field.state.value || t('placeholder'),
                     })}
                   </FieldDescription>
                   {slugStatusMessage() && <p className="text-sm">{slugStatusMessage()}</p>}
