@@ -25,16 +25,22 @@ export const Route = createRootRouteWithContext<{
       title: messages?.www?.metadata?.title ?? 'ValGuide',
       description: messages?.www?.metadata?.description ?? 'Your digital guide companion',
     }
-    return { user, locale, theme, metadata }
+    return { user, locale, theme, messages, metadata }
   },
-  notFoundComponent: () => (
-    <NotFoundPage
-      i18n={{
-        title: 'Page Not Found',
-        description: 'The page you are looking for does not exist.',
-      }}
-    />
-  ),
+  notFoundComponent: () => {
+    const { messages } = Route.useRouteContext()
+    return (
+      <NotFoundPage
+        i18n={{
+          title: messages?.notFound?.title ?? 'Page not found',
+          description:
+            messages?.notFound?.description ??
+            "We couldn't find the page you're looking for. It may have been moved or no longer exists.",
+          homeButton: messages?.notFound?.homeButton ?? 'Back to Home',
+        }}
+      />
+    )
+  },
   head: ({ match }) => ({
     meta: [
       {

@@ -1,0 +1,29 @@
+studio.local.dev {
+	reverse_proxy localhost:3002
+	tls internal
+}
+
+storybook.local.dev {
+	reverse_proxy localhost:6006
+	tls internal
+}
+
+app.local.dev {
+	reverse_proxy localhost:3000
+	tls internal
+}
+
+admin.local.dev {
+	reverse_proxy localhost:3001
+	tls internal
+}
+
+links.local.dev {
+	reverse_proxy localhost:3003
+	tls internal
+}
+
+www.local.dev {
+	reverse_proxy localhost:3004
+	tls internal
+}

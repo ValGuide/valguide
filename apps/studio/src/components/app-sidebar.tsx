@@ -150,7 +150,7 @@ export function AppSidebar({
             activeTeamId={currentTeam?.id}
             onTeamSwitch={onTeamSwitch}
             onCreateTeam={() => setCreateTeamOpen(true)}
-            onTeamSettings={() => router.navigate({ to: '/team' })}
+            onTeamSettings={() => router.navigate({ to: '/settings' })}
           />
         </SidebarHeader>
         <SidebarContent>

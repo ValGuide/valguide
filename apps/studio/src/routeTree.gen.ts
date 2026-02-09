@@ -17,7 +17,6 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiDevAuthRouteImport } from './routes/api.dev-auth'
 import { Route as MainToursRouteImport } from './routes/_main/tours'
-import { Route as MainTeamRouteImport } from './routes/_main/team'
 import { Route as MainSupportRouteImport } from './routes/_main/support'
 import { Route as MainStopsRouteImport } from './routes/_main/stops'
 import { Route as MainSettingsRouteImport } from './routes/_main/settings'
@@ -77,11 +76,6 @@ const ApiDevAuthRoute = ApiDevAuthRouteImport.update({
 const MainToursRoute = MainToursRouteImport.update({
   id: '/tours',
   path: '/tours',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainTeamRoute = MainTeamRouteImport.update({
-  id: '/team',
-  path: '/team',
   getParentRoute: () => MainRoute,
 } as any)
 const MainSupportRoute = MainSupportRouteImport.update({
@@ -212,7 +206,6 @@ export interface FileRoutesByFullPath {
   '/settings': typeof MainSettingsRoute
   '/stops': typeof MainStopsRouteWithChildren
   '/support': typeof MainSupportRoute
-  '/team': typeof MainTeamRoute
   '/tours': typeof MainToursRouteWithChildren
   '/api/dev-auth': typeof ApiDevAuthRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
@@ -242,7 +235,6 @@ export interface FileRoutesByTo {
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
-  '/team': typeof MainTeamRoute
   '/api/dev-auth': typeof ApiDevAuthRoute
   '/tours/new': typeof MainToursNewRoute
   '/stops': typeof MainStopsIndexRoute
@@ -273,7 +265,6 @@ export interface FileRoutesById {
   '/_main/settings': typeof MainSettingsRoute
   '/_main/stops': typeof MainStopsRouteWithChildren
   '/_main/support': typeof MainSupportRoute
-  '/_main/team': typeof MainTeamRoute
   '/_main/tours': typeof MainToursRouteWithChildren
   '/api/dev-auth': typeof ApiDevAuthRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
@@ -306,7 +297,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/stops'
     | '/support'
-    | '/team'
     | '/tours'
     | '/api/dev-auth'
     | '/stops/$nanoId'
@@ -336,7 +326,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/support'
-    | '/team'
     | '/api/dev-auth'
     | '/tours/new'
     | '/stops'
@@ -366,7 +355,6 @@ export interface FileRouteTypes {
     | '/_main/settings'
     | '/_main/stops'
     | '/_main/support'
-    | '/_main/team'
     | '/_main/tours'
     | '/api/dev-auth'
     | '/_main/stops/$nanoId'
@@ -448,13 +436,6 @@ declare module '@tanstack/react-router' {
       path: '/tours'
       fullPath: '/tours'
       preLoaderRoute: typeof MainToursRouteImport
-      parentRoute: typeof MainRoute
-    }
-    '/_main/team': {
-      id: '/_main/team'
-      path: '/team'
-      fullPath: '/team'
-      preLoaderRoute: typeof MainTeamRouteImport
       parentRoute: typeof MainRoute
     }
     '/_main/support': {
@@ -698,7 +679,6 @@ interface MainRouteChildren {
   MainSettingsRoute: typeof MainSettingsRoute
   MainStopsRoute: typeof MainStopsRouteWithChildren
   MainSupportRoute: typeof MainSupportRoute
-  MainTeamRoute: typeof MainTeamRoute
   MainToursRoute: typeof MainToursRouteWithChildren
 }
 
@@ -712,7 +692,6 @@ const MainRouteChildren: MainRouteChildren = {
   MainSettingsRoute: MainSettingsRoute,
   MainStopsRoute: MainStopsRouteWithChildren,
   MainSupportRoute: MainSupportRoute,
-  MainTeamRoute: MainTeamRoute,
   MainToursRoute: MainToursRouteWithChildren,
 }
 

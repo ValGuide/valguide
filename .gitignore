@@ -54,6 +54,7 @@ key.txt
 # Additional ignores
 dist-ssr
 *.local
+!Caddyfile.local
 count.txt
 .env
 .nitro

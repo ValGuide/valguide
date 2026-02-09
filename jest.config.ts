@@ -10,6 +10,12 @@ const config: Config = {
       },
     ],
   },
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/exhibit-story-maker/',
+    '/exhibit-storyteller/',
+    '/lovable/',
+  ],
   transformIgnorePatterns: [
     'node_modules/(?!(\\.pnpm/(nanoid|uuidv7)@|(nanoid|uuidv7)/))',
   ],

@@ -1,7 +1,11 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@valguide/ui/components/button'
 
-export const HomeButton = () => (
+export type HomeButtonProps = {
+  label?: string
+}
+
+export const HomeButton = ({ label = 'Home' }: HomeButtonProps) => (
   <Link to="/" preload="intent">
     <Button>
       <svg
@@ -19,7 +23,7 @@ export const HomeButton = () => (
           strokeLinejoin="round"
         />
       </svg>
-      Home
+      {label}
     </Button>
   </Link>
 )

@@ -4,7 +4,7 @@ import { NotFoundPage } from './not-found-page'
 
 function NotFoundPageWithTranslations() {
   const t = useTranslations('notFound')
-  return <NotFoundPage i18n={{ title: t('title'), description: t('description') }} />
+  return <NotFoundPage i18n={{ title: t('title'), description: t('description'), homeButton: t('homeButton') }} />
 }
 
 const meta: Meta<typeof NotFoundPageWithTranslations> = {

@@ -126,19 +126,6 @@ export const DesignActive: Story = {
   },
 }
 
-export const TeamActive: Story = {
-  args: {
-    pathname: '/en/team',
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Sidebar with Team & Members page active.',
-      },
-    },
-  },
-}
-
 export const SettingsActive: Story = {
   args: {
     pathname: '/en/settings',
@@ -146,7 +133,7 @@ export const SettingsActive: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Sidebar with Settings page active.',
+        story: 'Sidebar with Workspace settings page active.',
       },
     },
   },
