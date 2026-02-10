@@ -64,6 +64,14 @@ const config: StorybookConfig = {
     )
 
     return mergeConfig(config, {
+      server: {
+        allowedHosts: true,
+        hmr: {
+          protocol: 'wss',
+          host: 'storybook.local.dev',
+          clientPort: 443,
+        },
+      },
       define: generateMockEnvDefines(),
       optimizeDeps: {
         exclude: ['@storybook/builder-vite'],
