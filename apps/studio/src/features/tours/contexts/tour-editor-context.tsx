@@ -74,7 +74,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
 
   // Fetch stops from structure
   const structureQuery = useQuery({
-    ...tourStructureDraftQueryOptions(nanoId, activeLocale),
+    ...tourStructureDraftQueryOptions(nanoId),
     enabled: !!nanoId,
   })
   const stops = structureQuery.data?.stops ?? []
@@ -121,7 +121,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
       const newStop = await createStopFn({ data: { locale: activeLocale } })
       await addStopToTourFn({ data: { tourNanoId: nanoId, stopNanoId: newStop.nanoId } })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
-      const structureResult = await queryClient.fetchQuery(tourStructureDraftQueryOptions(nanoId, activeLocale))
+      const structureResult = await queryClient.fetchQuery(tourStructureDraftQueryOptions(nanoId))
       const addedStop = structureResult?.stops.find((s) => s.stopNanoId === newStop.nanoId)
       return addedStop ?? null
     } catch (error) {

@@ -36,7 +36,7 @@ export function TourProgress() {
     },
     {
       label: t('progress.allStopTitles'),
-      complete: stops.length > 0 && stops.every((stop) => !!stop.title),
+      complete: stops.length > 0 && stops.every((s) => !!s.title),
     },
   ]
 

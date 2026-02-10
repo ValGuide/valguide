@@ -101,8 +101,7 @@ const createMockStops = (count: number): StructureDraftStop[] =>
     stopNanoId: `stop${i + 1}nano`,
     position: i,
     visible: true,
-    title: `Stop ${i + 1}: ${['Gallery', 'Exhibition', 'Courtyard', 'Hall', 'Room'][i % 5]} ${Math.floor(i / 5) + 1}`,
-    locale: 'en',
+    title: `Stop ${i + 1}: ${['Gallery', 'Exhibition', 'Courtyard', 'Hall', 'Room'][i % 5]}`,
     thumbnailUrl: null,
   }))
 

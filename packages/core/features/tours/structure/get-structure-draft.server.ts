@@ -13,7 +13,6 @@ export type StructureDraftStop = {
   position: number
   visible: boolean
   title: string | null
-  locale: string
   thumbnailUrl: string | null
 }
 
@@ -26,9 +25,9 @@ export type StructureDraftResult = {
 // INTERNAL FUNCTION
 // =============================================================================
 
-export async function getStructureDraft(tourNanoId: string, locale: string): Promise<StructureDraftResult | null> {
+export async function getStructureDraft(tourNanoId: string): Promise<StructureDraftResult | null> {
   const [foundTour] = await db
-    .select({ id: tour.id, nanoId: tour.nanoId })
+    .select({ id: tour.id, nanoId: tour.nanoId, availableLocales: tour.availableLocales })
     .from(tour)
     .where(eq(tour.nanoId, tourNanoId))
     .limit(1)
@@ -41,18 +40,16 @@ export async function getStructureDraft(tourNanoId: string, locale: string): Pro
       stopNanoId: stop.nanoId,
       position: tourStopDraft.position,
       visible: tourStopDraft.visible,
-      title: stopLocaleDraft.title,
-      locale: stopLocaleDraft.locale,
     })
     .from(tourStopDraft)
     .innerJoin(stop, eq(stop.id, tourStopDraft.stopId))
-    .innerJoin(stopLocaleDraft, and(eq(stopLocaleDraft.stopId, stop.id), eq(stopLocaleDraft.locale, locale)))
     .where(eq(tourStopDraft.tourId, foundTour.id))
     .orderBy(asc(tourStopDraft.position))
 
-  // Fetch first gallery image for each stop as thumbnail
   const stopIds = [...new Set(rows.map((r) => r.stopId))]
+
   const thumbnailByStopId = new Map<string, string>()
+  const titleByStopId = new Map<string, string>()
 
   if (stopIds.length > 0) {
     const galleryAssets = await db
@@ -77,27 +74,34 @@ export async function getStructureDraft(tourNanoId: string, locale: string): Pro
         thumbnailByStopId.set(ga.stopId, ga.storagePath || ga.publicUrl || '')
       }
     }
-  }
 
-  // Filter to requested locale, fallback to first available
-  const stopsByStopId = new Map<string, StructureDraftStop>()
-  for (const row of rows) {
-    const existing = stopsByStopId.get(row.stopId)
-    if (!existing || row.locale === locale) {
-      stopsByStopId.set(row.stopId, {
-        stopId: row.stopId,
-        stopNanoId: row.stopNanoId,
-        position: row.position,
-        visible: row.visible,
-        title: row.title,
-        locale: row.locale,
-        thumbnailUrl: thumbnailByStopId.get(row.stopId) || null,
+    const localeDrafts = await db
+      .select({
+        stopId: stopLocaleDraft.stopId,
+        locale: stopLocaleDraft.locale,
+        title: stopLocaleDraft.title,
       })
+      .from(stopLocaleDraft)
+      .where(inArray(stopLocaleDraft.stopId, stopIds))
+
+    const primaryLocale = foundTour.availableLocales?.[0] ?? 'en'
+    for (const ld of localeDrafts) {
+      if (!ld.title?.trim()) continue
+      const existing = titleByStopId.get(ld.stopId)
+      if (!existing || ld.locale === primaryLocale) {
+        titleByStopId.set(ld.stopId, ld.title.trim())
+      }
     }
   }
 
-  // Sort by position
-  const stops = Array.from(stopsByStopId.values()).sort((a, b) => a.position - b.position)
+  const stops: StructureDraftStop[] = rows.map((row) => ({
+    stopId: row.stopId,
+    stopNanoId: row.stopNanoId,
+    position: row.position,
+    visible: row.visible,
+    title: titleByStopId.get(row.stopId) ?? null,
+    thumbnailUrl: thumbnailByStopId.get(row.stopId) ?? null,
+  }))
 
   return { tourNanoId: foundTour.nanoId, stops }
 }

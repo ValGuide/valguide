@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
 import { NotFoundError, requireTourAccessByNanoId } from '../../auth/authorization'
 import { db } from '../../db'
-import { tour, tourLocaleDraft } from '../schema'
+import { stopLocaleDraft, tour, tourLocaleDraft, tourStopDraft } from '../schema'
 
 // =============================================================================
 // TYPES
@@ -56,6 +56,24 @@ export async function updateTour(input: UpdateTourInput, userId: string): Promis
             locale: input.addLocale,
             updatedBy: userId,
           })
+        }
+
+        const tourStops = await tx
+          .select({ stopId: tourStopDraft.stopId })
+          .from(tourStopDraft)
+          .where(eq(tourStopDraft.tourId, tourId))
+
+        for (const { stopId } of tourStops) {
+          const existingStopDraft = await tx.query.stopLocaleDraft.findFirst({
+            where: and(eq(stopLocaleDraft.stopId, stopId), eq(stopLocaleDraft.locale, input.addLocale)),
+          })
+          if (!existingStopDraft) {
+            await tx.insert(stopLocaleDraft).values({
+              stopId,
+              locale: input.addLocale,
+              updatedBy: userId,
+            })
+          }
         }
       }
     }

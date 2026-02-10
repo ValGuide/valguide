@@ -36,7 +36,6 @@ const createMockStops = (count: number): StructureDraftStop[] =>
     position: i,
     visible: true,
     title: i === 0 ? null : `Stop ${i + 1}`,
-    locale: 'en',
     thumbnailUrl: null,
   }))
 

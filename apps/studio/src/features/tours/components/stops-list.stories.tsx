@@ -28,7 +28,6 @@ const createMockStops = (count: number): StructureDraftStop[] =>
     position: i,
     visible: true,
     title: `Stop ${i + 1}: ${['Gallery', 'Exhibition', 'Courtyard', 'Hall', 'Room'][i % 5]}`,
-    locale: 'en',
     thumbnailUrl: null,
   }))
 

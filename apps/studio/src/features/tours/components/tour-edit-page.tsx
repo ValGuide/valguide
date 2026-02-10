@@ -153,7 +153,7 @@ export function TourEditPage({
   }
 
   const getStopTitle = useCallback(
-    (stopNanoId: string) => stops.find((s) => s.stopNanoId === stopNanoId)?.title ?? tStops('untitled'),
+    (stopNanoId: string) => stops.find((s) => s.stopNanoId === stopNanoId)?.title?.trim() || tStops('untitled'),
     [stops, tStops],
   )
 
