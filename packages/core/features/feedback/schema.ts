@@ -8,9 +8,7 @@ export const feedback = studioSchema.table('feedback', {
   id: uuid('id').defaultRandom().primaryKey(),
 
   // User who submitted feedback
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => authUsers.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').references(() => authUsers.id, { onDelete: 'set null' }),
 
   // Feedback content
   message: text('message').notNull(),

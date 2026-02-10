@@ -32,16 +32,12 @@ export const tour = studioSchema.table(
       .references(() => organization.id, { onDelete: 'cascade' }),
 
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by')
-      .notNull()
-      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
       .notNull()
       .$onUpdate(() => new Date()),
-    updatedBy: uuid('updated_by')
-      .notNull()
-      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
 
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     publishedAt: timestamp('published_at', { withTimezone: true }),
@@ -65,16 +61,12 @@ export const stop = studioSchema.table(
       .references(() => organization.id, { onDelete: 'cascade' }),
 
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    createdBy: uuid('created_by')
-      .notNull()
-      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
       .notNull()
       .$onUpdate(() => new Date()),
-    updatedBy: uuid('updated_by')
-      .notNull()
-      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
 
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),

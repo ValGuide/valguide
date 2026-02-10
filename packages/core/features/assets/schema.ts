@@ -60,9 +60,7 @@ export const asset = studioSchema.table(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
 
-    uploadedBy: uuid('uploaded_by')
-      .notNull()
-      .references(() => authUsers.id, { onDelete: 'cascade' }),
+    uploadedBy: uuid('uploaded_by').references(() => authUsers.id, { onDelete: 'set null' }),
 
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
