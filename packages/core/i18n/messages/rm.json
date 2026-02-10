@@ -193,14 +193,24 @@
       "stepThree": "Ti retschaivas in e-mail suenter l'approvaziun",
       "checkStatus": "Controllar il status",
       "autoRefreshNote": "Questa pagina s'actualisescha automaticamain.",
+      "trustRationale": "Nus examinain tuts contos per garantir in spazi da lavur segir per teams da museums.",
       "contactPrompt": "Basegns access pli spert?",
+      "teamName": "ValGuide Team",
+      "responseTime": "Respunda normalmain entaifer 1 di da lavur",
       "contactCta": "Scriva a nus",
       "signOut": "Sortir"
     },
     "blocked": {
       "title": "Grazia fitg per tes interess",
       "description": "Tia dumonda per l'access a ValGuide vegn actualmain examinada. Nus ans annunzain, uschespert ch'ina decisiun è vegnida prendida.",
-      "nextStep": "Has ti dumondas? Nus gidin gugent.",
+      "statusLabel": "Status da la dumonda",
+      "statusValue": "En examinaziun",
+      "stepOne": "Nus avain retschavì tia dumonda",
+      "stepTwo": "Noss team examinescha tes datas",
+      "stepThree": "Ti retschaivas in e-mail, uschespert ch'ina decisiun è vegnida prendida",
+      "trustRationale": "Nus examinain tut las dumondas per garantir in spazi da lavur segir e fidà per teams da museums.",
+      "teamName": "ValGuide Team",
+      "responseTime": "Respunda normalmain entaifer 1 di da lavur",
       "contactCta": "Contacta nus",
       "signOut": "Sortir"
     }

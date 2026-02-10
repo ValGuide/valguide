@@ -193,14 +193,24 @@
       "stepThree": "Du erhältst eine E-Mail nach der Freigabe",
       "checkStatus": "Status prüfen",
       "autoRefreshNote": "Diese Seite aktualisiert sich automatisch.",
+      "trustRationale": "Wir prüfen alle Konten, um einen sicheren Arbeitsbereich für Museumsteams zu gewährleisten.",
       "contactPrompt": "Schneller Zugang nötig?",
+      "teamName": "ValGuide Team",
+      "responseTime": "Antwortet in der Regel innerhalb von 1 Werktag",
       "contactCta": "Schreib uns",
       "signOut": "Abmelden"
     },
     "blocked": {
       "title": "Vielen Dank für dein Interesse",
       "description": "Deine Anfrage für den Zugang zu ValGuide wird derzeit geprüft. Wir melden uns, sobald eine Entscheidung getroffen wurde.",
-      "nextStep": "Hast du Fragen? Wir helfen gerne weiter.",
+      "statusLabel": "Antragsstatus",
+      "statusValue": "In Prüfung",
+      "stepOne": "Wir haben deine Anfrage erhalten",
+      "stepTwo": "Unser Team prüft deine Angaben",
+      "stepThree": "Du erhältst eine E-Mail, sobald eine Entscheidung getroffen wurde",
+      "trustRationale": "Wir prüfen alle Anfragen, um einen sicheren und zuverlässigen Arbeitsbereich für Museumsteams zu gewährleisten.",
+      "teamName": "ValGuide Team",
+      "responseTime": "Antwortet in der Regel innerhalb von 1 Werktag",
       "contactCta": "Kontaktiere uns",
       "signOut": "Abmelden"
     }

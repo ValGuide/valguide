@@ -23,6 +23,7 @@ export const organization = studioSchema.table('organization', {
 export const organizationRelations = relations(organization, ({ many }) => ({
   members: many(organizationMember),
   invitations: many(organizationInvitation),
+  approvedDomains: many(organizationApprovedDomain),
 }))
 
 export const organizationMember = studioSchema.table(
@@ -128,6 +129,34 @@ export const organizationSlugRelations = relations(organizationSlug, ({ one }) =
   }),
 }))
 
+// =============================================================================
+// APPROVED DOMAINS (Admin-managed, for auto-approval bypass)
+// =============================================================================
+
+export const organizationApprovedDomain = studioSchema.table(
+  'organization_approved_domain',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    domain: varchar('domain', { length: 255 }).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => ({
+    uniqueDomain: uniqueIndex('org_approved_domain_unique').on(t.domain),
+    orgIdx: index('org_approved_domain_org_idx').on(t.organizationId),
+  }),
+)
+
+export const organizationApprovedDomainRelations = relations(organizationApprovedDomain, ({ one }) => ({
+  organization: one(organization, {
+    fields: [organizationApprovedDomain.organizationId],
+    references: [organization.id],
+  }),
+}))
+
 // Types
 export type OrganizationSlug = typeof organizationSlug.$inferSelect
 export type NewOrganizationSlug = typeof organizationSlug.$inferInsert
+export type OrganizationApprovedDomain = typeof organizationApprovedDomain.$inferSelect

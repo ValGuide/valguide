@@ -1,5 +1,6 @@
 import type { DB } from '@valguide/core/features/db'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
+import { profiles } from '../profiles/schema'
 import { organizationInvitation, organizationMember } from './schema'
 
 // =============================================================================
@@ -25,19 +26,25 @@ export async function acceptInvitation(dbClient: DB, invitationId: string, userI
 
     if (!invite) throw new Error('Invitation not found')
 
-    // Add member
     await tx.insert(organizationMember).values({
       organizationId: invite.organizationId,
       userId,
       role: invite.role,
     })
 
-    // Mark invitation as accepted
     await tx
       .update(organizationInvitation)
       .set({
         acceptedAt: new Date(),
       })
       .where(eq(organizationInvitation.id, invitationId))
+
+    await tx
+      .update(profiles)
+      .set({
+        status: 'approved',
+        approvedAt: new Date(),
+      })
+      .where(and(eq(profiles.id, userId), eq(profiles.status, 'pending')))
   })
 }

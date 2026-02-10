@@ -193,14 +193,24 @@
       "stepThree": "You'll receive an email once approved",
       "checkStatus": "Check status",
       "autoRefreshNote": "This page refreshes automatically.",
+      "trustRationale": "We review all accounts to ensure a safe workspace for museum teams.",
       "contactPrompt": "Need access sooner?",
+      "teamName": "ValGuide Team",
+      "responseTime": "Usually replies within 1 business day",
       "contactCta": "Email us",
       "signOut": "Sign out"
     },
     "blocked": {
       "title": "Thank you for your interest",
       "description": "Your application to access ValGuide is currently under review. We'll be in touch once a decision has been made.",
-      "nextStep": "Have questions? We're happy to help.",
+      "statusLabel": "Application status",
+      "statusValue": "Under review",
+      "stepOne": "We received your application",
+      "stepTwo": "Our team is reviewing your details",
+      "stepThree": "We'll email you once a decision is made",
+      "trustRationale": "We review all applications to ensure a safe and reliable workspace for museum teams.",
+      "teamName": "ValGuide Team",
+      "responseTime": "Usually replies within 1 business day",
       "contactCta": "Contact us",
       "signOut": "Sign out"
     }
