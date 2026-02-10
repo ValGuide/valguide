@@ -104,7 +104,7 @@ export function OrgAvatarForm({ currentLogo, orgName, onUploadAndSave }: OrgAvat
 
       <div className="flex flex-col gap-1">
         <p className="text-sm font-medium">{t('avatarLabel')}</p>
-        <p className="text-xs text-muted-foreground">{t('avatarDescription')}</p>
+        <p className="text-xs text-muted-foreground">{t('avatarClickToUpload')}</p>
         {selectedFile && (
           <div className="flex items-center gap-2 pt-1">
             <Button size="sm" onClick={handleSave} disabled={isSaving}>

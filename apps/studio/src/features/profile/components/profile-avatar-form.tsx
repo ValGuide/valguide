@@ -123,9 +123,7 @@ export function ProfileAvatarForm({ currentAvatarUrl, displayName, onUploadAndSa
       ) : (
         <button type="button" className="flex flex-col gap-0.5 text-left" onClick={() => fileInputRef.current?.click()}>
           <p className="text-sm font-medium">{t('avatarLabel')}</p>
-          <p className="text-xs text-muted-foreground">
-            {t('avatarClickToUpload')} · {t('avatarDescription')}
-          </p>
+          <p className="text-xs text-muted-foreground">{t('avatarClickToUpload')}</p>
         </button>
       )}
     </div>
