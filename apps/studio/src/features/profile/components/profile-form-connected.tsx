@@ -22,7 +22,14 @@ export function ProfileFormConnected() {
   const { data: profile } = useSuspenseQuery(profileQueryOptions())
   const { data: user } = useSuspenseQuery(currentUserQueryOptions())
 
-  const displayName = [profile.firstName, profile.lastName].filter(Boolean).join(' ') || profile.username || ''
+  const emailPrefix = user?.email?.split('@')[0] ?? ''
+  const profileWithDefaults = {
+    ...profile,
+    username: profile.username || emailPrefix,
+  }
+
+  const displayName =
+    [profile.firstName, profile.lastName].filter(Boolean).join(' ') || profileWithDefaults.username || ''
   const currentAvatarUrl = profile.avatarStoragePath ? getImageKitUrl(profile.avatarStoragePath) : null
 
   const handleUploadAndSaveAvatar = async (file: File) => {
@@ -70,7 +77,7 @@ export function ProfileFormConnected() {
           onUploadAndSave={handleUploadAndSaveAvatar}
         />
         <Separator />
-        <ProfileForm profile={profile} email={user?.email} onSubmit={handleSubmit} />
+        <ProfileForm profile={profileWithDefaults} email={user?.email} onSubmit={handleSubmit} />
       </CardContent>
     </Card>
   )

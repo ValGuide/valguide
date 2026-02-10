@@ -132,7 +132,7 @@ export function ProfileForm({ profile, email, onSubmit }: ProfileFormProps) {
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   aria-invalid={isInvalid}
-                  placeholder="jdoe"
+                  placeholder={email?.split('@')[0]}
                 />
                 <div className="min-h-5">{isInvalid && <FieldError errors={field.state.meta.errors} />}</div>
               </Field>

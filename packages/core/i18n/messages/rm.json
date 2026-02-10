@@ -867,7 +867,7 @@
   },
   "profile": {
     "title": "Profil",
-    "photoAndName": "Foto & Num",
+    "avatar": "Avatar",
     "email": "E-mail",
     "emailChangeHint": "Contactescha il support per midar",
     "username": "Num d'utilisader",

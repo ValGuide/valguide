@@ -44,6 +44,44 @@ USING (
   AND owner = auth.uid()
 );
 
+-- Policy: Users can upload to their own user namespace
+CREATE POLICY "Users can upload to their own user namespace"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+  bucket_id = 'assets'
+  AND (storage.foldername(name))[1] = 'users'
+  AND (storage.foldername(name))[2] = auth.uid()::text
+);
+
+-- Policy: Users can read their own user namespace
+CREATE POLICY "Users can read their own user namespace"
+ON storage.objects
+FOR SELECT
+TO authenticated
+USING (
+  bucket_id = 'assets'
+  AND (storage.foldername(name))[1] = 'users'
+  AND (storage.foldername(name))[2] = auth.uid()::text
+);
+
+-- Policy: Users can update their own user namespace
+CREATE POLICY "Users can update their own user namespace"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (
+  bucket_id = 'assets'
+  AND (storage.foldername(name))[1] = 'users'
+  AND (storage.foldername(name))[2] = auth.uid()::text
+)
+WITH CHECK (
+  bucket_id = 'assets'
+  AND (storage.foldername(name))[1] = 'users'
+  AND (storage.foldername(name))[2] = auth.uid()::text
+);
+
 -- Alternative: Allow users to delete any file in their org (if needed)
 -- CREATE POLICY "Users can delete org files"
 -- ON storage.objects

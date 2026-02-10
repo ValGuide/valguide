@@ -867,7 +867,7 @@
   },
   "profile": {
     "title": "Profile",
-    "photoAndName": "Photo & Name",
+    "avatar": "Avatar",
     "email": "Email",
     "emailChangeHint": "Contact support to change",
     "username": "Username",
