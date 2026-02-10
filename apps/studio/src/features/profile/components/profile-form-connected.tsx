@@ -3,12 +3,16 @@ import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import { currentUserQueryOptions } from '@valguide/core/features/auth/query-options'
 import { updateProfileFn } from '@valguide/core/features/profiles/update-profile.fn'
 import { updateProfileAvatarFn } from '@valguide/core/features/profiles/update-profile-avatar.fn'
+import { useTranslations } from '@valguide/core/i18n/client'
+import { Separator } from '@valguide/core/ui/components/separator'
+import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { uploadFileWithTUS } from '@/features/assets/lib/tus-upload'
 import { useProfile } from '../hooks/use-profile'
 import { ProfileAvatarForm } from './profile-avatar-form'
 import { ProfileForm } from './profile-form'
 
 export function ProfileFormConnected() {
+  const t = useTranslations('profile')
   const { profile, refetch } = useProfile()
   const { data: user } = useSuspenseQuery(currentUserQueryOptions())
 
@@ -34,25 +38,31 @@ export function ProfileFormConnected() {
   }
 
   return (
-    <div className="space-y-6">
-      <ProfileAvatarForm
-        currentAvatarUrl={currentAvatarUrl}
-        displayName={displayName}
-        onUploadAndSave={handleUploadAndSaveAvatar}
-      />
-      <ProfileForm
-        profile={profile}
-        email={user?.email}
-        onSubmit={async (data) => {
-          try {
-            await updateProfileFn({ data })
-            return { success: true }
-          } catch {
-            return { success: false }
-          }
-        }}
-        onSuccess={refetch}
-      />
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('photoAndName')}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <ProfileAvatarForm
+          currentAvatarUrl={currentAvatarUrl}
+          displayName={displayName}
+          onUploadAndSave={handleUploadAndSaveAvatar}
+        />
+        <Separator />
+        <ProfileForm
+          profile={profile}
+          email={user?.email}
+          onSubmit={async (data) => {
+            try {
+              await updateProfileFn({ data })
+              return { success: true }
+            } catch {
+              return { success: false }
+            }
+          }}
+          onSuccess={refetch}
+        />
+      </CardContent>
+    </Card>
   )
 }

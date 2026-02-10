@@ -867,15 +867,23 @@
   },
   "profile": {
     "title": "Profil",
+    "photoAndName": "Foto & Name",
     "email": "E-Mail",
-    "emailDescription": "Ihre E-Mail-Adresse. Kontaktieren Sie den Support, um sie zu ändern.",
+    "emailChangeHint": "Support kontaktieren, um sie zu ändern",
     "username": "Benutzername",
-    "usernameDescription": "Dies ist Ihr Anzeigename.",
     "firstName": "Vorname",
     "lastName": "Nachname",
     "save": "Änderungen speichern",
     "saving": "Wird gespeichert...",
+    "unsavedChanges": "Nicht gespeicherte Änderungen",
+    "saved": "Gespeichert",
+    "reset": "Zurücksetzen",
+    "uploadPhoto": "Foto hochladen",
+    "changePhoto": "Foto ändern",
+    "cancel": "Abbrechen",
     "avatarLabel": "Profilfoto",
+    "avatarClickToUpload": "Klicken zum Hochladen",
+    "avatarUpload": "Foto hochladen",
     "avatarDescription": "PNG, JPG, WebP oder GIF. Max. 5 MB.",
     "avatarInvalidType": "Bitte laden Sie ein PNG-, JPG-, WebP- oder GIF-Bild hoch.",
     "avatarTooLarge": "Das Bild muss kleiner als 5 MB sein.",
@@ -886,6 +894,19 @@
     "actions": {
       "updateSuccess": "Profil erfolgreich aktualisiert",
       "updateError": "Fehler beim Aktualisieren des Profils"
+    },
+    "phone": "Telefon",
+    "phonePlaceholder": "(201) 555-0123",
+    "phoneHint": "Für wichtige Service-Benachrichtigungen",
+    "deleteAccount": {
+      "title": "Konto löschen",
+      "description": "Löscht Ihr Konto und alle persönlichen Daten unwiderruflich.",
+      "confirmTitle": "Sind Sie sicher?",
+      "confirmDescription": "Ihr Konto, Profildaten und Teammitgliedschaften werden dauerhaft gelöscht.",
+      "typeConfirm": "Geben Sie DELETE ein, um zu bestätigen",
+      "confirm": "Konto löschen",
+      "deleting": "Wird gelöscht...",
+      "error": "Fehler beim Löschen des Kontos"
     }
   },
   "fileDropzone": {

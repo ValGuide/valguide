@@ -867,15 +867,23 @@
   },
   "profile": {
     "title": "Profil",
+    "photoAndName": "Foto & Num",
     "email": "E-mail",
-    "emailDescription": "Tia adressa d'e-mail. Contactescha il support per la midar.",
+    "emailChangeHint": "Contactescha il support per midar",
     "username": "Num d'utilisader",
-    "usernameDescription": "Quai è tes num mussà.",
     "firstName": "Prenum",
     "lastName": "Num da famiglia",
     "save": "Memorisar midadas",
     "saving": "Vegn memorisà...",
+    "unsavedChanges": "Midadas betg memorisadas",
+    "saved": "Memorisà",
+    "reset": "Reinizialisar",
+    "uploadPhoto": "Chargiar foto",
+    "changePhoto": "Midar foto",
+    "cancel": "Interrumper",
     "avatarLabel": "Foto da profil",
+    "avatarClickToUpload": "Cliccar per chargiar",
+    "avatarUpload": "Chargiar foto",
     "avatarDescription": "PNG, JPG, WebP u GIF. Max. 5 MB.",
     "avatarInvalidType": "Chargiai per plaschair ina maletg PNG, JPG, WebP u GIF.",
     "avatarTooLarge": "La maletg sto esser pli pitschna che 5 MB.",
@@ -886,6 +894,19 @@
     "actions": {
       "updateSuccess": "Profil actualisà cun success",
       "updateError": "Errur tar actualisar il profil"
+    },
+    "phone": "Telefon",
+    "phonePlaceholder": "(201) 555-0123",
+    "phoneHint": "Per impurtantas notificaziuns dal servetsch",
+    "deleteAccount": {
+      "title": "Stizzar il conto",
+      "description": "Stizza definitiv Voss conto e tuttas las datas persunalas. Quai na po betg vegnir revocà.",
+      "confirmTitle": "Essas Vus segir?",
+      "confirmDescription": "Voss conto, datas da profil e tut las commembranzas en teams vegnan stizzadas definitivamain.",
+      "typeConfirm": "Tippar DELETE per confermar",
+      "confirm": "Stizzar il conto",
+      "deleting": "Vegn stizzà...",
+      "error": "Errur tar stizzar il conto"
     }
   },
   "fileDropzone": {

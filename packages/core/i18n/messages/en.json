@@ -867,15 +867,23 @@
   },
   "profile": {
     "title": "Profile",
+    "photoAndName": "Photo & Name",
     "email": "Email",
-    "emailDescription": "Your email address. Contact support to change it.",
+    "emailChangeHint": "Contact support to change",
     "username": "Username",
-    "usernameDescription": "This is your display name.",
     "firstName": "First Name",
     "lastName": "Last Name",
     "save": "Save Changes",
     "saving": "Saving...",
+    "unsavedChanges": "Unsaved changes",
+    "saved": "Saved",
+    "reset": "Reset",
+    "uploadPhoto": "Upload photo",
+    "changePhoto": "Change photo",
+    "cancel": "Cancel",
     "avatarLabel": "Profile photo",
+    "avatarClickToUpload": "Click to upload",
+    "avatarUpload": "Upload photo",
     "avatarDescription": "PNG, JPG, WebP or GIF. Max 5MB.",
     "avatarInvalidType": "Please upload a PNG, JPG, WebP, or GIF image.",
     "avatarTooLarge": "Image must be smaller than 5MB.",
@@ -886,6 +894,19 @@
     "actions": {
       "updateSuccess": "Profile updated successfully",
       "updateError": "Failed to update profile"
+    },
+    "phone": "Phone",
+    "phonePlaceholder": "(201) 555-0123",
+    "phoneHint": "For important service notifications",
+    "deleteAccount": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and all personal data. This cannot be undone.",
+      "confirmTitle": "Are you sure?",
+      "confirmDescription": "This will permanently delete your account, profile data, and remove you from all teams.",
+      "typeConfirm": "Type DELETE to confirm",
+      "confirm": "Delete Account",
+      "deleting": "Deleting...",
+      "error": "Failed to delete account"
     }
   },
   "fileDropzone": {

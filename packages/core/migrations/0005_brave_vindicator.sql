@@ -1,0 +1,1 @@
+ALTER TABLE "studio"."profiles" ADD COLUMN "phone" text;

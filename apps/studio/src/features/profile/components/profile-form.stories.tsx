@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { ProfileForm } from './profile-form'
 
 const mockOnSubmit = async () => {
@@ -24,11 +25,19 @@ const meta: Meta<typeof ProfileForm> = {
   args: {
     onSubmit: mockOnSubmit,
     onSuccess: mockOnSuccess,
+    email: 'john@museum.org',
   },
   decorators: [
     (Story) => (
       <div className="w-[600px]">
-        <Story />
+        <Card>
+          <CardHeader>
+            <CardTitle>Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Story />
+          </CardContent>
+        </Card>
       </div>
     ),
   ],
@@ -44,6 +53,7 @@ export const Default: Story = {
       username: 'johndoe',
       firstName: 'John',
       lastName: 'Doe',
+      phone: '+41791234567',
     },
     isLoading: false,
   },
@@ -55,6 +65,7 @@ export const Empty: Story = {
       username: null,
       firstName: null,
       lastName: null,
+      phone: null,
     },
     isLoading: false,
   },
@@ -66,7 +77,14 @@ export const PartialData: Story = {
       username: 'johndoe',
       firstName: null,
       lastName: null,
+      phone: null,
     },
     isLoading: false,
+  },
+}
+
+export const Loading: Story = {
+  args: {
+    isLoading: true,
   },
 }

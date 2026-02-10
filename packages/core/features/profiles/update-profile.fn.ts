@@ -13,6 +13,7 @@ const updateProfileSchema = z.object({
   username: z.string().nullable().optional(),
   firstName: z.string().nullable().optional(),
   lastName: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
   is_onboarded: z.boolean().optional(),
 })
 
