@@ -27,3 +27,8 @@ www.local.dev {
 	reverse_proxy localhost:3004
 	tls internal
 }
+
+docs.local.dev {
+	reverse_proxy localhost:3006
+	tls internal
+}

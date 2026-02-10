@@ -1,0 +1,27 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "product-north-star",
+    "ubiquitous-language",
+    "valguide-business-case",
+    "use-cases",
+    "studio-audience",
+    "---Architecture---",
+    "server-function-architecture",
+    "publishing",
+    "status-model",
+    "localisation",
+    "toasts",
+    "vercel-build-control",
+    "dev-auth-playwright",
+    "resend-supabase-auth-hook",
+    "i18n-tooling",
+    "---Sections---",
+    "architecture",
+    "features",
+    "patterns",
+    "tour-stop-asset",
+    "ux",
+    "plans"
+  ]
+}

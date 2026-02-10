@@ -1,0 +1,12 @@
+node_modules
+.DS_Store
+.vercel
+.output
+.nitro
+/build/
+/api/
+/server/build
+/test-results/
+/playwright-report/
+.tanstack
+.source

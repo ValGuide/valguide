@@ -94,6 +94,16 @@
       }
     },
     {
+      "includes": ["apps/docs/**/*.tsx", "apps/docs/**/*.ts"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "noJsxLiterals": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["packages/core/scripts/**/*.ts"],
       "linter": {
         "rules": {
@@ -125,7 +135,8 @@
       "!**/*.css",
       "!**/routeTree.gen.ts",
       "!apps/storybook/.storybook/__mocks__",
-      "!supabase/functions"
+      "!supabase/functions",
+      "!apps/docs/.source"
     ]
   }
 }
