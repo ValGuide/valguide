@@ -896,8 +896,8 @@
       "updateError": "Fehler beim Aktualisieren des Profils"
     },
     "phone": "Telefon",
-    "phonePlaceholder": "(201) 555-0123",
-    "phoneHint": "Für wichtige Service-Benachrichtigungen",
+    "phonePlaceholder": "079 123 45 67",
+    "phoneHint": "Optional. Nur für den Notfall, wenn wir Sie bei einem Serviceproblem nicht per E-Mail erreichen.",
     "deleteAccount": {
       "title": "Konto löschen",
       "description": "Löscht Ihr Konto und alle persönlichen Daten unwiderruflich.",

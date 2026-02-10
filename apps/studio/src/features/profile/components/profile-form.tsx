@@ -161,7 +161,7 @@ export function ProfileForm({ profile, email, onSubmit }: ProfileFormProps) {
                 value={field.state.value}
                 onChange={(value) => field.handleChange(value)}
                 defaultCountry="CH"
-                placeholder={t('phonePlaceholder')}
+                placeholder="079 123 45 67"
               />
               <p className="text-xs text-muted-foreground">{t('phoneHint')}</p>
             </Field>

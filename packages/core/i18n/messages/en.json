@@ -896,8 +896,8 @@
       "updateError": "Failed to update profile"
     },
     "phone": "Phone",
-    "phonePlaceholder": "(201) 555-0123",
-    "phoneHint": "For important service notifications",
+    "phonePlaceholder": "079 123 45 67",
+    "phoneHint": "Optional. Only used if we can't reach you by email for urgent service matters.",
     "deleteAccount": {
       "title": "Delete Account",
       "description": "Permanently delete your account and all personal data. This cannot be undone.",
