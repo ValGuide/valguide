@@ -27,7 +27,7 @@ export const Route = createRootRouteWithContext<{
     }
     return { locale, theme, messages, metadata }
   },
-  errorComponent: ({ error, reset }) => {
+  errorComponent: ({ error }) => {
     const { messages } = Route.useRouteContext()
     return (
       <ErrorPage
@@ -39,7 +39,7 @@ export const Route = createRootRouteWithContext<{
           tryAgain: messages?.error?.tryAgain ?? 'Try again',
         }}
         error={error}
-        reset={reset}
+        reset={() => window.location.reload()}
       />
     )
   },

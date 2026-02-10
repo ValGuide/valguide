@@ -11,6 +11,7 @@ export const profiles = studioSchema.table('profiles', {
   username: text('username'),
   firstName: text('first_name'),
   lastName: text('last_name'),
+  avatarStoragePath: text('avatar_storage_path'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   onboardedAt: timestamp('onboarded_at', { withTimezone: true }),

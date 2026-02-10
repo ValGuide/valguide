@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { currentUserQueryOptions } from '@valguide/features/auth/query-options'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { ProfileFormConnected } from '@/features/profile/components/profile-form-connected'
 import { ProfileSkeleton } from '@/features/profile/components/profile-skeleton'
@@ -7,7 +8,11 @@ import { profileQueryOptions } from '@/features/profile/query-options'
 
 export const Route = createFileRoute('/_main/profile')({
   component: ProfilePage,
-  loader: ({ context }) => context.queryClient.ensureQueryData(profileQueryOptions()),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(profileQueryOptions()),
+      context.queryClient.ensureQueryData(currentUserQueryOptions()),
+    ]),
   pendingComponent: ProfileSkeleton,
 })
 

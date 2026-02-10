@@ -5,7 +5,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldDescription, FieldError, FieldLabel } from '@valguide/core/ui/components/field'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useEffect, useTransition } from 'react'
@@ -33,6 +33,7 @@ export interface ProfileFormProps {
     firstName: string | null
     lastName: string | null
   } | null
+  email?: string
   isLoading?: boolean
   onSubmit?: (data: ProfileFormData) => Promise<UpdateProfileResult>
   onSuccess?: () => Promise<void>
@@ -41,6 +42,7 @@ export interface ProfileFormProps {
 export function ProfileForm({
   initialData,
   profile: profileProp,
+  email,
   isLoading: isLoadingProp,
   onSubmit,
   onSuccess,
@@ -119,7 +121,6 @@ export function ProfileForm({
     <Card>
       <CardHeader>
         <CardTitle>{t('title')}</CardTitle>
-        <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -189,6 +190,11 @@ export function ProfileForm({
               }}
             </form.Field>
           </div>
+          <Field>
+            <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
+            <Input id="email" value={email ?? ''} disabled className="bg-muted" />
+            <FieldDescription>{t('emailDescription')}</FieldDescription>
+          </Field>
           <Button type="submit" disabled={isPending}>
             {isPending ? t('saving') : t('save')}
           </Button>
