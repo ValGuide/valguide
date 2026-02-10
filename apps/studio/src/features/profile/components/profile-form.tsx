@@ -1,13 +1,9 @@
 import { useForm, useStore } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldLabel } from '@valguide/core/ui/components/field'
 import { PhoneInput } from '@valguide/core/ui/components/phone-input'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
-import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Lock } from 'lucide-react'
 import { useCallback, useEffect, useState, useTransition } from 'react'
 import { z } from 'zod'
@@ -22,64 +18,38 @@ const profileSchema = z.object({
   phone: z.string(),
 })
 
-export type UpdateProfileResult = { success: boolean; validationError?: boolean }
-
 export interface ProfileFormProps {
-  initialData?: {
-    username?: string | null
-    firstName?: string | null
-    lastName?: string | null
-    phone?: string | null
-  }
-  profile?: {
+  profile: {
     username: string | null
     firstName: string | null
     lastName: string | null
     phone: string | null
-  } | null
+  }
   email?: string
-  isLoading?: boolean
-  onSubmit?: (data: ProfileFormData) => Promise<UpdateProfileResult>
-  onSuccess?: () => Promise<void>
+  onSubmit: (data: ProfileFormData) => Promise<{ success: boolean }>
 }
 
-export function ProfileForm({
-  initialData,
-  profile: profileProp,
-  email,
-  isLoading: isLoadingProp,
-  onSubmit,
-  onSuccess,
-}: ProfileFormProps) {
+export function ProfileForm({ profile, email, onSubmit }: ProfileFormProps) {
   const t = useTranslations('profile')
   const [isPending, startTransition] = useTransition()
   const [saveState, setSaveState] = useState<'idle' | 'saved'>('idle')
-  const router = useRouter()
-  const queryClient = useQueryClient()
-  const profile = profileProp
-  const isLoading = isLoadingProp ?? false
 
   const form = useForm({
     defaultValues: {
-      username: initialData?.username ?? '',
-      firstName: initialData?.firstName ?? '',
-      lastName: initialData?.lastName ?? '',
-      phone: initialData?.phone ?? '',
+      username: profile.username ?? '',
+      firstName: profile.firstName ?? '',
+      lastName: profile.lastName ?? '',
+      phone: profile.phone ?? '',
     },
     validators: {
       onSubmit: profileSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!onSubmit) return
       startTransition(async () => {
         const result = await onSubmit(value)
         if (result.success) {
+          form.reset(value)
           setSaveState('saved')
-          router.invalidate()
-          await onSuccess?.()
-          await queryClient.invalidateQueries({ queryKey: ['sidebar'] })
-        } else {
-          toast.error(t('actions.updateError'))
         }
       })
     },
@@ -94,29 +64,9 @@ export function ProfileForm({
     }
   }, [saveState])
 
-  useEffect(() => {
-    if (profile) {
-      form.reset({
-        username: profile.username ?? '',
-        firstName: profile.firstName ?? '',
-        lastName: profile.lastName ?? '',
-        phone: profile.phone ?? '',
-      })
-    }
-  }, [profile, form])
-
   const handleReset = useCallback(() => {
-    form.reset({
-      username: profile?.username ?? '',
-      firstName: profile?.firstName ?? '',
-      lastName: profile?.lastName ?? '',
-      phone: profile?.phone ?? '',
-    })
-  }, [form, profile])
-
-  if (isLoading && !initialData) {
-    return <ProfileFormSkeleton />
-  }
+    form.reset()
+  }, [form])
 
   return (
     <form
@@ -142,7 +92,7 @@ export function ProfileForm({
                     aria-invalid={isInvalid}
                     placeholder="John"
                   />
-                  <div className="min-h-5">{isInvalid && <FieldError errors={field.state.meta.errors} />}</div>
+                  <div>{isInvalid && <FieldError errors={field.state.meta.errors} />}</div>
                 </Field>
               )
             }}
@@ -161,7 +111,7 @@ export function ProfileForm({
                     aria-invalid={isInvalid}
                     placeholder="Doe"
                   />
-                  <div className="min-h-5">{isInvalid && <FieldError errors={field.state.meta.errors} />}</div>
+                  <div>{isInvalid && <FieldError errors={field.state.meta.errors} />}</div>
                 </Field>
               )
             }}
@@ -233,46 +183,5 @@ export function ProfileForm({
         </div>
       </div>
     </form>
-  )
-}
-
-function ProfileFormSkeleton() {
-  return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        </div>
-      </div>
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-12" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-3 w-48" />
-        </div>
-      </div>
-      <div className="flex items-center justify-between border-t pt-4">
-        <Skeleton className="h-3 w-24" />
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-8 w-16" />
-          <Skeleton className="h-8 w-24" />
-        </div>
-      </div>
-    </div>
   )
 }

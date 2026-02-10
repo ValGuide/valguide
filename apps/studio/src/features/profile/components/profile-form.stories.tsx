@@ -7,10 +7,6 @@ const mockOnSubmit = async () => {
   return { success: true }
 }
 
-const mockOnSuccess = async () => {
-  console.log('Profile updated successfully')
-}
-
 const meta: Meta<typeof ProfileForm> = {
   title: 'Studio/Features/Profile/ProfileForm',
   component: ProfileForm,
@@ -24,7 +20,6 @@ const meta: Meta<typeof ProfileForm> = {
   },
   args: {
     onSubmit: mockOnSubmit,
-    onSuccess: mockOnSuccess,
     email: 'john@museum.org',
   },
   decorators: [
@@ -55,7 +50,6 @@ export const Default: Story = {
       lastName: 'Doe',
       phone: '+41791234567',
     },
-    isLoading: false,
   },
 }
 
@@ -67,7 +61,6 @@ export const Empty: Story = {
       lastName: null,
       phone: null,
     },
-    isLoading: false,
   },
 }
 
@@ -79,12 +72,5 @@ export const PartialData: Story = {
       lastName: null,
       phone: null,
     },
-    isLoading: false,
-  },
-}
-
-export const Loading: Story = {
-  args: {
-    isLoading: true,
   },
 }
