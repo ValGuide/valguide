@@ -1,22 +1,21 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-router'
+import { checkSuperadminFn } from '@valguide/core/features/admin/check-superadmin.fn'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AdminSidebar } from '@/components/admin-sidebar'
 
-const SUPERADMIN_EMAILS = ['curator@museum-zurich.example', 'curator@museum-zurich.example', 'ops@museum-zurich.example']
-
 export const Route = createFileRoute('/_main')({
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: async ({ context, location }) => {
     if (!context.user) {
       throw redirect({
         to: '/login',
         search: { next: location.href },
       })
     }
-    const email = context.user.email?.toLowerCase()
-    if (!email || !SUPERADMIN_EMAILS.includes(email)) {
+    const { allowed } = await checkSuperadminFn()
+    if (!allowed) {
       throw redirect({ to: '/login' })
     }
   },

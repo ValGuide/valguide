@@ -1,9 +1,5 @@
 import { Resend } from 'resend'
 import { AccountApprovedEmail, type AccountApprovedEmailProps } from './emails/account-approved-email'
-import {
-  NewSignupNotificationEmail,
-  type NewSignupNotificationEmailProps,
-} from './emails/new-signup-notification-email'
 import { TeamInviteEmail, type TeamInviteEmailProps } from './emails/team-invite-email'
 import { env } from './env'
 
@@ -16,7 +12,6 @@ const FROM_EMAIL = env.EMAIL_FROM
 
 export type EmailTemplate =
   | { name: 'team-invite'; data: TeamInviteEmailProps }
-  | { name: 'new-signup-notification'; data: NewSignupNotificationEmailProps }
   | { name: 'account-approved'; data: AccountApprovedEmailProps }
 
 export interface SendEmailOptions {
@@ -45,9 +40,6 @@ export async function sendEmail({ to, subject, template }: SendEmailOptions) {
   switch (template.name) {
     case 'team-invite':
       react = <TeamInviteEmail {...template.data} />
-      break
-    case 'new-signup-notification':
-      react = <NewSignupNotificationEmail {...template.data} />
       break
     case 'account-approved':
       react = <AccountApprovedEmail {...template.data} />

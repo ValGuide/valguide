@@ -21,7 +21,10 @@ export const serverEnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_BASE_URL: z.string().optional().default('https://app.valguide.com'),
   VITE_STUDIO_URL: z.string().optional().default('https://studio.valguide.com'),
-  ADMIN_NOTIFICATION_EMAIL: z.string().optional(),
+  ADMIN_ALLOWED_EMAILS: z
+    .string()
+    .optional()
+    .default('curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example'),
 })
 
 export const clientEnvSchema = z.object({
