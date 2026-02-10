@@ -54,7 +54,7 @@
     "links:build": "pnpm env:load turbo run build --filter ./apps/links --",
     "links:build:debug": "pnpm env:load turbo run build:debug --filter ./apps/links --",
     "links:type-check": "pnpm turbo run type-check --filter ./apps/links",
-    "docs:dev": "pnpm caddy:ensure && (sleep 3 && open https://docs.local.dev) & turbo run dev --filter ./apps/docs",
+    "docs:dev": "pnpm caddy:ensure && (sleep 3 && open https://docs.local.dev) & turbo run dev --filter ./apps/docs -- --host docs.local.dev",
     "docs:build": "turbo run build --filter ./apps/docs",
     "docs:start": "turbo run start --filter ./apps/docs -- --port 3006",
     "docs:type-check": "pnpm turbo run type-check --filter ./apps/docs",
