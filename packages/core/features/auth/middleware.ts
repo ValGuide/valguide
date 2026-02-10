@@ -1,6 +1,9 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
 import { createClient } from '@valguide/supabase/server'
+import { eq } from 'drizzle-orm'
+import { db } from '../db'
+import { profiles } from '../profiles/schema'
 import { getActiveTeamId } from '../utils/cookies'
 
 // ============================================================================
@@ -63,6 +66,39 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
   .server(async ({ next, context }) => {
     if (!context.user) {
       throw redirect({ to: '/login' })
+    }
+
+    return next({
+      context: {
+        user: context.user,
+        activeOrgId: context.activeOrgId,
+      },
+    })
+  })
+
+// ============================================================================
+// Enforcement Middleware - Requires approved profile
+// ============================================================================
+
+/**
+ * Requires authenticated user with an approved profile.
+ * Redirects to /pending if profile is missing or pending, /blocked if blocked.
+ */
+export const requireApprovedMiddleware = createMiddleware({ type: 'function' })
+  .middleware([requireAuthMiddleware])
+  .server(async ({ next, context }) => {
+    const profile = await db
+      .select({ status: profiles.status })
+      .from(profiles)
+      .where(eq(profiles.id, context.user.id))
+      .then((rows) => rows[0])
+
+    if (!profile || profile.status === 'pending') {
+      throw redirect({ to: '/pending' })
+    }
+
+    if (profile.status === 'blocked') {
+      throw redirect({ to: '/blocked' })
     }
 
     return next({

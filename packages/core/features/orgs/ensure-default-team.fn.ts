@@ -18,7 +18,7 @@ export type { EnsureDefaultTeamResult } from './ensure-default-team.server'
 export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .handler(async ({ context }): Promise<EnsureDefaultTeamResult> => {
-    const profile = await getOrCreateProfile(context.user.id)
+    const profile = await getOrCreateProfile(context.user.id, context.user.email)
     const displayName = getUserDisplayName(profile, context.user.email)
 
     const team = await ensureDefaultTeam(db, context.user.id, displayName)

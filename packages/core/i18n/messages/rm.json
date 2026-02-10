@@ -180,6 +180,19 @@
     "invalidEmail": "Endatei per plaschair ina adressa d'e-mail valida",
     "emailRequired": "Adressa d'e-mail è necessaria"
   },
+  "accountStatus": {
+    "pending": {
+      "title": "Tes conto spetga sin approvaziun",
+      "description": "Nus examinain tes conto. Ti retschaivas in e-mail uschespert che ti es approvà.",
+      "checkAgain": "Controllar danovamain",
+      "signOut": "Sortir"
+    },
+    "blocked": {
+      "title": "Tes conto è vegnì bloccà",
+      "description": "Contactescha per plaschair il support, sche ti cartezzas ch'quai è in sbagl.",
+      "signOut": "Sortir"
+    }
+  },
   "login": {
     "welcome": "Beinvegni",
     "loginPrompt": "S'annunziai tar vies conto",

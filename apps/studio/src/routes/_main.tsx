@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router'
 import { ensureDefaultTeamQueryOptions } from '@valguide/core/features/orgs/query-options'
-import { isAuthenticatedQueryOptions } from '@valguide/features/auth/query-options'
+import { isAuthenticatedQueryOptions, userStatusQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { MainLayoutPending } from '@/components/main-layout-pending'
@@ -15,6 +15,15 @@ export const Route = createFileRoute('/_main')({
         to: '/login',
         search: { next: location.href },
       })
+    }
+
+    const statusResult = await context.queryClient.ensureQueryData(userStatusQueryOptions())
+    const status = statusResult?.status ?? 'pending'
+    if (status === 'pending') {
+      throw redirect({ to: '/pending' })
+    }
+    if (status === 'blocked') {
+      throw redirect({ to: '/blocked' })
     }
 
     // FIRST: Ensure user has at least one team (cached after first call)

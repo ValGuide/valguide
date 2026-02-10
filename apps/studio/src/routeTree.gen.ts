@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as PendingRouteImport } from './routes/pending'
 import { Route as JoinTeamRouteImport } from './routes/join-team'
+import { Route as BlockedRouteImport } from './routes/blocked'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -50,9 +52,19 @@ const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PendingRoute = PendingRouteImport.update({
+  id: '/pending',
+  path: '/pending',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JoinTeamRoute = JoinTeamRouteImport.update({
   id: '/join-team',
   path: '/join-team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlockedRoute = BlockedRouteImport.update({
+  id: '/blocked',
+  path: '/blocked',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MainRoute = MainRouteImport.update({
@@ -192,7 +204,9 @@ const MainToursNanoIdStopsStopIdEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blocked': typeof BlockedRoute
   '/join-team': typeof JoinTeamRoute
+  '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
@@ -222,7 +236,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blocked': typeof BlockedRoute
   '/join-team': typeof JoinTeamRoute
+  '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
@@ -251,7 +267,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/_main': typeof MainRouteWithChildren
+  '/blocked': typeof BlockedRoute
   '/join-team': typeof JoinTeamRoute
+  '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/_auth/login': typeof AuthLoginRoute
@@ -283,7 +301,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/blocked'
     | '/join-team'
+    | '/pending'
     | '/privacy-policy'
     | '/terms-of-service'
     | '/login'
@@ -313,7 +333,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/blocked'
     | '/join-team'
+    | '/pending'
     | '/privacy-policy'
     | '/terms-of-service'
     | '/login'
@@ -341,7 +363,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/_main'
+    | '/blocked'
     | '/join-team'
+    | '/pending'
     | '/privacy-policy'
     | '/terms-of-service'
     | '/_auth/login'
@@ -374,7 +398,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   MainRoute: typeof MainRouteWithChildren
+  BlockedRoute: typeof BlockedRoute
   JoinTeamRoute: typeof JoinTeamRoute
+  PendingRoute: typeof PendingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   ApiDevAuthRoute: typeof ApiDevAuthRoute
@@ -396,11 +422,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pending': {
+      id: '/pending'
+      path: '/pending'
+      fullPath: '/pending'
+      preLoaderRoute: typeof PendingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/join-team': {
       id: '/join-team'
       path: '/join-team'
       fullPath: '/join-team'
       preLoaderRoute: typeof JoinTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blocked': {
+      id: '/blocked'
+      path: '/blocked'
+      fullPath: '/blocked'
+      preLoaderRoute: typeof BlockedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_main': {
@@ -701,7 +741,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   MainRoute: MainRouteWithChildren,
+  BlockedRoute: BlockedRoute,
   JoinTeamRoute: JoinTeamRoute,
+  PendingRoute: PendingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   ApiDevAuthRoute: ApiDevAuthRoute,

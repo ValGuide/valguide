@@ -1,6 +1,7 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
+import { createRootRoute, HeadContent, Outlet, redirect, Scripts } from '@tanstack/react-router'
 import { RootProvider } from 'fumadocs-ui/provider/tanstack'
 import type { ReactNode } from 'react'
+import { checkAuthFn } from '@/lib/auth'
 import appCss from '@/styles/app.css?url'
 
 export const Route = createRootRoute({
@@ -19,6 +20,15 @@ export const Route = createRootRoute({
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
   }),
+  beforeLoad: async ({ location }) => {
+    const { authenticated } = await checkAuthFn()
+
+    if (!authenticated && location.pathname !== '/login') {
+      throw redirect({ to: '/login' })
+    }
+
+    return { authenticated }
+  },
   component: RootComponent,
 })
 

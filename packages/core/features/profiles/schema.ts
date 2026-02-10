@@ -3,6 +3,8 @@ import { authUsers } from 'drizzle-orm/supabase'
 
 const studioSchema = pgSchema('studio')
 
+export const userStatus = studioSchema.enum('user_status', ['pending', 'approved', 'blocked'])
+
 export const profiles = studioSchema.table('profiles', {
   id: uuid('id')
     .primaryKey()
@@ -16,4 +18,8 @@ export const profiles = studioSchema.table('profiles', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   onboardedAt: timestamp('onboarded_at', { withTimezone: true }),
+  status: userStatus('status').default('pending').notNull(),
+  approvedAt: timestamp('approved_at', { withTimezone: true }),
+  blockedAt: timestamp('blocked_at', { withTimezone: true }),
+  blockedReason: text('blocked_reason'),
 })

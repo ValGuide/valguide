@@ -180,6 +180,19 @@
     "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
     "emailRequired": "E-Mail-Adresse ist erforderlich"
   },
+  "accountStatus": {
+    "pending": {
+      "title": "Dein Konto wartet auf Freigabe",
+      "description": "Wir prüfen dein Konto. Du erhältst eine E-Mail, sobald du freigeschaltet wurdest.",
+      "checkAgain": "Erneut prüfen",
+      "signOut": "Abmelden"
+    },
+    "blocked": {
+      "title": "Dein Konto wurde gesperrt",
+      "description": "Bitte kontaktiere den Support, wenn du glaubst, dass dies ein Fehler ist.",
+      "signOut": "Abmelden"
+    }
+  },
   "login": {
     "welcome": "Willkommen zurück",
     "loginPrompt": "Melden Sie sich bei Ihrem Konto an",

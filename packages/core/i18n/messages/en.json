@@ -180,6 +180,19 @@
     "invalidEmail": "Please enter a valid email address",
     "emailRequired": "Email is required"
   },
+  "accountStatus": {
+    "pending": {
+      "title": "Your account is pending approval",
+      "description": "We're reviewing your account. You'll receive an email once you're approved.",
+      "checkAgain": "Check again",
+      "signOut": "Sign out"
+    },
+    "blocked": {
+      "title": "Your account has been suspended",
+      "description": "Please contact support if you believe this is an error.",
+      "signOut": "Sign out"
+    }
+  },
   "login": {
     "welcome": "Welcome back",
     "loginPrompt": "Sign in to your account",
