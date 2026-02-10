@@ -17,7 +17,7 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
-import { Check, ChevronDown, Globe, MoreHorizontal, Plus, Trash2 } from 'lucide-react'
+import { Check, ChevronDown, Globe, MoreHorizontal, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { LocaleStatusMap, TranslationLocaleStatus } from '../utils/translation-status'
 import { RemoveLocaleDialogUnified } from './remove-locale-dialog-unified'
@@ -149,6 +149,83 @@ const LOCALE_NAMES: Record<string, string> = {
   fi: 'Finnish',
 }
 
+const LOCALE_NATIVE_NAMES: Record<string, string> = {
+  en: 'English',
+  de: 'Deutsch',
+  rm: 'Rumantsch',
+  fr: 'Français',
+  it: 'Italiano',
+  es: 'Español',
+  pt: 'Português',
+  nl: 'Nederlands',
+  pl: 'Polski',
+  cs: 'Čeština',
+  sk: 'Slovenčina',
+  hu: 'Magyar',
+  ro: 'Română',
+  bg: 'Български',
+  hr: 'Hrvatski',
+  sl: 'Slovenščina',
+  uk: 'Українська',
+  ru: 'Русский',
+  ja: '日本語',
+  zh: '中文',
+  ko: '한국어',
+  ar: 'العربية',
+  he: 'עברית',
+  tr: 'Türkçe',
+  el: 'Ελληνικά',
+  da: 'Dansk',
+  sv: 'Svenska',
+  no: 'Norsk',
+  fi: 'Suomi',
+  et: 'Eesti',
+  lv: 'Latviešu',
+  lt: 'Lietuvių',
+  ca: 'Català',
+  eu: 'Euskara',
+  gl: 'Galego',
+  cy: 'Cymraeg',
+  ga: 'Gaeilge',
+  gd: 'Gàidhlig',
+  mt: 'Malti',
+  sq: 'Shqip',
+  mk: 'Македонски',
+  sr: 'Српски',
+  bs: 'Bosanski',
+  is: 'Íslenska',
+  fo: 'Føroyskt',
+  lb: 'Lëtzebuergesch',
+  gsw: 'Schwyzerdütsch',
+  bar: 'Boarisch',
+  hi: 'हिन्दी',
+  bn: 'বাংলা',
+  ta: 'தமிழ்',
+  th: 'ไทย',
+  vi: 'Tiếng Việt',
+  id: 'Bahasa Indonesia',
+  ms: 'Bahasa Melayu',
+  tl: 'Filipino',
+  fa: 'فارسی',
+  ur: 'اردو',
+  ka: 'ქართული',
+  hy: 'Հայերեն',
+  mn: 'Монгол',
+  ne: 'नेपाली',
+  si: 'සිංහල',
+  km: 'ខ្មែរ',
+  lo: 'ລາວ',
+  my: 'မြန်မာ',
+  af: 'Afrikaans',
+  ku: 'Kurdî',
+  az: 'Azərbaycan',
+  kk: 'Қазақ',
+  uz: "O'zbek",
+  ky: 'Кыргыз',
+  tk: 'Türkmen',
+  tg: 'Тоҷикӣ',
+}
+
 export function getLocaleDisplayName(locale: string): string {
   if (LOCALE_NAMES[locale]) return LOCALE_NAMES[locale]
 
@@ -163,6 +240,10 @@ export function getLocaleDisplayName(locale: string): string {
   }
 
   return locale.toUpperCase()
+}
+
+export function getLocaleNativeName(locale: string): string {
+  return LOCALE_NATIVE_NAMES[locale] ?? getLocaleDisplayName(locale)
 }
 
 function StatusBadge({
@@ -380,7 +461,6 @@ export function UnifiedLocaleSelector({
                           onSelect={() => handleAddLocale(locale)}
                           className="flex items-center gap-2"
                         >
-                          <Plus className="h-4 w-4 text-muted-foreground" />
                           <span>{localeName}</span>
                         </CommandItem>
                       )
