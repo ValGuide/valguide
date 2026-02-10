@@ -182,14 +182,26 @@
   },
   "accountStatus": {
     "pending": {
-      "title": "Tes conto spetga sin approvaziun",
-      "description": "Nus examinain tes conto. Ti retschaivas in e-mail uschespert che ti es approvà.",
-      "checkAgain": "Controllar danovamain",
+      "title": "Tes conto vegn examinà",
+      "description": "Grazia fitg per l'annunzia. Noss team examinescha tes conto.",
+      "statusLabel": "Status dal conto",
+      "statusValue": "En examinaziun",
+      "expectation": "Normalmain entaifer 1 di da lavur.",
+      "stepsTitle": "Tge capita suenter",
+      "stepOne": "Nus avain retschavì tia annunzia",
+      "stepTwo": "Noss team examinescha tes datas",
+      "stepThree": "Ti retschaivas in e-mail suenter l'approvaziun",
+      "checkStatus": "Controllar il status",
+      "autoRefreshNote": "Questa pagina s'actualisescha automaticamain.",
+      "contactPrompt": "Basegns access pli spert?",
+      "contactCta": "Scriva a nus",
       "signOut": "Sortir"
     },
     "blocked": {
-      "title": "Tes conto è vegnì bloccà",
-      "description": "Contactescha per plaschair il support, sche ti cartezzas ch'quai è in sbagl.",
+      "title": "Grazia fitg per tes interess",
+      "description": "Tia dumonda per l'access a ValGuide vegn actualmain examinada. Nus ans annunzain, uschespert ch'ina decisiun è vegnida prendida.",
+      "nextStep": "Has ti dumondas? Nus gidin gugent.",
+      "contactCta": "Contacta nus",
       "signOut": "Sortir"
     }
   },

@@ -32,6 +32,7 @@ function PendingPage() {
 
   const handleSignOut = async () => {
     await signOutFn({ data: {} })
+    queryClient.clear()
     await router.invalidate()
     router.navigate({ to: '/login' })
   }

@@ -14,6 +14,9 @@ import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MainUsersRouteImport } from './routes/_main/users'
+import { Route as MainToursRouteImport } from './routes/_main/tours'
+import { Route as MainOrgsRouteImport } from './routes/_main/orgs'
 import { Route as MainAssetsRouteImport } from './routes/_main/assets'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
@@ -41,6 +44,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainUsersRoute = MainUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainToursRoute = MainToursRouteImport.update({
+  id: '/tours',
+  path: '/tours',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainOrgsRoute = MainOrgsRouteImport.update({
+  id: '/orgs',
+  path: '/orgs',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainAssetsRoute = MainAssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
@@ -64,6 +82,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/assets': typeof MainAssetsRoute
+  '/orgs': typeof MainOrgsRoute
+  '/tours': typeof MainToursRoute
+  '/users': typeof MainUsersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -72,6 +93,9 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/assets': typeof MainAssetsRoute
+  '/orgs': typeof MainOrgsRoute
+  '/tours': typeof MainToursRoute
+  '/users': typeof MainUsersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,6 +107,9 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_main/assets': typeof MainAssetsRoute
+  '/_main/orgs': typeof MainOrgsRoute
+  '/_main/tours': typeof MainToursRoute
+  '/_main/users': typeof MainUsersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -93,6 +120,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/assets'
+    | '/orgs'
+    | '/tours'
+    | '/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -101,6 +131,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/assets'
+    | '/orgs'
+    | '/tours'
+    | '/users'
   id:
     | '__root__'
     | '/'
@@ -111,6 +144,9 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/signup'
     | '/_main/assets'
+    | '/_main/orgs'
+    | '/_main/tours'
+    | '/_main/users'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -158,6 +194,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_main/users': {
+      id: '/_main/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof MainUsersRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/tours': {
+      id: '/_main/tours'
+      path: '/tours'
+      fullPath: '/tours'
+      preLoaderRoute: typeof MainToursRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/orgs': {
+      id: '/_main/orgs'
+      path: '/orgs'
+      fullPath: '/orgs'
+      preLoaderRoute: typeof MainOrgsRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/assets': {
       id: '/_main/assets'
       path: '/assets'
@@ -196,10 +253,16 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface MainRouteChildren {
   MainAssetsRoute: typeof MainAssetsRoute
+  MainOrgsRoute: typeof MainOrgsRoute
+  MainToursRoute: typeof MainToursRoute
+  MainUsersRoute: typeof MainUsersRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainAssetsRoute: MainAssetsRoute,
+  MainOrgsRoute: MainOrgsRoute,
+  MainToursRoute: MainToursRoute,
+  MainUsersRoute: MainUsersRoute,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)

@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { BlockedPage } from '@valguide/core/features/auth/common/blocked-page'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
@@ -25,9 +26,11 @@ export const Route = createFileRoute('/blocked')({
 
 function BlockedPageRoute() {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const handleSignOut = async () => {
     await signOutFn({ data: {} })
+    queryClient.clear()
     await router.invalidate()
     router.navigate({ to: '/login' })
   }
