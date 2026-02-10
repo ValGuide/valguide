@@ -1,7 +1,7 @@
 import '@valguide/ui/styles/globals.css'
 
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
-import type { Preview } from '@storybook/nextjs-vite'
+import type { Preview } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createMemoryHistory, createRootRoute, createRoute, createRouter, RouterProvider } from '@tanstack/react-router'
 import { defaultThemes } from '@valguide/features/themes/defaults.ts'

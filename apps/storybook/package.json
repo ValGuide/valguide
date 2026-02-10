@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@storybook/addon-themes": "^10.2.4",
-    "@storybook/nextjs-vite": "^10.2.4",
+    "@storybook/react-vite": "^10.2.4",
     "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
     "@testing-library/dom": "^9.3.4",
