@@ -43,6 +43,13 @@
       "when": 1770724053406,
       "tag": "0005_brave_vindicator",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1770749021949,
+      "tag": "0006_wonderful_spitfire",
+      "breakpoints": true
     }
   ]
 }
