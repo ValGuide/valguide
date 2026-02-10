@@ -61,7 +61,7 @@
     "storybook:clean": "pnpm --filter @valguide/storybook clean",
     "storybook:build": "pnpm --filter @valguide/storybook build",
     "storybook:serve": "pnpm --filter @valguide/storybook serve",
-    "storybook:dev": "pnpm caddy:ensure && turbo run dev --filter ./apps/storybook",
+    "storybook:dev": "pnpm caddy:ensure && (sleep 3 && open https://storybook.local.dev) & turbo run dev --filter ./apps/storybook",
     "caddy": "caddy run --config Caddyfile.local",
     "caddy:ensure": "sh .scripts/ensure-caddy.sh",
     "icons:build": "turbo run build --filter ./packages/icons",
