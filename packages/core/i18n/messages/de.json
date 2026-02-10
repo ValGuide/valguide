@@ -897,7 +897,7 @@
     },
     "phone": "Telefon",
     "phonePlaceholder": "079 123 45 67",
-    "phoneHint": "Optional. Nur für den Notfall, wenn wir Sie bei einem Serviceproblem nicht per E-Mail erreichen.",
+    "phoneHint": "Optional. Nur für dringende Supportfälle, falls wir Sie per E-Mail nicht erreichen. Kein Marketing. Jederzeit entfernbar.",
     "deleteAccount": {
       "title": "Konto löschen",
       "description": "Löscht Ihr Konto und alle persönlichen Daten unwiderruflich.",

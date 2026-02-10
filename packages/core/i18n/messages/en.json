@@ -897,7 +897,7 @@
     },
     "phone": "Phone",
     "phonePlaceholder": "079 123 45 67",
-    "phoneHint": "Optional. Only used if we can't reach you by email for urgent service matters.",
+    "phoneHint": "Optional. Only for time-sensitive support if email isn't reaching you. No marketing. You can remove it anytime.",
     "deleteAccount": {
       "title": "Delete Account",
       "description": "Permanently delete your account and all personal data. This cannot be undone.",
