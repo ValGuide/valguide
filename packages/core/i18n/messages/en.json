@@ -202,17 +202,13 @@
       "signOut": "Sign out"
     },
     "blocked": {
-      "title": "Thank you for your interest",
-      "description": "Your application to access ValGuide is currently under review. We'll be in touch once a decision has been made.",
-      "statusLabel": "Application status",
-      "statusValue": "Under review",
-      "stepOne": "We received your application",
-      "stepTwo": "Our team is reviewing your details",
-      "stepThree": "We'll email you once a decision is made",
-      "trustRationale": "We review all applications to ensure a safe and reliable workspace for museum teams.",
-      "teamName": "ValGuide Team",
-      "responseTime": "Usually replies within 1 business day",
-      "contactCta": "Contact us",
+      "title": "Let's get you set up",
+      "description": "We're reviewing your institution details to set up your account. This helps us connect you with the right resources.",
+      "statusLabel": "Your status",
+      "statusValue": "In setup",
+      "expectation": "We usually complete this within 1 business day.",
+      "contactCta": "Talk to us",
+      "checkStatus": "Check status",
       "signOut": "Sign out"
     }
   },

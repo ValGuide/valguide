@@ -94,11 +94,11 @@ export const requireApprovedMiddleware = createMiddleware({ type: 'function' })
       .then((rows) => rows[0])
 
     if (!profile || profile.status === 'pending') {
-      throw redirect({ to: '/access-denied' })
+      throw redirect({ to: '/login' })
     }
 
     if (profile.status === 'blocked') {
-      throw redirect({ to: '/access-denied' })
+      throw redirect({ to: '/login' })
     }
 
     return next({

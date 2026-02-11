@@ -202,17 +202,13 @@
       "signOut": "Sortir"
     },
     "blocked": {
-      "title": "Grazia fitg per tes interess",
-      "description": "Tia dumonda per l'access a ValGuide vegn actualmain examinada. Nus ans annunzain, uschespert ch'ina decisiun è vegnida prendida.",
-      "statusLabel": "Status da la dumonda",
-      "statusValue": "En examinaziun",
-      "stepOne": "Nus avain retschavì tia dumonda",
-      "stepTwo": "Noss team examinescha tes datas",
-      "stepThree": "Ti retschaivas in e-mail, uschespert ch'ina decisiun è vegnida prendida",
-      "trustRationale": "Nus examinain tut las dumondas per garantir in spazi da lavur segir e fidà per teams da museums.",
-      "teamName": "ValGuide Team",
-      "responseTime": "Respunda normalmain entaifer 1 di da lavur",
-      "contactCta": "Contacta nus",
+      "title": "Vain a t'installar",
+      "description": "Nus controllin las datas da tia instituziun per installar tiu conti. Uschia pudain nus dar ad igl las resursas giustas.",
+      "statusLabel": "Tiu status",
+      "statusValue": "Vegn installar",
+      "expectation": "Frequentamain nus isprovan tut entaifer 1 di da lavur.",
+      "contactCta": "Scriva a nus",
+      "checkStatus": "Controllar il status",
       "signOut": "Sortir"
     }
   },

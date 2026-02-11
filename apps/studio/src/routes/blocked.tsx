@@ -32,26 +32,40 @@ export const Route = createFileRoute('/blocked')({
 function BlockedPageRoute() {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const [accessRequested, setAccessRequested] = useState(false)
 
-  // Notify team of blocked access attempt
+  // Notify team once per session only
   useEffect(() => {
-    notifyStudioBlockedAccessFn({ data: {} })
+    const sessionKey = 'vg_blocked_notified_session'
+    if (!sessionStorage.getItem(sessionKey)) {
+      sessionStorage.setItem(sessionKey, '1')
+      notifyStudioBlockedAccessFn({ data: {} })
+    }
   }, [])
 
-  const { mutate: requestAccess, isPending } = useMutation({
-    mutationFn: async () => {
-      // Just show success - notification already sent on page load
-      return Promise.resolve()
-    },
-    onSuccess: () => {
-      setAccessRequested(true)
-      toast.success('Access request sent. Our team will review it shortly.')
-    },
-    onError: () => {
-      toast.error('Failed to send access request. Please try again.')
-    },
-  })
+  // Check status and redirect if changed
+  const handleCheckStatus = async () => {
+    try {
+      // Invalidate cache to fetch fresh status
+      await queryClient.invalidateQueries({ queryKey: ['user-status'] })
+      const statusResult = await queryClient.ensureQueryData(userStatusQueryOptions())
+      const status = statusResult?.status ?? 'blocked'
+
+      if (status === 'approved') {
+        toast.success('Access approved! Redirecting...')
+        await router.invalidate()
+        router.navigate({ to: '/tours' })
+      } else if (status === 'pending') {
+        toast.info('Status updated to pending review.')
+        await router.invalidate()
+        router.navigate({ to: '/pending' })
+      } else {
+        toast.info('Still under review. Our team is working on it.')
+      }
+    } catch (error) {
+      console.error('Failed to check status:', error)
+      toast.error('Could not refresh status. Please try again.')
+    }
+  }
 
   const handleSignOut = async () => {
     await signOutFn({ data: {} })
@@ -60,10 +74,5 @@ function BlockedPageRoute() {
     router.navigate({ to: '/login' })
   }
 
-  return (
-    <BlockedPage
-      onSignOut={handleSignOut}
-      onRequestAccess={!accessRequested && !isPending ? () => requestAccess() : undefined}
-    />
-  )
+  return <BlockedPage onSignOut={handleSignOut} onCheckStatus={handleCheckStatus} isCheckingStatus={false} />
 }

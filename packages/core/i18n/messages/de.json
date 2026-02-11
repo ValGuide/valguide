@@ -202,17 +202,13 @@
       "signOut": "Abmelden"
     },
     "blocked": {
-      "title": "Vielen Dank für dein Interesse",
-      "description": "Deine Anfrage für den Zugang zu ValGuide wird derzeit geprüft. Wir melden uns, sobald eine Entscheidung getroffen wurde.",
-      "statusLabel": "Antragsstatus",
-      "statusValue": "In Prüfung",
-      "stepOne": "Wir haben deine Anfrage erhalten",
-      "stepTwo": "Unser Team prüft deine Angaben",
-      "stepThree": "Du erhältst eine E-Mail, sobald eine Entscheidung getroffen wurde",
-      "trustRationale": "Wir prüfen alle Anfragen, um einen sicheren und zuverlässigen Arbeitsbereich für Museumsteams zu gewährleisten.",
-      "teamName": "ValGuide Team",
-      "responseTime": "Antwortet in der Regel innerhalb von 1 Werktag",
-      "contactCta": "Kontaktiere uns",
+      "title": "Lass dich einrichten",
+      "description": "Wir überprüfen deine Institutionsdaten, um dein Konto einzurichten. So können wir dich mit den richtigen Ressourcen verbinden.",
+      "statusLabel": "Dein Status",
+      "statusValue": "Wird eingerichtet",
+      "expectation": "Das dauert normalerweise weniger als 1 Werktag.",
+      "contactCta": "Schreib uns",
+      "checkStatus": "Status überprüfen",
       "signOut": "Abmelden"
     }
   },
