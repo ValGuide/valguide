@@ -862,7 +862,8 @@
       "avatarSaveSuccess": "Team-Avatar aktualisiert",
       "avatarSaveError": "Fehler beim Aktualisieren des Team-Avatars",
       "avatarInvalidType": "Bitte laden Sie ein PNG-, JPG-, WebP- oder GIF-Bild hoch",
-      "avatarTooLarge": "Das Bild darf nicht grösser als 5 MB sein"
+      "avatarTooLarge": "Das Bild darf nicht grösser als 5 MB sein",
+      "avatarClickToUpload": "Klicken zum Hochladen"
     }
   },
   "joinTeam": {

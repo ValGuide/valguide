@@ -14,6 +14,8 @@ export const Route = createFileRoute('/blocked')({
       throw redirect({ to: '/login' })
     }
 
+    // Invalidate cache to fetch fresh status (user may have accepted invite)
+    await context.queryClient.invalidateQueries({ queryKey: ['user-status'] })
     const statusResult = await context.queryClient.ensureQueryData(userStatusQueryOptions())
     const status = statusResult?.status ?? 'pending'
 

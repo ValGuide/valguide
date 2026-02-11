@@ -862,7 +862,8 @@
       "avatarSaveSuccess": "Avatar dal team actualisà",
       "avatarSaveError": "Errur cun actualisar l'avatar dal team",
       "avatarInvalidType": "Chargiai si in maletg PNG, JPG, WebP u GIF",
-      "avatarTooLarge": "Il maletg sto esser pli pitschen che 5 MB"
+      "avatarTooLarge": "Il maletg sto esser pli pitschen che 5 MB",
+      "avatarClickToUpload": "Cliccar per chargiar"
     }
   },
   "joinTeam": {

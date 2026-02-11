@@ -862,7 +862,8 @@
       "avatarSaveSuccess": "Team avatar updated",
       "avatarSaveError": "Failed to update team avatar",
       "avatarInvalidType": "Please upload a PNG, JPG, WebP, or GIF image",
-      "avatarTooLarge": "Image must be smaller than 5MB"
+      "avatarTooLarge": "Image must be smaller than 5MB",
+      "avatarClickToUpload": "Click to upload"
     }
   },
   "joinTeam": {

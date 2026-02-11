@@ -16,6 +16,7 @@
     "@react-email/components": "^1.0.6",
     "@react-email/render": "^2.0.4",
     "react": "19.2.1",
+    "react-dom": "19.2.1",
     "react-email": "^5.2.5",
     "resend": "^6.9.1",
     "zod": "^3.25.76"
