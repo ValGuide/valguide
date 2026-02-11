@@ -19,6 +19,7 @@ import { Route as MainToursRouteImport } from './routes/_main/tours'
 import { Route as MainOrgsRouteImport } from './routes/_main/orgs'
 import { Route as MainAssetsRouteImport } from './routes/_main/assets'
 import { Route as MainApprovedDomainsRouteImport } from './routes/_main/approved-domains'
+import { Route as MainAccessDeniedRouteImport } from './routes/_main/access-denied'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 
@@ -70,6 +71,11 @@ const MainApprovedDomainsRoute = MainApprovedDomainsRouteImport.update({
   path: '/approved-domains',
   getParentRoute: () => MainRoute,
 } as any)
+const MainAccessDeniedRoute = MainAccessDeniedRouteImport.update({
+  id: '/access-denied',
+  path: '/access-denied',
+  getParentRoute: () => MainRoute,
+} as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
+  '/access-denied': typeof MainAccessDeniedRoute
   '/approved-domains': typeof MainApprovedDomainsRoute
   '/assets': typeof MainAssetsRoute
   '/orgs': typeof MainOrgsRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
+  '/access-denied': typeof MainAccessDeniedRoute
   '/approved-domains': typeof MainApprovedDomainsRoute
   '/assets': typeof MainAssetsRoute
   '/orgs': typeof MainOrgsRoute
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/terms-of-service': typeof TermsOfServiceRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
+  '/_main/access-denied': typeof MainAccessDeniedRoute
   '/_main/approved-domains': typeof MainApprovedDomainsRoute
   '/_main/assets': typeof MainAssetsRoute
   '/_main/orgs': typeof MainOrgsRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/terms-of-service'
     | '/login'
     | '/signup'
+    | '/access-denied'
     | '/approved-domains'
     | '/assets'
     | '/orgs'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/terms-of-service'
     | '/login'
     | '/signup'
+    | '/access-denied'
     | '/approved-domains'
     | '/assets'
     | '/orgs'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/terms-of-service'
     | '/_auth/login'
     | '/_auth/signup'
+    | '/_main/access-denied'
     | '/_main/approved-domains'
     | '/_main/assets'
     | '/_main/orgs'
@@ -241,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainApprovedDomainsRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/access-denied': {
+      id: '/_main/access-denied'
+      path: '/access-denied'
+      fullPath: '/access-denied'
+      preLoaderRoute: typeof MainAccessDeniedRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_auth/signup': {
       id: '/_auth/signup'
       path: '/signup'
@@ -271,6 +290,7 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface MainRouteChildren {
+  MainAccessDeniedRoute: typeof MainAccessDeniedRoute
   MainApprovedDomainsRoute: typeof MainApprovedDomainsRoute
   MainAssetsRoute: typeof MainAssetsRoute
   MainOrgsRoute: typeof MainOrgsRoute
@@ -279,6 +299,7 @@ interface MainRouteChildren {
 }
 
 const MainRouteChildren: MainRouteChildren = {
+  MainAccessDeniedRoute: MainAccessDeniedRoute,
   MainApprovedDomainsRoute: MainApprovedDomainsRoute,
   MainAssetsRoute: MainAssetsRoute,
   MainOrgsRoute: MainOrgsRoute,

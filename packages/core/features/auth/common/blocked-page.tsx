@@ -8,9 +8,10 @@ import { AuthLayout } from './auth-layout'
 export interface BlockedPageProps {
   onSignOut: () => void
   supportEmail?: string
+  onRequestAccess?: () => void
 }
 
-export function BlockedPage({ onSignOut, supportEmail = 'hello@valguide.com' }: BlockedPageProps) {
+export function BlockedPage({ onSignOut, supportEmail = 'hello@valguide.com', onRequestAccess }: BlockedPageProps) {
   const t = useTranslations('accountStatus')
 
   return (
@@ -66,9 +67,21 @@ export function BlockedPage({ onSignOut, supportEmail = 'hello@valguide.com' }: 
           </Button>
         </div>
 
-        <Button variant="ghost" size="sm" onClick={onSignOut} className="text-muted-foreground">
-          {t('blocked.signOut')}
-        </Button>
+        <div className="flex w-full flex-col gap-2 sm:flex-row">
+          {onRequestAccess && (
+            <Button onClick={onRequestAccess} size="sm" className="flex-1">
+              Request Access
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onSignOut}
+            className="text-muted-foreground flex-1 sm:flex-initial"
+          >
+            {t('blocked.signOut')}
+          </Button>
+        </div>
       </div>
     </AuthLayout>
   )

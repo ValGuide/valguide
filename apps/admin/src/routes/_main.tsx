@@ -16,7 +16,7 @@ export const Route = createFileRoute('/_main')({
     }
     const { allowed } = await checkSuperadminFn()
     if (!allowed) {
-      throw redirect({ to: '/login' })
+      throw redirect({ to: '/access-denied' })
     }
   },
   component: MainLayout,
