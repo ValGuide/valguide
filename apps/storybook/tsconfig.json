@@ -1,20 +1,16 @@
 {
-  "extends": "@valguide/typescript-config/nextjs.json",
+  "extends": "@valguide/typescript-config/react-library.json",
   "include": [
     "src",
     ".storybook/**/*.tsx",
     ".storybook/**/*.ts",
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.css",
-    "next.config.mjs",
     "../../packages/core/i18n/global.d.ts"
   ],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
       "@valguide/app/*": ["../apps/guide/*"],

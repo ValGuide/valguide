@@ -1,5 +1,5 @@
 {
-  "extends": "@valguide/typescript-config/nextjs.json",
+  "extends": "@valguide/typescript-config/react-library.json",
   "include": ["src", "**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "build", "node_modules"]
 }

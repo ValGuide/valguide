@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { themes } from '@valguide/features/themes/types.ts'
 import { FileDropzone } from './file-dropzone'

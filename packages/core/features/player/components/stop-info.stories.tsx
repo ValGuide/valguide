@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import { PlayerProvider } from '../store/player-provider'
 import type { PlayerStop } from '../types'
 import { StopInfo } from './stop-info'

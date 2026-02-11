@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import { useEffect } from 'react'
 import { fn } from 'storybook/test'
 import { PlayerProvider, usePlayerStoreContext } from '../store/player-provider'

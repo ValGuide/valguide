@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react'
 import { themes } from '@valguide/features/themes/types.ts'
 import { Button } from './button'
 

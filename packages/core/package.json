@@ -82,7 +82,6 @@
     "lucide-react": "0.546.0",
     "nanoid": "^5.1.6",
     "negotiator": "^1.0.0",
-    "next": "16.0.7",
     "openai": "^4.67.3",
     "postgres": "^3.4.3",
     "posthog-js": "^1.321.0",
@@ -106,7 +105,6 @@
   },
   "devDependencies": {
     "@fontsource-variable/vollkorn": "^5.2.10",
-    "@storybook/nextjs-vite": "^10.2.4",
     "@storybook/react": "^10.2.4",
     "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/vite": "^4.1.16",
