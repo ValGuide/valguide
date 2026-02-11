@@ -178,7 +178,8 @@
     "verificationSuccess": "Verifitgà! Redirecziun…",
     "verificationError": "Code nunvalid. Empruvai per plaschair aunc ina giada",
     "invalidEmail": "Endatei per plaschair ina adressa d'e-mail valida",
-    "emailRequired": "Adressa d'e-mail è necessaria"
+    "emailRequired": "Adressa d'e-mail è necessaria",
+    "emailNotAllowed": "Questa adressa d'e-mail n'è betg autorisada per l'access d'admin"
   },
   "accountStatus": {
     "pending": {

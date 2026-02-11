@@ -178,7 +178,8 @@
     "verificationSuccess": "Verified! Redirecting…",
     "verificationError": "Invalid code. Please try again",
     "invalidEmail": "Please enter a valid email address",
-    "emailRequired": "Email is required"
+    "emailRequired": "Email is required",
+    "emailNotAllowed": "This email is not authorized for admin access"
   },
   "accountStatus": {
     "pending": {

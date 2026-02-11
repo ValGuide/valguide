@@ -178,7 +178,8 @@
     "verificationSuccess": "Bestätigt! Weiterleitung…",
     "verificationError": "Ungültiger Code. Bitte versuchen Sie es erneut",
     "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "emailRequired": "E-Mail-Adresse ist erforderlich"
+    "emailRequired": "E-Mail-Adresse ist erforderlich",
+    "emailNotAllowed": "Diese E-Mail-Adresse ist nicht für den Admin-Zugang berechtigt"
   },
   "accountStatus": {
     "pending": {

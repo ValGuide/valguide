@@ -12,6 +12,8 @@ const log = createLogger('auth-provider')
 
 export type AuthMessage = { type: 'success' | 'error'; text: string }
 
+type SignInWithOtpFn = typeof signInWithOtpFn
+
 const Context = createContext<{
   loading: boolean
   message: AuthMessage | null
@@ -40,9 +42,11 @@ const Context = createContext<{
 
 const defaultNextPath = '/'
 
-type AuthProviderProps = PropsWithChildren
+type AuthProviderProps = PropsWithChildren<{
+  signInFn?: SignInWithOtpFn
+}>
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children, signInFn }: AuthProviderProps) => {
   const t = useTranslations('auth')
 
   const searchParams = useSearch({ strict: false }) as { next?: string; email?: string }
@@ -54,7 +58,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [otp, setOtp] = useState('')
 
-  const signInWithOtp = useServerFn(signInWithOtpFn)
+  const signInWithOtp = useServerFn(signInFn ?? signInWithOtpFn)
   const verifyOtp = useServerFn(verifyOtpFn)
 
   const handleEmailAuth = async (email: string) => {
