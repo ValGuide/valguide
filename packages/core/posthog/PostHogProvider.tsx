@@ -1,27 +1,21 @@
 import { ClientOnly, useLocation, useSearch } from '@tanstack/react-router'
-import { createLogger } from '@valguide/logger'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
 import type React from 'react'
 import { Suspense, useEffect } from 'react'
 import { clientEnv } from '../env/client'
 
-const log = createLogger('PostHog')
-
 const isPostHogEnabled = clientEnv.VITE_POSTHOG_ENABLED
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    if (!isPostHogEnabled) {
-      log.warn('PostHogProvider is disabled')
-    }
-  }, [])
-  return isPostHogEnabled ? (
+  return (
     <ClientOnly>
-      <Provider>{children}</Provider>
+      {isPostHogEnabled ? (
+        <Provider>{children}</Provider>
+      ) : (
+        children
+      )}
     </ClientOnly>
-  ) : (
-    children
   )
 }
 
