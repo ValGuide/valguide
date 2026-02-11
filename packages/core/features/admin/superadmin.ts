@@ -1,10 +1,7 @@
-import { serverEnv } from '../../env/server'
-
-function getAllowedEmails(): string[] {
-  return serverEnv.ADMIN_ALLOWED_EMAILS.split(',').map((e) => e.trim().toLowerCase())
-}
+import { serverEnv } from '@valguide/core/env/server'
 
 export function isSuperadmin(email: string | undefined): boolean {
   if (!email) return false
-  return getAllowedEmails().includes(email.toLowerCase())
+  const superadminEmails = serverEnv.ADMIN_ALLOWED_EMAILS.split(',').map((e) => e.trim().toLowerCase())
+  return superadminEmails.includes(email.toLowerCase())
 }
