@@ -28,7 +28,12 @@ export const adminSignInWithOtpFn = createServerFn({ method: 'POST' })
     if (!email) {
       return {
         data: { user: null, session: null },
-        error: { message: 'Email is required', status: 400 },
+        error: {
+          code: 'EMAIL_REQUIRED',
+          status: 400,
+          name: 'EmailRequiredError',
+          message: 'Email is required',
+        } as const,
       }
     }
 
@@ -37,7 +42,12 @@ export const adminSignInWithOtpFn = createServerFn({ method: 'POST' })
     } catch {
       return {
         data: { user: null, session: null },
-        error: { message: 'Email not authorized for admin access', status: 403 },
+        error: {
+          code: 'ADMIN_ACCESS_DENIED',
+          status: 403,
+          name: 'AdminAccessDeniedError',
+          message: 'Email not authorized for admin access',
+        } as const,
       }
     }
 

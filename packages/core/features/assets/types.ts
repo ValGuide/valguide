@@ -19,7 +19,7 @@ export interface Asset {
   height: number | null
   duration: number | null
   organizationId: string
-  uploadedBy: string
+  uploadedBy: string | null
   createdAt: Date
   updatedAt: Date
 }

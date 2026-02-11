@@ -297,6 +297,16 @@
         "allStopTitles": "All stops have titles"
       },
       "backToTour": "Tour",
+      "hideChanges": "Hide changes",
+      "showChanges": "Show changes",
+      "pendingChanges": "{count, plural, one {1 pending change} other {# pending changes}}",
+      "draft": "Draft",
+      "published": "Published",
+      "publishedAt": "Published on {date}",
+      "visitorsSeePreviousVersion": "Visitors see the previous version",
+      "publish": "Publish",
+      "publishChanges": "Publish Changes",
+      "discard": "Discard",
       "slug": {
         "title": "URL Slug",
         "description": "{baseUrl}/{slug}",

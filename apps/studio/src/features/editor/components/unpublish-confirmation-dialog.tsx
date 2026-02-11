@@ -16,6 +16,7 @@ interface UnpublishConfirmationDialogProps {
   isUnpublishing?: boolean
   onConfirm: () => void
   languageName: string
+  contentType?: 'tour' | 'stop'
 }
 
 export function UnpublishConfirmationDialog({

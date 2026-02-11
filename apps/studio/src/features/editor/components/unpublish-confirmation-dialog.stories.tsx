@@ -11,6 +11,7 @@ const meta = {
   args: {
     open: true,
     onOpenChange: fn(),
+    languageName: 'English',
     contentType: 'tour',
     onConfirm: fn(),
   },

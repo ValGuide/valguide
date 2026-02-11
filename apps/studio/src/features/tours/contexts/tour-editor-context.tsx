@@ -232,7 +232,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     if (!nanoId) return
 
     try {
-      const result = await publishTourFn({ data: { nanoId, locale: activeLocale } })
+      await publishTourFn({ data: { nanoId, locale: activeLocale } })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId] })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'assets'] })

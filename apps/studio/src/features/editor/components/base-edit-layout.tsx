@@ -266,6 +266,7 @@ export function BaseEditLayout({
         open={unpublishDialogOpen}
         onOpenChange={setUnpublishDialogOpen}
         contentType={contentType}
+        languageName={getLocaleDisplayName(activeLocale)}
         onConfirm={onUnpublish}
       />
 

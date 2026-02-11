@@ -25,5 +25,19 @@ export const newSignupMessage = ({ email }: Props): SlackMessage => ({
     {
       type: 'divider',
     },
+    {
+      type: 'actions',
+      elements: [
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: 'Review in Admin',
+          },
+          url: 'https://admin.valguide.com/users',
+          action_id: 'view_signup_admin',
+        },
+      ],
+    },
   ],
 })

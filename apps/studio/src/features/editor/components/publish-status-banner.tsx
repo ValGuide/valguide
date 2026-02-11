@@ -22,8 +22,7 @@ export function PublishStatusBanner({
   onPublish,
   onDiscard,
 }: PublishStatusBannerProps) {
-  const t = useTranslations('tours.editor.banner')
-
+  const t = useTranslations('tours.editor')
   const formattedDate = publishedAt ? publishedAt.toLocaleDateString() : null
 
   return (
