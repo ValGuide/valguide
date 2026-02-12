@@ -189,16 +189,6 @@
       "autoCheckNote": "Questa pagina controllescha automaticamain.",
       "contactCta": "Scriva a nus",
       "signOut": "Sortir"
-    },
-    "blocked": {
-      "title": "Vain a t'installar",
-      "description": "Nus controllin las datas da tia instituziun per installar tiu conti. Uschia pudain nus dar ad igl las resursas giustas.",
-      "statusLabel": "Tiu status",
-      "statusValue": "Vegn installar",
-      "expectation": "Frequentamain nus isprovan tut entaifer 1 di da lavur.",
-      "contactCta": "Scriva a nus",
-      "checkStatus": "Controllar il status",
-      "signOut": "Sortir"
     }
   },
   "login": {
@@ -856,12 +846,13 @@
       "title": "Questa invitaziun è scrudada",
       "description": "Quest link n'è betg pli activ. El pudess esser scrudà u revocà.",
       "action": "Dumonda tes admin dal team da trametter ina nova invitaziun — quai va svelt.",
-      "homeButton": "Ir a la pagina principala"
+      "homeButton": "S'annunziar"
     },
     "accepted": {
       "title": "Ti es gia unì",
       "description": "Questa invitaziun per <strong>{teamName}</strong> è gia vegnida acceptada. Tut è pront.",
-      "dashboardButton": "Ir al dashboard"
+      "dashboardButton": "Ir al dashboard",
+      "signOutFooter": "S'annunziar ora"
     },
     "public": {
       "title": "Unir a {teamName}",
@@ -881,13 +872,15 @@
       "intendedFor": "Questa invitaziun è per <strong>{email}</strong>.",
       "instruction": "S'annunzia ora sutvart e s'annunzia puspè cun l'adressa d'e-mail envidada.",
       "signOutButton": "S'annunziar ora & midar conto",
-      "cancelButton": "Interrumper"
+      "cancelButton": "Restar s'annunzià",
+      "signOutFooter": "S'annunziar ora"
     },
     "joining": {
       "title": "Unir a {teamName}…",
       "description": "Tes access vegn installà ussa",
       "error": "Insatge è ì mal cun unir. Ti pos empruvar anc ina giada u ir a tes dashboard.",
-      "dashboardButton": "Ir al dashboard"
+      "dashboardButton": "Ir al dashboard",
+      "signOutFooter": "S'annunziar ora"
     }
   },
   "theme": {

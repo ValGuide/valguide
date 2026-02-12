@@ -189,16 +189,6 @@
       "autoCheckNote": "This page checks automatically.",
       "contactCta": "Email us",
       "signOut": "Sign out"
-    },
-    "blocked": {
-      "title": "Let's get you set up",
-      "description": "We're reviewing your institution details to set up your account. This helps us connect you with the right resources.",
-      "statusLabel": "Your status",
-      "statusValue": "In setup",
-      "expectation": "We usually complete this within 1 business day.",
-      "contactCta": "Talk to us",
-      "checkStatus": "Check status",
-      "signOut": "Sign out"
     }
   },
   "login": {
@@ -866,12 +856,13 @@
       "title": "This Invitation Has Expired",
       "description": "This link is no longer active. It may have expired or been revoked.",
       "action": "Ask your team admin to send a new invitation — it only takes a moment.",
-      "homeButton": "Go to Home"
+      "homeButton": "Sign in"
     },
     "accepted": {
       "title": "You've Already Joined",
       "description": "This invitation to <strong>{teamName}</strong> has already been accepted. You're all set.",
-      "dashboardButton": "Go to Dashboard"
+      "dashboardButton": "Go to Dashboard",
+      "signOutFooter": "Sign out"
     },
     "public": {
       "title": "Join {teamName}",
@@ -891,13 +882,15 @@
       "intendedFor": "This invitation is for <strong>{email}</strong>.",
       "instruction": "Sign out below and sign back in with the invited email address.",
       "signOutButton": "Sign Out & Switch Account",
-      "cancelButton": "Cancel"
+      "cancelButton": "Stay signed in",
+      "signOutFooter": "Sign out"
     },
     "joining": {
       "title": "Joining {teamName}…",
       "description": "Setting up your access now",
       "error": "Something went wrong while joining. You can try again or head to your dashboard.",
-      "dashboardButton": "Go to Dashboard"
+      "dashboardButton": "Go to Dashboard",
+      "signOutFooter": "Sign out"
     }
   },
   "theme": {

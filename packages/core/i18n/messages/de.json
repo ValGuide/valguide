@@ -189,16 +189,6 @@
       "autoCheckNote": "Diese Seite prüft automatisch.",
       "contactCta": "Schreib uns",
       "signOut": "Abmelden"
-    },
-    "blocked": {
-      "title": "Lass dich einrichten",
-      "description": "Wir überprüfen deine Institutionsdaten, um dein Konto einzurichten. So können wir dich mit den richtigen Ressourcen verbinden.",
-      "statusLabel": "Dein Status",
-      "statusValue": "Wird eingerichtet",
-      "expectation": "Das dauert normalerweise weniger als 1 Werktag.",
-      "contactCta": "Schreib uns",
-      "checkStatus": "Status überprüfen",
-      "signOut": "Abmelden"
     }
   },
   "login": {
@@ -856,12 +846,13 @@
       "title": "Diese Einladung ist abgelaufen",
       "description": "Dieser Link ist nicht mehr aktiv. Er könnte abgelaufen oder widerrufen worden sein.",
       "action": "Bitte deinen Teamadmin, dir eine neue Einladung zu senden — das geht schnell.",
-      "homeButton": "Zur Startseite"
+      "homeButton": "Anmelden"
     },
     "accepted": {
       "title": "Du bist bereits beigetreten",
       "description": "Diese Einladung zu <strong>{teamName}</strong> wurde bereits angenommen. Alles bereit.",
-      "dashboardButton": "Zum Dashboard"
+      "dashboardButton": "Zum Dashboard",
+      "signOutFooter": "Abmelden"
     },
     "public": {
       "title": "Tritt {teamName} bei",
@@ -881,13 +872,15 @@
       "intendedFor": "Diese Einladung ist für <strong>{email}</strong>.",
       "instruction": "Melde dich unten ab und melde dich mit der eingeladenen E-Mail-Adresse wieder an.",
       "signOutButton": "Abmelden & Konto wechseln",
-      "cancelButton": "Abbrechen"
+      "cancelButton": "Angemeldet bleiben",
+      "signOutFooter": "Abmelden"
     },
     "joining": {
       "title": "Tritt {teamName} bei…",
       "description": "Dein Zugang wird jetzt eingerichtet",
       "error": "Beim Beitritt ist etwas schiefgelaufen. Du kannst es erneut versuchen oder zu deinem Dashboard gehen.",
-      "dashboardButton": "Zum Dashboard"
+      "dashboardButton": "Zum Dashboard",
+      "signOutFooter": "Abmelden"
     }
   },
   "theme": {

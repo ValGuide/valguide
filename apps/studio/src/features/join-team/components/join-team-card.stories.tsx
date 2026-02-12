@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from 'storybook/test'
 import { JoinTeamCard } from './join-team-card'
 
 const meta = {
@@ -7,10 +8,14 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    nextjs: {
-      appDirectory: true,
-    },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[28rem]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof JoinTeamCard>
 
 export default meta
@@ -21,13 +26,16 @@ const mockInvite = {
   email: 'jane@example.com',
 }
 
-const mockSignOut = async () => {
-  console.log('Sign out clicked')
-}
-
 export const Invalid: Story = {
   args: {
     variant: 'invalid',
+  },
+}
+
+export const Accepted: Story = {
+  args: {
+    variant: 'accepted',
+    invite: mockInvite,
   },
 }
 
@@ -35,7 +43,8 @@ export const Public: Story = {
   args: {
     variant: 'public',
     invite: mockInvite,
-    nextUrl: '/join-team.fn',
+    onSendOtp: fn(),
+    onVerifyOtp: fn(),
   },
 }
 
@@ -44,7 +53,7 @@ export const WrongAccount: Story = {
     variant: 'wrong-account',
     invite: mockInvite,
     userEmail: 'wrong@example.com',
-    onSignOut: mockSignOut,
+    onSignOut: fn(),
   },
 }
 

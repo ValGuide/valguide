@@ -1,8 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { AlertCircle, CheckCircle2, Mail, UserPlus, Users } from 'lucide-react'
+import { Card, CardContent } from '@valguide/ui/components/card'
+import { cn } from '@valguide/ui/lib/utils'
+import { AlertCircle, CheckCircle2, Mail, Users } from 'lucide-react'
 import { JoinTeamOtpForm } from './join-team-otp-form'
 import { SignOutButton } from './sign-out-button'
 
@@ -14,6 +15,7 @@ type JoinTeamCardProps = {
   }
   userEmail?: string
   error?: string | null
+  className?: string
   onSendOtp?: () => Promise<void>
   onVerifyOtp?: (otp: string) => Promise<void>
   onSignOut?: () => Promise<void>
@@ -24,6 +26,7 @@ export function JoinTeamCard({
   invite,
   userEmail,
   error,
+  className,
   onSendOtp,
   onVerifyOtp,
   onSignOut,
@@ -32,82 +35,85 @@ export function JoinTeamCard({
 
   if (variant === 'invalid') {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
-            <AlertCircle className="h-5 w-5 text-destructive" />
+      <Card className={cn(className)}>
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
+              <AlertCircle className="size-6 text-destructive" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="font-serif text-2xl tracking-tight">{t('invalid.title')}</h2>
+              <p className="text-sm text-muted-foreground">{t('invalid.description')}</p>
+            </div>
+            <p className="text-sm text-muted-foreground">{t('invalid.action')}</p>
+            <Button asChild className="w-full">
+              <Link to="/" preload="intent">
+                {t('invalid.homeButton')}
+              </Link>
+            </Button>
           </div>
-          <CardTitle>{t('invalid.title')}</CardTitle>
-          <CardDescription>{t('invalid.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">{t('invalid.action')}</p>
         </CardContent>
-        <CardFooter>
-          <Button asChild className="w-full">
-            <Link to="/" preload="intent">
-              {t('invalid.homeButton')}
-            </Link>
-          </Button>
-        </CardFooter>
       </Card>
     )
   }
 
   if (variant === 'accepted' && invite) {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-success/10">
-            <CheckCircle2 className="h-5 w-5 text-success" />
+      <Card className={cn(className)}>
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <div className="flex size-12 items-center justify-center rounded-full bg-success/10">
+              <CheckCircle2 className="size-6 text-success" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="font-serif text-2xl tracking-tight">{t('accepted.title')}</h2>
+              <p className="text-sm text-muted-foreground">
+                {t.rich('accepted.description', {
+                  teamName: invite.organization.name,
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
+              </p>
+            </div>
+            <Button asChild className="w-full">
+              <Link to="/" preload="intent">
+                {t('accepted.dashboardButton')}
+              </Link>
+            </Button>
           </div>
-          <CardTitle>{t('accepted.title')}</CardTitle>
-          <CardDescription>
-            {t.rich('accepted.description', {
-              teamName: invite.organization.name,
-              strong: (chunks) => <strong>{chunks}</strong>,
-            })}
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <Button asChild className="w-full">
-            <Link to="/" preload="intent">
-              {t('accepted.dashboardButton')}
-            </Link>
-          </Button>
-        </CardFooter>
+        </CardContent>
       </Card>
     )
   }
 
   if (variant === 'public' && invite && onSendOtp && onVerifyOtp) {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-            <UserPlus className="h-5 w-5 text-primary" />
-          </div>
-          <CardTitle>
-            {t('public.title', {
-              teamName: invite.organization.name,
-            })}
-          </CardTitle>
-          <CardDescription>
-            {t.rich('public.description', {
-              teamName: invite.organization.name,
-              strong1: (chunks) => <strong>{chunks}</strong>,
-            })}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="rounded-md bg-muted p-4">
-            <p className="mb-1 text-xs text-muted-foreground">{t('public.sentTo')}</p>
-            <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">{invite.email}</p>
+      <Card className={cn(className)}>
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <div className="space-y-2">
+              <h2 className="font-serif text-2xl tracking-tight">
+                {t('public.title', {
+                  teamName: invite.organization.name,
+                })}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {t.rich('public.description', {
+                  teamName: invite.organization.name,
+                  strong1: (chunks) => <strong>{chunks}</strong>,
+                })}
+              </p>
+            </div>
+            <div className="w-full rounded-md bg-muted p-4 text-center">
+              <p className="mb-1 text-xs text-muted-foreground">{t('public.sentTo')}</p>
+              <div className="flex items-center justify-center gap-2">
+                <Mail className="size-4 text-muted-foreground" />
+                <p className="text-sm font-medium">{invite.email}</p>
+              </div>
+            </div>
+            <div className="w-full">
+              <JoinTeamOtpForm email={invite.email} onSendOtp={onSendOtp} onVerifyOtp={onVerifyOtp} />
             </div>
           </div>
-          <JoinTeamOtpForm email={invite.email} onSendOtp={onSendOtp} onVerifyOtp={onVerifyOtp} />
         </CardContent>
       </Card>
     )
@@ -115,81 +121,86 @@ export function JoinTeamCard({
 
   if (variant === 'wrong-account' && invite && userEmail) {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-warning/10">
-            <AlertCircle className="h-5 w-5 text-warning" />
+      <Card className={cn(className)}>
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <div className="space-y-2">
+              <h2 className="font-serif text-2xl tracking-tight">{t('wrongAccount.title')}</h2>
+              <p className="text-sm text-muted-foreground">
+                {t.rich('wrongAccount.description', {
+                  email: userEmail,
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
+              </p>
+            </div>
+            <div className="w-full rounded-md bg-muted p-4 text-center">
+              <p className="text-sm">
+                {t.rich('wrongAccount.intendedFor', {
+                  email: invite.email,
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
+              </p>
+            </div>
+            <p className="text-sm text-muted-foreground">{t('wrongAccount.instruction')}</p>
+            <div className="flex w-full flex-col gap-3">
+              {onSignOut && <SignOutButton onSignOut={onSignOut}>{t('wrongAccount.signOutButton')}</SignOutButton>}
+              <Button asChild variant="ghost" className="w-full">
+                <Link to="/" preload="intent">
+                  {t('wrongAccount.cancelButton')}
+                </Link>
+              </Button>
+            </div>
           </div>
-          <CardTitle>{t('wrongAccount.title')}</CardTitle>
-          <CardDescription>
-            {t.rich('wrongAccount.description', {
-              email: userEmail,
-              strong: (chunks) => <strong>{chunks}</strong>,
-            })}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="rounded-md bg-muted p-4">
-            <p className="text-sm">
-              {t.rich('wrongAccount.intendedFor', {
-                email: invite.email,
-                strong: (chunks) => <strong>{chunks}</strong>,
-              })}
-            </p>
-          </div>
-          <p className="text-sm text-muted-foreground">{t('wrongAccount.instruction')}</p>
         </CardContent>
-        <CardFooter className="flex flex-col gap-3">
-          {onSignOut && <SignOutButton onSignOut={onSignOut}>{t('wrongAccount.signOutButton')}</SignOutButton>}
-          <Button asChild variant="ghost" className="w-full">
-            <Link to="/" preload="intent">
-              {t('wrongAccount.cancelButton')}
-            </Link>
-          </Button>
-        </CardFooter>
       </Card>
     )
   }
 
   if (variant === 'joining' && invite) {
-    return (
-      <Card className="w-full max-w-md">
-        {error ? (
-          <>
-            <CardHeader>
-              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
-                <AlertCircle className="h-5 w-5 text-destructive" />
+    if (error) {
+      return (
+        <Card className={cn(className)}>
+          <CardContent className="p-8">
+            <div className="flex flex-col items-center gap-6 text-center">
+              <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
+                <AlertCircle className="size-6 text-destructive" />
               </div>
-              <CardTitle>
+              <h2 className="font-serif text-2xl tracking-tight">
                 {t('joining.title', {
                   teamName: invite.organization.name,
                 })}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{t('joining.error')}</div>
-            </CardContent>
-            <CardFooter>
+              </h2>
+              <div className="w-full rounded-md bg-destructive/5 p-3 text-center text-sm text-destructive">
+                {t('joining.error')}
+              </div>
               <Button asChild className="w-full">
                 <Link to="/" preload="intent">
                   {t('joining.dashboardButton')}
                 </Link>
               </Button>
-            </CardFooter>
-          </>
-        ) : (
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <Users className="h-6 w-6 animate-pulse text-primary" />
             </div>
-            <p className="text-lg font-medium">
-              {t('joining.title', {
-                teamName: invite.organization.name,
-              })}
-            </p>
-            <p className="mt-1 text-center text-sm text-muted-foreground">{t('joining.description')}</p>
           </CardContent>
-        )}
+        </Card>
+      )
+    }
+
+    return (
+      <Card className={cn(className)}>
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+              <Users className="size-6 animate-pulse text-primary" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="font-serif text-2xl tracking-tight">
+                {t('joining.title', {
+                  teamName: invite.organization.name,
+                })}
+              </h2>
+              <p className="text-sm text-muted-foreground">{t('joining.description')}</p>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     )
   }

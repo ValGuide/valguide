@@ -1,11 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
-import { BlockedPage } from '@valguide/core/features/auth/common/blocked-page'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { notifyStudioBlockedAccessFn } from '@valguide/core/features/auth/notify-studio-blocked-access.fn'
-import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import { isAuthenticatedQueryOptions, userStatusQueryOptions } from '@valguide/features/auth/query-options'
-import { useEffect, useState } from 'react'
+import { PendingApprovalContainer } from '@/features/auth/pending-approval-container'
 
 export const Route = createFileRoute('/blocked')({
   beforeLoad: async ({ context }) => {
@@ -30,49 +26,13 @@ export const Route = createFileRoute('/blocked')({
 })
 
 function BlockedPageRoute() {
-  const router = useRouter()
-  const queryClient = useQueryClient()
-
-  // Notify team once per session only
-  useEffect(() => {
+  const notifyTeam = () => {
     const sessionKey = 'vg_blocked_notified_session'
     if (!sessionStorage.getItem(sessionKey)) {
       sessionStorage.setItem(sessionKey, '1')
       notifyStudioBlockedAccessFn({ data: {} })
     }
-  }, [])
-
-  // Check status and redirect if changed
-  const handleCheckStatus = async () => {
-    try {
-      // Invalidate cache to fetch fresh status
-      await queryClient.invalidateQueries({ queryKey: ['user-status'] })
-      const statusResult = await queryClient.ensureQueryData(userStatusQueryOptions())
-      const status = statusResult?.status ?? 'blocked'
-
-      if (status === 'approved') {
-        toast.success('Access approved! Redirecting...')
-        await router.invalidate()
-        router.navigate({ to: '/tours' })
-      } else if (status === 'pending') {
-        toast.info('Status updated to pending review.')
-        await router.invalidate()
-        router.navigate({ to: '/pending' })
-      } else {
-        toast.info('Still under review. Our team is working on it.')
-      }
-    } catch (error) {
-      console.error('Failed to check status:', error)
-      toast.error('Could not refresh status. Please try again.')
-    }
   }
 
-  const handleSignOut = async () => {
-    await signOutFn({ data: {} })
-    queryClient.clear()
-    await router.invalidate()
-    router.navigate({ to: '/login' })
-  }
-
-  return <BlockedPage onSignOut={handleSignOut} onCheckStatus={handleCheckStatus} isCheckingStatus={false} />
+  return <PendingApprovalContainer onMount={notifyTeam} />
 }
