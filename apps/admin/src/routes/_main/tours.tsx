@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import type { PaginationState, SortingState } from '@tanstack/react-table'
+import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
 import type { ListToursInput } from '@valguide/core/features/admin/tours/list-tours.fn'
 import { BookOpen } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
@@ -47,26 +47,66 @@ function ToursPage() {
   const tours = data?.tours ?? []
   const totalCount = data?.totalCount ?? 0
 
-  // Debounced search
-  const [searchValue, setSearchValue] = useState(searchParams.search ?? '')
+  // Derive column filters from URL search params
+  const columnFiltersFromUrl: ColumnFiltersState = [
+    ...(searchParams.search ? [{ id: 'title', value: searchParams.search }] : []),
+    ...(searchParams.status ? [{ id: 'status', value: searchParams.status }] : []),
+  ]
 
-  // Sync search input when URL changes externally (e.g., browser back)
-  useEffect(() => {
-    setSearchValue(searchParams.search ?? '')
-  }, [searchParams.search])
+  const [debouncedFilters, setDebouncedFilters] = useState<ColumnFiltersState>(columnFiltersFromUrl)
 
+  // Sync when URL changes externally (e.g., browser back)
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const current = searchParams.search ?? ''
-      if (searchValue !== current) {
+    setDebouncedFilters(columnFiltersFromUrl)
+    // Only re-sync when the actual URL values change
+    // biome-ignore lint/correctness/useExhaustiveDependencies: derived from searchParams
+  }, [searchParams.search, searchParams.status])
+
+  const onColumnFiltersChange = useCallback(
+    (updater: ColumnFiltersState | ((old: ColumnFiltersState) => ColumnFiltersState)) => {
+      const next = typeof updater === 'function' ? updater(debouncedFilters) : updater
+      setDebouncedFilters(next)
+
+      // Apply select filters (status) immediately — only debounce text filters
+      const statusFilter = next.find((f) => f.id === 'status')?.value as string | undefined
+      const currentStatus = searchParams.status ?? undefined
+      if (statusFilter !== currentStatus) {
+        const titleFilter = next.find((f) => f.id === 'title')?.value as string | undefined
         navigate({
           to: '/tours',
-          search: (prev) => ({ ...prev, search: searchValue || undefined, page: 0 }),
+          search: (prev) => ({
+            ...prev,
+            search: titleFilter || undefined,
+            status: statusFilter as 'draft' | 'published' | 'archived' | undefined,
+            page: 0,
+          }),
         })
       }
+    },
+    [debouncedFilters, searchParams.status, navigate],
+  )
+
+  // Debounce text filter (title/search) to URL
+  useEffect(() => {
+    const titleFilter = debouncedFilters.find((f) => f.id === 'title')?.value as string | undefined
+    const currentSearch = searchParams.search ?? undefined
+
+    if (titleFilter === currentSearch) return
+
+    const timeout = setTimeout(() => {
+      const statusFilter = debouncedFilters.find((f) => f.id === 'status')?.value as string | undefined
+      navigate({
+        to: '/tours',
+        search: (prev) => ({
+          ...prev,
+          search: titleFilter || undefined,
+          status: statusFilter as 'draft' | 'published' | 'archived' | undefined,
+          page: 0,
+        }),
+      })
     }, 300)
     return () => clearTimeout(timeout)
-  }, [searchValue, searchParams.search, navigate])
+  }, [debouncedFilters, searchParams.search, navigate])
 
   // Pagination state
   const pagination: PaginationState = {
@@ -79,7 +119,11 @@ function ToursPage() {
       const next = typeof updater === 'function' ? updater(pagination) : updater
       navigate({
         to: '/tours',
-        search: (prev) => ({ ...prev, page: next.pageIndex, pageSize: next.pageSize }),
+        search: (prev) => ({
+          ...prev,
+          page: next.pageIndex,
+          pageSize: next.pageSize,
+        }),
       })
     },
     [navigate, pagination],
@@ -107,17 +151,6 @@ function ToursPage() {
     [navigate, sorting],
   )
 
-  // Status filter
-  const onStatusFilterChange = useCallback(
-    (value: 'draft' | 'published' | 'archived' | undefined) => {
-      navigate({
-        to: '/tours',
-        search: (prev) => ({ ...prev, status: value, page: 0 }),
-      })
-    },
-    [navigate],
-  )
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -130,12 +163,10 @@ function ToursPage() {
         totalCount={totalCount}
         pagination={pagination}
         sorting={sorting}
+        columnFilters={debouncedFilters}
         onPaginationChange={onPaginationChange}
         onSortingChange={onSortingChange}
-        search={searchValue}
-        onSearchChange={setSearchValue}
-        statusFilter={searchParams.status}
-        onStatusFilterChange={onStatusFilterChange}
+        onColumnFiltersChange={onColumnFiltersChange}
         isLoading={isFetching}
       />
     </div>

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import type { PaginationState, SortingState } from '@tanstack/react-table'
+import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
 import type { ListUsersInput } from '@valguide/core/features/admin/users/list-users.fn'
 import { adminUpdateUserStatusFn } from '@valguide/core/features/admin/users/update-user-status.fn'
 import { toast } from '@valguide/ui/components/sonner/state'
@@ -31,6 +31,13 @@ function buildInput(search: z.infer<typeof usersSearchSchema>): ListUsersInput {
   }
 }
 
+function buildColumnFilters(searchParams: z.infer<typeof usersSearchSchema>): ColumnFiltersState {
+  return [
+    ...(searchParams.search ? [{ id: 'email', value: searchParams.search }] : []),
+    ...(searchParams.status ? [{ id: 'status', value: searchParams.status }] : []),
+  ]
+}
+
 export const Route = createFileRoute('/_main/users')({
   validateSearch: usersSearchSchema,
   loaderDeps: ({ search }) => search,
@@ -51,26 +58,45 @@ function UsersPage() {
   const users = data?.users ?? []
   const totalCount = data?.totalCount ?? 0
 
-  // Debounced search
-  const [searchValue, setSearchValue] = useState(searchParams.search ?? '')
+  // Column filters state (local for instant input, debounced to URL)
+  const [debouncedFilters, setDebouncedFilters] = useState<ColumnFiltersState>(buildColumnFilters(searchParams))
 
-  // Sync search input when URL changes externally (e.g., browser back)
+  // Sync when URL changes externally (e.g., browser back, pending banner click)
   useEffect(() => {
-    setSearchValue(searchParams.search ?? '')
-  }, [searchParams.search])
+    setDebouncedFilters(buildColumnFilters(searchParams))
+  }, [searchParams.search, searchParams.status])
 
+  const onColumnFiltersChange = useCallback(
+    (updater: ColumnFiltersState | ((old: ColumnFiltersState) => ColumnFiltersState)) => {
+      const next = typeof updater === 'function' ? updater(debouncedFilters) : updater
+      setDebouncedFilters(next)
+    },
+    [debouncedFilters],
+  )
+
+  // Debounce column filters to URL
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const current = searchParams.search ?? ''
-      if (searchValue !== current) {
+      const emailFilter = debouncedFilters.find((f) => f.id === 'email')?.value as string | undefined
+      const statusFilter = debouncedFilters.find((f) => f.id === 'status')?.value as string | undefined
+
+      const currentSearch = searchParams.search ?? undefined
+      const currentStatus = searchParams.status ?? undefined
+
+      if (emailFilter !== currentSearch || statusFilter !== currentStatus) {
         navigate({
           to: '/users',
-          search: (prev) => ({ ...prev, search: searchValue || undefined, page: 0 }),
+          search: (prev) => ({
+            ...prev,
+            search: emailFilter || undefined,
+            status: statusFilter as 'pending' | 'approved' | 'blocked' | undefined,
+            page: 0,
+          }),
         })
       }
     }, 300)
     return () => clearTimeout(timeout)
-  }, [searchValue, searchParams.search, navigate])
+  }, [debouncedFilters, searchParams.search, searchParams.status, navigate])
 
   // Pagination state
   const pagination: PaginationState = {
@@ -83,7 +109,11 @@ function UsersPage() {
       const next = typeof updater === 'function' ? updater(pagination) : updater
       navigate({
         to: '/users',
-        search: (prev) => ({ ...prev, page: next.pageIndex, pageSize: next.pageSize }),
+        search: (prev) => ({
+          ...prev,
+          page: next.pageIndex,
+          pageSize: next.pageSize,
+        }),
       })
     },
     [navigate, pagination],
@@ -109,17 +139,6 @@ function UsersPage() {
       })
     },
     [navigate, sorting],
-  )
-
-  // Status filter
-  const onStatusFilterChange = useCallback(
-    (value: 'pending' | 'approved' | 'blocked' | undefined) => {
-      navigate({
-        to: '/users',
-        search: (prev) => ({ ...prev, status: value, page: 0 }),
-      })
-    },
-    [navigate],
   )
 
   // Mutations
@@ -155,7 +174,16 @@ function UsersPage() {
         <button
           type="button"
           className="w-full rounded-lg border border-warning/20 bg-warning/5 px-4 py-3 text-left text-sm font-medium text-warning"
-          onClick={() => navigate({ to: '/users', search: (prev) => ({ ...prev, status: 'pending', page: 0 }) })}
+          onClick={() =>
+            navigate({
+              to: '/users',
+              search: (prev) => ({
+                ...prev,
+                status: 'pending',
+                page: 0,
+              }),
+            })
+          }
         >
           {pendingCount} user{pendingCount !== 1 ? 's' : ''} pending approval
         </button>
@@ -166,12 +194,10 @@ function UsersPage() {
         totalCount={totalCount}
         pagination={pagination}
         sorting={sorting}
+        columnFilters={debouncedFilters}
         onPaginationChange={onPaginationChange}
         onSortingChange={onSortingChange}
-        search={searchValue}
-        onSearchChange={setSearchValue}
-        statusFilter={searchParams.status}
-        onStatusFilterChange={onStatusFilterChange}
+        onColumnFiltersChange={onColumnFiltersChange}
         meta={{
           onApprove: (userId) => mutation.mutate({ userId, status: 'approved' }),
           onBlock: (userId, email) => setBlockTarget({ userId, email }),
@@ -188,7 +214,11 @@ function UsersPage() {
         isBlocking={mutation.isPending}
         onConfirm={(reason) => {
           if (blockTarget) {
-            mutation.mutate({ userId: blockTarget.userId, status: 'blocked', blockedReason: reason || undefined })
+            mutation.mutate({
+              userId: blockTarget.userId,
+              status: 'blocked',
+              blockedReason: reason || undefined,
+            })
           }
         }}
       />

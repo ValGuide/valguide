@@ -1,4 +1,6 @@
 import {
+  type Column,
+  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   type OnChangeFn,
@@ -12,7 +14,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { cn } from '@valguide/ui/lib/utils'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import type { UsersTableMeta } from './users-columns'
 import { usersColumns } from './users-columns'
 
@@ -21,12 +23,10 @@ type UsersDataTableProps = {
   totalCount: number
   pagination: PaginationState
   sorting: SortingState
+  columnFilters: ColumnFiltersState
   onPaginationChange: OnChangeFn<PaginationState>
   onSortingChange: OnChangeFn<SortingState>
-  search: string
-  onSearchChange: (value: string) => void
-  statusFilter?: 'pending' | 'approved' | 'blocked'
-  onStatusFilterChange: (value: 'pending' | 'approved' | 'blocked' | undefined) => void
+  onColumnFiltersChange: OnChangeFn<ColumnFiltersState>
   meta: UsersTableMeta
   isLoading?: boolean
 }
@@ -36,12 +36,10 @@ export function UsersDataTable({
   totalCount,
   pagination,
   sorting,
+  columnFilters,
   onPaginationChange,
   onSortingChange,
-  search,
-  onSearchChange,
-  statusFilter,
-  onStatusFilterChange,
+  onColumnFiltersChange,
   meta,
   isLoading,
 }: UsersDataTableProps) {
@@ -51,10 +49,12 @@ export function UsersDataTable({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
+    manualFiltering: true,
     pageCount: Math.ceil(totalCount / pagination.pageSize),
-    state: { pagination, sorting },
+    state: { pagination, sorting, columnFilters },
     onPaginationChange,
     onSortingChange,
+    onColumnFiltersChange,
     meta,
   })
 
@@ -63,13 +63,6 @@ export function UsersDataTable({
 
   return (
     <div className="space-y-4">
-      <Toolbar
-        search={search}
-        onSearchChange={onSearchChange}
-        statusFilter={statusFilter}
-        onStatusFilterChange={onStatusFilterChange}
-      />
-
       <div className={cn('rounded-md border', isLoading && 'opacity-50 pointer-events-none transition-opacity')}>
         <Table>
           <TableHeader>
@@ -82,6 +75,13 @@ export function UsersDataTable({
                 ))}
               </TableRow>
             ))}
+            <TableRow>
+              {table.getHeaderGroups()[0]?.headers.map((header) => (
+                <TableHead key={`filter-${header.id}`} className="py-1">
+                  <ColumnFilter column={header.column} />
+                </TableHead>
+              ))}
+            </TableRow>
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
@@ -120,45 +120,43 @@ export function UsersDataTable({
   )
 }
 
-function Toolbar({
-  search,
-  onSearchChange,
-  statusFilter,
-  onStatusFilterChange,
-}: {
-  search: string
-  onSearchChange: (value: string) => void
-  statusFilter?: 'pending' | 'approved' | 'blocked'
-  onStatusFilterChange: (value: 'pending' | 'approved' | 'blocked' | undefined) => void
-}) {
-  return (
-    <div className="flex items-center gap-4">
-      <div className="relative max-w-sm flex-1">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search by email or name..."
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-9"
-        />
-      </div>
+function ColumnFilter<TData>({ column }: { column: Column<TData, unknown> }) {
+  if (!column.getCanFilter()) return null
+
+  const meta = column.columnDef.meta as
+    | {
+        filterType?: string
+        filterOptions?: { label: string; value: string }[]
+      }
+    | undefined
+
+  if (meta?.filterType === 'select' && meta.filterOptions) {
+    return (
       <Select
-        value={statusFilter ?? 'all'}
-        onValueChange={(value) =>
-          onStatusFilterChange(value === 'all' ? undefined : (value as 'pending' | 'approved' | 'blocked'))
-        }
+        value={(column.getFilterValue() as string) ?? ''}
+        onValueChange={(value) => column.setFilterValue(value === 'all' ? undefined : value)}
       >
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="All statuses" />
+        <SelectTrigger className="h-8 text-xs">
+          <SelectValue placeholder="All" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All</SelectItem>
-          <SelectItem value="pending">Pending</SelectItem>
-          <SelectItem value="approved">Approved</SelectItem>
-          <SelectItem value="blocked">Blocked</SelectItem>
+          {meta.filterOptions.map((option) => (
+            <SelectItem key={option.value || 'all'} value={option.value || 'all'}>
+              {option.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
-    </div>
+    )
+  }
+
+  return (
+    <Input
+      value={(column.getFilterValue() as string) ?? ''}
+      onChange={(e) => column.setFilterValue(e.target.value || undefined)}
+      placeholder="Filter..."
+      className="h-8 text-xs"
+    />
   )
 }
 

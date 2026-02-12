@@ -7,6 +7,8 @@ import { TourStatusBadge } from './tour-status-badge'
 export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   {
     accessorKey: 'title',
+    enableColumnFilter: true,
+    meta: { filterType: 'text' },
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Title
@@ -22,11 +24,13 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   },
   {
     accessorKey: 'nanoId',
+    enableColumnFilter: false,
     header: 'ID',
     cell: ({ row }) => <code className="text-xs text-muted-foreground">{row.original.nanoId}</code>,
   },
   {
     accessorKey: 'organizationName',
+    enableColumnFilter: false,
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Organization
@@ -37,11 +41,22 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   },
   {
     accessorKey: 'status',
+    enableColumnFilter: true,
+    meta: {
+      filterType: 'select',
+      filterOptions: [
+        { label: 'All', value: '' },
+        { label: 'Draft', value: 'draft' },
+        { label: 'Published', value: 'published' },
+        { label: 'Archived', value: 'archived' },
+      ],
+    },
     header: 'Status',
     cell: ({ row }) => <TourStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: 'availableLocales',
+    enableColumnFilter: false,
     header: 'Locales',
     cell: ({ row }) => (
       <span className="text-sm text-muted-foreground">{row.original.availableLocales.join(', ')}</span>
@@ -49,6 +64,7 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   },
   {
     accessorKey: 'stopCount',
+    enableColumnFilter: false,
     header: ({ column }) => (
       <div className="text-right">
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -61,6 +77,7 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   },
   {
     accessorKey: 'createdAt',
+    enableColumnFilter: false,
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Created
@@ -71,6 +88,7 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   },
   {
     accessorKey: 'publishedAt',
+    enableColumnFilter: false,
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Published

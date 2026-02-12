@@ -1,4 +1,6 @@
+import type { Column } from '@tanstack/react-table'
 import {
+  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   type OnChangeFn,
@@ -12,7 +14,7 @@ import { Input } from '@valguide/ui/components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { cn } from '@valguide/ui/lib/utils'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { toursColumns } from './tours-columns'
 
 type ToursDataTableProps = {
@@ -20,12 +22,10 @@ type ToursDataTableProps = {
   totalCount: number
   pagination: PaginationState
   sorting: SortingState
+  columnFilters: ColumnFiltersState
   onPaginationChange: OnChangeFn<PaginationState>
   onSortingChange: OnChangeFn<SortingState>
-  search: string
-  onSearchChange: (value: string) => void
-  statusFilter?: 'draft' | 'published' | 'archived'
-  onStatusFilterChange: (value: 'draft' | 'published' | 'archived' | undefined) => void
+  onColumnFiltersChange: OnChangeFn<ColumnFiltersState>
   isLoading?: boolean
 }
 
@@ -34,12 +34,10 @@ export function ToursDataTable({
   totalCount,
   pagination,
   sorting,
+  columnFilters,
   onPaginationChange,
   onSortingChange,
-  search,
-  onSearchChange,
-  statusFilter,
-  onStatusFilterChange,
+  onColumnFiltersChange,
   isLoading,
 }: ToursDataTableProps) {
   const table = useReactTable({
@@ -48,10 +46,12 @@ export function ToursDataTable({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
+    manualFiltering: true,
     pageCount: Math.ceil(totalCount / pagination.pageSize),
-    state: { pagination, sorting },
+    state: { pagination, sorting, columnFilters },
     onPaginationChange,
     onSortingChange,
+    onColumnFiltersChange,
   })
 
   const from = totalCount === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1
@@ -59,13 +59,6 @@ export function ToursDataTable({
 
   return (
     <div className="space-y-4">
-      <Toolbar
-        search={search}
-        onSearchChange={onSearchChange}
-        statusFilter={statusFilter}
-        onStatusFilterChange={onStatusFilterChange}
-      />
-
       <div className={cn('rounded-md border', isLoading && 'opacity-50 pointer-events-none transition-opacity')}>
         <Table>
           <TableHeader>
@@ -78,6 +71,13 @@ export function ToursDataTable({
                 ))}
               </TableRow>
             ))}
+            <TableRow>
+              {table.getHeaderGroups()[0]?.headers.map((header) => (
+                <TableHead key={`filter-${header.id}`} className="py-1">
+                  <ColumnFilter column={header.column} />
+                </TableHead>
+              ))}
+            </TableRow>
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
@@ -116,45 +116,43 @@ export function ToursDataTable({
   )
 }
 
-function Toolbar({
-  search,
-  onSearchChange,
-  statusFilter,
-  onStatusFilterChange,
-}: {
-  search: string
-  onSearchChange: (value: string) => void
-  statusFilter?: 'draft' | 'published' | 'archived'
-  onStatusFilterChange: (value: 'draft' | 'published' | 'archived' | undefined) => void
-}) {
-  return (
-    <div className="flex items-center gap-4">
-      <div className="relative max-w-sm flex-1">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search by title or organization..."
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-9"
-        />
-      </div>
+function ColumnFilter<TData>({ column }: { column: Column<TData, unknown> }) {
+  if (!column.getCanFilter()) return null
+
+  const meta = column.columnDef.meta as
+    | {
+        filterType?: string
+        filterOptions?: { label: string; value: string }[]
+      }
+    | undefined
+
+  if (meta?.filterType === 'select' && meta.filterOptions) {
+    return (
       <Select
-        value={statusFilter ?? 'all'}
-        onValueChange={(value) =>
-          onStatusFilterChange(value === 'all' ? undefined : (value as 'draft' | 'published' | 'archived'))
-        }
+        value={(column.getFilterValue() as string) ?? ''}
+        onValueChange={(value) => column.setFilterValue(value === 'all' ? undefined : value)}
       >
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="All statuses" />
+        <SelectTrigger className="h-8 text-xs">
+          <SelectValue placeholder="All" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All</SelectItem>
-          <SelectItem value="draft">Draft</SelectItem>
-          <SelectItem value="published">Published</SelectItem>
-          <SelectItem value="archived">Archived</SelectItem>
+          {meta.filterOptions.map((option) => (
+            <SelectItem key={option.value || 'all'} value={option.value || 'all'}>
+              {option.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
-    </div>
+    )
+  }
+
+  return (
+    <Input
+      value={(column.getFilterValue() as string) ?? ''}
+      onChange={(e) => column.setFilterValue(e.target.value || undefined)}
+      placeholder="Filter..."
+      className="h-8 text-xs"
+    />
   )
 }
 

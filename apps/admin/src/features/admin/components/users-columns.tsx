@@ -20,6 +20,8 @@ export type UsersTableMeta = {
 export const usersColumns: ColumnDef<AdminUserListItem>[] = [
   {
     accessorKey: 'email',
+    enableColumnFilter: true,
+    meta: { filterType: 'text' },
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Email
@@ -30,6 +32,7 @@ export const usersColumns: ColumnDef<AdminUserListItem>[] = [
   },
   {
     id: 'name',
+    enableColumnFilter: false,
     accessorFn: (row) => {
       const name = [row.firstName, row.lastName].filter(Boolean).join(' ')
       return name || '—'
@@ -43,11 +46,22 @@ export const usersColumns: ColumnDef<AdminUserListItem>[] = [
   },
   {
     accessorKey: 'status',
+    enableColumnFilter: true,
+    meta: {
+      filterType: 'select',
+      filterOptions: [
+        { label: 'All', value: '' },
+        { label: 'Pending', value: 'pending' },
+        { label: 'Approved', value: 'approved' },
+        { label: 'Blocked', value: 'blocked' },
+      ],
+    },
     header: 'Status',
     cell: ({ row }) => <UserStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: 'orgCount',
+    enableColumnFilter: false,
     header: ({ column }) => (
       <div className="text-right">
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -60,6 +74,7 @@ export const usersColumns: ColumnDef<AdminUserListItem>[] = [
   },
   {
     accessorKey: 'createdAt',
+    enableColumnFilter: false,
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Created
@@ -70,6 +85,7 @@ export const usersColumns: ColumnDef<AdminUserListItem>[] = [
   },
   {
     id: 'actions',
+    enableColumnFilter: false,
     cell: ({ row, table }) => {
       const user = row.original
       const meta = table.options.meta as UsersTableMeta
