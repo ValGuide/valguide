@@ -8,7 +8,7 @@ export type { AdminOrgListItem, ListOrgsInput, ListOrgsResult } from './list-org
 
 const listOrgsSchema = z.object({
   page: z.number().int().min(0).default(0),
-  pageSize: z.number().int().min(1).max(100).default(20),
+  pageSize: z.number().int().min(1).max(200).default(20),
   search: z.string().optional(),
   sortBy: z.enum(['name', 'memberCount', 'tourCount', 'createdAt']).default('createdAt'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),

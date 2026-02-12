@@ -11,7 +11,7 @@ import { adminOrgsQueryOptions } from '@/features/admin/orgs-query-options'
 const orgsSearchSchema = z.object({
   search: z.string().optional(),
   page: z.number().int().min(0).optional(),
-  pageSize: z.number().int().min(1).max(100).optional(),
+  pageSize: z.number().int().min(1).max(200).optional(),
   sortBy: z.enum(['name', 'memberCount', 'tourCount', 'createdAt']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
 })

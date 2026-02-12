@@ -202,6 +202,7 @@ function PaginationControls({
             <SelectItem value="20">20</SelectItem>
             <SelectItem value="50">50</SelectItem>
             <SelectItem value="100">100</SelectItem>
+            <SelectItem value="200">200</SelectItem>
           </SelectContent>
         </Select>
         <Button variant="outline" size="icon" className="size-8" onClick={onFirst} disabled={!canPreviousPage}>

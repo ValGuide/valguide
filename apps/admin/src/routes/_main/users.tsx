@@ -15,7 +15,7 @@ const usersSearchSchema = z.object({
   status: z.enum(['pending', 'approved', 'blocked']).optional(),
   search: z.string().optional(),
   page: z.number().int().min(0).optional(),
-  pageSize: z.number().int().min(1).max(100).optional(),
+  pageSize: z.number().int().min(1).max(200).optional(),
   sortBy: z.enum(['email', 'name', 'status', 'createdAt', 'orgCount']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
 })

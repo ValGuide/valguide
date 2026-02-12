@@ -8,7 +8,7 @@ export type { AdminTourListItem, ListToursInput, ListToursResult } from './list-
 
 const listToursSchema = z.object({
   page: z.number().int().min(0).default(0),
-  pageSize: z.number().int().min(1).max(100).default(20),
+  pageSize: z.number().int().min(1).max(200).default(20),
   search: z.string().optional(),
   status: z.enum(['draft', 'published', 'archived']).optional(),
   sortBy: z.enum(['title', 'organizationName', 'stopCount', 'createdAt', 'publishedAt']).default('createdAt'),
