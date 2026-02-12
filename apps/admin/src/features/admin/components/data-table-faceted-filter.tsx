@@ -1,7 +1,15 @@
 import type { Column } from '@tanstack/react-table'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
-import { Command, CommandGroup, CommandItem, CommandList, CommandSeparator } from '@valguide/ui/components/command'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@valguide/ui/components/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { Separator } from '@valguide/ui/components/separator'
 import { cn } from '@valguide/ui/lib/utils'
@@ -16,12 +24,14 @@ type DataTableFacetedFilterProps<TData, TValue> = {
   column?: Column<TData, TValue>
   title: string
   options: FilterOption[]
+  searchable?: boolean
 }
 
 export function DataTableFacetedFilter<TData, TValue>({
   column,
   title,
   options,
+  searchable,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[] | undefined)
 
@@ -41,9 +51,11 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className={cn('p-0', searchable ? 'w-[250px]' : 'w-[200px]')} align="start">
         <Command>
+          {searchable && <CommandInput placeholder={`Search ${title.toLowerCase()}...`} />}
           <CommandList>
+            {searchable && <CommandEmpty>No results found.</CommandEmpty>}
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value)

@@ -3,13 +3,15 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
 import type { ListToursInput } from '@valguide/core/features/admin/tours/list-tours.fn'
 import { BookOpen } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 import { ToursDataTable } from '@/features/admin/components/tours-data-table'
+import { adminOrgsQueryOptions } from '@/features/admin/orgs-query-options'
 import { adminToursQueryOptions } from '@/features/admin/tours-query-options'
 
 const toursSearchSchema = z.object({
   status: z.string().optional(),
+  org: z.string().optional(),
   search: z.string().optional(),
   page: z.number().int().min(0).optional(),
   pageSize: z.number().int().min(1).max(200).optional(),
@@ -20,11 +22,13 @@ const toursSearchSchema = z.object({
 function buildInput(search: z.infer<typeof toursSearchSchema>): ListToursInput {
   const statusValues = search.status?.split(',').filter(Boolean)
   const singleStatus = statusValues?.length === 1 ? statusValues[0] : undefined
+  const orgValues = search.org?.split(',').filter(Boolean)
   return {
     page: search.page ?? 0,
     pageSize: search.pageSize ?? 20,
     search: search.search,
     status: singleStatus as ListToursInput['status'],
+    organizationNames: orgValues?.length ? orgValues : undefined,
     sortBy: search.sortBy ?? 'createdAt',
     sortOrder: search.sortOrder ?? 'desc',
   }
@@ -35,6 +39,9 @@ export const Route = createFileRoute('/_main/tours')({
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) => {
     context.queryClient.ensureQueryData(adminToursQueryOptions(buildInput(deps)))
+    context.queryClient.ensureQueryData(
+      adminOrgsQueryOptions({ page: 0, pageSize: 200, sortBy: 'name', sortOrder: 'asc' }),
+    )
   },
   component: ToursPage,
 })
@@ -45,15 +52,25 @@ function ToursPage() {
 
   const input = buildInput(searchParams)
   const { data, isFetching } = useQuery(adminToursQueryOptions(input))
+  const { data: orgsData } = useQuery(
+    adminOrgsQueryOptions({ page: 0, pageSize: 200, sortBy: 'name', sortOrder: 'asc' }),
+  )
 
   const tours = data?.tours ?? []
   const totalCount = data?.totalCount ?? 0
 
+  const orgOptions = useMemo(
+    () => (orgsData?.orgs ?? []).map((org) => ({ label: org.name, value: org.name })),
+    [orgsData],
+  )
+
   // Derive column filters from URL search params
   const statusValues = searchParams.status?.split(',').filter(Boolean)
+  const orgValues = searchParams.org?.split(',').filter(Boolean)
   const columnFiltersFromUrl: ColumnFiltersState = [
     ...(searchParams.search ? [{ id: 'title', value: searchParams.search }] : []),
     ...(statusValues?.length ? [{ id: 'status', value: statusValues }] : []),
+    ...(orgValues?.length ? [{ id: 'organizationName', value: orgValues }] : []),
   ]
 
   const [debouncedFilters, setDebouncedFilters] = useState<ColumnFiltersState>(columnFiltersFromUrl)
@@ -63,31 +80,35 @@ function ToursPage() {
     setDebouncedFilters(columnFiltersFromUrl)
     // Only re-sync when the actual URL values change
     // biome-ignore lint/correctness/useExhaustiveDependencies: derived from searchParams
-  }, [searchParams.search, searchParams.status])
+  }, [searchParams.search, searchParams.status, searchParams.org])
 
   const onColumnFiltersChange = useCallback(
     (updater: ColumnFiltersState | ((old: ColumnFiltersState) => ColumnFiltersState)) => {
       const next = typeof updater === 'function' ? updater(debouncedFilters) : updater
       setDebouncedFilters(next)
 
-      // Apply select filters (status) immediately — only debounce text filters
+      // Apply select filters (status, org) immediately — only debounce text filters
       const statusFilter = next.find((f) => f.id === 'status')?.value as string[] | undefined
       const statusParam = statusFilter?.length ? statusFilter.join(',') : undefined
+      const orgFilter = next.find((f) => f.id === 'organizationName')?.value as string[] | undefined
+      const orgParam = orgFilter?.length ? orgFilter.join(',') : undefined
       const currentStatus = searchParams.status ?? undefined
-      if (statusParam !== currentStatus) {
+      const currentOrg = searchParams.org ?? undefined
+      if (statusParam !== currentStatus || orgParam !== currentOrg) {
         const titleFilter = next.find((f) => f.id === 'title')?.value as string | undefined
         navigate({
           to: '/tours',
-          search: (prev) => ({
-            ...prev,
+          search: {
+            ...searchParams,
             search: titleFilter || undefined,
             status: statusParam,
+            org: orgParam,
             page: 0,
-          }),
+          },
         })
       }
     },
-    [debouncedFilters, searchParams.status, navigate],
+    [debouncedFilters, searchParams, navigate],
   )
 
   // Debounce text filter (title/search) to URL
@@ -100,14 +121,17 @@ function ToursPage() {
     const timeout = setTimeout(() => {
       const statusFilter = debouncedFilters.find((f) => f.id === 'status')?.value as string[] | undefined
       const statusParam = statusFilter?.length ? statusFilter.join(',') : undefined
+      const orgFilter = debouncedFilters.find((f) => f.id === 'organizationName')?.value as string[] | undefined
+      const orgParam = orgFilter?.length ? orgFilter.join(',') : undefined
       navigate({
         to: '/tours',
-        search: (prev) => ({
-          ...prev,
+        search: {
+          ...searchParams,
           search: titleFilter || undefined,
           status: statusParam,
+          org: orgParam,
           page: 0,
-        }),
+        },
       })
     }, 300)
     return () => clearTimeout(timeout)
@@ -124,11 +148,11 @@ function ToursPage() {
       const next = typeof updater === 'function' ? updater(pagination) : updater
       navigate({
         to: '/tours',
-        search: (prev) => ({
-          ...prev,
+        search: {
+          ...searchParams,
           page: next.pageIndex,
           pageSize: next.pageSize,
-        }),
+        },
       })
     },
     [navigate, pagination],
@@ -145,12 +169,12 @@ function ToursPage() {
       const sort = next[0]
       navigate({
         to: '/tours',
-        search: (prev) => ({
-          ...prev,
+        search: {
+          ...searchParams,
           sortBy: sort?.id as ListToursInput['sortBy'],
           sortOrder: sort ? (sort.desc ? 'desc' : 'asc') : undefined,
           page: 0,
-        }),
+        },
       })
     },
     [navigate, sorting],
@@ -165,6 +189,7 @@ function ToursPage() {
 
       <ToursDataTable
         data={tours}
+        orgOptions={orgOptions}
         totalCount={totalCount}
         pagination={pagination}
         sorting={sorting}

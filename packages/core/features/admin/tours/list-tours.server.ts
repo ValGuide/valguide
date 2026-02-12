@@ -1,7 +1,8 @@
 import type { DB } from '@valguide/core/features/db'
-import { and, asc, count, desc, eq, ilike, isNotNull, isNull, or, sql } from 'drizzle-orm'
+import { and, asc, count, desc, eq, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm'
+import { asset } from '../../assets/schema'
 import { organization } from '../../orgs/schema'
-import { tour, tourLocaleDraft, tourStopDraft } from '../../tours/schema'
+import { tour, tourAssetDraft, tourLocaleDraft, tourStopDraft } from '../../tours/schema'
 
 export type AdminTourListItem = {
   nanoId: string
@@ -12,6 +13,7 @@ export type AdminTourListItem = {
   stopCount: number
   createdAt: Date
   publishedAt: Date | null
+  coverStoragePath: string | null
 }
 
 export type ListToursInput = {
@@ -19,6 +21,7 @@ export type ListToursInput = {
   pageSize: number
   search?: string
   status?: 'draft' | 'published' | 'archived'
+  organizationNames?: string[]
   sortBy: 'title' | 'organizationName' | 'stopCount' | 'createdAt' | 'publishedAt'
   sortOrder: 'asc' | 'desc'
 }
@@ -40,7 +43,7 @@ function deriveTourStatus(row: {
 }
 
 export async function listTours(dbClient: DB, input: ListToursInput): Promise<ListToursResult> {
-  const { page, pageSize, search, status, sortBy, sortOrder } = input
+  const { page, pageSize, search, status, organizationNames, sortBy, sortOrder } = input
 
   // Build WHERE conditions
   const conditions = [isNull(tour.deletedAt)]
@@ -55,9 +58,13 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
     conditions.push(isNotNull(tour.archivedAt))
   }
 
+  if (organizationNames?.length) {
+    conditions.push(inArray(organization.name, organizationNames))
+  }
+
   if (search) {
     const pattern = `%${search}%`
-    conditions.push(or(ilike(tourLocaleDraft.title, pattern), ilike(organization.name, pattern)))
+    conditions.push(or(ilike(tourLocaleDraft.title, pattern), ilike(organization.name, pattern))!)
   }
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
@@ -69,12 +76,27 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
     WHERE ${tourStopDraft.tourId} = ${tour.id}
   )`
 
+  // Cover image subquery
+  const coverImageSubquery = dbClient
+    .select({ storagePath: asset.storagePath })
+    .from(tourAssetDraft)
+    .innerJoin(asset, eq(tourAssetDraft.assetId, asset.id))
+    .where(and(eq(tourAssetDraft.tourId, tour.id), eq(tourAssetDraft.channel, 'images.hero')))
+    .limit(1)
+    .as('cover_image')
+
   // Build ORDER BY
   const direction = sortOrder === 'asc' ? asc : desc
   const orderClauses = (() => {
     switch (sortBy) {
       case 'title':
-        return [direction(tourLocaleDraft.title)]
+        // Push NULL titles ("Untitled") to the end regardless of sort direction
+        return [
+          sortOrder === 'asc'
+            ? asc(sql`${tourLocaleDraft.title} IS NULL`)
+            : desc(sql`${tourLocaleDraft.title} IS NOT NULL`),
+          direction(tourLocaleDraft.title),
+        ]
       case 'organizationName':
         return [direction(organization.name)]
       case 'stopCount':
@@ -98,6 +120,7 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
         archivedAt: tour.archivedAt,
         createdAt: tour.createdAt,
         stopCount: stopCountSubquery,
+        coverStoragePath: coverImageSubquery.storagePath,
       })
       .from(tour)
       .innerJoin(organization, eq(tour.organizationId, organization.id))
@@ -105,6 +128,7 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
         tourLocaleDraft,
         and(eq(tourLocaleDraft.tourId, tour.id), eq(tourLocaleDraft.locale, sql`${tour.availableLocales}[1]`)),
       )
+      .leftJoinLateral(coverImageSubquery, sql`true`)
       .where(whereClause)
       .orderBy(...orderClauses)
       .limit(pageSize)
@@ -130,6 +154,7 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
       stopCount: row.stopCount,
       createdAt: row.createdAt,
       publishedAt: row.publishedAt,
+      coverStoragePath: row.coverStoragePath,
     })),
     totalCount: countResult?.total ?? 0,
     page,

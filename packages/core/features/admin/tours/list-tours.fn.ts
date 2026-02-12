@@ -11,6 +11,7 @@ const listToursSchema = z.object({
   pageSize: z.number().int().min(1).max(200).default(20),
   search: z.string().optional(),
   status: z.enum(['draft', 'published', 'archived']).optional(),
+  organizationNames: z.array(z.string()).optional(),
   sortBy: z.enum(['title', 'organizationName', 'stopCount', 'createdAt', 'publishedAt']).default('createdAt'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
 })

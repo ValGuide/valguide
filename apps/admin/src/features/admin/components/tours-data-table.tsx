@@ -23,8 +23,11 @@ const statusOptions = [
   { label: 'Archived', value: 'archived' },
 ]
 
+type OrgOption = { label: string; value: string }
+
 type ToursDataTableProps = {
   data: AdminTourListItem[]
+  orgOptions: OrgOption[]
   totalCount: number
   pagination: PaginationState
   sorting: SortingState
@@ -37,6 +40,7 @@ type ToursDataTableProps = {
 
 export function ToursDataTable({
   data,
+  orgOptions,
   totalCount,
   pagination,
   sorting,
@@ -76,6 +80,14 @@ export function ToursDataTable({
         </div>
         {table.getColumn('status') && (
           <DataTableFacetedFilter column={table.getColumn('status')} title="Status" options={statusOptions} />
+        )}
+        {table.getColumn('organizationName') && orgOptions.length > 0 && (
+          <DataTableFacetedFilter
+            column={table.getColumn('organizationName')}
+            title="Organization"
+            options={orgOptions}
+            searchable
+          />
         )}
         {isFiltered && (
           <Button variant="ghost" size="sm" className="h-8" onClick={() => table.resetColumnFilters()}>

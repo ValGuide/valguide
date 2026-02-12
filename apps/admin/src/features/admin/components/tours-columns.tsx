@@ -1,10 +1,30 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import type { AdminTourListItem } from '@valguide/core/features/admin/tours/list-tours.fn'
+import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import { Button } from '@valguide/ui/components/button'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, ImageOff } from 'lucide-react'
 import { TourStatusBadge } from './tour-status-badge'
 
 export const toursColumns: ColumnDef<AdminTourListItem>[] = [
+  {
+    accessorKey: 'coverStoragePath',
+    enableColumnFilter: false,
+    header: 'Cover',
+    cell: ({ row }) => {
+      const storagePath = row.original.coverStoragePath
+      return storagePath ? (
+        <img
+          src={`${getImageKitUrl(storagePath)}?tr=w-64,h-40,fo-auto`}
+          alt=""
+          className="size-10 rounded object-cover"
+        />
+      ) : (
+        <div className="flex size-10 items-center justify-center rounded bg-muted">
+          <ImageOff className="size-4 text-muted-foreground" />
+        </div>
+      )
+    },
+  },
   {
     accessorKey: 'title',
     enableColumnFilter: true,
@@ -30,7 +50,7 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   },
   {
     accessorKey: 'organizationName',
-    enableColumnFilter: false,
+    enableColumnFilter: true,
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Organization
