@@ -22,7 +22,7 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
 
   const handleUploadAndSaveLogo = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
-    const storagePath = `org-logos/${data.team.id}/${crypto.randomUUID()}.${ext}`
+    const storagePath = `${data.team.id}/org-logos/${crypto.randomUUID()}.${ext}`
 
     await uploadFileWithTUS({
       bucketName: 'assets',
