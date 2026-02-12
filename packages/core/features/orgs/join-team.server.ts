@@ -1,5 +1,5 @@
 import type { DB } from '@valguide/core/features/db'
-import { and, eq } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { profiles } from '../profiles/schema'
 import { organizationInvitation, organizationMember } from './schema'
 
@@ -39,12 +39,23 @@ export async function acceptInvitation(dbClient: DB, invitationId: string, userI
       })
       .where(eq(organizationInvitation.id, invitationId))
 
+    // Upsert profile: create if missing (new user via invite OTP), approve if pending.
+    // The profile may not exist yet when the user is created via verifyOtp —
+    // there's no DB trigger creating it automatically.
     await tx
-      .update(profiles)
-      .set({
+      .insert(profiles)
+      .values({
+        id: userId,
         status: 'approved',
         approvedAt: new Date(),
       })
-      .where(and(eq(profiles.id, userId), eq(profiles.status, 'pending')))
+      .onConflictDoUpdate({
+        target: profiles.id,
+        set: {
+          status: 'approved',
+          approvedAt: new Date(),
+        },
+        setWhere: eq(profiles.status, 'pending'),
+      })
   })
 }
