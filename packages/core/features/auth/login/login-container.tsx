@@ -14,6 +14,7 @@ export default function LoginContainer() {
     verifyingOtp,
     email,
     setEmail,
+    emailLocked,
   } = useAuth()
 
   return (
@@ -29,6 +30,7 @@ export default function LoginContainer() {
       loading={loading}
       message={message}
       verifyingOtp={verifyingOtp}
+      emailLocked={emailLocked}
     />
   )
 }

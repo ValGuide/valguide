@@ -8,7 +8,7 @@ import { getInvitationByTokenHash } from './utils'
 // =============================================================================
 
 export type InvitationData = {
-  variant: 'invalid' | 'public' | 'wrong-account' | 'joining'
+  variant: 'invalid' | 'accepted' | 'public' | 'wrong-account' | 'joining'
   invite?: {
     organization: { name: string }
     email: string
@@ -30,6 +30,16 @@ export async function getInvitationData(token: string | undefined): Promise<Invi
 
   if (!invite) {
     return { variant: 'invalid' }
+  }
+
+  if (invite.acceptedAt) {
+    return {
+      variant: 'accepted',
+      invite: {
+        organization: { name: invite.organization.name },
+        email: invite.email,
+      },
+    }
   }
 
   const supabase = await createClient()

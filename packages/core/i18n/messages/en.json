@@ -868,6 +868,11 @@
       "action": "Ask your team admin to send a new invitation — it only takes a moment.",
       "homeButton": "Go to Home"
     },
+    "accepted": {
+      "title": "You've Already Joined",
+      "description": "This invitation to <strong>{teamName}</strong> has already been accepted. You're all set.",
+      "dashboardButton": "Go to Dashboard"
+    },
     "public": {
       "title": "Join {teamName}",
       "description": "You've been invited to join <strong1>{teamName}</strong1> on ValGuide.",

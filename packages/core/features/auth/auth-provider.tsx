@@ -1,7 +1,7 @@
 import { useSearch } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { withLeadingSlash } from '@valguide/i18n/route.utils'
+import { sanitizeRedirectPath } from '@valguide/core/utils/sanitize-redirect-path'
 import { createLogger } from '@valguide/logger'
 import type React from 'react'
 import { createContext, type Dispatch, type PropsWithChildren, type SetStateAction, useContext, useState } from 'react'
@@ -26,6 +26,7 @@ const Context = createContext<{
   verifyingOtp: boolean
   email: string
   setEmail: Dispatch<SetStateAction<string>>
+  emailLocked: boolean
 }>({
   loading: false,
   message: null,
@@ -38,6 +39,7 @@ const Context = createContext<{
   setEmail: () => {},
   setOtp: () => {},
   verifyingOtp: false,
+  emailLocked: false,
 })
 
 const defaultNextPath = '/'
@@ -50,7 +52,8 @@ export const AuthProvider = ({ children, signInFn }: AuthProviderProps) => {
   const t = useTranslations('auth')
 
   const searchParams = useSearch({ strict: false }) as { next?: string; email?: string }
-  const next = withLeadingSlash(searchParams.next ?? defaultNextPath)
+  const next = sanitizeRedirectPath(searchParams.next ?? defaultNextPath)
+  const emailLocked = !!searchParams.email
 
   const [loading, setLoading] = useState<boolean>(false)
   const [verifyingOtp, setValidatingOpt] = useState<boolean>(false)
@@ -180,6 +183,7 @@ export const AuthProvider = ({ children, signInFn }: AuthProviderProps) => {
         verifyingOtp,
         email,
         setEmail,
+        emailLocked,
       }}
     >
       {children}

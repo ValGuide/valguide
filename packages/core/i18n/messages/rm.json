@@ -858,6 +858,11 @@
       "action": "Dumonda tes admin dal team da trametter ina nova invitaziun — quai va svelt.",
       "homeButton": "Ir a la pagina principala"
     },
+    "accepted": {
+      "title": "Ti es gia unì",
+      "description": "Questa invitaziun per <strong>{teamName}</strong> è gia vegnida acceptada. Tut è pront.",
+      "dashboardButton": "Ir al dashboard"
+    },
     "public": {
       "title": "Unir a {teamName}",
       "description": "Ti es vegnì envidà da unir a <strong1>{teamName}</strong1> sin ValGuide.",

@@ -2,12 +2,12 @@ import { Link } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { AlertCircle, Mail, UserPlus, Users } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Mail, UserPlus, Users } from 'lucide-react'
 import { JoinTeamOtpForm } from './join-team-otp-form'
 import { SignOutButton } from './sign-out-button'
 
 type JoinTeamCardProps = {
-  variant: 'invalid' | 'public' | 'wrong-account' | 'joining'
+  variant: 'invalid' | 'accepted' | 'public' | 'wrong-account' | 'joining'
   invite?: {
     organization: { name: string }
     email: string
@@ -47,6 +47,32 @@ export function JoinTeamCard({
           <Button asChild className="w-full">
             <Link to="/" preload="intent">
               {t('invalid.homeButton')}
+            </Link>
+          </Button>
+        </CardFooter>
+      </Card>
+    )
+  }
+
+  if (variant === 'accepted' && invite) {
+    return (
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-success/10">
+            <CheckCircle2 className="h-5 w-5 text-success" />
+          </div>
+          <CardTitle>{t('accepted.title')}</CardTitle>
+          <CardDescription>
+            {t.rich('accepted.description', {
+              teamName: invite.organization.name,
+              strong: (chunks) => <strong>{chunks}</strong>,
+            })}
+          </CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <Button asChild className="w-full">
+            <Link to="/" preload="intent">
+              {t('accepted.dashboardButton')}
             </Link>
           </Button>
         </CardFooter>

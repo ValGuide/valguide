@@ -17,6 +17,7 @@ export interface AuthContainerProps {
   loading: boolean
   message: { type: 'success' | 'error'; text: string } | null
   verifyingOtp: boolean
+  emailLocked?: boolean
 }
 
 export function AuthContainer({
@@ -31,6 +32,7 @@ export function AuthContainer({
   loading,
   message,
   verifyingOtp,
+  emailLocked = false,
 }: AuthContainerProps) {
   const t = useTranslations('auth')
 
@@ -55,11 +57,17 @@ export function AuthContainer({
             onOtpChange={(e) => setOtp(e.target.value)}
             onSubmit={handleVerifyOtp}
             onResendClick={handleResendOtp}
-            onChangeEmail={handleChangeEmail}
+            onChangeEmail={emailLocked ? undefined : handleChangeEmail}
             loading={loading}
           />
         ) : (
-          <AuthForm email={email} onEmailChange={setEmail} onSubmit={handleEmailAuth} loading={loading} />
+          <AuthForm
+            email={email}
+            onEmailChange={setEmail}
+            onSubmit={handleEmailAuth}
+            loading={loading}
+            emailLocked={emailLocked}
+          />
         )}
       </div>
     </AuthLayout>

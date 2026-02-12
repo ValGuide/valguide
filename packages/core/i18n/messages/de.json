@@ -858,6 +858,11 @@
       "action": "Bitte deinen Teamadmin, dir eine neue Einladung zu senden — das geht schnell.",
       "homeButton": "Zur Startseite"
     },
+    "accepted": {
+      "title": "Du bist bereits beigetreten",
+      "description": "Diese Einladung zu <strong>{teamName}</strong> wurde bereits angenommen. Alles bereit.",
+      "dashboardButton": "Zum Dashboard"
+    },
     "public": {
       "title": "Tritt {teamName} bei",
       "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",

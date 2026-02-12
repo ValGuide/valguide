@@ -9,9 +9,16 @@ export interface AuthFormProps {
   onEmailChange: (email: string) => void
   onSubmit: (email: string) => void
   loading?: boolean
+  emailLocked?: boolean
 }
 
-export function AuthForm({ email: initialEmail, onEmailChange, onSubmit, loading = false }: AuthFormProps) {
+export function AuthForm({
+  email: initialEmail,
+  onEmailChange,
+  onSubmit,
+  loading = false,
+  emailLocked = false,
+}: AuthFormProps) {
   const t = useTranslations('auth')
   const [error, setError] = useState<string | null>(null)
 
@@ -46,6 +53,8 @@ export function AuthForm({ email: initialEmail, onEmailChange, onSubmit, loading
                 onEmailChange(e.target.value)
                 setError(null)
               }}
+              readOnly={emailLocked}
+              className={emailLocked ? 'bg-muted' : undefined}
               required
             />
             {error && <FieldDescription className="text-destructive">{error}</FieldDescription>}
