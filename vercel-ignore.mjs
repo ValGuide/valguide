@@ -9,6 +9,8 @@
  *   [build vercel:app]          - Build only 'valguide-app'
  *   [build vercel:admin]        - Build only 'valguide-admin'
  *   [build vercel:app,admin,www] - Build multiple apps
+ *   [build app]                 - Shorthand (without 'vercel:' prefix)
+ *   [build studio,admin]        - Shorthand for multiple apps
  *
  * Available scopes: admin, links, www, studio, app, storybook
  * Maps to Vercel projects: valguide-admin, valguide-links, etc.
@@ -37,8 +39,8 @@ if (commitMsg.includes('[build vercel]')) {
   process.exit(1)
 }
 
-// Check for [build vercel:scope1,scope2,...]
-const scopeMatch = commitMsg.match(/\[build vercel:([^\]]+)\]/)
+// Check for [build vercel:scope1,scope2,...] or [build scope1,scope2,...]
+const scopeMatch = commitMsg.match(/\[build (?:vercel:)?([^\]]+)\]/)
 if (scopeMatch) {
   const scopes = scopeMatch[1].split(',').map((s) => s.trim())
   console.log(`Found scoped build request: ${scopes.join(', ')}`)
