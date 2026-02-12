@@ -11,7 +11,7 @@ import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
-import { cn } from '@valguide/ui/utils/cn'
+import { cn } from '@valguide/ui/lib/utils'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
 import type { UsersTableMeta } from './users-columns'
 import { usersColumns } from './users-columns'
@@ -201,6 +201,8 @@ function PaginationControls({
             <SelectItem value="10">10</SelectItem>
             <SelectItem value="20">20</SelectItem>
             <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+            <SelectItem value="200">200</SelectItem>
           </SelectContent>
         </Select>
         <Button variant="outline" size="icon" className="size-8" onClick={onFirst} disabled={!canPreviousPage}>
