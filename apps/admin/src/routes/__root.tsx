@@ -32,11 +32,10 @@ export const Route = createRootRouteWithContext<{
     return (
       <NotFoundPage
         i18n={{
-          title: messages?.notFound?.title ?? 'Page not found',
+          title: messages?.admin?.notFound?.title ?? 'Page not found',
           description:
-            messages?.notFound?.description ??
-            "We couldn't find the page you're looking for. It may have been moved or no longer exists.",
-          homeButton: messages?.notFound?.homeButton ?? 'Back to Home',
+            messages?.admin?.notFound?.description ?? "The page you're looking for doesn't exist or has been moved.",
+          homeButton: messages?.admin?.notFound?.homeButton ?? 'Go back',
         }}
       />
     )

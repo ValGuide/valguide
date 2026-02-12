@@ -74,6 +74,11 @@
     "assets": {
       "title": "Assets",
       "comingSoon": "Administraziun dad assets vegn prest"
+    },
+    "notFound": {
+      "title": "Pagina betg chattada",
+      "description": "La pagina che Vus tschertgais n'exista betg u è vegnida spustada.",
+      "homeButton": "Enavos"
     }
   },
   "studio": {

@@ -74,6 +74,11 @@
     "assets": {
       "title": "Assets",
       "comingSoon": "Asset-Verwaltung kommt bald"
+    },
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "description": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
+      "homeButton": "Zurück"
     }
   },
   "studio": {
