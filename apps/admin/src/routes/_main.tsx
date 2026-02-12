@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, notFound, Outlet, redirect, useRouter } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-router'
 import { checkSuperadminFn } from '@valguide/core/features/admin/check-superadmin.fn'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { Separator } from '@valguide/ui/components/separator'
@@ -16,7 +16,8 @@ export const Route = createFileRoute('/_main')({
     }
     const { allowed } = await checkSuperadminFn()
     if (!allowed) {
-      throw notFound()
+      await signOutFn({ data: {} })
+      throw redirect({ to: '/login' })
     }
   },
   component: MainLayout,
