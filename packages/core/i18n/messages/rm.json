@@ -184,9 +184,9 @@
   "accountStatus": {
     "pending": {
       "title": "Tes conto vegn examinà",
-      "description": "Grazia fitg per l'annunzia. Noss team examinescha tes conto.",
-      "expectation": "Normalmain entaifer 1 di da lavur.",
+      "description": "Grazia fitg per l'annunzia. Noss team examinescha tes conto — normalmain entaifer 1 di da lavur. Ti retschaivas in e-mail cura che tes conto è approvà.",
       "checkStatus": "Controllar il status",
+      "autoCheckNote": "Questa pagina controllescha automaticamain.",
       "contactCta": "Scriva a nus",
       "signOut": "Sortir"
     },

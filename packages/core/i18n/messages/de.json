@@ -184,9 +184,9 @@
   "accountStatus": {
     "pending": {
       "title": "Dein Konto wird geprüft",
-      "description": "Vielen Dank für deine Anmeldung. Unser Team prüft dein Konto.",
-      "expectation": "In der Regel innerhalb von 1 Werktag.",
+      "description": "Vielen Dank für deine Anmeldung. Unser Team prüft dein Konto — in der Regel innerhalb von 1 Werktag. Du erhältst eine E-Mail, sobald dein Konto freigegeben ist.",
       "checkStatus": "Status prüfen",
+      "autoCheckNote": "Diese Seite prüft automatisch.",
       "contactCta": "Schreib uns",
       "signOut": "Abmelden"
     },

@@ -19,7 +19,13 @@ export function PendingApprovalPage({
   const t = useTranslations('accountStatus')
 
   return (
-    <AuthLayout>
+    <AuthLayout
+      footer={
+        <Button variant="link" size="sm" onClick={onSignOut} className="text-xs text-muted-foreground">
+          {t('pending.signOut')}
+        </Button>
+      }
+    >
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="flex size-12 items-center justify-center rounded-full bg-muted">
           <Clock className="size-6 text-muted-foreground" />
@@ -30,25 +36,20 @@ export function PendingApprovalPage({
           <p className="text-sm text-muted-foreground">{t('pending.description')}</p>
         </div>
 
-        <p className="text-xs text-muted-foreground">{t('pending.expectation')}</p>
-
-        <div className="flex w-full flex-col gap-2">
-          <Button variant="outline" size="sm" onClick={onCheckAgain} disabled={isChecking} className="w-full">
-            {isChecking && <Loader2 className="size-3.5 animate-spin" />}
-            {t('pending.checkStatus')}
-          </Button>
-
-          <Button variant="ghost" size="sm" asChild className="w-full text-muted-foreground">
-            <a href={`mailto:${supportEmail}`}>
-              <Mail className="size-3.5" />
-              {t('pending.contactCta')}
-            </a>
-          </Button>
-        </div>
-
-        <Button variant="link" size="sm" onClick={onSignOut} className="text-xs text-muted-foreground">
-          {t('pending.signOut')}
+        <Button variant="outline" size="sm" onClick={onCheckAgain} disabled={isChecking} className="w-full">
+          {isChecking && <Loader2 className="size-3.5 animate-spin" />}
+          {t('pending.checkStatus')}
         </Button>
+
+        <p className="text-xs text-muted-foreground">{t('pending.autoCheckNote')}</p>
+
+        <a
+          href={`mailto:${supportEmail}`}
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-4 hover:underline"
+        >
+          <Mail className="size-3" />
+          {t('pending.contactCta')}
+        </a>
       </div>
     </AuthLayout>
   )
