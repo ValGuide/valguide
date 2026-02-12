@@ -864,31 +864,31 @@
   },
   "joinTeam": {
     "invalid": {
-      "title": "Invitaziun nunvalida",
-      "description": "Quest link d'invitaziun è nunvalid, scrudà u annullà.",
-      "action": "Dumandai per plascher l'administratur dal team da trametter ina nova invitaziun.",
+      "title": "Questa invitaziun è scrudada",
+      "description": "Quest link n'è betg pli activ. El pudess esser scrudà u revocà.",
+      "action": "Dumonda tes admin dal team da trametter ina nova invitaziun — quai va svelt.",
       "homeButton": "Ir a la pagina principala"
     },
     "public": {
       "title": "Unir a {teamName}",
       "description": "Ti es vegnì envidà da unir a <strong1>{teamName}</strong1> sin ValGuide.",
-      "invitationFor": "Invitaziun per:",
-      "instruction": "Per acceptar questa invitaziun, s'annunziai u creei in conto cun questa adressa d'e-mail.",
-      "createAccount": "Crear conto",
+      "sentTo": "Questa invitaziun è vegnida tramessa a",
+      "instruction": "S'annunziai u creei in conto cun questa adressa d'e-mail.",
+      "createAccount": "Cumenzar",
       "haveAccount": "Jau hai gia in conto"
     },
     "wrongAccount": {
-      "title": "Conto fauss",
-      "description": "Ti es actualmain s'annunzià sco <strong>{email}</strong>.",
-      "intendedFor": "Questa invitaziun è destinada per <strong>{email}</strong>.",
-      "instruction": "S'annunziai ora e s'annunziai cun il conto correct per acceptar questa invitaziun.",
+      "title": "S'annunzià cun in auter conto",
+      "description": "Ti es s'annunzià sco <strong>{email}</strong>, ma questa invitaziun è vegnida tramessa ad ina autra adressa.",
+      "intendedFor": "Questa invitaziun è per <strong>{email}</strong>.",
+      "instruction": "S'annunzia ora sutvart e s'annunzia puspè cun l'adressa d'e-mail envidada.",
       "signOutButton": "S'annunziar ora & midar conto",
       "cancelButton": "Interrumper"
     },
     "joining": {
-      "title": "Unir al team...",
-      "description": "Acceptar invitaziun per {teamName}",
-      "error": "Igl ha dà in problem cun unir al team.",
+      "title": "Unir a {teamName}…",
+      "description": "Tes access vegn installà ussa",
+      "error": "Insatge è ì mal cun unir. Ti pos empruvar anc ina giada u ir a tes dashboard.",
       "dashboardButton": "Ir al dashboard"
     }
   },

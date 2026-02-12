@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
@@ -23,6 +24,7 @@ export const Route = createFileRoute('/join-team')({
 function JoinTeamPage() {
   const data = Route.useLoaderData()
   const { token } = Route.useSearch()
+  const queryClient = useQueryClient()
   const router = useRouter()
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
@@ -35,8 +37,10 @@ function JoinTeamPage() {
     if (data.variant === 'joining' && token && !isJoining && !error) {
       setIsJoining(true)
       joinTeam({ data: { token } })
-        .then((result) => {
+        .then(async (result) => {
           if (result.success) {
+            await queryClient.invalidateQueries({ queryKey: ['user-status'] })
+            await queryClient.invalidateQueries({ queryKey: ['is-authenticated'] })
             navigate({ to: '/' })
           }
         })
@@ -44,7 +48,7 @@ function JoinTeamPage() {
           setError(err instanceof Error ? err.message : 'Failed to join team')
         })
     }
-  }, [data.variant, token, joinTeam, isJoining, error, navigate])
+  }, [data.variant, token, joinTeam, isJoining, error, queryClient, navigate])
 
   const handleSignOut = async () => {
     await signOut({ data: { scope: 'global' } })

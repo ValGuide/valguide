@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { AlertCircle, Mail, UserPlus, Users } from 'lucide-react'
 import { SignOutButton } from './sign-out-button'
 
 type JoinTeamCardProps = {
@@ -23,7 +24,10 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
     return (
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-destructive">{t('invalid.title')}</CardTitle>
+          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
+            <AlertCircle className="h-5 w-5 text-destructive" />
+          </div>
+          <CardTitle>{t('invalid.title')}</CardTitle>
           <CardDescription>{t('invalid.description')}</CardDescription>
         </CardHeader>
         <CardContent>
@@ -44,6 +48,9 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
     return (
       <Card className="w-full max-w-md">
         <CardHeader>
+          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+            <UserPlus className="h-5 w-5 text-primary" />
+          </div>
           <CardTitle>{t('public.title', { teamName: invite.organization.name })}</CardTitle>
           <CardDescription>
             {t.rich('public.description', {
@@ -53,9 +60,12 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="rounded-md bg-muted p-4 text-sm">
-            <p className="font-medium">{t('public.invitationFor')}</p>
-            <p className="text-muted-foreground">{invite.email}</p>
+          <div className="rounded-md bg-muted p-4">
+            <p className="mb-1 text-xs text-muted-foreground">{t('public.sentTo')}</p>
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm font-medium">{invite.email}</p>
+            </div>
           </div>
           <p className="text-sm text-muted-foreground">{t('public.instruction')}</p>
         </CardContent>
@@ -79,6 +89,9 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
     return (
       <Card className="w-full max-w-md">
         <CardHeader>
+          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-warning/10">
+            <AlertCircle className="h-5 w-5 text-warning" />
+          </div>
           <CardTitle>{t('wrongAccount.title')}</CardTitle>
           <CardDescription>
             {t.rich('wrongAccount.description', {
@@ -88,8 +101,8 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="rounded-md bg-destructive/10 p-4 text-sm text-destructive">
-            <p>
+          <div className="rounded-md bg-muted p-4">
+            <p className="text-sm">
               {t.rich('wrongAccount.intendedFor', {
                 email: invite.email,
                 strong: (chunks) => <strong>{chunks}</strong>,
@@ -116,14 +129,13 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
         {error ? (
           <>
             <CardHeader>
-              <CardTitle>{t('joining.title')}</CardTitle>
-              <CardDescription>{t('joining.description', { teamName: invite.organization.name })}</CardDescription>
+              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
+                <AlertCircle className="h-5 w-5 text-destructive" />
+              </div>
+              <CardTitle>{t('joining.title', { teamName: invite.organization.name })}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col gap-4">
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
-                <p className="text-sm text-muted-foreground">{t('joining.error')}</p>
-              </div>
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{t('joining.error')}</div>
             </CardContent>
             <CardFooter>
               <Button asChild className="w-full">
@@ -135,11 +147,11 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
           </>
         ) : (
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="mb-6 h-10 w-10 animate-spin rounded-full border-3 border-primary border-t-transparent" />
-            <p className="text-lg font-medium">{t('joining.title')}</p>
-            <p className="mt-1 text-center text-sm text-muted-foreground">
-              {t('joining.description', { teamName: invite.organization.name })}
-            </p>
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+              <Users className="h-6 w-6 animate-pulse text-primary" />
+            </div>
+            <p className="text-lg font-medium">{t('joining.title', { teamName: invite.organization.name })}</p>
+            <p className="mt-1 text-center text-sm text-muted-foreground">{t('joining.description')}</p>
           </CardContent>
         )}
       </Card>

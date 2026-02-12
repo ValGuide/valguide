@@ -864,31 +864,31 @@
   },
   "joinTeam": {
     "invalid": {
-      "title": "Einladung ungültig",
-      "description": "Dieser Einladungslink ist ungültig, abgelaufen oder wurde storniert.",
-      "action": "Bitte bitten Sie den Teamadministrator, Ihnen eine neue Einladung zu senden.",
+      "title": "Diese Einladung ist abgelaufen",
+      "description": "Dieser Link ist nicht mehr aktiv. Er könnte abgelaufen oder widerrufen worden sein.",
+      "action": "Bitte deinen Teamadmin, dir eine neue Einladung zu senden — das geht schnell.",
       "homeButton": "Zur Startseite"
     },
     "public": {
       "title": "Tritt {teamName} bei",
       "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",
-      "invitationFor": "Einladung für:",
-      "instruction": "Um diese Einladung anzunehmen, melde dich bitte an oder erstelle ein Konto mit dieser E-Mail-Adresse.",
-      "createAccount": "Konto erstellen",
+      "sentTo": "Diese Einladung wurde gesendet an",
+      "instruction": "Melde dich an oder erstelle ein Konto mit dieser E-Mail-Adresse.",
+      "createAccount": "Loslegen",
       "haveAccount": "Ich habe bereits ein Konto"
     },
     "wrongAccount": {
-      "title": "Falsches Konto",
-      "description": "Du bist derzeit als <strong>{email}</strong> angemeldet.",
-      "intendedFor": "Diese Einladung ist für <strong>{email}</strong> bestimmt.",
-      "instruction": "Bitte melde dich ab und mit dem richtigen Konto an, um diese Einladung anzunehmen.",
+      "title": "Mit einem anderen Konto angemeldet",
+      "description": "Du bist als <strong>{email}</strong> angemeldet, aber diese Einladung wurde an eine andere Adresse gesendet.",
+      "intendedFor": "Diese Einladung ist für <strong>{email}</strong>.",
+      "instruction": "Melde dich unten ab und melde dich mit der eingeladenen E-Mail-Adresse wieder an.",
       "signOutButton": "Abmelden & Konto wechseln",
       "cancelButton": "Abbrechen"
     },
     "joining": {
-      "title": "Team wird beigetreten...",
-      "description": "Einladung für {teamName} wird angenommen",
-      "error": "Es gab ein Problem beim Beitritt zum Team.",
+      "title": "Tritt {teamName} bei…",
+      "description": "Dein Zugang wird jetzt eingerichtet",
+      "error": "Beim Beitritt ist etwas schiefgelaufen. Du kannst es erneut versuchen oder zu deinem Dashboard gehen.",
       "dashboardButton": "Zum Dashboard"
     }
   },

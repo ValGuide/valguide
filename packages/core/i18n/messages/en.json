@@ -874,31 +874,31 @@
   },
   "joinTeam": {
     "invalid": {
-      "title": "Invitation Invalid",
-      "description": "This invitation link is invalid, expired, or has been canceled.",
-      "action": "Please ask the team admin to send you a new invitation.",
+      "title": "This Invitation Has Expired",
+      "description": "This link is no longer active. It may have expired or been revoked.",
+      "action": "Ask your team admin to send a new invitation — it only takes a moment.",
       "homeButton": "Go to Home"
     },
     "public": {
       "title": "Join {teamName}",
       "description": "You've been invited to join <strong1>{teamName}</strong1> on ValGuide.",
-      "invitationFor": "Invitation for:",
-      "instruction": "To accept this invitation, please sign in or create an account with this email address.",
-      "createAccount": "Create Account",
+      "sentTo": "This invitation was sent to",
+      "instruction": "Sign in or create an account with this email to get started.",
+      "createAccount": "Get Started",
       "haveAccount": "I already have an account"
     },
     "wrongAccount": {
-      "title": "Wrong Account",
-      "description": "You are currently signed in as <strong>{email}</strong>.",
-      "intendedFor": "This invitation is intended for <strong>{email}</strong>.",
-      "instruction": "Please sign out and sign in with the correct account to accept this invitation.",
+      "title": "Signed In as a Different Account",
+      "description": "You're signed in as <strong>{email}</strong>, but this invitation was sent to a different address.",
+      "intendedFor": "This invitation is for <strong>{email}</strong>.",
+      "instruction": "Sign out below and sign back in with the invited email address.",
       "signOutButton": "Sign Out & Switch Account",
       "cancelButton": "Cancel"
     },
     "joining": {
-      "title": "Joining Team...",
-      "description": "Accepting invitation for {teamName}",
-      "error": "There was a problem joining the team.",
+      "title": "Joining {teamName}…",
+      "description": "Setting up your access now",
+      "error": "Something went wrong while joining. You can try again or head to your dashboard.",
       "dashboardButton": "Go to Dashboard"
     }
   },

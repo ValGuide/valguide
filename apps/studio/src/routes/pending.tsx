@@ -1,9 +1,9 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { PendingApprovalPage } from '@valguide/core/features/auth/common/pending-approval-page'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { isAuthenticatedQueryOptions, userStatusQueryOptions } from '@valguide/features/auth/query-options'
-import { useState } from 'react'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/pending')({
   beforeLoad: async ({ context }) => {
@@ -28,7 +28,20 @@ export const Route = createFileRoute('/pending')({
 function PendingPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const [isChecking, setIsChecking] = useState(false)
+
+  const { data: statusResult, isRefetching } = useQuery({
+    ...userStatusQueryOptions(),
+    refetchInterval: 30_000,
+  })
+
+  useEffect(() => {
+    const status = statusResult?.status
+    if (status === 'approved') {
+      router.navigate({ to: '/tours' })
+    } else if (status === 'blocked') {
+      router.navigate({ to: '/blocked' })
+    }
+  }, [statusResult?.status, router])
 
   const handleSignOut = async () => {
     await signOutFn({ data: {} })
@@ -38,12 +51,8 @@ function PendingPage() {
   }
 
   const handleCheckAgain = async () => {
-    setIsChecking(true)
     await queryClient.invalidateQueries({ queryKey: ['user-status'] })
-    await queryClient.refetchQueries({ queryKey: ['user-status'] })
-    setIsChecking(false)
-    await router.invalidate()
   }
 
-  return <PendingApprovalPage onSignOut={handleSignOut} onCheckAgain={handleCheckAgain} isChecking={isChecking} />
+  return <PendingApprovalPage onSignOut={handleSignOut} onCheckAgain={handleCheckAgain} isChecking={isRefetching} />
 }

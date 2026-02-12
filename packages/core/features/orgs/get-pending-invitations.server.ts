@@ -1,5 +1,5 @@
 import type { DB } from '@valguide/core/features/db'
-import { and, desc, eq, gt } from 'drizzle-orm'
+import { and, desc, eq, gt, isNull } from 'drizzle-orm'
 import { authUsers } from 'drizzle-orm/supabase'
 import { profiles } from '../profiles/schema'
 import { organizationInvitation } from './schema'
@@ -31,6 +31,13 @@ export async function getPendingInvitations(dbClient: DB, teamId: string): Promi
     .from(organizationInvitation)
     .leftJoin(authUsers, eq(organizationInvitation.invitedBy, authUsers.id))
     .leftJoin(profiles, eq(organizationInvitation.invitedBy, profiles.id))
-    .where(and(eq(organizationInvitation.organizationId, teamId), gt(organizationInvitation.expiresAt, new Date())))
+    .where(
+      and(
+        eq(organizationInvitation.organizationId, teamId),
+        gt(organizationInvitation.expiresAt, new Date()),
+        isNull(organizationInvitation.acceptedAt),
+        isNull(organizationInvitation.canceledAt),
+      ),
+    )
     .orderBy(desc(organizationInvitation.createdAt))
 }
