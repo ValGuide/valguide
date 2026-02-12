@@ -1,4 +1,3 @@
-import type { Column } from '@tanstack/react-table'
 import {
   type ColumnFiltersState,
   flexRender,
@@ -11,11 +10,18 @@ import {
 import type { AdminTourListItem } from '@valguide/core/features/admin/tours/list-tours.fn'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { cn } from '@valguide/ui/lib/utils'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { Search, X } from 'lucide-react'
+import { DataTableFacetedFilter } from './data-table-faceted-filter'
+import { DataTablePagination } from './data-table-pagination'
 import { toursColumns } from './tours-columns'
+
+const statusOptions = [
+  { label: 'Draft', value: 'draft' },
+  { label: 'Published', value: 'published' },
+  { label: 'Archived', value: 'archived' },
+]
 
 type ToursDataTableProps = {
   data: AdminTourListItem[]
@@ -54,11 +60,31 @@ export function ToursDataTable({
     onColumnFiltersChange,
   })
 
-  const from = totalCount === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1
-  const to = Math.min((pagination.pageIndex + 1) * pagination.pageSize, totalCount)
+  const isFiltered = table.getState().columnFilters.length > 0
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <div className="relative max-w-sm">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Filter tours..."
+            value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+            onChange={(e) => table.getColumn('title')?.setFilterValue(e.target.value || undefined)}
+            className="h-8 pl-9 w-[250px]"
+          />
+        </div>
+        {table.getColumn('status') && (
+          <DataTableFacetedFilter column={table.getColumn('status')} title="Status" options={statusOptions} />
+        )}
+        {isFiltered && (
+          <Button variant="ghost" size="sm" className="h-8" onClick={() => table.resetColumnFilters()}>
+            Reset
+            <X className="size-4" />
+          </Button>
+        )}
+      </div>
+
       <div className={cn('rounded-md border', isLoading && 'opacity-50 pointer-events-none transition-opacity')}>
         <Table>
           <TableHeader>
@@ -71,13 +97,6 @@ export function ToursDataTable({
                 ))}
               </TableRow>
             ))}
-            <TableRow>
-              {table.getHeaderGroups()[0]?.headers.map((header) => (
-                <TableHead key={`filter-${header.id}`} className="py-1">
-                  <ColumnFilter column={header.column} />
-                </TableHead>
-              ))}
-            </TableRow>
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
@@ -99,123 +118,7 @@ export function ToursDataTable({
         </Table>
       </div>
 
-      <PaginationControls
-        from={from}
-        to={to}
-        totalCount={totalCount}
-        pageSize={pagination.pageSize}
-        canPreviousPage={table.getCanPreviousPage()}
-        canNextPage={table.getCanNextPage()}
-        onFirst={() => table.setPageIndex(0)}
-        onPrevious={() => table.previousPage()}
-        onNext={() => table.nextPage()}
-        onLast={() => table.setPageIndex(table.getPageCount() - 1)}
-        onPageSizeChange={(size) => table.setPageSize(size)}
-      />
-    </div>
-  )
-}
-
-function ColumnFilter<TData>({ column }: { column: Column<TData, unknown> }) {
-  if (!column.getCanFilter()) return null
-
-  const meta = column.columnDef.meta as
-    | {
-        filterType?: string
-        filterOptions?: { label: string; value: string }[]
-      }
-    | undefined
-
-  if (meta?.filterType === 'select' && meta.filterOptions) {
-    return (
-      <Select
-        value={(column.getFilterValue() as string) ?? ''}
-        onValueChange={(value) => column.setFilterValue(value === 'all' ? undefined : value)}
-      >
-        <SelectTrigger className="h-8 text-xs">
-          <SelectValue placeholder="All" />
-        </SelectTrigger>
-        <SelectContent>
-          {meta.filterOptions.map((option) => (
-            <SelectItem key={option.value || 'all'} value={option.value || 'all'}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    )
-  }
-
-  return (
-    <Input
-      value={(column.getFilterValue() as string) ?? ''}
-      onChange={(e) => column.setFilterValue(e.target.value || undefined)}
-      placeholder="Filter..."
-      className="h-8 text-xs"
-    />
-  )
-}
-
-function PaginationControls({
-  from,
-  to,
-  totalCount,
-  pageSize,
-  canPreviousPage,
-  canNextPage,
-  onFirst,
-  onPrevious,
-  onNext,
-  onLast,
-  onPageSizeChange,
-}: {
-  from: number
-  to: number
-  totalCount: number
-  pageSize: number
-  canPreviousPage: boolean
-  canNextPage: boolean
-  onFirst: () => void
-  onPrevious: () => void
-  onNext: () => void
-  onLast: () => void
-  onPageSizeChange: (size: number) => void
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <p className="text-sm text-muted-foreground">
-        Showing {from}–{to} of {totalCount} tours
-      </p>
-      <div className="flex items-center gap-2">
-        <Select value={String(pageSize)} onValueChange={(value) => onPageSizeChange(Number(value))}>
-          <SelectTrigger className="w-[70px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="10">10</SelectItem>
-            <SelectItem value="20">20</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="100">100</SelectItem>
-            <SelectItem value="200">200</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button variant="outline" size="icon" className="size-8" onClick={onFirst} disabled={!canPreviousPage}>
-          <ChevronsLeft className="size-4" />
-          <span className="sr-only">First page</span>
-        </Button>
-        <Button variant="outline" size="icon" className="size-8" onClick={onPrevious} disabled={!canPreviousPage}>
-          <ChevronLeft className="size-4" />
-          <span className="sr-only">Previous page</span>
-        </Button>
-        <Button variant="outline" size="icon" className="size-8" onClick={onNext} disabled={!canNextPage}>
-          <ChevronRight className="size-4" />
-          <span className="sr-only">Next page</span>
-        </Button>
-        <Button variant="outline" size="icon" className="size-8" onClick={onLast} disabled={!canNextPage}>
-          <ChevronsRight className="size-4" />
-          <span className="sr-only">Last page</span>
-        </Button>
-      </div>
+      <DataTablePagination table={table} totalCount={totalCount} entityName="tours" />
     </div>
   )
 }

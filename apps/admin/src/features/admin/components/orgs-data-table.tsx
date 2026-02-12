@@ -7,12 +7,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import type { AdminOrgListItem } from '@valguide/core/features/admin/orgs/list-orgs.fn'
-import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { cn } from '@valguide/ui/lib/utils'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
+import { DataTablePagination } from './data-table-pagination'
 import { orgsColumns } from './orgs-columns'
 
 type OrgsDataTableProps = {
@@ -50,9 +49,6 @@ export function OrgsDataTable({
     onSortingChange,
   })
 
-  const from = totalCount === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1
-  const to = Math.min((pagination.pageIndex + 1) * pagination.pageSize, totalCount)
-
   return (
     <div className="space-y-4">
       <div className="relative max-w-sm">
@@ -61,7 +57,7 @@ export function OrgsDataTable({
           placeholder="Search by name..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-9"
+          className="h-8 pl-9 w-[250px]"
         />
       </div>
 
@@ -98,65 +94,7 @@ export function OrgsDataTable({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          Showing {from}–{to} of {totalCount} organizations
-        </p>
-        <div className="flex items-center gap-2">
-          <Select value={String(pagination.pageSize)} onValueChange={(value) => table.setPageSize(Number(value))}>
-            <SelectTrigger className="w-[70px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="20">20</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-              <SelectItem value="200">200</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-8"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronsLeft className="size-4" />
-            <span className="sr-only">First page</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-8"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronLeft className="size-4" />
-            <span className="sr-only">Previous page</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-8"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <ChevronRight className="size-4" />
-            <span className="sr-only">Next page</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-8"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <ChevronsRight className="size-4" />
-            <span className="sr-only">Last page</span>
-          </Button>
-        </div>
-      </div>
+      <DataTablePagination table={table} totalCount={totalCount} entityName="organizations" />
     </div>
   )
 }

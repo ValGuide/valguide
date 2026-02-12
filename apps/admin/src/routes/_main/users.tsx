@@ -12,7 +12,7 @@ import { UsersDataTable } from '@/features/admin/components/users-data-table'
 import { adminUsersQueryOptions } from '@/features/admin/users-query-options'
 
 const usersSearchSchema = z.object({
-  status: z.enum(['pending', 'approved', 'blocked']).optional(),
+  status: z.string().optional(),
   search: z.string().optional(),
   page: z.number().int().min(0).optional(),
   pageSize: z.number().int().min(1).max(200).optional(),
@@ -21,20 +21,24 @@ const usersSearchSchema = z.object({
 })
 
 function buildInput(search: z.infer<typeof usersSearchSchema>): ListUsersInput {
+  // Backend only supports single status - use first if multiple selected
+  const statusValues = search.status?.split(',').filter(Boolean)
+  const singleStatus = statusValues?.length === 1 ? statusValues[0] : undefined
   return {
     page: search.page ?? 0,
     pageSize: search.pageSize ?? 20,
     search: search.search,
-    status: search.status,
+    status: singleStatus as ListUsersInput['status'],
     sortBy: search.sortBy ?? 'createdAt',
     sortOrder: search.sortOrder ?? 'desc',
   }
 }
 
 function buildColumnFilters(searchParams: z.infer<typeof usersSearchSchema>): ColumnFiltersState {
+  const statusValues = searchParams.status?.split(',').filter(Boolean)
   return [
     ...(searchParams.search ? [{ id: 'email', value: searchParams.search }] : []),
-    ...(searchParams.status ? [{ id: 'status', value: searchParams.status }] : []),
+    ...(statusValues?.length ? [{ id: 'status', value: statusValues }] : []),
   ]
 }
 
@@ -78,18 +82,19 @@ function UsersPage() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       const emailFilter = debouncedFilters.find((f) => f.id === 'email')?.value as string | undefined
-      const statusFilter = debouncedFilters.find((f) => f.id === 'status')?.value as string | undefined
+      const statusFilter = debouncedFilters.find((f) => f.id === 'status')?.value as string[] | undefined
+      const statusParam = statusFilter?.length ? statusFilter.join(',') : undefined
 
       const currentSearch = searchParams.search ?? undefined
       const currentStatus = searchParams.status ?? undefined
 
-      if (emailFilter !== currentSearch || statusFilter !== currentStatus) {
+      if (emailFilter !== currentSearch || statusParam !== currentStatus) {
         navigate({
           to: '/users',
           search: (prev) => ({
             ...prev,
             search: emailFilter || undefined,
-            status: statusFilter as 'pending' | 'approved' | 'blocked' | undefined,
+            status: statusParam,
             page: 0,
           }),
         })

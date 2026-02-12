@@ -9,7 +9,7 @@ import { ToursDataTable } from '@/features/admin/components/tours-data-table'
 import { adminToursQueryOptions } from '@/features/admin/tours-query-options'
 
 const toursSearchSchema = z.object({
-  status: z.enum(['draft', 'published', 'archived']).optional(),
+  status: z.string().optional(),
   search: z.string().optional(),
   page: z.number().int().min(0).optional(),
   pageSize: z.number().int().min(1).max(200).optional(),
@@ -18,11 +18,13 @@ const toursSearchSchema = z.object({
 })
 
 function buildInput(search: z.infer<typeof toursSearchSchema>): ListToursInput {
+  const statusValues = search.status?.split(',').filter(Boolean)
+  const singleStatus = statusValues?.length === 1 ? statusValues[0] : undefined
   return {
     page: search.page ?? 0,
     pageSize: search.pageSize ?? 20,
     search: search.search,
-    status: search.status,
+    status: singleStatus as ListToursInput['status'],
     sortBy: search.sortBy ?? 'createdAt',
     sortOrder: search.sortOrder ?? 'desc',
   }
@@ -48,9 +50,10 @@ function ToursPage() {
   const totalCount = data?.totalCount ?? 0
 
   // Derive column filters from URL search params
+  const statusValues = searchParams.status?.split(',').filter(Boolean)
   const columnFiltersFromUrl: ColumnFiltersState = [
     ...(searchParams.search ? [{ id: 'title', value: searchParams.search }] : []),
-    ...(searchParams.status ? [{ id: 'status', value: searchParams.status }] : []),
+    ...(statusValues?.length ? [{ id: 'status', value: statusValues }] : []),
   ]
 
   const [debouncedFilters, setDebouncedFilters] = useState<ColumnFiltersState>(columnFiltersFromUrl)
@@ -68,16 +71,17 @@ function ToursPage() {
       setDebouncedFilters(next)
 
       // Apply select filters (status) immediately — only debounce text filters
-      const statusFilter = next.find((f) => f.id === 'status')?.value as string | undefined
+      const statusFilter = next.find((f) => f.id === 'status')?.value as string[] | undefined
+      const statusParam = statusFilter?.length ? statusFilter.join(',') : undefined
       const currentStatus = searchParams.status ?? undefined
-      if (statusFilter !== currentStatus) {
+      if (statusParam !== currentStatus) {
         const titleFilter = next.find((f) => f.id === 'title')?.value as string | undefined
         navigate({
           to: '/tours',
           search: (prev) => ({
             ...prev,
             search: titleFilter || undefined,
-            status: statusFilter as 'draft' | 'published' | 'archived' | undefined,
+            status: statusParam,
             page: 0,
           }),
         })
@@ -94,13 +98,14 @@ function ToursPage() {
     if (titleFilter === currentSearch) return
 
     const timeout = setTimeout(() => {
-      const statusFilter = debouncedFilters.find((f) => f.id === 'status')?.value as string | undefined
+      const statusFilter = debouncedFilters.find((f) => f.id === 'status')?.value as string[] | undefined
+      const statusParam = statusFilter?.length ? statusFilter.join(',') : undefined
       navigate({
         to: '/tours',
         search: (prev) => ({
           ...prev,
           search: titleFilter || undefined,
-          status: statusFilter as 'draft' | 'published' | 'archived' | undefined,
+          status: statusParam,
           page: 0,
         }),
       })

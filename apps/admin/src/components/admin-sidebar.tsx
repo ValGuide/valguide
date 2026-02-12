@@ -1,4 +1,6 @@
 import { Link, useLocation } from '@tanstack/react-router'
+import { useTheme } from '@valguide/core/features/app-theme/theme-provider'
+import type { Theme } from '@valguide/core/features/app-theme/types'
 import { Button } from '@valguide/ui/components/button'
 import {
   Sidebar,
@@ -13,8 +15,23 @@ import {
   useSidebar,
 } from '@valguide/ui/components/sidebar'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
-import { BookOpen, Building2, LogOut, PanelLeftClose, PanelLeftOpen, Shield, Users } from 'lucide-react'
+import {
+  BookOpen,
+  Building2,
+  LogOut,
+  Monitor,
+  Moon,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Shield,
+  Sun,
+  Users,
+} from 'lucide-react'
 import * as React from 'react'
+
+const themeOrder: Theme[] = ['light', 'dark', 'system']
+const themeIcon: Record<Theme, typeof Sun> = { light: Sun, dark: Moon, system: Monitor }
+const themeLabel: Record<Theme, string> = { light: 'Light', dark: 'Dark', system: 'System' }
 
 type AdminSidebarProps = React.ComponentProps<typeof Sidebar> & {
   pathname?: string
@@ -24,6 +41,7 @@ type AdminSidebarProps = React.ComponentProps<typeof Sidebar> & {
 
 export function AdminSidebar({ pathname: pathnameProp, userEmail, onLogout, ...props }: AdminSidebarProps) {
   const { setOpenMobile, toggleSidebar, state, isMobile } = useSidebar()
+  const { theme, setTheme } = useTheme()
   const location = useLocation()
   const pathname = pathnameProp ?? location.pathname ?? '/'
 
@@ -90,6 +108,18 @@ export function AdminSidebar({ pathname: pathnameProp, userEmail, onLogout, ...p
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              tooltip={`Theme: ${themeLabel[theme]}`}
+              onClick={() => {
+                const next = themeOrder[(themeOrder.indexOf(theme) + 1) % themeOrder.length]
+                setTheme(next)
+              }}
+            >
+              {React.createElement(themeIcon[theme])}
+              <span className="truncate">{themeLabel[theme]}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip={userEmail ?? 'Sign out'} onClick={onLogout}>
               <LogOut />
