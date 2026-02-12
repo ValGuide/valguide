@@ -6,6 +6,11 @@ import { TourStatusBadge } from './tour-status-badge'
 
 export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   {
+    accessorKey: 'nanoId',
+    header: 'ID',
+    cell: ({ row }) => <code className="text-xs text-muted-foreground">{row.original.nanoId}</code>,
+  },
+  {
     accessorKey: 'title',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
