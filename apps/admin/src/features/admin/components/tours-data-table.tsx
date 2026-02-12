@@ -6,18 +6,17 @@ import {
   type SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import type { AdminUserListItem } from '@valguide/core/features/admin/users/list-users.fn'
+import type { AdminTourListItem } from '@valguide/core/features/admin/tours/list-tours.fn'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { cn } from '@valguide/ui/lib/utils'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
-import type { UsersTableMeta } from './users-columns'
-import { usersColumns } from './users-columns'
+import { toursColumns } from './tours-columns'
 
-type UsersDataTableProps = {
-  data: AdminUserListItem[]
+type ToursDataTableProps = {
+  data: AdminTourListItem[]
   totalCount: number
   pagination: PaginationState
   sorting: SortingState
@@ -25,13 +24,12 @@ type UsersDataTableProps = {
   onSortingChange: OnChangeFn<SortingState>
   search: string
   onSearchChange: (value: string) => void
-  statusFilter?: 'pending' | 'approved' | 'blocked'
-  onStatusFilterChange: (value: 'pending' | 'approved' | 'blocked' | undefined) => void
-  meta: UsersTableMeta
+  statusFilter?: 'draft' | 'published' | 'archived'
+  onStatusFilterChange: (value: 'draft' | 'published' | 'archived' | undefined) => void
   isLoading?: boolean
 }
 
-export function UsersDataTable({
+export function ToursDataTable({
   data,
   totalCount,
   pagination,
@@ -42,12 +40,11 @@ export function UsersDataTable({
   onSearchChange,
   statusFilter,
   onStatusFilterChange,
-  meta,
   isLoading,
-}: UsersDataTableProps) {
+}: ToursDataTableProps) {
   const table = useReactTable({
     data,
-    columns: usersColumns,
+    columns: toursColumns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
@@ -55,7 +52,6 @@ export function UsersDataTable({
     state: { pagination, sorting },
     onPaginationChange,
     onSortingChange,
-    meta,
   })
 
   const from = totalCount === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1
@@ -94,8 +90,8 @@ export function UsersDataTable({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={usersColumns.length} className="h-24 text-center">
-                  No users found.
+                <TableCell colSpan={toursColumns.length} className="h-24 text-center">
+                  No tours found.
                 </TableCell>
               </TableRow>
             )}
@@ -128,15 +124,15 @@ function Toolbar({
 }: {
   search: string
   onSearchChange: (value: string) => void
-  statusFilter?: 'pending' | 'approved' | 'blocked'
-  onStatusFilterChange: (value: 'pending' | 'approved' | 'blocked' | undefined) => void
+  statusFilter?: 'draft' | 'published' | 'archived'
+  onStatusFilterChange: (value: 'draft' | 'published' | 'archived' | undefined) => void
 }) {
   return (
     <div className="flex items-center gap-4">
       <div className="relative max-w-sm flex-1">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Search by email or name..."
+          placeholder="Search by title or organization..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-9"
@@ -145,7 +141,7 @@ function Toolbar({
       <Select
         value={statusFilter ?? 'all'}
         onValueChange={(value) =>
-          onStatusFilterChange(value === 'all' ? undefined : (value as 'pending' | 'approved' | 'blocked'))
+          onStatusFilterChange(value === 'all' ? undefined : (value as 'draft' | 'published' | 'archived'))
         }
       >
         <SelectTrigger className="w-[150px]">
@@ -153,9 +149,9 @@ function Toolbar({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All</SelectItem>
-          <SelectItem value="pending">Pending</SelectItem>
-          <SelectItem value="approved">Approved</SelectItem>
-          <SelectItem value="blocked">Blocked</SelectItem>
+          <SelectItem value="draft">Draft</SelectItem>
+          <SelectItem value="published">Published</SelectItem>
+          <SelectItem value="archived">Archived</SelectItem>
         </SelectContent>
       </Select>
     </div>
@@ -190,7 +186,7 @@ function PaginationControls({
   return (
     <div className="flex items-center justify-between">
       <p className="text-sm text-muted-foreground">
-        Showing {from}–{to} of {totalCount} users
+        Showing {from}–{to} of {totalCount} tours
       </p>
       <div className="flex items-center gap-2">
         <Select value={String(pageSize)} onValueChange={(value) => onPageSizeChange(Number(value))}>
@@ -202,6 +198,7 @@ function PaginationControls({
             <SelectItem value="20">20</SelectItem>
             <SelectItem value="50">50</SelectItem>
             <SelectItem value="100">100</SelectItem>
+            <SelectItem value="200">200</SelectItem>
           </SelectContent>
         </Select>
         <Button variant="outline" size="icon" className="size-8" onClick={onFirst} disabled={!canPreviousPage}>
