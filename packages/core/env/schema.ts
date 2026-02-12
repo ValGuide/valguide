@@ -10,7 +10,7 @@ export const serverEnvSchema = z.object({
   SUPABASE_COOKIE_DOMAIN: z.string().optional(),
   KV_REST_API_URL: z.string().optional(),
   KV_REST_API_TOKEN: z.string().optional(),
-  DRIIZLE_LOG_ENABLED: z
+  DRIZZLE_LOG_ENABLED: z
     .string()
     .optional()
     .transform((v) => v === 'true'),

@@ -10,7 +10,7 @@ export const serverEnv: StringifyValues<ServerEnv> = {
   SUPABASE_COOKIE_DOMAIN: undefined,
   KV_REST_API_URL: undefined,
   KV_REST_API_TOKEN: undefined,
-  DRIIZLE_LOG_ENABLED: 'false',
+  DRIZZLE_LOG_ENABLED: 'false',
   RESEND_SENDING_API_KEY: undefined,
   EMAIL_FROM: 'ValGuide <noreply@valguide.com>',
   VALBOT_SLACK_TOKEN: undefined,

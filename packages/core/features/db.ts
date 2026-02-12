@@ -17,7 +17,7 @@ export function getDb(): PostgresJsDatabase<typeof schema> {
 
   _db = drizzle(getClient(), {
     schema,
-    logger: serverEnv.DRIIZLE_LOG_ENABLED,
+    logger: serverEnv.DRIZZLE_LOG_ENABLED,
   })
   return _db
 }
