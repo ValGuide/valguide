@@ -14,7 +14,6 @@ export type InvitationData = {
     email: string
   }
   userEmail?: string
-  nextUrl?: string
 }
 
 // =============================================================================
@@ -37,8 +36,6 @@ export async function getInvitationData(token: string | undefined): Promise<Invi
   const { data: claimsData } = await supabase.auth.getClaims()
   const user = claimsData?.claims
 
-  const nextUrl = `/join-team?token=${token}`
-
   if (!user) {
     return {
       variant: 'public',
@@ -46,7 +43,6 @@ export async function getInvitationData(token: string | undefined): Promise<Invi
         organization: { name: invite.organization.name },
         email: invite.email,
       },
-      nextUrl,
     }
   }
 

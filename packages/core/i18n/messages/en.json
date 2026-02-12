@@ -872,9 +872,13 @@
       "title": "Join {teamName}",
       "description": "You've been invited to join <strong1>{teamName}</strong1> on ValGuide.",
       "sentTo": "This invitation was sent to",
-      "instruction": "Sign in or create an account with this email to get started.",
-      "createAccount": "Get Started",
-      "haveAccount": "I already have an account"
+      "sendCode": "Send verification code",
+      "codeSent": "We sent a 6-digit code to {email}",
+      "verify": "Verify & join team",
+      "verifying": "Verifying…",
+      "resend": "Resend code",
+      "resendIn": "Resend in {seconds}s",
+      "notYou": "If you didn't request this, you can safely ignore the email."
     },
     "wrongAccount": {
       "title": "Signed In as a Different Account",

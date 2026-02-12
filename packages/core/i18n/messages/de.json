@@ -862,9 +862,13 @@
       "title": "Tritt {teamName} bei",
       "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",
       "sentTo": "Diese Einladung wurde gesendet an",
-      "instruction": "Melde dich an oder erstelle ein Konto mit dieser E-Mail-Adresse.",
-      "createAccount": "Loslegen",
-      "haveAccount": "Ich habe bereits ein Konto"
+      "sendCode": "Bestätigungscode senden",
+      "codeSent": "Wir haben einen 6-stelligen Code an {email} gesendet",
+      "verify": "Bestätigen & Team beitreten",
+      "verifying": "Wird überprüft…",
+      "resend": "Code erneut senden",
+      "resendIn": "Erneut senden in {seconds}s",
+      "notYou": "Falls du das nicht warst, kannst du die E-Mail einfach ignorieren."
     },
     "wrongAccount": {
       "title": "Mit einem anderen Konto angemeldet",

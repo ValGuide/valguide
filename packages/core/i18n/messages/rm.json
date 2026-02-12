@@ -862,9 +862,13 @@
       "title": "Unir a {teamName}",
       "description": "Ti es vegnì envidà da unir a <strong1>{teamName}</strong1> sin ValGuide.",
       "sentTo": "Questa invitaziun è vegnida tramessa a",
-      "instruction": "S'annunziai u creei in conto cun questa adressa d'e-mail.",
-      "createAccount": "Cumenzar",
-      "haveAccount": "Jau hai gia in conto"
+      "sendCode": "Trametter code da verificaziun",
+      "codeSent": "Nus avain tramess in code da 6 cifras a {email}",
+      "verify": "Verifitgar & unir al team",
+      "verifying": "Vegn verifitgà…",
+      "resend": "Trametter danovamain il code",
+      "resendIn": "Trametter danovamain en {seconds}s",
+      "notYou": "Sche ti n'has betg dumandà quai, pos ti simplamain ignorar l'e-mail."
     },
     "wrongAccount": {
       "title": "S'annunzià cun in auter conto",

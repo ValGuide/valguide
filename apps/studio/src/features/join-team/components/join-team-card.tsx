@@ -3,6 +3,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { AlertCircle, Mail, UserPlus, Users } from 'lucide-react'
+import { JoinTeamOtpForm } from './join-team-otp-form'
 import { SignOutButton } from './sign-out-button'
 
 type JoinTeamCardProps = {
@@ -12,12 +13,21 @@ type JoinTeamCardProps = {
     email: string
   }
   userEmail?: string
-  nextUrl?: string
   error?: string | null
+  onSendOtp?: () => Promise<void>
+  onVerifyOtp?: (otp: string) => Promise<void>
   onSignOut?: () => Promise<void>
 }
 
-export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error, onSignOut }: JoinTeamCardProps) {
+export function JoinTeamCard({
+  variant,
+  invite,
+  userEmail,
+  error,
+  onSendOtp,
+  onVerifyOtp,
+  onSignOut,
+}: JoinTeamCardProps) {
   const t = useTranslations('joinTeam')
 
   if (variant === 'invalid') {
@@ -44,14 +54,18 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
     )
   }
 
-  if (variant === 'public' && invite) {
+  if (variant === 'public' && invite && onSendOtp && onVerifyOtp) {
     return (
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
             <UserPlus className="h-5 w-5 text-primary" />
           </div>
-          <CardTitle>{t('public.title', { teamName: invite.organization.name })}</CardTitle>
+          <CardTitle>
+            {t('public.title', {
+              teamName: invite.organization.name,
+            })}
+          </CardTitle>
           <CardDescription>
             {t.rich('public.description', {
               teamName: invite.organization.name,
@@ -67,20 +81,8 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
               <p className="text-sm font-medium">{invite.email}</p>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">{t('public.instruction')}</p>
+          <JoinTeamOtpForm email={invite.email} onSendOtp={onSendOtp} onVerifyOtp={onVerifyOtp} />
         </CardContent>
-        <CardFooter className="flex flex-col gap-3">
-          <Button asChild className="w-full">
-            <Link to="/signup" preload="intent" search={{ email: invite.email, next: nextUrl }}>
-              {t('public.createAccount')}
-            </Link>
-          </Button>
-          <Button asChild variant="outline" className="w-full">
-            <Link to="/login" preload="intent" search={{ next: nextUrl }}>
-              {t('public.haveAccount')}
-            </Link>
-          </Button>
-        </CardFooter>
       </Card>
     )
   }
@@ -132,7 +134,11 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
               <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
                 <AlertCircle className="h-5 w-5 text-destructive" />
               </div>
-              <CardTitle>{t('joining.title', { teamName: invite.organization.name })}</CardTitle>
+              <CardTitle>
+                {t('joining.title', {
+                  teamName: invite.organization.name,
+                })}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{t('joining.error')}</div>
@@ -150,7 +156,11 @@ export function JoinTeamCard({ variant, invite, userEmail, nextUrl = '/', error,
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <Users className="h-6 w-6 animate-pulse text-primary" />
             </div>
-            <p className="text-lg font-medium">{t('joining.title', { teamName: invite.organization.name })}</p>
+            <p className="text-lg font-medium">
+              {t('joining.title', {
+                teamName: invite.organization.name,
+              })}
+            </p>
             <p className="mt-1 text-center text-sm text-muted-foreground">{t('joining.description')}</p>
           </CardContent>
         )}
