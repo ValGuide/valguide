@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
-import { requireSuperadminMiddleware } from '../middleware'
+import { adminMiddleware } from '../middleware'
 import { updateUserStatus } from './update-user-status.server'
 
 const updateUserStatusSchema = z.object({
@@ -11,7 +11,7 @@ const updateUserStatusSchema = z.object({
 })
 
 export const adminUpdateUserStatusFn = createServerFn({ method: 'POST' })
-  .middleware([requireSuperadminMiddleware])
+  .middleware([adminMiddleware])
   .inputValidator(updateUserStatusSchema)
   .handler(async ({ data }) => {
     return updateUserStatus(db, data)

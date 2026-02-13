@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import type { AdminUserListItem } from '@valguide/core/features/admin/users/list-users.fn'
+import type { AdminUserListItem } from '@/server/functions/list-users.fn'
 import { Button } from '@valguide/ui/components/button'
 import {
   DropdownMenu,

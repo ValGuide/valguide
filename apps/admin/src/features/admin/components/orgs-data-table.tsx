@@ -6,7 +6,7 @@ import {
   type SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import type { AdminOrgListItem } from '@valguide/core/features/admin/orgs/list-orgs.fn'
+import type { AdminOrgListItem } from '@/server/functions/list-orgs.fn'
 import { Input } from '@valguide/ui/components/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { cn } from '@valguide/ui/lib/utils'

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
-import type { ListToursInput } from '@valguide/core/features/admin/tours/list-tours.fn'
+import type { ListToursInput } from '@/server/functions/list-tours.fn'
 import { BookOpen } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'

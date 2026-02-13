@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
-import type { ListOrgsInput } from '@valguide/core/features/admin/orgs/list-orgs.fn'
+import type { ListOrgsInput } from '@/server/functions/list-orgs.fn'
 import { Building2 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { z } from 'zod'

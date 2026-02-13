@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import type { DB } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
-import { serverEnv } from '../../../env/server'
-import { profiles } from '../../profiles/schema'
+import { serverEnv } from '@valguide/core/env/server'
+import { profiles } from '@valguide/core/features/profiles/schema'
 
 export type UpdateUserStatusInput = {
   userId: string

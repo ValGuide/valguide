@@ -7,7 +7,7 @@ import {
   type SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import type { AdminTourListItem } from '@valguide/core/features/admin/tours/list-tours.fn'
+import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'

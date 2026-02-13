@@ -1,9 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { requireSuperadminMiddleware } from '../admin/middleware'
-import { addApprovedDomain, addApprovedDomainInputSchema } from './add-approved-domain.server'
+import { addApprovedDomain, addApprovedDomainInputSchema } from '@valguide/core/features/orgs/add-approved-domain.server'
+import { adminMiddleware } from '../middleware'
 
 export const addApprovedDomainFn = createServerFn({ method: 'POST' })
-  .middleware([requireSuperadminMiddleware])
+  .middleware([adminMiddleware])
   .inputValidator(addApprovedDomainInputSchema)
   .handler(async ({ data }) => {
     return addApprovedDomain(data)

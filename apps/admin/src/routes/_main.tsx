@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-router'
-import { checkSuperadminFn } from '@valguide/core/features/admin/check-superadmin.fn'
+import { checkSuperadminFn } from '@/server/functions/check-superadmin.fn'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'

@@ -1,7 +1,7 @@
 import type { DB } from '@valguide/core/features/db'
 import { and, asc, count, desc, ilike, sql } from 'drizzle-orm'
-import { organization, organizationMember } from '../../orgs/schema'
-import { tour } from '../../tours/schema'
+import { organization, organizationMember } from '@valguide/core/features/orgs/schema'
+import { tour } from '@valguide/core/features/tours/schema'
 
 export type AdminOrgListItem = {
   nanoId: string
@@ -30,7 +30,6 @@ export type ListOrgsResult = {
 export async function listOrgs(dbClient: DB, input: ListOrgsInput): Promise<ListOrgsResult> {
   const { page, pageSize, search, sortBy, sortOrder } = input
 
-  // Build WHERE conditions
   const conditions = []
 
   if (search) {
@@ -40,21 +39,18 @@ export async function listOrgs(dbClient: DB, input: ListOrgsInput): Promise<List
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  // Member count subquery
   const memberCountSubquery = sql<number>`(
 		SELECT count(*)::int
 		FROM ${organizationMember}
 		WHERE ${organizationMember.organizationId} = ${organization.id}
 	)`
 
-  // Tour count subquery
   const tourCountSubquery = sql<number>`(
 		SELECT count(*)::int
 		FROM ${tour}
 		WHERE ${tour.organizationId} = ${organization.id}
 	)`
 
-  // Build ORDER BY
   const direction = sortOrder === 'asc' ? asc : desc
   const orderClauses = (() => {
     switch (sortBy) {
@@ -69,7 +65,6 @@ export async function listOrgs(dbClient: DB, input: ListOrgsInput): Promise<List
     }
   })()
 
-  // Run data query and count query in parallel
   const [rows, [countResult]] = await Promise.all([
     dbClient
       .select({

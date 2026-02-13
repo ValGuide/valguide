@@ -1,10 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { requireSuperadminMiddleware } from '../admin/middleware'
-import { deleteApprovedDomain } from './delete-approved-domain.server'
+import { deleteApprovedDomain } from '@valguide/core/features/orgs/delete-approved-domain.server'
+import { adminMiddleware } from '../middleware'
 
 export const deleteApprovedDomainFn = createServerFn({ method: 'POST' })
-  .middleware([requireSuperadminMiddleware])
+  .middleware([adminMiddleware])
   .inputValidator(z.object({ domainId: z.string().uuid() }))
   .handler(async ({ data }) => {
     await deleteApprovedDomain(data.domainId)

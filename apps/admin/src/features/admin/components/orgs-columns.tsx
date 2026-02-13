@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import type { AdminOrgListItem } from '@valguide/core/features/admin/orgs/list-orgs.fn'
+import type { AdminOrgListItem } from '@/server/functions/list-orgs.fn'
 import { Button } from '@valguide/ui/components/button'
 import { ArrowUpDown } from 'lucide-react'
 

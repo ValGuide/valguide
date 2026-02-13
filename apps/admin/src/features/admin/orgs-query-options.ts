@@ -1,6 +1,6 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query'
-import type { ListOrgsInput } from '@valguide/core/features/admin/orgs/list-orgs.fn'
-import { adminListOrgsFn } from '@valguide/core/features/admin/orgs/list-orgs.fn'
+import type { ListOrgsInput } from '@/server/functions/list-orgs.fn'
+import { adminListOrgsFn } from '@/server/functions/list-orgs.fn'
 
 export const adminOrgsQueryOptions = (input: ListOrgsInput) =>
   queryOptions({

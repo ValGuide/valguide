@@ -1,8 +1,8 @@
 import type { DB } from '@valguide/core/features/db'
 import { and, asc, count, desc, eq, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm'
-import { asset } from '../../assets/schema'
-import { organization } from '../../orgs/schema'
-import { tour, tourAssetDraft, tourLocaleDraft, tourStopDraft } from '../../tours/schema'
+import { asset } from '@valguide/core/features/assets/schema'
+import { organization } from '@valguide/core/features/orgs/schema'
+import { tour, tourAssetDraft, tourLocaleDraft, tourStopDraft } from '@valguide/core/features/tours/schema'
 
 export type AdminTourListItem = {
   nanoId: string
@@ -45,7 +45,6 @@ function deriveTourStatus(row: {
 export async function listTours(dbClient: DB, input: ListToursInput): Promise<ListToursResult> {
   const { page, pageSize, search, status, organizationNames, sortBy, sortOrder } = input
 
-  // Build WHERE conditions
   const conditions = [isNull(tour.deletedAt)]
 
   if (status === 'draft') {
@@ -69,14 +68,12 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  // Stop count subquery
   const stopCountSubquery = sql<number>`(
     SELECT count(*)::int
     FROM studio.tour_stop_draft
     WHERE ${tourStopDraft.tourId} = ${tour.id}
   )`
 
-  // Cover image subquery
   const coverImageSubquery = dbClient
     .select({ storagePath: asset.storagePath })
     .from(tourAssetDraft)
@@ -85,12 +82,10 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
     .limit(1)
     .as('cover_image')
 
-  // Build ORDER BY
   const direction = sortOrder === 'asc' ? asc : desc
   const orderClauses = (() => {
     switch (sortBy) {
       case 'title':
-        // Push NULL titles ("Untitled") to the end regardless of sort direction
         return [
           sortOrder === 'asc'
             ? asc(sql`${tourLocaleDraft.title} IS NULL`)
@@ -108,7 +103,6 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
     }
   })()
 
-  // Run data query and count query in parallel
   const [rows, [countResult]] = await Promise.all([
     dbClient
       .select({

@@ -1,8 +1,8 @@
 import type { DB } from '@valguide/core/features/db'
 import { and, asc, count, desc, eq, ilike, or, sql } from 'drizzle-orm'
 import { authUsers } from 'drizzle-orm/supabase'
-import { organizationMember } from '../../orgs/schema'
-import { profiles } from '../../profiles/schema'
+import { organizationMember } from '@valguide/core/features/orgs/schema'
+import { profiles } from '@valguide/core/features/profiles/schema'
 
 export type AdminUserListItem = {
   id: string
@@ -36,7 +36,6 @@ export type ListUsersResult = {
 export async function listUsers(dbClient: DB, input: ListUsersInput): Promise<ListUsersResult> {
   const { page, pageSize, search, status, sortBy, sortOrder } = input
 
-  // Build WHERE conditions
   const conditions = []
 
   if (status) {
@@ -52,14 +51,12 @@ export async function listUsers(dbClient: DB, input: ListUsersInput): Promise<Li
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  // Org count subquery
   const orgCountSubquery = sql<number>`(
 		SELECT count(*)::int
 		FROM ${organizationMember}
 		WHERE ${organizationMember.userId} = ${profiles.id}
 	)`
 
-  // Build ORDER BY
   const direction = sortOrder === 'asc' ? asc : desc
   const orderClauses = (() => {
     switch (sortBy) {
@@ -76,7 +73,6 @@ export async function listUsers(dbClient: DB, input: ListUsersInput): Promise<Li
     }
   })()
 
-  // Run data query and count query in parallel
   const [rows, [countResult]] = await Promise.all([
     dbClient
       .select({

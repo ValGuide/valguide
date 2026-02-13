@@ -7,7 +7,7 @@ import {
   type SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import type { AdminUserListItem } from '@valguide/core/features/admin/users/list-users.fn'
+import type { AdminUserListItem } from '@/server/functions/list-users.fn'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'

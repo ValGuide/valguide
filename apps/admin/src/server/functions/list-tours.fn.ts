@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
-import { requireSuperadminMiddleware } from '../middleware'
+import { adminMiddleware } from '../middleware'
 import { listTours } from './list-tours.server'
 
 export type { AdminTourListItem, ListToursInput, ListToursResult } from './list-tours.server'
@@ -17,7 +17,7 @@ const listToursSchema = z.object({
 })
 
 export const adminListToursFn = createServerFn({ method: 'GET' })
-  .middleware([requireSuperadminMiddleware])
+  .middleware([adminMiddleware])
   .inputValidator(listToursSchema)
   .handler(async ({ data }) => {
     return listTours(db, data)
