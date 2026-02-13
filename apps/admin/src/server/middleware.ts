@@ -3,11 +3,8 @@ import { NotFoundError } from '@valguide/features/auth/authorization'
 import { createAdminClient } from './supabase'
 import { isSuperadmin } from './utils/superadmin'
 
-/**
- * Per-function middleware for individual .fn.ts files.
- * Provides typed auth context to handlers.
- * Verifies both authentication and superadmin status.
- */
+
+// TODO: fix /en, etc. apparently not working due to this
 export const adminMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
   const supabase = await createAdminClient()
   const { data } = await supabase.auth.getClaims()
