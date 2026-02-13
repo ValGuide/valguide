@@ -2,10 +2,10 @@
   "name": "@valguide/turbo",
   "private": true,
   "scripts": {
-    "env:load": "pnpm dlx tsx ./.scripts/load-env.ts",
-    "env:merge": "pnpm dlx tsx ./.scripts/merge-env.ts",
-    "env:push": "pnpm dlx tsx ./.scripts/push-to-vercel.ts",
-    "env:clear": "pnpm dlx tsx ./.scripts/clear-vercel-env.ts",
+    "env:load": "pnpm dlx tsx ./scripts/load-env.ts",
+    "env:merge": "pnpm dlx tsx ./scripts/merge-env.ts",
+    "env:push": "pnpm dlx tsx ./scripts/push-to-vercel.ts",
+    "env:clear": "pnpm dlx tsx ./scripts/clear-vercel-env.ts",
     "prepare": "husky",
     "build": "turbo build",
     "dev": "turbo dev",
@@ -21,8 +21,8 @@
     "clean:vite": "turbo run clean:vite --parallel",
     "clean:install": "pnpm clean && pnpm install",
     "format": "biome format --write .",
-    "secrets:hide": "sh .scripts/secrets-hide.sh",
-    "secrets:show": "sh .scripts/secrets-show.sh",
+    "secrets:hide": "sh scripts/secrets-hide.sh",
+    "secrets:show": "sh scripts/secrets-show.sh",
     "core:type-check": "pnpm turbo run type-check --filter ./packages/core",
     "admin:dev": "pnpm caddy:ensure && (sleep 5 && open https://admin-local.dev) & pnpm env:load turbo run dev --filter ./apps/admin",
     "admin:start": "pnpm env:load turbo run start --filter ./apps/admin",
@@ -68,7 +68,7 @@
     "storybook:serve": "pnpm --filter @valguide/storybook serve",
     "storybook:dev": "pnpm caddy:ensure && (sleep 5 && open https://storybook.local.dev) & turbo run dev --filter ./apps/storybook",
     "caddy": "caddy run --config Caddyfile.local",
-    "caddy:ensure": "sh .scripts/ensure-caddy.sh",
+    "caddy:ensure": "sh scripts/ensure-caddy.sh",
     "icons:build": "turbo run build --filter ./packages/icons",
     "supabase:link": "supabase link --project-ref $SUPABASE_PROJECT_ID",
     "supabase:link:dev": "pnpm env:load --sb:dev pnpm supabase:link",
@@ -83,7 +83,7 @@
     "seed:prod": "pnpm env:load --sb:prod pnpm dlx tsx scripts/seed-studio.ts",
     "resend:sync": "pnpm env:load pnpm --filter @valguide/email sync-templates",
     "email:dev": "pnpm --filter @valguide/email dev",
-    "workspace:dev": "pnpm caddy:ensure && (sleep 5 && for u in studio admin storybook; do open https://$u.local.dev; done) & pnpm env:load turbo run dev --filter ./apps/studio --filter ./apps/admin --filter ./apps/storybook"
+    "workspace:dev": "pnpm caddy:ensure && (sleep 5 && for u in studio.local.dev admin-local.dev storybook.local.dev; do open https://$u; done) & pnpm env:load turbo run dev --filter ./apps/studio --filter ./apps/admin --filter ./apps/storybook"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.0",

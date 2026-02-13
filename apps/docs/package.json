@@ -6,7 +6,6 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev --port 3006",
-    "dev:local": "vite dev --port 3006 --host docs.local.dev",
     "build": "vite build",
     "preview": "vite preview --port 3006",
     "start": "PORT=3006 node .output/server/index.mjs",

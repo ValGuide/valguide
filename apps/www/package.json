@@ -5,7 +5,6 @@
   "private": true,
   "scripts": {
     "dev": "vite dev --port 3004",
-    "dev:local": "vite dev --port 3004 --host www.local.dev",
     "build": "vite build",
     "preview": "vite preview --port 3004",
     "start": "PORT=3004 node .output/server/index.mjs",

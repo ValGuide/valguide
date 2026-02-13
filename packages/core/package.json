@@ -9,7 +9,7 @@
     "i18n:check": "tsx i18n/scripts/validate-locales.ts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "env:load": "pnpm dlx tsx ../../.scripts/load-env.ts",
+    "env:load": "pnpm dlx tsx ../../scripts/load-env.ts",
     "db:generate": "pnpm env:load drizzle-kit generate",
     "db:migrate": "pnpm env:load drizzle-kit migrate",
     "db:pull": "pnpm env:load drizzle-kit pull",
