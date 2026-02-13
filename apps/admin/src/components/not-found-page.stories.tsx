@@ -3,7 +3,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 
 function AdminNotFoundPage() {
-  const t = useTranslations('admin.notFound')
+  const t = useTranslations('notFound')
   return <NotFoundPage i18n={{ title: t('title'), description: t('description'), homeButton: t('homeButton') }} />
 }
 

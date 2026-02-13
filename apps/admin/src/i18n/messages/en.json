@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "title": "Admin - ValGuide",
+    "description": "Manage your ValGuide resources"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "homeButton": "Go back"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again or return to the home page.",
+    "tryAgain": "Try again"
+  },
+  "assets": {
+    "title": "Assets",
+    "comingSoon": "Asset management coming soon"
+  }
+}

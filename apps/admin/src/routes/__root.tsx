@@ -6,36 +6,58 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
+import { ErrorPage } from '@valguide/features/error/error-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
 import { currentUserQueryOptions } from '@/features/auth/query-options'
 import { themeQueryOptions } from '@/features/theme/query-options'
+import { adminMessagesQueryOptions } from '@/i18n/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
+  ssr: true,
   beforeLoad: async ({ context }) => {
-    const [user, locale, theme] = await Promise.all([
-      context.queryClient.ensureQueryData(currentUserQueryOptions()),
+    const [locale, theme] = await Promise.all([
       context.queryClient.ensureQueryData(localeQueryOptions()),
       context.queryClient.ensureQueryData(themeQueryOptions()),
     ])
-    const messages = await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
+    const [user, messages] = await Promise.all([
+      context.queryClient.ensureQueryData(currentUserQueryOptions()),
+      context.queryClient.ensureQueryData(messagesQueryOptions(locale)),
+    ])
+    const adminMessages = await context.queryClient.ensureQueryData(adminMessagesQueryOptions(locale))
     const metadata = {
-      title: messages?.admin?.metadata?.title ?? 'Admin - ValGuide',
-      description: messages?.admin?.metadata?.description ?? 'Manage your ValGuide resources',
+      title: adminMessages?.metadata?.title ?? 'Admin - ValGuide',
+      description: adminMessages?.metadata?.description ?? 'Manage your ValGuide resources',
     }
-    return { user, locale, theme, messages, metadata }
+    return { user, locale, theme, messages, adminMessages, metadata }
+  },
+  errorComponent: ({ error }) => {
+    const { adminMessages } = Route.useRouteContext()
+    return (
+      <ErrorPage
+        i18n={{
+          title: adminMessages?.error?.title ?? 'Something went wrong',
+          description:
+            adminMessages?.error?.description ??
+            'An unexpected error occurred. Please try again or return to the home page.',
+          tryAgain: adminMessages?.error?.tryAgain ?? 'Try again',
+        }}
+        error={error}
+        reset={() => window.location.reload()}
+      />
+    )
   },
   notFoundComponent: () => {
-    const { messages } = Route.useRouteContext()
+    const { adminMessages } = Route.useRouteContext()
     return (
       <NotFoundPage
         i18n={{
-          title: messages?.admin?.notFound?.title ?? 'Page not found',
+          title: adminMessages?.notFound?.title ?? 'Page not found',
           description:
-            messages?.admin?.notFound?.description ?? "The page you're looking for doesn't exist or has been moved.",
-          homeButton: messages?.admin?.notFound?.homeButton ?? 'Go back',
+            adminMessages?.notFound?.description ?? "The page you're looking for doesn't exist or has been moved.",
+          homeButton: adminMessages?.notFound?.homeButton ?? 'Go back',
         }}
       />
     )
