@@ -11,6 +11,7 @@ const exchangeCodeFn = createServerFn({ method: 'GET' })
     const supabase = await createAdminClient()
     const { error } = await supabase.auth.exchangeCodeForSession(data.code)
     if (error) {
+      console.error('Error exchanging code for session:', error)
       return { success: false, error: error.message }
     }
 
@@ -23,6 +24,7 @@ const exchangeCodeFn = createServerFn({ method: 'GET' })
       const slackTeamId =
         slackIdentity?.identity_data?.['https://slack.com/team_id'] ?? slackIdentity?.identity_data?.team_id
       if (slackTeamId && slackTeamId !== serverEnv.SLACK_TEAM_ID) {
+        console.warn(`User belongs to Slack team ${slackTeamId}, expected ${serverEnv.SLACK_TEAM_ID}`)
         await supabase.auth.signOut()
         return { success: false, error: 'Access denied: wrong Slack workspace' }
       }
@@ -31,10 +33,12 @@ const exchangeCodeFn = createServerFn({ method: 'GET' })
     // Verify superadmin status
     const email = user?.email
     if (!isSuperadmin(email)) {
+      console.warn(`User ${email} is not a superadmin`)
       await supabase.auth.signOut()
       return { success: false, error: 'Access denied: not authorized for admin access' }
     }
 
+    console.info(`User ${email} authenticated successfully as superadmin`)
     return { success: true }
   })
 
@@ -56,6 +60,7 @@ export const Route = createFileRoute('/auth/callback')({
       throw redirect({ to: '/login' })
     }
 
+    console.log('Exchanging code for session...')
     const result = await exchangeCodeFn({ data: { code: search.code } })
     if (!result.success) {
       throw redirect({
