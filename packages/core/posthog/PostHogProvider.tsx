@@ -8,15 +8,7 @@ import { clientEnv } from '../env/client'
 const isPostHogEnabled = clientEnv.VITE_POSTHOG_ENABLED
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <ClientOnly>
-      {isPostHogEnabled ? (
-        <Provider>{children}</Provider>
-      ) : (
-        children
-      )}
-    </ClientOnly>
-  )
+  return <ClientOnly>{isPostHogEnabled ? <Provider>{children}</Provider> : children}</ClientOnly>
 }
 
 function Provider({ children }: { children: React.ReactNode }) {

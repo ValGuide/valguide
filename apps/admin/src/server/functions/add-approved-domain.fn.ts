@@ -1,5 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
-import { addApprovedDomain, addApprovedDomainInputSchema } from '@valguide/core/features/orgs/add-approved-domain.server'
+import {
+  addApprovedDomain,
+  addApprovedDomainInputSchema,
+} from '@valguide/core/features/orgs/add-approved-domain.server'
 import { adminMiddleware } from '../middleware'
 
 export const addApprovedDomainFn = createServerFn({ method: 'POST' })
