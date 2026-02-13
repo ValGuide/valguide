@@ -13,7 +13,7 @@ app.local.dev {
 	tls internal
 }
 
-admin.local.dev {
+admin-local.dev {
 	reverse_proxy localhost:3001
 	tls internal
 }

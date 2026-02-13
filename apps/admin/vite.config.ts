@@ -11,7 +11,7 @@ import Inspect from "vite-plugin-inspect";
 export default defineConfig({
   server: {
     port: 3001,
-    allowedHosts: ['admin.local.dev'],
+    allowedHosts: ['admin-local.dev'],
   },
   ssr: {
     // required because resend uses uuid v9 which caused

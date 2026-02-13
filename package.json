@@ -24,7 +24,7 @@
     "secrets:hide": "sh .scripts/secrets-hide.sh",
     "secrets:show": "sh .scripts/secrets-show.sh",
     "core:type-check": "pnpm turbo run type-check --filter ./packages/core",
-    "admin:dev": "pnpm caddy:ensure && (sleep 5 && open https://admin.local.dev) & pnpm env:load turbo run dev --filter ./apps/admin",
+    "admin:dev": "pnpm caddy:ensure && (sleep 5 && open https://admin-local.dev) & pnpm env:load turbo run dev --filter ./apps/admin",
     "admin:start": "pnpm env:load turbo run start --filter ./apps/admin",
     "admin:build": "pnpm env:load turbo run build --filter ./apps/admin",
     "admin:preview": "pnpm env:load turbo run preview --filter ./apps/admin",
