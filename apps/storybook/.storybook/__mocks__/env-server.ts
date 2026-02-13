@@ -18,4 +18,9 @@ export const serverEnv: StringifyValues<ServerEnv> = {
   NODE_ENV: 'development' as const,
   APP_BASE_URL: 'https://app.valguide.com',
   VITE_STUDIO_URL: 'https://studio.valguide.com',
+  ADMIN_ALLOWED_EMAILS: '',
+  ADMIN_BASE_URL: 'https://admin-local.dev',
+  ADMIN_COOKIE_DOMAIN: undefined,
+  SLACK_TEAM_ID: undefined,
+  SUPABASE_SECRET_KEY: undefined,
 }

@@ -145,6 +145,7 @@
     "./i18n": "./i18n/index.ts",
     "./i18n/server": "./i18n/server.ts",
     "./i18n/client": "./i18n/client.ts",
-    "./i18n/mock": "./i18n/mock.ts"
+    "./i18n/mock": "./i18n/mock.ts",
+    "./utils/types": "./utils/types.ts"
   }
 }
