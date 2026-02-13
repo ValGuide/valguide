@@ -7,7 +7,7 @@ export const adminCookieOptions = (): CookieOptionsWithName => ({
   name: 'sb-admin-auth-token',
   domain: serverEnv.ADMIN_COOKIE_DOMAIN,
   path: '/',
-  sameSite: 'strict',
+  sameSite: 'lax',
   secure: true,
   httpOnly: true,
   maxAge: 60 * 60 * 4, // 4 hours
