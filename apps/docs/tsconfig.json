@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@valguide/core/*": ["../../packages/core/*"],
       "fumadocs-mdx:collections/*": [".source/*"]
     }
   },

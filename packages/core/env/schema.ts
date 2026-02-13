@@ -40,6 +40,10 @@ export const clientEnvSchema = z.object({
   VITE_STUDIO_URL: z.string().optional(),
   VITE_APP_DOMAIN: z.string().optional().default('app.valguide.com'),
   VITE_IMAGEKIT_URL: z.string().optional().default('https://ik.imagekit.io/valguide'),
+  VITE_ENV: z
+    .enum(['local', 'dev', 'prod'])
+    .optional()
+    .default('prod'),
 })
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>

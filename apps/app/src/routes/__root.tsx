@@ -5,6 +5,7 @@ import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/reac
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
+import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
@@ -51,7 +52,7 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: match.context.metadata.title,
+        title: getPrefixedTitle(match.context.metadata.title),
       },
       {
         name: 'description',

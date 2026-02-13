@@ -1,6 +1,7 @@
 import { createRootRoute, HeadContent, Outlet, redirect, Scripts } from '@tanstack/react-router'
 import { RootProvider } from 'fumadocs-ui/provider/tanstack'
 import type { ReactNode } from 'react'
+import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { checkAuthFn } from '@/lib/auth'
 import appCss from '@/styles/app.css?url'
 
@@ -15,7 +16,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'ValGuide Docs',
+        title: getPrefixedTitle('ValGuide Docs'),
       },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],

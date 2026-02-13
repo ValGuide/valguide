@@ -60,6 +60,7 @@
   "globalEnv": [
     "VERCEL_URL",
     "VERCEL_ENV",
+    "VITE_ENV",
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",
     "OPENAI_API_KEY",
