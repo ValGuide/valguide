@@ -4,11 +4,21 @@
 
 import { execSync } from 'node:child_process'
 import * as fs from 'node:fs'
+import * as path from 'node:path'
 import { Project, SyntaxKind } from 'ts-morph'
 
-export const MESSAGES_DIR = 'packages/core/i18n/messages'
-export const MESSAGES_PATH = `${MESSAGES_DIR}/en.json`
-export const LOCALE_FILES = ['en.json', 'de.json', 'rm.json']
+export type MessageSet = {
+  dir: string
+  localeFiles: string[]
+}
+
+export const MESSAGE_SETS: MessageSet[] = [
+  { dir: 'packages/core/i18n/messages', localeFiles: ['en.json', 'de.json', 'rm.json'] },
+  { dir: 'apps/admin/src/i18n/messages', localeFiles: ['en.json'] },
+]
+
+export const BASE_LOCALE = 'en.json'
+
 const SRC_DIRS = ['apps', 'packages']
 
 export function flattenKeys(obj: Record<string, unknown>, prefix = ''): Set<string> {
@@ -200,4 +210,107 @@ export function printUnusedKeys(unusedKeys: string[]): void {
     }
     console.log(`  - ${key.substring(namespace.length + 1)}`)
   }
+}
+
+function findDuplicateKeys(jsonString: string, filename: string): string[] {
+  const duplicates: string[] = []
+  const lines = jsonString.split('\n')
+  const keysByIndent: Map<number, Map<string, number>> = new Map()
+
+  for (let lineNum = 0; lineNum < lines.length; lineNum++) {
+    const line = lines[lineNum]
+    const trimmed = line.trim()
+
+    if (!trimmed || trimmed === '{' || trimmed === '}' || trimmed === '[' || trimmed === ']' || trimmed === '},') {
+      if (trimmed === '}' || trimmed === '},') {
+        const lineIndent = line.search(/\S/)
+        for (const [indent] of keysByIndent) {
+          if (indent > lineIndent) {
+            keysByIndent.delete(indent)
+          }
+        }
+      }
+      continue
+    }
+
+    const keyMatch = trimmed.match(/^"([^"]+)"\s*:/)
+    if (keyMatch) {
+      const key = keyMatch[1]
+      const lineIndent = line.search(/\S/)
+
+      for (const [indent] of keysByIndent) {
+        if (indent > lineIndent) {
+          keysByIndent.delete(indent)
+        }
+      }
+
+      if (!keysByIndent.has(lineIndent)) {
+        keysByIndent.set(lineIndent, new Map())
+      }
+
+      const keysAtLevel = keysByIndent.get(lineIndent)!
+      if (keysAtLevel.has(key)) {
+        const firstLine = keysAtLevel.get(key)!
+        duplicates.push(`${filename}:${lineNum + 1} - key "${key}" (first seen at line ${firstLine})`)
+      } else {
+        keysAtLevel.set(key, lineNum + 1)
+      }
+    }
+  }
+
+  return duplicates
+}
+
+export function validateMessagesDir(messagesDir: string): boolean {
+  const files = fs.readdirSync(messagesDir).filter((f) => f.endsWith('.json'))
+  const locales: Record<string, object> = {}
+  let hasErrors = false
+  const baseLocale = 'en'
+
+  for (const file of files) {
+    const locale = file.replace('.json', '')
+    const filePath = path.join(messagesDir, file)
+    const content = fs.readFileSync(filePath, 'utf-8')
+
+    const duplicates = findDuplicateKeys(content, file)
+    if (duplicates.length > 0) {
+      for (const dup of duplicates) {
+        console.error(`❌ Duplicate key: ${dup}`)
+      }
+      hasErrors = true
+    }
+
+    locales[locale] = JSON.parse(content)
+  }
+
+  if (!locales[baseLocale]) {
+    console.error(`❌ Base locale "${baseLocale}.json" not found in ${messagesDir}`)
+    return false
+  }
+
+  const baseKeys = flattenKeys(locales[baseLocale] as Record<string, unknown>)
+
+  for (const [locale, messages] of Object.entries(locales)) {
+    if (locale === baseLocale) continue
+    const localeKeys = flattenKeys(messages as Record<string, unknown>)
+
+    for (const key of baseKeys) {
+      if (!localeKeys.has(key)) {
+        console.error(`❌ Missing in ${locale}: ${key}`)
+        hasErrors = true
+      }
+    }
+
+    for (const key of localeKeys) {
+      if (!baseKeys.has(key)) {
+        console.warn(`⚠️  Extra key in ${locale}: ${key}`)
+      }
+    }
+  }
+
+  if (!hasErrors) {
+    console.log(`✅ ${files.length} locale file(s) valid (no duplicates${files.length > 1 ? ', keys in sync' : ''})`)
+  }
+
+  return !hasErrors
 }

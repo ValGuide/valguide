@@ -4,21 +4,31 @@
  * Usage: npx tsx scripts/find-unused-i18n-keys.ts
  */
 
+import * as path from 'node:path'
 import {
+  BASE_LOCALE,
   extractUsedKeys,
   findEmptyObjects,
   findUnusedKeys,
   flattenKeys,
   loadTranslations,
-  MESSAGES_PATH,
+  MESSAGE_SETS,
   printUnusedKeys,
 } from './i18n-utils'
 
 async function main() {
-  console.log('Loading translations from', MESSAGES_PATH)
-  const messages = loadTranslations(MESSAGES_PATH)
-  const existingKeys = flattenKeys(messages)
-  const emptyObjects = findEmptyObjects(messages)
+  const existingKeys = new Set<string>()
+  const emptyObjects: string[] = []
+
+  for (const set of MESSAGE_SETS) {
+    const filePath = path.join(set.dir, BASE_LOCALE)
+    console.log('Loading translations from', filePath)
+    const messages = loadTranslations(filePath)
+    for (const key of flattenKeys(messages)) {
+      existingKeys.add(key)
+    }
+    emptyObjects.push(...findEmptyObjects(messages))
+  }
   console.log(`Found ${existingKeys.size} translation keys\n`)
 
   console.log('Parsing source files with ts-morph...')

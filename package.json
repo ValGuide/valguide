@@ -14,7 +14,7 @@
     "lint:fix": "biome check --write .",
     "test": "turbo test",
     "type-check": "turbo type-check",
-    "i18n:check": "pnpm --filter @valguide/core i18n:check",
+    "i18n:check": "pnpm dlx tsx scripts/validate-locales.ts",
     "i18n:unused": "pnpm dlx tsx scripts/find-unused-i18n-keys.ts",
     "i18n:prune": "pnpm dlx tsx scripts/remove-unused-i18n-keys.ts",
     "clean": "turbo clean --parallel && rm -rf node_modules pnpm-lock.yaml .turbo",

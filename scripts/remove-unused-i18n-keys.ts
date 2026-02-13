@@ -7,14 +7,13 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import {
+  BASE_LOCALE,
   extractUsedKeys,
   findEmptyObjects,
   findUnusedKeys,
   flattenKeys,
-  LOCALE_FILES,
   loadTranslations,
-  MESSAGES_DIR,
-  MESSAGES_PATH,
+  MESSAGE_SETS,
   printUnusedKeys,
 } from './i18n-utils'
 
@@ -56,10 +55,18 @@ function cleanEmptyObjects(obj: Record<string, unknown>): void {
 async function main() {
   console.log(isDryRun ? '🔍 DRY RUN - No files will be modified\n' : '')
 
-  console.log('Loading translations from', MESSAGES_PATH)
-  const messages = loadTranslations(MESSAGES_PATH)
-  const existingKeys = flattenKeys(messages)
-  const emptyObjects = findEmptyObjects(messages)
+  const existingKeys = new Set<string>()
+  const emptyObjects: string[] = []
+
+  for (const set of MESSAGE_SETS) {
+    const filePath = path.join(set.dir, BASE_LOCALE)
+    console.log('Loading translations from', filePath)
+    const messages = loadTranslations(filePath)
+    for (const key of flattenKeys(messages)) {
+      existingKeys.add(key)
+    }
+    emptyObjects.push(...findEmptyObjects(messages))
+  }
   console.log(`Found ${existingKeys.size} translation keys\n`)
 
   console.log('Parsing source files with ts-morph...')
@@ -99,25 +106,27 @@ async function main() {
 
   console.log('\nRemoving keys from locale files...')
 
-  for (const localeFile of LOCALE_FILES) {
-    const filePath = path.join(MESSAGES_DIR, localeFile)
-    if (!fs.existsSync(filePath)) {
-      console.log(`  ⚠️  ${localeFile} not found, skipping`)
-      continue
-    }
-
-    const localeMessages = loadTranslations(filePath)
-    let removedCount = 0
-
-    for (const fullKey of unusedKeys) {
-      if (removeKeyFromObject(localeMessages, fullKey)) {
-        removedCount++
+  for (const set of MESSAGE_SETS) {
+    for (const localeFile of set.localeFiles) {
+      const filePath = path.join(set.dir, localeFile)
+      if (!fs.existsSync(filePath)) {
+        console.log(`  ⚠️  ${filePath} not found, skipping`)
+        continue
       }
-    }
 
-    cleanEmptyObjects(localeMessages)
-    fs.writeFileSync(filePath, JSON.stringify(localeMessages, null, 2) + '\n')
-    console.log(`  ✅ ${localeFile}: removed ${removedCount} keys`)
+      const localeMessages = loadTranslations(filePath)
+      let removedCount = 0
+
+      for (const fullKey of unusedKeys) {
+        if (removeKeyFromObject(localeMessages, fullKey)) {
+          removedCount++
+        }
+      }
+
+      cleanEmptyObjects(localeMessages)
+      fs.writeFileSync(filePath, JSON.stringify(localeMessages, null, 2) + '\n')
+      console.log(`  ✅ ${filePath}: removed ${removedCount} keys`)
+    }
   }
 
   console.log('\n✅ Done! Run `pnpm i18n:unused` and `pnpm type-check` to verify.')
