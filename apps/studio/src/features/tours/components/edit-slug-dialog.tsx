@@ -7,6 +7,7 @@ type SlugSettingsComponentProps = {
   tourNanoId: string
   tourTitle: string
   variant?: 'card' | 'plain'
+  onSaved?: () => void
 }
 
 export type EditSlugDialogProps = {
@@ -30,7 +31,12 @@ export function EditSlugDialog({ open, onOpenChange, tourNanoId, tourTitle, Slug
           </DialogTitle>
           <DialogDescription>{t('dialogDescription')}</DialogDescription>
         </DialogHeader>
-        <SlugSettings tourNanoId={tourNanoId} tourTitle={tourTitle} variant="plain" />
+        <SlugSettings
+          tourNanoId={tourNanoId}
+          tourTitle={tourTitle}
+          variant="plain"
+          onSaved={() => onOpenChange(false)}
+        />
       </DialogContent>
     </Dialog>
   )

@@ -10,9 +10,10 @@ interface TourSlugSettingsConnectedProps {
   tourNanoId: string
   tourTitle: string
   variant?: 'card' | 'plain'
+  onSaved?: () => void
 }
 
-export function TourSlugSettingsConnected({ tourNanoId, tourTitle, variant }: TourSlugSettingsConnectedProps) {
+export function TourSlugSettingsConnected({ tourNanoId, tourTitle, variant, onSaved }: TourSlugSettingsConnectedProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [slugHistory, setSlugHistory] = useState<TourSlugHistoryItem[]>([])
   const [orgSlug, setOrgSlug] = useState<string>()
@@ -78,6 +79,7 @@ export function TourSlugSettingsConnected({ tourNanoId, tourTitle, variant }: To
       orgSlug={orgSlug}
       onUpdateSlug={handleUpdateSlug}
       onCheckSlugAvailable={handleCheckSlugAvailable}
+      onSaved={onSaved}
     />
   )
 }

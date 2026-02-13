@@ -43,6 +43,7 @@ export interface TourSlugSettingsProps {
   orgSlug?: string
   onUpdateSlug?: (newSlug: string) => Promise<UpdateTourSlugResult>
   onCheckSlugAvailable?: (slug: string) => Promise<TourSlugCheckResult>
+  onSaved?: () => void
 }
 
 export function TourSlugSettings({
@@ -54,6 +55,7 @@ export function TourSlugSettings({
   orgSlug,
   onUpdateSlug,
   onCheckSlugAvailable,
+  onSaved,
 }: TourSlugSettingsProps) {
   const t = useTranslations('tours.editor.slug')
   const [isPending, startTransition] = useTransition()
@@ -79,6 +81,7 @@ export function TourSlugSettings({
         const result = await onUpdateSlug(value.slug)
         if (result.success) {
           setSlugCheckState('idle')
+          onSaved?.()
         } else {
           toast.error(result.message ?? t('saveError'))
         }
