@@ -1,8 +1,8 @@
-import type { DB } from '@valguide/core/features/db'
-import { and, asc, count, desc, eq, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm'
 import { asset } from '@valguide/core/features/assets/schema'
+import type { DB } from '@valguide/core/features/db'
 import { organization } from '@valguide/core/features/orgs/schema'
 import { tour, tourAssetDraft, tourLocaleDraft, tourStopDraft } from '@valguide/core/features/tours/schema'
+import { and, asc, count, desc, eq, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm'
 
 export type AdminTourListItem = {
   nanoId: string
@@ -68,11 +68,7 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  const stopCountSubquery = sql<number>`(
-    SELECT count(*)::int
-    FROM studio.tour_stop_draft
-    WHERE ${tourStopDraft.tourId} = ${tour.id}
-  )`
+  const stopCountSubquery = dbClient.$count(tourStopDraft, eq(tourStopDraft.tourId, tour.id))
 
   const coverImageSubquery = dbClient
     .select({ storagePath: asset.storagePath })
