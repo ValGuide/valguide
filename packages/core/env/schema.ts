@@ -26,7 +26,8 @@ export const serverEnvSchema = z.object({
     .optional()
     .default('curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example'),
   ADMIN_COOKIE_DOMAIN: z.string().optional(),
-	ADMIN_BASE_URL: z.string().optional().default('http://localhost:3001'),
+  ADMIN_BASE_URL: z.string().optional().default('https://admin-local.dev'),
+  SLACK_TEAM_ID: z.string().optional(),
 })
 
 export const clientEnvSchema = z.object({
