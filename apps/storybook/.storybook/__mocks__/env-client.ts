@@ -10,4 +10,5 @@ export const clientEnv: StringifyValues<ClientEnv> = {
   VITE_STUDIO_URL: 'https://studio.valguide.com',
   VITE_APP_DOMAIN: 'valguide.com',
   VITE_IMAGEKIT_URL: 'https://ik.imagekit.io/valguide',
+  VITE_ENV: 'dev',
 }

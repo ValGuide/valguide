@@ -1,5 +1,5 @@
 import type { DB } from '@valguide/core/features/db'
-import { and, asc, count, desc, ilike, sql } from 'drizzle-orm'
+import { and, asc, count, desc, eq, ilike, isNull } from 'drizzle-orm'
 import { organization, organizationMember } from '@valguide/core/features/orgs/schema'
 import { tour } from '@valguide/core/features/tours/schema'
 
@@ -39,17 +39,15 @@ export async function listOrgs(dbClient: DB, input: ListOrgsInput): Promise<List
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  const memberCountSubquery = sql<number>`(
-		SELECT count(*)::int
-		FROM ${organizationMember}
-		WHERE ${organizationMember.organizationId} = ${organization.id}
-	)`
+  const memberCountSubquery = dbClient.$count(
+    organizationMember,
+    eq(organizationMember.organizationId, organization.id),
+  )
 
-  const tourCountSubquery = sql<number>`(
-		SELECT count(*)::int
-		FROM ${tour}
-		WHERE ${tour.organizationId} = ${organization.id}
-	)`
+  const tourCountSubquery = dbClient.$count(
+    tour,
+    and(eq(tour.organizationId, organization.id), isNull(tour.deletedAt)),
+  )
 
   const direction = sortOrder === 'asc' ? asc : desc
   const orderClauses = (() => {
