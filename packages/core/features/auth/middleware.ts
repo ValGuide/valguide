@@ -1,10 +1,8 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
 import { createClient } from '@valguide/supabase/server'
-import { eq } from 'drizzle-orm'
-import { db } from '../db'
-import { profiles } from '../profiles/schema'
 import { getActiveTeamId } from '../utils/cookies'
+import { getUserStatus } from './get-user-status.server'
 
 // ============================================================================
 // Types
@@ -54,11 +52,12 @@ export const authContextMiddleware = createMiddleware({ type: 'function' }).serv
 })
 
 // ============================================================================
-// Enforcement Middleware - Requires authenticated user
+// Enforcement Middleware - Requires authenticated + approved user
 // ============================================================================
 
 /**
- * Requires authenticated user. Redirects to /login if not authenticated.
+ * Requires authenticated user with approved status.
+ * Redirects to /login if not authenticated, /pending or /blocked based on profile status.
  * Use this for all protected server functions.
  */
 export const requireAuthMiddleware = createMiddleware({ type: 'function' })
@@ -68,37 +67,12 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
       throw redirect({ to: '/login' })
     }
 
-    return next({
-      context: {
-        user: context.user,
-        activeOrgId: context.activeOrgId,
-      },
-    })
-  })
-
-// ============================================================================
-// Enforcement Middleware - Requires approved profile
-// ============================================================================
-
-/**
- * Requires authenticated user with an approved profile.
- * Redirects to /pending if profile is missing or pending, /blocked if blocked.
- */
-export const requireApprovedMiddleware = createMiddleware({ type: 'function' })
-  .middleware([requireAuthMiddleware])
-  .server(async ({ next, context }) => {
-    const profile = await db
-      .select({ status: profiles.status })
-      .from(profiles)
-      .where(eq(profiles.id, context.user.id))
-      .then((rows) => rows[0])
-
-    if (!profile || profile.status === 'pending') {
-      throw redirect({ to: '/login' })
+    const status = await getUserStatus(context.user.id, context.user.email)
+    if (status === 'pending') {
+      throw redirect({ to: '/pending' })
     }
-
-    if (profile.status === 'blocked') {
-      throw redirect({ to: '/login' })
+    if (status === 'blocked') {
+      throw redirect({ to: '/blocked' })
     }
 
     return next({
