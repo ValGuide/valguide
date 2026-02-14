@@ -1,7 +1,8 @@
+import { Link } from '@tanstack/react-router'
 import type { ColumnDef } from '@tanstack/react-table'
-import type { AdminOrgListItem } from '@/server/functions/list-orgs.fn'
 import { Button } from '@valguide/ui/components/button'
 import { ArrowUpDown } from 'lucide-react'
+import type { AdminOrgListItem } from '@/server/functions/list-orgs.fn'
 
 export const orgsColumns: ColumnDef<AdminOrgListItem>[] = [
   {
@@ -12,7 +13,15 @@ export const orgsColumns: ColumnDef<AdminOrgListItem>[] = [
         <ArrowUpDown className="ml-2 size-4" />
       </Button>
     ),
-    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+    cell: ({ row }) => (
+      <Link
+        to="/orgs/$nanoId"
+        params={{ nanoId: row.original.nanoId }}
+        className="font-medium text-primary hover:underline"
+      >
+        {row.original.name}
+      </Link>
+    ),
   },
   {
     accessorKey: 'nanoId',

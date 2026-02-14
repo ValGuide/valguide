@@ -22,6 +22,7 @@ import { Route as MainAssetsRouteImport } from './routes/_main/assets'
 import { Route as MainApprovedDomainsRouteImport } from './routes/_main/approved-domains'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as MainOrgsNanoIdRouteImport } from './routes/_main/orgs_.$nanoId'
 
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
   id: '/terms-of-service',
@@ -86,6 +87,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const MainOrgsNanoIdRoute = MainOrgsNanoIdRouteImport.update({
+  id: '/orgs_/$nanoId',
+  path: '/orgs/$nanoId',
+  getParentRoute: () => MainRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/orgs/$nanoId': typeof MainOrgsNanoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/orgs/$nanoId': typeof MainOrgsNanoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/_main/tours': typeof MainToursRoute
   '/_main/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/_main/orgs_/$nanoId': typeof MainOrgsNanoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/tours'
     | '/users'
     | '/auth/callback'
+    | '/orgs/$nanoId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/tours'
     | '/users'
     | '/auth/callback'
+    | '/orgs/$nanoId'
   id:
     | '__root__'
     | '/'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/_main/tours'
     | '/_main/users'
     | '/auth/callback'
+    | '/_main/orgs_/$nanoId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -275,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_main/orgs_/$nanoId': {
+      id: '/_main/orgs_/$nanoId'
+      path: '/orgs/$nanoId'
+      fullPath: '/orgs/$nanoId'
+      preLoaderRoute: typeof MainOrgsNanoIdRouteImport
+      parentRoute: typeof MainRoute
+    }
   }
 }
 
@@ -296,6 +315,7 @@ interface MainRouteChildren {
   MainOrgsRoute: typeof MainOrgsRoute
   MainToursRoute: typeof MainToursRoute
   MainUsersRoute: typeof MainUsersRoute
+  MainOrgsNanoIdRoute: typeof MainOrgsNanoIdRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
@@ -304,6 +324,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainOrgsRoute: MainOrgsRoute,
   MainToursRoute: MainToursRoute,
   MainUsersRoute: MainUsersRoute,
+  MainOrgsNanoIdRoute: MainOrgsNanoIdRoute,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
