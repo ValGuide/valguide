@@ -17,8 +17,7 @@ export const updateOrgLogoFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireOrgMember(data.organizationId, context.user.id)
 
-    const expectedPrefix = `org-logos/${data.organizationId}/`
-    if (!data.storagePath.startsWith(expectedPrefix)) {
+    if (!data.storagePath.startsWith('orgs/')) {
       throw new Error('Invalid storage path')
     }
 
