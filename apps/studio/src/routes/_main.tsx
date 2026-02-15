@@ -45,7 +45,7 @@ function MainLayout() {
             </div>
           </header>
         )}
-        <div className={isFocusMode ? 'min-h-svh flex flex-col' : 'min-h-[calc(100svh-4rem)] flex flex-col'}>
+        <div className={isFocusMode ? 'min-h-dvh flex flex-col' : 'min-h-[calc(100dvh-4rem)] flex flex-col'}>
           <Outlet />
         </div>
       </SidebarInset>
