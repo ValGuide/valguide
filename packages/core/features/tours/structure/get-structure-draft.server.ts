@@ -25,7 +25,10 @@ export type StructureDraftResult = {
 // INTERNAL FUNCTION
 // =============================================================================
 
-export async function getStructureDraft(tourNanoId: string): Promise<StructureDraftResult | null> {
+export async function getStructureDraft(
+  tourNanoId: string,
+  preferredLocale?: string,
+): Promise<StructureDraftResult | null> {
   const [foundTour] = await db
     .select({ id: tour.id, nanoId: tour.nanoId, availableLocales: tour.availableLocales })
     .from(tour)
@@ -84,11 +87,11 @@ export async function getStructureDraft(tourNanoId: string): Promise<StructureDr
       .from(stopLocaleDraft)
       .where(inArray(stopLocaleDraft.stopId, stopIds))
 
-    const primaryLocale = foundTour.availableLocales?.[0] ?? 'en'
+    const targetLocale = preferredLocale ?? foundTour.availableLocales?.[0] ?? 'en'
     for (const ld of localeDrafts) {
       if (!ld.title?.trim()) continue
       const existing = titleByStopId.get(ld.stopId)
-      if (!existing || ld.locale === primaryLocale) {
+      if (!existing || ld.locale === targetLocale) {
         titleByStopId.set(ld.stopId, ld.title.trim())
       }
     }

@@ -8,6 +8,7 @@ export type { StructureDraftResult, StructureDraftStop } from './get-structure-d
 
 const getStructureDraftSchema = z.object({
   nanoId: z.string(),
+  locale: z.string().optional(),
 })
 
 export const getStructureDraftFn = createServerFn({ method: 'GET' })
@@ -16,7 +17,7 @@ export const getStructureDraftFn = createServerFn({ method: 'GET' })
   .handler(async ({ context, data }) => {
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
-    const result = await getStructureDraft(data.nanoId)
+    const result = await getStructureDraft(data.nanoId, data.locale)
     if (!result) {
       throw new NotFoundError('Tour')
     }

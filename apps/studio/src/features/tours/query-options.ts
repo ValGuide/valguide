@@ -81,10 +81,10 @@ export const tourLocalePublishedQueryOptions = (nanoId: string, locale: string) 
 /**
  * Query options for tour structure draft (stops in tour)
  */
-export const tourStructureDraftQueryOptions = (nanoId: string) =>
+export const tourStructureDraftQueryOptions = (nanoId: string, locale?: string) =>
   queryOptions<StructureDraftResult | null>({
-    queryKey: ['tour', nanoId, 'structure'],
-    queryFn: () => getStructureDraftFn({ data: { nanoId } }),
+    queryKey: ['tour', nanoId, 'structure', { locale }],
+    queryFn: () => getStructureDraftFn({ data: { nanoId, locale } }),
     staleTime: 30 * 1000,
   })
 
