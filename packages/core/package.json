@@ -135,7 +135,10 @@
     "./ui/lib/*": "./ui/lib/*.ts",
     "./ui/components/*": "./ui/components/*.tsx",
     "./ui/hooks/*": "./ui/hooks/*.ts",
+    "./features/schema": "./features/schema.ts",
+    "./features/db": "./features/db.ts",
     "./features/qrcodes": "./features/qrcodes/index.ts",
+    "./features/*/schema": "./features/*/schema.ts",
     "./posthog/rewrites": "./posthog/rewrites.ts",
     "./posthog/server": "./posthog/server.ts",
     "./posthog/PostHogProvider": "./posthog/PostHogProvider.tsx",
@@ -146,6 +149,7 @@
     "./i18n/server": "./i18n/server.ts",
     "./i18n/client": "./i18n/client.ts",
     "./i18n/mock": "./i18n/mock.ts",
-    "./utils/types": "./utils/types.ts"
+    "./utils/types": "./utils/types.ts",
+    "./utils/nanoid": "./utils/nanoid.ts"
   }
 }
