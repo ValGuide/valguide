@@ -2,6 +2,7 @@ import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
 import { updateOrgLogoFn } from '@valguide/core/features/orgs/update-org-logo.fn'
 import { updateOrgNameFn } from '@valguide/core/features/orgs/update-org-name.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { uploadFileWithTUS } from '@/features/assets/lib/tus-upload'
 import { OrgAvatarForm } from './org-avatar-form'
@@ -22,7 +23,8 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
 
   const handleUploadAndSaveLogo = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
-    const storagePath = `${data.team.id}/org-logos/${crypto.randomUUID()}.${ext}`
+    const fileId = valguideId()
+    const storagePath = `orgs/${data.team.nanoId}/${fileId}.${ext}`
 
     await uploadFileWithTUS({
       bucketName: 'assets',

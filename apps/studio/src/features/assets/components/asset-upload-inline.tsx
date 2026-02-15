@@ -25,7 +25,7 @@ export type AssetUploadInlineProps = {
   onUploadComplete?: (asset: Asset) => void
 }
 
-export function AssetUploadInline({ organizationId, allowedTypes, onUploadComplete }: AssetUploadInlineProps) {
+export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploadInlineProps) {
   const t = useTranslations('assets')
   const [file, setFile] = useState<File | null>(null)
   const [detectedType, setDetectedType] = useState<AssetType | null>(null)
@@ -115,8 +115,9 @@ export function AssetUploadInline({ organizationId, allowedTypes, onUploadComple
 
     try {
       const assetId = valguideId()
-      const timestamp = Date.now()
-      const fileName = `${organizationId}/${detectedType}/${timestamp}-${file.name}`
+      const fileId = valguideId()
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'bin'
+      const fileName = `assets/${assetId}/${fileId}.${ext}`
 
       await uploadFileWithTUS({
         bucketName: 'assets',

@@ -30,8 +30,9 @@ export function MediaPickerConnected({
       if (!detected) return null
 
       const assetId = valguideId()
-      const timestamp = Date.now()
-      const fileName = `${organizationId}/${detected}/${timestamp}-${file.name}`
+      const fileId = valguideId()
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'bin'
+      const fileName = `assets/${assetId}/${fileId}.${ext}`
 
       await uploadFileWithTUS({
         bucketName: 'assets',

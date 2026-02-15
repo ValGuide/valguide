@@ -81,10 +81,10 @@ export function AppSidebarContainer() {
           // Get upload credentials
           const credentials = await getFeedbackUploadCredentialsFn()
 
-          // Generate unique filename with user ID prefix (required by RLS policy)
-          // Path format: {userId}/{timestamp}-{nanoid}.{ext}
           const ext = mimeToExt[file.type] ?? file.name.split('.').pop() ?? 'png'
-          const uniqueFileName = `${data?.user?.userId}/${Date.now()}-${valguideId()}.${ext}`
+          const feedbackId = valguideId()
+          const fileId = valguideId()
+          const uniqueFileName = `feedback/${feedbackId}/${fileId}.${ext}`
 
           // Upload with TUS (resumable upload protocol)
           // - Handles large files efficiently via chunked uploads

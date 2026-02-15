@@ -8,6 +8,7 @@ import { updateProfileAvatarFn } from '@valguide/core/features/profiles/update-p
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Separator } from '@valguide/core/ui/components/separator'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { uploadFileWithTUS } from '@/features/assets/lib/tus-upload'
 import { profileQueryOptions } from '../query-options'
@@ -34,7 +35,8 @@ export function ProfileFormConnected() {
 
   const handleUploadAndSaveAvatar = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
-    const storagePath = `users/${profile.id}/profile-avatars/${crypto.randomUUID()}.${ext}`
+    const fileId = valguideId()
+    const storagePath = `users/${profile.id}/${fileId}.${ext}`
 
     await uploadFileWithTUS({
       bucketName: 'assets',
