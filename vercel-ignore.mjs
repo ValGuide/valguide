@@ -40,9 +40,10 @@ if (commitMsg.includes('[build vercel]')) {
 }
 
 // Check for [build vercel:scope1,scope2,...] or [build scope1,scope2,...]
-const scopeMatch = commitMsg.match(/\[build (?:vercel:)?([^\]]+)\]/)
-if (scopeMatch) {
-  const scopes = scopeMatch[1].split(',').map((s) => s.trim())
+// Supports multiple tags: [build app] [build admin] or single: [build app,admin]
+const scopeMatches = [...commitMsg.matchAll(/\[build (?:vercel:)?([^\]]+)\]/g)]
+if (scopeMatches.length > 0) {
+  const scopes = scopeMatches.flatMap((m) => m[1].split(',').map((s) => s.trim()))
   console.log(`Found scoped build request: ${scopes.join(', ')}`)
 
   if (scopes.includes(shortName)) {
