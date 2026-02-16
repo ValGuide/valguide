@@ -107,6 +107,7 @@
     "@fontsource-variable/vollkorn": "^5.2.10",
     "@storybook/react": "^10.2.4",
     "@tailwindcss/postcss": "^4.1.16",
+    "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.16",
     "@turbo/gen": "^2.4.0",
     "@types/jest": "^29.5.14",
