@@ -1,5 +1,6 @@
 import { generateHTML } from '@tiptap/html'
 import StarterKit from '@tiptap/starter-kit'
+import { SmallText } from './small-text-extension'
 
 export interface RichTextDisplayProps {
   content: string
@@ -25,7 +26,7 @@ function generateHTMLFromContent(content: string): string {
 
   try {
     const json = JSON.parse(content)
-    return generateHTML(json, [StarterKit])
+    return generateHTML(json, [StarterKit, SmallText])
   } catch {
     return `<p>${content}</p>`
   }

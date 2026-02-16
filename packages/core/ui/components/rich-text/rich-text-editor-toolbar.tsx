@@ -3,7 +3,21 @@ import { useEditorState } from '@tiptap/react'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Separator } from '@valguide/core/ui/components/separator'
-import { Bold, Heading2, Italic, List, ListOrdered, Quote, Redo, Strikethrough, Undo } from 'lucide-react'
+import {
+  ALargeSmall,
+  Bold,
+  Heading1,
+  Heading2,
+  Heading3,
+  Heading4,
+  Italic,
+  List,
+  ListOrdered,
+  Quote,
+  Redo,
+  Strikethrough,
+  Undo,
+} from 'lucide-react'
 
 export interface EditorToolbarProps {
   editor: Editor | null
@@ -19,14 +33,22 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
       isBold: snapshot.editor?.isActive('bold') ?? false,
       isItalic: snapshot.editor?.isActive('italic') ?? false,
       isStrike: snapshot.editor?.isActive('strike') ?? false,
+      isHeading1: snapshot.editor?.isActive('heading', { level: 1 }) ?? false,
       isHeading2: snapshot.editor?.isActive('heading', { level: 2 }) ?? false,
+      isHeading3: snapshot.editor?.isActive('heading', { level: 3 }) ?? false,
+      isHeading4: snapshot.editor?.isActive('heading', { level: 4 }) ?? false,
+      isSmall: snapshot.editor?.isActive('small') ?? false,
       isBulletList: snapshot.editor?.isActive('bulletList') ?? false,
       isOrderedList: snapshot.editor?.isActive('orderedList') ?? false,
       isBlockquote: snapshot.editor?.isActive('blockquote') ?? false,
       canBold: snapshot.editor?.can().chain().focus().toggleBold().run() ?? false,
       canItalic: snapshot.editor?.can().chain().focus().toggleItalic().run() ?? false,
       canStrike: snapshot.editor?.can().chain().focus().toggleStrike().run() ?? false,
+      canHeading1: snapshot.editor?.can().chain().focus().toggleHeading({ level: 1 }).run() ?? false,
       canHeading2: snapshot.editor?.can().chain().focus().toggleHeading({ level: 2 }).run() ?? false,
+      canHeading3: snapshot.editor?.can().chain().focus().toggleHeading({ level: 3 }).run() ?? false,
+      canHeading4: snapshot.editor?.can().chain().focus().toggleHeading({ level: 4 }).run() ?? false,
+      canSmall: snapshot.editor?.can().chain().focus().toggleMark('small').run() ?? false,
       canBulletList: snapshot.editor?.can().chain().focus().toggleBulletList().run() ?? false,
       canOrderedList: snapshot.editor?.can().chain().focus().toggleOrderedList().run() ?? false,
       canBlockquote: snapshot.editor?.can().chain().focus().toggleBlockquote().run() ?? false,
@@ -77,14 +99,58 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
 
       <Button
         type="button"
+        variant={editorState.isHeading1 ? 'secondary' : 'ghost'}
+        size="sm"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        disabled={disabled || !editorState.canHeading1}
+        aria-label={t('heading1')}
+        title={t('heading1')}
+      >
+        <Heading1 className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
         variant={editorState.isHeading2 ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         disabled={disabled || !editorState.canHeading2}
-        aria-label={t('heading')}
-        title={t('heading')}
+        aria-label={t('heading2')}
+        title={t('heading2')}
       >
         <Heading2 className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        variant={editorState.isHeading3 ? 'secondary' : 'ghost'}
+        size="sm"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        disabled={disabled || !editorState.canHeading3}
+        aria-label={t('heading3')}
+        title={t('heading3')}
+      >
+        <Heading3 className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        variant={editorState.isHeading4 ? 'secondary' : 'ghost'}
+        size="sm"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
+        disabled={disabled || !editorState.canHeading4}
+        aria-label={t('heading4')}
+        title={t('heading4')}
+      >
+        <Heading4 className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        variant={editorState.isSmall ? 'secondary' : 'ghost'}
+        size="sm"
+        onClick={() => editor.chain().focus().toggleMark('small').run()}
+        disabled={disabled || !editorState.canSmall}
+        aria-label={t('smallText')}
+        title={t('smallText')}
+      >
+        <ALargeSmall className="h-4 w-4" />
       </Button>
 
       <Separator orientation="vertical" className="mx-1 h-6" />

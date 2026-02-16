@@ -4,7 +4,15 @@ type TipTapNode = {
   text?: string
 }
 
-const BLOCK_TYPES = new Set(['paragraph', 'heading', 'blockquote', 'listItem', 'codeBlock'])
+const BLOCK_TYPES = new Set([
+  'paragraph',
+  'heading',
+  'blockquote',
+  'listItem',
+  'codeBlock',
+  'bulletList',
+  'orderedList',
+])
 
 export function extractTextFromRichText(value: string | null): string {
   if (!value) return ''
@@ -19,6 +27,10 @@ export function extractTextFromRichText(value: string | null): string {
 
 function extractNodeText(node: TipTapNode): string {
   if (node.text) return node.text
+
+  if (node.type === 'hardBreak') return '\n'
+
+  if (node.type === 'horizontalRule') return '\n---\n'
 
   if (!node.content) return ''
 

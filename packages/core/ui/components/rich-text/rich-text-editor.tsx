@@ -1,6 +1,7 @@
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { RichTextEditorToolbar } from './rich-text-editor-toolbar'
+import { SmallText } from './small-text-extension'
 
 export interface RichTextEditorProps {
   'aria-labelledby'?: string
@@ -25,7 +26,7 @@ export function RichTextEditor({
     extensions: [
       StarterKit.configure({
         heading: {
-          levels: [2, 3],
+          levels: [1, 2, 3, 4],
         },
         bulletList: {
           keepMarks: true,
@@ -36,6 +37,7 @@ export function RichTextEditor({
           keepAttributes: false,
         },
       }),
+      SmallText,
     ],
     content: value ? parseEditorContent(value) : '',
     onUpdate: ({ editor }) => {
