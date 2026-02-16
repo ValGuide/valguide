@@ -1,8 +1,8 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import { Button } from '@valguide/ui/components/button'
 import { ArrowUpDown, ImageOff } from 'lucide-react'
+import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { TourStatusBadge } from './tour-status-badge'
 
 export const toursColumns: ColumnDef<AdminTourListItem>[] = [

@@ -1,5 +1,4 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import type { AdminUserListItem } from '@/server/functions/list-users.fn'
 import { Button } from '@valguide/ui/components/button'
 import {
   DropdownMenu,
@@ -8,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import type { AdminUserListItem } from '@/server/functions/list-users.fn'
 import { UserStatusBadge } from './user-status-badge'
 
 export type UsersTableMeta = {

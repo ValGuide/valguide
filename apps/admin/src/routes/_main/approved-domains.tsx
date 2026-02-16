@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { approvedDomainsQueryOptions } from '@/features/admin/approved-domains-query-options'
-import { addApprovedDomainFn } from '@/server/functions/add-approved-domain.fn'
-import { deleteApprovedDomainFn } from '@/server/functions/delete-approved-domain.fn'
-import { getUserTeamsFn } from '@/server/functions/get-user-teams.fn'
 import { Button } from '@valguide/ui/components/button'
 import { toast } from '@valguide/ui/components/sonner/state'
 import { Globe } from 'lucide-react'
 import { useState } from 'react'
+import { approvedDomainsQueryOptions } from '@/features/admin/approved-domains-query-options'
 import { AddApprovedDomainDialog } from '@/features/admin/components/add-approved-domain-dialog'
 import { ApprovedDomainsTable } from '@/features/admin/components/approved-domains-table'
+import { addApprovedDomainFn } from '@/server/functions/add-approved-domain.fn'
+import { deleteApprovedDomainFn } from '@/server/functions/delete-approved-domain.fn'
+import { getUserTeamsFn } from '@/server/functions/get-user-teams.fn'
 
 const userTeamsQueryOptions = () => ({
   queryKey: ['user', 'teams'],

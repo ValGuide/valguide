@@ -1,7 +1,7 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from 'storybook/test'
 import { FullscreenImage } from './fullscreen-image'
-import { faker } from '@faker-js/faker'
 
 const meta = {
   title: 'Player/FullscreenImage',

@@ -1,8 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
-import type { ListUsersInput } from '@/server/functions/list-users.fn'
-import { adminUpdateUserStatusFn } from '@/server/functions/update-user-status.fn'
 import { toast } from '@valguide/ui/components/sonner/state'
 import { Users } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
@@ -10,6 +8,8 @@ import { z } from 'zod'
 import { BlockUserDialog } from '@/features/admin/components/block-user-dialog'
 import { UsersDataTable } from '@/features/admin/components/users-data-table'
 import { adminUsersQueryOptions } from '@/features/admin/users-query-options'
+import type { ListUsersInput } from '@/server/functions/list-users.fn'
+import { adminUpdateUserStatusFn } from '@/server/functions/update-user-status.fn'
 
 const usersSearchSchema = z.object({
   status: z.string().optional(),

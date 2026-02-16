@@ -1,7 +1,7 @@
 import type { DB } from '@valguide/core/features/db'
-import { and, asc, count, desc, eq, ilike, isNull } from 'drizzle-orm'
 import { organization, organizationMember } from '@valguide/core/features/orgs/schema'
 import { tour } from '@valguide/core/features/tours/schema'
+import { and, asc, count, desc, eq, ilike, isNull } from 'drizzle-orm'
 
 export type AdminOrgListItem = {
   nanoId: string
@@ -44,10 +44,7 @@ export async function listOrgs(dbClient: DB, input: ListOrgsInput): Promise<List
     eq(organizationMember.organizationId, organization.id),
   )
 
-  const tourCountSubquery = dbClient.$count(
-    tour,
-    and(eq(tour.organizationId, organization.id), isNull(tour.deletedAt)),
-  )
+  const tourCountSubquery = dbClient.$count(tour, and(eq(tour.organizationId, organization.id), isNull(tour.deletedAt)))
 
   const direction = sortOrder === 'asc' ? asc : desc
   const orderClauses = (() => {

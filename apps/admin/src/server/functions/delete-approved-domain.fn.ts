@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { z } from 'zod'
 import { deleteApprovedDomain } from '@valguide/core/features/orgs/delete-approved-domain.server'
+import { z } from 'zod'
 import { adminMiddleware } from '../middleware'
 
 export const deleteApprovedDomainFn = createServerFn({ method: 'POST' })

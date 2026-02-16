@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
-import type { ListToursInput } from '@/server/functions/list-tours.fn'
 import { BookOpen } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 import { ToursDataTable } from '@/features/admin/components/tours-data-table'
 import { adminOrgsQueryOptions } from '@/features/admin/orgs-query-options'
 import { adminToursQueryOptions } from '@/features/admin/tours-query-options'
+import type { ListToursInput } from '@/server/functions/list-tours.fn'
 
 const toursSearchSchema = z.object({
   status: z.string().optional(),

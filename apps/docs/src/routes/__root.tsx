@@ -1,7 +1,7 @@
 import { createRootRoute, HeadContent, Outlet, redirect, Scripts } from '@tanstack/react-router'
+import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { RootProvider } from 'fumadocs-ui/provider/tanstack'
 import type { ReactNode } from 'react'
-import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { checkAuthFn } from '@/lib/auth'
 import appCss from '@/styles/app.css?url'
 

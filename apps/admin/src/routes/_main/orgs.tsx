@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
-import type { ListOrgsInput } from '@/server/functions/list-orgs.fn'
 import { Building2 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { z } from 'zod'
 import { OrgsDataTable } from '@/features/admin/components/orgs-data-table'
 import { adminOrgsQueryOptions } from '@/features/admin/orgs-query-options'
+import type { ListOrgsInput } from '@/server/functions/list-orgs.fn'
 
 const orgsSearchSchema = z.object({
   search: z.string().optional(),

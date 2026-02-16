@@ -1,7 +1,7 @@
-import type { ApprovedDomain } from '@/server/functions/get-approved-domains.fn'
 import { Button } from '@valguide/ui/components/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { Trash2 } from 'lucide-react'
+import type { ApprovedDomain } from '@/server/functions/get-approved-domains.fn'
 
 type ApprovedDomainsTableProps = {
   domains: ApprovedDomain[]

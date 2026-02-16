@@ -7,12 +7,12 @@ import {
   type SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@valguide/ui/components/table'
 import { cn } from '@valguide/ui/lib/utils'
 import { Search, X } from 'lucide-react'
+import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
 import { DataTablePagination } from './data-table-pagination'
 import { toursColumns } from './tours-columns'

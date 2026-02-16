@@ -1,10 +1,11 @@
 // @ts-nocheck - Storybook types only available in storybook package
+
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { Button } from '@valguide/ui/components/button'
 import { fn } from 'storybook/test'
 import { TourDetailView } from './tour-detail-view'
-import { faker } from '@faker-js/faker'
 
 const mockTour: TourDetail = {
   id: 'tour-uuid-123',
@@ -65,9 +66,9 @@ const meta = {
     appDomain: 'https://app.valguide.io',
     onBack: fn(),
     onArchived: fn(),
-    onAddLanguage: fn(async () => { }),
-    onRemoveLanguage: fn(async () => { }),
-    onPublish: fn(async () => { }),
+    onAddLanguage: fn(async () => {}),
+    onRemoveLanguage: fn(async () => {}),
+    onPublish: fn(async () => {}),
     ViewInAppButton: MockViewInAppButton,
     ArchiveTourButton: MockArchiveButton,
     currentSlug: 'city-art-museum-tour',
