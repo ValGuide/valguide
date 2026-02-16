@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.0/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -30,11 +30,13 @@
       },
       "suspicious": {
         "noExplicitAny": "warn",
-        "noArrayIndexKey": "warn"
+        "noArrayIndexKey": "warn",
+        "noImportCycles": "error"
       },
       "style": {
         "noNonNullAssertion": "warn",
         "useImportType": "warn",
+        "noJsxLiterals": "warn",
         "noRestrictedImports": {
           "level": "error",
           "options": {
@@ -48,9 +50,6 @@
       "a11y": {
         "useAltText": "warn",
         "useButtonType": "warn"
-      },
-      "nursery": {
-        "noJsxLiterals": "warn"
       }
     }
   },
@@ -59,10 +58,8 @@
       "includes": ["**/*.stories.tsx", "**/*.stories.ts"],
       "linter": {
         "rules": {
-          "nursery": {
-            "noJsxLiterals": "off"
-          },
           "style": {
+            "noJsxLiterals": "off",
             "noNonNullAssertion": "off"
           }
         }
@@ -72,7 +69,7 @@
       "includes": ["packages/email/**/*.tsx", "packages/email/**/*.ts"],
       "linter": {
         "rules": {
-          "nursery": {
+          "style": {
             "noJsxLiterals": "off"
           }
         }
@@ -82,7 +79,7 @@
       "includes": ["packages/core/ui/**/*.tsx", "packages/core/ui/**/*.ts"],
       "linter": {
         "rules": {
-          "nursery": {
+          "style": {
             "noJsxLiterals": "off"
           },
           "a11y": {
@@ -94,10 +91,20 @@
       }
     },
     {
+      "includes": ["apps/admin/**/*.tsx", "apps/admin/**/*.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noJsxLiterals": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["apps/docs/**/*.tsx", "apps/docs/**/*.ts"],
       "linter": {
         "rules": {
-          "nursery": {
+          "style": {
             "noJsxLiterals": "off"
           }
         }
@@ -136,7 +143,8 @@
       "!**/routeTree.gen.ts",
       "!apps/storybook/.storybook/__mocks__",
       "!supabase/functions",
-      "!apps/docs/.source"
+      "!apps/docs/.source",
+      "!**/vibes"
     ]
   }
 }

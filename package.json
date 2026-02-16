@@ -63,7 +63,6 @@
     "db:generate": "turbo run db:generate --",
     "db:migrate": "turbo run db:migrate --",
     "db:studio": "turbo run db:studio --",
-    "madge:circular": "pnpm dlx madge -c --extensions ts,tsx,js,jsx .",
     "storybook:clean": "pnpm --filter @valguide/storybook clean",
     "storybook:build": "pnpm --filter @valguide/storybook build",
     "storybook:serve": "pnpm --filter @valguide/storybook serve",
@@ -93,7 +92,7 @@
     "workspace:dev": "pnpm caddy:ensure && (sleep 5 && for u in studio.local.dev admin-local.dev storybook.local.dev; do open https://$u; done) & pnpm env:load turbo run dev --filter ./apps/studio --filter ./apps/admin --filter ./apps/storybook"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.0",
+    "@biomejs/biome": "^2.4.0",
     "@dotenvx/dotenvx": "^1.22.0",
     "@faker-js/faker": "^9.9.0",
     "@supabase/supabase-js": "^2.93.3",
