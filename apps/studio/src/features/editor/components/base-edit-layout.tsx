@@ -1,13 +1,18 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import { ChevronLeft } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@valguide/ui/components/dropdown-menu'
+import { ChevronLeft, MoreHorizontal, Trash2, X } from 'lucide-react'
 import { type ReactNode, useCallback, useState } from 'react'
 import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
-import { EditorActionsPanel } from './editor-actions-panel'
 import { EditorHeader } from './editor-header'
 import { getLocaleDisplayName, LocaleSelector } from './locale-selector'
-import { MobileMoreMenu, MobileSavePublish } from './mobile-action-bar'
+import { MobileSavePublish } from './mobile-action-bar'
 import { PublishConfirmationDialog } from './publish-confirmation-dialog'
 import { UnpublishConfirmationDialog } from './unpublish-confirmation-dialog'
 
@@ -34,9 +39,6 @@ export interface BaseEditLayoutProps {
 
   /** Hide publish/unpublish actions (e.g., for stops in tour context) */
   publishingDisabled?: boolean
-
-  /** Message to show when publishing is disabled */
-  publishingDisabledMessage?: string
 
   /** Currently active locale */
   activeLocale: string
@@ -80,17 +82,85 @@ export interface BaseEditLayoutProps {
   /** Simple back button handler */
   onBack?: () => void
 
-  /** Desktop sidebar content (TourProgress for tours, null for stops) */
-  sidebar?: ReactNode
-
-  /** Mobile header extra actions (e.g., sheet trigger for progress) */
-  mobileHeaderExtra?: ReactNode
-
   /** Main content area */
   children: ReactNode
 
   /** Optional unsaved changes confirmation dialog (rendered by parent) */
   unsavedChangesDialog?: ReactNode
+}
+
+function MoreActionsMenu({
+  canUnpublish,
+  canDiscard,
+  onUnpublishClick,
+  onDiscardClick,
+}: {
+  canUnpublish: boolean
+  canDiscard: boolean
+  onUnpublishClick: () => void
+  onDiscardClick: () => void
+}) {
+  const t = useTranslations('tours')
+
+  if (!canUnpublish && !canDiscard) return null
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon" className="h-8 w-8 shrink-0">
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">{t('actions.moreActions')}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-40">
+        {canUnpublish && (
+          <DropdownMenuItem onClick={onUnpublishClick} className="text-destructive focus:text-destructive">
+            <X className="mr-2 h-4 w-4" />
+            {t('actions.unpublish')}
+          </DropdownMenuItem>
+        )}
+        {canDiscard && (
+          <DropdownMenuItem onClick={onDiscardClick}>
+            <Trash2 className="mr-2 h-4 w-4" />
+            {t('actions.discardChanges')}
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+function SavePublishButtons({
+  hasDraft,
+  isDirty,
+  isSaving,
+  isPublishing,
+  onSave,
+  onPublishClick,
+  publishingDisabled,
+}: {
+  hasDraft: boolean
+  isDirty: boolean
+  isSaving: boolean
+  isPublishing: boolean
+  onSave: () => void
+  onPublishClick: () => void
+  publishingDisabled?: boolean
+}) {
+  const t = useTranslations('tours')
+
+  return (
+    <>
+      <Button variant="outline" onClick={onSave} disabled={!isDirty || isSaving || isPublishing} size="sm">
+        {isSaving && !isPublishing ? t('actions.saving') : t('actions.save')}
+      </Button>
+      {!publishingDisabled && (
+        <Button onClick={onPublishClick} disabled={!(hasDraft || isDirty) || isPublishing || isSaving} size="sm">
+          {isPublishing ? t('actions.publishing') : t('actions.publish')}
+        </Button>
+      )}
+    </>
+  )
 }
 
 export function BaseEditLayout({
@@ -100,7 +170,6 @@ export function BaseEditLayout({
   hasPublished,
   contentType,
   publishingDisabled,
-  publishingDisabledMessage,
   activeLocale,
   availableLocales,
   onLocaleChange,
@@ -115,8 +184,6 @@ export function BaseEditLayout({
   breadcrumbContent,
   backLabel,
   onBack,
-  sidebar,
-  mobileHeaderExtra,
   children,
   unsavedChangesDialog,
 }: BaseEditLayoutProps) {
@@ -128,20 +195,48 @@ export function BaseEditLayout({
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
 
   const showChangedHelper = status.status === 'published' && status.indicator === 'changed'
+  const canUnpublish = hasPublished && !publishingDisabled
+  const canDiscard = hasDraft && hasPublished
 
   const handlePublishClick = useCallback(() => setPublishDialogOpen(true), [])
   const handleUnpublishClick = useCallback(() => setUnpublishDialogOpen(true), [])
   const handleDiscardClick = useCallback(() => setDiscardDialogOpen(true), [])
+
+  const headerActions = (
+    <div className="flex items-center gap-2">
+      <MoreActionsMenu
+        canUnpublish={canUnpublish}
+        canDiscard={canDiscard}
+        onUnpublishClick={handleUnpublishClick}
+        onDiscardClick={handleDiscardClick}
+      />
+      <LocaleSelector
+        value={activeLocale}
+        locales={availableLocales}
+        onValueChange={onLocaleChange}
+        footer={localeSelectorFooter}
+      />
+      <SavePublishButtons
+        hasDraft={hasDraft}
+        isDirty={isDirty}
+        isSaving={isSaving}
+        isPublishing={isPublishing}
+        onSave={onSave}
+        onPublishClick={handlePublishClick}
+        publishingDisabled={publishingDisabled}
+      />
+    </div>
+  )
 
   return (
     <>
       {unsavedChangesDialog}
 
       <div className="bg-background pb-16 sm:pb-0">
-        {/* Mobile/Tablet Header */}
-        <div className="sticky top-0 z-10 border-b bg-background lg:hidden">
+        {/* Mobile Header */}
+        <div className="sticky top-0 z-10 border-b bg-background sm:hidden">
           {/* Row 1: Back/breadcrumb left, actions right */}
-          <div className="flex items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-center justify-between gap-2 px-4 py-3">
             {breadcrumbContent ?? (
               <Button variant="ghost" size="sm" onClick={onBack} className="-ml-2 shrink-0">
                 <ChevronLeft className="h-4 w-4" />
@@ -150,62 +245,42 @@ export function BaseEditLayout({
             )}
 
             <div className="flex shrink-0 items-center gap-2">
+              <MoreActionsMenu
+                canUnpublish={canUnpublish}
+                canDiscard={canDiscard}
+                onUnpublishClick={handleUnpublishClick}
+                onDiscardClick={handleDiscardClick}
+              />
               <LocaleSelector
                 value={activeLocale}
                 locales={availableLocales}
                 onValueChange={onLocaleChange}
                 footer={localeSelectorFooter}
               />
-              <MobileMoreMenu
-                hasDraft={hasDraft}
-                hasPublished={hasPublished}
-                onUnpublishClick={handleUnpublishClick}
-                onDiscardClick={handleDiscardClick}
-                publishingDisabled={publishingDisabled}
-              />
-              {mobileHeaderExtra}
             </div>
           </div>
 
           {/* Row 2: Title */}
-          <div className="flex flex-col gap-1 px-4 pb-3 sm:px-6">
+          <div className="flex flex-col gap-1 px-4 pb-3">
             <h1 className="min-w-0 truncate text-lg font-semibold">{title}</h1>
             {showChangedHelper && <p className="text-xs text-muted-foreground">{t('helper.changedExplanation')}</p>}
           </div>
         </div>
 
-        {/* Desktop Header */}
+        {/* Tablet + Desktop Header */}
         {breadcrumbContent ? (
-          <EditorHeader
-            backContent={breadcrumbContent}
-            className="hidden lg:flex"
-            actions={
-              <LocaleSelector
-                value={activeLocale}
-                locales={availableLocales}
-                onValueChange={onLocaleChange}
-                footer={localeSelectorFooter}
-              />
-            }
-          />
+          <EditorHeader backContent={breadcrumbContent} className="hidden sm:flex" actions={headerActions} />
         ) : (
           <EditorHeader
             backLabel={backLabel ?? ''}
             onBack={onBack ?? (() => {})}
-            className="hidden lg:flex"
-            actions={
-              <LocaleSelector
-                value={activeLocale}
-                locales={availableLocales}
-                onValueChange={onLocaleChange}
-                footer={localeSelectorFooter}
-              />
-            }
+            className="hidden sm:flex"
+            actions={headerActions}
           />
         )}
 
-        {/* Desktop: Title */}
-        <div className="sticky top-14 z-10 hidden border-b bg-background px-4 py-3 sm:px-6 lg:block">
+        {/* Tablet + Desktop: Title */}
+        <div className="sticky top-14 z-10 hidden bg-background px-4 py-3 sm:block sm:px-6">
           <div className="flex flex-col gap-1">
             <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{title}</h1>
             {showChangedHelper && <p className="text-sm text-muted-foreground">{t('helper.changedExplanation')}</p>}
@@ -213,7 +288,7 @@ export function BaseEditLayout({
         </div>
 
         {/* Mobile Save/Publish - fixed bottom bar */}
-        <div className="lg:hidden">
+        <div className="sm:hidden">
           <MobileSavePublish
             hasDraft={hasDraft}
             isDirty={isDirty}
@@ -226,31 +301,8 @@ export function BaseEditLayout({
         </div>
 
         {/* Main Content */}
-        <div className="flex min-w-0">
-          <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
-            <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</div>
-          </div>
-
-          {/* Right Sidebar - Actions Panel (Desktop only) */}
-          <aside className="sticky top-35 hidden w-72 shrink-0 self-start border-l bg-background lg:block">
-            <div className="space-y-6 p-5">
-              <EditorActionsPanel
-                hasDraft={hasDraft}
-                hasPublished={hasPublished}
-                isDirty={isDirty}
-                isSaving={isSaving}
-                isPublishing={isPublishing}
-                onSave={onSave}
-                onPublishClick={handlePublishClick}
-                onUnpublishClick={handleUnpublishClick}
-                onDiscardClick={handleDiscardClick}
-                publishingDisabled={publishingDisabled}
-                publishingDisabledMessage={publishingDisabledMessage}
-              />
-
-              {sidebar && <div className="border-t pt-5">{sidebar}</div>}
-            </div>
-          </aside>
+        <div className="bg-muted/30 dark:bg-background">
+          <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</div>
         </div>
       </div>
 

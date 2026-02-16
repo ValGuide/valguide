@@ -272,15 +272,6 @@
       "descriptionLabel": "Beschreibung",
       "descriptionPlaceholder": "z.B. Ein kuratierter Rundgang durch die bedeutendsten römischen Artefakte des Museums",
       "coverImageLabel": "Titelbild",
-      "tourProgress": "Tour-Fortschritt",
-      "progress": {
-        "label": "Vollständigkeit",
-        "tourTitle": "Tour-Titel",
-        "tourDescription": "Tour-Beschreibung",
-        "coverImage": "Titelbild",
-        "hasStops": "Mindestens ein Stop",
-        "allStopTitles": "Alle Stops haben Titel"
-      },
       "backToTour": "Tour",
       "slug": {
         "title": "URL-Slug",
@@ -526,8 +517,7 @@
       "autoGenerate": "Automatisch aus Audio generieren",
       "galleryLabel": "Galerie (Bilder & Video)",
       "usedInTours": "Verwendet in {count, plural, one {# Tour} other {# Touren}}",
-      "sharedStopWarning": "Änderungen wirken sich auf alle Touren aus, die diesen Stopp verwenden",
-      "publishFromTour": "Dieser Stopp wird veröffentlicht, wenn Sie die Tour veröffentlichen."
+      "sharedStopWarning": "Änderungen wirken sich auf alle Touren aus, die diesen Stopp verwenden"
     },
     "actions": {
       "edit": "Stopp bearbeiten",

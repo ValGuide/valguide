@@ -272,15 +272,6 @@
       "descriptionLabel": "Descripziun",
       "descriptionPlaceholder": "p.ex. In tur curà tras ils artefacts romains ils pli significants dal museum",
       "coverImageLabel": "Maletg da front",
-      "tourProgress": "Progress da la tura",
-      "progress": {
-        "label": "Cumplettaziun",
-        "tourTitle": "Titel da la tura",
-        "tourDescription": "Descripziun da la tura",
-        "coverImage": "Maletg da front",
-        "hasStops": "Almain in stop",
-        "allStopTitles": "Tut ils stops han in titel"
-      },
       "backToTour": "Tura",
       "slug": {
         "title": "Slug da l'URL",
@@ -526,8 +517,7 @@
       "autoGenerate": "Generar automaticamain dall'audio",
       "galleryLabel": "Galaria (Maletgs & Video)",
       "usedInTours": "Duvrà en {count, plural, one {# tura} other {# turas}}",
-      "sharedStopWarning": "Midadas tangeschan tuttas turas che dovran quest stop",
-      "publishFromTour": "Quest stop vegn publitgà cura che Vus publitgais la tura."
+      "sharedStopWarning": "Midadas tangeschan tuttas turas che dovran quest stop"
     },
     "actions": {
       "edit": "Modifitgar stop",

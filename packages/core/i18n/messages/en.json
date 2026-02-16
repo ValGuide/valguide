@@ -272,15 +272,6 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "e.g. A curated tour of the museum's most significant Roman artifacts",
       "coverImageLabel": "Cover Image",
-      "tourProgress": "Tour Progress",
-      "progress": {
-        "label": "Completion",
-        "tourTitle": "Tour title",
-        "tourDescription": "Tour description",
-        "coverImage": "Cover image",
-        "hasStops": "At least one stop",
-        "allStopTitles": "All stops have titles"
-      },
       "backToTour": "Tour",
       "hideChanges": "Hide changes",
       "showChanges": "Show changes",
@@ -536,8 +527,7 @@
       "autoGenerate": "Auto-generate from audio",
       "galleryLabel": "Gallery (Images & Video)",
       "usedInTours": "Used in {count, plural, one {# tour} other {# tours}}",
-      "sharedStopWarning": "Changes will affect all tours using this stop",
-      "publishFromTour": "This stop will be published when you publish the tour."
+      "sharedStopWarning": "Changes will affect all tours using this stop"
     },
     "actions": {
       "edit": "Edit Stop",

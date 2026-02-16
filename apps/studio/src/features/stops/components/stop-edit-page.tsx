@@ -233,7 +233,6 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       hasPublished={hasPublished}
       contentType="stop"
       publishingDisabled={isInTourContext}
-      publishingDisabledMessage={tStops('editor.publishFromTour')}
       activeLocale={activeLocale}
       availableLocales={availableLocales}
       onLocaleChange={setActiveLocale}
