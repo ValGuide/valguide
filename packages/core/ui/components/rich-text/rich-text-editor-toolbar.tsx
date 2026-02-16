@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/react'
+import { useEditorState } from '@tiptap/react'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Separator } from '@valguide/core/ui/components/separator'
@@ -12,16 +13,38 @@ export interface EditorToolbarProps {
 export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) {
   const t = useTranslations('richTextEditor')
 
-  if (!editor) return null
+  const editorState = useEditorState({
+    editor,
+    selector: (snapshot) => ({
+      isBold: snapshot.editor?.isActive('bold') ?? false,
+      isItalic: snapshot.editor?.isActive('italic') ?? false,
+      isStrike: snapshot.editor?.isActive('strike') ?? false,
+      isHeading2: snapshot.editor?.isActive('heading', { level: 2 }) ?? false,
+      isBulletList: snapshot.editor?.isActive('bulletList') ?? false,
+      isOrderedList: snapshot.editor?.isActive('orderedList') ?? false,
+      isBlockquote: snapshot.editor?.isActive('blockquote') ?? false,
+      canBold: snapshot.editor?.can().chain().focus().toggleBold().run() ?? false,
+      canItalic: snapshot.editor?.can().chain().focus().toggleItalic().run() ?? false,
+      canStrike: snapshot.editor?.can().chain().focus().toggleStrike().run() ?? false,
+      canHeading2: snapshot.editor?.can().chain().focus().toggleHeading({ level: 2 }).run() ?? false,
+      canBulletList: snapshot.editor?.can().chain().focus().toggleBulletList().run() ?? false,
+      canOrderedList: snapshot.editor?.can().chain().focus().toggleOrderedList().run() ?? false,
+      canBlockquote: snapshot.editor?.can().chain().focus().toggleBlockquote().run() ?? false,
+      canUndo: snapshot.editor?.can().chain().focus().undo().run() ?? false,
+      canRedo: snapshot.editor?.can().chain().focus().redo().run() ?? false,
+    }),
+  })
+
+  if (!editor || !editorState) return null
 
   return (
     <div className={`flex flex-wrap items-center gap-1 border-b p-2 ${disabled ? 'opacity-50' : ''}`}>
       <Button
         type="button"
-        variant={editor.isActive('bold') ? 'secondary' : 'ghost'}
+        variant={editorState.isBold ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={disabled || !editor.can().chain().focus().toggleBold().run()}
+        disabled={disabled || !editorState.canBold}
         aria-label={t('bold')}
         title={t('bold')}
       >
@@ -29,10 +52,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
       </Button>
       <Button
         type="button"
-        variant={editor.isActive('italic') ? 'secondary' : 'ghost'}
+        variant={editorState.isItalic ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        disabled={disabled || !editor.can().chain().focus().toggleItalic().run()}
+        disabled={disabled || !editorState.canItalic}
         aria-label={t('italic')}
         title={t('italic')}
       >
@@ -40,10 +63,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
       </Button>
       <Button
         type="button"
-        variant={editor.isActive('strike') ? 'secondary' : 'ghost'}
+        variant={editorState.isStrike ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleStrike().run()}
-        disabled={disabled || !editor.can().chain().focus().toggleStrike().run()}
+        disabled={disabled || !editorState.canStrike}
         aria-label={t('strikethrough')}
         title={t('strikethrough')}
       >
@@ -54,10 +77,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
 
       <Button
         type="button"
-        variant={editor.isActive('heading', { level: 2 }) ? 'secondary' : 'ghost'}
+        variant={editorState.isHeading2 ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        disabled={disabled || !editor.can().chain().focus().toggleHeading({ level: 2 }).run()}
+        disabled={disabled || !editorState.canHeading2}
         aria-label={t('heading')}
         title={t('heading')}
       >
@@ -68,10 +91,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
 
       <Button
         type="button"
-        variant={editor.isActive('bulletList') ? 'secondary' : 'ghost'}
+        variant={editorState.isBulletList ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        disabled={disabled || !editor.can().chain().focus().toggleBulletList().run()}
+        disabled={disabled || !editorState.canBulletList}
         aria-label={t('bulletList')}
         title={t('bulletList')}
       >
@@ -79,10 +102,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
       </Button>
       <Button
         type="button"
-        variant={editor.isActive('orderedList') ? 'secondary' : 'ghost'}
+        variant={editorState.isOrderedList ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        disabled={disabled || !editor.can().chain().focus().toggleOrderedList().run()}
+        disabled={disabled || !editorState.canOrderedList}
         aria-label={t('orderedList')}
         title={t('orderedList')}
       >
@@ -93,10 +116,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
 
       <Button
         type="button"
-        variant={editor.isActive('blockquote') ? 'secondary' : 'ghost'}
+        variant={editorState.isBlockquote ? 'secondary' : 'ghost'}
         size="sm"
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        disabled={disabled || !editor.can().chain().focus().toggleBlockquote().run()}
+        disabled={disabled || !editorState.canBlockquote}
         aria-label={t('blockquote')}
         title={t('blockquote')}
       >
@@ -110,7 +133,7 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().undo().run()}
-        disabled={disabled || !editor.can().chain().focus().undo().run()}
+        disabled={disabled || !editorState.canUndo}
         aria-label={t('undo')}
         title={t('undo')}
       >
@@ -121,7 +144,7 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().redo().run()}
-        disabled={disabled || !editor.can().chain().focus().redo().run()}
+        disabled={disabled || !editorState.canRedo}
         aria-label={t('redo')}
         title={t('redo')}
       >
