@@ -5,11 +5,9 @@ import { getTourStatusDisplay } from '@valguide/core/features/tours/status-utils
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
-import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { CommandSeparator } from '@valguide/ui/components/command'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@valguide/ui/components/sheet'
-import { Globe, Languages, ListChecks } from 'lucide-react'
+import { Globe, Languages } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
@@ -25,7 +23,6 @@ import {
   TourMetadataFormWithDiff,
   type TourMetadataFormWithDiffRef,
 } from '@/features/tours/components/tour-metadata-form-with-diff'
-import { TourProgress } from '@/features/tours/components/tour-progress'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 
 export type TourSlugSettingsComponentProps = {
@@ -232,34 +229,6 @@ export function TourEditPage({
 
   if (!tourDetail) return null
 
-  const mobileProgressSheet = (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <ListChecks className="h-4 w-4" />
-          <span className="sr-only">{t('editor.tourProgress')}</span>
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-75 p-6 sm:w-87.5">
-        <SheetHeader>
-          <SheetTitle>{t('editor.tourProgress')}</SheetTitle>
-        </SheetHeader>
-        <div className="mt-6">
-          <TourProgress />
-        </div>
-      </SheetContent>
-    </Sheet>
-  )
-
-  const sidebarContent = (
-    <>
-      <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        {t('editor.tourProgress')}
-      </h3>
-      <TourProgress />
-    </>
-  )
-
   const localeSelectorFooter = (
     <>
       <CommandSeparator />
@@ -297,8 +266,6 @@ export function TourEditPage({
         onDiscard={handleDiscard}
         backLabel={t('editor.tourDetails')}
         onBack={handleNavigateToTour}
-        sidebar={sidebarContent}
-        mobileHeaderExtra={mobileProgressSheet}
         unsavedChangesDialog={unsavedChangesDialog}
       >
         <div className="space-y-6 sm:space-y-8">

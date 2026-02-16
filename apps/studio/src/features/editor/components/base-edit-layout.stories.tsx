@@ -57,30 +57,6 @@ const MockContent = () => (
   </div>
 )
 
-const MockSidebar = () => (
-  <>
-    <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tour Progress</h3>
-    <div className="space-y-3">
-      <div className="flex items-center gap-2 text-sm">
-        <span className="h-2 w-2 rounded-full bg-success" />
-        <span>Title added</span>
-      </div>
-      <div className="flex items-center gap-2 text-sm">
-        <span className="h-2 w-2 rounded-full bg-success" />
-        <span>Description added</span>
-      </div>
-      <div className="flex items-center gap-2 text-sm">
-        <span className="h-2 w-2 rounded-full bg-muted" />
-        <span>Cover image missing</span>
-      </div>
-      <div className="flex items-center gap-2 text-sm">
-        <span className="h-2 w-2 rounded-full bg-muted" />
-        <span>No stops added</span>
-      </div>
-    </div>
-  </>
-)
-
 const MockBreadcrumb = () => (
   <Button variant="ghost" size="sm" className="-ml-2 shrink-0">
     <ChevronLeft className="h-4 w-4" />
@@ -126,7 +102,6 @@ export const TourUnpublished: Story = {
     status: { status: 'unpublished', indicator: null },
     hasDraft: true,
     hasPublished: false,
-    sidebar: <MockSidebar />,
   },
 }
 
@@ -136,7 +111,6 @@ export const TourPublished: Story = {
     status: { status: 'published', indicator: 'up-to-date' },
     hasDraft: true,
     hasPublished: true,
-    sidebar: <MockSidebar />,
   },
 }
 
@@ -147,7 +121,6 @@ export const TourWithChanges: Story = {
     hasDraft: true,
     hasPublished: true,
     isDirty: true,
-    sidebar: <MockSidebar />,
   },
 }
 
@@ -159,7 +132,6 @@ export const TourSaving: Story = {
     hasPublished: true,
     isDirty: true,
     isSaving: true,
-    sidebar: <MockSidebar />,
   },
 }
 
@@ -170,7 +142,6 @@ export const TourPublishing: Story = {
     hasDraft: true,
     hasPublished: false,
     isPublishing: true,
-    sidebar: <MockSidebar />,
   },
 }
 
@@ -184,7 +155,6 @@ export const StopWithBreadcrumb: Story = {
     breadcrumbContent: <MockBreadcrumb />,
     backLabel: undefined,
     onBack: undefined,
-    sidebar: undefined,
   },
 }
 
@@ -198,6 +168,5 @@ export const StopPublished: Story = {
     breadcrumbContent: <MockBreadcrumb />,
     backLabel: undefined,
     onBack: undefined,
-    sidebar: undefined,
   },
 }

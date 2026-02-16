@@ -4,6 +4,7 @@ import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-det
 import { Button } from '@valguide/ui/components/button'
 import { fn } from 'storybook/test'
 import { TourDetailView } from './tour-detail-view'
+import { faker } from '@faker-js/faker'
 
 const mockTour: TourDetail = {
   id: 'tour-uuid-123',
@@ -64,9 +65,9 @@ const meta = {
     appDomain: 'https://app.valguide.io',
     onBack: fn(),
     onArchived: fn(),
-    onAddLanguage: fn(async () => {}),
-    onRemoveLanguage: fn(async () => {}),
-    onPublish: fn(async () => {}),
+    onAddLanguage: fn(async () => { }),
+    onRemoveLanguage: fn(async () => { }),
+    onPublish: fn(async () => { }),
     ViewInAppButton: MockViewInAppButton,
     ArchiveTourButton: MockArchiveButton,
     currentSlug: 'city-art-museum-tour',
@@ -87,8 +88,8 @@ export const WithCoverImage: Story = {
     tour: {
       ...mockTour,
       coverImage: {
-        storagePath: 'tours/cover-art-museum.jpg',
-        publicUrl: 'https://images.unsplash.com/photo-1580060405669-fcb8ed2f91fa?w=800&h=450&fit=crop',
+        storagePath: '',
+        publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 450, category: 'art' }),
       },
     },
   },

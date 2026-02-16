@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from 'storybook/test'
 import { FullscreenImage } from './fullscreen-image'
+import { faker } from '@faker-js/faker'
 
 const meta = {
   title: 'Player/FullscreenImage',
@@ -9,7 +10,7 @@ const meta = {
     layout: 'fullscreen',
   },
   args: {
-    src: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1200',
+    src: faker.image.urlLoremFlickr({ width: 800, height: 450, category: 'art' }),
     alt: 'The Starry Night by Vincent van Gogh',
     open: true,
     onOpenChange: fn(),

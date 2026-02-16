@@ -60,22 +60,6 @@ export const EnglishWithContent: Story = {
   },
 }
 
-export const WithCoverImage: Story = {
-  args: {
-    locale: 'en',
-    translation: mockTranslationEN,
-    coverImage: faker.image.urlLoremFlickr({ width: 800, height: 450, category: 'art' }),
-  },
-}
-
-export const WithoutCoverImage: Story = {
-  args: {
-    locale: 'en',
-    translation: mockTranslationEN,
-    coverImage: null,
-  },
-}
-
 export const LongContent: Story = {
   args: {
     locale: 'en',
