@@ -9,6 +9,7 @@
     "prepare": "husky",
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:select": "sh scripts/dev.sh",
     "lint": "biome check .",
     "lint:error": "biome check . --diagnostic-level=error",
     "lint:fix": "biome check --write .",
