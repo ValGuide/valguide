@@ -13,6 +13,7 @@ export interface MockTourEditorProviderProps {
   localeDraft?: TourLocaleDraftResult | null
   localePublished?: TourLocalePublishedResult | null
   stops?: StructureDraftStop[]
+  tourAssets?: TourAssetDraftItem[]
 }
 
 export function MockTourEditorProvider({
@@ -21,10 +22,11 @@ export function MockTourEditorProvider({
   localeDraft = null,
   localePublished = null,
   stops: initialStops = [],
+  tourAssets: initialTourAssets = [],
 }: MockTourEditorProviderProps) {
   const [activeLocale, setActiveLocale] = useState<string>(tourDetail.availableLocales[0] ?? 'en')
   const [isDirty, setIsDirty] = useState(false)
-  const [tourAssets, setTourAssets] = useState<TourAssetDraftItem[]>([])
+  const [tourAssets, setTourAssets] = useState<TourAssetDraftItem[]>(initialTourAssets)
   const [stops, setStops] = useState<StructureDraftStop[]>(initialStops)
 
   const value: TourEditorContextValue = {

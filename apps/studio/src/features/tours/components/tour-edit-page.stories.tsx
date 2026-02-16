@@ -1,6 +1,8 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { QueryObserverOptions } from '@tanstack/react-query'
 import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
+import type { TourAssetDraftItem } from '@valguide/core/features/tours/tour/asset/get-tour-assets-draft.fn'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
@@ -111,6 +113,7 @@ type StoryContextData = {
   localeDraft?: TourLocaleDraftResult | null
   localePublished?: TourLocalePublishedResult | null
   stops?: StructureDraftStop[]
+  tourAssets?: TourAssetDraftItem[]
 }
 
 const meta = {
@@ -129,7 +132,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const storyContext = context.args as TourEditPageProps & StoryContextData
-      const { tourDetail, localeDraft, localePublished, stops } = storyContext
+      const { tourDetail, localeDraft, localePublished, stops, tourAssets } = storyContext
       return (
         <MockAssetsProvider>
           <MockTourEditorProvider
@@ -137,6 +140,7 @@ const meta = {
             localeDraft={localeDraft ?? createMockLocaleDraft()}
             localePublished={localePublished ?? null}
             stops={stops ?? createMockStops(3)}
+            tourAssets={tourAssets ?? []}
           >
             <Story />
           </MockTourEditorProvider>
@@ -245,5 +249,49 @@ export const MultipleLocales: Story = {
     tourDetail: createMockTourDetail({ availableLocales: ['en', 'de', 'fr', 'it'] }),
     localeDraft: createMockLocaleDraft(),
     stops: createMockStops(3),
+  } as TourEditPageProps & StoryContextData,
+}
+
+const createMockCoverImageAsset = (): TourAssetDraftItem => ({
+  id: 'tour-asset-cover-1',
+  asset: {
+    id: 'asset-cover-1',
+    nanoId: 'coverImg01',
+    fileName: 'tour-cover.jpg',
+    fileSize: 245_000,
+    mimeType: 'image/jpeg',
+    type: 'image',
+    storagePath: 'covers/tour-1.jpg',
+    publicUrl: faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' }),
+    width: 1200,
+    height: 800,
+    duration: null,
+    organizationId: 'org-1',
+    uploadedBy: null,
+    createdAt: new Date('2025-01-05T10:00:00Z'),
+    updatedAt: new Date('2025-01-05T10:00:00Z'),
+  },
+  channel: 'images.hero',
+  locale: null,
+  position: 0,
+  createdAt: new Date('2025-01-05T10:00:00Z'),
+})
+
+export const WithCoverImage: Story = {
+  args: {
+    onPublish: fn(),
+    onUnpublish: fn(),
+    onHideStop: fn(),
+    onShowStop: fn(),
+    MediaPicker: StoryMediaPicker,
+    tourDetail: createMockTourDetail({
+      coverImage: {
+        storagePath: 'covers/tour-1.jpg',
+        publicUrl: faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' }),
+      },
+    }),
+    localeDraft: createMockLocaleDraft(),
+    stops: createMockStops(3),
+    tourAssets: [createMockCoverImageAsset()],
   } as TourEditPageProps & StoryContextData,
 }

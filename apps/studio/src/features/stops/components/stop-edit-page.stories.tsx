@@ -77,6 +77,57 @@ const createMockLocalePublished = (overrides: Partial<StopLocalePublishedResult>
   ...overrides,
 })
 
+const createMockAudioAssets = (count: number): StopAssetDraftItem[] =>
+  Array.from({ length: count }, (_, i) => ({
+    id: `audio-item-${i + 1}`,
+    asset: {
+      id: `audio-${i + 1}`,
+      nanoId: `audio${i + 1}nano`,
+      type: 'audio' as const,
+      fileName: `narration-${i + 1}.mp3`,
+      fileSize: 2048000 + i * 512000,
+      mimeType: 'audio/mpeg',
+      storagePath: '',
+      publicUrl: null,
+      width: null,
+      height: null,
+      duration: 120 + i * 30,
+      organizationId: 'org-1',
+      uploadedBy: 'user-1',
+      createdAt: new Date('2025-01-10T10:00:00Z'),
+      updatedAt: new Date('2025-01-10T10:00:00Z'),
+    },
+    channel: 'audio.narration',
+    position: i,
+    locale: null,
+    createdAt: new Date('2025-01-10T10:00:00Z'),
+  }))
+
+const createMockCoverImageAsset = (): StopAssetDraftItem => ({
+  id: 'cover-item-1',
+  asset: {
+    id: 'cover-1',
+    nanoId: 'cover1nano',
+    type: 'image' as const,
+    fileName: 'cover-image.jpg',
+    fileSize: 1024000,
+    mimeType: 'image/jpeg',
+    storagePath: '',
+    publicUrl: faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' }),
+    width: 1200,
+    height: 800,
+    duration: null,
+    organizationId: 'org-1',
+    uploadedBy: 'user-1',
+    createdAt: new Date('2025-01-10T10:00:00Z'),
+    updatedAt: new Date('2025-01-10T10:00:00Z'),
+  },
+  channel: 'images.hero',
+  position: 0,
+  locale: null,
+  createdAt: new Date('2025-01-10T10:00:00Z'),
+})
+
 const createMockAssets = (count: number): StopAssetDraftItem[] =>
   Array.from({ length: count }, (_, i) => ({
     id: `asset-item-${i + 1}`,
@@ -294,6 +345,50 @@ export const StandaloneStop: Story = {
           localePublished={null}
           assets={createMockAssets(2)}
           navigation={{ backPath: '/stops', backLabel: 'All Stops' }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
+}
+
+export const WithAudioAssets: Story = {
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft()}
+          localePublished={null}
+          assets={createMockAudioAssets(3)}
+          navigation={{
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
+        >
+          <Story />
+        </MockStopEditorProvider>
+      </MockAssetsProvider>
+    ),
+  ],
+}
+
+export const WithCoverImage: Story = {
+  decorators: [
+    (Story) => (
+      <MockAssetsProvider>
+        <MockStopEditorProvider
+          stopDetail={createMockStopDetail()}
+          localeDraft={createMockLocaleDraft()}
+          localePublished={null}
+          assets={[createMockCoverImageAsset(), ...createMockAssets(2)]}
+          navigation={{
+            backPath: '/tours/abc123xyz/edit',
+            backLabel: 'Art Museum Tour',
+            backParams: { nanoId: 'abc123xyz' },
+          }}
         >
           <Story />
         </MockStopEditorProvider>
