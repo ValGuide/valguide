@@ -9,7 +9,7 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
 import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
-import { Calendar, Clock, ImageIcon, Link2, Pencil } from 'lucide-react'
+import { Calendar, ChevronLeft, Clock, ImageIcon, Link2, Pencil } from 'lucide-react'
 import { type ComponentType, type ReactNode, useState } from 'react'
 import { EditorHeader } from '@/features/editor/components/editor-header'
 import { TourStatusBadge } from '@/features/tours/components/tour-status-badge'
@@ -65,29 +65,45 @@ export function TourDetailView({
     tour.hasAnyChanges,
   )
 
+  const actions = headerActions ?? (
+    <>
+      <ViewInAppButton nanoId={nanoId} published={tourStatus === 'published'} appDomain={appDomain} />
+      <ArchiveTourButton tourNanoId={tour.nanoId} onArchived={onArchived} />
+      <Button asChild>
+        <Link to="/tours/$nanoId/edit" params={{ nanoId }} preload="intent">
+          <Pencil className="h-4 w-4" />
+          {t('editTour')}
+        </Link>
+      </Button>
+    </>
+  )
+
   return (
     <main className="flex flex-1 flex-col bg-background">
+      {/* Mobile Header */}
+      <div className="sticky top-0 z-10 border-b bg-background sm:hidden">
+        <div className="flex items-center justify-between gap-2 px-4 py-3">
+          <Button variant="ghost" size="sm" onClick={onBack} className="-ml-2 shrink-0">
+            <ChevronLeft className="h-4 w-4" />
+            <span>{t('title')}</span>
+          </Button>
+          <div className="flex shrink-0 items-center gap-2">{actions}</div>
+        </div>
+        <div className="px-4 pb-3">
+          <h1 className="min-w-0 truncate text-lg font-semibold">{displayTitle}</h1>
+        </div>
+      </div>
+
+      {/* Tablet + Desktop Header */}
       <EditorHeader
         backLabel={t('title')}
         onBack={onBack}
-        actions={
-          headerActions ?? (
-            <>
-              <ViewInAppButton nanoId={nanoId} published={tourStatus === 'published'} appDomain={appDomain} />
-              <ArchiveTourButton tourNanoId={tour.nanoId} onArchived={onArchived} />
-              <Button asChild>
-                <Link to="/tours/$nanoId/edit" params={{ nanoId }} preload="intent">
-                  <Pencil className="h-4 w-4" />
-                  {t('editTour')}
-                </Link>
-              </Button>
-            </>
-          )
-        }
+        className="hidden sm:flex"
+        actions={<div className="flex items-center gap-2">{actions}</div>}
       />
 
-      {/* Title Row */}
-      <div className="sticky top-14 z-10 bg-background px-4 py-3 sm:px-6">
+      {/* Tablet + Desktop: Title */}
+      <div className="sticky top-14 z-10 hidden bg-background px-4 py-3 sm:block sm:px-6">
         <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{displayTitle}</h1>
       </div>
 
