@@ -13,6 +13,7 @@ import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrgSlugTourSlugRouteImport } from './routes/$orgSlug.$tourSlug'
+import { Route as OrgSlugTourSlugIndexRouteImport } from './routes/$orgSlug.$tourSlug.index'
 import { Route as OrgSlugTourSlugStopNanoIdRouteImport } from './routes/$orgSlug.$tourSlug.$stopNanoId'
 
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
@@ -35,6 +36,11 @@ const OrgSlugTourSlugRoute = OrgSlugTourSlugRouteImport.update({
   path: '/$orgSlug/$tourSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrgSlugTourSlugIndexRoute = OrgSlugTourSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OrgSlugTourSlugRoute,
+} as any)
 const OrgSlugTourSlugStopNanoIdRoute =
   OrgSlugTourSlugStopNanoIdRouteImport.update({
     id: '/$stopNanoId',
@@ -48,13 +54,14 @@ export interface FileRoutesByFullPath {
   '/terms-of-service': typeof TermsOfServiceRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
+  '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
-  '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
+  '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -63,6 +70,7 @@ export interface FileRoutesById {
   '/terms-of-service': typeof TermsOfServiceRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
+  '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -72,13 +80,14 @@ export interface FileRouteTypes {
     | '/terms-of-service'
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
+    | '/$orgSlug/$tourSlug/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/privacy-policy'
     | '/terms-of-service'
-    | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
+    | '/$orgSlug/$tourSlug'
   id:
     | '__root__'
     | '/'
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/terms-of-service'
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
+    | '/$orgSlug/$tourSlug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -125,6 +135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrgSlugTourSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$orgSlug/$tourSlug/': {
+      id: '/$orgSlug/$tourSlug/'
+      path: '/'
+      fullPath: '/$orgSlug/$tourSlug/'
+      preLoaderRoute: typeof OrgSlugTourSlugIndexRouteImport
+      parentRoute: typeof OrgSlugTourSlugRoute
+    }
     '/$orgSlug/$tourSlug/$stopNanoId': {
       id: '/$orgSlug/$tourSlug/$stopNanoId'
       path: '/$stopNanoId'
@@ -137,10 +154,12 @@ declare module '@tanstack/react-router' {
 
 interface OrgSlugTourSlugRouteChildren {
   OrgSlugTourSlugStopNanoIdRoute: typeof OrgSlugTourSlugStopNanoIdRoute
+  OrgSlugTourSlugIndexRoute: typeof OrgSlugTourSlugIndexRoute
 }
 
 const OrgSlugTourSlugRouteChildren: OrgSlugTourSlugRouteChildren = {
   OrgSlugTourSlugStopNanoIdRoute: OrgSlugTourSlugStopNanoIdRoute,
+  OrgSlugTourSlugIndexRoute: OrgSlugTourSlugIndexRoute,
 }
 
 const OrgSlugTourSlugRouteWithChildren = OrgSlugTourSlugRoute._addFileChildren(

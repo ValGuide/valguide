@@ -61,8 +61,6 @@ export async function getPublishedTourByNanoId(nanoId: string): Promise<TourWith
         })
       : []
 
-  console.info('Retrieved stops data:', publishedStops) // Debug log for stops data
-
   // 5. Get published translations for each stop (stopLocale IS the live/published table)
   const stopTranslationsData =
     stopIds.length > 0
