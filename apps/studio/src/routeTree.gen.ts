@@ -18,9 +18,7 @@ import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiDevAuthRouteImport } from './routes/api.dev-auth'
-import { Route as MainToursRouteImport } from './routes/_main/tours'
 import { Route as MainSupportRouteImport } from './routes/_main/support'
-import { Route as MainStopsRouteImport } from './routes/_main/stops'
 import { Route as MainSettingsRouteImport } from './routes/_main/settings'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
 import { Route as MainDesignRouteImport } from './routes/_main/design'
@@ -85,19 +83,9 @@ const ApiDevAuthRoute = ApiDevAuthRouteImport.update({
   path: '/api/dev-auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MainToursRoute = MainToursRouteImport.update({
-  id: '/tours',
-  path: '/tours',
-  getParentRoute: () => MainRoute,
-} as any)
 const MainSupportRoute = MainSupportRouteImport.update({
   id: '/support',
   path: '/support',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainStopsRoute = MainStopsRouteImport.update({
-  id: '/stops',
-  path: '/stops',
   getParentRoute: () => MainRoute,
 } as any)
 const MainSettingsRoute = MainSettingsRouteImport.update({
@@ -146,29 +134,29 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 const MainToursIndexRoute = MainToursIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => MainToursRoute,
+  id: '/tours/',
+  path: '/tours/',
+  getParentRoute: () => MainRoute,
 } as any)
 const MainStopsIndexRoute = MainStopsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => MainStopsRoute,
+  id: '/stops/',
+  path: '/stops/',
+  getParentRoute: () => MainRoute,
 } as any)
 const MainToursNewRoute = MainToursNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => MainToursRoute,
+  id: '/tours/new',
+  path: '/tours/new',
+  getParentRoute: () => MainRoute,
 } as any)
 const MainToursNanoIdRoute = MainToursNanoIdRouteImport.update({
-  id: '/$nanoId',
-  path: '/$nanoId',
-  getParentRoute: () => MainToursRoute,
+  id: '/tours/$nanoId',
+  path: '/tours/$nanoId',
+  getParentRoute: () => MainRoute,
 } as any)
 const MainStopsNanoIdRoute = MainStopsNanoIdRouteImport.update({
-  id: '/$nanoId',
-  path: '/$nanoId',
-  getParentRoute: () => MainStopsRoute,
+  id: '/stops/$nanoId',
+  path: '/stops/$nanoId',
+  getParentRoute: () => MainRoute,
 } as any)
 const MainToursNanoIdIndexRoute = MainToursNanoIdIndexRouteImport.update({
   id: '/',
@@ -218,9 +206,7 @@ export interface FileRoutesByFullPath {
   '/design': typeof MainDesignRoute
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
-  '/stops': typeof MainStopsRouteWithChildren
   '/support': typeof MainSupportRoute
-  '/tours': typeof MainToursRouteWithChildren
   '/api/dev-auth': typeof ApiDevAuthRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
@@ -281,9 +267,7 @@ export interface FileRoutesById {
   '/_main/design': typeof MainDesignRoute
   '/_main/profile': typeof MainProfileRoute
   '/_main/settings': typeof MainSettingsRoute
-  '/_main/stops': typeof MainStopsRouteWithChildren
   '/_main/support': typeof MainSupportRoute
-  '/_main/tours': typeof MainToursRouteWithChildren
   '/api/dev-auth': typeof ApiDevAuthRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
@@ -315,9 +299,7 @@ export interface FileRouteTypes {
     | '/design'
     | '/profile'
     | '/settings'
-    | '/stops'
     | '/support'
-    | '/tours'
     | '/api/dev-auth'
     | '/stops/$nanoId'
     | '/tours/$nanoId'
@@ -377,9 +359,7 @@ export interface FileRouteTypes {
     | '/_main/design'
     | '/_main/profile'
     | '/_main/settings'
-    | '/_main/stops'
     | '/_main/support'
-    | '/_main/tours'
     | '/api/dev-auth'
     | '/_main/stops/$nanoId'
     | '/_main/tours/$nanoId'
@@ -471,25 +451,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDevAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_main/tours': {
-      id: '/_main/tours'
-      path: '/tours'
-      fullPath: '/tours'
-      preLoaderRoute: typeof MainToursRouteImport
-      parentRoute: typeof MainRoute
-    }
     '/_main/support': {
       id: '/_main/support'
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof MainSupportRouteImport
-      parentRoute: typeof MainRoute
-    }
-    '/_main/stops': {
-      id: '/_main/stops'
-      path: '/stops'
-      fullPath: '/stops'
-      preLoaderRoute: typeof MainStopsRouteImport
       parentRoute: typeof MainRoute
     }
     '/_main/settings': {
@@ -557,38 +523,38 @@ declare module '@tanstack/react-router' {
     }
     '/_main/tours/': {
       id: '/_main/tours/'
-      path: '/'
+      path: '/tours'
       fullPath: '/tours/'
       preLoaderRoute: typeof MainToursIndexRouteImport
-      parentRoute: typeof MainToursRoute
+      parentRoute: typeof MainRoute
     }
     '/_main/stops/': {
       id: '/_main/stops/'
-      path: '/'
+      path: '/stops'
       fullPath: '/stops/'
       preLoaderRoute: typeof MainStopsIndexRouteImport
-      parentRoute: typeof MainStopsRoute
+      parentRoute: typeof MainRoute
     }
     '/_main/tours/new': {
       id: '/_main/tours/new'
-      path: '/new'
+      path: '/tours/new'
       fullPath: '/tours/new'
       preLoaderRoute: typeof MainToursNewRouteImport
-      parentRoute: typeof MainToursRoute
+      parentRoute: typeof MainRoute
     }
     '/_main/tours/$nanoId': {
       id: '/_main/tours/$nanoId'
-      path: '/$nanoId'
+      path: '/tours/$nanoId'
       fullPath: '/tours/$nanoId'
       preLoaderRoute: typeof MainToursNanoIdRouteImport
-      parentRoute: typeof MainToursRoute
+      parentRoute: typeof MainRoute
     }
     '/_main/stops/$nanoId': {
       id: '/_main/stops/$nanoId'
-      path: '/$nanoId'
+      path: '/stops/$nanoId'
       fullPath: '/stops/$nanoId'
       preLoaderRoute: typeof MainStopsNanoIdRouteImport
-      parentRoute: typeof MainStopsRoute
+      parentRoute: typeof MainRoute
     }
     '/_main/tours/$nanoId/': {
       id: '/_main/tours/$nanoId/'
@@ -661,20 +627,6 @@ const MainStopsNanoIdRouteWithChildren = MainStopsNanoIdRoute._addFileChildren(
   MainStopsNanoIdRouteChildren,
 )
 
-interface MainStopsRouteChildren {
-  MainStopsNanoIdRoute: typeof MainStopsNanoIdRouteWithChildren
-  MainStopsIndexRoute: typeof MainStopsIndexRoute
-}
-
-const MainStopsRouteChildren: MainStopsRouteChildren = {
-  MainStopsNanoIdRoute: MainStopsNanoIdRouteWithChildren,
-  MainStopsIndexRoute: MainStopsIndexRoute,
-}
-
-const MainStopsRouteWithChildren = MainStopsRoute._addFileChildren(
-  MainStopsRouteChildren,
-)
-
 interface MainToursNanoIdRouteChildren {
   MainToursNanoIdEditRoute: typeof MainToursNanoIdEditRoute
   MainToursNanoIdIndexRoute: typeof MainToursNanoIdIndexRoute
@@ -693,22 +645,6 @@ const MainToursNanoIdRouteWithChildren = MainToursNanoIdRoute._addFileChildren(
   MainToursNanoIdRouteChildren,
 )
 
-interface MainToursRouteChildren {
-  MainToursNanoIdRoute: typeof MainToursNanoIdRouteWithChildren
-  MainToursNewRoute: typeof MainToursNewRoute
-  MainToursIndexRoute: typeof MainToursIndexRoute
-}
-
-const MainToursRouteChildren: MainToursRouteChildren = {
-  MainToursNanoIdRoute: MainToursNanoIdRouteWithChildren,
-  MainToursNewRoute: MainToursNewRoute,
-  MainToursIndexRoute: MainToursIndexRoute,
-}
-
-const MainToursRouteWithChildren = MainToursRoute._addFileChildren(
-  MainToursRouteChildren,
-)
-
 interface MainRouteChildren {
   MainAnalyticsRoute: typeof MainAnalyticsRoute
   MainArchivedRoute: typeof MainArchivedRoute
@@ -717,9 +653,12 @@ interface MainRouteChildren {
   MainDesignRoute: typeof MainDesignRoute
   MainProfileRoute: typeof MainProfileRoute
   MainSettingsRoute: typeof MainSettingsRoute
-  MainStopsRoute: typeof MainStopsRouteWithChildren
   MainSupportRoute: typeof MainSupportRoute
-  MainToursRoute: typeof MainToursRouteWithChildren
+  MainStopsNanoIdRoute: typeof MainStopsNanoIdRouteWithChildren
+  MainToursNanoIdRoute: typeof MainToursNanoIdRouteWithChildren
+  MainToursNewRoute: typeof MainToursNewRoute
+  MainStopsIndexRoute: typeof MainStopsIndexRoute
+  MainToursIndexRoute: typeof MainToursIndexRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
@@ -730,9 +669,12 @@ const MainRouteChildren: MainRouteChildren = {
   MainDesignRoute: MainDesignRoute,
   MainProfileRoute: MainProfileRoute,
   MainSettingsRoute: MainSettingsRoute,
-  MainStopsRoute: MainStopsRouteWithChildren,
   MainSupportRoute: MainSupportRoute,
-  MainToursRoute: MainToursRouteWithChildren,
+  MainStopsNanoIdRoute: MainStopsNanoIdRouteWithChildren,
+  MainToursNanoIdRoute: MainToursNanoIdRouteWithChildren,
+  MainToursNewRoute: MainToursNewRoute,
+  MainStopsIndexRoute: MainStopsIndexRoute,
+  MainToursIndexRoute: MainToursIndexRoute,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)

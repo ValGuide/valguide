@@ -1,9 +1,9 @@
+import { MainLayoutPending } from '@/components/main-layout-pending'
 import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router'
 import { ensureDefaultTeamQueryOptions } from '@valguide/core/features/orgs/query-options'
 import { isAuthenticatedQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
-import { MainLayoutPending } from '@/components/main-layout-pending'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
 import { sidebarStateQueryOptions } from '../features/sidebar/query-options'
 
