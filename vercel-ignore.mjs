@@ -11,6 +11,7 @@
  *   [build vercel:app,admin,www] - Build multiple apps
  *   [build app]                 - Shorthand (without 'vercel:' prefix)
  *   [build studio,admin]        - Shorthand for multiple apps
+ *   [build studio app storybook] - Space-separated apps
  *
  * Available scopes: admin, links, www, studio, app, storybook
  * Maps to Vercel projects: valguide-admin, valguide-links, etc.
@@ -43,7 +44,7 @@ if (commitMsg.includes('[build vercel]')) {
 // Supports multiple tags: [build app] [build admin] or single: [build app,admin]
 const scopeMatches = [...commitMsg.matchAll(/\[build (?:vercel:)?([^\]]+)\]/g)]
 if (scopeMatches.length > 0) {
-  const scopes = scopeMatches.flatMap((m) => m[1].split(',').map((s) => s.trim()))
+  const scopes = scopeMatches.flatMap((m) => m[1].split(/[\s,]+/).map((s) => s.trim()).filter(Boolean))
   console.log(`Found scoped build request: ${scopes.join(', ')}`)
 
   if (scopes.includes(shortName)) {
