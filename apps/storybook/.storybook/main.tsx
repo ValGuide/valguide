@@ -77,7 +77,7 @@ const config: StorybookConfig = {
         exclude: ['@storybook/builder-vite'],
       },
       resolve: {
-        dedupe: ['react', 'react-dom', '@tanstack/react-form', '@tanstack/react-store'],
+        dedupe: ['react', 'react-dom', '@tanstack/react-form'],
         alias: [
           // Note: @/* paths are resolved by vite-tsconfig-paths based on each app's tsconfig.json
           // Mock TanStack Start to prevent server-side modules from being bundled
