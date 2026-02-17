@@ -1,5 +1,5 @@
 {
-  "id": "b7c28156-2555-4bca-ae8c-a8d063273718",
+  "id": "f6d3fa08-c9a8-44a5-a4a7-eb5ebba370f7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -86,7 +86,7 @@
           "name": "uploaded_by",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -159,7 +159,7 @@
           "schemaTo": "auth",
           "columnsFrom": ["uploaded_by"],
           "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -190,7 +190,7 @@
           "name": "user_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "message": {
           "name": "message",
@@ -275,7 +275,7 @@
           "schemaTo": "auth",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
         "feedback_team_id_organization_id_fk": {
@@ -572,6 +572,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "logo": {
           "name": "logo",
           "type": "text",
@@ -607,8 +613,94 @@
           "name": "unique_org_nano_id",
           "nullsNotDistinct": false,
           "columns": ["nano_id"]
+        },
+        "unique_org_slug": {
+          "name": "unique_org_slug",
+          "nullsNotDistinct": false,
+          "columns": ["slug"]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "studio.organization_approved_domain": {
+      "name": "organization_approved_domain",
+      "schema": "studio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "domain": {
+          "name": "domain",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "org_approved_domain_unique": {
+          "name": "org_approved_domain_unique",
+          "columns": [
+            {
+              "expression": "domain",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "org_approved_domain_org_idx": {
+          "name": "org_approved_domain_org_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "organization_approved_domain_organization_id_organization_id_fk": {
+          "name": "organization_approved_domain_organization_id_organization_id_fk",
+          "tableFrom": "organization_approved_domain",
+          "tableTo": "organization",
+          "schemaTo": "studio",
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -888,6 +980,87 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "studio.organization_slug": {
+      "name": "organization_slug",
+      "schema": "studio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "organization_slug_unique": {
+          "name": "organization_slug_unique",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "organization_slug_org_idx": {
+          "name": "organization_slug_org_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "organization_slug_organization_id_organization_id_fk": {
+          "name": "organization_slug_organization_id_organization_id_fk",
+          "tableFrom": "organization_slug",
+          "tableTo": "organization",
+          "schemaTo": "studio",
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "studio.profiles": {
       "name": "profiles",
       "schema": "studio",
@@ -923,6 +1096,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar_storage_path": {
+          "name": "avatar_storage_path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -940,6 +1125,32 @@
         "onboarded_at": {
           "name": "onboarded_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "user_status",
+          "typeSchema": "studio",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "approved_at": {
+          "name": "approved_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blocked_at": {
+          "name": "blocked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blocked_reason": {
+          "name": "blocked_reason",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -1144,7 +1355,7 @@
           "name": "created_by",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -1157,7 +1368,7 @@
           "name": "updated_by",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "archived_at": {
           "name": "archived_at",
@@ -1214,7 +1425,7 @@
           "schemaTo": "auth",
           "columnsFrom": ["created_by"],
           "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
         "stop_updated_by_users_id_fk": {
@@ -1224,7 +1435,7 @@
           "schemaTo": "auth",
           "columnsFrom": ["updated_by"],
           "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -1996,6 +2207,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -2007,7 +2224,7 @@
           "name": "created_by",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -2020,10 +2237,16 @@
           "name": "updated_by",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "archived_at": {
           "name": "archived_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_at": {
+          "name": "published_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
@@ -2057,6 +2280,27 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "tour_org_slug_unique": {
+          "name": "tour_org_slug_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -2077,7 +2321,7 @@
           "schemaTo": "auth",
           "columnsFrom": ["created_by"],
           "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
         "tour_updated_by_users_id_fk": {
@@ -2087,7 +2331,7 @@
           "schemaTo": "auth",
           "columnsFrom": ["updated_by"],
           "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -2824,6 +3068,130 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "studio.tour_slug": {
+      "name": "tour_slug",
+      "schema": "studio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "tour_id": {
+          "name": "tour_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "tour_slug_org_unique": {
+          "name": "tour_slug_org_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tour_slug_tour_idx": {
+          "name": "tour_slug_tour_idx",
+          "columns": [
+            {
+              "expression": "tour_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tour_slug_lookup_idx": {
+          "name": "tour_slug_lookup_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tour_slug_tour_id_tour_id_fk": {
+          "name": "tour_slug_tour_id_tour_id_fk",
+          "tableFrom": "tour_slug",
+          "tableTo": "tour",
+          "schemaTo": "studio",
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tour_slug_organization_id_organization_id_fk": {
+          "name": "tour_slug_organization_id_organization_id_fk",
+          "tableFrom": "tour_slug",
+          "tableTo": "organization",
+          "schemaTo": "studio",
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "studio.tour_stop": {
       "name": "tour_stop",
       "schema": "studio",
@@ -3133,6 +3501,11 @@
       "schema": "studio",
       "values": ["owner", "admin", "curator", "editor", "viewer"]
     },
+    "studio.user_status": {
+      "name": "user_status",
+      "schema": "studio",
+      "values": ["pending", "approved", "blocked"]
+    },
     "studio.theme_preset": {
       "name": "theme_preset",
       "schema": "studio",
@@ -3167,7 +3540,144 @@
   "schemas": {},
   "sequences": {},
   "roles": {},
-  "policies": {},
+  "policies": {
+    "assets: owner can delete own uploads": {
+      "name": "assets: owner can delete own uploads",
+      "as": "PERMISSIVE",
+      "for": "DELETE",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets' AND owner = auth.uid()",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "assets: authenticated users can upload to assets namespace": {
+      "name": "assets: authenticated users can upload to assets namespace",
+      "as": "PERMISSIVE",
+      "for": "INSERT",
+      "to": ["authenticated"],
+      "withCheck": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "assets: authenticated users can read assets namespace": {
+      "name": "assets: authenticated users can read assets namespace",
+      "as": "PERMISSIVE",
+      "for": "SELECT",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "assets: authenticated users can update assets namespace": {
+      "name": "assets: authenticated users can update assets namespace",
+      "as": "PERMISSIVE",
+      "for": "UPDATE",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "feedback: owner can delete own uploads": {
+      "name": "feedback: owner can delete own uploads",
+      "as": "PERMISSIVE",
+      "for": "DELETE",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'studio-feedback' AND owner = auth.uid()",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "feedback: authenticated users can upload screenshots": {
+      "name": "feedback: authenticated users can upload screenshots",
+      "as": "PERMISSIVE",
+      "for": "INSERT",
+      "to": ["authenticated"],
+      "withCheck": "bucket_id = 'studio-feedback' AND (storage.foldername(name))[1] = 'feedback'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "feedback: public read access": {
+      "name": "feedback: public read access",
+      "as": "PERMISSIVE",
+      "for": "SELECT",
+      "to": ["anon"],
+      "using": "bucket_id = 'studio-feedback'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "orgs: owner can delete org logos": {
+      "name": "orgs: owner can delete org logos",
+      "as": "PERMISSIVE",
+      "for": "DELETE",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs' AND owner = auth.uid()",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "orgs: authenticated users can upload org logos": {
+      "name": "orgs: authenticated users can upload org logos",
+      "as": "PERMISSIVE",
+      "for": "INSERT",
+      "to": ["authenticated"],
+      "withCheck": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "orgs: authenticated users can read org logos": {
+      "name": "orgs: authenticated users can read org logos",
+      "as": "PERMISSIVE",
+      "for": "SELECT",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "orgs: authenticated users can update org logos": {
+      "name": "orgs: authenticated users can update org logos",
+      "as": "PERMISSIVE",
+      "for": "UPDATE",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs'",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "users: can delete own user namespace": {
+      "name": "users: can delete own user namespace",
+      "as": "PERMISSIVE",
+      "for": "DELETE",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "users: can upload to own user namespace": {
+      "name": "users: can upload to own user namespace",
+      "as": "PERMISSIVE",
+      "for": "INSERT",
+      "to": ["authenticated"],
+      "withCheck": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "users: can read own user namespace": {
+      "name": "users: can read own user namespace",
+      "as": "PERMISSIVE",
+      "for": "SELECT",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    },
+    "users: can update own user namespace": {
+      "name": "users: can update own user namespace",
+      "as": "PERMISSIVE",
+      "for": "UPDATE",
+      "to": ["authenticated"],
+      "using": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text",
+      "withCheck": "bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text",
+      "schema": "storage",
+      "on": "\"storage\".\"objects\""
+    }
+  },
   "views": {},
   "_meta": {
     "columns": {},

@@ -1,1 +1,0 @@
-ALTER TABLE "studio"."profiles" ADD COLUMN "avatar_storage_path" text;
