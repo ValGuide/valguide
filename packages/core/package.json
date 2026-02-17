@@ -152,6 +152,7 @@
     "./i18n/client": "./i18n/client.ts",
     "./i18n/mock": "./i18n/mock.ts",
     "./utils/types": "./utils/types.ts",
-    "./utils/nanoid": "./utils/nanoid.ts"
+    "./utils/nanoid": "./utils/nanoid.ts",
+    "./utils/slug": "./utils/slug.ts"
   }
 }
