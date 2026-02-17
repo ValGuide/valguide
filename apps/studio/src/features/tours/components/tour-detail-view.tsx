@@ -87,7 +87,7 @@ export function TourDetailView({
       />
 
       {/* Title Row */}
-      <div className="sticky top-14 z-10 border-b bg-background px-4 py-3 sm:px-6">
+      <div className="sticky top-14 z-10 bg-background px-4 py-3 sm:px-6">
         <h1 className="min-w-0 truncate text-lg font-semibold sm:text-xl">{displayTitle}</h1>
       </div>
 

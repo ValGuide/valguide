@@ -1,9 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Asset } from '@valguide/core/features/assets/types'
-import { createStopFn } from '@valguide/core/features/tours/stop/create-stop.fn'
-import { addStopToTourFn } from '@valguide/core/features/tours/structure/add-stop.fn'
-import { removeStopFromTourFn } from '@valguide/core/features/tours/structure/remove-stop.fn'
-import { reorderStopsFn } from '@valguide/core/features/tours/structure/reorder-stops.fn'
 import { assignTourAssetFn } from '@valguide/core/features/tours/tour/asset/assign-tour-asset.fn'
 import { removeTourAssetFn } from '@valguide/core/features/tours/tour/asset/remove-tour-asset.fn'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
@@ -23,8 +19,8 @@ import {
   tourDetailQueryOptions,
   tourLocaleDraftQueryOptions,
   tourLocalePublishedQueryOptions,
-  tourStructureDraftQueryOptions,
 } from '../query-options'
+import { TourEditorStopsProvider } from './tour-editor-stops-context'
 import { TourEditorContext, type TourEditorContextValue } from './tour-editor-types'
 
 interface TourEditorProviderProps {
@@ -72,13 +68,6 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     queryClient,
   } = base
 
-  // Fetch stops from structure (locale-aware for translated titles)
-  const structureQuery = useQuery({
-    ...tourStructureDraftQueryOptions(nanoId, activeLocale),
-    enabled: !!nanoId,
-  })
-  const stops = structureQuery.data?.stops ?? []
-
   // Tour assets from server (immediate operations, no local state)
   const tourAssetsQuery = useQuery({
     ...tourAssetsDraftQueryOptions(nanoId),
@@ -112,52 +101,6 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
       }
     },
     [nanoId, queryClient, activeLocale, setActiveLocale, t],
-  )
-
-  // Stop operations
-  const addStop = useCallback(async () => {
-    if (!nanoId) return null
-    try {
-      const newStop = await createStopFn({ data: { locale: activeLocale } })
-      await addStopToTourFn({ data: { tourNanoId: nanoId, stopNanoId: newStop.nanoId } })
-      await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
-      const structureResult = await queryClient.fetchQuery(tourStructureDraftQueryOptions(nanoId, activeLocale))
-      const addedStop = structureResult?.stops.find((s) => s.stopNanoId === newStop.nanoId)
-      return addedStop ?? null
-    } catch (error) {
-      console.error('Failed to add stop:', error)
-      toast.error(t('stops.actions.addError'))
-      return null
-    }
-  }, [nanoId, activeLocale, queryClient, t])
-
-  const removeStop = useCallback(
-    async (stopNanoId: string) => {
-      if (!nanoId) return
-      try {
-        await removeStopFromTourFn({ data: { tourNanoId: nanoId, stopNanoId } })
-        await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
-        toast.success(t('stops.actions.removeSuccess'))
-      } catch (error) {
-        console.error('Failed to remove stop:', error)
-        toast.error(t('stops.actions.removeError'))
-      }
-    },
-    [nanoId, queryClient, t],
-  )
-
-  const reorderStops = useCallback(
-    async (stopOrder: string[]) => {
-      if (!nanoId) return
-      try {
-        await reorderStopsFn({ data: { tourNanoId: nanoId, stopNanoIds: stopOrder } })
-        await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
-      } catch (error) {
-        console.error('Failed to reorder stops:', error)
-        toast.error(t('stops.actions.reorderError'))
-      }
-    },
-    [nanoId, queryClient, t],
   )
 
   // Tour asset operations (immediate server calls)
@@ -264,10 +207,6 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     isLoadingLocale,
     localePublished,
     isLoadingLocalePublished,
-    stops,
-    addStop,
-    removeStop,
-    reorderStops,
     tourAssets,
     isLoadingTourAssets,
     tourAssetsPublished,
@@ -285,7 +224,11 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     refetch,
   }
 
-  return <TourEditorContext.Provider value={value}>{children}</TourEditorContext.Provider>
+  return (
+    <TourEditorContext.Provider value={value}>
+      <TourEditorStopsProvider>{children}</TourEditorStopsProvider>
+    </TourEditorContext.Provider>
+  )
 }
 
 export { useTourEditor } from './tour-editor-types'

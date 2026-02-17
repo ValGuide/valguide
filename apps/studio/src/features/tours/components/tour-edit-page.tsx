@@ -23,6 +23,7 @@ import {
   TourMetadataFormWithDiff,
   type TourMetadataFormWithDiffRef,
 } from '@/features/tours/components/tour-metadata-form-with-diff'
+import { useTourEditorStops } from '@/features/tours/contexts/tour-editor-stops-types'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 
 export type TourSlugSettingsComponentProps = {
@@ -68,9 +69,6 @@ export function TourEditPage({
     lastSaved,
     tourAssets,
     setTourCover,
-    removeStop,
-    reorderStops,
-    stops,
     setActiveLocale,
     save,
     refetch,
@@ -78,6 +76,8 @@ export function TourEditPage({
     unregisterForm,
     registerFormReset,
   } = useTourEditor()
+
+  const { stops, isLoadingStops, stopsError, removeStop, reorderStops, refetchStops } = useTourEditorStops()
 
   const [isPublishing, setIsPublishing] = useState(false)
   const [stopToHide, setStopToHide] = useState<{ id: string; title: string } | null>(null)
@@ -312,6 +312,10 @@ export function TourEditPage({
           <div>
             <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
             <StopsList
+              stops={stops}
+              isLoading={isLoadingStops}
+              error={stopsError}
+              onRetry={refetchStops}
               onReorder={reorderStops}
               onEdit={handleSelectStop}
               onHide={handleHideStop}

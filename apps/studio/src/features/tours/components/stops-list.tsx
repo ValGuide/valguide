@@ -38,10 +38,15 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components
 import { cn } from '@valguide/ui/lib/utils'
 import { Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus, Unlink } from 'lucide-react'
 import * as React from 'react'
-import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
+import { ListError } from '@/components/list-error'
 import { RemoveStopDialog } from './remove-stop-dialog'
+import { StopsListLoading } from './stops-list-loading'
 
 export type StopsListProps = {
+  stops: StructureDraftStop[]
+  isLoading?: boolean
+  error?: Error | null
+  onRetry?: () => void
   onReorder: (stopNanoIds: string[]) => void
   onEdit: (stopNanoId: string) => void
   onHide: (stopNanoId: string) => void | Promise<void>
@@ -172,9 +177,19 @@ function SortableStopItem({ stop, index, onEdit, onHide, onShow, onRequestRemove
   )
 }
 
-export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }: StopsListProps) {
+export function StopsList({
+  stops,
+  isLoading = false,
+  error = null,
+  onRetry,
+  onReorder,
+  onEdit,
+  onHide,
+  onShow,
+  onRemove,
+  onAdd,
+}: StopsListProps) {
   const t = useTranslations('stops')
-  const { stops } = useTourEditor()
   const [items, setItems] = React.useState(stops)
   const [isMounted, setIsMounted] = React.useState(false)
   const [stopToRemove, setStopToRemove] = React.useState<StructureDraftStop | null>(null)
@@ -211,6 +226,14 @@ export function StopsList({ onReorder, onEdit, onHide, onShow, onRemove, onAdd }
   }
 
   const stopToRemoveTitle = stopToRemove?.title?.trim() || t('untitled')
+
+  if (isLoading) {
+    return <StopsListLoading />
+  }
+
+  if (error) {
+    return <ListError error={error} onRetry={onRetry} title={t('list.error')} />
+  }
 
   if (stops.length === 0) {
     return (

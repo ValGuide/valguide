@@ -5,6 +5,7 @@ import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-det
 import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
 import { type ReactNode, useState } from 'react'
+import { TourEditorStopsContext, type TourEditorStopsContextValue } from './tour-editor-stops-types'
 import { TourEditorContext, type TourEditorContextValue } from './tour-editor-types'
 
 export interface MockTourEditorProviderProps {
@@ -44,22 +45,6 @@ export function MockTourEditorProvider({
     isLoadingLocale: false,
     localePublished,
     isLoadingLocalePublished: false,
-    stops,
-    addStop: async () => {
-      console.log('Mock: addStop')
-      return null
-    },
-    removeStop: async (stopNanoId: string) => {
-      console.log('Mock: removeStop', stopNanoId)
-      setStops((prev) => prev.filter((s) => s.stopNanoId !== stopNanoId))
-    },
-    reorderStops: async (stopNanoIds: string[]) => {
-      console.log('Mock: reorderStops', stopNanoIds)
-      setStops((prev) => {
-        const byNanoId = new Map(prev.map((s) => [s.stopNanoId, s]))
-        return stopNanoIds.map((id, index) => ({ ...byNanoId.get(id)!, position: index }))
-      })
-    },
     tourAssets,
     isLoadingTourAssets: false,
     tourAssetsPublished: [],
@@ -98,5 +83,33 @@ export function MockTourEditorProvider({
     },
   }
 
-  return <TourEditorContext.Provider value={value}>{children}</TourEditorContext.Provider>
+  const stopsValue: TourEditorStopsContextValue = {
+    stops,
+    isLoadingStops: false,
+    stopsError: null,
+    addStop: async () => {
+      console.log('Mock: addStop')
+      return null
+    },
+    removeStop: async (stopNanoId: string) => {
+      console.log('Mock: removeStop', stopNanoId)
+      setStops((prev) => prev.filter((s) => s.stopNanoId !== stopNanoId))
+    },
+    reorderStops: async (stopNanoIds: string[]) => {
+      console.log('Mock: reorderStops', stopNanoIds)
+      setStops((prev) => {
+        const byNanoId = new Map(prev.map((s) => [s.stopNanoId, s]))
+        return stopNanoIds.map((id, index) => ({ ...byNanoId.get(id)!, position: index }))
+      })
+    },
+    refetchStops: async () => {
+      console.log('Mock: refetchStops')
+    },
+  }
+
+  return (
+    <TourEditorContext.Provider value={value}>
+      <TourEditorStopsContext.Provider value={stopsValue}>{children}</TourEditorStopsContext.Provider>
+    </TourEditorContext.Provider>
+  )
 }

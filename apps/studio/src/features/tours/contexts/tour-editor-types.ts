@@ -1,5 +1,4 @@
 import type { Asset } from '@valguide/core/features/assets/types'
-import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import type { TourAssetDraftItem } from '@valguide/core/features/tours/tour/asset/get-tour-assets-draft.fn'
 import type { TourAssetPublishedItem } from '@valguide/core/features/tours/tour/asset/get-tour-assets-published.fn'
 import type { LocaleDraftInfo, TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
@@ -8,7 +7,7 @@ import type { TourLocalePublishedResult } from '@valguide/core/features/tours/to
 import { createContext, useContext } from 'react'
 
 // Re-export types for consumers
-export type { TourDetail, LocaleDraftInfo, TourLocaleDraftResult, TourLocalePublishedResult, StructureDraftStop }
+export type { TourDetail, LocaleDraftInfo, TourLocaleDraftResult, TourLocalePublishedResult }
 
 export type FormValues = { title?: string; description?: string | null }
 export type FormValueGetter = () => FormValues
@@ -38,12 +37,6 @@ export interface TourEditorContextValue {
   isLoadingLocale: boolean
   localePublished: TourLocalePublishedResult | null
   isLoadingLocalePublished: boolean
-
-  // Stop operations - uses stopNanoId for identification
-  stops: StructureDraftStop[]
-  addStop: () => Promise<StructureDraftStop | null>
-  removeStop: (stopNanoId: string) => Promise<void>
-  reorderStops: (stopNanoIds: string[]) => Promise<void>
 
   // Tour asset state (from React Query cache)
   tourAssets: TourAssetDraftItem[]

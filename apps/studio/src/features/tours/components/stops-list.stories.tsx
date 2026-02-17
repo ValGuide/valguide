@@ -52,6 +52,9 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Empty: Story = {
+  args: {
+    stops: [],
+  },
   decorators: [
     (Story) => (
       <MockTourEditorProvider tourDetail={createMockTourDetail()} stops={[]}>
@@ -62,6 +65,9 @@ export const Empty: Story = {
 }
 
 export const SingleStop: Story = {
+  args: {
+    stops: createMockStops(1),
+  },
   decorators: [
     (Story) => (
       <MockTourEditorProvider tourDetail={createMockTourDetail()} stops={createMockStops(1)}>
@@ -72,6 +78,9 @@ export const SingleStop: Story = {
 }
 
 export const MultipleStops: Story = {
+  args: {
+    stops: createMockStops(3),
+  },
   decorators: [
     (Story) => (
       <MockTourEditorProvider tourDetail={createMockTourDetail()} stops={createMockStops(3)}>
@@ -82,6 +91,9 @@ export const MultipleStops: Story = {
 }
 
 export const ManyStops: Story = {
+  args: {
+    stops: createMockStops(15),
+  },
   decorators: [
     (Story) => (
       <MockTourEditorProvider tourDetail={createMockTourDetail()} stops={createMockStops(15)}>
@@ -92,13 +104,19 @@ export const ManyStops: Story = {
 }
 
 export const HiddenStop: Story = {
+  args: {
+    stops: createMockStops(3).map((stop, i) => ({
+      ...stop,
+      visible: i !== 1,
+    })),
+  },
   decorators: [
     (Story) => (
       <MockTourEditorProvider
         tourDetail={createMockTourDetail()}
         stops={createMockStops(3).map((stop, i) => ({
           ...stop,
-          visible: i === 1 ? false : true,
+          visible: i !== 1,
         }))}
       >
         <Story />
@@ -107,7 +125,42 @@ export const HiddenStop: Story = {
   ],
 }
 
+export const Loading: Story = {
+  args: {
+    stops: [],
+    isLoading: true,
+  },
+  decorators: [
+    (Story) => (
+      <MockTourEditorProvider tourDetail={createMockTourDetail()} stops={[]}>
+        <Story />
+      </MockTourEditorProvider>
+    ),
+  ],
+}
+
+export const ErrorState: Story = {
+  args: {
+    stops: [],
+    error: new globalThis.Error('Failed to load stops. Please check your connection.'),
+    onRetry: fn(),
+  },
+  decorators: [
+    (Story) => (
+      <MockTourEditorProvider tourDetail={createMockTourDetail()} stops={[]}>
+        <Story />
+      </MockTourEditorProvider>
+    ),
+  ],
+}
+
 export const UntitledStop: Story = {
+  args: {
+    stops: createMockStops(2).map((stop) => ({
+      ...stop,
+      title: null,
+    })),
+  },
   decorators: [
     (Story) => (
       <MockTourEditorProvider
