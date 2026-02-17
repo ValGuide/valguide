@@ -6,7 +6,7 @@ export const Route = createFileRoute('/_main/assets')({
 })
 
 function AssetsPage() {
-  const t = useTranslations('assets')
+  const t = useTranslations('admin.assets')
 
   return (
     <div className="flex flex-1 items-center justify-center p-8">

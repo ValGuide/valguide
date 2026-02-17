@@ -59,7 +59,7 @@ function OrgsPage() {
       if (searchValue !== current) {
         navigate({
           to: '/orgs',
-          search: (prev) => ({ ...prev, search: searchValue || undefined, page: 0 }),
+          search: { ...searchParams, search: searchValue || undefined, page: 0 },
         })
       }
     }, 300)
@@ -77,10 +77,10 @@ function OrgsPage() {
       const next = typeof updater === 'function' ? updater(pagination) : updater
       navigate({
         to: '/orgs',
-        search: (prev) => ({ ...prev, page: next.pageIndex, pageSize: next.pageSize }),
+        search: { ...searchParams, page: next.pageIndex, pageSize: next.pageSize },
       })
     },
-    [navigate, pagination],
+    [navigate, pagination, searchParams],
   )
 
   // Sorting state
@@ -94,15 +94,15 @@ function OrgsPage() {
       const sort = next[0]
       navigate({
         to: '/orgs',
-        search: (prev) => ({
-          ...prev,
+        search: {
+          ...searchParams,
           sortBy: sort?.id as ListOrgsInput['sortBy'],
           sortOrder: sort ? (sort.desc ? 'desc' : 'asc') : undefined,
           page: 0,
-        }),
+        },
       })
     },
-    [navigate, sorting],
+    [navigate, sorting, searchParams],
   )
 
   return (

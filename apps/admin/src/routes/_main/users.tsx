@@ -91,12 +91,12 @@ function UsersPage() {
       if (emailFilter !== currentSearch || statusParam !== currentStatus) {
         navigate({
           to: '/users',
-          search: (prev) => ({
-            ...prev,
+          search: {
+            ...searchParams,
             search: emailFilter || undefined,
             status: statusParam,
             page: 0,
-          }),
+          },
         })
       }
     }, 300)
@@ -114,14 +114,14 @@ function UsersPage() {
       const next = typeof updater === 'function' ? updater(pagination) : updater
       navigate({
         to: '/users',
-        search: (prev) => ({
-          ...prev,
+        search: {
+          ...searchParams,
           page: next.pageIndex,
           pageSize: next.pageSize,
-        }),
+        },
       })
     },
-    [navigate, pagination],
+    [navigate, pagination, searchParams],
   )
 
   // Sorting state
@@ -135,15 +135,15 @@ function UsersPage() {
       const sort = next[0]
       navigate({
         to: '/users',
-        search: (prev) => ({
-          ...prev,
+        search: {
+          ...searchParams,
           sortBy: sort?.id as ListUsersInput['sortBy'],
           sortOrder: sort ? (sort.desc ? 'desc' : 'asc') : undefined,
           page: 0,
-        }),
+        },
       })
     },
-    [navigate, sorting],
+    [navigate, sorting, searchParams],
   )
 
   // Mutations
@@ -182,11 +182,11 @@ function UsersPage() {
           onClick={() =>
             navigate({
               to: '/users',
-              search: (prev) => ({
-                ...prev,
+              search: {
+                ...searchParams,
                 status: 'pending',
                 page: 0,
-              }),
+              },
             })
           }
         >
