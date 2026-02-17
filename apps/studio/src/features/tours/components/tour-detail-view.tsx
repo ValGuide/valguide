@@ -27,10 +27,11 @@ export type TourDetailViewProps = {
   onRemoveLanguage: (locale: string) => Promise<void>
   onPublish?: (locale: string) => Promise<void>
   onUnpublish?: (locale: string) => Promise<void>
-  ViewInAppButton: React.ComponentType<{ nanoId: string; published: boolean; appDomain: string }>
+  ViewInAppButton: React.ComponentType<{ orgSlug: string; tourSlug: string; published: boolean; appDomain: string }>
   ArchiveTourButton: React.ComponentType<{ tourNanoId: string; onArchived: () => void }>
   SlugSettings?: ComponentType<{ tourNanoId: string; tourTitle: string }>
-  currentSlug?: string
+  orgSlug: string
+  currentSlug: string
   headerActions?: ReactNode
 }
 
@@ -48,6 +49,7 @@ export function TourDetailView({
   ViewInAppButton,
   ArchiveTourButton,
   SlugSettings,
+  orgSlug,
   currentSlug,
   headerActions,
 }: TourDetailViewProps) {
@@ -67,7 +69,12 @@ export function TourDetailView({
 
   const actions = headerActions ?? (
     <>
-      <ViewInAppButton nanoId={nanoId} published={tourStatus === 'published'} appDomain={appDomain} />
+      <ViewInAppButton
+        orgSlug={orgSlug}
+        tourSlug={currentSlug}
+        published={tourStatus === 'published'}
+        appDomain={appDomain}
+      />
       <ArchiveTourButton tourNanoId={tour.nanoId} onArchived={onArchived} />
       <Button asChild>
         <Link to="/tours/$nanoId/edit" params={{ nanoId }} preload="intent">
@@ -166,7 +173,7 @@ export function TourDetailView({
                   label={t('editor.slug.title')}
                   value={
                     <span className="flex items-center gap-1.5">
-                      <span className="font-mono text-xs">{currentSlug ?? '—'}</span>
+                      <span className="font-mono text-xs">{currentSlug}</span>
                       {SlugSettings && (
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setSlugDialogOpen(true)}>
                           <Pencil className="h-3 w-3" />

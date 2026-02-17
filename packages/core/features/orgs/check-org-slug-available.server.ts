@@ -27,18 +27,31 @@ export async function checkOrgSlugAvailable(
     return { available: false, takenBy: 'nanoId' }
   }
 
-  const existing = await db.query.organizationSlug.findFirst({
+  // Check canonical slug on organization table
+  const existingOrg = await db.query.organization.findFirst({
+    where: eq(organization.slug, slug),
+    columns: { id: true },
+  })
+
+  if (existingOrg) {
+    if (excludeOrgId && existingOrg.id === excludeOrgId) {
+      return { available: false, takenBy: 'self' }
+    }
+    return { available: false, takenBy: 'other' }
+  }
+
+  // Check redirect table (old slugs are never reused)
+  const existingRedirect = await db.query.organizationSlug.findFirst({
     where: eq(organizationSlug.slug, slug),
     columns: { organizationId: true },
   })
 
-  if (!existing) {
-    return { available: true }
+  if (existingRedirect) {
+    if (excludeOrgId && existingRedirect.organizationId === excludeOrgId) {
+      return { available: false, takenBy: 'self' }
+    }
+    return { available: false, takenBy: 'other' }
   }
 
-  if (excludeOrgId && existing.organizationId === excludeOrgId) {
-    return { available: false, takenBy: 'self' }
-  }
-
-  return { available: false, takenBy: 'other' }
+  return { available: true }
 }

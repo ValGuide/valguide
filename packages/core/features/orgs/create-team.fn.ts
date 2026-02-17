@@ -15,7 +15,7 @@ export const createTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(createTeamSchema)
   .handler(async ({ context, data }): Promise<CreateTeamResult> => {
-    const team = await createTeam(db, data.name, context.user.id)
+    const { team, orgSlug } = await createTeam(db, data.name, context.user.id)
     setActiveTeamId(team.id)
-    return { success: true, team }
+    return { success: true, team, orgSlug }
   })

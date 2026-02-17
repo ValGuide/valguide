@@ -2,7 +2,6 @@ import type { DB } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
 import { createTeam } from './create-team.server'
 import { organizationMember } from './schema'
-import type { Organization } from './types'
 
 // =============================================================================
 // TYPES
@@ -10,6 +9,7 @@ import type { Organization } from './types'
 
 export type EnsureDefaultTeamResult = {
   teamId: string
+  orgSlug: string
 }
 
 // =============================================================================
@@ -19,8 +19,13 @@ export type EnsureDefaultTeamResult = {
 /**
  * Ensure user has at least one team, creating a default one if needed.
  * This is idempotent - safe to call multiple times.
+ * Returns both the teamId and the org's primary slug.
  */
-export async function ensureDefaultTeam(dbClient: DB, userId: string, userName?: string): Promise<Organization> {
+export async function ensureDefaultTeam(
+  dbClient: DB,
+  userId: string,
+  userName?: string,
+): Promise<EnsureDefaultTeamResult> {
   // Check if user already has any team
   const existingMembership = await dbClient.query.organizationMember.findFirst({
     where: eq(organizationMember.userId, userId),
@@ -28,12 +33,12 @@ export async function ensureDefaultTeam(dbClient: DB, userId: string, userName?:
   })
 
   if (existingMembership?.organization) {
-    return existingMembership.organization
+    return { teamId: existingMembership.organization.id, orgSlug: existingMembership.organization.slug }
   }
 
   // Create a new team for the user using existing transactional createTeam
   const teamName = userName ? `${userName}'s Studio` : 'My Studio'
-  const newTeam = await createTeam(dbClient, teamName, userId)
+  const { team, orgSlug } = await createTeam(dbClient, teamName, userId)
 
-  return newTeam
+  return { teamId: team.id, orgSlug }
 }

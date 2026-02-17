@@ -21,58 +21,56 @@ export type ResolvedOrg =
  * Returns the org details plus redirect information.
  *
  * Resolution priority:
- * 1. Check if input matches org.nanoId → needsRedirect: true (redirect to slug URL)
- * 2. Check if input matches a slug → if not primary, needsRedirect: true
- * 3. If primary slug match → needsRedirect: false (serve page)
+ * 1. Check if input matches org.nanoId or org.slug → canonical match
+ * 2. Fall back to redirect table for old slugs → needsRedirect: true
  */
 export async function resolveOrgByIdOrSlug(db: DB, idOrSlug: string): Promise<ResolvedOrg> {
-  // Single query: join org with slug table, check both nanoId and slug
-  const results = await db
-    .select({
-      orgId: organization.id,
-      orgNanoId: organization.nanoId,
-      slugId: organizationSlug.id,
-      slug: organizationSlug.slug,
-      isPrimary: organizationSlug.isPrimary,
-    })
-    .from(organization)
-    .leftJoin(organizationSlug, eq(organizationSlug.organizationId, organization.id))
-    .where(or(eq(organization.nanoId, idOrSlug), eq(organizationSlug.slug, idOrSlug)))
+  // Try canonical: nanoId or slug on organization table
+  const org = await db.query.organization.findFirst({
+    where: or(eq(organization.nanoId, idOrSlug), eq(organization.slug, idOrSlug)),
+    columns: { id: true, nanoId: true, slug: true },
+  })
 
-  if (results.length === 0) {
+  if (org) {
+    const matchedByNanoId = org.nanoId === idOrSlug
+    return {
+      found: true,
+      organizationId: org.id,
+      nanoId: org.nanoId,
+      matchedBy: matchedByNanoId ? 'nanoId' : 'slug',
+      matchedSlug: matchedByNanoId ? null : org.slug,
+      primarySlug: org.slug,
+      needsRedirect: matchedByNanoId, // nanoId access → redirect to slug URL
+    }
+  }
+
+  // Fall back to redirect table
+  const redirect = await db.query.organizationSlug.findFirst({
+    where: eq(organizationSlug.slug, idOrSlug),
+    columns: { organizationId: true },
+  })
+
+  if (!redirect) {
     return { found: false }
   }
 
-  // Group results by org (should only be one org, but may have multiple slug rows)
-  const orgId = results[0].orgId
-  const orgNanoId = results[0].orgNanoId
+  // Look up the org to get canonical slug
+  const redirectedOrg = await db.query.organization.findFirst({
+    where: eq(organization.id, redirect.organizationId),
+    columns: { id: true, nanoId: true, slug: true },
+  })
 
-  // Find how we matched
-  const matchedByNanoId = orgNanoId === idOrSlug
-  const matchedSlugRow = results.find((r) => r.slug === idOrSlug)
-  const primarySlugRow = results.find((r) => r.isPrimary === true)
-
-  const primarySlug = primarySlugRow?.slug ?? null
-  const matchedSlug = matchedSlugRow?.slug ?? null
-
-  // Determine if redirect is needed
-  let needsRedirect = false
-
-  if (matchedByNanoId) {
-    // Accessed via nanoId → redirect to primary slug (if exists)
-    needsRedirect = primarySlug !== null
-  } else if (matchedSlug && !matchedSlugRow?.isPrimary) {
-    // Accessed via old slug → redirect to primary
-    needsRedirect = true
+  if (!redirectedOrg) {
+    return { found: false }
   }
 
   return {
     found: true,
-    organizationId: orgId,
-    nanoId: orgNanoId,
-    matchedBy: matchedByNanoId ? 'nanoId' : 'slug',
-    matchedSlug,
-    primarySlug,
-    needsRedirect,
+    organizationId: redirectedOrg.id,
+    nanoId: redirectedOrg.nanoId,
+    matchedBy: 'slug',
+    matchedSlug: idOrSlug,
+    primarySlug: redirectedOrg.slug,
+    needsRedirect: true, // Old slug → redirect to canonical
   }
 }

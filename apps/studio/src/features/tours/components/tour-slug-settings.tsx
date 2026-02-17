@@ -17,7 +17,7 @@ import { z } from 'zod'
 
 export type TourSlugCheckResult = {
   available: boolean
-  takenBy?: 'other' | 'self' | 'selfDraft' | 'reserved' | 'nanoId'
+  takenBy?: 'other' | 'self' | 'reserved' | 'nanoId'
 }
 
 export type UpdateTourSlugResult = {
@@ -29,8 +29,6 @@ export type UpdateTourSlugResult = {
 export type TourSlugHistoryItem = {
   id: string
   slug: string
-  isPrimary: boolean
-  publishedAt: string | null
   createdAt: string
 }
 
@@ -40,7 +38,7 @@ export interface TourSlugSettingsProps {
   slugHistory?: TourSlugHistoryItem[]
   isLoading?: boolean
   variant?: 'card' | 'plain'
-  orgSlug?: string
+  orgSlug: string
   onUpdateSlug?: (newSlug: string) => Promise<UpdateTourSlugResult>
   onCheckSlugAvailable?: (slug: string) => Promise<TourSlugCheckResult>
   onSaved?: () => void
@@ -60,7 +58,7 @@ export function TourSlugSettings({
   const t = useTranslations('tours.editor.slug')
   const [isPending, startTransition] = useTransition()
   const [slugCheckState, setSlugCheckState] = useState<
-    'idle' | 'checking' | 'available' | 'taken' | 'reserved' | 'self' | 'selfDraft'
+    'idle' | 'checking' | 'available' | 'taken' | 'reserved' | 'self'
   >('idle')
   const [historyOpen, setHistoryOpen] = useState(false)
 
@@ -109,8 +107,6 @@ export function TourSlugSettings({
           setSlugCheckState('available')
         } else if (result.takenBy === 'reserved') {
           setSlugCheckState('reserved')
-        } else if (result.takenBy === 'selfDraft') {
-          setSlugCheckState('selfDraft')
         } else if (result.takenBy === 'self') {
           setSlugCheckState('self')
         } else {
@@ -156,7 +152,6 @@ export function TourSlugSettings({
       case 'checking':
         return <Loader2 className="size-4 animate-spin text-muted-foreground" />
       case 'available':
-      case 'selfDraft':
         return <Check className="size-4 text-success" />
       case 'taken':
       case 'reserved':
@@ -173,8 +168,6 @@ export function TourSlugSettings({
         return <span className="text-muted-foreground">{t('checking')}</span>
       case 'available':
         return <span className="text-success">{t('available')}</span>
-      case 'selfDraft':
-        return <span className="text-success">{t('selfDraft')}</span>
       case 'taken':
         return <span className="text-destructive">{t('taken')}</span>
       case 'reserved':
@@ -186,13 +179,9 @@ export function TourSlugSettings({
     }
   }
 
-  const draftSlug = slugHistory.find((s) => !s.publishedAt)
-  const primarySlug = slugHistory.find((s) => s.isPrimary)
-  const currentEditSlug = draftSlug ?? primarySlug
-  const historyItems = slugHistory.filter((s) => s.id !== currentEditSlug?.id)
+  const historyItems = slugHistory
   const currentSlug = useStore(form.store, (state) => state.values.slug)
-  const canSubmit =
-    (slugCheckState === 'available' || slugCheckState === 'selfDraft') && currentSlug !== initialSlug && !isPending
+  const canSubmit = slugCheckState === 'available' && currentSlug !== initialSlug && !isPending
 
   const Wrapper = variant === 'card' ? Card : 'div'
 
@@ -271,14 +260,12 @@ export function TourSlugSettings({
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">{slugStatusIcon()}</div>
                   </div>
-                  {orgSlug && (
-                    <FieldDescription>
-                      {t('description', {
-                        baseUrl: `valguide.com/${orgSlug}`,
-                        slug: field.state.value || t('placeholder'),
-                      })}
-                    </FieldDescription>
-                  )}
+                  <FieldDescription>
+                    {t('description', {
+                      baseUrl: `valguide.com/${orgSlug}`,
+                      slug: field.state.value || t('placeholder'),
+                    })}
+                  </FieldDescription>
                   {slugStatusMessage() && <p className="text-sm">{slugStatusMessage()}</p>}
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>

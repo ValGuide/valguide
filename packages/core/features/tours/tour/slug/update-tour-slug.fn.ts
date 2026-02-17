@@ -4,20 +4,19 @@ import { slugSchema } from '../../../../utils/slug'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { db } from '../../../db'
-import { upsertTourDraftSlug } from './upsert-tour-draft-slug.server'
+import { updateTourSlug } from './update-tour-slug.server'
 
-export type { UpsertTourDraftSlugResult } from './upsert-tour-draft-slug.server'
+export type { UpdateTourSlugResult } from './update-tour-slug.server'
 
-const upsertTourDraftSlugSchema = z.object({
+const updateTourSlugSchema = z.object({
   tourNanoId: z.string(),
   newSlug: slugSchema,
 })
 
-export const upsertTourDraftSlugFn = createServerFn({ method: 'POST' })
+export const updateTourSlugFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
-  .inputValidator(upsertTourDraftSlugSchema)
+  .inputValidator(updateTourSlugSchema)
   .handler(async ({ context, data }) => {
     const { tourId, organizationId } = await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
-
-    return upsertTourDraftSlug(db, tourId, organizationId, data.newSlug)
+    return updateTourSlug(db, tourId, organizationId, data.newSlug)
   })

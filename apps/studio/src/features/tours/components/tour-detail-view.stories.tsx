@@ -10,6 +10,7 @@ import { TourDetailView } from './tour-detail-view'
 const mockTour: TourDetail = {
   id: 'tour-uuid-123',
   nanoId: 'abc123xyz',
+  slug: 'city-art-museum-tour',
   organizationId: 'org-1',
   archivedAt: null,
   publishedAt: null,
@@ -71,6 +72,7 @@ const meta = {
     onPublish: fn(async () => {}),
     ViewInAppButton: MockViewInAppButton,
     ArchiveTourButton: MockArchiveButton,
+    orgSlug: 'city-art-museum',
     currentSlug: 'city-art-museum-tour',
   },
 } satisfies Meta<typeof TourDetailView>

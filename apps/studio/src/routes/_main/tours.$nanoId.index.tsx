@@ -3,11 +3,10 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { clientEnv } from '@valguide/core/env/client'
 import { unpublishTourLocaleFn } from '@valguide/core/features/tours/tour/locale/unpublish-tour-locale.fn'
 import { publishTourFn } from '@valguide/core/features/tours/tour/publish-tour.fn'
-import { getTourSlugsFn } from '@valguide/core/features/tours/tour/slug/get-tour-slugs.fn'
 import { updateTourFn } from '@valguide/core/features/tours/tour/update-tour.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { ArchiveTourButton } from '@/features/tours/components/archive-tour-button'
 import { TourDetailSkeleton } from '@/features/tours/components/tour-detail-skeleton'
 import { TourDetailView } from '@/features/tours/components/tour-detail-view'
@@ -33,14 +32,8 @@ function TourPage() {
   const tUnpublish = useTranslations('tours.unpublish')
   const router = useRouter()
 
-  const [currentSlug, setCurrentSlug] = useState<string | undefined>()
-  useEffect(() => {
-    getTourSlugsFn({ data: { tourNanoId: nanoId } }).then((slugs) => {
-      const draft = slugs.find((s) => !s.publishedAt)
-      const primary = slugs.find((s) => s.isPrimary)
-      setCurrentSlug((draft ?? primary)?.slug)
-    })
-  }, [nanoId])
+  const { team } = Route.useRouteContext()
+  const orgSlug = team.orgSlug
 
   const handleArchived = async () => {
     await router.invalidate()
@@ -130,7 +123,8 @@ function TourPage() {
       ViewInAppButton={ViewInAppButton}
       ArchiveTourButton={ArchiveTourButton}
       SlugSettings={TourSlugSettingsConnected}
-      currentSlug={currentSlug}
+      orgSlug={orgSlug}
+      currentSlug={tour.slug}
     />
   )
 }

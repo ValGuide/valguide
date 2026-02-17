@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm'
 import { valguideId } from '../../../utils/nanoid'
 import { db } from '../../db'
 import { tour, tourLocaleDraft, tourSettingsDraft } from '../schema'
+import { generateUniqueTourSlug } from './slug/generate-unique-tour-slug.server'
 
 // =============================================================================
 // TYPES
@@ -40,12 +41,16 @@ export async function createTour(
     }
   }
 
+  // Generate unique slug from title or nanoId
+  const slug = await generateUniqueTourSlug(db, organizationId, input.title, nanoId)
+
   return db.transaction(async (tx) => {
     const [newTour] = await tx
       .insert(tour)
       .values({
         nanoId,
         organizationId,
+        slug,
         createdBy: userId,
         updatedBy: userId,
         availableLocales: [locale],

@@ -14,7 +14,6 @@ import {
   tourStop,
   tourStopDraft,
 } from '../schema'
-import { publishTourSlugTx } from './slug/publish-tour-slug.server'
 
 export type PublishTourInput = {
   nanoId: string
@@ -200,8 +199,6 @@ export async function publishTour(input: PublishTourInput, userId: string): Prom
     await publishTourSettingsTx(tx, foundTour.id, userId)
 
     await publishTourAssetsTx(tx, foundTour.id)
-
-    await publishTourSlugTx(tx, foundTour.id)
 
     for (const stopId of stopIds) {
       await publishStopLocaleTx(tx, stopId, input.locale, userId)

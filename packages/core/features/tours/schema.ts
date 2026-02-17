@@ -1,4 +1,3 @@
-import { relations, sql } from 'drizzle-orm'
 import { boolean, index, integer, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 import { organization } from '../orgs/schema'
@@ -31,6 +30,8 @@ export const tour = studioSchema.table(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
 
+    slug: varchar('slug', { length: 200 }).notNull(),
+
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
     updatedAt: timestamp('updated_at', { withTimezone: true })
@@ -47,6 +48,7 @@ export const tour = studioSchema.table(
   },
   (t) => ({
     tourOrgIdx: index('tour_org_idx').on(t.organizationId),
+    tourOrgSlugIdx: uniqueIndex('tour_org_slug_unique').on(t.organizationId, t.slug),
   }),
 )
 
@@ -466,9 +468,7 @@ export type StopAssetDraft = typeof stopAssetDraft.$inferSelect
 export type StopAsset = typeof stopAsset.$inferSelect
 
 // =============================================================================
-// SLUGS (Draft/Published Pattern)
-// - Draft slug: publishedAt IS NULL (0-1 per tour, overwritten on each save)
-// - Published slugs: publishedAt IS NOT NULL (0-N per tour, one has isPrimary=true)
+// SLUG REDIRECT LOG (append-only, old slugs only)
 // =============================================================================
 
 export const tourSlug = studioSchema.table(
@@ -482,28 +482,14 @@ export const tourSlug = studioSchema.table(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
     slug: varchar('slug', { length: 200 }).notNull(),
-    isPrimary: boolean('is_primary').notNull().default(false),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
   },
   (t) => ({
     uniqueOrgSlug: uniqueIndex('tour_slug_org_unique').on(t.organizationId, t.slug),
-    uniquePrimary: uniqueIndex('tour_slug_primary_unique').on(t.tourId).where(sql`${t.isPrimary} = true`),
     tourIdx: index('tour_slug_tour_idx').on(t.tourId),
     slugLookupIdx: index('tour_slug_lookup_idx').on(t.organizationId, t.slug),
   }),
 )
-
-export const tourSlugRelations = relations(tourSlug, ({ one }) => ({
-  tour: one(tour, {
-    fields: [tourSlug.tourId],
-    references: [tour.id],
-  }),
-  organization: one(organization, {
-    fields: [tourSlug.organizationId],
-    references: [organization.id],
-  }),
-}))
 
 // Slug types
 export type TourSlug = typeof tourSlug.$inferSelect

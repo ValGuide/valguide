@@ -21,20 +21,20 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
     const profile = await getOrCreateProfile(context.user.id, context.user.email)
     const displayName = getUserDisplayName(profile, context.user.email)
 
-    const team = await ensureDefaultTeam(db, context.user.id, displayName)
+    const result = await ensureDefaultTeam(db, context.user.id, displayName)
 
     // Validate current cookie - if stale or missing, set to the default team
     const currentActiveTeamId = getActiveTeamId()
     if (!currentActiveTeamId) {
-      setActiveTeamId(team.id)
-    } else if (currentActiveTeamId !== team.id) {
+      setActiveTeamId(result.teamId)
+    } else if (currentActiveTeamId !== result.teamId) {
       // Check if user is still a member of the cookie's team
       const membership = await getOrgMembership(context.user.id, currentActiveTeamId)
       if (!membership) {
         // Cookie points to invalid team - reset to default
-        setActiveTeamId(team.id)
+        setActiveTeamId(result.teamId)
       }
     }
 
-    return { teamId: team.id }
+    return result
   })

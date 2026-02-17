@@ -5,7 +5,7 @@ import { tour, tourSlug } from '../../schema'
 
 export type TourSlugAvailabilityResult = {
   available: boolean
-  takenBy?: 'other' | 'self' | 'selfDraft' | 'reserved' | 'nanoId'
+  takenBy?: 'other' | 'self' | 'reserved' | 'nanoId'
 }
 
 export async function checkTourSlugAvailable(
@@ -27,19 +27,31 @@ export async function checkTourSlugAvailable(
     return { available: false, takenBy: 'nanoId' }
   }
 
-  const existing = await db.query.tourSlug.findFirst({
-    where: and(eq(tourSlug.organizationId, organizationId), eq(tourSlug.slug, slug)),
-    columns: { tourId: true, publishedAt: true },
+  // Check canonical slug on tour table (scoped to org)
+  const existingTour = await db.query.tour.findFirst({
+    where: and(eq(tour.organizationId, organizationId), eq(tour.slug, slug)),
+    columns: { id: true },
   })
 
-  if (!existing) {
-    return { available: true }
+  if (existingTour) {
+    if (excludeTourId && existingTour.id === excludeTourId) {
+      return { available: false, takenBy: 'self' }
+    }
+    return { available: false, takenBy: 'other' }
   }
 
-  if (excludeTourId && existing.tourId === excludeTourId) {
-    const isDraft = existing.publishedAt === null
-    return { available: false, takenBy: isDraft ? 'selfDraft' : 'self' }
+  // Check redirect table (old slugs are never reused)
+  const existingRedirect = await db.query.tourSlug.findFirst({
+    where: and(eq(tourSlug.organizationId, organizationId), eq(tourSlug.slug, slug)),
+    columns: { tourId: true },
+  })
+
+  if (existingRedirect) {
+    if (excludeTourId && existingRedirect.tourId === excludeTourId) {
+      return { available: false, takenBy: 'self' }
+    }
+    return { available: false, takenBy: 'other' }
   }
 
-  return { available: false, takenBy: 'other' }
+  return { available: true }
 }

@@ -8,6 +8,7 @@ import { StopsList } from './stops-list'
 const createMockTourDetail = (overrides: Partial<TourDetail> = {}): TourDetail => ({
   id: 'tour-1',
   nanoId: 'abc123xyz',
+  slug: 'city-art-museum-tour',
   organizationId: 'org-1',
   availableLocales: ['en', 'de', 'rm'],
   archivedAt: null,

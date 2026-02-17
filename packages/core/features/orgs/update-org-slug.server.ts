@@ -3,7 +3,7 @@ import { slugSchema } from '../../utils/slug'
 import type { DB } from '../db'
 import { isUniqueViolation } from '../links/utils'
 import { checkOrgSlugAvailable } from './check-org-slug-available.server'
-import { organizationSlug } from './schema'
+import { organization, organizationSlug } from './schema'
 
 export type UpdateOrgSlugResult =
   | { success: true }
@@ -34,23 +34,23 @@ export async function updateOrgSlug(db: DB, organizationId: string, newSlug: str
 
   try {
     await db.transaction(async (tx) => {
-      await tx
-        .update(organizationSlug)
-        .set({ isPrimary: false })
-        .where(eq(organizationSlug.organizationId, organizationId))
+      // Read current slug
+      const [current] = await tx
+        .select({ slug: organization.slug })
+        .from(organization)
+        .where(eq(organization.id, organizationId))
+        .limit(1)
 
-      await tx
-        .insert(organizationSlug)
-        .values({
+      // Insert old slug into redirect table (if different)
+      if (current && current.slug !== newSlug) {
+        await tx.insert(organizationSlug).values({
           organizationId,
-          slug: newSlug,
-          isPrimary: true,
-          publishedAt: new Date(),
+          slug: current.slug,
         })
-        .onConflictDoUpdate({
-          target: organizationSlug.slug,
-          set: { isPrimary: true, publishedAt: new Date() },
-        })
+      }
+
+      // Update canonical slug
+      await tx.update(organization).set({ slug: newSlug }).where(eq(organization.id, organizationId))
     })
 
     return { success: true }

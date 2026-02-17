@@ -1,21 +1,21 @@
-import { and, eq, isNull } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { slugSchema } from '../../../../utils/slug'
 import type { DB } from '../../../db'
 import { isUniqueViolation } from '../../../links/utils'
-import { tourSlug } from '../../schema'
+import { tour, tourSlug } from '../../schema'
 import { checkTourSlugAvailable } from './check-tour-slug-available.server'
 
-export type UpsertTourDraftSlugResult =
+export type UpdateTourSlugResult =
   | { success: true }
   | { success: false; error: 'SLUG_TAKEN'; message: string }
   | { success: false; error: 'VALIDATION_ERROR'; message: string }
 
-export async function upsertTourDraftSlug(
+export async function updateTourSlug(
   db: DB,
   tourId: string,
   organizationId: string,
   newSlug: string,
-): Promise<UpsertTourDraftSlugResult> {
+): Promise<UpdateTourSlugResult> {
   const validation = slugSchema.safeParse(newSlug)
   if (!validation.success) {
     return {
@@ -26,7 +26,7 @@ export async function upsertTourDraftSlug(
   }
 
   const availability = await checkTourSlugAvailable(db, newSlug, organizationId, tourId)
-  if (!availability.available && availability.takenBy !== 'self' && availability.takenBy !== 'selfDraft') {
+  if (!availability.available && availability.takenBy !== 'self') {
     return {
       success: false,
       error: 'SLUG_TAKEN',
@@ -36,22 +36,22 @@ export async function upsertTourDraftSlug(
   }
 
   try {
-    const existingDraft = await db.query.tourSlug.findFirst({
-      where: and(eq(tourSlug.tourId, tourId), isNull(tourSlug.publishedAt)),
-      columns: { id: true },
-    })
+    await db.transaction(async (tx) => {
+      // Read current slug
+      const [current] = await tx.select({ slug: tour.slug }).from(tour).where(eq(tour.id, tourId)).limit(1)
 
-    if (existingDraft) {
-      await db.update(tourSlug).set({ slug: newSlug }).where(eq(tourSlug.id, existingDraft.id))
-    } else {
-      await db.insert(tourSlug).values({
-        tourId,
-        organizationId,
-        slug: newSlug,
-        isPrimary: false,
-        publishedAt: null,
-      })
-    }
+      // Insert old slug into redirect table (if different)
+      if (current && current.slug !== newSlug) {
+        await tx.insert(tourSlug).values({
+          tourId,
+          organizationId,
+          slug: current.slug,
+        })
+      }
+
+      // Update canonical slug
+      await tx.update(tour).set({ slug: newSlug }).where(eq(tour.id, tourId))
+    })
 
     return { success: true }
   } catch (err) {

@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   args: {
-    url: 'https://app.valguide.com/g/abc123',
+    url: 'https://app.valguide.com/kunsthaus-zurich/giacometti',
     title: 'Van Gogh Museum Audio Guide',
     text: 'Check out this amazing museum guide!',
   },

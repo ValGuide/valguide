@@ -24,6 +24,7 @@ export type TourCoverImage = {
 export type TourDetail = {
   id: string
   nanoId: string
+  slug: string
   organizationId: string
   availableLocales: string[]
   archivedAt: Date | null
@@ -107,6 +108,7 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
   return {
     id: foundTour.id,
     nanoId: foundTour.nanoId,
+    slug: foundTour.slug,
     organizationId: foundTour.organizationId,
     availableLocales: foundTour.availableLocales ?? [],
     archivedAt: foundTour.archivedAt,

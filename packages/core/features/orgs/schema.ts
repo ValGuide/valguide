@@ -1,4 +1,4 @@
-import { relations, sql } from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 import { boolean, index, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { authUsers } from 'drizzle-orm/supabase'
 
@@ -12,6 +12,7 @@ export const organization = studioSchema.table('organization', {
   id: uuid('id').defaultRandom().primaryKey(),
   nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_org_nano_id'),
   name: varchar('name', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 100 }).notNull().unique('unique_org_slug'),
   logo: text('logo'),
   defaultThemeId: uuid('default_theme_id'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -97,8 +98,7 @@ export const organizationInvitationRelations = relations(organizationInvitation,
 }))
 
 // =============================================================================
-// SLUGS (Immediate Publish - No Draft State for Orgs)
-// publishedAt is always set on insert for consistency with tour slugs
+// SLUG REDIRECT LOG (append-only, old slugs only)
 // =============================================================================
 
 export const organizationSlug = studioSchema.table(
@@ -109,15 +109,10 @@ export const organizationSlug = studioSchema.table(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
     slug: varchar('slug', { length: 100 }).notNull(),
-    isPrimary: boolean('is_primary').notNull().default(false),
     createdAt: timestamp('created_at').defaultNow().notNull(),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
   },
   (t) => ({
     uniqueSlug: uniqueIndex('organization_slug_unique').on(t.slug),
-    uniquePrimary: uniqueIndex('organization_slug_primary_unique')
-      .on(t.organizationId)
-      .where(sql`${t.isPrimary} = true`),
     orgIdx: index('organization_slug_org_idx').on(t.organizationId),
   }),
 )

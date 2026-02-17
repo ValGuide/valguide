@@ -1,9 +1,8 @@
-import { getOrgSlugsFn } from '@valguide/core/features/orgs/get-org-slugs.fn'
 import { checkTourSlugAvailableFn } from '@valguide/core/features/tours/tour/slug/check-tour-slug-available.fn'
 import { getTourSlugsFn } from '@valguide/core/features/tours/tour/slug/get-tour-slugs.fn'
-import { upsertTourDraftSlugFn } from '@valguide/core/features/tours/tour/slug/upsert-tour-draft-slug.fn'
+import { updateTourSlugFn } from '@valguide/core/features/tours/tour/slug/update-tour-slug.fn'
 import { useEffect, useState } from 'react'
-import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
+import { useOrgSlug } from '@/hooks/use-org-slug'
 import { type TourSlugHistoryItem, TourSlugSettings } from './tour-slug-settings'
 
 interface TourSlugSettingsConnectedProps {
@@ -16,8 +15,7 @@ interface TourSlugSettingsConnectedProps {
 export function TourSlugSettingsConnected({ tourNanoId, tourTitle, variant, onSaved }: TourSlugSettingsConnectedProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [slugHistory, setSlugHistory] = useState<TourSlugHistoryItem[]>([])
-  const [orgSlug, setOrgSlug] = useState<string>()
-  const { data: sidebarData } = useSidebarData()
+  const orgSlug = useOrgSlug()
 
   useEffect(() => {
     async function loadSlugs() {
@@ -35,17 +33,8 @@ export function TourSlugSettingsConnected({ tourNanoId, tourTitle, variant, onSa
     loadSlugs()
   }, [tourNanoId])
 
-  useEffect(() => {
-    const teamId = sidebarData?.currentTeam?.id
-    if (!teamId) return
-    getOrgSlugsFn({ data: { organizationId: teamId } }).then((slugs) => {
-      const primary = slugs.find((s) => s.isPrimary)
-      if (primary) setOrgSlug(primary.slug)
-    })
-  }, [sidebarData?.currentTeam?.id])
-
   const handleUpdateSlug = async (newSlug: string) => {
-    const result = await upsertTourDraftSlugFn({
+    const result = await updateTourSlugFn({
       data: { tourNanoId, newSlug },
     })
 
@@ -65,9 +54,7 @@ export function TourSlugSettingsConnected({ tourNanoId, tourTitle, variant, onSa
     })
   }
 
-  const draftSlug = slugHistory.find((s) => !s.publishedAt)
-  const primarySlug = slugHistory.find((s) => s.isPrimary)
-  const currentSlug = draftSlug ?? primarySlug
+  const currentSlug = slugHistory[0]
 
   return (
     <TourSlugSettings

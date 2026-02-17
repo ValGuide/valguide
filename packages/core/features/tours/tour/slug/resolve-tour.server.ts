@@ -1,6 +1,6 @@
 import { and, eq, isNull, or } from 'drizzle-orm'
 import type { DB } from '../../../db'
-import { organization, organizationSlug } from '../../../orgs/schema'
+import { organization } from '../../../orgs/schema'
 import { tour, tourSlug } from '../../schema'
 
 export type ResolvedTour =
@@ -20,18 +20,13 @@ export type ResolvedTour =
       found: false
     }
 
-/**
- * Resolve a tour by either nanoId or slug within an organization.
- *
- * @param orgId - The internal UUID of the organization (from prior org resolution)
- * @param idOrSlug - The tour identifier (nanoId or slug)
- */
 export async function resolveTourByIdOrSlug(db: DB, orgId: string, idOrSlug: string): Promise<ResolvedTour> {
-  // Get org details for redirect URL building
+  // Get org details
   const orgData = await db
     .select({
       orgId: organization.id,
       orgNanoId: organization.nanoId,
+      orgSlug: organization.slug,
     })
     .from(organization)
     .where(eq(organization.id, orgId))
@@ -42,68 +37,65 @@ export async function resolveTourByIdOrSlug(db: DB, orgId: string, idOrSlug: str
   }
 
   const orgNanoId = orgData[0].orgNanoId
+  const orgPrimarySlug = orgData[0].orgSlug
 
-  // Get org's primary slug
-  const orgSlugData = await db
-    .select({ slug: organizationSlug.slug })
-    .from(organizationSlug)
-    .where(and(eq(organizationSlug.organizationId, orgId), eq(organizationSlug.isPrimary, true)))
-    .limit(1)
+  // Try canonical: nanoId or slug on tour table
+  const foundTour = await db.query.tour.findFirst({
+    where: and(
+      eq(tour.organizationId, orgId),
+      isNull(tour.deletedAt),
+      isNull(tour.archivedAt),
+      or(eq(tour.nanoId, idOrSlug), eq(tour.slug, idOrSlug)),
+    ),
+    columns: { id: true, nanoId: true, slug: true },
+  })
 
-  const orgPrimarySlug = orgSlugData[0]?.slug ?? null
+  if (foundTour) {
+    const matchedByNanoId = foundTour.nanoId === idOrSlug
+    return {
+      found: true,
+      tourId: foundTour.id,
+      tourNanoId: foundTour.nanoId,
+      organizationId: orgId,
+      orgNanoId,
+      orgPrimarySlug,
+      matchedBy: matchedByNanoId ? 'nanoId' : 'slug',
+      matchedSlug: matchedByNanoId ? null : foundTour.slug,
+      primarySlug: foundTour.slug,
+      needsRedirect: matchedByNanoId,
+    }
+  }
 
-  // Query tour with its slugs
-  const results = await db
-    .select({
-      tourId: tour.id,
-      tourNanoId: tour.nanoId,
-      slugId: tourSlug.id,
-      slug: tourSlug.slug,
-      isPrimary: tourSlug.isPrimary,
-    })
-    .from(tour)
-    .leftJoin(tourSlug, eq(tourSlug.tourId, tour.id))
-    .where(
-      and(
-        eq(tour.organizationId, orgId),
-        isNull(tour.deletedAt),
-        isNull(tour.archivedAt),
-        or(eq(tour.nanoId, idOrSlug), eq(tourSlug.slug, idOrSlug)),
-      ),
-    )
+  // Fall back to redirect table
+  const redirect = await db.query.tourSlug.findFirst({
+    where: and(eq(tourSlug.organizationId, orgId), eq(tourSlug.slug, idOrSlug)),
+    columns: { tourId: true },
+  })
 
-  if (results.length === 0) {
+  if (!redirect) {
     return { found: false }
   }
 
-  const tourId = results[0].tourId
-  const tourNanoId = results[0].tourNanoId
+  // Look up the tour for canonical slug
+  const redirectedTour = await db.query.tour.findFirst({
+    where: and(eq(tour.id, redirect.tourId), isNull(tour.deletedAt), isNull(tour.archivedAt)),
+    columns: { id: true, nanoId: true, slug: true },
+  })
 
-  const matchedByNanoId = tourNanoId === idOrSlug
-  const matchedSlugRow = results.find((r) => r.slug === idOrSlug)
-  const primarySlugRow = results.find((r) => r.isPrimary === true)
-
-  const primarySlug = primarySlugRow?.slug ?? null
-  const matchedSlug = matchedSlugRow?.slug ?? null
-
-  let needsRedirect = false
-
-  if (matchedByNanoId) {
-    needsRedirect = primarySlug !== null
-  } else if (matchedSlug && !matchedSlugRow?.isPrimary) {
-    needsRedirect = true
+  if (!redirectedTour) {
+    return { found: false }
   }
 
   return {
     found: true,
-    tourId,
-    tourNanoId,
+    tourId: redirectedTour.id,
+    tourNanoId: redirectedTour.nanoId,
     organizationId: orgId,
     orgNanoId,
     orgPrimarySlug,
-    matchedBy: matchedByNanoId ? 'nanoId' : 'slug',
-    matchedSlug,
-    primarySlug,
-    needsRedirect,
+    matchedBy: 'slug',
+    matchedSlug: idOrSlug,
+    primarySlug: redirectedTour.slug,
+    needsRedirect: true,
   }
 }

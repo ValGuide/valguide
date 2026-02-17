@@ -17,7 +17,7 @@ const meta = {
   ],
   args: {
     tourTitle: 'Van Gogh Museum Audio Guide',
-    shareUrl: 'https://app.valguide.com/g/abc123',
+    shareUrl: 'https://app.valguide.com/kunsthaus-zurich/giacometti',
     onFeedbackSubmit: fn(),
   },
 } satisfies Meta<typeof TourComplete>

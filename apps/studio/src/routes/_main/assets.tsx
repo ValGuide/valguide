@@ -31,7 +31,7 @@ function AssetsPage() {
 
 function AssetsContent() {
   const queryClient = useQueryClient()
-  const organizationId = Root.useRouteContext().team?.teamId
+  const organizationId = Root.useRouteContext().team.teamId
 
   const { data } = useSuspenseQuery(assetsQueryOptions())
   const assets = data?.assets ?? []

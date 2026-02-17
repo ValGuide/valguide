@@ -20,7 +20,7 @@ const resolveShortLinkFn = createServerFn({ method: 'GET' })
         return { error: 'Not found', status: 404 }
       }
 
-      path = buildPathFromShortLink(shortLink)
+      path = await buildPathFromShortLink(shortLink)
       if (!path) {
         return { error: 'Invalid link configuration', status: 500 }
       }
