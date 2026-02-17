@@ -4,6 +4,7 @@ import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
+import { defaultLocale } from '@valguide/core/i18n/i18n.config'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
@@ -73,11 +74,11 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: getPrefixedTitle(match.context.metadata.title),
+        title: getPrefixedTitle(match.context.metadata?.title ?? 'Admin - ValGuide'),
       },
       {
         name: 'description',
-        content: match.context.metadata.description,
+        content: match.context.metadata?.description ?? 'Manage your ValGuide resources',
       },
     ],
     links: [
@@ -101,7 +102,7 @@ export const Route = createRootRouteWithContext<{
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const { locale, theme } = Route.useRouteContext()
+  const { locale = defaultLocale, theme = 'system' } = Route.useRouteContext()
   const resolvedTheme = resolveTheme(theme)
 
   return (

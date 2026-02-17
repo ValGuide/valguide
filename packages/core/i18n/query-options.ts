@@ -8,6 +8,7 @@ export const localeQueryOptions = () =>
     queryKey: ['locale'],
     queryFn: () => resolveLocaleFn(),
     staleTime: 5 * 60 * 1000, // 5 minutes - locale rarely changes during a session
+    retry: false, // fail fast in beforeLoad — retries would brick the app
   })
 
 export const messagesQueryOptions = (locale: SupportedLocale) =>
@@ -16,4 +17,5 @@ export const messagesQueryOptions = (locale: SupportedLocale) =>
     queryFn: () => getMessagesFn({ data: { locale } }),
     staleTime: Infinity,
     gcTime: Infinity,
+    retry: false,
   })

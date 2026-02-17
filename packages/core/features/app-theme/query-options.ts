@@ -8,4 +8,5 @@ export const createThemeQueryOptions = (getThemeFn: GetThemeFn) =>
     queryKey: ['theme'],
     queryFn: () => getThemeFn(),
     staleTime: 5 * 60 * 1000,
+    retry: false, // fail fast in beforeLoad — retries would brick the app
   })
