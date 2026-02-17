@@ -2,6 +2,8 @@ import { and, eq } from 'drizzle-orm'
 import { NotFoundError } from '../../auth/authorization'
 import { type DB, db } from '../../db'
 import {
+  stopAsset,
+  stopAssetDraft,
   stopLocale,
   stopLocaleDraft,
   tour,
@@ -182,6 +184,33 @@ async function publishStopLocaleTx(tx: Tx, stopId: string, locale: string, userI
     })
 }
 
+async function publishStopAssetsTx(tx: Tx, stopId: string): Promise<void> {
+  const drafts = await tx
+    .select({
+      assetId: stopAssetDraft.assetId,
+      channel: stopAssetDraft.channel,
+      locale: stopAssetDraft.locale,
+      position: stopAssetDraft.position,
+    })
+    .from(stopAssetDraft)
+    .where(eq(stopAssetDraft.stopId, stopId))
+
+  await tx.delete(stopAsset).where(eq(stopAsset.stopId, stopId))
+
+  if (drafts.length > 0) {
+    await tx.insert(stopAsset).values(
+      drafts.map((d) => ({
+        stopId,
+        assetId: d.assetId,
+        channel: d.channel,
+        locale: d.locale,
+        position: d.position,
+        publishedAt: new Date(),
+      })),
+    )
+  }
+}
+
 export async function publishTour(input: PublishTourInput, userId: string): Promise<PublishTourResult> {
   const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, input.nanoId)).limit(1)
 
@@ -202,6 +231,7 @@ export async function publishTour(input: PublishTourInput, userId: string): Prom
 
     for (const stopId of stopIds) {
       await publishStopLocaleTx(tx, stopId, input.locale, userId)
+      await publishStopAssetsTx(tx, stopId)
     }
 
     publishedStopCount = stopIds.length

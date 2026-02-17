@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import { RESERVED_SLUGS } from './reserved-slugs'
+
+export { RESERVED_SLUGS } from './reserved-slugs'
 
 /**
  * German-specific replacements (applied before NFD normalization).
@@ -14,49 +17,6 @@ const GERMAN_MAP: Record<string, string> = {
   ß: 'ss',
   ẞ: 'Ss',
 }
-
-/**
- * Reserved slugs that cannot be used for organizations or tours.
- * These are reserved for system routes and common paths.
- */
-export const RESERVED_SLUGS = [
-  'admin',
-  'api',
-  'app',
-  'auth',
-  'login',
-  'logout',
-  'signup',
-  'settings',
-  'help',
-  'support',
-  'about',
-  'contact',
-  'terms',
-  'privacy',
-  'tours',
-  'stops',
-  'assets',
-  'new',
-  'edit',
-  'delete',
-  'studio',
-  'links',
-  'explore',
-  'search',
-  'dashboard',
-  'profile',
-  'account',
-  'billing',
-  'invite',
-  'join',
-  'team',
-  'teams',
-  'org',
-  'orgs',
-  'organization',
-  'organizations',
-] as const
 
 /**
  * Generate a URL-safe slug from text.
