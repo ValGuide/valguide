@@ -19,7 +19,6 @@ export function ApprovedDomainsTable({ domains, isDeletingId, onDelete }: Approv
       <TableHeader>
         <TableRow>
           <TableHead>Domain</TableHead>
-          <TableHead>Organization ID</TableHead>
           <TableHead>Added</TableHead>
           <TableHead className="text-right">Actions</TableHead>
         </TableRow>
@@ -28,9 +27,6 @@ export function ApprovedDomainsTable({ domains, isDeletingId, onDelete }: Approv
         {domains.map((domain) => (
           <TableRow key={domain.id}>
             <TableCell className="font-mono font-medium">{domain.domain}</TableCell>
-            <TableCell className="font-mono text-sm text-muted-foreground">
-              {domain.organizationId.slice(0, 8)}…
-            </TableCell>
             <TableCell className="text-sm text-muted-foreground">
               {new Date(domain.createdAt).toLocaleDateString()}
             </TableCell>

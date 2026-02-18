@@ -1,4 +1,5 @@
 export * from './assets/schema'
+export * from './auth/schema'
 export * from './feedback/schema'
 export * from './links/schema'
 export * from './orgs/schema'
