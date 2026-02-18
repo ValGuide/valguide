@@ -14,7 +14,7 @@ export function PendingApprovalPage({
   onSignOut,
   onCheckAgain,
   isChecking,
-  supportEmail = 'hello@valguide.com',
+  supportEmail = 'team@valguide.com',
 }: PendingApprovalPageProps) {
   const t = useTranslations('accountStatus')
 

@@ -13,7 +13,7 @@ export type ErrorPageProps = {
 
 export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
   const [showDetails, setShowDetails] = useState(false)
-  const hasError = error?.message && process.env.NODE_ENV === 'development'
+  const hasError = Boolean(error?.message)
 
   return (
     <div className="min-h-svh flex flex-1 flex-col items-center justify-center px-4 py-8">

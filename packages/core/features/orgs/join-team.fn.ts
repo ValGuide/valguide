@@ -32,7 +32,7 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
     }
 
     if (invite.email.toLowerCase() !== (context.user.email || '').toLowerCase()) {
-      throw new ForbiddenError(`This invitation is for ${invite.email}, but you are signed in as ${context.user.email}`)
+      throw new ForbiddenError('This invitation was sent to a different email address')
     }
 
     await acceptInvitation(db, invite.id, context.user.id)

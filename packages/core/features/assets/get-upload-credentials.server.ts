@@ -29,7 +29,7 @@ export async function getUploadCredentials(): Promise<UploadCredentials> {
   const projectId = new URL(supabaseUrl).hostname.split('.')[0]
 
   if (!projectId) {
-    throw new Error('Could not extract project ID from Supabase URL')
+    throw new Error('Upload service configuration error')
   }
 
   return {

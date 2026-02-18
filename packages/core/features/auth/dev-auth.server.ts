@@ -14,7 +14,7 @@ export async function generateDevMagicLink(email = DEV_TEST_EMAIL): Promise<DevA
   }
 
   if (!serverEnv.SUPABASE_SECRET_KEY) {
-    throw new Error('SUPABASE_SECRET_KEY is required for dev auth')
+    throw new Error('Required secret key is not configured for dev auth')
   }
 
   const adminClient = createClient(serverEnv.SUPABASE_URL, serverEnv.SUPABASE_SECRET_KEY, {
@@ -39,7 +39,7 @@ export async function generateDevMagicLink(email = DEV_TEST_EMAIL): Promise<DevA
   })
 
   if (error) {
-    throw new Error(`Failed to generate magic link: ${error.message}`)
+    throw new Error('Failed to generate magic link')
   }
 
   if (!data.properties.action_link) {
