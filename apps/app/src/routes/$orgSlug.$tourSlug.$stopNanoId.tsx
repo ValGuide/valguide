@@ -51,7 +51,7 @@ function StopPage() {
       allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
     >
       <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
-        <div className="container max-w-lg py-6 space-y-6">
+        <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
           <Link
             to="/$orgSlug/$tourSlug"
             params={{ orgSlug, tourSlug }}
