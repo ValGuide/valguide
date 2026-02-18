@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
+import { clientEnv } from '@valguide/core/env/client'
 import { PendingApprovalPage } from '@valguide/core/features/auth/common/pending-approval-page'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { userStatusQueryOptions } from '@valguide/features/auth/query-options'
@@ -41,5 +42,13 @@ export function PendingApprovalContainer({ onMount }: PendingApprovalContainerPr
     await queryClient.invalidateQueries({ queryKey: ['user-status'] })
   }
 
-  return <PendingApprovalPage onSignOut={handleSignOut} onCheckAgain={handleCheckAgain} isChecking={isRefetching} />
+  return (
+    <PendingApprovalPage
+      onSignOut={handleSignOut}
+      onCheckAgain={handleCheckAgain}
+      isChecking={isRefetching}
+      supportEmail={clientEnv.VITE_STUDIO_SUPPORT_EMAIL}
+      userEmail={statusResult?.email ?? ''}
+    />
+  )
 }

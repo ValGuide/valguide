@@ -11,6 +11,8 @@ const meta: Meta<typeof PendingApprovalPage> = {
   args: {
     onSignOut: fn(),
     onCheckAgain: fn(),
+    supportEmail: 'team@valguide.com',
+    userEmail: 'curator@museum.ch',
   },
 }
 
