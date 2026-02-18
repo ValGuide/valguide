@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components
 import {
   BookOpen,
   Building2,
+  Globe,
   LogOut,
   Monitor,
   Moon,
@@ -55,9 +56,10 @@ export function AdminSidebar({ pathname: pathnameProp, userEmail, onLogout, ...p
   }
 
   const navItems = [
+    { title: 'Tours', path: '/tours', icon: BookOpen },
     { title: 'Users', path: '/users', icon: Users },
     { title: 'Organizations', path: '/orgs', icon: Building2 },
-    { title: 'Tours', path: '/tours', icon: BookOpen },
+    { title: 'Approved Domains', path: '/approved-domains', icon: Globe },
   ]
 
   return (
