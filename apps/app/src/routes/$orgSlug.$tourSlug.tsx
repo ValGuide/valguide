@@ -48,7 +48,7 @@ const resolveTourFn = createServerFn({ method: 'GET' })
   })
 
 export const Route = createFileRoute('/$orgSlug/$tourSlug')({
-  loader: async ({ params }) => {
+  beforeLoad: async ({ params }) => {
     const result = await resolveTourFn({ data: params })
 
     if (!result) {

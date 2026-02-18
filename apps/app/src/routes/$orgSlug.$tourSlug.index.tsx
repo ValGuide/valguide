@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useMatch } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { clientEnv } from '@valguide/core/env/client'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { QrScannerModal } from '@valguide/core/features/player/components/qr-scanner-modal'
@@ -20,9 +20,7 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug/')({
 })
 
 function TourPage() {
-  const parentMatch = useMatch({ from: '/$orgSlug/$tourSlug' })
-  const { tour, orgSlug, tourSlug } = parentMatch.loaderData
-  const { locale } = Route.useRouteContext()
+  const { tour, orgSlug, tourSlug, locale } = Route.useRouteContext()
 
   const title = getLocalizedTourText(tour, 'title', locale as SupportedLocale)
   const description = getLocalizedTourText(tour, 'description', locale as SupportedLocale)
