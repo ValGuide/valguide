@@ -16,7 +16,7 @@ import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
 import { CheckCircle2, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import { uploadFileWithTUS } from '../lib/tus-upload'
+import { uploadFile } from '../lib/tus-upload'
 
 export type AssetUploadInlineProps = {
   organizationId: string
@@ -119,9 +119,8 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
       const ext = file.name.split('.').pop()?.toLowerCase() ?? 'bin'
       const fileName = `assets/${assetId}/${fileId}.${ext}`
 
-      await uploadFileWithTUS({
-        bucketName: 'assets',
-        fileName,
+      await uploadFile({
+        key: fileName,
         file,
         onProgress: setProgress,
         onError: (err) => setError(err.message),

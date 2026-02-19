@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TourPreviewCard } from './preview-card'
 
@@ -22,8 +21,7 @@ export const Default: Story = {
       title: 'Getting Started with ValGuide',
       description: 'Learn the basics of ValGuide and how to create your first visit.',
       coverImage: {
-        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
-        storagePath: '',
+        storagePath: 'assets/mock/getting-started.jpg',
       },
       author: 'ValGuide Team',
       createdAt: new Date('2023-10-15'),
@@ -41,8 +39,7 @@ export const Intermediate: Story = {
       title: 'Advanced Techniques',
       description: 'Discover advanced techniques to create engaging tours.',
       coverImage: {
-        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
-        storagePath: '',
+        storagePath: 'assets/mock/advanced-techniques.jpg',
       },
       author: 'ValGuide Pro',
       createdAt: new Date('2023-09-10'),
@@ -60,8 +57,7 @@ export const Advanced: Story = {
       title: 'Expert Tour Creation',
       description: 'Master the art of creating professional tours with advanced features.',
       coverImage: {
-        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
-        storagePath: '',
+        storagePath: 'assets/mock/expert-creation.jpg',
       },
       author: 'ValGuide Expert',
       createdAt: new Date('2023-08-05'),
@@ -92,8 +88,7 @@ export const MinimalInfo: Story = {
       nanoId: 'minimal-005',
       title: 'Minimal Tour',
       coverImage: {
-        publicUrl: faker.image.urlLoremFlickr({ width: 2070, height: 1380, category: 'art' }),
-        storagePath: '',
+        storagePath: 'assets/mock/minimal-tour.jpg',
       },
     },
   },

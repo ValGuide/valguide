@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/types'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
@@ -37,8 +36,7 @@ const baseAsset: AssetWithUsage = {
   fileSize: 2048576, // 2MB
   mimeType: 'image/jpeg',
   type: 'image',
-  storagePath: '',
-  publicUrl: faker.image.urlLoremFlickr({ width: 400, height: 300, category: 'art' }),
+  storagePath: 'assets/mock/museum-photo.jpg',
   width: 1920,
   height: 1080,
   duration: null,
@@ -74,7 +72,6 @@ export const AudioAsset: Story = {
       fileName: 'narration-en.mp3',
       fileSize: 5242880, // 5MB
       mimeType: 'audio/mpeg',
-      publicUrl: null,
       width: null,
       height: null,
       duration: 180, // 3 minutes
@@ -91,7 +88,6 @@ export const VideoAsset: Story = {
       fileName: 'intro-video.mp4',
       fileSize: 52428800, // 50MB
       mimeType: 'video/mp4',
-      publicUrl: null,
       width: 1920,
       height: 1080,
       duration: 120, // 2 minutes

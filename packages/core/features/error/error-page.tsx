@@ -60,7 +60,7 @@ export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
             </button>
             {showDetails && (
               <pre className="mt-3 p-3 bg-muted rounded text-xs max-h-48 overflow-auto text-destructive whitespace-pre-wrap">
-                {error.message}
+                {error?.message}
               </pre>
             )}
           </div>

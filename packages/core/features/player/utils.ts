@@ -1,4 +1,4 @@
-import { getAssetImageUrl } from '../assets/image-url'
+import { getAssetImageUrl, getAssetUrl } from '../assets/image-url'
 import { getLocalizedStopText } from '../tours/public/localization-helpers'
 import type { StopWithAssets } from '../tours/public/types'
 import type { PlayerStop } from './types'
@@ -14,7 +14,7 @@ export function toPlayerStop(stop: StopWithAssets, locale: string): PlayerStop {
   return {
     nanoId: stop.nanoId,
     title: title || 'Untitled',
-    audioUrl: audioAsset?.publicUrl ?? null,
+    audioUrl: audioAsset ? getAssetUrl(audioAsset.storagePath) : null,
     coverImageUrl: imageAsset ? getAssetImageUrl(imageAsset) : null,
     duration: audioAsset?.duration ?? undefined,
   }

@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { QueryObserverOptions } from '@tanstack/react-query'
 import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
@@ -263,7 +262,6 @@ const createMockCoverImageAsset = (): TourAssetDraftItem => ({
     mimeType: 'image/jpeg',
     type: 'image',
     storagePath: 'covers/tour-1.jpg',
-    publicUrl: faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' }),
     width: 1200,
     height: 800,
     duration: null,
@@ -288,7 +286,6 @@ export const WithCoverImage: Story = {
     tourDetail: createMockTourDetail({
       coverImage: {
         storagePath: 'covers/tour-1.jpg',
-        publicUrl: faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' }),
       },
     }),
     localeDraft: createMockLocaleDraft(),

@@ -29,7 +29,6 @@ const tourTranslationFormSchema = z.object({
 const coverImageSchema = z
   .object({
     storagePath: z.string(),
-    publicUrl: z.string().nullable().optional(),
   })
   .nullable()
   .optional()

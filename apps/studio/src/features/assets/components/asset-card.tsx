@@ -1,6 +1,6 @@
 import { Image as UnpicImage } from '@unpic/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
-import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl, getAssetUrl } from '@valguide/core/features/assets/image-url'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
@@ -58,8 +58,8 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
   }
 
   const handleDownload = () => {
-    if (asset.publicUrl) {
-      window.open(asset.publicUrl, '_blank')
+    if (asset.storagePath) {
+      window.open(getAssetUrl(asset.storagePath), '_blank')
     }
   }
 

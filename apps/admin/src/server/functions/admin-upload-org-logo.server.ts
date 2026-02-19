@@ -1,7 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
-import { serverEnv } from '@valguide/core/env/server'
+import { getAssetUrl } from '@valguide/core/features/assets/image-url'
 import type { DB } from '@valguide/core/features/db'
 import { organization } from '@valguide/core/features/orgs/schema'
+import { putObject } from '@valguide/core/features/storage/upload.server'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { eq } from 'drizzle-orm'
 
@@ -33,7 +33,6 @@ export async function adminUploadOrgLogo(
     return { success: false, error: 'File too large. Maximum 5MB.' }
   }
 
-  // Resolve org
   const orgs = await dbClient
     .select({ id: organization.id, nanoId: organization.nanoId })
     .from(organization)
@@ -46,24 +45,9 @@ export async function adminUploadOrgLogo(
   const ext = input.mimeType.split('/')[1] === 'jpeg' ? 'jpg' : input.mimeType.split('/')[1]
   const storagePath = `orgs/${org.nanoId}/${valguideId()}.${ext}`
 
-  // Upload via service role (bypasses RLS)
-  const supabase = createClient(serverEnv.SUPABASE_URL, serverEnv.SUPABASE_SECRET_KEY, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  })
+  await putObject(storagePath, buffer, input.mimeType)
 
-  const { error: uploadError } = await supabase.storage
-    .from('assets')
-    .upload(storagePath, buffer, { contentType: input.mimeType, upsert: false })
-
-  if (uploadError) {
-    return { success: false, error: 'Upload failed' }
-  }
-
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from('assets').getPublicUrl(storagePath)
-
-  // Update org logo
+  const publicUrl = getAssetUrl(storagePath)
   await dbClient.update(organization).set({ logo: publicUrl }).where(eq(organization.id, org.id))
 
   return { success: true, logoUrl: publicUrl }

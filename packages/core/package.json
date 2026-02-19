@@ -21,6 +21,8 @@
     "clean:vite": "rm -rf node_modules/.vite"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.994.0",
+    "@aws-sdk/s3-request-presigner": "^3.994.0",
     "@faker-js/faker": "^9.2.0",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/noto-sans": "^5.2.10",

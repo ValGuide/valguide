@@ -28,6 +28,10 @@ export const serverEnvSchema = z.object({
   ADMIN_COOKIE_DOMAIN: z.string().optional(),
   ADMIN_BASE_URL: z.string().optional().default('https://admin-local.dev'),
   SLACK_TEAM_ID: z.string().optional(),
+  R2_ACCESS_KEY_ID: z.string().optional(),
+  R2_SECRET_ACCESS_KEY: z.string().optional(),
+  R2_ENDPOINT: z.string().optional(),
+  R2_BUCKET_NAME: z.string().optional().default('valguide'),
 })
 
 export const clientEnvSchema = z.object({
@@ -42,6 +46,7 @@ export const clientEnvSchema = z.object({
   VITE_IMAGEKIT_URL: z.string().optional().default('https://ik.imagekit.io/valguide'),
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),
   VITE_STUDIO_SUPPORT_EMAIL: z.string().optional().default('support@valguide.com'),
+  VITE_R2_PUBLIC_URL: z.string().optional().default('https://assets.valguide.app'),
 })
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>

@@ -59,7 +59,6 @@ export async function getStructureDraft(
       .select({
         stopId: stopAssetDraft.stopId,
         storagePath: asset.storagePath,
-        publicUrl: asset.publicUrl,
       })
       .from(stopAssetDraft)
       .innerJoin(asset, eq(asset.id, stopAssetDraft.assetId))
@@ -74,7 +73,7 @@ export async function getStructureDraft(
 
     for (const ga of galleryAssets) {
       if (!thumbnailByStopId.has(ga.stopId)) {
-        thumbnailByStopId.set(ga.stopId, ga.storagePath || ga.publicUrl || '')
+        thumbnailByStopId.set(ga.stopId, ga.storagePath)
       }
     }
 

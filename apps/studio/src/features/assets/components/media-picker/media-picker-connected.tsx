@@ -5,7 +5,7 @@ import { detectAssetType } from '@valguide/core/features/assets/utils'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useCallback, useState } from 'react'
 import { useSidebarData } from '@/features/sidebar/hooks/use-sidebar-data'
-import { uploadFileWithTUS } from '../../lib/tus-upload'
+import { uploadFile } from '../../lib/tus-upload'
 import { AssetPickerModalConnected } from '../asset-picker-modal-connected'
 import { MediaPicker } from './media-picker'
 import type { MediaPickerComponentProps } from './types'
@@ -34,9 +34,8 @@ export function MediaPickerConnected({
       const ext = file.name.split('.').pop()?.toLowerCase() ?? 'bin'
       const fileName = `assets/${assetId}/${fileId}.${ext}`
 
-      await uploadFileWithTUS({
-        bucketName: 'assets',
-        fileName,
+      await uploadFile({
+        key: fileName,
         file,
         onProgress,
         onError: (err) => {

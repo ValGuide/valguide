@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
+import { getAssetUrl } from '../assets/image-url'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
@@ -21,11 +21,7 @@ export const updateOrgLogoFn = createServerFn({ method: 'POST' })
       throw new Error('Invalid storage path')
     }
 
-    const supabase = await createClient()
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from('assets').getPublicUrl(data.storagePath)
-
+    const publicUrl = getAssetUrl(data.storagePath)
     await updateOrgLogo(db, data.organizationId, publicUrl)
     return { publicUrl }
   })

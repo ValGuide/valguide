@@ -1,131 +1,79 @@
-/**
- * TUS (Resumable Upload Protocol) client for Supabase Storage
- *
- * This module handles file uploads to Supabase Storage using the TUS protocol,
- * which provides:
- * - Resumable uploads: If a connection fails, uploads can be resumed from where they stopped
- * - Progress tracking: Real-time upload progress for UI feedback
- * - Chunked uploads: Large files are split into 6MB chunks (Supabase requirement)
- * - Auto-retry: Failed uploads are automatically retried with exponential backoff
- *
- * Usage:
- * ```ts
- * const result = await uploadFileWithTUS({
- *   bucketName: 'studio-feedback',
- *   fileName: 'screenshot.png',
- *   file: myFile,
- *   onProgress: (percent) => setProgress(percent),
- *   credentials: { accessToken, projectId },
- * })
- * ```
- *
- * @see https://tus.io/ - TUS Protocol specification
- * @see https://supabase.com/docs/guides/storage/uploads/resumable-uploads - Supabase TUS docs
- */
+import { completeUploadFn } from '@valguide/core/features/storage/complete-upload.fn'
+import { initUploadFn } from '@valguide/core/features/storage/init-upload.fn'
 
-import { getUploadCredentialsFn } from '@valguide/core/features/assets/get-upload-credentials.fn'
-import * as tus from 'tus-js-client'
-
-export type UploadCredentials = {
-  accessToken: string
-  projectId: string
-}
-
-export type TUSUploadOptions = {
-  bucketName: string
-  fileName: string
+export type UploadOptions = {
+  key: string
   file: File
   onProgress?: (percentage: number) => void
   onError?: (error: Error) => void
-  metadata?: Record<string, string>
-  /** Pre-fetched credentials (if not provided, will fetch from getUploadCredentialsFn) */
-  credentials?: UploadCredentials
 }
 
-export async function uploadFileWithTUS({
-  bucketName,
-  fileName,
-  file,
-  onProgress,
-  onError,
-  metadata = {},
-  credentials,
-}: TUSUploadOptions): Promise<{ path: string }> {
-  // Use provided credentials or fetch from server action
-  let accessToken: string
-  let projectId: string
+/**
+ * Upload a file to R2 via presigned URLs.
+ * Small files (< 50MB) use a single PUT request.
+ * Large files (≥ 50MB) use S3 multipart upload with 10MB parts.
+ */
+export async function uploadFile({ key, file, onProgress, onError }: UploadOptions): Promise<{ key: string }> {
+  try {
+    const init = await initUploadFn({ data: { key, contentType: file.type, fileSize: file.size } })
 
-  if (credentials) {
-    accessToken = credentials.accessToken
-    projectId = credentials.projectId
-  } else {
-    const creds = await getUploadCredentialsFn()
-    accessToken = creds.accessToken
-    projectId = creds.projectId
+    if (init.mode === 'put') {
+      await uploadWithProgress(init.putUrl, file, onProgress)
+    } else {
+      const completedParts: Array<{ ETag: string; PartNumber: number }> = []
+      let uploadedBytes = 0
+
+      for (let i = 0; i < init.partUrls.length; i++) {
+        const start = i * init.partSize
+        const end = Math.min(start + init.partSize, file.size)
+        const part = file.slice(start, end)
+
+        const response = await fetch(init.partUrls[i], { method: 'PUT', body: part })
+        if (!response.ok) throw new Error(`Part ${i + 1} upload failed: ${response.status}`)
+
+        const etag = response.headers.get('ETag')
+        if (!etag) throw new Error(`Missing ETag for part ${i + 1}`)
+
+        completedParts.push({ ETag: etag, PartNumber: i + 1 })
+        uploadedBytes += end - start
+        onProgress?.((uploadedBytes / file.size) * 100)
+      }
+
+      await completeUploadFn({ data: { key, uploadId: init.uploadId, parts: completedParts } })
+    }
+
+    return { key }
+  } catch (error) {
+    const err = error instanceof Error ? error : new Error(String(error))
+    onError?.(err)
+    throw err
   }
+}
 
+/**
+ * Upload a file with XMLHttpRequest for progress tracking (single PUT).
+ */
+function uploadWithProgress(url: string, file: File, onProgress?: (percentage: number) => void): Promise<void> {
   return new Promise((resolve, reject) => {
-    const upload = new tus.Upload(file, {
-      // Direct storage endpoint for better performance
-      endpoint: `https://${projectId}.storage.supabase.co/storage/v1/upload/resumable`,
+    const xhr = new XMLHttpRequest()
+    xhr.open('PUT', url)
+    xhr.setRequestHeader('Content-Type', file.type)
 
-      // Retry delays in milliseconds
-      retryDelays: [0, 3000, 5000, 10000, 20000],
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        onProgress?.((e.loaded / e.total) * 100)
+      }
+    }
 
-      // Auth headers
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-        'x-upsert': 'true', // Overwrite existing files
-      },
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve()
+      } else {
+        reject(new Error(`Upload failed: ${xhr.status}`))
+      }
+    }
 
-      // Upload settings
-      uploadDataDuringCreation: true,
-      removeFingerprintOnSuccess: true, // Allow re-uploading same file
-
-      // File metadata
-      metadata: {
-        bucketName: bucketName,
-        objectName: fileName,
-        contentType: file.type,
-        cacheControl: '3600',
-        ...metadata,
-      },
-
-      // MUST be 6MB for Supabase
-      chunkSize: 6 * 1024 * 1024,
-
-      // Progress tracking
-      onProgress: (bytesUploaded, bytesTotal) => {
-        const percentage = (bytesUploaded / bytesTotal) * 100
-        onProgress?.(percentage)
-      },
-
-      // Success handler
-      onSuccess: () => {
-        resolve({ path: fileName })
-      },
-
-      // Error handler
-      onError: (error) => {
-        const err = error instanceof Error ? error : new Error(String(error))
-        onError?.(err)
-        reject(err)
-      },
-    })
-
-    // Check for previous incomplete uploads and resume
-    upload
-      .findPreviousUploads()
-      .then((previousUploads) => {
-        if (previousUploads.length && previousUploads[0]) {
-          upload.resumeFromPreviousUpload(previousUploads[0])
-        }
-        upload.start()
-      })
-      .catch((error) => {
-        const err = error instanceof Error ? error : new Error(String(error))
-        onError?.(err)
-        reject(err)
-      })
+    xhr.onerror = () => reject(new Error('Upload failed: network error'))
+    xhr.send(file)
   })
 }

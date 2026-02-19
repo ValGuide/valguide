@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { useServerFn } from '@tanstack/react-start'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
-import { getFeedbackUploadCredentialsFn } from '@valguide/core/features/feedback/get-feedback-upload-credentials.fn'
 import { submitFeedbackFn } from '@valguide/core/features/feedback/submit-feedback.fn'
 import { createTeamFn } from '@valguide/core/features/orgs/create-team.fn'
 import { switchTeamFn } from '@valguide/core/features/orgs/switch-team.fn'
@@ -10,7 +9,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { useEffect, useState } from 'react'
-import { uploadFileWithTUS } from '../features/assets/lib/tus-upload'
+import { uploadFile } from '../features/assets/lib/tus-upload'
 import { FeedbackDialog } from '../features/feedback/components/feedback-dialog'
 import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
 import { AppSidebar } from './app-sidebar'
@@ -78,27 +77,18 @@ export function AppSidebarContainer() {
       // Upload file to Supabase Storage if provided
       if (file) {
         try {
-          // Get upload credentials
-          const credentials = await getFeedbackUploadCredentialsFn()
-
           const ext = mimeToExt[file.type] ?? file.name.split('.').pop() ?? 'png'
           const feedbackId = valguideId()
           const fileId = valguideId()
           const uniqueFileName = `feedback/${feedbackId}/${fileId}.${ext}`
 
-          // Upload with TUS (resumable upload protocol)
-          // - Handles large files efficiently via chunked uploads
-          // - Auto-retries on network failures
-          // - Reports progress for UI feedback
-          const result = await uploadFileWithTUS({
-            bucketName: 'studio-feedback',
-            fileName: uniqueFileName,
+          const result = await uploadFile({
+            key: uniqueFileName,
             file,
             onProgress: setUploadProgress,
-            credentials,
           })
 
-          screenshotPath = result.path
+          screenshotPath = result.key
           fileName = file.name
           fileSize = file.size
           mimeType = file.type as typeof mimeType

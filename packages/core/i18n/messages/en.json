@@ -192,6 +192,7 @@
       "description": "Thank you for signing up. Our team is reviewing your account — usually within 1 business day. We'll email you once you're approved.",
       "checkStatus": "Check status",
       "autoCheckNote": "This page checks automatically.",
+      "signedInAs": "Signed in as {email}",
       "contactCta": "Email us",
       "signOut": "Sign out"
     }

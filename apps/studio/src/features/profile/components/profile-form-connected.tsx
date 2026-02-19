@@ -10,7 +10,7 @@ import { Separator } from '@valguide/core/ui/components/separator'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { uploadFileWithTUS } from '@/features/assets/lib/tus-upload'
+import { uploadFile } from '@/features/assets/lib/tus-upload'
 import { profileQueryOptions } from '../query-options'
 import type { ProfileFormData } from '../schemas'
 import { ProfileAvatarForm } from './profile-avatar-form'
@@ -38,9 +38,8 @@ export function ProfileFormConnected() {
     const fileId = valguideId()
     const storagePath = `users/${profile.id}/${fileId}.${ext}`
 
-    await uploadFileWithTUS({
-      bucketName: 'assets',
-      fileName: storagePath,
+    await uploadFile({
+      key: storagePath,
       file,
     })
 

@@ -1,12 +1,14 @@
+import { GetObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { createServerFn } from '@tanstack/react-start'
 import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
-import { createClient } from '@valguide/supabase/server'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
 import { organization } from '../orgs/schema'
+import { getR2Bucket, getR2Client } from '../storage/r2'
 import { feedback } from './schema'
 
 // =============================================================================
@@ -56,21 +58,16 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(submitFeedbackSchema)
   .handler(async ({ context, data }): Promise<SubmitFeedbackResult> => {
-    const supabase = await createClient()
-
     // Get screenshot signed URL if path provided (bucket is private)
     // Gracefully handle storage lookup failures - feedback should still be submitted
     let screenshotUrl: string | null = null
     if (data.screenshotPath) {
       try {
-        // Create signed URL valid for 1 year (31536000 seconds)
-        // Signed URLs don't require the bucket to be public
-        const { data: urlData, error } = await supabase.storage
-          .from('studio-feedback')
-          .createSignedUrl(data.screenshotPath, 31536000)
-
-        if (error) throw error
-        screenshotUrl = urlData?.signedUrl ?? null
+        screenshotUrl = await getSignedUrl(
+          getR2Client(),
+          new GetObjectCommand({ Bucket: getR2Bucket(), Key: data.screenshotPath }),
+          { expiresIn: 31536000 },
+        )
       } catch (storageErr) {
         // Log but don't fail - screenshot is optional
         console.error('Failed to get screenshot URL:', storageErr)

@@ -18,7 +18,6 @@ export type LocaleDraftInfo = {
 
 export type TourCoverImage = {
   storagePath: string
-  publicUrl: string | null
 }
 
 export type TourDetail = {
@@ -96,7 +95,6 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
   const [coverImageRow] = await db
     .select({
       storagePath: asset.storagePath,
-      publicUrl: asset.publicUrl,
     })
     .from(tourAssetDraft)
     .innerJoin(asset, eq(tourAssetDraft.assetId, asset.id))

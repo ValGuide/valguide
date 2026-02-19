@@ -1,5 +1,5 @@
 import { db } from '../db'
-import { type ApprovedDomain, approvedDomain } from './schema'
+import type { ApprovedDomain } from './schema'
 
 export type { ApprovedDomain }
 

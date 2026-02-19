@@ -50,7 +50,6 @@ export const asset = studioSchema.table(
     type: assetType('type').notNull(),
 
     storagePath: text('storage_path').notNull(),
-    publicUrl: text('public_url'),
 
     width: integer('width'),
     height: integer('height'),
