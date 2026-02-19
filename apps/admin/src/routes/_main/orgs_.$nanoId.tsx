@@ -11,7 +11,10 @@ import { RemoveMemberDialog } from '@/features/admin/components/remove-member-di
 import { adminOrgDetailQueryOptions, adminOrgMembersQueryOptions } from '@/features/admin/org-detail-query-options'
 import { adminAddMemberFn } from '@/server/functions/admin-add-member.fn'
 import { adminRemoveMemberFn } from '@/server/functions/admin-remove-member.fn'
+import { adminRemoveOrgLogoFn } from '@/server/functions/admin-remove-org-logo.fn'
 import { adminUpdateMemberRoleFn } from '@/server/functions/admin-update-member-role.fn'
+import { adminUpdateOrgNameFn } from '@/server/functions/admin-update-org-name.fn'
+import { adminUploadOrgLogoFn } from '@/server/functions/admin-upload-org-logo.fn'
 
 export const Route = createFileRoute('/_main/orgs_/$nanoId')({
   loader: ({ context, params }) => {
@@ -27,6 +30,47 @@ function OrgDetailPage() {
 
   const { data: org } = useQuery(adminOrgDetailQueryOptions(nanoId))
   const { data: members } = useQuery(adminOrgMembersQueryOptions(nanoId))
+
+  // Name update mutation
+  const nameMutation = useMutation({
+    mutationFn: (name: string) => adminUpdateOrgNameFn({ data: { orgNanoId: nanoId, name } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'org-detail', nanoId] })
+      toast.success('Name updated')
+    },
+    onError: () => {
+      toast.error('Failed to update name')
+    },
+  })
+
+  // Logo upload mutation
+  const logoUploadMutation = useMutation({
+    mutationFn: (input: { base64: string; mimeType: string }) =>
+      adminUploadOrgLogoFn({ data: { orgNanoId: nanoId, ...input } }),
+    onSuccess: (result) => {
+      if (!result.success) {
+        toast.error(result.error ?? 'Failed to upload logo')
+        return
+      }
+      queryClient.invalidateQueries({ queryKey: ['admin', 'org-detail', nanoId] })
+      toast.success('Logo updated')
+    },
+    onError: () => {
+      toast.error('Failed to upload logo')
+    },
+  })
+
+  // Logo remove mutation
+  const logoRemoveMutation = useMutation({
+    mutationFn: () => adminRemoveOrgLogoFn({ data: { orgNanoId: nanoId } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'org-detail', nanoId] })
+      toast.success('Logo removed')
+    },
+    onError: () => {
+      toast.error('Failed to remove logo')
+    },
+  })
 
   // Role change mutation
   const [updatingMemberId, setUpdatingMemberId] = useState<string | null>(null)
@@ -109,7 +153,15 @@ function OrgDetailPage() {
         Back to Organizations
       </Link>
 
-      <OrgDetailHeader org={org} />
+      <OrgDetailHeader
+        org={org}
+        onNameUpdate={(name) => nameMutation.mutate(name)}
+        isUpdatingName={nameMutation.isPending}
+        onLogoUpload={(logo) => logoUploadMutation.mutate(logo)}
+        isUploadingLogo={logoUploadMutation.isPending}
+        onLogoRemove={() => logoRemoveMutation.mutate()}
+        isRemovingLogo={logoRemoveMutation.isPending}
+      />
 
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Members</h2>
