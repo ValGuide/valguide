@@ -4,6 +4,7 @@ import { userStartedLoginMessage } from '@valguide/slack/messages/user-started-l
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
+import { waitUntil } from '../../utils/wait-until'
 import { serializeAuthError } from './utils'
 
 // ============================================================================
@@ -39,7 +40,7 @@ export const signInWithOtpFn = createServerFn({ method: 'POST' })
 
     if (!response.error) {
       const email = 'email' in credentials ? credentials.email : undefined
-      postMessage(userStartedLoginMessage({ email })).catch(console.error)
+      waitUntil(postMessage(userStartedLoginMessage({ email })))
       return { data: response.data, error: null }
     }
 
