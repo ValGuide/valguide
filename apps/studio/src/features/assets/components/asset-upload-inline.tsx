@@ -16,7 +16,7 @@ import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
 import { CheckCircle2, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import { uploadFile } from '../lib/tus-upload'
+import { uploadFile } from '../lib/upload'
 
 export type AssetUploadInlineProps = {
   organizationId: string

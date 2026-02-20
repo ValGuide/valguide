@@ -4,7 +4,7 @@ import { updateOrgNameFn } from '@valguide/core/features/orgs/update-org-name.fn
 import { useTranslations } from '@valguide/core/i18n/client'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { uploadFile } from '@/features/assets/lib/tus-upload'
+import { uploadFile } from '@/features/assets/lib/upload'
 import { OrgAvatarForm } from './org-avatar-form'
 import { OrgNameForm } from './org-name-form'
 
