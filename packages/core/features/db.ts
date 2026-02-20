@@ -3,26 +3,46 @@ import postgres, { type Sql } from 'postgres'
 import { serverEnv } from '../env/server'
 import * as schema from './schema'
 
-let _client: Sql | null = null
-let _db: PostgresJsDatabase<typeof schema> | null = null
-
+/**
+ * Creates a fresh postgres.js client.
+ * Each call returns a new client — required for Cloudflare Workers
+ * where I/O objects are bound to the request context that created them.
+ */
 export function getClient(): Sql {
-  if (_client) return _client
-  _client = postgres(serverEnv.DATABASE_URL, { prepare: false })
-  return _client
+  return postgres(serverEnv.DATABASE_URL, { prepare: false })
 }
 
+/**
+ * Creates a fresh Drizzle ORM instance with its own postgres client.
+ * Uses Supabase Supavisor connection pooler, so per-call clients are cheap.
+ */
 export function getDb(): PostgresJsDatabase<typeof schema> {
-  if (_db) return _db
-
-  _db = drizzle(getClient(), {
+  return drizzle(getClient(), {
     schema,
     logger: serverEnv.DRIZZLE_LOG_ENABLED,
   })
-  return _db
 }
 
-export const client = getClient()
-export const db = getDb()
+/**
+ * Proxy-backed DB instance for backward-compatible `import { db }` usage.
+ *
+ * Creates a fresh Drizzle instance on each property access, ensuring each
+ * query chain gets its own postgres connection. Required for Cloudflare
+ * Workers where I/O objects from one request can't be used in another
+ * request's context ("Cannot perform I/O on behalf of a different request").
+ *
+ * On Vercel/Node.js this creates short-lived per-query connections,
+ * which is fine with Supavisor connection pooler (prepare: false).
+ */
+export const db: PostgresJsDatabase<typeof schema> = new Proxy({} as PostgresJsDatabase<typeof schema>, {
+  get(_target, prop) {
+    const instance = getDb()
+    const value = (instance as any)[prop]
+    if (typeof value === 'function') {
+      return value.bind(instance)
+    }
+    return value
+  },
+})
 
-export type DB = ReturnType<typeof getDb>
+export type DB = PostgresJsDatabase<typeof schema>
