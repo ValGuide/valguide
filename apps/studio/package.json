@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --port 3002",
     "deploy": "pnpm build && wrangler deploy",
-    "deploy:dev": "pnpm build && wrangler deploy --env dev",
+    "deploy:dev": "CLOUDFLARE_ENV=dev pnpm build && wrangler deploy",
     "cf-typegen": "wrangler types",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",

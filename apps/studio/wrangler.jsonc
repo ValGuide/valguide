@@ -5,8 +5,18 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
 
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  },
+
   // Native R2 binding — no S3 API keys needed
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod" }],
+
+  // Production custom domain
+  "routes": [{ "pattern": "studio.valguide.com", "custom_domain": true }],
 
   // Production vars (studio.valguide.com)
   // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
@@ -21,10 +31,12 @@
   },
 
   // Dev environment (studio.valguide.dev)
-  // Deploy with: wrangler deploy --env dev
+  // Build with: CLOUDFLARE_ENV=dev vite build
+  // Deploy with: wrangler deploy (after building with CLOUDFLARE_ENV=dev)
   // Set secrets with: wrangler secret put <NAME> --env dev
   "env": {
     "dev": {
+      "routes": [{ "pattern": "studio.valguide.dev", "custom_domain": true }],
       "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev" }],
       "vars": {
         "NODE_ENV": "production",
