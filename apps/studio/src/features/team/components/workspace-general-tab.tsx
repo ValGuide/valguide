@@ -1,3 +1,4 @@
+import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
 import { updateOrgLogoFn } from '@valguide/core/features/orgs/update-org-logo.fn'
 import { updateOrgNameFn } from '@valguide/core/features/orgs/update-org-name.fn'
@@ -24,7 +25,7 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
   const handleUploadAndSaveLogo = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
     const fileId = valguideId()
-    const storagePath = `orgs/${data.team.nanoId}/${fileId}.${ext}`
+    const storagePath = `orgs/${data.team.nanoId}/logos/${fileId}.${ext}`
 
     await uploadFile({
       key: storagePath,
@@ -47,7 +48,7 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
         </CardHeader>
         <CardContent className="space-y-6">
           <OrgAvatarForm
-            currentLogo={data.team.logo}
+            currentLogo={data.team.logoStoragePath ? getImageKitUrl(data.team.logoStoragePath) : null}
             orgName={data.team.name}
             onUploadAndSave={handleUploadAndSaveLogo}
           />

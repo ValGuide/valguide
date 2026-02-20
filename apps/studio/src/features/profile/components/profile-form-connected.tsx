@@ -36,7 +36,7 @@ export function ProfileFormConnected() {
   const handleUploadAndSaveAvatar = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
     const fileId = valguideId()
-    const storagePath = `users/${profile.id}/${fileId}.${ext}`
+    const storagePath = `users/${profile.id}/avatars/${fileId}.${ext}`
 
     await uploadFile({
       key: storagePath,

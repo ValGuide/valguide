@@ -1,6 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { getAssetUrl } from '../assets/image-url'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
@@ -17,11 +16,10 @@ export const updateOrgLogoFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireOrgMember(data.organizationId, context.user.id)
 
-    if (!data.storagePath.startsWith('orgs/')) {
+    if (!/^orgs\/[^/]+\/logos\//.test(data.storagePath)) {
       throw new Error('Invalid storage path')
     }
 
-    const publicUrl = getAssetUrl(data.storagePath)
-    await updateOrgLogo(db, data.organizationId, publicUrl)
-    return { publicUrl }
+    await updateOrgLogo(db, data.organizationId, data.storagePath)
+    return { storagePath: data.storagePath }
   })

@@ -1,4 +1,3 @@
-import { getAssetUrl } from '@valguide/core/features/assets/image-url'
 import type { DB } from '@valguide/core/features/db'
 import { organization } from '@valguide/core/features/orgs/schema'
 import { putObject } from '@valguide/core/features/storage/upload.server'
@@ -13,7 +12,7 @@ export type AdminUploadOrgLogoInput = {
 
 export type AdminUploadOrgLogoResult = {
   success: boolean
-  logoUrl?: string
+  storagePath?: string
   error?: string
 }
 
@@ -43,12 +42,11 @@ export async function adminUploadOrgLogo(
   if (!org) return { success: false, error: 'Organization not found' }
 
   const ext = input.mimeType.split('/')[1] === 'jpeg' ? 'jpg' : input.mimeType.split('/')[1]
-  const storagePath = `orgs/${org.nanoId}/${valguideId()}.${ext}`
+  const storagePath = `orgs/${org.nanoId}/logos/${valguideId()}.${ext}`
 
   await putObject(storagePath, buffer, input.mimeType)
 
-  const publicUrl = getAssetUrl(storagePath)
-  await dbClient.update(organization).set({ logo: publicUrl }).where(eq(organization.id, org.id))
+  await dbClient.update(organization).set({ logoStoragePath: storagePath }).where(eq(organization.id, org.id))
 
-  return { success: true, logoUrl: publicUrl }
+  return { success: true, storagePath }
 }

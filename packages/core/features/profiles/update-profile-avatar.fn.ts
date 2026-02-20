@@ -11,7 +11,7 @@ export const updateProfileAvatarFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateProfileAvatarSchema)
   .handler(async ({ context, data }) => {
-    const expectedPrefix = `users/${context.user.id}/profile-avatars/`
+    const expectedPrefix = `users/${context.user.id}/avatars/`
     if (!data.storagePath.startsWith(expectedPrefix)) {
       throw new Error('Invalid storage path')
     }
