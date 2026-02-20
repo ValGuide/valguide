@@ -66,7 +66,7 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
         screenshotUrl = await getSignedUrl(
           getR2Client(),
           new GetObjectCommand({ Bucket: getR2Bucket(), Key: data.screenshotPath }),
-          { expiresIn: 31536000 },
+          { expiresIn: 604800 },
         )
       } catch (storageErr) {
         // Log but don't fail - screenshot is optional
@@ -115,6 +115,7 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
           teamNanoId: data.teamNanoId,
           pageUrl: data.pageUrl || undefined,
           screenshotUrl: screenshotUrl ?? undefined,
+          screenshotPath: data.screenshotPath,
         }),
       )
     } catch (slackErr) {

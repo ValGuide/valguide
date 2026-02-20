@@ -31,6 +31,9 @@ export const errorCatchingMiddleware = createMiddleware({ type: 'function' }).se
       console.info('ForbiddenError caught in errorCatchingMiddleware:', error)
       throw redirect({ to: '/' })
     }
+    if (error instanceof Response) {
+      throw error
+    }
     console.error('Uncaught error in errorCatchingMiddleware:', error)
     throw error
   }
