@@ -1,7 +1,31 @@
+import { AsyncLocalStorage } from 'node:async_hooks'
 import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import postgres, { type Sql } from 'postgres'
 import { serverEnv } from '../env/server'
 import * as schema from './schema'
+
+// ============================================================================
+// Per-request DB context via AsyncLocalStorage
+// ============================================================================
+
+type RequestDbStore = {
+  sql: Sql | null
+  db: PostgresJsDatabase<typeof schema> | null
+}
+
+const requestDbStore = new AsyncLocalStorage<RequestDbStore>()
+
+function getOrCreateRequestDb(store: RequestDbStore): PostgresJsDatabase<typeof schema> {
+  if (!store.db) {
+    store.sql = getClient()
+    store.db = drizzle(store.sql, { schema, logger: serverEnv.DRIZZLE_LOG_ENABLED })
+  }
+  return store.db
+}
+
+// ============================================================================
+// Connection factory
+// ============================================================================
 
 /**
  * Creates a fresh postgres.js client.
@@ -23,20 +47,46 @@ export function getDb(): PostgresJsDatabase<typeof schema> {
   })
 }
 
+// ============================================================================
+// Request-scoped runner
+// ============================================================================
+
 /**
- * Proxy-backed DB instance for backward-compatible `import { db }` usage.
+ * Runs `fn` within a request-scoped DB context.
+ * All `db` property accesses inside `fn` share one postgres.js connection.
+ * Connection is closed in `finally` after `fn` completes.
+ */
+export async function runWithRequestDb<T>(fn: () => Promise<T>): Promise<T> {
+  const store: RequestDbStore = { sql: null, db: null }
+  return requestDbStore.run(store, async () => {
+    try {
+      return await fn()
+    } finally {
+      if (store.sql) {
+        store.sql.end({ timeout: 0 }).catch(console.error)
+      }
+    }
+  })
+}
+
+// ============================================================================
+// Proxy-backed DB instance
+// ============================================================================
+
+/**
+ * Request-scoped DB instance via AsyncLocalStorage.
  *
- * Creates a fresh Drizzle instance on each property access, ensuring each
- * query chain gets its own postgres connection. Required for Cloudflare
- * Workers where I/O objects from one request can't be used in another
- * request's context ("Cannot perform I/O on behalf of a different request").
+ * When inside `runWithRequestDb()` (i.e., within a TanStack Start request):
+ * returns a request-scoped Drizzle instance — one postgres.js connection
+ * shared across middleware, auth checks, and handler.
  *
- * On Vercel/Node.js this creates short-lived per-query connections,
- * which is fine with Supavisor connection pooler (prepare: false).
+ * When outside (scripts, seeds, Hono API): falls back to creating a fresh
+ * instance per property access (per-query connection).
  */
 export const db: PostgresJsDatabase<typeof schema> = new Proxy({} as PostgresJsDatabase<typeof schema>, {
   get(_target, prop) {
-    const instance = getDb()
+    const store = requestDbStore.getStore()
+    const instance = store ? getOrCreateRequestDb(store) : getDb()
     const value = (instance as any)[prop]
     if (typeof value === 'function') {
       return value.bind(instance)
