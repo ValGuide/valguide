@@ -8,8 +8,8 @@ const completeUploadSchema = z.object({
   uploadId: z.string(),
   parts: z.array(
     z.object({
-      ETag: z.string(),
-      PartNumber: z.number(),
+      etag: z.string(),
+      partNumber: z.number(),
     }),
   ),
 })

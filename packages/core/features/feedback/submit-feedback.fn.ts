@@ -1,14 +1,12 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { createServerFn } from '@tanstack/react-start'
 import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { getAssetUrl } from '../assets/image-url'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
 import { organization } from '../orgs/schema'
-import { getR2Bucket, getR2Client } from '../storage/r2'
 import { feedback } from './schema'
 
 // =============================================================================
@@ -58,20 +56,10 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(submitFeedbackSchema)
   .handler(async ({ context, data }): Promise<SubmitFeedbackResult> => {
-    // Get screenshot signed URL if path provided (bucket is private)
-    // Gracefully handle storage lookup failures - feedback should still be submitted
+    // Build public URL for screenshot if path provided
     let screenshotUrl: string | null = null
     if (data.screenshotPath) {
-      try {
-        screenshotUrl = await getSignedUrl(
-          getR2Client(),
-          new GetObjectCommand({ Bucket: getR2Bucket(), Key: data.screenshotPath }),
-          { expiresIn: 604800 },
-        )
-      } catch (storageErr) {
-        // Log but don't fail - screenshot is optional
-        console.error('Failed to get screenshot URL:', storageErr)
-      }
+      screenshotUrl = getAssetUrl(data.screenshotPath)
     }
 
     // Resolve team ID from nanoId if provided

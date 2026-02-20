@@ -9,32 +9,36 @@ export type UploadOptions = {
 }
 
 /**
- * Upload a file to R2 via presigned URLs.
- * Small files (< 50MB) use a single PUT request.
- * Large files (≥ 50MB) use S3 multipart upload with 10MB parts.
+ * Upload a file to R2 via native Worker binding.
+ * Small files (< 50MB) use a single PUT through the /api/upload route.
+ * Large files (≥ 50MB) use multipart upload with 10MB parts through /api/upload-part.
  */
 export async function uploadFile({ key, file, onProgress, onError }: UploadOptions): Promise<{ key: string }> {
   try {
     const init = await initUploadFn({ data: { key, contentType: file.type, fileSize: file.size } })
 
     if (init.mode === 'put') {
-      await uploadWithProgress(init.putUrl, file, onProgress)
+      await uploadWithProgress(`/api/upload?key=${encodeURIComponent(init.key)}`, file, onProgress)
     } else {
-      const completedParts: Array<{ ETag: string; PartNumber: number }> = []
+      const completedParts: Array<{ etag: string; partNumber: number }> = []
       let uploadedBytes = 0
 
-      for (let i = 0; i < init.partUrls.length; i++) {
+      for (let i = 0; i < init.totalParts; i++) {
         const start = i * init.partSize
         const end = Math.min(start + init.partSize, file.size)
         const part = file.slice(start, end)
 
-        const response = await fetch(init.partUrls[i], { method: 'PUT', body: part })
+        const params = new URLSearchParams({
+          key: init.key,
+          uploadId: init.uploadId,
+          partNumber: String(i + 1),
+        })
+
+        const response = await fetch(`/api/upload-part?${params}`, { method: 'PUT', body: part })
         if (!response.ok) throw new Error(`Part ${i + 1} upload failed: ${response.status}`)
 
-        const etag = response.headers.get('ETag')
-        if (!etag) throw new Error(`Missing ETag for part ${i + 1}`)
-
-        completedParts.push({ ETag: etag, PartNumber: i + 1 })
+        const { etag } = (await response.json()) as { etag: string }
+        completedParts.push({ etag, partNumber: i + 1 })
         uploadedBytes += end - start
         onProgress?.((uploadedBytes / file.size) * 100)
       }

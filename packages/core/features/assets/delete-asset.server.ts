@@ -1,8 +1,7 @@
-import { DeleteObjectCommand } from '@aws-sdk/client-s3'
 import { eq } from 'drizzle-orm'
 import { NotFoundError } from '../auth/authorization'
 import { db } from '../db'
-import { getR2Bucket, getR2Client } from '../storage/r2'
+import { deleteObject } from '../storage/upload.server'
 import { asset } from './schema'
 
 // =============================================================================
@@ -26,12 +25,7 @@ export async function deleteAsset(assetId: string): Promise<DeleteAssetResult> {
     throw new NotFoundError('Asset')
   }
 
-  await getR2Client().send(
-    new DeleteObjectCommand({
-      Bucket: getR2Bucket(),
-      Key: assetData.storagePath,
-    }),
-  )
+  await deleteObject(assetData.storagePath)
 
   await db.delete(asset).where(eq(asset.id, assetId))
 

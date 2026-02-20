@@ -28,10 +28,6 @@ export const serverEnvSchema = z.object({
   ADMIN_COOKIE_DOMAIN: z.string().optional(),
   ADMIN_BASE_URL: z.string().optional().default('https://admin-local.dev'),
   SLACK_TEAM_ID: z.string().optional(),
-  R2_ACCESS_KEY_ID: z.string().optional(),
-  R2_SECRET_ACCESS_KEY: z.string().optional(),
-  R2_ENDPOINT: z.string().optional(),
-  R2_BUCKET_NAME: z.string().optional().default('valguide'),
 })
 
 export const clientEnvSchema = z.object({

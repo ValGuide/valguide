@@ -3,6 +3,8 @@ import { organization } from '@valguide/core/features/orgs/schema'
 import { putObject } from '@valguide/core/features/storage/upload.server'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { eq } from 'drizzle-orm'
+// Note: putObject now uses native R2 binding (cloudflare:workers).
+// This file will only work when admin is deployed to Cloudflare Workers.
 
 export type AdminUploadOrgLogoInput = {
   orgNanoId: string

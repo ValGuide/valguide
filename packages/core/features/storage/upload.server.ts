@@ -1,90 +1,63 @@
-import {
-  CompleteMultipartUploadCommand,
-  CreateMultipartUploadCommand,
-  HeadObjectCommand,
-  PutObjectCommand,
-  UploadPartCommand,
-} from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { getR2Bucket, getR2Client } from './r2'
+/// <reference path="./cloudflare-r2.d.ts" />
+import { getR2Bucket } from './r2'
 
 export const MULTIPART_THRESHOLD = 50 * 1024 * 1024 // 50 MB
 export const PART_SIZE = 10 * 1024 * 1024 // 10 MB per part
 
-// ── Simple PUT (small files) ────────────────────────────────────────
+// ── Simple PUT ──────────────────────────────────────────────────────
 
-export async function createPresignedPutUrl(key: string, contentType: string): Promise<string> {
-  return getSignedUrl(
-    getR2Client(),
-    new PutObjectCommand({ Bucket: getR2Bucket(), Key: key, ContentType: contentType }),
-    { expiresIn: 300 }, // 5 minutes
-  )
+export async function putObject(
+  key: string,
+  body: ReadableStream | ArrayBuffer | ArrayBufferView | string | Blob,
+  contentType: string,
+): Promise<void> {
+  await getR2Bucket().put(key, body, {
+    httpMetadata: { contentType },
+  })
 }
 
-// ── Multipart (large files) ─────────────────────────────────────────
+// ── Delete ──────────────────────────────────────────────────────────
+
+export async function deleteObject(key: string): Promise<void> {
+  await getR2Bucket().delete(key)
+}
+
+// ── Head ────────────────────────────────────────────────────────────
+
+export async function headObject(key: string): Promise<{ size: number; etag: string } | null> {
+  const obj = await getR2Bucket().head(key)
+  if (!obj) return null
+  return { size: obj.size, etag: obj.etag }
+}
+
+// ── Multipart ───────────────────────────────────────────────────────
 
 export async function initMultipartUpload(key: string, contentType: string) {
-  const { UploadId } = await getR2Client().send(
-    new CreateMultipartUploadCommand({ Bucket: getR2Bucket(), Key: key, ContentType: contentType }),
-  )
-  if (!UploadId) throw new Error('Failed to initiate upload')
-  return { uploadId: UploadId, key }
+  const upload = await getR2Bucket().createMultipartUpload(key, {
+    httpMetadata: { contentType },
+  })
+  return { uploadId: upload.uploadId, key }
 }
 
-export async function getPartUploadUrls(key: string, uploadId: string, totalParts: number) {
-  return Promise.all(
-    Array.from({ length: totalParts }, (_, i) =>
-      getSignedUrl(
-        getR2Client(),
-        new UploadPartCommand({
-          Bucket: getR2Bucket(),
-          Key: key,
-          UploadId: uploadId,
-          PartNumber: i + 1,
-        }),
-        { expiresIn: 3600 }, // 1 hour (large files take time)
-      ),
-    ),
-  )
-}
-
-export async function completeMultipartUpload(
+export async function uploadPart(
   key: string,
   uploadId: string,
-  parts: Array<{ ETag: string; PartNumber: number }>,
-) {
-  await getR2Client().send(
-    new CompleteMultipartUploadCommand({
-      Bucket: getR2Bucket(),
-      Key: key,
-      UploadId: uploadId,
-      MultipartUpload: { Parts: parts },
-    }),
-  )
+  partNumber: number,
+  body: ReadableStream | ArrayBuffer | ArrayBufferView | string | Blob,
+): Promise<R2UploadedPart> {
+  const upload = getR2Bucket().resumeMultipartUpload(key, uploadId)
+  return upload.uploadPart(partNumber, body)
 }
 
-// ── Verify upload exists (used by confirmUpload) ────────────────────
-
-// ── Direct PUT (server-side, for small files like logos) ─────────────
-
-export async function putObject(key: string, body: Buffer | Uint8Array, contentType: string): Promise<void> {
-  await getR2Client().send(
-    new PutObjectCommand({
-      Bucket: getR2Bucket(),
-      Key: key,
-      Body: body,
-      ContentType: contentType,
-    }),
-  )
+export async function completeMultipartUpload(key: string, uploadId: string, parts: R2UploadedPart[]): Promise<void> {
+  const upload = getR2Bucket().resumeMultipartUpload(key, uploadId)
+  await upload.complete(parts)
 }
 
-// ── Verify upload exists (used by confirmUpload) ────────────────────
+// ── Verify ──────────────────────────────────────────────────────────
 
 export async function verifyUpload(key: string, expectedSize: number): Promise<boolean> {
-  try {
-    const head = await getR2Client().send(new HeadObjectCommand({ Bucket: getR2Bucket(), Key: key }))
-    return head.ContentLength === expectedSize
-  } catch {
-    return false
-  }
+  const obj = await headObject(key)
+  if (!obj) return false
+  return obj.size === expectedSize
 }

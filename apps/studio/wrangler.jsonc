@@ -5,6 +5,9 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
 
+  // Native R2 binding — no S3 API keys needed
+  "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod" }],
+
   // Production vars (studio.valguide.com)
   // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
   // Secrets set via: wrangler secret put <NAME>
@@ -13,8 +16,6 @@
     "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
     "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
     "SUPABASE_COOKIE_DOMAIN": ".valguide.com",
-    "R2_ENDPOINT": "https://REPLACE_WITH_CLOUDFLARE_ACCOUNT_ID.eu.r2.cloudflarestorage.com",
-    "R2_BUCKET_NAME": "valguide-prod",
     "APP_BASE_URL": "https://app.valguide.com",
     "VITE_STUDIO_URL": "https://studio.valguide.com",
   },
@@ -24,13 +25,12 @@
   // Set secrets with: wrangler secret put <NAME> --env dev
   "env": {
     "dev": {
+      "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev" }],
       "vars": {
         "NODE_ENV": "production",
         "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
         "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
         "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
-        "R2_ENDPOINT": "https://REPLACE_WITH_CLOUDFLARE_ACCOUNT_ID.eu.r2.cloudflarestorage.com",
-        "R2_BUCKET_NAME": "valguide-dev",
         "APP_BASE_URL": "https://app.valguide.dev",
         "VITE_STUDIO_URL": "https://studio.valguide.dev"
       }
