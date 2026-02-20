@@ -15,7 +15,7 @@ function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (posthog.__loaded) return
     posthog.init(clientEnv.VITE_POSTHOG_KEY!, {
-      // Proxy through our domain to avoid ad blockers (see vercel.ts rewrites)
+      // Proxy through our domain to avoid ad blockers (see workers/posthog-proxy)
       api_host: clientEnv.VITE_POSTHOG_HOST ?? `${window.location.origin}/ingest`,
 
       // 🔒 GDPR Compliance Settings
