@@ -9,7 +9,7 @@ import * as schema from './schema'
  * where I/O objects are bound to the request context that created them.
  */
 export function getClient(): Sql {
-  return postgres(serverEnv.DATABASE_URL, { prepare: false })
+  return postgres(serverEnv.DATABASE_URL, { prepare: false, max: 1 })
 }
 
 /**
