@@ -68,6 +68,11 @@
       "ratePrompt": "How was your experience?",
       "exploreMore": "Explore more",
       "learnMore": "Learn more"
+    },
+    "previewBanner": {
+      "title": "Preview mode",
+      "description": "Only you can see these changes. This does not publish anything.",
+      "exit": "Exit preview"
     }
   },
   "admin": {

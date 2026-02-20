@@ -68,6 +68,11 @@
       "ratePrompt": "Co è stada Vossa experientscha?",
       "exploreMore": "Explorar dapli",
       "learnMore": "Emprender dapli"
+    },
+    "previewBanner": {
+      "title": "Modus da prevista",
+      "description": "Mo Vus pudais vesair questas midadas. Nagut vegn publitgà.",
+      "exit": "Bandunar la prevista"
     }
   },
   "admin": {
