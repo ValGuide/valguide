@@ -120,7 +120,6 @@
     "@types/react-dom": "19.2.3",
     "@types/ws": "^8.5.12",
     "@valguide/typescript-config": "workspace:*",
-    "@vercel/config": "^0.0.25",
     "@vitejs/plugin-react": "^5.0.4",
     "bufferutil": "^4.0.8",
     "bun-types": "latest",

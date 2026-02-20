@@ -48,7 +48,6 @@
     "@types/react-dom": "19.2.3",
     "@valguide/test-config": "workspace:*",
     "@valguide/typescript-config": "workspace:*",
-    "@vercel/config": "^0.0.25",
     "@vitejs/plugin-react": "^5.0.4",
     "storybook": "^10.2.7",
     "tailwindcss": "^4.1.16",
