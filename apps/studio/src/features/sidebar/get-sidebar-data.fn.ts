@@ -1,7 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
+import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams.server'
-import type { OrganizationWithRole as Team } from '@valguide/core/features/orgs/types'
+import type { OrganizationWithRole } from '@valguide/core/features/orgs/types'
 import { getOrCreateProfile } from '@valguide/core/features/profiles/get-or-create-profile.server'
 import { getUserDisplayName } from '@valguide/core/features/profiles/utils'
 import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
@@ -11,6 +12,8 @@ import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 // TYPES
 // ============================================================================
 
+type SidebarTeam = Omit<OrganizationWithRole, 'logoStoragePath'> & { logo: string | null }
+
 export interface SidebarData {
   user: {
     userId: string
@@ -18,9 +21,14 @@ export interface SidebarData {
     email: string
     avatar: string
   }
-  teams: Team[]
-  currentTeam: Team | undefined
+  teams: SidebarTeam[]
+  currentTeam: SidebarTeam | undefined
   wasAutoSelected: boolean
+}
+
+function mapTeam(team: OrganizationWithRole): SidebarTeam {
+  const { logoStoragePath, ...rest } = team
+  return { ...rest, logo: logoStoragePath ? getImageKitUrl(logoStoragePath) : null }
 }
 
 // ============================================================================
@@ -32,9 +40,10 @@ export const getSidebarDataFn = createServerFn({ method: 'GET' })
   .handler(async ({ context }) => {
     const user = context.user
     const activeTeamId = context.activeOrgId
-    const [teams, profile] = await Promise.all([getUserTeams(db, user.id), getOrCreateProfile(user.id)])
+    const [rawTeams, profile] = await Promise.all([getUserTeams(db, user.id), getOrCreateProfile(user.id)])
 
-    let currentTeam = teams.find((t: any) => t.id === activeTeamId)
+    const teams = rawTeams.map(mapTeam)
+    let currentTeam = teams.find((t) => t.id === activeTeamId)
 
     const name = getUserDisplayName(profile, user.email, user.metadata)
 

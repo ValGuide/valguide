@@ -13,7 +13,7 @@ export const organization = studioSchema.table('organization', {
   nanoId: varchar('nano_id', { length: 21 }).notNull().unique('unique_org_nano_id'),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 100 }).notNull().unique('unique_org_slug'),
-  logo: text('logo'),
+  logoStoragePath: text('logo_storage_path'),
   defaultThemeId: uuid('default_theme_id'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')

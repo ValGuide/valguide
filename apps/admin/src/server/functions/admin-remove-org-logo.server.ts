@@ -12,5 +12,5 @@ export async function adminRemoveOrgLogo(dbClient: DB, orgNanoId: string): Promi
   const org = orgs[0]
   if (!org) throw new Error('Organization not found')
 
-  await dbClient.update(organization).set({ logo: null }).where(eq(organization.id, org.id))
+  await dbClient.update(organization).set({ logoStoragePath: null }).where(eq(organization.id, org.id))
 }
