@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
 import { updateOrgLogoFn } from '@valguide/core/features/orgs/update-org-logo.fn'
@@ -16,10 +17,16 @@ interface WorkspaceGeneralTabProps {
 
 export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProps) {
   const t = useTranslations('orgs.teamSettings')
+  const queryClient = useQueryClient()
+
+  const invalidateAfterOrgUpdate = async () => {
+    await onRefetch()
+    await queryClient.invalidateQueries({ queryKey: ['sidebar'] })
+  }
 
   const handleUpdateName = async (organizationId: string, newName: string) => {
     await updateOrgNameFn({ data: { organizationId, newName } })
-    await onRefetch()
+    await invalidateAfterOrgUpdate()
   }
 
   const handleUploadAndSaveLogo = async (file: File) => {
@@ -36,7 +43,7 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
       data: { organizationId: data.team.id, storagePath },
     })
 
-    await onRefetch()
+    await invalidateAfterOrgUpdate()
   }
 
   return (
