@@ -51,7 +51,7 @@ export function FeedbackDialogContainer({
           const ext = mimeToExt[file.type] ?? file.name.split('.').pop() ?? 'png'
           const feedbackId = valguideId()
           const fileId = valguideId()
-          const uniqueFileName = `feedback/${feedbackId}/${fileId}.${ext}`
+          const uniqueFileName = `studio-feedback/${feedbackId}/${fileId}.${ext}`
 
           const result = await uploadFile({
             key: uniqueFileName,
