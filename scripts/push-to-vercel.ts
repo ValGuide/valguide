@@ -20,7 +20,6 @@ const CONCURRENCY = 5
 // Maps app folder name to Vercel project name
 const VERCEL_APPS = {
   app: 'valguide-app',
-  studio: 'valguide-studio',
   admin: 'valguide-admin',
   www: 'valguide-www',
   links: 'valguide-links',
