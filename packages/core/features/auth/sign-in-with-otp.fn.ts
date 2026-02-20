@@ -3,7 +3,6 @@ import { createServerFn } from '@tanstack/react-start'
 import { userStartedLoginMessage } from '@valguide/slack/messages/user-started-login.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { createClient } from '@valguide/supabase/server'
-import { waitUntil } from '@vercel/functions'
 import { z } from 'zod'
 import { serializeAuthError } from './utils'
 
@@ -40,7 +39,7 @@ export const signInWithOtpFn = createServerFn({ method: 'POST' })
 
     if (!response.error) {
       const email = 'email' in credentials ? credentials.email : undefined
-      waitUntil(postMessage(userStartedLoginMessage({ email })))
+      postMessage(userStartedLoginMessage({ email })).catch(console.error)
       return { data: response.data, error: null }
     }
 

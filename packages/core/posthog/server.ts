@@ -1,4 +1,3 @@
-import { waitUntil } from '@vercel/functions'
 import { PostHog } from 'posthog-node'
 
 let posthogServer: PostHog | null = null
@@ -54,5 +53,5 @@ export function flushPostHog() {
   const posthog = getPostHogServer()
   if (!posthog) return
 
-  waitUntil(posthog.shutdown())
+  posthog.shutdown().catch(console.error)
 }
