@@ -6,10 +6,12 @@ export const adminOrgDetailQueryOptions = (nanoId: string) =>
   queryOptions({
     queryKey: ['admin', 'org-detail', nanoId],
     queryFn: () => adminGetOrgDetailFn({ data: { nanoId } }),
+    staleTime: 30_000,
   })
 
 export const adminOrgMembersQueryOptions = (nanoId: string) =>
   queryOptions({
     queryKey: ['admin', 'org-members', nanoId],
     queryFn: () => adminGetOrgMembersFn({ data: { nanoId } }),
+    staleTime: 30_000,
   })

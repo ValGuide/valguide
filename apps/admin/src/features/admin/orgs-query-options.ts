@@ -7,4 +7,5 @@ export const adminOrgsQueryOptions = (input: ListOrgsInput) =>
     queryKey: ['admin', 'orgs', input],
     queryFn: () => adminListOrgsFn({ data: input }),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
   })
