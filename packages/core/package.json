@@ -67,7 +67,7 @@
     "@valguide/email": "workspace:*",
     "@valguide/icons": "workspace:*",
     "@valguide/logger": "workspace:*",
-    "@vercel/functions": "^3.3.6",
+
     "@yudiel/react-qr-scanner": "^2.5.1",
     "attr-accept": "^2.2.5",
     "class-variance-authority": "^0.7.1",

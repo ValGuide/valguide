@@ -7,6 +7,7 @@
     "dev": "storybook dev -p 6006 --no-open",
     "build": "storybook build",
     "deploy": "pnpm build && wrangler deploy",
+    "deploy:dev": "pnpm build && wrangler deploy --env dev",
     "serve": "serve storybook-static",
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml storybook-static .turbo",
     "clean:vite": "rm -rf node_modules/.vite"

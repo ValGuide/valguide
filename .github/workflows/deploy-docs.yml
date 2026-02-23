@@ -15,7 +15,7 @@ name: Deploy Docs
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
 
 concurrency:
   group: deploy-docs-${{ github.ref }}
@@ -30,9 +30,9 @@ jobs:
     with:
       app-name: docs
 
-  deploy:
+  deploy-prod:
     needs: check
-    if: needs.check.outputs.should_deploy == 'true'
+    if: needs.check.outputs.should_deploy == 'true' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: prod
@@ -55,24 +55,71 @@ jobs:
       - name: Build & Deploy
         run: pnpm --filter @valguide/docs run deploy
 
-  notify:
-    needs: [check, deploy]
-    if: always() && needs.check.outputs.should_deploy == 'true' && needs.deploy.result != 'skipped'
+  notify-prod:
+    needs: [check, deploy-prod]
+    if: always() && needs.check.outputs.should_deploy == 'true' && needs.deploy-prod.result != 'skipped'
     uses: ./.github/workflows/notify-slack.yml
     with:
       app-name: Docs
       environment: prod
       url: https://docs.val.guide
-      status: ${{ needs.deploy.result }}
+      status: ${{ needs.deploy-prod.result }}
     secrets:
       VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
 
-  release:
-    needs: [check, deploy]
-    if: needs.deploy.result == 'success'
+  deploy-dev:
+    needs: check
+    if: needs.check.outputs.should_deploy == 'true' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+      url: https://docs-dev.val.guide
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build & Deploy
+        run: pnpm --filter @valguide/docs run deploy:dev
+
+  notify-dev:
+    needs: [check, deploy-dev]
+    if: always() && needs.check.outputs.should_deploy == 'true' && needs.deploy-dev.result != 'skipped'
+    uses: ./.github/workflows/notify-slack.yml
+    with:
+      app-name: Docs
+      environment: dev
+      url: https://docs-dev.val.guide
+      status: ${{ needs.deploy-dev.result }}
+    secrets:
+      VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
+
+  release-prod:
+    needs: [check, deploy-prod]
+    if: needs.deploy-prod.result == 'success'
     uses: ./.github/workflows/create-release.yml
     with:
       app-name: docs
       app-display-name: Docs
       environment: prod
       url: https://docs.val.guide
+
+  release-dev:
+    needs: [check, deploy-dev]
+    if: needs.deploy-dev.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: docs
+      app-display-name: Docs
+      environment: dev
+      url: https://docs-dev.val.guide
