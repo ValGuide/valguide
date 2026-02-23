@@ -32,7 +32,7 @@ jobs:
     if: needs.check.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: prod
       url: https://docs.val.guide
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
     uses: ./.github/workflows/notify-slack.yml
     with:
       app-name: Docs
-      environment: production
+      environment: prod
       url: https://docs.val.guide
       status: ${{ needs.deploy.result }}
     secrets:

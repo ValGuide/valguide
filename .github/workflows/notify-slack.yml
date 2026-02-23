@@ -37,7 +37,7 @@ jobs:
           token: ${{ secrets.VALBOT_SLACK_TOKEN }}
           payload: |
             channel: "deployments"
-            text: "${{ inputs.status == 'success' && '✅' || '❌' }} *${{ inputs.app-name }}* → *${{ inputs.environment }}* ${{ inputs.status }}"
+            text: "${{ inputs.status == 'success' && '✅' || '❌' }} ${{ inputs.app-name }} → ${{ inputs.environment }} ${{ inputs.status }}"
             blocks:
               - type: "section"
                 text:
