@@ -15,6 +15,7 @@
     "localisation",
     "toasts",
     "domains-and-dns",
+    "environment-variables",
     "vercel-build-control",
     "dev-auth-playwright",
     "resend-supabase-auth-hook",

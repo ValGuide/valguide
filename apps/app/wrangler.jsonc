@@ -23,8 +23,7 @@
     "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
     "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
     "SUPABASE_COOKIE_DOMAIN": ".valguide.com",
-    "APP_BASE_URL": "https://app.valguide.com",
-    "VITE_STUDIO_URL": "https://studio.valguide.com"
+    "APP_BASE_URL": "https://app.valguide.com"
   },
 
   // Dev environment (app.valguide.dev)
@@ -39,8 +38,7 @@
         "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
         "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
         "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
-        "APP_BASE_URL": "https://app.valguide.dev",
-        "VITE_STUDIO_URL": "https://studio.valguide.dev"
+        "APP_BASE_URL": "https://app.valguide.dev"
       }
     }
   }

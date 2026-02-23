@@ -26,10 +26,9 @@
     "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
     "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
     "SUPABASE_COOKIE_DOMAIN": ".val.guide",
-    "ADMIN_COOKIE_DOMAIN": ".val.guide",
+    "ADMIN_COOKIE_DOMAIN": "ops.val.guide",
     "ADMIN_BASE_URL": "https://ops.val.guide",
-    "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example",
-    "VITE_STUDIO_URL": "https://studio.valguide.com"
+    "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example"
   },
 
   // Dev environment (ops-dev.val.guide)
@@ -45,10 +44,9 @@
         "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
         "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
         "SUPABASE_COOKIE_DOMAIN": ".val.guide",
-        "ADMIN_COOKIE_DOMAIN": ".val.guide",
+        "ADMIN_COOKIE_DOMAIN": "ops-dev.val.guide",
         "ADMIN_BASE_URL": "https://ops-dev.val.guide",
-        "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example",
-        "VITE_STUDIO_URL": "https://studio.valguide.dev"
+        "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example"
       }
     }
   }
