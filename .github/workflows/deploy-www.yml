@@ -12,7 +12,7 @@
 #   [build www,admin]      — deploy www (and admin in its own workflow)
 #   [build all]            — deploy all apps
 
-name: Deploy WWW
+name: Deploy www
 
 on:
   push:
