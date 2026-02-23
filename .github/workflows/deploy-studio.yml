@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   check:
@@ -116,3 +116,23 @@ jobs:
       status: ${{ needs.deploy-dev.result }}
     secrets:
       VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
+
+  release-prod:
+    needs: [check, deploy-prod]
+    if: needs.deploy-prod.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: studio
+      app-display-name: Studio
+      environment: prod
+      url: https://studio.valguide.com
+
+  release-dev:
+    needs: [check, deploy-dev]
+    if: needs.deploy-dev.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: studio
+      app-display-name: Studio
+      environment: dev
+      url: https://studio.valguide.dev

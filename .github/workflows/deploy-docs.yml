@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   check:
@@ -66,3 +66,13 @@ jobs:
       status: ${{ needs.deploy.result }}
     secrets:
       VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
+
+  release:
+    needs: [check, deploy]
+    if: needs.deploy.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: docs
+      app-display-name: Docs
+      environment: prod
+      url: https://docs.val.guide

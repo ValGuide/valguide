@@ -1,0 +1,87 @@
+# Reusable workflow to create a GitHub Release after a successful deploy.
+#
+# Creates a git tag ({app}-{env}-{date}-{sha}) and a GitHub Release
+# with auto-generated release notes showing commits since the last
+# deploy of the same app+environment.
+#
+# Usage:
+#   jobs:
+#     release:
+#       uses: ./.github/workflows/create-release.yml
+#       with:
+#         app-name: studio
+#         app-display-name: Studio
+#         environment: prod
+#         url: https://studio.valguide.com
+
+name: Create Release
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+        description: "Lowercase app name (app, studio, admin, etc.)"
+      app-display-name:
+        required: true
+        type: string
+        description: "Display name for the release title (App, Studio, Admin)"
+      environment:
+        required: true
+        type: string
+        description: "Environment (dev or prod)"
+      url:
+        required: true
+        type: string
+        description: "Deployment URL"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine previous tag
+        id: prev
+        run: |
+          TAG_PREFIX="${{ inputs.app-name }}-${{ inputs.environment }}-"
+          PREV_TAG=$(git tag -l "${TAG_PREFIX}*" --sort=-creatordate | head -1)
+          if [ -n "$PREV_TAG" ]; then
+            echo "Found previous tag: $PREV_TAG"
+            echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
+          else
+            echo "No previous tag found — this is the first release"
+            echo "tag=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create tag
+        id: tag
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          DATE=$(date -u +%Y-%m-%d)
+          TAG="${{ inputs.app-name }}-${{ inputs.environment }}-${DATE}-${SHORT_SHA}"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "${{ inputs.app-display-name }} → ${{ inputs.environment }} (${{ steps.tag.outputs.tag }})"
+          body: |
+            ## ${{ inputs.app-display-name }} deployed to ${{ inputs.environment }}
+
+            🔗 **URL**: ${{ inputs.url }}
+            📦 **Commit**: [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+            👤 **Triggered by**: ${{ github.actor }}
+            ${{ steps.prev.outputs.tag && format('📋 **Changes since**: [`{0}`]({1}/{2}/releases/tag/{0})', steps.prev.outputs.tag, github.server_url, github.repository) || '🎉 **First release for this app/environment!**' }}
+            ${{ steps.prev.outputs.tag && format('🔀 **Full diff**: [{0}...{1}]({2}/{3}/compare/{0}...{4})', steps.prev.outputs.tag, steps.tag.outputs.tag, github.server_url, github.repository, steps.tag.outputs.tag) || '' }}
+          generate_release_notes: ${{ steps.prev.outputs.tag != '' }}
+          prerelease: ${{ inputs.environment == 'dev' }}
+          make_latest: ${{ inputs.environment == 'prod' }}
