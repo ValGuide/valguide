@@ -68,6 +68,11 @@
       "ratePrompt": "Wie war Ihr Erlebnis?",
       "exploreMore": "Mehr entdecken",
       "learnMore": "Mehr erfahren"
+    },
+    "previewBanner": {
+      "title": "Vorschaumodus",
+      "description": "Nur Sie können diese Änderungen sehen. Es wird nichts veröffentlicht.",
+      "exit": "Vorschau beenden"
     }
   },
   "admin": {

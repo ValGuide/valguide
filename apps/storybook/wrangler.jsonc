@@ -1,0 +1,8 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "valguide-storybook",
+  "compatibility_date": "2025-09-24",
+  "main": "src/index.ts",
+  "assets": { "directory": "storybook-static", "binding": "ASSETS", "run_worker_first": true },
+  "routes": [{ "pattern": "sb.val.guide", "custom_domain": true }]
+}

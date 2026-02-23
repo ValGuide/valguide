@@ -2,5 +2,6 @@ packages:
   - "apps/*"
   - "packages/*"
   - "packages/configs/*"
+  - "workers/*"
   - "scripts/seed-studio"
   - "supabase/*"

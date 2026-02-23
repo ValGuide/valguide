@@ -33,6 +33,17 @@ const resendOptions: EnvOptions<'dev' | 'prod'> = {
   },
 }
 
+const cloudflareOptions: EnvOptions<'dev' | 'prod'> = {
+  name: 'cloudflare',
+  prefix: '--cf:',
+  values: ['dev', 'prod'] as const,
+  defaultValue: 'dev' as const,
+  envFiles: {
+    dev: '.env.cloudflare.dev',
+    prod: '.env.cloudflare.prod',
+  },
+}
+
 const defaultOptions: EnvOptions<'all'> = {
   name: 'defaults',
   prefix: '--defaults:',
@@ -43,7 +54,7 @@ const defaultOptions: EnvOptions<'all'> = {
   },
 }
 
-const options: EnvOptions<string>[] = [supabaseOptions, resendOptions, defaultOptions]
+const options: EnvOptions<string>[] = [supabaseOptions, resendOptions, cloudflareOptions, defaultOptions]
 
 type EnvAndFile<T> = {
   name: string

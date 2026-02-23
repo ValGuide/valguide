@@ -1,5 +1,5 @@
-import { waitUntil } from '@vercel/functions'
 import { PostHog } from 'posthog-node'
+import { waitUntil } from '../utils/wait-until'
 
 let posthogServer: PostHog | null = null
 
@@ -47,7 +47,7 @@ export async function captureServerException(error: Error, distinctId?: string, 
 }
 
 /**
- * Flush PostHog events using Vercel's waitUntil.
+ * Flush PostHog events using waitUntil.
  * Call this at the end of server functions to ensure events are sent.
  */
 export function flushPostHog() {

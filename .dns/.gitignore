@@ -1,0 +1,3 @@
+# Ignore raw JSON exports (local-only)
+*.json
+!*.json.secret

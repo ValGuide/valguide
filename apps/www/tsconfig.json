@@ -16,6 +16,6 @@
       "@valguide/logger": ["../../packages/logger"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "../../packages/core/i18n/global.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "../../packages/core/i18n/global.d.ts", "worker-configuration.d.ts"],
   "exclude": ["node_modules"]
 }

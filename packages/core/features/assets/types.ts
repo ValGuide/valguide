@@ -14,7 +14,6 @@ export interface Asset {
   mimeType: string
   type: AssetType
   storagePath: string
-  publicUrl: string | null
   width: number | null
   height: number | null
   duration: number | null

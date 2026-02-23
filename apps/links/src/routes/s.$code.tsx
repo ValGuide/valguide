@@ -2,8 +2,8 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { serverEnv } from '@valguide/core/env/server'
 import { getShortLinkByCode } from '@valguide/core/features/links/get-short-link'
+import { CACHE_TTL, getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/kv'
 import { buildPathFromShortLink, isAbsoluteUrl } from '@valguide/core/features/links/paths'
-import { CACHE_TTL, getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/redis'
 import { z } from 'zod'
 
 const resolveShortLinkFn = createServerFn({ method: 'GET' })
@@ -12,7 +12,7 @@ const resolveShortLinkFn = createServerFn({ method: 'GET' })
     const appBaseUrl = serverEnv.APP_BASE_URL
     const cacheKey = getLinkCacheKey(code)
 
-    let path = await getCache<string>(cacheKey)
+    let path = await getCache(cacheKey)
 
     if (!path) {
       const shortLink = await getShortLinkByCode(code)

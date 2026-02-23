@@ -4,7 +4,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**", ".output/**", ".vercel/output/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
       "cache": false
@@ -58,8 +58,6 @@
     }
   },
   "globalEnv": [
-    "VERCEL_URL",
-    "VERCEL_ENV",
     "VITE_ENV",
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",
@@ -78,19 +76,12 @@
     "VITE_IMAGEKIT_URL",
     "VITE_STUDIO_URL",
     "VITE_APP_DOMAIN",
-    "KV_URL",
-    "KV_REST_API_READ_ONLY_TOKEN",
-    "REDIS_URL",
-    "KV_REST_API_TOKEN",
-    "KV_REST_API_URL",
-    "QSTASH_NEXT_SIGNING_KEY",
-    "QSTASH_CURRENT_SIGNING_KEY",
-    "QSTASH_URL",
-    "QSTASH_TOKEN",
     "DOCS_PASSWORD",
     "ADMIN_ALLOWED_EMAILS",
     "ADMIN_COOKIE_DOMAIN",
     "ADMIN_BASE_URL",
-    "SLACK_TEAM_ID"
+    "SLACK_TEAM_ID",
+    "VITE_STUDIO_SUPPORT_EMAIL",
+    "VITE_R2_PUBLIC_URL"
   ]
 }

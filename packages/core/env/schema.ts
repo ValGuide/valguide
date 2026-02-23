@@ -8,8 +8,6 @@ export const serverEnvSchema = z.object({
   }),
   SUPABASE_SECRET_KEY: z.string().optional(),
   SUPABASE_COOKIE_DOMAIN: z.string().optional(),
-  KV_REST_API_URL: z.string().optional(),
-  KV_REST_API_TOKEN: z.string().optional(),
   DRIZZLE_LOG_ENABLED: z
     .string()
     .optional()
@@ -17,7 +15,6 @@ export const serverEnvSchema = z.object({
   RESEND_SENDING_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
   VALBOT_SLACK_TOKEN: z.string().optional(),
-  VERCEL_ENV: z.enum(['development', 'preview', 'production']).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_BASE_URL: z.string().optional().default('https://app.valguide.com'),
   VITE_STUDIO_URL: z.string().optional().default('https://studio.valguide.com'),
@@ -41,6 +38,8 @@ export const clientEnvSchema = z.object({
   VITE_APP_DOMAIN: z.string().optional().default('app.valguide.com'),
   VITE_IMAGEKIT_URL: z.string().optional().default('https://ik.imagekit.io/valguide'),
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),
+  VITE_STUDIO_SUPPORT_EMAIL: z.string().optional().default('support@valguide.com'),
+  VITE_R2_PUBLIC_URL: z.string().optional().default('https://assets.valguide.app'),
 })
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>

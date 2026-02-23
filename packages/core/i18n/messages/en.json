@@ -68,6 +68,11 @@
       "ratePrompt": "How was your experience?",
       "exploreMore": "Explore more",
       "learnMore": "Learn more"
+    },
+    "previewBanner": {
+      "title": "Preview mode",
+      "description": "Only you can see these changes. This does not publish anything.",
+      "exit": "Exit preview"
     }
   },
   "admin": {
@@ -192,6 +197,7 @@
       "description": "Thank you for signing up. Our team is reviewing your account — usually within 1 business day. We'll email you once you're approved.",
       "checkStatus": "Check status",
       "autoCheckNote": "This page checks automatically.",
+      "signedInAs": "Signed in as {email}",
       "contactCta": "Email us",
       "signOut": "Sign out"
     }

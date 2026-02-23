@@ -10,7 +10,6 @@ import { LOCALE_PRIORITY } from '../utils'
 
 export type TourCoverImage = {
   storagePath: string
-  publicUrl: string | null
 }
 
 export type TourListItem = {
@@ -65,7 +64,6 @@ export async function listTours(organizationId: string, filters: ListToursFilter
   const coverImageSubquery = db
     .select({
       storagePath: asset.storagePath,
-      publicUrl: asset.publicUrl,
     })
     .from(tourAssetDraft)
     .innerJoin(asset, eq(tourAssetDraft.assetId, asset.id))
@@ -84,7 +82,6 @@ export async function listTours(organizationId: string, filters: ListToursFilter
       title: titleSubquery.title,
       locale: titleSubquery.locale,
       coverStoragePath: coverImageSubquery.storagePath,
-      coverPublicUrl: coverImageSubquery.publicUrl,
     })
     .from(tour)
     .leftJoinLateral(titleSubquery, sql`true`)
@@ -101,6 +98,6 @@ export async function listTours(organizationId: string, filters: ListToursFilter
     publishedAt: row.publishedAt,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
-    coverImage: row.coverStoragePath ? { storagePath: row.coverStoragePath, publicUrl: row.coverPublicUrl } : null,
+    coverImage: row.coverStoragePath ? { storagePath: row.coverStoragePath } : null,
   }))
 }

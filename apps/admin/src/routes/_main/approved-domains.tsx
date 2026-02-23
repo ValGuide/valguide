@@ -9,17 +9,10 @@ import { AddApprovedDomainDialog } from '@/features/admin/components/add-approve
 import { ApprovedDomainsTable } from '@/features/admin/components/approved-domains-table'
 import { addApprovedDomainFn } from '@/server/functions/add-approved-domain.fn'
 import { deleteApprovedDomainFn } from '@/server/functions/delete-approved-domain.fn'
-import { getUserTeamsFn } from '@/server/functions/get-user-teams.fn'
-
-const userTeamsQueryOptions = () => ({
-  queryKey: ['user', 'teams'],
-  queryFn: () => getUserTeamsFn(),
-})
 
 export const Route = createFileRoute('/_main/approved-domains')({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(approvedDomainsQueryOptions())
-    context.queryClient.ensureQueryData(userTeamsQueryOptions())
   },
   component: ApprovedDomainsPage,
 })
@@ -27,13 +20,12 @@ export const Route = createFileRoute('/_main/approved-domains')({
 function ApprovedDomainsPage() {
   const queryClient = useQueryClient()
   const { data: domains } = useSuspenseQuery(approvedDomainsQueryOptions())
-  const { data: teams } = useSuspenseQuery(userTeamsQueryOptions())
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const addMutation = useMutation({
-    mutationFn: (input: { organizationId: string; domain: string }) => addApprovedDomainFn({ data: input }),
+    mutationFn: (domain: string) => addApprovedDomainFn({ data: { domain } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'approved-domains'] })
       toast.success('Domain approved')
@@ -65,9 +57,7 @@ function ApprovedDomainsPage() {
           <Globe className="size-6" />
           <h1 className="text-2xl font-bold">Approved Domains</h1>
         </div>
-        <Button onClick={() => setDialogOpen(true)} disabled={teams.length === 0}>
-          Add Domain
-        </Button>
+        <Button onClick={() => setDialogOpen(true)}>Add Domain</Button>
       </div>
 
       <div className="rounded-lg border">
@@ -81,9 +71,8 @@ function ApprovedDomainsPage() {
       <AddApprovedDomainDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        organizations={teams.map((team) => ({ id: team.id, name: team.name }))}
         isAdding={addMutation.isPending}
-        onConfirm={(organizationId, domain) => addMutation.mutate({ organizationId, domain })}
+        onConfirm={(domain) => addMutation.mutate(domain)}
       />
     </div>
   )

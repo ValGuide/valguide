@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { QueryObserverOptions } from '@tanstack/react-query'
 import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
@@ -87,8 +86,7 @@ const createMockAudioAssets = (count: number): StopAssetDraftItem[] =>
       fileName: `narration-${i + 1}.mp3`,
       fileSize: 2048000 + i * 512000,
       mimeType: 'audio/mpeg',
-      storagePath: '',
-      publicUrl: null,
+      storagePath: 'assets/mock/narration.mp3',
       width: null,
       height: null,
       duration: 120 + i * 30,
@@ -112,8 +110,7 @@ const createMockCoverImageAsset = (): StopAssetDraftItem => ({
     fileName: 'cover-image.jpg',
     fileSize: 1024000,
     mimeType: 'image/jpeg',
-    storagePath: '',
-    publicUrl: faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' }),
+    storagePath: 'assets/mock/cover-image.jpg',
     width: 1200,
     height: 800,
     duration: null,
@@ -138,8 +135,7 @@ const createMockAssets = (count: number): StopAssetDraftItem[] =>
       fileName: `image-${i + 1}.jpg`,
       fileSize: 1024000,
       mimeType: 'image/jpeg',
-      storagePath: '',
-      publicUrl: faker.image.urlLoremFlickr({ width: 800, height: 600, category: 'art' }),
+      storagePath: 'assets/mock/gallery-image.jpg',
       width: 800,
       height: 600,
       duration: null,

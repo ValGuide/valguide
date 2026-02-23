@@ -1,10 +1,12 @@
+import { useQueryClient } from '@tanstack/react-query'
+import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
 import { updateOrgLogoFn } from '@valguide/core/features/orgs/update-org-logo.fn'
 import { updateOrgNameFn } from '@valguide/core/features/orgs/update-org-name.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { uploadFileWithTUS } from '@/features/assets/lib/tus-upload'
+import { uploadFile } from '@/features/assets/lib/upload'
 import { OrgAvatarForm } from './org-avatar-form'
 import { OrgNameForm } from './org-name-form'
 
@@ -15,20 +17,25 @@ interface WorkspaceGeneralTabProps {
 
 export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProps) {
   const t = useTranslations('orgs.teamSettings')
+  const queryClient = useQueryClient()
+
+  const invalidateAfterOrgUpdate = async () => {
+    await onRefetch()
+    await queryClient.invalidateQueries({ queryKey: ['sidebar'] })
+  }
 
   const handleUpdateName = async (organizationId: string, newName: string) => {
     await updateOrgNameFn({ data: { organizationId, newName } })
-    await onRefetch()
+    await invalidateAfterOrgUpdate()
   }
 
   const handleUploadAndSaveLogo = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
     const fileId = valguideId()
-    const storagePath = `orgs/${data.team.nanoId}/${fileId}.${ext}`
+    const storagePath = `orgs/${data.team.nanoId}/logos/${fileId}.${ext}`
 
-    await uploadFileWithTUS({
-      bucketName: 'assets',
-      fileName: storagePath,
+    await uploadFile({
+      key: storagePath,
       file,
     })
 
@@ -36,7 +43,7 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
       data: { organizationId: data.team.id, storagePath },
     })
 
-    await onRefetch()
+    await invalidateAfterOrgUpdate()
   }
 
   return (
@@ -48,7 +55,7 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
         </CardHeader>
         <CardContent className="space-y-6">
           <OrgAvatarForm
-            currentLogo={data.team.logo}
+            currentLogo={data.team.logoStoragePath ? getImageKitUrl(data.team.logoStoragePath) : null}
             orgName={data.team.name}
             onUploadAndSave={handleUploadAndSaveLogo}
           />

@@ -1,4 +1,3 @@
-import { createClient } from '@valguide/supabase/server'
 import { db } from '../db'
 import { type Asset, asset } from './schema'
 
@@ -29,12 +28,6 @@ export async function confirmUpload(
   organizationId: string,
   userId: string,
 ): Promise<ConfirmUploadResult> {
-  const supabase = await createClient()
-
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from('assets').getPublicUrl(input.storagePath)
-
   const [newAsset] = await db
     .insert(asset)
     .values({
@@ -44,7 +37,6 @@ export async function confirmUpload(
       mimeType: input.mimeType,
       type: input.type,
       storagePath: input.storagePath,
-      publicUrl,
       organizationId,
       uploadedBy: userId,
       width: input.width ?? null,

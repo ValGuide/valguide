@@ -3,8 +3,8 @@ import { createServerFn } from '@tanstack/react-start'
 import { userStartedLoginMessage } from '@valguide/slack/messages/user-started-login.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { createClient } from '@valguide/supabase/server'
-import { waitUntil } from '@vercel/functions'
 import { z } from 'zod'
+import { waitUntil } from '../../utils/wait-until'
 import { serializeAuthError } from './utils'
 
 // ============================================================================

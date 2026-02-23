@@ -1,7 +1,8 @@
 import { and, eq, gt, isNull, sql } from 'drizzle-orm'
 import { db } from '../db'
-import { organizationApprovedDomain, organizationInvitation } from '../orgs/schema'
+import { organizationInvitation } from '../orgs/schema'
 import { profiles } from '../profiles/schema'
+import { approvedDomain } from './schema'
 
 export async function autoApproveIfEligible(userId: string, email: string): Promise<boolean> {
   const emailNorm = email.trim().toLowerCase()
@@ -21,9 +22,9 @@ export async function autoApproveIfEligible(userId: string, email: string): Prom
     .limit(1)
 
   const hasApprovedDomain = await db
-    .select({ id: organizationApprovedDomain.id })
-    .from(organizationApprovedDomain)
-    .where(eq(organizationApprovedDomain.domain, domain))
+    .select({ id: approvedDomain.id })
+    .from(approvedDomain)
+    .where(eq(approvedDomain.domain, domain))
     .limit(1)
 
   if (hasInvite.length === 0 && hasApprovedDomain.length === 0) {

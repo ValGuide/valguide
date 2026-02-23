@@ -7,14 +7,16 @@ export interface PendingApprovalPageProps {
   onSignOut: () => void
   onCheckAgain: () => void
   isChecking?: boolean
-  supportEmail?: string
+  supportEmail: string
+  userEmail: string
 }
 
 export function PendingApprovalPage({
   onSignOut,
   onCheckAgain,
   isChecking,
-  supportEmail = 'hello@valguide.com',
+  supportEmail,
+  userEmail,
 }: PendingApprovalPageProps) {
   const t = useTranslations('accountStatus')
 
@@ -41,7 +43,7 @@ export function PendingApprovalPage({
           {t('pending.checkStatus')}
         </Button>
 
-        <p className="text-xs text-muted-foreground">{t('pending.autoCheckNote')}</p>
+        <p className="text-xs text-muted-foreground">{t('pending.signedInAs', { email: userEmail })}</p>
 
         <a
           href={`mailto:${supportEmail}`}

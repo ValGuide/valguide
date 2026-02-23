@@ -14,5 +14,5 @@ export const getUserStatusFn = createServerFn({ method: 'GET' }).handler(async (
   }
 
   const status = await getUserStatus(user.sub, user.email as string | undefined)
-  return { status }
+  return { status, email: (user.email as string | undefined) ?? '' }
 })
