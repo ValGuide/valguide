@@ -1,6 +1,6 @@
 # Reusable workflow to create a GitHub Release after a successful deploy.
 #
-# Creates a git tag ({app}-{env}-{date}-{sha}) and a GitHub Release
+# Creates a git tag ({app}-{env}-{ISO8601}-{sha}) and a GitHub Release
 # with auto-generated release notes showing commits since the last
 # deploy of the same app+environment.
 #
@@ -63,8 +63,8 @@ jobs:
         id: tag
         run: |
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-          DATE=$(date -u +%Y-%m-%d)
-          TAG="${{ inputs.app-name }}-${{ inputs.environment }}-${DATE}-${SHORT_SHA}"
+          TS=$(date -u +%Y-%m-%dT%H%M%S)
+          TAG="${{ inputs.app-name }}-${{ inputs.environment }}-${TS}-${SHORT_SHA}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           git tag "$TAG"
           git push origin "$TAG"
