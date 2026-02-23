@@ -1,8 +1,46 @@
 # Reusable workflow to create a GitHub Release after a successful deploy.
 #
 # Creates a git tag ({app}-{env}-{ISO8601}-{sha}) and a GitHub Release
-# with auto-generated release notes showing commits since the last
+# with a conventional-commits changelog showing commits since the last
 # deploy of the same app+environment.
+#
+# How it works:
+#   1. Finds the most recent tag matching "{app}-{env}-*" (previous deploy)
+#   2. Creates a new tag: {app}-{env}-{ISO8601}-{short-sha}
+#   3. Parses all commits between the two tags using Conventional Commits
+#      prefixes (feat, fix, docs, chore, etc.) and groups them into sections
+#   4. Publishes a GitHub Release with deploy metadata + grouped changelog
+#
+# Changelog sections (only shown when commits exist):
+#   💥 Breaking Changes  — commits with "!" before ":" (e.g. feat!: or feat(auth)!:)
+#   ✨ Features           — feat: A new feature
+#   🐛 Fixes              — fix: A bug fix
+#   ⚡ Performance        — perf: A code change that improves performance
+#   ♻️  Refactors          — refactor: A code change that neither fixes a bug nor adds a feature
+#   📖 Docs               — docs: Documentation only changes
+#   🧪 Tests              — test: Adding missing tests or correcting existing tests
+#   🔧 Chores             — chore: Changes which don't change source code or tests
+#   🏗️  Build              — build: Changes that affect the build system or external dependencies
+#   👷 CI                  — ci: Changes to CI configuration files and scripts
+#   🎨 Style              — style: Changes that do not affect the meaning of the code (formatting, etc.)
+#   ⏪ Reverts             — revert: Revert something
+#   {Prefix}              — unknown prefixes are auto-grouped & title-cased (e.g. ai: → "### Ai")
+#   📝 Other              — commits with no conventional prefix at all
+#
+# Example release body:
+#   ## Studio deployed to prod
+#   🔗 **URL**: https://studio.valguide.com
+#   📦 **Commit**: [abc1234](…)
+#
+#   ### ✨ Features
+#   - feat: add SSO login ([3e92da2](…))
+#   - feat(auth): Google oauth ([a524005](…))
+#
+#   ### 🐛 Fixes
+#   - fix: null pointer on timeout ([c47622f](…))
+#
+#   ### 📝 Other
+#   - updated readme ([420dd41](…))
 #
 # Usage:
 #   jobs:
@@ -69,6 +107,78 @@ jobs:
           git tag "$TAG"
           git push origin "$TAG"
 
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -n "${{ steps.prev.outputs.tag }}" ]; then
+            RANGE="${{ steps.prev.outputs.tag }}..HEAD"
+          else
+            RANGE="HEAD"
+          fi
+
+          format_commits() {
+            local pattern=$1
+            git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
+              | grep -E "$pattern" | sed 's/^/- /' || true
+          }
+
+          BREAKING=$(format_commits "^.+(\(.+\))?!:")
+          FEATURES=$(format_commits "^feat(\(.+\))?[!]?:")
+          FIXES=$(format_commits "^fix(\(.+\))?[!]?:")
+          PERF=$(format_commits "^perf(\(.+\))?[!]?:")
+          REFACTOR=$(format_commits "^refactor(\(.+\))?[!]?:")
+          DOCS=$(format_commits "^docs(\(.+\))?[!]?:")
+          TESTS=$(format_commits "^test(\(.+\))?[!]?:")
+          CHORES=$(format_commits "^chore(\(.+\))?[!]?:")
+          BUILD=$(format_commits "^build(\(.+\))?[!]?:")
+          CI=$(format_commits "^ci(\(.+\))?[!]?:")
+          STYLE=$(format_commits "^style(\(.+\))?[!]?:")
+          REVERT=$(format_commits "^revert(\(.+\))?[!]?:")
+          BODY=""
+          [ -n "$BREAKING" ] && BODY="${BODY}### 💥 Breaking Changes\n${BREAKING}\n\n"
+          [ -n "$FEATURES" ] && BODY="${BODY}### ✨ Features\n${FEATURES}\n\n"
+          [ -n "$FIXES" ]    && BODY="${BODY}### 🐛 Fixes\n${FIXES}\n\n"
+          [ -n "$PERF" ]     && BODY="${BODY}### ⚡ Performance\n${PERF}\n\n"
+          [ -n "$REFACTOR" ] && BODY="${BODY}### ♻️ Refactors\n${REFACTOR}\n\n"
+          [ -n "$DOCS" ]     && BODY="${BODY}### 📖 Docs\n${DOCS}\n\n"
+          [ -n "$TESTS" ]    && BODY="${BODY}### 🧪 Tests\n${TESTS}\n\n"
+          [ -n "$CHORES" ]   && BODY="${BODY}### 🔧 Chores\n${CHORES}\n\n"
+          [ -n "$BUILD" ]    && BODY="${BODY}### 🏗️ Build\n${BUILD}\n\n"
+          [ -n "$CI" ]       && BODY="${BODY}### 👷 CI\n${CI}\n\n"
+          [ -n "$STYLE" ]    && BODY="${BODY}### 🎨 Style\n${STYLE}\n\n"
+          [ -n "$REVERT" ]   && BODY="${BODY}### ⏪ Reverts\n${REVERT}\n\n"
+
+          # Group remaining commits by unknown prefix (e.g. "ai:", "dx(scope):")
+          # or collect them as uncategorized
+          KNOWN="feat|fix|chore|docs|style|refactor|test|perf|ci|build|revert"
+          OTHER_LINES=$(git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
+            | grep -Ev "^($KNOWN)(\(.+\))?[!]?:" || true)
+
+          if [ -n "$OTHER_LINES" ]; then
+            # Extract unique unknown prefixes (word before optional (scope) and :)
+            UNKNOWN_PREFIXES=$(echo "$OTHER_LINES" | grep -oE "^[a-z]+(\(.+\))?[!]?:" | sed 's/(.*//' | sed 's/!.*//' | sort -u || true)
+
+            for prefix in $UNKNOWN_PREFIXES; do
+              HEADING=$(echo "$prefix" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+              MATCHES=$(echo "$OTHER_LINES" | grep -E "^${prefix}(\(.+\))?[!]?:" | sed 's/^/- /' || true)
+              [ -n "$MATCHES" ] && BODY="${BODY}### ${HEADING}\n${MATCHES}\n\n"
+              # Remove matched lines so they don't appear in uncategorized
+              OTHER_LINES=$(echo "$OTHER_LINES" | grep -Ev "^${prefix}(\(.+\))?[!]?:" || true)
+            done
+
+            # Anything left has no conventional prefix at all
+            if [ -n "$OTHER_LINES" ]; then
+              UNCATEGORIZED=$(echo "$OTHER_LINES" | sed 's/^/- /')
+              BODY="${BODY}### 📝 Other\n${UNCATEGORIZED}\n\n"
+            fi
+          fi
+
+          {
+            echo "body<<EOF"
+            echo -e "$BODY"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -82,6 +192,7 @@ jobs:
             👤 **Triggered by**: ${{ github.actor }}
             ${{ steps.prev.outputs.tag && format('📋 **Changes since**: [`{0}`]({1}/{2}/releases/tag/{0})', steps.prev.outputs.tag, github.server_url, github.repository) || '🎉 **First release for this app/environment!**' }}
             ${{ steps.prev.outputs.tag && format('🔀 **Full diff**: [{0}...{1}]({2}/{3}/compare/{0}...{4})', steps.prev.outputs.tag, steps.tag.outputs.tag, github.server_url, github.repository, steps.tag.outputs.tag) || '' }}
-          generate_release_notes: ${{ steps.prev.outputs.tag != '' }}
+
+            ${{ steps.changelog.outputs.body }}
           prerelease: ${{ inputs.environment == 'dev' }}
           make_latest: ${{ inputs.environment == 'prod' }}
