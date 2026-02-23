@@ -19,7 +19,10 @@ export const Route = createRootRoute({
         title: getPrefixedTitle('ValGuide Docs'),
       },
     ],
-    links: [{ rel: 'stylesheet', href: appCss }],
+    links: [
+      { rel: 'stylesheet', href: appCss },
+      { rel: 'icon', href: '/favicon.ico' },
+    ],
   }),
   beforeLoad: async ({ location }) => {
     const { authenticated } = await checkAuthFn()
