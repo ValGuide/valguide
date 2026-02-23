@@ -13,3 +13,5 @@ count.txt
 .output
 .wrangler
 .next
+worker-configuration.d.ts
+.dev.vars

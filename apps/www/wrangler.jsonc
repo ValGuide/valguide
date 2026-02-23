@@ -1,0 +1,43 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "valguide-www",
+  "compatibility_date": "2025-09-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  },
+
+  // Production custom domain
+  "routes": [{ "pattern": "www.valguide.com", "custom_domain": true }],
+
+  // Production vars (www.valguide.com)
+  // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
+  // Secrets set via: wrangler secret put <NAME>
+  "vars": {
+    "NODE_ENV": "production",
+    "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
+    "SUPABASE_COOKIE_DOMAIN": ".valguide.com"
+  },
+
+  // Dev environment (www.valguide.dev)
+  // Build with: CLOUDFLARE_ENV=dev vite build
+  // Deploy with: wrangler deploy (after building with CLOUDFLARE_ENV=dev)
+  // Set secrets with: wrangler secret put <NAME> --env dev
+  "env": {
+    "dev": {
+      "routes": [{ "pattern": "www.valguide.dev", "custom_domain": true }],
+      "vars": {
+        "NODE_ENV": "production",
+        "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
+        "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
+        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev"
+      }
+    }
+  }
+}
