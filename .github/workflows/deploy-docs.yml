@@ -1,24 +1,24 @@
-# Deploy Storybook to Cloudflare Workers (static site with password protection)
+# Deploy Docs to Cloudflare Workers
 #
 # Required GitHub Secrets (Settings → Secrets and variables → Actions):
 #   CLOUDFLARE_API_TOKEN  — Cloudflare API token with Workers deploy permissions
 #   CLOUDFLARE_ACCOUNT_ID — Cloudflare account ID
 #
-# Runtime secrets (STORYBOOK_PASSWORD) are pushed separately via
-# `wrangler secret put STORYBOOK_PASSWORD` — NOT managed by CI.
+# Runtime secrets (DOCS_PASSWORD) are pushed separately via
+# `pnpm env:push:cf docs prod` — NOT managed by CI.
 #
 # Triggered by commit message tags:
-#   [build storybook]     — deploy storybook
-#   [build all]           — deploy all apps
+#   [build docs]           — deploy docs
+#   [build all]            — deploy all apps
 
-name: Deploy Storybook
+name: Deploy Docs
 
 on:
   push:
     branches: [main]
 
 concurrency:
-  group: deploy-storybook-${{ github.ref }}
+  group: deploy-docs-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -28,17 +28,17 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://sb.val.guide
+      url: https://docs.val.guide
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check if storybook should deploy
+      - name: Check if docs should deploy
         id: check
         run: |
-          if node scripts/should-deploy.mjs storybook; then
+          if node scripts/should-deploy.mjs docs; then
             echo "should_deploy=true" >> $GITHUB_OUTPUT
           else
             echo "should_deploy=false" >> $GITHUB_OUTPUT
@@ -58,16 +58,16 @@ jobs:
 
       - name: Build & Deploy
         if: steps.check.outputs.should_deploy == 'true'
-        run: pnpm --filter @valguide/storybook run deploy
+        run: pnpm --filter @valguide/docs run deploy
 
   notify:
     needs: deploy
     if: always() && needs.deploy.outputs.should_deploy == 'true'
     uses: ./.github/workflows/notify-slack.yml
     with:
-      app-name: Storybook
+      app-name: Docs
       environment: production
-      url: https://sb.val.guide
+      url: https://docs.val.guide
       status: ${{ needs.deploy.result }}
     secrets:
       VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}

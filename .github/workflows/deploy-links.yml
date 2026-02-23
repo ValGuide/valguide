@@ -25,6 +25,8 @@ concurrency:
 jobs:
   deploy-prod:
     if: github.ref == 'refs/heads/main'
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -42,28 +44,32 @@ jobs:
 
       - name: Check if links should deploy
         id: check
-        run: node scripts/should-deploy.mjs links
-        continue-on-error: true
+        run: |
+          if node scripts/should-deploy.mjs links; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+          fi
 
       - uses: pnpm/action-setup@v4
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
 
       - uses: actions/setup-node@v4
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
         with:
           node-version: 24
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
 
       - name: Build & Deploy
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
         run: pnpm --filter @valguide/links run deploy
 
   notify-prod:
     needs: deploy-prod
-    if: always() && needs.deploy-prod.result != 'skipped'
+    if: always() && needs.deploy-prod.outputs.should_deploy == 'true'
     uses: ./.github/workflows/notify-slack.yml
     with:
       app-name: Links
@@ -75,6 +81,8 @@ jobs:
 
   deploy-dev:
     if: github.ref == 'refs/heads/dev'
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
     runs-on: ubuntu-latest
     environment:
       name: development
@@ -92,28 +100,32 @@ jobs:
 
       - name: Check if links should deploy
         id: check
-        run: node scripts/should-deploy.mjs links
-        continue-on-error: true
+        run: |
+          if node scripts/should-deploy.mjs links; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+          fi
 
       - uses: pnpm/action-setup@v4
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
 
       - uses: actions/setup-node@v4
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
         with:
           node-version: 24
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
 
       - name: Build & Deploy
-        if: steps.check.outcome == 'success'
+        if: steps.check.outputs.should_deploy == 'true'
         run: pnpm --filter @valguide/links run deploy:dev
 
   notify-dev:
     needs: deploy-dev
-    if: always() && needs.deploy-dev.result != 'skipped'
+    if: always() && needs.deploy-dev.outputs.should_deploy == 'true'
     uses: ./.github/workflows/notify-slack.yml
     with:
       app-name: Links
