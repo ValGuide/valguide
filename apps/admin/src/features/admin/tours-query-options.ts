@@ -7,5 +7,4 @@ export const adminToursQueryOptions = (input: ListToursInput) =>
     queryKey: ['admin', 'tours', input],
     queryFn: () => adminListToursFn({ data: input }),
     placeholderData: keepPreviousData,
-    staleTime: 30_000,
   })

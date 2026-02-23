@@ -7,5 +7,4 @@ export const adminUsersQueryOptions = (input: ListUsersInput) =>
     queryKey: ['admin', 'users', input],
     queryFn: () => adminListUsersFn({ data: input }),
     placeholderData: keepPreviousData,
-    staleTime: 30_000,
   })

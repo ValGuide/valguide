@@ -5,5 +5,4 @@ export const approvedDomainsQueryOptions = () =>
   queryOptions<ApprovedDomain[]>({
     queryKey: ['admin', 'approved-domains'],
     queryFn: () => getApprovedDomainsFn(),
-    staleTime: 30_000,
   })
