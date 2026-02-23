@@ -4,7 +4,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**", ".output/**", ".vercel/output/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
       "cache": false
@@ -58,8 +58,6 @@
     }
   },
   "globalEnv": [
-    "VERCEL_URL",
-    "VERCEL_ENV",
     "VITE_ENV",
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",

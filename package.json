@@ -4,9 +4,7 @@
   "scripts": {
     "env:load": "pnpm dlx tsx ./scripts/load-env.ts",
     "env:merge": "pnpm dlx tsx ./scripts/merge-env.ts",
-    "env:push": "pnpm dlx tsx ./scripts/push-to-vercel.ts",
-    "studio:env:push": "pnpm dlx tsx ./scripts/push-to-cloudflare.ts",
-    "env:clear": "pnpm dlx tsx ./scripts/clear-vercel-env.ts",
+    "env:push:cf": "pnpm dlx tsx ./scripts/push-to-cloudflare.ts",
     "prepare": "husky",
     "build": "turbo build",
     "dev": "turbo dev",

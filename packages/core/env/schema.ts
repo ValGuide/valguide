@@ -15,7 +15,6 @@ export const serverEnvSchema = z.object({
   RESEND_SENDING_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
   VALBOT_SLACK_TOKEN: z.string().optional(),
-  VERCEL_ENV: z.enum(['development', 'preview', 'production']).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_BASE_URL: z.string().optional().default('https://app.valguide.com'),
   VITE_STUDIO_URL: z.string().optional().default('https://studio.valguide.com'),
