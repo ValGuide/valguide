@@ -57,3 +57,15 @@ jobs:
           fi
 
           echo "should_deploy=false" >> $GITHUB_OUTPUT
+
+      - name: Cancel run if skipping
+        if: steps.check.outputs.should_deploy == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.cancelWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+            });
+            await new Promise(r => setTimeout(r, 5000));
