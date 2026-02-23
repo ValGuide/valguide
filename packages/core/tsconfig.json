@@ -14,6 +14,6 @@
       "@valguide/logger": ["../logger"]
     }
   },
-  "include": ["env/env.d.ts", "i18n/global.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["env/env.d.ts", "i18n/global.d.ts", "features/storage/cloudflare-r2.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

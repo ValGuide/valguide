@@ -1,4 +1,3 @@
-/// <reference path="./cloudflare-r2.d.ts" />
 import { getR2Bucket } from './r2'
 
 export const MULTIPART_THRESHOLD = 50 * 1024 * 1024 // 50 MB

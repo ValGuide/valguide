@@ -9,7 +9,8 @@ declare module 'cloudflare:workers' {
     R2_BUCKET: R2Bucket
     [key: string]: unknown
   }
-  export { env }
+  function waitUntil(promise: Promise<unknown>): void
+  export { env, waitUntil }
 }
 
 interface R2Bucket {
