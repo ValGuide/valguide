@@ -36,7 +36,7 @@ jobs:
     if: needs.check.outputs.should_deploy == 'true' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
-      name: prod
+      name: links-prod
       url: https://links.valguide.com
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -78,7 +78,7 @@ jobs:
     if: needs.check.outputs.should_deploy == 'true' && github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      name: links-dev
       url: https://links.valguide.dev
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
