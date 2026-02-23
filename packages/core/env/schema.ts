@@ -8,8 +8,6 @@ export const serverEnvSchema = z.object({
   }),
   SUPABASE_SECRET_KEY: z.string().optional(),
   SUPABASE_COOKIE_DOMAIN: z.string().optional(),
-  KV_REST_API_URL: z.string().optional(),
-  KV_REST_API_TOKEN: z.string().optional(),
   DRIZZLE_LOG_ENABLED: z
     .string()
     .optional()

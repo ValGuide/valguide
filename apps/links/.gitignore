@@ -1,4 +1,3 @@
-.vercel
 *.pem
 
 node_modules
@@ -8,7 +7,7 @@ dist-ssr
 *.local
 count.txt
 .env
-.nitro
 .tanstack
 .output
-.next
+worker-configuration.d.ts
+.dev.vars
