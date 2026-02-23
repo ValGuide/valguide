@@ -23,10 +23,44 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy-prod:
-    if: github.ref == 'refs/heads/main'
+  check:
+    runs-on: ubuntu-latest
     outputs:
       should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - id: check
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          APP_NAME: app
+        run: |
+          echo "Commit message: $COMMIT_MSG"
+          echo "App: $APP_NAME"
+
+          if echo "$COMMIT_MSG" | grep -qF '[build all]'; then
+            echo "✅ [build all] found — deploying $APP_NAME"
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          SCOPES=$(echo "$COMMIT_MSG" | grep -oE '\[build [^]]+' | sed 's/\[build //' | tr ' ,' '\n' | tr -s '\n')
+
+          if [ -n "$SCOPES" ]; then
+            echo "Found scoped build request: $(echo $SCOPES | tr '\n' ' ')"
+            if echo "$SCOPES" | grep -qx "$APP_NAME"; then
+              echo "✅ '$APP_NAME' matches scope — deploying"
+              echo "should_deploy=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            echo "🚫 '$APP_NAME' not in scope — skipping"
+          else
+            echo "🚫 No [build] tag found — skipping deploy"
+          fi
+
+          echo "should_deploy=false" >> $GITHUB_OUTPUT
+
+  deploy-prod:
+    needs: check
+    if: needs.check.outputs.should_deploy == 'true' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -43,34 +77,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check if app should deploy
-        id: check
-        run: |
-          if node scripts/should-deploy.mjs app; then
-            echo "should_deploy=true" >> $GITHUB_OUTPUT
-          else
-            echo "should_deploy=false" >> $GITHUB_OUTPUT
-          fi
-
       - uses: pnpm/action-setup@v4
-        if: steps.check.outputs.should_deploy == 'true'
 
       - uses: actions/setup-node@v4
-        if: steps.check.outputs.should_deploy == 'true'
         with:
           node-version: 24
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-        if: steps.check.outputs.should_deploy == 'true'
 
       - name: Build & Deploy
-        if: steps.check.outputs.should_deploy == 'true'
         run: pnpm --filter @valguide/app run deploy
 
   notify-prod:
-    needs: deploy-prod
-    if: always() && needs.deploy-prod.outputs.should_deploy == 'true'
+    needs: [check, deploy-prod]
+    if: always() && needs.check.outputs.should_deploy == 'true' && needs.deploy-prod.result != 'skipped'
     uses: ./.github/workflows/notify-slack.yml
     with:
       app-name: App
@@ -81,9 +102,8 @@ jobs:
       VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
 
   deploy-dev:
-    if: github.ref == 'refs/heads/dev'
-    outputs:
-      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    needs: check
+    if: needs.check.outputs.should_deploy == 'true' && github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     environment:
       name: development
@@ -100,34 +120,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check if app should deploy
-        id: check
-        run: |
-          if node scripts/should-deploy.mjs app; then
-            echo "should_deploy=true" >> $GITHUB_OUTPUT
-          else
-            echo "should_deploy=false" >> $GITHUB_OUTPUT
-          fi
-
       - uses: pnpm/action-setup@v4
-        if: steps.check.outputs.should_deploy == 'true'
 
       - uses: actions/setup-node@v4
-        if: steps.check.outputs.should_deploy == 'true'
         with:
           node-version: 24
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-        if: steps.check.outputs.should_deploy == 'true'
 
       - name: Build & Deploy
-        if: steps.check.outputs.should_deploy == 'true'
         run: pnpm --filter @valguide/app run deploy:dev
 
   notify-dev:
-    needs: deploy-dev
-    if: always() && needs.deploy-dev.outputs.should_deploy == 'true'
+    needs: [check, deploy-dev]
+    if: always() && needs.check.outputs.should_deploy == 'true' && needs.deploy-dev.result != 'skipped'
     uses: ./.github/workflows/notify-slack.yml
     with:
       app-name: App
