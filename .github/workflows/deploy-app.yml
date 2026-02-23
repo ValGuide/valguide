@@ -62,6 +62,18 @@ jobs:
         if: steps.check.outcome == 'success'
         run: pnpm --filter @valguide/app run deploy
 
+  notify-prod:
+    needs: deploy-prod
+    if: always() && needs.deploy-prod.result != 'skipped'
+    uses: ./.github/workflows/notify-slack.yml
+    with:
+      app-name: App
+      environment: production
+      url: https://app.valguide.com
+      status: ${{ needs.deploy-prod.result }}
+    secrets:
+      VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
+
   deploy-dev:
     if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
@@ -100,3 +112,15 @@ jobs:
       - name: Build & Deploy
         if: steps.check.outcome == 'success'
         run: pnpm --filter @valguide/app run deploy:dev
+
+  notify-dev:
+    needs: deploy-dev
+    if: always() && needs.deploy-dev.result != 'skipped'
+    uses: ./.github/workflows/notify-slack.yml
+    with:
+      app-name: App
+      environment: development
+      url: https://app.valguide.dev
+      status: ${{ needs.deploy-dev.result }}
+    secrets:
+      VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}

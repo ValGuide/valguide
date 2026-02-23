@@ -53,3 +53,15 @@ jobs:
       - name: Build & Deploy
         if: steps.check.outcome == 'success'
         run: pnpm --filter @valguide/storybook run deploy
+
+  notify:
+    needs: deploy
+    if: always() && needs.deploy.result != 'skipped'
+    uses: ./.github/workflows/notify-slack.yml
+    with:
+      app-name: Storybook
+      environment: production
+      url: https://sb.val.guide
+      status: ${{ needs.deploy.result }}
+    secrets:
+      VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}

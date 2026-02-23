@@ -1,0 +1,49 @@
+# Reusable Slack notification workflow for deploy results.
+#
+# Uses the existing VALBOT_SLACK_TOKEN bot token (same bot used for
+# signup/feedback notifications) to post to #valguide-deploys.
+#
+# Required GitHub Secrets:
+#   VALBOT_SLACK_TOKEN — Slack Bot Token (xoxb-…) with chat:write scope
+
+name: Slack Deploy Notification
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      url:
+        required: true
+        type: string
+      status:
+        required: true
+        type: string
+    secrets:
+      VALBOT_SLACK_TOKEN:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.VALBOT_SLACK_TOKEN }}
+          payload: |
+            channel: "deployments"
+            text: "${{ inputs.status == 'success' && '✅' || '❌' }} *${{ inputs.app-name }}* → *${{ inputs.environment }}* ${{ inputs.status }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "${{ inputs.status == 'success' && '✅' || '❌' }} *${{ inputs.app-name }}* → *${{ inputs.environment }}* ${{ inputs.status }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run> · <${{ inputs.url }}|${{ inputs.url }}>"
+              - type: "context"
+                elements:
+                  - type: "mrkdwn"
+                    text: "`${{ github.sha }}` by ${{ github.actor }}"
