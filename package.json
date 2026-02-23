@@ -31,11 +31,7 @@
     "admin:build": "pnpm env:load turbo run build --filter ./apps/admin",
     "admin:preview": "pnpm env:load turbo run preview --filter ./apps/admin",
     "admin:type-check": "pnpm turbo run type-check --filter ./apps/admin",
-    "api:dev": "pnpm env:load turbo run dev --filter ./apps/api -- --port 3000",
-    "api:start": "pnpm env:load turbo run start --filter ./apps/api --",
-    "api:build": "pnpm env:load turbo run build --filter ./apps/api --",
-    "api:docker": "docker build -t valguide-api -f ./apps/api/Dockerfile .",
-    "api:docker:run": "docker run -p 3000:3000 valguide-api",
+
     "app:dev": "pnpm caddy:ensure && (sleep 5 && open https://app.local.dev) & pnpm env:load turbo run dev --filter ./apps/app",
     "app:start": "pnpm env:load turbo run start --filter ./apps/app",
     "app:build": "pnpm env:load turbo run build --filter ./apps/app",
