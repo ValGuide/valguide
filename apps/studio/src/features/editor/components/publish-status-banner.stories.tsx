@@ -3,6 +3,7 @@ import { fn } from 'storybook/test'
 import { PublishStatusBanner } from './publish-status-banner'
 
 const meta = {
+  title: 'Editor/PublishStatusBanner',
   component: PublishStatusBanner,
   args: {
     onPublish: fn(),
