@@ -18,10 +18,11 @@ export function IntlProvider({ locale, messages, children, timeZone, now }: Intl
       timeZone={timeZone}
       now={now}
       onError={(error) => {
-        if (error.code === 'MISSING_MESSAGE' && process.env.NODE_ENV === 'development') {
+        const isDev = (process.env.NODE_ENV as string) === 'development'
+        if (error.code === 'MISSING_MESSAGE' && isDev) {
           throw new Error(`Missing translation: ${error.message}`)
         }
-        if (process.env.NODE_ENV === 'development') {
+        if (isDev) {
           console.warn('[IntlProvider]', error.message)
         }
       }}
