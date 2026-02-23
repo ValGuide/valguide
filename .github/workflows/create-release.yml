@@ -152,7 +152,8 @@ jobs:
           # or collect them as uncategorized
           KNOWN="feat|fix|chore|docs|style|refactor|test|perf|ci|build|revert"
           OTHER_LINES=$(git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
-            | grep -Ev "^($KNOWN)(\(.+\))?[!]?:" || true)
+            | grep -Ev "^($KNOWN)(\(.+\))?[!]?:" \
+            | grep -Ev "^\[build [^\]]+\] \(" || true)
 
           if [ -n "$OTHER_LINES" ]; then
             # Extract unique unknown prefixes (word before optional (scope) and :)
