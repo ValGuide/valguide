@@ -22,11 +22,24 @@ concurrency:
   group: deploy-app-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  actions: write
+
 jobs:
   check:
     uses: ./.github/workflows/check-deploy.yml
     with:
       app-name: app
+
+  cancel-if-skipped:
+    needs: check
+    if: needs.check.outputs.should_deploy == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/cancel-if-skipped
+        with:
+          should_deploy: ${{ needs.check.outputs.should_deploy }}
 
   deploy-prod:
     needs: check
