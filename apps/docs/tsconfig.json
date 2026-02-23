@@ -9,6 +9,6 @@
       "fumadocs-mdx:collections/*": [".source/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "worker-configuration.d.ts"],
   "exclude": ["node_modules"]
 }
