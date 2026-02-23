@@ -36,10 +36,15 @@ jobs:
     if: needs.check.outputs.should_deploy == 'false'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/cancel-if-skipped
+      - uses: actions/github-script@v7
         with:
-          should_deploy: ${{ needs.check.outputs.should_deploy }}
+          script: |
+            await github.rest.actions.cancelWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+            });
+            await new Promise(r => setTimeout(r, 5000));
 
   deploy:
     needs: check
