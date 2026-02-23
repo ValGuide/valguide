@@ -197,6 +197,7 @@
       "description": "Grazia fitg per l'annunzia. Noss team examinescha tes conto — normalmain entaifer 1 di da lavur. Ti retschaivas in e-mail cura che tes conto è approvà.",
       "checkStatus": "Controllar il status",
       "autoCheckNote": "Questa pagina controllescha automaticamain.",
+      "signedInAs": "Annunzià sco {email}",
       "contactCta": "Scriva a nus",
       "signOut": "Sortir"
     }
@@ -278,6 +279,16 @@
       "descriptionPlaceholder": "p.ex. In tur curà tras ils artefacts romains ils pli significants dal museum",
       "coverImageLabel": "Maletg da front",
       "backToTour": "Tura",
+      "hideChanges": "Zuppar midadas",
+      "showChanges": "Mussar midadas",
+      "pendingChanges": "{count, plural, one {1 midada pendent} other {# midadas pendentas}}",
+      "draft": "Sboz",
+      "published": "Publitgà",
+      "publishedAt": "Publitgà ils {date}",
+      "visitorsSeePreviousVersion": "Visitaders vesan la versiun precedenta",
+      "publish": "Publitgar",
+      "publishChanges": "Publitgar midadas",
+      "discard": "Bandunar",
       "slug": {
         "title": "Slug da l'URL",
         "description": "{baseUrl}/{slug}",

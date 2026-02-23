@@ -197,6 +197,7 @@
       "description": "Vielen Dank für deine Anmeldung. Unser Team prüft dein Konto — in der Regel innerhalb von 1 Werktag. Du erhältst eine E-Mail, sobald dein Konto freigegeben ist.",
       "checkStatus": "Status prüfen",
       "autoCheckNote": "Diese Seite prüft automatisch.",
+      "signedInAs": "Angemeldet als {email}",
       "contactCta": "Schreib uns",
       "signOut": "Abmelden"
     }
@@ -278,6 +279,16 @@
       "descriptionPlaceholder": "z.B. Ein kuratierter Rundgang durch die bedeutendsten römischen Artefakte des Museums",
       "coverImageLabel": "Titelbild",
       "backToTour": "Tour",
+      "hideChanges": "Änderungen ausblenden",
+      "showChanges": "Änderungen anzeigen",
+      "pendingChanges": "{count, plural, one {1 ausstehende Änderung} other {# ausstehende Änderungen}}",
+      "draft": "Entwurf",
+      "published": "Veröffentlicht",
+      "publishedAt": "Veröffentlicht am {date}",
+      "visitorsSeePreviousVersion": "Besucher sehen die vorherige Version",
+      "publish": "Veröffentlichen",
+      "publishChanges": "Änderungen veröffentlichen",
+      "discard": "Verwerfen",
       "slug": {
         "title": "URL-Slug",
         "description": "{baseUrl}/{slug}",

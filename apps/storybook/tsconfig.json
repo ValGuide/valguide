@@ -1,5 +1,5 @@
 {
-  "extends": "@valguide/typescript-config/react-library.json",
+  "extends": "@valguide/typescript-config/start.json",
   "include": [
     "src",
     ".storybook/**/*.tsx",

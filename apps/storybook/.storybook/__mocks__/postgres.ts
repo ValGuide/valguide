@@ -11,8 +11,8 @@ const mockPostgres = function postgres(_connectionString?: string, options?: Rec
       builtins: {},
     } as Record<string, unknown>,
     {
-      get: (target: Record<string, unknown>, prop) => {
-        if (prop in target) return target[prop]
+      get: (target: Record<string, unknown>, prop: string | symbol) => {
+        if (typeof prop === 'string' && prop in target) return target[prop]
         return { to: 0, from: [] }
       },
       set: (target: Record<string, unknown>, prop: string, value) => {

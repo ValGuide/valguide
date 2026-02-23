@@ -7,8 +7,7 @@ export function useServerFn<T extends (...args: unknown[]) => unknown>(fn: T): T
 }
 
 // Mock createServerFn - returns a builder that ultimately returns a callable function
-export function createServerFn(options?: { method?: string }) {
-  const fn = async () => null
+export function createServerFn(_options?: { method?: string }) {
 
   const builder = {
     inputValidator: () => builder,
@@ -27,8 +26,8 @@ export function createServerFn(options?: { method?: string }) {
 // Mock createMiddleware - returns a builder that creates middleware
 export function createMiddleware() {
   const builder = {
-    middleware: (middlewares: unknown[]) => builder,
-    server: (fn: (...args: unknown[]) => unknown) => fn,
+    middleware: (_middlewares: unknown[]) => builder,
+    server: (_fn: (...args: unknown[]) => unknown) => _fn,
   }
   return builder
 }

@@ -1,5 +1,5 @@
 /**
- * Cloudflare Workers R2 type declarations.
+ * Cloudflare Workers type declarations (R2, KV).
  * Subset of @cloudflare/workers-types — only what we use.
  * Can be removed if @cloudflare/workers-types is installed.
  */
@@ -7,10 +7,39 @@
 declare module 'cloudflare:workers' {
   const env: {
     R2_BUCKET: R2Bucket
+    LINKS_KV: KVNamespace
     [key: string]: unknown
   }
   function waitUntil(promise: Promise<unknown>): void
   export { env, waitUntil }
+}
+
+interface KVNamespace {
+  get(key: string, options?: { type?: 'text' }): Promise<string | null>
+  get(key: string, options: { type: 'json' }): Promise<unknown>
+  get(key: string, options: { type: 'arrayBuffer' }): Promise<ArrayBuffer | null>
+  get(key: string, options: { type: 'stream' }): Promise<ReadableStream | null>
+  put(key: string, value: string | ArrayBuffer | ReadableStream, options?: KVNamespacePutOptions): Promise<void>
+  delete(key: string): Promise<void>
+  list(options?: KVNamespaceListOptions): Promise<KVNamespaceListResult>
+}
+
+interface KVNamespacePutOptions {
+  expiration?: number
+  expirationTtl?: number
+  metadata?: Record<string, unknown>
+}
+
+interface KVNamespaceListOptions {
+  prefix?: string
+  limit?: number
+  cursor?: string
+}
+
+interface KVNamespaceListResult {
+  keys: { name: string; expiration?: number; metadata?: Record<string, unknown> }[]
+  list_complete: boolean
+  cursor?: string
 }
 
 interface R2Bucket {
