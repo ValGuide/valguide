@@ -1,0 +1,55 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "valguide-admin",
+  "compatibility_date": "2025-09-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  },
+
+  // Native R2 binding — for org logo uploads
+  "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod" }],
+
+  // Production custom domain
+  "routes": [{ "pattern": "ops.val.guide", "custom_domain": true }],
+
+  // Production vars (ops.val.guide)
+  // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
+  // Secrets set via: wrangler secret put <NAME>
+  "vars": {
+    "NODE_ENV": "production",
+    "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
+    "SUPABASE_COOKIE_DOMAIN": ".val.guide",
+    "ADMIN_COOKIE_DOMAIN": ".val.guide",
+    "ADMIN_BASE_URL": "https://ops.val.guide",
+    "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example",
+    "VITE_STUDIO_URL": "https://studio.valguide.com"
+  },
+
+  // Dev environment (ops-dev.val.guide)
+  // Build with: CLOUDFLARE_ENV=dev vite build
+  // Deploy with: wrangler deploy (after building with CLOUDFLARE_ENV=dev)
+  // Set secrets with: wrangler secret put <NAME> --env dev
+  "env": {
+    "dev": {
+      "routes": [{ "pattern": "ops-dev.val.guide", "custom_domain": true }],
+      "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev" }],
+      "vars": {
+        "NODE_ENV": "production",
+        "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
+        "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
+        "SUPABASE_COOKIE_DOMAIN": ".val.guide",
+        "ADMIN_COOKIE_DOMAIN": ".val.guide",
+        "ADMIN_BASE_URL": "https://ops-dev.val.guide",
+        "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example",
+        "VITE_STUDIO_URL": "https://studio.valguide.dev"
+      }
+    }
+  }
+}

@@ -1,7 +1,4 @@
-.vercel
 *.pem
-
-certificates
 
 node_modules
 .DS_Store
@@ -10,7 +7,7 @@ dist-ssr
 *.local
 count.txt
 .env
-.nitro
 .tanstack
 .output
-.next
+worker-configuration.d.ts
+.dev.vars
