@@ -7,7 +7,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.css",
-    "../../packages/core/i18n/global.d.ts"
+    "../../packages/core/i18n/global.d.ts",
+    "worker-configuration.d.ts"
   ],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {

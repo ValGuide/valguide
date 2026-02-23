@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
     "build": "storybook build",
+    "deploy": "pnpm build && wrangler deploy",
     "serve": "serve storybook-static",
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml storybook-static .turbo",
     "clean:vite": "rm -rf node_modules/.vite"
@@ -36,6 +37,7 @@
     "msw": "^2.12.3",
     "msw-storybook-addon": "^2.0.6",
     "serve": "^14.2.5",
+    "wrangler": "^4.20.0",
     "storybook": "^10.2.7",
     "tailwindcss": "^4.1.16",
     "typescript": "^5.9.3",
