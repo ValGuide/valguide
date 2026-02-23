@@ -12,8 +12,11 @@
     }
   },
 
-  // Production custom domain
-  "routes": [{ "pattern": "docs.val.guide", "custom_domain": true }],
+  // Production custom domains
+  "routes": [
+    { "pattern": "docs.val.guide", "custom_domain": true },
+    { "pattern": "docs.valguide.com", "custom_domain": true }
+  ],
 
   // Production vars
   // Secrets (DOCS_PASSWORD) set via: wrangler secret put DOCS_PASSWORD
@@ -24,7 +27,10 @@
   // Dev environment (docs-dev.val.guide)
   "env": {
     "dev": {
-      "routes": [{ "pattern": "docs-dev.val.guide", "custom_domain": true }],
+      "routes": [
+        { "pattern": "docs-dev.val.guide", "custom_domain": true },
+        { "pattern": "docs.valguide.dev", "custom_domain": true }
+      ],
       "vars": {
         "NODE_ENV": "production"
       }
