@@ -1,0 +1,59 @@
+# Reusable workflow to check if an app should be deployed.
+#
+# Parses commit message tags like [build app], [build app,studio], [build all]
+# and outputs should_deploy (true/false).
+#
+# Usage:
+#   jobs:
+#     check:
+#       uses: ./.github/workflows/check-deploy.yml
+#       with:
+#         app-name: app
+
+name: Check Deploy
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+    outputs:
+      should_deploy:
+        value: ${{ jobs.check.outputs.should_deploy }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - id: check
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          APP_NAME: ${{ inputs.app-name }}
+        run: |
+          echo "Commit message: $COMMIT_MSG"
+          echo "App: $APP_NAME"
+
+          if echo "$COMMIT_MSG" | grep -qF '[build all]'; then
+            echo "✅ [build all] found — deploying $APP_NAME"
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          SCOPES=$(echo "$COMMIT_MSG" | grep -oE '\[build [^]]+' | sed 's/\[build //' | tr ' ,' '\n' | tr -s '\n')
+
+          if [ -n "$SCOPES" ]; then
+            echo "Found scoped build request: $(echo $SCOPES | tr '\n' ' ')"
+            if echo "$SCOPES" | grep -qx "$APP_NAME"; then
+              echo "✅ '$APP_NAME' matches scope — deploying"
+              echo "should_deploy=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            echo "🚫 '$APP_NAME' not in scope — skipping"
+          else
+            echo "🚫 No [build] tag found — skipping deploy"
+          fi
+
+          echo "should_deploy=false" >> $GITHUB_OUTPUT
