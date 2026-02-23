@@ -6,6 +6,11 @@
 #
 # Runtime secrets (DATABASE_URL, SUPABASE_SECRET_KEY, etc.) are pushed
 # separately via `pnpm studio:env:push dev|prod` — NOT managed by CI.
+#
+# Triggered by commit message tags:
+#   [build studio]        — deploy studio
+#   [build studio,admin]  — deploy studio (and admin in its own workflow)
+#   [build all]           — deploy all apps
 
 name: Deploy Studio
 
@@ -36,16 +41,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check if studio should deploy
+        id: check
+        run: node scripts/should-deploy.mjs studio
+        continue-on-error: true
+
       - uses: pnpm/action-setup@v4
+        if: steps.check.outcome == 'success'
 
       - uses: actions/setup-node@v4
+        if: steps.check.outcome == 'success'
         with:
           node-version: 24
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+        if: steps.check.outcome == 'success'
 
       - name: Build & Deploy
+        if: steps.check.outcome == 'success'
         run: pnpm --filter @valguide/studio run deploy
 
   deploy-dev:
@@ -66,14 +80,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check if studio should deploy
+        id: check
+        run: node scripts/should-deploy.mjs studio
+        continue-on-error: true
+
       - uses: pnpm/action-setup@v4
+        if: steps.check.outcome == 'success'
 
       - uses: actions/setup-node@v4
+        if: steps.check.outcome == 'success'
         with:
           node-version: 24
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+        if: steps.check.outcome == 'success'
 
       - name: Build & Deploy
+        if: steps.check.outcome == 'success'
         run: pnpm --filter @valguide/studio run deploy:dev
