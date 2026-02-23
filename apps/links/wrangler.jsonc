@@ -18,7 +18,10 @@
   ],
 
   // Production custom domain
-  "routes": [{ "pattern": "links.valguide.com", "custom_domain": true }],
+  "routes": [
+    { "pattern": "links.valguide.com", "custom_domain": true },
+    { "pattern": "l.valguide.com", "custom_domain": true }
+  ],
 
   // Production vars (links.valguide.com)
   // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
@@ -37,7 +40,10 @@
   // Set secrets with: wrangler secret put <NAME> --env dev
   "env": {
     "dev": {
-      "routes": [{ "pattern": "links.valguide.dev", "custom_domain": true }],
+      "routes": [
+        { "pattern": "links.valguide.dev", "custom_domain": true },
+        { "pattern": "l.valguide.dev", "custom_domain": true }
+      ],
       "kv_namespaces": [
         { "binding": "LINKS_KV", "id": "REPLACE_WITH_LINKS_KV_ID_DEV" }
       ],

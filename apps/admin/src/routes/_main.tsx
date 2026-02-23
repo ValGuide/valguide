@@ -4,7 +4,7 @@ import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AdminSidebar } from '@/components/admin-sidebar'
-import { checkSuperadminFn } from '@/server/functions/check-superadmin.fn'
+import { superadminQueryOptions } from '@/features/admin/superadmin-query-options'
 
 export const Route = createFileRoute('/_main')({
   beforeLoad: async ({ context, location }) => {
@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_main')({
         search: { next: location.href },
       })
     }
-    const { allowed } = await checkSuperadminFn()
+    const { allowed } = await context.queryClient.ensureQueryData(superadminQueryOptions())
     if (!allowed) {
       await signOutFn({ data: {} })
       throw redirect({ to: '/login' })
