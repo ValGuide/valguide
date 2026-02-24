@@ -1,9 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { slugSchema } from '../../../../utils/slug'
+import { waitUntil } from '../../../../utils/wait-until'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { db } from '../../../db'
+import { writeTourSlugToKv } from '../../public/kv-helpers'
 import { updateTourSlug } from './update-tour-slug.server'
 
 export type { UpdateTourSlugResult } from './update-tour-slug.server'
@@ -18,5 +20,21 @@ export const updateTourSlugFn = createServerFn({ method: 'POST' })
   .inputValidator(updateTourSlugSchema)
   .handler(async ({ context, data }) => {
     const { tourId, organizationId } = await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
-    return updateTourSlug(db, tourId, organizationId, data.newSlug)
+    const result = await updateTourSlug(db, tourId, organizationId, data.newSlug)
+
+    if (result.success) {
+      const kvEntry = {
+        tourNanoId: result.tourNanoId,
+        primarySlug: data.newSlug,
+        orgPrimarySlug: result.orgSlug,
+      }
+      waitUntil(
+        Promise.all([
+          writeTourSlugToKv(result.orgSlug, data.newSlug, kvEntry),
+          ...(result.oldSlug !== data.newSlug ? [writeTourSlugToKv(result.orgSlug, result.oldSlug, kvEntry)] : []),
+        ]),
+      )
+    }
+
+    return result
   })

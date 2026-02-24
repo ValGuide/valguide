@@ -6,7 +6,7 @@ import { checkOrgSlugAvailable } from './check-org-slug-available.server'
 import { organization, organizationSlug } from './schema'
 
 export type UpdateOrgSlugResult =
-  | { success: true }
+  | { success: true; nanoId: string; oldSlug: string }
   | { success: false; error: 'SLUG_TAKEN'; message: string }
   | { success: false; error: 'VALIDATION_ERROR'; message: string }
 
@@ -33,13 +33,21 @@ export async function updateOrgSlug(db: DB, organizationId: string, newSlug: str
   }
 
   try {
+    let oldSlug = ''
+    let nanoId = ''
+
     await db.transaction(async (tx) => {
-      // Read current slug
+      // Read current slug + nanoId
       const [current] = await tx
-        .select({ slug: organization.slug })
+        .select({ slug: organization.slug, nanoId: organization.nanoId })
         .from(organization)
         .where(eq(organization.id, organizationId))
         .limit(1)
+
+      if (current) {
+        oldSlug = current.slug
+        nanoId = current.nanoId
+      }
 
       // Insert old slug into redirect table (if different)
       if (current && current.slug !== newSlug) {
@@ -53,7 +61,7 @@ export async function updateOrgSlug(db: DB, organizationId: string, newSlug: str
       await tx.update(organization).set({ slug: newSlug }).where(eq(organization.id, organizationId))
     })
 
-    return { success: true }
+    return { success: true, nanoId, oldSlug }
   } catch (err) {
     if (isUniqueViolation(err)) {
       return {
