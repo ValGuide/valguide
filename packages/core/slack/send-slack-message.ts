@@ -12,7 +12,9 @@ export const postMessage: SendSlackMessage = async (message) => {
 
   try {
     const client = new WebClient(serverEnv.VALBOT_SLACK_TOKEN)
-    console.info('[Slack] Sending message:', message)
+    const title = 'text' in message ? message.text : undefined
+    console.info(`[Slack] Sending message to channel ${message.channel}${title ? `. Title: ${title}` : ''}`)
+
     await client.chat.postMessage(message)
   } catch (e) {
     console.error('[Slack] Error sending message:', e)
