@@ -12,7 +12,7 @@ import {
   writeOrgSlugToKv,
   writeTourSlugToKv,
   writeTourToKv,
-} from '@valguide/core/features/tours/public/kv-helpers'
+} from '@valguide/core/features/tours/public/kv'
 import { serializeTourForKv, tourKvDataToTourWithStops } from '@valguide/core/features/tours/public/kv-serializers'
 import { resolveTourByIdOrSlug } from '@valguide/core/features/tours/tour/slug/resolve-tour.server'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -45,7 +45,7 @@ const resolveTourFn = createServerFn({ method: 'GET' })
         resolveOrgSlugFromKv(orgSlug),
         resolveTourSlugFromKv(orgSlug, tourSlug),
       ])
-      
+
       if (orgKv && tourKv) {
         const needsRedirect = orgSlug !== orgKv.primarySlug || tourSlug !== tourKv.primarySlug
 

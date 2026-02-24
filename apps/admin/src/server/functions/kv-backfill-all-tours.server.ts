@@ -1,6 +1,6 @@
 import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-tour'
+import { writeOrgSlugToKv, writeTourSlugToKv, writeTourToKv } from '@valguide/core/features/tours/public/kv'
 import { getAllPublishedTourSummaries } from '@valguide/core/features/tours/public/kv-backfill.server'
-import { writeOrgSlugToKv, writeTourSlugToKv, writeTourToKv } from '@valguide/core/features/tours/public/kv-helpers'
 import { serializeTourForKv } from '@valguide/core/features/tours/public/kv-serializers'
 
 export type BackfillAllToursResult = {

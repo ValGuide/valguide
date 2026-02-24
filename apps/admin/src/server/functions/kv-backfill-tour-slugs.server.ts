@@ -1,5 +1,5 @@
+import { writeTourSlugToKv } from '@valguide/core/features/tours/public/kv'
 import { getAllTourSlugEntries } from '@valguide/core/features/tours/public/kv-backfill.server'
-import { writeTourSlugToKv } from '@valguide/core/features/tours/public/kv-helpers'
 
 export type BackfillTourSlugsResult = {
   toursProcessed: number

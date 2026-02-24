@@ -17,6 +17,7 @@ function getKv(): KVNamespace | null {
   try {
     return env.TOUR_DATA ?? null
   } catch {
+    console.error('[tour-kv] KV binding TOUR_DATA not available')
     return null
   }
 }
@@ -43,7 +44,8 @@ export async function readTourFromKv(tourNanoId: string, locale: string): Promis
   try {
     const data = await kv.get(tourDataKey(tourNanoId, locale), { type: 'json' })
     return (data as TourKvData) ?? null
-  } catch {
+  } catch (err) {
+    console.error('[tour-kv] Failed to read tour', tourNanoId, locale, err)
     return null
   }
 }
@@ -54,7 +56,8 @@ export async function resolveOrgSlugFromKv(orgSlug: string): Promise<OrgSlugKvEn
   try {
     const data = await kv.get(orgSlugKey(orgSlug), { type: 'json' })
     return (data as OrgSlugKvEntry) ?? null
-  } catch {
+  } catch (err) {
+    console.error('[tour-kv] Failed to resolve org slug', orgSlug, err)
     return null
   }
 }
@@ -65,7 +68,8 @@ export async function resolveTourSlugFromKv(orgSlug: string, tourSlug: string): 
   try {
     const data = await kv.get(tourSlugKey(orgSlug, tourSlug), { type: 'json' })
     return (data as TourSlugKvEntry) ?? null
-  } catch {
+  } catch (err) {
+    console.error('[tour-kv] Failed to resolve tour slug', orgSlug, tourSlug, err)
     return null
   }
 }
@@ -77,8 +81,8 @@ export async function writeTourToKv(tourNanoId: string, locale: string, data: To
   if (!kv) return
   try {
     await kv.put(tourDataKey(tourNanoId, locale), JSON.stringify(data))
-  } catch {
-    // Silently fail — KV write failure shouldn't break the request
+  } catch (err) {
+    console.error('[tour-kv] Failed to write tour', tourNanoId, locale, err)
   }
 }
 
@@ -87,8 +91,8 @@ export async function writeOrgSlugToKv(slug: string, data: OrgSlugKvEntry): Prom
   if (!kv) return
   try {
     await kv.put(orgSlugKey(slug), JSON.stringify(data))
-  } catch {
-    // Silently fail
+  } catch (err) {
+    console.error('[tour-kv] Failed to write org slug', slug, err)
   }
 }
 
@@ -97,8 +101,8 @@ export async function writeTourSlugToKv(orgSlug: string, tourSlug: string, data:
   if (!kv) return
   try {
     await kv.put(tourSlugKey(orgSlug, tourSlug), JSON.stringify(data))
-  } catch {
-    // Silently fail
+  } catch (err) {
+    console.error('[tour-kv] Failed to write tour slug', orgSlug, tourSlug, err)
   }
 }
 
@@ -109,8 +113,8 @@ export async function deleteTourFromKv(tourNanoId: string, locale: string): Prom
   if (!kv) return
   try {
     await kv.delete(tourDataKey(tourNanoId, locale))
-  } catch {
-    // Silently fail
+  } catch (err) {
+    console.error('[tour-kv] Failed to delete tour', tourNanoId, locale, err)
   }
 }
 
@@ -119,8 +123,8 @@ export async function deleteTourAllLocalesFromKv(tourNanoId: string, locales: st
   if (!kv) return
   try {
     await Promise.all(locales.map((locale) => kv.delete(tourDataKey(tourNanoId, locale))))
-  } catch {
-    // Silently fail
+  } catch (err) {
+    console.error('[tour-kv] Failed to delete tour locales', tourNanoId, locales, err)
   }
 }
 
@@ -129,7 +133,7 @@ export async function deleteTourSlugFromKv(orgSlug: string, tourSlug: string): P
   if (!kv) return
   try {
     await kv.delete(tourSlugKey(orgSlug, tourSlug))
-  } catch {
-    // Silently fail
+  } catch (err) {
+    console.error('[tour-kv] Failed to delete tour slug', orgSlug, tourSlug, err)
   }
 }

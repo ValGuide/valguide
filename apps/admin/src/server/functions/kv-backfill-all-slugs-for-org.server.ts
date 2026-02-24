@@ -1,8 +1,8 @@
+import { writeOrgSlugToKv, writeTourSlugToKv } from '@valguide/core/features/tours/public/kv'
 import {
   getOrgSlugEntriesForOrg,
   getTourSlugEntriesForOrg,
 } from '@valguide/core/features/tours/public/kv-backfill.server'
-import { writeOrgSlugToKv, writeTourSlugToKv } from '@valguide/core/features/tours/public/kv-helpers'
 
 export type BackfillAllSlugsForOrgResult = {
   orgSlugEntriesWritten: number
