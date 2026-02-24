@@ -1,3 +1,5 @@
+import { Providers } from '@/components/providers'
+import { themeQueryOptions } from '@/features/theme/query-options'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
@@ -10,13 +12,10 @@ import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import { ErrorPage } from '@valguide/features/error/error-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
-import { Providers } from '@/components/providers'
-import { themeQueryOptions } from '@/features/theme/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  ssr: true,
   beforeLoad: async ({ context }) => {
     const [locale, theme] = await Promise.all([
       context.queryClient.ensureQueryData(localeQueryOptions()),

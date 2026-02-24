@@ -1,4 +1,3 @@
-import { ClientOnly } from '@tanstack/react-router'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider } from '@valguide/ui/components/sidebar'
 import { Skeleton } from '@valguide/ui/components/skeleton'
@@ -9,7 +8,7 @@ function getSidebarStateFromCookie(): boolean {
   return match ? match[1] !== 'false' : true
 }
 
-function MainLayoutPendingContent() {
+export function MainLayoutPending() {
   const defaultOpen = getSidebarStateFromCookie()
 
   return (
@@ -22,17 +21,8 @@ function MainLayoutPendingContent() {
             <Separator orientation="vertical" className="mr-2 h-4" />
           </div>
         </header>
-        {/* Empty content area - each route handles its own loading via Suspense */}
         <main className="flex flex-1 flex-col gap-4 p-4 pt-0" />
       </SidebarInset>
     </SidebarProvider>
-  )
-}
-
-export function MainLayoutPending() {
-  return (
-    <ClientOnly fallback={null}>
-      <MainLayoutPendingContent />
-    </ClientOnly>
   )
 }

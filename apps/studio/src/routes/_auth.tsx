@@ -1,7 +1,6 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import LoginLoading from '@valguide/features/auth/login/loading'
 import { isAuthenticatedQueryOptions } from '@valguide/features/auth/query-options'
-import { Suspense } from 'react'
 import { z } from 'zod'
 
 const authSearchSchema = z.object({
@@ -24,9 +23,5 @@ export const Route = createFileRoute('/_auth')({
 })
 
 function AuthLayout() {
-  return (
-    <Suspense fallback={<LoginLoading />}>
-      <Outlet />
-    </Suspense>
-  )
+  return <Outlet />
 }

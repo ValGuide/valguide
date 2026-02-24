@@ -18,7 +18,6 @@ import { adminMessagesQueryOptions } from '@/i18n/query-options'
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  ssr: true,
   beforeLoad: async ({ context }) => {
     const [locale, theme] = await Promise.all([
       context.queryClient.ensureQueryData(localeQueryOptions()),

@@ -10,7 +10,6 @@ import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query
 import { createQueryClient } from '@valguide/core/utils/query-client'
 import { DefaultError } from './components/default-error'
 import { DefaultNotFound } from './components/default-not-found'
-import { DefaultPending } from './components/default-pending'
 import { routeTree } from './routeTree.gen'
 
 export const getRouter = () => {
@@ -27,7 +26,6 @@ export const getRouter = () => {
     defaultPendingMs: 150,
     // Minimum time to show pending component to prevent flash (200ms feels instant but smooth)
     defaultPendingMinMs: 200,
-    defaultPendingComponent: DefaultPending,
     defaultErrorComponent: DefaultError,
     defaultNotFoundComponent: DefaultNotFound,
     // Enable view transitions for smooth page changes (Chrome 111+)
