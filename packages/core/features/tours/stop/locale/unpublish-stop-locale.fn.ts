@@ -3,7 +3,7 @@ import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { requireStopAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
-import { deleteTourFromKv } from '../../public/kv-helpers'
+import { deleteTourFromKv } from '../../public/kv'
 import { unpublishStopLocale } from './unpublish-stop-locale.server'
 
 export type { UnpublishStopLocaleResult } from './unpublish-stop-locale.server'

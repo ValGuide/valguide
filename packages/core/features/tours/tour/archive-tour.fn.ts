@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { requireAuthMiddleware } from '../../auth/middleware'
-import { deleteTourAllLocalesFromKv, deleteTourSlugFromKv } from '../public/kv-helpers'
+import { deleteTourAllLocalesFromKv, deleteTourSlugFromKv } from '../public/kv'
 import { archiveTour } from './archive-tour.server'
 
 export type { ArchiveTourResult } from './archive-tour.server'

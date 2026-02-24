@@ -5,7 +5,7 @@ import { waitUntil } from '../../../../utils/wait-until'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { db } from '../../../db'
-import { writeTourSlugToKv } from '../../public/kv-helpers'
+import { writeTourSlugToKv } from '../../public/kv'
 import { updateTourSlug } from './update-tour-slug.server'
 
 export type { UpdateTourSlugResult } from './update-tour-slug.server'
