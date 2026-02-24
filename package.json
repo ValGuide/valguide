@@ -21,6 +21,7 @@
     "clean:vite": "turbo run clean:vite --parallel",
     "clean:install": "pnpm clean && pnpm install",
     "format": "biome format --write .",
+    "update:turbo": "pnpm dlx @turbo/codemod@latest update .",
     "secrets:hide": "sh scripts/secrets-hide.sh",
     "secrets:show": "sh scripts/secrets-show.sh",
     "core:type-check": "pnpm turbo run type-check --filter ./packages/core",
