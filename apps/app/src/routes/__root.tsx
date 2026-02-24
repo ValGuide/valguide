@@ -70,6 +70,10 @@ export const Route = createRootRouteWithContext<{
         href: '/favicon.ico',
       },
       {
+        rel: 'apple-touch-icon',
+        href: '/apple-touch-icon.png',
+      },
+      {
         rel: 'manifest',
         href: '/manifest.json',
       },
