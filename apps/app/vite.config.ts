@@ -7,7 +7,7 @@ import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(() => ({
   server: {
     port: 3000,
     allowedHosts: ['app.local.dev'],
@@ -22,16 +22,17 @@ export default defineConfig(({ command }) => ({
     tailwindcss(),
     cloudflare({
       viteEnvironment: { name: 'ssr' },
-      ...(command === 'serve' && {
-        config: {
-          vars: Object.fromEntries(
-            Object.entries(process.env)
-              .filter((entry): entry is [string, string] => entry[1] !== undefined)
-          ),
-        },
-      }),
+      config: {
+        vars: Object.fromEntries(
+          Object.entries(process.env)
+            .filter((entry): entry is [string, string] => entry[1] !== undefined)
+        ),
+      },
     }),
     tanstackStart({
+      spa: {
+        enabled: true,
+      },
       srcDirectory: 'src',
       router: {
         routesDirectory: 'routes',

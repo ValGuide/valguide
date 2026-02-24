@@ -1,6 +1,7 @@
 import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import { createQueryClient } from '@valguide/core/utils/query-client'
+import { AppLoadingSkeleton } from './components/app-loading-skeleton'
 import { routeTree } from './routeTree.gen'
 
 export const getRouter = () => {
@@ -12,6 +13,7 @@ export const getRouter = () => {
     scrollRestoration: true,
     defaultPreloadStaleTime: 30_000,
     defaultStaleTime: 30_000,
+    defaultPendingComponent: AppLoadingSkeleton,
   })
 
   setupRouterSsrQueryIntegration({

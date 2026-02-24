@@ -17,4 +17,8 @@ function getServerEnv(): ServerEnv {
   return _serverEnv
 }
 
-export const serverEnv = getServerEnv()
+export const serverEnv: ServerEnv = new Proxy({} as ServerEnv, {
+  get(_, prop: string) {
+    return getServerEnv()[prop as keyof ServerEnv]
+  },
+})
