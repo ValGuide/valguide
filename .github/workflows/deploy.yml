@@ -178,8 +178,8 @@ jobs:
               docs-dev)    echo "https://docs-dev.val.guide" ;;
               links-prod)  echo "https://links.valguide.com" ;;
               links-dev)   echo "https://links.valguide.dev" ;;
-              sb-prod)     echo "https://sb.val.guide" ;;
-              sb-dev)      echo "https://sb-dev.val.guide" ;;
+              storybook-prod) echo "https://sb.val.guide" ;;
+              storybook-dev)  echo "https://sb-dev.val.guide" ;;
               www-prod)    echo "https://www.valguide.com" ;;
               www-dev)     echo "https://www.valguide.dev" ;;
             esac
@@ -193,7 +193,7 @@ jobs:
             local should=$1 result=$2 display_name=$3
             if [ "$should" != "true" ]; then return; fi
             local url
-            url=$(url_for "$display_name")
+            url=$(url_for "${display_name}-${ENV}")
             if [ "$result" = "success" ]; then
               LINES="${LINES}✅  \`${display_name}\`  <${url}|${url}>\n"
             else
@@ -203,25 +203,29 @@ jobs:
             fi
           }
 
-          add_line "$DEPLOY_APP"       "$RESULT_APP"       "app-${ENV}"
-          add_line "$DEPLOY_STUDIO"    "$RESULT_STUDIO"    "studio-${ENV}"
-          add_line "$DEPLOY_ADMIN"     "$RESULT_ADMIN"     "admin-${ENV}"
-          add_line "$DEPLOY_DOCS"      "$RESULT_DOCS"      "docs-${ENV}"
-          add_line "$DEPLOY_LINKS"     "$RESULT_LINKS"     "links-${ENV}"
-          add_line "$DEPLOY_STORYBOOK" "$RESULT_STORYBOOK" "sb-${ENV}"
-          add_line "$DEPLOY_WWW"       "$RESULT_WWW"       "www-${ENV}"
+          add_line "$DEPLOY_APP"       "$RESULT_APP"       "app"
+          add_line "$DEPLOY_STUDIO"    "$RESULT_STUDIO"    "studio"
+          add_line "$DEPLOY_ADMIN"     "$RESULT_ADMIN"     "admin"
+          add_line "$DEPLOY_DOCS"      "$RESULT_DOCS"      "docs"
+          add_line "$DEPLOY_LINKS"     "$RESULT_LINKS"     "links"
+          add_line "$DEPLOY_STORYBOOK" "$RESULT_STORYBOOK" "storybook"
+          add_line "$DEPLOY_WWW"       "$RESULT_WWW"       "www"
 
           # Build header
           if [ "$FAIL_COUNT" -gt 0 ]; then
             HEADER="🚨 *Deploy Finished — ${ENV_UPPER}* (${FAIL_COUNT} failed)"
             FAIL_NAMES="${FAIL_NAMES%, }"
-            FOOTER="\n_Failed: ${FAIL_NAMES}_\n<${RUN_URL}|View Run>"
           else
             HEADER="🚀 *Deploy Complete — ${ENV_UPPER}*"
-            FOOTER="\n<${RUN_URL}|View Run>"
           fi
 
-          MSG=$(echo -e "${HEADER}\n\`${SHA7}\` by @${ACTOR}\n\n${LINES}${FOOTER}")
+          MSG=$(echo -e "${HEADER}\n\`${SHA7}\` by @${ACTOR}\n\n${LINES}")
+
+          if [ "$FAIL_COUNT" -gt 0 ]; then
+            FOOTER_TEXT="_Failed: ${FAIL_NAMES}_  •  <${RUN_URL}|View Run>"
+          else
+            FOOTER_TEXT="<${RUN_URL}|View Run>"
+          fi
 
           # Fallback plain text for notifications
           PLAIN=$(echo -e "${HEADER}\nCommit: ${SHA7} by @${ACTOR}")
@@ -231,16 +235,21 @@ jobs:
             --arg channel "deployments" \
             --arg text "$PLAIN" \
             --arg body "$MSG" \
+            --arg footer "$FOOTER_TEXT" \
             '{
               channel: $channel,
               text: $text,
-              blocks: [{
-                type: "section",
-                text: {
-                  type: "mrkdwn",
-                  text: $body
+              blocks: [
+                {
+                  type: "section",
+                  text: { type: "mrkdwn", text: $body }
+                },
+                { type: "divider" },
+                {
+                  type: "context",
+                  elements: [{ type: "mrkdwn", text: $footer }]
                 }
-              }]
+              ]
             }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
               -H "Authorization: Bearer $SLACK_TOKEN" \
               -H "Content-Type: application/json" \
