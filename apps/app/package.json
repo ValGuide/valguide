@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
-    "start": "wrangler dev --remote --port 3000",
+    "dev:remote": "WRANGLER_REMOTE=true vite dev --port 3000",
     "preview": "vite preview --port 3000",
     "deploy": "pnpm build && wrangler deploy",
     "deploy:dev": "CLOUDFLARE_ENV=dev pnpm build && wrangler deploy",

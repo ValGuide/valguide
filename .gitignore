@@ -61,3 +61,4 @@ count.txt
 .tanstack
 .output
 .wrangler
+.wrangler.dev-remote.json

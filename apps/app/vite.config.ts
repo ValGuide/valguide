@@ -1,4 +1,4 @@
-// vite.config.ts
+import { getRemoteDevConfigPath } from '../../scripts/wrangler-remote-bindings'
 import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import { devtools } from '@tanstack/devtools-vite'
@@ -23,6 +23,9 @@ export default defineConfig(() => ({
     cloudflare({
       viteEnvironment: { name: 'ssr' },
       inspectorPort: 9230,
+      ...(process.env.WRANGLER_REMOTE === 'true' && {
+        configPath: getRemoteDevConfigPath(),
+      }),
       config: {
         vars: Object.fromEntries(
           Object.entries(process.env)

@@ -23,7 +23,7 @@
       "cache": false,
       "persistent": true
     },
-    "start": {
+    "dev:remote": {
       "cache": false,
       "persistent": true
     },

@@ -1,4 +1,4 @@
-// vite.config.ts
+import { getRemoteDevConfigPath } from '../../scripts/wrangler-remote-bindings'
 import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import { devtools } from '@tanstack/devtools-vite'
@@ -27,6 +27,9 @@ export default defineConfig(({ command }) => ({
       // loaded by dotenvx (DATABASE_URL, etc.) are available via process.env.
       // CLOUDFLARE_INCLUDE_PROCESS_ENV doesn't work with the Vite plugin.
       ...(command === 'serve' && {
+        ...(process.env.WRANGLER_REMOTE === 'true' && {
+          configPath: getRemoteDevConfigPath(),
+        }),
         config: {
           vars: Object.fromEntries(
             Object.entries(process.env)
