@@ -46,7 +46,8 @@
         "SUPABASE_COOKIE_DOMAIN": ".val.guide",
         "ADMIN_COOKIE_DOMAIN": "ops-dev.val.guide",
         "ADMIN_BASE_URL": "https://ops-dev.val.guide",
-        "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example"
+        "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example",
+        "BLOCK_ROBOTS": "true"
       }
     }
   }

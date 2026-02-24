@@ -9,7 +9,10 @@
   // Dev environment (sb-dev.val.guide)
   "env": {
     "dev": {
-      "routes": [{ "pattern": "sb-dev.val.guide", "custom_domain": true }]
+      "routes": [{ "pattern": "sb-dev.val.guide", "custom_domain": true }],
+      "vars": {
+        "BLOCK_ROBOTS": "true"
+      }
     }
   }
 }

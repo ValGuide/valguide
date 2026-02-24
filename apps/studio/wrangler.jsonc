@@ -46,7 +46,8 @@
         "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
         "APP_BASE_URL": "https://app.valguide.dev",
         // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
-        "VITE_STUDIO_URL": "https://studio.valguide.dev"
+        "VITE_STUDIO_URL": "https://studio.valguide.dev",
+        "BLOCK_ROBOTS": "true"
       }
     }
   }

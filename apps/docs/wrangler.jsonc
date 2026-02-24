@@ -32,7 +32,8 @@
         { "pattern": "docs.valguide.dev", "custom_domain": true }
       ],
       "vars": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "BLOCK_ROBOTS": "true"
       }
     }
   }

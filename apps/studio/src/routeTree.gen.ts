@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PendingRouteImport } from './routes/pending'
 import { Route as JoinTeamRouteImport } from './routes/join-team'
@@ -45,6 +46,11 @@ import { Route as MainToursNanoIdStopsStopIdEditRouteImport } from './routes/_ma
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
   id: '/terms-of-service',
   path: '/terms-of-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/join-team': typeof JoinTeamRoute
   '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
@@ -240,6 +247,7 @@ export interface FileRoutesByTo {
   '/join-team': typeof JoinTeamRoute
   '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/join-team': typeof JoinTeamRoute
   '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/join-team'
     | '/pending'
     | '/privacy-policy'
+    | '/robots.txt'
     | '/terms-of-service'
     | '/login'
     | '/signup'
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
     | '/join-team'
     | '/pending'
     | '/privacy-policy'
+    | '/robots.txt'
     | '/terms-of-service'
     | '/login'
     | '/signup'
@@ -371,6 +382,7 @@ export interface FileRouteTypes {
     | '/join-team'
     | '/pending'
     | '/privacy-policy'
+    | '/robots.txt'
     | '/terms-of-service'
     | '/_auth/login'
     | '/_auth/signup'
@@ -406,6 +418,7 @@ export interface RootRouteChildren {
   JoinTeamRoute: typeof JoinTeamRoute
   PendingRoute: typeof PendingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   ApiDevAuthRoute: typeof ApiDevAuthRoute
   ApiUploadRoute: typeof ApiUploadRoute
@@ -419,6 +432,13 @@ declare module '@tanstack/react-router' {
       path: '/terms-of-service'
       fullPath: '/terms-of-service'
       preLoaderRoute: typeof TermsOfServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy-policy': {
@@ -727,6 +747,7 @@ const rootRouteChildren: RootRouteChildren = {
   JoinTeamRoute: JoinTeamRoute,
   PendingRoute: PendingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   ApiDevAuthRoute: ApiDevAuthRoute,
   ApiUploadRoute: ApiUploadRoute,

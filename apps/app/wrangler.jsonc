@@ -38,7 +38,8 @@
         "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
         "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
         "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
-        "APP_BASE_URL": "https://app.valguide.dev"
+        "APP_BASE_URL": "https://app.valguide.dev",
+        "BLOCK_ROBOTS": "true"
       }
     }
   }

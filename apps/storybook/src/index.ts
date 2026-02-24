@@ -1,4 +1,5 @@
 import { env } from 'cloudflare:workers'
+import { robotsResponse } from '@valguide/core/features/seo/robots'
 
 const COOKIE_NAME = 'sb-auth'
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7 // 7 days
@@ -95,6 +96,10 @@ function getCookie(request: Request, name: string): string | null {
 export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url)
+
+    if (url.pathname === '/robots.txt') {
+      return robotsResponse(env.BLOCK_ROBOTS === 'true')
+    }
 
     if (request.method === 'POST' && url.pathname === '/login') {
       const form = await request.formData()

@@ -36,7 +36,8 @@
         "NODE_ENV": "production",
         "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
         "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev"
+        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
+        "BLOCK_ROBOTS": "true"
       }
     }
   }
