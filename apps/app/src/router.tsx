@@ -1,8 +1,9 @@
-import { createRouter } from '@tanstack/react-router'
+import { createRouter, DefaultGlobalNotFound } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import { createQueryClient } from '@valguide/core/utils/query-client'
 import { AppLoadingSkeleton } from './components/app-loading-skeleton'
 import { routeTree } from './routeTree.gen'
+import { DefaultNotFound } from './components/default-not-found'
 
 export const getRouter = () => {
   const queryClient = createQueryClient()
@@ -14,6 +15,7 @@ export const getRouter = () => {
     defaultPreloadStaleTime: 30_000,
     defaultStaleTime: 30_000,
     defaultPendingComponent: AppLoadingSkeleton,
+    defaultNotFoundComponent: DefaultNotFound
   })
 
   setupRouterSsrQueryIntegration({
