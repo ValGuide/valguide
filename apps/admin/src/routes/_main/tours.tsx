@@ -1,12 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
+import { toast } from '@valguide/ui/components/sonner/state'
 import { BookOpen } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 import { ToursDataTable } from '@/features/admin/components/tours-data-table'
 import { adminOrgsQueryOptions } from '@/features/admin/orgs-query-options'
 import { adminToursQueryOptions } from '@/features/admin/tours-query-options'
+import { kvBackfillTourFn } from '@/server/functions/kv-backfill-tour.fn'
 import type { ListToursInput } from '@/server/functions/list-tours.fn'
 
 const toursSearchSchema = z.object({
@@ -36,13 +38,6 @@ function buildInput(search: z.infer<typeof toursSearchSchema>): ListToursInput {
 
 export const Route = createFileRoute('/_main/tours')({
   validateSearch: toursSearchSchema,
-  loaderDeps: ({ search }) => search,
-  loader: ({ context, deps }) => {
-    context.queryClient.ensureQueryData(adminToursQueryOptions(buildInput(deps)))
-    context.queryClient.ensureQueryData(
-      adminOrgsQueryOptions({ page: 0, pageSize: 200, sortBy: 'name', sortOrder: 'asc' }),
-    )
-  },
   component: ToursPage,
 })
 
@@ -180,6 +175,26 @@ function ToursPage() {
     [navigate, sorting],
   )
 
+  // Backfill KV cache for a specific tour
+  const [backfillingTourId, setBackfillingTourId] = useState<string | null>(null)
+
+  const backfillTourMutation = useMutation({
+    retry: false,
+    mutationFn: (tourNanoId: string) => kvBackfillTourFn({ data: { tourNanoId } }),
+    onMutate: (tourNanoId) => setBackfillingTourId(tourNanoId),
+    onSuccess: (result) => {
+      const msg = `${result.localesWritten} locales, ${result.slugsWritten} slugs written`
+      if (result.errors.length > 0) {
+        toast.warning(`${msg} — ${result.errors.length} errors (see console)`)
+        console.error('Backfill errors:', result.errors)
+      } else {
+        toast.success(msg)
+      }
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Backfill failed'),
+    onSettled: () => setBackfillingTourId(null),
+  })
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -198,6 +213,8 @@ function ToursPage() {
         onSortingChange={onSortingChange}
         onColumnFiltersChange={onColumnFiltersChange}
         isLoading={isFetching}
+        onBackfillTour={(nanoId) => backfillTourMutation.mutate(nanoId)}
+        isBackfilling={backfillingTourId}
       />
     </div>
   )
