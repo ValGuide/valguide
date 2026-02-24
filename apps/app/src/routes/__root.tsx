@@ -69,6 +69,10 @@ export const Route = createRootRouteWithContext<{
         rel: 'icon',
         href: '/favicon.ico',
       },
+      {
+        rel: 'manifest',
+        href: '/manifest.json',
+      },
     ],
     scripts: [
       {

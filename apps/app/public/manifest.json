@@ -1,0 +1,9 @@
+{
+  "name": "ValGuide",
+  "short_name": "ValGuide",
+  "description": "Audio tours for museums and cultural sites",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
+}

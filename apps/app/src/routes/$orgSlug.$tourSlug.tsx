@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, Outlet, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { getAssetUrl } from '@valguide/core/features/assets/image-url'
 import { db } from '@valguide/core/features/db'
 import { resolveOrgByIdOrSlug } from '@valguide/core/features/orgs/resolve-org.server'
 import { getDraftTourByNanoId } from '@valguide/core/features/tours/public/get-draft-tour'
@@ -15,8 +16,10 @@ import {
 import { serializeTourForKv, tourKvDataToTourWithStops } from '@valguide/core/features/tours/public/kv-serializers'
 import { resolveTourByIdOrSlug } from '@valguide/core/features/tours/tour/slug/resolve-tour.server'
 import { waitUntil } from '@valguide/core/utils/wait-until'
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { PreviewBanner } from '@/components/preview-banner'
+import { notifyServiceWorker } from '@/sw'
 
 const tourSearchSchema = z.object({
   preview: z.boolean().optional(),
@@ -192,7 +195,22 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug')({
 })
 
 function TourLayout() {
-  const { isPreviewMode, locale } = Route.useRouteContext()
+  const { tour, isPreviewMode, locale } = Route.useRouteContext()
+
+  useEffect(() => {
+    if (isPreviewMode) return
+
+    const audioUrls = tour.stops
+      .flatMap((s) => s.assets)
+      .filter((a) => a.type === 'audio')
+      .map((a) => getAssetUrl(a.storagePath))
+
+    notifyServiceWorker({
+      type: 'TOUR_OPENED',
+      audioUrls,
+      tourKey: tour.nanoId,
+    })
+  }, [tour.nanoId, isPreviewMode])
 
   return (
     <>
