@@ -195,9 +195,9 @@ jobs:
             local url
             url=$(url_for "$display_name")
             if [ "$result" = "success" ]; then
-              LINES="${LINES}$(printf '✅ %-14s %s' "$display_name" "$url")\n"
+              LINES="${LINES}✅  \`${display_name}\`  <${url}|${url}>\n"
             else
-              LINES="${LINES}$(printf '❌ %-14s %s' "$display_name" "$url")\n"
+              LINES="${LINES}❌  \`${display_name}\`  <${url}|${url}>\n"
               FAIL_NAMES="${FAIL_NAMES}${display_name}, "
               FAIL_COUNT=$((FAIL_COUNT + 1))
             fi
@@ -213,32 +213,33 @@ jobs:
 
           # Build header
           if [ "$FAIL_COUNT" -gt 0 ]; then
-            HEADER="🚨 Deploy Finished — ${ENV_UPPER} (${FAIL_COUNT} failed)"
+            HEADER="🚨 *Deploy Finished — ${ENV_UPPER}* (${FAIL_COUNT} failed)"
             FAIL_NAMES="${FAIL_NAMES%, }"
-            FOOTER="\nFailure: ${FAIL_NAMES}\nRun: ${RUN_URL}"
+            FOOTER="\n_Failed: ${FAIL_NAMES}_\n<${RUN_URL}|View Run>"
           else
-            HEADER="🚀 Deploy Complete — ${ENV_UPPER}"
-            FOOTER="\nRun: ${RUN_URL}"
+            HEADER="🚀 *Deploy Complete — ${ENV_UPPER}*"
+            FOOTER="\n<${RUN_URL}|View Run>"
           fi
 
-          MSG=$(echo -e "${HEADER}\nCommit: ${SHA7} • @${ACTOR}\n\n${LINES}${FOOTER}")
+          MSG=$(echo -e "${HEADER}\n\`${SHA7}\` by @${ACTOR}\n\n${LINES}${FOOTER}")
+
+          # Fallback plain text for notifications
+          PLAIN=$(echo -e "${HEADER}\nCommit: ${SHA7} by @${ACTOR}")
 
           # Send via Slack API (jq handles JSON escaping reliably)
           jq -n \
             --arg channel "deployments" \
-            --arg text "$MSG" \
+            --arg text "$PLAIN" \
+            --arg body "$MSG" \
             '{
               channel: $channel,
               text: $text,
               blocks: [{
-                type: "rich_text",
-                elements: [{
-                  type: "rich_text_preformatted",
-                  elements: [{
-                    type: "text",
-                    text: $text
-                  }]
-                }]
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: $body
+                }
               }]
             }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
               -H "Authorization: Bearer $SLACK_TOKEN" \
