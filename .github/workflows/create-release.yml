@@ -24,6 +24,7 @@
 #   👷 CI                  — ci: Changes to CI configuration files and scripts
 #   🎨 Style              — style: Changes that do not affect the meaning of the code (formatting, etc.)
 #   ⏪ Reverts             — revert: Revert something
+#   📋 Plan               — plan: Planning documents and feature plans
 #   {Prefix}              — unknown prefixes are auto-grouped & title-cased (e.g. ai: → "### Ai")
 #   📝 Other              — commits with no conventional prefix at all
 #
@@ -134,6 +135,7 @@ jobs:
           CI=$(format_commits "^ci(\(.+\))?[!]?:")
           STYLE=$(format_commits "^style(\(.+\))?[!]?:")
           REVERT=$(format_commits "^revert(\(.+\))?[!]?:")
+          PLAN=$(format_commits "^plan(\(.+\))?[!]?:")
           BODY=""
           [ -n "$BREAKING" ] && BODY="${BODY}### 💥 Breaking Changes\n${BREAKING}\n\n"
           [ -n "$FEATURES" ] && BODY="${BODY}### ✨ Features\n${FEATURES}\n\n"
@@ -147,10 +149,11 @@ jobs:
           [ -n "$CI" ]       && BODY="${BODY}### 👷 CI\n${CI}\n\n"
           [ -n "$STYLE" ]    && BODY="${BODY}### 🎨 Style\n${STYLE}\n\n"
           [ -n "$REVERT" ]   && BODY="${BODY}### ⏪ Reverts\n${REVERT}\n\n"
+          [ -n "$PLAN" ]     && BODY="${BODY}### 📋 Plan\n${PLAN}\n\n"
 
           # Group remaining commits by unknown prefix (e.g. "ai:", "dx(scope):")
           # or collect them as uncategorized
-          KNOWN="feat|fix|chore|docs|style|refactor|test|perf|ci|build|revert"
+          KNOWN="feat|fix|chore|docs|style|refactor|test|perf|ci|build|revert|plan"
           OTHER_LINES=$(git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
             | grep -Ev "^($KNOWN)(\(.+\))?[!]?:" \
             | grep -Ev "^\[build [^\]]+\] \(" || true)
