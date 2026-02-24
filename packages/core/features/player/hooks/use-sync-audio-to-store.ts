@@ -54,26 +54,28 @@ export function useSyncAudioToStore() {
     [syncPlayback],
   )
 
+  const audioSrc = currentStop?.audioUrl ?? null
+
   const {
     play,
     pause: pauseAudio,
     seek,
     setPlaybackRate,
   } = useAudioElement({
-    src: currentStop?.audioUrl ?? null,
+    src: audioSrc,
     onTimeUpdate: handleTimeUpdate,
     onEnded: handleEnded,
     onLoadedMetadata: handleLoadedMetadata,
   })
 
-  // Sync isPlaying to audio
+  // Sync isPlaying to audio (audioSrc ensures re-run when track changes)
   useEffect(() => {
     if (isPlaying) {
       play()
     } else {
       pauseAudio()
     }
-  }, [isPlaying, play, pauseAudio])
+  }, [isPlaying, audioSrc, play, pauseAudio])
 
   // Sync speed to audio
   useEffect(() => {

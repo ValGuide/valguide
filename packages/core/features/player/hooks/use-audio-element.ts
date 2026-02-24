@@ -9,6 +9,13 @@ type UseAudioElementOptions = {
 
 export function useAudioElement({ src, onTimeUpdate, onEnded, onLoadedMetadata }: UseAudioElementOptions) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const onTimeUpdateRef = useRef(onTimeUpdate)
+  const onEndedRef = useRef(onEnded)
+  const onLoadedMetadataRef = useRef(onLoadedMetadata)
+
+  onTimeUpdateRef.current = onTimeUpdate
+  onEndedRef.current = onEnded
+  onLoadedMetadataRef.current = onLoadedMetadata
 
   useEffect(() => {
     if (!src) return
@@ -18,15 +25,15 @@ export function useAudioElement({ src, onTimeUpdate, onEnded, onLoadedMetadata }
     audioRef.current = audio
 
     const handleTimeUpdate = () => {
-      onTimeUpdate?.(audio.currentTime, audio.duration || 0)
+      onTimeUpdateRef.current?.(audio.currentTime, audio.duration || 0)
     }
 
     const handleLoadedMetadata = () => {
-      onLoadedMetadata?.(audio.duration || 0)
+      onLoadedMetadataRef.current?.(audio.duration || 0)
     }
 
     const handleEnded = () => {
-      onEnded?.()
+      onEndedRef.current?.()
     }
 
     audio.addEventListener('timeupdate', handleTimeUpdate)
@@ -40,7 +47,7 @@ export function useAudioElement({ src, onTimeUpdate, onEnded, onLoadedMetadata }
       audio.removeEventListener('ended', handleEnded)
       audioRef.current = null
     }
-  }, [src, onTimeUpdate, onEnded, onLoadedMetadata])
+  }, [src])
 
   const play = useCallback(() => {
     audioRef.current?.play()
