@@ -244,11 +244,11 @@ jobs:
                   type: "section",
                   text: { type: "mrkdwn", text: $body }
                 },
-                { type: "divider" },
                 {
-                  type: "context",
-                  elements: [{ type: "mrkdwn", text: $footer }]
-                }
+                  type: "section",
+                  text: { type: "mrkdwn", text: $footer }
+                },
+                { type: "divider" }
               ]
             }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
               -H "Authorization: Bearer $SLACK_TOKEN" \
