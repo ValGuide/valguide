@@ -31,7 +31,6 @@
     "admin:preview": "pnpm caddy:ensure && (sleep 2 && open https://admin-local.dev) & pnpm env:load turbo run preview --filter ./apps/admin",
     "admin:build:preview": "pnpm admin:build && pnpm admin:preview",
     "admin:type-check": "pnpm turbo run type-check --filter ./apps/admin",
-
     "app:dev": "pnpm caddy:ensure && (sleep 5 && open https://app.local.dev) & pnpm env:load turbo run dev --filter ./apps/app",
     "app:dev:remote": "pnpm caddy:ensure && (sleep 5 && open https://app.local.dev) & pnpm env:load turbo run dev:remote --filter ./apps/app",
     "app:build": "pnpm env:load turbo run build --filter ./apps/app",
@@ -110,7 +109,7 @@
     "playwright": "^1.58.0",
     "postgres": "^3.4.8",
     "ts-morph": "^27.0.2",
-    "turbo": "2.8.2"
+    "turbo": "2.8.10"
   },
   "engines": {
     "node": ">=24"
