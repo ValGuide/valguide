@@ -3,6 +3,7 @@ import { clientEnv } from '@valguide/core/env/client'
 import { FullPlayer } from '@valguide/core/features/player/components/full-player'
 import { StopsList } from '@valguide/core/features/player/components/stops-list'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
+import { useCurrentStopNanoId } from '@valguide/core/features/player/store/use-player-store'
 import { TourThemeProvider } from '@valguide/core/features/player/theming/tour-theme-provider'
 import { toPlayerStops } from '@valguide/core/features/player/utils'
 import { getLocalizedTourText } from '@valguide/core/features/tours/public/localization-helpers'
@@ -11,7 +12,7 @@ import type { SupportedLocale } from '@valguide/core/i18n/i18n.config'
 import { Button } from '@valguide/core/ui/components/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@valguide/core/ui/components/sheet'
 import { ChevronLeft, ListMusic } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/$orgSlug/$tourSlug/$stopNanoId')({
   beforeLoad: ({ params, context }) => {
@@ -51,6 +52,7 @@ function StopPage() {
       allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
     >
       <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
+        <SyncStopToUrl stopNanoId={stopNanoId} orgSlug={orgSlug} tourSlug={tourSlug} />
         <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
           <Link
             to="/$orgSlug/$tourSlug"
@@ -79,6 +81,23 @@ function StopPage() {
       </PlayerProvider>
     </TourThemeProvider>
   )
+}
+
+function SyncStopToUrl({ stopNanoId, orgSlug, tourSlug }: { stopNanoId: string; orgSlug: string; tourSlug: string }) {
+  const navigate = useNavigate()
+  const currentStopNanoId = useCurrentStopNanoId()
+
+  useEffect(() => {
+    if (currentStopNanoId && currentStopNanoId !== stopNanoId) {
+      navigate({
+        to: '/$orgSlug/$tourSlug/$stopNanoId',
+        params: { orgSlug, tourSlug, stopNanoId: currentStopNanoId },
+        replace: true,
+      })
+    }
+  }, [currentStopNanoId, stopNanoId, navigate, orgSlug, tourSlug])
+
+  return null
 }
 
 function ViewAllStopsButton({ onClick }: { onClick: () => void }) {
