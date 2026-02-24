@@ -60,6 +60,20 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
     cell: ({ row }) => <code className="text-xs text-muted-foreground">{row.original.nanoId}</code>,
   },
   {
+    accessorKey: 'slugs',
+    enableColumnFilter: false,
+    header: 'Slugs',
+    cell: ({ row }) => (
+      <div className="flex flex-col gap-0.5">
+        {row.original.slugs.map((slug) => (
+          <code key={slug} className="text-xs text-muted-foreground">
+            {slug}
+          </code>
+        ))}
+      </div>
+    ),
+  },
+  {
     accessorKey: 'organizationName',
     enableColumnFilter: true,
     header: ({ column }) => (

@@ -1,7 +1,7 @@
 import { asset } from '@valguide/core/features/assets/schema'
 import type { DB } from '@valguide/core/features/db'
 import { organization } from '@valguide/core/features/orgs/schema'
-import { tour, tourAssetDraft, tourLocaleDraft, tourStopDraft } from '@valguide/core/features/tours/schema'
+import { tour, tourAssetDraft, tourLocaleDraft, tourSlug, tourStopDraft } from '@valguide/core/features/tours/schema'
 import { and, asc, count, desc, eq, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm'
 
 export type AdminTourListItem = {
@@ -10,6 +10,7 @@ export type AdminTourListItem = {
   organizationName: string
   status: 'draft' | 'published' | 'archived'
   availableLocales: string[]
+  slugs: string[]
   stopCount: number
   createdAt: Date
   publishedAt: Date | null
@@ -63,7 +64,15 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
 
   if (search) {
     const pattern = `%${search}%`
-    conditions.push(or(ilike(tourLocaleDraft.title, pattern), ilike(organization.name, pattern))!)
+    const slugMatch = sql`EXISTS (SELECT 1 FROM ${tourSlug} WHERE ${tourSlug.tourId} = ${tour.id} AND ${tourSlug.slug} ILIKE ${pattern})`
+    conditions.push(
+      or(
+        ilike(tourLocaleDraft.title, pattern),
+        ilike(organization.name, pattern),
+        ilike(tour.slug, pattern),
+        slugMatch,
+      )!,
+    )
   }
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
@@ -103,6 +112,8 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
     dbClient
       .select({
         nanoId: tour.nanoId,
+        tourId: tour.id,
+        slug: tour.slug,
         title: tourLocaleDraft.title,
         organizationName: organization.name,
         availableLocales: tour.availableLocales,
@@ -134,18 +145,39 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
       .where(whereClause),
   ])
 
+  const tourIds = rows.map((r) => r.tourId)
+  const historicalSlugs =
+    tourIds.length > 0
+      ? await dbClient
+          .select({ tourId: tourSlug.tourId, slug: tourSlug.slug })
+          .from(tourSlug)
+          .where(inArray(tourSlug.tourId, tourIds))
+      : []
+
+  const slugsByTourId = new Map<string, string[]>()
+  for (const hs of historicalSlugs) {
+    const existing = slugsByTourId.get(hs.tourId) ?? []
+    existing.push(hs.slug)
+    slugsByTourId.set(hs.tourId, existing)
+  }
+
   return {
-    tours: rows.map((row) => ({
-      nanoId: row.nanoId,
-      title: row.title,
-      organizationName: row.organizationName,
-      status: deriveTourStatus(row),
-      availableLocales: row.availableLocales,
-      stopCount: row.stopCount,
-      createdAt: row.createdAt,
-      publishedAt: row.publishedAt,
-      coverStoragePath: row.coverStoragePath,
-    })),
+    tours: rows.map((row) => {
+      const historical = slugsByTourId.get(row.tourId) ?? []
+      const allSlugs = [row.slug, ...historical.filter((s) => s !== row.slug)]
+      return {
+        nanoId: row.nanoId,
+        title: row.title,
+        organizationName: row.organizationName,
+        status: deriveTourStatus(row),
+        availableLocales: row.availableLocales,
+        slugs: allSlugs,
+        stopCount: row.stopCount,
+        createdAt: row.createdAt,
+        publishedAt: row.publishedAt,
+        coverStoragePath: row.coverStoragePath,
+      }
+    }),
     totalCount: countResult?.total ?? 0,
     page,
     pageSize,
