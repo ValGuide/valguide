@@ -1,7 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
+import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { requireTourAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
+import { getPublishedTourByNanoId } from '../public/get-published-tour'
+import { writeOrgSlugToKv, writeTourSlugToKv, writeTourToKv } from '../public/kv-helpers'
+import { serializeTourForKv } from '../public/kv-serializers'
 import { publishTour } from './publish-tour.server'
 
 export type { PublishTourInput, PublishTourResult } from './publish-tour.server'
@@ -16,5 +20,41 @@ export const publishTourFn = createServerFn({ method: 'POST' })
   .inputValidator(publishTourInputSchema)
   .handler(async ({ context, data }) => {
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
-    return publishTour(data, context.user.id)
+    const result = await publishTour(data, context.user.id)
+
+    if (result.success) {
+      waitUntil(writeKvAfterPublish(data.nanoId, data.locale, result.tourSlug, result.orgSlug, result.orgNanoId))
+    }
+
+    return result
   })
+
+async function writeKvAfterPublish(
+  tourNanoId: string,
+  locale: string,
+  tourSlug: string | null,
+  orgSlug: string | null,
+  orgNanoId: string | null,
+): Promise<void> {
+  try {
+    const fullTour = await getPublishedTourByNanoId(tourNanoId)
+    if (fullTour) {
+      const tourKv = serializeTourForKv(fullTour, locale)
+      await writeTourToKv(tourNanoId, locale, tourKv)
+    }
+
+    if (orgSlug && orgNanoId) {
+      await writeOrgSlugToKv(orgSlug, { nanoId: orgNanoId, primarySlug: orgSlug })
+    }
+
+    if (orgSlug && tourSlug) {
+      await writeTourSlugToKv(orgSlug, tourSlug, {
+        tourNanoId,
+        primarySlug: tourSlug,
+        orgPrimarySlug: orgSlug,
+      })
+    }
+  } catch (err) {
+    console.error('KV write after publish failed (non-fatal):', err)
+  }
+}

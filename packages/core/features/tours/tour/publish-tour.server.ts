@@ -1,6 +1,7 @@
 import { and, eq } from 'drizzle-orm'
 import { NotFoundError } from '../../auth/authorization'
 import { type DB, db } from '../../db'
+import { organization } from '../../orgs/schema'
 import {
   stopAsset,
   stopAssetDraft,
@@ -25,6 +26,9 @@ export type PublishTourInput = {
 export type PublishTourResult = {
   success: boolean
   publishedStopCount: number
+  tourSlug: string | null
+  orgSlug: string | null
+  orgNanoId: string | null
 }
 
 type Tx = Parameters<Parameters<DB['transaction']>[0]>[0]
@@ -212,7 +216,11 @@ async function publishStopAssetsTx(tx: Tx, stopId: string): Promise<void> {
 }
 
 export async function publishTour(input: PublishTourInput, userId: string): Promise<PublishTourResult> {
-  const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, input.nanoId)).limit(1)
+  const [foundTour] = await db
+    .select({ id: tour.id, slug: tour.slug, organizationId: tour.organizationId })
+    .from(tour)
+    .where(eq(tour.nanoId, input.nanoId))
+    .limit(1)
 
   if (!foundTour) {
     throw new NotFoundError('Tour')
@@ -239,5 +247,17 @@ export async function publishTour(input: PublishTourInput, userId: string): Prom
     await tx.update(tour).set({ publishedAt: new Date() }).where(eq(tour.id, foundTour.id))
   })
 
-  return { success: true, publishedStopCount }
+  const [org] = await db
+    .select({ slug: organization.slug, nanoId: organization.nanoId })
+    .from(organization)
+    .where(eq(organization.id, foundTour.organizationId))
+    .limit(1)
+
+  return {
+    success: true,
+    publishedStopCount,
+    tourSlug: foundTour.slug,
+    orgSlug: org?.slug ?? null,
+    orgNanoId: org?.nanoId ?? null,
+  }
 }

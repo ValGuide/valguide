@@ -15,6 +15,11 @@
   // Native R2 binding — no S3 API keys needed
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod" }],
 
+  // KV namespace for tour data edge caching (same namespace as app worker — publish writes here)
+  "kv_namespaces": [
+    { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" }
+  ],
+
   // Production custom domain
   "routes": [{ "pattern": "studio.valguide.com", "custom_domain": true }],
 
@@ -39,6 +44,9 @@
     "dev": {
       "routes": [{ "pattern": "studio.valguide.dev", "custom_domain": true }],
       "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev" }],
+      "kv_namespaces": [
+        { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" }
+      ],
       "vars": {
         "NODE_ENV": "production",
         "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
