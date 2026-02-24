@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { serverEnv } from '@valguide/core/env/server'
 import { getShortLinkByCode } from '@valguide/core/features/links/get-short-link'
-import { CACHE_TTL, getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/kv'
+import { getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/kv'
 import { buildPathFromShortLink, isAbsoluteUrl } from '@valguide/core/features/links/paths'
 import { z } from 'zod'
 
@@ -25,7 +25,7 @@ const resolveShortLinkFn = createServerFn({ method: 'GET' })
         return { error: 'Invalid link configuration', status: 500 }
       }
 
-      await setCache(cacheKey, path, { ttl: CACHE_TTL })
+      await setCache(cacheKey, path)
     }
 
     const redirectUrl = isAbsoluteUrl(path) ? path : `${appBaseUrl}${path}`

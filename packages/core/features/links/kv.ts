@@ -1,12 +1,7 @@
 import { env } from 'cloudflare:workers'
 
-// Cache TTL in seconds (default: 24 hours)
-export const CACHE_TTL = 60 * 60 * 24
-
 export async function setCache(key: string, value: string, options?: { ttl?: number }): Promise<void> {
-  await env.LINKS_KV.put(key, value, {
-    expirationTtl: options?.ttl ?? CACHE_TTL,
-  })
+  await env.LINKS_KV.put(key, value, options?.ttl ? { expirationTtl: options.ttl } : undefined)
 }
 
 export async function getCache(key: string): Promise<string | null> {

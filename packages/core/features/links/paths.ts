@@ -43,26 +43,17 @@ export async function buildPathFromShortLink(link: ShortLink): Promise<string | 
 }
 
 /**
- * Resolves a tour nanoId to its org slug and tour slug.
+ * Resolves a tour nanoId to its org slug and tour slug via a single join query.
  */
 async function resolveTourSlugs(tourNanoId: string): Promise<{ orgSlug: string; tourSlug: string } | null> {
-  const [foundTour] = await db
-    .select({ id: tour.id, organizationId: tour.organizationId, slug: tour.slug })
+  const [result] = await db
+    .select({ orgSlug: organization.slug, tourSlug: tour.slug })
     .from(tour)
+    .innerJoin(organization, eq(tour.organizationId, organization.id))
     .where(and(eq(tour.nanoId, tourNanoId), isNull(tour.deletedAt)))
     .limit(1)
 
-  if (!foundTour) return null
-
-  const [orgRow] = await db
-    .select({ slug: organization.slug })
-    .from(organization)
-    .where(eq(organization.id, foundTour.organizationId))
-    .limit(1)
-
-  if (!orgRow) return null
-
-  return { orgSlug: orgRow.slug, tourSlug: foundTour.slug }
+  return result ?? null
 }
 
 /**
