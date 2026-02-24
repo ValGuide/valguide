@@ -15,6 +15,11 @@
   // Native R2 binding — for org logo uploads
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod" }],
 
+  // KV namespace for tour data edge caching (shared with app worker)
+  "kv_namespaces": [
+    { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" }
+  ],
+
   // Production custom domain
   "routes": [{ "pattern": "ops.val.guide", "custom_domain": true }],
 
@@ -39,6 +44,9 @@
     "dev": {
       "routes": [{ "pattern": "ops-dev.val.guide", "custom_domain": true }],
       "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev" }],
+      "kv_namespaces": [
+        { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" }
+      ],
       "vars": {
         "NODE_ENV": "production",
         "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",

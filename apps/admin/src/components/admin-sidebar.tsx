@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components
 import {
   BookOpen,
   Building2,
+  Database,
   Globe,
   LogOut,
   Monitor,
@@ -60,6 +61,7 @@ export function AdminSidebar({ pathname: pathnameProp, userEmail, onLogout, ...p
     { title: 'Users', path: '/users', icon: Users },
     { title: 'Organizations', path: '/orgs', icon: Building2 },
     { title: 'Approved Domains', path: '/approved-domains', icon: Globe },
+    { title: 'KV Cache', path: '/kv-cache', icon: Database },
   ]
 
   return (

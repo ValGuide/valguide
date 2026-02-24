@@ -77,6 +77,8 @@
     "supabase:secrets:set:prod": "pnpm env:load --sb:prod --rs:prod pnpm supabase:secrets:set",
     "seed:dev": "pnpm env:load --sb:dev pnpm dlx tsx scripts/seed-studio/main.ts",
     "seed:prod": "pnpm env:load --sb:prod pnpm dlx tsx scripts/seed-studio/main.ts",
+    "kv:backfill:dev": "pnpm env:load --sb:dev pnpm dlx tsx scripts/kv-backfill.ts",
+    "kv:backfill:prod": "pnpm env:load --sb:prod pnpm dlx tsx scripts/kv-backfill.ts",
     "resend:sync": "pnpm env:load pnpm --filter @valguide/email sync-templates",
     "email:dev": "pnpm --filter @valguide/email dev",
     "workspace:dev": "pnpm caddy:ensure && (sleep 5 && for u in studio.local.dev admin-local.dev storybook.local.dev; do open https://$u; done) & pnpm env:load turbo run dev --filter ./apps/studio --filter ./apps/admin --filter ./apps/storybook"
