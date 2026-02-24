@@ -46,6 +46,7 @@ jobs:
       VITE_POSTHOG_HOST: https://e.valguide.com
       VITE_STUDIO_URL: https://studio.valguide.com
       VITE_APP_DOMAIN: app.valguide.com
+      VITE_R2_PUBLIC_URL: https://assets.valguide.com
       VITE_ENV: prod
     steps:
       - uses: actions/checkout@v4
@@ -89,6 +90,7 @@ jobs:
       VITE_POSTHOG_HOST: https://e.valguide.dev
       VITE_STUDIO_URL: https://studio.valguide.dev
       VITE_APP_DOMAIN: app.valguide.dev
+      VITE_R2_PUBLIC_URL: https://assets.valguide.dev
       VITE_ENV: dev
     steps:
       - uses: actions/checkout@v4

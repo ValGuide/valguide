@@ -6,7 +6,7 @@
 //   Navigation (_shell.html)    → network-first, cache fallback
 //   /assets/* (JS/CSS)          → cache-first (hashed filenames, immutable)
 //   /_serverFn/* (tour data)    → network-first, cache fallback
-//   assets.valguide.app (R2)    → cache-first (immutable media URLs)
+//   assets.valguide.{dev,com} (R2) → cache-first (immutable media URLs)
 //   *.imagekit.io (images)      → cache-first (immutable image URLs)
 //
 // One tour cached at a time — opening a new tour evicts the previous tour's
@@ -61,7 +61,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // R2 media (audio, video, images) → cache-first with range support
-  if (url.hostname === 'assets.valguide.app') {
+  if (url.hostname === 'assets.valguide.dev' || url.hostname === 'assets.valguide.com') {
     event.respondWith(mediaCacheFirst(request))
     return
   }
