@@ -12,7 +12,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { Search } from 'lucide-react'
 import type { AdminOrgListItem } from '@/server/functions/list-orgs.fn'
 import { DataTablePagination } from './data-table-pagination'
-import { orgsColumns } from './orgs-columns'
+import { type OrgsTableMeta, orgsColumns } from './orgs-columns'
 
 type OrgsDataTableProps = {
   data: AdminOrgListItem[]
@@ -24,6 +24,8 @@ type OrgsDataTableProps = {
   search: string
   onSearchChange: (value: string) => void
   isLoading?: boolean
+  onBackfillSlugs: (orgNanoId: string) => void
+  isBackfilling: string | null
 }
 
 export function OrgsDataTable({
@@ -36,7 +38,11 @@ export function OrgsDataTable({
   search,
   onSearchChange,
   isLoading,
+  onBackfillSlugs,
+  isBackfilling,
 }: OrgsDataTableProps) {
+  const meta: OrgsTableMeta = { onBackfillSlugs, isBackfilling }
+
   const table = useReactTable({
     data,
     columns: orgsColumns,
@@ -47,6 +53,7 @@ export function OrgsDataTable({
     state: { pagination, sorting },
     onPaginationChange,
     onSortingChange,
+    meta,
   })
 
   return (

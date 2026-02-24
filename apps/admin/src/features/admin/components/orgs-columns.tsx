@@ -1,8 +1,19 @@
 import { Link } from '@tanstack/react-router'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@valguide/ui/components/button'
-import { ArrowUpDown } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@valguide/ui/components/dropdown-menu'
+import { ArrowUpDown, Loader2, MoreHorizontal } from 'lucide-react'
 import type { AdminOrgListItem } from '@/server/functions/list-orgs.fn'
+
+export type OrgsTableMeta = {
+  onBackfillSlugs: (orgNanoId: string) => void
+  isBackfilling: string | null
+}
 
 export const orgsColumns: ColumnDef<AdminOrgListItem>[] = [
   {
@@ -61,5 +72,29 @@ export const orgsColumns: ColumnDef<AdminOrgListItem>[] = [
       </Button>
     ),
     cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+  },
+  {
+    id: 'actions',
+    cell: ({ row, table }) => {
+      const org = row.original
+      const meta = table.options.meta as OrgsTableMeta
+      const isBackfilling = meta.isBackfilling === org.nanoId
+
+      return (
+        <div className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-8" disabled={isBackfilling}>
+                {isBackfilling ? <Loader2 className="size-4 animate-spin" /> : <MoreHorizontal className="size-4" />}
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => meta.onBackfillSlugs(org.nanoId)}>Backfill KV Slugs</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )
+    },
   },
 ]

@@ -11,6 +11,7 @@ import { OrgsDataTable } from '@/features/admin/components/orgs-data-table'
 import { adminOrgsQueryOptions } from '@/features/admin/orgs-query-options'
 import { adminCreateOrgFn } from '@/server/functions/admin-create-org.fn'
 import { adminUploadOrgLogoFn } from '@/server/functions/admin-upload-org-logo.fn'
+import { kvBackfillAllSlugsForOrgFn } from '@/server/functions/kv-backfill-all-slugs-for-org.fn'
 import type { ListOrgsInput } from '@/server/functions/list-orgs.fn'
 
 const orgsSearchSchema = z.object({
@@ -111,6 +112,22 @@ function OrgsPage() {
     [navigate, sorting, searchParams],
   )
 
+  // Backfill KV slugs for a specific org
+  const [backfillingOrgId, setBackfillingOrgId] = useState<string | null>(null)
+
+  const backfillSlugsMutation = useMutation({
+    retry: false,
+    mutationFn: (orgNanoId: string) => kvBackfillAllSlugsForOrgFn({ data: { orgNanoId } }),
+    onMutate: (orgNanoId) => setBackfillingOrgId(orgNanoId),
+    onSuccess: (result) => {
+      toast.success(
+        `Org: ${result.orgSlugEntriesWritten} slug entries, Tours: ${result.tourSlugsProcessed} processed, ${result.tourSlugEntriesWritten} slug entries written`,
+      )
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Backfill failed'),
+    onSettled: () => setBackfillingOrgId(null),
+  })
+
   // Create org
   const [showCreateDialog, setShowCreateDialog] = useState(false)
 
@@ -170,6 +187,8 @@ function OrgsPage() {
         search={searchValue}
         onSearchChange={setSearchValue}
         isLoading={isFetching}
+        onBackfillSlugs={(nanoId) => backfillSlugsMutation.mutate(nanoId)}
+        isBackfilling={backfillingOrgId}
       />
 
       <CreateOrgDialog

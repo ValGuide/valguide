@@ -15,7 +15,7 @@ import { Search, X } from 'lucide-react'
 import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
 import { DataTablePagination } from './data-table-pagination'
-import { toursColumns } from './tours-columns'
+import { type ToursTableMeta, toursColumns } from './tours-columns'
 
 const statusOptions = [
   { label: 'Draft', value: 'draft' },
@@ -36,6 +36,8 @@ type ToursDataTableProps = {
   onSortingChange: OnChangeFn<SortingState>
   onColumnFiltersChange: OnChangeFn<ColumnFiltersState>
   isLoading?: boolean
+  onBackfillTour: (tourNanoId: string) => void
+  isBackfilling: string | null
 }
 
 export function ToursDataTable({
@@ -49,7 +51,11 @@ export function ToursDataTable({
   onSortingChange,
   onColumnFiltersChange,
   isLoading,
+  onBackfillTour,
+  isBackfilling,
 }: ToursDataTableProps) {
+  const meta: ToursTableMeta = { onBackfillTour, isBackfilling }
+
   const table = useReactTable({
     data,
     columns: toursColumns,
@@ -62,6 +68,7 @@ export function ToursDataTable({
     onPaginationChange,
     onSortingChange,
     onColumnFiltersChange,
+    meta,
   })
 
   const isFiltered = table.getState().columnFilters.length > 0

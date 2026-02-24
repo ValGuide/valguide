@@ -1,9 +1,20 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import { Button } from '@valguide/ui/components/button'
-import { ArrowUpDown, ImageOff } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@valguide/ui/components/dropdown-menu'
+import { ArrowUpDown, ImageOff, Loader2, MoreHorizontal } from 'lucide-react'
 import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { TourStatusBadge } from './tour-status-badge'
+
+export type ToursTableMeta = {
+  onBackfillTour: (tourNanoId: string) => void
+  isBackfilling: string | null
+}
 
 export const toursColumns: ColumnDef<AdminTourListItem>[] = [
   {
@@ -116,5 +127,30 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
       </Button>
     ),
     cell: ({ row }) => (row.original.publishedAt ? new Date(row.original.publishedAt).toLocaleDateString() : '—'),
+  },
+  {
+    id: 'actions',
+    enableColumnFilter: false,
+    cell: ({ row, table }) => {
+      const tour = row.original
+      const meta = table.options.meta as ToursTableMeta
+      const isBackfilling = meta.isBackfilling === tour.nanoId
+
+      return (
+        <div className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-8" disabled={isBackfilling}>
+                {isBackfilling ? <Loader2 className="size-4 animate-spin" /> : <MoreHorizontal className="size-4" />}
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => meta.onBackfillTour(tour.nanoId)}>Backfill KV Cache</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )
+    },
   },
 ]
