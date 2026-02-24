@@ -8,6 +8,7 @@
     "build": "storybook build",
     "deploy": "pnpm build && wrangler deploy",
     "deploy:dev": "pnpm build && wrangler deploy --env dev",
+    "worker:dev": "wrangler dev",
     "serve": "serve storybook-static",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml storybook-static .turbo",

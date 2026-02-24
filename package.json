@@ -62,6 +62,7 @@
     "storybook:build": "pnpm --filter @valguide/storybook build",
     "storybook:serve": "pnpm --filter @valguide/storybook serve",
     "storybook:dev": "pnpm caddy:ensure && (sleep 5 && open https://storybook.local.dev) & turbo run dev --filter ./apps/storybook",
+    "storybook:wrangler:dev": "(sleep 5 && open http://localhost:8787) & turbo run dev --filter ./apps/storybook & pnpm --filter @valguide/storybook worker:dev",
     "caddy": "caddy run --config Caddyfile.local",
     "caddy:ensure": "sh scripts/ensure-caddy.sh",
     "icons:build": "turbo run build --filter ./packages/icons",
