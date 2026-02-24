@@ -17,7 +17,7 @@ export const getRouter = () => {
     defaultPendingComponent: AppLoadingSkeleton,
     defaultNotFoundComponent: DefaultNotFound
   })
-π
+
   setupRouterSsrQueryIntegration({
     router,
     queryClient,
