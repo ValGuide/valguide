@@ -23,7 +23,15 @@ export const publishTourFn = createServerFn({ method: 'POST' })
     const result = await publishTour(data, context.user.id)
 
     if (result.success) {
-      waitUntil(writeKvAfterPublish(data.nanoId, data.locale, result.tourSlug, result.orgSlug, result.orgNanoId))
+      // DB read must happen inline (before handler returns) because
+      // runWithRequestDb closes the connection in `finally`.
+      // waitUntil callbacks run after the response — only KV/HTTP work is safe there.
+      const fullTour = await getPublishedTourByNanoId(data.nanoId)
+      const tourKv = fullTour ? serializeTourForKv(fullTour, data.locale) : null
+
+      waitUntil(
+        writeKvAfterPublish(data.nanoId, data.locale, tourKv, result.tourSlug, result.orgSlug, result.orgNanoId),
+      )
     }
 
     return result
@@ -32,14 +40,13 @@ export const publishTourFn = createServerFn({ method: 'POST' })
 async function writeKvAfterPublish(
   tourNanoId: string,
   locale: string,
+  tourKv: Parameters<typeof writeTourToKv>[2] | null,
   tourSlug: string | null,
   orgSlug: string | null,
   orgNanoId: string | null,
 ): Promise<void> {
   try {
-    const fullTour = await getPublishedTourByNanoId(tourNanoId)
-    if (fullTour) {
-      const tourKv = serializeTourForKv(fullTour, locale)
+    if (tourKv) {
       await writeTourToKv(tourNanoId, locale, tourKv)
     }
 
