@@ -101,3 +101,35 @@ export async function writeTourSlugToKv(orgSlug: string, tourSlug: string, data:
     // Silently fail
   }
 }
+
+// ── Delete helpers ───────────────────────────────────────────────
+
+export async function deleteTourFromKv(tourNanoId: string, locale: string): Promise<void> {
+  const kv = getKv()
+  if (!kv) return
+  try {
+    await kv.delete(tourDataKey(tourNanoId, locale))
+  } catch {
+    // Silently fail
+  }
+}
+
+export async function deleteTourAllLocalesFromKv(tourNanoId: string, locales: string[]): Promise<void> {
+  const kv = getKv()
+  if (!kv) return
+  try {
+    await Promise.all(locales.map((locale) => kv.delete(tourDataKey(tourNanoId, locale))))
+  } catch {
+    // Silently fail
+  }
+}
+
+export async function deleteTourSlugFromKv(orgSlug: string, tourSlug: string): Promise<void> {
+  const kv = getKv()
+  if (!kv) return
+  try {
+    await kv.delete(tourSlugKey(orgSlug, tourSlug))
+  } catch {
+    // Silently fail
+  }
+}

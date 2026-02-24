@@ -1,13 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
+import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { requireAuthMiddleware } from '../../auth/middleware'
+import { deleteTourAllLocalesFromKv, deleteTourSlugFromKv } from '../public/kv-helpers'
 import { deleteTour, permanentlyDeleteTour } from './delete-tour.server'
 
 export type { DeleteTourResult } from './delete-tour.server'
-
-// =============================================================================
-// SERVER FUNCTION
-// =============================================================================
 
 const deleteTourSchema = z.object({
   nanoId: z.string(),
@@ -18,9 +16,29 @@ export const deleteTourFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(deleteTourSchema)
   .handler(async ({ context, data }) => {
-    if (data.permanent) {
-      await permanentlyDeleteTour(data.nanoId, context.user.id)
-      return { nanoId: data.nanoId, deletedAt: new Date() }
+    const result = data.permanent
+      ? await permanentlyDeleteTour(data.nanoId, context.user.id)
+      : await deleteTour(data.nanoId, context.user.id)
+
+    if (result.publishedLocales.length > 0 || result.tourSlug) {
+      waitUntil(deleteKvAfterTourRemoval(data.nanoId, result.publishedLocales, result.tourSlug, result.orgSlug))
     }
-    return deleteTour(data.nanoId, context.user.id)
+
+    return result
   })
+
+async function deleteKvAfterTourRemoval(
+  tourNanoId: string,
+  publishedLocales: string[],
+  tourSlug: string | null,
+  orgSlug: string | null,
+): Promise<void> {
+  try {
+    await deleteTourAllLocalesFromKv(tourNanoId, publishedLocales)
+    if (orgSlug && tourSlug) {
+      await deleteTourSlugFromKv(orgSlug, tourSlug)
+    }
+  } catch (err) {
+    console.error('KV delete after tour removal failed (non-fatal):', err)
+  }
+}

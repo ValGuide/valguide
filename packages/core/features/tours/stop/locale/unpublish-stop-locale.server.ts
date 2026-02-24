@@ -1,10 +1,11 @@
 import { and, eq } from 'drizzle-orm'
 import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
-import { stop, stopLocale } from '../../schema'
+import { stop, stopLocale, tour, tourStop } from '../../schema'
 
 export type UnpublishStopLocaleResult = {
   success: boolean
+  tourNanoIds: string[]
 }
 
 export async function unpublishStopLocale(stopNanoId: string, locale: string): Promise<UnpublishStopLocaleResult> {
@@ -23,5 +24,14 @@ export async function unpublishStopLocale(stopNanoId: string, locale: string): P
     throw new NotFoundError('Stop locale')
   }
 
-  return { success: true }
+  const tours = await db
+    .select({ nanoId: tour.nanoId })
+    .from(tourStop)
+    .innerJoin(tour, eq(tourStop.tourId, tour.id))
+    .where(eq(tourStop.stopId, foundStop.id))
+
+  return {
+    success: true,
+    tourNanoIds: tours.map((t) => t.nanoId),
+  }
 }

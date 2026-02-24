@@ -1,7 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
+import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
+import { deleteTourFromKv } from '../../public/kv-helpers'
 import { unpublishTourLocale } from './unpublish-tour-locale.server'
 
 export type { UnpublishTourLocaleResult } from './unpublish-tour-locale.server'
@@ -17,5 +19,9 @@ export const unpublishTourLocaleFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
-    return unpublishTourLocale(data.nanoId, data.locale)
+    const result = await unpublishTourLocale(data.nanoId, data.locale)
+
+    waitUntil(deleteTourFromKv(data.nanoId, data.locale))
+
+    return result
   })
