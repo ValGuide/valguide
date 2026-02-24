@@ -31,7 +31,9 @@ export function TourHero({ title, description, coverImage, assets }: TourHeroPro
         <PageTitle size="xl" className="mb-4">
           {title}
         </PageTitle>
-        {description && <RichTextDisplay content={description} />}
+        {description && (
+          <RichTextDisplay content={description} className="text-foreground prose-p:text-muted-foreground" />
+        )}
       </div>
 
       {galleryImages.length > 0 && <ImageGallery images={galleryImages} />}
