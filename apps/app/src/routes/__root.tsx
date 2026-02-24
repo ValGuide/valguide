@@ -1,3 +1,5 @@
+import { Providers } from '@/components/providers'
+import { themeQueryOptions } from '@/features/theme/query-options'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
@@ -9,16 +11,12 @@ import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/qu
 import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
-import { Providers } from '@/components/providers'
-import { currentUserQueryOptions } from '@/features/auth/query-options'
-import { themeQueryOptions } from '@/features/theme/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   beforeLoad: async ({ context }) => {
-    const [user, locale, theme] = await Promise.all([
-      context.queryClient.ensureQueryData(currentUserQueryOptions()),
+    const [locale, theme] = await Promise.all([
       context.queryClient.ensureQueryData(localeQueryOptions()),
       context.queryClient.ensureQueryData(themeQueryOptions()),
     ])
@@ -27,7 +25,7 @@ export const Route = createRootRouteWithContext<{
       title: messages?.app?.metadata?.title ?? 'ValGuide',
       description: messages?.app?.metadata?.description ?? 'Explore tours',
     }
-    return { user, locale, theme, messages, metadata }
+    return { locale, theme, messages, metadata }
   },
   notFoundComponent: () => {
     const { messages } = Route.useRouteContext()
