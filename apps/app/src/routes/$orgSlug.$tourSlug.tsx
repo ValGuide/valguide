@@ -15,8 +15,10 @@ import {
 } from '@valguide/core/features/tours/public/kv-helpers'
 import { serializeTourForKv, tourKvDataToTourWithStops } from '@valguide/core/features/tours/public/kv-serializers'
 import { resolveTourByIdOrSlug } from '@valguide/core/features/tours/tour/slug/resolve-tour.server'
+import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { waitUntil } from '@valguide/core/utils/wait-until'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { z } from 'zod'
 import { PreviewBanner } from '@/components/preview-banner'
 import { notifyServiceWorker } from '@/sw'
@@ -196,6 +198,8 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug')({
 
 function TourLayout() {
   const { tour, isPreviewMode, locale } = Route.useRouteContext()
+  const t = useTranslations('player')
+  const offlineShownRef = useRef(false)
 
   useEffect(() => {
     if (isPreviewMode) return
@@ -211,6 +215,23 @@ function TourLayout() {
       tourKey: tour.nanoId,
     })
   }, [tour.nanoId, isPreviewMode])
+
+  useEffect(() => {
+    if (isPreviewMode) return
+
+    const sw = navigator.serviceWorker
+    if (!sw) return
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'TOUR_READY_OFFLINE' && event.data.tourKey === tour.nanoId && !offlineShownRef.current) {
+        offlineShownRef.current = true
+        toast.success(t('offlineReady'), { duration: 4000 })
+      }
+    }
+
+    sw.addEventListener('message', handleMessage)
+    return () => sw.removeEventListener('message', handleMessage)
+  }, [tour.nanoId, isPreviewMode, t])
 
   return (
     <>

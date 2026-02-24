@@ -73,7 +73,8 @@
       "title": "Vorschaumodus",
       "description": "Nur Sie können diese Änderungen sehen. Es wird nichts veröffentlicht.",
       "exit": "Vorschau beenden"
-    }
+    },
+    "offlineReady": "Offline verfügbar"
   },
   "admin": {
     "assets": {

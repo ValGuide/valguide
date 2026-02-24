@@ -73,7 +73,8 @@
       "title": "Modus da prevista",
       "description": "Mo Vus pudais vesair questas midadas. Nagut vegn publitgà.",
       "exit": "Bandunar la prevista"
-    }
+    },
+    "offlineReady": "Disponibel offline"
   },
   "admin": {
     "assets": {
