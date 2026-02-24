@@ -45,7 +45,7 @@ const resolveTourFn = createServerFn({ method: 'GET' })
         resolveOrgSlugFromKv(orgSlug),
         resolveTourSlugFromKv(orgSlug, tourSlug),
       ])
-
+      
       if (orgKv && tourKv) {
         const needsRedirect = orgSlug !== orgKv.primarySlug || tourSlug !== tourKv.primarySlug
 
