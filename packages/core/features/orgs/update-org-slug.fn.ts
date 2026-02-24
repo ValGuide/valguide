@@ -4,7 +4,7 @@ import { waitUntil } from '../../utils/wait-until'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
-import { writeOrgSlugToKv } from '../tours/public/kv-helpers'
+import { writeOrgSlugToKv } from '../tours/public/kv'
 import { updateOrgSlug } from './update-org-slug.server'
 
 export type { UpdateOrgSlugResult } from './update-org-slug.server'

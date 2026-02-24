@@ -3,7 +3,7 @@ import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
-import { deleteTourFromKv } from '../../public/kv-helpers'
+import { deleteTourFromKv } from '../../public/kv'
 import { unpublishTourLocale } from './unpublish-tour-locale.server'
 
 export type { UnpublishTourLocaleResult } from './unpublish-tour-locale.server'

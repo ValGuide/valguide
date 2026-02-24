@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { requireTourAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { getPublishedTourByNanoId } from '../public/get-published-tour'
-import { writeOrgSlugToKv, writeTourSlugToKv, writeTourToKv } from '../public/kv-helpers'
+import { writeOrgSlugToKv, writeTourSlugToKv, writeTourToKv } from '../public/kv'
 import { serializeTourForKv } from '../public/kv-serializers'
 import { publishTour } from './publish-tour.server'
 
