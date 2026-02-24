@@ -1,0 +1,317 @@
+# Unified deploy orchestrator.
+#
+# Parses commit message tags like [build app], [build app,studio], [build all],
+# deploys matching apps in parallel via reusable sub-workflows, sends ONE
+# consolidated Slack notification, and creates GitHub Releases on success.
+#
+# Required GitHub Secrets:
+#   CLOUDFLARE_API_TOKEN  — Cloudflare API token with Workers deploy permissions
+#   CLOUDFLARE_ACCOUNT_ID — Cloudflare account ID
+#   VALBOT_SLACK_TOKEN    — Slack Bot Token (xoxb-…) with chat:write scope
+
+name: Deploy
+
+on:
+  push:
+    branches: [main, dev]
+
+concurrency:
+  group: deploy-${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  # ── Check which apps to deploy ──────────────────────────────────────
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.check.outputs.environment }}
+      deploy-app: ${{ steps.check.outputs.deploy-app }}
+      deploy-studio: ${{ steps.check.outputs.deploy-studio }}
+      deploy-admin: ${{ steps.check.outputs.deploy-admin }}
+      deploy-docs: ${{ steps.check.outputs.deploy-docs }}
+      deploy-links: ${{ steps.check.outputs.deploy-links }}
+      deploy-storybook: ${{ steps.check.outputs.deploy-storybook }}
+      deploy-www: ${{ steps.check.outputs.deploy-www }}
+      any-deploy: ${{ steps.check.outputs.any-deploy }}
+    steps:
+      - id: check
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          # Determine environment from branch
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+
+          APPS="app studio admin docs links storybook www"
+          ANY=false
+
+          if echo "$COMMIT_MSG" | grep -qF '[build all]'; then
+            echo "✅ [build all] found — deploying everything"
+            for app in $APPS; do
+              echo "deploy-${app}=true" >> $GITHUB_OUTPUT
+            done
+            ANY=true
+          else
+            SCOPES=$(echo "$COMMIT_MSG" | grep -oE '\[build [^]]+' | sed 's/\[build //' | tr ' ,' '\n' | tr -s '\n')
+            if [ -n "$SCOPES" ]; then
+              echo "Found scoped build request: $(echo $SCOPES | tr '\n' ' ')"
+            else
+              echo "No [build] tag found — nothing to deploy"
+            fi
+            for app in $APPS; do
+              if echo "$SCOPES" | grep -qx "$app"; then
+                echo "deploy-${app}=true" >> $GITHUB_OUTPUT
+                ANY=true
+              else
+                echo "deploy-${app}=false" >> $GITHUB_OUTPUT
+              fi
+            done
+          fi
+
+          echo "any-deploy=$ANY" >> $GITHUB_OUTPUT
+
+  # ── Deploy jobs (parallel) ──────────────────────────────────────────
+  deploy-app:
+    needs: check
+    if: needs.check.outputs.deploy-app == 'true'
+    uses: ./.github/workflows/_deploy-app.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+    secrets: inherit
+
+  deploy-studio:
+    needs: check
+    if: needs.check.outputs.deploy-studio == 'true'
+    uses: ./.github/workflows/_deploy-studio.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+    secrets: inherit
+
+  deploy-admin:
+    needs: check
+    if: needs.check.outputs.deploy-admin == 'true'
+    uses: ./.github/workflows/_deploy-admin.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+    secrets: inherit
+
+  deploy-docs:
+    needs: check
+    if: needs.check.outputs.deploy-docs == 'true'
+    uses: ./.github/workflows/_deploy-docs.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+    secrets: inherit
+
+  deploy-links:
+    needs: check
+    if: needs.check.outputs.deploy-links == 'true'
+    uses: ./.github/workflows/_deploy-links.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+    secrets: inherit
+
+  deploy-storybook:
+    needs: check
+    if: needs.check.outputs.deploy-storybook == 'true'
+    uses: ./.github/workflows/_deploy-storybook.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+    secrets: inherit
+
+  deploy-www:
+    needs: check
+    if: needs.check.outputs.deploy-www == 'true'
+    uses: ./.github/workflows/_deploy-www.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+    secrets: inherit
+
+  # ── Consolidated Slack notification ─────────────────────────────────
+  notify:
+    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www]
+    if: always() && needs.check.outputs.any-deploy == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build and send Slack summary
+        env:
+          SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
+          ENV: ${{ needs.check.outputs.environment }}
+          ACTOR: ${{ github.actor }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # Which apps were requested
+          DEPLOY_APP: ${{ needs.check.outputs.deploy-app }}
+          DEPLOY_STUDIO: ${{ needs.check.outputs.deploy-studio }}
+          DEPLOY_ADMIN: ${{ needs.check.outputs.deploy-admin }}
+          DEPLOY_DOCS: ${{ needs.check.outputs.deploy-docs }}
+          DEPLOY_LINKS: ${{ needs.check.outputs.deploy-links }}
+          DEPLOY_STORYBOOK: ${{ needs.check.outputs.deploy-storybook }}
+          DEPLOY_WWW: ${{ needs.check.outputs.deploy-www }}
+          # Results
+          RESULT_APP: ${{ needs.deploy-app.result }}
+          RESULT_STUDIO: ${{ needs.deploy-studio.result }}
+          RESULT_ADMIN: ${{ needs.deploy-admin.result }}
+          RESULT_DOCS: ${{ needs.deploy-docs.result }}
+          RESULT_LINKS: ${{ needs.deploy-links.result }}
+          RESULT_STORYBOOK: ${{ needs.deploy-storybook.result }}
+          RESULT_WWW: ${{ needs.deploy-www.result }}
+        run: |
+          SHA7="${GITHUB_SHA:0:7}"
+          ENV_UPPER=$(echo "$ENV" | tr '[:lower:]' '[:upper:]')
+
+          # URL lookup by display name
+          url_for() {
+            case "$1" in
+              app-prod)    echo "https://app.valguide.com" ;;
+              app-dev)     echo "https://app.valguide.dev" ;;
+              studio-prod) echo "https://studio.valguide.com" ;;
+              studio-dev)  echo "https://studio.valguide.dev" ;;
+              admin-prod)  echo "https://ops.val.guide" ;;
+              admin-dev)   echo "https://ops-dev.val.guide" ;;
+              docs-prod)   echo "https://docs.val.guide" ;;
+              docs-dev)    echo "https://docs-dev.val.guide" ;;
+              links-prod)  echo "https://links.valguide.com" ;;
+              links-dev)   echo "https://links.valguide.dev" ;;
+              sb-prod)     echo "https://sb.val.guide" ;;
+              sb-dev)      echo "https://sb-dev.val.guide" ;;
+              www-prod)    echo "https://www.valguide.com" ;;
+              www-dev)     echo "https://www.valguide.dev" ;;
+            esac
+          }
+
+          LINES=""
+          FAIL_COUNT=0
+          FAIL_NAMES=""
+
+          add_line() {
+            local should=$1 result=$2 display_name=$3
+            if [ "$should" != "true" ]; then return; fi
+            local url
+            url=$(url_for "$display_name")
+            if [ "$result" = "success" ]; then
+              LINES="${LINES}$(printf '✅ %-14s %s' "$display_name" "$url")\n"
+            else
+              LINES="${LINES}$(printf '❌ %-14s %s' "$display_name" "$url")\n"
+              FAIL_NAMES="${FAIL_NAMES}${display_name}, "
+              FAIL_COUNT=$((FAIL_COUNT + 1))
+            fi
+          }
+
+          add_line "$DEPLOY_APP"       "$RESULT_APP"       "app-${ENV}"
+          add_line "$DEPLOY_STUDIO"    "$RESULT_STUDIO"    "studio-${ENV}"
+          add_line "$DEPLOY_ADMIN"     "$RESULT_ADMIN"     "admin-${ENV}"
+          add_line "$DEPLOY_DOCS"      "$RESULT_DOCS"      "docs-${ENV}"
+          add_line "$DEPLOY_LINKS"     "$RESULT_LINKS"     "links-${ENV}"
+          add_line "$DEPLOY_STORYBOOK" "$RESULT_STORYBOOK" "sb-${ENV}"
+          add_line "$DEPLOY_WWW"       "$RESULT_WWW"       "www-${ENV}"
+
+          # Build header
+          if [ "$FAIL_COUNT" -gt 0 ]; then
+            HEADER="🚨 Deploy Finished — ${ENV_UPPER} (${FAIL_COUNT} failed)"
+            FAIL_NAMES="${FAIL_NAMES%, }"
+            FOOTER="\nFailure: ${FAIL_NAMES}\nRun: ${RUN_URL}"
+          else
+            HEADER="🚀 Deploy Complete — ${ENV_UPPER}"
+            FOOTER="\nRun: ${RUN_URL}"
+          fi
+
+          MSG=$(echo -e "${HEADER}\nCommit: ${SHA7} • @${ACTOR}\n\n${LINES}${FOOTER}")
+
+          # Send via Slack API (jq handles JSON escaping reliably)
+          jq -n \
+            --arg channel "deployments" \
+            --arg text "$MSG" \
+            '{
+              channel: $channel,
+              text: $text,
+              blocks: [{
+                type: "rich_text",
+                elements: [{
+                  type: "rich_text_preformatted",
+                  elements: [{
+                    type: "text",
+                    text: $text
+                  }]
+                }]
+              }]
+            }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
+              -H "Authorization: Bearer $SLACK_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d @-
+
+  # ── GitHub Releases (per-app, on success) ───────────────────────────
+  release-app:
+    needs: [check, deploy-app]
+    if: needs.deploy-app.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: app
+      app-display-name: App
+      environment: ${{ needs.check.outputs.environment }}
+      url: ${{ needs.deploy-app.outputs.url }}
+
+  release-studio:
+    needs: [check, deploy-studio]
+    if: needs.deploy-studio.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: studio
+      app-display-name: Studio
+      environment: ${{ needs.check.outputs.environment }}
+      url: ${{ needs.deploy-studio.outputs.url }}
+
+  release-admin:
+    needs: [check, deploy-admin]
+    if: needs.deploy-admin.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: admin
+      app-display-name: Admin
+      environment: ${{ needs.check.outputs.environment }}
+      url: ${{ needs.deploy-admin.outputs.url }}
+
+  release-docs:
+    needs: [check, deploy-docs]
+    if: needs.deploy-docs.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: docs
+      app-display-name: Docs
+      environment: ${{ needs.check.outputs.environment }}
+      url: ${{ needs.deploy-docs.outputs.url }}
+
+  release-links:
+    needs: [check, deploy-links]
+    if: needs.deploy-links.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: links
+      app-display-name: Links
+      environment: ${{ needs.check.outputs.environment }}
+      url: ${{ needs.deploy-links.outputs.url }}
+
+  release-storybook:
+    needs: [check, deploy-storybook]
+    if: needs.deploy-storybook.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: storybook
+      app-display-name: Storybook
+      environment: ${{ needs.check.outputs.environment }}
+      url: ${{ needs.deploy-storybook.outputs.url }}
+
+  release-www:
+    needs: [check, deploy-www]
+    if: needs.deploy-www.result == 'success'
+    uses: ./.github/workflows/create-release.yml
+    with:
+      app-name: www
+      app-display-name: www
+      environment: ${{ needs.check.outputs.environment }}
+      url: ${{ needs.deploy-www.outputs.url }}
