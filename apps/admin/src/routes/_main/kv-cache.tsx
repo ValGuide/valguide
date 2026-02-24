@@ -6,6 +6,7 @@ import { Input } from '@valguide/ui/components/input'
 import { toast } from '@valguide/ui/components/sonner/state'
 import { Database, Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { kvBackfillAllSlugsForOrgFn } from '@/server/functions/kv-backfill-all-slugs-for-org.fn'
 import { kvBackfillAllToursFn } from '@/server/functions/kv-backfill-all-tours.fn'
 import { kvBackfillOrgSlugsFn } from '@/server/functions/kv-backfill-org-slugs.fn'
 import { kvBackfillTourFn } from '@/server/functions/kv-backfill-tour.fn'
@@ -17,6 +18,7 @@ export const Route = createFileRoute('/_main/kv-cache')({
 
 function KvCachePage() {
   const [tourNanoId, setTourNanoId] = useState('')
+  const [orgNanoId, setOrgNanoId] = useState('')
 
   const allToursMutation = useMutation({
     mutationFn: () => kvBackfillAllToursFn(),
@@ -33,6 +35,7 @@ function KvCachePage() {
   })
 
   const singleTourMutation = useMutation({
+    retry: false,
     mutationFn: (nanoId: string) => kvBackfillTourFn({ data: { tourNanoId: nanoId } }),
     onSuccess: (result) => {
       const msg = `${result.localesWritten} locales, ${result.slugsWritten} slugs written`
@@ -61,6 +64,18 @@ function KvCachePage() {
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Backfill failed'),
   })
 
+  const orgAllSlugsMutation = useMutation({
+    retry: false,
+    mutationFn: (nanoId: string) => kvBackfillAllSlugsForOrgFn({ data: { orgNanoId: nanoId } }),
+    onSuccess: (result) => {
+      toast.success(
+        `Org: ${result.orgSlugEntriesWritten} slug entries, Tours: ${result.tourSlugsProcessed} processed, ${result.tourSlugEntriesWritten} slug entries written`,
+      )
+      setOrgNanoId('')
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Backfill failed'),
+  })
+
   const fullBackfillMutation = useMutation({
     mutationFn: async () => {
       const tours = await kvBackfillAllToursFn()
@@ -86,6 +101,7 @@ function KvCachePage() {
     singleTourMutation.isPending ||
     orgSlugsMutation.isPending ||
     tourSlugsMutation.isPending ||
+    orgAllSlugsMutation.isPending ||
     fullBackfillMutation.isPending
 
   return (
@@ -149,6 +165,33 @@ function KvCachePage() {
               {tourSlugsMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Backfill All Tour Slugs
             </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>All Slugs for Org</CardTitle>
+            <CardDescription>
+              Backfill org slug + all tour slugs (current + historical) for a specific organization.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="Org nanoId"
+                value={orgNanoId}
+                onChange={(e) => setOrgNanoId(e.target.value)}
+                className="max-w-xs"
+              />
+              <Button
+                variant="outline"
+                onClick={() => orgNanoId.trim() && orgAllSlugsMutation.mutate(orgNanoId.trim())}
+                disabled={isAnyPending || !orgNanoId.trim()}
+              >
+                {orgAllSlugsMutation.isPending && <Loader2 className="size-4 animate-spin" />}
+                Backfill Org Slugs
+              </Button>
+            </div>
           </CardContent>
         </Card>
 

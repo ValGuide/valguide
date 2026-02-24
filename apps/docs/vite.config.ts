@@ -19,6 +19,7 @@ export default defineConfig(async ({ command }) => ({
     }),
     cloudflare({
       viteEnvironment: { name: 'ssr' },
+      inspectorPort: 9236,
       ...(command === 'serve' && {
         config: {
           vars: Object.fromEntries(

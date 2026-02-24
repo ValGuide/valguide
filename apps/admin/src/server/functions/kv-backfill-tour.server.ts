@@ -19,7 +19,7 @@ export async function backfillTour(tourNanoId: string): Promise<BackfillTourResu
 
   const fullTour = await getPublishedTourByNanoId(tourNanoId)
   if (!fullTour) {
-    return { localesWritten: 0, slugsWritten: 0, errors: ['Tour not found or not published'] }
+    throw new Error('Tour not found or not published')
   }
 
   for (const locale of fullTour.availableLocales) {

@@ -22,6 +22,7 @@ export default defineConfig(() => ({
     tailwindcss(),
     cloudflare({
       viteEnvironment: { name: 'ssr' },
+      inspectorPort: 9230,
       config: {
         vars: Object.fromEntries(
           Object.entries(process.env)

@@ -19,6 +19,7 @@ export default defineConfig(({ command }) => ({
     tailwindcss(),
     cloudflare({
       viteEnvironment: { name: 'ssr' },
+      inspectorPort: 9233,
       // In dev, pass system process.env into the miniflare worker so secrets
       // loaded by dotenvx (DATABASE_URL, etc.) are available via process.env.
       // CLOUDFLARE_INCLUDE_PROCESS_ENV doesn't work with the Vite plugin.

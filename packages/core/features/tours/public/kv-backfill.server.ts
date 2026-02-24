@@ -113,6 +113,57 @@ export async function getOrgSlugEntriesForOrg(orgNanoId: string): Promise<OrgSlu
   }
 }
 
+export async function getTourSlugEntriesForOrg(orgNanoId: string): Promise<TourSlugEntry[]> {
+  const [org] = await db
+    .select({ id: organization.id })
+    .from(organization)
+    .where(eq(organization.nanoId, orgNanoId))
+    .limit(1)
+
+  if (!org) return []
+
+  const [tours, history] = await Promise.all([
+    db
+      .select({
+        tourId: tour.id,
+        tourNanoId: tour.nanoId,
+        currentSlug: tour.slug,
+        orgCurrentSlug: organization.slug,
+        orgNanoId: organization.nanoId,
+      })
+      .from(tour)
+      .innerJoin(organization, eq(tour.organizationId, organization.id))
+      .where(
+        and(
+          eq(tour.organizationId, org.id),
+          isNotNull(tour.publishedAt),
+          isNull(tour.deletedAt),
+          isNull(tour.archivedAt),
+        ),
+      ),
+    db
+      .select({ tourId: tourSlug.tourId, slug: tourSlug.slug })
+      .from(tourSlug)
+      .innerJoin(tour, eq(tourSlug.tourId, tour.id))
+      .where(eq(tour.organizationId, org.id)),
+  ])
+
+  const historyMap = new Map<string, string[]>()
+  for (const h of history) {
+    const arr = historyMap.get(h.tourId) ?? []
+    arr.push(h.slug)
+    historyMap.set(h.tourId, arr)
+  }
+
+  return tours.map((t) => ({
+    tourNanoId: t.tourNanoId,
+    currentSlug: t.currentSlug,
+    historicalSlugs: historyMap.get(t.tourId) ?? [],
+    orgCurrentSlug: t.orgCurrentSlug,
+    orgNanoId: t.orgNanoId,
+  }))
+}
+
 export async function getTourSlugEntriesForTour(tourNanoId: string): Promise<TourSlugEntry | null> {
   const [result] = await db
     .select({
