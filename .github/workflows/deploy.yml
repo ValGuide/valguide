@@ -137,123 +137,25 @@ jobs:
   notify:
     needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www]
     if: always() && needs.check.outputs.any-deploy == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build and send Slack summary
-        env:
-          SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
-          ENV: ${{ needs.check.outputs.environment }}
-          ACTOR: ${{ github.actor }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          # Which apps were requested
-          DEPLOY_APP: ${{ needs.check.outputs.deploy-app }}
-          DEPLOY_STUDIO: ${{ needs.check.outputs.deploy-studio }}
-          DEPLOY_ADMIN: ${{ needs.check.outputs.deploy-admin }}
-          DEPLOY_DOCS: ${{ needs.check.outputs.deploy-docs }}
-          DEPLOY_LINKS: ${{ needs.check.outputs.deploy-links }}
-          DEPLOY_STORYBOOK: ${{ needs.check.outputs.deploy-storybook }}
-          DEPLOY_WWW: ${{ needs.check.outputs.deploy-www }}
-          # Results
-          RESULT_APP: ${{ needs.deploy-app.result }}
-          RESULT_STUDIO: ${{ needs.deploy-studio.result }}
-          RESULT_ADMIN: ${{ needs.deploy-admin.result }}
-          RESULT_DOCS: ${{ needs.deploy-docs.result }}
-          RESULT_LINKS: ${{ needs.deploy-links.result }}
-          RESULT_STORYBOOK: ${{ needs.deploy-storybook.result }}
-          RESULT_WWW: ${{ needs.deploy-www.result }}
-        run: |
-          SHA7="${GITHUB_SHA:0:7}"
-          ENV_UPPER=$(echo "$ENV" | tr '[:lower:]' '[:upper:]')
-
-          # URL lookup by display name
-          url_for() {
-            case "$1" in
-              app-prod)    echo "https://app.valguide.com" ;;
-              app-dev)     echo "https://app.valguide.dev" ;;
-              studio-prod) echo "https://studio.valguide.com" ;;
-              studio-dev)  echo "https://studio.valguide.dev" ;;
-              admin-prod)  echo "https://ops.val.guide" ;;
-              admin-dev)   echo "https://ops-dev.val.guide" ;;
-              docs-prod)   echo "https://docs.val.guide" ;;
-              docs-dev)    echo "https://docs-dev.val.guide" ;;
-              links-prod)  echo "https://links.valguide.com" ;;
-              links-dev)   echo "https://links.valguide.dev" ;;
-              storybook-prod) echo "https://sb.val.guide" ;;
-              storybook-dev)  echo "https://sb-dev.val.guide" ;;
-              www-prod)    echo "https://www.valguide.com" ;;
-              www-dev)     echo "https://www.valguide.dev" ;;
-            esac
-          }
-
-          LINES=""
-          FAIL_COUNT=0
-          FAIL_NAMES=""
-
-          add_line() {
-            local should=$1 result=$2 display_name=$3
-            if [ "$should" != "true" ]; then return; fi
-            local url
-            url=$(url_for "${display_name}-${ENV}")
-            if [ "$result" = "success" ]; then
-              LINES="${LINES}✅  \`${display_name}\`  <${url}|${url}>\n"
-            else
-              LINES="${LINES}❌  \`${display_name}\`  <${url}|${url}>\n"
-              FAIL_NAMES="${FAIL_NAMES}${display_name}, "
-              FAIL_COUNT=$((FAIL_COUNT + 1))
-            fi
-          }
-
-          add_line "$DEPLOY_APP"       "$RESULT_APP"       "app"
-          add_line "$DEPLOY_STUDIO"    "$RESULT_STUDIO"    "studio"
-          add_line "$DEPLOY_ADMIN"     "$RESULT_ADMIN"     "admin"
-          add_line "$DEPLOY_DOCS"      "$RESULT_DOCS"      "docs"
-          add_line "$DEPLOY_LINKS"     "$RESULT_LINKS"     "links"
-          add_line "$DEPLOY_STORYBOOK" "$RESULT_STORYBOOK" "storybook"
-          add_line "$DEPLOY_WWW"       "$RESULT_WWW"       "www"
-
-          # Build header
-          if [ "$FAIL_COUNT" -gt 0 ]; then
-            HEADER="🚨 *Deploy Finished — ${ENV_UPPER}* (${FAIL_COUNT} failed)"
-            FAIL_NAMES="${FAIL_NAMES%, }"
-          else
-            HEADER="🚀 *Deploy Complete — ${ENV_UPPER}*"
-          fi
-
-          MSG=$(echo -e "${HEADER}\n\`${SHA7}\` by @${ACTOR}\n\n${LINES}")
-
-          if [ "$FAIL_COUNT" -gt 0 ]; then
-            FOOTER_TEXT="_Failed: ${FAIL_NAMES}_  •  <${RUN_URL}|View Run>"
-          else
-            FOOTER_TEXT="<${RUN_URL}|View Run>"
-          fi
-
-          # Fallback plain text for notifications
-          PLAIN=$(echo -e "${HEADER}\nCommit: ${SHA7} by @${ACTOR}")
-
-          # Send via Slack API (jq handles JSON escaping reliably)
-          jq -n \
-            --arg channel "deployments" \
-            --arg text "$PLAIN" \
-            --arg body "$MSG" \
-            --arg footer "$FOOTER_TEXT" \
-            '{
-              channel: $channel,
-              text: $text,
-              blocks: [
-                {
-                  type: "section",
-                  text: { type: "mrkdwn", text: $body }
-                },
-                {
-                  type: "section",
-                  text: { type: "mrkdwn", text: $footer }
-                },
-                { type: "divider" }
-              ]
-            }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
-              -H "Authorization: Bearer $SLACK_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d @-
+    uses: ./.github/workflows/_notify-deploy.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+      deploy-app: ${{ needs.check.outputs.deploy-app }}
+      deploy-studio: ${{ needs.check.outputs.deploy-studio }}
+      deploy-admin: ${{ needs.check.outputs.deploy-admin }}
+      deploy-docs: ${{ needs.check.outputs.deploy-docs }}
+      deploy-links: ${{ needs.check.outputs.deploy-links }}
+      deploy-storybook: ${{ needs.check.outputs.deploy-storybook }}
+      deploy-www: ${{ needs.check.outputs.deploy-www }}
+      result-app: ${{ needs.deploy-app.result }}
+      result-studio: ${{ needs.deploy-studio.result }}
+      result-admin: ${{ needs.deploy-admin.result }}
+      result-docs: ${{ needs.deploy-docs.result }}
+      result-links: ${{ needs.deploy-links.result }}
+      result-storybook: ${{ needs.deploy-storybook.result }}
+      result-www: ${{ needs.deploy-www.result }}
+    secrets:
+      VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
 
   # ── GitHub Releases (per-app, on success) ───────────────────────────
   release-app:
