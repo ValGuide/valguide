@@ -17,7 +17,6 @@
     "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .turbo .wrangler",
     "clean:vite": "rm -rf node_modules/.vite",
     "type-check": "fumadocs-mdx && tsc --noEmit",
-    "postinstall": "fumadocs-mdx",
     "tail": "wrangler tail",
     "tail:dev": "wrangler tail --env dev"
   },
