@@ -166,20 +166,28 @@ jobs:
           # Build changelog block for Slack (bullet list with • prefix)
           CHANGELOG_BLOCK=""
           if [ -n "$CHANGELOG" ]; then
-            # Convert markdown changelog to Slack mrkdwn: strip ### headers, convert - to •
+            # Convert markdown to Slack mrkdwn:
+            # - ### headers → *bold*
+            # - markdown links [text](url) → <url|text>
+            # - bullet dashes → •
             SLACK_CHANGELOG=$(echo -e "$CHANGELOG" \
-              | sed 's/^### /\n*/' \
+              | sed -E 's/^### (.+)/*\1*/' \
               | sed 's/^- /• /' \
-              | sed '/^$/d' \
-              | head -c 2500)
+              | sed -E 's/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g' \
+              | sed '/^$/d')
 
-            # Truncate if original was longer
-            ORIGINAL_LEN=${#CHANGELOG}
-            if [ "$ORIGINAL_LEN" -gt 2500 ] && [ -n "$RELEASE_URL" ]; then
-              SLACK_CHANGELOG="${SLACK_CHANGELOG}…\n<${RELEASE_URL}|View full changelog>"
+            # Limit to first MAX_LINES to keep message compact
+            TOTAL_LINES=$(echo "$SLACK_CHANGELOG" | wc -l | tr -d ' ')
+            MAX_LINES=8
+            if [ "$TOTAL_LINES" -gt "$MAX_LINES" ]; then
+              SLACK_CHANGELOG=$(echo "$SLACK_CHANGELOG" | head -n "$MAX_LINES")
+              REMAINING=$((TOTAL_LINES - MAX_LINES))
+              if [ -n "$RELEASE_URL" ]; then
+                SLACK_CHANGELOG=$(printf "%s\n_…+%d more_ — <${RELEASE_URL}|see full changelog>" "$SLACK_CHANGELOG" "$REMAINING")
+              fi
             fi
 
-            CHANGELOG_BLOCK="*Changelog*\n${SLACK_CHANGELOG}"
+            CHANGELOG_BLOCK=$(printf "*Changelog*\n%s" "$SLACK_CHANGELOG")
           fi
 
           # Fallback plain text for notifications (no mrkdwn formatting)
