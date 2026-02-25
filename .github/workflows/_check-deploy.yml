@@ -46,11 +46,11 @@ jobs:
         id: ts
         run: echo "timestamp=$(date -u +%Y-%m-%dT%H%M%S)" >> $GITHUB_OUTPUT
 
-      - id: check
+      - name: Determine environment and apps to deploy
+        id: check
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
-          # Determine environment from branch
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo "environment=prod" >> $GITHUB_OUTPUT
           else
