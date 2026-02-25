@@ -25,56 +25,7 @@ permissions:
 jobs:
   # ── Check which apps to deploy ──────────────────────────────────────
   check:
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.check.outputs.environment }}
-      deploy-app: ${{ steps.check.outputs.deploy-app }}
-      deploy-studio: ${{ steps.check.outputs.deploy-studio }}
-      deploy-admin: ${{ steps.check.outputs.deploy-admin }}
-      deploy-docs: ${{ steps.check.outputs.deploy-docs }}
-      deploy-links: ${{ steps.check.outputs.deploy-links }}
-      deploy-storybook: ${{ steps.check.outputs.deploy-storybook }}
-      deploy-www: ${{ steps.check.outputs.deploy-www }}
-      any-deploy: ${{ steps.check.outputs.any-deploy }}
-    steps:
-      - id: check
-        env:
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-        run: |
-          # Determine environment from branch
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "environment=prod" >> $GITHUB_OUTPUT
-          else
-            echo "environment=dev" >> $GITHUB_OUTPUT
-          fi
-
-          APPS="app studio admin docs links storybook www"
-          ANY=false
-
-          if echo "$COMMIT_MSG" | grep -qF '[build all]'; then
-            echo "✅ [build all] found — deploying everything"
-            for app in $APPS; do
-              echo "deploy-${app}=true" >> $GITHUB_OUTPUT
-            done
-            ANY=true
-          else
-            SCOPES=$(echo "$COMMIT_MSG" | grep -oE '\[build [^]]+' | sed 's/\[build //' | tr ' ,' '\n' | tr -s '\n')
-            if [ -n "$SCOPES" ]; then
-              echo "Found scoped build request: $(echo $SCOPES | tr '\n' ' ')"
-            else
-              echo "No [build] tag found — nothing to deploy"
-            fi
-            for app in $APPS; do
-              if echo "$SCOPES" | grep -qx "$app"; then
-                echo "deploy-${app}=true" >> $GITHUB_OUTPUT
-                ANY=true
-              else
-                echo "deploy-${app}=false" >> $GITHUB_OUTPUT
-              fi
-            done
-          fi
-
-          echo "any-deploy=$ANY" >> $GITHUB_OUTPUT
+    uses: ./.github/workflows/_check-deploy.yml
 
   # ── Deploy jobs (parallel) ──────────────────────────────────────────
   deploy-app:
