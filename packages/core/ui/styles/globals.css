@@ -1,9 +1,7 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
-@import "@fontsource-variable/noto-sans";
-@import "@fontsource-variable/jetbrains-mono";
-@import "@fontsource-variable/vollkorn";
+@import "./fonts.css";
 
 @source '../../../../**/*.{ts,tsx}';
 @source not '../../../**/node_modules/**/*';
@@ -103,7 +101,7 @@
     --animate-card-lift: card-lift 0.2s var(--ease-out-expo) forwards;
 
     /* Typography */
-    --font-sans: 'Noto Sans Variable', sans-serif;
+    --font-sans: 'Noto Sans Variable', 'Noto Sans Fallback', sans-serif;
     --font-serif: 'Vollkorn Variable', Georgia, serif;
     --font-mono: 'JetBrains Mono Variable', monospace;
 

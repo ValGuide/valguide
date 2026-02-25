@@ -62,6 +62,20 @@ export const Route = createRootRouteWithContext<{
     ],
     links: [
       {
+        rel: 'preload',
+        href: '/fonts/noto-sans-latin-wght-normal.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/vollkorn-latin-wght-normal.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
         rel: 'stylesheet',
         href: appCss,
       },
