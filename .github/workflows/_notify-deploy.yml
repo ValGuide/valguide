@@ -52,6 +52,14 @@ on:
       result-www:
         required: true
         type: string
+      release-url:
+        required: false
+        type: string
+        default: ''
+      changelog:
+        required: false
+        type: string
+        default: ''
     secrets:
       VALBOT_SLACK_TOKEN:
         required: true
@@ -66,6 +74,8 @@ jobs:
           ENV: ${{ inputs.environment }}
           ACTOR: ${{ github.actor }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RELEASE_URL: ${{ inputs.release-url }}
+          CHANGELOG: ${{ inputs.changelog }}
           DEPLOY_APP: ${{ inputs.deploy-app }}
           DEPLOY_STUDIO: ${{ inputs.deploy-studio }}
           DEPLOY_ADMIN: ${{ inputs.deploy-admin }}
@@ -148,30 +158,85 @@ jobs:
             FOOTER_TEXT="<${RUN_URL}|View Run>"
           fi
 
+          # Add release link to footer if available
+          if [ -n "$RELEASE_URL" ]; then
+            FOOTER_TEXT="📋 <${RELEASE_URL}|Full Release Notes>  •  ${FOOTER_TEXT}"
+          fi
+
+          # Build changelog block for Slack (bullet list with • prefix)
+          CHANGELOG_BLOCK=""
+          if [ -n "$CHANGELOG" ]; then
+            # Convert markdown changelog to Slack mrkdwn: strip ### headers, convert - to •
+            SLACK_CHANGELOG=$(echo -e "$CHANGELOG" \
+              | sed 's/^### /\n*/' \
+              | sed 's/^- /• /' \
+              | sed '/^$/d' \
+              | head -c 2500)
+
+            # Truncate if original was longer
+            ORIGINAL_LEN=${#CHANGELOG}
+            if [ "$ORIGINAL_LEN" -gt 2500 ] && [ -n "$RELEASE_URL" ]; then
+              SLACK_CHANGELOG="${SLACK_CHANGELOG}…\n<${RELEASE_URL}|View full changelog>"
+            fi
+
+            CHANGELOG_BLOCK="*Changelog*\n${SLACK_CHANGELOG}"
+          fi
+
           # Fallback plain text for notifications (no mrkdwn formatting)
           PLAIN=$(echo -e "${PLAIN_HEADER}\nCommit: ${SHA7} by @${ACTOR}")
 
           # Send via Slack API (jq handles JSON escaping reliably)
-          jq -n \
-            --arg channel "deployments" \
-            --arg text "$PLAIN" \
-            --arg body "$MSG" \
-            --arg footer "$FOOTER_TEXT" \
-            '{
-              channel: $channel,
-              text: $text,
-              blocks: [
-                {
-                  type: "section",
-                  text: { type: "mrkdwn", text: $body }
-                },
-                {
-                  type: "section",
-                  text: { type: "mrkdwn", text: $footer }
-                },
-                { type: "divider" }
-              ]
-            }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
-              -H "Authorization: Bearer $SLACK_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d @-
+          if [ -n "$CHANGELOG_BLOCK" ]; then
+            jq -n \
+              --arg channel "deployments" \
+              --arg text "$PLAIN" \
+              --arg body "$MSG" \
+              --arg changelog "$CHANGELOG_BLOCK" \
+              --arg footer "$FOOTER_TEXT" \
+              '{
+                channel: $channel,
+                text: $text,
+                blocks: [
+                  {
+                    type: "section",
+                    text: { type: "mrkdwn", text: $body }
+                  },
+                  {
+                    type: "section",
+                    text: { type: "mrkdwn", text: $changelog }
+                  },
+                  {
+                    type: "section",
+                    text: { type: "mrkdwn", text: $footer }
+                  },
+                  { type: "divider" }
+                ]
+              }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
+                -H "Authorization: Bearer $SLACK_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d @-
+          else
+            jq -n \
+              --arg channel "deployments" \
+              --arg text "$PLAIN" \
+              --arg body "$MSG" \
+              --arg footer "$FOOTER_TEXT" \
+              '{
+                channel: $channel,
+                text: $text,
+                blocks: [
+                  {
+                    type: "section",
+                    text: { type: "mrkdwn", text: $body }
+                  },
+                  {
+                    type: "section",
+                    text: { type: "mrkdwn", text: $footer }
+                  },
+                  { type: "divider" }
+                ]
+              }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
+                -H "Authorization: Bearer $SLACK_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d @-
+          fi

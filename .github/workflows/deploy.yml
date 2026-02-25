@@ -84,9 +84,96 @@ jobs:
       environment: ${{ needs.check.outputs.environment }}
     secrets: inherit
 
+  # ── Per-app git tags (lightweight, no release) ──────────────────────
+  tag-app:
+    needs: [check, deploy-app]
+    if: needs.deploy-app.result == 'success'
+    uses: ./.github/workflows/create-app-tags.yml
+    with:
+      app-name: app
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+
+  tag-studio:
+    needs: [check, deploy-studio]
+    if: needs.deploy-studio.result == 'success'
+    uses: ./.github/workflows/create-app-tags.yml
+    with:
+      app-name: studio
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+
+  tag-admin:
+    needs: [check, deploy-admin]
+    if: needs.deploy-admin.result == 'success'
+    uses: ./.github/workflows/create-app-tags.yml
+    with:
+      app-name: admin
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+
+  tag-docs:
+    needs: [check, deploy-docs]
+    if: needs.deploy-docs.result == 'success'
+    uses: ./.github/workflows/create-app-tags.yml
+    with:
+      app-name: docs
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+
+  tag-links:
+    needs: [check, deploy-links]
+    if: needs.deploy-links.result == 'success'
+    uses: ./.github/workflows/create-app-tags.yml
+    with:
+      app-name: links
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+
+  tag-storybook:
+    needs: [check, deploy-storybook]
+    if: needs.deploy-storybook.result == 'success'
+    uses: ./.github/workflows/create-app-tags.yml
+    with:
+      app-name: storybook
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+
+  tag-www:
+    needs: [check, deploy-www]
+    if: needs.deploy-www.result == 'success'
+    uses: ./.github/workflows/create-app-tags.yml
+    with:
+      app-name: www
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+
+  # ── Consolidated GitHub Release ─────────────────────────────────────
+  release:
+    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www]
+    if: always() && needs.check.outputs.any-deploy == 'true'
+    uses: ./.github/workflows/release.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+      deploy-app: ${{ needs.check.outputs.deploy-app }}
+      deploy-studio: ${{ needs.check.outputs.deploy-studio }}
+      deploy-admin: ${{ needs.check.outputs.deploy-admin }}
+      deploy-docs: ${{ needs.check.outputs.deploy-docs }}
+      deploy-links: ${{ needs.check.outputs.deploy-links }}
+      deploy-storybook: ${{ needs.check.outputs.deploy-storybook }}
+      deploy-www: ${{ needs.check.outputs.deploy-www }}
+      result-app: ${{ needs.deploy-app.result }}
+      result-studio: ${{ needs.deploy-studio.result }}
+      result-admin: ${{ needs.deploy-admin.result }}
+      result-docs: ${{ needs.deploy-docs.result }}
+      result-links: ${{ needs.deploy-links.result }}
+      result-storybook: ${{ needs.deploy-storybook.result }}
+      result-www: ${{ needs.deploy-www.result }}
+
   # ── Consolidated Slack notification ─────────────────────────────────
   notify:
-    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www]
+    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www, release]
     if: always() && needs.check.outputs.any-deploy == 'true'
     uses: ./.github/workflows/_notify-deploy.yml
     with:
@@ -105,76 +192,7 @@ jobs:
       result-links: ${{ needs.deploy-links.result }}
       result-storybook: ${{ needs.deploy-storybook.result }}
       result-www: ${{ needs.deploy-www.result }}
+      release-url: ${{ needs.release.outputs.release-url }}
+      changelog: ${{ needs.release.outputs.changelog }}
     secrets:
       VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
-
-  # ── GitHub Releases (per-app, on success) ───────────────────────────
-  release-app:
-    needs: [check, deploy-app]
-    if: needs.deploy-app.result == 'success'
-    uses: ./.github/workflows/create-release.yml
-    with:
-      app-name: app
-      app-display-name: App
-      environment: ${{ needs.check.outputs.environment }}
-      url: ${{ needs.deploy-app.outputs.url }}
-
-  release-studio:
-    needs: [check, deploy-studio]
-    if: needs.deploy-studio.result == 'success'
-    uses: ./.github/workflows/create-release.yml
-    with:
-      app-name: studio
-      app-display-name: Studio
-      environment: ${{ needs.check.outputs.environment }}
-      url: ${{ needs.deploy-studio.outputs.url }}
-
-  release-admin:
-    needs: [check, deploy-admin]
-    if: needs.deploy-admin.result == 'success'
-    uses: ./.github/workflows/create-release.yml
-    with:
-      app-name: admin
-      app-display-name: Admin
-      environment: ${{ needs.check.outputs.environment }}
-      url: ${{ needs.deploy-admin.outputs.url }}
-
-  release-docs:
-    needs: [check, deploy-docs]
-    if: needs.deploy-docs.result == 'success'
-    uses: ./.github/workflows/create-release.yml
-    with:
-      app-name: docs
-      app-display-name: Docs
-      environment: ${{ needs.check.outputs.environment }}
-      url: ${{ needs.deploy-docs.outputs.url }}
-
-  release-links:
-    needs: [check, deploy-links]
-    if: needs.deploy-links.result == 'success'
-    uses: ./.github/workflows/create-release.yml
-    with:
-      app-name: links
-      app-display-name: Links
-      environment: ${{ needs.check.outputs.environment }}
-      url: ${{ needs.deploy-links.outputs.url }}
-
-  release-storybook:
-    needs: [check, deploy-storybook]
-    if: needs.deploy-storybook.result == 'success'
-    uses: ./.github/workflows/create-release.yml
-    with:
-      app-name: storybook
-      app-display-name: Storybook
-      environment: ${{ needs.check.outputs.environment }}
-      url: ${{ needs.deploy-storybook.outputs.url }}
-
-  release-www:
-    needs: [check, deploy-www]
-    if: needs.deploy-www.result == 'success'
-    uses: ./.github/workflows/create-release.yml
-    with:
-      app-name: www
-      app-display-name: www
-      environment: ${{ needs.check.outputs.environment }}
-      url: ${{ needs.deploy-www.outputs.url }}

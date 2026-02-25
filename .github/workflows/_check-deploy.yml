@@ -24,6 +24,8 @@ on:
         value: ${{ jobs.check.outputs.deploy-www }}
       any-deploy:
         value: ${{ jobs.check.outputs.any-deploy }}
+      timestamp:
+        value: ${{ jobs.check.outputs.timestamp }}
 
 jobs:
   check:
@@ -38,7 +40,12 @@ jobs:
       deploy-storybook: ${{ steps.check.outputs.deploy-storybook }}
       deploy-www: ${{ steps.check.outputs.deploy-www }}
       any-deploy: ${{ steps.check.outputs.any-deploy }}
+      timestamp: ${{ steps.ts.outputs.timestamp }}
     steps:
+      - name: Generate deploy timestamp
+        id: ts
+        run: echo "timestamp=$(date -u +%Y-%m-%dT%H%M%S)" >> $GITHUB_OUTPUT
+
       - id: check
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
