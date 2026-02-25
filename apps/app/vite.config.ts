@@ -7,7 +7,7 @@ import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-export default defineConfig(() => ({
+export default defineConfig(({ command }) => ({
   server: {
     port: 3000,
     allowedHosts: ['app.local.dev'],
@@ -23,15 +23,20 @@ export default defineConfig(() => ({
     cloudflare({
       viteEnvironment: { name: 'ssr' },
       inspectorPort: 9230,
-      ...(process.env.WRANGLER_REMOTE === 'true' && {
-        configPath: getRemoteDevConfigPath(),
+      // In dev, pass system process.env into the miniflare worker so secrets
+      // loaded by dotenvx (DATABASE_URL, etc.) are available via process.env.
+      // CLOUDFLARE_INCLUDE_PROCESS_ENV doesn't work with the Vite plugin.
+      ...(command === 'serve' && {
+        ...(process.env.WRANGLER_REMOTE === 'true' && {
+          configPath: getRemoteDevConfigPath(),
+        }),
+        config: {
+          vars: Object.fromEntries(
+            Object.entries(process.env)
+              .filter((entry): entry is [string, string] => entry[1] !== undefined)
+          ),
+        },
       }),
-      config: {
-        vars: Object.fromEntries(
-          Object.entries(process.env)
-            .filter((entry): entry is [string, string] => entry[1] !== undefined)
-        ),
-      },
     }),
     tanstackStart({
       spa: {
