@@ -101,7 +101,7 @@ jobs:
   # ── Consolidated GitHub Release ─────────────────────────────────────
   release:
     needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www]
-    if: always() && needs.check.outputs.any-deploy == 'true'
+    if: "!cancelled() && needs.check.outputs.any-deploy == 'true'"
     uses: ./.github/workflows/release.yml
     with:
       environment: ${{ needs.check.outputs.environment }}
@@ -124,7 +124,7 @@ jobs:
   # ── Consolidated Slack notification ─────────────────────────────────
   notify:
     needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www, release]
-    if: always() && needs.check.outputs.any-deploy == 'true'
+    if: "!cancelled() && needs.check.outputs.any-deploy == 'true'"
     uses: ./.github/workflows/_notify-deploy.yml
     with:
       environment: ${{ needs.check.outputs.environment }}
