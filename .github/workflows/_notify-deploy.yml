@@ -2,7 +2,7 @@
 #
 # Called by deploy.yml after all deploy jobs complete.
 
-name: Notify Deploy
+name: _notify-deploy
 
 on:
   workflow_call:

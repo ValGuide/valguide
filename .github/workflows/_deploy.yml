@@ -4,7 +4,7 @@
 # internally based on app-name + environment. Creates a per-app git tag
 # on success via the create-app-tag composite action.
 
-name: Deploy
+name: _deploy
 
 on:
   workflow_call:

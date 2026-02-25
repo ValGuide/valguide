@@ -1,7 +1,7 @@
 # Reusable workflow: parse commit message [build ...] tags and determine
 # which apps to deploy and the target environment.
 
-name: Check Deploy
+name: _check-deploy
 
 on:
   workflow_call:
