@@ -12,7 +12,7 @@
     "lint": "biome check .",
     "lint:error": "biome check . --diagnostic-level=error",
     "lint:fix": "biome check --write .",
-    "test": "turbo test",
+    "test": "turbo test && bash .github/scripts/generate-changelog.test.sh",
     "type-check": "turbo type-check",
     "i18n:check": "pnpm dlx tsx scripts/validate-locales.ts",
     "i18n:unused": "pnpm dlx tsx scripts/find-unused-i18n-keys.ts",

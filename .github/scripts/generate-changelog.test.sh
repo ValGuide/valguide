@@ -102,7 +102,7 @@ INPUT="release: v1.0.0 ([aaa1111](https://example.com/commit/aaa))
 release: v1.1.0 ([bbb2222](https://example.com/commit/bbb))"
 
 OUTPUT=$(echo "$INPUT" | bash "$SCRIPT")
-assert_contains "unknown prefix heading" "$OUTPUT" "### Release:"
+assert_contains "unknown prefix heading" "$OUTPUT" "### Release"
 assert_contains "release commit 1" "$OUTPUT" "v1.0.0"
 assert_contains "release commit 2" "$OUTPUT" "v1.1.0"
 echo ""
@@ -155,6 +155,25 @@ assert_not_contains "no storybook" "$OUTPUT" "[build storybook]"
 assert_not_contains "no www" "$OUTPUT" "[build www]"
 # With all lines excluded, there should be no output sections
 assert_not_contains "no sections at all" "$OUTPUT" "###"
+echo ""
+
+# ─── Test 10: [build xxx] with multi-word and comma-separated app names ───
+echo "Test 10: [build xxx] variants are excluded"
+INPUT="[build all] ([aaa](https://x/a))
+[build studio www] ([bbb](https://x/b))
+[build studio,www] ([ccc](https://x/c))
+[build studio, www, admin] ([ddd](https://x/d))
+[build app,studio,admin,docs] ([eee](https://x/e))
+feat: real feature ([fff](https://x/f))"
+
+OUTPUT=$(echo "$INPUT" | bash "$SCRIPT")
+assert_not_contains "[build all] excluded" "$OUTPUT" "[build all]"
+assert_not_contains "[build studio www] excluded" "$OUTPUT" "[build studio www]"
+assert_not_contains "[build studio,www] excluded" "$OUTPUT" "[build studio,www]"
+assert_not_contains "[build studio, www, admin] excluded" "$OUTPUT" "[build studio, www, admin]"
+assert_not_contains "[build app,studio,admin,docs] excluded" "$OUTPUT" "[build app,studio,admin,docs]"
+assert_contains "real feature still present" "$OUTPUT" "real feature"
+assert_not_contains "no Other section" "$OUTPUT" "### 📝 Other"
 echo ""
 
 # ─── Results ───

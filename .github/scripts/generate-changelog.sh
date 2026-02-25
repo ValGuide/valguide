@@ -61,7 +61,7 @@ OTHER_LINES=$(echo "$LINES" \
 
 if [ -n "$OTHER_LINES" ]; then
   # Group by unknown prefixes (e.g., "wip:", "release:")
-  UNKNOWN_PREFIXES=$(echo "$OTHER_LINES" | grep -oE "^[a-z]+(\(.+\))?[!]?:" | sed 's/(.*//' | sed 's/!.*//' | sort -u || true)
+  UNKNOWN_PREFIXES=$(echo "$OTHER_LINES" | grep -oE "^[a-z]+" | sort -u || true)
 
   for prefix in $UNKNOWN_PREFIXES; do
     HEADING=$(echo "$prefix" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')

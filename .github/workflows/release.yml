@@ -188,61 +188,8 @@ jobs:
             exit 0
           fi
 
-          format_commits() {
-            local pattern=$1
-            git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
-              | grep -E "$pattern" | sed 's/^/- /' || true
-          }
-
-          BREAKING=$(format_commits "^.+(\(.+\))?!:")
-          FEATURES=$(format_commits "^feat(\(.+\))?[!]?:")
-          FIXES=$(format_commits "^fix(\(.+\))?[!]?:")
-          PERF=$(format_commits "^perf(\(.+\))?[!]?:")
-          REFACTOR=$(format_commits "^refactor(\(.+\))?[!]?:")
-          DOCS=$(format_commits "^docs(\(.+\))?[!]?:")
-          TESTS=$(format_commits "^test(\(.+\))?[!]?:")
-          CHORES=$(format_commits "^chore(\(.+\))?[!]?:")
-          BUILD=$(format_commits "^build(\(.+\))?[!]?:")
-          CI=$(format_commits "^ci(\(.+\))?[!]?:")
-          STYLE=$(format_commits "^style(\(.+\))?[!]?:")
-          REVERT=$(format_commits "^revert(\(.+\))?[!]?:")
-          PLAN=$(format_commits "^plan(\(.+\))?[!]?:")
-          BODY=""
-          [ -n "$BREAKING" ] && BODY="${BODY}### 💥 Breaking Changes\n${BREAKING}\n\n"
-          [ -n "$FEATURES" ] && BODY="${BODY}### ✨ Features\n${FEATURES}\n\n"
-          [ -n "$FIXES" ]    && BODY="${BODY}### 🐛 Fixes\n${FIXES}\n\n"
-          [ -n "$PERF" ]     && BODY="${BODY}### ⚡ Performance\n${PERF}\n\n"
-          [ -n "$REFACTOR" ] && BODY="${BODY}### ♻️ Refactors\n${REFACTOR}\n\n"
-          [ -n "$DOCS" ]     && BODY="${BODY}### 📖 Docs\n${DOCS}\n\n"
-          [ -n "$TESTS" ]    && BODY="${BODY}### 🧪 Tests\n${TESTS}\n\n"
-          [ -n "$CHORES" ]   && BODY="${BODY}### 🔧 Chores\n${CHORES}\n\n"
-          [ -n "$BUILD" ]    && BODY="${BODY}### 🏗️ Build\n${BUILD}\n\n"
-          [ -n "$CI" ]       && BODY="${BODY}### 👷 CI\n${CI}\n\n"
-          [ -n "$STYLE" ]    && BODY="${BODY}### 🎨 Style\n${STYLE}\n\n"
-          [ -n "$REVERT" ]   && BODY="${BODY}### ⏪ Reverts\n${REVERT}\n\n"
-          [ -n "$PLAN" ]     && BODY="${BODY}### 📋 Plan\n${PLAN}\n\n"
-
-          # Group remaining commits by unknown prefix or collect as uncategorized
-          KNOWN="feat|fix|chore|docs|style|refactor|test|perf|ci|build|revert|plan"
-          OTHER_LINES=$(git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
-            | grep -Ev "^($KNOWN)(\(.+\))?[!]?:" \
-            | grep -Ev "^\[build [^\]]+\] \(" || true)
-
-          if [ -n "$OTHER_LINES" ]; then
-            UNKNOWN_PREFIXES=$(echo "$OTHER_LINES" | grep -oE "^[a-z]+(\(.+\))?[!]?:" | sed 's/(.*//' | sed 's/!.*//' | sort -u || true)
-
-            for prefix in $UNKNOWN_PREFIXES; do
-              HEADING=$(echo "$prefix" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
-              MATCHES=$(echo "$OTHER_LINES" | grep -E "^${prefix}(\(.+\))?[!]?:" | sed 's/^/- /' || true)
-              [ -n "$MATCHES" ] && BODY="${BODY}### ${HEADING}\n${MATCHES}\n\n"
-              OTHER_LINES=$(echo "$OTHER_LINES" | grep -Ev "^${prefix}(\(.+\))?[!]?:" || true)
-            done
-
-            if [ -n "$OTHER_LINES" ]; then
-              UNCATEGORIZED=$(echo "$OTHER_LINES" | sed 's/^/- /')
-              BODY="${BODY}### 📝 Other\n${UNCATEGORIZED}\n\n"
-            fi
-          fi
+          BODY=$(git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
+            | bash .github/scripts/generate-changelog.sh)
 
           {
             echo "body<<EOF"
