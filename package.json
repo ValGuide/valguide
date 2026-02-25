@@ -33,7 +33,7 @@
     "admin:type-check": "pnpm turbo run type-check --filter ./apps/admin",
     "app:dev": "pnpm caddy:ensure && (sleep 5 && open https://app.local.dev) & pnpm env:load turbo run dev --filter ./apps/app",
     "app:dev:remote": "pnpm caddy:ensure && (sleep 5 && open https://app.local.dev) & pnpm env:load turbo run dev:remote --filter ./apps/app",
-    "app:build": "pnpm env:load turbo run build --filter ./apps/app",
+    "app:build": "pnpm env:load pnpm --filter \"@valguide/app\" run build",
     "app:preview": "pnpm caddy:ensure && (sleep 2 && open https://app.local.dev) & pnpm env:load turbo run preview --filter ./apps/app",
     "app:build:preview": "pnpm app:build && pnpm app:preview",
     "app:type-check": "pnpm turbo run type-check --filter ./apps/app",
