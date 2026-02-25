@@ -17,8 +17,11 @@ runs:
   steps:
     - name: Create and push tag
       shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
         TAG="${{ inputs.app-name }}-${{ inputs.environment }}-${{ inputs.timestamp }}-${SHORT_SHA}"
-        git tag "$TAG"
-        git push origin "$TAG"
+        gh api repos/${{ github.repository }}/git/refs \
+          -f ref="refs/tags/${TAG}" \
+          -f sha="${{ github.sha }}"
