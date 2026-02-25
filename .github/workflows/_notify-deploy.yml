@@ -124,9 +124,9 @@ jobs:
             local url
             url=$(url_for "${display_name}-${ENV}")
             if [ "$result" = "success" ]; then
-              LINES="${LINES}✅  \`${display_name}\`  <${url}|${url}>\n"
+              LINES="${LINES}✅  \`${display_name}\`  <${url}|${url#https://}>\n"
             else
-              LINES="${LINES}❌  \`${display_name}\`  <${url}|${url}>\n"
+              LINES="${LINES}❌  \`${display_name}\`  <${url}|${url#https://}>\n"
               FAIL_NAMES="${FAIL_NAMES}${display_name}, "
               FAIL_COUNT=$((FAIL_COUNT + 1))
             fi
@@ -170,15 +170,18 @@ jobs:
             # - ### headers → *bold*
             # - markdown links [text](url) → <url|text>
             # - bullet dashes → •
+            # - strip conventional commit prefixes (e.g. "feat(scope)!: msg" → "msg")
             SLACK_CHANGELOG=$(echo -e "$CHANGELOG" \
               | sed -E 's/^### (.+)/*\1*/' \
               | sed 's/^- /• /' \
+              | sed -E 's/^(• )[a-z]+(\([^)]*\))?!?: /\1/' \
               | sed -E 's/\[([^]]+)\]\(([^)]+)\)/<\2|\1>/g' \
-              | sed '/^$/d')
+              | sed '/^$/d' \
+              | awk '/^\*[^*]/ && NR>1 {print ""} {print}')
 
             # Limit to first MAX_LINES to keep message compact
             TOTAL_LINES=$(echo "$SLACK_CHANGELOG" | wc -l | tr -d ' ')
-            MAX_LINES=8
+            MAX_LINES=14
             if [ "$TOTAL_LINES" -gt "$MAX_LINES" ]; then
               SLACK_CHANGELOG=$(echo "$SLACK_CHANGELOG" | head -n "$MAX_LINES")
               REMAINING=$((TOTAL_LINES - MAX_LINES))
