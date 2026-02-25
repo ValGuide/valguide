@@ -10,7 +10,6 @@
 #   VALBOT_SLACK_TOKEN    — Slack Bot Token (xoxb-…) with chat:write scope
 
 name: Deploy
-run-name: "Deploy to ${{ github.ref_name }} 🚀"
 
 on:
   push:
