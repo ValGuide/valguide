@@ -62,6 +62,3 @@ count.txt
 .output
 .wrangler
 .wrangler.dev-remote.json
-
-# large test media (keep locally, don't push)
-assets/test-media/
