@@ -1,7 +1,8 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
 import { createClient } from '@valguide/supabase/server'
-import { getActiveTeamId } from '../utils/cookies'
+import { resolveFirstOrgId } from '../orgs/resolve-active-org.server'
+import { getActiveTeamId, setActiveTeamId } from '../utils/cookies'
 import { getUserStatus } from './get-user-status.server'
 
 // ============================================================================
@@ -75,10 +76,19 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
       throw redirect({ to: '/blocked' })
     }
 
+    // Resolve active org if cookie was missing (e.g., first SSR pass after login)
+    let activeOrgId = context.activeOrgId
+    if (!activeOrgId) {
+      activeOrgId = await resolveFirstOrgId(context.user.id)
+      if (activeOrgId) {
+        setActiveTeamId(activeOrgId)
+      }
+    }
+
     return next({
       context: {
         user: context.user,
-        activeOrgId: context.activeOrgId,
+        activeOrgId,
       },
     })
   })
