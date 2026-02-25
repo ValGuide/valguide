@@ -31,122 +31,72 @@ jobs:
   deploy-app:
     needs: check
     if: needs.check.outputs.deploy-app == 'true'
-    uses: ./.github/workflows/_deploy-app.yml
+    uses: ./.github/workflows/_deploy.yml
     with:
+      app-name: app
       environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
   deploy-studio:
     needs: check
     if: needs.check.outputs.deploy-studio == 'true'
-    uses: ./.github/workflows/_deploy-studio.yml
+    uses: ./.github/workflows/_deploy.yml
     with:
+      app-name: studio
       environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
   deploy-admin:
     needs: check
     if: needs.check.outputs.deploy-admin == 'true'
-    uses: ./.github/workflows/_deploy-admin.yml
+    uses: ./.github/workflows/_deploy.yml
     with:
+      app-name: admin
       environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
   deploy-docs:
     needs: check
     if: needs.check.outputs.deploy-docs == 'true'
-    uses: ./.github/workflows/_deploy-docs.yml
+    uses: ./.github/workflows/_deploy.yml
     with:
+      app-name: docs
       environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
   deploy-links:
     needs: check
     if: needs.check.outputs.deploy-links == 'true'
-    uses: ./.github/workflows/_deploy-links.yml
+    uses: ./.github/workflows/_deploy.yml
     with:
+      app-name: links
       environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
   deploy-storybook:
     needs: check
     if: needs.check.outputs.deploy-storybook == 'true'
-    uses: ./.github/workflows/_deploy-storybook.yml
+    uses: ./.github/workflows/_deploy.yml
     with:
+      app-name: storybook
       environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
   deploy-www:
     needs: check
     if: needs.check.outputs.deploy-www == 'true'
-    uses: ./.github/workflows/_deploy-www.yml
-    with:
-      environment: ${{ needs.check.outputs.environment }}
-    secrets: inherit
-
-  # ── Per-app git tags (lightweight, no release) ──────────────────────
-  tag-app:
-    needs: [check, deploy-app]
-    if: needs.deploy-app.result == 'success'
-    uses: ./.github/workflows/create-app-tags.yml
-    with:
-      app-name: app
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-
-  tag-studio:
-    needs: [check, deploy-studio]
-    if: needs.deploy-studio.result == 'success'
-    uses: ./.github/workflows/create-app-tags.yml
-    with:
-      app-name: studio
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-
-  tag-admin:
-    needs: [check, deploy-admin]
-    if: needs.deploy-admin.result == 'success'
-    uses: ./.github/workflows/create-app-tags.yml
-    with:
-      app-name: admin
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-
-  tag-docs:
-    needs: [check, deploy-docs]
-    if: needs.deploy-docs.result == 'success'
-    uses: ./.github/workflows/create-app-tags.yml
-    with:
-      app-name: docs
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-
-  tag-links:
-    needs: [check, deploy-links]
-    if: needs.deploy-links.result == 'success'
-    uses: ./.github/workflows/create-app-tags.yml
-    with:
-      app-name: links
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-
-  tag-storybook:
-    needs: [check, deploy-storybook]
-    if: needs.deploy-storybook.result == 'success'
-    uses: ./.github/workflows/create-app-tags.yml
-    with:
-      app-name: storybook
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-
-  tag-www:
-    needs: [check, deploy-www]
-    if: needs.deploy-www.result == 'success'
-    uses: ./.github/workflows/create-app-tags.yml
+    uses: ./.github/workflows/_deploy.yml
     with:
       app-name: www
       environment: ${{ needs.check.outputs.environment }}
       timestamp: ${{ needs.check.outputs.timestamp }}
+    secrets: inherit
 
   # ── Consolidated GitHub Release ─────────────────────────────────────
   release:

@@ -1,0 +1,24 @@
+name: Create App Tag
+description: Create a lightweight per-app git tag after a successful deploy.
+
+inputs:
+  app-name:
+    required: true
+    description: "Lowercase app name (app, studio, admin, etc.)"
+  environment:
+    required: true
+    description: "Environment (dev or prod)"
+  timestamp:
+    required: true
+    description: "Deploy timestamp (shared across all jobs)"
+
+runs:
+  using: composite
+  steps:
+    - name: Create and push tag
+      shell: bash
+      run: |
+        SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+        TAG="${{ inputs.app-name }}-${{ inputs.environment }}-${{ inputs.timestamp }}-${SHORT_SHA}"
+        git tag "$TAG"
+        git push origin "$TAG"

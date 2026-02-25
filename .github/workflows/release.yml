@@ -6,7 +6,7 @@
 #
 # Called by deploy.yml after all deploy jobs complete.
 
-name: Create Release
+name: Release
 
 on:
   workflow_call:

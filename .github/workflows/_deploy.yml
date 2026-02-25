@@ -1,0 +1,114 @@
+# Reusable workflow: build and deploy a single app to Cloudflare Workers.
+#
+# Handles environment-specific configuration (URLs, env vars, PostHog)
+# internally based on app-name + environment. Creates a per-app git tag
+# on success via the create-app-tag composite action.
+
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+        description: "Lowercase app name (app, studio, admin, docs, links, storybook, www)"
+      environment:
+        required: true
+        type: string
+        description: "Environment (dev or prod)"
+      timestamp:
+        required: true
+        type: string
+        description: "Deploy timestamp (shared across all jobs)"
+    outputs:
+      url:
+        value: ${{ jobs.deploy.outputs.url }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      url: ${{ steps.config.outputs.url }}
+    environment:
+      name: ${{ inputs.app-name }}-${{ inputs.environment }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Configure environment
+        id: config
+        run: |
+          APP="${{ inputs.app-name }}"
+          ENV="${{ inputs.environment }}"
+
+          # Deploy URL (used for output only — environment.url can't reference step outputs)
+          case "${APP}-${ENV}" in
+            app-prod)       URL="https://app.valguide.com" ;;
+            app-dev)        URL="https://app.valguide.dev" ;;
+            studio-prod)    URL="https://studio.valguide.com" ;;
+            studio-dev)     URL="https://studio.valguide.dev" ;;
+            admin-prod)     URL="https://ops.val.guide" ;;
+            admin-dev)      URL="https://ops-dev.val.guide" ;;
+            docs-prod)      URL="https://docs.val.guide" ;;
+            docs-dev)       URL="https://docs-dev.val.guide" ;;
+            links-prod)     URL="https://links.valguide.com" ;;
+            links-dev)      URL="https://links.valguide.dev" ;;
+            storybook-prod) URL="https://sb.val.guide" ;;
+            storybook-dev)  URL="https://sb-dev.val.guide" ;;
+            www-prod)       URL="https://www.valguide.com" ;;
+            www-dev)        URL="https://www.valguide.dev" ;;
+          esac
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+          # Domain suffix for VITE_* URLs
+          if [ "$ENV" = "prod" ]; then DS="com"; else DS="dev"; fi
+
+          # PostHog (all apps except docs and storybook)
+          case "$APP" in
+            app|studio|admin|links|www)
+              echo "VITE_POSTHOG_ENABLED=true" >> $GITHUB_ENV
+              echo "VITE_POSTHOG_KEY=<public-posthog-project-key>" >> $GITHUB_ENV
+              echo "VITE_POSTHOG_HOST=https://e.valguide.${DS}" >> $GITHUB_ENV
+              echo "VITE_APP_DOMAIN=app.valguide.${DS}" >> $GITHUB_ENV
+              ;;
+          esac
+
+          # Studio URL and R2 (app, studio, admin)
+          case "$APP" in
+            app|studio|admin)
+              echo "VITE_STUDIO_URL=https://studio.valguide.${DS}" >> $GITHUB_ENV
+              echo "VITE_R2_PUBLIC_URL=https://assets.valguide.${DS}" >> $GITHUB_ENV
+              ;;
+          esac
+
+          # VITE_ENV (all except storybook)
+          case "$APP" in
+            app|studio|admin|docs|links|www)
+              echo "VITE_ENV=${ENV}" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Build & Deploy
+        run: |
+          if [ "${{ inputs.environment }}" = "prod" ]; then
+            pnpm --filter "@valguide/${{ inputs.app-name }}" run deploy
+          else
+            pnpm --filter "@valguide/${{ inputs.app-name }}" run deploy:dev
+          fi
+
+      - uses: ./.github/actions/create-app-tag
+        with:
+          app-name: ${{ inputs.app-name }}
+          environment: ${{ inputs.environment }}
+          timestamp: ${{ inputs.timestamp }}

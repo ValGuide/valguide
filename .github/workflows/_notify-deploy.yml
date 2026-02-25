@@ -186,57 +186,25 @@ jobs:
           PLAIN=$(echo -e "${PLAIN_HEADER}\nCommit: ${SHA7} by @${ACTOR}")
 
           # Send via Slack API (jq handles JSON escaping reliably)
-          if [ -n "$CHANGELOG_BLOCK" ]; then
-            jq -n \
-              --arg channel "deployments" \
-              --arg text "$PLAIN" \
-              --arg body "$MSG" \
-              --arg changelog "$CHANGELOG_BLOCK" \
-              --arg footer "$FOOTER_TEXT" \
-              '{
-                channel: $channel,
-                text: $text,
-                blocks: [
-                  {
-                    type: "section",
-                    text: { type: "mrkdwn", text: $body }
-                  },
-                  {
-                    type: "section",
-                    text: { type: "mrkdwn", text: $changelog }
-                  },
-                  {
-                    type: "section",
-                    text: { type: "mrkdwn", text: $footer }
-                  },
-                  { type: "divider" }
-                ]
-              }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
-                -H "Authorization: Bearer $SLACK_TOKEN" \
-                -H "Content-Type: application/json" \
-                -d @-
-          else
-            jq -n \
-              --arg channel "deployments" \
-              --arg text "$PLAIN" \
-              --arg body "$MSG" \
-              --arg footer "$FOOTER_TEXT" \
-              '{
-                channel: $channel,
-                text: $text,
-                blocks: [
-                  {
-                    type: "section",
-                    text: { type: "mrkdwn", text: $body }
-                  },
-                  {
-                    type: "section",
-                    text: { type: "mrkdwn", text: $footer }
-                  },
-                  { type: "divider" }
-                ]
-              }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
-                -H "Authorization: Bearer $SLACK_TOKEN" \
-                -H "Content-Type: application/json" \
-                -d @-
-          fi
+          # Build blocks array dynamically — changelog block included only if non-empty
+          jq -n \
+            --arg channel "deployments" \
+            --arg text "$PLAIN" \
+            --arg body "$MSG" \
+            --arg changelog "$CHANGELOG_BLOCK" \
+            --arg footer "$FOOTER_TEXT" \
+            '{
+              channel: $channel,
+              text: $text,
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: $body } },
+                (if ($changelog | length) > 0 then
+                  { type: "section", text: { type: "mrkdwn", text: $changelog } }
+                else empty end),
+                { type: "section", text: { type: "mrkdwn", text: $footer } },
+                { type: "divider" }
+              ]
+            }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
+              -H "Authorization: Bearer $SLACK_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d @-
