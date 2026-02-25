@@ -158,9 +158,9 @@ jobs:
             url=$(url_for "${name}-${ENV}")
             display=$(display_for "$name")
             if [ "$result" = "success" ]; then
-              SECTION="${SECTION}✅  **${display}** — ${url}\n"
+              SECTION="${SECTION}- ✅ ${display} — ${url}\n"
             else
-              SECTION="${SECTION}❌  **${display}** — ${url}\n"
+              SECTION="${SECTION}- ❌ ${display} — ${url}\n"
             fi
           }
 
@@ -255,19 +255,19 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
-          name: "Deploy → ${{ inputs.environment }} (${{ inputs.timestamp }})"
+          name: "🚀 Deploy → ${{ inputs.environment }} (${{ inputs.timestamp }})"
           body: |
-            ## Deploy to ${{ inputs.environment }}
+            ## 📦 Deployment Summary
+            - **Environment:** ${{ inputs.environment }}
+            - **Triggered by:** @${{ github.actor }}
+            - **Commit:** [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+            ${{ steps.prev.outputs.tag && format('- **Previous release:** [`{0}`]({1}/{2}/releases/tag/{0})', steps.prev.outputs.tag, github.server_url, github.repository) || '- 🎉 **First consolidated release for this environment!**' }}
+            ${{ steps.prev.outputs.tag && format('- **Full diff:** [{0} → {1}]({2}/{3}/compare/{0}...{4})', steps.prev.outputs.tag, steps.tag.outputs.tag, github.server_url, github.repository, steps.tag.outputs.tag) || '' }}
 
-            👤 **Triggered by**: ${{ github.actor }}
-            📦 **Commit**: [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
-            ${{ steps.prev.outputs.tag && format('📋 **Changes since**: [`{0}`]({1}/{2}/releases/tag/{0})', steps.prev.outputs.tag, github.server_url, github.repository) || '🎉 **First consolidated release for this environment!**' }}
-            ${{ steps.prev.outputs.tag && format('🔀 **Full diff**: [{0}...{1}]({2}/{3}/compare/{0}...{4})', steps.prev.outputs.tag, steps.tag.outputs.tag, github.server_url, github.repository, steps.tag.outputs.tag) || '' }}
-
-            ### Apps deployed
+            ## 📦 Applications
             ${{ steps.apps.outputs.body }}
-            ---
 
+            ## 🛠 Changes
             ${{ steps.changelog.outputs.body }}
           prerelease: ${{ inputs.environment == 'dev' }}
           make_latest: ${{ inputs.environment == 'prod' }}
