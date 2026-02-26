@@ -64,6 +64,7 @@
     "@tiptap/react": "^3.10.5",
     "@tiptap/starter-kit": "^3.10.5",
     "@unpic/react": "^1.0.2",
+    "unpic": "^4.2.2",
     "@valguide/email": "workspace:*",
     "@valguide/icons": "workspace:*",
     "@valguide/logger": "workspace:*",

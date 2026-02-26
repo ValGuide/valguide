@@ -1,7 +1,7 @@
-import { Image } from '@unpic/react'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Dialog, DialogContent } from '@valguide/core/ui/components/dialog'
+import { Image } from '@valguide/core/ui/components/image'
 import { Minus, Plus, RotateCcw, X } from 'lucide-react'
 import { useCallback, useState } from 'react'
 

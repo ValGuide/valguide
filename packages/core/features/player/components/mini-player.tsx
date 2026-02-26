@@ -1,5 +1,5 @@
-import { Image } from '@unpic/react'
 import { Button } from '@valguide/core/ui/components/button'
+import { Image } from '@valguide/core/ui/components/image'
 import { Music, Pause, Play, SkipForward } from 'lucide-react'
 import { useCurrentStop, useHasNext, useIsPlaying, usePlayerActions, useProgress } from '../store/use-player-store'
 

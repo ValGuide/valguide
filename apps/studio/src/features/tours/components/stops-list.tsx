@@ -15,7 +15,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { StructureDraftStop } from '@valguide/core/features/tours/structure/get-structure-draft.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -35,6 +34,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@valguide/ui/components/empty'
+import { Image } from '@valguide/ui/components/image'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { cn } from '@valguide/ui/lib/utils'
 import { Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus, Unlink } from 'lucide-react'

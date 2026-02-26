@@ -1,4 +1,3 @@
-import { Image as UnpicImage } from '@unpic/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import { getAssetImageUrl, getAssetUrl } from '@valguide/core/features/assets/image-url'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
@@ -13,8 +12,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
+import { Image } from '@valguide/ui/components/image'
 import { formatDistanceToNow } from 'date-fns'
-import { Download, Eye, Image, MoreVertical, Music, Trash2, Video } from 'lucide-react'
+import { Download, Eye, Image as ImageIcon, MoreVertical, Music, Trash2, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useState } from 'react'
 
@@ -66,7 +66,7 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
   const getIcon = () => {
     switch (asset.type) {
       case 'image':
-        return <Image className="h-12 w-12 text-muted-foreground" />
+        return <ImageIcon className="h-12 w-12 text-muted-foreground" />
       case 'audio':
         return <Music className="h-12 w-12 text-muted-foreground" />
       case 'video':
@@ -86,7 +86,7 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
             onClick={() => onPreview?.(asset)}
           >
             {asset.type === 'image' ? (
-              <UnpicImage
+              <Image
                 src={getAssetImageUrl(asset)}
                 alt={asset.fileName}
                 layout="fullWidth"

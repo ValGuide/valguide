@@ -34,7 +34,7 @@
     "@tanstack/react-router-devtools": "^1.145.7",
     "@tanstack/react-router-ssr-query": "^1.145.7",
     "@tanstack/react-start": "^1.154.0",
-    "@unpic/react": "^1.0.2",
+
     "@valguide/core": "workspace:*",
     "@valguide/email": "workspace:*",
     "class-variance-authority": "^0.7.1",

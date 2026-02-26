@@ -1,4 +1,4 @@
-import { Image } from '@unpic/react'
+import { Image } from '@valguide/core/ui/components/image'
 import { Music, Pause, Play } from 'lucide-react'
 import type { PlayerStop } from '../types'
 

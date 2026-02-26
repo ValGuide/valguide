@@ -1,5 +1,4 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -8,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
+import { Image } from '@valguide/ui/components/image'
 import { ArrowUpDown, ImageOff, Loader2, MoreHorizontal } from 'lucide-react'
 import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { TourStatusBadge } from './tour-status-badge'
