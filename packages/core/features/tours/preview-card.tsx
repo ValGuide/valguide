@@ -98,7 +98,9 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
           <Image
             src={displayImage}
             alt={displayTitle}
-            layout="fullWidth"
+            layout="constrained"
+            width={400}
+            height={176}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (

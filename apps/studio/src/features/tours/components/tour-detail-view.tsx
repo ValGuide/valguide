@@ -124,7 +124,9 @@ export function TourDetailView({
                 <Image
                   src={coverImageUrl}
                   alt={displayTitle}
-                  layout="fullWidth"
+                  layout="constrained"
+                  width={800}
+                  height={224}
                   className="h-full w-full object-cover"
                 />
               ) : (

@@ -66,7 +66,14 @@ export function MediaPickerGallery({
       case 'image': {
         const imageUrl = getAssetImageUrl(asset)
         return imageUrl ? (
-          <Image src={imageUrl} alt={asset.fileName} layout="fullWidth" className="h-full w-full object-cover" />
+          <Image
+            src={imageUrl}
+            alt={asset.fileName}
+            layout="constrained"
+            width={200}
+            height={200}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted">
             <span className="text-xs text-muted-foreground">{t('noPreview')}</span>

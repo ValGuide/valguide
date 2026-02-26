@@ -29,7 +29,9 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
           <Image
             src={getAssetImageUrl({ storagePath })}
             alt=""
-            layout="fullWidth"
+            layout="constrained"
+            width={40}
+            height={40}
             className="h-full w-full object-cover"
           />
         </div>

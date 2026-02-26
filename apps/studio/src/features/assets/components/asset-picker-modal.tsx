@@ -209,7 +209,9 @@ export function AssetPickerModal({
                             <Image
                               src={getAssetImageUrl(asset)}
                               alt={asset.fileName}
-                              layout="fullWidth"
+                              layout="constrained"
+                              width={300}
+                              height={160}
                               className="h-full w-full object-cover"
                             />
                           ) : (

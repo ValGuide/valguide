@@ -89,7 +89,9 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
               <Image
                 src={getAssetImageUrl(asset)}
                 alt={asset.fileName}
-                layout="fullWidth"
+                layout="constrained"
+                width={400}
+                height={192}
                 className="h-full w-full object-cover"
               />
             ) : (

@@ -35,7 +35,9 @@ export function MiniPlayer({ className = '', onExpand }: MiniPlayerProps) {
             <Image
               src={currentStop.coverImageUrl}
               alt={currentStop.title}
-              layout="fullWidth"
+              layout="constrained"
+              width={40}
+              height={40}
               className="w-full h-full object-cover"
             />
           ) : (

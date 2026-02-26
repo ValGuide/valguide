@@ -69,7 +69,9 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                 <Image
                   src={getAssetImageUrl(img)}
                   alt={img.fileName}
-                  layout="fullWidth"
+                  layout="constrained"
+                  width={64}
+                  height={64}
                   className="absolute inset-0 w-full h-full object-cover rounded"
                 />
               </button>
