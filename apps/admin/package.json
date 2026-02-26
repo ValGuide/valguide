@@ -33,6 +33,7 @@
     "@tanstack/react-router-ssr-query": "^1.145.7",
     "@tanstack/react-start": "^1.154.0",
     "@tanstack/react-table": "^8.21.3",
+    "@unpic/react": "^1.0.2",
     "@valguide/core": "workspace:*",
     "@valguide/email": "workspace:*",
     "jest": "^29.7.0",
