@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "valguide-image-guard",
+  "compatibility_date": "2025-09-24",
+  "main": "src/index.ts",
+
+  // Production: assets.valguide.com/i/*
+  "routes": [
+    { "pattern": "assets.valguide.com/i/*", "zone_name": "valguide.com" }
+  ],
+
+  // Dev environment: assets.valguide.dev/i/*
+  "env": {
+    "dev": {
+      "routes": [
+        { "pattern": "assets.valguide.dev/i/*", "zone_name": "valguide.dev" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@valguide/image-guard",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "cf:deploy": "wrangler deploy --env=\"\"",
+    "cf:deploy:dev": "wrangler deploy --env dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.67.0"
+  }
+}
