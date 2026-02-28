@@ -13,16 +13,24 @@
  *   /i/w-{width},h-{height}/{storagePath}
  *
  * Allowed transforms:
- *   w-{width}    → width (must be in ALLOWED_WIDTHS)
+ *   w-{width}    → width (snapped to nearest ALLOWED_WIDTH)
  *   h-{height}   → height (optional, passed through)
  *   q-{quality}  → quality (optional, clamped to MAX_QUALITY)
+ *
+ * Fallback behavior (no 400s for transform issues):
+ *   - Invalid/missing width   → defaults to largest width (1920)
+ *   - Width not in whitelist  → snapped to nearest allowed width
+ *   - Unknown transform keys  → silently ignored
+ *   - Invalid values (NaN/≤0) → param ignored (width falls back to 1920)
+ *   - Missing storage path    → 404 (genuinely broken URL)
  *
  * Always enforced:
  *   format       → auto (WebP/AVIF based on Accept header)
  *   fit          → cover (fill the area, crop if needed)
  */
 
-const ALLOWED_WIDTHS = new Set([320, 640, 960, 1280, 1920])
+const ALLOWED_WIDTHS: readonly number[] = [320, 640, 960, 1280, 1920]
+const DEFAULT_WIDTH = 1920
 const DEFAULT_QUALITY = 75
 const MAX_QUALITY = 85
 
@@ -44,31 +52,19 @@ export default {
     const withoutPrefix = path.slice(3) // Remove "/i/"
     const firstSlash = withoutPrefix.indexOf('/')
     if (firstSlash === -1) {
-      return errorResponse(400, 'Missing storage path')
+      return new Response('Not Found', { status: 404 })
     }
 
     const transformSegment = withoutPrefix.slice(0, firstSlash)
     const storagePath = withoutPrefix.slice(firstSlash + 1)
 
     if (!storagePath || storagePath === '') {
-      return errorResponse(400, 'Missing storage path')
+      return new Response('Not Found', { status: 404 })
     }
 
     const params = parseTransforms(transformSegment)
-    if (params.error) {
-      console.log(
-        `Image guard rejected: ${params.error} | path=${path} | ip=${request.headers.get('cf-connecting-ip')}`,
-      )
-      return errorResponse(400, params.error)
-    }
 
-    if (!ALLOWED_WIDTHS.has(params.width)) {
-      console.log(
-        `Image guard rejected: invalid width ${params.width} | path=${path} | ip=${request.headers.get('cf-connecting-ip')}`,
-      )
-      return errorResponse(400, `Invalid width: ${params.width}. Allowed: ${[...ALLOWED_WIDTHS].join(', ')}`)
-    }
-
+    const width = snapToNearest(params.width || DEFAULT_WIDTH)
     const quality = Math.min(params.quality ?? DEFAULT_QUALITY, MAX_QUALITY)
 
     // Negotiate format from Accept header
@@ -83,7 +79,7 @@ export default {
     const originUrl = new URL(`/${storagePath}`, url.origin)
 
     const imageOptions: Record<string, unknown> = {
-      width: params.width,
+      width,
       quality,
       format,
       fit: 'cover',
@@ -121,7 +117,6 @@ interface ParsedTransforms {
   width: number
   height?: number
   quality?: number
-  error?: string
 }
 
 function parseTransforms(segment: string): ParsedTransforms {
@@ -132,14 +127,10 @@ function parseTransforms(segment: string): ParsedTransforms {
 
   for (const part of parts) {
     const [key, rawValue] = part.split('-', 2)
-    if (!key || !rawValue) {
-      return { width: 0, error: `Invalid transform: ${part}` }
-    }
+    if (!key || !rawValue) continue
 
     const value = Number.parseInt(rawValue, 10)
-    if (Number.isNaN(value) || value <= 0) {
-      return { width: 0, error: `Invalid value for ${key}: ${rawValue}` }
-    }
+    if (Number.isNaN(value) || value <= 0) continue
 
     switch (key) {
       case 'w':
@@ -151,21 +142,24 @@ function parseTransforms(segment: string): ParsedTransforms {
       case 'q':
         quality = value
         break
-      default:
-        return { width: 0, error: `Unknown transform: ${key}` }
+      // Unknown keys: silently ignored
     }
-  }
-
-  if (width === 0) {
-    return { width: 0, error: 'Width (w) is required' }
   }
 
   return { width, height, quality }
 }
 
-function errorResponse(status: number, message: string): Response {
-  return new Response(JSON.stringify({ error: message }), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
+function snapToNearest(requested: number): number {
+  let closest = ALLOWED_WIDTHS[0]
+  let minDiff = Math.abs(requested - closest)
+
+  for (const w of ALLOWED_WIDTHS) {
+    const diff = Math.abs(requested - w)
+    if (diff < minDiff) {
+      closest = w
+      minDiff = diff
+    }
+  }
+
+  return closest
 }
