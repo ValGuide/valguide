@@ -1,11 +1,11 @@
 import { createMiddleware } from '@tanstack/react-start'
-import { getAuthSession } from '@valguide/core/features/auth/better-auth.server'
+import { getAdminAuthSession } from '@valguide/core/features/auth/better-auth.server'
 import { NotFoundError } from '@valguide/features/auth/authorization'
 import { isSuperadmin } from './utils/superadmin'
 
 // TODO: fix /en, etc. apparently not working due to this
 export const adminMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
-  const session = await getAuthSession()
+  const session = await getAdminAuthSession()
   const user = session?.user
 
   if (!user?.id) {

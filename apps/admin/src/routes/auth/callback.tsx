@@ -1,12 +1,12 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { auth, getAuthSession } from '@valguide/core/features/auth/better-auth.server'
+import { adminAuth, getAdminAuthSession } from '@valguide/core/features/auth/better-auth.server'
 import { z } from 'zod'
 import { isSuperadmin } from '@/server/utils/superadmin'
 
 const validateAdminSessionFn = createServerFn({ method: 'GET' }).handler(async () => {
-  const session = await getAuthSession()
+  const session = await getAdminAuthSession()
   const user = session?.user
 
   if (!user?.id) {
@@ -14,7 +14,7 @@ const validateAdminSessionFn = createServerFn({ method: 'GET' }).handler(async (
   }
 
   if (!isSuperadmin(user.email)) {
-    await auth.api.signOut({ headers: getRequestHeaders() })
+    await adminAuth.api.signOut({ headers: getRequestHeaders() })
     return { success: false }
   }
 
