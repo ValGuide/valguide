@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
 import { boolean, index, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
-import { authUsers } from 'drizzle-orm/supabase'
+import { authUsers } from '../auth/schema'
 
 const studioSchema = pgSchema('studio')
 

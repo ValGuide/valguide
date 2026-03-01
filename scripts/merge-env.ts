@@ -11,9 +11,9 @@ const SECRETS_DIR = join(ROOT_DIR, '.secrets')
 const OUTPUT_DIR = join(ROOT_DIR, '.env-merged')
 
 const ENV_FILES: Record<Environment, string[]> = {
-  local: ['.env.defaults', '.env.supabase.local', '.env.resend.dev'],
-  dev: ['.env.defaults', '.env.supabase.dev', '.env.resend.dev'],
-  prod: ['.env.defaults', '.env.supabase.prod', '.env.resend.prod'],
+  local: ['.env.defaults', '.env.neon.local', '.env.resend.dev'],
+  dev: ['.env.defaults', '.env.neon.dev', '.env.resend.dev'],
+  prod: ['.env.defaults', '.env.neon.prod', '.env.resend.prod'],
 }
 
 /**

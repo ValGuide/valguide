@@ -2,12 +2,12 @@ import { z } from 'zod'
 
 export const serverEnvSchema = z.object({
   DATABASE_URL: z.string().min(1, 'Database URL is required'),
-  SUPABASE_URL: z.string().url('Invalid Supabase URL'),
-  SUPABASE_PUBLISHABLE_KEY: z.string({
-    required_error: 'Supabase publishable key is required',
-  }),
-  SUPABASE_SECRET_KEY: z.string().optional(),
-  SUPABASE_COOKIE_DOMAIN: z.string().optional(),
+  BETTER_AUTH_SECRET: z.string().min(1, 'Better Auth secret is required'),
+  BETTER_AUTH_URL: z.string().optional().default(''),
+  BETTER_AUTH_TRUSTED_ORIGINS: z.string().optional().default(''),
+  BETTER_AUTH_COOKIE_DOMAIN: z.string().optional().default(''),
+  BETTER_AUTH_COOKIE_PREFIX: z.string().optional().default('valguide-auth'),
+  BETTER_AUTH_DEV_OTP: z.string().optional().default('000000'),
   DRIZZLE_LOG_ENABLED: z
     .string()
     .optional()
@@ -24,7 +24,9 @@ export const serverEnvSchema = z.object({
     .default('curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example'),
   ADMIN_COOKIE_DOMAIN: z.string().optional(),
   ADMIN_BASE_URL: z.string().optional().default('https://admin-local.dev'),
-  SLACK_TEAM_ID: z.string().optional(),
+  SLACK_CLIENT_ID: z.string().optional().default(''),
+  SLACK_CLIENT_SECRET: z.string().optional().default(''),
+  SLACK_TEAM_ID: z.string().optional().default(''),
 })
 
 export const clientEnvSchema = z.object({

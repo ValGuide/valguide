@@ -1,6 +1,6 @@
 import type { DB } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
-import { authUsers } from 'drizzle-orm/supabase'
+import { authUsers } from '../auth/schema'
 import { profiles } from '../profiles/schema'
 import { organizationMember } from './schema'
 

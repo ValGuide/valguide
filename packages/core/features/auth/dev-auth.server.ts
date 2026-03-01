@@ -1,5 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { serverEnv } from '../../env/server'
+import { auth } from './better-auth.server'
 
 const DEV_TEST_EMAIL = 'e2e@valguide.test'
 
@@ -13,41 +14,16 @@ export async function generateDevMagicLink(email = DEV_TEST_EMAIL): Promise<DevA
     throw new Error('Dev auth is only available in development mode')
   }
 
-  if (!serverEnv.SUPABASE_SECRET_KEY) {
-    throw new Error('Required secret key is not configured for dev auth')
-  }
-
-  const adminClient = createClient(serverEnv.SUPABASE_URL, serverEnv.SUPABASE_SECRET_KEY, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  })
-
-  await adminClient.auth.admin
-    .createUser({
+  await auth.api.sendVerificationOTP({
+    body: {
       email,
-      email_confirm: true,
-    })
-    .catch(() => {
-      // Ignore if user already exists
-    })
-
-  const { data, error } = await adminClient.auth.admin.generateLink({
-    type: 'magiclink',
-    email,
+      type: 'sign-in',
+    },
+    headers: getRequestHeaders(),
   })
-
-  if (error) {
-    throw new Error('Failed to generate magic link')
-  }
-
-  if (!data.properties.action_link) {
-    throw new Error('No action link returned from Supabase')
-  }
 
   return {
-    magicLink: data.properties.action_link,
+    magicLink: `${serverEnv.VITE_STUDIO_URL}/login?email=${encodeURIComponent(email)}&otp=${serverEnv.BETTER_AUTH_DEV_OTP}`,
     email,
   }
 }

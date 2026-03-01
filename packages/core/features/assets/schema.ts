@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
 import { index, integer, pgEnum, pgSchema, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
-import { authUsers } from 'drizzle-orm/supabase'
+import { authUsers } from '../auth/schema'
 import { organization } from '../orgs/schema'
 import {
   stop,

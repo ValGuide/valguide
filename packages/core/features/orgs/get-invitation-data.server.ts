@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { createClient } from '../../supabase/server'
+import { getAuthSession } from '../auth/better-auth.server'
 import { db } from '../db'
 import { getInvitationByTokenHash } from './utils'
 
@@ -42,9 +42,8 @@ export async function getInvitationData(token: string | undefined): Promise<Invi
     }
   }
 
-  const supabase = await createClient()
-  const { data: claimsData } = await supabase.auth.getClaims()
-  const user = claimsData?.claims
+  const session = await getAuthSession()
+  const user = session?.user
 
   if (!user) {
     return {

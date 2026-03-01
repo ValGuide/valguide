@@ -1,5 +1,3 @@
-import type { AuthError } from '@supabase/supabase-js'
-
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -15,11 +13,19 @@ export type SerializableError = {
 // HELPERS
 // ============================================================================
 
-export function serializeAuthError(error: AuthError): SerializableError {
+type ErrorLike = {
+  code?: string
+  status?: number
+  name?: string
+  message?: string
+}
+
+export function serializeAuthError(error: unknown): SerializableError {
+  const errorLike = (error ?? {}) as ErrorLike
   return {
-    code: error.code,
-    status: error.status,
-    name: error.name,
-    message: error.message,
+    code: errorLike.code,
+    status: errorLike.status,
+    name: errorLike.name ?? 'AuthError',
+    message: errorLike.message ?? 'Authentication failed',
   }
 }

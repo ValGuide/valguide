@@ -1,5 +1,5 @@
 import { integer, pgSchema, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { authUsers } from 'drizzle-orm/supabase'
+import { authUsers } from '../auth/schema'
 import { organization } from '../orgs/schema'
 
 const studioSchema = pgSchema('studio')

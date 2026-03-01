@@ -1,6 +1,9 @@
 import { createHash } from 'node:crypto'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
-import { createClient } from '@valguide/supabase/server'
+import { eq } from 'drizzle-orm'
+import { auth } from '../auth/better-auth.server'
+import { authUsers } from '../auth/schema'
 import { acceptInvitation } from './join-team.server'
 import { getInvitationByTokenHash } from './utils'
 
@@ -34,18 +37,22 @@ export async function verifyInviteOtp(token: string, otp: string): Promise<Verif
     }
   }
 
-  const supabase = await createClient()
-  const { data: verifyData, error: verifyError } = await supabase.auth.verifyOtp({
-    email: invite.email,
-    token: otp,
-    type: 'email',
-  })
-
-  if (verifyError) {
-    return { success: false, error: verifyError.message }
+  try {
+    await auth.api.signInEmailOTP({
+      body: {
+        email: invite.email,
+        otp,
+      },
+      headers: getRequestHeaders(),
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Verification failed'
+    return { success: false, error: message }
   }
 
-  const userId = verifyData.user?.id
+  const [user] = await db.select({ id: authUsers.id }).from(authUsers).where(eq(authUsers.email, invite.email)).limit(1)
+
+  const userId = user?.id
   if (!userId) {
     return { success: false, error: 'Verification failed' }
   }

@@ -21,7 +21,7 @@ const verifyInviteOtpSchema = z.object({
 /**
  * Verify OTP and accept invitation atomically.
  * No auth middleware needed — user starts unauthenticated and becomes
- * authenticated during this call via supabase.auth.verifyOtp.
+ * authenticated during this call via Better Auth email OTP verification.
  */
 export const verifyInviteOtpFn = createServerFn({ method: 'POST' })
   .inputValidator(verifyInviteOtpSchema)

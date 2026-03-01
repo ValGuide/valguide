@@ -20,9 +20,7 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
-    "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-    "SUPABASE_COOKIE_DOMAIN": ".valguide.com"
+    "APP_BASE_URL": "https://www.valguide.com"
   },
 
   // Dev environment (www.valguide.dev)
@@ -34,9 +32,7 @@
       "routes": [{ "pattern": "www.valguide.dev", "custom_domain": true }],
       "vars": {
         "NODE_ENV": "production",
-        "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
-        "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
+        "APP_BASE_URL": "https://www.valguide.dev",
         "BLOCK_ROBOTS": "true"
       }
     }

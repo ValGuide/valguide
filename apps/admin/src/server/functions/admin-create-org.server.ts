@@ -1,10 +1,10 @@
+import { authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
 import { generateUniqueOrgSlug } from '@valguide/core/features/orgs/generate-unique-org-slug.server'
 import { organization, organizationMember } from '@valguide/core/features/orgs/schema'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { SLUG_PATTERN } from '@valguide/core/utils/slug'
 import { eq } from 'drizzle-orm'
-import { authUsers } from 'drizzle-orm/supabase'
 
 export type AdminCreateOrgInput = {
   name: string

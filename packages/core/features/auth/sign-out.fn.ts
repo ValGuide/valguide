@@ -1,7 +1,10 @@
-import type { SignOut } from '@supabase/supabase-js'
 import { createServerFn } from '@tanstack/react-start'
-import { createClient } from '@valguide/supabase/server'
+import { getRequestHeaders } from '@tanstack/react-start/server'
+import { and, eq, ne } from 'drizzle-orm'
 import { z } from 'zod'
+import { db } from '../db'
+import { auth } from './better-auth.server'
+import { authSessions } from './schema'
 import { serializeAuthError } from './utils'
 
 // ============================================================================
@@ -26,12 +29,27 @@ const signOutSchema = z.object({
 export const signOutFn = createServerFn({ method: 'POST' })
   .inputValidator(signOutSchema)
   .handler(async ({ data: options }) => {
-    const supabase = await createClient()
-    const response = await supabase.auth.signOut(options as SignOut)
+    const headers = getRequestHeaders()
+    const scope = options.scope ?? 'local'
 
-    if (response.error) {
-      return { error: serializeAuthError(response.error) }
+    try {
+      const sessionData = await auth.api.getSession({ headers })
+
+      if (scope === 'others' && sessionData?.user?.id) {
+        await db
+          .delete(authSessions)
+          .where(and(eq(authSessions.userId, sessionData.user.id), ne(authSessions.id, sessionData.session.id)))
+        return { error: null }
+      }
+
+      await auth.api.signOut({ headers })
+
+      if (scope === 'global' && sessionData?.user?.id) {
+        await db.delete(authSessions).where(eq(authSessions.userId, sessionData.user.id))
+      }
+
+      return { error: null }
+    } catch (error) {
+      return { error: serializeAuthError(error) }
     }
-
-    return { error: null }
   })

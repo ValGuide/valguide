@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createClient } from '@valguide/supabase/server'
+import { getAuthSession } from './better-auth.server'
 
 // ============================================================================
 // TYPES
@@ -19,15 +19,14 @@ export type AuthUser = {
  * Returns null if not authenticated.
  */
 export const getCurrentUserFn = createServerFn({ method: 'GET' }).handler(async (): Promise<AuthUser | null> => {
-  const supabase = await createClient()
-  const { data, error } = await supabase.auth.getUser()
+  const session = await getAuthSession()
 
-  if (error || !data.user) {
+  if (!session?.user) {
     return null
   }
 
   return {
-    id: data.user.id,
-    email: data.user.email,
+    id: session.user.id,
+    email: session.user.email,
   }
 })

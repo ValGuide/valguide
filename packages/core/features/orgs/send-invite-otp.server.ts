@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
-import { createClient } from '@valguide/supabase/server'
+import { auth } from '../auth/better-auth.server'
 import { getInvitationByTokenHash } from './utils'
 
 // =============================================================================
@@ -37,13 +38,17 @@ export async function sendInviteOtp(token: string): Promise<SendInviteOtpResult>
     }
   }
 
-  const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithOtp({
-    email: invite.email,
-  })
-
-  if (error) {
-    return { success: false, error: error.message }
+  try {
+    await auth.api.sendVerificationOTP({
+      body: {
+        email: invite.email,
+        type: 'sign-in',
+      },
+      headers: getRequestHeaders(),
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to send OTP'
+    return { success: false, error: message }
   }
 
   return { success: true }

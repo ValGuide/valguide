@@ -10,15 +10,15 @@ type EnvOptions<T extends string> = {
   envFiles: Record<T, string>
 }
 
-const supabaseOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
-  name: 'supabase',
-  prefix: '--sb:',
+const databaseOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
+  name: 'database',
+  prefix: '--db:',
   values: ['dev', 'local', 'prod'] as const,
   defaultValue: 'dev' as const,
   envFiles: {
-    local: '.env.supabase.local',
-    dev: '.env.supabase.dev',
-    prod: '.env.supabase.prod',
+    local: '.env.neon.local',
+    dev: '.env.neon.dev',
+    prod: '.env.neon.prod',
   },
 }
 
@@ -54,7 +54,7 @@ const defaultOptions: EnvOptions<'all'> = {
   },
 }
 
-const options: EnvOptions<string>[] = [supabaseOptions, resendOptions, cloudflareOptions, defaultOptions]
+const options: EnvOptions<string>[] = [databaseOptions, resendOptions, cloudflareOptions, defaultOptions]
 
 type EnvAndFile<T> = {
   name: string

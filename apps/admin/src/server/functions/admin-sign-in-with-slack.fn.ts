@@ -1,25 +1,24 @@
 import { createServerFn } from '@tanstack/react-start'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { serverEnv } from '@valguide/core/env/server'
-import { createAdminClient } from '../supabase'
+import { auth } from '@valguide/core/features/auth/better-auth.server'
+import { serializeAuthError } from '@valguide/core/features/auth/utils'
 
 export const adminSignInWithSlackFn = createServerFn({ method: 'POST' }).handler(async () => {
-  const supabase = await createAdminClient()
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'slack_oidc',
-    options: {
-      redirectTo: `${serverEnv.ADMIN_BASE_URL}/auth/callback`,
-      ...(serverEnv.SLACK_TEAM_ID && {
-        queryParams: { team: serverEnv.SLACK_TEAM_ID },
-      }),
-    },
-  })
+  try {
+    const data = await auth.api.signInSocial({
+      body: {
+        provider: 'slack',
+        callbackURL: `${serverEnv.ADMIN_BASE_URL}/auth/callback`,
+      },
+      headers: getRequestHeaders(),
+    })
 
-  if (error) {
+    return { data, error: null }
+  } catch (error) {
     return {
       data: null,
-      error: { message: error.message, status: error.status },
+      error: serializeAuthError(error),
     }
   }
-
-  return { data, error: null }
 })

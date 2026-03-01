@@ -1,8 +1,8 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
-import { createClient } from '@valguide/supabase/server'
 import { resolveFirstOrgId } from '../orgs/resolve-active-org.server'
 import { getActiveTeamId, setActiveTeamId } from '../utils/cookies'
+import { getAuthSession } from './better-auth.server'
 import { getUserStatus } from './get-user-status.server'
 
 // ============================================================================
@@ -30,18 +30,16 @@ export type RequiredAuthContext = {
 // ============================================================================
 
 /**
- * Extracts user from Supabase claims and activeOrgId from cookie.
+ * Extracts user from Better Auth session and activeOrgId from cookie.
  * Use this for routes that need optional auth (public pages with conditional UI).
  */
 export const authContextMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
+  const session = await getAuthSession()
 
-  const user: AuthUser | null = data?.claims?.sub
+  const user: AuthUser | null = session?.user?.id
     ? {
-        id: data.claims.sub,
-        email: data.claims.email as string | undefined,
-        metadata: data.claims.user_metadata,
+        id: session.user.id,
+        email: session.user.email,
       }
     : null
 

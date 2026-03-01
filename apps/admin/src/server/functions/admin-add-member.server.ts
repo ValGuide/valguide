@@ -1,7 +1,7 @@
+import { authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
 import { type OrgRole, organization, organizationMember } from '@valguide/core/features/orgs/schema'
 import { and, eq } from 'drizzle-orm'
-import { authUsers } from 'drizzle-orm/supabase'
 
 export type AddMemberInput = {
   orgNanoId: string

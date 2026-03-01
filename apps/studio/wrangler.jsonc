@@ -28,9 +28,6 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
-    "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-    "SUPABASE_COOKIE_DOMAIN": ".valguide.com",
     "APP_BASE_URL": "https://app.valguide.com",
     // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
     "VITE_STUDIO_URL": "https://studio.valguide.com"
@@ -49,9 +46,6 @@
       ],
       "vars": {
         "NODE_ENV": "production",
-        "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
-        "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
         "APP_BASE_URL": "https://app.valguide.dev",
         // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
         "VITE_STUDIO_URL": "https://studio.valguide.dev",

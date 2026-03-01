@@ -33,6 +33,7 @@ import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainToursIndexRouteImport } from './routes/_main/tours.index'
 import { Route as MainStopsIndexRouteImport } from './routes/_main/stops.index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 import { Route as MainToursNewRouteImport } from './routes/_main/tours.new'
 import { Route as MainToursNanoIdRouteImport } from './routes/_main/tours.$nanoId'
 import { Route as MainStopsNanoIdRouteImport } from './routes/_main/stops.$nanoId'
@@ -161,6 +162,11 @@ const MainStopsIndexRoute = MainStopsIndexRouteImport.update({
   path: '/stops/',
   getParentRoute: () => MainRoute,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MainToursNewRoute = MainToursNewRouteImport.update({
   id: '/tours/new',
   path: '/tours/new',
@@ -232,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/tours/new': typeof MainToursNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops/': typeof MainStopsIndexRoute
   '/tours/': typeof MainToursIndexRoute
   '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
@@ -263,6 +270,7 @@ export interface FileRoutesByTo {
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/tours/new': typeof MainToursNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops': typeof MainStopsIndexRoute
   '/tours': typeof MainToursIndexRoute
   '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/_main/tours/new': typeof MainToursNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/_main/stops/': typeof MainStopsIndexRoute
   '/_main/tours/': typeof MainToursIndexRoute
   '/_main/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
@@ -334,6 +343,7 @@ export interface FileRouteTypes {
     | '/stops/$nanoId'
     | '/tours/$nanoId'
     | '/tours/new'
+    | '/api/auth/$'
     | '/stops/'
     | '/tours/'
     | '/stops/$nanoId/edit'
@@ -365,6 +375,7 @@ export interface FileRouteTypes {
     | '/api/upload'
     | '/api/upload-part'
     | '/tours/new'
+    | '/api/auth/$'
     | '/stops'
     | '/tours'
     | '/stops/$nanoId/edit'
@@ -400,6 +411,7 @@ export interface FileRouteTypes {
     | '/_main/stops/$nanoId'
     | '/_main/tours/$nanoId'
     | '/_main/tours/new'
+    | '/api/auth/$'
     | '/_main/stops/'
     | '/_main/tours/'
     | '/_main/stops/$nanoId/edit'
@@ -423,6 +435,7 @@ export interface RootRouteChildren {
   ApiDevAuthRoute: typeof ApiDevAuthRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ApiUploadPartRoute: typeof ApiUploadPartRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -595,6 +608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainStopsIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/tours/new': {
       id: '/_main/tours/new'
       path: '/tours/new'
@@ -752,6 +772,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDevAuthRoute: ApiDevAuthRoute,
   ApiUploadRoute: ApiUploadRoute,
   ApiUploadPartRoute: ApiUploadPartRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

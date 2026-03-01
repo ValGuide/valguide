@@ -1,8 +1,8 @@
+import { authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
 import { organizationMember } from '@valguide/core/features/orgs/schema'
 import { profiles } from '@valguide/core/features/profiles/schema'
 import { and, asc, count, desc, eq, ilike, or } from 'drizzle-orm'
-import { authUsers } from 'drizzle-orm/supabase'
 
 export type AdminUserListItem = {
   id: string

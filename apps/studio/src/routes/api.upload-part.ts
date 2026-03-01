@@ -1,14 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { getAuthSession } from '@valguide/core/features/auth/better-auth.server'
 import { uploadPart } from '@valguide/core/features/storage/upload.server'
-import { createClient } from '@valguide/core/supabase/server'
 
 export const Route = createFileRoute('/api/upload-part')({
   server: {
     handlers: {
       PUT: async ({ request }) => {
-        const supabase = await createClient()
-        const { data } = await supabase.auth.getClaims()
-        if (!data?.claims?.sub) {
+        const session = await getAuthSession()
+        if (!session?.user?.id) {
           return new Response('Unauthorized', { status: 401 })
         }
 
