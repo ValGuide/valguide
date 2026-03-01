@@ -874,6 +874,7 @@
       "title": "Tritt {teamName} bei",
       "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",
       "sentTo": "Diese Einladung wurde gesendet an",
+      "signInButton": "Anmelden und Einladung annehmen",
       "sendCode": "Bestätigungscode senden",
       "codeSent": "Wir haben einen 6-stelligen Code an {email} gesendet",
       "verify": "Bestätigen & Team beitreten",

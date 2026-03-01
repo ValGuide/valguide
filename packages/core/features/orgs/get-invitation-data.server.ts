@@ -1,7 +1,6 @@
-import { createHash } from 'node:crypto'
 import { getAuthSession } from '../auth/better-auth.server'
 import { db } from '../db'
-import { getInvitationByTokenHash } from './utils'
+import { getInvitationById } from './utils'
 
 // =============================================================================
 // TYPES
@@ -20,19 +19,18 @@ export type InvitationData = {
 // INTERNAL FUNCTION
 // =============================================================================
 
-export async function getInvitationData(token: string | undefined): Promise<InvitationData> {
-  if (!token) {
+export async function getInvitationData(invitationId: string | undefined): Promise<InvitationData> {
+  if (!invitationId) {
     return { variant: 'invalid' }
   }
 
-  const tokenHash = createHash('sha256').update(token).digest('hex')
-  const invite = await getInvitationByTokenHash(db, tokenHash)
+  const invite = await getInvitationById(db, invitationId)
 
   if (!invite) {
     return { variant: 'invalid' }
   }
 
-  if (invite.acceptedAt) {
+  if (invite.status === 'accepted') {
     return {
       variant: 'accepted',
       invite: {
@@ -40,6 +38,11 @@ export async function getInvitationData(token: string | undefined): Promise<Invi
         email: invite.email,
       },
     }
+  }
+
+  const inviteExpired = invite.expiresAt ? invite.expiresAt.getTime() < Date.now() : false
+  if (invite.status !== 'pending' || inviteExpired) {
+    return { variant: 'invalid' }
   }
 
   const session = await getAuthSession()

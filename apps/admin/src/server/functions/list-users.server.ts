@@ -1,6 +1,6 @@
 import { authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
-import { organizationMember } from '@valguide/core/features/orgs/schema'
+import { member } from '@valguide/core/features/orgs/schema'
 import { profiles } from '@valguide/core/features/profiles/schema'
 import { and, asc, count, desc, eq, ilike, or } from 'drizzle-orm'
 
@@ -51,7 +51,7 @@ export async function listUsers(dbClient: DB, input: ListUsersInput): Promise<Li
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  const orgCountSubquery = dbClient.$count(organizationMember, eq(organizationMember.userId, profiles.id))
+  const orgCountSubquery = dbClient.$count(member, eq(member.userId, profiles.id))
 
   const direction = sortOrder === 'asc' ? asc : desc
   const orderClauses = (() => {

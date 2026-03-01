@@ -1,7 +1,7 @@
 import type { DB } from '@valguide/core/features/db'
 import { valguideId } from '../../utils/nanoid'
 import { generateUniqueOrgSlug } from './generate-unique-org-slug.server'
-import { organization, organizationMember } from './schema'
+import { member, organization } from './schema'
 import type { Organization } from './types'
 
 // =============================================================================
@@ -44,11 +44,10 @@ export async function createTeam(
     }
 
     // Add creator as owner
-    await tx.insert(organizationMember).values({
+    await tx.insert(member).values({
       organizationId: newTeam.id,
       userId,
       role: 'owner',
-      isOwner: true, // Deprecated but kept for compat
     })
 
     // No organizationSlug insert needed — slug is on the org row

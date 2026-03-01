@@ -1,6 +1,6 @@
 import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import type { DB } from '@valguide/core/features/db'
-import { organization, organizationMember } from '@valguide/core/features/orgs/schema'
+import { member, organization } from '@valguide/core/features/orgs/schema'
 import { tour } from '@valguide/core/features/tours/schema'
 import { and, eq, isNull } from 'drizzle-orm'
 
@@ -15,10 +15,7 @@ export type AdminOrgDetail = {
 }
 
 export async function getOrgDetail(dbClient: DB, nanoId: string): Promise<AdminOrgDetail | null> {
-  const memberCountSubquery = dbClient.$count(
-    organizationMember,
-    eq(organizationMember.organizationId, organization.id),
-  )
+  const memberCountSubquery = dbClient.$count(member, eq(member.organizationId, organization.id))
 
   const tourCountSubquery = dbClient.$count(tour, and(eq(tour.organizationId, organization.id), isNull(tour.deletedAt)))
 

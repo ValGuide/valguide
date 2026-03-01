@@ -1,6 +1,6 @@
-import { and, eq, gt, isNull, sql } from 'drizzle-orm'
+import { and, eq, gt, isNull, or, sql } from 'drizzle-orm'
 import { db } from '../db'
-import { organizationInvitation } from '../orgs/schema'
+import { invitation } from '../orgs/schema'
 import { profiles } from '../profiles/schema'
 import { approvedDomain } from './schema'
 
@@ -10,13 +10,13 @@ export async function autoApproveIfEligible(userId: string, email: string): Prom
   if (!domain) return false
 
   const hasInvite = await db
-    .select({ id: organizationInvitation.id })
-    .from(organizationInvitation)
+    .select({ id: invitation.id })
+    .from(invitation)
     .where(
       and(
-        eq(sql`lower(${organizationInvitation.email})`, emailNorm),
-        isNull(organizationInvitation.canceledAt),
-        gt(organizationInvitation.expiresAt, new Date()),
+        eq(sql`lower(${invitation.email})`, emailNorm),
+        eq(invitation.status, 'pending'),
+        or(isNull(invitation.expiresAt), gt(invitation.expiresAt, new Date())),
       ),
     )
     .limit(1)

@@ -36,7 +36,6 @@ const mockMembers = [
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anna',
     role: 'owner' as const,
     joinedAt: '2023-01-15T10:00:00Z',
-    isOwner: true,
   },
   {
     id: '2',

@@ -4,7 +4,6 @@ import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
 import { cn } from '@valguide/ui/lib/utils'
 import { AlertCircle, CheckCircle2, Mail, Users } from 'lucide-react'
-import { JoinTeamOtpForm } from './join-team-otp-form'
 import { SignOutButton } from './sign-out-button'
 
 type JoinTeamCardProps = {
@@ -16,8 +15,7 @@ type JoinTeamCardProps = {
   userEmail?: string
   error?: string | null
   className?: string
-  onSendOtp?: () => Promise<void>
-  onVerifyOtp?: (otp: string) => Promise<void>
+  loginNext?: string
   onSignOut?: () => Promise<void>
 }
 
@@ -27,8 +25,7 @@ export function JoinTeamCard({
   userEmail,
   error,
   className,
-  onSendOtp,
-  onVerifyOtp,
+  loginNext,
   onSignOut,
 }: JoinTeamCardProps) {
   const t = useTranslations('joinTeam')
@@ -85,7 +82,7 @@ export function JoinTeamCard({
     )
   }
 
-  if (variant === 'public' && invite && onSendOtp && onVerifyOtp) {
+  if (variant === 'public' && invite && loginNext) {
     return (
       <Card className={cn(className)}>
         <CardContent className="p-8">
@@ -110,9 +107,12 @@ export function JoinTeamCard({
                 <p className="text-sm font-medium">{invite.email}</p>
               </div>
             </div>
-            <div className="w-full">
-              <JoinTeamOtpForm email={invite.email} onSendOtp={onSendOtp} onVerifyOtp={onVerifyOtp} />
-            </div>
+            <Button asChild className="w-full">
+              <Link to="/login" search={{ next: loginNext }} preload="intent">
+                {t('public.signInButton')}
+              </Link>
+            </Button>
+            <p className="text-xs text-muted-foreground">{t('public.notYou')}</p>
           </div>
         </CardContent>
       </Card>

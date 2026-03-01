@@ -874,6 +874,7 @@
       "title": "Join {teamName}",
       "description": "You've been invited to join <strong1>{teamName}</strong1> on ValGuide.",
       "sentTo": "This invitation was sent to",
+      "signInButton": "Sign in to accept invitation",
       "sendCode": "Send verification code",
       "codeSent": "We sent a 6-digit code to {email}",
       "verify": "Verify & join team",

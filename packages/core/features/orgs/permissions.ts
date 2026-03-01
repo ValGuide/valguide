@@ -1,17 +1,10 @@
+import { isRoleAtLeast } from '../auth/organization-permissions'
 import type { OrgRole } from './schema'
 
 export type { OrgRole }
 
-const roleHierarchy: Record<OrgRole, number> = {
-  viewer: 0,
-  editor: 1,
-  curator: 2,
-  admin: 3,
-  owner: 4,
-}
-
 export function hasMinRole(userRole: OrgRole, minRole: OrgRole): boolean {
-  return roleHierarchy[userRole] >= roleHierarchy[minRole]
+  return isRoleAtLeast(userRole, minRole)
 }
 
 export function canPublishContent(role: OrgRole): boolean {

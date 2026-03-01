@@ -1,10 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
-import { db } from '@valguide/core/features/db'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { z } from 'zod'
 import { requireOrgRole } from '../auth/authorization'
+import { auth } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { ORG_ROLES, type OrgRole } from './schema'
-import { updateMemberRole } from './update-member-role.server'
+import { ORG_ROLES } from './schema'
 
 const updateMemberRoleSchema = z.object({
   memberId: z.string(),
@@ -18,5 +18,12 @@ export const updateMemberRoleFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireOrgRole(data.teamId, context.user.id, 'admin')
 
-    await updateMemberRole(db, data.memberId, data.newRole as OrgRole)
+    await auth.api.updateMemberRole({
+      headers: getRequestHeaders(),
+      body: {
+        memberId: data.memberId,
+        organizationId: data.teamId,
+        role: data.newRole,
+      },
+    })
   })

@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
-import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
 import { ForbiddenError, NotFoundError } from '../auth/authorization'
+import { setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getTeamById } from './get-team.server'
 import { isTeamMember } from './utils'
@@ -37,7 +37,7 @@ export const switchTeamFn = createServerFn({ method: 'POST' })
       throw new ForbiddenError('Not a member of this team')
     }
 
-    setActiveTeamId(team.id)
+    await setActiveOrganizationForCurrentSession(team.id)
 
     return { success: true }
   })

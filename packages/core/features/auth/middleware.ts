@@ -1,8 +1,7 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
 import { resolveFirstOrgId } from '../orgs/resolve-active-org.server'
-import { getActiveTeamId, setActiveTeamId } from '../utils/cookies'
-import { getAuthSession } from './better-auth.server'
+import { getAuthSession, setActiveOrganizationForCurrentSession } from './better-auth.server'
 import { getUserStatus } from './get-user-status.server'
 
 // ============================================================================
@@ -12,7 +11,7 @@ import { getUserStatus } from './get-user-status.server'
 export type AuthUser = {
   id: string
   email?: string
-  metadata?: any
+  metadata?: unknown
 }
 
 export type AuthContext = {
@@ -30,7 +29,7 @@ export type RequiredAuthContext = {
 // ============================================================================
 
 /**
- * Extracts user from Better Auth session and activeOrgId from cookie.
+ * Extracts user and active organization directly from the Better Auth session.
  * Use this for routes that need optional auth (public pages with conditional UI).
  */
 export const authContextMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
@@ -43,9 +42,8 @@ export const authContextMiddleware = createMiddleware({ type: 'function' }).serv
       }
     : null
 
-  // Get active org from cookie (set when user switches teams)
-  // Uses team ID (not slug) because slugs can change
-  const activeOrgId = getActiveTeamId() ?? null
+  const activeOrgId =
+    (session?.session as { activeOrganizationId?: string | null } | undefined)?.activeOrganizationId ?? null
 
   return next({ context: { user, activeOrgId } })
 })
@@ -74,12 +72,12 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
       throw redirect({ to: '/blocked' })
     }
 
-    // Resolve active org if cookie was missing (e.g., first SSR pass after login)
+    // Resolve and persist an active organization when the session has not selected one yet.
     let activeOrgId = context.activeOrgId
     if (!activeOrgId) {
       activeOrgId = await resolveFirstOrgId(context.user.id)
       if (activeOrgId) {
-        setActiveTeamId(activeOrgId)
+        await setActiveOrganizationForCurrentSession(activeOrgId)
       }
     }
 

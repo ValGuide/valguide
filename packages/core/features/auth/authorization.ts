@@ -1,10 +1,10 @@
 import { db } from '@valguide/core/features/db'
 import { and, eq } from 'drizzle-orm'
 import { asset } from '../assets/schema'
-import { hasMinRole, type OrgRole } from '../orgs/permissions'
-import { organizationMember } from '../orgs/schema'
+import { member, type OrgRole } from '../orgs/schema'
 import { theme } from '../themes/schema'
 import { stop, tour } from '../tours/schema'
+import { isRoleAtLeast, parseOrgRole } from './organization-permissions'
 
 // ============================================================================
 // Error Classes
@@ -58,12 +58,17 @@ export type AuthResult = AuthUser & { role: OrgRole; organizationId: string }
  */
 export async function getOrgMembership(userId: string, organizationId: string): Promise<{ role: OrgRole } | null> {
   const [membership] = await db
-    .select({ role: organizationMember.role })
-    .from(organizationMember)
-    .where(and(eq(organizationMember.organizationId, organizationId), eq(organizationMember.userId, userId)))
+    .select({ role: member.role })
+    .from(member)
+    .where(and(eq(member.organizationId, organizationId), eq(member.userId, userId)))
     .limit(1)
 
-  return membership ?? null
+  const role = membership?.role ? parseOrgRole(membership.role) : null
+  if (!role) {
+    return null
+  }
+
+  return { role }
 }
 
 /**
@@ -91,7 +96,7 @@ export async function requireOrgMember(organizationId: string, userId: string): 
 export async function requireOrgRole(organizationId: string, userId: string, minRole: OrgRole): Promise<AuthResult> {
   const result = await requireOrgMember(organizationId, userId)
 
-  if (!hasMinRole(result.role, minRole)) {
+  if (!isRoleAtLeast(result.role, minRole)) {
     throw new ForbiddenError(`Requires ${minRole} role or higher`)
   }
 
