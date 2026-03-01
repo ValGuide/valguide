@@ -1,3 +1,6 @@
+CREATE SCHEMA IF NOT EXISTS "auth";--> statement-breakpoint
+CREATE SCHEMA IF NOT EXISTS "studio";--> statement-breakpoint
+CREATE SCHEMA IF NOT EXISTS "short_links";--> statement-breakpoint
 CREATE TYPE "public"."asset_type" AS ENUM('image', 'audio', 'video');--> statement-breakpoint
 CREATE TYPE "studio"."short_link_type" AS ENUM('tour', 'stop', 'campaign', 'external', 'landing_page');--> statement-breakpoint
 CREATE TYPE "studio"."org_role" AS ENUM('owner', 'admin', 'curator', 'editor', 'viewer');--> statement-breakpoint
@@ -11,7 +14,6 @@ CREATE TABLE "studio"."asset" (
 	"mime_type" varchar(100) NOT NULL,
 	"type" "asset_type" NOT NULL,
 	"storage_path" text NOT NULL,
-	"public_url" text,
 	"width" integer,
 	"height" integer,
 	"duration" integer,
@@ -20,6 +22,58 @@ CREATE TABLE "studio"."asset" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "unique_asset_nano_id" UNIQUE("nano_id")
+);
+--> statement-breakpoint
+CREATE TABLE "studio"."approved_domain" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"domain" varchar(255) NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "auth"."account" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" uuid NOT NULL,
+	"account_id" text NOT NULL,
+	"provider_id" text NOT NULL,
+	"access_token" text,
+	"refresh_token" text,
+	"id_token" text,
+	"access_token_expires_at" timestamp with time zone,
+	"refresh_token_expires_at" timestamp with time zone,
+	"scope" text,
+	"password" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "auth"."session" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" uuid NOT NULL,
+	"token" text NOT NULL,
+	"expires_at" timestamp with time zone NOT NULL,
+	"ip_address" text,
+	"user_agent" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "auth"."user" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"email" text NOT NULL,
+	"email_verified" boolean DEFAULT false NOT NULL,
+	"image" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "auth"."verification" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"identifier" text NOT NULL,
+	"value" text NOT NULL,
+	"expires_at" timestamp with time zone NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."feedback" (
@@ -59,19 +113,12 @@ CREATE TABLE "studio"."organization" (
 	"nano_id" varchar(21) NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"slug" varchar(100) NOT NULL,
-	"logo" text,
+	"logo_storage_path" text,
 	"default_theme_id" uuid,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now(),
 	CONSTRAINT "unique_org_nano_id" UNIQUE("nano_id"),
 	CONSTRAINT "unique_org_slug" UNIQUE("slug")
-);
---> statement-breakpoint
-CREATE TABLE "studio"."organization_approved_domain" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"organization_id" uuid NOT NULL,
-	"domain" varchar(255) NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."organization_invitation" (
@@ -314,44 +361,45 @@ CREATE TABLE "studio"."tour_stop_draft" (
 );
 --> statement-breakpoint
 ALTER TABLE "studio"."asset" ADD CONSTRAINT "asset_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."asset" ADD CONSTRAINT "asset_uploaded_by_users_id_fk" FOREIGN KEY ("uploaded_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."feedback" ADD CONSTRAINT "feedback_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."asset" ADD CONSTRAINT "asset_uploaded_by_user_id_fk" FOREIGN KEY ("uploaded_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "auth"."account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "auth"."session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."feedback" ADD CONSTRAINT "feedback_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."feedback" ADD CONSTRAINT "feedback_team_id_organization_id_fk" FOREIGN KEY ("team_id") REFERENCES "studio"."organization"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."organization_approved_domain" ADD CONSTRAINT "organization_approved_domain_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."organization_invitation" ADD CONSTRAINT "organization_invitation_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."organization_invitation" ADD CONSTRAINT "organization_invitation_invited_by_users_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."organization_invitation" ADD CONSTRAINT "organization_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."organization_member" ADD CONSTRAINT "organization_member_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."organization_member" ADD CONSTRAINT "organization_member_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."organization_member" ADD CONSTRAINT "organization_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."organization_slug" ADD CONSTRAINT "organization_slug_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."profiles" ADD CONSTRAINT "profiles_id_users_id_fk" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."profiles" ADD CONSTRAINT "profiles_id_user_id_fk" FOREIGN KEY ("id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."theme" ADD CONSTRAINT "theme_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."theme" ADD CONSTRAINT "theme_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."theme" ADD CONSTRAINT "theme_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop" ADD CONSTRAINT "stop_updated_by_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_asset" ADD CONSTRAINT "stop_asset_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_asset_draft" ADD CONSTRAINT "stop_asset_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale" ADD CONSTRAINT "stop_locale_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_locale" ADD CONSTRAINT "stop_locale_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_locale" ADD CONSTRAINT "stop_locale_published_by_user_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_locale_draft" ADD CONSTRAINT "stop_locale_draft_updated_by_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_settings" ADD CONSTRAINT "stop_settings_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_settings" ADD CONSTRAINT "stop_settings_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_settings" ADD CONSTRAINT "stop_settings_published_by_user_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."stop_settings_draft" ADD CONSTRAINT "stop_settings_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."stop_settings_draft" ADD CONSTRAINT "stop_settings_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."stop_settings_draft" ADD CONSTRAINT "stop_settings_draft_updated_by_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour" ADD CONSTRAINT "tour_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."tour" ADD CONSTRAINT "tour_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."tour" ADD CONSTRAINT "tour_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."tour" ADD CONSTRAINT "tour_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."tour" ADD CONSTRAINT "tour_updated_by_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_asset" ADD CONSTRAINT "tour_asset_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_asset_draft" ADD CONSTRAINT "tour_asset_draft_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_locale" ADD CONSTRAINT "tour_locale_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."tour_locale" ADD CONSTRAINT "tour_locale_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."tour_locale" ADD CONSTRAINT "tour_locale_published_by_user_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_locale_draft" ADD CONSTRAINT "tour_locale_draft_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."tour_locale_draft" ADD CONSTRAINT "tour_locale_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."tour_locale_draft" ADD CONSTRAINT "tour_locale_draft_updated_by_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_settings" ADD CONSTRAINT "tour_settings_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."tour_settings" ADD CONSTRAINT "tour_settings_published_by_users_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."tour_settings" ADD CONSTRAINT "tour_settings_published_by_user_id_fk" FOREIGN KEY ("published_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_settings_draft" ADD CONSTRAINT "tour_settings_draft_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."tour_settings_draft" ADD CONSTRAINT "tour_settings_draft_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."tour_settings_draft" ADD CONSTRAINT "tour_settings_draft_updated_by_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_slug" ADD CONSTRAINT "tour_slug_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_slug" ADD CONSTRAINT "tour_slug_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."tour_stop" ADD CONSTRAINT "tour_stop_tour_id_tour_id_fk" FOREIGN KEY ("tour_id") REFERENCES "studio"."tour"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -360,6 +408,13 @@ ALTER TABLE "studio"."tour_stop_draft" ADD CONSTRAINT "tour_stop_draft_tour_id_t
 ALTER TABLE "studio"."tour_stop_draft" ADD CONSTRAINT "tour_stop_draft_stop_id_stop_id_fk" FOREIGN KEY ("stop_id") REFERENCES "studio"."stop"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "asset_org_idx" ON "studio"."asset" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "asset_type_org_idx" ON "studio"."asset" USING btree ("type","organization_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "approved_domain_unique" ON "studio"."approved_domain" USING btree ("domain");--> statement-breakpoint
+CREATE UNIQUE INDEX "auth_account_provider_account_unique" ON "auth"."account" USING btree ("provider_id","account_id");--> statement-breakpoint
+CREATE INDEX "auth_account_user_id_idx" ON "auth"."account" USING btree ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "auth_session_token_unique" ON "auth"."session" USING btree ("token");--> statement-breakpoint
+CREATE INDEX "auth_session_user_id_idx" ON "auth"."session" USING btree ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "auth_user_email_unique" ON "auth"."user" USING btree ("email");--> statement-breakpoint
+CREATE UNIQUE INDEX "auth_verification_identifier_value_unique" ON "auth"."verification" USING btree ("identifier","value");--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_code_uq" ON "studio"."short_links" USING btree ("code");--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_tour_target_uq" ON "studio"."short_links" USING btree ("type","tour_nano_id","locale") WHERE "studio"."short_links"."type" = 'tour';--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_stop_target_uq" ON "studio"."short_links" USING btree ("type","tour_nano_id","stop_nano_id","locale") WHERE "studio"."short_links"."type" = 'stop';--> statement-breakpoint
@@ -367,8 +422,6 @@ CREATE UNIQUE INDEX "short_links_campaign_target_uq" ON "studio"."short_links" U
 CREATE UNIQUE INDEX "short_links_external_target_uq" ON "studio"."short_links" USING btree ("type","external_url") WHERE "studio"."short_links"."type" = 'external';--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_landing_target_uq" ON "studio"."short_links" USING btree ("type","page_slug","locale") WHERE "studio"."short_links"."type" = 'landing_page';--> statement-breakpoint
 CREATE INDEX "short_links_tour_idx" ON "studio"."short_links" USING btree ("tour_nano_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "org_approved_domain_unique" ON "studio"."organization_approved_domain" USING btree ("domain");--> statement-breakpoint
-CREATE INDEX "org_approved_domain_org_idx" ON "studio"."organization_approved_domain" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "org_invite_email_idx" ON "studio"."organization_invitation" USING btree ("email");--> statement-breakpoint
 CREATE INDEX "org_invite_org_id_idx" ON "studio"."organization_invitation" USING btree ("organization_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "organization_member_unique" ON "studio"."organization_member" USING btree ("organization_id","user_id");--> statement-breakpoint
@@ -419,19 +472,4 @@ CREATE INDEX "tour_stop_position_idx" ON "studio"."tour_stop" USING btree ("tour
 CREATE UNIQUE INDEX "uniq_tour_stop_draft" ON "studio"."tour_stop_draft" USING btree ("tour_id","stop_id");--> statement-breakpoint
 CREATE INDEX "tour_stop_draft_tour_idx" ON "studio"."tour_stop_draft" USING btree ("tour_id");--> statement-breakpoint
 CREATE INDEX "tour_stop_draft_stop_idx" ON "studio"."tour_stop_draft" USING btree ("stop_id");--> statement-breakpoint
-CREATE INDEX "tour_stop_draft_position_idx" ON "studio"."tour_stop_draft" USING btree ("tour_id","position");--> statement-breakpoint
-CREATE POLICY "assets: owner can delete own uploads" ON "storage"."objects" AS PERMISSIVE FOR DELETE TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets' AND owner = auth.uid());--> statement-breakpoint
-CREATE POLICY "assets: authenticated users can upload to assets namespace" ON "storage"."objects" AS PERMISSIVE FOR INSERT TO "authenticated" WITH CHECK (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets');--> statement-breakpoint
-CREATE POLICY "assets: authenticated users can read assets namespace" ON "storage"."objects" AS PERMISSIVE FOR SELECT TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets');--> statement-breakpoint
-CREATE POLICY "assets: authenticated users can update assets namespace" ON "storage"."objects" AS PERMISSIVE FOR UPDATE TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'assets');--> statement-breakpoint
-CREATE POLICY "feedback: owner can delete own uploads" ON "storage"."objects" AS PERMISSIVE FOR DELETE TO "authenticated" USING (bucket_id = 'studio-feedback' AND owner = auth.uid());--> statement-breakpoint
-CREATE POLICY "feedback: authenticated users can upload screenshots" ON "storage"."objects" AS PERMISSIVE FOR INSERT TO "authenticated" WITH CHECK (bucket_id = 'studio-feedback' AND (storage.foldername(name))[1] = 'feedback');--> statement-breakpoint
-CREATE POLICY "feedback: public read access" ON "storage"."objects" AS PERMISSIVE FOR SELECT TO "anon" USING (bucket_id = 'studio-feedback');--> statement-breakpoint
-CREATE POLICY "orgs: owner can delete org logos" ON "storage"."objects" AS PERMISSIVE FOR DELETE TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs' AND owner = auth.uid());--> statement-breakpoint
-CREATE POLICY "orgs: authenticated users can upload org logos" ON "storage"."objects" AS PERMISSIVE FOR INSERT TO "authenticated" WITH CHECK (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs');--> statement-breakpoint
-CREATE POLICY "orgs: authenticated users can read org logos" ON "storage"."objects" AS PERMISSIVE FOR SELECT TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs');--> statement-breakpoint
-CREATE POLICY "orgs: authenticated users can update org logos" ON "storage"."objects" AS PERMISSIVE FOR UPDATE TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'orgs');--> statement-breakpoint
-CREATE POLICY "users: can delete own user namespace" ON "storage"."objects" AS PERMISSIVE FOR DELETE TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text);--> statement-breakpoint
-CREATE POLICY "users: can upload to own user namespace" ON "storage"."objects" AS PERMISSIVE FOR INSERT TO "authenticated" WITH CHECK (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text);--> statement-breakpoint
-CREATE POLICY "users: can read own user namespace" ON "storage"."objects" AS PERMISSIVE FOR SELECT TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text);--> statement-breakpoint
-CREATE POLICY "users: can update own user namespace" ON "storage"."objects" AS PERMISSIVE FOR UPDATE TO "authenticated" USING (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text) WITH CHECK (bucket_id = 'assets' AND (storage.foldername(name))[1] = 'users' AND (storage.foldername(name))[2] = auth.uid()::text);
+CREATE INDEX "tour_stop_draft_position_idx" ON "studio"."tour_stop_draft" USING btree ("tour_id","position");
