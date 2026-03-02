@@ -7,7 +7,7 @@ import { getAuthSession } from './better-auth.server'
 
 /**
  * Check if the current user is authenticated.
- * Uses getClaims() for efficiency (no network call to Supabase).
+ * Uses getAuthSession() for efficiency.
  */
 export const isAuthenticatedFn = createServerFn({ method: 'GET' }).handler(async (): Promise<boolean> => {
   const session = await getAuthSession()

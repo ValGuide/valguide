@@ -14,7 +14,7 @@ export const feedback = studioSchema.table('feedback', {
   message: text('message').notNull(),
 
   // Screenshot (optional)
-  screenshotUrl: text('screenshot_url'), // Public Supabase URL
+  screenshotUrl: text('screenshot_url'), // Public URL
   screenshotPath: text('screenshot_path'), // Storage path like "studio-feedback/userId/file.png"
 
   // Context

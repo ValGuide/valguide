@@ -38,7 +38,7 @@ export function getClient(): Sql {
 
 /**
  * Creates a fresh Drizzle ORM instance with its own postgres client.
- * Uses Supabase Supavisor connection pooler, so per-call clients are cheap.
+ * Uses Neon connection pooler, so per-call clients are cheap.
  */
 export function getDb(): PostgresJsDatabase<typeof schema> {
   return drizzle(getClient(), {
