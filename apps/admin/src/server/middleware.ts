@@ -3,7 +3,6 @@ import { NotFoundError } from '@valguide/features/auth/authorization'
 import { getAdminAuthSession } from './admin-auth.server'
 import { isSuperadmin } from './utils/superadmin'
 
-// TODO: fix /en, etc. apparently not working due to this
 export const adminMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
   const session = await getAdminAuthSession()
   const user = session?.user

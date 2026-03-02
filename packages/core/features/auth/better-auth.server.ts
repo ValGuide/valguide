@@ -27,6 +27,17 @@ export function createAuthInstance(options: {
     slack: {
       clientId: string
       clientSecret: string
+      getUserInfo?: (token: { accessToken?: string; idToken?: string }) => Promise<{
+        user: {
+          id: string
+          name?: string
+          email?: string | null
+          image?: string
+          emailVerified: boolean
+          [key: string]: unknown
+        }
+        data: unknown
+      } | null>
     }
   }
   enableEmailOtp?: boolean

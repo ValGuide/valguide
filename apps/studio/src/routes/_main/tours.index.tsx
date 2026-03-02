@@ -1,9 +1,9 @@
+import { createFileRoute, useRouter } from '@tanstack/react-router'
+import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours.fn'
 import { ToursList } from '@/features/tours/components/tours-list'
 import { ToursListSkeleton } from '@/features/tours/components/tours-list-skeleton'
 import { useTours } from '@/features/tours/hooks/use-tours'
 import { toursListQueryOptions } from '@/features/tours/query-options'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours.fn'
 
 export const Route = createFileRoute('/_main/tours/')({
   loader: ({ context }) => {

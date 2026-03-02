@@ -16,6 +16,33 @@ const slackSocialProviders =
         slack: {
           clientId: serverEnv.SLACK_CLIENT_ID,
           clientSecret: serverEnv.SLACK_CLIENT_SECRET,
+          getUserInfo: async (token: { accessToken?: string }) => {
+            if (!token.accessToken) return null
+
+            const response = await fetch('https://slack.com/api/openid.connect.userInfo', {
+              headers: { authorization: `Bearer ${token.accessToken}` },
+            })
+            const profile = await response.json()
+            if (!profile.ok) return null
+
+            if (serverEnv.SLACK_TEAM_ID) {
+              const teamId = profile['https://slack.com/team_id']
+              if (teamId !== serverEnv.SLACK_TEAM_ID) {
+                return null
+              }
+            }
+
+            return {
+              user: {
+                id: profile['https://slack.com/user_id'],
+                name: profile.name || '',
+                email: profile.email,
+                emailVerified: profile.email_verified,
+                image: profile.picture || profile['https://slack.com/user_image_512'],
+              },
+              data: profile,
+            }
+          },
         },
       }
     : undefined
