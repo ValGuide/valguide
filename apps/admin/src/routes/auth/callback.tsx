@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { adminAuth, getAdminAuthSession } from '@valguide/core/features/auth/better-auth.server'
 import { z } from 'zod'
+import { adminAuth, getAdminAuthSession } from '@/server/admin-auth.server'
 import { isSuperadmin } from '@/server/utils/superadmin'
 
 const validateAdminSessionFn = createServerFn({ method: 'GET' }).handler(async () => {

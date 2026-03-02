@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { adminAuth } from './better-auth.server'
-import { serializeAuthError } from './utils'
+import { serializeAuthError } from '@valguide/core/features/auth/utils'
+import { adminAuth } from '../admin-auth.server'
 
 /**
  * Sign out the current admin session.

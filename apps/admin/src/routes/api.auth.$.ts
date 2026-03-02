@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { adminAuth } from '@valguide/core/features/auth/better-auth.server'
+import { adminAuth } from '@/server/admin-auth.server'
 
 export const Route = createFileRoute('/api/auth/$')({
   server: {

@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { serverEnv } from '@valguide/core/env/server'
-import { adminAuth } from '@valguide/core/features/auth/better-auth.server'
 import { serializeAuthError } from '@valguide/core/features/auth/utils'
+import { adminAuth } from '../admin-auth.server'
 
 export const adminSignInWithSlackFn = createServerFn({ method: 'POST' }).handler(async () => {
   try {

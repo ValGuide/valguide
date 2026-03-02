@@ -17,24 +17,9 @@ const regularTrustedOrigins = [serverEnv.APP_BASE_URL, serverEnv.VITE_STUDIO_URL
   (origin, index, all) => !!origin && all.indexOf(origin) === index,
 )
 
-const adminTrustedOrigins = [serverEnv.ADMIN_BASE_URL, ...sharedTrustedOrigins].filter(
-  (origin, index, all) => !!origin && all.indexOf(origin) === index,
-)
-
 const regularCookieDomain = serverEnv.BETTER_AUTH_COOKIE_DOMAIN || undefined
-const adminCookieDomain = serverEnv.ADMIN_COOKIE_DOMAIN || undefined
 
-const slackSocialProviders =
-  serverEnv.SLACK_CLIENT_ID && serverEnv.SLACK_CLIENT_SECRET
-    ? {
-        slack: {
-          clientId: serverEnv.SLACK_CLIENT_ID,
-          clientSecret: serverEnv.SLACK_CLIENT_SECRET,
-        },
-      }
-    : undefined
-
-function createAuthInstance(options: {
+export function createAuthInstance(options: {
   cookiePrefix: string
   cookieDomain?: string
   trustedOrigins: string[]
@@ -199,14 +184,6 @@ export const auth = createAuthInstance({
   },
 })
 
-// Admin auth uses a dedicated cookie namespace + domain and only Slack social login.
-export const adminAuth = createAuthInstance({
-  cookiePrefix: 'valguide-admin-auth',
-  cookieDomain: adminCookieDomain,
-  trustedOrigins: adminTrustedOrigins,
-  ...(slackSocialProviders ? { socialProviders: slackSocialProviders } : {}),
-})
-
 export async function setActiveOrganizationForCurrentSession(
   organizationId: string | null,
   headers = getRequestHeaders(),
@@ -222,14 +199,6 @@ export async function setActiveOrganizationForCurrentSession(
 export async function getAuthSession(headers = getRequestHeaders()) {
   try {
     return await auth.api.getSession({ headers })
-  } catch {
-    return null
-  }
-}
-
-export async function getAdminAuthSession(headers = getRequestHeaders()) {
-  try {
-    return await adminAuth.api.getSession({ headers })
   } catch {
     return null
   }

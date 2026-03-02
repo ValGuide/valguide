@@ -1,10 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-router'
-import { signOutAdminFn } from '@valguide/core/features/auth/sign-out-admin.fn'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AdminSidebar } from '@/components/admin-sidebar'
 import { superadminQueryOptions } from '@/features/admin/superadmin-query-options'
+import { signOutAdminFn } from '@/server/functions/sign-out-admin.fn'
 
 export const Route = createFileRoute('/_main')({
   beforeLoad: async ({ context, location }) => {

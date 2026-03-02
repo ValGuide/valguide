@@ -1,6 +1,6 @@
 import { createMiddleware } from '@tanstack/react-start'
-import { getAdminAuthSession } from '@valguide/core/features/auth/better-auth.server'
 import { NotFoundError } from '@valguide/features/auth/authorization'
+import { getAdminAuthSession } from './admin-auth.server'
 import { isSuperadmin } from './utils/superadmin'
 
 // TODO: fix /en, etc. apparently not working due to this

@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getAdminAuthSession } from '@valguide/core/features/auth/better-auth.server'
+import { getAdminAuthSession } from '../admin-auth.server'
 import { isSuperadmin } from '../utils/superadmin'
 
 export type AdminUser = {
