@@ -1,5 +1,5 @@
 {
-  "id": "e6413e9d-4d92-48e8-bcf7-a63e7cd0ba7a",
+  "id": "fd401d2a-7129-4575-ac07-49000437ebb8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -141,12 +141,8 @@
           "tableFrom": "asset",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -155,12 +151,8 @@
           "tableFrom": "asset",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "uploaded_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["uploaded_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -170,9 +162,7 @@
         "unique_asset_nano_id": {
           "name": "unique_asset_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -358,12 +348,8 @@
           "tableFrom": "account",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -412,6 +398,12 @@
         "user_agent": {
           "name": "user_agent",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active_organization_id": {
+          "name": "active_organization_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -468,12 +460,8 @@
           "tableFrom": "session",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -731,12 +719,8 @@
           "tableFrom": "feedback",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -745,12 +729,8 @@
           "tableFrom": "feedback",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "team_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["team_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1015,6 +995,275 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "studio.invitation": {
+      "name": "invitation",
+      "schema": "studio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'viewer'"
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "inviter_id": {
+          "name": "inviter_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "invitation_email_idx": {
+          "name": "invitation_email_idx",
+          "columns": [
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invitation_org_id_idx": {
+          "name": "invitation_org_id_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invitation_org_email_status_idx": {
+          "name": "invitation_org_email_status_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "invitation_organization_id_organization_id_fk": {
+          "name": "invitation_organization_id_organization_id_fk",
+          "tableFrom": "invitation",
+          "tableTo": "organization",
+          "schemaTo": "studio",
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invitation_inviter_id_user_id_fk": {
+          "name": "invitation_inviter_id_user_id_fk",
+          "tableFrom": "invitation",
+          "tableTo": "user",
+          "schemaTo": "auth",
+          "columnsFrom": ["inviter_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "studio.member": {
+      "name": "member",
+      "schema": "studio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'viewer'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "member_unique": {
+          "name": "member_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "member_user_id_idx": {
+          "name": "member_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "member_org_user_idx": {
+          "name": "member_org_user_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "member_organization_id_organization_id_fk": {
+          "name": "member_organization_id_organization_id_fk",
+          "tableFrom": "member",
+          "tableTo": "organization",
+          "schemaTo": "studio",
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "member_user_id_user_id_fk": {
+          "name": "member_user_id_user_id_fk",
+          "tableFrom": "member",
+          "tableTo": "user",
+          "schemaTo": "auth",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "studio.organization": {
       "name": "organization",
       "schema": "studio",
@@ -1078,311 +1327,14 @@
         "unique_org_nano_id": {
           "name": "unique_org_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         },
         "unique_org_slug": {
           "name": "unique_org_slug",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "studio.organization_invitation": {
-      "name": "organization_invitation",
-      "schema": "studio",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "org_role",
-          "typeSchema": "studio",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'editor'"
-        },
-        "invited_by": {
-          "name": "invited_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "token_hash": {
-          "name": "token_hash",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "accepted_at": {
-          "name": "accepted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "canceled_at": {
-          "name": "canceled_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "org_invite_email_idx": {
-          "name": "org_invite_email_idx",
-          "columns": [
-            {
-              "expression": "email",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "org_invite_org_id_idx": {
-          "name": "org_invite_org_id_idx",
-          "columns": [
-            {
-              "expression": "organization_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "organization_invitation_organization_id_organization_id_fk": {
-          "name": "organization_invitation_organization_id_organization_id_fk",
-          "tableFrom": "organization_invitation",
-          "tableTo": "organization",
-          "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "organization_invitation_invited_by_user_id_fk": {
-          "name": "organization_invitation_invited_by_user_id_fk",
-          "tableFrom": "organization_invitation",
-          "tableTo": "user",
-          "schemaTo": "auth",
-          "columnsFrom": [
-            "invited_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "organization_invitation_token_hash_unique": {
-          "name": "organization_invitation_token_hash_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "token_hash"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "studio.organization_member": {
-      "name": "organization_member",
-      "schema": "studio",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "org_role",
-          "typeSchema": "studio",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'editor'"
-        },
-        "is_owner": {
-          "name": "is_owner",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "organization_member_unique": {
-          "name": "organization_member_unique",
-          "columns": [
-            {
-              "expression": "organization_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "org_member_user_id_idx": {
-          "name": "org_member_user_id_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "org_member_org_user_idx": {
-          "name": "org_member_org_user_idx",
-          "columns": [
-            {
-              "expression": "organization_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "organization_member_organization_id_organization_id_fk": {
-          "name": "organization_member_organization_id_organization_id_fk",
-          "tableFrom": "organization_member",
-          "tableTo": "organization",
-          "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "organization_member_user_id_user_id_fk": {
-          "name": "organization_member_user_id_user_id_fk",
-          "tableFrom": "organization_member",
-          "tableTo": "user",
-          "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1456,12 +1408,8 @@
           "tableFrom": "organization_slug",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1573,12 +1521,8 @@
           "tableFrom": "profiles",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1708,12 +1652,8 @@
           "tableFrom": "theme",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1722,12 +1662,8 @@
           "tableFrom": "theme",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1737,9 +1673,7 @@
         "unique_theme_nano_id": {
           "name": "unique_theme_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -1838,12 +1772,8 @@
           "tableFrom": "stop",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1852,12 +1782,8 @@
           "tableFrom": "stop",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1866,12 +1792,8 @@
           "tableFrom": "stop",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1881,9 +1803,7 @@
         "unique_stop_nano_id": {
           "name": "unique_stop_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -2032,12 +1952,8 @@
           "tableFrom": "stop_asset",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2190,12 +2106,8 @@
           "tableFrom": "stop_asset_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2305,12 +2217,8 @@
           "tableFrom": "stop_locale",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2319,12 +2227,8 @@
           "tableFrom": "stop_locale",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2441,12 +2345,8 @@
           "tableFrom": "stop_locale_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2455,12 +2355,8 @@
           "tableFrom": "stop_locale_draft",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2537,12 +2433,8 @@
           "tableFrom": "stop_settings",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2551,12 +2443,8 @@
           "tableFrom": "stop_settings",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2633,12 +2521,8 @@
           "tableFrom": "stop_settings_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2647,12 +2531,8 @@
           "tableFrom": "stop_settings_draft",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2788,12 +2668,8 @@
           "tableFrom": "tour",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2802,12 +2678,8 @@
           "tableFrom": "tour",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2816,12 +2688,8 @@
           "tableFrom": "tour",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2831,9 +2699,7 @@
         "unique_tour_nano_id": {
           "name": "unique_tour_nano_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "nano_id"
-          ]
+          "columns": ["nano_id"]
         }
       },
       "policies": {},
@@ -2982,12 +2848,8 @@
           "tableFrom": "tour_asset",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3140,12 +3002,8 @@
           "tableFrom": "tour_asset_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3249,12 +3107,8 @@
           "tableFrom": "tour_locale",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3263,12 +3117,8 @@
           "tableFrom": "tour_locale",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3379,12 +3229,8 @@
           "tableFrom": "tour_locale_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3393,12 +3239,8 @@
           "tableFrom": "tour_locale_draft",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3475,12 +3317,8 @@
           "tableFrom": "tour_settings",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3489,12 +3327,8 @@
           "tableFrom": "tour_settings",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "published_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["published_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3571,12 +3405,8 @@
           "tableFrom": "tour_settings_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3585,12 +3415,8 @@
           "tableFrom": "tour_settings_draft",
           "tableTo": "user",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3703,12 +3529,8 @@
           "tableFrom": "tour_slug",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3717,12 +3539,8 @@
           "tableFrom": "tour_slug",
           "tableTo": "organization",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3857,12 +3675,8 @@
           "tableFrom": "tour_stop",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3871,12 +3685,8 @@
           "tableFrom": "tour_stop",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4011,12 +3821,8 @@
           "tableFrom": "tour_stop_draft",
           "tableTo": "tour",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "tour_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tour_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4025,12 +3831,8 @@
           "tableFrom": "tour_stop_draft",
           "tableTo": "stop",
           "schemaTo": "studio",
-          "columnsFrom": [
-            "stop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["stop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4046,42 +3848,17 @@
     "public.asset_type": {
       "name": "asset_type",
       "schema": "public",
-      "values": [
-        "image",
-        "audio",
-        "video"
-      ]
+      "values": ["image", "audio", "video"]
     },
     "studio.short_link_type": {
       "name": "short_link_type",
       "schema": "studio",
-      "values": [
-        "tour",
-        "stop",
-        "campaign",
-        "external",
-        "landing_page"
-      ]
-    },
-    "studio.org_role": {
-      "name": "org_role",
-      "schema": "studio",
-      "values": [
-        "owner",
-        "admin",
-        "curator",
-        "editor",
-        "viewer"
-      ]
+      "values": ["tour", "stop", "campaign", "external", "landing_page"]
     },
     "studio.user_status": {
       "name": "user_status",
       "schema": "studio",
-      "values": [
-        "pending",
-        "approved",
-        "blocked"
-      ]
+      "values": ["pending", "approved", "blocked"]
     },
     "studio.theme_preset": {
       "name": "theme_preset",

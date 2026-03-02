@@ -1,9 +1,9 @@
+CREATE SCHEMA IF NOT EXISTS "public";--> statement-breakpoint
 CREATE SCHEMA IF NOT EXISTS "auth";--> statement-breakpoint
 CREATE SCHEMA IF NOT EXISTS "studio";--> statement-breakpoint
 CREATE SCHEMA IF NOT EXISTS "short_links";--> statement-breakpoint
 CREATE TYPE "public"."asset_type" AS ENUM('image', 'audio', 'video');--> statement-breakpoint
 CREATE TYPE "studio"."short_link_type" AS ENUM('tour', 'stop', 'campaign', 'external', 'landing_page');--> statement-breakpoint
-CREATE TYPE "studio"."org_role" AS ENUM('owner', 'admin', 'curator', 'editor', 'viewer');--> statement-breakpoint
 CREATE TYPE "studio"."user_status" AS ENUM('pending', 'approved', 'blocked');--> statement-breakpoint
 CREATE TYPE "studio"."theme_preset" AS ENUM('angle', 'angle-dark', 'light', 'dark', 'blue', 'blue-dark', 'green', 'green-dark', 'purple', 'purple-dark', 'sage', 'sage-dark', 'stone', 'stone-dark', 'lavender', 'lavender-dark', 'sand', 'sand-dark', 'gallery', 'gallery-dark', 'curator', 'curator-dark', 'claude', 'claude-dark');--> statement-breakpoint
 CREATE TABLE "studio"."asset" (
@@ -53,6 +53,7 @@ CREATE TABLE "auth"."session" (
 	"expires_at" timestamp with time zone NOT NULL,
 	"ip_address" text,
 	"user_agent" text,
+	"active_organization_id" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -108,6 +109,25 @@ CREATE TABLE "studio"."short_links" (
 	"updated_at" timestamp with time zone DEFAULT now()
 );
 --> statement-breakpoint
+CREATE TABLE "studio"."invitation" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"organization_id" uuid NOT NULL,
+	"email" varchar(255) NOT NULL,
+	"role" varchar(32) DEFAULT 'viewer' NOT NULL,
+	"status" varchar(20) DEFAULT 'pending' NOT NULL,
+	"inviter_id" uuid NOT NULL,
+	"expires_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "studio"."member" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"organization_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	"role" varchar(32) DEFAULT 'viewer' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "studio"."organization" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"nano_id" varchar(21) NOT NULL,
@@ -119,30 +139,6 @@ CREATE TABLE "studio"."organization" (
 	"updated_at" timestamp DEFAULT now(),
 	CONSTRAINT "unique_org_nano_id" UNIQUE("nano_id"),
 	CONSTRAINT "unique_org_slug" UNIQUE("slug")
-);
---> statement-breakpoint
-CREATE TABLE "studio"."organization_invitation" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"organization_id" uuid NOT NULL,
-	"email" varchar(255) NOT NULL,
-	"role" "studio"."org_role" DEFAULT 'editor' NOT NULL,
-	"invited_by" uuid NOT NULL,
-	"token_hash" varchar(255) NOT NULL,
-	"expires_at" timestamp NOT NULL,
-	"accepted_at" timestamp,
-	"canceled_at" timestamp,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "organization_invitation_token_hash_unique" UNIQUE("token_hash")
-);
---> statement-breakpoint
-CREATE TABLE "studio"."organization_member" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"organization_id" uuid NOT NULL,
-	"user_id" uuid NOT NULL,
-	"role" "studio"."org_role" DEFAULT 'editor' NOT NULL,
-	"is_owner" boolean DEFAULT false,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "studio"."organization_slug" (
@@ -366,10 +362,10 @@ ALTER TABLE "auth"."account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN
 ALTER TABLE "auth"."session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."feedback" ADD CONSTRAINT "feedback_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."feedback" ADD CONSTRAINT "feedback_team_id_organization_id_fk" FOREIGN KEY ("team_id") REFERENCES "studio"."organization"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."organization_invitation" ADD CONSTRAINT "organization_invitation_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."organization_invitation" ADD CONSTRAINT "organization_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."organization_member" ADD CONSTRAINT "organization_member_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "studio"."organization_member" ADD CONSTRAINT "organization_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."invitation" ADD CONSTRAINT "invitation_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."invitation" ADD CONSTRAINT "invitation_inviter_id_user_id_fk" FOREIGN KEY ("inviter_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."member" ADD CONSTRAINT "member_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "studio"."member" ADD CONSTRAINT "member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."organization_slug" ADD CONSTRAINT "organization_slug_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."profiles" ADD CONSTRAINT "profiles_id_user_id_fk" FOREIGN KEY ("id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "studio"."theme" ADD CONSTRAINT "theme_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "studio"."organization"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -422,11 +418,12 @@ CREATE UNIQUE INDEX "short_links_campaign_target_uq" ON "studio"."short_links" U
 CREATE UNIQUE INDEX "short_links_external_target_uq" ON "studio"."short_links" USING btree ("type","external_url") WHERE "studio"."short_links"."type" = 'external';--> statement-breakpoint
 CREATE UNIQUE INDEX "short_links_landing_target_uq" ON "studio"."short_links" USING btree ("type","page_slug","locale") WHERE "studio"."short_links"."type" = 'landing_page';--> statement-breakpoint
 CREATE INDEX "short_links_tour_idx" ON "studio"."short_links" USING btree ("tour_nano_id");--> statement-breakpoint
-CREATE INDEX "org_invite_email_idx" ON "studio"."organization_invitation" USING btree ("email");--> statement-breakpoint
-CREATE INDEX "org_invite_org_id_idx" ON "studio"."organization_invitation" USING btree ("organization_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "organization_member_unique" ON "studio"."organization_member" USING btree ("organization_id","user_id");--> statement-breakpoint
-CREATE INDEX "org_member_user_id_idx" ON "studio"."organization_member" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "org_member_org_user_idx" ON "studio"."organization_member" USING btree ("organization_id","user_id");--> statement-breakpoint
+CREATE INDEX "invitation_email_idx" ON "studio"."invitation" USING btree ("email");--> statement-breakpoint
+CREATE INDEX "invitation_org_id_idx" ON "studio"."invitation" USING btree ("organization_id");--> statement-breakpoint
+CREATE INDEX "invitation_org_email_status_idx" ON "studio"."invitation" USING btree ("organization_id","email","status");--> statement-breakpoint
+CREATE UNIQUE INDEX "member_unique" ON "studio"."member" USING btree ("organization_id","user_id");--> statement-breakpoint
+CREATE INDEX "member_user_id_idx" ON "studio"."member" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "member_org_user_idx" ON "studio"."member" USING btree ("organization_id","user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "organization_slug_unique" ON "studio"."organization_slug" USING btree ("slug");--> statement-breakpoint
 CREATE INDEX "organization_slug_org_idx" ON "studio"."organization_slug" USING btree ("organization_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "theme_unique_name_per_org" ON "studio"."theme" USING btree ("organization_id","name");--> statement-breakpoint
