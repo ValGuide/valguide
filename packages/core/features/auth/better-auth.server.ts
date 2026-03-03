@@ -20,6 +20,7 @@ const regularTrustedOrigins = [serverEnv.APP_BASE_URL, serverEnv.VITE_STUDIO_URL
 const regularCookieDomain = serverEnv.BETTER_AUTH_COOKIE_DOMAIN || undefined
 
 export function createAuthInstance(options: {
+  baseURL?: string
   cookiePrefix: string
   cookieDomain?: string
   trustedOrigins: string[]
@@ -51,7 +52,9 @@ export function createAuthInstance(options: {
 }) {
   return betterAuth({
     secret: serverEnv.BETTER_AUTH_SECRET,
-    ...(serverEnv.BETTER_AUTH_URL ? { baseURL: serverEnv.BETTER_AUTH_URL } : {}),
+    ...(options.baseURL || serverEnv.BETTER_AUTH_URL
+      ? { baseURL: options.baseURL || serverEnv.BETTER_AUTH_URL }
+      : {}),
     trustedOrigins: options.trustedOrigins,
     database: drizzleAdapter(db, {
       provider: 'pg',

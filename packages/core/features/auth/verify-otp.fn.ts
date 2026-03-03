@@ -52,6 +52,7 @@ export const verifyOtpFn = createServerFn({ method: 'POST' })
         headers: getRequestHeaders(),
       })
 
+      console.info('[verifyOtpFn] OTP verification successful for email:', params.email)
       return { data, error: null }
     } catch (error) {
       return { data: null, error: serializeAuthError(error) }

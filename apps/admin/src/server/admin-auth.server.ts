@@ -48,6 +48,7 @@ const slackSocialProviders =
     : undefined
 
 export const adminAuth = createAuthInstance({
+  baseURL: serverEnv.ADMIN_BASE_URL,
   cookiePrefix: 'valguide-admin-auth',
   cookieDomain: adminCookieDomain,
   trustedOrigins: adminTrustedOrigins,
