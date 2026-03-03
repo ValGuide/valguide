@@ -44,6 +44,18 @@ const cloudflareOptions: EnvOptions<'dev' | 'prod'> = {
   },
 }
 
+const authOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
+  name: 'auth',
+  prefix: '--auth:',
+  values: ['local', 'dev', 'prod'] as const,
+  defaultValue: 'local' as const,
+  envFiles: {
+    local: '.env.auth.local',
+    dev: '.env.auth.dev',
+    prod: '.env.auth.prod',
+  },
+}
+
 const defaultOptions: EnvOptions<'all'> = {
   name: 'defaults',
   prefix: '--defaults:',
@@ -54,7 +66,7 @@ const defaultOptions: EnvOptions<'all'> = {
   },
 }
 
-const options: EnvOptions<string>[] = [databaseOptions, resendOptions, cloudflareOptions, defaultOptions]
+const options: EnvOptions<string>[] = [databaseOptions, resendOptions, cloudflareOptions, authOptions, defaultOptions]
 
 type EnvAndFile<T> = {
   name: string

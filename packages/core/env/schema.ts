@@ -7,7 +7,7 @@ export const serverEnvSchema = z.object({
   BETTER_AUTH_TRUSTED_ORIGINS: z.string().optional().default(''),
   BETTER_AUTH_COOKIE_DOMAIN: z.string().optional().default(''),
   BETTER_AUTH_COOKIE_PREFIX: z.string().optional().default('valguide-auth'),
-  BETTER_AUTH_DEV_OTP: z.string().optional().default('000000'),
+  BETTER_AUTH_DEV_OTP: z.string().optional().default(''),
   DRIZZLE_LOG_ENABLED: z
     .string()
     .optional()
@@ -22,8 +22,8 @@ export const serverEnvSchema = z.object({
     .string()
     .optional()
     .default('curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example'),
-  ADMIN_COOKIE_DOMAIN: z.string().optional(),
-  ADMIN_BASE_URL: z.string().optional().default('https://admin-local.dev'),
+  ADMIN_COOKIE_DOMAIN: z.string().optional().default('val.guide'),
+  ADMIN_BASE_URL: z.string().optional().default('https://ops.val.guide'),
   SLACK_CLIENT_ID: z.string().optional().default(''),
   SLACK_CLIENT_SECRET: z.string().optional().default(''),
   SLACK_TEAM_ID: z.string().optional().default(''),

@@ -86,7 +86,7 @@ export function createAuthInstance(options: {
               otpLength: 6,
               expiresIn: 5 * 60,
               allowedAttempts: 5,
-              ...(serverEnv.NODE_ENV === 'development'
+              ...(serverEnv.BETTER_AUTH_DEV_OTP
                 ? {
                     generateOTP: () => serverEnv.BETTER_AUTH_DEV_OTP,
                   }
