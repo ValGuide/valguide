@@ -37,8 +37,8 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      POSTHOG_PROJECT_KEY_DEV: ${{ secrets.POSTHOG_PROJECT_KEY_DEV }}
-      POSTHOG_PROJECT_KEY_PROD: ${{ secrets.POSTHOG_PROJECT_KEY_PROD }}
+      POSTHOG_PROJECT_KEY_DEV_VAR: ${{ vars.POSTHOG_PROJECT_KEY_DEV }}
+      POSTHOG_PROJECT_KEY_PROD_VAR: ${{ vars.POSTHOG_PROJECT_KEY_PROD }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -82,13 +82,13 @@ jobs:
               echo "VITE_POSTHOG_ENABLED=true" >> $GITHUB_ENV
 
               if [ "$ENV" = "prod" ]; then
-                PH_KEY="$POSTHOG_PROJECT_KEY_PROD"
+                PH_KEY="$POSTHOG_PROJECT_KEY_PROD_VAR"
               else
-                PH_KEY="$POSTHOG_PROJECT_KEY_DEV"
+                PH_KEY="$POSTHOG_PROJECT_KEY_DEV_VAR"
               fi
 
               if [ -z "$PH_KEY" ]; then
-                echo "Missing required secret for PostHog in ${APP}-${ENV}. Expected POSTHOG_PROJECT_KEY_${ENV^^}" >&2
+                echo "Missing PostHog key for ${APP}-${ENV}. Set POSTHOG_PROJECT_KEY_${ENV^^} as a GitHub Variable." >&2
                 exit 1
               fi
 
