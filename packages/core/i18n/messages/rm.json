@@ -192,6 +192,16 @@
     "emailRequired": "Adressa d'e-mail è necessaria",
     "emailNotAllowed": "Questa adressa d'e-mail n'è betg autorisada per l'access d'admin"
   },
+  "authError": {
+    "title": "Errur d'autentificaziun",
+    "description": "Insatge è ì mal durant l'annunzia. Empruvai per plaschair anc ina giada.",
+    "backToLogin": "Enavos a l'annunzia",
+    "oAuthCodeMissing": "Il process d'annunzia è vegnì interrût. Empruvai per plaschair anc ina giada.",
+    "sessionExpired": "Vossa sessiun d'annunzia è scadida. Entschaivai per plaschair il process da nov.",
+    "accountNotFound": "Per questa annunzia n'è nagin conto vegnì chattà. Controlai che Vus utilisais il conto correct.",
+    "accountCreationFailed": "Voss conto n'ha betg pudì vegnir creà. Contactai per plaschair in administratur.",
+    "originNotTrusted": "La dumonda è vegnida dad ina funtauna betg fidada. Contactai per plaschair in administratur."
+  },
   "accountStatus": {
     "pending": {
       "title": "Tes conto vegn examinà",

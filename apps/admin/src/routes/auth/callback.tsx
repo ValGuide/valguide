@@ -29,8 +29,11 @@ export const Route = createFileRoute('/auth/callback')({
   beforeLoad: async ({ search }) => {
     if (search.error) {
       throw redirect({
-        to: '/login',
-        search: { next: undefined, email: undefined },
+        to: '/auth/error',
+        search: {
+          error: search.error,
+          error_description: search.error_description,
+        },
       })
     }
 

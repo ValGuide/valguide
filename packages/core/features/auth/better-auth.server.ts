@@ -43,6 +43,7 @@ export function createAuthInstance(options: {
   }
   enableEmailOtp?: boolean
   enableOrganizationPlugin?: boolean
+  errorURL?: string
   sendInvitationEmail?: (input: {
     email: string
     organizationName: string
@@ -52,10 +53,9 @@ export function createAuthInstance(options: {
 }) {
   return betterAuth({
     secret: serverEnv.BETTER_AUTH_SECRET,
-    ...(options.baseURL || serverEnv.BETTER_AUTH_URL
-      ? { baseURL: options.baseURL || serverEnv.BETTER_AUTH_URL }
-      : {}),
+    ...(options.baseURL || serverEnv.BETTER_AUTH_URL ? { baseURL: options.baseURL || serverEnv.BETTER_AUTH_URL } : {}),
     trustedOrigins: options.trustedOrigins,
+    ...(options.errorURL ? { onAPIError: { errorURL: options.errorURL } } : {}),
     database: drizzleAdapter(db, {
       provider: 'pg',
       schema: {
@@ -179,6 +179,7 @@ export const auth = createAuthInstance({
   cookiePrefix: serverEnv.BETTER_AUTH_COOKIE_PREFIX,
   cookieDomain: regularCookieDomain,
   trustedOrigins: regularTrustedOrigins,
+  errorURL: '/auth/error',
   enableEmailOtp: true,
   enableOrganizationPlugin: true,
   sendInvitationEmail: async ({ email, organizationName, inviterEmail, invitationId }) => {

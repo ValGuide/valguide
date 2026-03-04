@@ -192,6 +192,16 @@
     "emailRequired": "Email is required",
     "emailNotAllowed": "This email is not authorized for admin access"
   },
+  "authError": {
+    "title": "Authentication error",
+    "description": "Something went wrong during sign-in. Please try again.",
+    "backToLogin": "Back to login",
+    "oAuthCodeMissing": "The login process was interrupted. Please try signing in again.",
+    "sessionExpired": "Your login session has expired. Please start the sign-in process again.",
+    "accountNotFound": "No account was found for this login. Make sure you are using the correct account.",
+    "accountCreationFailed": "We could not create your account. Please contact an administrator.",
+    "originNotTrusted": "The request came from an untrusted origin. Please contact an administrator."
+  },
   "accountStatus": {
     "pending": {
       "title": "Your account is under review",

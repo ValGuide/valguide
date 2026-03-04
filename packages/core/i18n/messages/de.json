@@ -192,6 +192,16 @@
     "emailRequired": "E-Mail-Adresse ist erforderlich",
     "emailNotAllowed": "Diese E-Mail-Adresse ist nicht für den Admin-Zugang berechtigt"
   },
+  "authError": {
+    "title": "Authentifizierungsfehler",
+    "description": "Bei der Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "backToLogin": "Zurück zur Anmeldung",
+    "oAuthCodeMissing": "Der Anmeldevorgang wurde unterbrochen. Bitte versuchen Sie es erneut.",
+    "sessionExpired": "Ihre Anmeldesitzung ist abgelaufen. Bitte starten Sie den Vorgang erneut.",
+    "accountNotFound": "Für diese Anmeldung wurde kein Konto gefunden. Stellen Sie sicher, dass Sie das richtige Konto verwenden.",
+    "accountCreationFailed": "Ihr Konto konnte nicht erstellt werden. Bitte kontaktieren Sie einen Administrator.",
+    "originNotTrusted": "Die Anfrage kam von einer nicht vertrauenswürdigen Quelle. Bitte kontaktieren Sie einen Administrator."
+  },
   "accountStatus": {
     "pending": {
       "title": "Dein Konto wird geprüft",
