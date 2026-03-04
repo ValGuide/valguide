@@ -9,17 +9,18 @@ import { ThemeProvider } from '../app-theme/theme-provider'
 import type { Theme } from '../app-theme/types'
 
 type ProvidersProps = PropsWithChildren<{
+  appName: string
   locale: SupportedLocale
   initialTheme: Theme
   setThemeFn: (args: { data: Theme }) => Promise<Theme>
 }>
 
-export function Providers({ locale, initialTheme, setThemeFn, children }: ProvidersProps) {
+export function Providers({ appName, locale, initialTheme, setThemeFn, children }: ProvidersProps) {
   const { data: messages } = useSuspenseQuery(messagesQueryOptions(locale))
   return (
     <PostHogProvider>
       <ThemeProvider initialTheme={initialTheme} setThemeFn={setThemeFn}>
-        <IntlProvider locale={locale} messages={messages}>
+        <IntlProvider locale={locale} messages={messages} appName={appName}>
           {children}
           <Toaster />
         </IntlProvider>

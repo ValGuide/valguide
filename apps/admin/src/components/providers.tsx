@@ -23,7 +23,7 @@ export function Providers({ locale, initialTheme, children }: ProvidersProps) {
   return (
     <PostHogProvider>
       <ThemeProvider initialTheme={initialTheme} setThemeFn={setThemeFn}>
-        <IntlProvider locale={locale} messages={messages}>
+        <IntlProvider locale={locale} messages={messages} appName="admin">
           {children}
           <Toaster />
         </IntlProvider>

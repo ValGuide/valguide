@@ -16,7 +16,7 @@ export function Providers({ locale, initialTheme, children }: ProvidersProps) {
   }, [])
 
   return (
-    <CoreProviders locale={locale} initialTheme={initialTheme} setThemeFn={setThemeFn}>
+    <CoreProviders appName="app" locale={locale} initialTheme={initialTheme} setThemeFn={setThemeFn}>
       {children}
     </CoreProviders>
   )
