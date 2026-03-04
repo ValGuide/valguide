@@ -11,29 +11,33 @@ export type UpdateUserStatusInput = {
 
 export async function updateUserStatus(dbClient: DB, input: UpdateUserStatusInput) {
   const { userId, status, blockedReason } = input
+  const now = new Date()
 
-  if (status === 'approved') {
-    await dbClient
-      .update(profiles)
-      .set({
-        status: 'approved',
-        approvedAt: new Date(),
-        blockedAt: null,
-        blockedReason: null,
-      })
-      .where(eq(profiles.id, userId))
-  } else {
-    await dbClient
+  await dbClient.transaction(async (tx) => {
+    if (status === 'approved') {
+      await tx
+        .update(profiles)
+        .set({
+          status: 'approved',
+          approvedAt: now,
+          blockedAt: null,
+          blockedReason: null,
+        })
+        .where(eq(profiles.id, userId))
+      return
+    }
+
+    await tx
       .update(profiles)
       .set({
         status: 'blocked',
-        blockedAt: new Date(),
+        blockedAt: now,
         blockedReason: blockedReason ?? null,
       })
       .where(eq(profiles.id, userId))
 
-    await dbClient.delete(authSessions).where(eq(authSessions.userId, userId))
-  }
+    await tx.delete(authSessions).where(eq(authSessions.userId, userId))
+  })
 
   return { success: true }
 }

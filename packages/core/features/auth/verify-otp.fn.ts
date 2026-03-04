@@ -1,7 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
+import { eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { db } from '../db'
 import { auth } from './better-auth.server'
+import { getUserStatus } from './get-user-status.server'
+import { authSessions } from './schema'
 import { serializeAuthError } from './utils'
 
 // ============================================================================
@@ -51,6 +55,25 @@ export const verifyOtpFn = createServerFn({ method: 'POST' })
         },
         headers: getRequestHeaders(),
       })
+
+      const userId = data?.user?.id
+      if (userId) {
+        const status = await getUserStatus(userId, data.user.email ?? undefined)
+
+        if (status === 'blocked') {
+          await db.delete(authSessions).where(eq(authSessions.userId, userId))
+          await auth.api.signOut({ headers: getRequestHeaders() })
+
+          return {
+            data: null,
+            error: serializeAuthError({
+              message: 'User account is blocked',
+              status: 403,
+              code: 'USER_BLOCKED',
+            }),
+          }
+        }
+      }
 
       console.info('[verifyOtpFn] OTP verification successful for email:', params.email)
       return { data, error: null }
