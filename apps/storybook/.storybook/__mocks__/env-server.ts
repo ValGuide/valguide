@@ -18,10 +18,4 @@ export const serverEnv: StringifyValues<ServerEnv> = {
   NODE_ENV: 'development',
   APP_BASE_URL: 'https://app.valguide.com',
   VITE_STUDIO_URL: 'https://studio.valguide.com',
-  ADMIN_ALLOWED_EMAILS: '',
-  ADMIN_COOKIE_DOMAIN: '.valguide.com',
-  ADMIN_BASE_URL: 'https://admin-local.dev',
-  SLACK_CLIENT_ID: 'mock-slack-client-id',
-  SLACK_CLIENT_SECRET: 'mock-slack-client-secret',
-  SLACK_TEAM_ID: 'mock-slack-team-id',
 }

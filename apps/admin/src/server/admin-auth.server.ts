@@ -22,7 +22,7 @@ const slackSocialProviders =
             const response = await fetch('https://slack.com/api/openid.connect.userInfo', {
               headers: { authorization: `Bearer ${token.accessToken}` },
             })
-            const profile = await response.json()
+            const profile = (await response.json()) as Record<string, unknown>
             if (!profile.ok) return null
 
             if (adminEnv.SLACK_TEAM_ID) {
@@ -34,11 +34,11 @@ const slackSocialProviders =
 
             return {
               user: {
-                id: profile['https://slack.com/user_id'],
-                name: profile.name || '',
-                email: profile.email,
-                emailVerified: profile.email_verified,
-                image: profile.picture || profile['https://slack.com/user_image_512'],
+                id: String(profile['https://slack.com/user_id']),
+                name: String(profile.name ?? ''),
+                email: String(profile.email ?? ''),
+                emailVerified: Boolean(profile.email_verified),
+                image: String(profile.picture ?? profile['https://slack.com/user_image_512'] ?? ''),
               },
               data: profile,
             }
