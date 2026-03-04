@@ -23,6 +23,7 @@ export function IntlProvider({ locale, messages, children, timeZone, now, appNam
       now={now}
       onError={(error) => {
         const isDev = (process.env.NODE_ENV as string) === 'development'
+        console.warn('[IntlProvider] onError called with error:', error)
         trackMissingMessage(error)
 
         if (error.code === 'MISSING_MESSAGE' && isDev) {

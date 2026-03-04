@@ -59,6 +59,8 @@ export function useMissingMessageTracker({ appName, locale }: UseMissingMessageT
 
   return useCallback(
     (error: MissingMessageError) => {
+      console.warn('[useMissingMessageTracker] Tracking missing message:', error)
+
       if (error.code !== 'MISSING_MESSAGE') return
       if (!import.meta.env.PROD) return
       if (!clientEnv.VITE_POSTHOG_ENABLED) return
