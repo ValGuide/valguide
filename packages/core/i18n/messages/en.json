@@ -10,11 +10,6 @@
     "forward": "Forward 10 seconds",
     "playbackProgress": "Playback progress",
     "transcript": "Transcript",
-    "transcriptAndMore": "Transcript & More",
-    "noTranscript": "No transcript available for this track",
-    "language": "Language",
-    "save": "Save",
-    "shareAction": "Share",
     "stopOf": "Stop {current} of {total}",
     "stopsCount": "{count, plural, one {# stop} other {# stops}}",
     "totalDuration": "{minutes} min",
@@ -35,8 +30,6 @@
     "textSize": "Text size",
     "decreaseTextSize": "Decrease text size",
     "increaseTextSize": "Increase text size",
-    "showTranscript": "Show transcript",
-    "hideTranscript": "Hide transcript",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "resetZoom": "Reset zoom",
@@ -44,30 +37,22 @@
     "startTour": "Start Tour",
     "viewAllStops": "View All Stops",
     "feedback": {
-      "title": "How was your experience?",
       "rateExperience": "Rate your experience",
       "commentLabel": "Additional comments (optional)",
       "commentPlaceholder": "Tell us what you liked or how we can improve...",
       "characterCount": "{current}/{max}",
       "submit": "Submit Feedback",
-      "submitting": "Submitting...",
-      "thankYouTitle": "Thank you!",
-      "thankYouMessage": "Your feedback helps us improve.",
-      "shareExperience": "Share your experience"
+      "submitting": "Submitting..."
     },
     "share": {
       "title": "Share this tour",
       "copyLink": "Copy link",
-      "linkCopied": "Link copied!",
-      "shareVia": "Share via",
-      "shareError": "Could not share. Please try copying the link instead."
+      "linkCopied": "Link copied!"
     },
     "tourComplete": {
       "title": "Tour Complete!",
       "message": "You've finished exploring this tour.",
-      "ratePrompt": "How was your experience?",
-      "exploreMore": "Explore more",
-      "learnMore": "Learn more"
+      "ratePrompt": "How was your experience?"
     },
     "previewBanner": {
       "title": "Preview mode",
@@ -80,11 +65,6 @@
     "assets": {
       "title": "Assets",
       "comingSoon": "Asset management coming soon"
-    },
-    "notFound": {
-      "title": "Page not found",
-      "description": "The page you're looking for doesn't exist or has been moved.",
-      "homeButton": "Go back"
     }
   },
   "studio": {
@@ -160,7 +140,6 @@
     "loading": "...",
     "tryAgain": "Try again",
     "error": "An error occurred",
-    "saved": "Saved",
     "saveError": "Failed to save"
   },
   "comingSoon": {
@@ -189,8 +168,7 @@
     "verificationSuccess": "Verified! Redirecting…",
     "verificationError": "Invalid code. Please try again",
     "invalidEmail": "Please enter a valid email address",
-    "emailRequired": "Email is required",
-    "emailNotAllowed": "This email is not authorized for admin access"
+    "emailRequired": "Email is required"
   },
   "authError": {
     "title": "Authentication error",
@@ -207,15 +185,12 @@
       "title": "Your account is under review",
       "description": "Thank you for signing up. Our team is reviewing your account — usually within 1 business day. We'll email you once you're approved.",
       "checkStatus": "Check status",
-      "autoCheckNote": "This page checks automatically.",
       "signedInAs": "Signed in as {email}",
       "contactCta": "Email us",
       "signOut": "Sign out"
     }
   },
   "login": {
-    "welcome": "Welcome back",
-    "loginPrompt": "Sign in to your account",
     "otpSent": "Check your email for the login code",
     "otpError": "Failed to send login code. Please try again"
   },
@@ -240,27 +215,18 @@
       "updated": "Updated",
       "authorInfo": "Author Information",
       "addCoverImage": "Add an image that captures this exhibition",
-      "noDescription": "No description",
       "published": "Published",
       "unpublished": "Unpublished"
     },
     "stops": "Stops",
     "stop": "Stop",
-    "stopNumber": "Stop {number}",
-    "stopProgress": "{current} of {total}",
-    "transcription": "Transcription",
-    "previous": "Previous",
-    "next": "Next",
-    "backToOverview": "Back to overview",
     "separator": "•",
-    "imageCounter": "{current} / {total}",
-    "videoNotSupported": "Your browser does not support the video tag."
+    "imageCounter": "{current} / {total}"
   },
   "richTextEditor": {
     "bold": "Bold",
     "italic": "Italic",
     "strikethrough": "Strikethrough",
-    "heading": "Heading",
     "heading1": "Heading 1",
     "heading2": "Heading 2",
     "heading3": "Heading 3",
@@ -276,7 +242,6 @@
     "title": "Tours",
     "description": "Create and manage your multimedia tours",
     "editor": {
-      "preview": "Preview",
       "sharedContent": "Shared across all languages",
       "sharedContentDescription": "Changes here will apply to all languages",
       "localeContent": "Language-specific content",
@@ -312,26 +277,17 @@
         "checking": "Checking availability...",
         "save": "Save Slug",
         "saving": "Saving...",
-        "saveSuccess": "Tour slug updated",
         "saveError": "Failed to update slug",
         "history": "Slug History",
         "historyDescription": "Old slugs still redirect to this tour.",
-        "autoGenerate": "Auto-generate",
-        "validationTooShort": "Slugs need at least 3 characters",
-        "validationTooLong": "Slugs can be at most 100 characters",
-        "validationFormat": "Use only lowercase letters, numbers, and hyphens (e.g., \"my-tour-name\")"
+        "autoGenerate": "Auto-generate"
       }
     },
     "empty": {
       "title": "No tours yet",
       "heroDescription": "Your visitors deserve more than a brochure. Create immersive audio tours that bring your exhibitions to life.",
       "createButton": "Start creating",
-      "createNewButton": "Create new tour",
-      "creating": "Creating..."
-    },
-    "create": {
-      "error": "Failed to create tour",
-      "errorDescription": "An error occurred while creating the tour. Please try again."
+      "createNewButton": "Create new tour"
     },
     "editTour": "Edit Tour",
     "viewInApp": "View in App",
@@ -374,15 +330,6 @@
     "deleteConfirmPhrase": "delete tour",
     "archivedOnDate": "Archived on: {date}",
     "noCoverImage": "No cover image",
-    "status": {
-      "published": "Published",
-      "unpublished": "Unpublished",
-      "archived": "Archived"
-    },
-    "indicator": {
-      "up-to-date": "Up to date",
-      "changed": "Changed"
-    },
     "visibility": {
       "live": "Published",
       "notLive": "Not published",
@@ -392,28 +339,18 @@
       "unpublishedEdits": "Unpublished edits"
     },
     "publish": {
-      "success": "Translation published successfully",
       "error": "Failed to publish translation",
-      "tourPublished": "Tour published with {stopCount, plural, =0 {no stops} one {# stop} other {# stops}}",
       "tourPublishError": "Failed to publish tour"
     },
     "unpublish": {
-      "success": "Content unpublished",
       "error": "Failed to unpublish"
     },
     "discard": {
-      "success": "Draft discarded",
       "error": "Failed to discard draft"
     },
     "confirmUnpublishTour": {
       "title": "Unpublish {language} translation?",
       "description": "Visitors will no longer see the {language} version of the tour. The tour remains available in other languages. Nothing is deleted—you can republish anytime.",
-      "confirm": "Unpublish translation",
-      "cancel": "Keep published"
-    },
-    "confirmUnpublishStop": {
-      "title": "Unpublish this translation?",
-      "description": "Visitors will no longer see this language version of the stop. The stop remains available in other languages. Nothing is deleted—you can republish anytime.",
       "confirm": "Unpublish translation",
       "cancel": "Keep published"
     },
@@ -427,14 +364,9 @@
       "manageTranslations": "Manage translations...",
       "statusPublished": "Published",
       "statusDraft": "Draft",
-      "statusModified": "Modified",
       "statusEmpty": "Empty",
       "enabledLanguages": "Enabled languages",
       "addLanguage": "Add language"
-    },
-    "tabs": {
-      "draft": "Draft",
-      "published": "Published"
     },
     "actions": {
       "publish": "Publish",
@@ -477,8 +409,6 @@
       "created": "Created",
       "lastUpdated": "Last Updated",
       "status": "Status",
-      "published": "Published",
-      "draft": "Draft",
       "translations": "Languages",
       "addCoverImageHint": "Add a cover image in the editor"
     },
@@ -493,7 +423,6 @@
       "confirmRemove": "Remove"
     },
     "locales": {
-      "updateSuccess": "Languages updated",
       "updateError": "Failed to update languages"
     },
     "helper": {
@@ -503,11 +432,7 @@
       "toggleLabel": "{count, plural, =1 {# change} other {# changes}}",
       "noChanges": "No changes since last publish",
       "neverPublished": "Never published",
-      "changesCount": "{count, plural, =1 {# field changed} other {# fields changed}} since last publish",
-      "showDiff": "Compare changes",
-      "hideDiff": "Hide changes",
-      "fieldChanged": "Changed",
-      "fieldNew": "New"
+      "changesCount": "{count, plural, =1 {# field changed} other {# fields changed}} since last publish"
     }
   },
   "stops": {
@@ -549,7 +474,6 @@
       "edit": "Edit Stop",
       "cancel": "Cancel",
       "addError": "Failed to add stop",
-      "reorderSuccess": "Stops reordered",
       "reorderError": "Failed to reorder stops",
       "removeSuccess": "Stop removed from tour",
       "removeError": "Failed to remove stop"
@@ -563,11 +487,9 @@
       "addError": "Failed to add asset to stop"
     },
     "publish": {
-      "success": "Stop translation published successfully",
       "error": "Failed to publish stop translation"
     },
     "unpublish": {
-      "success": "Stop translation unpublished",
       "error": "Failed to unpublish stop translation"
     },
     "translationStatus": {
@@ -706,7 +628,6 @@
       "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",
-      "settings": "Settings",
       "support": "Support",
       "feedback": "Feedback",
       "recentTours": "Recent Tours",
@@ -728,9 +649,6 @@
       },
       "analytics": {
         "description": "View and analyze your tour performance metrics."
-      },
-      "settings": {
-        "description": "Configure your application preferences and settings."
       },
       "support": {
         "description": "Get help and support for your questions."
@@ -783,7 +701,6 @@
       "resendInvite": "Resend invite",
       "removeMember": "Remove member",
       "removeError": "Failed to remove member",
-      "roleUpdateSuccess": "Role updated",
       "roleUpdateError": "Failed to update role"
     },
     "inviteDialog": {
@@ -811,7 +728,6 @@
       "cancel": "Cancel invitation",
       "resendSuccess": "Invitation resent",
       "resendError": "Failed to resend invitation",
-      "cancelSuccess": "Invitation cancelled",
       "cancelError": "Failed to cancel invitation"
     },
     "createTeam": {
@@ -838,26 +754,9 @@
       "nameSaving": "Saving...",
       "nameSaveSuccess": "Team name updated",
       "nameSaveError": "Failed to update team name",
-      "slugLabel": "URL Slug",
-      "slugDescription": "Your team's unique identifier in URLs. valguide.com/{slug}",
-      "slugPlaceholder": "my-team",
-      "slugAvailable": "This slug is available",
-      "slugTaken": "This slug is already taken",
-      "slugReserved": "This slug is reserved",
-      "slugSelf": "This is your current slug",
-      "slugChecking": "Checking availability...",
-      "autoSuggest": "Auto-generate from name",
-      "save": "Save Slug",
-      "saving": "Saving...",
-      "saveSuccess": "Team slug updated",
-      "saveError": "Failed to update slug",
-      "slugHistory": "Slug History",
-      "slugHistoryDescription": "Old slugs still redirect to your team.",
-      "current": "Current",
       "profileSectionTitle": "Organization Profile",
       "profileSectionDescription": "Your organization's name and avatar are visible to all team members.",
       "avatarLabel": "Team Avatar",
-      "avatarDescription": "PNG, JPG, WebP or GIF. Max 5MB.",
       "avatarSave": "Save",
       "avatarSaving": "Saving...",
       "avatarSaveSuccess": "Team avatar updated",
@@ -885,12 +784,6 @@
       "description": "You've been invited to join <strong1>{teamName}</strong1> on ValGuide.",
       "sentTo": "This invitation was sent to",
       "signInButton": "Sign in to accept invitation",
-      "sendCode": "Send verification code",
-      "codeSent": "We sent a 6-digit code to {email}",
-      "verify": "Verify & join team",
-      "verifying": "Verifying…",
-      "resend": "Resend code",
-      "resendIn": "Resend in {seconds}s",
       "notYou": "If you didn't request this, you can safely ignore the email."
     },
     "wrongAccount": {
@@ -899,15 +792,13 @@
       "intendedFor": "This invitation is for <strong>{email}</strong>.",
       "instruction": "Sign out below and sign back in with the invited email address.",
       "signOutButton": "Sign Out & Switch Account",
-      "cancelButton": "Stay signed in",
-      "signOutFooter": "Sign out"
+      "cancelButton": "Stay signed in"
     },
     "joining": {
       "title": "Joining {teamName}…",
       "description": "Setting up your access now",
       "error": "Something went wrong while joining. You can try again or head to your dashboard.",
-      "dashboardButton": "Go to Dashboard",
-      "signOutFooter": "Sign out"
+      "dashboardButton": "Go to Dashboard"
     }
   },
   "theme": {
@@ -929,13 +820,9 @@
     "unsavedChanges": "Unsaved changes",
     "saved": "Saved",
     "reset": "Reset",
-    "uploadPhoto": "Upload photo",
-    "changePhoto": "Change photo",
     "cancel": "Cancel",
     "avatarLabel": "Profile photo",
     "avatarClickToUpload": "Click to upload",
-    "avatarUpload": "Upload photo",
-    "avatarDescription": "PNG, JPG, WebP or GIF. Max 5MB.",
     "avatarInvalidType": "Please upload a PNG, JPG, WebP, or GIF image.",
     "avatarTooLarge": "Image must be smaller than 5MB.",
     "avatarSave": "Save",
@@ -943,11 +830,9 @@
     "avatarSaveSuccess": "Profile photo updated.",
     "avatarSaveError": "Failed to update profile photo.",
     "actions": {
-      "updateSuccess": "Profile updated successfully",
       "updateError": "Failed to update profile"
     },
     "phone": "Phone",
-    "phonePlaceholder": "079 123 45 67",
     "phoneHint": "Optional. Only for time-sensitive support if email isn't reaching you. No marketing. You can remove it anytime.",
     "deleteAccount": {
       "title": "Delete Account",

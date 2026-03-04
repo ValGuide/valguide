@@ -10,11 +10,6 @@
     "forward": "10 Sekunden vor",
     "playbackProgress": "Wiedergabefortschritt",
     "transcript": "Transkript",
-    "transcriptAndMore": "Transkript & Mehr",
-    "noTranscript": "Kein Transkript für diesen Track verfügbar",
-    "language": "Sprache",
-    "save": "Speichern",
-    "shareAction": "Teilen",
     "stopOf": "Stop {current} von {total}",
     "stopsCount": "{count, plural, one {# Stop} other {# Stops}}",
     "totalDuration": "{minutes} Min.",
@@ -35,8 +30,6 @@
     "textSize": "Textgröße",
     "decreaseTextSize": "Textgröße verringern",
     "increaseTextSize": "Textgröße erhöhen",
-    "showTranscript": "Transkript anzeigen",
-    "hideTranscript": "Transkript ausblenden",
     "zoomIn": "Vergrössern",
     "zoomOut": "Verkleinern",
     "resetZoom": "Zoom zurücksetzen",
@@ -44,30 +37,22 @@
     "startTour": "Tour starten",
     "viewAllStops": "Alle Stops anzeigen",
     "feedback": {
-      "title": "Wie war Ihr Erlebnis?",
       "rateExperience": "Bewerten Sie Ihr Erlebnis",
       "commentLabel": "Zusätzliche Kommentare (optional)",
       "commentPlaceholder": "Sagen Sie uns, was Ihnen gefallen hat oder wie wir uns verbessern können...",
       "characterCount": "{current}/{max}",
       "submit": "Feedback senden",
-      "submitting": "Wird gesendet...",
-      "thankYouTitle": "Vielen Dank!",
-      "thankYouMessage": "Ihr Feedback hilft uns, uns zu verbessern.",
-      "shareExperience": "Teilen Sie Ihr Erlebnis"
+      "submitting": "Wird gesendet..."
     },
     "share": {
       "title": "Tour teilen",
       "copyLink": "Link kopieren",
-      "linkCopied": "Link kopiert!",
-      "shareVia": "Teilen via",
-      "shareError": "Teilen nicht möglich. Bitte kopieren Sie stattdessen den Link."
+      "linkCopied": "Link kopiert!"
     },
     "tourComplete": {
       "title": "Tour abgeschlossen!",
       "message": "Sie haben diese Tour vollständig erkundet.",
-      "ratePrompt": "Wie war Ihr Erlebnis?",
-      "exploreMore": "Mehr entdecken",
-      "learnMore": "Mehr erfahren"
+      "ratePrompt": "Wie war Ihr Erlebnis?"
     },
     "previewBanner": {
       "title": "Vorschaumodus",
@@ -80,11 +65,6 @@
     "assets": {
       "title": "Assets",
       "comingSoon": "Asset-Verwaltung kommt bald"
-    },
-    "notFound": {
-      "title": "Seite nicht gefunden",
-      "description": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
-      "homeButton": "Zurück"
     }
   },
   "studio": {
@@ -160,7 +140,6 @@
     "loading": "...",
     "tryAgain": "Erneut versuchen",
     "error": "Ein Fehler ist aufgetreten",
-    "saved": "Gespeichert",
     "saveError": "Speichern fehlgeschlagen"
   },
   "comingSoon": {
@@ -189,8 +168,7 @@
     "verificationSuccess": "Bestätigt! Weiterleitung…",
     "verificationError": "Ungültiger Code. Bitte versuchen Sie es erneut",
     "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "emailRequired": "E-Mail-Adresse ist erforderlich",
-    "emailNotAllowed": "Diese E-Mail-Adresse ist nicht für den Admin-Zugang berechtigt"
+    "emailRequired": "E-Mail-Adresse ist erforderlich"
   },
   "authError": {
     "title": "Authentifizierungsfehler",
@@ -207,15 +185,12 @@
       "title": "Dein Konto wird geprüft",
       "description": "Vielen Dank für deine Anmeldung. Unser Team prüft dein Konto — in der Regel innerhalb von 1 Werktag. Du erhältst eine E-Mail, sobald dein Konto freigegeben ist.",
       "checkStatus": "Status prüfen",
-      "autoCheckNote": "Diese Seite prüft automatisch.",
       "signedInAs": "Angemeldet als {email}",
       "contactCta": "Schreib uns",
       "signOut": "Abmelden"
     }
   },
   "login": {
-    "welcome": "Willkommen zurück",
-    "loginPrompt": "Melden Sie sich bei Ihrem Konto an",
     "otpSent": "Überprüfen Sie Ihre E-Mail für den Anmeldecode",
     "otpError": "Fehler beim Senden des Bestätigungscodes. Bitte versuchen Sie es erneut"
   },
@@ -240,27 +215,18 @@
       "updated": "Aktualisiert",
       "authorInfo": "Autorinformationen",
       "addCoverImage": "Fügen Sie ein Bild hinzu, das diese Ausstellung einfängt",
-      "noDescription": "Keine Beschreibung",
       "published": "Veröffentlicht",
       "unpublished": "Unveröffentlicht"
     },
     "stops": "Stationen",
     "stop": "Station",
-    "stopNumber": "Station {number}",
-    "stopProgress": "{current} von {total}",
-    "transcription": "Transkription",
-    "previous": "Zurück",
-    "next": "Weiter",
-    "backToOverview": "Zurück zur Übersicht",
     "separator": "•",
-    "imageCounter": "{current} / {total}",
-    "videoNotSupported": "Ihr Browser unterstützt das Video-Element nicht."
+    "imageCounter": "{current} / {total}"
   },
   "richTextEditor": {
     "bold": "Fett",
     "italic": "Kursiv",
     "strikethrough": "Durchgestrichen",
-    "heading": "Überschrift",
     "heading1": "Überschrift 1",
     "heading2": "Überschrift 2",
     "heading3": "Überschrift 3",
@@ -276,7 +242,6 @@
     "title": "Touren",
     "description": "Erstellen und verwalten Sie Ihre Multimedia-Touren",
     "editor": {
-      "preview": "Vorschau",
       "sharedContent": "Für alle Sprachen gültig",
       "sharedContentDescription": "Änderungen hier gelten für alle Sprachen",
       "localeContent": "Sprachspezifischer Inhalt",
@@ -312,26 +277,17 @@
         "checking": "Verfügbarkeit wird geprüft...",
         "save": "Slug speichern",
         "saving": "Wird gespeichert...",
-        "saveSuccess": "Tour-Slug aktualisiert",
         "saveError": "Slug konnte nicht aktualisiert werden",
         "history": "Slug-Verlauf",
         "historyDescription": "Alte Slugs leiten weiterhin zu dieser Tour weiter.",
-        "autoGenerate": "Auto-generieren",
-        "validationTooShort": "Slugs müssen mindestens 3 Zeichen haben",
-        "validationTooLong": "Slugs dürfen höchstens 100 Zeichen haben",
-        "validationFormat": "Verwende nur Kleinbuchstaben, Zahlen und Bindestriche (z.\u00a0B. \"meine-tour\")"
+        "autoGenerate": "Auto-generieren"
       }
     },
     "empty": {
       "title": "Noch keine Touren",
       "heroDescription": "Ihre Besucher verdienen mehr als eine Broschüre. Erstellen Sie immersive Audio-Touren, die Ihre Ausstellungen zum Leben erwecken.",
       "createButton": "Jetzt starten",
-      "createNewButton": "Neue Tour erstellen",
-      "creating": "Wird erstellt..."
-    },
-    "create": {
-      "error": "Tour konnte nicht erstellt werden",
-      "errorDescription": "Beim Erstellen der Tour ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+      "createNewButton": "Neue Tour erstellen"
     },
     "editTour": "Tour bearbeiten",
     "viewInApp": "In App anzeigen",
@@ -374,15 +330,6 @@
     "deleteConfirmPhrase": "Tour löschen",
     "archivedOnDate": "Archiviert am: {date}",
     "noCoverImage": "Kein Titelbild",
-    "status": {
-      "published": "Veröffentlicht",
-      "unpublished": "Unveröffentlicht",
-      "archived": "Archiviert"
-    },
-    "indicator": {
-      "up-to-date": "Aktuell",
-      "changed": "Geändert"
-    },
     "visibility": {
       "live": "Veröffentlicht",
       "notLive": "Nicht veröffentlicht",
@@ -392,28 +339,18 @@
       "unpublishedEdits": "Unveröffentlichte Änderungen"
     },
     "publish": {
-      "success": "Übersetzung erfolgreich veröffentlicht",
       "error": "Fehler beim Veröffentlichen der Übersetzung",
-      "tourPublished": "Tour veröffentlicht mit {stopCount, plural, =0 {keinen Stopps} one {# Stopp} other {# Stopps}}",
       "tourPublishError": "Fehler beim Veröffentlichen der Tour"
     },
     "unpublish": {
-      "success": "Inhalt zurückgezogen",
       "error": "Fehler beim Zurückziehen"
     },
     "discard": {
-      "success": "Entwurf verworfen",
       "error": "Fehler beim Verwerfen des Entwurfs"
     },
     "confirmUnpublishTour": {
       "title": "{language}-Übersetzung zurückziehen?",
       "description": "Besucher sehen die {language}-Version der Tour nicht mehr. Die Tour bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
-      "confirm": "Übersetzung zurückziehen",
-      "cancel": "Veröffentlicht lassen"
-    },
-    "confirmUnpublishStop": {
-      "title": "Diese Übersetzung zurückziehen?",
-      "description": "Besucher sehen diese Sprachversion des Stops nicht mehr. Der Stop bleibt in anderen Sprachen verfügbar. Nichts wird gelöscht – du kannst jederzeit erneut veröffentlichen.",
       "confirm": "Übersetzung zurückziehen",
       "cancel": "Veröffentlicht lassen"
     },
@@ -427,14 +364,9 @@
       "manageTranslations": "Übersetzungen verwalten...",
       "statusPublished": "Veröffentlicht",
       "statusDraft": "Entwurf",
-      "statusModified": "Geändert",
       "statusEmpty": "Leer",
       "enabledLanguages": "Aktivierte Sprachen",
       "addLanguage": "Sprache hinzufügen"
-    },
-    "tabs": {
-      "draft": "Entwurf",
-      "published": "Veröffentlicht"
     },
     "actions": {
       "publish": "Veröffentlichen",
@@ -477,8 +409,6 @@
       "created": "Erstellt",
       "lastUpdated": "Zuletzt aktualisiert",
       "status": "Status",
-      "published": "Veröffentlicht",
-      "draft": "Entwurf",
       "translations": "Sprachen",
       "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
     },
@@ -493,7 +423,6 @@
       "confirmRemove": "Entfernen"
     },
     "locales": {
-      "updateSuccess": "Sprachen aktualisiert",
       "updateError": "Fehler beim Aktualisieren der Sprachen"
     },
     "helper": {
@@ -503,11 +432,7 @@
       "toggleLabel": "{count, plural, =1 {# Änderung} other {# Änderungen}}",
       "noChanges": "Keine Änderungen seit letzter Veröffentlichung",
       "neverPublished": "Noch nie veröffentlicht",
-      "changesCount": "{count, plural, =1 {# Feld geändert} other {# Felder geändert}} seit letzter Veröffentlichung",
-      "showDiff": "Änderungen vergleichen",
-      "hideDiff": "Änderungen ausblenden",
-      "fieldChanged": "Geändert",
-      "fieldNew": "Neu"
+      "changesCount": "{count, plural, =1 {# Feld geändert} other {# Felder geändert}} seit letzter Veröffentlichung"
     }
   },
   "stops": {
@@ -549,7 +474,6 @@
       "edit": "Stopp bearbeiten",
       "cancel": "Abbrechen",
       "addError": "Fehler beim Hinzufügen des Stops",
-      "reorderSuccess": "Stops neu angeordnet",
       "reorderError": "Fehler beim Neuanordnen der Stops",
       "removeSuccess": "Stopp aus Tour entfernt",
       "removeError": "Stopp konnte nicht entfernt werden"
@@ -563,11 +487,9 @@
       "addError": "Fehler beim Hinzufügen des Assets zum Stop"
     },
     "publish": {
-      "success": "Stop-Übersetzung erfolgreich veröffentlicht",
       "error": "Fehler beim Veröffentlichen der Stop-Übersetzung"
     },
     "unpublish": {
-      "success": "Stopp-Übersetzung zurückgezogen",
       "error": "Stopp-Übersetzung konnte nicht zurückgezogen werden"
     },
     "translationStatus": {
@@ -706,7 +628,6 @@
       "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",
-      "settings": "Einstellungen",
       "support": "Support",
       "feedback": "Feedback",
       "recentTours": "Neueste Touren",
@@ -728,9 +649,6 @@
       },
       "analytics": {
         "description": "Zeigen Sie die Leistungsmetriken Ihrer Touren an und analysieren Sie diese."
-      },
-      "settings": {
-        "description": "Konfigurieren Sie Ihre Anwendungseinstellungen."
       },
       "support": {
         "description": "Erhalten Sie Hilfe und Unterstützung für Ihre Fragen."
@@ -783,7 +701,6 @@
       "resendInvite": "Einladung erneut senden",
       "removeMember": "Mitglied entfernen",
       "removeError": "Fehler beim Entfernen des Mitglieds",
-      "roleUpdateSuccess": "Rolle aktualisiert",
       "roleUpdateError": "Fehler beim Aktualisieren der Rolle"
     },
     "inviteDialog": {
@@ -811,7 +728,6 @@
       "cancel": "Einladung abbrechen",
       "resendSuccess": "Einladung erneut gesendet",
       "resendError": "Fehler beim erneuten Senden der Einladung",
-      "cancelSuccess": "Einladung abgebrochen",
       "cancelError": "Fehler beim Abbrechen der Einladung"
     },
     "createTeam": {
@@ -838,26 +754,9 @@
       "nameSaving": "Wird gespeichert...",
       "nameSaveSuccess": "Teamname aktualisiert",
       "nameSaveError": "Fehler beim Aktualisieren des Teamnamens",
-      "slugLabel": "URL-Slug",
-      "slugDescription": "Die eindeutige Kennung Ihres Teams in URLs. valguide.com/{slug}",
-      "slugPlaceholder": "mein-team",
-      "slugAvailable": "Dieser Slug ist verfügbar",
-      "slugTaken": "Dieser Slug ist bereits vergeben",
-      "slugReserved": "Dieser Slug ist reserviert",
-      "slugSelf": "Dies ist Ihr aktueller Slug",
-      "slugChecking": "Verfügbarkeit wird geprüft...",
-      "autoSuggest": "Automatisch aus Namen generieren",
-      "save": "Slug speichern",
-      "saving": "Wird gespeichert...",
-      "saveSuccess": "Team-Slug aktualisiert",
-      "saveError": "Fehler beim Aktualisieren des Slugs",
-      "slugHistory": "Slug-Verlauf",
-      "slugHistoryDescription": "Alte Slugs leiten weiterhin zu Ihrem Team weiter.",
-      "current": "Aktuell",
       "profileSectionTitle": "Organisationsprofil",
       "profileSectionDescription": "Name und Avatar Ihrer Organisation sind für alle Teammitglieder sichtbar.",
       "avatarLabel": "Team-Avatar",
-      "avatarDescription": "PNG, JPG, WebP oder GIF. Max. 5 MB.",
       "avatarSave": "Speichern",
       "avatarSaving": "Wird gespeichert...",
       "avatarSaveSuccess": "Team-Avatar aktualisiert",
@@ -885,12 +784,6 @@
       "description": "Du wurdest eingeladen, <strong1>{teamName}</strong1> auf ValGuide beizutreten.",
       "sentTo": "Diese Einladung wurde gesendet an",
       "signInButton": "Anmelden und Einladung annehmen",
-      "sendCode": "Bestätigungscode senden",
-      "codeSent": "Wir haben einen 6-stelligen Code an {email} gesendet",
-      "verify": "Bestätigen & Team beitreten",
-      "verifying": "Wird überprüft…",
-      "resend": "Code erneut senden",
-      "resendIn": "Erneut senden in {seconds}s",
       "notYou": "Falls du das nicht warst, kannst du die E-Mail einfach ignorieren."
     },
     "wrongAccount": {
@@ -899,15 +792,13 @@
       "intendedFor": "Diese Einladung ist für <strong>{email}</strong>.",
       "instruction": "Melde dich unten ab und melde dich mit der eingeladenen E-Mail-Adresse wieder an.",
       "signOutButton": "Abmelden & Konto wechseln",
-      "cancelButton": "Angemeldet bleiben",
-      "signOutFooter": "Abmelden"
+      "cancelButton": "Angemeldet bleiben"
     },
     "joining": {
       "title": "Tritt {teamName} bei…",
       "description": "Dein Zugang wird jetzt eingerichtet",
       "error": "Beim Beitritt ist etwas schiefgelaufen. Du kannst es erneut versuchen oder zu deinem Dashboard gehen.",
-      "dashboardButton": "Zum Dashboard",
-      "signOutFooter": "Abmelden"
+      "dashboardButton": "Zum Dashboard"
     }
   },
   "theme": {
@@ -929,13 +820,9 @@
     "unsavedChanges": "Nicht gespeicherte Änderungen",
     "saved": "Gespeichert",
     "reset": "Zurücksetzen",
-    "uploadPhoto": "Foto hochladen",
-    "changePhoto": "Foto ändern",
     "cancel": "Abbrechen",
     "avatarLabel": "Profilfoto",
     "avatarClickToUpload": "Klicken zum Hochladen",
-    "avatarUpload": "Foto hochladen",
-    "avatarDescription": "PNG, JPG, WebP oder GIF. Max. 5 MB.",
     "avatarInvalidType": "Bitte laden Sie ein PNG-, JPG-, WebP- oder GIF-Bild hoch.",
     "avatarTooLarge": "Das Bild muss kleiner als 5 MB sein.",
     "avatarSave": "Speichern",
@@ -943,11 +830,9 @@
     "avatarSaveSuccess": "Profilfoto aktualisiert.",
     "avatarSaveError": "Fehler beim Aktualisieren des Profilfotos.",
     "actions": {
-      "updateSuccess": "Profil erfolgreich aktualisiert",
       "updateError": "Fehler beim Aktualisieren des Profils"
     },
     "phone": "Telefon",
-    "phonePlaceholder": "079 123 45 67",
     "phoneHint": "Optional. Nur für dringende Supportfälle, falls wir Sie per E-Mail nicht erreichen. Kein Marketing. Jederzeit entfernbar.",
     "deleteAccount": {
       "title": "Konto löschen",

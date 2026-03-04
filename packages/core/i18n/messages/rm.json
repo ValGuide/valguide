@@ -10,11 +10,6 @@
     "forward": "10 secundas enavant",
     "playbackProgress": "Progress da reproducziun",
     "transcript": "Transcripziun",
-    "transcriptAndMore": "Transcripziun & Dapli",
-    "noTranscript": "Nagina transcripziun disponibla per questa registraziun",
-    "language": "Lingua",
-    "save": "Memorisar",
-    "shareAction": "Cundivider",
     "stopOf": "Stop {current} da {total}",
     "stopsCount": "{count, plural, one {# stop} other {# stops}}",
     "totalDuration": "{minutes} min",
@@ -35,8 +30,6 @@
     "textSize": "Grondezza dal text",
     "decreaseTextSize": "Diminuir la grondezza dal text",
     "increaseTextSize": "Augmentar la grondezza dal text",
-    "showTranscript": "Mussar la transcripziun",
-    "hideTranscript": "Zuppentar la transcripziun",
     "zoomIn": "Sgrandir",
     "zoomOut": "Reducir",
     "resetZoom": "Reinizialisar il zoom",
@@ -44,30 +37,22 @@
     "startTour": "Cumenzar la tura",
     "viewAllStops": "Mussar tut ils stops",
     "feedback": {
-      "title": "Co è stada Vossa experientscha?",
       "rateExperience": "Valitar Vossa experientscha",
       "commentLabel": "Commentaris supplementars (opziunal)",
       "commentPlaceholder": "Ditgai a nus tge che Vus ha plajì u co nus pudain meglierar...",
       "characterCount": "{current}/{max}",
       "submit": "Trametter feedback",
-      "submitting": "Tramessa...",
-      "thankYouTitle": "Grazia fitg!",
-      "thankYouMessage": "Voss feedback ans gida da meglierar.",
-      "shareExperience": "Cundivider Vossa experientscha"
+      "submitting": "Tramessa..."
     },
     "share": {
       "title": "Cundivider questa tura",
       "copyLink": "Copiar la colliaziun",
-      "linkCopied": "Colliaziun copiada!",
-      "shareVia": "Cundivider via",
-      "shareError": "Impussibel da cundivider. Copiar la colliaziun enstagl."
+      "linkCopied": "Colliaziun copiada!"
     },
     "tourComplete": {
       "title": "Tura terminada!",
       "message": "Vus avais terminà dad explorar questa tura.",
-      "ratePrompt": "Co è stada Vossa experientscha?",
-      "exploreMore": "Explorar dapli",
-      "learnMore": "Emprender dapli"
+      "ratePrompt": "Co è stada Vossa experientscha?"
     },
     "previewBanner": {
       "title": "Modus da prevista",
@@ -80,11 +65,6 @@
     "assets": {
       "title": "Assets",
       "comingSoon": "Administraziun dad assets vegn prest"
-    },
-    "notFound": {
-      "title": "Pagina betg chattada",
-      "description": "La pagina che Vus tschertgais n'exista betg u è vegnida spustada.",
-      "homeButton": "Enavos"
     }
   },
   "studio": {
@@ -160,7 +140,6 @@
     "loading": "...",
     "tryAgain": "Empruvar danovamain",
     "error": "Ina errur è capità",
-    "saved": "Memorisà",
     "saveError": "Errur cun memorisar"
   },
   "comingSoon": {
@@ -189,8 +168,7 @@
     "verificationSuccess": "Verifitgà! Redirecziun…",
     "verificationError": "Code nunvalid. Empruvai per plaschair aunc ina giada",
     "invalidEmail": "Endatei per plaschair ina adressa d'e-mail valida",
-    "emailRequired": "Adressa d'e-mail è necessaria",
-    "emailNotAllowed": "Questa adressa d'e-mail n'è betg autorisada per l'access d'admin"
+    "emailRequired": "Adressa d'e-mail è necessaria"
   },
   "authError": {
     "title": "Errur d'autentificaziun",
@@ -207,15 +185,12 @@
       "title": "Tes conto vegn examinà",
       "description": "Grazia fitg per l'annunzia. Noss team examinescha tes conto — normalmain entaifer 1 di da lavur. Ti retschaivas in e-mail cura che tes conto è approvà.",
       "checkStatus": "Controllar il status",
-      "autoCheckNote": "Questa pagina controllescha automaticamain.",
       "signedInAs": "Annunzià sco {email}",
       "contactCta": "Scriva a nus",
       "signOut": "Sortir"
     }
   },
   "login": {
-    "welcome": "Beinvegni",
-    "loginPrompt": "S'annunziai tar vies conto",
     "otpSent": "Controllei vies e-mail per il code d'annunzia",
     "otpError": "Errur cun trametter il code d'annunzia. Empruvei per plascher aunc inagada"
   },
@@ -240,27 +215,18 @@
       "updated": "Actualisà",
       "authorInfo": "Infurmaziuns davart l'autur",
       "addCoverImage": "Agiuntai in maletg che representa questa exposiziun",
-      "noDescription": "Nagina descripziun",
       "published": "Publitgà",
       "unpublished": "Betg publitgà"
     },
     "stops": "Staziuns",
     "stop": "Staziun",
-    "stopNumber": "Staziun {number}",
-    "stopProgress": "{current} da {total}",
-    "transcription": "Transcripziun",
-    "previous": "Enavos",
-    "next": "Vinavant",
-    "backToOverview": "Turnar a la survista",
     "separator": "•",
-    "imageCounter": "{current} / {total}",
-    "videoNotSupported": "Voss navigatur na sustegna betg l'element video."
+    "imageCounter": "{current} / {total}"
   },
   "richTextEditor": {
     "bold": "Grass",
     "italic": "Cursiv",
     "strikethrough": "Stritgà tras",
-    "heading": "Titel",
     "heading1": "Titel 1",
     "heading2": "Titel 2",
     "heading3": "Titel 3",
@@ -276,7 +242,6 @@
     "title": "Turas",
     "description": "Crear e administrar vossas turas multimedials",
     "editor": {
-      "preview": "Prevista",
       "sharedContent": "Valid per tut las linguas",
       "sharedContentDescription": "Midadas qua valan per tut las linguas",
       "localeContent": "Cuntegn specific per lingua",
@@ -312,26 +277,17 @@
         "checking": "Vegn controllà la disponibladad...",
         "save": "Memorisar il slug",
         "saving": "Vegn memorisà...",
-        "saveSuccess": "Slug da la tura actualisà",
         "saveError": "Errur cun actualisar il slug",
         "history": "Istorgia dal slug",
         "historyDescription": "Vegls slugs redirigeschan vinavant a questa tura.",
-        "autoGenerate": "Generar automaticamain",
-        "validationTooShort": "Slugs ston avair almain 3 caracters",
-        "validationTooLong": "Slugs pon avair maximalmain 100 caracters",
-        "validationFormat": "Utilisai mo minusclas, cifras e stritgs (p.\u00a0ex. \"mia-tura\")"
+        "autoGenerate": "Generar automaticamain"
       }
     },
     "empty": {
       "title": "Anc naginas turas",
       "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-turas immersivsas che dattan vita a vossas exposiziuns.",
       "createButton": "Cumenzar",
-      "createNewButton": "Crear nova tura",
-      "creating": "Vegn creà..."
-    },
-    "create": {
-      "error": "Errur cun crear la tura",
-      "errorDescription": "In errur è succedì cun crear la tura. Empruvei per plascher aunc inagada."
+      "createNewButton": "Crear nova tura"
     },
     "editTour": "Modifitgar la tura",
     "viewInApp": "Mussar en app",
@@ -374,15 +330,6 @@
     "deleteConfirmPhrase": "stizzar tura",
     "archivedOnDate": "Archivà ils: {date}",
     "noCoverImage": "Nagina maletg da titel",
-    "status": {
-      "published": "Publitgà",
-      "unpublished": "Betg publitgà",
-      "archived": "Archivà"
-    },
-    "indicator": {
-      "up-to-date": "Actual",
-      "changed": "Midà"
-    },
     "visibility": {
       "live": "Publitgà",
       "notLive": "Betg publitgà",
@@ -392,28 +339,18 @@
       "unpublishedEdits": "Midadas betg publitgadas"
     },
     "publish": {
-      "success": "Translaziun publichada cun success",
       "error": "Errur tar publitgar la translaziun",
-      "tourPublished": "Tura publichada cun {stopCount, plural, =0 {naginas posts} one {# post} other {# posts}}",
       "tourPublishError": "Errur cun publitgar la tura"
     },
     "unpublish": {
-      "success": "Cuntegn retrà",
       "error": "Errur cun retrar"
     },
     "discard": {
-      "success": "Sboz stizzà",
       "error": "Errur cun stizzar il sboz"
     },
     "confirmUnpublishTour": {
       "title": "Retrar la translaziun {language}?",
       "description": "Visitaders na vesan betg pli la versiun {language} da la tura. La tura resta disponibla en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
-      "confirm": "Retrar translaziun",
-      "cancel": "Laschar publitgà"
-    },
-    "confirmUnpublishStop": {
-      "title": "Retrar questa translaziun?",
-      "description": "Visitaders na vesan betg pli questa versiun linguistica dal stop. Il stop resta disponibel en autras linguas. Nagut vegn stizzà – ti pos publitgar danovamain da tut temp.",
       "confirm": "Retrar translaziun",
       "cancel": "Laschar publitgà"
     },
@@ -427,14 +364,9 @@
       "manageTranslations": "Administrar translaziuns...",
       "statusPublished": "Publitgà",
       "statusDraft": "Sboz",
-      "statusModified": "Midà",
       "statusEmpty": "Vid",
       "enabledLanguages": "Linguatgs activads",
       "addLanguage": "Agiuntar linguatg"
-    },
-    "tabs": {
-      "draft": "Sboz",
-      "published": "Publitgà"
     },
     "actions": {
       "publish": "Publitgar",
@@ -477,8 +409,6 @@
       "created": "Creà",
       "lastUpdated": "Ultima actualisaziun",
       "status": "Status",
-      "published": "Publichà",
-      "draft": "Sboz",
       "translations": "Linguas",
       "addCoverImageHint": "Agiuntai in maletg da front en l'editur"
     },
@@ -493,7 +423,6 @@
       "confirmRemove": "Allontanar"
     },
     "locales": {
-      "updateSuccess": "Linguas actualisadas",
       "updateError": "Errur cun actualisar las linguas"
     },
     "helper": {
@@ -503,11 +432,7 @@
       "toggleLabel": "{count, plural, =1 {# midada} other {# midadas}}",
       "noChanges": "Naginas midadas dapi l'ultima publicaziun",
       "neverPublished": "Mai publitgà",
-      "changesCount": "{count, plural, =1 {# champ midà} other {# champs midads}} dapi l'ultima publicaziun",
-      "showDiff": "Cumparegliar midadas",
-      "hideDiff": "Zuppentar midadas",
-      "fieldChanged": "Midà",
-      "fieldNew": "Nov"
+      "changesCount": "{count, plural, =1 {# champ midà} other {# champs midads}} dapi l'ultima publicaziun"
     }
   },
   "stops": {
@@ -549,7 +474,6 @@
       "edit": "Modifitgar stop",
       "cancel": "Interrumper",
       "addError": "Errur cun agiuntar il stop",
-      "reorderSuccess": "Stops rearranschads",
       "reorderError": "Errur cun rearranschar ils stops",
       "removeSuccess": "Stop allontanà da la tura",
       "removeError": "Betg reussì dad allontanar il stop"
@@ -563,11 +487,9 @@
       "addError": "Errur cun agiuntar l'asset al stop"
     },
     "publish": {
-      "success": "Translaziun dal stop publichada cun success",
       "error": "Errur tar publitgar la translaziun dal stop"
     },
     "unpublish": {
-      "success": "Translaziun dal stop retratta",
       "error": "Impussibel da retrar la translaziun dal stop"
     },
     "translationStatus": {
@@ -706,7 +628,6 @@
       "assets": "Assets",
       "design": "Design",
       "analytics": "Analytics",
-      "settings": "Parameters",
       "support": "Support",
       "feedback": "Feedback",
       "recentTours": "Turas novas",
@@ -728,9 +649,6 @@
       },
       "analytics": {
         "description": "Vesair ed analisar las metrickas da prestaziun da vossas turas."
-      },
-      "settings": {
-        "description": "Configurar vossas preferenzas ed parameters da l'applicaziun."
       },
       "support": {
         "description": "Survegnir agid e support per vossas dumondas."
@@ -783,7 +701,6 @@
       "resendInvite": "Trametter invitaziun danovamain",
       "removeMember": "Allontanar commember",
       "removeError": "Errur cun allontanar il commember",
-      "roleUpdateSuccess": "Rolla actualisada",
       "roleUpdateError": "Errur cun actualisar la rolla"
     },
     "inviteDialog": {
@@ -811,7 +728,6 @@
       "cancel": "Annullar invitaziun",
       "resendSuccess": "Invitaziun tramessa danovamain",
       "resendError": "Errur cun trametter l'invitaziun danovamain",
-      "cancelSuccess": "Invitaziun annullada",
       "cancelError": "Errur cun annullar l'invitaziun"
     },
     "createTeam": {
@@ -838,26 +754,9 @@
       "nameSaving": "Vegn memorisà...",
       "nameSaveSuccess": "Num dal team actualisà",
       "nameSaveError": "Errur cun actualisar il num dal team",
-      "slugLabel": "Slug da l'URL",
-      "slugDescription": "L'identificatur unic da voss team en URLs. valguide.com/{slug}",
-      "slugPlaceholder": "mieu-team",
-      "slugAvailable": "Quest slug è disponibel",
-      "slugTaken": "Quest slug è gia utilisà",
-      "slugReserved": "Quest slug è reservà",
-      "slugSelf": "Quai è voss slug actual",
-      "slugChecking": "Controllar la disponibilitad...",
-      "autoSuggest": "Generar automaticamain dal num",
-      "save": "Memorisar slug",
-      "saving": "Vegn memorisà...",
-      "saveSuccess": "Slug dal team actualisà",
-      "saveError": "Errur cun actualisar il slug",
-      "slugHistory": "Istorgia dal slug",
-      "slugHistoryDescription": "Slugs vegls redirigian anc adina a voss team.",
-      "current": "Actual",
       "profileSectionTitle": "Profil da l'organisaziun",
       "profileSectionDescription": "Il num e l'avatar da vossa organisaziun èn visibels per tut ils commembers.",
       "avatarLabel": "Avatar dal team",
-      "avatarDescription": "PNG, JPG, WebP u GIF. Max. 5 MB.",
       "avatarSave": "Memorisar",
       "avatarSaving": "Vegn memorisà...",
       "avatarSaveSuccess": "Avatar dal team actualisà",
@@ -885,12 +784,6 @@
       "description": "Ti es vegnì envidà da unir a <strong1>{teamName}</strong1> sin ValGuide.",
       "sentTo": "Questa invitaziun è vegnida tramessa a",
       "signInButton": "S'annunziar per acceptar l'invitaziun",
-      "sendCode": "Trametter code da verificaziun",
-      "codeSent": "Nus avain tramess in code da 6 cifras a {email}",
-      "verify": "Verifitgar & unir al team",
-      "verifying": "Vegn verifitgà…",
-      "resend": "Trametter danovamain il code",
-      "resendIn": "Trametter danovamain en {seconds}s",
       "notYou": "Sche ti n'has betg dumandà quai, pos ti simplamain ignorar l'e-mail."
     },
     "wrongAccount": {
@@ -899,15 +792,13 @@
       "intendedFor": "Questa invitaziun è per <strong>{email}</strong>.",
       "instruction": "S'annunzia ora sutvart e s'annunzia puspè cun l'adressa d'e-mail envidada.",
       "signOutButton": "S'annunziar ora & midar conto",
-      "cancelButton": "Restar s'annunzià",
-      "signOutFooter": "S'annunziar ora"
+      "cancelButton": "Restar s'annunzià"
     },
     "joining": {
       "title": "Unir a {teamName}…",
       "description": "Tes access vegn installà ussa",
       "error": "Insatge è ì mal cun unir. Ti pos empruvar anc ina giada u ir a tes dashboard.",
-      "dashboardButton": "Ir al dashboard",
-      "signOutFooter": "S'annunziar ora"
+      "dashboardButton": "Ir al dashboard"
     }
   },
   "theme": {
@@ -929,13 +820,9 @@
     "unsavedChanges": "Midadas betg memorisadas",
     "saved": "Memorisà",
     "reset": "Reinizialisar",
-    "uploadPhoto": "Chargiar foto",
-    "changePhoto": "Midar foto",
     "cancel": "Interrumper",
     "avatarLabel": "Foto da profil",
     "avatarClickToUpload": "Cliccar per chargiar",
-    "avatarUpload": "Chargiar foto",
-    "avatarDescription": "PNG, JPG, WebP u GIF. Max. 5 MB.",
     "avatarInvalidType": "Chargiai per plaschair ina maletg PNG, JPG, WebP u GIF.",
     "avatarTooLarge": "La maletg sto esser pli pitschna che 5 MB.",
     "avatarSave": "Memorisar",
@@ -943,11 +830,9 @@
     "avatarSaveSuccess": "Foto da profil actualisada.",
     "avatarSaveError": "Errur tar actualisar la foto da profil.",
     "actions": {
-      "updateSuccess": "Profil actualisà cun success",
       "updateError": "Errur tar actualisar il profil"
     },
     "phone": "Telefon",
-    "phonePlaceholder": "079 123 45 67",
     "phoneHint": "Opziunal. Mo per support urgent, sche nus na cuntanschin Vus per e-mail. Nagin marketing. Pudais allontanar da tut temp.",
     "deleteAccount": {
       "title": "Stizzar il conto",
