@@ -1,4 +1,5 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import type { MaintenanceApp } from '../../features/maintenance/types'
 
 type MaintenanceToggleMessageInput = {
@@ -20,6 +21,11 @@ export const maintenanceToggleMessage = ({
   message,
   eta,
 }: MaintenanceToggleMessageInput): SlackMessage => {
+  const isDevEnv = serverEnv.VITE_ENV === 'dev'
+  const channel = serverEnv.MAINTENANCE_SLACK_CHANNEL || (isDevEnv ? 'maintenance-dev' : 'maintenance')
+  const adminBaseUrl = (
+    serverEnv.ADMIN_BASE_URL || (isDevEnv ? 'https://ops-dev.val.guide' : 'https://ops.val.guide')
+  ).replace(/\/$/, '')
   const title = enabled ? '🛠️ Maintenance enabled' : '✅ Maintenance disabled'
   const details = [
     `*Target* ${appLabel(app)}`,
@@ -32,7 +38,7 @@ export const maintenanceToggleMessage = ({
     .join('\n')
 
   return {
-    channel: 'valguide-users',
+    channel,
     text: `${title} (${appLabel(app)})`,
     blocks: [
       {
@@ -58,7 +64,7 @@ export const maintenanceToggleMessage = ({
               type: 'plain_text',
               text: 'Open Admin',
             },
-            url: 'https://ops.val.guide/maintenance',
+            url: `${adminBaseUrl}/maintenance`,
             action_id: 'open_maintenance_admin',
           },
         ],
