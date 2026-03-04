@@ -74,7 +74,6 @@ function ToursPage() {
   useEffect(() => {
     setDebouncedFilters(columnFiltersFromUrl)
     // Only re-sync when the actual URL values change
-    // biome-ignore lint/correctness/useExhaustiveDependencies: derived from searchParams
   }, [searchParams.search, searchParams.status, searchParams.org])
 
   const onColumnFiltersChange = useCallback(

@@ -124,7 +124,7 @@ async function main() {
       }
 
       cleanEmptyObjects(localeMessages)
-      fs.writeFileSync(filePath, JSON.stringify(localeMessages, null, 2) + '\n')
+      fs.writeFileSync(filePath, `${JSON.stringify(localeMessages, null, 2)}\n`)
       console.log(`  ✅ ${filePath}: removed ${removedCount} keys`)
     }
   }
