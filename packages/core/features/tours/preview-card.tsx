@@ -7,6 +7,12 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/
 import { Image } from '@valguide/core/ui/components/image'
 import { StatusBadge } from '@valguide/core/ui/components/status-badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
+import {
+  getImageRevealStateClasses,
+  IMAGE_REVEAL_IMAGE_CLASS,
+  IMAGE_REVEAL_PLACEHOLDER_CLASS,
+  useImageReveal,
+} from '@valguide/core/ui/hooks/use-image-reveal'
 import { cn } from '@valguide/core/ui/lib/utils'
 import { ImageIcon, LucideInfo } from 'lucide-react'
 import * as React from 'react'
@@ -65,7 +71,6 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
   // i18n-used-keys: tour.previewCard.published, tour.previewCard.unpublished
   const t = useTranslations('tour.previewCard')
   const locale = useLocale()
-  const [imageLoaded, setImageLoaded] = React.useState(false)
 
   const formatDate = (date?: Date | string) => {
     if (!date) return ''
@@ -79,15 +84,13 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
 
   const displayTitle = translation?.title || tour.title || 'Untitled Tour'
   const displayImage = tour.imageUrl ?? (tour.coverImage ? getAssetImageUrl(tour.coverImage) : undefined)
+  const { imageLoaded, handleImageLoad, handleImageError } = useImageReveal({ imageKey: displayImage })
+  const imageRevealClasses = getImageRevealStateClasses(imageLoaded)
   const tourLinkOptions = tour.nanoId
     ? ({ to: '/tours/$nanoId', params: { nanoId: tour.nanoId } } as const)
     : ({ to: '/' } as const)
 
   const tourStatus = getTourStatus({ publishedAt: tour.published ?? null, archivedAt: null })
-
-  React.useEffect(() => {
-    setImageLoaded(false)
-  }, [displayImage])
 
   return (
     <Card
@@ -101,25 +104,16 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
       <div className="relative h-44 w-full overflow-hidden shrink-0 bg-muted/30">
         {displayImage ? (
           <>
-            <div
-              className={cn(
-                'pointer-events-none absolute inset-0 bg-linear-to-br from-muted/80 to-muted/40 transition-opacity duration-500 motion-reduce:transition-none',
-                imageLoaded ? 'opacity-0' : 'opacity-100',
-              )}
-            />
+            <div className={cn(IMAGE_REVEAL_PLACEHOLDER_CLASS, imageRevealClasses.placeholder)} />
             <Image
               src={displayImage}
               alt={displayTitle}
               layout="constrained"
               width={400}
               height={176}
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageLoaded(true)}
-              className={cn(
-                'h-full w-full object-cover transition-[opacity,transform,filter] duration-500 ease-out motion-reduce:transition-none',
-                imageLoaded ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-[1.02] blur-sm',
-                'group-hover:scale-105',
-              )}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              className={cn(IMAGE_REVEAL_IMAGE_CLASS, imageRevealClasses.image, 'group-hover:scale-105')}
             />
           </>
         ) : (
