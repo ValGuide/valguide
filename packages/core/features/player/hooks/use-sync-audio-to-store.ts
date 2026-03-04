@@ -68,14 +68,14 @@ export function useSyncAudioToStore() {
     onLoadedMetadata: handleLoadedMetadata,
   })
 
-  // Sync isPlaying to audio (audioSrc ensures re-run when track changes)
+  // Sync isPlaying to audio
   useEffect(() => {
     if (isPlaying) {
       play()
     } else {
       pauseAudio()
     }
-  }, [isPlaying, audioSrc, play, pauseAudio])
+  }, [isPlaying, play, pauseAudio])
 
   // Sync speed to audio
   useEffect(() => {

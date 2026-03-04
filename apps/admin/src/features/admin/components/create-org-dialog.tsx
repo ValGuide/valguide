@@ -1,4 +1,5 @@
 import { ORG_ROLES, type OrgRole } from '@valguide/core/features/orgs/schema'
+import { valguideId } from '@valguide/core/utils/nanoid'
 import { generateSlug } from '@valguide/core/utils/slug'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import { Button } from '@valguide/ui/components/button'
@@ -16,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Building2, Plus, Trash2, Upload } from 'lucide-react'
 import { useRef, useState } from 'react'
 
-type MemberRow = { email: string; role: OrgRole }
+type MemberRow = { id: string; email: string; role: OrgRole }
 
 export type LogoFile = {
   base64: string
@@ -102,7 +103,7 @@ export function CreateOrgDialog({ open, onOpenChange, isCreating, onConfirm }: C
   }
 
   const addMemberRow = () => {
-    setMembers([...members, { email: '', role: 'editor' }])
+    setMembers([...members, { id: valguideId(), email: '', role: 'editor' }])
   }
 
   const updateMember = (index: number, updates: Partial<MemberRow>) => {
@@ -185,7 +186,7 @@ export function CreateOrgDialog({ open, onOpenChange, isCreating, onConfirm }: C
             </div>
 
             {members.map((member, index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div key={member.id} className="flex items-center gap-2">
                 <Input
                   type="email"
                   placeholder="user@example.com"

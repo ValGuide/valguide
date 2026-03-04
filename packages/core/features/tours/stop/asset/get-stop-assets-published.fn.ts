@@ -16,7 +16,10 @@ export const getStopAssetsPublishedFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getStopAssetsPublishedSchema)
   .handler(async ({ context, data }) => {
-    await requireStopAccessByNanoId(data.nanoId, context!.user.id)
+    if (!context?.user?.id) {
+      throw new Error('Unauthorized')
+    }
+    await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
     return getStopAssetsPublished(data.nanoId, data.channel, data.locale)
   })

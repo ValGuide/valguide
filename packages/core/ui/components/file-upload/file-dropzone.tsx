@@ -293,7 +293,6 @@ export function FileDropzone({
                       <FileIcon className="w-5 h-5 text-destructive" />
                     </div>
                   ) : getFileIcon(uploadedFile.file) === 'image' ? (
-                    // biome-ignore lint/performance/noImgElement: Using img for dynamic content
                     <img
                       src={uploadedFile.preview}
                       alt={uploadedFile.file.name}

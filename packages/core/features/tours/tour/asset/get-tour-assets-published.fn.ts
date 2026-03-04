@@ -16,7 +16,10 @@ export const getTourAssetsPublishedFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getTourAssetsPublishedSchema)
   .handler(async ({ context, data }) => {
-    await requireTourAccessByNanoId(data.nanoId, context!.user.id)
+    if (!context?.user?.id) {
+      throw new Error('Unauthorized')
+    }
+    await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
     return getTourAssetsPublished(data.nanoId, data.channel, data.locale)
   })

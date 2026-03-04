@@ -31,7 +31,11 @@ export async function getOrCreateProfile(userId: string, email?: string): Promis
 
   const [created] = await db.insert(profiles).values({ id: userId }).onConflictDoNothing().returning()
 
-  let profile = created ?? (await db.query.profiles.findFirst({ where: eq(profiles.id, userId) }))!
+  const foundProfile = created ?? (await db.query.profiles.findFirst({ where: eq(profiles.id, userId) }))
+  if (!foundProfile) {
+    throw new Error('Failed to create or fetch profile')
+  }
+  let profile = foundProfile
 
   if (email) {
     const approved = await autoApproveIfEligible(userId, email)

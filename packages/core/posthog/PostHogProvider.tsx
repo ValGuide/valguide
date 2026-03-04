@@ -14,7 +14,10 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (posthog.__loaded) return
-    posthog.init(clientEnv.VITE_POSTHOG_KEY!, {
+    const posthogKey = clientEnv.VITE_POSTHOG_KEY
+    if (!posthogKey) return
+
+    posthog.init(posthogKey, {
       // Proxy through our domain to avoid ad blockers (see workers/posthog-proxy)
       api_host: clientEnv.VITE_POSTHOG_HOST ?? `${window.location.origin}/ingest`,
 

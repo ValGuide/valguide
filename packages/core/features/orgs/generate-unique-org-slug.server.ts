@@ -45,8 +45,12 @@ export function pickUniqueSlug(slug: string, takenSlugs: string[]): string {
   const suffixPattern = new RegExp(`^${slug}(?:-(\\d+))?$`)
   const maxSuffix = takenSlugs
     .map((s) => s.match(suffixPattern))
-    .filter(Boolean)
-    .map((m) => (m![1] ? Number.parseInt(m![1], 10) : 1))
+    .flatMap((match) => {
+      if (!match) {
+        return []
+      }
+      return [match[1] ? Number.parseInt(match[1], 10) : 1]
+    })
     .reduce((max, n) => Math.max(max, n), 0)
 
   return `${slug}-${maxSuffix + 1}`

@@ -20,14 +20,14 @@ export const getAsset = (type: ToastTypes): JSX.Element | null => {
   }
 }
 
-const bars = Array(12).fill(0)
+const bars = Array.from({ length: 12 }, (_, i) => i)
 
 export const Loader = ({ visible, className }: { visible: boolean; className?: string }) => {
   return (
     <div className={['sonner-loading-wrapper', className].filter(Boolean).join(' ')} data-visible={visible}>
       <div className="sonner-spinner">
-        {bars.map((_, i) => (
-          <div className="sonner-loading-bar" key={`spinner-bar-${i}`} />
+        {bars.map((bar) => (
+          <div className="sonner-loading-bar" key={`spinner-bar-${bar}`} />
         ))}
       </div>
     </div>

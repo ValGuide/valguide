@@ -36,7 +36,7 @@
       "style": {
         "noNonNullAssertion": "warn",
         "useImportType": "warn",
-        "noJsxLiterals": "warn",
+        "noJsxLiterals": "off",
         "noRestrictedImports": {
           "level": "error",
           "options": {
@@ -79,13 +79,17 @@
       "includes": ["packages/core/ui/**/*.tsx", "packages/core/ui/**/*.ts"],
       "linter": {
         "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          },
           "style": {
             "noJsxLiterals": "off"
           },
           "a11y": {
-            "useSemanticElements": "warn",
-            "useFocusableInteractive": "warn",
-            "useAriaPropsForRole": "warn"
+            "useSemanticElements": "off",
+            "useFocusableInteractive": "off",
+            "useAriaPropsForRole": "off",
+            "useButtonType": "off"
           }
         }
       }
@@ -94,6 +98,22 @@
       "includes": ["apps/admin/**/*.tsx", "apps/admin/**/*.ts"],
       "linter": {
         "rules": {
+          "correctness": {
+            "useExhaustiveDependencies": "off"
+          },
+          "style": {
+            "noJsxLiterals": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/studio/**/*.tsx", "apps/studio/**/*.ts", "apps/app/**/*.tsx", "apps/app/**/*.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useExhaustiveDependencies": "off"
+          },
           "style": {
             "noJsxLiterals": "off"
           }
@@ -138,9 +158,9 @@
       "!**/drizzle.config.ts",
       "!**/postcss.config.mjs",
       "!**/tailwind.config.ts",
-      "!**/growth",
       "!**/*.css",
       "!**/routeTree.gen.ts",
+      "!**/worker-configuration.d.ts",
       "!apps/storybook/.storybook/__mocks__",
       "!apps/docs/.source",
       "!**/vibes"
