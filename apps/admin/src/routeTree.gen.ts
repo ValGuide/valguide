@@ -15,6 +15,7 @@ import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthErrorRouteImport } from './routes/auth/error'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as MainUsersRouteImport } from './routes/_main/users'
 import { Route as MainToursRouteImport } from './routes/_main/tours'
@@ -53,6 +54,11 @@ const AuthRoute = AuthRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthErrorRoute = AuthErrorRouteImport.update({
+  id: '/auth/error',
+  path: '/auth/error',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/error': typeof AuthErrorRoute
   '/orgs/$nanoId': typeof MainOrgsNanoIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/error': typeof AuthErrorRoute
   '/orgs/$nanoId': typeof MainOrgsNanoIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/_main/tours': typeof MainToursRoute
   '/_main/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/error': typeof AuthErrorRoute
   '/_main/orgs_/$nanoId': typeof MainOrgsNanoIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/tours'
     | '/users'
     | '/auth/callback'
+    | '/auth/error'
     | '/orgs/$nanoId'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/tours'
     | '/users'
     | '/auth/callback'
+    | '/auth/error'
     | '/orgs/$nanoId'
     | '/api/auth/$'
   id:
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/_main/tours'
     | '/_main/users'
     | '/auth/callback'
+    | '/auth/error'
     | '/_main/orgs_/$nanoId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -229,6 +241,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthErrorRoute: typeof AuthErrorRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -274,6 +287,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/error': {
+      id: '/auth/error'
+      path: '/auth/error'
+      fullPath: '/auth/error'
+      preLoaderRoute: typeof AuthErrorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/callback': {
@@ -398,6 +418,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  AuthErrorRoute: AuthErrorRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
