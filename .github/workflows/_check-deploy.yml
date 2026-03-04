@@ -64,9 +64,13 @@ jobs:
           ANY=false
 
           if echo "$COMMIT_MSG" | grep -qF '[build all]'; then
-            echo "✅ [build all] found — deploying everything"
+            echo "✅ [build all] found — deploying all apps (excluding workers)"
             for app in $APPS; do
-              echo "deploy-${app}=true" >> $GITHUB_OUTPUT
+              if [ "$app" = "workers" ]; then
+                echo "deploy-${app}=false" >> $GITHUB_OUTPUT
+              else
+                echo "deploy-${app}=true" >> $GITHUB_OUTPUT
+              fi
             done
             ANY=true
           else

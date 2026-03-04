@@ -4,7 +4,7 @@
 # for each one. Adding a new worker only requires creating the
 # directory with a package.json that has deploy/deploy:dev scripts.
 #
-# Triggered via [build workers] or [build all] in the commit message.
+# Triggered via [build workers] in the commit message (NOT included in [build all]).
 
 name: _deploy-workers
 
