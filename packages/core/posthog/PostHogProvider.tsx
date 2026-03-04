@@ -4,6 +4,7 @@ import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
 import type React from 'react'
 import { Suspense, useEffect } from 'react'
 import { clientEnv } from '../env/client'
+import { flushMissingMessageQueue } from '../i18n/use-missing-message-tracker'
 
 const isPostHogEnabled = clientEnv.VITE_POSTHOG_ENABLED
 
@@ -13,7 +14,10 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
 function Provider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    if (posthog.__loaded) return
+    if (posthog.__loaded) {
+      flushMissingMessageQueue()
+      return
+    }
     const posthogKey = clientEnv.VITE_POSTHOG_KEY
     if (!posthogKey) return
 
@@ -29,6 +33,9 @@ function Provider({ children }: { children: React.ReactNode }) {
       disable_session_recording: true, // Prevent recording of user sessions
       person_profiles: 'identified_only', // Only create profiles for identified users
       capture_pageview: true,
+      loaded: () => {
+        flushMissingMessageQueue()
+      },
     })
   }, [])
 
