@@ -21,6 +21,7 @@ type CameraErrorKey = 'cameraPermissionDenied' | 'cameraNotFound' | 'cameraError
 
 export function QrScannerModal({ open, onOpenChange, onScan }: QrScannerModalProps) {
   const t = useTranslations('player')
+  // i18n-used-keys: player.cameraPermissionDenied, player.cameraNotFound, player.cameraError
   const [error, setError] = useState<CameraErrorKey | null>(null)
   const [paused, setPaused] = useState(false)
 

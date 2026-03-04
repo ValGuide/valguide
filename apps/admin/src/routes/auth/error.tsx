@@ -16,6 +16,7 @@ export const Route = createFileRoute('/auth/error')({
 function AuthErrorRoute() {
   const { error, error_description } = Route.useSearch()
   const t = useTranslations('authError')
+  // i18n-used-keys: authError.oAuthCodeMissing, authError.sessionExpired, authError.accountNotFound, authError.accountCreationFailed, authError.originNotTrusted
   const descriptionKey = error ? authErrorCodeToI18nKey[error] : undefined
 
   return (

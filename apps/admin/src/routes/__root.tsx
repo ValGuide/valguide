@@ -28,6 +28,7 @@ export const Route = createRootRouteWithContext<{
       context.queryClient.ensureQueryData(messagesQueryOptions(locale)),
     ])
     const adminMessages = await context.queryClient.ensureQueryData(adminMessagesQueryOptions(locale))
+    // i18n-used-keys: metadata.title, metadata.description
     const metadata = {
       title: adminMessages?.metadata?.title ?? 'Admin - ValGuide',
       description: adminMessages?.metadata?.description ?? 'Manage your ValGuide resources',
@@ -36,6 +37,7 @@ export const Route = createRootRouteWithContext<{
   },
   errorComponent: ({ error }) => {
     const { adminMessages } = Route.useRouteContext()
+    // i18n-used-keys: error.title, error.description, error.tryAgain
     return (
       <ErrorPage
         i18n={{
@@ -52,6 +54,7 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: () => {
     const { adminMessages } = Route.useRouteContext()
+    // i18n-used-keys: notFound.title, notFound.description, notFound.homeButton
     return (
       <NotFoundPage
         i18n={{
