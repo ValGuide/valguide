@@ -28,6 +28,7 @@ import {
   Shield,
   Sun,
   Users,
+  Wrench,
 } from 'lucide-react'
 import * as React from 'react'
 
@@ -62,6 +63,7 @@ export function AdminSidebar({ pathname: pathnameProp, userEmail, onLogout, ...p
     { title: 'Organizations', path: '/orgs', icon: Building2 },
     { title: 'Approved Domains', path: '/approved-domains', icon: Globe },
     { title: 'KV Cache', path: '/kv-cache', icon: Database },
+    { title: 'Maintenance', path: '/maintenance', icon: Wrench },
   ]
 
   return (

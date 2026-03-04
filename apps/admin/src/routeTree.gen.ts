@@ -20,6 +20,7 @@ import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as MainUsersRouteImport } from './routes/_main/users'
 import { Route as MainToursRouteImport } from './routes/_main/tours'
 import { Route as MainOrgsRouteImport } from './routes/_main/orgs'
+import { Route as MainMaintenanceRouteImport } from './routes/_main/maintenance'
 import { Route as MainKvCacheRouteImport } from './routes/_main/kv-cache'
 import { Route as MainAssetsRouteImport } from './routes/_main/assets'
 import { Route as MainApprovedDomainsRouteImport } from './routes/_main/approved-domains'
@@ -81,6 +82,11 @@ const MainOrgsRoute = MainOrgsRouteImport.update({
   path: '/orgs',
   getParentRoute: () => MainRoute,
 } as any)
+const MainMaintenanceRoute = MainMaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainKvCacheRoute = MainKvCacheRouteImport.update({
   id: '/kv-cache',
   path: '/kv-cache',
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/approved-domains': typeof MainApprovedDomainsRoute
   '/assets': typeof MainAssetsRoute
   '/kv-cache': typeof MainKvCacheRoute
+  '/maintenance': typeof MainMaintenanceRoute
   '/orgs': typeof MainOrgsRoute
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/approved-domains': typeof MainApprovedDomainsRoute
   '/assets': typeof MainAssetsRoute
   '/kv-cache': typeof MainKvCacheRoute
+  '/maintenance': typeof MainMaintenanceRoute
   '/orgs': typeof MainOrgsRoute
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/_main/approved-domains': typeof MainApprovedDomainsRoute
   '/_main/assets': typeof MainAssetsRoute
   '/_main/kv-cache': typeof MainKvCacheRoute
+  '/_main/maintenance': typeof MainMaintenanceRoute
   '/_main/orgs': typeof MainOrgsRoute
   '/_main/tours': typeof MainToursRoute
   '/_main/users': typeof MainUsersRoute
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/approved-domains'
     | '/assets'
     | '/kv-cache'
+    | '/maintenance'
     | '/orgs'
     | '/tours'
     | '/users'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/approved-domains'
     | '/assets'
     | '/kv-cache'
+    | '/maintenance'
     | '/orgs'
     | '/tours'
     | '/users'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/_main/approved-domains'
     | '/_main/assets'
     | '/_main/kv-cache'
+    | '/_main/maintenance'
     | '/_main/orgs'
     | '/_main/tours'
     | '/_main/users'
@@ -324,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainOrgsRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/maintenance': {
+      id: '/_main/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MainMaintenanceRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/kv-cache': {
       id: '/_main/kv-cache'
       path: '/kv-cache'
@@ -392,6 +411,7 @@ interface MainRouteChildren {
   MainApprovedDomainsRoute: typeof MainApprovedDomainsRoute
   MainAssetsRoute: typeof MainAssetsRoute
   MainKvCacheRoute: typeof MainKvCacheRoute
+  MainMaintenanceRoute: typeof MainMaintenanceRoute
   MainOrgsRoute: typeof MainOrgsRoute
   MainToursRoute: typeof MainToursRoute
   MainUsersRoute: typeof MainUsersRoute
@@ -402,6 +422,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainApprovedDomainsRoute: MainApprovedDomainsRoute,
   MainAssetsRoute: MainAssetsRoute,
   MainKvCacheRoute: MainKvCacheRoute,
+  MainMaintenanceRoute: MainMaintenanceRoute,
   MainOrgsRoute: MainOrgsRoute,
   MainToursRoute: MainToursRoute,
   MainUsersRoute: MainUsersRoute,
