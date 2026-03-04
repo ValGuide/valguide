@@ -2,15 +2,20 @@ import { getRequestHeaders } from '@tanstack/react-start/server'
 import { sendEmail } from '@valguide/email'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { createAuthMiddleware } from 'better-auth/api'
 import { emailOTP, organization as organizationPlugin } from 'better-auth/plugins'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { serverEnv } from '../../env/server'
+import { userLoggedInMessage } from '../../slack/messages/user-logged-in.message'
+import { userStartedLoginMessage } from '../../slack/messages/user-started-login.message'
+import { postMessage } from '../../slack/send-slack-message'
 import { db } from '../db'
 import { invitation, member, organization } from '../orgs/schema'
 import { orgAc, orgRoles } from './organization-permissions'
 import { authAccounts, authSessions, authUsers, authVerifications } from './schema'
 
 const cookieSecure = serverEnv.NODE_ENV === 'production'
+const isProduction = serverEnv.NODE_ENV === 'production'
 const sharedTrustedOrigins = serverEnv.BETTER_AUTH_TRUSTED_ORIGINS.split(',').map((origin) => origin.trim())
 
 const regularTrustedOrigins = [serverEnv.APP_BASE_URL, serverEnv.VITE_STUDIO_URL, ...sharedTrustedOrigins].filter(
@@ -18,6 +23,17 @@ const regularTrustedOrigins = [serverEnv.APP_BASE_URL, serverEnv.VITE_STUDIO_URL
 )
 
 const regularCookieDomain = serverEnv.BETTER_AUTH_COOKIE_DOMAIN || undefined
+const otpSendLimit = isProduction ? 3 : 4
+const otpVerifyLimit = isProduction ? 5 : 6
+
+function normalizeEmail(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null
+  }
+
+  const normalized = value.trim().toLowerCase()
+  return normalized.length > 0 ? normalized : null
+}
 
 export function createAuthInstance(options: {
   baseURL?: string
@@ -78,6 +94,42 @@ export function createAuthInstance(options: {
     }),
     ...(options.socialProviders ? { socialProviders: options.socialProviders } : {}),
     ...(options.sessionCookieCache ? { session: { cookieCache: options.sessionCookieCache } } : {}),
+    rateLimit: {
+      enabled: true,
+      window: 60,
+      max: isProduction ? 100 : 1000,
+      customRules: {
+        '/email-otp/send-verification-otp': { window: 60, max: otpSendLimit },
+        '/api/auth/email-otp/send-verification-otp': { window: 60, max: otpSendLimit },
+        '/sign-in/email-otp': { window: 60, max: otpVerifyLimit },
+        '/api/auth/sign-in/email-otp': { window: 60, max: otpVerifyLimit },
+        '/email-otp/check-verification-otp': { window: 60, max: otpVerifyLimit },
+        '/api/auth/email-otp/check-verification-otp': { window: 60, max: otpVerifyLimit },
+      },
+    },
+    hooks: {
+      after: createAuthMiddleware(async (ctx) => {
+        if (ctx.path === '/email-otp/send-verification-otp') {
+          const result = ctx.context.returned as { success?: boolean } | undefined
+          if (!result?.success) {
+            return
+          }
+          const email = normalizeEmail((ctx.body as { email?: unknown } | undefined)?.email)
+          if (!email) {
+            return
+          }
+          await ctx.context.runInBackgroundOrAwait(postMessage(userStartedLoginMessage({ email })))
+        }
+
+        if (ctx.path === '/sign-in/email-otp') {
+          const email = normalizeEmail(ctx.context.newSession?.user?.email)
+          if (!email) {
+            return
+          }
+          await ctx.context.runInBackgroundOrAwait(postMessage(userLoggedInMessage({ email })))
+        }
+      }),
+    },
     advanced: {
       cookiePrefix: options.cookiePrefix,
       useSecureCookies: cookieSecure,
@@ -98,6 +150,10 @@ export function createAuthInstance(options: {
               otpLength: 6,
               expiresIn: 5 * 60,
               allowedAttempts: 5,
+              rateLimit: {
+                window: 60,
+                max: otpVerifyLimit,
+              },
               ...(serverEnv.BETTER_AUTH_DEV_OTP
                 ? {
                     generateOTP: () => serverEnv.BETTER_AUTH_DEV_OTP,
