@@ -1,6 +1,6 @@
 # Unified deploy orchestrator.
 #
-# Parses commit message tags like [build app], [build app,studio], [build workers], [build all],
+# Parses commit message tags like [build app], [build app,studio], [build workers], [build apps], [build all],
 # deploys matching apps in parallel via reusable sub-workflows, sends ONE
 # consolidated Slack notification, and creates GitHub Releases on success.
 #
