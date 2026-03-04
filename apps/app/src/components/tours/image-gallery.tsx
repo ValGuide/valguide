@@ -1,8 +1,8 @@
-import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { AssetItem } from '@valguide/core/features/tours/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
+import { Image } from '@valguide/ui/components/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
@@ -69,7 +69,9 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                 <Image
                   src={getAssetImageUrl(img)}
                   alt={img.fileName}
-                  layout="fullWidth"
+                  layout="constrained"
+                  width={64}
+                  height={64}
                   className="absolute inset-0 w-full h-full object-cover rounded"
                 />
               </button>

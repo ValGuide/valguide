@@ -1,12 +1,18 @@
 import { relations } from 'drizzle-orm'
-import { boolean, index, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
-import { authUsers } from 'drizzle-orm/supabase'
+import { index, pgSchema, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { authUsers } from '../auth/schema'
 
 const studioSchema = pgSchema('studio')
 
 export const ORG_ROLES = ['owner', 'admin', 'curator', 'editor', 'viewer'] as const
-export const orgRole = studioSchema.enum('org_role', ORG_ROLES)
 export type OrgRole = (typeof ORG_ROLES)[number]
+
+export function isOrgRole(value: string): value is OrgRole {
+  return ORG_ROLES.includes(value as OrgRole)
+}
+
+export const INVITATION_STATUS = ['pending', 'accepted', 'rejected', 'canceled'] as const
+export type InvitationStatus = (typeof INVITATION_STATUS)[number]
 
 export const organization = studioSchema.table('organization', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -22,12 +28,12 @@ export const organization = studioSchema.table('organization', {
 })
 
 export const organizationRelations = relations(organization, ({ many }) => ({
-  members: many(organizationMember),
-  invitations: many(organizationInvitation),
+  members: many(member),
+  invitations: many(invitation),
 }))
 
-export const organizationMember = studioSchema.table(
-  'organization_member',
+export const member = studioSchema.table(
+  'member',
   {
     id: uuid('id').defaultRandom().primaryKey(),
     organizationId: uuid('organization_id')
@@ -36,62 +42,57 @@ export const organizationMember = studioSchema.table(
     userId: uuid('user_id')
       .notNull()
       .references(() => authUsers.id, { onDelete: 'cascade' }),
-    role: orgRole('role').notNull().default('editor'),
-    isOwner: boolean('is_owner').default(false), // Deprecated, keep for backward compat
+    role: varchar('role', { length: 32 }).notNull().default('viewer'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('updated_at')
-      .defaultNow()
-      .$onUpdate(() => new Date()),
   },
   (t) => ({
-    uniqueMember: uniqueIndex('organization_member_unique').on(t.organizationId, t.userId),
-    userIdIdx: index('org_member_user_id_idx').on(t.userId),
-    orgUserIdx: index('org_member_org_user_idx').on(t.organizationId, t.userId),
+    uniqueMember: uniqueIndex('member_unique').on(t.organizationId, t.userId),
+    userIdIdx: index('member_user_id_idx').on(t.userId),
+    orgUserIdx: index('member_org_user_idx').on(t.organizationId, t.userId),
   }),
 )
 
-export const organizationMemberRelations = relations(organizationMember, ({ one }) => ({
+export const memberRelations = relations(member, ({ one }) => ({
   organization: one(organization, {
-    fields: [organizationMember.organizationId],
+    fields: [member.organizationId],
     references: [organization.id],
   }),
   user: one(authUsers, {
-    fields: [organizationMember.userId],
+    fields: [member.userId],
     references: [authUsers.id],
   }),
 }))
 
-export const organizationInvitation = studioSchema.table(
-  'organization_invitation',
+export const invitation = studioSchema.table(
+  'invitation',
   {
     id: uuid('id').defaultRandom().primaryKey(),
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
     email: varchar('email', { length: 255 }).notNull(),
-    role: orgRole('role').notNull().default('editor'),
-    invitedBy: uuid('invited_by')
+    role: varchar('role', { length: 32 }).notNull().default('viewer'),
+    status: varchar('status', { length: 20 }).notNull().default('pending'),
+    inviterId: uuid('inviter_id')
       .notNull()
       .references(() => authUsers.id, { onDelete: 'cascade' }),
-    tokenHash: varchar('token_hash', { length: 255 }).notNull().unique(),
-    expiresAt: timestamp('expires_at').notNull(), // 7 days from creation
-    acceptedAt: timestamp('accepted_at'),
-    canceledAt: timestamp('canceled_at'),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({
-    emailIdx: index('org_invite_email_idx').on(t.email),
-    orgIdx: index('org_invite_org_id_idx').on(t.organizationId),
+    emailIdx: index('invitation_email_idx').on(t.email),
+    orgIdx: index('invitation_org_id_idx').on(t.organizationId),
+    orgEmailStatusIdx: index('invitation_org_email_status_idx').on(t.organizationId, t.email, t.status),
   }),
 )
 
-export const organizationInvitationRelations = relations(organizationInvitation, ({ one }) => ({
+export const invitationRelations = relations(invitation, ({ one }) => ({
   organization: one(organization, {
-    fields: [organizationInvitation.organizationId],
+    fields: [invitation.organizationId],
     references: [organization.id],
   }),
   inviter: one(authUsers, {
-    fields: [organizationInvitation.invitedBy],
+    fields: [invitation.inviterId],
     references: [authUsers.id],
   }),
 }))

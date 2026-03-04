@@ -20,9 +20,11 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
-    "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-    "SUPABASE_COOKIE_DOMAIN": ".valguide.com"
+    "APP_BASE_URL": "https://www.valguide.com",
+    "BETTER_AUTH_URL": "https://www.valguide.com",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://www.valguide.com",
+    "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
+    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth"
   },
 
   // Dev environment (www.valguide.dev)
@@ -34,9 +36,11 @@
       "routes": [{ "pattern": "www.valguide.dev", "custom_domain": true }],
       "vars": {
         "NODE_ENV": "production",
-        "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
-        "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
+        "APP_BASE_URL": "https://www.valguide.dev",
+        "BETTER_AUTH_URL": "https://www.valguide.dev",
+        "BETTER_AUTH_TRUSTED_ORIGINS": "https://www.valguide.dev",
+        "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",
+        "BETTER_AUTH_COOKIE_PREFIX": "valguide-dev-auth",
         "BLOCK_ROBOTS": "true"
       }
     }

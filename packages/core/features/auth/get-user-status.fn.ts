@@ -1,18 +1,17 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createClient } from '@valguide/supabase/server'
+import { getAuthSession } from './better-auth.server'
 import { getUserStatus } from './get-user-status.server'
 
 export type { UserStatus } from './get-user-status.server'
 
 export const getUserStatusFn = createServerFn({ method: 'GET' }).handler(async () => {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+  const session = await getAuthSession()
+  const user = session?.user
 
   if (!user) {
     return null
   }
 
-  const status = await getUserStatus(user.sub, user.email as string | undefined)
-  return { status, email: (user.email as string | undefined) ?? '' }
+  const status = await getUserStatus(user.id, user.email ?? undefined)
+  return { status, email: user.email ?? '' }
 })

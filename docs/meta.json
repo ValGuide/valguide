@@ -17,7 +17,6 @@
     "domains-and-dns",
     "environment-variables",
     "dev-auth-playwright",
-    "resend-supabase-auth-hook",
     "i18n-tooling",
     "---Sections---",
     "architecture",

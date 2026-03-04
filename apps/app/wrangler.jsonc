@@ -16,19 +16,18 @@
   "routes": [{ "pattern": "app.valguide.com", "custom_domain": true }],
 
   // KV namespace for tour data edge caching
-  "kv_namespaces": [
-    { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" }
-  ],
+  "kv_namespaces": [{ "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" }],
 
   // Production vars (app.valguide.com)
   // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
-    "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-    "SUPABASE_COOKIE_DOMAIN": ".valguide.com",
-    "APP_BASE_URL": "https://app.valguide.com"
+    "APP_BASE_URL": "https://app.valguide.com",
+    "BETTER_AUTH_URL": "https://app.valguide.com",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://app.valguide.com,https://studio.valguide.com",
+    "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
+    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth"
   },
 
   // Dev environment (app.valguide.dev)
@@ -38,15 +37,14 @@
   "env": {
     "dev": {
       "routes": [{ "pattern": "app.valguide.dev", "custom_domain": true }],
-      "kv_namespaces": [
-        { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" }
-      ],
+      "kv_namespaces": [{ "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" }],
       "vars": {
         "NODE_ENV": "production",
-        "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
-        "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
         "APP_BASE_URL": "https://app.valguide.dev",
+        "BETTER_AUTH_URL": "https://app.valguide.dev",
+        "BETTER_AUTH_TRUSTED_ORIGINS": "https://app.valguide.dev,https://studio.valguide.dev",
+        "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",
+        "BETTER_AUTH_COOKIE_PREFIX": "valguide-dev-auth",
         "BLOCK_ROBOTS": "true"
       }
     }

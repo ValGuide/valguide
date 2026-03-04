@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { getTourStatus } from '@valguide/core/features/tours/status-utils'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
+import { Image } from '@valguide/core/ui/components/image'
 import { StatusBadge } from '@valguide/core/ui/components/status-badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
 import { cn } from '@valguide/core/ui/lib/utils'
@@ -98,7 +98,9 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
           <Image
             src={displayImage}
             alt={displayTitle}
-            layout="fullWidth"
+            layout="constrained"
+            width={400}
+            height={176}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (

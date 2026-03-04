@@ -22,6 +22,8 @@ on:
         value: ${{ jobs.check.outputs.deploy-storybook }}
       deploy-www:
         value: ${{ jobs.check.outputs.deploy-www }}
+      deploy-workers:
+        value: ${{ jobs.check.outputs.deploy-workers }}
       any-deploy:
         value: ${{ jobs.check.outputs.any-deploy }}
       timestamp:
@@ -39,6 +41,7 @@ jobs:
       deploy-links: ${{ steps.check.outputs.deploy-links }}
       deploy-storybook: ${{ steps.check.outputs.deploy-storybook }}
       deploy-www: ${{ steps.check.outputs.deploy-www }}
+      deploy-workers: ${{ steps.check.outputs.deploy-workers }}
       any-deploy: ${{ steps.check.outputs.any-deploy }}
       timestamp: ${{ steps.ts.outputs.timestamp }}
     steps:
@@ -57,7 +60,7 @@ jobs:
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
 
-          APPS="app studio admin docs links storybook www"
+          APPS="app studio admin docs links storybook www workers"
           ANY=false
 
           if echo "$COMMIT_MSG" | grep -qF '[build all]'; then

@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createAdminClient } from '../supabase'
+import { getAdminAuthSession } from '../admin-auth.server'
+import { isSuperadmin } from '../utils/superadmin'
 
 export type AdminUser = {
   id: string
@@ -7,15 +8,14 @@ export type AdminUser = {
 }
 
 export const getCurrentAdminUserFn = createServerFn({ method: 'GET' }).handler(async (): Promise<AdminUser | null> => {
-  const supabase = await createAdminClient()
-  const { data, error } = await supabase.auth.getUser()
+  const session = await getAdminAuthSession()
 
-  if (error || !data.user) {
+  if (!session?.user?.id || !isSuperadmin(session.user.email)) {
     return null
   }
 
   return {
-    id: data.user.id,
-    email: data.user.email,
+    id: session.user.id,
+    email: session.user.email,
   }
 })

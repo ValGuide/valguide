@@ -1,26 +1,25 @@
-import { createHash } from 'node:crypto'
 import { createServerFn } from '@tanstack/react-start'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
-import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
 import { ForbiddenError, NotFoundError } from '../auth/authorization'
+import { auth, setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { acceptInvitation, type JoinTeamResult } from './join-team.server'
+import { getPendingInvitationById, isTeamMember } from './utils'
 
-export type { JoinTeamResult } from './join-team.server'
-
-import { getInvitationByTokenHash, isTeamMember } from './utils'
+export type JoinTeamResult = {
+  success: true
+}
 
 const joinTeamSchema = z.object({
-  token: z.string(),
+  invitationId: z.string(),
 })
 
 export const joinTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(joinTeamSchema)
   .handler(async ({ context, data }): Promise<JoinTeamResult> => {
-    const tokenHash = createHash('sha256').update(data.token).digest('hex')
-    const invite = await getInvitationByTokenHash(db, tokenHash)
+    const invite = await getPendingInvitationById(db, data.invitationId)
 
     if (!invite) {
       throw new NotFoundError('Invitation')
@@ -35,7 +34,12 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
       throw new ForbiddenError('This invitation was sent to a different email address')
     }
 
-    await acceptInvitation(db, invite.id, context.user.id)
-    setActiveTeamId(invite.organizationId)
+    await auth.api.acceptInvitation({
+      headers: getRequestHeaders(),
+      body: {
+        invitationId: invite.id,
+      },
+    })
+    await setActiveOrganizationForCurrentSession(invite.organizationId)
     return { success: true }
   })

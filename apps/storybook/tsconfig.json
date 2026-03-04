@@ -20,7 +20,6 @@
       "@valguide/features/*": ["../../packages/core/features/*"],
       "@valguide/slack/*": ["../../packages/core/slack/*"],
       "@valguide/ui/*": ["../../packages/core/ui/*"],
-      "@valguide/supabase/*": ["../../packages/core/supabase/*"],
       "@valguide/i18n/*": ["../../packages/core/i18n/*"],
       "@valguide/core/*": ["../../packages/core/*"],
       "@valguide/icons/*": ["../../packages/icons/dist/*"],

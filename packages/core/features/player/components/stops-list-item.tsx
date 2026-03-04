@@ -1,4 +1,4 @@
-import { Image } from '@unpic/react'
+import { Image } from '@valguide/core/ui/components/image'
 import { Music, Pause, Play } from 'lucide-react'
 import type { PlayerStop } from '../types'
 
@@ -30,7 +30,14 @@ export function StopsListItem({ stop, index, isPlaying, isCurrent, onSelect }: S
     >
       <div className="relative h-12 w-12 flex-shrink-0 rounded-md overflow-hidden bg-muted">
         {stop.coverImageUrl ? (
-          <Image src={stop.coverImageUrl} alt={stop.title} layout="fullWidth" className="w-full h-full object-cover" />
+          <Image
+            src={stop.coverImageUrl}
+            alt={stop.title}
+            layout="constrained"
+            width={48}
+            height={48}
+            className="w-full h-full object-cover"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <Music className="h-5 w-5 text-muted-foreground" />

@@ -1,10 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-router'
-import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { AdminSidebar } from '@/components/admin-sidebar'
 import { superadminQueryOptions } from '@/features/admin/superadmin-query-options'
+import { signOutAdminFn } from '@/server/functions/sign-out-admin.fn'
 
 export const Route = createFileRoute('/_main')({
   beforeLoad: async ({ context, location }) => {
@@ -16,7 +16,7 @@ export const Route = createFileRoute('/_main')({
     }
     const { allowed } = await context.queryClient.ensureQueryData(superadminQueryOptions())
     if (!allowed) {
-      await signOutFn({ data: {} })
+      await signOutAdminFn()
       throw redirect({ to: '/login' })
     }
   },
@@ -29,7 +29,7 @@ function MainLayout() {
   const queryClient = useQueryClient()
 
   const handleLogout = async () => {
-    await signOutFn({ data: {} })
+    await signOutAdminFn()
     queryClient.clear()
     await router.invalidate()
     router.navigate({ to: '/login' })

@@ -94,7 +94,6 @@ const config: StorybookConfig = {
           { find: '@valguide/core/env/client', replacement: path.resolve(__dirname, './__mocks__/env-client.ts') },
           // Mock server-side modules for browser compatibility
           { find: 'postgres', replacement: path.resolve(__dirname, './__mocks__/postgres.ts') },
-          { find: '@valguide/supabase/server', replacement: path.resolve(__dirname, './__mocks__/supabase-server.ts') },
           {
             find: '@valguide/core/features/assets/actions',
             replacement: path.resolve(__dirname, './__mocks__/asset-actions.ts'),

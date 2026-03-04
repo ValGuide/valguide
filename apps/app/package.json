@@ -9,7 +9,7 @@
     "dev:remote": "WRANGLER_REMOTE=true vite dev --port 3000",
     "preview": "vite preview --port 3000",
     "deploy": "pnpm build && wrangler deploy",
-    "deploy:dev": "CLOUDFLARE_ENV=dev pnpm build && wrangler deploy",
+    "deploy:dev": "CLOUDFLARE_ENV=dev pnpm build && wrangler deploy --env dev",
     "cf-typegen": "wrangler types",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
-    "@supabase/supabase-js": "^2.39.8",
     "@tanstack/react-devtools": "^0.9.0",
     "@tanstack/react-query": "^5.64.0",
     "@tanstack/react-query-devtools": "^5.91.2",
@@ -31,7 +30,7 @@
     "@tanstack/react-router-devtools": "^1.145.7",
     "@tanstack/react-router-ssr-query": "^1.145.7",
     "@tanstack/react-start": "^1.154.0",
-    "@unpic/react": "^1.0.2",
+
     "@valguide/core": "workspace:*",
     "@valguide/email": "workspace:*",
     "jest": "^29.7.0",

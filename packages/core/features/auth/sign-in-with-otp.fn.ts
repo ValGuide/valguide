@@ -1,10 +1,10 @@
-import type { SignInWithPasswordlessCredentials } from '@supabase/supabase-js'
 import { createServerFn } from '@tanstack/react-start'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { userStartedLoginMessage } from '@valguide/slack/messages/user-started-login.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
-import { createClient } from '@valguide/supabase/server'
 import { z } from 'zod'
 import { waitUntil } from '../../utils/wait-until'
+import { auth } from './better-auth.server'
 import { serializeAuthError } from './utils'
 
 // ============================================================================
@@ -35,14 +35,29 @@ const signInWithOtpSchema = z.object({
 export const signInWithOtpFn = createServerFn({ method: 'POST' })
   .inputValidator(signInWithOtpSchema)
   .handler(async ({ data: credentials }) => {
-    const supabase = await createClient()
-    const response = await supabase.auth.signInWithOtp(credentials as SignInWithPasswordlessCredentials)
-
-    if (!response.error) {
-      const email = 'email' in credentials ? credentials.email : undefined
-      waitUntil(postMessage(userStartedLoginMessage({ email })))
-      return { data: response.data, error: null }
+    if (!credentials.email) {
+      return {
+        data: null,
+        error: serializeAuthError({
+          message: 'Email is required',
+          status: 400,
+          code: 'EMAIL_REQUIRED',
+        }),
+      }
     }
 
-    return { data: response.data, error: serializeAuthError(response.error) }
+    try {
+      await auth.api.sendVerificationOTP({
+        body: {
+          email: credentials.email,
+          type: 'sign-in',
+        },
+        headers: getRequestHeaders(),
+      })
+
+      waitUntil(postMessage(userStartedLoginMessage({ email: credentials.email })))
+      return { data: null, error: null }
+    } catch (error) {
+      return { data: null, error: serializeAuthError(error) }
+    }
   })

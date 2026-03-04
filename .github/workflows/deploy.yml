@@ -1,6 +1,6 @@
 # Unified deploy orchestrator.
 #
-# Parses commit message tags like [build app], [build app,studio], [build all],
+# Parses commit message tags like [build app], [build app,studio], [build workers], [build all],
 # deploys matching apps in parallel via reusable sub-workflows, sends ONE
 # consolidated Slack notification, and creates GitHub Releases on success.
 #
@@ -98,9 +98,18 @@ jobs:
       timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
+  deploy-workers:
+    needs: check
+    if: needs.check.outputs.deploy-workers == 'true'
+    uses: ./.github/workflows/_deploy-workers.yml
+    with:
+      environment: ${{ needs.check.outputs.environment }}
+      timestamp: ${{ needs.check.outputs.timestamp }}
+    secrets: inherit
+
   # ── Consolidated GitHub Release ─────────────────────────────────────
   release:
-    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www]
+    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www, deploy-workers]
     if: "!cancelled() && needs.check.outputs.any-deploy == 'true'"
     uses: ./.github/workflows/release.yml
     with:
@@ -113,6 +122,7 @@ jobs:
       deploy-links: ${{ needs.check.outputs.deploy-links }}
       deploy-storybook: ${{ needs.check.outputs.deploy-storybook }}
       deploy-www: ${{ needs.check.outputs.deploy-www }}
+      deploy-workers: ${{ needs.check.outputs.deploy-workers }}
       result-app: ${{ needs.deploy-app.result }}
       result-studio: ${{ needs.deploy-studio.result }}
       result-admin: ${{ needs.deploy-admin.result }}
@@ -120,10 +130,11 @@ jobs:
       result-links: ${{ needs.deploy-links.result }}
       result-storybook: ${{ needs.deploy-storybook.result }}
       result-www: ${{ needs.deploy-www.result }}
+      result-workers: ${{ needs.deploy-workers.result }}
 
   # ── Consolidated Slack notification ─────────────────────────────────
   notify:
-    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www, release]
+    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www, deploy-workers, release]
     if: "!cancelled() && needs.check.outputs.any-deploy == 'true'"
     uses: ./.github/workflows/_notify-deploy.yml
     with:
@@ -135,6 +146,7 @@ jobs:
       deploy-links: ${{ needs.check.outputs.deploy-links }}
       deploy-storybook: ${{ needs.check.outputs.deploy-storybook }}
       deploy-www: ${{ needs.check.outputs.deploy-www }}
+      deploy-workers: ${{ needs.check.outputs.deploy-workers }}
       result-app: ${{ needs.deploy-app.result }}
       result-studio: ${{ needs.deploy-studio.result }}
       result-admin: ${{ needs.deploy-admin.result }}
@@ -142,6 +154,7 @@ jobs:
       result-links: ${{ needs.deploy-links.result }}
       result-storybook: ${{ needs.deploy-storybook.result }}
       result-www: ${{ needs.deploy-www.result }}
+      result-workers: ${{ needs.deploy-workers.result }}
       release-url: ${{ needs.release.outputs.release-url }}
       changelog: ${{ needs.release.outputs.changelog }}
     secrets:

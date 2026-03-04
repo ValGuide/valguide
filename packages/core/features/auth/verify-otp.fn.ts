@@ -1,7 +1,7 @@
-import type { VerifyOtpParams } from '@supabase/supabase-js'
 import { createServerFn } from '@tanstack/react-start'
-import { createClient } from '@valguide/supabase/server'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { z } from 'zod'
+import { auth } from './better-auth.server'
 import { serializeAuthError } from './utils'
 
 // ============================================================================
@@ -32,12 +32,29 @@ const verifyOtpSchema = z.object({
 export const verifyOtpFn = createServerFn({ method: 'POST' })
   .inputValidator(verifyOtpSchema)
   .handler(async ({ data: params }) => {
-    const supabase = await createClient()
-    const response = await supabase.auth.verifyOtp(params as VerifyOtpParams)
-
-    if (response.error) {
-      return { data: response.data, error: serializeAuthError(response.error) }
+    if (!params.email) {
+      return {
+        data: null,
+        error: serializeAuthError({
+          message: 'Email is required',
+          status: 400,
+          code: 'EMAIL_REQUIRED',
+        }),
+      }
     }
 
-    return { data: response.data, error: null }
+    try {
+      const data = await auth.api.signInEmailOTP({
+        body: {
+          email: params.email,
+          otp: params.token,
+        },
+        headers: getRequestHeaders(),
+      })
+
+      console.info('[verifyOtpFn] OTP verification successful for email:', params.email)
+      return { data, error: null }
+    } catch (error) {
+      return { data: null, error: serializeAuthError(error) }
+    }
   })

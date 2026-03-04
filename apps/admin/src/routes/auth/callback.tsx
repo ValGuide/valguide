@@ -1,50 +1,28 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { serverEnv } from '@valguide/core/env/server'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { z } from 'zod'
-import { createAdminClient } from '@/server/supabase'
+import { adminAuth, getAdminAuthSession } from '@/server/admin-auth.server'
 import { isSuperadmin } from '@/server/utils/superadmin'
 
-const exchangeCodeFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ code: z.string() }))
-  .handler(async ({ data }) => {
-    const supabase = await createAdminClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(data.code)
-    if (error) {
-      console.error('Error exchanging code for session:', error)
-      return { success: false, error: error.message }
-    }
+const validateAdminSessionFn = createServerFn({ method: 'GET' }).handler(async () => {
+  const session = await getAdminAuthSession()
+  const user = session?.user
 
-    const { data: userData } = await supabase.auth.getUser()
-    const user = userData?.user
+  if (!user?.id) {
+    return { success: false }
+  }
 
-    // Verify Slack workspace matches expected team
-    if (serverEnv.SLACK_TEAM_ID) {
-      const slackIdentity = user?.identities?.find((i) => i.provider === 'slack_oidc')
-      const slackTeamId =
-        slackIdentity?.identity_data?.['https://slack.com/team_id'] ?? slackIdentity?.identity_data?.team_id
-      if (slackTeamId && slackTeamId !== serverEnv.SLACK_TEAM_ID) {
-        console.warn(`User belongs to Slack team ${slackTeamId}, expected ${serverEnv.SLACK_TEAM_ID}`)
-        await supabase.auth.signOut()
-        return { success: false, error: 'Access denied: wrong Slack workspace' }
-      }
-    }
+  if (!isSuperadmin(user.email)) {
+    await adminAuth.api.signOut({ headers: getRequestHeaders() })
+    return { success: false }
+  }
 
-    // Verify superadmin status
-    const email = user?.email
-    if (!isSuperadmin(email)) {
-      console.warn(`User ${email} is not a superadmin`)
-      await supabase.auth.signOut()
-      return { success: false, error: 'Access denied: not authorized for admin access' }
-    }
-
-    console.info(`User ${email} authenticated successfully as superadmin`)
-    return { success: true }
-  })
+  return { success: true }
+})
 
 export const Route = createFileRoute('/auth/callback')({
   validateSearch: z.object({
-    code: z.string().optional(),
     error: z.string().optional(),
     error_description: z.string().optional(),
   }),
@@ -56,12 +34,7 @@ export const Route = createFileRoute('/auth/callback')({
       })
     }
 
-    if (!search.code) {
-      throw redirect({ to: '/login' })
-    }
-
-    console.log('Exchanging code for session...')
-    const result = await exchangeCodeFn({ data: { code: search.code } })
+    const result = await validateAdminSessionFn()
     if (!result.success) {
       throw redirect({
         to: '/login',

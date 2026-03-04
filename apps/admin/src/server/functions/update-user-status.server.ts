@@ -1,5 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
-import { serverEnv } from '@valguide/core/env/server'
+import { authSessions } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
 import { profiles } from '@valguide/core/features/profiles/schema'
 import { eq } from 'drizzle-orm'
@@ -33,12 +32,7 @@ export async function updateUserStatus(dbClient: DB, input: UpdateUserStatusInpu
       })
       .where(eq(profiles.id, userId))
 
-    if (serverEnv.SUPABASE_SECRET_KEY) {
-      const adminClient = createClient(serverEnv.SUPABASE_URL, serverEnv.SUPABASE_SECRET_KEY, {
-        auth: { autoRefreshToken: false, persistSession: false },
-      })
-      await adminClient.auth.admin.signOut(userId, 'global')
-    }
+    await dbClient.delete(authSessions).where(eq(authSessions.userId, userId))
   }
 
   return { success: true }

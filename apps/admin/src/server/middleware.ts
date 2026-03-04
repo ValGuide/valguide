@@ -1,26 +1,20 @@
 import { createMiddleware } from '@tanstack/react-start'
 import { NotFoundError } from '@valguide/features/auth/authorization'
-import { createAdminClient } from './supabase'
+import { getAdminAuthSession } from './admin-auth.server'
 import { isSuperadmin } from './utils/superadmin'
 
-// TODO: fix /en, etc. apparently not working due to this
 export const adminMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
-  const supabase = await createAdminClient()
-  const { data } = await supabase.auth.getClaims()
+  const session = await getAdminAuthSession()
+  const user = session?.user
 
-  if (!data?.claims?.sub) {
+  if (!user?.id) {
     throw new NotFoundError('Admin user not authenticated')
   }
 
-  const email = data.claims.email as string | undefined
+  const email = user.email as string | undefined
   if (!isSuperadmin(email)) {
     throw new NotFoundError('Superadmin access required')
   }
 
-  const user = {
-    id: data.claims.sub,
-    email: data.claims.email as string,
-  }
-
-  return next({ context: { user } })
+  return next({ context: { user: { id: user.id, email: user.email ?? '' } } })
 })

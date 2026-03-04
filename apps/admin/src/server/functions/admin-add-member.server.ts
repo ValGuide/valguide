@@ -1,7 +1,7 @@
+import { authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
-import { type OrgRole, organization, organizationMember } from '@valguide/core/features/orgs/schema'
+import { member, type OrgRole, organization } from '@valguide/core/features/orgs/schema'
 import { and, eq } from 'drizzle-orm'
-import { authUsers } from 'drizzle-orm/supabase'
 
 export type AddMemberInput = {
   orgNanoId: string
@@ -37,9 +37,9 @@ export async function adminAddMember(dbClient: DB, input: AddMemberInput): Promi
 
   // Check if already a member
   const existing = await dbClient
-    .select({ id: organizationMember.id })
-    .from(organizationMember)
-    .where(and(eq(organizationMember.organizationId, org.id), eq(organizationMember.userId, user.id)))
+    .select({ id: member.id })
+    .from(member)
+    .where(and(eq(member.organizationId, org.id), eq(member.userId, user.id)))
     .limit(1)
 
   if (existing[0])
@@ -49,7 +49,7 @@ export async function adminAddMember(dbClient: DB, input: AddMemberInput): Promi
     }
 
   // Insert member directly
-  await dbClient.insert(organizationMember).values({
+  await dbClient.insert(member).values({
     organizationId: org.id,
     userId: user.id,
     role: input.role,

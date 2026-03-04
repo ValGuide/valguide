@@ -10,15 +10,15 @@ type EnvOptions<T extends string> = {
   envFiles: Record<T, string>
 }
 
-const supabaseOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
-  name: 'supabase',
-  prefix: '--sb:',
+const databaseOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
+  name: 'database',
+  prefix: '--db:',
   values: ['dev', 'local', 'prod'] as const,
   defaultValue: 'dev' as const,
   envFiles: {
-    local: '.env.supabase.local',
-    dev: '.env.supabase.dev',
-    prod: '.env.supabase.prod',
+    local: '.env.neon.local',
+    dev: '.env.neon.dev',
+    prod: '.env.neon.prod',
   },
 }
 
@@ -44,6 +44,18 @@ const cloudflareOptions: EnvOptions<'dev' | 'prod'> = {
   },
 }
 
+const authOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
+  name: 'auth',
+  prefix: '--auth:',
+  values: ['local', 'dev', 'prod'] as const,
+  defaultValue: 'local' as const,
+  envFiles: {
+    local: '.env.auth.local',
+    dev: '.env.auth.dev',
+    prod: '.env.auth.prod',
+  },
+}
+
 const defaultOptions: EnvOptions<'all'> = {
   name: 'defaults',
   prefix: '--defaults:',
@@ -54,7 +66,7 @@ const defaultOptions: EnvOptions<'all'> = {
   },
 }
 
-const options: EnvOptions<string>[] = [supabaseOptions, resendOptions, cloudflareOptions, defaultOptions]
+const options: EnvOptions<string>[] = [databaseOptions, resendOptions, cloudflareOptions, authOptions, defaultOptions]
 
 type EnvAndFile<T> = {
   name: string
@@ -62,7 +74,9 @@ type EnvAndFile<T> = {
   file: string
 }
 
+const PRINT_ENV_FLAG = '--print-env'
 const args = process.argv.slice(2)
+const printEnv = args.includes(PRINT_ENV_FLAG)
 
 const extractEnv = <T extends string>({
   name,
@@ -85,7 +99,9 @@ console.info(`\n${borderBox(...logEnvs(...envs))}\n`)
 
 const envCommand = `dotenvx run ${envs.map(({ file }) => `--env-file=${__dirname}/../.secrets/${file}`).join(' ')} -- `
 const runCommand = args
-  .filter((arg) => !options.map((option) => option.prefix).some((prefix) => arg.startsWith(prefix)))
+  .filter(
+    (arg) => arg !== PRINT_ENV_FLAG && !options.map((option) => option.prefix).some((prefix) => arg.startsWith(prefix)),
+  )
   .join(' ')
 
 if (!runCommand) {
@@ -94,5 +110,17 @@ if (!runCommand) {
 }
 
 const command = `${envCommand}${runCommand}`
+
+if (printEnv) {
+  const envOutput = execSync(`${envCommand}env`, { encoding: 'utf-8' })
+  console.info(chalk.cyan('\n📋 Loaded environment variables:\n'))
+  for (const line of envOutput.trim().split('\n').sort()) {
+    const [key] = line.split('=', 1)
+    const value = line.slice(key.length + 1)
+    console.info(`  ${chalk.green(key)}=${chalk.dim(value)}`)
+  }
+  console.info()
+}
+
 console.info(chalk.yellow(`Running command '${command}'`))
 execSync(command, { stdio: 'inherit' })

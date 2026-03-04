@@ -874,6 +874,7 @@
       "title": "Unir a {teamName}",
       "description": "Ti es vegnì envidà da unir a <strong1>{teamName}</strong1> sin ValGuide.",
       "sentTo": "Questa invitaziun è vegnida tramessa a",
+      "signInButton": "S'annunziar per acceptar l'invitaziun",
       "sendCode": "Trametter code da verificaziun",
       "codeSent": "Nus avain tramess in code da 6 cifras a {email}",
       "verify": "Verifitgar & unir al team",

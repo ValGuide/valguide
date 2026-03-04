@@ -31,6 +31,9 @@ on:
       deploy-www:
         required: true
         type: string
+      deploy-workers:
+        required: true
+        type: string
       result-app:
         required: true
         type: string
@@ -50,6 +53,9 @@ on:
         required: true
         type: string
       result-www:
+        required: true
+        type: string
+      result-workers:
         required: true
         type: string
       release-url:
@@ -83,6 +89,7 @@ jobs:
           DEPLOY_LINKS: ${{ inputs.deploy-links }}
           DEPLOY_STORYBOOK: ${{ inputs.deploy-storybook }}
           DEPLOY_WWW: ${{ inputs.deploy-www }}
+          DEPLOY_WORKERS: ${{ inputs.deploy-workers }}
           RESULT_APP: ${{ inputs.result-app }}
           RESULT_STUDIO: ${{ inputs.result-studio }}
           RESULT_ADMIN: ${{ inputs.result-admin }}
@@ -90,6 +97,7 @@ jobs:
           RESULT_LINKS: ${{ inputs.result-links }}
           RESULT_STORYBOOK: ${{ inputs.result-storybook }}
           RESULT_WWW: ${{ inputs.result-www }}
+          RESULT_WORKERS: ${{ inputs.result-workers }}
         run: |
           SHA7="${GITHUB_SHA:0:7}"
           ENV_UPPER=$(echo "$ENV" | tr '[:lower:]' '[:upper:]')
@@ -121,12 +129,17 @@ jobs:
           add_line() {
             local should=$1 result=$2 display_name=$3
             if [ "$should" != "true" ]; then return; fi
-            local url
+            local url suffix
             url=$(url_for "${display_name}-${ENV}")
-            if [ "$result" = "success" ]; then
-              LINES="${LINES}✅  \`${display_name}\`  <${url}|${url#https://}>\n"
+            if [ -n "$url" ]; then
+              suffix="  <${url}|${url#https://}>"
             else
-              LINES="${LINES}❌  \`${display_name}\`  <${url}|${url#https://}>\n"
+              suffix=""
+            fi
+            if [ "$result" = "success" ]; then
+              LINES="${LINES}✅  \`${display_name}\`${suffix}\n"
+            else
+              LINES="${LINES}❌  \`${display_name}\`${suffix}\n"
               FAIL_NAMES="${FAIL_NAMES}${display_name}, "
               FAIL_COUNT=$((FAIL_COUNT + 1))
             fi
@@ -139,6 +152,7 @@ jobs:
           add_line "$DEPLOY_LINKS"     "$RESULT_LINKS"     "links"
           add_line "$DEPLOY_STORYBOOK" "$RESULT_STORYBOOK" "storybook"
           add_line "$DEPLOY_WWW"       "$RESULT_WWW"       "www"
+          add_line "$DEPLOY_WORKERS"   "$RESULT_WORKERS"   "workers"
 
           # Build header (rich text for body, plain for notification fallback)
           if [ "$FAIL_COUNT" -gt 0 ]; then

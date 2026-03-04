@@ -18,10 +18,10 @@ import {
   tourAsset,
   tourAssetDraft,
   tourLocaleDraft,
-  tourSettingsDraft,
   tourSettings,
-  tourStopDraft,
+  tourSettingsDraft,
   tourStop,
+  tourStopDraft,
 } from '../schema'
 import type { AssetItem, PublishedStopTranslation, StopWithAssets, TourWithStopsAndAssets } from './types'
 

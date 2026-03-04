@@ -1,0 +1,59 @@
+# Reusable workflow: deploy all Cloudflare Workers.
+#
+# Loops over workers/*/ directories and runs deploy/deploy:dev
+# for each one. Adding a new worker only requires creating the
+# directory with a package.json that has deploy/deploy:dev scripts.
+#
+# Triggered via [build workers] or [build all] in the commit message.
+
+name: _deploy-workers
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: "Environment (dev or prod)"
+      timestamp:
+        required: true
+        type: string
+        description: "Deploy timestamp (shared across all jobs)"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    environment:
+      name: workers-${{ inputs.environment }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Deploy all workers
+        run: |
+          for dir in workers/*/; do
+            WORKER=$(basename "$dir")
+            echo "::group::Deploying ${WORKER}"
+            if [ "${{ inputs.environment }}" = "prod" ]; then
+              pnpm --filter "@valguide/${WORKER}" run deploy
+            else
+              pnpm --filter "@valguide/${WORKER}" run deploy:dev
+            fi
+            echo "::endgroup::"
+          done
+
+      - uses: ./.github/actions/create-app-tag
+        with:
+          app-name: workers
+          environment: ${{ inputs.environment }}
+          timestamp: ${{ inputs.timestamp }}

@@ -1,5 +1,5 @@
-import { Image } from '@unpic/react'
 import { Button } from '@valguide/core/ui/components/button'
+import { Image } from '@valguide/core/ui/components/image'
 import { Music, Pause, Play, SkipForward } from 'lucide-react'
 import { useCurrentStop, useHasNext, useIsPlaying, usePlayerActions, useProgress } from '../store/use-player-store'
 
@@ -35,7 +35,9 @@ export function MiniPlayer({ className = '', onExpand }: MiniPlayerProps) {
             <Image
               src={currentStop.coverImageUrl}
               alt={currentStop.title}
-              layout="fullWidth"
+              layout="constrained"
+              width={40}
+              height={40}
               className="w-full h-full object-cover"
             />
           ) : (

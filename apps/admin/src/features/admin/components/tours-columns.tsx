@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { Button } from '@valguide/ui/components/button'
 import {
   DropdownMenu,
@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
+import { Image } from '@valguide/ui/components/image'
 import { ArrowUpDown, ImageOff, Loader2, MoreHorizontal } from 'lucide-react'
 import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { TourStatusBadge } from './tour-status-badge'
@@ -24,11 +25,16 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
     cell: ({ row }) => {
       const storagePath = row.original.coverStoragePath
       return storagePath ? (
-        <img
-          src={`${getImageKitUrl(storagePath)}?tr=w-64,h-40,fo-auto`}
-          alt=""
-          className="size-10 rounded object-cover"
-        />
+        <div className="size-10 overflow-hidden rounded bg-muted">
+          <Image
+            src={getAssetImageUrl({ storagePath })}
+            alt=""
+            layout="constrained"
+            width={40}
+            height={40}
+            className="h-full w-full object-cover"
+          />
+        </div>
       ) : (
         <div className="flex size-10 items-center justify-center rounded bg-muted">
           <ImageOff className="size-4 text-muted-foreground" />

@@ -66,7 +66,7 @@ export const TeamInviteEmail = ({ inviteLink, teamName, inviterName, logoUrl }: 
 }
 
 TeamInviteEmail.PreviewProps = {
-  inviteLink: 'https://valguide.com/join-team?token=123',
+  inviteLink: 'https://valguide.com/join-team?invitationId=123',
   teamName: 'Acme Corp',
   inviterName: 'Alice',
   logoUrl: '/static/demo-logo.png',

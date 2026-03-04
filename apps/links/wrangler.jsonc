@@ -13,9 +13,7 @@
   },
 
   // Native KV binding — replaces Upstash Redis for short link caching
-  "kv_namespaces": [
-    { "binding": "LINKS_KV", "id": "REPLACE_WITH_LINKS_KV_ID_PROD" }
-  ],
+  "kv_namespaces": [{ "binding": "LINKS_KV", "id": "REPLACE_WITH_LINKS_KV_ID_PROD" }],
 
   // Production custom domain
   "routes": [
@@ -28,10 +26,11 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
-    "SUPABASE_URL": "https://iqqbsfadyyokridklekh.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-    "SUPABASE_COOKIE_DOMAIN": ".valguide.com",
-    "APP_BASE_URL": "https://app.valguide.com"
+    "APP_BASE_URL": "https://app.valguide.com",
+    "BETTER_AUTH_URL": "https://links.valguide.com",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://links.valguide.com",
+    "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
+    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth"
   },
 
   // Dev environment (links.valguide.dev)
@@ -44,15 +43,14 @@
         { "pattern": "links.valguide.dev", "custom_domain": true },
         { "pattern": "l.valguide.dev", "custom_domain": true }
       ],
-      "kv_namespaces": [
-        { "binding": "LINKS_KV", "id": "REPLACE_WITH_LINKS_KV_ID_DEV" }
-      ],
+      "kv_namespaces": [{ "binding": "LINKS_KV", "id": "REPLACE_WITH_LINKS_KV_ID_DEV" }],
       "vars": {
         "NODE_ENV": "production",
-        "SUPABASE_URL": "https://zdmcpbqroqowlflvztks.supabase.co",
-        "SUPABASE_PUBLISHABLE_KEY": "<public-supabase-publishable-key>",
-        "SUPABASE_COOKIE_DOMAIN": ".valguide.dev",
         "APP_BASE_URL": "https://app.valguide.dev",
+        "BETTER_AUTH_URL": "https://links.valguide.dev",
+        "BETTER_AUTH_TRUSTED_ORIGINS": "https://links.valguide.dev",
+        "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",
+        "BETTER_AUTH_COOKIE_PREFIX": "valguide-dev-auth",
         "BLOCK_ROBOTS": "true"
       }
     }

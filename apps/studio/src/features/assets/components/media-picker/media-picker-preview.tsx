@@ -1,8 +1,8 @@
-import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
+import { Image } from '@valguide/ui/components/image'
 import { Music, Trash2, Video } from 'lucide-react'
 
 export type MediaPickerPreviewProps = {

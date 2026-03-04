@@ -1,5 +1,5 @@
-import { Image } from '@unpic/react'
 import type { AssetItem } from '@valguide/core/features/tours/public/types'
+import { Image } from '@valguide/ui/components/image'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
 import { ImageGallery } from './image-gallery'

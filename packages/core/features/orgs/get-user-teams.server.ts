@@ -1,6 +1,6 @@
 import type { DB } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
-import { organizationMember } from './schema'
+import { isOrgRole, member } from './schema'
 import type { OrganizationWithRole } from './types'
 
 // =============================================================================
@@ -17,15 +17,21 @@ export type { OrganizationWithRole }
  * Get all teams a user belongs to
  */
 export async function getUserTeams(dbClient: DB, userId: string): Promise<OrganizationWithRole[]> {
-  const members = await dbClient.query.organizationMember.findMany({
-    where: eq(organizationMember.userId, userId),
+  const members = await dbClient.query.member.findMany({
+    where: eq(member.userId, userId),
     with: {
       organization: true,
     },
   })
 
-  return members.map((m) => ({
-    ...m.organization,
-    role: m.role,
-  }))
+  return members.flatMap((membership) => {
+    if (!isOrgRole(membership.role)) {
+      return []
+    }
+
+    return {
+      ...membership.organization,
+      role: membership.role,
+    }
+  })
 }

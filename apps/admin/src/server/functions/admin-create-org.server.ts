@@ -1,10 +1,10 @@
+import { authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
 import { generateUniqueOrgSlug } from '@valguide/core/features/orgs/generate-unique-org-slug.server'
-import { organization, organizationMember } from '@valguide/core/features/orgs/schema'
+import { member, organization } from '@valguide/core/features/orgs/schema'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { SLUG_PATTERN } from '@valguide/core/utils/slug'
 import { eq } from 'drizzle-orm'
-import { authUsers } from 'drizzle-orm/supabase'
 
 export type AdminCreateOrgInput = {
   name: string
@@ -53,24 +53,23 @@ export async function adminCreateOrg(dbClient: DB, input: AdminCreateOrgInput): 
 
     // Add members if provided
     if (input.members?.length) {
-      for (const member of input.members) {
+      for (const memberInput of input.members) {
         const users = await tx
           .select({ id: authUsers.id })
           .from(authUsers)
-          .where(eq(authUsers.email, member.email))
+          .where(eq(authUsers.email, memberInput.email))
           .limit(1)
 
         const user = users[0]
         if (!user) {
-          memberErrors.push(`User not found: ${member.email}`)
+          memberErrors.push(`User not found: ${memberInput.email}`)
           continue
         }
 
-        await tx.insert(organizationMember).values({
+        await tx.insert(member).values({
           organizationId: created.id,
           userId: user.id,
-          role: member.role,
-          isOwner: member.role === 'owner',
+          role: memberInput.role,
         })
       }
     }

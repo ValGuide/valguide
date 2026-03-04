@@ -1,8 +1,8 @@
-import { Image } from '@unpic/react'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
+import { Image } from '@valguide/ui/components/image'
 import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
 import { Music, Plus, Video, X } from 'lucide-react'
@@ -66,7 +66,14 @@ export function MediaPickerGallery({
       case 'image': {
         const imageUrl = getAssetImageUrl(asset)
         return imageUrl ? (
-          <Image src={imageUrl} alt={asset.fileName} layout="fullWidth" className="h-full w-full object-cover" />
+          <Image
+            src={imageUrl}
+            alt={asset.fileName}
+            layout="constrained"
+            width={200}
+            height={200}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted">
             <span className="text-xs text-muted-foreground">{t('noPreview')}</span>

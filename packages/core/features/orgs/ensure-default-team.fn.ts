@@ -2,10 +2,10 @@ import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
 import { getOrgMembership } from '../auth/authorization'
+import { setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { getOrCreateProfile } from '../profiles/get-or-create-profile.server'
 import { getUserDisplayName } from '../profiles/utils'
-import { getActiveTeamId, setActiveTeamId } from '../utils/cookies'
 import { type EnsureDefaultTeamResult, ensureDefaultTeam } from './ensure-default-team.server'
 import { organization } from './schema'
 
@@ -14,7 +14,7 @@ export type { EnsureDefaultTeamResult } from './ensure-default-team.server'
 /**
  * Ensures the current user has at least one team.
  * Creates a default team if they don't have any.
- * Also validates and sets the active-team-id cookie.
+ * Also validates and sets the active organization in the Better Auth session.
  * Idempotent - safe to call multiple times (cached via React Query).
  */
 export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
@@ -25,22 +25,21 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
 
     const defaultResult = await ensureDefaultTeam(db, context.user.id, displayName)
 
-    // Validate current cookie - if stale or missing, set to the default team
-    const currentActiveTeamId = getActiveTeamId()
-    if (!currentActiveTeamId) {
-      setActiveTeamId(defaultResult.teamId)
+    // Validate active organization from session - if stale or missing, reset to default.
+    const currentActiveOrgId = context.activeOrgId
+    if (!currentActiveOrgId) {
+      await setActiveOrganizationForCurrentSession(defaultResult.teamId)
       return defaultResult
     }
 
-    if (currentActiveTeamId === defaultResult.teamId) {
+    if (currentActiveOrgId === defaultResult.teamId) {
       return defaultResult
     }
 
-    // Cookie points to a different team - validate membership
-    const membership = await getOrgMembership(context.user.id, currentActiveTeamId)
+    // Session points to a different team - validate membership.
+    const membership = await getOrgMembership(context.user.id, currentActiveOrgId)
     if (!membership) {
-      // Cookie points to invalid team - reset to default
-      setActiveTeamId(defaultResult.teamId)
+      await setActiveOrganizationForCurrentSession(defaultResult.teamId)
       return defaultResult
     }
 
@@ -48,11 +47,11 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
     const [activeOrg] = await db
       .select({ id: organization.id, slug: organization.slug })
       .from(organization)
-      .where(eq(organization.id, currentActiveTeamId))
+      .where(eq(organization.id, currentActiveOrgId))
       .limit(1)
 
     if (!activeOrg) {
-      setActiveTeamId(defaultResult.teamId)
+      await setActiveOrganizationForCurrentSession(defaultResult.teamId)
       return defaultResult
     }
 

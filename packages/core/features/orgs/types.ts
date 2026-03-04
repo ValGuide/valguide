@@ -1,4 +1,4 @@
-import type { OrgRole, organization, organizationInvitation, organizationMember } from './schema'
+import type { invitation, member, OrgRole, organization } from './schema'
 
 // =============================================================================
 // BASE TYPES (inferred from schema)
@@ -7,11 +7,11 @@ import type { OrgRole, organization, organizationInvitation, organizationMember 
 export type Organization = typeof organization.$inferSelect
 export type NewOrganization = typeof organization.$inferInsert
 
-export type OrganizationMember = typeof organizationMember.$inferSelect
-export type NewOrganizationMember = typeof organizationMember.$inferInsert
+export type OrganizationMember = typeof member.$inferSelect
+export type NewOrganizationMember = typeof member.$inferInsert
 
-export type OrganizationInvitation = typeof organizationInvitation.$inferSelect
-export type NewOrganizationInvitation = typeof organizationInvitation.$inferInsert
+export type OrganizationInvitation = typeof invitation.$inferSelect
+export type NewOrganizationInvitation = typeof invitation.$inferInsert
 
 // =============================================================================
 // COMPOSITE TYPES
@@ -19,7 +19,7 @@ export type NewOrganizationInvitation = typeof organizationInvitation.$inferInse
 
 /** Organization with the user's role in it */
 export type OrganizationWithRole = Organization & {
-  role: OrganizationMember['role']
+  role: OrgRole
 }
 
 export type { OrgRole }
@@ -33,7 +33,6 @@ export interface TeamMember {
   avatar?: string | null
   role: OrgRole
   joinedAt: string
-  isOwner?: boolean
 }
 
 export interface PendingInvitation {

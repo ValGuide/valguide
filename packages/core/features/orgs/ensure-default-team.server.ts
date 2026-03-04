@@ -1,7 +1,7 @@
 import type { DB } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
 import { createTeam } from './create-team.server'
-import { organizationMember } from './schema'
+import { member } from './schema'
 
 // =============================================================================
 // TYPES
@@ -27,8 +27,8 @@ export async function ensureDefaultTeam(
   userName?: string,
 ): Promise<EnsureDefaultTeamResult> {
   // Check if user already has any team
-  const existingMembership = await dbClient.query.organizationMember.findFirst({
-    where: eq(organizationMember.userId, userId),
+  const existingMembership = await dbClient.query.member.findFirst({
+    where: eq(member.userId, userId),
     with: { organization: true },
   })
 

@@ -43,8 +43,7 @@ export const Public: Story = {
   args: {
     variant: 'public',
     invite: mockInvite,
-    onSendOtp: fn(),
-    onVerifyOtp: fn(),
+    loginNext: '/join-team?invitationId=invitation-123',
   },
 }
 

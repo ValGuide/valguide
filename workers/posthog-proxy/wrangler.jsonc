@@ -5,16 +5,12 @@
   "main": "src/index.ts",
 
   // Production: e.valguide.com
-  "routes": [
-    { "pattern": "e.valguide.com", "custom_domain": true }
-  ],
+  "routes": [{ "pattern": "e.valguide.com", "custom_domain": true }],
 
   // Dev environment: e.valguide.dev
   "env": {
     "dev": {
-      "routes": [
-        { "pattern": "e.valguide.dev", "custom_domain": true }
-      ]
+      "routes": [{ "pattern": "e.valguide.dev", "custom_domain": true }]
     }
   }
 }

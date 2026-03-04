@@ -1,9 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { db } from '@valguide/core/features/db'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { z } from 'zod'
 import { requireOrgRole } from '../auth/authorization'
+import { auth } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { removeMember } from './remove-member.server'
 
 const removeMemberSchema = z.object({
   memberId: z.string(),
@@ -16,5 +16,11 @@ export const removeMemberFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireOrgRole(data.teamId, context.user.id, 'admin')
 
-    await removeMember(db, data.memberId)
+    await auth.api.removeMember({
+      headers: getRequestHeaders(),
+      body: {
+        organizationId: data.teamId,
+        memberIdOrEmail: data.memberId,
+      },
+    })
   })

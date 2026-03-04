@@ -4,4 +4,3 @@ packages:
   - "packages/configs/*"
   - "workers/*"
   - "scripts/seed-studio"
-  - "supabase/*"

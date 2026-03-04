@@ -2,12 +2,12 @@ import { z } from 'zod'
 
 export const serverEnvSchema = z.object({
   DATABASE_URL: z.string().min(1, 'Database URL is required'),
-  SUPABASE_URL: z.string().url('Invalid Supabase URL'),
-  SUPABASE_PUBLISHABLE_KEY: z.string({
-    required_error: 'Supabase publishable key is required',
-  }),
-  SUPABASE_SECRET_KEY: z.string().optional(),
-  SUPABASE_COOKIE_DOMAIN: z.string().optional(),
+  BETTER_AUTH_SECRET: z.string().min(1, 'Better Auth secret is required'),
+  BETTER_AUTH_URL: z.string().optional().default(''),
+  BETTER_AUTH_TRUSTED_ORIGINS: z.string().optional().default(''),
+  BETTER_AUTH_COOKIE_DOMAIN: z.string().optional().default(''),
+  BETTER_AUTH_COOKIE_PREFIX: z.string().optional().default('valguide-auth'),
+  BETTER_AUTH_DEV_OTP: z.string().optional().default(''),
   DRIZZLE_LOG_ENABLED: z
     .string()
     .optional()
@@ -18,13 +18,6 @@ export const serverEnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_BASE_URL: z.string().optional().default('https://app.valguide.com'),
   VITE_STUDIO_URL: z.string().optional().default('https://studio.valguide.com'),
-  ADMIN_ALLOWED_EMAILS: z
-    .string()
-    .optional()
-    .default('curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example'),
-  ADMIN_COOKIE_DOMAIN: z.string().optional(),
-  ADMIN_BASE_URL: z.string().optional().default('https://admin-local.dev'),
-  SLACK_TEAM_ID: z.string().optional(),
 })
 
 export const clientEnvSchema = z.object({
@@ -40,6 +33,7 @@ export const clientEnvSchema = z.object({
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),
   VITE_STUDIO_SUPPORT_EMAIL: z.string().optional().default('support@valguide.com'),
   VITE_R2_PUBLIC_URL: z.string().optional().default('https://assets.valguide.com'),
+  VITE_IMAGE_PROVIDER: z.enum(['cloudflare', 'imagekit']).optional().default('imagekit'),
 })
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>

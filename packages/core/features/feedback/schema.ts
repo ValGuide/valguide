@@ -1,5 +1,5 @@
 import { integer, pgSchema, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { authUsers } from 'drizzle-orm/supabase'
+import { authUsers } from '../auth/schema'
 import { organization } from '../orgs/schema'
 
 const studioSchema = pgSchema('studio')
@@ -14,7 +14,7 @@ export const feedback = studioSchema.table('feedback', {
   message: text('message').notNull(),
 
   // Screenshot (optional)
-  screenshotUrl: text('screenshot_url'), // Public Supabase URL
+  screenshotUrl: text('screenshot_url'), // Public URL
   screenshotPath: text('screenshot_path'), // Storage path like "studio-feedback/userId/file.png"
 
   // Context

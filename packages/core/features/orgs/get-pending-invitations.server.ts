@@ -1,15 +1,15 @@
 import type { DB } from '@valguide/core/features/db'
-import { and, desc, eq, gt, isNull } from 'drizzle-orm'
-import { authUsers } from 'drizzle-orm/supabase'
+import { and, desc, eq, gt, isNull, or } from 'drizzle-orm'
+import { authUsers } from '../auth/schema'
 import { profiles } from '../profiles/schema'
-import { organizationInvitation } from './schema'
+import { invitation } from './schema'
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
 export type PendingInvitationWithDetails = {
-  invitation: typeof organizationInvitation.$inferSelect
+  invitation: typeof invitation.$inferSelect
   inviter: typeof authUsers.$inferSelect | null
   inviterProfile: typeof profiles.$inferSelect | null
 }
@@ -24,20 +24,19 @@ export type PendingInvitationWithDetails = {
 export async function getPendingInvitations(dbClient: DB, teamId: string): Promise<PendingInvitationWithDetails[]> {
   return dbClient
     .select({
-      invitation: organizationInvitation,
+      invitation,
       inviter: authUsers,
       inviterProfile: profiles,
     })
-    .from(organizationInvitation)
-    .leftJoin(authUsers, eq(organizationInvitation.invitedBy, authUsers.id))
-    .leftJoin(profiles, eq(organizationInvitation.invitedBy, profiles.id))
+    .from(invitation)
+    .leftJoin(authUsers, eq(invitation.inviterId, authUsers.id))
+    .leftJoin(profiles, eq(invitation.inviterId, profiles.id))
     .where(
       and(
-        eq(organizationInvitation.organizationId, teamId),
-        gt(organizationInvitation.expiresAt, new Date()),
-        isNull(organizationInvitation.acceptedAt),
-        isNull(organizationInvitation.canceledAt),
+        eq(invitation.organizationId, teamId),
+        eq(invitation.status, 'pending'),
+        or(isNull(invitation.expiresAt), gt(invitation.expiresAt, new Date())),
       ),
     )
-    .orderBy(desc(organizationInvitation.createdAt))
+    .orderBy(desc(invitation.createdAt))
 }

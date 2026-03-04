@@ -20,7 +20,6 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiUploadPartRouteImport } from './routes/api.upload-part'
 import { Route as ApiUploadRouteImport } from './routes/api.upload'
-import { Route as ApiDevAuthRouteImport } from './routes/api.dev-auth'
 import { Route as MainSupportRouteImport } from './routes/_main/support'
 import { Route as MainSettingsRouteImport } from './routes/_main/settings'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
@@ -33,6 +32,7 @@ import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainToursIndexRouteImport } from './routes/_main/tours.index'
 import { Route as MainStopsIndexRouteImport } from './routes/_main/stops.index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 import { Route as MainToursNewRouteImport } from './routes/_main/tours.new'
 import { Route as MainToursNanoIdRouteImport } from './routes/_main/tours.$nanoId'
 import { Route as MainStopsNanoIdRouteImport } from './routes/_main/stops.$nanoId'
@@ -96,11 +96,6 @@ const ApiUploadRoute = ApiUploadRouteImport.update({
   path: '/api/upload',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDevAuthRoute = ApiDevAuthRouteImport.update({
-  id: '/api/dev-auth',
-  path: '/api/dev-auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MainSupportRoute = MainSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -160,6 +155,11 @@ const MainStopsIndexRoute = MainStopsIndexRouteImport.update({
   id: '/stops/',
   path: '/stops/',
   getParentRoute: () => MainRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MainToursNewRoute = MainToursNewRouteImport.update({
   id: '/tours/new',
@@ -226,12 +226,12 @@ export interface FileRoutesByFullPath {
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
-  '/api/dev-auth': typeof ApiDevAuthRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/tours/new': typeof MainToursNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops/': typeof MainStopsIndexRoute
   '/tours/': typeof MainToursIndexRoute
   '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
@@ -259,10 +259,10 @@ export interface FileRoutesByTo {
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
-  '/api/dev-auth': typeof ApiDevAuthRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/tours/new': typeof MainToursNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops': typeof MainStopsIndexRoute
   '/tours': typeof MainToursIndexRoute
   '/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
@@ -293,12 +293,12 @@ export interface FileRoutesById {
   '/_main/profile': typeof MainProfileRoute
   '/_main/settings': typeof MainSettingsRoute
   '/_main/support': typeof MainSupportRoute
-  '/api/dev-auth': typeof ApiDevAuthRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/_main/tours/new': typeof MainToursNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/_main/stops/': typeof MainStopsIndexRoute
   '/_main/tours/': typeof MainToursIndexRoute
   '/_main/stops/$nanoId/edit': typeof MainStopsNanoIdEditRoute
@@ -328,12 +328,12 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/support'
-    | '/api/dev-auth'
     | '/api/upload'
     | '/api/upload-part'
     | '/stops/$nanoId'
     | '/tours/$nanoId'
     | '/tours/new'
+    | '/api/auth/$'
     | '/stops/'
     | '/tours/'
     | '/stops/$nanoId/edit'
@@ -361,10 +361,10 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/support'
-    | '/api/dev-auth'
     | '/api/upload'
     | '/api/upload-part'
     | '/tours/new'
+    | '/api/auth/$'
     | '/stops'
     | '/tours'
     | '/stops/$nanoId/edit'
@@ -394,12 +394,12 @@ export interface FileRouteTypes {
     | '/_main/profile'
     | '/_main/settings'
     | '/_main/support'
-    | '/api/dev-auth'
     | '/api/upload'
     | '/api/upload-part'
     | '/_main/stops/$nanoId'
     | '/_main/tours/$nanoId'
     | '/_main/tours/new'
+    | '/api/auth/$'
     | '/_main/stops/'
     | '/_main/tours/'
     | '/_main/stops/$nanoId/edit'
@@ -420,9 +420,9 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
-  ApiDevAuthRoute: typeof ApiDevAuthRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ApiUploadPartRoute: typeof ApiUploadPartRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -502,13 +502,6 @@ declare module '@tanstack/react-router' {
       path: '/api/upload'
       fullPath: '/api/upload'
       preLoaderRoute: typeof ApiUploadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/dev-auth': {
-      id: '/api/dev-auth'
-      path: '/api/dev-auth'
-      fullPath: '/api/dev-auth'
-      preLoaderRoute: typeof ApiDevAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_main/support': {
@@ -594,6 +587,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/stops/'
       preLoaderRoute: typeof MainStopsIndexRouteImport
       parentRoute: typeof MainRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_main/tours/new': {
       id: '/_main/tours/new'
@@ -749,9 +749,9 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
-  ApiDevAuthRoute: ApiDevAuthRoute,
   ApiUploadRoute: ApiUploadRoute,
   ApiUploadPartRoute: ApiUploadPartRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

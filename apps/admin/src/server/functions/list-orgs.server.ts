@@ -1,6 +1,6 @@
 import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import type { DB } from '@valguide/core/features/db'
-import { organization, organizationMember } from '@valguide/core/features/orgs/schema'
+import { member, organization } from '@valguide/core/features/orgs/schema'
 import { tour } from '@valguide/core/features/tours/schema'
 import { and, asc, count, desc, eq, ilike, isNull } from 'drizzle-orm'
 
@@ -40,10 +40,7 @@ export async function listOrgs(dbClient: DB, input: ListOrgsInput): Promise<List
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  const memberCountSubquery = dbClient.$count(
-    organizationMember,
-    eq(organizationMember.organizationId, organization.id),
-  )
+  const memberCountSubquery = dbClient.$count(member, eq(member.organizationId, organization.id))
 
   const tourCountSubquery = dbClient.$count(tour, and(eq(tour.organizationId, organization.id), isNull(tour.deletedAt)))
 

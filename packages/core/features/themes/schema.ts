@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
 import { index, jsonb, numeric, pgSchema, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
-import { authUsers } from 'drizzle-orm/supabase'
+import { authUsers } from '../auth/schema'
 import { organization } from '../orgs/schema'
 import { type ThemeColors, type ThemeFonts, themePresets } from './types'
 

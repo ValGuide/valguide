@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
-import { setActiveTeamId } from '@valguide/features/utils/cookies.ts'
 import { z } from 'zod'
+import { setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type CreateTeamResult, createTeam } from './create-team.server'
 
@@ -16,6 +16,6 @@ export const createTeamFn = createServerFn({ method: 'POST' })
   .inputValidator(createTeamSchema)
   .handler(async ({ context, data }): Promise<CreateTeamResult> => {
     const { team, orgSlug } = await createTeam(db, data.name, context.user.id)
-    setActiveTeamId(team.id)
+    await setActiveOrganizationForCurrentSession(team.id)
     return { success: true, team, orgSlug }
   })
