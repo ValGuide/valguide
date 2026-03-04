@@ -20,7 +20,6 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiUploadPartRouteImport } from './routes/api.upload-part'
 import { Route as ApiUploadRouteImport } from './routes/api.upload'
-import { Route as ApiDevAuthRouteImport } from './routes/api.dev-auth'
 import { Route as MainSupportRouteImport } from './routes/_main/support'
 import { Route as MainSettingsRouteImport } from './routes/_main/settings'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
@@ -95,11 +94,6 @@ const ApiUploadPartRoute = ApiUploadPartRouteImport.update({
 const ApiUploadRoute = ApiUploadRouteImport.update({
   id: '/api/upload',
   path: '/api/upload',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDevAuthRoute = ApiDevAuthRouteImport.update({
-  id: '/api/dev-auth',
-  path: '/api/dev-auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MainSupportRoute = MainSupportRouteImport.update({
@@ -232,7 +226,6 @@ export interface FileRoutesByFullPath {
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
-  '/api/dev-auth': typeof ApiDevAuthRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
@@ -266,7 +259,6 @@ export interface FileRoutesByTo {
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
-  '/api/dev-auth': typeof ApiDevAuthRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/tours/new': typeof MainToursNewRoute
@@ -301,7 +293,6 @@ export interface FileRoutesById {
   '/_main/profile': typeof MainProfileRoute
   '/_main/settings': typeof MainSettingsRoute
   '/_main/support': typeof MainSupportRoute
-  '/api/dev-auth': typeof ApiDevAuthRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
@@ -337,7 +328,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/support'
-    | '/api/dev-auth'
     | '/api/upload'
     | '/api/upload-part'
     | '/stops/$nanoId'
@@ -371,7 +361,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/support'
-    | '/api/dev-auth'
     | '/api/upload'
     | '/api/upload-part'
     | '/tours/new'
@@ -405,7 +394,6 @@ export interface FileRouteTypes {
     | '/_main/profile'
     | '/_main/settings'
     | '/_main/support'
-    | '/api/dev-auth'
     | '/api/upload'
     | '/api/upload-part'
     | '/_main/stops/$nanoId'
@@ -432,7 +420,6 @@ export interface RootRouteChildren {
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
-  ApiDevAuthRoute: typeof ApiDevAuthRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ApiUploadPartRoute: typeof ApiUploadPartRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -515,13 +502,6 @@ declare module '@tanstack/react-router' {
       path: '/api/upload'
       fullPath: '/api/upload'
       preLoaderRoute: typeof ApiUploadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/dev-auth': {
-      id: '/api/dev-auth'
-      path: '/api/dev-auth'
-      fullPath: '/api/dev-auth'
-      preLoaderRoute: typeof ApiDevAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_main/support': {
@@ -769,7 +749,6 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
-  ApiDevAuthRoute: ApiDevAuthRoute,
   ApiUploadRoute: ApiUploadRoute,
   ApiUploadPartRoute: ApiUploadPartRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

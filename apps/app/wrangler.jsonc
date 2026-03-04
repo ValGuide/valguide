@@ -23,7 +23,11 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
-    "APP_BASE_URL": "https://app.valguide.com"
+    "APP_BASE_URL": "https://app.valguide.com",
+    "BETTER_AUTH_URL": "https://app.valguide.com",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://app.valguide.com,https://studio.valguide.com",
+    "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
+    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth"
   },
 
   // Dev environment (app.valguide.dev)
@@ -37,6 +41,10 @@
       "vars": {
         "NODE_ENV": "production",
         "APP_BASE_URL": "https://app.valguide.dev",
+        "BETTER_AUTH_URL": "https://app.valguide.dev",
+        "BETTER_AUTH_TRUSTED_ORIGINS": "https://app.valguide.dev,https://studio.valguide.dev",
+        "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",
+        "BETTER_AUTH_COOKIE_PREFIX": "valguide-dev-auth",
         "BLOCK_ROBOTS": "true"
       }
     }

@@ -26,6 +26,8 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
+    "BETTER_AUTH_URL": "https://ops.val.guide",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops.val.guide",
     "ADMIN_COOKIE_DOMAIN": "ops.val.guide",
     "ADMIN_BASE_URL": "https://ops.val.guide",
     "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example"
@@ -42,6 +44,8 @@
       "kv_namespaces": [{ "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" }],
       "vars": {
         "NODE_ENV": "production",
+        "BETTER_AUTH_URL": "https://ops-dev.val.guide",
+        "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops-dev.val.guide",
         "ADMIN_COOKIE_DOMAIN": "ops-dev.val.guide",
         "ADMIN_BASE_URL": "https://ops-dev.val.guide",
         "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example",

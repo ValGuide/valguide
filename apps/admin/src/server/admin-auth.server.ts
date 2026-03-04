@@ -1,21 +1,21 @@
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { serverEnv } from '@valguide/core/env/server'
 import { createAuthInstance } from '@valguide/core/features/auth/better-auth.server'
+import { adminEnv } from './env'
 
-const sharedTrustedOrigins = serverEnv.BETTER_AUTH_TRUSTED_ORIGINS.split(',').map((origin) => origin.trim())
+const sharedTrustedOrigins = adminEnv.BETTER_AUTH_TRUSTED_ORIGINS.split(',').map((origin) => origin.trim())
 
-const adminTrustedOrigins = [serverEnv.ADMIN_BASE_URL, ...sharedTrustedOrigins].filter(
+const adminTrustedOrigins = [adminEnv.ADMIN_BASE_URL, ...sharedTrustedOrigins].filter(
   (origin, index, all) => !!origin && all.indexOf(origin) === index,
 )
 
-const adminCookieDomain = serverEnv.ADMIN_COOKIE_DOMAIN || undefined
+const adminCookieDomain = adminEnv.ADMIN_COOKIE_DOMAIN || undefined
 
 const slackSocialProviders =
-  serverEnv.SLACK_CLIENT_ID && serverEnv.SLACK_CLIENT_SECRET
+  adminEnv.SLACK_CLIENT_ID && adminEnv.SLACK_CLIENT_SECRET
     ? {
         slack: {
-          clientId: serverEnv.SLACK_CLIENT_ID,
-          clientSecret: serverEnv.SLACK_CLIENT_SECRET,
+          clientId: adminEnv.SLACK_CLIENT_ID,
+          clientSecret: adminEnv.SLACK_CLIENT_SECRET,
           getUserInfo: async (token: { accessToken?: string }) => {
             if (!token.accessToken) return null
 
@@ -25,9 +25,9 @@ const slackSocialProviders =
             const profile = await response.json()
             if (!profile.ok) return null
 
-            if (serverEnv.SLACK_TEAM_ID) {
+            if (adminEnv.SLACK_TEAM_ID) {
               const teamId = profile['https://slack.com/team_id']
-              if (teamId !== serverEnv.SLACK_TEAM_ID) {
+              if (teamId !== adminEnv.SLACK_TEAM_ID) {
                 return null
               }
             }
@@ -48,7 +48,7 @@ const slackSocialProviders =
     : undefined
 
 export const adminAuth = createAuthInstance({
-  baseURL: serverEnv.ADMIN_BASE_URL,
+  baseURL: adminEnv.ADMIN_BASE_URL,
   cookiePrefix: 'valguide-admin-auth',
   cookieDomain: adminCookieDomain,
   trustedOrigins: adminTrustedOrigins,

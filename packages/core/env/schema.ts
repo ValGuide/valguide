@@ -18,15 +18,6 @@ export const serverEnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_BASE_URL: z.string().optional().default('https://app.valguide.com'),
   VITE_STUDIO_URL: z.string().optional().default('https://studio.valguide.com'),
-  ADMIN_ALLOWED_EMAILS: z
-    .string()
-    .optional()
-    .default('curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example'),
-  ADMIN_COOKIE_DOMAIN: z.string().optional().default('val.guide'),
-  ADMIN_BASE_URL: z.string().optional().default('https://ops.val.guide'),
-  SLACK_CLIENT_ID: z.string().optional().default(''),
-  SLACK_CLIENT_SECRET: z.string().optional().default(''),
-  SLACK_TEAM_ID: z.string().optional().default(''),
 })
 
 export const clientEnvSchema = z.object({
