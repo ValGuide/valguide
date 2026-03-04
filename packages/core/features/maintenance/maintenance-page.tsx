@@ -24,7 +24,7 @@ function formatLocalizedEta(eta: string | null, locale: SupportedLocale): string
   }
 
   try {
-    return new Intl.DateTimeFormat('locale', {
+    return new Intl.DateTimeFormat(locale, {
       dateStyle: 'long',
       timeStyle: 'short',
     }).format(date)
@@ -40,7 +40,7 @@ export function MaintenancePage({ appName, locale, i18n, message, eta }: Mainten
     <main className="min-h-svh bg-background px-4 py-8 text-foreground">
       <article className="mx-auto flex min-h-[calc(100svh-4rem)] w-full max-w-2xl items-center">
         <section className="w-full rounded-2xl border border-border/80 bg-card/90 p-6 shadow-lg backdrop-blur sm:p-8">
-          <header className="mb-3 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+          <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs font-bold tracking-[0.08em] text-muted-foreground uppercase">{appName}</p>
             <Badge variant="outline" className="border-primary/30 bg-primary/10 text-primary">
               {i18n.label}
