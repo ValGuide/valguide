@@ -16,6 +16,7 @@
     "toasts",
     "domains-and-dns",
     "environment-variables",
+    "session-cookie-caching",
     "dev-auth-playwright",
     "i18n-tooling",
     "---Sections---",

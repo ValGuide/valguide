@@ -50,6 +50,14 @@ export function createAuthInstance(options: {
     inviterEmail: string
     invitationId: string
   }) => Promise<void>
+  sessionCookieCache?:
+    | {
+        enabled: false
+      }
+    | {
+        enabled: true
+        maxAge: number
+      }
 }) {
   return betterAuth({
     secret: serverEnv.BETTER_AUTH_SECRET,
@@ -69,6 +77,7 @@ export function createAuthInstance(options: {
       },
     }),
     ...(options.socialProviders ? { socialProviders: options.socialProviders } : {}),
+    ...(options.sessionCookieCache ? { session: { cookieCache: options.sessionCookieCache } } : {}),
     advanced: {
       cookiePrefix: options.cookiePrefix,
       useSecureCookies: cookieSecure,
@@ -179,6 +188,10 @@ export const auth = createAuthInstance({
   cookiePrefix: serverEnv.BETTER_AUTH_COOKIE_PREFIX,
   cookieDomain: regularCookieDomain,
   trustedOrigins: regularTrustedOrigins,
+  sessionCookieCache: {
+    enabled: true,
+    maxAge: 300,
+  },
   errorURL: '/auth/error',
   enableEmailOtp: true,
   enableOrganizationPlugin: true,
