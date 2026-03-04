@@ -96,7 +96,8 @@
     "docs:deploy:dev": "pnpm env:load pnpm --filter @valguide/docs deploy:dev",
     "storybook:deploy": "pnpm --filter @valguide/storybook deploy",
     "storybook:deploy:dev": "pnpm --filter @valguide/storybook deploy:dev",
-    "workspace:dev": "pnpm caddy:ensure && (sleep 5 && for u in studio.local.dev admin-local.dev storybook.local.dev; do open https://$u; done) & pnpm env:load turbo run dev --filter ./apps/studio --filter ./apps/admin --filter ./apps/storybook"
+    "workspace:dev": "pnpm caddy:ensure && (sleep 5 && for u in studio.local.dev admin-local.dev storybook.local.dev; do open https://$u; done) & pnpm env:load turbo run dev --filter ./apps/studio --filter ./apps/admin --filter ./apps/storybook",
+    "gh:actions": "open https://github.com/valguide/valguide/actions"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.0",
