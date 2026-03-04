@@ -9,11 +9,10 @@ type IntlProviderProps = {
   children: ReactNode
   timeZone?: string
   now?: Date
-  appName?: string
 }
 
-export function IntlProvider({ locale, messages, children, timeZone, now, appName = 'unknown' }: IntlProviderProps) {
-  const trackMissingMessage = useMissingMessageTracker({ appName, locale })
+export function IntlProvider({ locale, messages, children, timeZone, now }: IntlProviderProps) {
+  const trackMissingMessage = useMissingMessageTracker({ locale })
 
   return (
     <UseIntlProvider

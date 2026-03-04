@@ -11,7 +11,7 @@ type ProvidersProps = PropsWithChildren<{
 
 export function Providers({ locale, initialTheme, children }: ProvidersProps) {
   return (
-    <CoreProviders appName="links" locale={locale} initialTheme={initialTheme} setThemeFn={setThemeFn}>
+    <CoreProviders app="links" locale={locale} initialTheme={initialTheme} setThemeFn={setThemeFn}>
       {children}
     </CoreProviders>
   )

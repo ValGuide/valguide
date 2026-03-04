@@ -21,9 +21,9 @@ export function Providers({ locale, initialTheme, children }: ProvidersProps) {
   const messages = { ...coreMessages, ...adminMessages }
 
   return (
-    <PostHogProvider>
+    <PostHogProvider app="admin">
       <ThemeProvider initialTheme={initialTheme} setThemeFn={setThemeFn}>
-        <IntlProvider locale={locale} messages={messages} appName="admin">
+        <IntlProvider locale={locale} messages={messages}>
           {children}
           <Toaster />
         </IntlProvider>

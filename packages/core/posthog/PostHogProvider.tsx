@@ -8,13 +8,31 @@ import { flushMissingMessageQueue } from '../i18n/use-missing-message-tracker'
 
 const isPostHogEnabled = clientEnv.VITE_POSTHOG_ENABLED
 
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  return <ClientOnly>{isPostHogEnabled ? <Provider>{children}</Provider> : children}</ClientOnly>
+type PostHogProviderProps = {
+  app: string
+  children: React.ReactNode
 }
 
-function Provider({ children }: { children: React.ReactNode }) {
+export function PostHogProvider({ app, children }: PostHogProviderProps) {
+  return <ClientOnly>{isPostHogEnabled ? <Provider app={app}>{children}</Provider> : children}</ClientOnly>
+}
+
+function registerAppProperty(app: string): void {
+  posthog.register({ app })
+}
+
+function withAppProperty(properties: unknown, app: string): Record<string, unknown> {
+  if (properties && typeof properties === 'object' && !Array.isArray(properties)) {
+    return { ...(properties as Record<string, unknown>), app }
+  }
+
+  return { app }
+}
+
+function Provider({ app, children }: PostHogProviderProps) {
   useEffect(() => {
     if (posthog.__loaded) {
+      registerAppProperty(app)
       flushMissingMessageQueue()
       return
     }
@@ -33,11 +51,17 @@ function Provider({ children }: { children: React.ReactNode }) {
       disable_session_recording: true, // Prevent recording of user sessions
       person_profiles: 'identified_only', // Only create profiles for identified users
       capture_pageview: true,
+      before_send: (event) => {
+        if (!event) return event
+        event.properties = withAppProperty(event.properties, app)
+        return event
+      },
       loaded: () => {
+        registerAppProperty(app)
         flushMissingMessageQueue()
       },
     })
-  }, [])
+  }, [app])
 
   return (
     <PHProvider client={posthog}>

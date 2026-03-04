@@ -9,12 +9,10 @@ type MissingMessageError = {
 }
 
 type UseMissingMessageTrackerOptions = {
-  appName: string
   locale: SupportedLocale
 }
 
 type MissingMessageEventProperties = {
-  app_name: string
   locale: SupportedLocale
   route: string
   translation_key: string
@@ -59,7 +57,7 @@ export function flushMissingMessageQueue(): void {
   }
 }
 
-export function useMissingMessageTracker({ appName, locale }: UseMissingMessageTrackerOptions) {
+export function useMissingMessageTracker({ locale }: UseMissingMessageTrackerOptions) {
   const reportedRef = useRef<Set<string>>(new Set())
 
   return useCallback(
@@ -72,18 +70,17 @@ export function useMissingMessageTracker({ appName, locale }: UseMissingMessageT
       if (!key) return
 
       const route = window.location.pathname
-      const dedupeId = `${appName}:${locale}:${route}:${key}`
+      const dedupeId = `${locale}:${route}:${key}`
       if (reportedRef.current.has(dedupeId)) return
       reportedRef.current.add(dedupeId)
 
       captureOrQueueMissingMessage({
-        app_name: appName,
         locale,
         route,
         translation_key: key,
         error_message: error.message,
       })
     },
-    [appName, locale],
+    [locale],
   )
 }
