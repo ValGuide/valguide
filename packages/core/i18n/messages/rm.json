@@ -67,6 +67,30 @@
       "comingSoon": "Administraziun dad assets vegn prest"
     }
   },
+  "maintenance": {
+    "shared": {
+      "status": "Servetsch temporarmain betg disponibel",
+      "estimatedEnd": "Termin previsibel da finiziun: {time}",
+      "retryHint": "Emprova per plaschair anc ina giada en intginas minutas.",
+      "retryAction": "Emprovar anc ina giada"
+    },
+    "studio": {
+      "label": "Mantegniment dal studio en curs",
+      "title": "Nus essan prest puspè qua",
+      "description": "ValGuide Studio è actualmain en mantegniment per meglierar ils workflows da curatura.",
+      "reassuranceOne": "Tes sbozs e cuntegns publitgads restan segirs.",
+      "reassuranceTwo": "Ti na ston actualmain far nagina acziun.",
+      "reassuranceThree": "Ti pos emprovar da chargiar danovamain en mintga mument."
+    },
+    "app": {
+      "label": "Actualisaziun dal servetsch en curs",
+      "title": "Nus essan puspè qua bainbaud",
+      "description": "La ValGuide App vegn actualisada per meglierar tia experientscha da visita.",
+      "reassuranceOne": "Tes access a turas e cuntegns è puspè disponibel suenter il mantegniment.",
+      "reassuranceTwo": "Ti na ston actualmain far nagina acziun.",
+      "reassuranceThree": "Ti pos emprovar da chargiar danovamain en mintga mument."
+    }
+  },
   "studio": {
     "themeCustomizer": {
       "title": "Persunalisaziun dal design",

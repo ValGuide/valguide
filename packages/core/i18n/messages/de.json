@@ -67,6 +67,30 @@
       "comingSoon": "Asset-Verwaltung kommt bald"
     }
   },
+  "maintenance": {
+    "shared": {
+      "status": "Dienst vorübergehend nicht verfügbar",
+      "estimatedEnd": "Voraussichtliche Fertigstellung: {time}",
+      "retryHint": "Bitte versuchen Sie es in ein paar Minuten erneut.",
+      "retryAction": "Erneut versuchen"
+    },
+    "studio": {
+      "label": "Studio-Wartung läuft",
+      "title": "Wir sind gleich wieder da",
+      "description": "ValGuide Studio wird aktuell gewartet, um den Kurations-Workflow zu verbessern.",
+      "reassuranceOne": "Ihre Entwürfe und publizierten Inhalte bleiben sicher.",
+      "reassuranceTwo": "Sie müssen aktuell nichts tun.",
+      "reassuranceThree": "Sie können jederzeit erneut laden."
+    },
+    "app": {
+      "label": "Service-Update läuft",
+      "title": "Wir sind in Kürze zurück",
+      "description": "Die ValGuide App wird aktuell aktualisiert, um Ihr Besuchserlebnis zu verbessern.",
+      "reassuranceOne": "Ihr Tourzugang und Ihre Inhalte sind nach Abschluss der Wartung wieder verfügbar.",
+      "reassuranceTwo": "Sie müssen aktuell nichts tun.",
+      "reassuranceThree": "Sie können jederzeit erneut laden."
+    }
+  },
   "studio": {
     "themeCustomizer": {
       "title": "Design-Anpassung",

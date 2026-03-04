@@ -7,8 +7,8 @@ export const startInstance = createStart(() => ({
   defaultSsr: true,
   functionMiddleware: [errorCatchingMiddleware],
   requestMiddleware: [
-    dbRequestMiddleware,
     createMaintenanceRequestMiddleware({ app: 'studio' }),
+    dbRequestMiddleware,
     globalErrorMiddleware,
   ],
 }))

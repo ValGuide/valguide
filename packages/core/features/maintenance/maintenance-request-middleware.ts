@@ -104,6 +104,7 @@ export function createMaintenanceRequestMiddleware({
           app,
           status,
           acceptLanguageHeader: request.headers.get('accept-language'),
+          cookieHeader: request.headers.get('cookie'),
         }),
         {
           status: 503,

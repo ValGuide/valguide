@@ -10,16 +10,8 @@ const meta: Meta<typeof MaintenancePage> = {
   },
   decorators: [
     (Story) => (
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'grid',
-          placeItems: 'center',
-          padding: '24px',
-          background: 'linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%)',
-        }}
-      >
-        <div style={{ width: 'min(640px, 100%)' }}>
+      <div className="min-h-svh bg-background px-4 py-8 text-foreground">
+        <div className="mx-auto w-full max-w-2xl">
           <Story />
         </div>
       </div>
@@ -27,7 +19,8 @@ const meta: Meta<typeof MaintenancePage> = {
   ],
   args: {
     appName: 'ValGuide Studio',
-    i18n: getMaintenancePageI18n('en'),
+    locale: 'en',
+    i18n: getMaintenancePageI18n('en', 'studio'),
     message: null,
     eta: null,
   },
@@ -36,18 +29,38 @@ const meta: Meta<typeof MaintenancePage> = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {}
+export const Studio: Story = {}
 
-export const WithEta: Story = {
+export const StudioWithEta: Story = {
   args: {
     eta: '2026-03-04 18:30',
   },
 }
 
-export const WithCustomMessage: Story = {
+export const Visitors: Story = {
   args: {
     appName: 'ValGuide App',
+    locale: 'en',
+    i18n: getMaintenancePageI18n('en', 'app'),
+    message: null,
+    eta: null,
+  },
+}
+
+export const VisitorsWithCustomMessage: Story = {
+  args: {
+    appName: 'ValGuide App',
+    locale: 'en',
+    i18n: getMaintenancePageI18n('en', 'app'),
     message: 'We are deploying an update and will be back shortly.',
     eta: '2026-03-04 19:15',
+  },
+}
+
+export const StudioWithEtaGerman: Story = {
+  args: {
+    locale: 'de',
+    i18n: getMaintenancePageI18n('de', 'studio'),
+    eta: '2026-03-04 18:30',
   },
 }

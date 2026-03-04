@@ -6,5 +6,5 @@ import { errorCatchingMiddleware, globalErrorMiddleware } from '@valguide/core/u
 export const startInstance = createStart(() => ({
   defaultSsr: false,
   functionMiddleware: [errorCatchingMiddleware],
-  requestMiddleware: [dbRequestMiddleware, createMaintenanceRequestMiddleware({ app: 'app' }), globalErrorMiddleware],
+  requestMiddleware: [createMaintenanceRequestMiddleware({ app: 'app' }), dbRequestMiddleware, globalErrorMiddleware],
 }))

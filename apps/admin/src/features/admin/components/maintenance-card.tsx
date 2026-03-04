@@ -60,7 +60,7 @@ export function MaintenanceCard({ app, status, isPending, onSetStatus }: Mainten
       <CardContent className="space-y-4 min-w-0">
         <div className="flex items-center justify-between rounded-md border p-3">
           <div className="space-y-0.5">
-            <Label htmlFor={`${app}-maintenance-toggle`} className="text-sm">
+            <Label htmlFor={`${app}-maintenance-toggle`} className="text-sm events-none cursor-default">
               Maintenance active
             </Label>
             <p className="text-xs text-muted-foreground">
@@ -103,26 +103,6 @@ export function MaintenanceCard({ app, status, isPending, onSetStatus }: Mainten
             onChange={(event) => setEta(event.target.value)}
             disabled={isPending}
           />
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            disabled={!canEnable}
-            onClick={() =>
-              onSetStatus({
-                app,
-                enabled: true,
-                message: normalizedMessage || undefined,
-                eta: normalizedEta || undefined,
-              })
-            }
-          >
-            {isPending && <Loader2 className="size-4 animate-spin" />}
-            Enable
-          </Button>
-          <Button variant="outline" disabled={isPending} onClick={() => onSetStatus({ app, enabled: false })}>
-            Disable
-          </Button>
         </div>
 
         <div className="text-xs text-muted-foreground space-y-1">
