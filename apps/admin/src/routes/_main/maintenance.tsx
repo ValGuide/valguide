@@ -15,16 +15,14 @@ export const Route = createFileRoute('/_main/maintenance')({
 
 function MaintenancePage() {
   const queryClient = useQueryClient()
-  const { data, isFetching } = useQuery(adminMaintenanceQueryOptions())
+  const { data } = useQuery(adminMaintenanceQueryOptions())
 
   const mutation = useMutation({
     mutationFn: setMaintenanceStatusFn,
     onSuccess: (result, variables) => {
       queryClient.setQueryData(adminMaintenanceQueryOptions().queryKey, result)
       queryClient.invalidateQueries({ queryKey: adminMaintenanceQueryOptions().queryKey })
-      toast.success(
-        `${variables.data.app === 'studio' ? 'Studio' : 'App'} maintenance ${variables.data.enabled ? 'enabled' : 'disabled'}`,
-      )
+      toast.success(`${variables.data.app === 'studio' ? 'Studio' : 'App'} maintenance updated`)
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : 'Failed to update maintenance status'
@@ -60,8 +58,6 @@ function MaintenancePage() {
           onSetStatus={(input) => mutation.mutate({ data: input })}
         />
       </div>
-
-      {isFetching && <p className="text-sm text-muted-foreground">Refreshing status…</p>}
     </div>
   )
 }

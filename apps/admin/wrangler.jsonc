@@ -31,6 +31,8 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
+    "VITE_ENV": "prod",
+    "MAINTENANCE_SLACK_CHANNEL": "maintenance",
     "BETTER_AUTH_URL": "https://ops.val.guide",
     "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops.val.guide",
     "ADMIN_COOKIE_DOMAIN": "ops.val.guide",
@@ -52,6 +54,8 @@
       ],
       "vars": {
         "NODE_ENV": "production",
+        "VITE_ENV": "dev",
+        "MAINTENANCE_SLACK_CHANNEL": "maintenance-dev",
         "BETTER_AUTH_URL": "https://ops-dev.val.guide",
         "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops-dev.val.guide",
         "ADMIN_COOKIE_DOMAIN": "ops-dev.val.guide",

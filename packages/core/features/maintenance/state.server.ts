@@ -3,14 +3,15 @@ import type { EnableMaintenanceInput, MaintenanceApp, MaintenanceState, Maintena
 
 const MAINTENANCE_KEY_PREFIX = 'ops:maintenance:'
 
-function getMaintenanceKv(): KVNamespace | null {
-  try {
-    const bindings = env as unknown as Record<string, KVNamespace | undefined>
-    return bindings.MAINTENANCE ?? null
-  } catch {
-    console.error('[maintenance-kv] KV binding MAINTENANCE not available')
-    return null
+function getMaintenanceKv(): KVNamespace {
+  const bindings = env as unknown as Record<string, KVNamespace | undefined>
+  const kv = bindings.MAINTENANCE
+  if (!kv) {
+    throw new Error(
+      '[maintenance-kv] KV binding MAINTENANCE is not available — check wrangler.jsonc kv_namespaces config',
+    )
   }
+  return kv
 }
 
 function toNullableString(value: unknown): string | null {
@@ -58,15 +59,8 @@ export function getMaintenanceKey(app: MaintenanceApp): string {
 
 export async function getMaintenanceState(app: MaintenanceApp): Promise<MaintenanceState | null> {
   const kv = getMaintenanceKv()
-  if (!kv) return null
-
-  try {
-    const raw = await kv.get(getMaintenanceKey(app), { type: 'json' })
-    return parseMaintenanceState(raw)
-  } catch (error) {
-    console.error('[maintenance-kv] Failed to read state', app, error)
-    return null
-  }
+  const raw = await kv.get(getMaintenanceKey(app), { type: 'json' })
+  return parseMaintenanceState(raw)
 }
 
 export async function getMaintenanceStatus(app: MaintenanceApp): Promise<MaintenanceStatus> {
@@ -107,7 +101,6 @@ export async function enableMaintenance(
   input: EnableMaintenanceInput = {},
 ): Promise<MaintenanceStatus> {
   const kv = getMaintenanceKv()
-  if (!kv) return buildDisabledStatus(app)
 
   const state: MaintenanceState = {
     enabled: true,
@@ -117,12 +110,7 @@ export async function enableMaintenance(
     enabledBy: normalizeOptionalValue(input.enabledBy),
   }
 
-  try {
-    await kv.put(getMaintenanceKey(app), JSON.stringify(state))
-  } catch (error) {
-    console.error('[maintenance-kv] Failed to enable maintenance', app, error)
-    return buildDisabledStatus(app)
-  }
+  await kv.put(getMaintenanceKey(app), JSON.stringify(state))
 
   return {
     app,
@@ -136,13 +124,6 @@ export async function enableMaintenance(
 
 export async function disableMaintenance(app: MaintenanceApp): Promise<MaintenanceStatus> {
   const kv = getMaintenanceKv()
-  if (!kv) return buildDisabledStatus(app)
-
-  try {
-    await kv.delete(getMaintenanceKey(app))
-  } catch (error) {
-    console.error('[maintenance-kv] Failed to disable maintenance', app, error)
-  }
-
+  await kv.delete(getMaintenanceKey(app))
   return buildDisabledStatus(app)
 }

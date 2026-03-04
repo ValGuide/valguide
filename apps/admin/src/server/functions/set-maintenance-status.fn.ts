@@ -17,7 +17,7 @@ export const setMaintenanceStatusFn = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
   .inputValidator(setMaintenanceStatusSchema)
   .handler(async ({ context, data }) => {
-    await setMaintenanceStatus({
+    const updatedStatus = await setMaintenanceStatus({
       app: data.app,
       enabled: data.enabled,
       message: data.message,
@@ -25,5 +25,9 @@ export const setMaintenanceStatusFn = createServerFn({ method: 'POST' })
       enabledBy: context.user.email ?? null,
     })
 
-    return getAdminMaintenanceStatus()
+    const status = await getAdminMaintenanceStatus()
+    return {
+      ...status,
+      [data.app]: updatedStatus,
+    }
   })

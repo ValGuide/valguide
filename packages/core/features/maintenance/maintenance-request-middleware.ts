@@ -1,22 +1,12 @@
 import { createMiddleware } from '@tanstack/react-start'
 import { renderMaintenanceDocument } from './maintenance-page.server'
 import { getMaintenanceStatus } from './state.server'
-import type { MaintenanceApp, MaintenanceStatus } from './types'
+import type { MaintenanceApp } from './types'
 
 type MaintenanceRequestMiddlewareOptions = {
   app: MaintenanceApp
   bypassPathPrefixes?: string[]
-  cacheTtlMs?: number
 }
-
-type MaintenanceCacheEntry = {
-  status: MaintenanceStatus
-  expiresAt: number
-}
-
-const maintenanceCache = new Map<MaintenanceApp, MaintenanceCacheEntry>()
-
-const DEFAULT_CACHE_TTL_MS = 5_000
 const DEFAULT_RETRY_AFTER_SECONDS = '120'
 const STATIC_PATH_PREFIXES = ['/assets/', '/fonts/', '/images/', '/favicon.ico', '/apple-touch-icon.png']
 const STATIC_PATH_NAMES = ['/manifest.json', '/robots.txt', '/sitemap.xml']
@@ -54,22 +44,9 @@ function isMaintenanceForcedByEnv(app: MaintenanceApp): boolean {
   return normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on'
 }
 
-async function resolveStatus(app: MaintenanceApp, cacheTtlMs: number): Promise<MaintenanceStatus> {
-  const now = Date.now()
-  const cached = maintenanceCache.get(app)
-  if (cached && cached.expiresAt > now) {
-    return cached.status
-  }
-
-  const status = await getMaintenanceStatus(app)
-  maintenanceCache.set(app, { status, expiresAt: now + cacheTtlMs })
-  return status
-}
-
 export function createMaintenanceRequestMiddleware({
   app,
   bypassPathPrefixes = ['/health', '/_health'],
-  cacheTtlMs = DEFAULT_CACHE_TTL_MS,
 }: MaintenanceRequestMiddlewareOptions) {
   return createMiddleware({ type: 'request' }).server(async ({ next, request }) => {
     const url = new URL(request.url)
@@ -86,7 +63,10 @@ export function createMaintenanceRequestMiddleware({
           enabledAt: null,
           enabledBy: null,
         }
-      : await resolveStatus(app, cacheTtlMs)
+      : await getMaintenanceStatus(app)
+
+    console.info(`[maintenance-middleware] ${app} status: ${status.enabled ? 'enabled' : 'disabled'}`, status)
+
     if (!status.enabled) {
       return next()
     }
