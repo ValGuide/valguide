@@ -4,15 +4,9 @@ import { getTourStatus } from '@valguide/core/features/tours/status-utils'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@valguide/core/ui/components/card'
-import { Image } from '@valguide/core/ui/components/image'
+import { RevealImage } from '@valguide/core/ui/components/reveal-image'
 import { StatusBadge } from '@valguide/core/ui/components/status-badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@valguide/core/ui/components/tooltip'
-import {
-  getImageRevealStateClasses,
-  IMAGE_REVEAL_IMAGE_CLASS,
-  IMAGE_REVEAL_PLACEHOLDER_CLASS,
-  useImageReveal,
-} from '@valguide/core/ui/hooks/use-image-reveal'
 import { cn } from '@valguide/core/ui/lib/utils'
 import { ImageIcon, LucideInfo } from 'lucide-react'
 import * as React from 'react'
@@ -84,8 +78,6 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
 
   const displayTitle = translation?.title || tour.title || 'Untitled Tour'
   const displayImage = tour.imageUrl ?? (tour.coverImage ? getAssetImageUrl(tour.coverImage) : undefined)
-  const { imageLoaded, handleImageLoad, handleImageError } = useImageReveal({ imageKey: displayImage })
-  const imageRevealClasses = getImageRevealStateClasses(imageLoaded)
   const tourLinkOptions = tour.nanoId
     ? ({ to: '/tours/$nanoId', params: { nanoId: tour.nanoId } } as const)
     : ({ to: '/' } as const)
@@ -103,19 +95,14 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
       {/* Cover Image - Fixed Height */}
       <div className="relative h-44 w-full overflow-hidden shrink-0 bg-muted/30">
         {displayImage ? (
-          <>
-            <div className={cn(IMAGE_REVEAL_PLACEHOLDER_CLASS, imageRevealClasses.placeholder)} />
-            <Image
-              src={displayImage}
-              alt={displayTitle}
-              layout="constrained"
-              width={400}
-              height={176}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-              className={cn(IMAGE_REVEAL_IMAGE_CLASS, imageRevealClasses.image, 'group-hover:scale-105')}
-            />
-          </>
+          <RevealImage
+            src={displayImage}
+            alt={displayTitle}
+            layout="constrained"
+            width={400}
+            height={176}
+            className="group-hover:scale-105"
+          />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">

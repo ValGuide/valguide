@@ -12,14 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { Image } from '@valguide/ui/components/image'
-import {
-  getImageRevealStateClasses,
-  IMAGE_REVEAL_IMAGE_CLASS,
-  IMAGE_REVEAL_PLACEHOLDER_CLASS,
-  useImageReveal,
-} from '@valguide/ui/hooks/use-image-reveal'
-import { cn } from '@valguide/ui/lib/utils'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { formatDistanceToNow } from 'date-fns'
 import { Download, Eye, Image as ImageIcon, MoreVertical, Music, Trash2, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
@@ -48,9 +41,6 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
   const t = useTranslations('assets')
   const [isDeleting, setIsDeleting] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const imageUrl = asset.type === 'image' ? getAssetImageUrl(asset) : undefined
-  const { imageLoaded, handleImageLoad, handleImageError } = useImageReveal({ imageKey: imageUrl })
-  const imageRevealClasses = getImageRevealStateClasses(imageLoaded)
 
   const handleDelete = async () => {
     try {
@@ -96,19 +86,13 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
             onClick={() => onPreview?.(asset)}
           >
             {asset.type === 'image' ? (
-              <>
-                <div className={cn(IMAGE_REVEAL_PLACEHOLDER_CLASS, imageRevealClasses.placeholder)} />
-                <Image
-                  src={imageUrl ?? ''}
-                  alt={asset.fileName}
-                  layout="constrained"
-                  width={400}
-                  height={192}
-                  onLoad={handleImageLoad}
-                  onError={handleImageError}
-                  className={cn(IMAGE_REVEAL_IMAGE_CLASS, imageRevealClasses.image)}
-                />
-              </>
+              <RevealImage
+                src={getAssetImageUrl(asset)}
+                alt={asset.fileName}
+                layout="constrained"
+                width={400}
+                height={192}
+              />
             ) : (
               getIcon()
             )}
