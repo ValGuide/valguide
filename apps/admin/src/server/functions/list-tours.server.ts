@@ -65,14 +65,15 @@ export async function listTours(dbClient: DB, input: ListToursInput): Promise<Li
   if (search) {
     const pattern = `%${search}%`
     const slugMatch = sql`EXISTS (SELECT 1 FROM ${tourSlug} WHERE ${tourSlug.tourId} = ${tour.id} AND ${tourSlug.slug} ILIKE ${pattern})`
-    conditions.push(
-      or(
-        ilike(tourLocaleDraft.title, pattern),
-        ilike(organization.name, pattern),
-        ilike(tour.slug, pattern),
-        slugMatch,
-      )!,
+    const searchCondition = or(
+      ilike(tourLocaleDraft.title, pattern),
+      ilike(organization.name, pattern),
+      ilike(tour.slug, pattern),
+      slugMatch,
     )
+    if (searchCondition) {
+      conditions.push(searchCondition)
+    }
   }
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined

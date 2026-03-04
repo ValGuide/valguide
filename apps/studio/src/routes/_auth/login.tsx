@@ -9,7 +9,5 @@ export const Route = createFileRoute('/_auth/login')({
       <LoginContainer />
     </AuthProvider>
   ),
-  pendingMinMs: 1000,
-  pendingMs: 0,
   pendingComponent: LoginLoading,
 })

@@ -58,7 +58,7 @@ export function loadTranslations(filePath: string): Record<string, unknown> {
 
 function findFilesWithTranslations(): string[] {
   const result = execSync(
-    `grep -rl "useTranslations\\|getTranslations" ${SRC_DIRS.join(' ')} --include='*.ts' --include='*.tsx' 2>/dev/null || true`,
+    `grep -rl "useTranslations\\|getTranslations\\|i18n-used-keys" ${SRC_DIRS.join(' ')} --include='*.ts' --include='*.tsx' 2>/dev/null || true`,
     { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
   )
   return result.trim().split('\n').filter(Boolean)
@@ -97,7 +97,11 @@ export function extractUsedKeys(): Set<string> {
     const sourceText = file.getFullText()
     const commentMatches = sourceText.matchAll(/\/\/\s*i18n-used-keys:\s*(.+)/g)
     for (const match of commentMatches) {
-      const keys = match[1].split(',').map((k) => k.trim())
+      const commentKeys = match[1]
+      if (!commentKeys) {
+        continue
+      }
+      const keys = commentKeys.split(',').map((k) => k.trim())
       for (const key of keys) {
         usedKeys.add(key)
       }
@@ -123,6 +127,7 @@ export function extractUsedKeys(): Set<string> {
             namespaceMap.set(varDecl.getName(), '')
           } else {
             const arg = args[0]
+            if (!arg) return
             if (arg.getKind() === SyntaxKind.StringLiteral) {
               // Simple: useTranslations('namespace') or useTranslations('nested.namespace')
               const ns = arg.getText().slice(1, -1)
@@ -159,13 +164,14 @@ export function extractUsedKeys(): Set<string> {
           varName = exprText
         } else if (exprText.includes('.')) {
           const [base] = exprText.split('.')
-          if (namespaceMap.has(base)) {
+          if (base && namespaceMap.has(base)) {
             varName = base
           }
         }
 
         if (varName && args.length > 0) {
           const arg = args[0]
+          if (!arg) return
           const namespaceValue = namespaceMap.get(varName) ?? ''
           // Handle multiple namespaces (from ternary in useTranslations)
           const namespaces = namespaceValue.split('|')
@@ -203,7 +209,7 @@ export function findUnusedKeys(existingKeys: Set<string>, usedKeys: Set<string>)
 export function printUnusedKeys(unusedKeys: string[]): void {
   let currentNamespace = ''
   for (const key of unusedKeys) {
-    const namespace = key.split('.')[0]
+    const namespace = key.split('.')[0] ?? ''
     if (namespace !== currentNamespace) {
       console.log(`\n[${namespace}]`)
       currentNamespace = namespace
@@ -218,7 +224,7 @@ function findDuplicateKeys(jsonString: string, filename: string): string[] {
   const keysByIndent: Map<number, Map<string, number>> = new Map()
 
   for (let lineNum = 0; lineNum < lines.length; lineNum++) {
-    const line = lines[lineNum]
+    const line = lines[lineNum] ?? ''
     const trimmed = line.trim()
 
     if (!trimmed || trimmed === '{' || trimmed === '}' || trimmed === '[' || trimmed === ']' || trimmed === '},') {
@@ -236,6 +242,9 @@ function findDuplicateKeys(jsonString: string, filename: string): string[] {
     const keyMatch = trimmed.match(/^"([^"]+)"\s*:/)
     if (keyMatch) {
       const key = keyMatch[1]
+      if (!key) {
+        continue
+      }
       const lineIndent = line.search(/\S/)
 
       for (const [indent] of keysByIndent) {
@@ -248,9 +257,15 @@ function findDuplicateKeys(jsonString: string, filename: string): string[] {
         keysByIndent.set(lineIndent, new Map())
       }
 
-      const keysAtLevel = keysByIndent.get(lineIndent)!
+      const keysAtLevel = keysByIndent.get(lineIndent)
+      if (!keysAtLevel) {
+        continue
+      }
       if (keysAtLevel.has(key)) {
-        const firstLine = keysAtLevel.get(key)!
+        const firstLine = keysAtLevel.get(key)
+        if (!firstLine) {
+          continue
+        }
         duplicates.push(`${filename}:${lineNum + 1} - key "${key}" (first seen at line ${firstLine})`)
       } else {
         keysAtLevel.set(key, lineNum + 1)

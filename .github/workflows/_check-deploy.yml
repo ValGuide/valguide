@@ -69,6 +69,16 @@ jobs:
               echo "deploy-${app}=true" >> $GITHUB_OUTPUT
             done
             ANY=true
+          elif echo "$COMMIT_MSG" | grep -qF '[build apps]'; then
+            echo "✅ [build apps] found — deploying all apps except workers"
+            for app in $APPS; do
+              if [ "$app" = "workers" ]; then
+                echo "deploy-${app}=false" >> $GITHUB_OUTPUT
+              else
+                echo "deploy-${app}=true" >> $GITHUB_OUTPUT
+              fi
+            done
+            ANY=true
           else
             SCOPES=$(echo "$COMMIT_MSG" | grep -oE '\[build [^]]+' | sed 's/\[build //' | tr ' ,' '\n' | tr -s '\n')
             if [ -n "$SCOPES" ]; then

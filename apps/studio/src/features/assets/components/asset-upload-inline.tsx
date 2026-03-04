@@ -214,7 +214,6 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
           ) : file && detectedType ? (
             <>
               {detectedType === 'image' ? (
-                // biome-ignore lint/performance/noImgElement: Using img for dynamic content
                 <img
                   src={URL.createObjectURL(file)}
                   alt={file.name}

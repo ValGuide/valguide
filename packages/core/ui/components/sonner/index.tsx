@@ -475,6 +475,7 @@ const Toast = (props: ToastProps) => {
         <button
           data-button
           data-cancel
+          type="button"
           style={toast.cancelButtonStyle || cancelButtonStyle}
           onClick={(event) => {
             // We need to check twice because typescript
@@ -494,6 +495,7 @@ const Toast = (props: ToastProps) => {
         <button
           data-button
           data-action
+          type="button"
           style={toast.actionButtonStyle || actionButtonStyle}
           onClick={(event) => {
             // We need to check twice because typescript

@@ -87,7 +87,7 @@ export const db: PostgresJsDatabase<typeof schema> = new Proxy({} as PostgresJsD
   get(_target, prop) {
     const store = requestDbStore.getStore()
     const instance = store ? getOrCreateRequestDb(store) : getDb()
-    const value = (instance as any)[prop]
+    const value = Reflect.get(instance as object, prop)
     if (typeof value === 'function') {
       return value.bind(instance)
     }

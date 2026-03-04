@@ -15,10 +15,12 @@ import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthErrorRouteImport } from './routes/auth/error'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as MainUsersRouteImport } from './routes/_main/users'
 import { Route as MainToursRouteImport } from './routes/_main/tours'
 import { Route as MainOrgsRouteImport } from './routes/_main/orgs'
+import { Route as MainMaintenanceRouteImport } from './routes/_main/maintenance'
 import { Route as MainKvCacheRouteImport } from './routes/_main/kv-cache'
 import { Route as MainAssetsRouteImport } from './routes/_main/assets'
 import { Route as MainApprovedDomainsRouteImport } from './routes/_main/approved-domains'
@@ -55,6 +57,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthErrorRoute = AuthErrorRouteImport.update({
+  id: '/auth/error',
+  path: '/auth/error',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
@@ -73,6 +80,11 @@ const MainToursRoute = MainToursRouteImport.update({
 const MainOrgsRoute = MainOrgsRouteImport.update({
   id: '/orgs',
   path: '/orgs',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainMaintenanceRoute = MainMaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
   getParentRoute: () => MainRoute,
 } as any)
 const MainKvCacheRoute = MainKvCacheRouteImport.update({
@@ -121,10 +133,12 @@ export interface FileRoutesByFullPath {
   '/approved-domains': typeof MainApprovedDomainsRoute
   '/assets': typeof MainAssetsRoute
   '/kv-cache': typeof MainKvCacheRoute
+  '/maintenance': typeof MainMaintenanceRoute
   '/orgs': typeof MainOrgsRoute
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/error': typeof AuthErrorRoute
   '/orgs/$nanoId': typeof MainOrgsNanoIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -138,10 +152,12 @@ export interface FileRoutesByTo {
   '/approved-domains': typeof MainApprovedDomainsRoute
   '/assets': typeof MainAssetsRoute
   '/kv-cache': typeof MainKvCacheRoute
+  '/maintenance': typeof MainMaintenanceRoute
   '/orgs': typeof MainOrgsRoute
   '/tours': typeof MainToursRoute
   '/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/error': typeof AuthErrorRoute
   '/orgs/$nanoId': typeof MainOrgsNanoIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -158,10 +174,12 @@ export interface FileRoutesById {
   '/_main/approved-domains': typeof MainApprovedDomainsRoute
   '/_main/assets': typeof MainAssetsRoute
   '/_main/kv-cache': typeof MainKvCacheRoute
+  '/_main/maintenance': typeof MainMaintenanceRoute
   '/_main/orgs': typeof MainOrgsRoute
   '/_main/tours': typeof MainToursRoute
   '/_main/users': typeof MainUsersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/error': typeof AuthErrorRoute
   '/_main/orgs_/$nanoId': typeof MainOrgsNanoIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -177,10 +195,12 @@ export interface FileRouteTypes {
     | '/approved-domains'
     | '/assets'
     | '/kv-cache'
+    | '/maintenance'
     | '/orgs'
     | '/tours'
     | '/users'
     | '/auth/callback'
+    | '/auth/error'
     | '/orgs/$nanoId'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
@@ -194,10 +214,12 @@ export interface FileRouteTypes {
     | '/approved-domains'
     | '/assets'
     | '/kv-cache'
+    | '/maintenance'
     | '/orgs'
     | '/tours'
     | '/users'
     | '/auth/callback'
+    | '/auth/error'
     | '/orgs/$nanoId'
     | '/api/auth/$'
   id:
@@ -213,10 +235,12 @@ export interface FileRouteTypes {
     | '/_main/approved-domains'
     | '/_main/assets'
     | '/_main/kv-cache'
+    | '/_main/maintenance'
     | '/_main/orgs'
     | '/_main/tours'
     | '/_main/users'
     | '/auth/callback'
+    | '/auth/error'
     | '/_main/orgs_/$nanoId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -229,6 +253,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthErrorRoute: typeof AuthErrorRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -276,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/error': {
+      id: '/auth/error'
+      path: '/auth/error'
+      fullPath: '/auth/error'
+      preLoaderRoute: typeof AuthErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
@@ -302,6 +334,13 @@ declare module '@tanstack/react-router' {
       path: '/orgs'
       fullPath: '/orgs'
       preLoaderRoute: typeof MainOrgsRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/maintenance': {
+      id: '/_main/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MainMaintenanceRouteImport
       parentRoute: typeof MainRoute
     }
     '/_main/kv-cache': {
@@ -372,6 +411,7 @@ interface MainRouteChildren {
   MainApprovedDomainsRoute: typeof MainApprovedDomainsRoute
   MainAssetsRoute: typeof MainAssetsRoute
   MainKvCacheRoute: typeof MainKvCacheRoute
+  MainMaintenanceRoute: typeof MainMaintenanceRoute
   MainOrgsRoute: typeof MainOrgsRoute
   MainToursRoute: typeof MainToursRoute
   MainUsersRoute: typeof MainUsersRoute
@@ -382,6 +422,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainApprovedDomainsRoute: MainApprovedDomainsRoute,
   MainAssetsRoute: MainAssetsRoute,
   MainKvCacheRoute: MainKvCacheRoute,
+  MainMaintenanceRoute: MainMaintenanceRoute,
   MainOrgsRoute: MainOrgsRoute,
   MainToursRoute: MainToursRoute,
   MainUsersRoute: MainUsersRoute,
@@ -398,6 +439,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  AuthErrorRoute: AuthErrorRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

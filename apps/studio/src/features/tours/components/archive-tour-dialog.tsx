@@ -27,7 +27,7 @@ export function ArchiveTourDialog({ open, onOpenChange, isArchiving, onConfirm }
       await onConfirm()
       toast.success(t('archive.success'))
       onOpenChange(false)
-    } catch (error) {
+    } catch {
       toast.error(t('archive.error'))
     }
   }

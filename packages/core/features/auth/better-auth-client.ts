@@ -1,13 +1,7 @@
-import { createAuthClient } from 'better-auth/client'
-import { emailOTPClient, organizationClient } from 'better-auth/client/plugins'
-import { orgAc, orgRoles } from './organization-permissions'
+import { emailOTPClient } from 'better-auth/client/plugins'
+import { createAuthClient } from 'better-auth/react'
 
 export const authClient = createAuthClient({
-  plugins: [
-    emailOTPClient(),
-    organizationClient({
-      ac: orgAc,
-      roles: orgRoles,
-    }),
-  ],
+  basePath: '/api/auth',
+  plugins: [emailOTPClient()],
 })

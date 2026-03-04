@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
-import chalk from 'chalk'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import chalk from 'chalk'
 import { borderBox } from './border-box'
 
 export type Environment = 'local' | 'dev' | 'prod'

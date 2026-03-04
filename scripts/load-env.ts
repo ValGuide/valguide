@@ -56,6 +56,18 @@ const authOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
   },
 }
 
+const posthogOptions: EnvOptions<'local' | 'dev' | 'prod'> = {
+  name: 'posthog',
+  prefix: '--ph:',
+  values: ['local', 'dev', 'prod'] as const,
+  defaultValue: 'local' as const,
+  envFiles: {
+    local: '.env.posthog.local',
+    dev: '.env.posthog.dev',
+    prod: '.env.posthog.prod',
+  },
+}
+
 const defaultOptions: EnvOptions<'all'> = {
   name: 'defaults',
   prefix: '--defaults:',
@@ -66,7 +78,14 @@ const defaultOptions: EnvOptions<'all'> = {
   },
 }
 
-const options: EnvOptions<string>[] = [databaseOptions, resendOptions, cloudflareOptions, authOptions, defaultOptions]
+const options: EnvOptions<string>[] = [
+  databaseOptions,
+  resendOptions,
+  cloudflareOptions,
+  authOptions,
+  posthogOptions,
+  defaultOptions,
+]
 
 type EnvAndFile<T> = {
   name: string
@@ -115,7 +134,7 @@ if (printEnv) {
   const envOutput = execSync(`${envCommand}env`, { encoding: 'utf-8' })
   console.info(chalk.cyan('\n📋 Loaded environment variables:\n'))
   for (const line of envOutput.trim().split('\n').sort()) {
-    const [key] = line.split('=', 1)
+    const [key = ''] = line.split('=', 1)
     const value = line.slice(key.length + 1)
     console.info(`  ${chalk.green(key)}=${chalk.dim(value)}`)
   }

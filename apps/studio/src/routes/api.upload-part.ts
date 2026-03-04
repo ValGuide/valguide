@@ -20,7 +20,7 @@ export const Route = createFileRoute('/api/upload-part')({
           return new Response('Missing required parameters (key, uploadId, partNumber)', { status: 400 })
         }
 
-        const partNumber = Number.parseInt(partNumberStr)
+        const partNumber = Number.parseInt(partNumberStr, 10)
         if (Number.isNaN(partNumber) || partNumber < 1) {
           return new Response('Invalid partNumber', { status: 400 })
         }

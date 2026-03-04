@@ -99,7 +99,13 @@ export function MockTourEditorProvider({
       console.log('Mock: reorderStops', stopNanoIds)
       setStops((prev) => {
         const byNanoId = new Map(prev.map((s) => [s.stopNanoId, s]))
-        return stopNanoIds.map((id, index) => ({ ...byNanoId.get(id)!, position: index }))
+        return stopNanoIds.flatMap((id, index) => {
+          const stop = byNanoId.get(id)
+          if (!stop) {
+            return []
+          }
+          return [{ ...stop, position: index }]
+        })
       })
     },
     refetchStops: async () => {

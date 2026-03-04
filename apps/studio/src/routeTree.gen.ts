@@ -18,6 +18,7 @@ import { Route as BlockedRouteImport } from './routes/blocked'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthErrorRouteImport } from './routes/auth/error'
 import { Route as ApiUploadPartRouteImport } from './routes/api.upload-part'
 import { Route as ApiUploadRouteImport } from './routes/api.upload'
 import { Route as MainSupportRouteImport } from './routes/_main/support'
@@ -84,6 +85,11 @@ const AuthRoute = AuthRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthErrorRoute = AuthErrorRouteImport.update({
+  id: '/auth/error',
+  path: '/auth/error',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiUploadPartRoute = ApiUploadPartRouteImport.update({
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof MainSupportRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
+  '/auth/error': typeof AuthErrorRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/tours/new': typeof MainToursNewRoute
@@ -261,6 +268,7 @@ export interface FileRoutesByTo {
   '/support': typeof MainSupportRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
+  '/auth/error': typeof AuthErrorRoute
   '/tours/new': typeof MainToursNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops': typeof MainStopsIndexRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/_main/support': typeof MainSupportRoute
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
+  '/auth/error': typeof AuthErrorRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/_main/tours/new': typeof MainToursNewRoute
@@ -330,6 +339,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/api/upload'
     | '/api/upload-part'
+    | '/auth/error'
     | '/stops/$nanoId'
     | '/tours/$nanoId'
     | '/tours/new'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/api/upload'
     | '/api/upload-part'
+    | '/auth/error'
     | '/tours/new'
     | '/api/auth/$'
     | '/stops'
@@ -396,6 +407,7 @@ export interface FileRouteTypes {
     | '/_main/support'
     | '/api/upload'
     | '/api/upload-part'
+    | '/auth/error'
     | '/_main/stops/$nanoId'
     | '/_main/tours/$nanoId'
     | '/_main/tours/new'
@@ -422,6 +434,7 @@ export interface RootRouteChildren {
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ApiUploadPartRoute: typeof ApiUploadPartRoute
+  AuthErrorRoute: typeof AuthErrorRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -488,6 +501,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/error': {
+      id: '/auth/error'
+      path: '/auth/error'
+      fullPath: '/auth/error'
+      preLoaderRoute: typeof AuthErrorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/upload-part': {
@@ -751,6 +771,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsOfServiceRoute: TermsOfServiceRoute,
   ApiUploadRoute: ApiUploadRoute,
   ApiUploadPartRoute: ApiUploadPartRoute,
+  AuthErrorRoute: AuthErrorRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

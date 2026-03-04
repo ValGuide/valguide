@@ -31,6 +31,7 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: () => {
     const { messages } = Route.useRouteContext()
+    // i18n-used-keys: notFound.title, notFound.description, notFound.homeButton
     return (
       <NotFoundPage
         i18n={{

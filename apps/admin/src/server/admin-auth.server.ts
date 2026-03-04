@@ -52,6 +52,10 @@ export const adminAuth = createAuthInstance({
   cookiePrefix: 'valguide-admin-auth',
   cookieDomain: adminCookieDomain,
   trustedOrigins: adminTrustedOrigins,
+  sessionCookieCache: {
+    enabled: false,
+  },
+  errorURL: '/auth/error',
   ...(slackSocialProviders ? { socialProviders: slackSocialProviders } : {}),
 })
 

@@ -64,10 +64,16 @@ function findDuplicateKeys(jsonString: string, filename: string): string[] {
         keysByIndent.set(lineIndent, new Map())
       }
 
-      const keysAtLevel = keysByIndent.get(lineIndent)!
+      const keysAtLevel = keysByIndent.get(lineIndent)
+      if (!keysAtLevel) {
+        continue
+      }
 
       if (keysAtLevel.has(key)) {
-        const firstLine = keysAtLevel.get(key)!
+        const firstLine = keysAtLevel.get(key)
+        if (!firstLine) {
+          continue
+        }
         duplicates.push(`${filename}:${lineNum + 1} - key "${key}" (first seen at line ${firstLine})`)
       } else {
         keysAtLevel.set(key, lineNum + 1)

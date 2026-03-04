@@ -15,8 +15,13 @@
   // Native R2 binding — for org logo uploads
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod", "jurisdiction": "eu" }],
 
-  // KV namespace for tour data edge caching (shared with app worker)
-  "kv_namespaces": [{ "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" }],
+  // KV namespaces:
+  // - TOUR_DATA for published tour edge cache operations
+  // - MAINTENANCE for maintenance mode state shared with app and studio
+  "kv_namespaces": [
+    { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" },
+    { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_PROD" }
+  ],
 
   // Production custom domain
   "routes": [{ "pattern": "ops.val.guide", "custom_domain": true }],
@@ -26,6 +31,8 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
+    "VITE_ENV": "prod",
+    "MAINTENANCE_SLACK_CHANNEL": "maintenance",
     "BETTER_AUTH_URL": "https://ops.val.guide",
     "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops.val.guide",
     "ADMIN_COOKIE_DOMAIN": "ops.val.guide",
@@ -41,9 +48,14 @@
     "dev": {
       "routes": [{ "pattern": "ops-dev.val.guide", "custom_domain": true }],
       "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev", "jurisdiction": "eu" }],
-      "kv_namespaces": [{ "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" }],
+      "kv_namespaces": [
+        { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" },
+        { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_DEV" }
+      ],
       "vars": {
         "NODE_ENV": "production",
+        "VITE_ENV": "dev",
+        "MAINTENANCE_SLACK_CHANNEL": "maintenance-dev",
         "BETTER_AUTH_URL": "https://ops-dev.val.guide",
         "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops-dev.val.guide",
         "ADMIN_COOKIE_DOMAIN": "ops-dev.val.guide",

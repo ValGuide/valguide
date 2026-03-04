@@ -30,6 +30,7 @@ export const Route = createRootRouteWithContext<{
   },
   errorComponent: ({ error }) => {
     const { messages } = Route.useRouteContext()
+    // i18n-used-keys: error.title, error.description, error.tryAgain
     return (
       <ErrorPage
         i18n={{
@@ -46,6 +47,7 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: () => {
     const { messages } = Route.useRouteContext()
+    // i18n-used-keys: notFound.title, notFound.description, notFound.homeButton
     return (
       <NotFoundPage
         i18n={{

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://v2-7-6.turborepo.dev/schema.json",
+  "$schema": "https://turborepo.dev/schema.json",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -62,6 +62,7 @@
     "DATABASE_URL",
     "DRIZZLE_LOG_ENABLED",
     "VALBOT_SLACK_TOKEN",
+    "MAINTENANCE_SLACK_CHANNEL",
     "BETTER_AUTH_SECRET",
     "BETTER_AUTH_URL",
     "BETTER_AUTH_TRUSTED_ORIGINS",
@@ -85,6 +86,9 @@
     "VITE_STUDIO_SUPPORT_EMAIL",
     "VITE_R2_PUBLIC_URL",
     "VITE_IMAGE_PROVIDER",
-    "BLOCK_ROBOTS"
+    "BLOCK_ROBOTS",
+    "MAINTENANCE_FORCE_STUDIO",
+    "MAINTENANCE_FORCE_APP",
+    "WRANGLER_REMOTE"
   ]
 }

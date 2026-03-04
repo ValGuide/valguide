@@ -149,15 +149,20 @@ function OrgsPage() {
         toast.error(result.error ?? 'Failed to create organization')
         return
       }
+      if (!result.org) {
+        toast.error('Failed to create organization')
+        return
+      }
+      const createdOrg = result.org
       queryClient.invalidateQueries({ queryKey: ['admin', 'orgs'] })
-      toast.success(`Organization "${result.org!.name}" created`)
+      toast.success(`Organization "${createdOrg.name}" created`)
       if (result.memberErrors?.length) {
         for (const err of result.memberErrors) {
           toast.warning(err)
         }
       }
       setShowCreateDialog(false)
-      navigate({ to: '/orgs/$nanoId', params: { nanoId: result.org!.nanoId } })
+      navigate({ to: '/orgs/$nanoId', params: { nanoId: createdOrg.nanoId } })
     },
     onError: () => {
       toast.error('Failed to create organization')
