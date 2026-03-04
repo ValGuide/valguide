@@ -115,7 +115,7 @@ if (printEnv) {
   const envOutput = execSync(`${envCommand}env`, { encoding: 'utf-8' })
   console.info(chalk.cyan('\n📋 Loaded environment variables:\n'))
   for (const line of envOutput.trim().split('\n').sort()) {
-    const [key] = line.split('=', 1)
+    const [key = ''] = line.split('=', 1)
     const value = line.slice(key.length + 1)
     console.info(`  ${chalk.green(key)}=${chalk.dim(value)}`)
   }

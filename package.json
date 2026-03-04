@@ -13,7 +13,7 @@
     "lint:error": "biome check . --diagnostic-level=error",
     "lint:fix": "biome check --write .",
     "test": "turbo test && bash .github/scripts/generate-changelog.test.sh > /tmp/changelog-test-output.txt 2>&1 || { cat /tmp/changelog-test-output.txt; exit 1; }",
-    "type-check": "turbo type-check",
+    "type-check": "pnpm exec tsc --noEmit -p tsconfig.json && turbo type-check",
     "i18n:check": "pnpm dlx tsx scripts/validate-locales.ts",
     "i18n:unused": "pnpm dlx tsx scripts/find-unused-i18n-keys.ts",
     "i18n:prune": "pnpm dlx tsx scripts/remove-unused-i18n-keys.ts",

@@ -25,14 +25,21 @@ function removeKeyFromObject(obj: Record<string, unknown>, keyPath: string): boo
 
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i]
-    if (current[part] && typeof current[part] === 'object') {
-      current = current[part] as Record<string, unknown>
+    if (!part) {
+      return false
+    }
+    const next = current[part]
+    if (next && typeof next === 'object') {
+      current = next as Record<string, unknown>
     } else {
       return false
     }
   }
 
   const lastKey = parts[parts.length - 1]
+  if (!lastKey) {
+    return false
+  }
   if (lastKey in current) {
     delete current[lastKey]
     return true
