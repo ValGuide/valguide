@@ -35,6 +35,7 @@ function createMissingMessageError(properties: MissingMessageEventProperties): E
 
 function captureOrQueueMissingMessage(properties: MissingMessageEventProperties): void {
   if (posthog.__loaded) {
+    console.info('[captureOrQueueMissingMessage] Flushing immediately:', properties)
     posthog.captureException(createMissingMessageError(properties), properties)
     return
   }
@@ -50,6 +51,7 @@ export function flushMissingMessageQueue(): void {
 
   const exceptionsToFlush = pendingExceptions.splice(0, pendingExceptions.length)
   for (const properties of exceptionsToFlush) {
+    console.info('[flushMissingMessageQueue] Flushing queued exception:', properties)
     posthog.captureException(createMissingMessageError(properties), properties)
   }
 }
@@ -61,11 +63,18 @@ export function useMissingMessageTracker({ appName, locale }: UseMissingMessageT
     (error: MissingMessageError) => {
       console.warn('[useMissingMessageTracker] Tracking missing message:', error)
 
+      console.warn('[useMissingMessageTracker] Error details:', {
+        code: error.code,
+        message: error.message,
+      })
+
       if (error.code !== 'MISSING_MESSAGE') return
       if (!import.meta.env.PROD) return
       if (!clientEnv.VITE_POSTHOG_ENABLED) return
 
       const key = extractMissingKey(error.message)
+
+      console.info('[useMissingMessageTracker] Extracted key:', key)
       if (!key) return
 
       const route = window.location.pathname
