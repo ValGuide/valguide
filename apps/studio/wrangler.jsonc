@@ -31,7 +31,10 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
+    "USERS_SLACK_CHANNEL": "users",
+    "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback",
     "APP_BASE_URL": "https://app.valguide.com",
+    "ADMIN_BASE_URL": "https://ops.val.guide",
     // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
     "VITE_STUDIO_URL": "https://studio.valguide.com",
     "BETTER_AUTH_URL": "https://studio.valguide.com",
@@ -54,7 +57,10 @@
       ],
       "vars": {
         "NODE_ENV": "production",
+        "USERS_SLACK_CHANNEL": "users-dev",
+        "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback-dev",
         "APP_BASE_URL": "https://app.valguide.dev",
+        "ADMIN_BASE_URL": "https://ops-dev.val.guide",
         // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
         "VITE_STUDIO_URL": "https://studio.valguide.dev",
         "BETTER_AUTH_URL": "https://studio.valguide.dev",

@@ -26,6 +26,7 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
+    "USERS_SLACK_CHANNEL": "users",
     "APP_BASE_URL": "https://app.valguide.com",
     "BETTER_AUTH_URL": "https://links.valguide.com",
     "BETTER_AUTH_TRUSTED_ORIGINS": "https://links.valguide.com",
@@ -46,6 +47,7 @@
       "kv_namespaces": [{ "binding": "LINKS_KV", "id": "REPLACE_WITH_LINKS_KV_ID_DEV" }],
       "vars": {
         "NODE_ENV": "production",
+        "USERS_SLACK_CHANNEL": "users-dev",
         "APP_BASE_URL": "https://app.valguide.dev",
         "BETTER_AUTH_URL": "https://links.valguide.dev",
         "BETTER_AUTH_TRUSTED_ORIGINS": "https://links.valguide.dev",

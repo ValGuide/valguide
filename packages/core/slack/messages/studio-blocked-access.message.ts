@@ -1,11 +1,13 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { resolveAdminUsersUrl } from './admin-url'
+import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
   email: string
 }
 
 export const studioBlockedAccessMessage = ({ email }: Props): SlackMessage => ({
-  channel: 'valguide-users',
+  channel: resolveUsersSlackChannel(),
   text: '🔒 Studio blocked access attempt',
   blocks: [
     {
@@ -39,7 +41,7 @@ export const studioBlockedAccessMessage = ({ email }: Props): SlackMessage => ({
             text: 'Review in Admin Panel',
             emoji: true,
           },
-          url: 'https://admin.valguide.com',
+          url: resolveAdminUsersUrl(),
           action_id: 'admin_review_button',
         },
       ],

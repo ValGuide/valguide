@@ -11,6 +11,7 @@ import { userStartedLoginMessage } from '../../slack/messages/user-started-login
 import { postMessage } from '../../slack/send-slack-message'
 import { db } from '../db'
 import { invitation, member, organization } from '../orgs/schema'
+import { getUserStatus } from './get-user-status.server'
 import { orgAc, orgRoles } from './organization-permissions'
 import { authAccounts, authSessions, authUsers, authVerifications } from './schema'
 
@@ -118,15 +119,33 @@ export function createAuthInstance(options: {
           if (!email) {
             return
           }
-          await ctx.context.runInBackgroundOrAwait(postMessage(userStartedLoginMessage({ email })))
+          await ctx.context.runInBackgroundOrAwait(
+            postMessage(
+              userStartedLoginMessage({
+                email,
+                timestampMs: Date.now(),
+              }),
+            ),
+          )
         }
 
         if (ctx.path === '/sign-in/email-otp') {
+          const userId = ctx.context.newSession?.user?.id
           const email = normalizeEmail(ctx.context.newSession?.user?.email)
-          if (!email) {
+          if (!userId || !email) {
             return
           }
-          await ctx.context.runInBackgroundOrAwait(postMessage(userLoggedInMessage({ email })))
+          const status = await getUserStatus(userId, email)
+          await ctx.context.runInBackgroundOrAwait(
+            postMessage(
+              userLoggedInMessage({
+                email,
+                userId,
+                status,
+                timestampMs: Date.now(),
+              }),
+            ),
+          )
         }
       }),
     },

@@ -1,26 +1,39 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
   email?: string
+  timestampMs: number
 }
 
-export const userStartedLoginMessage = ({ email }: Props): SlackMessage => ({
-  channel: 'valguide-users',
-  text: '👋 A user started the login process',
+function formatSlackDate(timestampMs: number): string {
+  const timestampSeconds = Math.floor(timestampMs / 1000)
+  return `<!date^${timestampSeconds}^{date_short_pretty} at {time}|${new Date(timestampMs).toISOString()}>`
+}
+
+export const userStartedLoginMessage = ({ email, timestampMs }: Props): SlackMessage => ({
+  channel: resolveUsersSlackChannel(),
+  text: '👀 User login started',
   blocks: [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: '👋 A user started the login process',
+        text: '*👀 User Login Started*',
       },
     },
     {
       type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `*Email* ${email ?? '-'}`,
-      },
+      fields: [
+        {
+          type: 'mrkdwn',
+          text: `*Email*\n${email ?? '-'}`,
+        },
+        {
+          type: 'mrkdwn',
+          text: `*Time*\n${formatSlackDate(timestampMs)}`,
+        },
+      ],
     },
     {
       type: 'divider',

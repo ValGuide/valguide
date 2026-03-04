@@ -1,11 +1,13 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { resolveAdminUsersUrl } from './admin-url'
+import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
   email: string
 }
 
 export const newSignupMessage = ({ email }: Props): SlackMessage => ({
-  channel: 'valguide-users',
+  channel: resolveUsersSlackChannel(),
   text: `🆕 New signup awaiting approval: ${email}`,
   blocks: [
     {
@@ -34,7 +36,7 @@ export const newSignupMessage = ({ email }: Props): SlackMessage => ({
             type: 'plain_text',
             text: 'Review in Admin',
           },
-          url: 'https://admin.valguide.com/users',
+          url: resolveAdminUsersUrl(),
           action_id: 'view_signup_admin',
         },
       ],

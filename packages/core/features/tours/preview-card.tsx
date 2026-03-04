@@ -65,6 +65,7 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
   // i18n-used-keys: tour.previewCard.published, tour.previewCard.unpublished
   const t = useTranslations('tour.previewCard')
   const locale = useLocale()
+  const [imageLoaded, setImageLoaded] = React.useState(false)
 
   const formatDate = (date?: Date | string) => {
     if (!date) return ''
@@ -84,25 +85,43 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
 
   const tourStatus = getTourStatus({ publishedAt: tour.published ?? null, archivedAt: null })
 
+  React.useEffect(() => {
+    setImageLoaded(false)
+  }, [displayImage])
+
   return (
     <Card
       className={cn(
-        'overflow-hidden flex flex-col h-full hover:-translate-y-0.5 hover:shadow-(--shadow-card-hover) hover:border-primary/20',
+        'group overflow-hidden flex flex-col h-full hover:-translate-y-0.5 hover:shadow-(--shadow-card-hover) hover:border-primary/20',
         className,
       )}
       {...props}
     >
       {/* Cover Image - Fixed Height */}
-      <div className="relative h-44 w-full overflow-hidden shrink-0">
+      <div className="relative h-44 w-full overflow-hidden shrink-0 bg-muted/30">
         {displayImage ? (
-          <Image
-            src={displayImage}
-            alt={displayTitle}
-            layout="constrained"
-            width={400}
-            height={176}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+          <>
+            <div
+              className={cn(
+                'pointer-events-none absolute inset-0 bg-linear-to-br from-muted/80 to-muted/40 transition-opacity duration-500 motion-reduce:transition-none',
+                imageLoaded ? 'opacity-0' : 'opacity-100',
+              )}
+            />
+            <Image
+              src={displayImage}
+              alt={displayTitle}
+              layout="constrained"
+              width={400}
+              height={176}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageLoaded(true)}
+              className={cn(
+                'h-full w-full object-cover transition-[opacity,transform,filter] duration-500 ease-out motion-reduce:transition-none',
+                imageLoaded ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-[1.02] blur-sm',
+                'group-hover:scale-105',
+              )}
+            />
+          </>
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
