@@ -28,10 +28,10 @@ export function getImageKitUrl(storagePath: string): string {
  * - imagekit: Returns ImageKit URL for transforms + CDN.
  */
 export function getAssetImageUrl(asset: { storagePath: string }): string {
-  if (clientEnv.VITE_IMAGE_PROVIDER === 'cloudflare') {
-    return getAssetUrl(asset.storagePath)
+  if (clientEnv.VITE_IMAGE_PROVIDER === 'imagekit') {
+    return getImageKitUrl(asset.storagePath)
   }
-  return getImageKitUrl(asset.storagePath)
+  return getAssetUrl(asset.storagePath)
 }
 
 /**
