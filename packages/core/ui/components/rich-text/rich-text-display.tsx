@@ -1,5 +1,6 @@
 import { generateHTML } from '@tiptap/html'
 import StarterKit from '@tiptap/starter-kit'
+import { cn } from '@valguide/ui/lib/utils'
 import { SmallText } from './small-text-extension'
 
 export interface RichTextDisplayProps {
@@ -14,7 +15,14 @@ export function RichTextDisplay({ content, className = '' }: RichTextDisplayProp
 
   return (
     <div
-      className={`prose prose-sm dark:prose-invert max-w-none ${className}`}
+      className={cn(
+        'prose prose-sm max-w-none',
+        'text-foreground',
+        'prose-headings:text-foreground prose-strong:text-foreground prose-code:text-foreground',
+        'prose-p:text-muted-foreground prose-li:text-muted-foreground prose-blockquote:text-muted-foreground',
+        'prose-a:text-foreground prose-a:decoration-border',
+        className,
+      )}
       // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized by TipTap
       dangerouslySetInnerHTML={{ __html: html }}
     />
