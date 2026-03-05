@@ -1,8 +1,8 @@
-import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 import type { AssetSortBy, AssetSortDirection } from '@valguide/core/features/assets/get-assets.fn'
 import type { AssetType } from '@valguide/core/features/assets/types'
-import { Suspense, useDeferredValue, useState } from 'react'
+import { useDeferredValue } from 'react'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
 import { AssetUploadInline } from '@/features/assets/components/asset-upload-inline.tsx'
 import { AssetsList } from '@/features/assets/components/assets-list.tsx'
@@ -11,7 +11,40 @@ import { assetsInfiniteQueryOptions } from '@/features/assets/query-options'
 
 const Root = getRouteApi('/_main')
 
+const assetTypeValues: readonly ['all', 'image', 'audio', 'video'] = ['all', 'image', 'audio', 'video']
+const sortByValues: readonly AssetSortBy[] = ['createdAt', 'name']
+const sortDirectionValues: readonly AssetSortDirection[] = ['asc', 'desc']
+
+type AssetsSearchParams = {
+  type?: AssetType | 'all'
+  query?: string
+  sortBy?: AssetSortBy
+  sortDirection?: AssetSortDirection
+}
+
+const parseAssetType = (value: unknown): AssetType | 'all' | undefined => {
+  return typeof value === 'string' && assetTypeValues.includes(value as (typeof assetTypeValues)[number])
+    ? (value as AssetType | 'all')
+    : undefined
+}
+
+const parseSortBy = (value: unknown): AssetSortBy | undefined => {
+  return typeof value === 'string' && sortByValues.includes(value as AssetSortBy) ? (value as AssetSortBy) : undefined
+}
+
+const parseSortDirection = (value: unknown): AssetSortDirection | undefined => {
+  return typeof value === 'string' && sortDirectionValues.includes(value as AssetSortDirection)
+    ? (value as AssetSortDirection)
+    : undefined
+}
+
 export const Route = createFileRoute('/_main/assets')({
+  validateSearch: (search: Record<string, unknown>): AssetsSearchParams => ({
+    type: parseAssetType(search.type),
+    query: typeof search.query === 'string' ? search.query : undefined,
+    sortBy: parseSortBy(search.sortBy),
+    sortDirection: parseSortDirection(search.sortDirection),
+  }),
   loader: ({ context }) => context.queryClient.ensureInfiniteQueryData(assetsInfiniteQueryOptions()),
   component: AssetsPage,
   pendingComponent: () => (
@@ -24,31 +57,46 @@ export const Route = createFileRoute('/_main/assets')({
 function AssetsPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <Suspense fallback={<AssetsListSkeleton />}>
-        <AssetsContent />
-      </Suspense>
+      <AssetsContent />
     </main>
   )
 }
 
 function AssetsContent() {
   const queryClient = useQueryClient()
+  const navigate = Route.useNavigate()
+  const routeSearch = Route.useSearch()
   const organizationId = Root.useRouteContext().team.teamId
-  const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState<AssetSortBy>('createdAt')
-  const [sortDirection, setSortDirection] = useState<AssetSortDirection>('desc')
+
+  const typeFilter = routeSearch.type ?? 'all'
+  const searchQuery = routeSearch.query ?? ''
+  const sortBy = routeSearch.sortBy ?? 'createdAt'
+  const sortDirection = routeSearch.sortDirection ?? 'desc'
+
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
-  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
-    assetsInfiniteQueryOptions({
+  const updateSearch = (nextSearch: AssetsSearchParams) => {
+    void navigate({
+      to: '/assets',
+      search: (prev) => ({
+        ...prev,
+        ...nextSearch,
+      }),
+      replace: true,
+    })
+  }
+
+  const { data, error, hasNextPage, isFetchingNextPage, isPending, fetchNextPage } = useInfiniteQuery({
+    ...assetsInfiniteQueryOptions({
       type: typeFilter === 'all' ? undefined : typeFilter,
       search: deferredSearchQuery.trim() || undefined,
       sortBy,
       sortDirection,
     }),
-  )
-  const assets = data.pages.flatMap((page) => page.items)
+    placeholderData: (previousData) => previousData,
+  })
+
+  const assets = data?.pages.flatMap((page) => page.items) ?? []
 
   const handleAssetDeleted = async (_assetId: string) => {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
@@ -63,26 +111,41 @@ function AssetsContent() {
     await queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })
   }
 
+  if (isPending && !data) {
+    return <AssetsListSkeleton />
+  }
+
   return organizationId ? (
     <AssetsList
       organizationId={organizationId}
       assets={assets}
       hasMore={hasNextPage}
       isFetchingMore={isFetchingNextPage}
+      error={error}
       onLoadMore={() => void fetchNextPage()}
       onAssetDeleted={handleAssetDeleted}
       onUploadComplete={handleUploadComplete}
       onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })}
       typeFilter={typeFilter}
-      onTypeFilterChange={setTypeFilter}
+      onTypeFilterChange={(nextTypeFilter) =>
+        updateSearch({
+          type: nextTypeFilter === 'all' ? undefined : nextTypeFilter,
+        })
+      }
       searchQuery={searchQuery}
-      onSearchQueryChange={setSearchQuery}
+      onSearchQueryChange={(nextSearchQuery) =>
+        updateSearch({
+          query: nextSearchQuery.length > 0 ? nextSearchQuery : undefined,
+        })
+      }
       sortBy={sortBy}
       sortDirection={sortDirection}
-      onSortChange={(nextSortBy, nextSortDirection) => {
-        setSortBy(nextSortBy)
-        setSortDirection(nextSortDirection)
-      }}
+      onSortChange={(nextSortBy, nextSortDirection) =>
+        updateSearch({
+          sortBy: nextSortBy === 'createdAt' ? undefined : nextSortBy,
+          sortDirection: nextSortDirection === 'desc' ? undefined : nextSortDirection,
+        })
+      }
       AssetCard={AssetCardConnected}
       UploadInline={AssetUploadInline}
     />
