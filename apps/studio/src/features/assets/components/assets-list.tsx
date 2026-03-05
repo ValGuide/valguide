@@ -318,7 +318,7 @@ export function AssetsList({
         </TabsList>
 
         <TabsContent value="library" className="space-y-6">
-          <div className="sticky top-0 z-20 border-b bg-background pb-4">
+          <div className="sticky top-0 z-20 border-b bg-background pt-4 pb-4">
             <div className="space-y-3">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px] xl:gap-4">
                 <div className="space-y-1">
