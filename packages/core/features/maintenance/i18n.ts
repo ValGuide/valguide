@@ -50,10 +50,10 @@ const messageByLocale: Record<SupportedLocale, MaintenanceI18nMessages> = {
   rm: rmMessages,
 }
 
-const fallbackMaintenanceMessages: Record<MaintenanceApp, MaintenancePageI18n> = {
+const englishFallbackMessages: Record<MaintenanceApp, MaintenancePageI18n> = {
   studio: {
     label: 'Studio maintenance in progress',
-    status: 'Studio temporarily unavailable',
+    status: 'Service temporarily unavailable',
     title: "We'll be right back",
     description: 'ValGuide Studio is currently under maintenance to improve curator workflows.',
     estimatedEnd: 'Estimated completion: {time}',
@@ -65,20 +65,20 @@ const fallbackMaintenanceMessages: Record<MaintenanceApp, MaintenancePageI18n> =
   },
   app: {
     label: 'Service update in progress',
-    status: 'Visitor app temporarily unavailable',
+    status: 'Service temporarily unavailable',
     title: "We'll be back shortly",
     description: 'ValGuide App is currently being updated to improve your visit experience.',
     estimatedEnd: 'Estimated completion: {time}',
     retryHint: 'Please retry in a couple of minutes.',
     retryAction: 'Retry now',
-    reassuranceOne: 'Your tour access and content stay available again once maintenance is done.',
+    reassuranceOne: 'Your tour access and content will be available again once maintenance is done.',
     reassuranceTwo: 'No action is required from your side.',
     reassuranceThree: 'You can retry at any time.',
   },
 }
 
 export function getMaintenancePageI18n(locale: SupportedLocale, app: MaintenanceApp): MaintenancePageI18n {
-  const fallback = fallbackMaintenanceMessages[app]
+  const fallback = englishFallbackMessages[app]
   const messages = messageByLocale[locale]
   const shared = messages.maintenance?.shared
   const appSpecific = app === 'studio' ? messages.maintenance?.studio : messages.maintenance?.app
@@ -96,5 +96,3 @@ export function getMaintenancePageI18n(locale: SupportedLocale, app: Maintenance
     reassuranceThree: appSpecific?.reassuranceThree ?? fallback.reassuranceThree,
   }
 }
-
-export const maintenanceFallbackI18n = fallbackMaintenanceMessages

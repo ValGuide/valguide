@@ -1,7 +1,10 @@
 import { createMiddleware } from '@tanstack/react-start'
+import { defaultLocale } from '@valguide/core/i18n/i18n.config'
+import { getAcceptLanguageLocale } from '@valguide/core/i18n/server'
+import { getMaintenancePageI18n } from './i18n'
 import { renderMaintenanceDocument } from './maintenance-page.server'
 import { getMaintenanceStatus } from './state.server'
-import type { MaintenanceApp } from './types'
+import type { MaintenanceApp, MaintenanceStatus } from './types'
 
 type MaintenanceRequestMiddlewareOptions = {
   app: MaintenanceApp
@@ -37,11 +40,53 @@ function getMaintenanceForceEnvKey(app: MaintenanceApp): string {
   return app === 'studio' ? 'MAINTENANCE_FORCE_STUDIO' : 'MAINTENANCE_FORCE_APP'
 }
 
-function isMaintenanceForcedByEnv(app: MaintenanceApp): boolean {
-  const value = process.env[getMaintenanceForceEnvKey(app)]
-  if (!value) return false
+type MaintenanceForcedByEnvState = {
+  envKey: string
+  value: string | undefined
+  enabled: boolean
+}
+
+function getMaintenanceForcedByEnvState(app: MaintenanceApp): MaintenanceForcedByEnvState {
+  const envKey = getMaintenanceForceEnvKey(app)
+  const value = process.env[envKey]
+  if (!value) {
+    return {
+      envKey,
+      value: undefined,
+      enabled: false,
+    }
+  }
   const normalized = value.trim().toLowerCase()
-  return normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on'
+  return {
+    envKey,
+    value,
+    enabled: normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on',
+  }
+}
+
+function getForcedMaintenanceStatus({
+  app,
+  request,
+  forcedByEnv,
+}: {
+  app: MaintenanceApp
+  request: Request
+  forcedByEnv: MaintenanceForcedByEnvState
+}): MaintenanceStatus {
+  const locale = getAcceptLanguageLocale(request.headers.get('accept-language')) ?? defaultLocale
+  const i18n = getMaintenancePageI18n(locale, app)
+  console.info(
+    `[maintenance] Forced maintenance enabled via env var ${forcedByEnv.envKey}=${forcedByEnv.value} for app=${app}`,
+  )
+
+  return {
+    app,
+    enabled: true,
+    message: i18n.description,
+    eta: null,
+    enabledAt: null,
+    enabledBy: null,
+  }
 }
 
 export function createMaintenanceRequestMiddleware({
@@ -54,56 +99,64 @@ export function createMaintenanceRequestMiddleware({
       return next()
     }
 
-    const status = isMaintenanceForcedByEnv(app)
-      ? {
-          app,
-          enabled: true,
-          message: 'Emergency maintenance mode is enabled.',
-          eta: null,
-          enabledAt: null,
-          enabledBy: null,
-        }
+    const forcedByEnv = getMaintenanceForcedByEnvState(app)
+    const status = forcedByEnv.enabled
+      ? getForcedMaintenanceStatus({ app, request, forcedByEnv })
       : await getMaintenanceStatus(app)
-
-    console.info(`[maintenance-middleware] ${app} status: ${status.enabled ? 'enabled' : 'disabled'}`, status)
 
     if (!status.enabled) {
       return next()
     }
 
-    const headers = new Headers({
-      'cache-control': 'no-store',
-      'retry-after': DEFAULT_RETRY_AFTER_SECONDS,
-      'x-maintenance-app': app,
+    return handleMaintenanceResponse({
+      app,
+      request,
+      status,
     })
+  })
+}
 
-    if (isDocumentRequest(request)) {
-      headers.set('content-type', 'text/html; charset=utf-8')
-      return new Response(
-        renderMaintenanceDocument({
-          app,
-          status,
-          acceptLanguageHeader: request.headers.get('accept-language'),
-          cookieHeader: request.headers.get('cookie'),
-        }),
-        {
-          status: 503,
-          headers,
-        },
-      )
-    }
+function handleMaintenanceResponse({
+  app,
+  request,
+  status,
+}: {
+  app: MaintenanceApp
+  request: Request
+  status: Awaited<ReturnType<typeof getMaintenanceStatus>>
+}) {
+  const headers = new Headers({
+    'cache-control': 'no-store',
+    'retry-after': DEFAULT_RETRY_AFTER_SECONDS,
+    'x-maintenance-app': app,
+  })
 
-    return Response.json(
-      {
-        error: 'maintenance_mode',
+  if (isDocumentRequest(request)) {
+    headers.set('content-type', 'text/html; charset=utf-8')
+    return new Response(
+      renderMaintenanceDocument({
         app,
-        message: status.message,
-        eta: status.eta,
-      },
+        status,
+        acceptLanguageHeader: request.headers.get('accept-language'),
+        cookieHeader: request.headers.get('cookie'),
+      }),
       {
         status: 503,
         headers,
       },
     )
-  })
+  }
+
+  return Response.json(
+    {
+      error: 'maintenance_mode',
+      app,
+      message: status.message,
+      eta: status.eta,
+    },
+    {
+      status: 503,
+      headers,
+    },
+  )
 }
