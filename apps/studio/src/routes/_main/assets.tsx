@@ -166,6 +166,13 @@ function AssetsContent() {
           sortDirection: nextSortDirection === 'desc' ? undefined : nextSortDirection,
         })
       }
+      onClearAllFilters={() =>
+        updateSearch({
+          type: undefined,
+          sortBy: undefined,
+          sortDirection: undefined,
+        })
+      }
       AssetCard={AssetCardConnected}
       UploadInline={AssetUploadInline}
     />

@@ -616,7 +616,11 @@
         "nameDesc": "Z bis A"
       },
       "searchLabel": "Suche",
-      "typeLabel": "Typ"
+      "typeLabel": "Typ",
+      "actions": {
+        "filters": "Filter",
+        "clearAll": "Alle löschen"
+      }
     },
     "types": {
       "image": "Bild",

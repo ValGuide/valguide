@@ -616,7 +616,11 @@
         "nameDesc": "Z fin A"
       },
       "searchLabel": "Tschertgar",
-      "typeLabel": "Tip"
+      "typeLabel": "Tip",
+      "actions": {
+        "filters": "Filters",
+        "clearAll": "Stizzar tut"
+      }
     },
     "types": {
       "image": "maletg",
