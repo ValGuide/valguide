@@ -212,8 +212,14 @@ jobs:
 
           # Send via Slack API (jq handles JSON escaping reliably)
           # Build blocks array dynamically — changelog block included only if non-empty
+          if [ "$ENV" = "prod" ]; then
+            SLACK_CHANNEL="deployments"
+          else
+            SLACK_CHANNEL="deployments-dev"
+          fi
+
           jq -n \
-            --arg channel "deployments" \
+            --arg channel "$SLACK_CHANNEL" \
             --arg text "$PLAIN" \
             --arg body "$MSG" \
             --arg changelog "$CHANGELOG_BLOCK" \
