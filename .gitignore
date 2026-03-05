@@ -62,3 +62,4 @@ count.txt
 .output
 .wrangler
 .wrangler.dev-remote.json
+error.log
