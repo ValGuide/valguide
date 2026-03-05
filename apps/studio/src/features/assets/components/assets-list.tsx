@@ -1,4 +1,3 @@
-import { useVirtualizer } from '@tanstack/react-virtual'
 import type { AssetSortBy, AssetSortDirection, AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -35,6 +34,7 @@ export type AssetsListProps = {
   assets?: AssetWithUsage[]
   hasMore?: boolean
   isFetchingMore?: boolean
+  isQueryPending?: boolean
   error?: Error | null
   onAssetDeleted?: (assetId: string) => void
   onUploadComplete?: (asset: Asset) => void
@@ -51,16 +51,13 @@ export type AssetsListProps = {
   UploadInline?: UploadInlineComponent
 }
 
-const GRID_GAP = 16
-const MIN_CARD_WIDTH = 240
-const ESTIMATED_CARD_HEIGHT = 396
-
 export function AssetsList({
   locale,
   organizationId,
   assets = [],
   hasMore = false,
   isFetchingMore = false,
+  isQueryPending = false,
   error = null,
   onAssetDeleted,
   onUploadComplete,
@@ -82,9 +79,7 @@ export function AssetsList({
   const [internalSearchQuery, setInternalSearchQuery] = useState('')
   const [internalSortBy, setInternalSortBy] = useState<AssetSortBy>('createdAt')
   const [internalSortDirection, setInternalSortDirection] = useState<AssetSortDirection>('desc')
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
-  const gridViewportRef = useRef<HTMLDivElement | null>(null)
-  const [containerWidth, setContainerWidth] = useState(0)
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
   const typeFilter = controlledTypeFilter ?? internalTypeFilter
   const searchQuery = controlledSearchQuery ?? internalSearchQuery
@@ -116,7 +111,13 @@ export function AssetsList({
     onSortChange(nextSortBy, nextSortDirection)
   }
 
-  const filteredAssets = useMemo(() => {
+  const isControlledMode = Boolean(onTypeFilterChange && onSearchQueryChange && onSortChange)
+
+  const displayedAssets = useMemo(() => {
+    if (isControlledMode) {
+      return assets ?? []
+    }
+
     const matchingAssets = (assets ?? []).filter((asset) => {
       const matchesType = typeFilter === 'all' || asset.type === typeFilter
       const matchesSearch = !searchQuery || asset.fileName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -139,7 +140,7 @@ export function AssetsList({
       const idComparison = left.id.localeCompare(right.id)
       return sortDirection === 'asc' ? idComparison : -idComparison
     })
-  }, [assets, typeFilter, searchQuery, sortBy, sortDirection])
+  }, [assets, isControlledMode, searchQuery, sortBy, sortDirection, typeFilter])
 
   const handleUploadComplete = (asset: Asset) => {
     onUploadComplete?.(asset)
@@ -147,52 +148,29 @@ export function AssetsList({
   }
 
   useEffect(() => {
-    const element = gridViewportRef.current
-    if (!element) {
+    if (!onLoadMore || !hasMore || isFetchingMore || isQueryPending || !loadMoreRef.current) {
       return
     }
-    const observer = new ResizeObserver((entries) => {
-      const entry = entries[0]
-      setContainerWidth(entry.contentRect.width)
-    })
-    observer.observe(element)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          onLoadMore()
+        }
+      },
+      { rootMargin: '300px 0px' },
+    )
+
+    const sentinel = loadMoreRef.current
+    if (!sentinel) {
+      return
+    }
+
+    observer.observe(sentinel)
     return () => {
       observer.disconnect()
     }
-  }, [])
-
-  useEffect(() => {
-    scrollContainerRef.current?.scrollTo({ top: 0 })
-  }, [typeFilter, searchQuery, sortBy, sortDirection])
-
-  const columnCount = useMemo(() => {
-    const adjustedWidth = containerWidth > 0 ? containerWidth + GRID_GAP : MIN_CARD_WIDTH + GRID_GAP
-    return Math.max(1, Math.floor(adjustedWidth / (MIN_CARD_WIDTH + GRID_GAP)))
-  }, [containerWidth])
-
-  const rowCount = Math.ceil(filteredAssets.length / columnCount)
-
-  const rowVirtualizer = useVirtualizer({
-    count: rowCount,
-    getScrollElement: () => scrollContainerRef.current,
-    estimateSize: () => ESTIMATED_CARD_HEIGHT,
-    overscan: 4,
-  })
-  const virtualRows = rowVirtualizer.getVirtualItems()
-
-  useEffect(() => {
-    if (!onLoadMore || !hasMore || isFetchingMore || virtualRows.length === 0) {
-      return
-    }
-    const scrollElement = scrollContainerRef.current
-    if (!scrollElement) {
-      return
-    }
-    const distanceFromBottom = scrollElement.scrollHeight - scrollElement.scrollTop - scrollElement.clientHeight
-    if (distanceFromBottom <= ESTIMATED_CARD_HEIGHT * 2) {
-      onLoadMore()
-    }
-  }, [hasMore, isFetchingMore, onLoadMore, virtualRows])
+  }, [hasMore, isFetchingMore, isQueryPending, onLoadMore, displayedAssets.length])
 
   // Error state
   if (error) {
@@ -236,82 +214,91 @@ export function AssetsList({
         </TabsList>
 
         <TabsContent value="library" className="space-y-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px]">
-            <div className="space-y-1">
-              <label htmlFor="asset-search" className="text-xs text-muted-foreground">
-                {t('filter.searchLabel')}
-              </label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="asset-search"
-                  aria-label={t('filter.searchLabel')}
-                  placeholder={t('filter.searchPlaceholder')}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
+          <div className="sticky top-0 z-20 border-b bg-background pb-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px]">
+              <div className="space-y-1">
+                <label htmlFor="asset-search" className="text-xs text-muted-foreground">
+                  {t('filter.searchLabel')}
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="asset-search"
+                    aria-label={t('filter.searchLabel')}
+                    placeholder={t('filter.searchPlaceholder')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-1">
-              <label htmlFor="asset-type-filter" className="text-xs text-muted-foreground">
-                {t('filter.typeLabel')}
-              </label>
-              <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
-                <SelectTrigger id="asset-type-filter" aria-label={t('filter.typeLabel')} className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filter.all')}</SelectItem>
-                  <SelectItem value="image">{t('filter.image')}</SelectItem>
-                  <SelectItem value="audio">{t('filter.audio')}</SelectItem>
-                  <SelectItem value="video">{t('filter.video')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+              <div className="space-y-1">
+                <label htmlFor="asset-type-filter" className="text-xs text-muted-foreground">
+                  {t('filter.typeLabel')}
+                </label>
+                <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
+                  <SelectTrigger id="asset-type-filter" aria-label={t('filter.typeLabel')} className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('filter.all')}</SelectItem>
+                    <SelectItem value="image">{t('filter.image')}</SelectItem>
+                    <SelectItem value="audio">{t('filter.audio')}</SelectItem>
+                    <SelectItem value="video">{t('filter.video')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div className="space-y-1">
-              <label htmlFor="asset-sort-by" className="text-xs text-muted-foreground">
-                {t('filter.sortBy.label')}
-              </label>
-              <Select value={sortBy} onValueChange={(value) => setSort(value as AssetSortBy, sortDirection)}>
-                <SelectTrigger id="asset-sort-by" aria-label={t('filter.sortBy.label')} className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="createdAt">{t('filter.sortBy.uploadedAt')}</SelectItem>
-                  <SelectItem value="name">{t('filter.sortBy.name')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+              <div className="space-y-1">
+                <label htmlFor="asset-sort-by" className="text-xs text-muted-foreground">
+                  {t('filter.sortBy.label')}
+                </label>
+                <Select
+                  value={sortBy}
+                  onValueChange={(value) => {
+                    const nextSortBy = value as AssetSortBy
+                    const nextSortDirection: AssetSortDirection = nextSortBy === 'name' ? 'asc' : 'desc'
+                    setSort(nextSortBy, nextSortDirection)
+                  }}
+                >
+                  <SelectTrigger id="asset-sort-by" aria-label={t('filter.sortBy.label')} className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="createdAt">{t('filter.sortBy.uploadedAt')}</SelectItem>
+                    <SelectItem value="name">{t('filter.sortBy.name')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div className="space-y-1">
-              <label htmlFor="asset-sort-order" className="text-xs text-muted-foreground">
-                {t('filter.order.label')}
-              </label>
-              <Select value={sortDirection} onValueChange={(value) => setSort(sortBy, value as AssetSortDirection)}>
-                <SelectTrigger id="asset-sort-order" aria-label={t('filter.order.label')} className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {sortBy === 'createdAt' ? (
-                    <>
-                      <SelectItem value="desc">{t('filter.order.uploadedAtDesc')}</SelectItem>
-                      <SelectItem value="asc">{t('filter.order.uploadedAtAsc')}</SelectItem>
-                    </>
-                  ) : (
-                    <>
-                      <SelectItem value="asc">{t('filter.order.nameAsc')}</SelectItem>
-                      <SelectItem value="desc">{t('filter.order.nameDesc')}</SelectItem>
-                    </>
-                  )}
-                </SelectContent>
-              </Select>
+              <div className="space-y-1">
+                <label htmlFor="asset-sort-order" className="text-xs text-muted-foreground">
+                  {t('filter.order.label')}
+                </label>
+                <Select value={sortDirection} onValueChange={(value) => setSort(sortBy, value as AssetSortDirection)}>
+                  <SelectTrigger id="asset-sort-order" aria-label={t('filter.order.label')} className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sortBy === 'createdAt' ? (
+                      <>
+                        <SelectItem value="desc">{t('filter.order.uploadedAtDesc')}</SelectItem>
+                        <SelectItem value="asc">{t('filter.order.uploadedAtAsc')}</SelectItem>
+                      </>
+                    ) : (
+                      <>
+                        <SelectItem value="asc">{t('filter.order.nameAsc')}</SelectItem>
+                        <SelectItem value="desc">{t('filter.order.nameDesc')}</SelectItem>
+                      </>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
-          {filteredAssets.length === 0 ? (
+          {displayedAssets.length === 0 ? (
             <Empty className="border border-dashed">
               <EmptyHeader>
                 <EmptyMedia variant="icon">
@@ -334,45 +321,16 @@ export function AssetsList({
               )}
             </Empty>
           ) : (
-            <div ref={gridViewportRef} className="w-full">
-              <div ref={scrollContainerRef} className="h-[70vh] overflow-auto rounded-lg">
-                <div
-                  className="relative w-full"
-                  style={{
-                    height: `${rowVirtualizer.getTotalSize()}px`,
-                  }}
-                >
-                  {virtualRows.map((virtualRow) => {
-                    const rowStart = virtualRow.index * columnCount
-                    const rowItems = filteredAssets.slice(rowStart, rowStart + columnCount)
-
-                    return (
-                      <div
-                        key={virtualRow.key}
-                        className="absolute left-0 top-0 w-full"
-                        style={{
-                          transform: `translateY(${virtualRow.start}px)`,
-                        }}
-                      >
-                        <div
-                          className="grid"
-                          style={{
-                            gap: `${GRID_GAP}px`,
-                            gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
-                          }}
-                        >
-                          {rowItems.map((asset) =>
-                            AssetCard ? <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} /> : null,
-                          )}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-                {isFetchingMore ? (
-                  <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
-                ) : null}
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {displayedAssets.map((asset) =>
+                  AssetCard ? <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} /> : null,
+                )}
               </div>
+              <div ref={loadMoreRef} aria-hidden="true" className="h-1 w-full" />
+              {isFetchingMore ? (
+                <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
+              ) : null}
             </div>
           )}
         </TabsContent>

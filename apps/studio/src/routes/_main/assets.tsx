@@ -2,7 +2,6 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 import type { AssetSortBy, AssetSortDirection } from '@valguide/core/features/assets/get-assets.fn'
 import type { AssetType } from '@valguide/core/features/assets/types'
-import { useDeferredValue } from 'react'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
 import { AssetUploadInline } from '@/features/assets/components/asset-upload-inline.tsx'
 import { AssetsList } from '@/features/assets/components/assets-list.tsx'
@@ -45,7 +44,17 @@ export const Route = createFileRoute('/_main/assets')({
     sortBy: parseSortBy(search.sortBy),
     sortDirection: parseSortDirection(search.sortDirection),
   }),
-  loader: ({ context }) => context.queryClient.ensureInfiniteQueryData(assetsInfiniteQueryOptions()),
+  loader: ({ context, location }) => {
+    const search = location.search as AssetsSearchParams
+    return context.queryClient.ensureInfiniteQueryData(
+      assetsInfiniteQueryOptions({
+        type: search.type === 'all' ? undefined : search.type,
+        search: search.query?.trim() || undefined,
+        sortBy: search.sortBy ?? 'createdAt',
+        sortDirection: search.sortDirection ?? 'desc',
+      }),
+    )
+  },
   component: AssetsPage,
   pendingComponent: () => (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -72,24 +81,34 @@ function AssetsContent() {
   const searchQuery = routeSearch.query ?? ''
   const sortBy = routeSearch.sortBy ?? 'createdAt'
   const sortDirection = routeSearch.sortDirection ?? 'desc'
-
-  const deferredSearchQuery = useDeferredValue(searchQuery)
+  const canonicalSearchQuery = searchQuery.trim() || undefined
 
   const updateSearch = (nextSearch: AssetsSearchParams) => {
+    const mergedSearch: AssetsSearchParams = {
+      type: routeSearch.type,
+      query: routeSearch.query,
+      sortBy: routeSearch.sortBy,
+      sortDirection: routeSearch.sortDirection,
+      ...nextSearch,
+    }
+
     void navigate({
       to: '/assets',
-      search: (prev) => ({
-        ...prev,
-        ...nextSearch,
-      }),
+      search: {
+        type: mergedSearch.type,
+        query: mergedSearch.query,
+        sortBy: mergedSearch.sortBy,
+        sortDirection: mergedSearch.sortDirection,
+      },
       replace: true,
+      viewTransition: false,
     })
   }
 
   const { data, error, hasNextPage, isFetchingNextPage, isPending, fetchNextPage } = useInfiniteQuery({
     ...assetsInfiniteQueryOptions({
       type: typeFilter === 'all' ? undefined : typeFilter,
-      search: deferredSearchQuery.trim() || undefined,
+      search: canonicalSearchQuery,
       sortBy,
       sortDirection,
     }),
@@ -121,6 +140,7 @@ function AssetsContent() {
       assets={assets}
       hasMore={hasNextPage}
       isFetchingMore={isFetchingNextPage}
+      isQueryPending={isPending}
       error={error}
       onLoadMore={() => void fetchNextPage()}
       onAssetDeleted={handleAssetDeleted}

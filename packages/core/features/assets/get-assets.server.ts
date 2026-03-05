@@ -25,6 +25,8 @@ export type AssetWithUsage = typeof asset.$inferSelect & {
 type AssetCursorPayload = {
   sortBy: AssetSortBy
   sortDirection: AssetSortDirection
+  type: AssetType | null
+  search: string | null
   sortValue: string
   id: string
 }
@@ -57,14 +59,21 @@ function decodeCursor(cursor: string): AssetCursorPayload {
     const parsed = JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')) as Partial<AssetCursorPayload>
     const isValidSortBy = parsed.sortBy === 'createdAt' || parsed.sortBy === 'name'
     const isValidSortDirection = parsed.sortDirection === 'asc' || parsed.sortDirection === 'desc'
-    if (!parsed.sortValue || !parsed.id || !isValidSortBy || !isValidSortDirection) {
+    const isValidType =
+      parsed.type === null || parsed.type === 'image' || parsed.type === 'audio' || parsed.type === 'video'
+    const isValidSearch = parsed.search === null || typeof parsed.search === 'string'
+    if (!parsed.sortValue || !parsed.id || !isValidSortBy || !isValidSortDirection || !isValidType || !isValidSearch) {
       throw new Error('Invalid cursor')
     }
     const sortBy = parsed.sortBy as AssetSortBy
     const sortDirection = parsed.sortDirection as AssetSortDirection
+    const type = parsed.type as AssetType | null
+    const search = parsed.search as string | null
     return {
       sortBy,
       sortDirection,
+      type,
+      search,
       sortValue: parsed.sortValue,
       id: parsed.id,
     }
@@ -98,6 +107,11 @@ function getFilterConditions(filters?: GetAssetsFilters) {
   }
 
   return conditions
+}
+
+function normalizeSearch(search?: string): string | undefined {
+  const trimmed = search?.trim()
+  return trimmed && trimmed.length > 0 ? trimmed : undefined
 }
 
 function buildAssetSelectQuery(sortBy: AssetSortBy, sortDirection: AssetSortDirection) {
@@ -165,7 +179,11 @@ function buildCursorCondition(
 // =============================================================================
 
 export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUsage[]> {
-  const conditions = getFilterConditions(filters)
+  const normalizedFilters: GetAssetsFilters = {
+    ...filters,
+    search: normalizeSearch(filters?.search),
+  }
+  const conditions = getFilterConditions(normalizedFilters)
   const query = buildAssetSelectQuery(DEFAULT_SORT_BY, DEFAULT_SORT_DIRECTION)
   if (conditions.length === 0) {
     return query
@@ -174,12 +192,18 @@ export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUs
 }
 
 export async function getAssetsPage(filters?: GetAssetsPageFilters): Promise<AssetPage> {
+  const normalizedSearch = normalizeSearch(filters?.search)
+  const normalizedType = filters?.type ?? null
+  const normalizedFilters: GetAssetsPageFilters = {
+    ...filters,
+    search: normalizedSearch,
+  }
   const pageSize = Math.min(filters?.limit ?? DEFAULT_ASSETS_PAGE_SIZE, MAX_ASSETS_PAGE_SIZE)
-  const { sortBy, sortDirection } = resolveSort(filters)
+  const { sortBy, sortDirection } = resolveSort(normalizedFilters)
   const query = buildAssetSelectQuery(sortBy, sortDirection)
-  const conditions = getFilterConditions(filters)
+  const conditions = getFilterConditions(normalizedFilters)
 
-  if (!filters?.cursor) {
+  if (!normalizedFilters.cursor) {
     const rows = await (conditions.length === 0 ? query : query.where(and(...conditions))).limit(pageSize + 1)
     const hasMore = rows.length > pageSize
     const items = hasMore ? rows.slice(0, pageSize) : rows
@@ -193,6 +217,8 @@ export async function getAssetsPage(filters?: GetAssetsPageFilters): Promise<Ass
           ? encodeCursor({
               sortBy,
               sortDirection,
+              type: normalizedType,
+              search: normalizedSearch ?? null,
               sortValue: getCursorSortValue(lastItem, sortBy),
               id: lastItem.id,
             })
@@ -200,8 +226,13 @@ export async function getAssetsPage(filters?: GetAssetsPageFilters): Promise<Ass
     }
   }
 
-  const decodedCursor = decodeCursor(filters.cursor)
-  if (decodedCursor.sortBy !== sortBy || decodedCursor.sortDirection !== sortDirection) {
+  const decodedCursor = decodeCursor(normalizedFilters.cursor)
+  if (
+    decodedCursor.sortBy !== sortBy ||
+    decodedCursor.sortDirection !== sortDirection ||
+    decodedCursor.type !== normalizedType ||
+    decodedCursor.search !== (normalizedSearch ?? null)
+  ) {
     throw new Error('Invalid cursor')
   }
   const cursorCondition = buildCursorCondition(sortBy, sortDirection, decodedCursor)
@@ -221,6 +252,8 @@ export async function getAssetsPage(filters?: GetAssetsPageFilters): Promise<Ass
         ? encodeCursor({
             sortBy,
             sortDirection,
+            type: normalizedType,
+            search: normalizedSearch ?? null,
             sortValue: getCursorSortValue(lastItem, sortBy),
             id: lastItem.id,
           })

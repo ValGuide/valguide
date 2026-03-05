@@ -40,16 +40,18 @@ export const assetsQueryOptions = (options?: AssetsQueryOptions) =>
   })
 
 export const assetsInfiniteQueryKey = (options?: AssetsInfiniteQueryOptions) =>
-  [
-    'assets-infinite',
-    {
-      type: options?.type ?? null,
-      search: options?.search ?? null,
-      pageSize: options?.pageSize ?? 60,
-      sortBy: options?.sortBy ?? 'createdAt',
-      sortDirection: options?.sortDirection ?? 'desc',
-    },
-  ] as const
+  ['assets-infinite', normalizeAssetsInfiniteOptions(options)] as const
+
+function normalizeAssetsInfiniteOptions(options?: AssetsInfiniteQueryOptions) {
+  const normalizedSearch = options?.search?.trim()
+  return {
+    type: options?.type ?? null,
+    search: normalizedSearch && normalizedSearch.length > 0 ? normalizedSearch : null,
+    pageSize: options?.pageSize ?? 60,
+    sortBy: options?.sortBy ?? 'createdAt',
+    sortDirection: options?.sortDirection ?? 'desc',
+  } as const
+}
 
 export const assetsInfiniteQueryOptions = (options?: AssetsInfiniteQueryOptions) =>
   infiniteQueryOptions<
@@ -61,16 +63,18 @@ export const assetsInfiniteQueryOptions = (options?: AssetsInfiniteQueryOptions)
   >({
     queryKey: assetsInfiniteQueryKey(options),
     initialPageParam: undefined,
-    queryFn: async ({ pageParam }) =>
-      getAssetsPageFn({
+    queryFn: async ({ pageParam }) => {
+      const normalizedOptions = normalizeAssetsInfiniteOptions(options)
+      return getAssetsPageFn({
         data: {
-          type: options?.type,
-          search: options?.search,
+          type: normalizedOptions.type ?? undefined,
+          search: normalizedOptions.search ?? undefined,
           cursor: pageParam,
-          limit: options?.pageSize ?? 60,
-          sortBy: options?.sortBy,
-          sortDirection: options?.sortDirection,
+          limit: normalizedOptions.pageSize,
+          sortBy: normalizedOptions.sortBy,
+          sortDirection: normalizedOptions.sortDirection,
         },
-      }),
+      })
+    },
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   })
