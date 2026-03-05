@@ -602,7 +602,21 @@
       "audio": "Audio",
       "video": "Video",
       "searchPlaceholder": "Nach Dateinamen suchen...",
-      "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen"
+      "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen",
+      "sortBy": {
+        "label": "Sortieren nach",
+        "uploadedAt": "Hochgeladen",
+        "name": "Name"
+      },
+      "order": {
+        "label": "Reihenfolge",
+        "uploadedAtDesc": "Neueste zuerst",
+        "uploadedAtAsc": "Älteste zuerst",
+        "nameAsc": "A bis Z",
+        "nameDesc": "Z bis A"
+      },
+      "searchLabel": "Suche",
+      "typeLabel": "Typ"
     },
     "types": {
       "image": "Bild",

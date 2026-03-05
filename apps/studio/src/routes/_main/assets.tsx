@@ -1,5 +1,6 @@
 import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import type { AssetSortBy, AssetSortDirection } from '@valguide/core/features/assets/get-assets.fn'
 import type { AssetType } from '@valguide/core/features/assets/types'
 import { Suspense, useDeferredValue, useState } from 'react'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
@@ -35,12 +36,16 @@ function AssetsContent() {
   const organizationId = Root.useRouteContext().team.teamId
   const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState<AssetSortBy>('createdAt')
+  const [sortDirection, setSortDirection] = useState<AssetSortDirection>('desc')
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
     assetsInfiniteQueryOptions({
       type: typeFilter === 'all' ? undefined : typeFilter,
       search: deferredSearchQuery.trim() || undefined,
+      sortBy,
+      sortDirection,
     }),
   )
   const assets = data.pages.flatMap((page) => page.items)
@@ -72,6 +77,12 @@ function AssetsContent() {
       onTypeFilterChange={setTypeFilter}
       searchQuery={searchQuery}
       onSearchQueryChange={setSearchQuery}
+      sortBy={sortBy}
+      sortDirection={sortDirection}
+      onSortChange={(nextSortBy, nextSortDirection) => {
+        setSortBy(nextSortBy)
+        setSortDirection(nextSortDirection)
+      }}
       AssetCard={AssetCardConnected}
       UploadInline={AssetUploadInline}
     />

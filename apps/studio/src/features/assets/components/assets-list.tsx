@@ -1,5 +1,5 @@
 import { useVirtualizer } from '@tanstack/react-virtual'
-import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
+import type { AssetSortBy, AssetSortDirection, AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
@@ -44,6 +44,9 @@ export type AssetsListProps = {
   onTypeFilterChange?: (value: AssetType | 'all') => void
   searchQuery?: string
   onSearchQueryChange?: (value: string) => void
+  sortBy?: AssetSortBy
+  sortDirection?: AssetSortDirection
+  onSortChange?: (sortBy: AssetSortBy, sortDirection: AssetSortDirection) => void
   AssetCard?: AssetCardComponent
   UploadInline?: UploadInlineComponent
 }
@@ -67,6 +70,9 @@ export function AssetsList({
   onTypeFilterChange,
   searchQuery: controlledSearchQuery,
   onSearchQueryChange,
+  sortBy: controlledSortBy,
+  sortDirection: controlledSortDirection,
+  onSortChange,
   AssetCard,
   UploadInline,
 }: AssetsListProps) {
@@ -74,12 +80,16 @@ export function AssetsList({
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
   const [internalTypeFilter, setInternalTypeFilter] = useState<AssetType | 'all'>('all')
   const [internalSearchQuery, setInternalSearchQuery] = useState('')
+  const [internalSortBy, setInternalSortBy] = useState<AssetSortBy>('createdAt')
+  const [internalSortDirection, setInternalSortDirection] = useState<AssetSortDirection>('desc')
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const gridViewportRef = useRef<HTMLDivElement | null>(null)
   const [containerWidth, setContainerWidth] = useState(0)
 
   const typeFilter = controlledTypeFilter ?? internalTypeFilter
   const searchQuery = controlledSearchQuery ?? internalSearchQuery
+  const sortBy = controlledSortBy ?? internalSortBy
+  const sortDirection = controlledSortDirection ?? internalSortDirection
 
   const setTypeFilter = (value: AssetType | 'all') => {
     if (!onTypeFilterChange) {
@@ -97,13 +107,39 @@ export function AssetsList({
     onSearchQueryChange(value)
   }
 
+  const setSort = (nextSortBy: AssetSortBy, nextSortDirection: AssetSortDirection) => {
+    if (!onSortChange) {
+      setInternalSortBy(nextSortBy)
+      setInternalSortDirection(nextSortDirection)
+      return
+    }
+    onSortChange(nextSortBy, nextSortDirection)
+  }
+
   const filteredAssets = useMemo(() => {
-    return (assets ?? []).filter((asset) => {
+    const matchingAssets = (assets ?? []).filter((asset) => {
       const matchesType = typeFilter === 'all' || asset.type === typeFilter
       const matchesSearch = !searchQuery || asset.fileName.toLowerCase().includes(searchQuery.toLowerCase())
       return matchesType && matchesSearch
     })
-  }, [assets, typeFilter, searchQuery])
+
+    return [...matchingAssets].sort((left, right) => {
+      if (sortBy === 'name') {
+        const nameComparison = left.fileName.localeCompare(right.fileName, undefined, { sensitivity: 'base' })
+        if (nameComparison !== 0) {
+          return sortDirection === 'asc' ? nameComparison : -nameComparison
+        }
+      } else {
+        const createdAtComparison = new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime()
+        if (createdAtComparison !== 0) {
+          return sortDirection === 'asc' ? createdAtComparison : -createdAtComparison
+        }
+      }
+
+      const idComparison = left.id.localeCompare(right.id)
+      return sortDirection === 'asc' ? idComparison : -idComparison
+    })
+  }, [assets, typeFilter, searchQuery, sortBy, sortDirection])
 
   const handleUploadComplete = (asset: Asset) => {
     onUploadComplete?.(asset)
@@ -127,7 +163,7 @@ export function AssetsList({
 
   useEffect(() => {
     scrollContainerRef.current?.scrollTo({ top: 0 })
-  }, [typeFilter, searchQuery])
+  }, [typeFilter, searchQuery, sortBy, sortDirection])
 
   const columnCount = useMemo(() => {
     const adjustedWidth = containerWidth > 0 ? containerWidth + GRID_GAP : MIN_CARD_WIDTH + GRID_GAP
@@ -200,28 +236,79 @@ export function AssetsList({
         </TabsList>
 
         <TabsContent value="library" className="space-y-6">
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder={t('filter.searchPlaceholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px]">
+            <div className="space-y-1">
+              <label htmlFor="asset-search" className="text-xs text-muted-foreground">
+                {t('filter.searchLabel')}
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="asset-search"
+                  aria-label={t('filter.searchLabel')}
+                  placeholder={t('filter.searchPlaceholder')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
             </div>
 
-            <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('filter.all')}</SelectItem>
-                <SelectItem value="image">{t('filter.image')}</SelectItem>
-                <SelectItem value="audio">{t('filter.audio')}</SelectItem>
-                <SelectItem value="video">{t('filter.video')}</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="space-y-1">
+              <label htmlFor="asset-type-filter" className="text-xs text-muted-foreground">
+                {t('filter.typeLabel')}
+              </label>
+              <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
+                <SelectTrigger id="asset-type-filter" aria-label={t('filter.typeLabel')} className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('filter.all')}</SelectItem>
+                  <SelectItem value="image">{t('filter.image')}</SelectItem>
+                  <SelectItem value="audio">{t('filter.audio')}</SelectItem>
+                  <SelectItem value="video">{t('filter.video')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="asset-sort-by" className="text-xs text-muted-foreground">
+                {t('filter.sortBy.label')}
+              </label>
+              <Select value={sortBy} onValueChange={(value) => setSort(value as AssetSortBy, sortDirection)}>
+                <SelectTrigger id="asset-sort-by" aria-label={t('filter.sortBy.label')} className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="createdAt">{t('filter.sortBy.uploadedAt')}</SelectItem>
+                  <SelectItem value="name">{t('filter.sortBy.name')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="asset-sort-order" className="text-xs text-muted-foreground">
+                {t('filter.order.label')}
+              </label>
+              <Select value={sortDirection} onValueChange={(value) => setSort(sortBy, value as AssetSortDirection)}>
+                <SelectTrigger id="asset-sort-order" aria-label={t('filter.order.label')} className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {sortBy === 'createdAt' ? (
+                    <>
+                      <SelectItem value="desc">{t('filter.order.uploadedAtDesc')}</SelectItem>
+                      <SelectItem value="asc">{t('filter.order.uploadedAtAsc')}</SelectItem>
+                    </>
+                  ) : (
+                    <>
+                      <SelectItem value="asc">{t('filter.order.nameAsc')}</SelectItem>
+                      <SelectItem value="desc">{t('filter.order.nameDesc')}</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {filteredAssets.length === 0 ? (

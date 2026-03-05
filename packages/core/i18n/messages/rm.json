@@ -602,7 +602,21 @@
       "audio": "Audio",
       "video": "Video",
       "searchPlaceholder": "Tschertgar tenor num da datoteca...",
-      "noResults": "Nagins assets chattads che correspundan a voss filters"
+      "noResults": "Nagins assets chattads che correspundan a voss filters",
+      "sortBy": {
+        "label": "Sortir tenor",
+        "uploadedAt": "Chargià si",
+        "name": "Num"
+      },
+      "order": {
+        "label": "Urden",
+        "uploadedAtDesc": "Ils pli novs emprim",
+        "uploadedAtAsc": "Ils pli vegls emprim",
+        "nameAsc": "A fin Z",
+        "nameDesc": "Z fin A"
+      },
+      "searchLabel": "Tschertgar",
+      "typeLabel": "Tip"
     },
     "types": {
       "image": "maletg",

@@ -4,7 +4,14 @@ import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type GetAssetsFilters, type GetAssetsPageFilters, getAssets, getAssetsPage } from './get-assets.server'
 
-export type { AssetPage, AssetWithUsage, GetAssetsFilters, GetAssetsPageFilters } from './get-assets.server'
+export type {
+  AssetPage,
+  AssetSortBy,
+  AssetSortDirection,
+  AssetWithUsage,
+  GetAssetsFilters,
+  GetAssetsPageFilters,
+} from './get-assets.server'
 
 const getAssetsSchema = z.object({
   type: z.enum(['image', 'audio', 'video']).optional(),
@@ -15,6 +22,8 @@ const getAssetsPageSchema = z.object({
   search: z.string().optional(),
   cursor: z.string().optional(),
   limit: z.number().int().min(1).max(120).optional(),
+  sortBy: z.enum(['createdAt', 'name']).optional(),
+  sortDirection: z.enum(['asc', 'desc']).optional(),
 })
 
 export const getAssetsFn = createServerFn({ method: 'GET' })
@@ -50,6 +59,8 @@ export const getAssetsPageFn = createServerFn({ method: 'GET' })
       cursor: data.cursor,
       limit: data.limit,
       search: data.search,
+      sortBy: data.sortBy,
+      sortDirection: data.sortDirection,
     }
     if (data.type) {
       filters.type = data.type

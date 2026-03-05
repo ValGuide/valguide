@@ -13,10 +13,23 @@ export function AssetsListSkeleton() {
         <Skeleton className="h-9 w-24" />
         <Skeleton className="h-9 w-24" />
       </div>
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <Skeleton className="h-10 flex-1" />
-        <Skeleton className="h-10 w-[180px]" />
-        <Skeleton className="h-10 w-[180px]" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px]">
+        <div className="space-y-1">
+          <Skeleton className="h-3 w-14" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="space-y-1">
+          <Skeleton className="h-3 w-10" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="space-y-1">
+          <Skeleton className="h-3 w-14" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="space-y-1">
+          <Skeleton className="h-3 w-10" />
+          <Skeleton className="h-10 w-full" />
+        </div>
       </div>
       <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]">
         {[...Array(12)].map((_, i) => (

@@ -1,5 +1,10 @@
 import { type InfiniteData, infiniteQueryOptions, queryOptions } from '@tanstack/react-query'
-import type { AssetPage, AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
+import type {
+  AssetPage,
+  AssetSortBy,
+  AssetSortDirection,
+  AssetWithUsage,
+} from '@valguide/core/features/assets/get-assets.fn'
 import { getAssetsFn, getAssetsPageFn } from '@valguide/core/features/assets/get-assets.fn'
 import type { AssetType } from '@valguide/core/features/assets/types'
 
@@ -11,6 +16,8 @@ export type AssetsInfiniteQueryOptions = {
   type?: AssetType
   search?: string
   pageSize?: number
+  sortBy?: AssetSortBy
+  sortDirection?: AssetSortDirection
 }
 
 export type AssetsResponse = {
@@ -39,6 +46,8 @@ export const assetsInfiniteQueryKey = (options?: AssetsInfiniteQueryOptions) =>
       type: options?.type ?? null,
       search: options?.search ?? null,
       pageSize: options?.pageSize ?? 60,
+      sortBy: options?.sortBy ?? 'createdAt',
+      sortDirection: options?.sortDirection ?? 'desc',
     },
   ] as const
 
@@ -59,6 +68,8 @@ export const assetsInfiniteQueryOptions = (options?: AssetsInfiniteQueryOptions)
           search: options?.search,
           cursor: pageParam,
           limit: options?.pageSize ?? 60,
+          sortBy: options?.sortBy,
+          sortDirection: options?.sortDirection,
         },
       }),
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
