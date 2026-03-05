@@ -563,6 +563,7 @@
   "assets": {
     "title": "Assets",
     "description": "Manage your media library",
+    "loadingMore": "Loading more assets...",
     "empty": {
       "title": "No assets yet",
       "description": "Upload images, audio, and video files to use in your tours. All files are stored securely and can be reused across multiple tours.",

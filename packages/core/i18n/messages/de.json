@@ -563,6 +563,7 @@
   "assets": {
     "title": "Assets",
     "description": "Verwalten Sie Ihre Medienbibliothek",
+    "loadingMore": "Weitere Assets werden geladen...",
     "empty": {
       "title": "Noch keine Assets",
       "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Tours zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Tours wiederverwendet werden.",

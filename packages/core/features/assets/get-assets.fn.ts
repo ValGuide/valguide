@@ -2,12 +2,19 @@ import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { type GetAssetsFilters, getAssets } from './get-assets.server'
+import { type GetAssetsFilters, type GetAssetsPageFilters, getAssets, getAssetsPage } from './get-assets.server'
 
-export type { AssetWithUsage, GetAssetsFilters } from './get-assets.server'
+export type { AssetPage, AssetWithUsage, GetAssetsFilters, GetAssetsPageFilters } from './get-assets.server'
 
 const getAssetsSchema = z.object({
   type: z.enum(['image', 'audio', 'video']).optional(),
+})
+
+const getAssetsPageSchema = z.object({
+  type: z.enum(['image', 'audio', 'video']).optional(),
+  search: z.string().optional(),
+  cursor: z.string().optional(),
+  limit: z.number().int().min(1).max(120).optional(),
 })
 
 export const getAssetsFn = createServerFn({ method: 'GET' })
@@ -26,4 +33,27 @@ export const getAssetsFn = createServerFn({ method: 'GET' })
     }
 
     return getAssets(filters)
+  })
+
+export const getAssetsPageFn = createServerFn({ method: 'GET' })
+  .middleware([requireAuthMiddleware])
+  .inputValidator(getAssetsPageSchema)
+  .handler(async ({ data, context }) => {
+    const organizationId = context.activeOrgId
+    if (!organizationId) {
+      throw new Error('No active organization')
+    }
+    await requireOrgMember(organizationId, context.user.id)
+
+    const filters: GetAssetsPageFilters = {
+      organizationId,
+      cursor: data.cursor,
+      limit: data.limit,
+      search: data.search,
+    }
+    if (data.type) {
+      filters.type = data.type
+    }
+
+    return getAssetsPage(filters)
   })

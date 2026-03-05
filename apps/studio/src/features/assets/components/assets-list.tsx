@@ -1,3 +1,4 @@
+import { useVirtualizer } from '@tanstack/react-virtual'
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -16,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { Image as ImageIcon, Search, Upload } from 'lucide-react'
 import type { ComponentType } from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
 
 export type AssetCardComponentProps = {
@@ -32,29 +33,69 @@ export type AssetsListProps = {
   organizationId: string
   locale?: string
   assets?: AssetWithUsage[]
+  hasMore?: boolean
+  isFetchingMore?: boolean
   error?: Error | null
   onAssetDeleted?: (assetId: string) => void
   onUploadComplete?: (asset: Asset) => void
+  onLoadMore?: () => void
   onRetry?: () => void
+  typeFilter?: AssetType | 'all'
+  onTypeFilterChange?: (value: AssetType | 'all') => void
+  searchQuery?: string
+  onSearchQueryChange?: (value: string) => void
   AssetCard?: AssetCardComponent
   UploadInline?: UploadInlineComponent
 }
+
+const GRID_GAP = 16
+const MIN_CARD_WIDTH = 240
+const ESTIMATED_CARD_HEIGHT = 396
 
 export function AssetsList({
   locale,
   organizationId,
   assets = [],
+  hasMore = false,
+  isFetchingMore = false,
   error = null,
   onAssetDeleted,
   onUploadComplete,
+  onLoadMore,
   onRetry,
+  typeFilter: controlledTypeFilter,
+  onTypeFilterChange,
+  searchQuery: controlledSearchQuery,
+  onSearchQueryChange,
   AssetCard,
   UploadInline,
 }: AssetsListProps) {
   const t = useTranslations('assets')
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
-  const [typeFilter, setTypeFilter] = useState<AssetType | 'all'>('all')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [internalTypeFilter, setInternalTypeFilter] = useState<AssetType | 'all'>('all')
+  const [internalSearchQuery, setInternalSearchQuery] = useState('')
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
+  const gridViewportRef = useRef<HTMLDivElement | null>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+
+  const typeFilter = controlledTypeFilter ?? internalTypeFilter
+  const searchQuery = controlledSearchQuery ?? internalSearchQuery
+
+  const setTypeFilter = (value: AssetType | 'all') => {
+    if (!onTypeFilterChange) {
+      setInternalTypeFilter(value)
+      return
+    }
+    onTypeFilterChange(value)
+  }
+
+  const setSearchQuery = (value: string) => {
+    if (!onSearchQueryChange) {
+      setInternalSearchQuery(value)
+      return
+    }
+    onSearchQueryChange(value)
+  }
 
   const filteredAssets = useMemo(() => {
     return (assets ?? []).filter((asset) => {
@@ -68,6 +109,54 @@ export function AssetsList({
     onUploadComplete?.(asset)
     setActiveTab('library')
   }
+
+  useEffect(() => {
+    const element = gridViewportRef.current
+    if (!element) {
+      return
+    }
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0]
+      setContainerWidth(entry.contentRect.width)
+    })
+    observer.observe(element)
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    scrollContainerRef.current?.scrollTo({ top: 0 })
+  }, [typeFilter, searchQuery])
+
+  const columnCount = useMemo(() => {
+    const adjustedWidth = containerWidth > 0 ? containerWidth + GRID_GAP : MIN_CARD_WIDTH + GRID_GAP
+    return Math.max(1, Math.floor(adjustedWidth / (MIN_CARD_WIDTH + GRID_GAP)))
+  }, [containerWidth])
+
+  const rowCount = Math.ceil(filteredAssets.length / columnCount)
+
+  const rowVirtualizer = useVirtualizer({
+    count: rowCount,
+    getScrollElement: () => scrollContainerRef.current,
+    estimateSize: () => ESTIMATED_CARD_HEIGHT,
+    overscan: 4,
+  })
+  const virtualRows = rowVirtualizer.getVirtualItems()
+
+  useEffect(() => {
+    if (!onLoadMore || !hasMore || isFetchingMore || virtualRows.length === 0) {
+      return
+    }
+    const scrollElement = scrollContainerRef.current
+    if (!scrollElement) {
+      return
+    }
+    const distanceFromBottom = scrollElement.scrollHeight - scrollElement.scrollTop - scrollElement.clientHeight
+    if (distanceFromBottom <= ESTIMATED_CARD_HEIGHT * 2) {
+      onLoadMore()
+    }
+  }, [hasMore, isFetchingMore, onLoadMore, virtualRows])
 
   // Error state
   if (error) {
@@ -141,21 +230,62 @@ export function AssetsList({
                 <EmptyMedia variant="icon">
                   <ImageIcon />
                 </EmptyMedia>
-                <EmptyTitle>{t('empty.title')}</EmptyTitle>
-                <EmptyDescription>{t('empty.description')}</EmptyDescription>
+                <EmptyTitle>
+                  {searchQuery || typeFilter !== 'all' ? t('filter.noResults') : t('empty.title')}
+                </EmptyTitle>
+                <EmptyDescription>
+                  {searchQuery || typeFilter !== 'all' ? t('filter.noResults') : t('empty.description')}
+                </EmptyDescription>
               </EmptyHeader>
-              <EmptyContent>
-                <Button onClick={() => setActiveTab('upload')} size="lg">
-                  <Upload className="mr-2 h-4 w-4" />
-                  {t('empty.uploadButton')}
-                </Button>
-              </EmptyContent>
+              {!searchQuery && typeFilter === 'all' && (
+                <EmptyContent>
+                  <Button onClick={() => setActiveTab('upload')} size="lg">
+                    <Upload className="mr-2 h-4 w-4" />
+                    {t('empty.uploadButton')}
+                  </Button>
+                </EmptyContent>
+              )}
             </Empty>
           ) : (
-            <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]">
-              {filteredAssets.map((asset) =>
-                AssetCard ? <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} /> : null,
-              )}
+            <div ref={gridViewportRef} className="w-full">
+              <div ref={scrollContainerRef} className="h-[70vh] overflow-auto rounded-lg">
+                <div
+                  className="relative w-full"
+                  style={{
+                    height: `${rowVirtualizer.getTotalSize()}px`,
+                  }}
+                >
+                  {virtualRows.map((virtualRow) => {
+                    const rowStart = virtualRow.index * columnCount
+                    const rowItems = filteredAssets.slice(rowStart, rowStart + columnCount)
+
+                    return (
+                      <div
+                        key={virtualRow.key}
+                        className="absolute left-0 top-0 w-full"
+                        style={{
+                          transform: `translateY(${virtualRow.start}px)`,
+                        }}
+                      >
+                        <div
+                          className="grid"
+                          style={{
+                            gap: `${GRID_GAP}px`,
+                            gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+                          }}
+                        >
+                          {rowItems.map((asset) =>
+                            AssetCard ? <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} /> : null,
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                {isFetchingMore ? (
+                  <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
+                ) : null}
+              </div>
             </div>
           )}
         </TabsContent>

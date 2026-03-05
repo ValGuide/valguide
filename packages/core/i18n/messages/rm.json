@@ -563,6 +563,7 @@
   "assets": {
     "title": "Assets",
     "description": "Administrar vossa biblioteca da medias",
+    "loadingMore": "Chargiar ulteriurs assets...",
     "empty": {
       "title": "Anc nagins assets",
       "description": "Chargiai si maletgs, audio e videos per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
