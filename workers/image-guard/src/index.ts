@@ -124,8 +124,8 @@ async function handleVideoThumbnailRequest(parsedPath: ParsedGuardPath, url: URL
     mediaOptions.push(`height=${params.height}`)
   }
 
-  const sourceUrl = new URL(`/${parsedPath.storagePath}`, url.origin)
-  const mediaUrl = `${url.origin}/cdn-cgi/media/${mediaOptions.join(',')}/${sourceUrl.toString()}`
+  const sourcePath = toEncodedPath(parsedPath.storagePath)
+  const mediaUrl = `${url.origin}/cdn-cgi/media/${mediaOptions.join(',')}/${sourcePath}`
 
   const response = await fetch(mediaUrl, {
     headers: {
@@ -271,4 +271,12 @@ function snapToNearest(requested: number): number {
   }
 
   return closest
+}
+
+function toEncodedPath(storagePath: string): string {
+  return storagePath
+    .split('/')
+    .filter((segment) => segment.length > 0)
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
 }

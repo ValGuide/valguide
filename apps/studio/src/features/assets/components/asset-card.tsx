@@ -103,7 +103,7 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
               <RevealImage
                 src={getAssetImageUrl(asset)}
                 alt={asset.fileName}
-                layout="constrained"
+                layout="fullWidth"
                 width={400}
                 height={192}
               />

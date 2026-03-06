@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { cn } from '../../ui/lib/utils'
 import { HomeButton } from '../404/home-button'
 
 export type ErrorPageProps = {
@@ -9,14 +10,15 @@ export type ErrorPageProps = {
   }
   error?: Error
   reset?: () => void
+  className?: string
 }
 
-export const ErrorPage = ({ i18n, error, reset }: ErrorPageProps) => {
+export const ErrorPage = ({ i18n, error, reset, className }: ErrorPageProps) => {
   const [showDetails, setShowDetails] = useState(false)
   const hasError = Boolean(error?.message)
 
   return (
-    <div className="min-h-svh flex flex-1 flex-col items-center justify-center px-4 py-8">
+    <div className={cn('min-h-svh flex flex-1 flex-col items-center justify-center px-4 py-8', className)}>
       <div className="w-full max-w-md text-center">
         <div className="flex items-center justify-center size-16 rounded-full bg-destructive/10 mx-auto mb-4">
           <svg

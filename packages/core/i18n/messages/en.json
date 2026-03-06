@@ -694,6 +694,7 @@
       "deleteConfirm": "Are you sure you want to delete this asset?",
       "deleteSuccess": "Asset deleted",
       "deleteError": "Failed to delete asset",
+      "details": "Details",
       "preview": "Preview",
       "download": "Download",
       "cancel": "Cancel"

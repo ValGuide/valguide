@@ -1,5 +1,4 @@
-import { getAssetVideoThumbnailUrl } from '@valguide/core/features/assets/image-url'
-import { Image } from '@valguide/ui/components/image'
+import { getAssetUrl, getAssetVideoThumbnailUrl } from '@valguide/core/features/assets/image-url'
 import { cn } from '@valguide/ui/lib/utils'
 import { Video } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -24,6 +23,8 @@ export function AssetVideoThumbnail({
   iconClassName,
 }: AssetVideoThumbnailProps) {
   const [hasError, setHasError] = useState(false)
+  const isWebm = storagePath.toLowerCase().endsWith('.webm')
+  const directVideoUrl = useMemo(() => getAssetUrl(storagePath), [storagePath])
 
   const thumbnailUrl = useMemo(
     () =>
@@ -48,13 +49,30 @@ export function AssetVideoThumbnail({
     )
   }
 
+  if (isWebm) {
+    return (
+      <div className="h-full w-full overflow-hidden bg-muted/30">
+        <video
+          src={directVideoUrl}
+          muted
+          playsInline
+          preload="metadata"
+          onError={() => setHasError(true)}
+          className={cn('h-full w-full object-cover', className)}
+          aria-label={alt}
+        />
+      </div>
+    )
+  }
+
   return (
-    <Image
+    <img
       src={thumbnailUrl}
       alt={alt}
-      layout="constrained"
       width={width}
       height={height ?? width}
+      loading="lazy"
+      decoding="async"
       onError={() => setHasError(true)}
       className={cn('h-full w-full object-cover', className)}
     />

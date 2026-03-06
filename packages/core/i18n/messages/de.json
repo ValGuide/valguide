@@ -694,6 +694,7 @@
       "deleteConfirm": "Möchten Sie dieses Asset wirklich löschen?",
       "deleteSuccess": "Asset gelöscht",
       "deleteError": "Asset konnte nicht gelöscht werden",
+      "details": "Details",
       "preview": "Vorschau",
       "download": "Herunterladen",
       "cancel": "Abbrechen"
