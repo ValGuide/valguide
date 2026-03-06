@@ -1,22 +1,15 @@
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
-import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
+import { LocalePickerList } from '@valguide/core/i18n/components/locale-picker-list'
+import { defaultLocale, type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { setLocaleFn } from '@valguide/core/i18n/set-locale.fn'
-import {
-  DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-} from '@valguide/ui/components/dropdown-menu'
-import { Check, Languages } from 'lucide-react'
-
-const localeNames: Record<SupportedLocale, string> = {
-  en: 'English',
-  de: 'Deutsch',
-  rm: 'Rumantsch',
-}
+import { DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from '@valguide/ui/components/dropdown-menu'
+import { Languages } from 'lucide-react'
 
 export function LocaleSwitcherDropdown() {
-  const currentLocale = useLocale()
+  const locale = useLocale()
+  const currentLocale = supportedLocales.includes(locale as SupportedLocale)
+    ? (locale as SupportedLocale)
+    : defaultLocale
   const t = useTranslations('sidebar.user')
 
   const handleLocaleChange = async (newLocale: SupportedLocale) => {
@@ -31,13 +24,8 @@ export function LocaleSwitcherDropdown() {
         <Languages />
         {t('language')}
       </DropdownMenuSubTrigger>
-      <DropdownMenuSubContent>
-        {supportedLocales.map((locale) => (
-          <DropdownMenuItem key={locale} onClick={() => handleLocaleChange(locale)} className="cursor-pointer">
-            <span className="flex-1">{localeNames[locale]}</span>
-            {currentLocale === locale && <Check className="size-4" />}
-          </DropdownMenuItem>
-        ))}
+      <DropdownMenuSubContent className="w-[300px] p-0">
+        <LocalePickerList currentLocale={currentLocale} onSelectLocale={(locale) => void handleLocaleChange(locale)} />
       </DropdownMenuSubContent>
     </DropdownMenuSub>
   )
