@@ -23,11 +23,19 @@ export type AssetListRowProps = {
   asset: AssetWithUsage
   variant: AssetListRowVariant
   onDelete?: (assetId: string) => void
+  onOpenDetails?: (asset: AssetWithUsage) => void
   onDeleteAction?: (assetId: string) => Promise<void>
   DeleteDialog?: DeleteAssetDialogComponent
 }
 
-export function AssetListRow({ asset, variant, onDelete, onDeleteAction, DeleteDialog }: AssetListRowProps) {
+export function AssetListRow({
+  asset,
+  variant,
+  onDelete,
+  onOpenDetails,
+  onDeleteAction,
+  DeleteDialog,
+}: AssetListRowProps) {
   const t = useTranslations('assets')
   const [isDeleting, setIsDeleting] = React.useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
@@ -87,15 +95,22 @@ export function AssetListRow({ asset, variant, onDelete, onDeleteAction, DeleteD
       <>
         <div className="grid grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] items-center gap-3 border-b px-2 py-3">
           <Checkbox aria-label={t('list.selectAsset')} />
-          <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md bg-muted">
-            {thumbnail}
-          </div>
-          <div className="min-w-0 space-y-0.5">
-            <p className="truncate text-sm font-medium">{asset.fileName}</p>
-            <p className="text-xs text-muted-foreground">
-              {usageSummary} · {createdAt}
-            </p>
-          </div>
+          <button
+            type="button"
+            className="col-span-2 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 text-left"
+            onClick={() => onOpenDetails?.(asset)}
+            aria-label={t('details.open')}
+          >
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md bg-muted">
+              {thumbnail}
+            </div>
+            <div className="min-w-0 space-y-0.5">
+              <p className="truncate text-sm font-medium">{asset.fileName}</p>
+              <p className="text-xs text-muted-foreground">
+                {usageSummary} · {createdAt}
+              </p>
+            </div>
+          </button>
           <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
             <Heart className="h-4 w-4" />
           </Button>
@@ -132,7 +147,12 @@ export function AssetListRow({ asset, variant, onDelete, onDeleteAction, DeleteD
     <>
       <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2.5">
         <Checkbox aria-label={t('list.selectAsset')} />
-        <div className="flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          className="flex min-w-0 items-center gap-3 text-left"
+          onClick={() => onOpenDetails?.(asset)}
+          aria-label={t('details.open')}
+        >
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-muted">
             {asset.type === 'video' || asset.type === 'audio' ? (
               asset.type === 'audio' ? (
@@ -145,7 +165,7 @@ export function AssetListRow({ asset, variant, onDelete, onDeleteAction, DeleteD
             )}
           </div>
           <p className="truncate text-sm font-medium">{asset.fileName}</p>
-        </div>
+        </button>
         <span className="text-sm text-muted-foreground">{t('list.upload')}</span>
         <div className="min-w-0 space-y-1">
           <Badge variant={totalUsage > 0 ? 'outline' : 'secondary'} className="max-w-full">

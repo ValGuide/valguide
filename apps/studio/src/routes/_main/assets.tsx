@@ -159,6 +159,11 @@ function AssetsContent() {
     await queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })
   }
 
+  const handleAssetRenamed = async (_assetId: string) => {
+    await queryClient.invalidateQueries({ queryKey: ['assets'] })
+    await queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })
+  }
+
   if (isPending && !data) {
     return <AssetsListSkeleton />
   }
@@ -173,6 +178,7 @@ function AssetsContent() {
       error={error}
       onLoadMore={() => void fetchNextPage()}
       onAssetDeleted={handleAssetDeleted}
+      onAssetRenamed={handleAssetRenamed}
       onUploadComplete={handleUploadComplete}
       onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })}
       typeFilter={typeFilter}

@@ -4,6 +4,7 @@ import type {
   AssetUsageFilter,
   AssetWithUsage,
 } from '@valguide/core/features/assets/get-assets.fn'
+import { renameAssetFn } from '@valguide/core/features/assets/rename-asset.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
@@ -32,12 +33,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/component
 import { Filter, Image as ImageIcon, LayoutGrid, List, Search, Upload, X } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { AssetDetailsDrawer } from '@/features/assets/components/asset-details-drawer'
 import type { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 export type AssetCardComponentProps = {
   asset: AssetWithUsage
   onDelete?: (assetId: string) => void
+  onPreview?: (asset: AssetWithUsage) => void
 }
 
 export type AssetCardComponent = ComponentType<AssetCardComponentProps>
@@ -48,6 +51,7 @@ export type AssetListRowComponentProps = {
   asset: AssetWithUsage
   variant: 'desktop' | 'mobile'
   onDelete?: (assetId: string) => void
+  onOpenDetails?: (asset: AssetWithUsage) => void
 }
 
 export type AssetListRowComponent = ComponentType<AssetListRowComponentProps>
@@ -63,6 +67,7 @@ export type AssetsListProps = {
   isQueryPending?: boolean
   error?: Error | null
   onAssetDeleted?: (assetId: string) => void
+  onAssetRenamed?: (assetId: string) => Promise<void> | void
   onUploadComplete?: (asset: Asset) => void
   onLoadMore?: () => void
   onRetry?: () => void
@@ -92,6 +97,7 @@ export function AssetsList({
   isQueryPending = false,
   error = null,
   onAssetDeleted,
+  onAssetRenamed,
   onUploadComplete,
   onLoadMore,
   onRetry,
@@ -120,6 +126,8 @@ export function AssetsList({
   const [internalUsageFilter, setInternalUsageFilter] = useState<AssetUsageFilter | 'all'>('all')
   const [internalViewMode, setInternalViewMode] = useState<AssetViewMode>('grid')
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [selectedAsset, setSelectedAsset] = useState<AssetWithUsage | null>(null)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
   const isMobile = useIsMobile()
 
@@ -218,6 +226,38 @@ export function AssetsList({
   const handleUploadComplete = (asset: Asset) => {
     onUploadComplete?.(asset)
     setActiveTab('library')
+  }
+
+  const openAssetDetails = (asset: AssetWithUsage) => {
+    setSelectedAsset(asset)
+    setIsDetailsOpen(true)
+  }
+
+  const closeAssetDetails = (open: boolean) => {
+    setIsDetailsOpen(open)
+    if (!open) {
+      setSelectedAsset(null)
+    }
+  }
+
+  const handleRenameAsset = async (assetId: string, fileName: string) => {
+    const renamedAsset = await renameAssetFn({
+      data: {
+        assetId,
+        fileName,
+      },
+    })
+
+    await onAssetRenamed?.(assetId)
+    setSelectedAsset((currentAsset) =>
+      currentAsset && currentAsset.id === renamedAsset.id
+        ? {
+            ...currentAsset,
+            fileName: renamedAsset.fileName,
+            updatedAt: renamedAsset.updatedAt,
+          }
+        : currentAsset,
+    )
   }
 
   const clearAllFilters = () => {
@@ -669,7 +709,14 @@ export function AssetsList({
             <div className={`space-y-3 ${isMobile ? 'pb-24' : ''}`}>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {displayedAssets.map((asset) =>
-                  AssetCard ? <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} /> : null,
+                  AssetCard ? (
+                    <AssetCard
+                      key={asset.id}
+                      asset={asset}
+                      onDelete={onAssetDeleted}
+                      onPreview={(previewAsset) => openAssetDetails(previewAsset)}
+                    />
+                  ) : null,
                 )}
               </div>
               <div ref={loadMoreRef} aria-hidden="true" className="h-1 w-full" />
@@ -683,7 +730,13 @@ export function AssetsList({
                 <div className="overflow-hidden rounded-xl border">
                   {displayedAssets.map((asset) =>
                     AssetListRow ? (
-                      <AssetListRow key={asset.id} asset={asset} variant="mobile" onDelete={onAssetDeleted} />
+                      <AssetListRow
+                        key={asset.id}
+                        asset={asset}
+                        variant="mobile"
+                        onDelete={onAssetDeleted}
+                        onOpenDetails={(clickedAsset) => openAssetDetails(clickedAsset)}
+                      />
                     ) : null,
                   )}
                 </div>
@@ -700,7 +753,13 @@ export function AssetsList({
                   </div>
                   {displayedAssets.map((asset) =>
                     AssetListRow ? (
-                      <AssetListRow key={asset.id} asset={asset} variant="desktop" onDelete={onAssetDeleted} />
+                      <AssetListRow
+                        key={asset.id}
+                        asset={asset}
+                        variant="desktop"
+                        onDelete={onAssetDeleted}
+                        onOpenDetails={(clickedAsset) => openAssetDetails(clickedAsset)}
+                      />
                     ) : null,
                   )}
                 </div>
@@ -755,6 +814,13 @@ export function AssetsList({
           </div>
         </TabsContent>
       </Tabs>
+
+      <AssetDetailsDrawer
+        asset={selectedAsset}
+        open={isDetailsOpen}
+        onOpenChange={closeAssetDetails}
+        onRename={handleRenameAsset}
+      />
     </div>
   )
 }
