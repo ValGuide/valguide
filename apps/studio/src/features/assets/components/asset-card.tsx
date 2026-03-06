@@ -91,7 +91,7 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
 
   return (
     <>
-      <Card className="group overflow-hidden transition-all hover:shadow-md">
+      <Card className="overflow-hidden transition-all hover:shadow-md">
         <CardContent className="p-4">
           <button
             type="button"
@@ -109,13 +109,6 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
             ) : (
               getIcon()
             )}
-
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
-              <span className="inline-flex items-center text-sm font-medium text-secondary bg-secondary-foreground/90 px-3 py-1.5 rounded-md">
-                <Eye className="mr-2 h-4 w-4" />
-                {t('card.preview')}
-              </span>
-            </div>
           </button>
 
           <div className="space-y-2">
