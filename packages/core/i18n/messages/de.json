@@ -641,11 +641,9 @@
     "list": {
       "sortAndFilter": "Sortieren & Filtern",
       "selectAsset": "Asset auswählen",
-      "addTag": "Tag hinzufügen",
       "upload": "Upload",
       "headers": {
         "name": "Name",
-        "tag": "Tag",
         "type": "Typ",
         "media": "Medien",
         "usage": "Verwendung",

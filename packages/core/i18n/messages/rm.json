@@ -641,11 +641,9 @@
     "list": {
       "sortAndFilter": "Sortir & filtrar",
       "selectAsset": "Tscherner asset",
-      "addTag": "Agiuntar tag",
       "upload": "Chargiar si",
       "headers": {
         "name": "Num",
-        "tag": "Tag",
         "type": "Tip",
         "media": "Media",
         "usage": "Utilisaziun",

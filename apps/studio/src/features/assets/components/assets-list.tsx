@@ -689,10 +689,9 @@ export function AssetsList({
                 </div>
               ) : (
                 <div className="overflow-hidden rounded-xl border">
-                  <div className="grid grid-cols-[36px_minmax(0,2fr)_minmax(120px,1fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
+                  <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
                     <span />
                     <span>{t('list.headers.name')}</span>
-                    <span>{t('list.headers.tag')}</span>
                     <span>{t('list.headers.type')}</span>
                     <span>{t('list.headers.usage')}</span>
                     <span>{t('list.headers.created')}</span>

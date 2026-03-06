@@ -130,7 +130,7 @@ export function AssetListRow({ asset, variant, onDelete, onDeleteAction, DeleteD
 
   return (
     <>
-      <div className="grid grid-cols-[36px_minmax(0,2fr)_minmax(120px,1fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2.5">
+      <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2.5">
         <Checkbox aria-label={t('list.selectAsset')} />
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-muted">
@@ -146,9 +146,6 @@ export function AssetListRow({ asset, variant, onDelete, onDeleteAction, DeleteD
           </div>
           <p className="truncate text-sm font-medium">{asset.fileName}</p>
         </div>
-        <Button type="button" variant="outline" size="sm" className="w-fit">
-          {t('list.addTag')}
-        </Button>
         <span className="text-sm text-muted-foreground">{t('list.upload')}</span>
         <div className="min-w-0 space-y-1">
           <Badge variant={totalUsage > 0 ? 'outline' : 'secondary'} className="max-w-full">
