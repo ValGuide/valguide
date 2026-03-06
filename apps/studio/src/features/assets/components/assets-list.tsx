@@ -24,7 +24,7 @@ import { PageTitle } from '@valguide/ui/components/page-title'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
-import { Filter, Image as ImageIcon, Search, Upload, X } from 'lucide-react'
+import { Filter, Image as ImageIcon, LayoutGrid, List, Search, Upload, X } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
@@ -36,6 +36,16 @@ export type AssetCardComponentProps = {
 }
 
 export type AssetCardComponent = ComponentType<AssetCardComponentProps>
+
+type AssetViewMode = 'grid' | 'list'
+
+export type AssetListRowComponentProps = {
+  asset: AssetWithUsage
+  variant: 'desktop' | 'mobile'
+  onDelete?: (assetId: string) => void
+}
+
+export type AssetListRowComponent = ComponentType<AssetListRowComponentProps>
 
 export type UploadInlineComponent = ComponentType<AssetUploadInlineProps>
 
@@ -58,8 +68,11 @@ export type AssetsListProps = {
   sortBy?: AssetSortBy
   sortDirection?: AssetSortDirection
   onSortChange?: (sortBy: AssetSortBy, sortDirection: AssetSortDirection) => void
+  viewMode?: AssetViewMode
+  onViewModeChange?: (value: AssetViewMode) => void
   onClearAllFilters?: () => void
   AssetCard?: AssetCardComponent
+  AssetListRow?: AssetListRowComponent
   UploadInline?: UploadInlineComponent
 }
 
@@ -82,8 +95,11 @@ export function AssetsList({
   sortBy: controlledSortBy,
   sortDirection: controlledSortDirection,
   onSortChange,
+  viewMode: controlledViewMode,
+  onViewModeChange,
   onClearAllFilters,
   AssetCard,
+  AssetListRow,
   UploadInline,
 }: AssetsListProps) {
   const t = useTranslations('assets')
@@ -92,6 +108,7 @@ export function AssetsList({
   const [internalSearchQuery, setInternalSearchQuery] = useState('')
   const [internalSortBy, setInternalSortBy] = useState<AssetSortBy>('createdAt')
   const [internalSortDirection, setInternalSortDirection] = useState<AssetSortDirection>('desc')
+  const [internalViewMode, setInternalViewMode] = useState<AssetViewMode>('grid')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
   const isMobile = useIsMobile()
@@ -100,6 +117,7 @@ export function AssetsList({
   const searchQuery = controlledSearchQuery ?? internalSearchQuery
   const sortBy = controlledSortBy ?? internalSortBy
   const sortDirection = controlledSortDirection ?? internalSortDirection
+  const viewMode = controlledViewMode ?? internalViewMode
 
   const setTypeFilter = (value: AssetType | 'all') => {
     if (!onTypeFilterChange) {
@@ -124,6 +142,14 @@ export function AssetsList({
       return
     }
     onSortChange(nextSortBy, nextSortDirection)
+  }
+
+  const setViewMode = (value: AssetViewMode) => {
+    if (!onViewModeChange) {
+      setInternalViewMode(value)
+      return
+    }
+    onViewModeChange(value)
   }
 
   const isControlledMode = Boolean(onTypeFilterChange && onSearchQueryChange && onSortChange)
@@ -183,6 +209,31 @@ export function AssetsList({
       : sortDirection === 'asc'
         ? t('filter.order.nameAsc')
         : t('filter.order.nameDesc')
+
+  const renderViewToggleControls = (compact = false) => (
+    <div className="inline-flex items-center gap-1 rounded-lg border bg-background p-1">
+      <Button
+        type="button"
+        variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
+        size={compact ? 'icon' : 'sm'}
+        className={compact ? 'h-8 w-8' : 'h-8'}
+        aria-label={t('view.grid')}
+        onClick={() => setViewMode('grid')}
+      >
+        <LayoutGrid className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+        size={compact ? 'icon' : 'sm'}
+        className={compact ? 'h-8 w-8' : 'h-8'}
+        aria-label={t('view.list')}
+        onClick={() => setViewMode('list')}
+      >
+        <List className="h-4 w-4" />
+      </Button>
+    </div>
+  )
 
   const renderFilterControls = (idPrefix: string) => (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -250,6 +301,16 @@ export function AssetsList({
       </div>
     </div>
   )
+
+  useEffect(() => {
+    setFiltersOpen(false)
+  }, [isMobile])
+
+  useEffect(() => {
+    return () => {
+      setFiltersOpen(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (!onLoadMore || !hasMore || isFetchingMore || isQueryPending || !loadMoreRef.current) {
@@ -320,7 +381,7 @@ export function AssetsList({
         <TabsContent value="library" className="space-y-6">
           <div className="sticky top-0 z-20 border-b bg-background pt-4 pb-4">
             <div className="space-y-3">
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px] xl:gap-4">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px_auto] xl:gap-4">
                 <div className="space-y-1">
                   <label htmlFor="asset-search" className="sr-only xl:not-sr-only xl:text-xs xl:text-muted-foreground">
                     {t('filter.searchLabel')}
@@ -338,34 +399,8 @@ export function AssetsList({
                   </div>
                 </div>
 
-                <div className="flex items-end xl:hidden">
-                  {isMobile ? (
-                    <Drawer open={filtersOpen} onOpenChange={setFiltersOpen}>
-                      <DrawerTrigger asChild>
-                        <Button variant="outline" className="h-10 min-w-28 justify-between">
-                          <span className="inline-flex items-center gap-2">
-                            <Filter className="h-4 w-4" />
-                            {t('filter.actions.filters')}
-                          </span>
-                          {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
-                        </Button>
-                      </DrawerTrigger>
-                      <DrawerContent>
-                        <DrawerHeader className="text-left">
-                          <DrawerTitle>{t('filter.actions.filters')}</DrawerTitle>
-                          <DrawerDescription>{t('description')}</DrawerDescription>
-                        </DrawerHeader>
-                        <div className="space-y-4 px-4 pb-6">
-                          {renderFilterControls('drawer')}
-                          {activeFilterCount > 0 ? (
-                            <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
-                              {t('filter.actions.clearAll')}
-                            </Button>
-                          ) : null}
-                        </div>
-                      </DrawerContent>
-                    </Drawer>
-                  ) : (
+                <div className="flex items-end gap-2 xl:hidden">
+                  {!isMobile ? (
                     <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
                       <PopoverTrigger asChild>
                         <Button variant="outline" className="h-10 min-w-28 justify-between">
@@ -386,7 +421,8 @@ export function AssetsList({
                         ) : null}
                       </PopoverContent>
                     </Popover>
-                  )}
+                  ) : null}
+                  {!isMobile ? renderViewToggleControls(true) : null}
                 </div>
 
                 <div className="hidden space-y-1 xl:block">
@@ -455,6 +491,8 @@ export function AssetsList({
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div className="hidden items-end xl:flex">{renderViewToggleControls()}</div>
               </div>
 
               {activeFilterCount > 0 ? (
@@ -513,8 +551,8 @@ export function AssetsList({
                 </EmptyContent>
               )}
             </Empty>
-          ) : (
-            <div className="space-y-3">
+          ) : viewMode === 'grid' ? (
+            <div className={`space-y-3 ${isMobile ? 'pb-24' : ''}`}>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {displayedAssets.map((asset) =>
                   AssetCard ? <AssetCard key={asset.id} asset={asset} onDelete={onAssetDeleted} /> : null,
@@ -525,7 +563,75 @@ export function AssetsList({
                 <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
               ) : null}
             </div>
+          ) : (
+            <div className={`space-y-3 ${isMobile ? 'pb-24' : ''}`}>
+              {isMobile ? (
+                <div className="overflow-hidden rounded-xl border">
+                  {displayedAssets.map((asset) =>
+                    AssetListRow ? (
+                      <AssetListRow key={asset.id} asset={asset} variant="mobile" onDelete={onAssetDeleted} />
+                    ) : null,
+                  )}
+                </div>
+              ) : (
+                <div className="overflow-hidden rounded-xl border">
+                  <div className="grid grid-cols-[36px_minmax(0,2fr)_minmax(120px,1fr)_110px_110px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
+                    <span />
+                    <span>{t('list.headers.name')}</span>
+                    <span>{t('list.headers.tag')}</span>
+                    <span>{t('list.headers.type')}</span>
+                    <span>{t('list.headers.media')}</span>
+                    <span>{t('list.headers.created')}</span>
+                    <span />
+                    <span />
+                  </div>
+                  {displayedAssets.map((asset) =>
+                    AssetListRow ? (
+                      <AssetListRow key={asset.id} asset={asset} variant="desktop" onDelete={onAssetDeleted} />
+                    ) : null,
+                  )}
+                </div>
+              )}
+              <div ref={loadMoreRef} aria-hidden="true" className="h-1 w-full" />
+              {isFetchingMore ? (
+                <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
+              ) : null}
+            </div>
           )}
+
+          {isMobile && displayedAssets.length > 0 ? (
+            <div className="fixed inset-x-0 bottom-4 z-40 px-4">
+              <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur">
+                <Drawer open={filtersOpen} onOpenChange={setFiltersOpen}>
+                  <DrawerTrigger asChild>
+                    <Button variant="ghost" className="h-10 justify-between rounded-xl px-4">
+                      <span className="inline-flex items-center gap-2">
+                        <Filter className="h-4 w-4" />
+                        {t('list.sortAndFilter')}
+                      </span>
+                      {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent>
+                    <DrawerHeader className="text-left">
+                      <DrawerTitle>{t('filter.actions.filters')}</DrawerTitle>
+                      <DrawerDescription>{t('description')}</DrawerDescription>
+                    </DrawerHeader>
+                    <div className="space-y-4 px-4 pb-6">
+                      {renderFilterControls('drawer')}
+                      {activeFilterCount > 0 ? (
+                        <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
+                          {t('filter.actions.clearAll')}
+                        </Button>
+                      ) : null}
+                    </div>
+                  </DrawerContent>
+                </Drawer>
+                <div className="h-8 w-px bg-border" />
+                {renderViewToggleControls(true)}
+              </div>
+            </div>
+          ) : null}
         </TabsContent>
 
         <TabsContent value="upload" className="space-y-6">
