@@ -11,7 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
-import { BadgeCheck, ChevronsUpDown, LogOut } from 'lucide-react'
+import { BadgeCheck, ChevronsUpDown, Languages, LogOut, Monitor } from 'lucide-react'
+import { useState } from 'react'
 import { LocaleSwitcherDropdown } from './locale-switcher-dropdown'
 import { ThemeSwitcherDropdown } from './theme-switcher-dropdown'
 
@@ -28,6 +29,9 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const t = useTranslations('sidebar.user')
+  const tTheme = useTranslations('theme')
+  const [isLanguagePickerOpen, setIsLanguagePickerOpen] = useState(false)
+  const [isThemePickerOpen, setIsThemePickerOpen] = useState(false)
 
   return (
     <SidebarMenu>
@@ -92,8 +96,14 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <LocaleSwitcherDropdown />
-              <ThemeSwitcherDropdown />
+              <DropdownMenuItem onSelect={() => setIsLanguagePickerOpen(true)} className="cursor-pointer">
+                <Languages />
+                {t('language')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setIsThemePickerOpen(true)} className="cursor-pointer">
+                <Monitor />
+                {tTheme('toggleTheme')}
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
@@ -102,6 +112,12 @@ export function NavUser({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <LocaleSwitcherDropdown
+          open={isLanguagePickerOpen}
+          onOpenChange={setIsLanguagePickerOpen}
+          isMobile={isMobile}
+        />
+        <ThemeSwitcherDropdown open={isThemePickerOpen} onOpenChange={setIsThemePickerOpen} isMobile={isMobile} />
       </SidebarMenuItem>
     </SidebarMenu>
   )
