@@ -6,6 +6,8 @@ import { createAuthMiddleware } from 'better-auth/api'
 import { emailOTP, organization as organizationPlugin } from 'better-auth/plugins'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { serverEnv } from '../../env/server'
+import { defaultLocale, type SupportedLocale } from '../../i18n/i18n.config'
+import { getAcceptLanguageLocale, isSupportedLocale, LOCALE_COOKIE_NAME } from '../../i18n/server'
 import { userLoggedInMessage } from '../../slack/messages/user-logged-in.message'
 import { userStartedLoginMessage } from '../../slack/messages/user-started-login.message'
 import { postMessage } from '../../slack/send-slack-message'
@@ -34,6 +36,46 @@ function normalizeEmail(value: unknown): string | null {
 
   const normalized = value.trim().toLowerCase()
   return normalized.length > 0 ? normalized : null
+}
+
+function getCookieValue(cookieHeader: string | null, name: string): string | null {
+  if (!cookieHeader) {
+    return null
+  }
+
+  const entries = cookieHeader.split(';')
+  for (const entry of entries) {
+    const [rawName, ...rest] = entry.trim().split('=')
+    if (rawName !== name) {
+      continue
+    }
+    return decodeURIComponent(rest.join('='))
+  }
+
+  return null
+}
+
+function resolveEmailLocaleFromHeaders(headers: Headers | null): SupportedLocale {
+  const cookieLocale = getCookieValue(headers?.get('cookie') ?? null, LOCALE_COOKIE_NAME)
+  if (isSupportedLocale(cookieLocale)) {
+    return cookieLocale
+  }
+
+  const acceptLanguage = headers?.get('accept-language') ?? null
+  const acceptLocale = getAcceptLanguageLocale(acceptLanguage)
+  if (acceptLocale) {
+    return acceptLocale
+  }
+
+  return defaultLocale
+}
+
+function resolveCurrentRequestEmailLocale(): SupportedLocale {
+  try {
+    return resolveEmailLocaleFromHeaders(getRequestHeaders())
+  } catch {
+    return defaultLocale
+  }
 }
 
 export function createAuthInstance(options: {
@@ -66,6 +108,7 @@ export function createAuthInstance(options: {
     organizationName: string
     inviterEmail: string
     invitationId: string
+    locale: SupportedLocale
   }) => Promise<void>
   sessionCookieCache?:
     | {
@@ -181,7 +224,7 @@ export function createAuthInstance(options: {
               async sendVerificationOTP({ email, otp }) {
                 await sendEmail({
                   to: email,
-                  subject: 'Your ValGuide login code',
+                  locale: resolveCurrentRequestEmailLocale(),
                   template: {
                     name: 'otp-login',
                     data: {
@@ -209,6 +252,7 @@ export function createAuthInstance(options: {
                         organizationName: organization.name,
                         inviterEmail: inviter.user.email,
                         invitationId: id,
+                        locale: resolveCurrentRequestEmailLocale(),
                       })
                     },
                   }
@@ -270,10 +314,10 @@ export const auth = createAuthInstance({
   errorURL: '/auth/error',
   enableEmailOtp: true,
   enableOrganizationPlugin: true,
-  sendInvitationEmail: async ({ email, organizationName, inviterEmail, invitationId }) => {
+  sendInvitationEmail: async ({ email, organizationName, inviterEmail, invitationId, locale }) => {
     await sendEmail({
       to: email,
-      subject: `Join ${organizationName} on ValGuide`,
+      locale,
       template: {
         name: 'team-invite',
         data: {

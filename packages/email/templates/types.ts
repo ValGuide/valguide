@@ -1,10 +1,22 @@
-export interface ResendTemplateVariable {
-  key: string
-  type: 'string' | 'number' | 'boolean'
-  fallbackValue: string | number | boolean
-}
+import type { EmailLocale } from './locales'
+
+export type EmailTemplateKey = 'otp-login' | 'team-invite'
+
+export type ResendTemplateVariable =
+  | {
+      key: string
+      type: 'string'
+      fallbackValue: string
+    }
+  | {
+      key: string
+      type: 'number'
+      fallbackValue: number
+    }
 
 export interface ResendTemplateConfig {
+  key: EmailTemplateKey
+  locale: EmailLocale
   alias: string
   name: string
   subject: string

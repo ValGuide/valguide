@@ -1,13 +1,17 @@
 import { Body, Container, Head, Heading, Html, Img, Preview, Section, Tailwind, Text } from '@react-email/components'
+import { getOtpLoginCopy } from '../templates/copy'
+import { defaultEmailLocale, type EmailLocale } from '../templates/locales'
 
 export interface OtpLoginEmailProps {
   code: string
   maxValidMinutes: number
   logoUrl?: string
+  locale?: EmailLocale
 }
 
-export const OtpLoginEmail = ({ code, maxValidMinutes, logoUrl }: OtpLoginEmailProps) => {
-  const previewText = `Use the code below to securely log in. Valid for ${maxValidMinutes} minutes.`
+export const OtpLoginEmail = ({ code, maxValidMinutes, logoUrl, locale = defaultEmailLocale }: OtpLoginEmailProps) => {
+  const copy = getOtpLoginCopy(locale)
+  const previewText = copy.preview(maxValidMinutes)
 
   return (
     <Html>
@@ -22,20 +26,16 @@ export const OtpLoginEmail = ({ code, maxValidMinutes, logoUrl }: OtpLoginEmailP
               </Section>
             )}
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-              Your login code for <strong>ValGuide</strong>
+              {copy.heading}
             </Heading>
 
             <Section style={codeContainerStyle}>
               <Text style={codeStyle}>{code}</Text>
             </Section>
 
-            <Text className="pt-2 text-center leading-[26px] text-[16px]">
-              This code expires in {maxValidMinutes} minutes.
-            </Text>
+            <Text className="pt-2 text-center leading-[26px] text-[16px]">{copy.expires(maxValidMinutes)}</Text>
 
-            <Text className="pt-2 text-center leading-[26px] text-[12px]">
-              If you didn't request this, please ignore this email.
-            </Text>
+            <Text className="pt-2 text-center leading-[26px] text-[12px]">{copy.ignore}</Text>
           </Container>
         </Body>
       </Tailwind>
@@ -69,6 +69,7 @@ const codeStyle = {
 OtpLoginEmail.PreviewProps = {
   code: '512345',
   maxValidMinutes: 60,
+  locale: 'en',
 } as OtpLoginEmailProps
 
 export default OtpLoginEmail

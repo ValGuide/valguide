@@ -1,27 +1,35 @@
 import { Body, Container, Head, Heading, Html, Preview, Section, Tailwind, Text } from '@react-email/components'
+import { getOtpLoginCopy } from './copy'
+import { defaultEmailLocale, type EmailLocale } from './locales'
 import type { ResendTemplateConfig } from './types'
 
-export const otpLoginConfig: ResendTemplateConfig = {
-  alias: 'otp-login',
-  name: 'OTP Login',
-  subject: 'Your ValGuide Login Code',
-  from: 'ValGuide <noreply@valguide.com>',
-  variables: [
-    { key: 'CODE', type: 'string', fallbackValue: '000000' },
-    { key: 'MAX_VALID_MINUTES', type: 'number', fallbackValue: 60 },
-  ],
+export function getOtpLoginConfig(locale: EmailLocale): ResendTemplateConfig {
+  return {
+    key: 'otp-login',
+    locale,
+    alias: `otp-login-${locale}`,
+    name: `OTP Login (${locale.toUpperCase()})`,
+    subject: getOtpLoginCopy(locale).subject,
+    from: 'ValGuide <noreply@valguide.com>',
+    variables: [
+      { key: 'CODE', type: 'string', fallbackValue: '000000' },
+      { key: 'MAX_VALID_MINUTES', type: 'number', fallbackValue: 60 },
+    ],
+  }
 }
 
-export const OtpLoginTemplate = () => {
+export const OtpLoginTemplate = ({ locale = defaultEmailLocale }: { locale?: EmailLocale }) => {
+  const copy = getOtpLoginCopy(locale)
+
   return (
     <Html>
       <Head />
-      <Preview>Use the code below to securely log in. Valid for {'{{{MAX_VALID_MINUTES}}}'} minutes.</Preview>
+      <Preview>{copy.preview('{{{MAX_VALID_MINUTES}}}')}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              Your login code for <strong>ValGuide</strong>
+              {copy.heading}
             </Heading>
 
             <Section style={codeContainerStyle}>
@@ -29,12 +37,10 @@ export const OtpLoginTemplate = () => {
             </Section>
 
             <Text className="pt-2 text-center text-[16px] leading-[26px]">
-              This code expires in {'{{{MAX_VALID_MINUTES}}}'} minutes.
+              {copy.expires('{{{MAX_VALID_MINUTES}}}')}
             </Text>
 
-            <Text className="pt-2 text-center text-[12px] leading-[26px]">
-              If you didn't request this, please ignore this email.
-            </Text>
+            <Text className="pt-2 text-center text-[12px] leading-[26px]">{copy.ignore}</Text>
           </Container>
         </Body>
       </Tailwind>
@@ -65,10 +71,13 @@ const codeStyle = {
   textAlign: 'center' as const,
 }
 
-export const otpLoginText = `Your login code for ValGuide
+export function getOtpLoginText(locale: EmailLocale): string {
+  const copy = getOtpLoginCopy(locale)
+  return `${copy.heading}
 
 {{{CODE}}}
 
-This code expires in {{{MAX_VALID_MINUTES}}} minutes.
+${copy.expires('{{{MAX_VALID_MINUTES}}}')}
 
-If you didn't request this, please ignore this email.`
+${copy.ignore}`
+}

@@ -4,27 +4,77 @@
  * Usage: pnpm dlx tsx scripts/sync-templates.ts
  *
  * Environment variables:
- * - RESEND_API_KEY: Your Resend API key with write access
+ * - RESEND_ADMIN_API_KEY: Your Resend API key with write access
  */
 
 import { render } from '@react-email/render'
 import React from 'react'
 import { Resend } from 'resend'
-import { templates } from '../templates'
+import { emailLocales, type ResendTemplate, templates } from '../templates'
 
 const RESEND_API_KEY = process.env.RESEND_ADMIN_API_KEY
-
-if (!RESEND_API_KEY) {
-  console.error('Error: RESEND_ADMIN_API_KEY environment variable is required')
-  process.exit(1)
-}
-
-const resend = new Resend(RESEND_API_KEY)
+const dryRun = process.argv.includes('--dry-run')
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
+function assertNoDuplicateAliases(allTemplates: ResendTemplate[]) {
+  const aliases = new Set<string>()
+  const duplicates: string[] = []
+
+  for (const template of allTemplates) {
+    if (aliases.has(template.config.alias)) {
+      duplicates.push(template.config.alias)
+      continue
+    }
+    aliases.add(template.config.alias)
+  }
+
+  if (duplicates.length > 0) {
+    throw new Error(`Duplicate template aliases found: ${duplicates.join(', ')}`)
+  }
+}
+
+function assertAllLocalesPresent(allTemplates: ResendTemplate[]) {
+  const byKey = new Map<string, Set<string>>()
+
+  for (const template of allTemplates) {
+    const set = byKey.get(template.config.key) ?? new Set<string>()
+    set.add(template.config.locale)
+    byKey.set(template.config.key, set)
+  }
+
+  for (const [key, locales] of byKey.entries()) {
+    const missing = emailLocales.filter((locale) => !locales.has(locale))
+    if (missing.length > 0) {
+      throw new Error(`Missing locales for "${key}": ${missing.join(', ')}`)
+    }
+  }
+}
+
 async function syncTemplates() {
+  assertNoDuplicateAliases(templates)
+  assertAllLocalesPresent(templates)
+
   console.log(`Syncing ${templates.length} templates to Resend...\n`)
+
+  if (dryRun) {
+    console.log('Running in dry-run mode. No Resend API calls will be made.\n')
+    for (const template of templates) {
+      const html = await render(React.createElement(template.component))
+      console.log(`[dry-run] ${template.config.alias}`)
+      console.log(`  key=${template.config.key} locale=${template.config.locale}`)
+      console.log(`  subject=${template.config.subject}`)
+      console.log(`  html_length=${html.length} text_length=${template.text.length}`)
+    }
+    console.log('\n✅ Dry-run complete!')
+    return
+  }
+
+  if (!resend) {
+    console.error('Error: RESEND_ADMIN_API_KEY environment variable is required')
+    process.exit(1)
+  }
 
   const { data: existingTemplates, error: listError } = await resend.templates.list({ limit: 100 })
 
@@ -35,12 +85,11 @@ async function syncTemplates() {
 
   const existingByAlias = new Map(existingTemplates?.data?.map((t) => [t.alias, t]) ?? [])
 
-  for (let i = 0; i < templates.length; i++) {
-    const template = templates[i]
+  for (const [index, template] of templates.entries()) {
     const { config, component, text } = template
 
     // Rate limit: 2 requests per second, so wait 600ms between templates
-    if (i > 0) {
+    if (index > 0) {
       await delay(600)
     }
 
