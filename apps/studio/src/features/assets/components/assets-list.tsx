@@ -295,7 +295,7 @@ export function AssetsList({
         type="button"
         variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
         size={compact ? 'icon' : 'sm'}
-        className={compact ? 'h-8 w-8' : 'h-8'}
+        className={compact ? 'h-8 w-8 touch-pan-y' : 'h-8 touch-pan-y'}
         aria-label={t('view.grid')}
         onClick={() => setViewMode('grid')}
       >
@@ -305,7 +305,7 @@ export function AssetsList({
         type="button"
         variant={viewMode === 'list' ? 'secondary' : 'ghost'}
         size={compact ? 'icon' : 'sm'}
-        className={compact ? 'h-8 w-8' : 'h-8'}
+        className={compact ? 'h-8 w-8 touch-pan-y' : 'h-8 touch-pan-y'}
         aria-label={t('view.list')}
         onClick={() => setViewMode('list')}
       >
@@ -772,11 +772,11 @@ export function AssetsList({
           )}
 
           {isMobile && displayedAssets.length > 0 ? (
-            <div className="fixed inset-x-0 bottom-4 z-40 px-4">
-              <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur">
-                <Drawer open={filtersOpen} onOpenChange={setFiltersOpen}>
+            <div className="fixed inset-x-0 bottom-4 z-40 px-4 touch-pan-y">
+              <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur touch-pan-y">
+                <Drawer open={filtersOpen} onOpenChange={setFiltersOpen} modal={false}>
                   <DrawerTrigger asChild>
-                    <Button variant="ghost" className="h-10 justify-between rounded-xl px-4">
+                    <Button variant="ghost" className="h-10 justify-between rounded-xl px-4 touch-pan-y">
                       <span className="inline-flex items-center gap-2">
                         <Filter className="h-4 w-4" />
                         {t('list.sortAndFilter')}
@@ -800,7 +800,7 @@ export function AssetsList({
                   </DrawerContent>
                 </Drawer>
                 <div className="h-8 w-px bg-border" />
-                {renderViewToggleControls(true)}
+                <div className="touch-pan-y">{renderViewToggleControls(true)}</div>
               </div>
             </div>
           ) : null}
