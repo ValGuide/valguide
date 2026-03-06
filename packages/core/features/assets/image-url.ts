@@ -45,3 +45,30 @@ export function getAssetDisplayUrl(asset: { storagePath: string; type: 'image' |
   }
   return getAssetUrl(asset.storagePath)
 }
+
+type VideoThumbnailOptions = {
+  width?: number
+  height?: number
+  timeSeconds?: number
+  format?: 'jpg' | 'png'
+}
+
+/**
+ * Get a guarded Cloudflare video-frame thumbnail URL.
+ * This uses the custom /v/ worker route, similar to image /i/ guarding.
+ */
+export function getAssetVideoThumbnailUrl(storagePath: string, options: VideoThumbnailOptions = {}): string {
+  const baseUrl = clientEnv.VITE_R2_PUBLIC_URL
+  const cleanPath = storagePath.startsWith('/') ? storagePath.slice(1) : storagePath
+
+  const width = options.width ?? 640
+  const timeSeconds = options.timeSeconds ?? 2
+  const format = options.format ?? 'jpg'
+
+  const transforms = [`w-${width}`, `t-${timeSeconds}`, `f-${format}`]
+  if (options.height) {
+    transforms.push(`h-${options.height}`)
+  }
+
+  return `${baseUrl}/v/${transforms.join(',')}/${cleanPath}`
+}

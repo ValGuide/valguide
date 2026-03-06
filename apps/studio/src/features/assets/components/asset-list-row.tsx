@@ -16,6 +16,7 @@ import { format } from 'date-fns'
 import { Heart, MoreHorizontal, Music, Trash2, Video } from 'lucide-react'
 import * as React from 'react'
 import type { DeleteAssetDialogComponent } from './asset-card'
+import { AssetVideoThumbnail } from './asset-video-thumbnail'
 
 type AssetListRowVariant = 'desktop' | 'mobile'
 
@@ -84,6 +85,8 @@ export function AssetListRow({
   const thumbnail =
     asset.type === 'image' ? (
       <RevealImage src={getAssetImageUrl(asset)} alt={asset.fileName} layout="constrained" width={64} height={48} />
+    ) : asset.type === 'video' ? (
+      <AssetVideoThumbnail storagePath={asset.storagePath} alt={asset.fileName} width={64} height={48} />
     ) : asset.type === 'audio' ? (
       <Music className="h-4 w-4 text-muted-foreground" />
     ) : (
@@ -154,15 +157,7 @@ export function AssetListRow({
           aria-label={t('details.open')}
         >
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-muted">
-            {asset.type === 'video' || asset.type === 'audio' ? (
-              asset.type === 'audio' ? (
-                <Music className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <Video className="h-4 w-4 text-muted-foreground" />
-              )
-            ) : (
-              thumbnail
-            )}
+            {thumbnail}
           </div>
           <p className="truncate text-sm font-medium">{asset.fileName}</p>
         </button>

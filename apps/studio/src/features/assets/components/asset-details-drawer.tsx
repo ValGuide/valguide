@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import { Clipboard, Music, Video } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { AssetVideoThumbnail } from './asset-video-thumbnail'
 
 type AssetDetailsDrawerProps = {
   asset: AssetWithUsage | null
@@ -104,6 +105,8 @@ export function AssetDetailsDrawer({ asset, open, onOpenChange, onRename }: Asse
                     width={640}
                     height={256}
                   />
+                ) : asset.type === 'video' ? (
+                  <AssetVideoThumbnail storagePath={asset.storagePath} alt={asset.fileName} width={640} height={256} />
                 ) : asset.type === 'audio' ? (
                   <Music className="h-10 w-10 text-muted-foreground" />
                 ) : (

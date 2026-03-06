@@ -1,6 +1,5 @@
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import { getAssetImageUrl, getAssetUrl } from '@valguide/core/features/assets/image-url'
-import { formatFileSize } from '@valguide/core/features/assets/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
@@ -14,9 +13,10 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { formatDistanceToNow } from 'date-fns'
-import { Download, Eye, Image as ImageIcon, MoreVertical, Music, Trash2, Video } from 'lucide-react'
+import { Download, Image as ImageIcon, Info, MoreVertical, Music, Trash2, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useState } from 'react'
+import { AssetVideoThumbnail } from './asset-video-thumbnail'
 
 export type DeleteAssetDialogComponentProps = {
   open: boolean
@@ -95,8 +95,9 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
         <CardContent className="p-4">
           <button
             type="button"
-            className="relative mb-3 flex h-48 w-full items-center justify-center overflow-hidden rounded-lg bg-muted cursor-pointer"
+            className="relative mb-3 flex h-48 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-muted"
             onClick={() => onPreview?.(asset)}
+            aria-label={t('details.open')}
           >
             {asset.type === 'image' ? (
               <RevealImage
@@ -106,6 +107,8 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
                 width={400}
                 height={192}
               />
+            ) : asset.type === 'video' ? (
+              <AssetVideoThumbnail storagePath={asset.storagePath} alt={asset.fileName} width={400} height={192} />
             ) : (
               getIcon()
             )}
@@ -125,8 +128,8 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => onPreview?.(asset)}>
-                    <Eye className="mr-2 h-4 w-4" />
-                    {t('card.preview')}
+                    <Info className="mr-2 h-4 w-4" />
+                    {t('card.details')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleDownload}>
                     <Download className="mr-2 h-4 w-4" />
@@ -148,7 +151,6 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
             </div>
 
             <div className="space-y-1 text-xs text-muted-foreground">
-              <div>{t('card.sizeValue', { size: formatFileSize(asset.fileSize) })}</div>
               <div>
                 {t('card.uploaded')} {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
               </div>
