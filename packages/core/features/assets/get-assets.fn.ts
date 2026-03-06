@@ -8,6 +8,7 @@ export type {
   AssetPage,
   AssetSortBy,
   AssetSortDirection,
+  AssetUsageFilter,
   AssetWithUsage,
   GetAssetsFilters,
   GetAssetsPageFilters,
@@ -15,14 +16,16 @@ export type {
 
 const getAssetsSchema = z.object({
   type: z.enum(['image', 'audio', 'video']).optional(),
+  usage: z.enum(['used', 'unused']).optional(),
 })
 
 const getAssetsPageSchema = z.object({
   type: z.enum(['image', 'audio', 'video']).optional(),
+  usage: z.enum(['used', 'unused']).optional(),
   search: z.string().optional(),
   cursor: z.string().optional(),
   limit: z.number().int().min(1).max(120).optional(),
-  sortBy: z.enum(['createdAt', 'name']).optional(),
+  sortBy: z.enum(['createdAt', 'name', 'usage']).optional(),
   sortDirection: z.enum(['asc', 'desc']).optional(),
 })
 
@@ -39,6 +42,9 @@ export const getAssetsFn = createServerFn({ method: 'GET' })
     const filters: GetAssetsFilters = { organizationId }
     if (data.type) {
       filters.type = data.type
+    }
+    if (data.usage) {
+      filters.usage = data.usage
     }
 
     return getAssets(filters)
@@ -61,6 +67,7 @@ export const getAssetsPageFn = createServerFn({ method: 'GET' })
       search: data.search,
       sortBy: data.sortBy,
       sortDirection: data.sortDirection,
+      usage: data.usage,
     }
     if (data.type) {
       filters.type = data.type

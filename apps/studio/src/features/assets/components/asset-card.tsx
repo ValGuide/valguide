@@ -63,6 +63,19 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
     }
   }
 
+  const totalUsage = asset.tourCount + asset.stopCount
+  const usageSummary =
+    totalUsage === 0
+      ? t('usage.unused')
+      : asset.tourCount > 0 && asset.stopCount > 0
+        ? t('usage.toursAndStops', {
+            tours: t('usage.toursCount', { count: asset.tourCount }),
+            stops: t('usage.stopsCount', { count: asset.stopCount }),
+          })
+        : asset.tourCount > 0
+          ? t('usage.toursCount', { count: asset.tourCount })
+          : t('usage.stopsCount', { count: asset.stopCount })
+
   const getIcon = () => {
     switch (asset.type) {
       case 'image':
@@ -136,18 +149,9 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
 
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">{t(`types.${asset.type}`)}</Badge>
-              {(asset.tourCount > 0 || asset.stopCount > 0) && (
-                <Badge variant="outline" className="text-muted-foreground">
-                  {asset.tourCount > 0 && asset.stopCount > 0
-                    ? t('usage.toursAndStops', {
-                        tours: t('usage.toursCount', { count: asset.tourCount }),
-                        stops: t('usage.stopsCount', { count: asset.stopCount }),
-                      })
-                    : asset.tourCount > 0
-                      ? t('usage.toursCount', { count: asset.tourCount })
-                      : t('usage.stopsCount', { count: asset.stopCount })}
-                </Badge>
-              )}
+              <Badge variant={totalUsage > 0 ? 'outline' : 'secondary'} className="text-muted-foreground">
+                {usageSummary}
+              </Badge>
             </div>
 
             <div className="space-y-1 text-xs text-muted-foreground">

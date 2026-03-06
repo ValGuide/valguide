@@ -603,23 +603,53 @@
       "video": "Video",
       "searchPlaceholder": "Tschertgar tenor num da datoteca...",
       "noResults": "Nagins assets chattads che correspundan a voss filters",
+      "noResultsUsed": "Nagins assets utilisads chattads che correspundan a voss filters",
+      "noResultsUnused": "Nagins assets nunutilisads chattads che correspundan a voss filters",
       "sortBy": {
         "label": "Sortir tenor",
         "uploadedAt": "Chargià si",
-        "name": "Num"
+        "name": "Num",
+        "usage": "Utilisaziun"
       },
       "order": {
         "label": "Urden",
         "uploadedAtDesc": "Ils pli novs emprim",
         "uploadedAtAsc": "Ils pli vegls emprim",
         "nameAsc": "A fin Z",
-        "nameDesc": "Z fin A"
+        "nameDesc": "Z fin A",
+        "usageDesc": "Ils pli utilisads emprim",
+        "usageAsc": "Ils pli pauc utilisads emprim"
       },
       "searchLabel": "Tschertgar",
       "typeLabel": "Tip",
+      "usageLabel": "Utilisaziun",
+      "usage": {
+        "all": "Tut ils assets",
+        "used": "Utilisà",
+        "unused": "Nunutilisà"
+      },
       "actions": {
         "filters": "Filters",
         "clearAll": "Stizzar tut"
+      }
+    },
+    "view": {
+      "label": "Vista",
+      "grid": "Grid",
+      "list": "Glista"
+    },
+    "list": {
+      "sortAndFilter": "Sortir & filtrar",
+      "selectAsset": "Tscherner asset",
+      "addTag": "Agiuntar tag",
+      "upload": "Chargiar si",
+      "headers": {
+        "name": "Num",
+        "tag": "Tag",
+        "type": "Tip",
+        "media": "Media",
+        "usage": "Utilisaziun",
+        "created": "Creà"
       }
     },
     "types": {
@@ -645,6 +675,8 @@
       "cancel": "Interrumper"
     },
     "usage": {
+      "unused": "Nunutilisà",
+      "summaryTotal": "Utilisà en {count, plural, one {# lieu} other {# lieus}}",
       "toursCount": "{count, plural, one {# tura} other {# turas}}",
       "stopsCount": "{count, plural, one {# stop} other {# stops}}",
       "toursAndStops": "{tours}, {stops}"

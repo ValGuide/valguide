@@ -1,4 +1,9 @@
-import type { AssetSortBy, AssetSortDirection, AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
+import type {
+  AssetSortBy,
+  AssetSortDirection,
+  AssetUsageFilter,
+  AssetWithUsage,
+} from '@valguide/core/features/assets/get-assets.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
@@ -68,6 +73,8 @@ export type AssetsListProps = {
   sortBy?: AssetSortBy
   sortDirection?: AssetSortDirection
   onSortChange?: (sortBy: AssetSortBy, sortDirection: AssetSortDirection) => void
+  usageFilter?: AssetUsageFilter | 'all'
+  onUsageFilterChange?: (value: AssetUsageFilter | 'all') => void
   viewMode?: AssetViewMode
   onViewModeChange?: (value: AssetViewMode) => void
   onClearAllFilters?: () => void
@@ -95,6 +102,8 @@ export function AssetsList({
   sortBy: controlledSortBy,
   sortDirection: controlledSortDirection,
   onSortChange,
+  usageFilter: controlledUsageFilter,
+  onUsageFilterChange,
   viewMode: controlledViewMode,
   onViewModeChange,
   onClearAllFilters,
@@ -108,6 +117,7 @@ export function AssetsList({
   const [internalSearchQuery, setInternalSearchQuery] = useState('')
   const [internalSortBy, setInternalSortBy] = useState<AssetSortBy>('createdAt')
   const [internalSortDirection, setInternalSortDirection] = useState<AssetSortDirection>('desc')
+  const [internalUsageFilter, setInternalUsageFilter] = useState<AssetUsageFilter | 'all'>('all')
   const [internalViewMode, setInternalViewMode] = useState<AssetViewMode>('grid')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
@@ -117,6 +127,7 @@ export function AssetsList({
   const searchQuery = controlledSearchQuery ?? internalSearchQuery
   const sortBy = controlledSortBy ?? internalSortBy
   const sortDirection = controlledSortDirection ?? internalSortDirection
+  const usageFilter = controlledUsageFilter ?? internalUsageFilter
   const viewMode = controlledViewMode ?? internalViewMode
 
   const setTypeFilter = (value: AssetType | 'all') => {
@@ -144,6 +155,14 @@ export function AssetsList({
     onSortChange(nextSortBy, nextSortDirection)
   }
 
+  const setUsageFilter = (value: AssetUsageFilter | 'all') => {
+    if (!onUsageFilterChange) {
+      setInternalUsageFilter(value)
+      return
+    }
+    onUsageFilterChange(value)
+  }
+
   const setViewMode = (value: AssetViewMode) => {
     if (!onViewModeChange) {
       setInternalViewMode(value)
@@ -152,10 +171,11 @@ export function AssetsList({
     onViewModeChange(value)
   }
 
-  const isControlledMode = Boolean(onTypeFilterChange && onSearchQueryChange && onSortChange)
+  const isControlledMode = Boolean(onTypeFilterChange && onSearchQueryChange && onSortChange && onUsageFilterChange)
   const hasTypeFilter = typeFilter !== 'all'
+  const hasUsageFilter = usageFilter !== 'all'
   const hasSortFilter = sortBy !== 'createdAt' || sortDirection !== 'desc'
-  const activeFilterCount = Number(hasTypeFilter) + Number(hasSortFilter)
+  const activeFilterCount = Number(hasTypeFilter) + Number(hasUsageFilter) + Number(hasSortFilter)
 
   const displayedAssets = useMemo(() => {
     if (isControlledMode) {
@@ -165,7 +185,9 @@ export function AssetsList({
     const matchingAssets = (assets ?? []).filter((asset) => {
       const matchesType = typeFilter === 'all' || asset.type === typeFilter
       const matchesSearch = !searchQuery || asset.fileName.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesType && matchesSearch
+      const totalUsage = asset.tourCount + asset.stopCount
+      const matchesUsage = usageFilter === 'all' || (usageFilter === 'used' ? totalUsage > 0 : totalUsage === 0)
+      return matchesType && matchesSearch && matchesUsage
     })
 
     return [...matchingAssets].sort((left, right) => {
@@ -173,6 +195,13 @@ export function AssetsList({
         const nameComparison = left.fileName.localeCompare(right.fileName, undefined, { sensitivity: 'base' })
         if (nameComparison !== 0) {
           return sortDirection === 'asc' ? nameComparison : -nameComparison
+        }
+      } else if (sortBy === 'usage') {
+        const leftUsage = left.tourCount + left.stopCount
+        const rightUsage = right.tourCount + right.stopCount
+        const usageComparison = leftUsage - rightUsage
+        if (usageComparison !== 0) {
+          return sortDirection === 'asc' ? usageComparison : -usageComparison
         }
       } else {
         const createdAtComparison = new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime()
@@ -184,7 +213,7 @@ export function AssetsList({
       const idComparison = left.id.localeCompare(right.id)
       return sortDirection === 'asc' ? idComparison : -idComparison
     })
-  }, [assets, isControlledMode, searchQuery, sortBy, sortDirection, typeFilter])
+  }, [assets, isControlledMode, searchQuery, sortBy, sortDirection, typeFilter, usageFilter])
 
   const handleUploadComplete = (asset: Asset) => {
     onUploadComplete?.(asset)
@@ -197,18 +226,28 @@ export function AssetsList({
       return
     }
     setTypeFilter('all')
+    setUsageFilter('all')
     setSort('createdAt', 'desc')
   }
 
-  const sortByLabel = sortBy === 'name' ? t('filter.sortBy.name') : t('filter.sortBy.uploadedAt')
+  const sortByLabel =
+    sortBy === 'name'
+      ? t('filter.sortBy.name')
+      : sortBy === 'usage'
+        ? t('filter.sortBy.usage')
+        : t('filter.sortBy.uploadedAt')
   const sortDirectionLabel =
-    sortBy === 'createdAt'
+    sortBy === 'usage'
       ? sortDirection === 'desc'
-        ? t('filter.order.uploadedAtDesc')
-        : t('filter.order.uploadedAtAsc')
-      : sortDirection === 'asc'
-        ? t('filter.order.nameAsc')
-        : t('filter.order.nameDesc')
+        ? t('filter.order.usageDesc')
+        : t('filter.order.usageAsc')
+      : sortBy === 'createdAt'
+        ? sortDirection === 'desc'
+          ? t('filter.order.uploadedAtDesc')
+          : t('filter.order.uploadedAtAsc')
+        : sortDirection === 'asc'
+          ? t('filter.order.nameAsc')
+          : t('filter.order.nameDesc')
 
   const renderViewToggleControls = (compact = false) => (
     <div className="inline-flex items-center gap-1 rounded-lg border bg-background p-1">
@@ -255,6 +294,22 @@ export function AssetsList({
       </div>
 
       <div className="space-y-1">
+        <label htmlFor={`${idPrefix}-asset-usage-filter`} className="text-xs text-muted-foreground">
+          {t('filter.usageLabel')}
+        </label>
+        <Select value={usageFilter} onValueChange={(value) => setUsageFilter(value as AssetUsageFilter | 'all')}>
+          <SelectTrigger id={`${idPrefix}-asset-usage-filter`} aria-label={t('filter.usageLabel')} className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t('filter.usage.all')}</SelectItem>
+            <SelectItem value="used">{t('filter.usage.used')}</SelectItem>
+            <SelectItem value="unused">{t('filter.usage.unused')}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-1">
         <label htmlFor={`${idPrefix}-asset-sort-by`} className="text-xs text-muted-foreground">
           {t('filter.sortBy.label')}
         </label>
@@ -272,6 +327,7 @@ export function AssetsList({
           <SelectContent>
             <SelectItem value="createdAt">{t('filter.sortBy.uploadedAt')}</SelectItem>
             <SelectItem value="name">{t('filter.sortBy.name')}</SelectItem>
+            <SelectItem value="usage">{t('filter.sortBy.usage')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -289,6 +345,11 @@ export function AssetsList({
               <>
                 <SelectItem value="desc">{t('filter.order.uploadedAtDesc')}</SelectItem>
                 <SelectItem value="asc">{t('filter.order.uploadedAtAsc')}</SelectItem>
+              </>
+            ) : sortBy === 'usage' ? (
+              <>
+                <SelectItem value="desc">{t('filter.order.usageDesc')}</SelectItem>
+                <SelectItem value="asc">{t('filter.order.usageAsc')}</SelectItem>
               </>
             ) : (
               <>
@@ -381,7 +442,7 @@ export function AssetsList({
         <TabsContent value="library" className="space-y-6">
           <div className="sticky top-0 z-20 border-b bg-background pt-4 pb-4">
             <div className="space-y-3">
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_180px_180px_180px_auto] xl:gap-4">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_170px_170px_170px_170px_auto] xl:gap-4">
                 <div className="space-y-1">
                   <label htmlFor="asset-search" className="sr-only xl:not-sr-only xl:text-xs xl:text-muted-foreground">
                     {t('filter.searchLabel')}
@@ -443,6 +504,29 @@ export function AssetsList({
                 </div>
 
                 <div className="hidden space-y-1 xl:block">
+                  <label htmlFor="desktop-asset-usage-filter" className="text-xs text-muted-foreground">
+                    {t('filter.usageLabel')}
+                  </label>
+                  <Select
+                    value={usageFilter}
+                    onValueChange={(value) => setUsageFilter(value as AssetUsageFilter | 'all')}
+                  >
+                    <SelectTrigger
+                      id="desktop-asset-usage-filter"
+                      aria-label={t('filter.usageLabel')}
+                      className="w-full"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('filter.usage.all')}</SelectItem>
+                      <SelectItem value="used">{t('filter.usage.used')}</SelectItem>
+                      <SelectItem value="unused">{t('filter.usage.unused')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="hidden space-y-1 xl:block">
                   <label htmlFor="desktop-asset-sort-by" className="text-xs text-muted-foreground">
                     {t('filter.sortBy.label')}
                   </label>
@@ -460,6 +544,7 @@ export function AssetsList({
                     <SelectContent>
                       <SelectItem value="createdAt">{t('filter.sortBy.uploadedAt')}</SelectItem>
                       <SelectItem value="name">{t('filter.sortBy.name')}</SelectItem>
+                      <SelectItem value="usage">{t('filter.sortBy.usage')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -481,6 +566,11 @@ export function AssetsList({
                         <>
                           <SelectItem value="desc">{t('filter.order.uploadedAtDesc')}</SelectItem>
                           <SelectItem value="asc">{t('filter.order.uploadedAtAsc')}</SelectItem>
+                        </>
+                      ) : sortBy === 'usage' ? (
+                        <>
+                          <SelectItem value="desc">{t('filter.order.usageDesc')}</SelectItem>
+                          <SelectItem value="asc">{t('filter.order.usageAsc')}</SelectItem>
                         </>
                       ) : (
                         <>
@@ -506,6 +596,18 @@ export function AssetsList({
                       className="h-8 gap-1"
                     >
                       {t('filter.typeLabel')}: {t(`filter.${typeFilter as AssetType}`)}
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  ) : null}
+                  {hasUsageFilter ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setUsageFilter('all')}
+                      className="h-8 gap-1"
+                    >
+                      {t('filter.usageLabel')}: {t(`filter.usage.${usageFilter as AssetUsageFilter}`)}
                       <X className="h-3.5 w-3.5" />
                     </Button>
                   ) : null}
@@ -536,13 +638,25 @@ export function AssetsList({
                   <ImageIcon />
                 </EmptyMedia>
                 <EmptyTitle>
-                  {searchQuery || typeFilter !== 'all' ? t('filter.noResults') : t('empty.title')}
+                  {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
+                    ? usageFilter === 'unused'
+                      ? t('filter.noResultsUnused')
+                      : usageFilter === 'used'
+                        ? t('filter.noResultsUsed')
+                        : t('filter.noResults')
+                    : t('empty.title')}
                 </EmptyTitle>
                 <EmptyDescription>
-                  {searchQuery || typeFilter !== 'all' ? t('filter.noResults') : t('empty.description')}
+                  {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
+                    ? usageFilter === 'unused'
+                      ? t('filter.noResultsUnused')
+                      : usageFilter === 'used'
+                        ? t('filter.noResultsUsed')
+                        : t('filter.noResults')
+                    : t('empty.description')}
                 </EmptyDescription>
               </EmptyHeader>
-              {!searchQuery && typeFilter === 'all' && (
+              {!searchQuery && typeFilter === 'all' && usageFilter === 'all' && (
                 <EmptyContent>
                   <Button onClick={() => setActiveTab('upload')} size="lg">
                     <Upload className="mr-2 h-4 w-4" />
@@ -575,12 +689,12 @@ export function AssetsList({
                 </div>
               ) : (
                 <div className="overflow-hidden rounded-xl border">
-                  <div className="grid grid-cols-[36px_minmax(0,2fr)_minmax(120px,1fr)_110px_110px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
+                  <div className="grid grid-cols-[36px_minmax(0,2fr)_minmax(120px,1fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
                     <span />
                     <span>{t('list.headers.name')}</span>
                     <span>{t('list.headers.tag')}</span>
                     <span>{t('list.headers.type')}</span>
-                    <span>{t('list.headers.media')}</span>
+                    <span>{t('list.headers.usage')}</span>
                     <span>{t('list.headers.created')}</span>
                     <span />
                     <span />

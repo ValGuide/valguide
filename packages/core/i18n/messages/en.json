@@ -603,23 +603,53 @@
       "video": "Video",
       "searchPlaceholder": "Search by filename...",
       "noResults": "No assets found matching your filters",
+      "noResultsUsed": "No used assets found matching your filters",
+      "noResultsUnused": "No unused assets found matching your filters",
       "sortBy": {
         "label": "Sort by",
         "uploadedAt": "Uploaded",
-        "name": "Name"
+        "name": "Name",
+        "usage": "Usage"
       },
       "order": {
         "label": "Order",
         "uploadedAtDesc": "Newest first",
         "uploadedAtAsc": "Oldest first",
         "nameAsc": "A to Z",
-        "nameDesc": "Z to A"
+        "nameDesc": "Z to A",
+        "usageDesc": "Most used first",
+        "usageAsc": "Least used first"
       },
       "searchLabel": "Search",
       "typeLabel": "Type",
+      "usageLabel": "Usage",
+      "usage": {
+        "all": "All assets",
+        "used": "Used",
+        "unused": "Unused"
+      },
       "actions": {
         "filters": "Filters",
         "clearAll": "Clear all"
+      }
+    },
+    "view": {
+      "label": "View",
+      "grid": "Grid",
+      "list": "List"
+    },
+    "list": {
+      "sortAndFilter": "Sort & Filter",
+      "selectAsset": "Select asset",
+      "addTag": "Add tag",
+      "upload": "Upload",
+      "headers": {
+        "name": "Name",
+        "tag": "Tag",
+        "type": "Type",
+        "media": "Media",
+        "usage": "Usage",
+        "created": "Created"
       }
     },
     "types": {
@@ -645,6 +675,8 @@
       "cancel": "Cancel"
     },
     "usage": {
+      "unused": "Unused",
+      "summaryTotal": "Used in {count, plural, one {# place} other {# places}}",
       "toursCount": "{count, plural, one {# tour} other {# tours}}",
       "stopsCount": "{count, plural, one {# stop} other {# stops}}",
       "toursAndStops": "{tours}, {stops}"

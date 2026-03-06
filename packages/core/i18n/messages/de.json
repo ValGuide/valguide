@@ -603,23 +603,53 @@
       "video": "Video",
       "searchPlaceholder": "Nach Dateinamen suchen...",
       "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen",
+      "noResultsUsed": "Keine verwendeten Assets gefunden, die Ihren Filtern entsprechen",
+      "noResultsUnused": "Keine ungenutzten Assets gefunden, die Ihren Filtern entsprechen",
       "sortBy": {
         "label": "Sortieren nach",
         "uploadedAt": "Hochgeladen",
-        "name": "Name"
+        "name": "Name",
+        "usage": "Verwendung"
       },
       "order": {
         "label": "Reihenfolge",
         "uploadedAtDesc": "Neueste zuerst",
         "uploadedAtAsc": "Älteste zuerst",
         "nameAsc": "A bis Z",
-        "nameDesc": "Z bis A"
+        "nameDesc": "Z bis A",
+        "usageDesc": "Am häufigsten verwendet",
+        "usageAsc": "Am wenigsten verwendet"
       },
       "searchLabel": "Suche",
       "typeLabel": "Typ",
+      "usageLabel": "Verwendung",
+      "usage": {
+        "all": "Alle Assets",
+        "used": "Verwendet",
+        "unused": "Ungenutzt"
+      },
       "actions": {
         "filters": "Filter",
         "clearAll": "Alle löschen"
+      }
+    },
+    "view": {
+      "label": "Ansicht",
+      "grid": "Raster",
+      "list": "Liste"
+    },
+    "list": {
+      "sortAndFilter": "Sortieren & Filtern",
+      "selectAsset": "Asset auswählen",
+      "addTag": "Tag hinzufügen",
+      "upload": "Upload",
+      "headers": {
+        "name": "Name",
+        "tag": "Tag",
+        "type": "Typ",
+        "media": "Medien",
+        "usage": "Verwendung",
+        "created": "Erstellt"
       }
     },
     "types": {
@@ -645,6 +675,8 @@
       "cancel": "Abbrechen"
     },
     "usage": {
+      "unused": "Ungenutzt",
+      "summaryTotal": "Verwendet in {count, plural, one {# Ort} other {# Orten}}",
       "toursCount": "{count, plural, one {# Tour} other {# Touren}}",
       "stopsCount": "{count, plural, one {# Stopp} other {# Stopps}}",
       "toursAndStops": "{tours}, {stops}"

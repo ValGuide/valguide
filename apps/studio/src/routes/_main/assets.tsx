@@ -1,8 +1,9 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
-import type { AssetSortBy, AssetSortDirection } from '@valguide/core/features/assets/get-assets.fn'
+import type { AssetSortBy, AssetSortDirection, AssetUsageFilter } from '@valguide/core/features/assets/get-assets.fn'
 import type { AssetType } from '@valguide/core/features/assets/types'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
+import { AssetListRowConnected } from '@/features/assets/components/asset-list-row-connected.tsx'
 import { AssetUploadInline } from '@/features/assets/components/asset-upload-inline.tsx'
 import { AssetsList } from '@/features/assets/components/assets-list.tsx'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
@@ -11,14 +12,20 @@ import { assetsInfiniteQueryOptions } from '@/features/assets/query-options'
 const Root = getRouteApi('/_main')
 
 const assetTypeValues: readonly ['all', 'image', 'audio', 'video'] = ['all', 'image', 'audio', 'video']
-const sortByValues: readonly AssetSortBy[] = ['createdAt', 'name']
+const usageFilterValues: readonly ['all', 'used', 'unused'] = ['all', 'used', 'unused']
+const sortByValues: readonly AssetSortBy[] = ['createdAt', 'name', 'usage']
 const sortDirectionValues: readonly AssetSortDirection[] = ['asc', 'desc']
+const viewModeValues: readonly ['grid', 'list'] = ['grid', 'list']
+
+type AssetViewMode = (typeof viewModeValues)[number]
 
 type AssetsSearchParams = {
   type?: AssetType | 'all'
+  usage?: AssetUsageFilter | 'all'
   query?: string
   sortBy?: AssetSortBy
   sortDirection?: AssetSortDirection
+  view?: AssetViewMode
 }
 
 const parseAssetType = (value: unknown): AssetType | 'all' | undefined => {
@@ -37,18 +44,33 @@ const parseSortDirection = (value: unknown): AssetSortDirection | undefined => {
     : undefined
 }
 
+const parseUsageFilter = (value: unknown): AssetUsageFilter | 'all' | undefined => {
+  return typeof value === 'string' && usageFilterValues.includes(value as (typeof usageFilterValues)[number])
+    ? (value as AssetUsageFilter | 'all')
+    : undefined
+}
+
+const parseViewMode = (value: unknown): AssetViewMode | undefined => {
+  return typeof value === 'string' && viewModeValues.includes(value as AssetViewMode)
+    ? (value as AssetViewMode)
+    : undefined
+}
+
 export const Route = createFileRoute('/_main/assets')({
   validateSearch: (search: Record<string, unknown>): AssetsSearchParams => ({
     type: parseAssetType(search.type),
+    usage: parseUsageFilter(search.usage),
     query: typeof search.query === 'string' ? search.query : undefined,
     sortBy: parseSortBy(search.sortBy),
     sortDirection: parseSortDirection(search.sortDirection),
+    view: parseViewMode(search.view),
   }),
   loader: ({ context, location }) => {
     const search = location.search as AssetsSearchParams
     return context.queryClient.ensureInfiniteQueryData(
       assetsInfiniteQueryOptions({
         type: search.type === 'all' ? undefined : search.type,
+        usage: search.usage === 'all' ? undefined : search.usage,
         search: search.query?.trim() || undefined,
         sortBy: search.sortBy ?? 'createdAt',
         sortDirection: search.sortDirection ?? 'desc',
@@ -78,17 +100,21 @@ function AssetsContent() {
   const organizationId = Root.useRouteContext().team.teamId
 
   const typeFilter = routeSearch.type ?? 'all'
+  const usageFilter = routeSearch.usage ?? 'all'
   const searchQuery = routeSearch.query ?? ''
   const sortBy = routeSearch.sortBy ?? 'createdAt'
   const sortDirection = routeSearch.sortDirection ?? 'desc'
+  const viewMode = routeSearch.view ?? 'grid'
   const canonicalSearchQuery = searchQuery.trim() || undefined
 
   const updateSearch = (nextSearch: AssetsSearchParams) => {
     const mergedSearch: AssetsSearchParams = {
       type: routeSearch.type,
       query: routeSearch.query,
+      usage: routeSearch.usage,
       sortBy: routeSearch.sortBy,
       sortDirection: routeSearch.sortDirection,
+      view: routeSearch.view,
       ...nextSearch,
     }
 
@@ -97,8 +123,10 @@ function AssetsContent() {
       search: {
         type: mergedSearch.type,
         query: mergedSearch.query,
+        usage: mergedSearch.usage,
         sortBy: mergedSearch.sortBy,
         sortDirection: mergedSearch.sortDirection,
+        view: mergedSearch.view,
       },
       replace: true,
       viewTransition: false,
@@ -108,6 +136,7 @@ function AssetsContent() {
   const { data, error, hasNextPage, isFetchingNextPage, isPending, fetchNextPage } = useInfiniteQuery({
     ...assetsInfiniteQueryOptions({
       type: typeFilter === 'all' ? undefined : typeFilter,
+      usage: usageFilter === 'all' ? undefined : usageFilter,
       search: canonicalSearchQuery,
       sortBy,
       sortDirection,
@@ -166,14 +195,28 @@ function AssetsContent() {
           sortDirection: nextSortDirection === 'desc' ? undefined : nextSortDirection,
         })
       }
+      usageFilter={usageFilter}
+      onUsageFilterChange={(nextUsageFilter) =>
+        updateSearch({
+          usage: nextUsageFilter === 'all' ? undefined : nextUsageFilter,
+        })
+      }
+      viewMode={viewMode}
+      onViewModeChange={(nextViewMode) =>
+        updateSearch({
+          view: nextViewMode === 'grid' ? undefined : nextViewMode,
+        })
+      }
       onClearAllFilters={() =>
         updateSearch({
           type: undefined,
+          usage: undefined,
           sortBy: undefined,
           sortDirection: undefined,
         })
       }
       AssetCard={AssetCardConnected}
+      AssetListRow={AssetListRowConnected}
       UploadInline={AssetUploadInline}
     />
   ) : null
