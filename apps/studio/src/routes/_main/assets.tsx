@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 import type { AssetSortBy, AssetSortDirection, AssetUsageFilter } from '@valguide/core/features/assets/get-assets.fn'
 import type { AssetType } from '@valguide/core/features/assets/types'
+import { useEffect, useState } from 'react'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
 import { AssetListRowConnected } from '@/features/assets/components/asset-list-row-connected.tsx'
 import { AssetUploadInline } from '@/features/assets/components/asset-upload-inline.tsx'
@@ -133,6 +134,27 @@ function AssetsContent() {
     })
   }
 
+  const [searchDraft, setSearchDraft] = useState(searchQuery)
+
+  useEffect(() => {
+    setSearchDraft(searchQuery)
+  }, [searchQuery])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const nextQuery = searchDraft.trim()
+      const currentQuery = searchQuery.trim()
+
+      if (nextQuery !== currentQuery) {
+        updateSearch({
+          query: nextQuery.length > 0 ? nextQuery : undefined,
+        })
+      }
+    }, 300)
+
+    return () => clearTimeout(timeout)
+  }, [searchDraft, searchQuery])
+
   const { data, error, hasNextPage, isFetchingNextPage, isPending, fetchNextPage } = useInfiniteQuery({
     ...assetsInfiniteQueryOptions({
       type: typeFilter === 'all' ? undefined : typeFilter,
@@ -187,12 +209,8 @@ function AssetsContent() {
           type: nextTypeFilter === 'all' ? undefined : nextTypeFilter,
         })
       }
-      searchQuery={searchQuery}
-      onSearchQueryChange={(nextSearchQuery) =>
-        updateSearch({
-          query: nextSearchQuery.length > 0 ? nextSearchQuery : undefined,
-        })
-      }
+      searchQuery={searchDraft}
+      onSearchQueryChange={setSearchDraft}
       sortBy={sortBy}
       sortDirection={sortDirection}
       onSortChange={(nextSortBy, nextSortDirection) =>
