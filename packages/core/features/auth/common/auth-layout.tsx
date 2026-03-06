@@ -3,7 +3,21 @@ import { LocalePickerList } from '@valguide/core/i18n/components/locale-picker-l
 import { defaultLocale, type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { setLocaleFn } from '@valguide/core/i18n/set-locale.fn'
 import { Card, CardContent } from '@valguide/core/ui/components/card'
-import { Popover, PopoverContent, PopoverTrigger } from '@valguide/core/ui/components/popover'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@valguide/core/ui/components/dialog'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@valguide/core/ui/components/drawer'
+import { useIsMobile } from '@valguide/core/ui/hooks/use-mobile'
 import { cn } from '@valguide/ui/lib/utils'
 import { Languages } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
@@ -59,6 +73,7 @@ function AuthLocaleSwitcher() {
   const currentLocale = supportedLocales.includes(locale as SupportedLocale)
     ? (locale as SupportedLocale)
     : defaultLocale
+  const isMobile = useIsMobile()
   const [open, setOpen] = useState(false)
   const [isSwitching, setIsSwitching] = useState(false)
   const currentDisplayName =
@@ -78,26 +93,48 @@ function AuthLocaleSwitcher() {
     }
   }
 
+  const title = t('languageLabel')
+  const pickerList = (
+    <LocalePickerList
+      currentLocale={currentLocale}
+      disabled={isSwitching}
+      onSelectLocale={(locale) => void handleLocaleChange(locale)}
+    />
+  )
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          aria-label={t('languageLabel')}
-          disabled={isSwitching}
-          className="flex h-9 items-center gap-2 rounded-md border border-border/60 bg-background/90 px-2.5 text-sm text-foreground backdrop-blur transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <Languages className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-          <span className="max-w-28 truncate">{currentDisplayName}</span>
-        </button>
-      </PopoverTrigger>
-      <PopoverContent align="end" side="bottom" className="w-[300px] p-0">
-        <LocalePickerList
-          currentLocale={currentLocale}
-          disabled={isSwitching}
-          onSelectLocale={(locale) => void handleLocaleChange(locale)}
-        />
-      </PopoverContent>
-    </Popover>
+    <>
+      <button
+        type="button"
+        aria-label={title}
+        disabled={isSwitching}
+        onClick={() => setOpen(true)}
+        className="flex h-9 items-center gap-2 rounded-md border border-border/60 bg-background/90 px-2.5 text-sm text-foreground backdrop-blur transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <Languages className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        <span className="max-w-28 truncate">{currentDisplayName}</span>
+      </button>
+      {isMobile ? (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>{title}</DrawerTitle>
+              <DrawerDescription className="sr-only">{title}</DrawerDescription>
+            </DrawerHeader>
+            {pickerList}
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="max-w-[380px] gap-0 p-0 overflow-hidden">
+            <DialogHeader className="px-4 pt-4 pb-3">
+              <DialogTitle>{title}</DialogTitle>
+              <DialogDescription className="sr-only">{title}</DialogDescription>
+            </DialogHeader>
+            {pickerList}
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   )
 }

@@ -1,7 +1,19 @@
 import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
 import { Check } from 'lucide-react'
 import type { KeyboardEvent } from 'react'
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
+
+const localeEnglishNames: Record<SupportedLocale, string> = {
+  en: 'English',
+  de: 'German',
+  rm: 'Romansh',
+}
+
+const localeNativeNames: Record<SupportedLocale, string> = {
+  en: 'English',
+  de: 'Deutsch',
+  rm: 'Rumantsch',
+}
 
 export interface LocalePickerListProps {
   currentLocale: SupportedLocale
@@ -10,11 +22,6 @@ export interface LocalePickerListProps {
 }
 
 export function LocalePickerList({ currentLocale, disabled = false, onSelectLocale }: LocalePickerListProps) {
-  const englishDisplayNames = useMemo(() => new Intl.DisplayNames(['en'], { type: 'language' }), [])
-  const nativeDisplayNames = useMemo(
-    () => new Intl.DisplayNames([currentLocale], { type: 'language' }),
-    [currentLocale],
-  )
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const focusItem = (index: number) => {
@@ -52,9 +59,8 @@ export function LocalePickerList({ currentLocale, disabled = false, onSelectLoca
   return (
     <div role="listbox" aria-label="Language" className="max-h-[300px] overflow-y-auto p-1">
       {supportedLocales.map((locale, index) => {
-        const nativeName = nativeDisplayNames.of(locale) ?? locale
-        const englishName = englishDisplayNames.of(locale) ?? locale
-        const showEnglishName = nativeName !== englishName
+        const nativeName = localeNativeNames[locale]
+        const englishName = localeEnglishNames[locale]
         const isSelected = locale === currentLocale
 
         return (
@@ -74,12 +80,9 @@ export function LocalePickerList({ currentLocale, disabled = false, onSelectLoca
           >
             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
               <span className="truncate font-medium">{nativeName}</span>
-              {showEnglishName && (
-                <span className="truncate text-xs text-muted-foreground">
-                  {englishName} ({locale})
-                </span>
-              )}
-              {!showEnglishName && <span className="text-xs text-muted-foreground">({locale})</span>}
+              <span className="truncate text-xs text-muted-foreground">
+                {englishName} ({locale})
+              </span>
             </span>
             {isSelected && <Check className="h-4 w-4 text-primary" />}
           </button>
