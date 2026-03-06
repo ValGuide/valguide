@@ -173,6 +173,7 @@
   "auth": {
     "title": "ValGuide",
     "subtitle": "Melden Sie sich an, um Ihre Touren zu verwalten",
+    "languageLabel": "Sprache",
     "emailLabel": "E-Mail-Adresse",
     "emailPlaceholder": "kurator@museum.org",
     "sendCode": "Login-Code senden",

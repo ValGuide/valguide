@@ -1,6 +1,12 @@
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
+import { setLocaleFn } from '@valguide/core/i18n/set-locale.fn'
 import { Card, CardContent } from '@valguide/core/ui/components/card'
+import { Command, CommandGroup, CommandItem, CommandList } from '@valguide/core/ui/components/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@valguide/core/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
-import type { ReactNode } from 'react'
+import { Check, Languages } from 'lucide-react'
+import { type ReactNode, useMemo, useState } from 'react'
 
 export interface AuthLayoutProps {
   children: ReactNode
@@ -27,6 +33,10 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
         }}
       />
 
+      <div className="absolute top-4 right-4 z-10">
+        <AuthLocaleSwitcher />
+      </div>
+
       <Card
         className={cn(
           'relative w-full max-w-md',
@@ -40,5 +50,81 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
 
       {footer && <div className="relative mt-6 w-full max-w-md text-center">{footer}</div>}
     </main>
+  )
+}
+
+function AuthLocaleSwitcher() {
+  const t = useTranslations('auth')
+  const currentLocale = useLocale()
+  const [open, setOpen] = useState(false)
+  const [isSwitching, setIsSwitching] = useState(false)
+  const englishDisplayNames = useMemo(() => new Intl.DisplayNames(['en'], { type: 'language' }), [])
+  const nativeDisplayNames = useMemo(
+    () => new Intl.DisplayNames([currentLocale], { type: 'language' }),
+    [currentLocale],
+  )
+
+  const handleLocaleChange = async (newLocale: SupportedLocale) => {
+    if (newLocale === currentLocale || isSwitching) {
+      return
+    }
+
+    setIsSwitching(true)
+    try {
+      await setLocaleFn({ data: { locale: newLocale } })
+      window.location.reload()
+    } finally {
+      setIsSwitching(false)
+    }
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          aria-label={t('languageLabel')}
+          disabled={isSwitching}
+          className="flex h-9 items-center gap-2 rounded-md border border-border/60 bg-background/90 px-2.5 text-sm text-foreground backdrop-blur transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <Languages className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+          <span className="max-w-28 truncate">{nativeDisplayNames.of(currentLocale) ?? currentLocale}</span>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" side="bottom" className="w-[300px] p-0">
+        <Command className="border-none">
+          <CommandList className="max-h-[300px]">
+            <CommandGroup>
+              {supportedLocales.map((locale) => {
+                const nativeName = nativeDisplayNames.of(locale) ?? locale
+                const englishName = englishDisplayNames.of(locale) ?? locale
+                const showEnglishName = nativeName !== englishName
+
+                return (
+                  <CommandItem
+                    key={locale}
+                    value={`${nativeName} ${englishName} ${locale}`}
+                    onSelect={() => void handleLocaleChange(locale)}
+                    disabled={isSwitching}
+                    className="flex items-center gap-2 py-2.5"
+                  >
+                    <span className="flex min-w-0 flex-col gap-0.5">
+                      <span className="truncate font-medium">{nativeName}</span>
+                      {showEnglishName && (
+                        <span className="truncate text-xs text-muted-foreground">
+                          {englishName} ({locale})
+                        </span>
+                      )}
+                      {!showEnglishName && <span className="text-xs text-muted-foreground">({locale})</span>}
+                    </span>
+                    {currentLocale === locale && <Check className="ml-auto h-4 w-4 text-primary" />}
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }

@@ -1,10 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
-import { resolveServerLocale } from './server'
+import { getRequestHeaders } from '@tanstack/react-start/server'
+import { resolveLocaleFromHeaders } from './locale-resolution'
 
 // ============================================================================
 // SERVER FUNCTION
 // ============================================================================
 
 export const resolveLocaleFn = createServerFn({ method: 'GET' }).handler(async () => {
-  return resolveServerLocale()
+  return resolveLocaleFromHeaders(getRequestHeaders())
 })

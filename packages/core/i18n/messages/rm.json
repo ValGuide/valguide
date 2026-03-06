@@ -173,6 +173,7 @@
   "auth": {
     "title": "ValGuide",
     "subtitle": "S'annunziai per administrar vossas turas",
+    "languageLabel": "Lingua",
     "emailLabel": "Adressa d'e-mail",
     "emailPlaceholder": "custos@museum.org",
     "sendCode": "Trametter code d'annunzia",

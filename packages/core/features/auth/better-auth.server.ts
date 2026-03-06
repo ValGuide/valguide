@@ -7,7 +7,7 @@ import { emailOTP, organization as organizationPlugin } from 'better-auth/plugin
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { serverEnv } from '../../env/server'
 import { defaultLocale, type SupportedLocale } from '../../i18n/i18n.config'
-import { getAcceptLanguageLocale, isSupportedLocale, LOCALE_COOKIE_NAME } from '../../i18n/server'
+import { resolveLocaleFromHeaders } from '../../i18n/locale-resolution'
 import { userLoggedInMessage } from '../../slack/messages/user-logged-in.message'
 import { userStartedLoginMessage } from '../../slack/messages/user-started-login.message'
 import { postMessage } from '../../slack/send-slack-message'
@@ -38,36 +38,8 @@ function normalizeEmail(value: unknown): string | null {
   return normalized.length > 0 ? normalized : null
 }
 
-function getCookieValue(cookieHeader: string | null, name: string): string | null {
-  if (!cookieHeader) {
-    return null
-  }
-
-  const entries = cookieHeader.split(';')
-  for (const entry of entries) {
-    const [rawName, ...rest] = entry.trim().split('=')
-    if (rawName !== name) {
-      continue
-    }
-    return decodeURIComponent(rest.join('='))
-  }
-
-  return null
-}
-
 function resolveEmailLocaleFromHeaders(headers: Headers | null): SupportedLocale {
-  const cookieLocale = getCookieValue(headers?.get('cookie') ?? null, LOCALE_COOKIE_NAME)
-  if (isSupportedLocale(cookieLocale)) {
-    return cookieLocale
-  }
-
-  const acceptLanguage = headers?.get('accept-language') ?? null
-  const acceptLocale = getAcceptLanguageLocale(acceptLanguage)
-  if (acceptLocale) {
-    return acceptLocale
-  }
-
-  return defaultLocale
+  return resolveLocaleFromHeaders(headers)
 }
 
 function resolveCurrentRequestEmailLocale(): SupportedLocale {
