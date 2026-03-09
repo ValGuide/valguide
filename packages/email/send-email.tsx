@@ -117,7 +117,6 @@ export async function sendEmail({ to, locale, subject: subjectOverride, template
   const subject = resolveSubject(template, resolvedLocale, subjectOverride)
   const alias = resolveTemplateAlias(template, resolvedLocale)
   const templateId = resendTemplateIds[alias as keyof typeof resendTemplateIds]
-  const text = resolveTemplateText(template, resolvedLocale)
   const variables = resolveTemplateVariables(template)
 
   if (!env.RESEND_SENDING_API_KEY) {
@@ -130,7 +129,6 @@ export async function sendEmail({ to, locale, subject: subjectOverride, template
       console.log('Alias:', alias)
       console.log('Template:', template.name)
       console.log('Data:', template.data)
-      console.log('Text:', text)
       console.log('Variables:', variables)
       console.log('-----------------------')
       return { id: 'simulated', error: null }
@@ -158,7 +156,6 @@ export async function sendEmail({ to, locale, subject: subjectOverride, template
         from: FROM_EMAIL,
         to,
         subject,
-        text,
         template: {
           id: templateId,
           variables,
