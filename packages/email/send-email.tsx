@@ -90,6 +90,7 @@ function resolveTemplateVariables(template: EmailTemplate): Record<string, strin
         INVITE_LINK: template.data.inviteLink,
         TEAM_NAME: template.data.teamName,
         INVITER_NAME: template.data.inviterName,
+        LOGO_URL: template.data.logoUrl,
       }
     case 'account-approved':
       return {
@@ -105,7 +106,7 @@ export async function sendEmail({ to, locale, subject: subjectOverride, template
   const resolvedLocale = normalizeLocale(locale)
   const subject = resolveSubject(template, resolvedLocale, subjectOverride)
   const alias = resolveTemplateAlias(template, resolvedLocale)
-  const templateId = resendTemplateIds[alias]
+  const templateId = resendTemplateIds[alias as keyof typeof resendTemplateIds]
   const variables = resolveTemplateVariables(template)
 
   if (!resend) {

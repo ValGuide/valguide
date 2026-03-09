@@ -14,6 +14,8 @@ import {
 import { getTeamInviteCopy } from '../templates/copy'
 import { defaultEmailLocale, type EmailLocale } from '../templates/locales'
 
+const previewLogoUrl = 'https://studio.valguide.com/icon.png'
+
 export interface TeamInviteEmailProps {
   inviteLink: string
   teamName: string
@@ -77,7 +79,7 @@ TeamInviteEmail.PreviewProps = {
   inviteLink: 'https://valguide.com/join-team?invitationId=123',
   teamName: 'Acme Corp',
   inviterName: 'Alice',
-  logoUrl: '/static/demo-logo.png',
+  logoUrl: previewLogoUrl,
   locale: 'en',
 } as TeamInviteEmailProps
 

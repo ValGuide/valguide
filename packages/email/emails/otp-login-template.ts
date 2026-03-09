@@ -1,3 +1,4 @@
+import { env } from '../env'
 import { getOtpLoginCopy } from '../templates/copy'
 import type { EmailLocale } from '../templates/locales'
 import type { ResendTemplateConfig } from '../templates/types'
@@ -9,7 +10,7 @@ export function getOtpLoginConfig(locale: EmailLocale): ResendTemplateConfig {
     alias: `otp-login-${locale}`,
     name: `OTP Login (${locale.toUpperCase()})`,
     subject: getOtpLoginCopy(locale).subject,
-    from: 'ValGuide <noreply@valguide.com>',
+    from: env.EMAIL_FROM,
     variables: [
       { key: 'CODE', type: 'string', fallbackValue: '000000' },
       { key: 'MAX_VALID_MINUTES', type: 'number', fallbackValue: 60 },

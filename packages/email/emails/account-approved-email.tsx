@@ -14,6 +14,8 @@ import {
 import { getAccountApprovedCopy } from '../templates/copy'
 import { defaultEmailLocale, type EmailLocale } from '../templates/locales'
 
+const previewLogoUrl = 'https://studio.valguide.com/icon.png'
+
 export interface AccountApprovedEmailProps {
   studioUrl: string
   logoUrl: string
@@ -69,7 +71,7 @@ export const AccountApprovedEmail = ({
 
 AccountApprovedEmail.PreviewProps = {
   studioUrl: 'https://studio.valguide.com',
-  logoUrl: '/static/demo-logo.png',
+  logoUrl: previewLogoUrl,
   locale: 'en',
 } as AccountApprovedEmailProps
 

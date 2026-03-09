@@ -31,7 +31,7 @@ export const templates: ResendTemplate[] = emailLocales.flatMap((locale) => [
         inviteLink: '{{{INVITE_LINK}}}',
         teamName: '{{{TEAM_NAME}}}',
         inviterName: '{{{INVITER_NAME}}}',
-        logoUrl: '/static/demo-logo.png',
+        logoUrl: '{{{LOGO_URL}}}',
         locale,
       }),
     text: getTeamInviteText(locale),
