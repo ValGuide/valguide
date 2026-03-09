@@ -48,7 +48,7 @@ export function RichTextEditor({
       attributes: {
         ...(ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {}),
         class:
-          'prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[120px] p-4 rounded-b-md border-x border-b',
+          'ProseMirror min-h-[120px] max-w-none rounded-b-md border-x border-b bg-card p-4 text-sm text-foreground caret-foreground focus:outline-none selection:bg-[var(--selection)] selection:text-[var(--selection-foreground)]',
         placeholder: placeholder || '',
       },
     },
@@ -56,7 +56,7 @@ export function RichTextEditor({
 
   return (
     <div className={className}>
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-md border bg-card text-card-foreground">
         <RichTextEditorToolbar editor={editor} disabled={readOnly} />
         <EditorContent editor={editor} />
       </div>

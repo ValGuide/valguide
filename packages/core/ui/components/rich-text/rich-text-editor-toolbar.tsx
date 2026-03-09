@@ -60,7 +60,9 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
   if (!editor || !editorState) return null
 
   return (
-    <div className={`flex flex-wrap items-center gap-1 border-b p-2 ${disabled ? 'opacity-50' : ''}`}>
+    <div
+      className={`flex flex-wrap items-center gap-1 border-b bg-muted/30 p-2 text-foreground ${disabled ? 'opacity-50' : ''}`}
+    >
       <Button
         type="button"
         variant={editorState.isBold ? 'secondary' : 'ghost'}

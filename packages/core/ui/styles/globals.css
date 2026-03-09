@@ -217,6 +217,35 @@
     }
 }
 
+@layer components {
+    .ProseMirror {
+        color: var(--foreground);
+        background-color: var(--card);
+        caret-color: var(--foreground);
+    }
+
+    .ProseMirror,
+    .ProseMirror :where(p, li, blockquote, h1, h2, h3, h4, strong, em, s, small) {
+        color: inherit;
+    }
+
+    .ProseMirror::selection,
+    .ProseMirror *::selection {
+        background-color: var(--selection);
+        color: var(--selection-foreground);
+    }
+
+    .ProseMirror img {
+        display: block;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        object-fit: contain;
+        margin-block: 1rem;
+        border-radius: var(--radius-md);
+    }
+}
+
 :root, [data-theme="light"] {
     --background: hsl(0 0% 100%);
     --foreground: hsl(240 10% 3.9%);

@@ -28,7 +28,10 @@ export function InlineDiff({ oldText, newText, className }: InlineDiffProps) {
         const key = `${part.added ? 'a' : part.removed ? 'r' : 'u'}-${part.value.slice(0, 20)}`
         if (part.added) {
           return (
-            <span key={key} className="rounded-sm bg-success/20 px-0.5 text-success dark:bg-success/30">
+            <span
+              key={key}
+              className="rounded-sm bg-success/18 px-0.5 text-foreground ring-1 ring-inset ring-success/25"
+            >
               {part.value}
             </span>
           )
@@ -37,7 +40,7 @@ export function InlineDiff({ oldText, newText, className }: InlineDiffProps) {
           return (
             <span
               key={key}
-              className="rounded-sm bg-destructive/20 px-0.5 text-destructive line-through dark:bg-destructive/30"
+              className="rounded-sm bg-destructive/18 px-0.5 text-foreground line-through decoration-destructive/80 decoration-2 ring-1 ring-inset ring-destructive/25"
             >
               {part.value}
             </span>

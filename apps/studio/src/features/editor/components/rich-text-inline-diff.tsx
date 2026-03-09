@@ -36,7 +36,16 @@ export function RichTextInlineDiff({ oldContent, newContent, className }: RichTe
     return renderTree(newDoc, cursor)
   }, [oldContent, newContent])
 
-  return <div className={cn('prose prose-sm max-w-none dark:prose-invert', className)}>{rendered}</div>
+  return (
+    <div
+      className={cn(
+        'max-w-none text-sm text-foreground [&_blockquote]:text-foreground [&_code]:text-foreground [&_em]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_h4]:text-foreground [&_img]:my-4 [&_img]:block [&_img]:h-auto [&_img]:w-full [&_img]:max-w-none [&_img]:rounded-md [&_img]:object-contain [&_li]:text-foreground [&_p]:text-foreground [&_pre]:text-foreground [&_small]:text-foreground [&_strong]:text-foreground',
+        className,
+      )}
+    >
+      {rendered}
+    </div>
+  )
 }
 
 function parseContent(value: string | null): TipTapNode | null {
@@ -61,8 +70,9 @@ type DiffCursor = {
   charIndex: number
 }
 
-const REMOVED_CLASS = 'rounded-sm bg-destructive/20 px-0.5 text-destructive line-through dark:bg-destructive/30'
-const ADDED_CLASS = 'rounded-sm bg-success/20 px-0.5 text-success dark:bg-success/30'
+const REMOVED_CLASS =
+  'rounded-sm bg-destructive/18 px-0.5 text-foreground line-through decoration-destructive/80 decoration-2 ring-1 ring-inset ring-destructive/25'
+const ADDED_CLASS = 'rounded-sm bg-success/18 px-0.5 text-foreground ring-1 ring-inset ring-success/25'
 
 function consumeChars(cursor: DiffCursor, length: number): ReactNode[] {
   const fragments: ReactNode[] = []
