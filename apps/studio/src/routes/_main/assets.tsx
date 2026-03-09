@@ -5,7 +5,7 @@ import type { AssetType } from '@valguide/core/features/assets/types'
 import { useEffect, useState } from 'react'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
 import { AssetListRowConnected } from '@/features/assets/components/asset-list-row-connected.tsx'
-import { AssetUploadInline } from '@/features/assets/components/asset-upload-inline.tsx'
+import { AssetUploadInlineConnected } from '@/features/assets/components/asset-upload-inline-connected'
 import { AssetsList } from '@/features/assets/components/assets-list.tsx'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
 import { assetsInfiniteQueryOptions } from '@/features/assets/query-options'
@@ -241,7 +241,7 @@ function AssetsContent() {
       }
       AssetCard={AssetCardConnected}
       AssetListRow={AssetListRowConnected}
-      UploadInline={AssetUploadInline}
+      UploadInline={AssetUploadInlineConnected}
     />
   ) : null
 }

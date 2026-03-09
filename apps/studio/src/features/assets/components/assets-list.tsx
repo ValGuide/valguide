@@ -4,7 +4,6 @@ import type {
   AssetUsageFilter,
   AssetWithUsage,
 } from '@valguide/core/features/assets/get-assets.fn'
-import { renameAssetFn } from '@valguide/core/features/assets/rename-asset.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
@@ -90,6 +89,7 @@ export type AssetsListProps = {
   AssetCard?: AssetCardComponent
   AssetListRow?: AssetListRowComponent
   UploadInline?: UploadInlineComponent
+  onRenameAssetAction?: (input: { assetId: string; fileName: string }) => Promise<AssetWithUsage>
 }
 
 export function AssetsList({
@@ -120,6 +120,7 @@ export function AssetsList({
   AssetCard,
   AssetListRow,
   UploadInline,
+  onRenameAssetAction,
 }: AssetsListProps) {
   const t = useTranslations('assets')
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
@@ -248,12 +249,11 @@ export function AssetsList({
   }
 
   const handleRenameAsset = async (assetId: string, fileName: string) => {
-    const renamedAsset = await renameAssetFn({
-      data: {
-        assetId,
-        fileName,
-      },
-    })
+    if (!onRenameAssetAction) {
+      throw new Error('Missing onRenameAssetAction handler')
+    }
+
+    const renamedAsset = await onRenameAssetAction({ assetId, fileName })
 
     await onAssetRenamed?.(assetId)
     setSelectedAsset((currentAsset) =>

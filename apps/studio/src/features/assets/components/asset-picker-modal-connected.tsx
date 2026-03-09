@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useAssetsContextOptional } from '../context/assets-context'
 import { assetsInfiniteQueryOptions } from '../query-options'
 import { AssetPickerModal, type AssetPickerModalProps } from './asset-picker-modal'
-import { AssetUploadInline } from './asset-upload-inline'
+import { AssetUploadInlineConnected } from './asset-upload-inline-connected'
 
 type AssetPickerModalConnectedProps = Omit<
   AssetPickerModalProps,
@@ -61,7 +61,7 @@ export function AssetPickerModalConnected({ type, locale, ...props }: AssetPicke
       onSearchQueryChange={setSearchDraft}
       onLoadMore={() => void fetchNextPage()}
       onRefetch={refetch}
-      UploadInline={AssetUploadInline}
+      UploadInline={AssetUploadInlineConnected}
     />
   )
 }

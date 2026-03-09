@@ -1,4 +1,3 @@
-import { confirmAssetUploadFn } from '@valguide/core/features/assets/confirm-upload.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import {
   detectAssetType,
@@ -24,9 +23,22 @@ export type AssetUploadInlineProps = {
   locale?: string
   onUploadComplete?: (asset: Asset) => void
   className?: string
+  onConfirmUpload?: (input: {
+    assetId: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    type: AssetType
+    storagePath: string
+  }) => Promise<Asset>
 }
 
-export function AssetUploadInline({ allowedTypes, onUploadComplete, className }: AssetUploadInlineProps) {
+export function AssetUploadInline({
+  allowedTypes,
+  onUploadComplete,
+  className,
+  onConfirmUpload,
+}: AssetUploadInlineProps) {
   const t = useTranslations('assets')
   const [file, setFile] = useState<File | null>(null)
   const [detectedType, setDetectedType] = useState<AssetType | null>(null)
@@ -127,15 +139,17 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete, className }:
         onError: (err) => setError(err.message),
       })
 
-      const asset = await confirmAssetUploadFn({
-        data: {
-          assetId,
-          fileName: file.name,
-          fileSize: file.size,
-          mimeType: file.type,
-          type: detectedType,
-          storagePath: fileName,
-        },
+      if (!onConfirmUpload) {
+        throw new Error('Missing onConfirmUpload handler')
+      }
+
+      const asset = await onConfirmUpload({
+        assetId,
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type,
+        type: detectedType,
+        storagePath: fileName,
       })
 
       if (asset) {
