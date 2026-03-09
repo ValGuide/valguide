@@ -35,12 +35,15 @@ import type { ComponentType } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AssetDetailsDrawer } from '@/features/assets/components/asset-details-drawer'
 import type { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
+import { VirtualizedAssetGrid } from '@/features/assets/components/virtualized-asset-grid'
+import { VirtualizedAssetList } from '@/features/assets/components/virtualized-asset-list'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 export type AssetCardComponentProps = {
   asset: AssetWithUsage
   onDelete?: (assetId: string) => void
   onPreview?: (asset: AssetWithUsage) => void
+  shouldSuppressPreview?: () => boolean
 }
 
 export type AssetCardComponent = ComponentType<AssetCardComponentProps>
@@ -52,6 +55,7 @@ export type AssetListRowComponentProps = {
   variant: 'desktop' | 'mobile'
   onDelete?: (assetId: string) => void
   onOpenDetails?: (asset: AssetWithUsage) => void
+  shouldSuppressOpenDetails?: () => boolean
 }
 
 export type AssetListRowComponent = ComponentType<AssetListRowComponentProps>
@@ -128,7 +132,10 @@ export function AssetsList({
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [selectedAsset, setSelectedAsset] = useState<AssetWithUsage | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
-  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+  const resultsRootRef = useRef<HTMLDivElement | null>(null)
+  const resultsScrollElementRef = useRef<HTMLElement | null>(null)
+  const [resultsScrollMargin, setResultsScrollMargin] = useState(0)
+  const lastMobileScrollAtRef = useRef(0)
   const isMobile = useIsMobile()
 
   const typeFilter = controlledTypeFilter ?? internalTypeFilter
@@ -414,29 +421,47 @@ export function AssetsList({
   }, [])
 
   useEffect(() => {
-    if (!onLoadMore || !hasMore || isFetchingMore || isQueryPending || !loadMoreRef.current) {
+    const resultsRootElement = resultsRootRef.current
+
+    if (!resultsRootElement) {
       return
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          onLoadMore()
-        }
-      },
-      { rootMargin: '300px 0px' },
-    )
+    const scrollElement = resultsRootElement.closest('[data-slot="sidebar-inset"]')
 
-    const sentinel = loadMoreRef.current
-    if (!sentinel) {
+    if (!(scrollElement instanceof HTMLElement)) {
+      resultsScrollElementRef.current = null
       return
     }
 
-    observer.observe(sentinel)
+    resultsScrollElementRef.current = scrollElement
+
+    const updateScrollMargin = () => {
+      const scrollRect = scrollElement.getBoundingClientRect()
+      const resultsRect = resultsRootElement.getBoundingClientRect()
+      setResultsScrollMargin(resultsRect.top - scrollRect.top + scrollElement.scrollTop)
+    }
+
+    const handleScroll = () => {
+      lastMobileScrollAtRef.current = Date.now()
+    }
+
+    updateScrollMargin()
+    scrollElement.addEventListener('scroll', handleScroll, { passive: true })
+
+    const resizeObserver = new ResizeObserver(updateScrollMargin)
+    resizeObserver.observe(resultsRootElement)
+    resizeObserver.observe(scrollElement)
+    window.addEventListener('resize', updateScrollMargin)
+
     return () => {
-      observer.disconnect()
+      scrollElement.removeEventListener('scroll', handleScroll)
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', updateScrollMargin)
     }
-  }, [hasMore, isFetchingMore, isQueryPending, onLoadMore, displayedAssets.length])
+  }, [activeTab, isMobile, viewMode, displayedAssets.length])
+
+  const shouldSuppressMobileItemOpen = () => Date.now() - lastMobileScrollAtRef.current < 180
 
   // Error state
   if (error) {
@@ -672,7 +697,7 @@ export function AssetsList({
           </div>
 
           {displayedAssets.length === 0 ? (
-            <Empty className="border border-dashed">
+            <Empty className="mt-6 border border-dashed">
               <EmptyHeader>
                 <EmptyMedia variant="icon">
                   <ImageIcon />
@@ -705,40 +730,38 @@ export function AssetsList({
                 </EmptyContent>
               )}
             </Empty>
-          ) : viewMode === 'grid' ? (
-            <div className={`space-y-3 ${isMobile ? 'pb-24' : ''}`}>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {displayedAssets.map((asset) =>
-                  AssetCard ? (
-                    <AssetCard
-                      key={asset.id}
-                      asset={asset}
-                      onDelete={onAssetDeleted}
-                      onPreview={(previewAsset) => openAssetDetails(previewAsset)}
-                    />
-                  ) : null,
-                )}
-              </div>
-              <div ref={loadMoreRef} aria-hidden="true" className="h-1 w-full" />
-              {isFetchingMore ? (
-                <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
-              ) : null}
-            </div>
           ) : (
-            <div className={`space-y-3 ${isMobile ? 'pb-24' : ''}`}>
-              {isMobile ? (
+            <div ref={resultsRootRef} className={isMobile ? 'pb-24' : ''}>
+              {viewMode === 'grid' ? (
+                <VirtualizedAssetGrid
+                  assets={displayedAssets}
+                  AssetCard={AssetCard}
+                  isMobile={isMobile}
+                  containerRef={resultsRootRef}
+                  scrollElementRef={resultsScrollElementRef}
+                  scrollMargin={resultsScrollMargin}
+                  onDelete={onAssetDeleted}
+                  onOpenDetails={openAssetDetails}
+                  onLoadMore={onLoadMore}
+                  hasMore={hasMore}
+                  isFetchingMore={isFetchingMore || isQueryPending}
+                  shouldSuppressPreview={shouldSuppressMobileItemOpen}
+                />
+              ) : isMobile ? (
                 <div className="overflow-hidden rounded-xl border">
-                  {displayedAssets.map((asset) =>
-                    AssetListRow ? (
-                      <AssetListRow
-                        key={asset.id}
-                        asset={asset}
-                        variant="mobile"
-                        onDelete={onAssetDeleted}
-                        onOpenDetails={(clickedAsset) => openAssetDetails(clickedAsset)}
-                      />
-                    ) : null,
-                  )}
+                  <VirtualizedAssetList
+                    assets={displayedAssets}
+                    AssetListRow={AssetListRow}
+                    isMobile={true}
+                    scrollElementRef={resultsScrollElementRef}
+                    scrollMargin={resultsScrollMargin}
+                    onDelete={onAssetDeleted}
+                    onOpenDetails={openAssetDetails}
+                    onLoadMore={onLoadMore}
+                    hasMore={hasMore}
+                    isFetchingMore={isFetchingMore || isQueryPending}
+                    shouldSuppressOpenDetails={shouldSuppressMobileItemOpen}
+                  />
                 </div>
               ) : (
                 <div className="overflow-hidden rounded-xl border">
@@ -751,20 +774,20 @@ export function AssetsList({
                     <span />
                     <span />
                   </div>
-                  {displayedAssets.map((asset) =>
-                    AssetListRow ? (
-                      <AssetListRow
-                        key={asset.id}
-                        asset={asset}
-                        variant="desktop"
-                        onDelete={onAssetDeleted}
-                        onOpenDetails={(clickedAsset) => openAssetDetails(clickedAsset)}
-                      />
-                    ) : null,
-                  )}
+                  <VirtualizedAssetList
+                    assets={displayedAssets}
+                    AssetListRow={AssetListRow}
+                    isMobile={false}
+                    scrollElementRef={resultsScrollElementRef}
+                    scrollMargin={resultsScrollMargin}
+                    onDelete={onAssetDeleted}
+                    onOpenDetails={openAssetDetails}
+                    onLoadMore={onLoadMore}
+                    hasMore={hasMore}
+                    isFetchingMore={isFetchingMore || isQueryPending}
+                  />
                 </div>
               )}
-              <div ref={loadMoreRef} aria-hidden="true" className="h-1 w-full" />
               {isFetchingMore ? (
                 <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
               ) : null}
@@ -772,8 +795,8 @@ export function AssetsList({
           )}
 
           {isMobile && displayedAssets.length > 0 ? (
-            <div className="fixed inset-x-0 bottom-4 z-40 px-4 touch-pan-y">
-              <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur touch-pan-y">
+            <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 px-4">
+              <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur pointer-events-auto touch-pan-y">
                 <Drawer open={filtersOpen} onOpenChange={setFiltersOpen} modal={false}>
                   <DrawerTrigger asChild>
                     <Button variant="ghost" className="h-10 justify-between rounded-xl px-4 touch-pan-y">

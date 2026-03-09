@@ -25,6 +25,7 @@ export type AssetListRowProps = {
   variant: AssetListRowVariant
   onDelete?: (assetId: string) => void
   onOpenDetails?: (asset: AssetWithUsage) => void
+  shouldSuppressOpenDetails?: () => boolean
   onDeleteAction?: (assetId: string) => Promise<void>
   DeleteDialog?: DeleteAssetDialogComponent
 }
@@ -34,12 +35,15 @@ export function AssetListRow({
   variant,
   onDelete,
   onOpenDetails,
+  shouldSuppressOpenDetails,
   onDeleteAction,
   DeleteDialog,
 }: AssetListRowProps) {
   const t = useTranslations('assets')
   const [isDeleting, setIsDeleting] = React.useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+  const suppressOpenDetailsRef = React.useRef(false)
+  const touchStartPointRef = React.useRef<{ x: number; y: number } | null>(null)
 
   const handleDelete = async () => {
     try {
@@ -93,6 +97,46 @@ export function AssetListRow({
       <Video className="h-4 w-4 text-muted-foreground" />
     )
 
+  const handleOpenDetails = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (suppressOpenDetailsRef.current || shouldSuppressOpenDetails?.()) {
+      suppressOpenDetailsRef.current = false
+      event.preventDefault()
+      return
+    }
+
+    onOpenDetails?.(asset)
+  }
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLButtonElement>) => {
+    const touch = event.touches[0]
+
+    if (!touch) {
+      return
+    }
+
+    touchStartPointRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    }
+    suppressOpenDetailsRef.current = shouldSuppressOpenDetails?.() ?? false
+  }
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLButtonElement>) => {
+    const startPoint = touchStartPointRef.current
+    const touch = event.touches[0]
+
+    if (!startPoint || !touch) {
+      return
+    }
+
+    const deltaX = Math.abs(touch.clientX - startPoint.x)
+    const deltaY = Math.abs(touch.clientY - startPoint.y)
+
+    if (deltaX > 8 || deltaY > 8) {
+      suppressOpenDetailsRef.current = true
+    }
+  }
+
   if (variant === 'mobile') {
     return (
       <>
@@ -100,8 +144,10 @@ export function AssetListRow({
           <Checkbox aria-label={t('list.selectAsset')} />
           <button
             type="button"
-            className="col-span-2 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 text-left"
-            onClick={() => onOpenDetails?.(asset)}
+            className="col-span-2 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 text-left touch-pan-y"
+            onClick={handleOpenDetails}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
             aria-label={t('details.open')}
           >
             <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md bg-muted">

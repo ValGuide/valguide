@@ -14,8 +14,8 @@ import {
 import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { formatDistanceToNow } from 'date-fns'
 import { Download, Image as ImageIcon, Info, MoreVertical, Music, Trash2, Video } from 'lucide-react'
-import type { ComponentType } from 'react'
-import { useState } from 'react'
+import type { ComponentType, MouseEvent, TouchEvent } from 'react'
+import { useRef, useState } from 'react'
 import { AssetVideoThumbnail } from './asset-video-thumbnail'
 
 export type DeleteAssetDialogComponentProps = {
@@ -33,14 +33,24 @@ export type AssetCardProps = {
   asset: AssetWithUsage
   onDelete?: (assetId: string) => void
   onPreview?: (asset: AssetWithUsage) => void
+  shouldSuppressPreview?: () => boolean
   onDeleteAction?: (assetId: string) => Promise<void>
   DeleteDialog?: DeleteAssetDialogComponent
 }
 
-export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDialog }: AssetCardProps) {
+export function AssetCard({
+  asset,
+  onDelete,
+  onPreview,
+  shouldSuppressPreview,
+  onDeleteAction,
+  DeleteDialog,
+}: AssetCardProps) {
   const t = useTranslations('assets')
   const [isDeleting, setIsDeleting] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const suppressPreviewRef = useRef(false)
+  const touchStartPointRef = useRef<{ x: number; y: number } | null>(null)
 
   const handleDelete = async () => {
     try {
@@ -89,14 +99,56 @@ export function AssetCard({ asset, onDelete, onPreview, onDeleteAction, DeleteDi
     }
   }
 
+  const handlePreview = (event: MouseEvent<HTMLButtonElement>) => {
+    if (suppressPreviewRef.current || shouldSuppressPreview?.()) {
+      suppressPreviewRef.current = false
+      event.preventDefault()
+      return
+    }
+
+    onPreview?.(asset)
+  }
+
+  const handleTouchStart = (event: TouchEvent<HTMLButtonElement>) => {
+    const touch = event.touches[0]
+
+    if (!touch) {
+      return
+    }
+
+    touchStartPointRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    }
+    suppressPreviewRef.current = shouldSuppressPreview?.() ?? false
+  }
+
+  const handleTouchMove = (event: TouchEvent<HTMLButtonElement>) => {
+    const startPoint = touchStartPointRef.current
+    const touch = event.touches[0]
+
+    if (!startPoint || !touch) {
+      return
+    }
+
+    const deltaX = Math.abs(touch.clientX - startPoint.x)
+    const deltaY = Math.abs(touch.clientY - startPoint.y)
+
+    if (deltaX > 8 || deltaY > 8) {
+      suppressPreviewRef.current = true
+    }
+  }
+
   return (
     <>
       <Card className="overflow-hidden transition-all hover:shadow-md">
         <CardContent className="p-4">
           <button
             type="button"
-            className="relative mb-3 flex h-48 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-muted"
-            onClick={() => onPreview?.(asset)}
+            className="relative mb-3 flex h-48 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-muted touch-pan-y"
+            onClick={handlePreview}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
             aria-label={t('details.open')}
           >
             {asset.type === 'image' ? (
