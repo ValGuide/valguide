@@ -1,4 +1,5 @@
 import { getRemoteDevConfigPath } from '../../scripts/wrangler-remote-bindings'
+import { getBundleAnalyzerPlugin } from '../../scripts/vite-bundle-analyzer'
 import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import { devtools } from '@tanstack/devtools-vite'
@@ -46,5 +47,6 @@ export default defineConfig(({ command }) => ({
     }),
     devtools(),
     viteReact(),
+    ...getBundleAnalyzerPlugin('admin'),
   ],
 }))

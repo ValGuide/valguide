@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite dev --port 3001",
     "build": "vite build",
+    "build:analyse": "ANALYZE=true vite build",
     "dev:remote": "WRANGLER_REMOTE=true vite dev --port 3001",
     "preview": "vite preview --port 3001",
     "deploy": "pnpm build && wrangler deploy",

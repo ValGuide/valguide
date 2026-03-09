@@ -1,3 +1,4 @@
+import { getBundleAnalyzerPlugin } from '../../scripts/vite-bundle-analyzer'
 import react from '@vitejs/plugin-react'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
@@ -35,5 +36,6 @@ export default defineConfig(async ({ command }) => ({
       },
     }),
     react(),
+    ...getBundleAnalyzerPlugin('docs'),
   ],
 }))
