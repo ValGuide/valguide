@@ -37,8 +37,6 @@ export function getRemoteDevConfigPath(dir = '.') {
   }
 
   const outPath = resolve(dir, '.wrangler.dev-remote.json')
-
-  console.log(`Writing remote dev config to ${outPath}`, JSON.stringify(remoteConfig, null, 2))
   writeFileSync(outPath, JSON.stringify(remoteConfig, null, 2))
   return outPath
 }
