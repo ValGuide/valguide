@@ -16,6 +16,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Image as ImageIcon, Music, Search, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useEffect, useMemo, useState } from 'react'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { AssetPickerVirtualGrid } from './asset-picker-virtual-grid'
 
 export type UploadInlineComponentProps = {
@@ -72,6 +73,7 @@ export function AssetPickerModal({
   // i18n-used-keys: assets.types.image, assets.types.audio, assets.types.video
   const tTypes = useTranslations('assets.types')
   const tFilter = useTranslations('assets.filter')
+  const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
   const [internalSearchQuery, setInternalSearchQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set(selectedAssetIds))
@@ -149,7 +151,7 @@ export function AssetPickerModal({
         role="button"
         tabIndex={0}
         key={asset.id}
-        className={`relative rounded-lg border-2 transition-all cursor-pointer hover:shadow-md text-left ${
+        className={`relative rounded-xl border-2 transition-all cursor-pointer hover:shadow-md text-left ${
           isSelected ? 'border-primary shadow-sm' : 'border-border'
         }`}
         onClick={() => handleToggleAsset(asset.id)}
@@ -160,21 +162,25 @@ export function AssetPickerModal({
           }
         }}
       >
-        <div className="absolute top-2 right-2 z-10">
+        <div className="absolute right-2 top-2 z-10">
           <Checkbox
             checked={isSelected}
             onCheckedChange={() => handleToggleAsset(asset.id)}
             onClick={(e) => e.stopPropagation()}
-            className="h-6 w-6 border-2 shadow-sm bg-background/80 backdrop-blur-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            className="h-5 w-5 border-2 shadow-sm bg-background/85 backdrop-blur-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary sm:h-6 sm:w-6"
           />
         </div>
 
-        <div className="flex h-40 items-center justify-center overflow-hidden rounded-t-lg bg-muted">
+        <div
+          className={`flex items-center justify-center overflow-hidden bg-muted ${
+            isMobile ? 'h-28 rounded-t-xl' : 'h-40 rounded-t-xl'
+          }`}
+        >
           {asset.type === 'image' ? (
             <Image
               src={getAssetImageUrl(asset)}
               alt={asset.fileName}
-              layout="constrained"
+              layout="fullWidth"
               width={300}
               height={160}
               className="h-full w-full object-cover"
@@ -184,18 +190,23 @@ export function AssetPickerModal({
           )}
         </div>
 
-        <div className="space-y-2 p-3">
-          <h4 className="line-clamp-1 text-sm font-medium" title={asset.fileName}>
+        <div className={isMobile ? 'space-y-1.5 p-2.5' : 'space-y-2 p-3'}>
+          <h4
+            className={isMobile ? 'line-clamp-2 text-xs leading-tight font-medium' : 'line-clamp-1 text-sm font-medium'}
+            title={asset.fileName}
+          >
             {asset.fileName}
           </h4>
           <div className="flex flex-wrap gap-1">
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className={isMobile ? 'px-2 py-0 text-[11px]' : 'text-xs'}>
               {formatFileSize(asset.fileSize)}
             </Badge>
           </div>
-          <div className="text-xs text-muted-foreground">
-            {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
-          </div>
+          {!isMobile ? (
+            <div className="text-xs text-muted-foreground">
+              {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
+            </div>
+          ) : null}
         </div>
       </div>
     )
@@ -203,8 +214,8 @@ export function AssetPickerModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-5xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden">
-        <DialogHeader>
+      <DialogContent className="inset-0 h-dvh max-h-dvh w-screen max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-none border-0 p-4 sm:top-[50%] sm:left-[50%] sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl lg:max-w-4xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border sm:p-6">
+        <DialogHeader className="pr-8">
           <DialogTitle>
             {locale
               ? t('titleWithLocale', { type: tTypes(type), locale: locale.toUpperCase() })
@@ -217,20 +228,23 @@ export function AssetPickerModal({
           onValueChange={(v) => setActiveTab(v as 'library' | 'upload')}
           className="flex-1 flex flex-col min-h-0"
         >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="library">{t('tabs.library')}</TabsTrigger>
-            <TabsTrigger value="upload">{t('tabs.upload')}</TabsTrigger>
+          <TabsList className="grid h-12 w-full grid-cols-2 rounded-xl">
+            <TabsTrigger value="library" className="rounded-lg text-sm font-medium">
+              {t('tabs.library')}
+            </TabsTrigger>
+            <TabsTrigger value="upload" className="rounded-lg text-sm font-medium">
+              {t('tabs.upload')}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="library" className="flex-1 flex flex-col min-h-0 mt-4">
-            {/* Search */}
-            <div className="relative mb-4">
+            <div className="relative mb-4 shrink-0">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={tFilter('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="h-12 rounded-xl pl-9 text-base sm:text-sm"
               />
             </div>
 
@@ -259,6 +273,7 @@ export function AssetPickerModal({
                   <AssetPickerVirtualGrid
                     assets={displayedAssets}
                     renderAsset={renderAssetCard}
+                    isMobile={isMobile}
                     loadingMoreLabel={t('loadingMore')}
                     onLoadMore={onLoadMore}
                     hasMore={hasMore}
@@ -281,11 +296,15 @@ export function AssetPickerModal({
           </TabsContent>
         </Tabs>
 
-        <DialogFooter className="flex items-center justify-end gap-2">
-          <Button variant="outline" onClick={handleCancel}>
+        <DialogFooter className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-t bg-background/95 pt-3 backdrop-blur sm:flex sm:justify-end sm:gap-2 sm:border-0 sm:bg-transparent sm:pt-0">
+          <Button variant="outline" onClick={handleCancel} className="h-11 rounded-xl px-4 sm:h-10 sm:rounded-md">
             {t('cancel')}
           </Button>
-          <Button onClick={handleSelect} disabled={selected.size === 0}>
+          <Button
+            onClick={handleSelect}
+            disabled={selected.size === 0}
+            className="h-11 rounded-xl px-5 font-medium sm:h-10 sm:rounded-md"
+          >
             {t('select')}
           </Button>
         </DialogFooter>

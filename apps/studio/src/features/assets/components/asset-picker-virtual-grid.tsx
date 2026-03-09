@@ -3,12 +3,12 @@ import type { Asset } from '@valguide/core/features/assets/types'
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 
 const GRID_GAP = 16
-const ROW_ESTIMATE = 236
 const LOADING_MORE_HEIGHT = 48
 
 type AssetPickerVirtualGridProps = {
   assets: Asset[]
   renderAsset: (asset: Asset) => ReactNode
+  isMobile?: boolean
   loadingMoreLabel?: string
   onLoadMore?: () => void
   hasMore?: boolean
@@ -20,7 +20,7 @@ function getGridColumnCount(viewportWidth: number) {
     return 3
   }
 
-  if (viewportWidth >= 640) {
+  if (viewportWidth >= 360) {
     return 2
   }
 
@@ -30,6 +30,7 @@ function getGridColumnCount(viewportWidth: number) {
 export function AssetPickerVirtualGrid({
   assets,
   renderAsset,
+  isMobile = false,
   loadingMoreLabel,
   onLoadMore,
   hasMore = false,
@@ -60,7 +61,7 @@ export function AssetPickerVirtualGrid({
   const rowVirtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => scrollElementRef.current,
-    estimateSize: () => ROW_ESTIMATE,
+    estimateSize: () => (isMobile ? 196 : 236),
     gap: GRID_GAP,
     overscan: 3,
   })
