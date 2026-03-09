@@ -15,6 +15,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Image as ImageIcon, Music, Search, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useMemo, useState } from 'react'
+import { AssetPickerVirtualGrid } from './asset-picker-virtual-grid'
 
 export type UploadInlineComponentProps = {
   organizationId: string
@@ -118,9 +119,70 @@ export function AssetPickerModal({
     }
   }
 
+  const renderAssetCard = (asset: Asset) => {
+    const isSelected = selected.has(asset.id)
+
+    return (
+      // biome-ignore lint/a11y/useSemanticElements: Cannot use button due to nested Checkbox which renders as button
+      <div
+        role="button"
+        tabIndex={0}
+        key={asset.id}
+        className={`relative rounded-lg border-2 transition-all cursor-pointer hover:shadow-md text-left ${
+          isSelected ? 'border-primary shadow-sm' : 'border-border'
+        }`}
+        onClick={() => handleToggleAsset(asset.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleToggleAsset(asset.id)
+          }
+        }}
+      >
+        <div className="absolute top-2 right-2 z-10">
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={() => handleToggleAsset(asset.id)}
+            onClick={(e) => e.stopPropagation()}
+            className="h-6 w-6 border-2 shadow-sm bg-background/80 backdrop-blur-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+          />
+        </div>
+
+        <div className="flex h-40 items-center justify-center overflow-hidden rounded-t-lg bg-muted">
+          {asset.type === 'image' ? (
+            <Image
+              src={getAssetImageUrl(asset)}
+              alt={asset.fileName}
+              layout="constrained"
+              width={300}
+              height={160}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            getTypeIcon()
+          )}
+        </div>
+
+        <div className="space-y-2 p-3">
+          <h4 className="line-clamp-1 text-sm font-medium" title={asset.fileName}>
+            {asset.fileName}
+          </h4>
+          <div className="flex flex-wrap gap-1">
+            <Badge variant="secondary" className="text-xs">
+              {formatFileSize(asset.fileSize)}
+            </Badge>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col">
+      <DialogContent className="max-h-[90vh] max-w-5xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden">
         <DialogHeader>
           <DialogTitle>
             {locale
@@ -151,8 +213,7 @@ export function AssetPickerModal({
               />
             </div>
 
-            {/* Assets Grid */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="min-h-0 overflow-hidden">
               {isLoading ? (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {[...Array(6)].map((_, i) => (
@@ -173,70 +234,7 @@ export function AssetPickerModal({
                   </EmptyHeader>
                 </Empty>
               ) : (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {filteredAssets.map((asset) => {
-                    const isSelected = selected.has(asset.id)
-                    return (
-                      // biome-ignore lint/a11y/useSemanticElements: Cannot use button due to nested Checkbox which renders as button
-                      <div
-                        role="button"
-                        tabIndex={0}
-                        key={asset.id}
-                        className={`relative rounded-lg border-2 transition-all cursor-pointer hover:shadow-md text-left ${
-                          isSelected ? 'border-primary shadow-sm' : 'border-border'
-                        }`}
-                        onClick={() => handleToggleAsset(asset.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault()
-                            handleToggleAsset(asset.id)
-                          }
-                        }}
-                      >
-                        {/* Checkbox */}
-                        <div className="absolute top-2 right-2 z-10">
-                          <Checkbox
-                            checked={isSelected}
-                            onCheckedChange={() => handleToggleAsset(asset.id)}
-                            onClick={(e) => e.stopPropagation()}
-                            className="h-6 w-6 border-2 shadow-sm bg-background/80 backdrop-blur-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                          />
-                        </div>
-
-                        {/* Preview */}
-                        <div className="flex h-40 items-center justify-center overflow-hidden rounded-t-lg bg-muted">
-                          {asset.type === 'image' ? (
-                            <Image
-                              src={getAssetImageUrl(asset)}
-                              alt={asset.fileName}
-                              layout="constrained"
-                              width={300}
-                              height={160}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            getTypeIcon()
-                          )}
-                        </div>
-
-                        {/* Info */}
-                        <div className="p-3 space-y-2">
-                          <h4 className="line-clamp-1 text-sm font-medium" title={asset.fileName}>
-                            {asset.fileName}
-                          </h4>
-                          <div className="flex flex-wrap gap-1">
-                            <Badge variant="secondary" className="text-xs">
-                              {formatFileSize(asset.fileSize)}
-                            </Badge>
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                <AssetPickerVirtualGrid assets={filteredAssets} renderAsset={renderAssetCard} />
               )}
             </div>
           </TabsContent>
