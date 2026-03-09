@@ -1,5 +1,5 @@
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { sendEmail } from '@valguide/email'
+import { sendEmail } from '@valguide/email/send-email'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { createAuthMiddleware } from 'better-auth/api'

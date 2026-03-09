@@ -7,14 +7,19 @@
  * - RESEND_ADMIN_API_KEY: Your Resend API key with write access
  */
 
+import { writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { render } from '@react-email/render'
 import React from 'react'
 import { Resend } from 'resend'
-import { emailLocales, type ResendTemplate, templates } from '../templates'
+import { templates } from '../emails/template-registry'
+import { emailLocales } from '../templates/locales'
+import type { ResendTemplate } from '../templates/types'
 
 const RESEND_API_KEY = process.env.RESEND_ADMIN_API_KEY
 const dryRun = process.argv.includes('--dry-run')
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null
+const templateIdsOutputPath = resolve(__dirname, '../template-ids.ts')
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -52,6 +57,16 @@ function assertAllLocalesPresent(allTemplates: ResendTemplate[]) {
   }
 }
 
+function writeTemplateIdsFile(templateIds: Record<string, string>) {
+  const entries = Object.entries(templateIds)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([alias, id]) => `  ${JSON.stringify(alias)}: ${JSON.stringify(id)},`)
+    .join('\n')
+
+  const fileContents = `${entries ? '' : ''}export const resendTemplateIds = {\n${entries}\n} as const satisfies Partial<Record<string, string>>\n`
+  writeFileSync(templateIdsOutputPath, fileContents, 'utf8')
+}
+
 async function syncTemplates() {
   assertNoDuplicateAliases(templates)
   assertAllLocalesPresent(templates)
@@ -84,6 +99,7 @@ async function syncTemplates() {
   }
 
   const existingByAlias = new Map(existingTemplates?.data?.map((t) => [t.alias, t]) ?? [])
+  const templateIds: Record<string, string> = {}
 
   for (const [index, template] of templates.entries()) {
     const { config, component, text } = template
@@ -116,6 +132,7 @@ async function syncTemplates() {
       }
 
       console.log(`  ✓ Updated template`)
+      templateIds[config.alias] = existing.id
 
       await delay(600)
       const { error: publishError } = await resend.templates.publish(existing.id)
@@ -145,6 +162,7 @@ async function syncTemplates() {
       console.log(`  ✓ Created template with ID: ${created?.id}`)
 
       if (created?.id) {
+        templateIds[config.alias] = created.id
         await delay(600)
         const { error: publishError } = await resend.templates.publish(created.id)
         if (publishError) {
@@ -155,6 +173,9 @@ async function syncTemplates() {
       }
     }
   }
+
+  writeTemplateIdsFile(templateIds)
+  console.log(`\n✓ Wrote template ID map to ${templateIdsOutputPath}`)
 
   console.log('\n✅ Template sync complete!')
 }

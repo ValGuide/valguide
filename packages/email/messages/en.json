@@ -1,0 +1,26 @@
+{
+  "otpLogin": {
+    "subject": "Your ValGuide login code",
+    "preview": "Use the code below to securely log in. Valid for {maxValidMinutes} minutes.",
+    "heading": "Your login code for ValGuide",
+    "expires": "This code expires in {maxValidMinutes} minutes.",
+    "ignore": "If you didn't request this, please ignore this email."
+  },
+  "teamInvite": {
+    "subject": "Join {teamName} on ValGuide",
+    "preview": "You have been invited to join {teamName} on ValGuide.",
+    "heading": "Join {teamName} on ValGuide",
+    "greeting": "Hello,",
+    "invitedBy": "{inviterName} has invited you to join the {teamName} team on ValGuide.",
+    "cta": "Join Team",
+    "copyUrl": "or copy and paste this URL into your browser:"
+  },
+  "accountApproved": {
+    "subject": "Your ValGuide account has been approved",
+    "preview": "Your ValGuide account has been approved.",
+    "heading": "Your Account Has Been Approved",
+    "body": "Your ValGuide account has been approved. You can now log in and start creating tours.",
+    "cta": "Go to Studio",
+    "copyUrl": "or copy and paste this URL into your browser:"
+  }
+}

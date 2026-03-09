@@ -1,0 +1,26 @@
+{
+  "otpLogin": {
+    "subject": "Vies code d'annunzia per ValGuide",
+    "preview": "Utilisei il code sutvart per As annunziar a moda segira. Valabel per {maxValidMinutes} minutas.",
+    "heading": "Vies code d'annunzia per ValGuide",
+    "expires": "Quest code scada en {maxValidMinutes} minutas.",
+    "ignore": "Sche Vus n'avais betg dumandà quai, ignorai per plaschair quest e-mail."
+  },
+  "teamInvite": {
+    "subject": "As participai a {teamName} sin ValGuide",
+    "preview": "Vus essas vegnì envidà da participar a {teamName} sin ValGuide.",
+    "heading": "Participar a {teamName} sin ValGuide",
+    "greeting": "Bun di,",
+    "invitedBy": "{inviterName} As ha envidà da participar al team {teamName} sin ValGuide.",
+    "cta": "Participar al team",
+    "copyUrl": "u copiar questa URL en Voss navigatur:"
+  },
+  "accountApproved": {
+    "subject": "Voss conto da ValGuide è vegnì approvà",
+    "preview": "Voss conto da ValGuide è vegnì approvà.",
+    "heading": "Voss conto è vegnì approvà",
+    "body": "Voss conto da ValGuide è vegnì approvà. Vus pudais ussa As annunziar ed entschaiver a crear tours.",
+    "cta": "Ir al Studio",
+    "copyUrl": "u copiar questa URL en Voss navigatur:"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "otpLogin": {
+    "subject": "Ihr ValGuide-Anmeldecode",
+    "preview": "Verwenden Sie den folgenden Code für die sichere Anmeldung. Gültig für {maxValidMinutes} Minuten.",
+    "heading": "Ihr Anmeldecode für ValGuide",
+    "expires": "Dieser Code läuft in {maxValidMinutes} Minuten ab.",
+    "ignore": "Falls Sie dies nicht angefordert haben, ignorieren Sie diese E-Mail bitte."
+  },
+  "teamInvite": {
+    "subject": "Treten Sie {teamName} auf ValGuide bei",
+    "preview": "Sie wurden eingeladen, {teamName} auf ValGuide beizutreten.",
+    "heading": "{teamName} auf ValGuide beitreten",
+    "greeting": "Hallo,",
+    "invitedBy": "{inviterName} hat Sie eingeladen, dem Team {teamName} auf ValGuide beizutreten.",
+    "cta": "Team beitreten",
+    "copyUrl": "oder kopieren Sie diese URL in Ihren Browser:"
+  },
+  "accountApproved": {
+    "subject": "Ihr ValGuide-Konto wurde freigegeben",
+    "preview": "Ihr ValGuide-Konto wurde freigegeben.",
+    "heading": "Ihr Konto wurde freigegeben",
+    "body": "Ihr ValGuide-Konto wurde freigegeben. Sie können sich jetzt anmelden und mit dem Erstellen von Touren beginnen.",
+    "cta": "Zum Studio",
+    "copyUrl": "oder kopieren Sie diese URL in Ihren Browser:"
+  }
+}

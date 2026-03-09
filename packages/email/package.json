@@ -2,7 +2,7 @@
   "name": "@valguide/email",
   "version": "1.0.0",
   "exports": {
-    ".": "./index.tsx"
+    "./send-email": "./send-email.tsx"
   },
   "private": true,
   "scripts": {

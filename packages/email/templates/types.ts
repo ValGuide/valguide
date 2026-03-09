@@ -1,6 +1,6 @@
 import type { EmailLocale } from './locales'
 
-export type EmailTemplateKey = 'otp-login' | 'team-invite'
+export type EmailTemplateKey = 'otp-login' | 'team-invite' | 'account-approved'
 
 export type ResendTemplateVariable =
   | {
