@@ -484,7 +484,7 @@ export function AssetsList({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-h-0 flex-1 flex-col gap-6">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <PageTitle as="h2">{t('title')}</PageTitle>
@@ -492,7 +492,11 @@ export function AssetsList({
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'library' | 'upload')} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as 'library' | 'upload')}
+        className="flex min-h-0 flex-1 flex-col gap-6"
+      >
         <TabsList>
           <TabsTrigger value="library" className="gap-2">
             <ImageIcon className="h-4 w-4" />
@@ -504,7 +508,7 @@ export function AssetsList({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="library" className="space-y-6">
+        <TabsContent value="library" className="mt-0 space-y-6">
           <div className="sticky top-0 z-20 border-b bg-background pt-4 pb-4">
             <div className="space-y-3">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_170px_170px_170px_170px_auto] xl:gap-4">
@@ -829,10 +833,15 @@ export function AssetsList({
           ) : null}
         </TabsContent>
 
-        <TabsContent value="upload" className="space-y-6">
-          <div className="mx-auto w-full max-w-2xl">
+        <TabsContent value="upload" className="mt-0 flex min-h-0 flex-1 flex-col">
+          <div className="flex min-h-0 flex-1 flex-col">
             {UploadInline && (
-              <UploadInline onUploadComplete={handleUploadComplete} organizationId={organizationId} locale={locale} />
+              <UploadInline
+                onUploadComplete={handleUploadComplete}
+                organizationId={organizationId}
+                locale={locale}
+                className="w-full flex-1"
+              />
             )}
           </div>
         </TabsContent>

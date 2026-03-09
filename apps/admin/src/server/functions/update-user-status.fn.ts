@@ -13,6 +13,9 @@ const updateUserStatusSchema = z.object({
 export const adminUpdateUserStatusFn = createServerFn({ method: 'POST' })
   .middleware([adminMiddleware])
   .inputValidator(updateUserStatusSchema)
-  .handler(async ({ data }) => {
-    return updateUserStatus(db, data)
+  .handler(async ({ context, data }) => {
+    return updateUserStatus(db, {
+      ...data,
+      actorEmail: context.user.email,
+    })
   })

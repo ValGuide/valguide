@@ -23,9 +23,10 @@ export type AssetUploadInlineProps = {
   allowedTypes?: AssetType[]
   locale?: string
   onUploadComplete?: (asset: Asset) => void
+  className?: string
 }
 
-export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploadInlineProps) {
+export function AssetUploadInline({ allowedTypes, onUploadComplete, className }: AssetUploadInlineProps) {
   const t = useTranslations('assets')
   const [file, setFile] = useState<File | null>(null)
   const [detectedType, setDetectedType] = useState<AssetType | null>(null)
@@ -171,7 +172,7 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4">
+    <div className={cn('flex h-full min-h-0 flex-col gap-4', className)}>
       {/* biome-ignore lint/a11y/useSemanticElements: button cannot support drag/drop events properly */}
       <div
         role="button"
@@ -184,7 +185,7 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
           }
         }}
         className={cn(
-          'relative flex min-h-0 flex-1 items-center justify-center rounded-lg border-2 border-dashed p-12 transition-all',
+          'relative flex min-h-0 flex-1 items-center justify-center rounded-lg border-2 border-dashed p-6 sm:p-12 transition-all',
           uploadComplete
             ? 'border-green-500 bg-green-50 dark:bg-green-950'
             : file
@@ -202,7 +203,7 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
         />
 
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+        <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-4 text-center">
           {uploadComplete ? (
             <>
               <CheckCircle2 className="h-16 w-16 text-green-600" />
@@ -232,11 +233,11 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
           ) : (
             <>
               {getTypeIcon(singleType)}
-              <div className="space-y-2">
-                <p className="text-base font-medium">
+              <div className="space-y-1.5 sm:space-y-2">
+                <p className="text-sm font-medium sm:text-base">
                   {singleType ? t('upload.dropzone', { type: t(`types.${singleType}`) }) : t('upload.dropzoneGeneric')}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground sm:text-sm">
                   {singleType ? t('upload.maxSize', { size: MAX_SIZE_MB[singleType] }) : t('upload.sizeLimits')}
                 </p>
               </div>
