@@ -1,13 +1,17 @@
 import { useForm, useStore } from '@tanstack/react-form'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldLabel } from '@valguide/core/ui/components/field'
-import { PhoneInput } from '@valguide/core/ui/components/phone-input'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Lock } from 'lucide-react'
-import { useCallback, useEffect, useState, useTransition } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState, useTransition } from 'react'
 import { z } from 'zod'
 import type { ProfileFormData } from '../schemas'
+
+const PhoneInput = lazy(async () => {
+  const module = await import('@valguide/core/ui/components/phone-input')
+  return { default: module.PhoneInput }
+})
 
 const profileSchema = z.object({
   username: z.string().refine((val) => val === '' || val.length >= 3, {
@@ -156,13 +160,25 @@ export function ProfileForm({ profile, email, onSubmit }: ProfileFormProps) {
           {(field) => (
             <Field>
               <FieldLabel htmlFor={field.name}>{t('phone')}</FieldLabel>
-              <PhoneInput
-                id={field.name}
-                value={field.state.value}
-                onChange={(value) => field.handleChange(value)}
-                defaultCountry="CH"
-                placeholder="079 123 45 67"
-              />
+              <Suspense
+                fallback={
+                  <Input
+                    id={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="079 123 45 67"
+                  />
+                }
+              >
+                <PhoneInput
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(value) => field.handleChange(value)}
+                  defaultCountry="CH"
+                  placeholder="079 123 45 67"
+                />
+              </Suspense>
               <p className="text-xs text-muted-foreground">{t('phoneHint')}</p>
             </Field>
           )}

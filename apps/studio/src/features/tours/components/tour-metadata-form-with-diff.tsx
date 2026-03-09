@@ -4,12 +4,12 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
-import { RichTextEditor } from '@valguide/ui/components/rich-text/rich-text-editor'
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
 import { z } from 'zod'
 import { DiffFieldLabel } from '@/features/editor/components/diff-aware-field'
 import { DiffToggle } from '@/features/editor/components/diff-toggle'
 import { InlineDiff } from '@/features/editor/components/inline-diff'
+import { LazyRichTextEditor } from '@/features/editor/components/lazy-rich-text-editor'
 import { RichTextInlineDiff } from '@/features/editor/components/rich-text-inline-diff'
 
 const tourTranslationFormSchema = z.object({
@@ -164,7 +164,7 @@ export const TourMetadataFormWithDiff = forwardRef<TourMetadataFormWithDiffRef, 
                           />
                         </div>
                       ) : (
-                        <RichTextEditor
+                        <LazyRichTextEditor
                           aria-labelledby={`${field.name}-label`}
                           value={field.state.value ?? ''}
                           onChange={field.handleChange}

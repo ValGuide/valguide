@@ -7,14 +7,26 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { ChevronLeft, MoreHorizontal, Trash2, X } from 'lucide-react'
-import { type ReactNode, useCallback, useState } from 'react'
+import { lazy, type ReactNode, Suspense, useCallback, useState } from 'react'
 import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
-import { DiscardConfirmationDialog } from './discard-confirmation-dialog'
 import { EditorHeader } from './editor-header'
 import { getLocaleDisplayName, LocaleSelector } from './locale-selector'
 import { MobileSavePublish } from './mobile-action-bar'
-import { PublishConfirmationDialog } from './publish-confirmation-dialog'
-import { UnpublishConfirmationDialog } from './unpublish-confirmation-dialog'
+
+const DiscardConfirmationDialog = lazy(async () => {
+  const module = await import('./discard-confirmation-dialog')
+  return { default: module.DiscardConfirmationDialog }
+})
+
+const PublishConfirmationDialog = lazy(async () => {
+  const module = await import('./publish-confirmation-dialog')
+  return { default: module.PublishConfirmationDialog }
+})
+
+const UnpublishConfirmationDialog = lazy(async () => {
+  const module = await import('./unpublish-confirmation-dialog')
+  return { default: module.UnpublishConfirmationDialog }
+})
 
 export type StatusDisplay = {
   status: TourStatus
@@ -306,28 +318,40 @@ export function BaseEditLayout({
         </div>
       </div>
 
-      <PublishConfirmationDialog
-        open={publishDialogOpen}
-        onOpenChange={setPublishDialogOpen}
-        isPublishing={isPublishing}
-        onConfirm={onPublish}
-        languageName={getLocaleDisplayName(activeLocale)}
-      />
+      {publishDialogOpen ? (
+        <Suspense fallback={null}>
+          <PublishConfirmationDialog
+            open={publishDialogOpen}
+            onOpenChange={setPublishDialogOpen}
+            isPublishing={isPublishing}
+            onConfirm={onPublish}
+            languageName={getLocaleDisplayName(activeLocale)}
+          />
+        </Suspense>
+      ) : null}
 
-      <UnpublishConfirmationDialog
-        open={unpublishDialogOpen}
-        onOpenChange={setUnpublishDialogOpen}
-        contentType={contentType}
-        languageName={getLocaleDisplayName(activeLocale)}
-        onConfirm={onUnpublish}
-      />
+      {unpublishDialogOpen ? (
+        <Suspense fallback={null}>
+          <UnpublishConfirmationDialog
+            open={unpublishDialogOpen}
+            onOpenChange={setUnpublishDialogOpen}
+            contentType={contentType}
+            languageName={getLocaleDisplayName(activeLocale)}
+            onConfirm={onUnpublish}
+          />
+        </Suspense>
+      ) : null}
 
-      <DiscardConfirmationDialog
-        open={discardDialogOpen}
-        onOpenChange={setDiscardDialogOpen}
-        onConfirm={onDiscard}
-        contentType={contentType}
-      />
+      {discardDialogOpen ? (
+        <Suspense fallback={null}>
+          <DiscardConfirmationDialog
+            open={discardDialogOpen}
+            onOpenChange={setDiscardDialogOpen}
+            onConfirm={onDiscard}
+            contentType={contentType}
+          />
+        </Suspense>
+      ) : null}
     </>
   )
 }

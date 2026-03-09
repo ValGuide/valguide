@@ -1,8 +1,5 @@
-import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
 import { defaultLocale } from '@valguide/core/i18n/i18n.config'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
@@ -10,10 +7,18 @@ import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import { ErrorPage } from '@valguide/features/error/error-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
+import { lazy, Suspense } from 'react'
 import { Providers } from '@/components/providers'
 import { currentUserQueryOptions } from '@/features/auth/query-options'
 import { themeQueryOptions } from '@/features/theme/query-options'
 import { adminMessagesQueryOptions } from '@/i18n/query-options'
+
+const Devtools = import.meta.env.DEV
+  ? lazy(async () => {
+      const module = await import('@valguide/core/ui/components/tanstack-devtools')
+      return { default: module.TanStackAppDevtools }
+    })
+  : null
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -130,24 +135,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Providers locale={locale} initialTheme={theme}>
           {children}
         </Providers>
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-            hideUntilHover: true,
-          }}
-          plugins={[
-            {
-              name: 'React Query',
-              render: <ReactQueryDevtoolsPanel />,
-              defaultOpen: false,
-            },
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-              defaultOpen: false,
-            },
-          ]}
-        />
+        {Devtools ? (
+          <Suspense fallback={null}>
+            <Devtools />
+          </Suspense>
+        ) : null}
         <Scripts />
       </body>
     </html>

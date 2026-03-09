@@ -116,7 +116,7 @@ const MainProfileRoute = MainProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => MainRoute,
-} as any)
+} as any).lazy(() => import('./routes/_main/profile.lazy').then((d) => d.Route))
 const MainDesignRoute = MainDesignRouteImport.update({
   id: '/design',
   path: '/design',

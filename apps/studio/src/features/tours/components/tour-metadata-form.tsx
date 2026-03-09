@@ -3,9 +3,9 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/components/field'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
-import { RichTextEditor } from '@valguide/ui/components/rich-text/rich-text-editor'
 import { forwardRef, useEffect, useImperativeHandle } from 'react'
 import { z } from 'zod'
+import { LazyRichTextEditor } from '@/features/editor/components/lazy-rich-text-editor'
 
 const tourTranslationFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(500),
@@ -127,7 +127,7 @@ export const TourMetadataForm = forwardRef<TourMetadataFormRef, TourMetadataForm
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel id={`${field.name}-label`}>{t('editor.descriptionLabel')}</FieldLabel>
-                    <RichTextEditor
+                    <LazyRichTextEditor
                       aria-labelledby={`${field.name}-label`}
                       value={field.state.value ?? ''}
                       onChange={field.handleChange}

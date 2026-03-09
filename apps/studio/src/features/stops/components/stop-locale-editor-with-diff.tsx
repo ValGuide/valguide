@@ -7,13 +7,13 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@valguide/core/ui/com
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Input } from '@valguide/ui/components/input'
-import { RichTextEditor } from '@valguide/ui/components/rich-text/rich-text-editor'
 import { Mic } from 'lucide-react'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DiffFieldLabel } from '@/features/editor/components/diff-aware-field'
 import { DiffToggle } from '@/features/editor/components/diff-toggle'
 import { InlineDiff } from '@/features/editor/components/inline-diff'
+import { LazyRichTextEditor } from '@/features/editor/components/lazy-rich-text-editor'
 import { RichTextInlineDiff } from '@/features/editor/components/rich-text-inline-diff'
 import { type StopTranslationFormData, stopTranslationFormSchema } from '@/features/tours/schemas/tour-form'
 
@@ -194,7 +194,7 @@ export const StopLocaleEditorWithDiff = forwardRef<StopLocaleEditorWithDiffRef, 
                         <RichTextInlineDiff oldContent={descriptionDiff.published} newContent={descriptionDiff.draft} />
                       </div>
                     ) : (
-                      <RichTextEditor
+                      <LazyRichTextEditor
                         value={field.state.value}
                         onChange={field.handleChange}
                         placeholder={t('descriptionPlaceholder')}
