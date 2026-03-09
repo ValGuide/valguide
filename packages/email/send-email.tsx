@@ -1,4 +1,3 @@
-import { Resend } from 'resend'
 import type { AccountApprovedEmailProps } from './emails/account-approved-email'
 import { getAccountApprovedConfig, getAccountApprovedText } from './emails/account-approved-template'
 import type { OtpLoginEmailProps } from './emails/otp-login-email'
@@ -9,12 +8,23 @@ import { env } from './env'
 import { resendTemplateIds } from './template-ids'
 import { defaultEmailLocale, type EmailLocale, isEmailLocale } from './templates/locales'
 
-// Initialize Resend with API key from environment
-// Don't throw if key is missing, we'll handle it in sendEmail
-const resend = env.RESEND_SENDING_API_KEY ? new Resend(env.RESEND_SENDING_API_KEY) : null
-
 // Configurable sender
 const FROM_EMAIL = env.EMAIL_FROM
+const RESEND_API_URL = 'https://api.resend.com/emails'
+
+type SendEmailResult =
+  | {
+      id: string
+      error: null
+    }
+  | {
+      id: null
+      error: {
+        message: string
+        name: string
+        statusCode?: number | null
+      }
+    }
 
 export type EmailTemplate =
   | { name: 'team-invite'; data: TeamInviteEmailProps }
@@ -107,9 +117,10 @@ export async function sendEmail({ to, locale, subject: subjectOverride, template
   const subject = resolveSubject(template, resolvedLocale, subjectOverride)
   const alias = resolveTemplateAlias(template, resolvedLocale)
   const templateId = resendTemplateIds[alias as keyof typeof resendTemplateIds]
+  const text = resolveTemplateText(template, resolvedLocale)
   const variables = resolveTemplateVariables(template)
 
-  if (!resend) {
+  if (!env.RESEND_SENDING_API_KEY) {
     console.warn('RESEND_SENDING_API_KEY is not set. Email not sent.')
     if (env.NODE_ENV !== 'production') {
       console.log('--- SIMULATED EMAIL ---')
@@ -119,7 +130,7 @@ export async function sendEmail({ to, locale, subject: subjectOverride, template
       console.log('Alias:', alias)
       console.log('Template:', template.name)
       console.log('Data:', template.data)
-      console.log('Text:', resolveTemplateText(template, resolvedLocale))
+      console.log('Text:', text)
       console.log('Variables:', variables)
       console.log('-----------------------')
       return { id: 'simulated', error: null }
@@ -137,21 +148,44 @@ export async function sendEmail({ to, locale, subject: subjectOverride, template
   }
 
   try {
-    const data = await resend.emails.send({
-      from: FROM_EMAIL,
-      to,
-      subject,
-      template: {
-        id: templateId,
-        variables,
+    const response = await fetch(RESEND_API_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.RESEND_SENDING_API_KEY}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        from: FROM_EMAIL,
+        to,
+        subject,
+        text,
+        template: {
+          id: templateId,
+          variables,
+        },
+      }),
     })
 
-    if (data.error) {
-      console.error('Error sending email:', data.error)
+    const data = (await response.json()) as
+      | {
+          id?: string
+          message?: string
+          name?: string
+          statusCode?: number | null
+        }
+      | undefined
+
+    if (!response.ok || !data?.id) {
+      const error = {
+        message: data?.message ?? 'Failed to send email',
+        name: data?.name ?? 'send_failed',
+        statusCode: data?.statusCode ?? response.status,
+      }
+      console.error('Error sending email:', error)
+      return { id: null, error } satisfies SendEmailResult
     }
 
-    return data
+    return { id: data.id, error: null } satisfies SendEmailResult
   } catch (error) {
     console.error('Failed to send email:', error)
     throw error
