@@ -1,19 +1,15 @@
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { sendEmail } from '@valguide/email/send-email'
-import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { createAuthMiddleware } from 'better-auth/api'
-import { emailOTP, organization as organizationPlugin } from 'better-auth/plugins'
+import { betterAuth } from 'better-auth/minimal'
+import { emailOTP } from 'better-auth/plugins/email-otp'
+import { organization as organizationPlugin } from 'better-auth/plugins/organization'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { serverEnv } from '../../env/server'
 import { defaultLocale, type SupportedLocale } from '../../i18n/i18n.config'
 import { resolveLocaleFromHeaders } from '../../i18n/locale-resolution'
-import { userLoggedInMessage } from '../../slack/messages/user-logged-in.message'
-import { userStartedLoginMessage } from '../../slack/messages/user-started-login.message'
-import { postMessage } from '../../slack/send-slack-message'
 import { db } from '../db'
 import { invitation, member, organization } from '../orgs/schema'
-import { getUserStatus } from './get-user-status.server'
 import { orgAc, orgRoles } from './organization-permissions'
 import { authAccounts, authSessions, authUsers, authVerifications } from './schema'
 
@@ -38,13 +34,9 @@ function normalizeEmail(value: unknown): string | null {
   return normalized.length > 0 ? normalized : null
 }
 
-function resolveEmailLocaleFromHeaders(headers: Headers | null): SupportedLocale {
-  return resolveLocaleFromHeaders(headers)
-}
-
 function resolveCurrentRequestEmailLocale(): SupportedLocale {
   try {
-    return resolveEmailLocaleFromHeaders(getRequestHeaders())
+    return resolveLocaleFromHeaders(getRequestHeaders())
   } catch {
     return defaultLocale
   }
@@ -72,16 +64,17 @@ export function createAuthInstance(options: {
       } | null>
     }
   }
-  enableEmailOtp?: boolean
   enableOrganizationPlugin?: boolean
   errorURL?: string
+  onVerificationOtpSent?: (input: { email: string }) => Promise<void>
+  onOtpSignIn?: (input: { email: string; userId: string }) => Promise<void>
   sendInvitationEmail?: (input: {
     email: string
     organizationName: string
     inviterEmail: string
     invitationId: string
-    locale: SupportedLocale
   }) => Promise<void>
+  sendVerificationOtp?: (input: { email: string; otp: string }) => Promise<void>
   sessionCookieCache?:
     | {
         enabled: false
@@ -91,6 +84,37 @@ export function createAuthInstance(options: {
         maxAge: number
       }
 }) {
+  const authHooks =
+    options.onVerificationOtpSent || options.onOtpSignIn
+      ? {
+          after: createAuthMiddleware(async (ctx) => {
+            if (ctx.path === '/email-otp/send-verification-otp' && options.onVerificationOtpSent) {
+              const result = ctx.context.returned as { success?: boolean } | undefined
+              if (!result?.success) {
+                return
+              }
+
+              const email = normalizeEmail((ctx.body as { email?: unknown } | undefined)?.email)
+              if (!email) {
+                return
+              }
+
+              await ctx.context.runInBackgroundOrAwait(options.onVerificationOtpSent({ email }))
+            }
+
+            if (ctx.path === '/sign-in/email-otp' && options.onOtpSignIn) {
+              const userId = ctx.context.newSession?.user?.id
+              const email = normalizeEmail(ctx.context.newSession?.user?.email)
+              if (!userId || !email) {
+                return
+              }
+
+              await ctx.context.runInBackgroundOrAwait(options.onOtpSignIn({ email, userId }))
+            }
+          }),
+        }
+      : undefined
+
   return betterAuth({
     secret: serverEnv.BETTER_AUTH_SECRET,
     ...(options.baseURL || serverEnv.BETTER_AUTH_URL ? { baseURL: options.baseURL || serverEnv.BETTER_AUTH_URL } : {}),
@@ -110,6 +134,7 @@ export function createAuthInstance(options: {
     }),
     ...(options.socialProviders ? { socialProviders: options.socialProviders } : {}),
     ...(options.sessionCookieCache ? { session: { cookieCache: options.sessionCookieCache } } : {}),
+    ...(authHooks ? { hooks: authHooks } : {}),
     rateLimit: {
       enabled: true,
       window: 60,
@@ -122,47 +147,6 @@ export function createAuthInstance(options: {
         '/email-otp/check-verification-otp': { window: 60, max: otpVerifyLimit },
         '/api/auth/email-otp/check-verification-otp': { window: 60, max: otpVerifyLimit },
       },
-    },
-    hooks: {
-      after: createAuthMiddleware(async (ctx) => {
-        if (ctx.path === '/email-otp/send-verification-otp') {
-          const result = ctx.context.returned as { success?: boolean } | undefined
-          if (!result?.success) {
-            return
-          }
-          const email = normalizeEmail((ctx.body as { email?: unknown } | undefined)?.email)
-          if (!email) {
-            return
-          }
-          await ctx.context.runInBackgroundOrAwait(
-            postMessage(
-              userStartedLoginMessage({
-                email,
-                timestampMs: Date.now(),
-              }),
-            ),
-          )
-        }
-
-        if (ctx.path === '/sign-in/email-otp') {
-          const userId = ctx.context.newSession?.user?.id
-          const email = normalizeEmail(ctx.context.newSession?.user?.email)
-          if (!userId || !email) {
-            return
-          }
-          const status = await getUserStatus(userId, email)
-          await ctx.context.runInBackgroundOrAwait(
-            postMessage(
-              userLoggedInMessage({
-                email,
-                userId,
-                status,
-                timestampMs: Date.now(),
-              }),
-            ),
-          )
-        }
-      }),
     },
     advanced: {
       cookiePrefix: options.cookiePrefix,
@@ -178,7 +162,7 @@ export function createAuthInstance(options: {
       },
     },
     plugins: [
-      ...(options.enableEmailOtp
+      ...(options.sendVerificationOtp
         ? [
             emailOTP({
               otpLength: 6,
@@ -194,17 +178,7 @@ export function createAuthInstance(options: {
                   }
                 : {}),
               async sendVerificationOTP({ email, otp }) {
-                await sendEmail({
-                  to: email,
-                  locale: resolveCurrentRequestEmailLocale(),
-                  template: {
-                    name: 'otp-login',
-                    data: {
-                      code: otp,
-                      maxValidMinutes: 5,
-                    },
-                  },
-                })
+                await options.sendVerificationOtp?.({ email, otp })
               },
             }),
           ]
@@ -224,7 +198,6 @@ export function createAuthInstance(options: {
                         organizationName: organization.name,
                         inviterEmail: inviter.user.email,
                         invitationId: id,
-                        locale: resolveCurrentRequestEmailLocale(),
                       })
                     },
                   }
@@ -284,12 +257,58 @@ export const auth = createAuthInstance({
     maxAge: 300,
   },
   errorURL: '/auth/error',
-  enableEmailOtp: true,
   enableOrganizationPlugin: true,
-  sendInvitationEmail: async ({ email, organizationName, inviterEmail, invitationId, locale }) => {
+  async onVerificationOtpSent({ email }) {
+    const [{ userStartedLoginMessage }, { postMessage }] = await Promise.all([
+      import('../../slack/messages/user-started-login.message'),
+      import('../../slack/send-slack-message'),
+    ])
+
+    await postMessage(
+      userStartedLoginMessage({
+        email,
+        timestampMs: Date.now(),
+      }),
+    )
+  },
+  async onOtpSignIn({ email, userId }) {
+    const [{ getUserStatus }, { userLoggedInMessage }, { postMessage }] = await Promise.all([
+      import('./get-user-status.server'),
+      import('../../slack/messages/user-logged-in.message'),
+      import('../../slack/send-slack-message'),
+    ])
+
+    const status = await getUserStatus(userId, email)
+    await postMessage(
+      userLoggedInMessage({
+        email,
+        userId,
+        status,
+        timestampMs: Date.now(),
+      }),
+    )
+  },
+  async sendVerificationOtp({ email, otp }) {
+    const { sendEmail } = await import('@valguide/email/send-email')
+
     await sendEmail({
       to: email,
-      locale,
+      locale: resolveCurrentRequestEmailLocale(),
+      template: {
+        name: 'otp-login',
+        data: {
+          code: otp,
+          maxValidMinutes: 5,
+        },
+      },
+    })
+  },
+  async sendInvitationEmail({ email, organizationName, inviterEmail, invitationId }) {
+    const { sendEmail } = await import('@valguide/email/send-email')
+
+    await sendEmail({
+      to: email,
+      locale: resolveCurrentRequestEmailLocale(),
       template: {
         name: 'team-invite',
         data: {
