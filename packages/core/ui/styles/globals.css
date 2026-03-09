@@ -234,16 +234,6 @@
         background-color: var(--selection);
         color: var(--selection-foreground);
     }
-
-    .ProseMirror img {
-        display: block;
-        width: 100%;
-        max-width: none;
-        height: auto;
-        object-fit: contain;
-        margin-block: 1rem;
-        border-radius: var(--radius-md);
-    }
 }
 
 :root, [data-theme="light"] {

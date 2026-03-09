@@ -21,7 +21,6 @@ export function RichTextDisplay({ content, className = '' }: RichTextDisplayProp
         'prose-headings:text-foreground prose-strong:text-foreground prose-code:text-foreground',
         'prose-p:text-muted-foreground prose-li:text-muted-foreground prose-blockquote:text-muted-foreground',
         'prose-a:text-foreground prose-a:decoration-border',
-        '[&_img]:my-4 [&_img]:block [&_img]:h-auto [&_img]:w-full [&_img]:max-w-none [&_img]:rounded-md [&_img]:object-contain',
         className,
       )}
       // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized by TipTap

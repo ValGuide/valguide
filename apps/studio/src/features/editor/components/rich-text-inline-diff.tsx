@@ -39,7 +39,7 @@ export function RichTextInlineDiff({ oldContent, newContent, className }: RichTe
   return (
     <div
       className={cn(
-        'max-w-none text-sm text-foreground [&_blockquote]:text-foreground [&_code]:text-foreground [&_em]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_h4]:text-foreground [&_img]:my-4 [&_img]:block [&_img]:h-auto [&_img]:w-full [&_img]:max-w-none [&_img]:rounded-md [&_img]:object-contain [&_li]:text-foreground [&_p]:text-foreground [&_pre]:text-foreground [&_small]:text-foreground [&_strong]:text-foreground',
+        'max-w-none text-sm text-foreground [&_blockquote]:text-foreground [&_code]:text-foreground [&_em]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_h4]:text-foreground [&_li]:text-foreground [&_p]:text-foreground [&_pre]:text-foreground [&_small]:text-foreground [&_strong]:text-foreground',
         className,
       )}
     >
