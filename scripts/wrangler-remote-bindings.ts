@@ -17,10 +17,14 @@ export function getRemoteDevConfigPath(dir = '.') {
   const config = parseJsonc(readFileSync(resolve(dir, 'wrangler.jsonc'), 'utf-8'))
   const devConfig = config.env?.dev ?? {}
 
-  // Start from top-level config, override bindings with env.dev versions + remote: true
+  // Start from top-level config, then override selected fields with env.dev values.
   const remoteConfig = { ...config }
   delete remoteConfig.env
   delete remoteConfig.routes
+
+  if (devConfig.vars) {
+    remoteConfig.vars = devConfig.vars
+  }
 
   for (const key of BINDING_KEYS) {
     const bindings = devConfig[key] ?? config[key]
@@ -33,6 +37,8 @@ export function getRemoteDevConfigPath(dir = '.') {
   }
 
   const outPath = resolve(dir, '.wrangler.dev-remote.json')
+
+  console.log(`Writing remote dev config to ${outPath}`, JSON.stringify(remoteConfig, null, 2))
   writeFileSync(outPath, JSON.stringify(remoteConfig, null, 2))
   return outPath
 }
