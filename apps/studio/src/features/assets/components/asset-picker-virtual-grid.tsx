@@ -4,10 +4,12 @@ import { type ReactNode, useEffect, useRef, useState } from 'react'
 
 const GRID_GAP = 16
 const ROW_ESTIMATE = 236
+const LOADING_MORE_HEIGHT = 48
 
 type AssetPickerVirtualGridProps = {
   assets: Asset[]
   renderAsset: (asset: Asset) => ReactNode
+  loadingMoreLabel?: string
   onLoadMore?: () => void
   hasMore?: boolean
   isFetchingMore?: boolean
@@ -28,6 +30,7 @@ function getGridColumnCount(viewportWidth: number) {
 export function AssetPickerVirtualGrid({
   assets,
   renderAsset,
+  loadingMoreLabel,
   onLoadMore,
   hasMore = false,
   isFetchingMore = false,
@@ -78,7 +81,12 @@ export function AssetPickerVirtualGrid({
 
   return (
     <div ref={scrollElementRef} className="h-full min-h-0 overflow-y-auto">
-      <div className="relative w-full" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
+      <div
+        className="relative w-full"
+        style={{
+          height: `${rowVirtualizer.getTotalSize() + (isFetchingMore ? LOADING_MORE_HEIGHT : 0)}px`,
+        }}
+      >
         {virtualRows.map((virtualRow) => {
           const startIndex = virtualRow.index * columnCount
           const rowAssets = assets.slice(startIndex, startIndex + columnCount)
@@ -101,6 +109,14 @@ export function AssetPickerVirtualGrid({
             </div>
           )
         })}
+        {isFetchingMore ? (
+          <div
+            className="absolute inset-x-0 text-center text-sm text-muted-foreground"
+            style={{ top: `${rowVirtualizer.getTotalSize()}px`, height: `${LOADING_MORE_HEIGHT}px` }}
+          >
+            <div className="flex h-full items-center justify-center">{loadingMoreLabel}</div>
+          </div>
+        ) : null}
       </div>
     </div>
   )

@@ -255,20 +255,16 @@ export function AssetPickerModal({
                   </EmptyHeader>
                 </Empty>
               ) : (
-                <>
-                  <div className="min-h-0 flex-1">
-                    <AssetPickerVirtualGrid
-                      assets={displayedAssets}
-                      renderAsset={renderAssetCard}
-                      onLoadMore={onLoadMore}
-                      hasMore={hasMore}
-                      isFetchingMore={isFetchingMore}
-                    />
-                  </div>
-                  {isFetchingMore ? (
-                    <div className="shrink-0 py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
-                  ) : null}
-                </>
+                <div className="min-h-0 flex-1">
+                  <AssetPickerVirtualGrid
+                    assets={displayedAssets}
+                    renderAsset={renderAssetCard}
+                    loadingMoreLabel={t('loadingMore')}
+                    onLoadMore={onLoadMore}
+                    hasMore={hasMore}
+                    isFetchingMore={isFetchingMore}
+                  />
+                </div>
               )}
             </div>
           </TabsContent>
