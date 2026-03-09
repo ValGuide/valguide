@@ -284,14 +284,16 @@ export function AssetPickerModal({
             </div>
           </TabsContent>
 
-          <TabsContent value="upload" className="flex-1 flex flex-col min-h-0 mt-4">
+          <TabsContent value="upload" className="mt-4 flex min-h-0 flex-1 flex-col">
             {UploadInline && (
-              <UploadInline
-                allowedTypes={[type]}
-                locale={locale}
-                onUploadComplete={handleUploadComplete}
-                organizationId={organizationId}
-              />
+              <div className="flex min-h-0 flex-1 flex-col">
+                <UploadInline
+                  allowedTypes={[type]}
+                  locale={locale}
+                  onUploadComplete={handleUploadComplete}
+                  organizationId={organizationId}
+                />
+              </div>
             )}
           </TabsContent>
         </Tabs>

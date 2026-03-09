@@ -171,7 +171,7 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex h-full min-h-0 flex-col gap-4">
       {/* biome-ignore lint/a11y/useSemanticElements: button cannot support drag/drop events properly */}
       <div
         role="button"
@@ -184,7 +184,7 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
           }
         }}
         className={cn(
-          'relative border-2 border-dashed rounded-lg p-12 transition-all',
+          'relative flex min-h-0 flex-1 items-center justify-center rounded-lg border-2 border-dashed p-12 transition-all',
           uploadComplete
             ? 'border-green-500 bg-green-50 dark:bg-green-950'
             : file
@@ -202,7 +202,7 @@ export function AssetUploadInline({ allowedTypes, onUploadComplete }: AssetUploa
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
         />
 
-        <div className="flex flex-col items-center justify-center text-center space-y-4">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center">
           {uploadComplete ? (
             <>
               <CheckCircle2 className="h-16 w-16 text-green-600" />
