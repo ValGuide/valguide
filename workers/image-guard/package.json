@@ -11,7 +11,7 @@
     "cf:deploy:dev": "wrangler deploy --env dev"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250620.0",
-    "wrangler": "^4.67.0"
+    "@cloudflare/workers-types": "^4.20260307.1",
+    "wrangler": "^4.71.0"
   }
 }
