@@ -1,3 +1,4 @@
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { formatFileSize } from '@valguide/core/features/assets/utils'
@@ -14,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/component
 import { formatDistanceToNow } from 'date-fns'
 import { Image as ImageIcon, Music, Search, Video } from 'lucide-react'
 import type { ComponentType } from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AssetPickerVirtualGrid } from './asset-picker-virtual-grid'
 
 export type UploadInlineComponentProps = {
@@ -35,8 +36,13 @@ export type AssetPickerModalProps = {
   multiple?: boolean
   selectedAssetIds?: string[]
   onSelect: (assets: Asset[]) => void
-  assets: Asset[]
+  assets: AssetWithUsage[]
   isLoading: boolean
+  isFetchingMore?: boolean
+  hasMore?: boolean
+  searchQuery?: string
+  onSearchQueryChange?: (value: string) => void
+  onLoadMore?: () => void
   onRefetch?: () => void
   onUploadComplete?: (asset: Asset) => void
   UploadInline?: UploadInlineComponent
@@ -53,6 +59,11 @@ export function AssetPickerModal({
   onSelect,
   assets,
   isLoading,
+  isFetchingMore = false,
+  hasMore = false,
+  searchQuery: controlledSearchQuery,
+  onSearchQueryChange,
+  onLoadMore,
   onRefetch,
   onUploadComplete: onUploadCompleteProp,
   UploadInline,
@@ -62,15 +73,25 @@ export function AssetPickerModal({
   const tTypes = useTranslations('assets.types')
   const tFilter = useTranslations('assets.filter')
   const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [internalSearchQuery, setInternalSearchQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set(selectedAssetIds))
+  const selectedAssetIdsKey = useMemo(() => [...selectedAssetIds].sort().join('|'), [selectedAssetIds])
+  const searchQuery = controlledSearchQuery ?? internalSearchQuery
 
-  const filteredAssets = useMemo(() => {
-    return assets.filter((asset) => {
-      if (!searchQuery) return true
-      return asset.fileName.toLowerCase().includes(searchQuery.toLowerCase())
-    })
-  }, [assets, searchQuery])
+  const setSearchQuery = (value: string) => {
+    if (!onSearchQueryChange) {
+      setInternalSearchQuery(value)
+      return
+    }
+
+    onSearchQueryChange(value)
+  }
+
+  const displayedAssets = useMemo(() => assets, [assets])
+
+  useEffect(() => {
+    setSelected(new Set(selectedAssetIds))
+  }, [selectedAssetIds, selectedAssetIdsKey])
 
   const handleToggleAsset = (assetId: string) => {
     const newSelected = new Set(selected)
@@ -213,7 +234,7 @@ export function AssetPickerModal({
               />
             </div>
 
-            <div className="min-h-0 overflow-hidden">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               {isLoading ? (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {[...Array(6)].map((_, i) => (
@@ -225,7 +246,7 @@ export function AssetPickerModal({
                     </div>
                   ))}
                 </div>
-              ) : filteredAssets.length === 0 ? (
+              ) : displayedAssets.length === 0 ? (
                 <Empty>
                   <EmptyHeader>
                     <EmptyMedia variant="icon">{getTypeIcon()}</EmptyMedia>
@@ -234,7 +255,20 @@ export function AssetPickerModal({
                   </EmptyHeader>
                 </Empty>
               ) : (
-                <AssetPickerVirtualGrid assets={filteredAssets} renderAsset={renderAssetCard} />
+                <>
+                  <div className="min-h-0 flex-1">
+                    <AssetPickerVirtualGrid
+                      assets={displayedAssets}
+                      renderAsset={renderAssetCard}
+                      onLoadMore={onLoadMore}
+                      hasMore={hasMore}
+                      isFetchingMore={isFetchingMore}
+                    />
+                  </div>
+                  {isFetchingMore ? (
+                    <div className="shrink-0 py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
+                  ) : null}
+                </>
               )}
             </div>
           </TabsContent>

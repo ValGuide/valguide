@@ -573,6 +573,7 @@
     "picker": {
       "title": "Tscherner {type}",
       "titleWithLocale": "Tscherner {type} ({locale})",
+      "loadingMore": "Chargiar ulteriurs assets...",
       "tabs": {
         "library": "Biblioteca",
         "upload": "Chargiar si"

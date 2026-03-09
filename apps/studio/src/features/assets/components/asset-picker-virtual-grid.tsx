@@ -8,6 +8,9 @@ const ROW_ESTIMATE = 236
 type AssetPickerVirtualGridProps = {
   assets: Asset[]
   renderAsset: (asset: Asset) => ReactNode
+  onLoadMore?: () => void
+  hasMore?: boolean
+  isFetchingMore?: boolean
 }
 
 function getGridColumnCount(viewportWidth: number) {
@@ -22,7 +25,13 @@ function getGridColumnCount(viewportWidth: number) {
   return 1
 }
 
-export function AssetPickerVirtualGrid({ assets, renderAsset }: AssetPickerVirtualGridProps) {
+export function AssetPickerVirtualGrid({
+  assets,
+  renderAsset,
+  onLoadMore,
+  hasMore = false,
+  isFetchingMore = false,
+}: AssetPickerVirtualGridProps) {
   const scrollElementRef = useRef<HTMLDivElement | null>(null)
   const [columnCount, setColumnCount] = useState(1)
 
@@ -54,6 +63,18 @@ export function AssetPickerVirtualGrid({ assets, renderAsset }: AssetPickerVirtu
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
+
+  useEffect(() => {
+    const lastVirtualRow = virtualRows[virtualRows.length - 1]
+
+    if (!lastVirtualRow || !onLoadMore || !hasMore || isFetchingMore) {
+      return
+    }
+
+    if (lastVirtualRow.index >= rowCount - 2) {
+      onLoadMore()
+    }
+  }, [hasMore, isFetchingMore, onLoadMore, rowCount, virtualRows])
 
   return (
     <div ref={scrollElementRef} className="h-full min-h-0 overflow-y-auto">

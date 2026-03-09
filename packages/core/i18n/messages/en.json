@@ -573,6 +573,7 @@
     "picker": {
       "title": "Select {type}",
       "titleWithLocale": "Select {type} ({locale})",
+      "loadingMore": "Loading more assets...",
       "tabs": {
         "library": "Library",
         "upload": "Upload"

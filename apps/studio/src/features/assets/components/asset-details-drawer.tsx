@@ -87,7 +87,7 @@ export function AssetDetailsDrawer({ asset, open, onOpenChange, onRename }: Asse
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction={isMobile ? 'bottom' : 'right'}>
-      <DrawerContent className="data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:sm:max-w-lg">
+      <DrawerContent className="data-[vaul-drawer-direction=bottom]:max-h-[min(88dvh,calc(100dvh-1rem))] data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:sm:max-w-lg">
         {asset ? (
           <>
             <DrawerHeader className="border-b text-left">
@@ -95,7 +95,7 @@ export function AssetDetailsDrawer({ asset, open, onOpenChange, onRename }: Asse
               <DrawerDescription>{asset.fileName}</DrawerDescription>
             </DrawerHeader>
 
-            <div className="space-y-4 overflow-y-auto p-4">
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
               <div className="flex h-44 items-center justify-center overflow-hidden rounded-lg border bg-muted">
                 {asset.type === 'image' ? (
                   <RevealImage
@@ -118,14 +118,19 @@ export function AssetDetailsDrawer({ asset, open, onOpenChange, onRename }: Asse
                 <label htmlFor="asset-name" className="text-sm font-medium">
                   {t('details.nameLabel')}
                 </label>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <Input
                     id="asset-name"
                     value={draftName}
                     onChange={(event) => setDraftName(event.target.value)}
                     placeholder={t('details.namePlaceholder')}
                   />
-                  <Button type="button" onClick={() => void handleSaveRename()} disabled={!canSave}>
+                  <Button
+                    type="button"
+                    onClick={() => void handleSaveRename()}
+                    disabled={!canSave}
+                    className="w-full sm:w-auto"
+                  >
                     {isSaving ? t('details.saving') : t('details.save')}
                   </Button>
                 </div>
