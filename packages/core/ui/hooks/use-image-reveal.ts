@@ -7,6 +7,7 @@ type UseImageRevealOptions = {
 export function useImageReveal({ imageKey }: UseImageRevealOptions) {
   const [imageLoaded, setImageLoaded] = React.useState(false)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Reset reveal state when the image URL key changes.
   React.useEffect(() => {
     setImageLoaded(false)
   }, [imageKey])
