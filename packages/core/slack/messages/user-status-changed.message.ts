@@ -68,7 +68,7 @@ export const userStatusChangedMessage = ({
           `*Time* ${formatSlackDate(timestampMs)}`,
         ].join('\n'),
       },
-gs
+    },
     ...(blockedReason
       ? [
           {

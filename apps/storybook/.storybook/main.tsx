@@ -8,6 +8,8 @@ import { clientEnv } from './__mocks__/env-client.ts'
 import { serverEnv } from './__mocks__/env-server.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const storybookMocksDir = path.resolve(__dirname, './__mocks__')
+const coreDbModulePath = path.resolve(__dirname, '../../packages/core/features/db.ts')
 
 function generateMockEnvDefines() {
   const defines: Record<string, string> = {}
@@ -83,96 +85,97 @@ const config: StorybookConfig = {
           // Mock TanStack Start to prevent server-side modules from being bundled
           {
             find: '@tanstack/react-start/server',
-            replacement: path.resolve(__dirname, './__mocks__/tanstack-react-start-server.ts'),
+            replacement: path.resolve(storybookMocksDir, 'tanstack-react-start-server.ts'),
           },
           {
             find: '@tanstack/react-start',
-            replacement: path.resolve(__dirname, './__mocks__/tanstack-react-start.ts'),
+            replacement: path.resolve(storybookMocksDir, 'tanstack-react-start.ts'),
           },
           // Mock environment variables
-          { find: '@valguide/core/env/server', replacement: path.resolve(__dirname, './__mocks__/env-server.ts') },
-          { find: '@valguide/core/env/client', replacement: path.resolve(__dirname, './__mocks__/env-client.ts') },
+          { find: '@valguide/core/env/server', replacement: path.resolve(storybookMocksDir, 'env-server.ts') },
+          { find: '@valguide/core/env/client', replacement: path.resolve(storybookMocksDir, 'env-client.ts') },
           // Mock server-side modules for browser compatibility
-          { find: 'postgres', replacement: path.resolve(__dirname, './__mocks__/postgres.ts') },
+          { find: 'postgres', replacement: path.resolve(storybookMocksDir, 'postgres.ts') },
           {
             find: '@valguide/core/features/assets/actions',
-            replacement: path.resolve(__dirname, './__mocks__/asset-actions.ts'),
+            replacement: path.resolve(storybookMocksDir, 'asset-actions.ts'),
           },
           {
             find: '@valguide/core/features/assets/queries',
-            replacement: path.resolve(__dirname, './__mocks__/asset-queries.ts'),
+            replacement: path.resolve(storybookMocksDir, 'asset-queries.ts'),
           },
           {
             find: '@valguide/core/features/orgs/actions',
-            replacement: path.resolve(__dirname, './__mocks__/org-actions.ts'),
+            replacement: path.resolve(storybookMocksDir, 'org-actions.ts'),
           },
 
-          { find: '@valguide/core/features/db', replacement: path.resolve(__dirname, './__mocks__/db.ts') },
+          { find: /^@valguide\/core\/features\/db$/, replacement: path.resolve(storybookMocksDir, 'db.ts') },
+          { find: coreDbModulePath, replacement: path.resolve(storybookMocksDir, 'db.ts') },
           {
             find: '@valguide/core/i18n/resolve-locale.fn',
-            replacement: path.resolve(__dirname, './__mocks__/i18n-resolve-locale.ts'),
+            replacement: path.resolve(storybookMocksDir, 'i18n-resolve-locale.ts'),
           },
           {
             find: '@valguide/core/i18n/get-messages.fn',
-            replacement: path.resolve(__dirname, './__mocks__/i18n-get-messages.ts'),
+            replacement: path.resolve(storybookMocksDir, 'i18n-get-messages.ts'),
           },
           {
             find: '@valguide/core/i18n/set-locale.fn',
-            replacement: path.resolve(__dirname, './__mocks__/i18n-set-locale.ts'),
+            replacement: path.resolve(storybookMocksDir, 'i18n-set-locale.ts'),
           },
           // Studio app server functions (use @/ alias pattern - split files)
           // Theme
           {
             find: /^@\/features\/theme\/get-theme$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-theme.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-theme.ts'),
           },
           {
             find: /^@\/features\/theme\/set-theme$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-set-theme.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-set-theme.ts'),
           },
           // Profile
           {
             find: /^@\/features\/profile\/actions$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-profile-actions.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-profile-actions.ts'),
           },
           // Sidebar
           {
             find: /^@\/features\/sidebar\/get-sidebar-state$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-sidebar-state.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-sidebar-state.ts'),
           },
           {
             find: /^@\/features\/sidebar\/get-sidebar-data$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-sidebar-data.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-sidebar-data.ts'),
           },
           // Team
           {
             find: /^@\/features\/team\/get-team-data$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-team-data.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-team-data.ts'),
           },
           // Join-team
           {
             find: /^@\/features\/join-team\/get-join-team-data$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-join-team-data.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-join-team-data.ts'),
           },
 
           // Stops
           {
             find: /^@\/features\/stops\/get-stops$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-stops.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-stops.ts'),
           },
           {
             find: /^@\/features\/stops\/get-stop-metadata$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-stop-metadata.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-stop-metadata.ts'),
           },
           {
             find: /^@\/features\/stops\/get-stop-locale-data$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-stop-locale-data.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-stop-locale-data.ts'),
           },
           {
             find: /^@\/features\/stops\/get-stop-detail$/,
-            replacement: path.resolve(__dirname, './__mocks__/studio-get-stop-detail.ts'),
+            replacement: path.resolve(storybookMocksDir, 'studio-get-stop-detail.ts'),
           },
-          { find: 'crypto', replacement: path.resolve(__dirname, './__mocks__/crypto.ts') },
+          { find: 'crypto', replacement: path.resolve(storybookMocksDir, 'crypto.ts') },
         ],
       },
     })
