@@ -3,20 +3,13 @@ import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/reac
 import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
 import { defaultLocale } from '@valguide/core/i18n/i18n.config'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
+import { TanStackAppDevtools } from '@valguide/core/ui/components/tanstack-devtools'
 import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import { ErrorPage } from '@valguide/features/error/error-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
-import { lazy, Suspense } from 'react'
 import { Providers } from '@/components/providers'
 import { themeQueryOptions } from '@/features/theme/query-options'
-
-const Devtools = import.meta.env.DEV
-  ? lazy(async () => {
-      const module = await import('@valguide/core/ui/components/tanstack-devtools')
-      return { default: module.TanStackAppDevtools }
-    })
-  : null
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -129,11 +122,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Providers locale={locale} initialTheme={theme}>
           {children}
         </Providers>
-        {Devtools ? (
-          <Suspense fallback={null}>
-            <Devtools />
-          </Suspense>
-        ) : null}
+        <TanStackAppDevtools />
         <Scripts />
       </body>
     </html>
