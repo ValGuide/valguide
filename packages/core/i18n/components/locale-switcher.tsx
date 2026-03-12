@@ -1,13 +1,8 @@
 import { useRouter } from '@tanstack/react-router'
 import { useLocale } from 'use-intl'
 import { type SupportedLocale, supportedLocales } from '../i18n.config'
+import { getLocaleNativeName } from '../locale-display-names'
 import { setLocaleFn } from '../set-locale.fn'
-
-const localeNames: Record<SupportedLocale, string> = {
-  en: 'English',
-  de: 'Deutsch',
-  rm: 'Rumantsch',
-}
 
 export function LocaleSwitcher() {
   const currentLocale = useLocale()
@@ -27,7 +22,7 @@ export function LocaleSwitcher() {
     >
       {supportedLocales.map((locale) => (
         <option key={locale} value={locale}>
-          {localeNames[locale]}
+          {getLocaleNativeName(locale)}
         </option>
       ))}
     </select>

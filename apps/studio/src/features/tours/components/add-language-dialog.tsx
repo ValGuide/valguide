@@ -1,4 +1,5 @@
 import { useTranslations } from '@valguide/core/i18n/client'
+import { getLocaleDisplayName, getLocaleNativeName } from '@valguide/core/i18n/locale-display-names'
 import {
   Command,
   CommandEmpty,
@@ -10,7 +11,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
-import { AVAILABLE_LANGUAGES, getLocaleDisplayName, getLocaleNativeName } from './unified-locale-selector'
+import { AVAILABLE_LANGUAGES } from './unified-locale-selector'
 
 export type AddLanguageDialogProps = {
   open: boolean

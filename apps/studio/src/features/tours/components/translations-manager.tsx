@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { LocaleDraftInfo } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
@@ -17,7 +18,6 @@ import { UnpublishConfirmationDialog } from '../../editor/components/unpublish-c
 import { AddLanguageDialog } from './add-language-dialog'
 import { RemoveLanguageDialog } from './remove-language-dialog'
 import { TourStatusBadge } from './tour-status-badge'
-import { getLocaleDisplayName } from './unified-locale-selector'
 
 export type TranslationsManagerProps = {
   tourNanoId: string

@@ -1,4 +1,5 @@
 import { useTranslations } from '@valguide/core/i18n/client'
+import { getLocaleDisplayName as getSharedLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import {
   Command,
@@ -117,135 +118,6 @@ export const AVAILABLE_LANGUAGES = [
   'tg',
 ] as const
 
-const LOCALE_NAMES: Record<string, string> = {
-  en: 'English',
-  de: 'German',
-  rm: 'Romansh',
-  fr: 'French',
-  it: 'Italian',
-  es: 'Spanish',
-  pt: 'Portuguese',
-  nl: 'Dutch',
-  pl: 'Polish',
-  cs: 'Czech',
-  sk: 'Slovak',
-  hu: 'Hungarian',
-  ro: 'Romanian',
-  bg: 'Bulgarian',
-  hr: 'Croatian',
-  sl: 'Slovenian',
-  uk: 'Ukrainian',
-  ru: 'Russian',
-  ja: 'Japanese',
-  zh: 'Chinese',
-  ko: 'Korean',
-  ar: 'Arabic',
-  he: 'Hebrew',
-  tr: 'Turkish',
-  el: 'Greek',
-  da: 'Danish',
-  sv: 'Swedish',
-  no: 'Norwegian',
-  fi: 'Finnish',
-}
-
-const LOCALE_NATIVE_NAMES: Record<string, string> = {
-  en: 'English',
-  de: 'Deutsch',
-  rm: 'Rumantsch',
-  fr: 'Français',
-  it: 'Italiano',
-  es: 'Español',
-  pt: 'Português',
-  nl: 'Nederlands',
-  pl: 'Polski',
-  cs: 'Čeština',
-  sk: 'Slovenčina',
-  hu: 'Magyar',
-  ro: 'Română',
-  bg: 'Български',
-  hr: 'Hrvatski',
-  sl: 'Slovenščina',
-  uk: 'Українська',
-  ru: 'Русский',
-  ja: '日本語',
-  zh: '中文',
-  ko: '한국어',
-  ar: 'العربية',
-  he: 'עברית',
-  tr: 'Türkçe',
-  el: 'Ελληνικά',
-  da: 'Dansk',
-  sv: 'Svenska',
-  no: 'Norsk',
-  fi: 'Suomi',
-  et: 'Eesti',
-  lv: 'Latviešu',
-  lt: 'Lietuvių',
-  ca: 'Català',
-  eu: 'Euskara',
-  gl: 'Galego',
-  cy: 'Cymraeg',
-  ga: 'Gaeilge',
-  gd: 'Gàidhlig',
-  mt: 'Malti',
-  sq: 'Shqip',
-  mk: 'Македонски',
-  sr: 'Српски',
-  bs: 'Bosanski',
-  is: 'Íslenska',
-  fo: 'Føroyskt',
-  lb: 'Lëtzebuergesch',
-  gsw: 'Schwyzerdütsch',
-  bar: 'Boarisch',
-  hi: 'हिन्दी',
-  bn: 'বাংলা',
-  ta: 'தமிழ்',
-  th: 'ไทย',
-  vi: 'Tiếng Việt',
-  id: 'Bahasa Indonesia',
-  ms: 'Bahasa Melayu',
-  tl: 'Filipino',
-  fa: 'فارسی',
-  ur: 'اردو',
-  ka: 'ქართული',
-  hy: 'Հայերեն',
-  mn: 'Монгол',
-  ne: 'नेपाली',
-  si: 'සිංහල',
-  km: 'ខ្មែរ',
-  lo: 'ລາວ',
-  my: 'မြန်မာ',
-  af: 'Afrikaans',
-  ku: 'Kurdî',
-  az: 'Azərbaycan',
-  kk: 'Қазақ',
-  uz: "O'zbek",
-  ky: 'Кыргыз',
-  tk: 'Türkmen',
-  tg: 'Тоҷикӣ',
-}
-
-export function getLocaleDisplayName(locale: string): string {
-  if (LOCALE_NAMES[locale]) return LOCALE_NAMES[locale]
-
-  if (typeof window !== 'undefined' && 'DisplayNames' in Intl) {
-    try {
-      const dn = new Intl.DisplayNames(['en'], { type: 'language' })
-      const name = dn.of(locale)
-      if (name) return name
-    } catch {
-      // ignore
-    }
-  }
-
-  return locale.toUpperCase()
-}
-
-export function getLocaleNativeName(locale: string): string {
-  return LOCALE_NATIVE_NAMES[locale] ?? getLocaleDisplayName(locale)
-}
-
 function StatusBadge({
   status,
   t,
@@ -306,7 +178,7 @@ export function UnifiedLocaleSelector({
     setIsMounted(true)
   }, [])
 
-  const selectedLocaleName = getLocaleDisplayName(value)
+  const selectedLocaleName = getSharedLocaleDisplayName(value)
   const selectedStatus = localeStatus?.[value]
   const availableToAdd = AVAILABLE_LANGUAGES.filter((lang) => !locales.includes(lang))
   const canRemove = locales.length > 1
@@ -398,7 +270,7 @@ export function UnifiedLocaleSelector({
 
               <CommandGroup heading={t('enabledLanguages')}>
                 {locales.map((locale) => {
-                  const localeName = getLocaleDisplayName(locale)
+                  const localeName = getSharedLocaleDisplayName(locale)
                   const status = localeStatus?.[locale]
                   const isSelected = value === locale
 
@@ -453,7 +325,7 @@ export function UnifiedLocaleSelector({
                   <CommandSeparator />
                   <CommandGroup heading={t('addLanguage')}>
                     {availableToAdd.map((locale) => {
-                      const localeName = getLocaleDisplayName(locale)
+                      const localeName = getSharedLocaleDisplayName(locale)
                       return (
                         <CommandItem
                           key={locale}
@@ -476,7 +348,7 @@ export function UnifiedLocaleSelector({
       <RemoveLocaleDialogUnified
         open={!!localeToRemove}
         onOpenChange={(open) => !open && setLocaleToRemove(null)}
-        localeName={localeToRemove ? getLocaleDisplayName(localeToRemove) : ''}
+        localeName={localeToRemove ? getSharedLocaleDisplayName(localeToRemove) : ''}
         isLoading={isLoading}
         onConfirm={handleConfirmRemove}
       />

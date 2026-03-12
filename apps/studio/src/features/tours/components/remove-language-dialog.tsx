@@ -1,4 +1,5 @@
 import { useTranslations } from '@valguide/core/i18n/client'
+import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +11,6 @@ import {
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
 import { useState } from 'react'
-import { getLocaleDisplayName } from './unified-locale-selector'
 
 export type RemoveLanguageDialogProps = {
   open: boolean

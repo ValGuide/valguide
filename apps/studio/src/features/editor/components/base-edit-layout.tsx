@@ -1,4 +1,5 @@
 import { useTranslations } from '@valguide/core/i18n/client'
+import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import {
   DropdownMenu,
@@ -10,7 +11,7 @@ import { ChevronLeft, MoreHorizontal, Trash2, X } from 'lucide-react'
 import { lazy, type ReactNode, Suspense, useCallback, useState } from 'react'
 import type { TourIndicator, TourStatus } from '@/features/tours/components/tour-status-badge'
 import { EditorHeader } from './editor-header'
-import { getLocaleDisplayName, LocaleSelector } from './locale-selector'
+import { LocaleSelector } from './locale-selector'
 import { MobileSavePublish } from './mobile-action-bar'
 
 const DiscardConfirmationDialog = lazy(async () => {

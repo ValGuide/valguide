@@ -1,6 +1,7 @@
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { LocalePickerList } from '@valguide/core/i18n/components/locale-picker-list'
 import { defaultLocale, type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
+import { getLocaleNativeName } from '@valguide/core/i18n/locale-display-names'
 import { setLocaleFn } from '@valguide/core/i18n/set-locale.fn'
 import { Card, CardContent } from '@valguide/core/ui/components/card'
 import {
@@ -76,8 +77,7 @@ function AuthLocaleSwitcher() {
   const isMobile = useIsMobile()
   const [open, setOpen] = useState(false)
   const [isSwitching, setIsSwitching] = useState(false)
-  const currentDisplayName =
-    new Intl.DisplayNames([currentLocale], { type: 'language' }).of(currentLocale) ?? currentLocale
+  const currentDisplayName = getLocaleNativeName(currentLocale)
 
   const handleLocaleChange = async (newLocale: SupportedLocale) => {
     if (newLocale === currentLocale || isSwitching) {

@@ -1,4 +1,5 @@
 import { useTranslations } from '@valguide/core/i18n/client'
+import { getLocaleDisplayName as getSharedLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import {
   Command,
@@ -23,54 +24,6 @@ export type LocaleSelectorProps = {
   footer?: ReactNode
 }
 
-const LOCALE_NAMES: Record<string, string> = {
-  en: 'English',
-  de: 'German',
-  rm: 'Romansh',
-  fr: 'French',
-  it: 'Italian',
-  es: 'Spanish',
-  pt: 'Portuguese',
-  nl: 'Dutch',
-  pl: 'Polish',
-  cs: 'Czech',
-  sk: 'Slovak',
-  hu: 'Hungarian',
-  ro: 'Romanian',
-  bg: 'Bulgarian',
-  hr: 'Croatian',
-  sl: 'Slovenian',
-  uk: 'Ukrainian',
-  ru: 'Russian',
-  ja: 'Japanese',
-  zh: 'Chinese',
-  ko: 'Korean',
-  ar: 'Arabic',
-  he: 'Hebrew',
-  tr: 'Turkish',
-  el: 'Greek',
-  da: 'Danish',
-  sv: 'Swedish',
-  no: 'Norwegian',
-  fi: 'Finnish',
-}
-
-export function getLocaleDisplayName(locale: string): string {
-  if (LOCALE_NAMES[locale]) return LOCALE_NAMES[locale]
-
-  if (typeof window !== 'undefined' && 'DisplayNames' in Intl) {
-    try {
-      const dn = new Intl.DisplayNames(['en'], { type: 'language' })
-      const name = dn.of(locale)
-      if (name) return name
-    } catch {
-      // ignore
-    }
-  }
-
-  return locale.toUpperCase()
-}
-
 const SEARCH_THRESHOLD = 8
 
 function isTextKey(e: React.KeyboardEvent) {
@@ -82,7 +35,7 @@ function isTextKey(e: React.KeyboardEvent) {
 export function LocaleSelector({ value, locales, onValueChange, className, footer }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
   const t = useTranslations('tours.localeSelector')
-  const selectedLocaleName = getLocaleDisplayName(value)
+  const selectedLocaleName = getSharedLocaleDisplayName(value)
   const showSearch = locales.length >= SEARCH_THRESHOLD
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -92,7 +45,7 @@ export function LocaleSelector({ value, locales, onValueChange, className, foote
 
   useEffect(() => {
     if (!open) return
-    setActive(getLocaleDisplayName(value))
+    setActive(getSharedLocaleDisplayName(value))
     requestAnimationFrame(() => inputRef.current?.focus())
   }, [open, value])
 
@@ -134,7 +87,7 @@ export function LocaleSelector({ value, locales, onValueChange, className, foote
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
               {locales.map((locale) => {
-                const localeName = getLocaleDisplayName(locale)
+                const localeName = getSharedLocaleDisplayName(locale)
                 return (
                   <CommandItem
                     key={locale}

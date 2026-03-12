@@ -1,19 +1,8 @@
 import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
+import { getLocaleDisplayName, getLocaleNativeName } from '@valguide/core/i18n/locale-display-names'
 import { Check } from 'lucide-react'
 import type { KeyboardEvent } from 'react'
 import { useRef } from 'react'
-
-const localeEnglishNames: Record<SupportedLocale, string> = {
-  en: 'English',
-  de: 'German',
-  rm: 'Romansh',
-}
-
-const localeNativeNames: Record<SupportedLocale, string> = {
-  en: 'English',
-  de: 'Deutsch',
-  rm: 'Rumantsch',
-}
 
 export interface LocalePickerListProps {
   currentLocale: SupportedLocale
@@ -59,8 +48,8 @@ export function LocalePickerList({ currentLocale, disabled = false, onSelectLoca
   return (
     <div role="listbox" aria-label="Language" className="max-h-[300px] overflow-y-auto p-1">
       {supportedLocales.map((locale, index) => {
-        const nativeName = localeNativeNames[locale]
-        const englishName = localeEnglishNames[locale]
+        const nativeName = getLocaleNativeName(locale)
+        const englishName = getLocaleDisplayName(locale)
         const isSelected = locale === currentLocale
 
         return (
