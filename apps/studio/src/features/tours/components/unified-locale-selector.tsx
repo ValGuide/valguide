@@ -1,5 +1,5 @@
-import { useTranslations } from '@valguide/core/i18n/client'
-import { getLocaleDisplayName as getSharedLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { getLocalePresentation } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import {
   Command,
@@ -171,6 +171,7 @@ export function UnifiedLocaleSelector({
   const [isMounted, setIsMounted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [localeToRemove, setLocaleToRemove] = useState<string | null>(null)
+  const displayLocale = useLocale()
   const t = useTranslations('tours.localeSelector')
   const tManager = useTranslations('tours.localesManager')
 
@@ -178,7 +179,9 @@ export function UnifiedLocaleSelector({
     setIsMounted(true)
   }, [])
 
-  const selectedLocaleName = getSharedLocaleDisplayName(value)
+  const selectedLocalePresentation = getLocalePresentation(value, displayLocale)
+  const selectedLocaleName = selectedLocalePresentation.localizedName
+  const selectedLocaleSearchValue = `${selectedLocalePresentation.nativeName} ${selectedLocalePresentation.localizedName} ${selectedLocalePresentation.localeCode}`
   const selectedStatus = localeStatus?.[value]
   const availableToAdd = AVAILABLE_LANGUAGES.filter((lang) => !locales.includes(lang))
   const canRemove = locales.length > 1
@@ -263,30 +266,34 @@ export function UnifiedLocaleSelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-70 p-0" align="end">
-          <Command defaultValue={selectedLocaleName}>
+          <Command defaultValue={selectedLocaleSearchValue}>
             <CommandInput placeholder={t('searchLanguages')} />
             <CommandList className="max-h-75">
               <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
 
               <CommandGroup heading={t('enabledLanguages')}>
                 {locales.map((locale) => {
-                  const localeName = getSharedLocaleDisplayName(locale)
+                  const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
                   const status = localeStatus?.[locale]
                   const isSelected = value === locale
 
                   return (
                     <CommandItem
                       key={locale}
-                      value={localeName}
+                      value={`${nativeName} ${localizedName} ${localeCode}`}
                       onSelect={() => {
                         onValueChange(locale)
                         setOpen(false)
                       }}
                       className="flex items-center justify-between pr-1"
                     >
-                      <span className="flex items-center gap-2">
-                        <span>{localeName}</span>
-                        <span className="text-xs text-muted-foreground">({locale})</span>
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span className="min-w-0">
+                          <span className="block truncate font-medium">{nativeName}</span>
+                          <span className="block truncate text-xs text-muted-foreground">
+                            {localizedName} ({localeCode})
+                          </span>
+                        </span>
                         {status && <StatusBadge status={status} t={t} />}
                       </span>
                       <span className="flex items-center gap-1">
@@ -309,7 +316,7 @@ export function UnifiedLocaleSelector({
                                 onClick={(e) => handleRemoveClick(locale, e)}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                {tManager('removeLanguage', { language: localeName })}
+                                {tManager('removeLanguage', { language: localizedName })}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -325,15 +332,20 @@ export function UnifiedLocaleSelector({
                   <CommandSeparator />
                   <CommandGroup heading={t('addLanguage')}>
                     {availableToAdd.map((locale) => {
-                      const localeName = getSharedLocaleDisplayName(locale)
+                      const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
                       return (
                         <CommandItem
                           key={locale}
-                          value={localeName}
+                          value={`${nativeName} ${localizedName} ${localeCode}`}
                           onSelect={() => handleAddLocale(locale)}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-2 py-2.5"
                         >
-                          <span>{localeName}</span>
+                          <span className="min-w-0">
+                            <span className="block truncate font-medium">{nativeName}</span>
+                            <span className="block truncate text-xs text-muted-foreground">
+                              {localizedName} ({localeCode})
+                            </span>
+                          </span>
                         </CommandItem>
                       )
                     })}
@@ -348,7 +360,7 @@ export function UnifiedLocaleSelector({
       <RemoveLocaleDialogUnified
         open={!!localeToRemove}
         onOpenChange={(open) => !open && setLocaleToRemove(null)}
-        localeName={localeToRemove ? getSharedLocaleDisplayName(localeToRemove) : ''}
+        localeName={localeToRemove ? getLocalePresentation(localeToRemove, displayLocale).localizedName : ''}
         isLoading={isLoading}
         onConfirm={handleConfirmRemove}
       />

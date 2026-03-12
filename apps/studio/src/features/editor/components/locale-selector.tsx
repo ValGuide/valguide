@@ -1,5 +1,5 @@
-import { useTranslations } from '@valguide/core/i18n/client'
-import { getLocaleDisplayName as getSharedLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { getLocalePresentation } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import {
   Command,
@@ -34,8 +34,9 @@ function isTextKey(e: React.KeyboardEvent) {
 
 export function LocaleSelector({ value, locales, onValueChange, className, footer }: LocaleSelectorProps) {
   const [open, setOpen] = useState(false)
+  const displayLocale = useLocale()
   const t = useTranslations('tours.localeSelector')
-  const selectedLocaleName = getSharedLocaleDisplayName(value)
+  const selectedLocaleName = getLocalePresentation(value, displayLocale).localizedName
   const showSearch = locales.length >= SEARCH_THRESHOLD
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -45,9 +46,10 @@ export function LocaleSelector({ value, locales, onValueChange, className, foote
 
   useEffect(() => {
     if (!open) return
-    setActive(getSharedLocaleDisplayName(value))
+    const { localizedName, nativeName, localeCode } = getLocalePresentation(value, displayLocale)
+    setActive(`${nativeName} ${localizedName} ${localeCode}`)
     requestAnimationFrame(() => inputRef.current?.focus())
-  }, [open, value])
+  }, [displayLocale, open, value])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -87,18 +89,23 @@ export function LocaleSelector({ value, locales, onValueChange, className, foote
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
               {locales.map((locale) => {
-                const localeName = getSharedLocaleDisplayName(locale)
+                const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
                 return (
                   <CommandItem
                     key={locale}
-                    value={localeName}
+                    value={`${nativeName} ${localizedName} ${localeCode}`}
                     onSelect={() => {
                       onValueChange(locale)
                       setOpen(false)
                     }}
                     className="flex items-center justify-between"
                   >
-                    <span>{localeName}</span>
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">{nativeName}</span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {localizedName} ({localeCode})
+                      </span>
+                    </span>
                     {value === locale && <Check className="h-4 w-4" />}
                   </CommandItem>
                 )

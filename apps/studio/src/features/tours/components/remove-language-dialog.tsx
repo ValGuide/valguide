@@ -1,5 +1,5 @@
-import { useTranslations } from '@valguide/core/i18n/client'
-import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { getLocalePresentation } from '@valguide/core/i18n/locale-display-names'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,10 +20,11 @@ export type RemoveLanguageDialogProps = {
 }
 
 export function RemoveLanguageDialog({ open, onOpenChange, locale, onConfirm }: RemoveLanguageDialogProps) {
+  const displayLocale = useLocale()
   const t = useTranslations('tours.localesManager')
   const [isLoading, setIsLoading] = useState(false)
 
-  const localeName = locale ? getLocaleDisplayName(locale) : ''
+  const localeName = locale ? getLocalePresentation(locale, displayLocale).localizedName : ''
 
   const handleConfirm = async () => {
     setIsLoading(true)

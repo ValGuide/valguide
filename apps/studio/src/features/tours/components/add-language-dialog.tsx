@@ -1,5 +1,5 @@
-import { useTranslations } from '@valguide/core/i18n/client'
-import { getLocaleDisplayName, getLocaleNativeName } from '@valguide/core/i18n/locale-display-names'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { getLocalePresentation } from '@valguide/core/i18n/locale-display-names'
 import {
   Command,
   CommandEmpty,
@@ -22,6 +22,7 @@ export type AddLanguageDialogProps = {
 
 export function AddLanguageDialog({ open, onOpenChange, existingLocales, onAddLanguage }: AddLanguageDialogProps) {
   const t = useTranslations('tours.localesManager')
+  const displayLocale = useLocale()
   const [isLoading, setIsLoading] = useState(false)
   const [loadingLocale, setLoadingLocale] = useState<string | null>(null)
 
@@ -52,26 +53,21 @@ export function AddLanguageDialog({ open, onOpenChange, existingLocales, onAddLa
             <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
             <CommandGroup>
               {availableLanguages.map((locale) => {
-                const nativeName = getLocaleNativeName(locale)
-                const englishName = getLocaleDisplayName(locale)
-                const showEnglishName = nativeName !== englishName
+                const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
 
                 return (
                   <CommandItem
                     key={locale}
-                    value={`${nativeName} ${englishName} ${locale}`}
+                    value={`${nativeName} ${localizedName} ${localeCode}`}
                     onSelect={() => handleAddLocale(locale)}
                     disabled={isLoading}
                     className="flex items-center gap-2 py-2.5"
                   >
                     <span className="flex flex-col gap-0.5 min-w-0">
                       <span className="font-medium truncate">{nativeName}</span>
-                      {showEnglishName && (
-                        <span className="text-xs text-muted-foreground truncate">
-                          {englishName} ({locale})
-                        </span>
-                      )}
-                      {!showEnglishName && <span className="text-xs text-muted-foreground">({locale})</span>}
+                      <span className="text-xs text-muted-foreground truncate">
+                        {localizedName} ({localeCode})
+                      </span>
                     </span>
                     {loadingLocale === locale && (
                       <Loader2 className="ml-auto h-4 w-4 animate-spin text-muted-foreground" />

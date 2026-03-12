@@ -2,7 +2,7 @@ import type { QueryObserverOptions } from '@tanstack/react-query'
 import { Link, useRouter } from '@tanstack/react-router'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { getTourStatusDisplay } from '@valguide/core/features/tours/status-utils'
-import { useTranslations } from '@valguide/core/i18n/client'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -55,6 +55,7 @@ export function TourEditPage({
   diffQueryOptions,
 }: TourEditPageProps) {
   const router = useRouter()
+  const locale = useLocale()
   const t = useTranslations('tours')
   const tLocaleSelector = useTranslations('tours.localeSelector')
   const tStops = useTranslations('stops')
@@ -271,7 +272,7 @@ export function TourEditPage({
         <div className="space-y-6 sm:space-y-8">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-sm font-semibold sm:text-base">
-              {t('editor.localeContent')} ({getLocaleDisplayName(activeLocale)})
+              {t('editor.localeContent')} ({getLocaleDisplayName(activeLocale, locale)})
             </h2>
           </div>
 

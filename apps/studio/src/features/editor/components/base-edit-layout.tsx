@@ -1,4 +1,4 @@
-import { useTranslations } from '@valguide/core/i18n/client'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -200,6 +200,7 @@ export function BaseEditLayout({
   children,
   unsavedChangesDialog,
 }: BaseEditLayoutProps) {
+  const locale = useLocale()
   const t = useTranslations('tours')
 
   // Dialog states
@@ -326,7 +327,7 @@ export function BaseEditLayout({
             onOpenChange={setPublishDialogOpen}
             isPublishing={isPublishing}
             onConfirm={onPublish}
-            languageName={getLocaleDisplayName(activeLocale)}
+            languageName={getLocaleDisplayName(activeLocale, locale)}
           />
         </Suspense>
       ) : null}
@@ -337,7 +338,7 @@ export function BaseEditLayout({
             open={unpublishDialogOpen}
             onOpenChange={setUnpublishDialogOpen}
             contentType={contentType}
-            languageName={getLocaleDisplayName(activeLocale)}
+            languageName={getLocaleDisplayName(activeLocale, locale)}
             onConfirm={onUnpublish}
           />
         </Suspense>

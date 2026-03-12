@@ -3,6 +3,12 @@ type LocaleFallback = {
   native: string
 }
 
+export type LocalePresentation = {
+  localeCode: string
+  localizedName: string
+  nativeName: string
+}
+
 const localeFallbacks: Partial<Record<string, LocaleFallback>> = {
   rm: {
     english: 'Romansh',
@@ -47,4 +53,12 @@ export function getLocaleDisplayName(locale: string, displayLocale = 'en'): stri
 
 export function getLocaleNativeName(locale: string): string {
   return getIntlDisplayName(locale, locale) ?? getFallback(locale)?.native ?? getLocaleDisplayName(locale)
+}
+
+export function getLocalePresentation(locale: string, displayLocale = 'en'): LocalePresentation {
+  return {
+    localeCode: locale,
+    localizedName: getLocaleDisplayName(locale, displayLocale),
+    nativeName: getLocaleNativeName(locale),
+  }
 }

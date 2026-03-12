@@ -1,5 +1,5 @@
-import { useTranslations } from '@valguide/core/i18n/client'
-import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { getLocalePresentation } from '@valguide/core/i18n/locale-display-names'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import {
@@ -120,6 +120,7 @@ export function TourLocalesManager({
   hasContentForLocale,
   disabled = false,
 }: TourLocalesManagerProps) {
+  const displayLocale = useLocale()
   const t = useTranslations('tours.localesManager')
   const [open, setOpen] = useState(false)
   const [localeToRemove, setLocaleToRemove] = useState<string | null>(null)
@@ -167,20 +168,24 @@ export function TourLocalesManager({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {value.map((locale) => (
-        <Badge key={locale} variant="secondary" className="gap-1 pr-1">
-          <span>{getLocaleDisplayName(locale)}</span>
-          <button
-            type="button"
-            onClick={() => handleRemoveLocale(locale)}
-            disabled={disabled || isLoading || value.length <= 1}
-            className="ml-1 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-30"
-            aria-label={t('removeLanguage', { language: getLocaleDisplayName(locale) })}
-          >
-            <X className="h-3 w-3" />
-          </button>
-        </Badge>
-      ))}
+      {value.map((locale) => {
+        const localeName = getLocalePresentation(locale, displayLocale).localizedName
+
+        return (
+          <Badge key={locale} variant="secondary" className="gap-1 pr-1">
+            <span>{localeName}</span>
+            <button
+              type="button"
+              onClick={() => handleRemoveLocale(locale)}
+              disabled={disabled || isLoading || value.length <= 1}
+              className="ml-1 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-30"
+              aria-label={t('removeLanguage', { language: localeName })}
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </Badge>
+        )
+      })}
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -196,16 +201,16 @@ export function TourLocalesManager({
               <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
               <CommandGroup>
                 {availableToAdd.map((locale) => {
-                  const localeName = getLocaleDisplayName(locale)
+                  const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
                   const isSelected = value.includes(locale)
                   return (
                     <CommandItem
                       key={locale}
-                      value={localeName}
+                      value={`${nativeName} ${localizedName} ${localeCode}`}
                       onSelect={() => handleAddLocale(locale)}
                       className="flex items-center justify-between"
                     >
-                      <span>{localeName}</span>
+                      <span>{localizedName}</span>
                       {isSelected && <Check className="h-4 w-4" />}
                     </CommandItem>
                   )
@@ -219,7 +224,7 @@ export function TourLocalesManager({
       <RemoveLocaleDialog
         open={!!localeToRemove}
         onOpenChange={(open) => !open && setLocaleToRemove(null)}
-        localeName={localeToRemove ? getLocaleDisplayName(localeToRemove) : ''}
+        localeName={localeToRemove ? getLocalePresentation(localeToRemove, displayLocale).localizedName : ''}
         isLoading={isLoading}
         onConfirm={handleConfirmRemove}
       />

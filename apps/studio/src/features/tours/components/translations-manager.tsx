@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { LocaleDraftInfo } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
-import { useTranslations } from '@valguide/core/i18n/client'
-import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { getLocalePresentation } from '@valguide/core/i18n/locale-display-names'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import {
@@ -36,6 +36,7 @@ export function TranslationsManager({
   onPublish,
   onUnpublish,
 }: TranslationsManagerProps) {
+  const displayLocale = useLocale()
   const t = useTranslations('tours.localesManager')
   const tDetails = useTranslations('tours.details')
   const tStops = useTranslations('stops')
@@ -107,7 +108,7 @@ export function TranslationsManager({
         <CardContent>
           <div className="divide-y">
             {locales.map((localeInfo) => {
-              const localeName = getLocaleDisplayName(localeInfo.locale)
+              const localeName = getLocalePresentation(localeInfo.locale, displayLocale).localizedName
               const isCurrentlyPublishing = publishingLocale === localeInfo.locale
               const isCurrentlyUnpublishing = unpublishingLocale === localeInfo.locale
               const showUnpublish = localeInfo.hasPublished && !localeInfo.hasChanges && onUnpublish
@@ -216,7 +217,7 @@ export function TranslationsManager({
       <PublishConfirmationDialog
         open={!!localeToPublish}
         onOpenChange={(open) => !open && setLocaleToPublish(null)}
-        languageName={localeToPublish ? getLocaleDisplayName(localeToPublish) : ''}
+        languageName={localeToPublish ? getLocalePresentation(localeToPublish, displayLocale).localizedName : ''}
         isPublishing={!!publishingLocale}
         onConfirm={handleConfirmPublish}
       />
@@ -224,7 +225,7 @@ export function TranslationsManager({
       <UnpublishConfirmationDialog
         open={!!localeToUnpublish}
         onOpenChange={(open) => !open && setLocaleToUnpublish(null)}
-        languageName={localeToUnpublish ? getLocaleDisplayName(localeToUnpublish) : ''}
+        languageName={localeToUnpublish ? getLocalePresentation(localeToUnpublish, displayLocale).localizedName : ''}
         isUnpublishing={!!unpublishingLocale}
         onConfirm={handleConfirmUnpublish}
       />

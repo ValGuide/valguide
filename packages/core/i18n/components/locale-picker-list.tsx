@@ -1,5 +1,6 @@
+import { useLocale } from '@valguide/core/i18n/client'
 import { type SupportedLocale, supportedLocales } from '@valguide/core/i18n/i18n.config'
-import { getLocaleDisplayName, getLocaleNativeName } from '@valguide/core/i18n/locale-display-names'
+import { getLocalePresentation } from '@valguide/core/i18n/locale-display-names'
 import { Check } from 'lucide-react'
 import type { KeyboardEvent } from 'react'
 import { useRef } from 'react'
@@ -11,6 +12,7 @@ export interface LocalePickerListProps {
 }
 
 export function LocalePickerList({ currentLocale, disabled = false, onSelectLocale }: LocalePickerListProps) {
+  const displayLocale = useLocale()
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const focusItem = (index: number) => {
@@ -48,8 +50,7 @@ export function LocalePickerList({ currentLocale, disabled = false, onSelectLoca
   return (
     <div role="listbox" aria-label="Language" className="max-h-[300px] overflow-y-auto p-1">
       {supportedLocales.map((locale, index) => {
-        const nativeName = getLocaleNativeName(locale)
-        const englishName = getLocaleDisplayName(locale)
+        const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
         const isSelected = locale === currentLocale
 
         return (
@@ -70,7 +71,7 @@ export function LocalePickerList({ currentLocale, disabled = false, onSelectLoca
             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
               <span className="truncate font-medium">{nativeName}</span>
               <span className="truncate text-xs text-muted-foreground">
-                {englishName} ({locale})
+                {localizedName} ({localeCode})
               </span>
             </span>
             {isSelected && <Check className="h-4 w-4 text-primary" />}
