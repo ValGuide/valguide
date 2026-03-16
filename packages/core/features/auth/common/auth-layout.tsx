@@ -21,7 +21,7 @@ import {
 import { useIsMobile } from '@valguide/core/ui/hooks/use-mobile'
 import { cn } from '@valguide/ui/lib/utils'
 import { Languages } from 'lucide-react'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 
 export interface AuthLayoutProps {
   children: ReactNode
@@ -77,7 +77,14 @@ function AuthLocaleSwitcher() {
   const isMobile = useIsMobile()
   const [open, setOpen] = useState(false)
   const [isSwitching, setIsSwitching] = useState(false)
+  const [selectedLocale, setSelectedLocale] = useState(currentLocale)
   const currentDisplayName = getLocaleNativeName(currentLocale)
+
+  useEffect(() => {
+    if (!isSwitching) {
+      setSelectedLocale(currentLocale)
+    }
+  }, [currentLocale, isSwitching])
 
   const handleLocaleChange = async (newLocale: SupportedLocale) => {
     if (newLocale === currentLocale || isSwitching) {
@@ -85,10 +92,12 @@ function AuthLocaleSwitcher() {
     }
 
     setIsSwitching(true)
+    setSelectedLocale(newLocale)
     try {
       await setLocaleFn({ data: { locale: newLocale } })
       window.location.reload()
-    } finally {
+    } catch {
+      setSelectedLocale(currentLocale)
       setIsSwitching(false)
     }
   }
@@ -96,7 +105,7 @@ function AuthLocaleSwitcher() {
   const title = t('languageLabel')
   const pickerList = (
     <LocalePickerList
-      currentLocale={currentLocale}
+      currentLocale={selectedLocale}
       disabled={isSwitching}
       onSelectLocale={(locale) => void handleLocaleChange(locale)}
     />

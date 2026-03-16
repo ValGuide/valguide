@@ -12,7 +12,7 @@ export type LocalePresentation = {
 const localeFallbacks: Partial<Record<string, LocaleFallback>> = {
   rm: {
     english: 'Romansh',
-    native: 'Rumantsch',
+    native: 'Romontsch',
   },
 }
 
@@ -47,12 +47,17 @@ function getIntlDisplayName(locale: string, displayLocale: string): string | und
   }
 }
 
+function getLocaleName(locale: string, displayLocale: string, fallbackName?: string): string {
+  return getIntlDisplayName(locale, displayLocale) ?? fallbackName ?? locale.toUpperCase()
+}
+
 export function getLocaleDisplayName(locale: string, displayLocale = 'en'): string {
-  return getIntlDisplayName(locale, displayLocale) ?? getFallback(locale)?.english ?? locale.toUpperCase()
+  return getLocaleName(locale, displayLocale, getFallback(locale)?.english)
 }
 
 export function getLocaleNativeName(locale: string): string {
-  return getIntlDisplayName(locale, locale) ?? getFallback(locale)?.native ?? getLocaleDisplayName(locale)
+  const fallback = getFallback(locale)
+  return fallback?.native ?? getLocaleName(locale, locale, fallback?.english)
 }
 
 export function getLocalePresentation(locale: string, displayLocale = 'en'): LocalePresentation {

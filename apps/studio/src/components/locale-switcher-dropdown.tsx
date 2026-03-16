@@ -4,6 +4,7 @@ import { defaultLocale, type SupportedLocale, supportedLocales } from '@valguide
 import { setLocaleFn } from '@valguide/core/i18n/set-locale.fn'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@valguide/ui/components/drawer'
+import { useEffect, useState } from 'react'
 
 interface LocaleSwitcherDropdownProps {
   isMobile: boolean
@@ -17,11 +18,26 @@ export function LocaleSwitcherDropdown({ isMobile, onOpenChange, open }: LocaleS
     ? (locale as SupportedLocale)
     : defaultLocale
   const t = useTranslations('sidebar.user')
+  const [isSwitching, setIsSwitching] = useState(false)
+  const [selectedLocale, setSelectedLocale] = useState(currentLocale)
+
+  useEffect(() => {
+    if (!isSwitching) {
+      setSelectedLocale(currentLocale)
+    }
+  }, [currentLocale, isSwitching])
 
   const handleLocaleChange = async (newLocale: SupportedLocale) => {
-    if (newLocale === currentLocale) return
-    await setLocaleFn({ data: { locale: newLocale } })
-    window.location.replace(window.location.href)
+    if (newLocale === currentLocale || isSwitching) return
+    setIsSwitching(true)
+    setSelectedLocale(newLocale)
+    try {
+      await setLocaleFn({ data: { locale: newLocale } })
+      window.location.replace(window.location.href)
+    } catch {
+      setSelectedLocale(currentLocale)
+      setIsSwitching(false)
+    }
   }
 
   const title = t('language')
@@ -35,7 +51,8 @@ export function LocaleSwitcherDropdown({ isMobile, onOpenChange, open }: LocaleS
             <DrawerDescription className="sr-only">{title}</DrawerDescription>
           </DrawerHeader>
           <LocalePickerList
-            currentLocale={currentLocale}
+            currentLocale={selectedLocale}
+            disabled={isSwitching}
             onSelectLocale={(locale) => void handleLocaleChange(locale)}
           />
         </DrawerContent>
@@ -50,7 +67,11 @@ export function LocaleSwitcherDropdown({ isMobile, onOpenChange, open }: LocaleS
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription className="sr-only">{title}</DialogDescription>
         </DialogHeader>
-        <LocalePickerList currentLocale={currentLocale} onSelectLocale={(locale) => void handleLocaleChange(locale)} />
+        <LocalePickerList
+          currentLocale={selectedLocale}
+          disabled={isSwitching}
+          onSelectLocale={(locale) => void handleLocaleChange(locale)}
+        />
       </DialogContent>
     </Dialog>
   )
