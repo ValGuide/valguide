@@ -98,8 +98,8 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
           <RevealImage
             src={displayImage}
             alt={displayTitle}
-            layout="constrained"
-            width={400}
+            layout="fullWidth"
+            width={800}
             height={176}
             className="group-hover:scale-105"
           />
