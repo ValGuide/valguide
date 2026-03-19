@@ -34,7 +34,7 @@ export function StopsList({ stops = [], isLoading = false, error = null, onEditS
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6">
+    <div data-testid="stops-page" className="mx-auto w-full max-w-5xl space-y-6">
       <ListPageHeader title={t('title')} description={t('list.description')} />
       {renderContent()}
     </div>

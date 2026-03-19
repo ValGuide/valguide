@@ -17,7 +17,7 @@ function SettingsPage() {
   const { data, refetch } = useTeam()
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <main data-testid="settings-page" className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="mx-auto w-full max-w-5xl space-y-6">
         <div className="space-y-1">
           <PageTitle as="h2">{t('title')}</PageTitle>

@@ -57,7 +57,7 @@ export function AppSidebarContainer() {
   }
 
   return (
-    <>
+    <div data-testid="app-shell" className="contents">
       <AppSidebar
         user={data.user}
         teams={data.teams}
@@ -74,6 +74,6 @@ export function AppSidebarContainer() {
         teamName={data.currentTeam?.name}
         teamNanoId={data.currentTeam?.nanoId}
       />
-    </>
+    </div>
   )
 }

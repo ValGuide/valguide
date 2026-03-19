@@ -51,7 +51,7 @@ export function ToursList({
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6">
+    <div data-testid="tours-page" className="mx-auto w-full max-w-5xl space-y-6">
       <ListPageHeader
         title={t('title')}
         description={t('description')}

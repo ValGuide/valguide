@@ -28,7 +28,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className="flex-1 space-y-4 p-6 pt-6 sm:p-8">
+    <div data-testid="profile-page" className="flex-1 space-y-4 p-6 pt-6 sm:p-8">
       <div className="mx-auto max-w-2xl space-y-6">
         <PageTitle as="h2" size="lg">
           {t('title')}

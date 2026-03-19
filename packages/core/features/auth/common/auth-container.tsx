@@ -38,7 +38,7 @@ export function AuthContainer({
 
   return (
     <AuthLayout footer={<Consent />}>
-      <div className="flex flex-1 flex-col justify-center gap-6">
+      <div data-testid={verifyingOtp ? 'otp' : 'login'} className="flex flex-1 flex-col justify-center gap-6">
         {verifyingOtp ? (
           <div className="text-center">
             <h2 className="text-3xl tracking-tight font-serif">{t('otpTitle')}</h2>
