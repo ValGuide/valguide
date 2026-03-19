@@ -63,3 +63,6 @@ count.txt
 .wrangler
 .wrangler.dev-remote.json
 error.log
+
+
+tmp/*
