@@ -10,6 +10,8 @@ type Props = {
   pageUrl?: string
   screenshotUrl?: string
   screenshotPath?: string
+  linearTicket?: { identifier: string; url: string }
+  linearError?: string
 }
 
 export const studioFeedbackMessage = ({
@@ -21,6 +23,8 @@ export const studioFeedbackMessage = ({
   pageUrl,
   screenshotUrl,
   screenshotPath,
+  linearTicket,
+  linearError,
 }: Props): SlackMessage => {
   const isDevEnv = serverEnv.VITE_ENV === 'dev' || serverEnv.VITE_ENV === 'local'
   const channel = serverEnv.STUDIO_FEEDBACK_SLACK_CHANNEL || (isDevEnv ? 'studio-feedback-dev' : 'studio-feedback')
@@ -107,6 +111,30 @@ export const studioFeedbackMessage = ({
                 {
                   type: 'mrkdwn' as const,
                   text: `*Page:* <${pageUrl}|${pageUrl}>`,
+                },
+              ],
+            },
+          ]
+        : []),
+      ...(linearTicket
+        ? [
+            {
+              type: 'section' as const,
+              text: {
+                type: 'mrkdwn' as const,
+                text: `🎫 *Linear:* <${linearTicket.url}|${linearTicket.identifier}>`,
+              },
+            },
+          ]
+        : []),
+      ...(linearError
+        ? [
+            {
+              type: 'context' as const,
+              elements: [
+                {
+                  type: 'mrkdwn' as const,
+                  text: `⚠️ *Linear ticket creation failed:* ${linearError}`,
                 },
               ],
             },

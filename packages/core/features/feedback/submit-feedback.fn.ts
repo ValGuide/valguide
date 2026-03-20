@@ -1,8 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
+import { createLinearIssue } from '@valguide/linear/create-issue'
+import { studioFeedbackIssue } from '@valguide/linear/messages/studio-feedback.issue'
 import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.message'
 import { postMessage } from '@valguide/slack/send-slack-message'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { serverEnv } from '../../env/server'
 import { getAssetUrl } from '../assets/image-url'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
@@ -92,7 +95,38 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
       })
       .returning()
 
-    // Send to Slack - do not fail submission if Slack fails
+    // Create Linear ticket (runs first so we can include the link in Slack)
+    let linearTicket: { identifier: string; url: string } | null = null
+    let linearError: string | undefined
+
+    try {
+      const { title, description } = studioFeedbackIssue({
+        feedback: data.feedback,
+        userEmail: context.user.email ?? 'unknown',
+        userName: data.userName,
+        teamName: data.teamName,
+        teamNanoId: data.teamNanoId,
+        pageUrl: data.pageUrl || undefined,
+        screenshotUrl: screenshotUrl ?? undefined,
+        feedbackId: record.id,
+      })
+
+      const result = await createLinearIssue({
+        title,
+        description,
+        teamId: serverEnv.LINEAR_FEEDBACK_TEAM_ID,
+        labelIds: serverEnv.LINEAR_FEEDBACK_LABEL_ID ? [serverEnv.LINEAR_FEEDBACK_LABEL_ID] : undefined,
+      })
+
+      if (result) {
+        linearTicket = { identifier: result.identifier, url: result.url }
+      }
+    } catch (err) {
+      linearError = err instanceof Error ? err.message : 'Unknown error'
+      console.error('[Linear] Failed to create issue:', err)
+    }
+
+    // Send to Slack (includes Linear ticket link or failure notice)
     try {
       await postMessage(
         studioFeedbackMessage({
@@ -104,12 +138,12 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
           pageUrl: data.pageUrl || undefined,
           screenshotUrl: screenshotUrl ?? undefined,
           screenshotPath: data.screenshotPath,
+          linearTicket: linearTicket ?? undefined,
+          linearError,
         }),
       )
     } catch (slackErr) {
-      // Log Slack failure but don't fail the request
-      // Feedback is already saved in DB
-      console.error('Failed to send feedback to Slack:', slackErr)
+      console.error('[Slack] Failed to send feedback message:', slackErr)
     }
 
     return { success: true, feedbackId: record.id }

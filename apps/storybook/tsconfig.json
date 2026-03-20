@@ -19,6 +19,7 @@
       "@valguide/www/*": ["../apps/www/*"],
       "@valguide/features/*": ["../../packages/core/features/*"],
       "@valguide/slack/*": ["../../packages/core/slack/*"],
+      "@valguide/linear/*": ["../../packages/core/linear/*"],
       "@valguide/ui/*": ["../../packages/core/ui/*"],
       "@valguide/i18n/*": ["../../packages/core/i18n/*"],
       "@valguide/core/*": ["../../packages/core/*"],
