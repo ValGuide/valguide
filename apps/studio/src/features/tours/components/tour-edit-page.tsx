@@ -269,7 +269,7 @@ export function TourEditPage({
         onBack={handleNavigateToTour}
         unsavedChangesDialog={unsavedChangesDialog}
       >
-        <div className="space-y-6 sm:space-y-8">
+        <div className="space-y-6 sm:space-y-8" data-testid="tour-edit-page">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-sm font-semibold sm:text-base">
               {t('editor.localeContent')} ({getLocaleDisplayName(activeLocale, locale)})
@@ -310,7 +310,7 @@ export function TourEditPage({
 
           {TourSlugSettings && <TourSlugSettings tourNanoId={nanoId} tourTitle={tourTitle} />}
 
-          <div>
+          <div data-testid="tour-stops-section">
             <h3 className="mb-4 text-base font-medium">{tStops('title')}</h3>
             <StopsList
               stops={stops}

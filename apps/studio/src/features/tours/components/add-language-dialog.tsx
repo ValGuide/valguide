@@ -42,7 +42,10 @@ export function AddLanguageDialog({ open, onOpenChange, existingLocales, onAddLa
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px] gap-0 p-0 overflow-hidden">
+      <DialogContent
+        className="sm:max-w-[400px] gap-0 p-0 overflow-hidden"
+        data-testid="translations-add-language-dialog"
+      >
         <DialogHeader className="px-4 pt-4 pb-3">
           <DialogTitle>{t('addLanguage')}</DialogTitle>
           <DialogDescription className="sr-only">{t('searchLanguages')}</DialogDescription>
@@ -62,6 +65,7 @@ export function AddLanguageDialog({ open, onOpenChange, existingLocales, onAddLa
                     onSelect={() => handleAddLocale(locale)}
                     disabled={isLoading}
                     className="flex items-center gap-2 py-2.5"
+                    data-testid={`translations-add-language-option-${locale}`}
                   >
                     <span className="flex flex-col gap-0.5 min-w-0">
                       <span className="font-medium truncate">{nativeName}</span>

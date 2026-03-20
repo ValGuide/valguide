@@ -20,6 +20,8 @@ export function StopsListContent({ stops, onEditStop }: StopsListContentProps) {
             key={stop.nanoId}
             className="cursor-pointer transition-shadow hover:shadow-md"
             onClick={() => onEditStop?.(stop)}
+            data-testid="stops-library-item"
+            data-stop-nanoid={stop.nanoId}
           >
             <CardHeader>
               <CardTitle className="line-clamp-2">{title}</CardTitle>

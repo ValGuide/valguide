@@ -246,7 +246,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
       breadcrumbContent={breadcrumbContent}
       unsavedChangesDialog={unsavedChangesDialog}
     >
-      <div className="space-y-6 sm:space-y-8">
+      <div className="space-y-6 sm:space-y-8" data-testid="stop-edit-page">
         {tourUsage && tourUsage.tourCount > 1 && <SharedStopBanner tourCount={tourUsage.tourCount} />}
 
         <div className="flex items-center justify-between gap-4">

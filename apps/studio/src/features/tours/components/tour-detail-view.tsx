@@ -86,7 +86,7 @@ export function TourDetailView({
   )
 
   return (
-    <main className="flex flex-1 flex-col bg-background">
+    <main className="flex flex-1 flex-col bg-background" data-testid="tour-detail-page">
       {/* Mobile Header */}
       <div className="sticky top-0 z-10 border-b bg-background sm:hidden">
         <div className="flex items-center justify-between gap-2 px-4 py-3">

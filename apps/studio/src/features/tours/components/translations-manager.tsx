@@ -100,13 +100,18 @@ export function TranslationsManager({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="text-base font-semibold">{tDetails('translations')}</CardTitle>
-          <Button variant="outline" size="sm" onClick={() => setShowAddDialog(true)}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAddDialog(true)}
+            data-testid="translations-add-language-button"
+          >
             <Plus className="mr-1 h-4 w-4" />
             {t('addLanguage')}
           </Button>
         </CardHeader>
         <CardContent>
-          <div className="divide-y">
+          <div className="divide-y" data-testid="translations-manager">
             {locales.map((localeInfo) => {
               const localeName = getLocalePresentation(localeInfo.locale, displayLocale).localizedName
               const isCurrentlyPublishing = publishingLocale === localeInfo.locale
@@ -116,6 +121,8 @@ export function TranslationsManager({
                 <div
                   key={localeInfo.locale}
                   className="flex items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                  data-testid="translation-locale-row"
+                  data-locale={localeInfo.locale}
                 >
                   <div className="flex min-w-0 items-center gap-2">
                     <span className="truncate font-medium">{localeName}</span>

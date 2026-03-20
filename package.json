@@ -52,6 +52,7 @@
     "studio:build:preview": "pnpm studio:build && pnpm studio:preview",
     "studio:agent:start": "node scripts/studio-agent/start.mjs",
     "studio:agent:verify": "node scripts/studio-agent/verify.mjs",
+    "studio:agent:vg-85": "node scripts/studio-agent/repros/vg-85.mjs",
     "studio:type-check": "pnpm turbo run type-check --filter ./apps/studio",
     "www:dev": "pnpm caddy:ensure && (sleep 5 && open https://www.local.dev) & pnpm env:load turbo run dev --filter ./apps/www",
     "www:dev:remote": "pnpm caddy:ensure && (sleep 5 && open https://www.local.dev) & pnpm env:load turbo run dev:remote --filter ./apps/www",

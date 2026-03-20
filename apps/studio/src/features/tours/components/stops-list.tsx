@@ -82,7 +82,7 @@ function SortableStopItem({ stop, index, onEdit, onHide, onShow, onRequestRemove
   const thumbnailUrl = stop.thumbnailUrl ? getAssetImageUrl({ storagePath: stop.thumbnailUrl }) : null
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style} data-testid="tour-stop-item" data-stop-nanoid={stop.stopNanoId}>
       <Card className={cn('hover:shadow-md transition-shadow', isHidden && 'opacity-60')}>
         <CardContent className="flex items-center gap-4 p-4">
           <button
@@ -238,7 +238,7 @@ export function StopsList({
 
   if (stops.length === 0) {
     return (
-      <Empty className="border">
+      <Empty className="border" data-testid="tour-stops-list-empty">
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <Plus />
@@ -247,7 +247,7 @@ export function StopsList({
           <EmptyDescription>{t('empty.description')}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button onClick={onAdd} size="lg">
+          <Button onClick={onAdd} size="lg" data-testid="tour-stops-add-button">
             <Plus />
             {t('add')}
           </Button>
@@ -258,7 +258,7 @@ export function StopsList({
 
   if (!isMounted) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-3" data-testid="tour-stops-list">
         {items.map((stop, index) => {
           const displayTitle = stop.title?.trim() || t('untitled')
           const isHidden = stop.visible === false
@@ -283,7 +283,7 @@ export function StopsList({
             </Card>
           )
         })}
-        <Button onClick={onAdd} className="w-full" size="lg">
+        <Button onClick={onAdd} className="w-full" size="lg" data-testid="tour-stops-add-button">
           <Plus />
           {t('add')}
         </Button>
@@ -298,7 +298,7 @@ export function StopsList({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-testid="tour-stops-list">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={items.map((item) => item.stopNanoId)} strategy={verticalListSortingStrategy}>
           <div className="space-y-3">
@@ -316,7 +316,7 @@ export function StopsList({
           </div>
         </SortableContext>
       </DndContext>
-      <Button onClick={onAdd} className="w-full" size="lg">
+      <Button onClick={onAdd} className="w-full" size="lg" data-testid="tour-stops-add-button">
         <Plus />
         {t('add')}
       </Button>
