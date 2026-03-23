@@ -1,5 +1,6 @@
 import { logPerformance, timePerformance } from '../../utils/performance'
 import { resolveFirstOrgId } from '../orgs/resolve-active-org.server'
+import { getOrgMembership } from './authorization'
 import { getAuthSession, setActiveOrganizationForCurrentSession } from './better-auth.server'
 import { getUserStatus, type UserStatus } from './get-user-status.server'
 
@@ -55,6 +56,31 @@ export async function getProtectedSessionBootstrap(stage: string): Promise<Prote
   let activeOrgId =
     (session?.session as { activeOrganizationId?: string | null } | undefined)?.activeOrganizationId ?? null
   let activeOrgSource: ActiveOrgSource = activeOrgId ? 'session' : 'missing'
+
+  if (activeOrgId) {
+    const sessionActiveOrgId = activeOrgId
+    const membership = await timePerformance(
+      'auth.validateActiveOrgMembership',
+      async () => getOrgMembership(user.id, sessionActiveOrgId),
+      {
+        stage,
+        userId: user.id,
+        activeOrgId: sessionActiveOrgId,
+      },
+    )
+
+    if (!membership) {
+      logPerformance('auth.invalidActiveOrgId', {
+        stage,
+        userId: user.id,
+        activeOrgId: sessionActiveOrgId,
+      })
+
+      activeOrgId = null
+      activeOrgSource = 'missing'
+      await setActiveOrganizationForCurrentSession(null)
+    }
+  }
 
   if (!activeOrgId) {
     activeOrgId = await timePerformance('auth.resolveFirstOrgId', async () => resolveFirstOrgId(user.id), {

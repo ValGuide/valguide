@@ -1,7 +1,15 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { ensureDefaultTeamFn } from '@valguide/core/features/orgs/ensure-default-team.fn'
 import { protectedSessionBootstrapQueryOptions } from '@valguide/features/auth/query-options'
-import { DefaultPending } from '@/components/default-pending'
+import { Spinner } from '@valguide/ui/components/spinner'
+
+function SessionRecoveryPending() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <Spinner className="size-8 text-muted-foreground" />
+    </div>
+  )
+}
 
 export const Route = createFileRoute('/session-recovery')({
   beforeLoad: async ({ context, location }) => {
@@ -27,15 +35,19 @@ export const Route = createFileRoute('/session-recovery')({
       throw redirect({ to: '/tours' })
     }
 
-    await ensureDefaultTeamFn()
+    const ensuredTeam = await ensureDefaultTeamFn()
 
-    await Promise.all([
-      context.queryClient.invalidateQueries({ queryKey: ['protected-session-bootstrap'] }),
-      context.queryClient.invalidateQueries({ queryKey: ['sidebar'] }),
-    ])
+    context.queryClient.setQueryData(protectedSessionBootstrapQueryOptions().queryKey, {
+      user: bootstrap.user,
+      status: bootstrap.status,
+      activeOrgId: ensuredTeam.teamId,
+      activeOrgSource: 'resolved',
+    })
+
+    await context.queryClient.invalidateQueries({ queryKey: ['sidebar'] })
 
     throw redirect({ to: '/tours' })
   },
-  component: DefaultPending,
-  pendingComponent: DefaultPending,
+  component: SessionRecoveryPending,
+  pendingComponent: SessionRecoveryPending,
 })
