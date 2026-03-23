@@ -1,9 +1,9 @@
 import type { AccountApprovedEmailProps } from './emails/account-approved-email'
-import { getAccountApprovedConfig, getAccountApprovedText } from './emails/account-approved-template'
+import { getAccountApprovedConfig } from './emails/account-approved-template'
 import type { OtpLoginEmailProps } from './emails/otp-login-email'
-import { getOtpLoginConfig, getOtpLoginText } from './emails/otp-login-template'
+import { getOtpLoginConfig } from './emails/otp-login-template'
 import type { TeamInviteEmailProps } from './emails/team-invite-email'
-import { getTeamInviteConfig, getTeamInviteText } from './emails/team-invite-template'
+import { getTeamInviteConfig } from './emails/team-invite-template'
 import { env } from './env'
 import { resendTemplateIds } from './template-ids'
 import { defaultEmailLocale, type EmailLocale, isEmailLocale } from './templates/locales'
@@ -70,19 +70,6 @@ function resolveTemplateAlias(template: EmailTemplate, locale: EmailLocale): str
       return getTeamInviteConfig(locale).alias
     case 'account-approved':
       return getAccountApprovedConfig(locale).alias
-    default:
-      throw new Error(`Unknown template: ${(template as EmailTemplate).name}`)
-  }
-}
-
-function resolveTemplateText(template: EmailTemplate, locale: EmailLocale): string {
-  switch (template.name) {
-    case 'otp-login':
-      return getOtpLoginText(locale)
-    case 'team-invite':
-      return getTeamInviteText(locale)
-    case 'account-approved':
-      return getAccountApprovedText(locale)
     default:
       throw new Error(`Unknown template: ${(template as EmailTemplate).name}`)
   }

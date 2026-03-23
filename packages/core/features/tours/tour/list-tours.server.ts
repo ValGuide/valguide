@@ -1,4 +1,5 @@
 import { and, desc, eq, isNotNull, isNull, sql } from 'drizzle-orm'
+import { timeStudioPerformance } from '../../../utils/studio-performance'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
 import { tour, tourAssetDraft, tourLocaleDraft } from '../schema'
@@ -71,23 +72,32 @@ export async function listTours(organizationId: string, filters: ListToursFilter
     .limit(1)
     .as('cover_image')
 
-  const rows = await db
-    .select({
-      nanoId: tour.nanoId,
-      availableLocales: tour.availableLocales,
-      archivedAt: tour.archivedAt,
-      publishedAt: tour.publishedAt,
-      createdAt: tour.createdAt,
-      updatedAt: tour.updatedAt,
-      title: titleSubquery.title,
-      locale: titleSubquery.locale,
-      coverStoragePath: coverImageSubquery.storagePath,
-    })
-    .from(tour)
-    .leftJoinLateral(titleSubquery, sql`true`)
-    .leftJoinLateral(coverImageSubquery, sql`true`)
-    .where(and(...conditions))
-    .orderBy(desc(tour.updatedAt))
+  const rows = await timeStudioPerformance(
+    'tours.listTours.query',
+    async () =>
+      db
+        .select({
+          nanoId: tour.nanoId,
+          availableLocales: tour.availableLocales,
+          archivedAt: tour.archivedAt,
+          publishedAt: tour.publishedAt,
+          createdAt: tour.createdAt,
+          updatedAt: tour.updatedAt,
+          title: titleSubquery.title,
+          locale: titleSubquery.locale,
+          coverStoragePath: coverImageSubquery.storagePath,
+        })
+        .from(tour)
+        .leftJoinLateral(titleSubquery, sql`true`)
+        .leftJoinLateral(coverImageSubquery, sql`true`)
+        .where(and(...conditions))
+        .orderBy(desc(tour.updatedAt)),
+    {
+      organizationId,
+      locale: preferredLocale,
+      includeArchived: filters.includeArchived ?? false,
+    },
+  )
 
   return rows.map((row) => ({
     nanoId: row.nanoId,

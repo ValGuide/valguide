@@ -1,10 +1,9 @@
 import path from 'node:path'
 import { visualizer } from 'rollup-plugin-visualizer'
-import type { PluginOption } from 'vite'
 
 const analyzeBuild = process.env.ANALYZE === 'true'
 
-export function getBundleAnalyzerPlugin(appName: string): PluginOption[] {
+export function getBundleAnalyzerPlugin(appName: string): ReturnType<typeof visualizer>[] {
   if (!analyzeBuild) {
     return []
   }

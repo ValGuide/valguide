@@ -13,6 +13,15 @@ type CreateLinearIssueResult = {
   url: string
 }
 
+type LinearGraphqlResponse = {
+  errors?: Array<{ message?: string }>
+  data?: {
+    issueCreate?: {
+      issue?: CreateLinearIssueResult | null
+    }
+  }
+}
+
 export async function createLinearIssue(input: CreateLinearIssueInput): Promise<CreateLinearIssueResult | null> {
   if (!serverEnv.LINEAR_API_KEY) {
     console.warn('[Linear] LINEAR_API_KEY is not set. Skipping Linear issue creation.')
@@ -48,7 +57,7 @@ export async function createLinearIssue(input: CreateLinearIssueInput): Promise<
     throw new Error(`Linear API request failed with status ${response.status}`)
   }
 
-  const result = await response.json()
+  const result: LinearGraphqlResponse = await response.json()
   if (result.errors) {
     throw new Error(`Linear API error: ${result.errors[0]?.message ?? 'unknown'}`)
   }

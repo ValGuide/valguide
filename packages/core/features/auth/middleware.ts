@@ -1,5 +1,6 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
+import { logStudioPerformance, timeStudioPerformance } from '../../utils/studio-performance'
 import { resolveFirstOrgId } from '../orgs/resolve-active-org.server'
 import { getAuthSession, setActiveOrganizationForCurrentSession } from './better-auth.server'
 import { getUserStatus } from './get-user-status.server'
@@ -33,7 +34,9 @@ export type RequiredAuthContext = {
  * Use this for routes that need optional auth (public pages with conditional UI).
  */
 export const authContextMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
-  const session = await getAuthSession()
+  const session = await timeStudioPerformance('auth.getAuthSession', async () => getAuthSession(), {
+    stage: 'authContextMiddleware',
+  })
 
   const user: AuthUser | null = session?.user?.id
     ? {
@@ -64,7 +67,12 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
       throw redirect({ to: '/login' })
     }
 
-    const status = await getUserStatus(context.user.id, context.user.email)
+    const user = context.user
+
+    const status = await timeStudioPerformance('auth.getUserStatus', async () => getUserStatus(user.id, user.email), {
+      stage: 'requireAuthMiddleware',
+      userId: user.id,
+    })
     if (status === 'pending') {
       throw redirect({ to: '/pending' })
     }
@@ -74,16 +82,28 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
 
     // Resolve and persist an active organization when the session has not selected one yet.
     let activeOrgId = context.activeOrgId
+    let activeOrgSource: 'session' | 'resolved' | 'missing' = activeOrgId ? 'session' : 'missing'
     if (!activeOrgId) {
-      activeOrgId = await resolveFirstOrgId(context.user.id)
+      activeOrgId = await timeStudioPerformance('auth.resolveFirstOrgId', async () => resolveFirstOrgId(user.id), {
+        stage: 'requireAuthMiddleware',
+        userId: user.id,
+      })
       if (activeOrgId) {
+        activeOrgSource = 'resolved'
         await setActiveOrganizationForCurrentSession(activeOrgId)
       }
     }
 
+    logStudioPerformance('auth.activeOrgId', {
+      stage: 'requireAuthMiddleware',
+      userId: user.id,
+      source: activeOrgSource,
+      hasActiveOrgId: !!activeOrgId,
+    })
+
     return next({
       context: {
-        user: context.user,
+        user,
         activeOrgId,
       },
     })

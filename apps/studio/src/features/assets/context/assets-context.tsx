@@ -1,8 +1,8 @@
-import type { Asset } from '@valguide/core/features/assets/types'
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import { createContext, useContext } from 'react'
 
 export type AssetsContextValue = {
-  assets: Asset[]
+  assets: AssetWithUsage[]
   isLoading: boolean
   error: Error | null
   refetch: () => void

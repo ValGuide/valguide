@@ -1,8 +1,9 @@
+import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import type { Asset } from '@valguide/core/features/assets/types'
 import type { ReactNode } from 'react'
 import { AssetsContext, type AssetsContextValue } from './assets-context'
 
-export const mockAssets: Asset[] = [
+const baseMockAssets: Asset[] = [
   {
     id: '1',
     nanoId: 'img1',
@@ -149,9 +150,15 @@ export const mockAssets: Asset[] = [
   },
 ]
 
+export const mockAssets: AssetWithUsage[] = baseMockAssets.map((asset) => ({
+  ...asset,
+  tourCount: 0,
+  stopCount: 0,
+}))
+
 type MockAssetsProviderProps = {
   children: ReactNode
-  assets?: Asset[]
+  assets?: AssetWithUsage[]
   isLoading?: boolean
   error?: Error | null
 }

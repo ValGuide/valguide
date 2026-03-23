@@ -89,7 +89,7 @@ export type AssetsListProps = {
   AssetCard?: AssetCardComponent
   AssetListRow?: AssetListRowComponent
   UploadInline?: UploadInlineComponent
-  onRenameAssetAction?: (input: { assetId: string; fileName: string }) => Promise<AssetWithUsage>
+  onRenameAssetAction?: (input: { assetId: string; fileName: string }) => Promise<Asset>
 }
 
 export function AssetsList({
