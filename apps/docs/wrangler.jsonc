@@ -4,6 +4,10 @@
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "placement": {
+    // Bias Worker execution toward Frankfurt-adjacent infrastructure.
+    "region": "aws:eu-central-1"
+  },
 
   "observability": {
     "logs": {

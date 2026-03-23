@@ -3,6 +3,10 @@
   "name": "valguide-image-guard",
   "compatibility_date": "2025-09-24",
   "main": "src/index.ts",
+  "placement": {
+    // Bias Worker execution toward Frankfurt-adjacent infrastructure.
+    "region": "aws:eu-central-1"
+  },
 
   // Production: assets.valguide.com/{i,v}/*
   "routes": [

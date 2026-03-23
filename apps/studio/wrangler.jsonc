@@ -4,6 +4,10 @@
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "placement": {
+    // Neon is in Frankfurt, so bias Worker execution toward AWS eu-central-1.
+    "region": "aws:eu-central-1"
+  },
 
   "observability": {
     "logs": {
