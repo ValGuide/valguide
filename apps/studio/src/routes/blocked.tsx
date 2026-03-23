@@ -1,24 +1,25 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { notifyStudioBlockedAccessFn } from '@valguide/core/features/auth/notify-studio-blocked-access.fn'
-import { isAuthenticatedQueryOptions, userStatusQueryOptions } from '@valguide/features/auth/query-options'
+import { protectedSessionBootstrapQueryOptions } from '@valguide/features/auth/query-options'
 import { PendingApprovalContainer } from '@/features/auth/pending-approval-container'
 
 export const Route = createFileRoute('/blocked')({
-  beforeLoad: async ({ context }) => {
-    const isAuthenticated = await context.queryClient.ensureQueryData(isAuthenticatedQueryOptions())
-    if (!isAuthenticated) {
+  beforeLoad: async ({ context, location }) => {
+    await context.queryClient.invalidateQueries({ queryKey: ['protected-session-bootstrap'] })
+    const bootstrap = await context.queryClient.ensureQueryData(protectedSessionBootstrapQueryOptions())
+
+    if (!bootstrap.user) {
       throw redirect({ to: '/login' })
     }
 
-    // Invalidate cache to fetch fresh status (user may have accepted invite)
-    await context.queryClient.invalidateQueries({ queryKey: ['user-status'] })
-    const statusResult = await context.queryClient.ensureQueryData(userStatusQueryOptions())
-    const status = statusResult?.status ?? 'pending'
-
-    if (status === 'approved') {
-      throw redirect({ to: '/tours' })
+    if (bootstrap.status === 'approved') {
+      throw redirect({
+        to: bootstrap.activeOrgId ? '/tours' : '/session-recovery',
+        search: bootstrap.activeOrgId ? undefined : { next: location.href },
+      })
     }
-    if (status === 'pending') {
+
+    if (bootstrap.status === 'pending') {
       throw redirect({ to: '/pending' })
     }
   },

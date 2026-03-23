@@ -1,9 +1,8 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
-import { logStudioPerformance, timeStudioPerformance } from '../../utils/studio-performance'
-import { resolveFirstOrgId } from '../orgs/resolve-active-org.server'
-import { getAuthSession, setActiveOrganizationForCurrentSession } from './better-auth.server'
-import { getUserStatus } from './get-user-status.server'
+import { timePerformance } from '../../utils/performance'
+import { getAuthSession } from './better-auth.server'
+import { getProtectedSessionBootstrap } from './get-protected-session-bootstrap.server'
 
 // ============================================================================
 // Types
@@ -34,7 +33,7 @@ export type RequiredAuthContext = {
  * Use this for routes that need optional auth (public pages with conditional UI).
  */
 export const authContextMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
-  const session = await timeStudioPerformance('auth.getAuthSession', async () => getAuthSession(), {
+  const session = await timePerformance('auth.getAuthSession', async () => getAuthSession(), {
     stage: 'authContextMiddleware',
   })
 
@@ -62,49 +61,24 @@ export const authContextMiddleware = createMiddleware({ type: 'function' }).serv
  */
 export const requireAuthMiddleware = createMiddleware({ type: 'function' })
   .middleware([authContextMiddleware])
-  .server(async ({ next, context }) => {
-    if (!context.user) {
+  .server(async ({ next }) => {
+    const bootstrap = await getProtectedSessionBootstrap('requireAuthMiddleware')
+
+    if (!bootstrap.user) {
       throw redirect({ to: '/login' })
     }
 
-    const user = context.user
-
-    const status = await timeStudioPerformance('auth.getUserStatus', async () => getUserStatus(user.id, user.email), {
-      stage: 'requireAuthMiddleware',
-      userId: user.id,
-    })
-    if (status === 'pending') {
+    if (bootstrap.status === 'pending') {
       throw redirect({ to: '/pending' })
     }
-    if (status === 'blocked') {
+    if (bootstrap.status === 'blocked') {
       throw redirect({ to: '/blocked' })
     }
 
-    // Resolve and persist an active organization when the session has not selected one yet.
-    let activeOrgId = context.activeOrgId
-    let activeOrgSource: 'session' | 'resolved' | 'missing' = activeOrgId ? 'session' : 'missing'
-    if (!activeOrgId) {
-      activeOrgId = await timeStudioPerformance('auth.resolveFirstOrgId', async () => resolveFirstOrgId(user.id), {
-        stage: 'requireAuthMiddleware',
-        userId: user.id,
-      })
-      if (activeOrgId) {
-        activeOrgSource = 'resolved'
-        await setActiveOrganizationForCurrentSession(activeOrgId)
-      }
-    }
-
-    logStudioPerformance('auth.activeOrgId', {
-      stage: 'requireAuthMiddleware',
-      userId: user.id,
-      source: activeOrgSource,
-      hasActiveOrgId: !!activeOrgId,
-    })
-
     return next({
       context: {
-        user,
-        activeOrgId,
+        user: bootstrap.user,
+        activeOrgId: bootstrap.activeOrgId,
       },
     })
   })

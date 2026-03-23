@@ -7,6 +7,11 @@ const mainRoute = getRouteApi('/_main')
  * Must be used within a /_main route (authenticated layout).
  */
 export function useOrgSlug(): string {
-  const { team } = mainRoute.useRouteContext()
-  return team.orgSlug
+  const { currentTeam } = mainRoute.useRouteContext()
+
+  if (!currentTeam) {
+    throw new Error('No active organization')
+  }
+
+  return currentTeam.slug
 }

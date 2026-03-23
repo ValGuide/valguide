@@ -98,7 +98,7 @@ function AssetsContent() {
   const queryClient = useQueryClient()
   const navigate = Route.useNavigate()
   const routeSearch = Route.useSearch()
-  const organizationId = Root.useRouteContext().team.teamId
+  const organizationId = Root.useRouteContext().currentTeam?.id
 
   const typeFilter = routeSearch.type ?? 'all'
   const usageFilter = routeSearch.usage ?? 'all'

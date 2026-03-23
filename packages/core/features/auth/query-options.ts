@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
 import { type AuthUser, getCurrentUserFn } from './get-current-user.fn'
+import { getProtectedSessionBootstrapFn, type ProtectedSessionBootstrap } from './get-protected-session-bootstrap.fn'
 import { getUserStatusFn, type UserStatus } from './get-user-status.fn'
 import { isAuthenticatedFn } from './is-authenticated.fn'
 
@@ -17,6 +18,14 @@ export const isAuthenticatedQueryOptions = () =>
   queryOptions<boolean>({
     queryKey: ['is-authenticated'],
     queryFn: () => isAuthenticatedFn(),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  })
+
+export const protectedSessionBootstrapQueryOptions = () =>
+  queryOptions<ProtectedSessionBootstrap>({
+    queryKey: ['protected-session-bootstrap'],
+    queryFn: () => getProtectedSessionBootstrapFn(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })

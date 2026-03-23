@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl, getImageKitUrl } from '@valguide/core/features/assets/image-url'
 import { setActiveOrganizationForCurrentSession } from '@valguide/core/features/auth/better-auth.server'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams.server'
@@ -13,10 +13,6 @@ import { requireAuthMiddleware } from '@valguide/features/auth/middleware'
 // ============================================================================
 
 type SidebarTeam = Omit<OrganizationWithRole, 'logoStoragePath'> & { logo: string | null }
-type UserMetadata = {
-  full_name?: string
-  avatar_url?: string
-}
 
 export interface SidebarData {
   user: {
@@ -46,19 +42,16 @@ export const getSidebarDataFn = createServerFn({ method: 'GET' })
     const activeTeamId = context.activeOrgId
     const [rawTeams, profile] = await Promise.all([getUserTeams(db, user.id), getOrCreateProfile(user.id)])
 
-    const userMetadata: UserMetadata | null =
-      user.metadata && typeof user.metadata === 'object' ? (user.metadata as UserMetadata) : null
-
     const teams = rawTeams.map(mapTeam)
     let currentTeam = teams.find((t) => t.id === activeTeamId)
 
-    const name = getUserDisplayName(profile, user.email, userMetadata)
+    const name = getUserDisplayName(profile, user.email)
 
     const sidebarUser = {
       userId: user.id,
       name,
       email: user.email || '',
-      avatar: userMetadata?.avatar_url || '',
+      avatar: profile.avatarStoragePath ? getAssetImageUrl({ storagePath: profile.avatarStoragePath }) : '',
     }
 
     if (!currentTeam && teams.length > 0) {

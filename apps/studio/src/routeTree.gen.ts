@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
+import { Route as SessionRecoveryRouteImport } from './routes/session-recovery'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PendingRouteImport } from './routes/pending'
@@ -47,6 +48,11 @@ import { Route as MainToursNanoIdStopsStopIdEditRouteImport } from './routes/_ma
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
   id: '/terms-of-service',
   path: '/terms-of-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionRecoveryRoute = SessionRecoveryRouteImport.update({
+  id: '/session-recovery',
+  path: '/session-recovery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/session-recovery': typeof SessionRecoveryRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByTo {
   '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/session-recovery': typeof SessionRecoveryRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/pending': typeof PendingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/session-recovery': typeof SessionRecoveryRoute
   '/terms-of-service': typeof TermsOfServiceRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/pending'
     | '/privacy-policy'
     | '/robots.txt'
+    | '/session-recovery'
     | '/terms-of-service'
     | '/login'
     | '/signup'
@@ -360,6 +370,7 @@ export interface FileRouteTypes {
     | '/pending'
     | '/privacy-policy'
     | '/robots.txt'
+    | '/session-recovery'
     | '/terms-of-service'
     | '/login'
     | '/signup'
@@ -394,6 +405,7 @@ export interface FileRouteTypes {
     | '/pending'
     | '/privacy-policy'
     | '/robots.txt'
+    | '/session-recovery'
     | '/terms-of-service'
     | '/_auth/login'
     | '/_auth/signup'
@@ -431,6 +443,7 @@ export interface RootRouteChildren {
   PendingRoute: typeof PendingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SessionRecoveryRoute: typeof SessionRecoveryRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ApiUploadPartRoute: typeof ApiUploadPartRoute
@@ -445,6 +458,13 @@ declare module '@tanstack/react-router' {
       path: '/terms-of-service'
       fullPath: '/terms-of-service'
       preLoaderRoute: typeof TermsOfServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session-recovery': {
+      id: '/session-recovery'
+      path: '/session-recovery'
+      fullPath: '/session-recovery'
+      preLoaderRoute: typeof SessionRecoveryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -768,6 +788,7 @@ const rootRouteChildren: RootRouteChildren = {
   PendingRoute: PendingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  SessionRecoveryRoute: SessionRecoveryRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
   ApiUploadRoute: ApiUploadRoute,
   ApiUploadPartRoute: ApiUploadPartRoute,

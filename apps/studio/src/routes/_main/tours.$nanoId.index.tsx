@@ -32,8 +32,8 @@ function TourPage() {
   const tUnpublish = useTranslations('tours.unpublish')
   const router = useRouter()
 
-  const { team } = Route.useRouteContext()
-  const orgSlug = team.orgSlug
+  const { currentTeam } = Route.useRouteContext()
+  const orgSlug = currentTeam?.slug ?? ''
 
   const handleArchived = async () => {
     await router.invalidate()

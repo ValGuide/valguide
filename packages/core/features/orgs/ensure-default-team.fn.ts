@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
-import { logStudioPerformance, timeStudioPerformance } from '../../utils/studio-performance'
+import { logPerformance, timePerformance } from '../../utils/performance'
 import { getOrgMembership } from '../auth/authorization'
 import { setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -21,17 +21,17 @@ export type { EnsureDefaultTeamResult } from './ensure-default-team.server'
 export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .handler(async ({ context }): Promise<EnsureDefaultTeamResult> => {
-    return timeStudioPerformance(
+    return timePerformance(
       'orgs.ensureDefaultTeamFn.total',
       async () => {
-        const profile = await timeStudioPerformance(
+        const profile = await timePerformance(
           'orgs.ensureDefaultTeamFn.getOrCreateProfile',
           async () => getOrCreateProfile(context.user.id, context.user.email),
           { userId: context.user.id },
         )
         const displayName = getUserDisplayName(profile, context.user.email)
 
-        const defaultResult = await timeStudioPerformance(
+        const defaultResult = await timePerformance(
           'orgs.ensureDefaultTeamFn.ensureDefaultTeam',
           async () => ensureDefaultTeam(db, context.user.id, displayName),
           { userId: context.user.id },
@@ -40,7 +40,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
         // Validate active organization from session - if stale or missing, reset to default.
         const currentActiveOrgId = context.activeOrgId
         if (!currentActiveOrgId) {
-          logStudioPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
+          logPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
             userId: context.user.id,
             source: 'missing',
             action: 'set-default',
@@ -51,7 +51,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
         }
 
         if (currentActiveOrgId === defaultResult.teamId) {
-          logStudioPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
+          logPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
             userId: context.user.id,
             source: 'session',
             action: 'reuse-default',
@@ -61,7 +61,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
         }
 
         // Session points to a different team - validate membership.
-        const membership = await timeStudioPerformance(
+        const membership = await timePerformance(
           'orgs.ensureDefaultTeamFn.getOrgMembership',
           async () => getOrgMembership(context.user.id, currentActiveOrgId),
           {
@@ -70,7 +70,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
           },
         )
         if (!membership) {
-          logStudioPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
+          logPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
             userId: context.user.id,
             source: 'session',
             action: 'reset-invalid-membership',
@@ -82,7 +82,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
         }
 
         // Return the active team's data
-        const [activeOrg] = await timeStudioPerformance(
+        const [activeOrg] = await timePerformance(
           'orgs.ensureDefaultTeamFn.activeOrgLookup',
           async () =>
             db
@@ -97,7 +97,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
         )
 
         if (!activeOrg) {
-          logStudioPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
+          logPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
             userId: context.user.id,
             source: 'session',
             action: 'reset-missing-org',
@@ -108,7 +108,7 @@ export const ensureDefaultTeamFn = createServerFn({ method: 'POST' })
           return defaultResult
         }
 
-        logStudioPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
+        logPerformance('orgs.ensureDefaultTeamFn.activeOrg', {
           userId: context.user.id,
           source: 'session',
           action: 'reuse-active-org',

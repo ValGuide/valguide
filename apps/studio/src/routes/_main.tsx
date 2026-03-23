@@ -1,26 +1,43 @@
 import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router'
-import { ensureDefaultTeamQueryOptions } from '@valguide/core/features/orgs/query-options'
-import { isAuthenticatedQueryOptions } from '@valguide/features/auth/query-options'
+import { protectedSessionBootstrapQueryOptions } from '@valguide/features/auth/query-options'
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { MainLayoutPending } from '@/components/main-layout-pending'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
-import { sidebarStateQueryOptions } from '../features/sidebar/query-options'
+import { sidebarQueryOptions, sidebarStateQueryOptions } from '../features/sidebar/query-options'
 
 export const Route = createFileRoute('/_main')({
   beforeLoad: async ({ context, location }) => {
-    const isAuthenticated = await context.queryClient.ensureQueryData(isAuthenticatedQueryOptions())
-    if (!isAuthenticated) {
+    const bootstrap = await context.queryClient.ensureQueryData(protectedSessionBootstrapQueryOptions())
+
+    if (!bootstrap.user) {
       throw redirect({
         to: '/login',
         search: { next: location.href },
       })
     }
 
-    // FIRST: Ensure user has at least one team (cached after first call)
-    const team = await context.queryClient.ensureQueryData(ensureDefaultTeamQueryOptions())
-    const sidebarState = await context.queryClient.ensureQueryData(sidebarStateQueryOptions())
-    return { defaultOpen: sidebarState, team }
+    if (bootstrap.status === 'pending') {
+      throw redirect({ to: '/pending' })
+    }
+
+    if (bootstrap.status === 'blocked') {
+      throw redirect({ to: '/blocked' })
+    }
+
+    if (!bootstrap.activeOrgId) {
+      throw redirect({ to: '/session-recovery' })
+    }
+
+    const [sidebarState, sidebar] = await Promise.all([
+      context.queryClient.ensureQueryData(sidebarStateQueryOptions()),
+      context.queryClient.ensureQueryData(sidebarQueryOptions()),
+    ])
+
+    return {
+      defaultOpen: sidebarState,
+      currentTeam: sidebar?.currentTeam ?? null,
+    }
   },
   component: MainLayout,
   pendingComponent: MainLayoutPending,

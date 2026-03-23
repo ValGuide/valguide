@@ -1,6 +1,6 @@
 import type { DB } from '@valguide/core/features/db'
 import { eq } from 'drizzle-orm'
-import { timeStudioPerformance } from '../../utils/studio-performance'
+import { timePerformance } from '../../utils/performance'
 import { createTeam } from './create-team.server'
 import { member } from './schema'
 
@@ -28,7 +28,7 @@ export async function ensureDefaultTeam(
   userName?: string,
 ): Promise<EnsureDefaultTeamResult> {
   // Check if user already has any team
-  const existingMembership = await timeStudioPerformance(
+  const existingMembership = await timePerformance(
     'orgs.ensureDefaultTeam.membershipLookup',
     async () =>
       dbClient.query.member.findFirst({
@@ -44,7 +44,7 @@ export async function ensureDefaultTeam(
 
   // Create a new team for the user using existing transactional createTeam
   const teamName = userName ? `${userName}'s Studio` : 'My Studio'
-  const { team, orgSlug } = await timeStudioPerformance(
+  const { team, orgSlug } = await timePerformance(
     'orgs.ensureDefaultTeam.createTeam',
     async () => createTeam(dbClient, teamName, userId),
     { userId },

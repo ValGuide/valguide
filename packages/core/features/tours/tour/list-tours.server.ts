@@ -1,5 +1,5 @@
 import { and, desc, eq, isNotNull, isNull, sql } from 'drizzle-orm'
-import { timeStudioPerformance } from '../../../utils/studio-performance'
+import { timePerformance } from '../../../utils/performance'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
 import { tour, tourAssetDraft, tourLocaleDraft } from '../schema'
@@ -72,7 +72,7 @@ export async function listTours(organizationId: string, filters: ListToursFilter
     .limit(1)
     .as('cover_image')
 
-  const rows = await timeStudioPerformance(
+  const rows = await timePerformance(
     'tours.listTours.query',
     async () =>
       db

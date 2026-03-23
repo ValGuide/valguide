@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { timeStudioPerformance } from '../../../utils/studio-performance'
+import { timePerformance } from '../../../utils/performance'
 import { requireOrgMember } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { listTours } from './list-tours.server'
@@ -20,7 +20,7 @@ export const listToursFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(listToursSchema)
   .handler(async ({ context, data }) => {
-    return timeStudioPerformance(
+    return timePerformance(
       'tours.listToursFn.total',
       async () => {
         const orgId = context.activeOrgId
@@ -28,7 +28,7 @@ export const listToursFn = createServerFn({ method: 'GET' })
           throw new Error('No active organization')
         }
 
-        await timeStudioPerformance(
+        await timePerformance(
           'tours.listToursFn.requireOrgMember',
           async () => requireOrgMember(orgId, context.user.id),
           {
@@ -37,7 +37,7 @@ export const listToursFn = createServerFn({ method: 'GET' })
           },
         )
 
-        return timeStudioPerformance('tours.listToursFn.listTours', async () => listTours(orgId, data), {
+        return timePerformance('tours.listToursFn.listTours', async () => listTours(orgId, data), {
           userId: context.user.id,
           orgId,
           locale: data.locale ?? 'en',

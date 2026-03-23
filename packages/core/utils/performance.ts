@@ -1,14 +1,25 @@
 import { getRequest, getRequestHeaders } from '@tanstack/react-start/server'
 import { createLogger } from '@valguide/logger'
 
-const log = createLogger('studio-performance')
+const log = createLogger('performance')
 
-type StudioPerformanceMetadata = Record<string, unknown>
+export type PerformanceMetadata = Record<string, unknown>
 type CloudflareRequest = Request & {
   cf?: {
     colo?: string
   }
 }
+
+type PerformanceContext = PerformanceMetadata & {
+  host?: string | null
+}
+
+type PerformanceOptions = {
+  message?: string
+  shouldLog?: (context: PerformanceContext) => boolean
+}
+
+const DEFAULT_MESSAGE = 'studio.performance'
 
 function nowMs(): number {
   return typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
@@ -50,7 +61,15 @@ function getRefererPath(headers: Headers): string | null {
   }
 }
 
-export function getStudioPerformanceContext(): StudioPerformanceMetadata {
+function defaultShouldLogPerformance(context: PerformanceContext): boolean {
+  return (
+    context.host === 'studio.valguide.com' ||
+    context.host === 'studio.valguide.dev' ||
+    context.host === 'studio.local.dev'
+  )
+}
+
+export function getPerformanceContext(): PerformanceContext {
   try {
     const headers = getRequestHeaders()
     const request = getRequest() as CloudflareRequest
@@ -72,29 +91,35 @@ export function getStudioPerformanceContext(): StudioPerformanceMetadata {
   }
 }
 
-export function shouldLogStudioPerformance(): boolean {
-  const host = getStudioPerformanceContext().host
-  return host === 'studio.valguide.com' || host === 'studio.valguide.dev' || host === 'studio.local.dev'
+export function shouldLogPerformance(options: PerformanceOptions = {}): boolean {
+  const context = getPerformanceContext()
+  const shouldLog = options.shouldLog ?? defaultShouldLogPerformance
+  return shouldLog(context)
 }
 
-export function logStudioPerformance(event: string, metadata: StudioPerformanceMetadata = {}): void {
-  if (!shouldLogStudioPerformance()) {
+export function logPerformance(
+  event: string,
+  metadata: PerformanceMetadata = {},
+  options: PerformanceOptions = {},
+): void {
+  if (!shouldLogPerformance(options)) {
     return
   }
 
-  log.info('studio.performance', {
+  log.info(options.message ?? DEFAULT_MESSAGE, {
     event,
-    ...getStudioPerformanceContext(),
+    ...getPerformanceContext(),
     ...metadata,
   })
 }
 
-export async function timeStudioPerformance<T>(
+export async function timePerformance<T>(
   event: string,
   operation: () => Promise<T>,
-  metadata: StudioPerformanceMetadata = {},
+  metadata: PerformanceMetadata = {},
+  options: PerformanceOptions = {},
 ): Promise<T> {
-  if (!shouldLogStudioPerformance()) {
+  if (!shouldLogPerformance(options)) {
     return operation()
   }
 
@@ -102,19 +127,27 @@ export async function timeStudioPerformance<T>(
 
   try {
     const result = await operation()
-    logStudioPerformance(event, {
-      ...metadata,
-      durationMs: roundDuration(nowMs() - startedAt),
-      outcome: 'ok',
-    })
+    logPerformance(
+      event,
+      {
+        ...metadata,
+        durationMs: roundDuration(nowMs() - startedAt),
+        outcome: 'ok',
+      },
+      options,
+    )
     return result
   } catch (error) {
-    logStudioPerformance(event, {
-      ...metadata,
-      durationMs: roundDuration(nowMs() - startedAt),
-      outcome: 'error',
-      error: error instanceof Error ? error.message : String(error),
-    })
+    logPerformance(
+      event,
+      {
+        ...metadata,
+        durationMs: roundDuration(nowMs() - startedAt),
+        outcome: 'error',
+        error: error instanceof Error ? error.message : String(error),
+      },
+      options,
+    )
     throw error
   }
 }
