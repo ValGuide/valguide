@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
 import { clientEnv } from '@valguide/core/env/client'
 import { PendingApprovalPage } from '@valguide/core/features/auth/common/pending-approval-page'
 import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
@@ -12,7 +11,6 @@ interface PendingApprovalContainerProps {
 }
 
 export function PendingApprovalContainer({ onMount }: PendingApprovalContainerProps) {
-  const router = useRouter()
   const queryClient = useQueryClient()
 
   useEffect(() => {
@@ -27,19 +25,18 @@ export function PendingApprovalContainer({ onMount }: PendingApprovalContainerPr
   useEffect(() => {
     const status = statusResult?.status
     if (status === 'approved') {
-      router.navigate({ to: '/tours' })
+      window.location.href = '/tours'
     }
-  }, [statusResult?.status, router])
+  }, [statusResult?.status])
 
   const handleSignOut = async () => {
     await signOutFn({ data: {} })
     queryClient.clear()
-    await router.invalidate()
-    router.navigate({ to: '/login' })
+    window.location.href = '/login'
   }
 
   const handleCheckAgain = async () => {
-    await queryClient.invalidateQueries({ queryKey: ['user-status'] })
+    window.location.href = '/pending'
   }
 
   return (

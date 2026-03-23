@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 import { currentUserQueryOptions } from '@valguide/core/features/auth/query-options'
 import { deleteAccountFn } from '@valguide/core/features/profiles/delete-account.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -14,14 +14,12 @@ export const Route = createLazyFileRoute('/_main/profile')({
 
 function ProfilePage() {
   const t = useTranslations('profile')
-  const router = useRouter()
   const { data: user } = useSuspenseQuery(currentUserQueryOptions())
 
   const handleDeleteAccount = async () => {
     try {
       await deleteAccountFn()
-      await router.invalidate()
-      router.navigate({ to: '/login' })
+      window.location.href = '/login'
     } catch {
       toast.error(t('deleteAccount.error'))
     }

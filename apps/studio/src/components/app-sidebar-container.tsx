@@ -44,8 +44,7 @@ export function AppSidebarContainer() {
     await signOut({ data: { scope: 'global' } })
     queryClient.removeQueries({ queryKey: ['is-authenticated'] })
     queryClient.removeQueries({ queryKey: ['current-user'] })
-    await router.invalidate()
-    router.navigate({ to: '/login' })
+    window.location.href = '/login'
   }
 
   if (isLoading) {
