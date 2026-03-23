@@ -1,9 +1,14 @@
-import { getRequestHeaders } from '@tanstack/react-start/server'
+import { getRequest, getRequestHeaders } from '@tanstack/react-start/server'
 import { createLogger } from '@valguide/logger'
 
 const log = createLogger('studio-performance')
 
 type StudioPerformanceMetadata = Record<string, unknown>
+type CloudflareRequest = Request & {
+  cf?: {
+    colo?: string
+  }
+}
 
 function nowMs(): number {
   return typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
@@ -48,6 +53,7 @@ function getRefererPath(headers: Headers): string | null {
 export function getStudioPerformanceContext(): StudioPerformanceMetadata {
   try {
     const headers = getRequestHeaders()
+    const request = getRequest() as CloudflareRequest
     const host = headers.get('host')
     const rayId = headers.get('cf-ray')
 
@@ -55,7 +61,7 @@ export function getStudioPerformanceContext(): StudioPerformanceMetadata {
       host,
       country: headers.get('cf-ipcountry'),
       rayId,
-      ingressColo: rayId?.split('-').pop() ?? null,
+      ingressColo: request.cf?.colo ?? null,
       requestKind: getRequestKind(headers),
       refererPath: getRefererPath(headers),
     }
