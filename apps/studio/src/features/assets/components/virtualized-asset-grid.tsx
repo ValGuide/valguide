@@ -122,7 +122,6 @@ export function VirtualizedAssetGrid({
           <div
             key={virtualRow.key}
             data-index={virtualRow.index}
-            ref={rowVirtualizer.measureElement}
             className="absolute left-0 top-0 grid w-full"
             style={{
               gap: `${GRID_GAP}px`,

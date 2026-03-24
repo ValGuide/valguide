@@ -7,6 +7,7 @@ import { AssetCardConnected } from '@/features/assets/components/asset-card-conn
 import { AssetListRowConnected } from '@/features/assets/components/asset-list-row-connected.tsx'
 import { AssetsList } from '@/features/assets/components/assets-list.tsx'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
+import { BulkDeleteAssetsDialogConnected } from '@/features/assets/components/bulk-delete-assets-dialog-connected.tsx'
 import { assetsInfiniteQueryOptions } from '@/features/assets/query-options'
 
 const Root = getRouteApi('/_main')
@@ -238,6 +239,7 @@ function AssetsContent() {
       }
       AssetCard={AssetCardConnected}
       AssetListRow={AssetListRowConnected}
+      BulkDeleteDialog={BulkDeleteAssetsDialogConnected}
     />
   ) : null
 }

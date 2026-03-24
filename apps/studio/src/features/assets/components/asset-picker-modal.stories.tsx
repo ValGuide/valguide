@@ -40,7 +40,7 @@ type Story = StoryObj<typeof meta>
 type PickerWrapperProps = React.ComponentProps<typeof AssetPickerModal>
 
 const PickerWrapper = (args: PickerWrapperProps) => {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   return (
     <div>

@@ -1,9 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { requireAssetAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { deleteAsset } from './delete-asset.server'
-
 export type { DeleteAssetResult } from './delete-asset.server'
 
 const deleteAssetSchema = z.object({
@@ -14,6 +11,11 @@ export const deleteAssetFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(deleteAssetSchema)
   .handler(async ({ context, data }) => {
+    const [{ requireAssetAccess }, { deleteAsset }] = await Promise.all([
+      import('../auth/authorization'),
+      import('./delete-asset.server'),
+    ])
+
     await requireAssetAccess(data.assetId, context.user.id)
     return deleteAsset(data.assetId)
   })

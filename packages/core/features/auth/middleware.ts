@@ -1,8 +1,6 @@
 import { redirect } from '@tanstack/react-router'
 import { createMiddleware } from '@tanstack/react-start'
 import { timePerformance } from '../../utils/performance'
-import { getAuthSession } from './better-auth.server'
-import { getProtectedSessionBootstrap } from './get-protected-session-bootstrap.server'
 
 // ============================================================================
 // Types
@@ -33,6 +31,7 @@ export type RequiredAuthContext = {
  * Use this for routes that need optional auth (public pages with conditional UI).
  */
 export const authContextMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
+  const { getAuthSession } = await import('./better-auth.server')
   const session = await timePerformance('auth.getAuthSession', async () => getAuthSession(), {
     stage: 'authContextMiddleware',
   })
@@ -62,6 +61,7 @@ export const authContextMiddleware = createMiddleware({ type: 'function' }).serv
 export const requireAuthMiddleware = createMiddleware({ type: 'function' })
   .middleware([authContextMiddleware])
   .server(async ({ next }) => {
+    const { getProtectedSessionBootstrap } = await import('./get-protected-session-bootstrap.server')
     const bootstrap = await getProtectedSessionBootstrap('requireAuthMiddleware')
 
     if (!bootstrap.user) {

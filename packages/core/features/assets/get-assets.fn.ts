@@ -1,8 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { type GetAssetsFilters, type GetAssetsPageFilters, getAssets, getAssetsPage } from './get-assets.server'
+import type { GetAssetsFilters, GetAssetsPageFilters } from './get-assets.server'
 
 export type {
   AssetPage,
@@ -33,6 +32,11 @@ export const getAssetsFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getAssetsSchema)
   .handler(async ({ data, context }) => {
+    const [{ requireOrgMember }, { getAssets }] = await Promise.all([
+      import('../auth/authorization'),
+      import('./get-assets.server'),
+    ])
+
     const organizationId = context.activeOrgId
     if (!organizationId) {
       throw new Error('No active organization')
@@ -54,6 +58,11 @@ export const getAssetsPageFn = createServerFn({ method: 'GET' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getAssetsPageSchema)
   .handler(async ({ data, context }) => {
+    const [{ requireOrgMember }, { getAssetsPage }] = await Promise.all([
+      import('../auth/authorization'),
+      import('./get-assets.server'),
+    ])
+
     const organizationId = context.activeOrgId
     if (!organizationId) {
       throw new Error('No active organization')

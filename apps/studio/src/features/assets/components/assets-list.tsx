@@ -145,6 +145,8 @@ export function AssetsList({
   const uploadSession = useContext(AssetUploadSessionContext)
   const openFilePicker = uploadSession?.openFilePicker ?? (() => {})
   const hasVisibleUploads = uploadSession?.hasVisibleUploads ?? false
+  // Keep this component render-only. Storybook mounts AssetsList directly, so connected
+  // server-function components must stay in AssetsListConnected and be injected via props.
 
   const typeFilter = controlledTypeFilter ?? internalTypeFilter
   const searchQuery = controlledSearchQuery ?? internalSearchQuery

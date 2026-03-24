@@ -14,6 +14,8 @@ type BulkDeleteAssetsDialogConnectedProps = Omit<
   onDeleteComplete: (result: DeleteAssetsResult) => Promise<void> | void
 }
 
+export type { BulkDeleteAssetsDialogConnectedProps }
+
 export function BulkDeleteAssetsDialogConnected({ onDeleteComplete, ...props }: BulkDeleteAssetsDialogConnectedProps) {
   const [isDeleting, setIsDeleting] = useState(false)
 

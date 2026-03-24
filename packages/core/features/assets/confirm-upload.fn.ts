@@ -1,9 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { confirmUpload } from './confirm-upload.server'
-
 export type { ConfirmUploadInput, ConfirmUploadResult } from './confirm-upload.server'
 
 const confirmUploadSchema = z.object({
@@ -22,6 +19,11 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(confirmUploadSchema)
   .handler(async ({ context, data }) => {
+    const [{ requireOrgMember }, { confirmUpload }] = await Promise.all([
+      import('../auth/authorization'),
+      import('./confirm-upload.server'),
+    ])
+
     const organizationId = context.activeOrgId
     if (!organizationId) {
       throw new Error('No active organization')

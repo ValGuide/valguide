@@ -19,6 +19,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { AssetPickerVirtualGrid } from './asset-picker-virtual-grid'
 
+// Keep the default selection array stable. A fresh [] here retriggers the sync effect
+// on every render and causes an infinite setState loop in Storybook.
+const EMPTY_SELECTED_ASSET_IDS: string[] = []
+
 export type UploadInlineComponentProps = {
   organizationId: string
   allowedTypes?: AssetType[]
@@ -57,7 +61,7 @@ export function AssetPickerModal({
   type,
   locale,
   multiple = false,
-  selectedAssetIds = [],
+  selectedAssetIds = EMPTY_SELECTED_ASSET_IDS,
   onSelect,
   assets,
   isLoading,
@@ -94,7 +98,7 @@ export function AssetPickerModal({
 
   useEffect(() => {
     setSelected(new Set(selectedAssetIds))
-  }, [selectedAssetIds, selectedAssetIdsKey])
+  }, [selectedAssetIdsKey])
 
   const handleToggleAsset = (assetId: string) => {
     const newSelected = new Set(selected)

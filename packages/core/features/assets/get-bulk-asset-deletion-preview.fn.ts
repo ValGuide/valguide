@@ -1,8 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { type BulkAssetDeletionPreview, getBulkAssetDeletionPreview } from './get-bulk-asset-deletion-preview.server'
+import type { BulkAssetDeletionPreview } from './get-bulk-asset-deletion-preview.server'
 
 export type { AssetDeletionEligibility, AssetUsageLocation, AssetUsageScope } from './asset-deletion-eligibility.server'
 export type { BulkAssetDeletionPreview } from './get-bulk-asset-deletion-preview.server'
@@ -15,6 +14,11 @@ export const getBulkAssetDeletionPreviewFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(getBulkAssetDeletionPreviewSchema)
   .handler(async ({ context, data }): Promise<BulkAssetDeletionPreview> => {
+    const [{ requireOrgMember }, { getBulkAssetDeletionPreview }] = await Promise.all([
+      import('../auth/authorization'),
+      import('./get-bulk-asset-deletion-preview.server'),
+    ])
+
     const organizationId = context.activeOrgId
     if (!organizationId) {
       throw new Error('No active organization')

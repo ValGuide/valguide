@@ -10,7 +10,8 @@ export async function putObject(
   body: ReadableStream | ArrayBuffer | ArrayBufferView | string | Blob,
   contentType: string,
 ): Promise<void> {
-  await getR2Bucket().put(key, body, {
+  const bucket = await getR2Bucket()
+  await bucket.put(key, body, {
     httpMetadata: { contentType },
   })
 }
@@ -18,13 +19,15 @@ export async function putObject(
 // ── Delete ──────────────────────────────────────────────────────────
 
 export async function deleteObject(key: string): Promise<void> {
-  await getR2Bucket().delete(key)
+  const bucket = await getR2Bucket()
+  await bucket.delete(key)
 }
 
 // ── Head ────────────────────────────────────────────────────────────
 
 export async function headObject(key: string): Promise<{ size: number; etag: string } | null> {
-  const obj = await getR2Bucket().head(key)
+  const bucket = await getR2Bucket()
+  const obj = await bucket.head(key)
   if (!obj) return null
   return { size: obj.size, etag: obj.etag }
 }
@@ -32,7 +35,8 @@ export async function headObject(key: string): Promise<{ size: number; etag: str
 // ── Multipart ───────────────────────────────────────────────────────
 
 export async function initMultipartUpload(key: string, contentType: string) {
-  const upload = await getR2Bucket().createMultipartUpload(key, {
+  const bucket = await getR2Bucket()
+  const upload = await bucket.createMultipartUpload(key, {
     httpMetadata: { contentType },
   })
   return { uploadId: upload.uploadId, key }
@@ -44,12 +48,14 @@ export async function uploadPart(
   partNumber: number,
   body: ReadableStream | ArrayBuffer | ArrayBufferView | string | Blob,
 ): Promise<R2UploadedPart> {
-  const upload = getR2Bucket().resumeMultipartUpload(key, uploadId)
+  const bucket = await getR2Bucket()
+  const upload = bucket.resumeMultipartUpload(key, uploadId)
   return upload.uploadPart(partNumber, body)
 }
 
 export async function completeMultipartUpload(key: string, uploadId: string, parts: R2UploadedPart[]): Promise<void> {
-  const upload = getR2Bucket().resumeMultipartUpload(key, uploadId)
+  const bucket = await getR2Bucket()
+  const upload = bucket.resumeMultipartUpload(key, uploadId)
   await upload.complete(parts)
 }
 
