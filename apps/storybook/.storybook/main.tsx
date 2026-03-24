@@ -10,6 +10,7 @@ import { serverEnv } from './__mocks__/env-server.ts'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const storybookMocksDir = path.resolve(__dirname, './__mocks__')
 const coreDbModulePath = path.resolve(__dirname, '../../packages/core/features/db.ts')
+const sharedFontsDir = path.resolve(__dirname, '../../studio/public/fonts')
 
 function generateMockEnvDefines() {
   const defines: Record<string, string> = {}
@@ -31,6 +32,12 @@ const config: StorybookConfig = {
   stories: [
     '../../../apps/!(storybook)/!(node_modules)/**/*.stories.@(ts|tsx)',
     '../../../packages/!(node_modules)/!(node_modules)/**/*.stories.@(ts|tsx)',
+  ],
+  staticDirs: [
+    {
+      from: sharedFontsDir,
+      to: '/fonts',
+    },
   ],
 
   addons: [
