@@ -24,6 +24,7 @@ export type UploadInlineComponentProps = {
   allowedTypes?: AssetType[]
   locale?: string
   onUploadComplete?: (asset: Asset) => void
+  onUploadBatchComplete?: (assets: Asset[], meta: { hasErrors: boolean }) => void
 }
 
 export type UploadInlineComponent = ComponentType<UploadInlineComponentProps>
@@ -116,13 +117,30 @@ export function AssetPickerModal({
     onOpenChange(false)
   }
 
-  const handleUploadComplete = (asset: Asset) => {
-    onUploadCompleteProp?.(asset)
-    onRefetch?.()
-    setActiveTab('library')
-    if (!multiple) {
-      const newSelected = new Set([asset.id])
-      setSelected(newSelected)
+  const handleUploadBatchComplete = (uploadedAssets: Asset[], meta: { hasErrors: boolean }) => {
+    const lastUploadedAsset = uploadedAssets[uploadedAssets.length - 1]
+
+    if (lastUploadedAsset) {
+      onUploadCompleteProp?.(lastUploadedAsset)
+    }
+
+    if (uploadedAssets.length > 0) {
+      onRefetch?.()
+      setSelected((currentSelected) => {
+        if (!multiple) {
+          return new Set([uploadedAssets[uploadedAssets.length - 1]?.id].filter(Boolean))
+        }
+
+        const nextSelected = new Set(currentSelected)
+        for (const asset of uploadedAssets) {
+          nextSelected.add(asset.id)
+        }
+        return nextSelected
+      })
+    }
+
+    if (!meta.hasErrors) {
+      setActiveTab('library')
     }
   }
 
@@ -290,7 +308,7 @@ export function AssetPickerModal({
                 <UploadInline
                   allowedTypes={[type]}
                   locale={locale}
-                  onUploadComplete={handleUploadComplete}
+                  onUploadBatchComplete={handleUploadBatchComplete}
                   organizationId={organizationId}
                 />
               </div>

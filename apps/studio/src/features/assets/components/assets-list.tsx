@@ -231,9 +231,15 @@ export function AssetsList({
     })
   }, [assets, isControlledMode, searchQuery, sortBy, sortDirection, typeFilter, usageFilter])
 
-  const handleUploadComplete = (asset: Asset) => {
-    onUploadComplete?.(asset)
-    setActiveTab('library')
+  const handleUploadBatchComplete = (uploadedAssets: Asset[], meta: { hasErrors: boolean }) => {
+    const lastUploadedAsset = uploadedAssets[uploadedAssets.length - 1]
+    if (lastUploadedAsset) {
+      onUploadComplete?.(lastUploadedAsset)
+    }
+
+    if (!meta.hasErrors) {
+      setActiveTab('library')
+    }
   }
 
   const openAssetDetails = (asset: AssetWithUsage) => {
@@ -837,7 +843,7 @@ export function AssetsList({
           <div className="flex min-h-0 flex-1 flex-col">
             {UploadInline && (
               <UploadInline
-                onUploadComplete={handleUploadComplete}
+                onUploadBatchComplete={handleUploadBatchComplete}
                 organizationId={organizationId}
                 locale={locale}
                 className="w-full flex-1"
