@@ -116,6 +116,7 @@ export function AppSidebar({
     { title: t('brandKit'), path: '/design', icon: SlidersHorizontal },
     { title: t('workspace'), path: '/settings', icon: Settings2 },
   ])
+  const sidebarToggleLabel = isMobile || state === 'expanded' ? tSidebar('collapse') : tSidebar('expand')
 
   return (
     <>
@@ -133,7 +134,7 @@ export function AppSidebar({
                   className="size-8 shrink-0 rounded-lg mr-0.5"
                   onClick={toggleSidebar}
                   tabIndex={isMobile ? -1 : 0}
-                  aria-label={isMobile || state === 'expanded' ? 'Collapse sidebar' : 'Expand sidebar'}
+                  aria-label={sidebarToggleLabel}
                 >
                   {isMobile || state === 'expanded' ? (
                     <PanelLeftClose className="size-4" />
@@ -143,7 +144,7 @@ export function AppSidebar({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right" hidden={isMobile}>
-                {state === 'expanded' ? 'Collapse sidebar' : 'Expand sidebar'}
+                {sidebarToggleLabel}
               </TooltipContent>
             </Tooltip>
           </div>

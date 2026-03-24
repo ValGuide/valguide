@@ -763,6 +763,8 @@
       "deleteProject": "Projekt löschen"
     },
     "appName": "Valguide Studio",
+    "expand": "Seitenleiste erweitern",
+    "collapse": "Seitenleiste einklappen",
     "sections": {
       "content": "Inhalt",
       "performance": "Leistung",

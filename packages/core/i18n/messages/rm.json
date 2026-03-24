@@ -763,6 +763,8 @@
       "deleteProject": "Stizzar project"
     },
     "appName": "Valguide Studio",
+    "expand": "Extender la trav laterala",
+    "collapse": "Reducir la trav laterala",
     "sections": {
       "content": "Cuntegn",
       "performance": "Prestaziun",

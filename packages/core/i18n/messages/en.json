@@ -763,6 +763,8 @@
       "deleteProject": "Delete Project"
     },
     "appName": "Valguide Studio",
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar",
     "sections": {
       "content": "Content",
       "performance": "Performance",
