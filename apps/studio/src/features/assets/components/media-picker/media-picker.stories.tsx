@@ -1,10 +1,15 @@
 // @ts-nocheck - Storybook types only available in storybook package
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { useState } from 'react'
 import { MockAssetsProvider } from '../../context/mock-assets-provider'
 import { MediaPicker } from './media-picker'
 import type { MediaPickerComponentProps } from './types'
+
+const mockMuseumEntranceImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
+const mockArtifactDisplayImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
+const mockSculptureImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
 
 const mockOnUpload = async (_file: File, onProgress: (p: number) => void) => {
   for (let i = 0; i <= 100; i += 20) {
@@ -55,7 +60,7 @@ const mockImageAsset: Asset = {
   fileSize: 2048576,
   mimeType: 'image/jpeg',
   type: 'image',
-  storagePath: 'assets/mock/museum-entrance.jpg',
+  storagePath: mockMuseumEntranceImageUrl,
   locale: null,
   width: 1920,
   height: 1080,
@@ -91,14 +96,14 @@ const mockGalleryAssets: Asset[] = [
     id: '2',
     nanoId: 'img2',
     fileName: 'artifact-display.jpg',
-    storagePath: 'assets/mock/artifact-display.jpg',
+    storagePath: mockArtifactDisplayImageUrl,
   },
   {
     ...mockImageAsset,
     id: '3',
     nanoId: 'img3',
     fileName: 'sculpture.jpg',
-    storagePath: 'assets/mock/sculpture.jpg',
+    storagePath: mockSculptureImageUrl,
   },
 ]
 

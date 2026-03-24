@@ -1,7 +1,13 @@
+import { faker } from '@faker-js/faker'
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import type { Asset } from '@valguide/core/features/assets/types'
 import type { ReactNode } from 'react'
 import { AssetsContext, type AssetsContextValue } from './assets-context'
+
+const mockMuseumEntranceImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
+const mockArtifactDisplayImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
+const mockSculptureCloseupImageUrl = faker.image.urlLoremFlickr({ width: 2560, height: 1440, category: 'art' })
+const mockGalleryViewImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
 
 const baseMockAssets: Asset[] = [
   {
@@ -11,7 +17,7 @@ const baseMockAssets: Asset[] = [
     fileSize: 2048576,
     mimeType: 'image/jpeg',
     type: 'image',
-    storagePath: 'org/images/user/img1-museum-entrance.jpg',
+    storagePath: mockMuseumEntranceImageUrl,
     width: 1920,
     height: 1080,
     duration: null,
@@ -27,7 +33,7 @@ const baseMockAssets: Asset[] = [
     fileSize: 3145728,
     mimeType: 'image/jpeg',
     type: 'image',
-    storagePath: 'org/images/user/img2-artifact.jpg',
+    storagePath: mockArtifactDisplayImageUrl,
     width: 1920,
     height: 1080,
     duration: null,
@@ -43,7 +49,7 @@ const baseMockAssets: Asset[] = [
     fileSize: 4194304,
     mimeType: 'image/jpeg',
     type: 'image',
-    storagePath: 'org/images/user/img3-sculpture.jpg',
+    storagePath: mockSculptureCloseupImageUrl,
     width: 2560,
     height: 1440,
     duration: null,
@@ -59,7 +65,7 @@ const baseMockAssets: Asset[] = [
     fileSize: 2500000,
     mimeType: 'image/jpeg',
     type: 'image',
-    storagePath: 'org/images/user/img4-gallery.jpg',
+    storagePath: mockGalleryViewImageUrl,
     width: 1920,
     height: 1080,
     duration: null,

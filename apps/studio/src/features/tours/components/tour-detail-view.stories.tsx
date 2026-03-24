@@ -1,10 +1,13 @@
 // @ts-nocheck - Storybook types only available in storybook package
 
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import { Button } from '@valguide/ui/components/button'
 import { fn } from 'storybook/test'
 import { TourDetailView } from './tour-detail-view'
+
+const mockCoverImageUrl = faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' })
 
 const mockTour: TourDetail = {
   id: 'tour-uuid-123',
@@ -90,7 +93,7 @@ export const WithCoverImage: Story = {
     tour: {
       ...mockTour,
       coverImage: {
-        storagePath: 'assets/mock/cover.jpg',
+        storagePath: mockCoverImageUrl,
       },
     },
   },

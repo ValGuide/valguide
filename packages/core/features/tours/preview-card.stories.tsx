@@ -1,5 +1,11 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TourPreviewCard } from './preview-card'
+
+const mockGettingStartedImageUrl = faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' })
+const mockAdvancedTechniquesImageUrl = faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' })
+const mockExpertCreationImageUrl = faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' })
+const mockMinimalTourImageUrl = faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' })
 
 const meta: Meta<typeof TourPreviewCard> = {
   title: 'Tour/PreviewCard',
@@ -21,7 +27,7 @@ export const Default: Story = {
       title: 'Getting Started with ValGuide',
       description: 'Learn the basics of ValGuide and how to create your first visit.',
       coverImage: {
-        storagePath: 'assets/mock/getting-started.jpg',
+        storagePath: mockGettingStartedImageUrl,
       },
       author: 'ValGuide Team',
       createdAt: new Date('2023-10-15'),
@@ -39,7 +45,7 @@ export const Intermediate: Story = {
       title: 'Advanced Techniques',
       description: 'Discover advanced techniques to create engaging tours.',
       coverImage: {
-        storagePath: 'assets/mock/advanced-techniques.jpg',
+        storagePath: mockAdvancedTechniquesImageUrl,
       },
       author: 'ValGuide Pro',
       createdAt: new Date('2023-09-10'),
@@ -57,7 +63,7 @@ export const Advanced: Story = {
       title: 'Expert Tour Creation',
       description: 'Master the art of creating professional tours with advanced features.',
       coverImage: {
-        storagePath: 'assets/mock/expert-creation.jpg',
+        storagePath: mockExpertCreationImageUrl,
       },
       author: 'ValGuide Expert',
       createdAt: new Date('2023-08-05'),
@@ -88,7 +94,7 @@ export const MinimalInfo: Story = {
       nanoId: 'minimal-005',
       title: 'Minimal Tour',
       coverImage: {
-        storagePath: 'assets/mock/minimal-tour.jpg',
+        storagePath: mockMinimalTourImageUrl,
       },
     },
   },

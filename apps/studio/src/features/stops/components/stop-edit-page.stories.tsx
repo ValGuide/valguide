@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { QueryObserverOptions } from '@tanstack/react-query'
 import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
@@ -10,6 +11,8 @@ import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
 
 import { MockStopEditorProvider } from '@/features/stops/contexts/mock-stop-editor-provider'
 import { StopEditPage } from './stop-edit-page'
+
+const mockCoverImageUrl = faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' })
 
 const createMockDiffQueryOptions = (diffResult: DiffResult): QueryObserverOptions<DiffResult> => ({
   queryKey: ['mock-diff', diffResult.hasChanges, diffResult.changedFields.length],
@@ -110,7 +113,7 @@ const createMockCoverImageAsset = (): StopAssetDraftItem => ({
     fileName: 'cover-image.jpg',
     fileSize: 1024000,
     mimeType: 'image/jpeg',
-    storagePath: 'assets/mock/cover-image.jpg',
+    storagePath: mockCoverImageUrl,
     width: 1200,
     height: 800,
     duration: null,
@@ -135,7 +138,7 @@ const createMockAssets = (count: number): StopAssetDraftItem[] =>
       fileName: `image-${i + 1}.jpg`,
       fileSize: 1024000,
       mimeType: 'image/jpeg',
-      storagePath: 'assets/mock/gallery-image.jpg',
+      storagePath: faker.image.urlLoremFlickr({ width: 800, height: 600, category: 'art' }),
       width: 800,
       height: 600,
       duration: null,

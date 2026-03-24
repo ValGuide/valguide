@@ -1,10 +1,17 @@
 import { clientEnv } from '../../env/client'
 
+function isAbsoluteUrl(path: string): boolean {
+  return path.startsWith('http://') || path.startsWith('https://')
+}
+
 /**
  * Get the public URL for any asset from its storage path.
  * Used for all asset types (images, audio, video).
  */
 export function getAssetUrl(storagePath: string): string {
+  if (isAbsoluteUrl(storagePath)) {
+    return storagePath
+  }
   const baseUrl = clientEnv.VITE_R2_PUBLIC_URL
   const cleanPath = storagePath.startsWith('/') ? storagePath.slice(1) : storagePath
   return `${baseUrl}/${cleanPath}`
@@ -15,6 +22,9 @@ export function getAssetUrl(storagePath: string): string {
  * Delegates to ImageKit which pulls from R2 as origin.
  */
 export function getImageKitUrl(storagePath: string): string {
+  if (isAbsoluteUrl(storagePath)) {
+    return storagePath
+  }
   const baseUrl = clientEnv.VITE_IMAGEKIT_URL
   const cleanPath = storagePath.startsWith('/') ? storagePath.slice(1) : storagePath
   return `${baseUrl}/${cleanPath}`

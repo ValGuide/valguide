@@ -1,7 +1,10 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { AssetWithUsage } from '@valguide/core/features/assets/types'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { DeleteAssetDialog } from './delete-asset-dialog'
+
+const mockImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
 
 function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
   return <DeleteAssetDialog {...props} onGetUsage={async () => ({ tours: [], stops: [] })} />
@@ -36,7 +39,7 @@ const baseAsset: AssetWithUsage = {
   fileSize: 2048576, // 2MB
   mimeType: 'image/jpeg',
   type: 'image',
-  storagePath: 'assets/mock/museum-photo.jpg',
+  storagePath: mockImageUrl,
   width: 1920,
   height: 1080,
   duration: null,

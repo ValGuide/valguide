@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { AssetWithUsage } from '@valguide/core/features/assets/types'
@@ -6,6 +7,10 @@ import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { type AssetCardComponentProps, AssetsList } from './assets-list'
 import { AssetsListSkeleton } from './assets-list-skeleton'
 import { DeleteAssetDialog } from './delete-asset-dialog'
+
+const mockMuseumEntranceImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
+const mockArtifactDisplayImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
+const mockSculptureCloseupImageUrl = faker.image.urlLoremFlickr({ width: 2560, height: 1440, category: 'art' })
 
 function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
   return <DeleteAssetDialog {...props} onGetUsage={async () => ({ tours: [], stops: [] })} />
@@ -62,7 +67,7 @@ const mockAssets: AssetWithUsage[] = [
     fileSize: 2048576,
     mimeType: 'image/jpeg',
     type: 'image',
-    storagePath: 'assets/mock/museum-entrance.jpg',
+    storagePath: mockMuseumEntranceImageUrl,
     width: 1920,
     height: 1080,
     duration: null,
@@ -80,7 +85,7 @@ const mockAssets: AssetWithUsage[] = [
     fileSize: 3145728,
     mimeType: 'image/jpeg',
     type: 'image',
-    storagePath: 'assets/mock/artifact-display.jpg',
+    storagePath: mockArtifactDisplayImageUrl,
     width: 1920,
     height: 1080,
     duration: null,
@@ -152,7 +157,7 @@ const mockAssets: AssetWithUsage[] = [
     fileSize: 4194304,
     mimeType: 'image/jpeg',
     type: 'image',
-    storagePath: 'assets/mock/sculpture-closeup.jpg',
+    storagePath: mockSculptureCloseupImageUrl,
     width: 2560,
     height: 1440,
     duration: null,
