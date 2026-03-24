@@ -11,6 +11,22 @@ const meta = {
   args: {
     open: true,
   },
+  decorators: [
+    (Story) => (
+      <div className="relative h-screen w-full bg-background">
+        <div className="flex flex-col gap-4 p-8">
+          <div className="h-32 w-full rounded-lg bg-muted" />
+          <div className="grid grid-cols-3 gap-4">
+            <div className="h-48 rounded-lg bg-muted" />
+            <div className="h-48 rounded-lg bg-muted" />
+            <div className="h-48 rounded-lg bg-muted" />
+          </div>
+          <div className="h-24 w-2/3 rounded-lg bg-muted" />
+        </div>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof AssetsGlobalDropOverlay>
 
 export default meta
