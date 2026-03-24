@@ -6,8 +6,10 @@ import type {
 } from '@valguide/core/features/assets/get-assets.fn'
 import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
+import { Checkbox } from '@valguide/ui/components/checkbox'
 import {
   Drawer,
   DrawerContent,
@@ -32,6 +34,7 @@ import { Filter, Image as ImageIcon, LayoutGrid, List, Search, Upload, X } from 
 import type { ComponentType } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AssetDetailsDrawer } from '@/features/assets/components/asset-details-drawer'
+import { BulkDeleteAssetsDialogConnected } from '@/features/assets/components/bulk-delete-assets-dialog-connected'
 import { VirtualizedAssetGrid } from '@/features/assets/components/virtualized-asset-grid'
 import { VirtualizedAssetList } from '@/features/assets/components/virtualized-asset-list'
 import { useAssetUploadSession } from '@/features/assets/upload-session/asset-upload-session-context'
@@ -42,6 +45,8 @@ export type AssetCardComponentProps = {
   onDelete?: (assetId: string) => void
   onPreview?: (asset: AssetWithUsage) => void
   shouldSuppressPreview?: () => boolean
+  isSelected?: boolean
+  onToggleSelected?: (assetId: string, selected: boolean) => void
 }
 
 export type AssetCardComponent = ComponentType<AssetCardComponentProps>
@@ -54,6 +59,8 @@ export type AssetListRowComponentProps = {
   onDelete?: (assetId: string) => void
   onOpenDetails?: (asset: AssetWithUsage) => void
   shouldSuppressOpenDetails?: () => boolean
+  isSelected?: boolean
+  onToggleSelected?: (assetId: string, selected: boolean) => void
 }
 
 export type AssetListRowComponent = ComponentType<AssetListRowComponentProps>
@@ -65,6 +72,7 @@ export type AssetsListProps = {
   isQueryPending?: boolean
   error?: Error | null
   onAssetDeleted?: (assetId: string) => void
+  onAssetsDeleted?: (assetIds: string[]) => Promise<void> | void
   onAssetRenamed?: (assetId: string) => Promise<void> | void
   onLoadMore?: () => void
   onRetry?: () => void
@@ -92,6 +100,7 @@ export function AssetsList({
   isQueryPending = false,
   error = null,
   onAssetDeleted,
+  onAssetsDeleted,
   onAssetRenamed,
   onLoadMore,
   onRetry,
@@ -121,6 +130,8 @@ export function AssetsList({
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [selectedAsset, setSelectedAsset] = useState<AssetWithUsage | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [selectedAssetIds, setSelectedAssetIds] = useState<Set<string>>(new Set())
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false)
   const resultsRootRef = useRef<HTMLDivElement | null>(null)
   const resultsScrollElementRef = useRef<HTMLElement | null>(null)
   const [resultsScrollMargin, setResultsScrollMargin] = useState(0)
@@ -220,6 +231,15 @@ export function AssetsList({
     })
   }, [assets, isControlledMode, searchQuery, sortBy, sortDirection, typeFilter, usageFilter])
 
+  useEffect(() => {
+    const visibleAssetIds = new Set(displayedAssets.map((item) => item.id))
+
+    setSelectedAssetIds((currentSelection) => {
+      const nextSelection = new Set(Array.from(currentSelection).filter((assetId) => visibleAssetIds.has(assetId)))
+      return nextSelection.size === currentSelection.size ? currentSelection : nextSelection
+    })
+  }, [displayedAssets])
+
   const openAssetDetails = (asset: AssetWithUsage) => {
     setSelectedAsset(asset)
     setIsDetailsOpen(true)
@@ -259,6 +279,92 @@ export function AssetsList({
     setTypeFilter('all')
     setUsageFilter('all')
     setSort('createdAt', 'desc')
+  }
+
+  const toggleSelectedAsset = (assetId: string, selected: boolean) => {
+    setSelectedAssetIds((currentSelection) => {
+      const nextSelection = new Set(currentSelection)
+
+      if (selected) {
+        nextSelection.add(assetId)
+      } else {
+        nextSelection.delete(assetId)
+      }
+
+      return nextSelection
+    })
+  }
+
+  const clearSelection = () => {
+    setSelectedAssetIds(new Set())
+  }
+
+  const allVisibleAssetIds = displayedAssets.map((asset) => asset.id)
+  const selectedVisibleCount = allVisibleAssetIds.filter((assetId) => selectedAssetIds.has(assetId)).length
+  const allVisibleSelected = displayedAssets.length > 0 && selectedVisibleCount === displayedAssets.length
+  const someVisibleSelected = selectedVisibleCount > 0 && !allVisibleSelected
+  const selectedCount = selectedAssetIds.size
+  const selectedAssets = displayedAssets
+    .filter((asset) => selectedAssetIds.has(asset.id))
+    .map((asset) => ({ id: asset.id, fileName: asset.fileName }))
+
+  const toggleSelectVisible = (selected: boolean) => {
+    setSelectedAssetIds((currentSelection) => {
+      const nextSelection = new Set(currentSelection)
+
+      for (const assetId of allVisibleAssetIds) {
+        if (selected) {
+          nextSelection.add(assetId)
+        } else {
+          nextSelection.delete(assetId)
+        }
+      }
+
+      return nextSelection
+    })
+  }
+
+  const handleBulkDeleteComplete = async ({
+    deletedAssetIds,
+    blockedAssets,
+    missingAssetIds,
+  }: {
+    deletedAssetIds: string[]
+    blockedAssets: Array<{ assetId: string }>
+    missingAssetIds: string[]
+  }) => {
+    if (deletedAssetIds.length > 0) {
+      await onAssetsDeleted?.(deletedAssetIds)
+    }
+
+    setSelectedAssetIds((currentSelection) => {
+      const nextSelection = new Set(currentSelection)
+
+      for (const assetId of deletedAssetIds) {
+        nextSelection.delete(assetId)
+      }
+
+      for (const assetId of missingAssetIds) {
+        nextSelection.delete(assetId)
+      }
+
+      return nextSelection
+    })
+
+    if (deletedAssetIds.length > 0 && blockedAssets.length === 0 && missingAssetIds.length === 0) {
+      toast.success(t('bulkDelete.result.deletedOnly', { count: deletedAssetIds.length }))
+    } else if (deletedAssetIds.length > 0) {
+      toast.success(
+        t('bulkDelete.result.partial', {
+          deleted: deletedAssetIds.length,
+          blocked: blockedAssets.length + missingAssetIds.length,
+        }),
+      )
+    } else {
+      toast.error(t('bulkDelete.result.noneDeleted'))
+    }
+
+    setIsBulkDeleteOpen(false)
   }
 
   const sortByLabel =
@@ -664,6 +770,23 @@ export function AssetsList({
           </div>
         </div>
 
+        {selectedCount > 0 ? (
+          <div className="sticky top-[8.5rem] z-10 flex items-center justify-between gap-3 rounded-xl border bg-background px-4 py-3">
+            <div className="min-w-0">
+              <p className="text-sm font-medium">{t('bulkDelete.selectionCount', { count: selectedCount })}</p>
+              <p className="text-xs text-muted-foreground">{t('bulkDelete.selectionHint')}</p>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <Button type="button" variant="outline" onClick={clearSelection}>
+                {t('bulkDelete.actions.clearSelection')}
+              </Button>
+              <Button type="button" variant="destructive" onClick={() => setIsBulkDeleteOpen(true)}>
+                {t('bulkDelete.actions.openDialog')}
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
         {displayedAssets.length === 0 ? (
           <Empty className="mt-6 border border-dashed">
             <EmptyHeader>
@@ -713,6 +836,8 @@ export function AssetsList({
                 scrollMargin={resultsScrollMargin}
                 onDelete={onAssetDeleted}
                 onOpenDetails={openAssetDetails}
+                selectedAssetIds={selectedAssetIds}
+                onToggleSelected={toggleSelectedAsset}
                 onLoadMore={onLoadMore}
                 hasMore={hasMore}
                 isFetchingMore={isFetchingMore || isQueryPending}
@@ -728,6 +853,8 @@ export function AssetsList({
                   scrollMargin={resultsScrollMargin}
                   onDelete={onAssetDeleted}
                   onOpenDetails={openAssetDetails}
+                  selectedAssetIds={selectedAssetIds}
+                  onToggleSelected={toggleSelectedAsset}
                   onLoadMore={onLoadMore}
                   hasMore={hasMore}
                   isFetchingMore={isFetchingMore || isQueryPending}
@@ -737,7 +864,11 @@ export function AssetsList({
             ) : (
               <div className="overflow-hidden rounded-xl border">
                 <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
-                  <span />
+                  <Checkbox
+                    aria-label={t('bulkDelete.selectVisible')}
+                    checked={allVisibleSelected ? true : someVisibleSelected ? 'indeterminate' : false}
+                    onCheckedChange={(checked) => toggleSelectVisible(checked === true || checked === 'indeterminate')}
+                  />
                   <span>{t('list.headers.name')}</span>
                   <span>{t('list.headers.type')}</span>
                   <span>{t('list.headers.usage')}</span>
@@ -753,6 +884,8 @@ export function AssetsList({
                   scrollMargin={resultsScrollMargin}
                   onDelete={onAssetDeleted}
                   onOpenDetails={openAssetDetails}
+                  selectedAssetIds={selectedAssetIds}
+                  onToggleSelected={toggleSelectedAsset}
                   onLoadMore={onLoadMore}
                   hasMore={hasMore}
                   isFetchingMore={isFetchingMore || isQueryPending}
@@ -766,43 +899,69 @@ export function AssetsList({
         )}
 
         {isMobile && displayedAssets.length > 0 ? (
-          <div
-            className={
-              hasVisibleUploads
-                ? 'pointer-events-none fixed inset-x-0 bottom-24 z-40 px-4'
-                : 'pointer-events-none fixed inset-x-0 bottom-4 z-40 px-4'
-            }
-          >
-            <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur pointer-events-auto touch-pan-y">
-              <Drawer open={filtersOpen} onOpenChange={setFiltersOpen} modal={false}>
-                <DrawerTrigger asChild>
-                  <Button variant="ghost" className="h-10 justify-between rounded-xl px-4 touch-pan-y">
-                    <span className="inline-flex items-center gap-2">
-                      <Filter className="h-4 w-4" />
-                      {t('list.sortAndFilter')}
-                    </span>
-                    {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader className="text-left">
-                    <DrawerTitle>{t('filter.actions.filters')}</DrawerTitle>
-                    <DrawerDescription>{t('description')}</DrawerDescription>
-                  </DrawerHeader>
-                  <div className="space-y-4 px-4 pb-6">
-                    {renderFilterControls('drawer')}
-                    {activeFilterCount > 0 ? (
-                      <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
-                        {t('filter.actions.clearAll')}
-                      </Button>
-                    ) : null}
+          <>
+            {selectedCount > 0 ? (
+              <div
+                className={
+                  hasVisibleUploads
+                    ? 'pointer-events-none fixed inset-x-0 bottom-40 z-40 px-4'
+                    : 'pointer-events-none fixed inset-x-0 bottom-20 z-40 px-4'
+                }
+              >
+                <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-4 py-3 shadow-lg backdrop-blur pointer-events-auto">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">{t('bulkDelete.selectionCount', { count: selectedCount })}</p>
+                    <p className="text-xs text-muted-foreground">{t('bulkDelete.selectionHint')}</p>
                   </div>
-                </DrawerContent>
-              </Drawer>
-              <div className="h-8 w-px bg-border" />
-              <div className="touch-pan-y">{renderViewToggleControls(true)}</div>
+                  <div className="flex items-center gap-2">
+                    <Button type="button" variant="ghost" size="sm" onClick={clearSelection}>
+                      {t('bulkDelete.actions.clearSelection')}
+                    </Button>
+                    <Button type="button" variant="destructive" size="sm" onClick={() => setIsBulkDeleteOpen(true)}>
+                      {t('bulkDelete.actions.openDialog')}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            <div
+              className={
+                hasVisibleUploads
+                  ? 'pointer-events-none fixed inset-x-0 bottom-24 z-40 px-4'
+                  : 'pointer-events-none fixed inset-x-0 bottom-4 z-40 px-4'
+              }
+            >
+              <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur pointer-events-auto touch-pan-y">
+                <Drawer open={filtersOpen} onOpenChange={setFiltersOpen} modal={false}>
+                  <DrawerTrigger asChild>
+                    <Button variant="ghost" className="h-10 justify-between rounded-xl px-4 touch-pan-y">
+                      <span className="inline-flex items-center gap-2">
+                        <Filter className="h-4 w-4" />
+                        {t('list.sortAndFilter')}
+                      </span>
+                      {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent>
+                    <DrawerHeader className="text-left">
+                      <DrawerTitle>{t('filter.actions.filters')}</DrawerTitle>
+                      <DrawerDescription>{t('description')}</DrawerDescription>
+                    </DrawerHeader>
+                    <div className="space-y-4 px-4 pb-6">
+                      {renderFilterControls('drawer')}
+                      {activeFilterCount > 0 ? (
+                        <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
+                          {t('filter.actions.clearAll')}
+                        </Button>
+                      ) : null}
+                    </div>
+                  </DrawerContent>
+                </Drawer>
+                <div className="h-8 w-px bg-border" />
+                <div className="touch-pan-y">{renderViewToggleControls(true)}</div>
+              </div>
             </div>
-          </div>
+          </>
         ) : null}
       </div>
 
@@ -811,6 +970,12 @@ export function AssetsList({
         open={isDetailsOpen}
         onOpenChange={closeAssetDetails}
         onRename={handleRenameAsset}
+      />
+      <BulkDeleteAssetsDialogConnected
+        open={isBulkDeleteOpen}
+        onOpenChange={setIsBulkDeleteOpen}
+        selectedAssets={selectedAssets}
+        onDeleteComplete={handleBulkDeleteComplete}
       />
     </div>
   )

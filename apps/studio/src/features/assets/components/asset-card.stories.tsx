@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { AssetUsageDetails } from '@valguide/core/features/assets/get-asset-usage.fn'
 import type { AssetWithUsage } from '@valguide/core/features/assets/types'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { DeleteAssetDialog } from './delete-asset-dialog'
@@ -7,7 +8,9 @@ import { DeleteAssetDialog } from './delete-asset-dialog'
 const mockImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
 
 function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
-  return <DeleteAssetDialog {...props} onGetUsage={async () => ({ tours: [], stops: [] })} />
+  return (
+    <DeleteAssetDialog {...props} onGetUsage={async (): Promise<AssetUsageDetails> => ({ tours: [], stops: [] })} />
+  )
 }
 
 const meta = {
@@ -168,11 +171,18 @@ function MockDeleteDialogWithUsage(props: DeleteAssetDialogComponentProps) {
   return (
     <DeleteAssetDialog
       {...props}
-      onGetUsage={async () => ({
-        tours: [{ id: 't1', nanoId: 'tour1', name: 'City Tour', channel: 'cover', locale: 'en' }],
+      onGetUsage={async (): Promise<AssetUsageDetails> => ({
+        tours: [{ id: 't1', nanoId: 'tour1', name: 'City Tour', channel: 'cover', locale: 'en', scope: 'published' }],
         stops: [
-          { id: 's1', nanoId: 'stop1', name: 'Museum Entrance', channel: 'media', locale: 'en' },
-          { id: 's2', nanoId: 'stop2', name: 'Art Gallery', channel: 'media', locale: null },
+          {
+            id: 's1',
+            nanoId: 'stop1',
+            name: 'Museum Entrance',
+            channel: 'media',
+            locale: 'en',
+            scope: 'draftAndPublished',
+          },
+          { id: 's2', nanoId: 'stop2', name: 'Art Gallery', channel: 'media', locale: null, scope: 'draft' },
         ],
       })}
     />

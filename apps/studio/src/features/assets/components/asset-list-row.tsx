@@ -1,3 +1,4 @@
+import { ASSET_IN_USE_ERROR_CODE } from '@valguide/core/features/assets/delete-asset-errors'
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import { getAssetImageUrl, getAssetUrl } from '@valguide/core/features/assets/image-url'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -26,6 +27,8 @@ export type AssetListRowProps = {
   onDelete?: (assetId: string) => void
   onOpenDetails?: (asset: AssetWithUsage) => void
   shouldSuppressOpenDetails?: () => boolean
+  isSelected?: boolean
+  onToggleSelected?: (assetId: string, selected: boolean) => void
   onDeleteAction?: (assetId: string) => Promise<void>
   DeleteDialog?: DeleteAssetDialogComponent
 }
@@ -36,6 +39,8 @@ export function AssetListRow({
   onDelete,
   onOpenDetails,
   shouldSuppressOpenDetails,
+  isSelected = false,
+  onToggleSelected,
   onDeleteAction,
   DeleteDialog,
 }: AssetListRowProps) {
@@ -53,7 +58,11 @@ export function AssetListRow({
       onDelete?.(asset.id)
     } catch (error) {
       console.error('Failed to delete asset:', error)
-      toast.error(t('card.deleteError'))
+      toast.error(
+        error instanceof Error && error.message === ASSET_IN_USE_ERROR_CODE
+          ? t('card.deleteBlocked')
+          : t('card.deleteError'),
+      )
     } finally {
       setIsDeleting(false)
       setShowDeleteDialog(false)
@@ -141,7 +150,12 @@ export function AssetListRow({
     return (
       <>
         <div className="grid grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] items-center gap-3 border-b px-2 py-3">
-          <Checkbox aria-label={t('list.selectAsset')} />
+          <Checkbox
+            aria-label={t('list.selectAsset')}
+            checked={isSelected}
+            onClick={(event) => event.stopPropagation()}
+            onCheckedChange={(checked) => onToggleSelected?.(asset.id, checked === true)}
+          />
           <button
             type="button"
             className="col-span-2 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 text-left touch-pan-y"
@@ -195,7 +209,12 @@ export function AssetListRow({
   return (
     <>
       <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2.5">
-        <Checkbox aria-label={t('list.selectAsset')} />
+        <Checkbox
+          aria-label={t('list.selectAsset')}
+          checked={isSelected}
+          onClick={(event) => event.stopPropagation()}
+          onCheckedChange={(checked) => onToggleSelected?.(asset.id, checked === true)}
+        />
         <button
           type="button"
           className="flex min-w-0 items-center gap-3 text-left"

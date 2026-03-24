@@ -14,6 +14,8 @@ type VirtualizedAssetListProps = {
   scrollMargin: number
   onDelete?: (assetId: string) => void
   onOpenDetails: (asset: AssetWithUsage) => void
+  selectedAssetIds?: Set<string>
+  onToggleSelected?: (assetId: string, selected: boolean) => void
   onLoadMore?: () => void
   hasMore?: boolean
   isFetchingMore?: boolean
@@ -28,6 +30,8 @@ export function VirtualizedAssetList({
   scrollMargin,
   onDelete,
   onOpenDetails,
+  selectedAssetIds,
+  onToggleSelected,
   onLoadMore,
   hasMore = false,
   isFetchingMore = false,
@@ -89,6 +93,8 @@ export function VirtualizedAssetList({
               onDelete={onDelete}
               onOpenDetails={onOpenDetails}
               shouldSuppressOpenDetails={shouldSuppressOpenDetails}
+              isSelected={selectedAssetIds?.has(asset.id)}
+              onToggleSelected={onToggleSelected}
             />
           </div>
         )

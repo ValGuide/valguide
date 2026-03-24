@@ -16,6 +16,8 @@ type VirtualizedAssetGridProps = {
   scrollMargin: number
   onDelete?: (assetId: string) => void
   onOpenDetails: (asset: AssetWithUsage) => void
+  selectedAssetIds?: Set<string>
+  onToggleSelected?: (assetId: string, selected: boolean) => void
   onLoadMore?: () => void
   hasMore?: boolean
   isFetchingMore?: boolean
@@ -47,6 +49,8 @@ export function VirtualizedAssetGrid({
   scrollMargin,
   onDelete,
   onOpenDetails,
+  selectedAssetIds,
+  onToggleSelected,
   onLoadMore,
   hasMore = false,
   isFetchingMore = false,
@@ -133,6 +137,8 @@ export function VirtualizedAssetGrid({
                 onDelete={onDelete}
                 onPreview={onOpenDetails}
                 shouldSuppressPreview={shouldSuppressPreview}
+                isSelected={selectedAssetIds?.has(asset.id)}
+                onToggleSelected={onToggleSelected}
               />
             ))}
           </div>

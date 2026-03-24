@@ -743,6 +743,7 @@
       "deleting": "Vegn stizzà...",
       "deleteConfirm": "Vulais vus propi stizzar quest asset?",
       "deleteSuccess": "Asset stizzà",
+      "deleteBlocked": "L'asset vegn anc utilisà",
       "deleteError": "Errur cun stizzar l'asset",
       "details": "Detagls",
       "preview": "Prevista",
@@ -759,12 +760,50 @@
     "deleteWithUsage": {
       "title": "Stizzar l'asset",
       "warningTitle": "Quest asset vegn utilisà",
+      "blockedDescription": "\"{fileName}\" è anc collià cun novitads en sboz u novitads publitgadas.",
       "description": "\"{fileName}\" vegn utilisà en:",
       "toursSection": "Turas",
       "stopsSection": "Stops",
       "warning": "Stizzar vegn a allontanar quest asset da tut quests lieus permanentamain.",
+      "blockedWarning": "Allontanai l'emprim quests colliaments e stizzai lura l'asset da la biblioteca.",
+      "close": "Serrar",
+      "scope": {
+        "draft": "sboz",
+        "published": "publitgà",
+        "draftAndPublished": "sboz + publitgà"
+      },
       "confirmButton": "Stizzar tuttina",
       "loadingUsage": "Controllar l'utilisaziun..."
+    },
+    "bulkDelete": {
+      "title": "Stizzar {count, plural, one {# asset tschernì} other {# assets tschernids}}",
+      "loadingPreview": "Controllar tge assets tschernids pon vegnir stizzads...",
+      "selectionCount": "{count, plural, one {# asset tschernì} other {# assets tschernids}}",
+      "selectionHint": "Mo assets nunutilisads pon vegnir stizzads cun acziuns en massa.",
+      "selectVisible": "Tscherner assets visibles",
+      "descriptionDeletable": "{count, plural, one {# asset tschernì è nunutilisà e po vegnir stizzà.} other {# assets tschernids èn nunutilisads e pon vegnir stizzads.}}",
+      "descriptionBlockedOnly": "Nagin dals assets tschernids po vegnir stizzà, perquai ch'els vegnan anc utilisads en sbozs u novitads publitgadas.",
+      "blockedTitle": "Assets bloccads",
+      "blockedBadge": "Utilisà",
+      "blockedUsageSummary": "{tours, plural, =0 {} one {# tura} other {# turas}}{stops, plural, =0 {} one {{tours, plural, =0 {} other {, }}# stop} other {{tours, plural, =0 {} other {, }}# stops}}",
+      "missingAssets": "{count, plural, one {# asset tschernì n'è betg pli disponibel.} other {# assets tschernids n'èn betg pli disponibels.}}",
+      "summary": {
+        "selected": "Tschernì",
+        "deletable": "Stizzabel",
+        "blocked": "Blocà"
+      },
+      "actions": {
+        "cancel": "Interrumper",
+        "deleting": "Vegn stizzà...",
+        "deleteEligible": "Stizzar {count, plural, one {# asset nunutilisà} other {# assets nunutilisads}}",
+        "clearSelection": "Stizzar tscherna",
+        "openDialog": "Stizzar tschernids"
+      },
+      "result": {
+        "deletedOnly": "{count, plural, one {# asset stizzà} other {# assets stizzads}}",
+        "partial": "{deleted, plural, one {# asset stizzà} other {# assets stizzads}}, {blocked, plural, one {# bloccà} other {# bloccads}}",
+        "noneDeleted": "Nagins assets tschernids han pudì vegnir stizzads"
+      }
     },
     "mediaPicker": {
       "dropzoneDesktop": "Tira qua u clicca per transferir",

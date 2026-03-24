@@ -743,6 +743,7 @@
       "deleting": "Deleting...",
       "deleteConfirm": "Are you sure you want to delete this asset?",
       "deleteSuccess": "Asset deleted",
+      "deleteBlocked": "Asset is still in use",
       "deleteError": "Failed to delete asset",
       "details": "Details",
       "preview": "Preview",
@@ -759,12 +760,50 @@
     "deleteWithUsage": {
       "title": "Delete Asset",
       "warningTitle": "This asset is in use",
+      "blockedDescription": "\"{fileName}\" is still linked to draft or published content.",
       "description": "\"{fileName}\" is used in:",
       "toursSection": "Tours",
       "stopsSection": "Stops",
       "warning": "Deleting will remove this asset from all these locations permanently.",
+      "blockedWarning": "Remove these references first, then delete the asset from the library.",
+      "close": "Close",
+      "scope": {
+        "draft": "draft",
+        "published": "published",
+        "draftAndPublished": "draft + published"
+      },
       "confirmButton": "Delete Anyway",
       "loadingUsage": "Checking usage..."
+    },
+    "bulkDelete": {
+      "title": "Delete {count, plural, one {# selected asset} other {# selected assets}}",
+      "loadingPreview": "Checking which selected assets can be deleted...",
+      "selectionCount": "{count, plural, one {# asset selected} other {# assets selected}}",
+      "selectionHint": "Only unused assets can be deleted from bulk actions.",
+      "selectVisible": "Select visible assets",
+      "descriptionDeletable": "{count, plural, one {# selected asset is unused and can be deleted.} other {# selected assets are unused and can be deleted.}}",
+      "descriptionBlockedOnly": "None of the selected assets can be deleted yet because they are still used in draft or published content.",
+      "blockedTitle": "Blocked assets",
+      "blockedBadge": "In use",
+      "blockedUsageSummary": "{tours, plural, =0 {} one {# tour} other {# tours}}{stops, plural, =0 {} one {{tours, plural, =0 {} other {, }}# stop} other {{tours, plural, =0 {} other {, }}# stops}}",
+      "missingAssets": "{count, plural, one {# selected asset is no longer available.} other {# selected assets are no longer available.}}",
+      "summary": {
+        "selected": "Selected",
+        "deletable": "Deletable",
+        "blocked": "Blocked"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "deleting": "Deleting...",
+        "deleteEligible": "Delete {count, plural, one {# unused asset} other {# unused assets}}",
+        "clearSelection": "Clear selection",
+        "openDialog": "Delete selected"
+      },
+      "result": {
+        "deletedOnly": "{count, plural, one {# asset deleted} other {# assets deleted}}",
+        "partial": "{deleted, plural, one {# asset deleted} other {# assets deleted}}, {blocked, plural, one {# blocked} other {# blocked}}",
+        "noneDeleted": "No selected assets could be deleted"
+      }
     },
     "mediaPicker": {
       "dropzoneDesktop": "Drag & drop or click to upload",

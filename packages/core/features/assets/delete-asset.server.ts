@@ -2,6 +2,8 @@ import { eq } from 'drizzle-orm'
 import { NotFoundError } from '../auth/authorization'
 import { db } from '../db'
 import { deleteObject } from '../storage/upload.server'
+import { getAssetDeletionEligibility } from './asset-deletion-eligibility.server'
+import { ASSET_IN_USE_ERROR_CODE } from './delete-asset-errors'
 import { asset } from './schema'
 
 // =============================================================================
@@ -17,9 +19,13 @@ export type DeleteAssetResult = {
 // =============================================================================
 
 export async function deleteAsset(assetId: string): Promise<DeleteAssetResult> {
-  const assetData = await db.query.asset.findFirst({
-    where: eq(asset.id, assetId),
-  })
+  const [eligibility] = await getAssetDeletionEligibility([assetId])
+
+  if (eligibility && !eligibility.deletable) {
+    throw new Error(ASSET_IN_USE_ERROR_CODE)
+  }
+
+  const assetData = await db.query.asset.findFirst({ where: eq(asset.id, assetId) })
 
   if (!assetData) {
     throw new NotFoundError('Asset')

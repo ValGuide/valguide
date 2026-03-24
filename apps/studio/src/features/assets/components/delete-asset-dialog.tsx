@@ -59,6 +59,10 @@ export function DeleteAssetDialog({
 
   const hasUsage = usage && (usage.tours.length > 0 || usage.stops.length > 0)
 
+  const scopeLabel = (scope: 'draft' | 'published' | 'draftAndPublished') => {
+    return t(`deleteWithUsage.scope.${scope}`)
+  }
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -76,7 +80,7 @@ export function DeleteAssetDialog({
                 </div>
               ) : hasUsage ? (
                 <>
-                  <p>{t('deleteWithUsage.description', { fileName })}</p>
+                  <p>{t('deleteWithUsage.blockedDescription', { fileName })}</p>
 
                   {usage.tours.length > 0 && (
                     <div>
@@ -93,7 +97,9 @@ export function DeleteAssetDialog({
                             >
                               {tour.name}
                             </Link>
-                            <span className="text-muted-foreground">({tour.channel})</span>
+                            <span className="text-muted-foreground">
+                              ({scopeLabel(tour.scope)}, {tour.channel})
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -106,15 +112,25 @@ export function DeleteAssetDialog({
                       <ul className="mt-1 list-inside list-disc space-y-1 text-sm">
                         {usage.stops.map((stop) => (
                           <li key={stop.id}>
-                            <span className="text-foreground">{stop.name}</span>
-                            <span className="text-muted-foreground">({stop.channel})</span>
+                            <Link
+                              to="/stops/$nanoId/edit"
+                              params={{ nanoId: stop.nanoId }}
+                              preload="intent"
+                              className="text-primary hover:underline"
+                              onClick={() => onOpenChange(false)}
+                            >
+                              {stop.name}
+                            </Link>
+                            <span className="text-muted-foreground">
+                              ({scopeLabel(stop.scope)}, {stop.channel})
+                            </span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  <p className="text-destructive">{t('deleteWithUsage.warning')}</p>
+                  <p className="text-destructive">{t('deleteWithUsage.blockedWarning')}</p>
                 </>
               ) : (
                 <p>{t('card.deleteConfirm')}</p>
@@ -123,14 +139,18 @@ export function DeleteAssetDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>{t('card.cancel')}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirmDelete}
-            disabled={isDeleting || isLoadingUsage}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {isDeleting ? t('card.deleting') : hasUsage ? t('deleteWithUsage.confirmButton') : t('card.delete')}
-          </AlertDialogAction>
+          <AlertDialogCancel disabled={isDeleting}>
+            {hasUsage ? t('deleteWithUsage.close') : t('card.cancel')}
+          </AlertDialogCancel>
+          {!hasUsage ? (
+            <AlertDialogAction
+              onClick={onConfirmDelete}
+              disabled={isDeleting || isLoadingUsage}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? t('card.deleting') : t('card.delete')}
+            </AlertDialogAction>
+          ) : null}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

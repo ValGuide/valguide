@@ -743,6 +743,7 @@
       "deleting": "Wird gelöscht...",
       "deleteConfirm": "Möchten Sie dieses Asset wirklich löschen?",
       "deleteSuccess": "Asset gelöscht",
+      "deleteBlocked": "Asset wird noch verwendet",
       "deleteError": "Asset konnte nicht gelöscht werden",
       "details": "Details",
       "preview": "Vorschau",
@@ -759,12 +760,50 @@
     "deleteWithUsage": {
       "title": "Asset löschen",
       "warningTitle": "Dieses Asset wird verwendet",
+      "blockedDescription": "\"{fileName}\" ist noch mit Entwurfs- oder veröffentlichten Inhalten verknüpft.",
       "description": "\"{fileName}\" wird verwendet in:",
       "toursSection": "Touren",
       "stopsSection": "Stopps",
       "warning": "Das Löschen entfernt dieses Asset dauerhaft von allen diesen Orten.",
+      "blockedWarning": "Entfernen Sie zuerst diese Verwendungen und löschen Sie das Asset erst danach aus der Bibliothek.",
+      "close": "Schließen",
+      "scope": {
+        "draft": "Entwurf",
+        "published": "veröffentlicht",
+        "draftAndPublished": "Entwurf + veröffentlicht"
+      },
       "confirmButton": "Trotzdem löschen",
       "loadingUsage": "Verwendung wird geprüft..."
+    },
+    "bulkDelete": {
+      "title": "{count, plural, one {# ausgewähltes Asset löschen} other {# ausgewählte Assets löschen}}",
+      "loadingPreview": "Es wird geprüft, welche ausgewählten Assets gelöscht werden können...",
+      "selectionCount": "{count, plural, one {# Asset ausgewählt} other {# Assets ausgewählt}}",
+      "selectionHint": "Über Sammelaktionen können nur ungenutzte Assets gelöscht werden.",
+      "selectVisible": "Sichtbare Assets auswählen",
+      "descriptionDeletable": "{count, plural, one {# ausgewähltes Asset ist ungenutzt und kann gelöscht werden.} other {# ausgewählte Assets sind ungenutzt und können gelöscht werden.}}",
+      "descriptionBlockedOnly": "Keines der ausgewählten Assets kann gelöscht werden, weil sie noch in Entwürfen oder veröffentlichten Inhalten verwendet werden.",
+      "blockedTitle": "Blockierte Assets",
+      "blockedBadge": "Verwendet",
+      "blockedUsageSummary": "{tours, plural, =0 {} one {# Tour} other {# Touren}}{stops, plural, =0 {} one {{tours, plural, =0 {} other {, }}# Stopp} other {{tours, plural, =0 {} other {, }}# Stopps}}",
+      "missingAssets": "{count, plural, one {# ausgewähltes Asset ist nicht mehr verfügbar.} other {# ausgewählte Assets sind nicht mehr verfügbar.}}",
+      "summary": {
+        "selected": "Ausgewählt",
+        "deletable": "Löschbar",
+        "blocked": "Blockiert"
+      },
+      "actions": {
+        "cancel": "Abbrechen",
+        "deleting": "Wird gelöscht...",
+        "deleteEligible": "{count, plural, one {# ungenutztes Asset löschen} other {# ungenutzte Assets löschen}}",
+        "clearSelection": "Auswahl aufheben",
+        "openDialog": "Ausgewählte löschen"
+      },
+      "result": {
+        "deletedOnly": "{count, plural, one {# Asset gelöscht} other {# Assets gelöscht}}",
+        "partial": "{deleted, plural, one {# Asset gelöscht} other {# Assets gelöscht}}, {blocked, plural, one {# blockiert} other {# blockiert}}",
+        "noneDeleted": "Keine ausgewählten Assets konnten gelöscht werden"
+      }
     },
     "mediaPicker": {
       "dropzoneDesktop": "Hierher ziehen oder klicken zum Hochladen",

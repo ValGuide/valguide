@@ -175,6 +175,10 @@ function AssetsContent() {
     await queryClient.invalidateQueries({ queryKey: ['stops'] })
   }
 
+  const handleAssetsDeleted = async (_assetIds: string[]) => {
+    await handleAssetDeleted('')
+  }
+
   const handleAssetRenamed = async (_assetId: string) => {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
     await queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })
@@ -193,6 +197,7 @@ function AssetsContent() {
       error={error}
       onLoadMore={() => void fetchNextPage()}
       onAssetDeleted={handleAssetDeleted}
+      onAssetsDeleted={handleAssetsDeleted}
       onAssetRenamed={handleAssetRenamed}
       onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })}
       typeFilter={typeFilter}

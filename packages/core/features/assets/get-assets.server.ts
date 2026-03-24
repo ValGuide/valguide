@@ -1,20 +1,6 @@
-import {
-  and,
-  asc,
-  countDistinct,
-  desc,
-  eq,
-  exists,
-  getTableColumns,
-  gt,
-  ilike,
-  lt,
-  notExists,
-  or,
-  sql,
-} from 'drizzle-orm'
+import { and, asc, desc, eq, exists, getTableColumns, gt, ilike, lt, notExists, or, sql } from 'drizzle-orm'
 import { db } from '../db'
-import { stopAsset, tourAsset } from '../tours/schema'
+import { stopAsset, stopAssetDraft, tourAsset, tourAssetDraft } from '../tours/schema'
 import { type AssetType, asset } from './schema'
 
 // =============================================================================
@@ -150,53 +136,69 @@ function getUsageCondition(usage?: AssetUsageFilter) {
   const hasTourUsage = exists(
     db.select({ assetId: tourAsset.assetId }).from(tourAsset).where(eq(tourAsset.assetId, asset.id)),
   )
+  const hasDraftTourUsage = exists(
+    db.select({ assetId: tourAssetDraft.assetId }).from(tourAssetDraft).where(eq(tourAssetDraft.assetId, asset.id)),
+  )
   const hasStopUsage = exists(
     db.select({ assetId: stopAsset.assetId }).from(stopAsset).where(eq(stopAsset.assetId, asset.id)),
   )
+  const hasDraftStopUsage = exists(
+    db.select({ assetId: stopAssetDraft.assetId }).from(stopAssetDraft).where(eq(stopAssetDraft.assetId, asset.id)),
+  )
 
   if (usage === 'used') {
-    return or(hasTourUsage, hasStopUsage)
+    return or(hasTourUsage, hasDraftTourUsage, hasStopUsage, hasDraftStopUsage)
   }
 
   const noTourUsage = notExists(
     db.select({ assetId: tourAsset.assetId }).from(tourAsset).where(eq(tourAsset.assetId, asset.id)),
   )
+  const noDraftTourUsage = notExists(
+    db.select({ assetId: tourAssetDraft.assetId }).from(tourAssetDraft).where(eq(tourAssetDraft.assetId, asset.id)),
+  )
   const noStopUsage = notExists(
     db.select({ assetId: stopAsset.assetId }).from(stopAsset).where(eq(stopAsset.assetId, asset.id)),
   )
-  return and(noTourUsage, noStopUsage)
+  const noDraftStopUsage = notExists(
+    db.select({ assetId: stopAssetDraft.assetId }).from(stopAssetDraft).where(eq(stopAssetDraft.assetId, asset.id)),
+  )
+  return and(noTourUsage, noDraftTourUsage, noStopUsage, noDraftStopUsage)
+}
+
+function getTourUsageCountExpression() {
+  return sql<number>`(
+    SELECT COUNT(DISTINCT usage.tour_id)::int
+    FROM (
+      SELECT ${tourAsset.assetId} AS asset_id, ${tourAsset.tourId} AS tour_id FROM ${tourAsset}
+      UNION
+      SELECT ${tourAssetDraft.assetId} AS asset_id, ${tourAssetDraft.tourId} AS tour_id FROM ${tourAssetDraft}
+    ) AS usage
+    WHERE usage.asset_id = ${asset.id}
+  )`
+}
+
+function getStopUsageCountExpression() {
+  return sql<number>`(
+    SELECT COUNT(DISTINCT usage.stop_id)::int
+    FROM (
+      SELECT ${stopAsset.assetId} AS asset_id, ${stopAsset.stopId} AS stop_id FROM ${stopAsset}
+      UNION
+      SELECT ${stopAssetDraft.assetId} AS asset_id, ${stopAssetDraft.stopId} AS stop_id FROM ${stopAssetDraft}
+    ) AS usage
+    WHERE usage.asset_id = ${asset.id}
+  )`
 }
 
 function getUsageSortExpression() {
-  const tourCountSq = db
-    .select({ count: countDistinct(tourAsset.tourId) })
-    .from(tourAsset)
-    .where(eq(tourAsset.assetId, asset.id))
-
-  const stopCountSq = db
-    .select({ count: countDistinct(stopAsset.stopId) })
-    .from(stopAsset)
-    .where(eq(stopAsset.assetId, asset.id))
-
-  return sql<number>`COALESCE(${tourCountSq}, 0) + COALESCE(${stopCountSq}, 0)`
+  return sql<number>`${getTourUsageCountExpression()} + ${getStopUsageCountExpression()}`
 }
 
 function buildAssetSelectQuery(sortBy: AssetSortBy, sortDirection: AssetSortDirection) {
-  const tourCountSq = db
-    .select({ count: countDistinct(tourAsset.tourId) })
-    .from(tourAsset)
-    .where(eq(tourAsset.assetId, asset.id))
-
-  const stopCountSq = db
-    .select({ count: countDistinct(stopAsset.stopId) })
-    .from(stopAsset)
-    .where(eq(stopAsset.assetId, asset.id))
-
   const query = db
     .select({
       ...getTableColumns(asset),
-      tourCount: sql<number>`COALESCE(${tourCountSq}, 0)`.as('tour_count'),
-      stopCount: sql<number>`COALESCE(${stopCountSq}, 0)`.as('stop_count'),
+      tourCount: getTourUsageCountExpression().as('tour_count'),
+      stopCount: getStopUsageCountExpression().as('stop_count'),
     })
     .from(asset)
 

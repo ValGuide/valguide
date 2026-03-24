@@ -1,3 +1,4 @@
+import { ASSET_IN_USE_ERROR_CODE } from '@valguide/core/features/assets/delete-asset-errors'
 import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.fn'
 import { getAssetImageUrl, getAssetUrl } from '@valguide/core/features/assets/image-url'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -5,6 +6,7 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
+import { Checkbox } from '@valguide/ui/components/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +36,8 @@ export type AssetCardProps = {
   onDelete?: (assetId: string) => void
   onPreview?: (asset: AssetWithUsage) => void
   shouldSuppressPreview?: () => boolean
+  isSelected?: boolean
+  onToggleSelected?: (assetId: string, selected: boolean) => void
   onDeleteAction?: (assetId: string) => Promise<void>
   DeleteDialog?: DeleteAssetDialogComponent
 }
@@ -43,6 +47,8 @@ export function AssetCard({
   onDelete,
   onPreview,
   shouldSuppressPreview,
+  isSelected = false,
+  onToggleSelected,
   onDeleteAction,
   DeleteDialog,
 }: AssetCardProps) {
@@ -60,7 +66,11 @@ export function AssetCard({
       onDelete?.(asset.id)
     } catch (error) {
       console.error('Failed to delete asset:', error)
-      toast.error(t('card.deleteError'))
+      toast.error(
+        error instanceof Error && error.message === ASSET_IN_USE_ERROR_CODE
+          ? t('card.deleteBlocked')
+          : t('card.deleteError'),
+      )
     } finally {
       setIsDeleting(false)
       setShowDeleteDialog(false)
@@ -143,9 +153,17 @@ export function AssetCard({
     <>
       <Card className="overflow-hidden transition-all hover:shadow-md">
         <CardContent className="p-4">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <Checkbox
+              aria-label={t('list.selectAsset')}
+              checked={isSelected}
+              onClick={(event) => event.stopPropagation()}
+              onCheckedChange={(checked) => onToggleSelected?.(asset.id, checked === true)}
+            />
+          </div>
           <button
             type="button"
-            className="relative mb-3 flex h-48 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-muted touch-pan-y"
+            className="relative flex h-48 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-muted touch-pan-y"
             onClick={handlePreview}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -166,7 +184,7 @@ export function AssetCard({
             )}
           </button>
 
-          <div className="space-y-2">
+          <div className="mt-3 space-y-2">
             <div className="flex items-start justify-between gap-2">
               <h3 className="line-clamp-2 text-sm font-medium" title={asset.fileName}>
                 {asset.fileName}
