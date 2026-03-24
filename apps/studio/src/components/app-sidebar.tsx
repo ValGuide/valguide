@@ -90,6 +90,8 @@ export function AppSidebar({
     return pathnameWithoutLocale.startsWith(path)
   }
 
+  const isExactPath = (path: string) => pathnameWithoutLocale === path || pathnameWithoutLocale === `${path}/`
+
   // Helper to create nav items with linkOptions
   const createNavItems = <T extends { title: string; path: string; icon: typeof BookOpen }>(
     items: T[],
@@ -164,7 +166,16 @@ export function AppSidebar({
               {contentItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
+                    <Link
+                      {...item.linkOptions}
+                      preload="intent"
+                      onClick={(event) => {
+                        if (isExactPath(item.linkOptions.to as string)) {
+                          event.preventDefault()
+                          setOpenMobile(false)
+                        }
+                      }}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -180,7 +191,16 @@ export function AppSidebar({
               {performanceItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
+                    <Link
+                      {...item.linkOptions}
+                      preload="intent"
+                      onClick={(event) => {
+                        if (isExactPath(item.linkOptions.to as string)) {
+                          event.preventDefault()
+                          setOpenMobile(false)
+                        }
+                      }}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -196,7 +216,16 @@ export function AppSidebar({
               {libraryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
+                    <Link
+                      {...item.linkOptions}
+                      preload="intent"
+                      onClick={(event) => {
+                        if (isExactPath(item.linkOptions.to as string)) {
+                          event.preventDefault()
+                          setOpenMobile(false)
+                        }
+                      }}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -212,7 +241,16 @@ export function AppSidebar({
               {settingsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link {...item.linkOptions} preload="intent" onClick={(e) => item.isActive && e.preventDefault()}>
+                    <Link
+                      {...item.linkOptions}
+                      preload="intent"
+                      onClick={(event) => {
+                        if (isExactPath(item.linkOptions.to as string)) {
+                          event.preventDefault()
+                          setOpenMobile(false)
+                        }
+                      }}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
