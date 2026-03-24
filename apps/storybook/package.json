@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "storybook dev -p 6006 --no-open",
+    "dev": "storybook dev -p 6006 --host 0.0.0.0 --no-open",
     "build": "storybook build",
     "deploy": "pnpm build && wrangler deploy",
     "deploy:dev": "pnpm build && wrangler deploy --env dev",

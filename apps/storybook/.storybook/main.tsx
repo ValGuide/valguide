@@ -46,6 +46,7 @@ const config: StorybookConfig = {
 
   core: {
     disableTelemetry: true,
+    allowedHosts: ['storybook.local.dev'],
   },
 
   async viteFinal(config) {
@@ -67,7 +68,8 @@ const config: StorybookConfig = {
 
     return mergeConfig(config, {
       server: {
-        allowedHosts: true,
+        host: '0.0.0.0',
+        allowedHosts: ['storybook.local.dev'],
         hmr: {
           protocol: 'wss',
           host: 'storybook.local.dev',

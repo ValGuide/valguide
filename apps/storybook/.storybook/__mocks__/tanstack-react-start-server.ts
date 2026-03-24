@@ -45,5 +45,20 @@ export function deleteCookie(name: string): void {
 
 export const getEvent = () => null
 export const getRequestHeader = () => undefined
+export function getRequestHeaders(): Headers {
+  if (typeof window === 'undefined') {
+    return new Headers()
+  }
+
+  return new Headers({ host: window.location.host })
+}
+
+export function getRequest(): Request | null {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  return new Request(window.location.href, { headers: getRequestHeaders() })
+}
 export const getWebRequest = () => null
 export const setResponseStatus = () => {}
