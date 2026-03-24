@@ -1,13 +1,9 @@
 import { renameAssetFn } from '@valguide/core/features/assets/rename-asset.fn'
 import { AssetCardConnected } from './asset-card-connected'
 import { AssetListRowConnected } from './asset-list-row-connected'
-import { AssetUploadInlineConnected } from './asset-upload-inline-connected'
 import { AssetsList, type AssetsListProps } from './assets-list'
 
-type AssetsListConnectedProps = Omit<
-  AssetsListProps,
-  'AssetCard' | 'AssetListRow' | 'UploadInline' | 'onRenameAssetAction'
->
+type AssetsListConnectedProps = Omit<AssetsListProps, 'AssetCard' | 'AssetListRow' | 'onRenameAssetAction'>
 
 export function AssetsListConnected(props: AssetsListConnectedProps) {
   const handleRenameAssetAction: NonNullable<AssetsListProps['onRenameAssetAction']> = async (data) =>
@@ -18,7 +14,6 @@ export function AssetsListConnected(props: AssetsListConnectedProps) {
       {...props}
       AssetCard={AssetCardConnected}
       AssetListRow={AssetListRowConnected}
-      UploadInline={AssetUploadInlineConnected}
       onRenameAssetAction={handleRenameAssetAction}
     />
   )

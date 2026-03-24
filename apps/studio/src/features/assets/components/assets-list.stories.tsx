@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { AssetWithUsage } from '@valguide/core/features/assets/types'
+import { AssetUploadSessionProvider } from '../upload-session/asset-upload-session'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { type AssetCardComponentProps, AssetsList } from './assets-list'
 import { AssetsListSkeleton } from './assets-list-skeleton'
@@ -22,13 +24,7 @@ function MockAssetCard({ asset, onDelete }: AssetCardComponentProps) {
   )
 }
 
-function MockUploadInline() {
-  return (
-    <div className="flex h-48 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50">
-      <p className="text-muted-foreground">Upload component (mocked for Storybook)</p>
-    </div>
-  )
-}
+const queryClient = new QueryClient()
 
 const meta = {
   title: 'Assets/AssetsList',
@@ -39,12 +35,19 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     onAssetDeleted: { action: 'asset-deleted' },
-    onUploadComplete: { action: 'upload-complete' },
   },
+  decorators: [
+    (Story) => (
+      <QueryClientProvider client={queryClient}>
+        <AssetUploadSessionProvider>
+          <Story />
+        </AssetUploadSessionProvider>
+      </QueryClientProvider>
+    ),
+  ],
   args: {
     assets: [],
     AssetCard: MockAssetCard,
-    UploadInline: MockUploadInline,
   },
 } satisfies Meta<typeof AssetsList>
 
@@ -165,42 +168,32 @@ const mockAssets: AssetWithUsage[] = [
 export const Default: Story = {
   args: {
     assets: mockAssets,
-    locale: 'en',
-    organizationId: 'org-123',
   },
 }
 
-export const Empty: Story = { args: { assets: [], locale: 'en', organizationId: 'org-123' } }
+export const Empty: Story = { args: { assets: [] } }
 
 export const ErrorState: Story = {
   args: {
     error: new globalThis.Error('Failed to load assets from server'),
-    locale: 'en',
-    organizationId: 'org-123',
   },
 }
 
 export const OnlyImages: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'image'),
-    locale: 'en',
-    organizationId: 'org-123',
   },
 }
 
 export const OnlyAudio: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'audio'),
-    locale: 'en',
-    organizationId: 'org-123',
   },
 }
 
 export const OnlyVideo: Story = {
   args: {
     assets: mockAssets.filter((a) => a.type === 'video'),
-    locale: 'en',
-    organizationId: 'org-123',
   },
 }
 
@@ -211,8 +204,6 @@ export const ManyAssets: Story = {
       id: `${asset.id}-${i}`,
       nanoId: `${asset.nanoId}-${i}`,
     })),
-    locale: 'en',
-    organizationId: 'org-123',
   },
 }
 

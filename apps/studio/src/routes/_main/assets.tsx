@@ -5,7 +5,6 @@ import type { AssetType } from '@valguide/core/features/assets/types'
 import { useEffect, useState } from 'react'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
 import { AssetListRowConnected } from '@/features/assets/components/asset-list-row-connected.tsx'
-import { AssetUploadInlineConnected } from '@/features/assets/components/asset-upload-inline-connected'
 import { AssetsList } from '@/features/assets/components/assets-list.tsx'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
 import { assetsInfiniteQueryOptions } from '@/features/assets/query-options'
@@ -176,11 +175,6 @@ function AssetsContent() {
     await queryClient.invalidateQueries({ queryKey: ['stops'] })
   }
 
-  const handleUploadComplete = async () => {
-    await queryClient.invalidateQueries({ queryKey: ['assets'] })
-    await queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })
-  }
-
   const handleAssetRenamed = async (_assetId: string) => {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
     await queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })
@@ -192,7 +186,6 @@ function AssetsContent() {
 
   return organizationId ? (
     <AssetsList
-      organizationId={organizationId}
       assets={assets}
       hasMore={hasNextPage}
       isFetchingMore={isFetchingNextPage}
@@ -201,7 +194,6 @@ function AssetsContent() {
       onLoadMore={() => void fetchNextPage()}
       onAssetDeleted={handleAssetDeleted}
       onAssetRenamed={handleAssetRenamed}
-      onUploadComplete={handleUploadComplete}
       onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })}
       typeFilter={typeFilter}
       onTypeFilterChange={(nextTypeFilter) =>
@@ -241,7 +233,6 @@ function AssetsContent() {
       }
       AssetCard={AssetCardConnected}
       AssetListRow={AssetListRowConnected}
-      UploadInline={AssetUploadInlineConnected}
     />
   ) : null
 }

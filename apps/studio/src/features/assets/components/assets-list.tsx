@@ -28,14 +28,13 @@ import { Input } from '@valguide/ui/components/input'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { Filter, Image as ImageIcon, LayoutGrid, List, Search, Upload, X } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AssetDetailsDrawer } from '@/features/assets/components/asset-details-drawer'
-import type { AssetUploadInlineProps } from '@/features/assets/components/asset-upload-inline.tsx'
 import { VirtualizedAssetGrid } from '@/features/assets/components/virtualized-asset-grid'
 import { VirtualizedAssetList } from '@/features/assets/components/virtualized-asset-list'
+import { useAssetUploadSession } from '@/features/assets/upload-session/asset-upload-session-context'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 export type AssetCardComponentProps = {
@@ -59,11 +58,7 @@ export type AssetListRowComponentProps = {
 
 export type AssetListRowComponent = ComponentType<AssetListRowComponentProps>
 
-export type UploadInlineComponent = ComponentType<AssetUploadInlineProps>
-
 export type AssetsListProps = {
-  organizationId: string
-  locale?: string
   assets?: AssetWithUsage[]
   hasMore?: boolean
   isFetchingMore?: boolean
@@ -71,7 +66,6 @@ export type AssetsListProps = {
   error?: Error | null
   onAssetDeleted?: (assetId: string) => void
   onAssetRenamed?: (assetId: string) => Promise<void> | void
-  onUploadComplete?: (asset: Asset) => void
   onLoadMore?: () => void
   onRetry?: () => void
   typeFilter?: AssetType | 'all'
@@ -88,13 +82,10 @@ export type AssetsListProps = {
   onClearAllFilters?: () => void
   AssetCard?: AssetCardComponent
   AssetListRow?: AssetListRowComponent
-  UploadInline?: UploadInlineComponent
   onRenameAssetAction?: (input: { assetId: string; fileName: string }) => Promise<Asset>
 }
 
 export function AssetsList({
-  locale,
-  organizationId,
   assets = [],
   hasMore = false,
   isFetchingMore = false,
@@ -102,7 +93,6 @@ export function AssetsList({
   error = null,
   onAssetDeleted,
   onAssetRenamed,
-  onUploadComplete,
   onLoadMore,
   onRetry,
   typeFilter: controlledTypeFilter,
@@ -119,11 +109,9 @@ export function AssetsList({
   onClearAllFilters,
   AssetCard,
   AssetListRow,
-  UploadInline,
   onRenameAssetAction,
 }: AssetsListProps) {
   const t = useTranslations('assets')
-  const [activeTab, setActiveTab] = useState<'library' | 'upload'>('library')
   const [internalTypeFilter, setInternalTypeFilter] = useState<AssetType | 'all'>('all')
   const [internalSearchQuery, setInternalSearchQuery] = useState('')
   const [internalSortBy, setInternalSortBy] = useState<AssetSortBy>('createdAt')
@@ -138,6 +126,7 @@ export function AssetsList({
   const [resultsScrollMargin, setResultsScrollMargin] = useState(0)
   const lastMobileScrollAtRef = useRef(0)
   const isMobile = useIsMobile()
+  const { openFilePicker, hasVisibleUploads } = useAssetUploadSession()
 
   const typeFilter = controlledTypeFilter ?? internalTypeFilter
   const searchQuery = controlledSearchQuery ?? internalSearchQuery
@@ -230,17 +219,6 @@ export function AssetsList({
       return sortDirection === 'asc' ? idComparison : -idComparison
     })
   }, [assets, isControlledMode, searchQuery, sortBy, sortDirection, typeFilter, usageFilter])
-
-  const handleUploadBatchComplete = (uploadedAssets: Asset[], meta: { hasErrors: boolean }) => {
-    const lastUploadedAsset = uploadedAssets[uploadedAssets.length - 1]
-    if (lastUploadedAsset) {
-      onUploadComplete?.(lastUploadedAsset)
-    }
-
-    if (!meta.hasErrors) {
-      setActiveTab('library')
-    }
-  }
 
   const openAssetDetails = (asset: AssetWithUsage) => {
     setSelectedAsset(asset)
@@ -465,7 +443,7 @@ export function AssetsList({
       resizeObserver.disconnect()
       window.removeEventListener('resize', updateScrollMargin)
     }
-  }, [activeTab, isMobile, viewMode, displayedAssets.length])
+  }, [isMobile, viewMode, displayedAssets.length])
 
   const shouldSuppressMobileItemOpen = () => Date.now() - lastMobileScrollAtRef.current < 180
 
@@ -491,263 +469,261 @@ export function AssetsList({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <div className="space-y-1">
           <PageTitle as="h2">{t('title')}</PageTitle>
           <p className="text-sm text-muted-foreground">{t('description')}</p>
         </div>
+        <Button onClick={openFilePicker} className="shrink-0">
+          <Upload className="mr-2 h-4 w-4" />
+          {t('upload.cta')}
+        </Button>
       </div>
 
-      <Tabs
-        value={activeTab}
-        onValueChange={(v) => setActiveTab(v as 'library' | 'upload')}
-        className="flex min-h-0 flex-1 flex-col gap-6"
-      >
-        <TabsList>
-          <TabsTrigger value="library" className="gap-2">
-            <ImageIcon className="h-4 w-4" />
-            {t('picker.tabs.library')}
-          </TabsTrigger>
-          <TabsTrigger value="upload" className="gap-2">
-            <Upload className="h-4 w-4" />
-            {t('picker.tabs.upload')}
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="library" className="mt-0 space-y-6">
-          <div className="sticky top-0 z-20 border-b bg-background pt-4 pb-4">
-            <div className="space-y-3">
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_170px_170px_170px_170px_auto] xl:gap-4">
-                <div className="space-y-1">
-                  <label htmlFor="asset-search" className="sr-only xl:not-sr-only xl:text-xs xl:text-muted-foreground">
-                    {t('filter.searchLabel')}
-                  </label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="asset-search"
-                      aria-label={t('filter.searchLabel')}
-                      placeholder={t('filter.searchPlaceholder')}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9"
-                    />
-                  </div>
+      <div className="flex min-h-0 flex-1 flex-col gap-6">
+        <div className="sticky top-0 z-20 border-b bg-background pt-4 pb-4">
+          <div className="space-y-3">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_170px_170px_170px_170px_auto] xl:gap-4">
+              <div className="space-y-1">
+                <label htmlFor="asset-search" className="sr-only xl:not-sr-only xl:text-xs xl:text-muted-foreground">
+                  {t('filter.searchLabel')}
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="asset-search"
+                    aria-label={t('filter.searchLabel')}
+                    placeholder={t('filter.searchPlaceholder')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
                 </div>
-
-                <div className="flex items-end gap-2 xl:hidden">
-                  {!isMobile ? (
-                    <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="h-10 min-w-28 justify-between">
-                          <span className="inline-flex items-center gap-2">
-                            <Filter className="h-4 w-4" />
-                            {t('filter.actions.filters')}
-                          </span>
-                          {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent align="end" className="w-[24rem] space-y-4">
-                        <div className="text-sm font-medium">{t('filter.actions.filters')}</div>
-                        {renderFilterControls('popover')}
-                        {activeFilterCount > 0 ? (
-                          <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
-                            {t('filter.actions.clearAll')}
-                          </Button>
-                        ) : null}
-                      </PopoverContent>
-                    </Popover>
-                  ) : null}
-                  {!isMobile ? renderViewToggleControls(true) : null}
-                </div>
-
-                <div className="hidden space-y-1 xl:block">
-                  <label htmlFor="desktop-asset-type-filter" className="text-xs text-muted-foreground">
-                    {t('filter.typeLabel')}
-                  </label>
-                  <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
-                    <SelectTrigger id="desktop-asset-type-filter" aria-label={t('filter.typeLabel')} className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t('filter.all')}</SelectItem>
-                      <SelectItem value="image">{t('filter.image')}</SelectItem>
-                      <SelectItem value="audio">{t('filter.audio')}</SelectItem>
-                      <SelectItem value="video">{t('filter.video')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="hidden space-y-1 xl:block">
-                  <label htmlFor="desktop-asset-usage-filter" className="text-xs text-muted-foreground">
-                    {t('filter.usageLabel')}
-                  </label>
-                  <Select
-                    value={usageFilter}
-                    onValueChange={(value) => setUsageFilter(value as AssetUsageFilter | 'all')}
-                  >
-                    <SelectTrigger
-                      id="desktop-asset-usage-filter"
-                      aria-label={t('filter.usageLabel')}
-                      className="w-full"
-                    >
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t('filter.usage.all')}</SelectItem>
-                      <SelectItem value="used">{t('filter.usage.used')}</SelectItem>
-                      <SelectItem value="unused">{t('filter.usage.unused')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="hidden space-y-1 xl:block">
-                  <label htmlFor="desktop-asset-sort-by" className="text-xs text-muted-foreground">
-                    {t('filter.sortBy.label')}
-                  </label>
-                  <Select
-                    value={sortBy}
-                    onValueChange={(value) => {
-                      const nextSortBy = value as AssetSortBy
-                      const nextSortDirection: AssetSortDirection = nextSortBy === 'name' ? 'asc' : 'desc'
-                      setSort(nextSortBy, nextSortDirection)
-                    }}
-                  >
-                    <SelectTrigger id="desktop-asset-sort-by" aria-label={t('filter.sortBy.label')} className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="createdAt">{t('filter.sortBy.uploadedAt')}</SelectItem>
-                      <SelectItem value="name">{t('filter.sortBy.name')}</SelectItem>
-                      <SelectItem value="usage">{t('filter.sortBy.usage')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="hidden space-y-1 xl:block">
-                  <label htmlFor="desktop-asset-sort-order" className="text-xs text-muted-foreground">
-                    {t('filter.order.label')}
-                  </label>
-                  <Select value={sortDirection} onValueChange={(value) => setSort(sortBy, value as AssetSortDirection)}>
-                    <SelectTrigger
-                      id="desktop-asset-sort-order"
-                      aria-label={t('filter.order.label')}
-                      className="w-full"
-                    >
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {sortBy === 'createdAt' ? (
-                        <>
-                          <SelectItem value="desc">{t('filter.order.uploadedAtDesc')}</SelectItem>
-                          <SelectItem value="asc">{t('filter.order.uploadedAtAsc')}</SelectItem>
-                        </>
-                      ) : sortBy === 'usage' ? (
-                        <>
-                          <SelectItem value="desc">{t('filter.order.usageDesc')}</SelectItem>
-                          <SelectItem value="asc">{t('filter.order.usageAsc')}</SelectItem>
-                        </>
-                      ) : (
-                        <>
-                          <SelectItem value="asc">{t('filter.order.nameAsc')}</SelectItem>
-                          <SelectItem value="desc">{t('filter.order.nameDesc')}</SelectItem>
-                        </>
-                      )}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="hidden items-end xl:flex">{renderViewToggleControls()}</div>
               </div>
 
-              {activeFilterCount > 0 ? (
-                <div className="hidden flex-wrap items-center gap-2 xl:flex">
-                  {hasTypeFilter ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setTypeFilter('all')}
-                      className="h-8 gap-1"
-                    >
-                      {t('filter.typeLabel')}: {t(`filter.${typeFilter as AssetType}`)}
-                      <X className="h-3.5 w-3.5" />
-                    </Button>
-                  ) : null}
-                  {hasUsageFilter ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setUsageFilter('all')}
-                      className="h-8 gap-1"
-                    >
-                      {t('filter.usageLabel')}: {t(`filter.usage.${usageFilter as AssetUsageFilter}`)}
-                      <X className="h-3.5 w-3.5" />
-                    </Button>
-                  ) : null}
-                  {hasSortFilter ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSort('createdAt', 'desc')}
-                      className="h-8 gap-1"
-                    >
-                      {t('filter.sortBy.label')}: {sortByLabel}, {sortDirectionLabel}
-                      <X className="h-3.5 w-3.5" />
-                    </Button>
-                  ) : null}
-                  <Button type="button" variant="ghost" size="sm" onClick={clearAllFilters} className="h-8">
-                    {t('filter.actions.clearAll')}
-                  </Button>
-                </div>
-              ) : null}
-            </div>
-          </div>
+              <div className="flex items-end gap-2 xl:hidden">
+                {!isMobile ? (
+                  <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="h-10 min-w-28 justify-between">
+                        <span className="inline-flex items-center gap-2">
+                          <Filter className="h-4 w-4" />
+                          {t('filter.actions.filters')}
+                        </span>
+                        {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="w-[24rem] space-y-4">
+                      <div className="text-sm font-medium">{t('filter.actions.filters')}</div>
+                      {renderFilterControls('popover')}
+                      {activeFilterCount > 0 ? (
+                        <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
+                          {t('filter.actions.clearAll')}
+                        </Button>
+                      ) : null}
+                    </PopoverContent>
+                  </Popover>
+                ) : null}
+                {!isMobile ? renderViewToggleControls(true) : null}
+              </div>
 
-          {displayedAssets.length === 0 ? (
-            <Empty className="mt-6 border border-dashed">
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <ImageIcon />
-                </EmptyMedia>
-                <EmptyTitle>
-                  {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
-                    ? usageFilter === 'unused'
-                      ? t('filter.noResultsUnused')
-                      : usageFilter === 'used'
-                        ? t('filter.noResultsUsed')
-                        : t('filter.noResults')
-                    : t('empty.title')}
-                </EmptyTitle>
-                <EmptyDescription>
-                  {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
-                    ? usageFilter === 'unused'
-                      ? t('filter.noResultsUnused')
-                      : usageFilter === 'used'
-                        ? t('filter.noResultsUsed')
-                        : t('filter.noResults')
-                    : t('empty.description')}
-                </EmptyDescription>
-              </EmptyHeader>
-              {!searchQuery && typeFilter === 'all' && usageFilter === 'all' && (
-                <EmptyContent>
-                  <Button onClick={() => setActiveTab('upload')} size="lg">
+              <div className="hidden space-y-1 xl:block">
+                <label htmlFor="desktop-asset-type-filter" className="text-xs text-muted-foreground">
+                  {t('filter.typeLabel')}
+                </label>
+                <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value as AssetType | 'all')}>
+                  <SelectTrigger id="desktop-asset-type-filter" aria-label={t('filter.typeLabel')} className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('filter.all')}</SelectItem>
+                    <SelectItem value="image">{t('filter.image')}</SelectItem>
+                    <SelectItem value="audio">{t('filter.audio')}</SelectItem>
+                    <SelectItem value="video">{t('filter.video')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="hidden space-y-1 xl:block">
+                <label htmlFor="desktop-asset-usage-filter" className="text-xs text-muted-foreground">
+                  {t('filter.usageLabel')}
+                </label>
+                <Select
+                  value={usageFilter}
+                  onValueChange={(value) => setUsageFilter(value as AssetUsageFilter | 'all')}
+                >
+                  <SelectTrigger id="desktop-asset-usage-filter" aria-label={t('filter.usageLabel')} className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('filter.usage.all')}</SelectItem>
+                    <SelectItem value="used">{t('filter.usage.used')}</SelectItem>
+                    <SelectItem value="unused">{t('filter.usage.unused')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="hidden space-y-1 xl:block">
+                <label htmlFor="desktop-asset-sort-by" className="text-xs text-muted-foreground">
+                  {t('filter.sortBy.label')}
+                </label>
+                <Select
+                  value={sortBy}
+                  onValueChange={(value) => {
+                    const nextSortBy = value as AssetSortBy
+                    const nextSortDirection: AssetSortDirection = nextSortBy === 'name' ? 'asc' : 'desc'
+                    setSort(nextSortBy, nextSortDirection)
+                  }}
+                >
+                  <SelectTrigger id="desktop-asset-sort-by" aria-label={t('filter.sortBy.label')} className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="createdAt">{t('filter.sortBy.uploadedAt')}</SelectItem>
+                    <SelectItem value="name">{t('filter.sortBy.name')}</SelectItem>
+                    <SelectItem value="usage">{t('filter.sortBy.usage')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="hidden space-y-1 xl:block">
+                <label htmlFor="desktop-asset-sort-order" className="text-xs text-muted-foreground">
+                  {t('filter.order.label')}
+                </label>
+                <Select value={sortDirection} onValueChange={(value) => setSort(sortBy, value as AssetSortDirection)}>
+                  <SelectTrigger id="desktop-asset-sort-order" aria-label={t('filter.order.label')} className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sortBy === 'createdAt' ? (
+                      <>
+                        <SelectItem value="desc">{t('filter.order.uploadedAtDesc')}</SelectItem>
+                        <SelectItem value="asc">{t('filter.order.uploadedAtAsc')}</SelectItem>
+                      </>
+                    ) : sortBy === 'usage' ? (
+                      <>
+                        <SelectItem value="desc">{t('filter.order.usageDesc')}</SelectItem>
+                        <SelectItem value="asc">{t('filter.order.usageAsc')}</SelectItem>
+                      </>
+                    ) : (
+                      <>
+                        <SelectItem value="asc">{t('filter.order.nameAsc')}</SelectItem>
+                        <SelectItem value="desc">{t('filter.order.nameDesc')}</SelectItem>
+                      </>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="hidden items-end xl:flex">{renderViewToggleControls()}</div>
+            </div>
+
+            {activeFilterCount > 0 ? (
+              <div className="hidden flex-wrap items-center gap-2 xl:flex">
+                {hasTypeFilter ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setTypeFilter('all')}
+                    className="h-8 gap-1"
+                  >
+                    {t('filter.typeLabel')}: {t(`filter.${typeFilter as AssetType}`)}
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                ) : null}
+                {hasUsageFilter ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setUsageFilter('all')}
+                    className="h-8 gap-1"
+                  >
+                    {t('filter.usageLabel')}: {t(`filter.usage.${usageFilter as AssetUsageFilter}`)}
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                ) : null}
+                {hasSortFilter ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSort('createdAt', 'desc')}
+                    className="h-8 gap-1"
+                  >
+                    {t('filter.sortBy.label')}: {sortByLabel}, {sortDirectionLabel}
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                ) : null}
+                <Button type="button" variant="ghost" size="sm" onClick={clearAllFilters} className="h-8">
+                  {t('filter.actions.clearAll')}
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        {displayedAssets.length === 0 ? (
+          <Empty className="mt-6 border border-dashed">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <ImageIcon />
+              </EmptyMedia>
+              <EmptyTitle>
+                {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
+                  ? usageFilter === 'unused'
+                    ? t('filter.noResultsUnused')
+                    : usageFilter === 'used'
+                      ? t('filter.noResultsUsed')
+                      : t('filter.noResults')
+                  : t('empty.title')}
+              </EmptyTitle>
+              <EmptyDescription>
+                {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
+                  ? usageFilter === 'unused'
+                    ? t('filter.noResultsUnused')
+                    : usageFilter === 'used'
+                      ? t('filter.noResultsUsed')
+                      : t('filter.noResults')
+                  : t('empty.description')}
+              </EmptyDescription>
+            </EmptyHeader>
+            {!searchQuery && typeFilter === 'all' && usageFilter === 'all' ? (
+              <EmptyContent>
+                <div className="flex flex-col items-center gap-3">
+                  <Button onClick={openFilePicker} size="lg">
                     <Upload className="mr-2 h-4 w-4" />
                     {t('empty.uploadButton')}
                   </Button>
-                </EmptyContent>
-              )}
-            </Empty>
-          ) : (
-            <div ref={resultsRootRef} className={isMobile ? 'pb-24' : ''}>
-              {viewMode === 'grid' ? (
-                <VirtualizedAssetGrid
+                  <p className="text-xs text-muted-foreground">{t('empty.dragHint')}</p>
+                </div>
+              </EmptyContent>
+            ) : null}
+          </Empty>
+        ) : (
+          <div ref={resultsRootRef} className={isMobile ? (hasVisibleUploads ? 'pb-44' : 'pb-24') : ''}>
+            {viewMode === 'grid' ? (
+              <VirtualizedAssetGrid
+                assets={displayedAssets}
+                AssetCard={AssetCard}
+                isMobile={isMobile}
+                containerRef={resultsRootRef}
+                scrollElementRef={resultsScrollElementRef}
+                scrollMargin={resultsScrollMargin}
+                onDelete={onAssetDeleted}
+                onOpenDetails={openAssetDetails}
+                onLoadMore={onLoadMore}
+                hasMore={hasMore}
+                isFetchingMore={isFetchingMore || isQueryPending}
+                shouldSuppressPreview={shouldSuppressMobileItemOpen}
+              />
+            ) : isMobile ? (
+              <div className="overflow-hidden rounded-xl border">
+                <VirtualizedAssetList
                   assets={displayedAssets}
-                  AssetCard={AssetCard}
-                  isMobile={isMobile}
-                  containerRef={resultsRootRef}
+                  AssetListRow={AssetListRow}
+                  isMobile={true}
                   scrollElementRef={resultsScrollElementRef}
                   scrollMargin={resultsScrollMargin}
                   onDelete={onAssetDeleted}
@@ -755,103 +731,80 @@ export function AssetsList({
                   onLoadMore={onLoadMore}
                   hasMore={hasMore}
                   isFetchingMore={isFetchingMore || isQueryPending}
-                  shouldSuppressPreview={shouldSuppressMobileItemOpen}
+                  shouldSuppressOpenDetails={shouldSuppressMobileItemOpen}
                 />
-              ) : isMobile ? (
-                <div className="overflow-hidden rounded-xl border">
-                  <VirtualizedAssetList
-                    assets={displayedAssets}
-                    AssetListRow={AssetListRow}
-                    isMobile={true}
-                    scrollElementRef={resultsScrollElementRef}
-                    scrollMargin={resultsScrollMargin}
-                    onDelete={onAssetDeleted}
-                    onOpenDetails={openAssetDetails}
-                    onLoadMore={onLoadMore}
-                    hasMore={hasMore}
-                    isFetchingMore={isFetchingMore || isQueryPending}
-                    shouldSuppressOpenDetails={shouldSuppressMobileItemOpen}
-                  />
-                </div>
-              ) : (
-                <div className="overflow-hidden rounded-xl border">
-                  <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
-                    <span />
-                    <span>{t('list.headers.name')}</span>
-                    <span>{t('list.headers.type')}</span>
-                    <span>{t('list.headers.usage')}</span>
-                    <span>{t('list.headers.created')}</span>
-                    <span />
-                    <span />
-                  </div>
-                  <VirtualizedAssetList
-                    assets={displayedAssets}
-                    AssetListRow={AssetListRow}
-                    isMobile={false}
-                    scrollElementRef={resultsScrollElementRef}
-                    scrollMargin={resultsScrollMargin}
-                    onDelete={onAssetDeleted}
-                    onOpenDetails={openAssetDetails}
-                    onLoadMore={onLoadMore}
-                    hasMore={hasMore}
-                    isFetchingMore={isFetchingMore || isQueryPending}
-                  />
-                </div>
-              )}
-              {isFetchingMore ? (
-                <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
-              ) : null}
-            </div>
-          )}
-
-          {isMobile && displayedAssets.length > 0 ? (
-            <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 px-4">
-              <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur pointer-events-auto touch-pan-y">
-                <Drawer open={filtersOpen} onOpenChange={setFiltersOpen} modal={false}>
-                  <DrawerTrigger asChild>
-                    <Button variant="ghost" className="h-10 justify-between rounded-xl px-4 touch-pan-y">
-                      <span className="inline-flex items-center gap-2">
-                        <Filter className="h-4 w-4" />
-                        {t('list.sortAndFilter')}
-                      </span>
-                      {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
-                    </Button>
-                  </DrawerTrigger>
-                  <DrawerContent>
-                    <DrawerHeader className="text-left">
-                      <DrawerTitle>{t('filter.actions.filters')}</DrawerTitle>
-                      <DrawerDescription>{t('description')}</DrawerDescription>
-                    </DrawerHeader>
-                    <div className="space-y-4 px-4 pb-6">
-                      {renderFilterControls('drawer')}
-                      {activeFilterCount > 0 ? (
-                        <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
-                          {t('filter.actions.clearAll')}
-                        </Button>
-                      ) : null}
-                    </div>
-                  </DrawerContent>
-                </Drawer>
-                <div className="h-8 w-px bg-border" />
-                <div className="touch-pan-y">{renderViewToggleControls(true)}</div>
               </div>
-            </div>
-          ) : null}
-        </TabsContent>
-
-        <TabsContent value="upload" className="mt-0 flex min-h-0 flex-1 flex-col">
-          <div className="flex min-h-0 flex-1 flex-col">
-            {UploadInline && (
-              <UploadInline
-                onUploadBatchComplete={handleUploadBatchComplete}
-                organizationId={organizationId}
-                locale={locale}
-                className="w-full flex-1"
-              />
+            ) : (
+              <div className="overflow-hidden rounded-xl border">
+                <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2 text-xs uppercase tracking-wide text-muted-foreground">
+                  <span />
+                  <span>{t('list.headers.name')}</span>
+                  <span>{t('list.headers.type')}</span>
+                  <span>{t('list.headers.usage')}</span>
+                  <span>{t('list.headers.created')}</span>
+                  <span />
+                  <span />
+                </div>
+                <VirtualizedAssetList
+                  assets={displayedAssets}
+                  AssetListRow={AssetListRow}
+                  isMobile={false}
+                  scrollElementRef={resultsScrollElementRef}
+                  scrollMargin={resultsScrollMargin}
+                  onDelete={onAssetDeleted}
+                  onOpenDetails={openAssetDetails}
+                  onLoadMore={onLoadMore}
+                  hasMore={hasMore}
+                  isFetchingMore={isFetchingMore || isQueryPending}
+                />
+              </div>
             )}
+            {isFetchingMore ? (
+              <div className="py-3 text-center text-sm text-muted-foreground">{t('loadingMore')}</div>
+            ) : null}
           </div>
-        </TabsContent>
-      </Tabs>
+        )}
+
+        {isMobile && displayedAssets.length > 0 ? (
+          <div
+            className={
+              hasVisibleUploads
+                ? 'pointer-events-none fixed inset-x-0 bottom-24 z-40 px-4'
+                : 'pointer-events-none fixed inset-x-0 bottom-4 z-40 px-4'
+            }
+          >
+            <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur pointer-events-auto touch-pan-y">
+              <Drawer open={filtersOpen} onOpenChange={setFiltersOpen} modal={false}>
+                <DrawerTrigger asChild>
+                  <Button variant="ghost" className="h-10 justify-between rounded-xl px-4 touch-pan-y">
+                    <span className="inline-flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      {t('list.sortAndFilter')}
+                    </span>
+                    {activeFilterCount > 0 ? <Badge variant="secondary">{activeFilterCount}</Badge> : null}
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader className="text-left">
+                    <DrawerTitle>{t('filter.actions.filters')}</DrawerTitle>
+                    <DrawerDescription>{t('description')}</DrawerDescription>
+                  </DrawerHeader>
+                  <div className="space-y-4 px-4 pb-6">
+                    {renderFilterControls('drawer')}
+                    {activeFilterCount > 0 ? (
+                      <Button type="button" variant="ghost" onClick={clearAllFilters} className="w-full">
+                        {t('filter.actions.clearAll')}
+                      </Button>
+                    ) : null}
+                  </div>
+                </DrawerContent>
+              </Drawer>
+              <div className="h-8 w-px bg-border" />
+              <div className="touch-pan-y">{renderViewToggleControls(true)}</div>
+            </div>
+          </div>
+        ) : null}
+      </div>
 
       <AssetDetailsDrawer
         asset={selectedAsset}

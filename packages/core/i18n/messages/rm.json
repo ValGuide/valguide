@@ -568,7 +568,8 @@
     "empty": {
       "title": "Anc nagins assets",
       "description": "Chargiai si maletgs, audio e videos per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
-      "uploadButton": "Chargiar si voss emprim asset"
+      "uploadButton": "Chargiar si voss emprim asset",
+      "dragHint": "Vus pudais era trair datotecas dapertut sin questa pagina."
     },
     "picker": {
       "title": "Tscherner {type}",
@@ -586,6 +587,7 @@
       }
     },
     "upload": {
+      "cta": "Chargiar si",
       "error": "Errur cun chargiar si",
       "dropzone": "Metter {type} qua u cliccar per tschertgar",
       "dropzoneGeneric": "Metter maletg, audio u video qua u cliccar per tschertgar",
@@ -611,6 +613,38 @@
       "failed": "Fallida",
       "partialFailure": "Intginas datotecas n'han betg pudì vegnir chargiadas si",
       "partialFailureDescription": "Controllai las datotecas fallidas ed empruvai anc ina giada."
+    },
+    "uploadSurface": {
+      "open": "Avrir il sectur d'upload",
+      "expand": "Extender il sectur d'upload",
+      "collapse": "Zuppentar il sectur d'upload",
+      "close": "Serrar il sectur d'upload",
+      "retry": "Empruvar danovamain",
+      "clearCompleted": "Allontanar ils terminads",
+      "uploadedToLibrary": "Chargià si en Assets",
+      "progressLabel": "{progress}% chargià si",
+      "footer": "{count, plural, one {# datoteca en questa sessiun d'upload} other {# datotecas en questa sessiun d'upload}}",
+      "status": {
+        "queued": "En coda",
+        "uploading": "Vegn chargiada si",
+        "confirming": "Vegn memorisada",
+        "complete": "Chargiada si",
+        "error": "Basegna attenziun"
+      },
+      "summary": {
+        "uploading": "{count, plural, one {# datoteca vegn chargiada si} other {# datotecas vegnan chargiadas si}}",
+        "inProgress": "Ils uploads cuntinueschan en il fund",
+        "partial": "{complete} chargiadas si, {failed} basegnan attenziun",
+        "failed": "{count, plural, one {# upload fallì} other {# uploads fallids}}",
+        "needsAttention": "Controllai las datotecas fallidas ed empruvai danovamain",
+        "complete": "{count, plural, one {# datoteca chargiada si} other {# datotecas chargiadas si}}",
+        "ready": "Uploads terminads"
+      },
+      "overlay": {
+        "title": "Laschai las datotecas per chargiar si",
+        "description": "Chargiai si maletgs, audio u video da mintga chantun dal Studio.",
+        "limits": "Maletgs fin 10MB, audio fin 50MB, video fin 500MB"
+      }
     },
     "filter": {
       "all": "Tut tips",

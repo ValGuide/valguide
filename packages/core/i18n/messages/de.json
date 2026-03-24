@@ -568,7 +568,8 @@
     "empty": {
       "title": "Noch keine Assets",
       "description": "Laden Sie Bilder, Audio und Videodateien hoch, um sie in Ihren Tours zu verwenden. Alle Dateien werden sicher gespeichert und können in mehreren Tours wiederverwendet werden.",
-      "uploadButton": "Ihr erstes Asset hochladen"
+      "uploadButton": "Ihr erstes Asset hochladen",
+      "dragHint": "Sie können Dateien auch irgendwo auf diese Seite ziehen."
     },
     "picker": {
       "title": "{type} auswählen",
@@ -586,6 +587,7 @@
       }
     },
     "upload": {
+      "cta": "Hochladen",
       "error": "Upload fehlgeschlagen",
       "dropzone": "{type} hier ablegen oder klicken zum Durchsuchen",
       "dropzoneGeneric": "Bild, Audio oder Video hier ablegen oder klicken zum Durchsuchen",
@@ -611,6 +613,38 @@
       "failed": "Fehlgeschlagen",
       "partialFailure": "Einige Dateien konnten nicht hochgeladen werden",
       "partialFailureDescription": "Prüfen Sie die fehlgeschlagenen Dateien und versuchen Sie es erneut."
+    },
+    "uploadSurface": {
+      "open": "Upload-Bereich öffnen",
+      "expand": "Upload-Bereich erweitern",
+      "collapse": "Upload-Bereich einklappen",
+      "close": "Upload-Bereich schließen",
+      "retry": "Erneut versuchen",
+      "clearCompleted": "Abgeschlossene entfernen",
+      "uploadedToLibrary": "In Assets hochgeladen",
+      "progressLabel": "{progress}% hochgeladen",
+      "footer": "{count, plural, one {# Datei in dieser Upload-Sitzung} other {# Dateien in dieser Upload-Sitzung}}",
+      "status": {
+        "queued": "In Warteschlange",
+        "uploading": "Wird hochgeladen",
+        "confirming": "Wird gespeichert",
+        "complete": "Hochgeladen",
+        "error": "Benötigt Aufmerksamkeit"
+      },
+      "summary": {
+        "uploading": "{count, plural, one {# Datei wird hochgeladen} other {# Dateien werden hochgeladen}}",
+        "inProgress": "Uploads laufen im Hintergrund weiter",
+        "partial": "{complete} hochgeladen, {failed} benötigen Aufmerksamkeit",
+        "failed": "{count, plural, one {# Upload fehlgeschlagen} other {# Uploads fehlgeschlagen}}",
+        "needsAttention": "Prüfen Sie fehlgeschlagene Dateien und versuchen Sie es erneut",
+        "complete": "{count, plural, one {# Datei hochgeladen} other {# Dateien hochgeladen}}",
+        "ready": "Uploads abgeschlossen"
+      },
+      "overlay": {
+        "title": "Dateien zum Hochladen ablegen",
+        "description": "Laden Sie Bilder, Audio- oder Videodateien von überall im Studio hoch.",
+        "limits": "Bilder bis 10MB, Audio bis 50MB, Video bis 500MB"
+      }
     },
     "filter": {
       "all": "Alle Typen",

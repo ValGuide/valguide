@@ -3,6 +3,7 @@ import { protectedSessionBootstrapQueryOptions } from '@valguide/features/auth/q
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { MainLayoutPending } from '@/components/main-layout-pending'
+import { AssetUploadSessionProvider } from '@/features/assets/upload-session/asset-upload-session'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
 import { sidebarQueryOptions, sidebarStateQueryOptions } from '../features/sidebar/query-options'
 
@@ -53,19 +54,21 @@ function MainLayout() {
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebarContainer />
-      <SidebarInset>
-        {!isFocusMode && (
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
-            <div className="flex flex-1 items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1 md:hidden" />
-              <Separator orientation="vertical" className="mr-2 h-4 md:hidden" />
-            </div>
-          </header>
-        )}
-        <div className={isFocusMode ? 'min-h-dvh flex flex-col' : 'min-h-[calc(100dvh-4rem)] flex flex-col'}>
-          <Outlet />
-        </div>
-      </SidebarInset>
+      <AssetUploadSessionProvider>
+        <SidebarInset>
+          {!isFocusMode && (
+            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
+              <div className="flex flex-1 items-center gap-2 px-4">
+                <SidebarTrigger className="-ml-1 md:hidden" />
+                <Separator orientation="vertical" className="mr-2 h-4 md:hidden" />
+              </div>
+            </header>
+          )}
+          <div className={isFocusMode ? 'min-h-dvh flex flex-col' : 'min-h-[calc(100dvh-4rem)] flex flex-col'}>
+            <Outlet />
+          </div>
+        </SidebarInset>
+      </AssetUploadSessionProvider>
     </SidebarProvider>
   )
 }

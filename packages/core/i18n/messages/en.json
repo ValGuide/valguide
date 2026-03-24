@@ -568,7 +568,8 @@
     "empty": {
       "title": "No assets yet",
       "description": "Upload images, audio, and video files to use in your tours. All files are stored securely and can be reused across multiple tours.",
-      "uploadButton": "Upload your first asset"
+      "uploadButton": "Upload your first asset",
+      "dragHint": "You can also drag files anywhere onto this page."
     },
     "picker": {
       "title": "Select {type}",
@@ -586,6 +587,7 @@
       }
     },
     "upload": {
+      "cta": "Upload",
       "error": "Upload failed",
       "dropzone": "Drop {type} here or click to browse",
       "dropzoneGeneric": "Drop image, audio or video here, or click to browse",
@@ -611,6 +613,38 @@
       "failed": "Failed",
       "partialFailure": "Some files could not be uploaded",
       "partialFailureDescription": "Review the failed files and try again."
+    },
+    "uploadSurface": {
+      "open": "Open upload panel",
+      "expand": "Expand upload panel",
+      "collapse": "Collapse upload panel",
+      "close": "Close upload panel",
+      "retry": "Retry",
+      "clearCompleted": "Clear completed",
+      "uploadedToLibrary": "Uploaded to Assets",
+      "progressLabel": "{progress}% uploaded",
+      "footer": "{count, plural, one {# file in this upload session} other {# files in this upload session}}",
+      "status": {
+        "queued": "Queued",
+        "uploading": "Uploading",
+        "confirming": "Saving",
+        "complete": "Uploaded",
+        "error": "Needs attention"
+      },
+      "summary": {
+        "uploading": "{count, plural, one {# file uploading} other {# files uploading}}",
+        "inProgress": "Uploads continue in the background",
+        "partial": "{complete} uploaded, {failed} need attention",
+        "failed": "{count, plural, one {# upload failed} other {# uploads failed}}",
+        "needsAttention": "Review failed files and retry when ready",
+        "complete": "{count, plural, one {# file uploaded} other {# files uploaded}}",
+        "ready": "Uploads finished"
+      },
+      "overlay": {
+        "title": "Drop files to upload",
+        "description": "Upload images, audio, or video files from anywhere in Studio.",
+        "limits": "Images up to 10MB, audio up to 50MB, video up to 500MB"
+      }
     },
     "filter": {
       "all": "All Types",
