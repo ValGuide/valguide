@@ -500,6 +500,37 @@ export function AssetsList({
     </div>
   )
 
+  const renderSelectionActions = (compact = false) => (
+    <div className={compact ? 'grid grid-cols-2 gap-2' : 'flex shrink-0 items-center gap-2'}>
+      <Button
+        type="button"
+        variant={compact ? 'secondary' : 'outline'}
+        size={compact ? 'sm' : 'default'}
+        onClick={clearSelection}
+      >
+        {t('bulkDelete.actions.clearSelection')}
+      </Button>
+      <Button
+        type="button"
+        variant="destructive"
+        size={compact ? 'sm' : 'default'}
+        onClick={() => setIsBulkDeleteOpen(true)}
+      >
+        {t('bulkDelete.actions.openDialog')}
+      </Button>
+    </div>
+  )
+
+  const renderDesktopSelectionSummary = () => (
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-border/70 bg-muted/35 px-4 py-3">
+      <div className="min-w-0">
+        <p className="text-sm font-medium">{t('bulkDelete.selectionCount', { count: selectedCount })}</p>
+        <p className="text-xs text-muted-foreground">{t('bulkDelete.selectionHint')}</p>
+      </div>
+      {renderSelectionActions()}
+    </div>
+  )
+
   useEffect(() => {
     setFiltersOpen(false)
   }, [isMobile])
@@ -587,7 +618,7 @@ export function AssetsList({
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-6">
-        <div className="sticky top-0 z-20 border-b bg-background pt-4 pb-4">
+        <div className="sticky top-0 z-20 -mx-4 border-b bg-background px-4 pt-4 pb-4">
           <div className="space-y-3">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:grid-cols-[minmax(0,1fr)_170px_170px_170px_170px_auto] xl:gap-4">
               <div className="space-y-1">
@@ -767,25 +798,10 @@ export function AssetsList({
                 </Button>
               </div>
             ) : null}
+
+            {!isMobile && selectedCount > 0 ? renderDesktopSelectionSummary() : null}
           </div>
         </div>
-
-        {selectedCount > 0 ? (
-          <div className="sticky top-[8.5rem] z-10 flex items-center justify-between gap-3 rounded-xl border bg-background px-4 py-3">
-            <div className="min-w-0">
-              <p className="text-sm font-medium">{t('bulkDelete.selectionCount', { count: selectedCount })}</p>
-              <p className="text-xs text-muted-foreground">{t('bulkDelete.selectionHint')}</p>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <Button type="button" variant="outline" onClick={clearSelection}>
-                {t('bulkDelete.actions.clearSelection')}
-              </Button>
-              <Button type="button" variant="destructive" onClick={() => setIsBulkDeleteOpen(true)}>
-                {t('bulkDelete.actions.openDialog')}
-              </Button>
-            </div>
-          </div>
-        ) : null}
 
         {displayedAssets.length === 0 ? (
           <Empty className="mt-6 border border-dashed">
@@ -825,7 +841,20 @@ export function AssetsList({
             ) : null}
           </Empty>
         ) : (
-          <div ref={resultsRootRef} className={isMobile ? (hasVisibleUploads ? 'pb-44' : 'pb-24') : ''}>
+          <div
+            ref={resultsRootRef}
+            className={
+              isMobile
+                ? selectedCount > 0
+                  ? hasVisibleUploads
+                    ? 'pb-56'
+                    : 'pb-40'
+                  : hasVisibleUploads
+                    ? 'pb-44'
+                    : 'pb-24'
+                : ''
+            }
+          >
             {viewMode === 'grid' ? (
               <VirtualizedAssetGrid
                 assets={displayedAssets}
@@ -899,38 +928,25 @@ export function AssetsList({
         )}
 
         {isMobile && displayedAssets.length > 0 ? (
-          <>
+          <div
+            className={
+              hasVisibleUploads
+                ? 'pointer-events-none fixed inset-x-0 bottom-24 z-40 px-4'
+                : 'pointer-events-none fixed inset-x-0 bottom-4 z-40 px-4'
+            }
+          >
             {selectedCount > 0 ? (
-              <div
-                className={
-                  hasVisibleUploads
-                    ? 'pointer-events-none fixed inset-x-0 bottom-40 z-40 px-4'
-                    : 'pointer-events-none fixed inset-x-0 bottom-20 z-40 px-4'
-                }
-              >
-                <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-4 py-3 shadow-lg backdrop-blur pointer-events-auto">
+              <div className="mx-auto w-full max-w-sm rounded-2xl border bg-background/95 p-3 shadow-lg backdrop-blur pointer-events-auto">
+                <div className="space-y-3">
                   <div className="min-w-0">
                     <p className="text-sm font-medium">{t('bulkDelete.selectionCount', { count: selectedCount })}</p>
                     <p className="text-xs text-muted-foreground">{t('bulkDelete.selectionHint')}</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button type="button" variant="ghost" size="sm" onClick={clearSelection}>
-                      {t('bulkDelete.actions.clearSelection')}
-                    </Button>
-                    <Button type="button" variant="destructive" size="sm" onClick={() => setIsBulkDeleteOpen(true)}>
-                      {t('bulkDelete.actions.openDialog')}
-                    </Button>
-                  </div>
+                  {renderSelectionActions(true)}
                 </div>
               </div>
             ) : null}
-            <div
-              className={
-                hasVisibleUploads
-                  ? 'pointer-events-none fixed inset-x-0 bottom-24 z-40 px-4'
-                  : 'pointer-events-none fixed inset-x-0 bottom-4 z-40 px-4'
-              }
-            >
+            {selectedCount === 0 ? (
               <div className="mx-auto flex w-full max-w-sm items-center justify-between rounded-2xl border bg-background/95 px-2 py-2 shadow-lg backdrop-blur pointer-events-auto touch-pan-y">
                 <Drawer open={filtersOpen} onOpenChange={setFiltersOpen} modal={false}>
                   <DrawerTrigger asChild>
@@ -960,8 +976,8 @@ export function AssetsList({
                 <div className="h-8 w-px bg-border" />
                 <div className="touch-pan-y">{renderViewToggleControls(true)}</div>
               </div>
-            </div>
-          </>
+            ) : null}
+          </div>
         ) : null}
       </div>
 

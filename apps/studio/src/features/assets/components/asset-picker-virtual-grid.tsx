@@ -4,6 +4,8 @@ import { type ReactNode, useEffect, useRef, useState } from 'react'
 
 const GRID_GAP = 16
 const LOADING_MORE_HEIGHT = 48
+const MOBILE_BOTTOM_PADDING = 96
+const DESKTOP_BOTTOM_PADDING = 24
 
 type AssetPickerVirtualGridProps = {
   assets: Asset[]
@@ -37,23 +39,27 @@ export function AssetPickerVirtualGrid({
   isFetchingMore = false,
 }: AssetPickerVirtualGridProps) {
   const scrollElementRef = useRef<HTMLDivElement | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const [columnCount, setColumnCount] = useState(1)
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    const containerElement = containerRef.current
+
+    if (!containerElement) {
       return
     }
 
     const updateColumnCount = () => {
-      setColumnCount(getGridColumnCount(window.innerWidth))
+      setColumnCount(getGridColumnCount(containerElement.clientWidth))
     }
 
-    const frameId = window.requestAnimationFrame(updateColumnCount)
-    window.addEventListener('resize', updateColumnCount)
+    updateColumnCount()
+
+    const resizeObserver = new ResizeObserver(updateColumnCount)
+    resizeObserver.observe(containerElement)
 
     return () => {
-      window.cancelAnimationFrame(frameId)
-      window.removeEventListener('resize', updateColumnCount)
+      resizeObserver.disconnect()
     }
   }, [])
 
@@ -81,43 +87,44 @@ export function AssetPickerVirtualGrid({
   }, [hasMore, isFetchingMore, onLoadMore, rowCount, virtualRows])
 
   return (
-    <div ref={scrollElementRef} className="h-full min-h-0 overflow-y-auto">
-      <div
-        className="relative w-full"
-        style={{
-          height: `${rowVirtualizer.getTotalSize() + (isFetchingMore ? LOADING_MORE_HEIGHT : 0)}px`,
-        }}
-      >
-        {virtualRows.map((virtualRow) => {
-          const startIndex = virtualRow.index * columnCount
-          const rowAssets = assets.slice(startIndex, startIndex + columnCount)
+    <div ref={containerRef} className="h-full min-h-0">
+      <div ref={scrollElementRef} className="h-full min-h-0 overflow-y-auto">
+        <div
+          className="relative w-full"
+          style={{
+            height: `${rowVirtualizer.getTotalSize() + (isFetchingMore ? LOADING_MORE_HEIGHT : 0) + (isMobile ? MOBILE_BOTTOM_PADDING : DESKTOP_BOTTOM_PADDING)}px`,
+          }}
+        >
+          {virtualRows.map((virtualRow) => {
+            const startIndex = virtualRow.index * columnCount
+            const rowAssets = assets.slice(startIndex, startIndex + columnCount)
 
-          return (
+            return (
+              <div
+                key={virtualRow.key}
+                data-index={virtualRow.index}
+                className="absolute left-0 top-0 grid w-full"
+                style={{
+                  gap: `${GRID_GAP}px`,
+                  gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                {rowAssets.map((asset) => (
+                  <div key={asset.id}>{renderAsset(asset)}</div>
+                ))}
+              </div>
+            )
+          })}
+          {isFetchingMore ? (
             <div
-              key={virtualRow.key}
-              data-index={virtualRow.index}
-              ref={rowVirtualizer.measureElement}
-              className="absolute left-0 top-0 grid w-full"
-              style={{
-                gap: `${GRID_GAP}px`,
-                gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
-                transform: `translateY(${virtualRow.start}px)`,
-              }}
+              className="absolute inset-x-0 text-center text-sm text-muted-foreground"
+              style={{ top: `${rowVirtualizer.getTotalSize()}px`, height: `${LOADING_MORE_HEIGHT}px` }}
             >
-              {rowAssets.map((asset) => (
-                <div key={asset.id}>{renderAsset(asset)}</div>
-              ))}
+              <div className="flex h-full items-center justify-center">{loadingMoreLabel}</div>
             </div>
-          )
-        })}
-        {isFetchingMore ? (
-          <div
-            className="absolute inset-x-0 text-center text-sm text-muted-foreground"
-            style={{ top: `${rowVirtualizer.getTotalSize()}px`, height: `${LOADING_MORE_HEIGHT}px` }}
-          >
-            <div className="flex h-full items-center justify-center">{loadingMoreLabel}</div>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </div>
     </div>
   )
