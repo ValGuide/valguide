@@ -1,9 +1,12 @@
+import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { Asset } from '@valguide/core/features/assets/types'
 import type { PropsWithChildren } from 'react'
 import type { AssetUploadStatus } from './asset-upload-session.utils'
 import { AssetUploadSessionContext, type AssetUploadSessionContextValue } from './asset-upload-session-context'
 import { AssetsUploadSurface } from './assets-upload-surface'
+
+const mockImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
 
 const baseAsset: Asset = {
   id: 'asset-1',
@@ -12,7 +15,7 @@ const baseAsset: Asset = {
   fileSize: 2_048_576,
   mimeType: 'image/jpeg',
   type: 'image',
-  storagePath: 'assets/mock/image-1.jpg',
+  storagePath: mockImageUrl,
   width: 1920,
   height: 1080,
   duration: null,
@@ -49,7 +52,6 @@ function MockSessionProvider({
     isExpanded: true,
     isDragActive: false,
     hasVisibleUploads: true,
-    aggregateProgress: 50,
     openFilePicker: () => undefined,
     setExpanded: () => undefined,
     closeSurface: () => undefined,
@@ -97,7 +99,6 @@ export const UploadingDesktop: Story = {
   args: {
     contextValue: {
       isExpanded: true,
-      aggregateProgress: 42,
       items: [
         createItem('uploading', { id: 'upload-1', progress: 68 }),
         createItem('confirming', {
@@ -120,7 +121,6 @@ export const SuccessCollapsed: Story = {
   args: {
     contextValue: {
       isExpanded: false,
-      aggregateProgress: 100,
       items: [
         createItem('complete', { id: 'complete-1', asset: baseAsset }),
         createItem('complete', {
@@ -137,7 +137,6 @@ export const PartialFailure: Story = {
   args: {
     contextValue: {
       isExpanded: true,
-      aggregateProgress: 74,
       items: [
         createItem('complete', { id: 'complete-1', asset: baseAsset }),
         createItem('error', {

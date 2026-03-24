@@ -167,7 +167,7 @@ function useUploadSurfaceSummary(items: ReturnType<typeof useAssetUploadSession>
 export function AssetsUploadSurface() {
   const t = useTranslations('assets.uploadSurface')
   const isMobile = useIsMobile()
-  const { items, isExpanded, setExpanded, closeSurface, dismissItem, retryItem, aggregateProgress, hasVisibleUploads } =
+  const { items, isExpanded, setExpanded, closeSurface, dismissItem, retryItem, hasVisibleUploads } =
     useAssetUploadSession()
 
   const summary = useUploadSurfaceSummary(items)
@@ -226,7 +226,6 @@ export function AssetsUploadSurface() {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <Progress value={aggregateProgress} className="mt-3 h-1.5" />
           </div>
         ) : null}
 
@@ -236,11 +235,6 @@ export function AssetsUploadSurface() {
               <DrawerTitle>{summary.title}</DrawerTitle>
               <DrawerDescription>{summary.description}</DrawerDescription>
             </DrawerHeader>
-
-            <div className="px-4 pb-2">
-              <Progress value={aggregateProgress} className="h-1.5" />
-            </div>
-
             <div className="max-h-[50dvh] overflow-y-auto px-4 pb-4">
               <div className="space-y-3 pb-4 pr-1">
                 {sortedItems.map((item) => (
@@ -285,8 +279,6 @@ export function AssetsUploadSurface() {
             </Button>
           </div>
         </div>
-
-        <Progress value={aggregateProgress} className="rounded-none" />
 
         <div
           className={cn(

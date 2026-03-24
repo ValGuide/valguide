@@ -19,7 +19,6 @@ export type AssetUploadSessionContextValue = {
   isExpanded: boolean
   isDragActive: boolean
   hasVisibleUploads: boolean
-  aggregateProgress: number
   openFilePicker: () => void
   setExpanded: (nextOpen: boolean) => void
   closeSurface: () => void

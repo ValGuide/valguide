@@ -11,7 +11,7 @@ import { valguideId } from '@valguide/core/utils/nanoid'
 import type { PropsWithChildren } from 'react'
 import * as React from 'react'
 import { uploadFile } from '../lib/upload'
-import { getAggregateUploadProgress, getUploadCounts, isFileDrag } from './asset-upload-session.utils'
+import { getUploadCounts, isFileDrag } from './asset-upload-session.utils'
 import {
   type AssetUploadItem,
   AssetUploadSessionContext,
@@ -122,11 +122,26 @@ export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
       }
 
       const nextItems = files.map(createUploadItem)
-      setItems((currentItems) => [...nextItems, ...currentItems])
+      const currentItems = itemsRef.current
+      const currentCounts = getUploadCounts(currentItems)
+      const shouldResetClosedSuccessfulSession =
+        isHidden &&
+        currentCounts.complete > 0 &&
+        currentCounts.active === 0 &&
+        currentCounts.queued === 0 &&
+        currentCounts.error === 0
+
+      if (shouldResetClosedSuccessfulSession) {
+        currentItems.forEach((item) => {
+          revokePreviewUrl(item.previewUrl)
+        })
+      }
+
+      setItems(shouldResetClosedSuccessfulSession ? nextItems : [...nextItems, ...currentItems])
       setIsHidden(false)
       setIsExpanded(window.innerWidth >= 768)
     },
-    [createUploadItem],
+    [createUploadItem, isHidden, revokePreviewUrl],
   )
 
   const dismissItem = React.useCallback(
@@ -415,25 +430,12 @@ export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
     [addFiles],
   )
 
-  const aggregateProgress = React.useMemo(
-    () =>
-      getAggregateUploadProgress(
-        items.map((item) => ({
-          status: item.status,
-          progress: item.progress,
-          type: item.type,
-        })),
-      ),
-    [items],
-  )
-
   const contextValue = React.useMemo<AssetUploadSessionContextValue>(
     () => ({
       items,
       isExpanded,
       isDragActive,
       hasVisibleUploads: items.length > 0 && !isHidden,
-      aggregateProgress,
       openFilePicker,
       setExpanded: setIsExpanded,
       closeSurface,
@@ -441,18 +443,7 @@ export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
       retryItem,
       clearCompleted,
     }),
-    [
-      aggregateProgress,
-      clearCompleted,
-      closeSurface,
-      dismissItem,
-      isDragActive,
-      isExpanded,
-      isHidden,
-      items,
-      openFilePicker,
-      retryItem,
-    ],
+    [clearCompleted, closeSurface, dismissItem, isDragActive, isExpanded, isHidden, items, openFilePicker, retryItem],
   )
 
   return (
