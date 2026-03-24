@@ -3,9 +3,6 @@ import type { AssetWithUsage } from '@valguide/core/features/assets/get-assets.f
 import { type RefObject, useEffect } from 'react'
 import type { AssetListRowComponent } from './assets-list'
 
-const MOBILE_BOTTOM_INSET = 12
-const DESKTOP_BOTTOM_INSET = 8
-
 type VirtualizedAssetListProps = {
   assets: AssetWithUsage[]
   AssetListRow?: AssetListRowComponent
@@ -67,7 +64,7 @@ export function VirtualizedAssetList({
     <div
       className="relative w-full"
       style={{
-        height: `${rowVirtualizer.getTotalSize() + (isMobile ? MOBILE_BOTTOM_INSET : DESKTOP_BOTTOM_INSET)}px`,
+        height: `${rowVirtualizer.getTotalSize()}px`,
       }}
     >
       {virtualRows.map((virtualRow) => {
@@ -89,6 +86,7 @@ export function VirtualizedAssetList({
             <AssetListRow
               asset={asset}
               variant={isMobile ? 'mobile' : 'desktop'}
+              isLast={virtualRow.index === assets.length - 1}
               onDelete={onDelete}
               onOpenDetails={onOpenDetails}
               shouldSuppressOpenDetails={shouldSuppressOpenDetails}

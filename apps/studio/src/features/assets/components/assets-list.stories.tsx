@@ -1,19 +1,67 @@
 import { faker } from '@faker-js/faker'
 import type { Meta, StoryObj } from '@storybook/react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { AssetWithUsage } from '@valguide/core/features/assets/types'
-import { AssetUploadSessionProvider } from '../upload-session/asset-upload-session'
+import {
+  AssetUploadSessionContext,
+  type AssetUploadSessionContextValue,
+} from '../upload-session/asset-upload-session-context'
 import { AssetCard, type DeleteAssetDialogComponentProps } from './asset-card'
 import { type AssetCardComponentProps, AssetsList } from './assets-list'
 import { AssetsListSkeleton } from './assets-list-skeleton'
+import { BulkDeleteAssetsDialog } from './bulk-delete-assets-dialog'
+import type { BulkDeleteAssetsDialogConnectedProps } from './bulk-delete-assets-dialog-connected'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 
 const mockMuseumEntranceImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
 const mockArtifactDisplayImageUrl = faker.image.urlLoremFlickr({ width: 1920, height: 1080, category: 'art' })
 const mockSculptureCloseupImageUrl = faker.image.urlLoremFlickr({ width: 2560, height: 1440, category: 'art' })
 
+const mockUploadSessionValue: AssetUploadSessionContextValue = {
+  items: [],
+  isExpanded: false,
+  isDragActive: false,
+  hasVisibleUploads: false,
+  openFilePicker: () => undefined,
+  setExpanded: () => undefined,
+  closeSurface: () => undefined,
+  dismissItem: () => undefined,
+  retryItem: () => undefined,
+  clearCompleted: () => undefined,
+}
+
 function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
   return <DeleteAssetDialog {...props} onGetUsage={async () => ({ tours: [], stops: [] })} />
+}
+
+function MockBulkDeleteDialog(props: BulkDeleteAssetsDialogConnectedProps) {
+  return (
+    <BulkDeleteAssetsDialog
+      open={props.open}
+      onOpenChange={props.onOpenChange}
+      selectedAssets={props.selectedAssets}
+      isDeleting={false}
+      onGetPreview={async (_assetIds) => ({
+        assets: props.selectedAssets.map((asset) => ({
+          assetId: asset.id,
+          nanoId: asset.id,
+          fileName: asset.fileName,
+          deletable: true,
+          tourCount: 0,
+          stopCount: 0,
+          tours: [],
+          stops: [],
+        })),
+        missingAssetIds: [],
+      })}
+      onConfirmDelete={async (assetIds) => {
+        await props.onDeleteComplete({
+          deletedAssetIds: assetIds,
+          blockedAssets: [],
+          missingAssetIds: [],
+        })
+      }}
+    />
+  )
 }
 
 function MockAssetCard({ asset, onDelete }: AssetCardComponentProps) {
@@ -29,8 +77,6 @@ function MockAssetCard({ asset, onDelete }: AssetCardComponentProps) {
   )
 }
 
-const queryClient = new QueryClient()
-
 const meta = {
   title: 'Assets/AssetsList',
   component: AssetsList,
@@ -43,16 +89,15 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <QueryClientProvider client={queryClient}>
-        <AssetUploadSessionProvider>
-          <Story />
-        </AssetUploadSessionProvider>
-      </QueryClientProvider>
+      <AssetUploadSessionContext.Provider value={mockUploadSessionValue}>
+        <Story />
+      </AssetUploadSessionContext.Provider>
     ),
   ],
   args: {
     assets: [],
     AssetCard: MockAssetCard,
+    BulkDeleteDialog: MockBulkDeleteDialog,
   },
 } satisfies Meta<typeof AssetsList>
 

@@ -32,13 +32,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Filter, Image as ImageIcon, LayoutGrid, List, Search, Upload, X } from 'lucide-react'
 import type { ComponentType } from 'react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { AssetDetailsDrawer } from '@/features/assets/components/asset-details-drawer'
-import { BulkDeleteAssetsDialogConnected } from '@/features/assets/components/bulk-delete-assets-dialog-connected'
 import { VirtualizedAssetGrid } from '@/features/assets/components/virtualized-asset-grid'
 import { VirtualizedAssetList } from '@/features/assets/components/virtualized-asset-list'
-import { useAssetUploadSession } from '@/features/assets/upload-session/asset-upload-session-context'
+import { AssetUploadSessionContext } from '@/features/assets/upload-session/asset-upload-session-context'
 import { useIsMobile } from '@/hooks/use-mobile'
+import type { BulkDeleteAssetsDialogConnectedProps } from './bulk-delete-assets-dialog-connected'
 
 export type AssetCardComponentProps = {
   asset: AssetWithUsage
@@ -56,6 +56,7 @@ type AssetViewMode = 'grid' | 'list'
 export type AssetListRowComponentProps = {
   asset: AssetWithUsage
   variant: 'desktop' | 'mobile'
+  isLast?: boolean
   onDelete?: (assetId: string) => void
   onOpenDetails?: (asset: AssetWithUsage) => void
   shouldSuppressOpenDetails?: () => boolean
@@ -64,6 +65,8 @@ export type AssetListRowComponentProps = {
 }
 
 export type AssetListRowComponent = ComponentType<AssetListRowComponentProps>
+
+export type BulkDeleteDialogComponent = ComponentType<BulkDeleteAssetsDialogConnectedProps>
 
 export type AssetsListProps = {
   assets?: AssetWithUsage[]
@@ -90,6 +93,7 @@ export type AssetsListProps = {
   onClearAllFilters?: () => void
   AssetCard?: AssetCardComponent
   AssetListRow?: AssetListRowComponent
+  BulkDeleteDialog?: BulkDeleteDialogComponent
   onRenameAssetAction?: (input: { assetId: string; fileName: string }) => Promise<Asset>
 }
 
@@ -118,6 +122,7 @@ export function AssetsList({
   onClearAllFilters,
   AssetCard,
   AssetListRow,
+  BulkDeleteDialog,
   onRenameAssetAction,
 }: AssetsListProps) {
   const t = useTranslations('assets')
@@ -137,7 +142,9 @@ export function AssetsList({
   const [resultsScrollMargin, setResultsScrollMargin] = useState(0)
   const lastMobileScrollAtRef = useRef(0)
   const isMobile = useIsMobile()
-  const { openFilePicker, hasVisibleUploads } = useAssetUploadSession()
+  const uploadSession = useContext(AssetUploadSessionContext)
+  const openFilePicker = uploadSession?.openFilePicker ?? (() => {})
+  const hasVisibleUploads = uploadSession?.hasVisibleUploads ?? false
 
   const typeFilter = controlledTypeFilter ?? internalTypeFilter
   const searchQuery = controlledSearchQuery ?? internalSearchQuery
@@ -987,12 +994,14 @@ export function AssetsList({
         onOpenChange={closeAssetDetails}
         onRename={handleRenameAsset}
       />
-      <BulkDeleteAssetsDialogConnected
-        open={isBulkDeleteOpen}
-        onOpenChange={setIsBulkDeleteOpen}
-        selectedAssets={selectedAssets}
-        onDeleteComplete={handleBulkDeleteComplete}
-      />
+      {BulkDeleteDialog ? (
+        <BulkDeleteDialog
+          open={isBulkDeleteOpen}
+          onOpenChange={setIsBulkDeleteOpen}
+          selectedAssets={selectedAssets}
+          onDeleteComplete={handleBulkDeleteComplete}
+        />
+      ) : null}
     </div>
   )
 }

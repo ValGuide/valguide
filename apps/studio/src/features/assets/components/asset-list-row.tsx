@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { RevealImage } from '@valguide/ui/components/reveal-image'
+import { cn } from '@valguide/ui/lib/utils'
 import { format } from 'date-fns'
 import { Heart, MoreHorizontal, Music, Trash2, Video } from 'lucide-react'
 import * as React from 'react'
@@ -24,6 +25,7 @@ type AssetListRowVariant = 'desktop' | 'mobile'
 export type AssetListRowProps = {
   asset: AssetWithUsage
   variant: AssetListRowVariant
+  isLast?: boolean
   onDelete?: (assetId: string) => void
   onOpenDetails?: (asset: AssetWithUsage) => void
   shouldSuppressOpenDetails?: () => boolean
@@ -36,6 +38,7 @@ export type AssetListRowProps = {
 export function AssetListRow({
   asset,
   variant,
+  isLast = false,
   onDelete,
   onOpenDetails,
   shouldSuppressOpenDetails,
@@ -149,7 +152,12 @@ export function AssetListRow({
   if (variant === 'mobile') {
     return (
       <>
-        <div className="grid grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] items-center gap-3 border-b px-2 py-3">
+        <div
+          className={cn(
+            'grid grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] items-center gap-3 px-2 py-3',
+            !isLast && 'shadow-[inset_0_-1px_0_0_hsl(var(--border))]',
+          )}
+        >
           <Checkbox
             aria-label={t('list.selectAsset')}
             checked={isSelected}
@@ -208,7 +216,12 @@ export function AssetListRow({
 
   return (
     <>
-      <div className="grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 border-b px-3 py-2.5">
+      <div
+        className={cn(
+          'grid grid-cols-[36px_minmax(0,2fr)_110px_150px_140px_44px_44px] items-center gap-3 px-3 py-2.5',
+          !isLast && 'shadow-[inset_0_-1px_0_0_hsl(var(--border))]',
+        )}
+      >
         <Checkbox
           aria-label={t('list.selectAsset')}
           checked={isSelected}
