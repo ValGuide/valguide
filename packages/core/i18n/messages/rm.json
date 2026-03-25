@@ -322,6 +322,7 @@
       "title": "Anc naginas turas",
       "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-turas immersivsas che dattan vita a vossas exposiziuns.",
       "createButton": "Cumenzar",
+      "creatingButton": "La tura vegn creada...",
       "createNewButton": "Crear nova tura"
     },
     "editTour": "Modifitgar la tura",
@@ -436,6 +437,7 @@
     },
     "error": {
       "failedToLoad": "Impussibel da chargiar las turas",
+      "createFailed": "Impussibel da crear la tura",
       "unexpected": "Ina errur nunspetgada è succedida"
     },
     "details": {

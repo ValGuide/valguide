@@ -322,6 +322,7 @@
       "title": "Noch keine Touren",
       "heroDescription": "Ihre Besucher verdienen mehr als eine Broschüre. Erstellen Sie immersive Audio-Touren, die Ihre Ausstellungen zum Leben erwecken.",
       "createButton": "Jetzt starten",
+      "creatingButton": "Tour wird erstellt...",
       "createNewButton": "Neue Tour erstellen"
     },
     "editTour": "Tour bearbeiten",
@@ -436,6 +437,7 @@
     },
     "error": {
       "failedToLoad": "Touren konnten nicht geladen werden",
+      "createFailed": "Tour konnte nicht erstellt werden",
       "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
     },
     "details": {

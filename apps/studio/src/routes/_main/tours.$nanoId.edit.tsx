@@ -1,7 +1,6 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { updateStopVisibilityFn } from '@valguide/core/features/tours/structure/update-stop-visibility.fn'
 import { discardAllTourChangesFn } from '@valguide/core/features/tours/tour/discard-all-tour-changes.fn'
-import { ensureAllTourLocalesFn } from '@valguide/core/features/tours/tour/locale/ensure-all-tour-locales.fn'
 import { unpublishTourLocaleFn } from '@valguide/core/features/tours/tour/locale/unpublish-tour-locale.fn'
 import { publishTourFn } from '@valguide/core/features/tours/tour/publish-tour.fn'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
@@ -34,13 +33,9 @@ export const Route = createFileRoute('/_main/tours/$nanoId/edit')({
       throw notFound()
     }
 
-    // Ensure all locales have records upfront for instant locale switching
-    await ensureAllTourLocalesFn({ data: { tourNanoId: params.nanoId } })
-
     const requestedLocale = deps.locale
     const { availableLocales } = tourDetail
 
-    // Redirect if locale missing or invalid
     if (!requestedLocale || !availableLocales.includes(requestedLocale)) {
       const defaultLocale = availableLocales[0]
       if (!defaultLocale) throw notFound()

@@ -12,9 +12,10 @@ import { Headphones, Plus } from 'lucide-react'
 
 interface ToursListEmptyProps {
   onCreateTour?: () => void
+  isCreatingTour?: boolean
 }
 
-export function ToursListEmpty({ onCreateTour }: ToursListEmptyProps) {
+export function ToursListEmpty({ onCreateTour, isCreatingTour = false }: ToursListEmptyProps) {
   const t = useTranslations('tours')
 
   return (
@@ -27,9 +28,9 @@ export function ToursListEmpty({ onCreateTour }: ToursListEmptyProps) {
         <EmptyDescription className="text-balance">{t('empty.heroDescription')}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button onClick={onCreateTour} size="lg">
+        <Button onClick={onCreateTour} size="lg" disabled={isCreatingTour}>
           <Plus />
-          {t('empty.createButton')}
+          {isCreatingTour ? t('empty.creatingButton') : t('empty.createButton')}
         </Button>
       </EmptyContent>
     </Empty>

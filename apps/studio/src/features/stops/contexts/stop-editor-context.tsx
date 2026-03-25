@@ -16,6 +16,7 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback, useMemo } from 'react'
 import { useEditorBase } from '@/features/editor/hooks/use-editor-base'
+import { useEnableAfterMount } from '@/features/editor/hooks/use-enable-after-mount'
 import {
   stopAssetsDraftQueryOptions,
   stopAssetsPublishedQueryOptions,
@@ -48,6 +49,7 @@ export function StopEditorProvider({
   navigation,
 }: StopEditorProviderProps) {
   const t = useTranslations()
+  const secondaryQueriesEnabled = useEnableAfterMount()
 
   const base = useEditorBase<StopDetail, StopLocaleDraftResult, StopLocalePublishedResult>({
     nanoId,
@@ -57,6 +59,8 @@ export function StopEditorProvider({
     detailQueryOptions: stopDetailQueryOptions,
     localeDraftQueryOptions: stopLocaleDraftQueryOptions,
     localePublishedQueryOptions: stopLocalePublishedQueryOptions,
+    enablePublishedQuery: secondaryQueriesEnabled,
+    prefetchOtherLocales: secondaryQueriesEnabled,
   })
 
   const {
@@ -110,18 +114,18 @@ export function StopEditorProvider({
   // Published stop assets
   const assetsPublishedQuery = useQuery({
     ...stopAssetsPublishedQueryOptions(nanoId),
-    enabled: !!nanoId,
+    enabled: !!nanoId && secondaryQueriesEnabled,
   })
   const assetsPublished = assetsPublishedQuery.data?.assets ?? []
-  const isLoadingAssetsPublished = assetsPublishedQuery.isLoading
+  const isLoadingAssetsPublished = secondaryQueriesEnabled && assetsPublishedQuery.isLoading
 
   // Tour usage (for shared stop indicator)
   const tourUsageQuery = useQuery({
     ...stopTourUsageQueryOptions(nanoId),
-    enabled: !!nanoId,
+    enabled: !!nanoId && secondaryQueriesEnabled,
   })
   const tourUsage = tourUsageQuery.data ?? null
-  const isLoadingTourUsage = tourUsageQuery.isLoading
+  const isLoadingTourUsage = secondaryQueriesEnabled && tourUsageQuery.isLoading
 
   // Update available locales
   const updateAvailableLocales = useCallback(

@@ -14,6 +14,7 @@ import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components
 import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
 import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
 import { useDiffView } from '@/features/editor/hooks/use-diff-view'
+import { useEnableAfterMount } from '@/features/editor/hooks/use-enable-after-mount'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
 import { SharedStopBanner } from '@/features/stops/components/shared-stop-banner'
 import {
@@ -59,13 +60,14 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
   } = useStopEditor()
 
   const [isPublishing, setIsPublishing] = useState(false)
+  const secondaryPanelsEnabled = useEnableAfterMount()
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
 
   // Diff view state
   const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
-    enabled: true,
-    queryOptions: diffQueryOptions,
+    enabled: secondaryPanelsEnabled,
+    queryOptions: secondaryPanelsEnabled ? diffQueryOptions : undefined,
   })
 
   const hasDraft = !!localeDraft

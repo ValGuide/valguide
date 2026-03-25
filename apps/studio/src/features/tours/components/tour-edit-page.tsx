@@ -15,6 +15,7 @@ import type { MediaPickerComponent } from '@/features/assets/components/media-pi
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
 import type { DiffResult } from '@/features/editor/hooks/use-diff-view'
 import { useDiffView } from '@/features/editor/hooks/use-diff-view'
+import { useEnableAfterMount } from '@/features/editor/hooks/use-enable-after-mount'
 import { useUnsavedChangesGuard } from '@/features/editor/hooks/use-unsaved-changes-guard'
 import { HideStopDialog } from '@/features/tours/components/hide-stop-dialog'
 import { ShowStopDialog } from '@/features/tours/components/show-stop-dialog'
@@ -83,23 +84,27 @@ export function TourEditPage({
   const [isPublishing, setIsPublishing] = useState(false)
   const [stopToHide, setStopToHide] = useState<{ id: string; title: string } | null>(null)
   const [stopToShow, setStopToShow] = useState<{ id: string; title: string } | null>(null)
+  const secondaryPanelsEnabled = useEnableAfterMount()
 
   const { confirmIfDirty, dialog: unsavedChangesDialog } = useUnsavedChangesGuard({ isDirty })
   const localeSearch = activeLocale !== defaultLocale ? { locale: activeLocale } : undefined
+  const activeLocaleDetail = tourDetail?.locales.find((item) => item.locale === activeLocale) ?? null
+  const hasLocaleChanges = activeLocaleDetail?.hasChanges ?? false
+  const hasDraft = true
+  const hasPublished = localeDraft?.hasPublished ?? false
 
   // Diff view state
-  const { diffEnabled, setDiffEnabled, changedCount, getFieldDiff } = useDiffView({
-    enabled: true,
-    queryOptions: diffQueryOptions,
+  const diffView = useDiffView({
+    enabled: secondaryPanelsEnabled && hasPublished,
+    queryOptions: secondaryPanelsEnabled && hasPublished ? diffQueryOptions : undefined,
   })
+  const { diffEnabled, setDiffEnabled, changedCount: fetchedChangedCount, getFieldDiff } = diffView
+  const changedCount = fetchedChangedCount > 0 ? fetchedChangedCount : hasLocaleChanges ? 1 : 0
 
   const tourTitle = useMemo(() => {
     const title = localeDraft?.title
     return title?.trim() ? title : t('unknownTitle')
   }, [localeDraft, t])
-
-  const hasDraft = true
-  const hasPublished = localeDraft?.hasPublished ?? false
 
   const computedStatusDisplay: StatusDisplay = useMemo(() => {
     const hasAnyChanges = tourDetail?.hasAnyChanges ?? changedCount > 0

@@ -6,6 +6,7 @@ import { reorderStopsFn } from '@valguide/core/features/tours/structure/reorder-
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { type ReactNode, useCallback } from 'react'
+import { useEnableAfterMount } from '@/features/editor/hooks/use-enable-after-mount'
 import { tourStructureDraftQueryOptions } from '../query-options'
 import { TourEditorStopsContext, type TourEditorStopsContextValue } from './tour-editor-stops-types'
 import { useTourEditor } from './tour-editor-types'
@@ -18,13 +19,14 @@ export function TourEditorStopsProvider({ children }: TourEditorStopsProviderPro
   const { nanoId, activeLocale } = useTourEditor()
   const queryClient = useQueryClient()
   const t = useTranslations()
+  const stopsQueryEnabled = useEnableAfterMount()
 
   const structureQuery = useQuery({
     ...tourStructureDraftQueryOptions(nanoId, activeLocale),
-    enabled: !!nanoId,
+    enabled: !!nanoId && stopsQueryEnabled,
   })
   const stops = structureQuery.data?.stops ?? []
-  const isLoadingStops = structureQuery.isLoading
+  const isLoadingStops = !stopsQueryEnabled || structureQuery.isLoading
   const stopsError = structureQuery.error instanceof Error ? structureQuery.error : null
 
   const addStop = useCallback(async () => {

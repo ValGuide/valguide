@@ -14,6 +14,7 @@ interface ToursListProps {
   error?: Error | null
   onViewTour?: (tour: TourListItem) => void
   onCreateTour?: () => void
+  isCreatingTour?: boolean
   onRetry?: () => void
 }
 
@@ -23,6 +24,7 @@ export function ToursList({
   error = null,
   onViewTour,
   onCreateTour,
+  isCreatingTour = false,
   onRetry,
 }: ToursListProps) {
   const t = useTranslations('tours')
@@ -44,7 +46,7 @@ export function ToursList({
     }
 
     if (tours.length === 0) {
-      return <ToursListEmpty onCreateTour={onCreateTour} />
+      return <ToursListEmpty onCreateTour={onCreateTour} isCreatingTour={isCreatingTour} />
     }
 
     return <ToursListContent tours={tours} onViewTour={onViewTour} />
@@ -57,9 +59,9 @@ export function ToursList({
         description={t('description')}
         action={
           tours.length > 0 && (
-            <Button onClick={onCreateTour} className="group">
+            <Button onClick={onCreateTour} className="group" disabled={isCreatingTour}>
               <Plus className="transition-transform duration-200 group-hover:rotate-90" />
-              {t('empty.createNewButton')}
+              {isCreatingTour ? t('empty.creatingButton') : t('empty.createNewButton')}
             </Button>
           )
         }

@@ -1,5 +1,7 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours.fn'
+import { useLocale, useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { ToursList } from '@/features/tours/components/tours-list'
 import { ToursListSkeleton } from '@/features/tours/components/tours-list-skeleton'
 import { useTours } from '@/features/tours/hooks/use-tours'
@@ -22,7 +24,9 @@ export const Route = createFileRoute('/_main/tours/')({
 
 function ToursPage() {
   const router = useRouter()
-  const { tours, isLoading, error, refetch } = useTours()
+  const locale = useLocale()
+  const t = useTranslations('tours')
+  const { tours, isLoading, error, refetch, createTour, isCreatingTour } = useTours()
 
   const handleViewTour = (tour: TourListItem) => {
     if (tour.nanoId) {
@@ -30,8 +34,17 @@ function ToursPage() {
     }
   }
 
-  const handleNavigateToNewTour = () => {
-    router.navigate({ to: '/tours/new' })
+  const handleCreateTour = async () => {
+    try {
+      const createdTour = await createTour({ locale })
+      await router.navigate({
+        to: '/tours/$nanoId/edit',
+        params: { nanoId: createdTour.nanoId },
+        search: { locale: createdTour.locale },
+      })
+    } catch {
+      toast.error(t('error.createFailed'))
+    }
   }
 
   return (
@@ -41,7 +54,8 @@ function ToursPage() {
         isLoading={isLoading}
         error={error}
         onViewTour={handleViewTour}
-        onCreateTour={handleNavigateToNewTour}
+        onCreateTour={handleCreateTour}
+        isCreatingTour={isCreatingTour}
         onRetry={refetch}
       />
     </main>

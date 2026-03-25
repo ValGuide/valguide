@@ -13,6 +13,7 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { type ReactNode, useCallback } from 'react'
 import { useEditorBase } from '@/features/editor/hooks/use-editor-base'
+import { useEnableAfterMount } from '@/features/editor/hooks/use-enable-after-mount'
 import {
   tourAssetsDraftQueryOptions,
   tourAssetsPublishedQueryOptions,
@@ -35,6 +36,7 @@ interface TourEditorProviderProps {
 
 export function TourEditorProvider({ children, nanoId, initialLocale, navigation }: TourEditorProviderProps) {
   const t = useTranslations()
+  const secondaryQueriesEnabled = useEnableAfterMount()
 
   const base = useEditorBase<TourDetail, TourLocaleDraftResult, TourLocalePublishedResult>({
     nanoId,
@@ -42,6 +44,8 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     detailQueryOptions: tourDetailQueryOptions,
     localeDraftQueryOptions: tourLocaleDraftQueryOptions,
     localePublishedQueryOptions: tourLocalePublishedQueryOptions,
+    enablePublishedQuery: secondaryQueriesEnabled,
+    prefetchOtherLocales: secondaryQueriesEnabled,
   })
 
   const {
@@ -79,7 +83,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
   // Published tour assets
   const tourAssetsPublishedQuery = useQuery({
     ...tourAssetsPublishedQueryOptions(nanoId),
-    enabled: !!nanoId,
+    enabled: !!nanoId && secondaryQueriesEnabled,
   })
   const tourAssetsPublished = tourAssetsPublishedQuery.data?.assets ?? []
   const isLoadingTourAssetsPublished = tourAssetsPublishedQuery.isLoading

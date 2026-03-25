@@ -322,6 +322,7 @@
       "title": "No tours yet",
       "heroDescription": "Your visitors deserve more than a brochure. Create immersive audio tours that bring your exhibitions to life.",
       "createButton": "Start creating",
+      "creatingButton": "Creating tour...",
       "createNewButton": "Create new tour"
     },
     "editTour": "Edit Tour",
@@ -436,6 +437,7 @@
     },
     "error": {
       "failedToLoad": "Failed to load tours",
+      "createFailed": "Failed to create tour",
       "unexpected": "An unexpected error occurred"
     },
     "details": {

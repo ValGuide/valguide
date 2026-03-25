@@ -38,6 +38,8 @@ export interface UseEditorBaseOptions {
   localeDraftQueryOptions: (nanoId: string, locale: string) => any
   // biome-ignore lint/suspicious/noExplicitAny: Query options return types vary by entity
   localePublishedQueryOptions: (nanoId: string, locale: string) => any
+  enablePublishedQuery?: boolean
+  prefetchOtherLocales?: boolean
 }
 
 export interface EditorBaseResult<TDetail extends EntityDetail, TLocaleDraft, TLocalePublished> {
@@ -73,6 +75,8 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
   detailQueryOptions,
   localeDraftQueryOptions,
   localePublishedQueryOptions,
+  enablePublishedQuery = true,
+  prefetchOtherLocales = true,
 }: UseEditorBaseOptions): EditorBaseResult<TDetail, TLocaleDraft, TLocalePublished> {
   const router = useRouter()
   const location = useLocation()
@@ -104,20 +108,31 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
 
   const localePublishedQuery = useQuery({
     ...localePublishedQueryOptions(nanoId, activeLocale),
-    enabled: !!nanoId,
+    enabled: !!nanoId && enablePublishedQuery,
   })
   const localePublished = (localePublishedQuery.data ?? null) as TLocalePublished | null
   const isLoadingLocalePublished = localePublishedQuery.isLoading
 
   useEffect(() => {
-    if (!nanoId || availableLocales.length <= 1) return
+    if (!nanoId || !prefetchOtherLocales || availableLocales.length <= 1) return
 
     const otherLocales = availableLocales.filter((l: string) => l !== activeLocale)
     for (const locale of otherLocales) {
       queryClient.prefetchQuery(localeDraftQueryOptions(nanoId, locale))
-      queryClient.prefetchQuery(localePublishedQueryOptions(nanoId, locale))
+      if (enablePublishedQuery) {
+        queryClient.prefetchQuery(localePublishedQueryOptions(nanoId, locale))
+      }
     }
-  }, [nanoId, activeLocale, availableLocales, queryClient, localeDraftQueryOptions, localePublishedQueryOptions])
+  }, [
+    nanoId,
+    activeLocale,
+    availableLocales,
+    enablePublishedQuery,
+    prefetchOtherLocales,
+    queryClient,
+    localeDraftQueryOptions,
+    localePublishedQueryOptions,
+  ])
 
   const [dirtyForms, setDirtyForms] = useState<Set<string>>(new Set())
   const formResetFnsRef = useRef<Map<string, () => void>>(new Map())

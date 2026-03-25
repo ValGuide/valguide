@@ -12,11 +12,9 @@ export const Route = createFileRoute('/_main/tours/new')({
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   pendingComponent: TourEditSkeleton,
-  loader: async ({ context, deps }) => {
+  loader: async ({ deps, context }) => {
     const locale = deps.locale ?? context.locale
     const result = await createTourFn({ data: { locale } })
-
-    await context.queryClient.invalidateQueries({ queryKey: ['tours'] })
 
     throw redirect({
       to: '/tours/$nanoId/edit',
