@@ -1637,28 +1637,28 @@
 }
 
 .studio-page-transition {
-    animation-duration: 200ms;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-duration: 160ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
     animation-fill-mode: both;
 }
 
 @keyframes studio-page-enter-a {
     from {
-        transform: translateY(1px);
+        opacity: 0.985;
     }
 
     to {
-        transform: translateY(0);
+        opacity: 1;
     }
 }
 
 @keyframes studio-page-enter-b {
     from {
-        transform: translateY(1px);
+        opacity: 0.985;
     }
 
     to {
-        transform: translateY(0);
+        opacity: 1;
     }
 }
 
