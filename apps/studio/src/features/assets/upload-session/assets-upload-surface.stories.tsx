@@ -25,6 +25,9 @@ const baseAsset: Asset = {
   updatedAt: new Date('2026-03-24T08:00:00Z'),
 }
 
+const longUploadErrorMessage =
+  'Upload failed after the connection dropped during multipart processing. The storage service rejected part 17 of 24 because the request signature expired before the retry completed, and the temporary upload session could not be resumed automatically. Please verify your network connection, request a fresh upload token, and try again once the source file is available locally.'
+
 function createItem(status: AssetUploadStatus, overrides?: Partial<AssetUploadSessionContextValue['items'][number]>) {
   return {
     id: overrides?.id ?? `upload-${status}`,
@@ -150,6 +153,29 @@ export const PartialFailure: Story = {
           type: 'audio',
           file: new File(['demo'], 'narration.wav', { type: 'audio/wav' }),
           error: 'File size exceeds 50MB limit',
+        }),
+      ],
+    },
+  },
+}
+
+export const PartialFailureLongErrorMessage: Story = {
+  args: {
+    contextValue: {
+      isExpanded: true,
+      items: [
+        createItem('complete', { id: 'complete-1', asset: baseAsset }),
+        createItem('error', {
+          id: 'error-long-1',
+          type: 'video',
+          file: new File(['demo'], 'museum-master-export-with-extended-filename.mp4', { type: 'video/mp4' }),
+          error: longUploadErrorMessage,
+        }),
+        createItem('error', {
+          id: 'error-long-2',
+          type: 'audio',
+          file: new File(['demo'], 'gallery-room-12-narration-final-mix.wav', { type: 'audio/wav' }),
+          error: longUploadErrorMessage,
         }),
       ],
     },
