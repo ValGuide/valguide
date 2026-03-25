@@ -59,9 +59,16 @@ export interface TourPreviewCardProps extends React.HTMLAttributes<HTMLDivElemen
   tour: Tour
   onViewDetails?: (tour: Tour) => void
   className?: string
+  imagePriority?: boolean
 }
 
-export function TourPreviewCard({ tour, onViewDetails, className, ...props }: TourPreviewCardProps) {
+export function TourPreviewCard({
+  tour,
+  onViewDetails,
+  className,
+  imagePriority = false,
+  ...props
+}: TourPreviewCardProps) {
   // i18n-used-keys: tour.previewCard.published, tour.previewCard.unpublished
   const t = useTranslations('tour.previewCard')
   const locale = useLocale()
@@ -101,6 +108,7 @@ export function TourPreviewCard({ tour, onViewDetails, className, ...props }: To
             layout="fullWidth"
             width={800}
             height={176}
+            priority={imagePriority}
             className="group-hover:scale-105"
           />
         ) : (

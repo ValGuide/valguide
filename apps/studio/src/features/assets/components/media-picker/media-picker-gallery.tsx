@@ -2,8 +2,8 @@ import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import { Image } from '@valguide/ui/components/image'
 import { Progress } from '@valguide/ui/components/progress'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { cn } from '@valguide/ui/lib/utils'
 import { Music, Plus, Video, X } from 'lucide-react'
 import { useCallback, useMemo, useRef } from 'react'
@@ -66,7 +66,7 @@ export function MediaPickerGallery({
       case 'image': {
         const imageUrl = getAssetImageUrl(asset)
         return imageUrl ? (
-          <Image
+          <RevealImage
             src={imageUrl}
             alt={asset.fileName}
             layout="constrained"

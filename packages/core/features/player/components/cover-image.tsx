@@ -1,4 +1,4 @@
-import { Image } from '@valguide/core/ui/components/image'
+import { RevealImage } from '@valguide/core/ui/components/reveal-image'
 import { Music } from 'lucide-react'
 
 type CoverImageProps = {
@@ -22,7 +22,7 @@ export function CoverImage({ src, alt, className = '' }: CoverImageProps) {
 
   return (
     <div className={`aspect-square rounded-lg overflow-hidden ${className}`}>
-      <Image src={src} alt={alt} layout="fullWidth" className="w-full h-full object-cover" />
+      <RevealImage src={src} alt={alt} layout="fullWidth" className="w-full h-full object-cover" />
     </div>
   )
 }

@@ -6,8 +6,8 @@ import { pickBestLocale } from '@valguide/core/features/tours/utils'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent } from '@valguide/ui/components/card'
-import { Image } from '@valguide/ui/components/image'
 import { MetadataGrid, MetadataRow } from '@valguide/ui/components/metadata-row'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
 import { Calendar, ChevronLeft, Clock, ImageIcon, Link2, Pencil } from 'lucide-react'
 import { type ComponentType, type ReactNode, useState } from 'react'
@@ -121,12 +121,13 @@ export function TourDetailView({
           <Card className="overflow-hidden shadow-(--shadow-md)">
             <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted/30">
               {coverImageUrl ? (
-                <Image
+                <RevealImage
                   src={coverImageUrl}
                   alt={displayTitle}
                   layout="fullWidth"
                   width={800}
                   height={224}
+                  priority
                   className="h-full w-full object-cover"
                 />
               ) : (

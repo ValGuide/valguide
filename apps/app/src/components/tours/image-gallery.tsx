@@ -2,7 +2,7 @@ import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { AssetItem } from '@valguide/core/features/tours/public/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
-import { Image } from '@valguide/ui/components/image'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
@@ -22,7 +22,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   return (
     <div className="space-y-4">
       <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted">
-        <Image
+        <RevealImage
           src={getAssetImageUrl(currentImage)}
           alt={currentImage.fileName}
           layout="fullWidth"
@@ -66,7 +66,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   idx === currentIndex ? 'border-primary' : 'border-transparent'
                 }`}
               >
-                <Image
+                <RevealImage
                   src={getAssetImageUrl(img)}
                   alt={img.fileName}
                   layout="constrained"

@@ -23,7 +23,12 @@ export function ToursListContent({ tours, onViewTour }: ToursListContentProps) {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {tours.map((tour) => (
-        <TourPreviewCard key={tour.nanoId} tour={toTourForPreview(tour)} onViewDetails={() => onViewTour?.(tour)} />
+        <TourPreviewCard
+          key={tour.nanoId}
+          tour={toTourForPreview(tour)}
+          imagePriority
+          onViewDetails={() => onViewTour?.(tour)}
+        />
       ))}
     </div>
   )

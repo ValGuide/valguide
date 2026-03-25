@@ -8,8 +8,8 @@ import { Button } from '@valguide/ui/components/button'
 import { Checkbox } from '@valguide/ui/components/checkbox'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@valguide/ui/components/empty'
-import { Image } from '@valguide/ui/components/image'
 import { Input } from '@valguide/ui/components/input'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { formatDistanceToNow } from 'date-fns'
@@ -199,7 +199,7 @@ export function AssetPickerModal({
           }`}
         >
           {asset.type === 'image' ? (
-            <Image
+            <RevealImage
               src={getAssetImageUrl(asset)}
               alt={asset.fileName}
               layout="fullWidth"

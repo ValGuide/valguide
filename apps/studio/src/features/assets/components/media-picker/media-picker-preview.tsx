@@ -2,7 +2,7 @@ import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import { Image } from '@valguide/ui/components/image'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { Music, Trash2, Video } from 'lucide-react'
 
 export type MediaPickerPreviewProps = {
@@ -18,7 +18,7 @@ export function MediaPickerPreview({ asset, onRemove, disabled = false }: MediaP
     switch (asset.type) {
       case 'image':
         return (
-          <Image
+          <RevealImage
             src={getAssetImageUrl(asset)}
             alt={asset.fileName}
             layout="fullWidth"

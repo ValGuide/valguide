@@ -1,5 +1,5 @@
 import { Button } from '@valguide/core/ui/components/button'
-import { Image } from '@valguide/core/ui/components/image'
+import { RevealImage } from '@valguide/core/ui/components/reveal-image'
 import { Music, Pause, Play, SkipForward } from 'lucide-react'
 import { useCurrentStop, useHasNext, useIsPlaying, usePlayerActions, useProgress } from '../store/use-player-store'
 
@@ -32,7 +32,7 @@ export function MiniPlayer({ className = '', onExpand }: MiniPlayerProps) {
           className="relative h-10 w-10 flex-shrink-0 rounded overflow-hidden bg-muted"
         >
           {currentStop.coverImageUrl ? (
-            <Image
+            <RevealImage
               src={currentStop.coverImageUrl}
               alt={currentStop.title}
               layout="constrained"

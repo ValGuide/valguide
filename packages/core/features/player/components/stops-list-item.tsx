@@ -1,4 +1,4 @@
-import { Image } from '@valguide/core/ui/components/image'
+import { RevealImage } from '@valguide/core/ui/components/reveal-image'
 import { Music, Pause, Play } from 'lucide-react'
 import type { PlayerStop } from '../types'
 
@@ -30,7 +30,7 @@ export function StopsListItem({ stop, index, isPlaying, isCurrent, onSelect }: S
     >
       <div className="relative h-12 w-12 flex-shrink-0 rounded-md overflow-hidden bg-muted">
         {stop.coverImageUrl ? (
-          <Image
+          <RevealImage
             src={stop.coverImageUrl}
             alt={stop.title}
             layout="constrained"

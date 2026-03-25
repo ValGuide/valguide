@@ -1,6 +1,6 @@
 import type { AssetItem } from '@valguide/core/features/tours/public/types'
-import { Image } from '@valguide/ui/components/image'
 import { PageTitle } from '@valguide/ui/components/page-title'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { RichTextDisplay } from '@valguide/ui/components/rich-text/rich-text-display'
 import { ImageGallery } from './image-gallery'
 
@@ -18,10 +18,11 @@ export function TourHero({ title, description, coverImage, assets }: TourHeroPro
     <div className="space-y-6">
       {coverImage && (
         <div className="relative aspect-video w-full rounded-lg overflow-hidden">
-          <Image
+          <RevealImage
             src={coverImage}
             alt={title}
             layout="fullWidth"
+            priority
             className="absolute inset-0 w-full h-full object-cover"
           />
         </div>

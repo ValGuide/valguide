@@ -34,7 +34,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@valguide/ui/components/empty'
-import { Image } from '@valguide/ui/components/image'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { cn } from '@valguide/ui/lib/utils'
 import { Edit, Eye, EyeOff, GripVertical, MoreVertical, Plus, Unlink } from 'lucide-react'
@@ -96,7 +96,7 @@ function SortableStopItem({ stop, index, onEdit, onHide, onShow, onRequestRemove
 
           <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
             {thumbnailUrl ? (
-              <Image src={thumbnailUrl} alt="" layout="fullWidth" className="h-full w-full object-cover" />
+              <RevealImage src={thumbnailUrl} alt="" layout="fullWidth" className="h-full w-full object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
             )}
@@ -271,7 +271,7 @@ export function StopsList({
                 <GripVertical className="h-5 w-5 text-muted-foreground" />
                 <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
                   {thumbnailUrl ? (
-                    <Image src={thumbnailUrl} alt="" layout="fullWidth" className="h-full w-full object-cover" />
+                    <RevealImage src={thumbnailUrl} alt="" layout="fullWidth" className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted to-muted-foreground/10" />
                   )}

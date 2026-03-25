@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
-import { Image } from '@valguide/ui/components/image'
+import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { ArrowUpDown, ImageOff, Loader2, MoreHorizontal } from 'lucide-react'
 import type { AdminTourListItem } from '@/server/functions/list-tours.fn'
 import { TourStatusBadge } from './tour-status-badge'
@@ -26,7 +26,7 @@ export const toursColumns: ColumnDef<AdminTourListItem>[] = [
       const storagePath = row.original.coverStoragePath
       return storagePath ? (
         <div className="size-10 overflow-hidden rounded bg-muted">
-          <Image
+          <RevealImage
             src={getAssetImageUrl({ storagePath })}
             alt=""
             layout="constrained"

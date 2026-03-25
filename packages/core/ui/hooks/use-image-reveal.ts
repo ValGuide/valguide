@@ -4,12 +4,18 @@ type UseImageRevealOptions = {
   imageKey: string | undefined
 }
 
-export function useImageReveal({ imageKey }: UseImageRevealOptions) {
-  const [imageLoaded, setImageLoaded] = React.useState(false)
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Reset reveal state when the image URL key changes.
-  React.useEffect(() => {
-    setImageLoaded(false)
+export function useImageReveal({ imageKey }: UseImageRevealOptions) {
+  const [hasMounted, setHasMounted] = React.useState(false)
+  const [imageLoaded, setImageLoaded] = React.useState(false)
+  const containerRef = React.useRef<HTMLDivElement>(null)
+
+  useIsomorphicLayoutEffect(() => {
+    setHasMounted(true)
+
+    const image = containerRef.current?.querySelector('img')
+    setImageLoaded(image?.complete === true)
   }, [imageKey])
 
   const handleImageLoad: NonNullable<React.ImgHTMLAttributes<HTMLImageElement>['onLoad']> = () => {
@@ -21,6 +27,8 @@ export function useImageReveal({ imageKey }: UseImageRevealOptions) {
   }
 
   return {
+    containerRef,
+    hasMounted,
     imageLoaded,
     handleImageLoad,
     handleImageError,
