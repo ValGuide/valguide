@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getAssetImageUrl, getImageKitUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { setActiveOrganizationForCurrentSession } from '@valguide/core/features/auth/better-auth.server'
 import { db } from '@valguide/core/features/db'
 import { getUserTeams } from '@valguide/core/features/orgs/get-user-teams.server'
@@ -28,7 +28,7 @@ export interface SidebarData {
 
 function mapTeam(team: OrganizationWithRole): SidebarTeam {
   const { logoStoragePath, ...rest } = team
-  return { ...rest, logo: logoStoragePath ? getImageKitUrl(logoStoragePath) : null }
+  return { ...rest, logo: logoStoragePath ? getAssetImageUrl({ storagePath: logoStoragePath }) : null }
 }
 
 // ============================================================================

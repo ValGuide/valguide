@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
 import { updateOrgLogoFn } from '@valguide/core/features/orgs/update-org-logo.fn'
 import { updateOrgNameFn } from '@valguide/core/features/orgs/update-org-name.fn'
@@ -55,7 +55,9 @@ export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProp
         </CardHeader>
         <CardContent className="space-y-6">
           <OrgAvatarForm
-            currentLogo={data.team.logoStoragePath ? getImageKitUrl(data.team.logoStoragePath) : null}
+            currentLogo={
+              data.team.logoStoragePath ? getAssetImageUrl({ storagePath: data.team.logoStoragePath }) : null
+            }
             orgName={data.team.name}
             onUploadAndSave={handleUploadAndSaveLogo}
           />

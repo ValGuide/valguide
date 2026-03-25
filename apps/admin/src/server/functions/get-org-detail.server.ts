@@ -1,4 +1,4 @@
-import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import type { DB } from '@valguide/core/features/db'
 import { member, organization } from '@valguide/core/features/orgs/schema'
 import { tour } from '@valguide/core/features/tours/schema'
@@ -35,7 +35,7 @@ export async function getOrgDetail(dbClient: DB, nanoId: string): Promise<AdminO
   return {
     nanoId: row.org.nanoId,
     name: row.org.name,
-    logo: row.org.logoStoragePath ? getImageKitUrl(row.org.logoStoragePath) : null,
+    logo: row.org.logoStoragePath ? getAssetImageUrl({ storagePath: row.org.logoStoragePath }) : null,
     memberCount: row.memberCount,
     tourCount: row.tourCount,
     createdAt: row.org.createdAt,

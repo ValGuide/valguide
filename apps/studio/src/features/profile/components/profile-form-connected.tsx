@@ -1,6 +1,6 @@
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
-import { getImageKitUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { currentUserQueryOptions } from '@valguide/core/features/auth/query-options'
 import type { Profile } from '@valguide/core/features/profiles/get-or-create-profile.fn'
 import { updateProfileFn } from '@valguide/core/features/profiles/update-profile.fn'
@@ -31,7 +31,9 @@ export function ProfileFormConnected() {
 
   const displayName =
     [profile.firstName, profile.lastName].filter(Boolean).join(' ') || profileWithDefaults.username || ''
-  const currentAvatarUrl = profile.avatarStoragePath ? getImageKitUrl(profile.avatarStoragePath) : null
+  const currentAvatarUrl = profile.avatarStoragePath
+    ? getAssetImageUrl({ storagePath: profile.avatarStoragePath })
+    : null
 
   const handleUploadAndSaveAvatar = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
