@@ -61,7 +61,7 @@ function AssetUploadSurfaceRow({
         : null
 
   return (
-    <div className="flex items-start gap-3 rounded-xl border bg-background px-3 py-3">
+    <div className="flex items-start gap-3 rounded-2xl border border-border/70 bg-background px-3 py-3 shadow-sm">
       <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted">
         {item.status === 'complete' && item.asset && item.type === 'image' ? (
           <Image
@@ -80,9 +80,11 @@ function AssetUploadSurfaceRow({
       </div>
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-3">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium">{item.file.name}</p>
+            <p className="truncate text-sm font-medium" title={item.file.name}>
+              {item.file.name}
+            </p>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <span>{item.status === 'complete' ? t('uploadedToLibrary') : statusLabel}</span>
               {secondaryLabel ? <span>{secondaryLabel}</span> : null}
@@ -90,17 +92,17 @@ function AssetUploadSurfaceRow({
           </div>
 
           {item.status === 'error' ? (
-            <div className="flex items-center gap-1">
-              <Button variant="ghost" size="sm" onClick={() => onRetry(item.id)} className="h-8 px-2">
+            <div className="flex shrink-0 items-center gap-1">
+              <Button variant="ghost" size="sm" onClick={() => onRetry(item.id)} className="h-8 rounded-lg px-2">
                 <RefreshCcw className="mr-2 h-3.5 w-3.5" />
                 {t('retry')}
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => onDismiss(item.id)} className="h-8 w-8">
+              <Button variant="ghost" size="icon" onClick={() => onDismiss(item.id)} className="h-8 w-8 rounded-lg">
                 <X className="h-4 w-4" />
               </Button>
             </div>
           ) : isTerminalUploadStatus(item.status) ? (
-            <Button variant="ghost" size="icon" onClick={() => onDismiss(item.id)} className="h-8 w-8">
+            <Button variant="ghost" size="icon" onClick={() => onDismiss(item.id)} className="h-8 w-8 rounded-lg">
               <X className="h-4 w-4" />
             </Button>
           ) : (
@@ -114,7 +116,11 @@ function AssetUploadSurfaceRow({
           )}
         </div>
 
-        {item.status === 'error' && item.error ? <p className="mt-2 text-xs text-destructive">{item.error}</p> : null}
+        {item.status === 'error' && item.error ? (
+          <p className="mt-3 rounded-xl border border-destructive/15 bg-destructive/5 px-3 py-2 text-xs leading-5 text-destructive break-words [overflow-wrap:anywhere]">
+            {item.error}
+          </p>
+        ) : null}
 
         {item.status === 'uploading' || item.status === 'confirming' ? (
           <Progress value={item.progress} className="mt-3 h-1.5" />

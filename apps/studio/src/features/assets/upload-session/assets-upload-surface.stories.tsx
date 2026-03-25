@@ -28,6 +28,9 @@ const baseAsset: Asset = {
 const longUploadErrorMessage =
   'Upload failed after the connection dropped during multipart processing. The storage service rejected part 17 of 24 because the request signature expired before the retry completed, and the temporary upload session could not be resumed automatically. Please verify your network connection, request a fresh upload token, and try again once the source file is available locally.'
 
+const unbreakableUploadErrorMessage =
+  'assetsuploaduploadsurfaceassetsuploaduploadsurfaceassetsuploaduploadsurfaceassetsuploaduploadsurfaceassetsuploaduploadsurfaceassetsuploaduploadsurfaceassetsuploaduploadsurfaceassetsuploaduploadsurfaceassetsup'
+
 function createItem(status: AssetUploadStatus, overrides?: Partial<AssetUploadSessionContextValue['items'][number]>) {
   return {
     id: overrides?.id ?? `upload-${status}`,
@@ -176,6 +179,23 @@ export const PartialFailureLongErrorMessage: Story = {
           type: 'audio',
           file: new File(['demo'], 'gallery-room-12-narration-final-mix.wav', { type: 'audio/wav' }),
           error: longUploadErrorMessage,
+        }),
+      ],
+    },
+  },
+}
+
+export const PartialFailureUnbreakableErrorMessage: Story = {
+  args: {
+    contextValue: {
+      isExpanded: true,
+      items: [
+        createItem('complete', { id: 'complete-1', asset: baseAsset }),
+        createItem('error', {
+          id: 'error-token-1',
+          type: 'audio',
+          file: new File(['demo'], 'gallery-room-12-narration-final-mix.wav', { type: 'audio/wav' }),
+          error: unbreakableUploadErrorMessage,
         }),
       ],
     },
