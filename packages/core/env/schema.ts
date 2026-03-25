@@ -41,7 +41,7 @@ export const clientEnvSchema = z.object({
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),
   VITE_STUDIO_SUPPORT_EMAIL: z.string().optional().default('support@valguide.com'),
   VITE_R2_PUBLIC_URL: z.string().optional().default('https://assets.valguide.com'),
-  VITE_IMAGE_PROVIDER: z.enum(['cloudflare', 'imagekit']).optional().default('imagekit'),
+  VITE_IMAGE_PROVIDER: z.enum(['cloudflare', 'imagekit']).optional().default('cloudflare'),
 })
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>
