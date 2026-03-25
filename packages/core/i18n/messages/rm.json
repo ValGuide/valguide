@@ -475,6 +475,7 @@
   "stops": {
     "title": "Stops",
     "add": "Agiuntar stop",
+    "adding": "Il stop vegn agiuntà...",
     "edit": "Modifitgar",
     "untitled": "Stop senza titel",
     "unknownTitle": "Nunenconuschent",

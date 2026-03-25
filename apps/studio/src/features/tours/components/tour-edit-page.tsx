@@ -79,7 +79,8 @@ export function TourEditPage({
     registerFormReset,
   } = useTourEditor()
 
-  const { stops, isLoadingStops, stopsError, removeStop, reorderStops, refetchStops } = useTourEditorStops()
+  const { stops, isLoadingStops, stopsError, isAddingStop, addStop, removeStop, reorderStops, refetchStops } =
+    useTourEditorStops()
 
   const [isPublishing, setIsPublishing] = useState(false)
   const [stopToHide, setStopToHide] = useState<{ id: string; title: string } | null>(null)
@@ -321,16 +322,20 @@ export function TourEditPage({
               stops={stops}
               isLoading={isLoadingStops}
               error={stopsError}
+              isAddingStop={isAddingStop}
               onRetry={refetchStops}
               onReorder={reorderStops}
               onEdit={handleSelectStop}
               onHide={handleHideStop}
               onShow={handleShowStop}
               onRemove={removeStop}
-              onAdd={() => {
+              onAdd={async () => {
+                const stopNanoId = await addStop()
+                if (!stopNanoId) return
+
                 router.navigate({
-                  to: '/tours/$nanoId/stops/new',
-                  params: { nanoId },
+                  to: '/tours/$nanoId/stops/$stopId/edit',
+                  params: { nanoId, stopId: stopNanoId },
                   search: localeSearch,
                 })
               }}

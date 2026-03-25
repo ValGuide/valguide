@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createStopFn } from '@valguide/core/features/tours/stop/create-stop.fn'
 import { addStopToTourFn } from '@valguide/core/features/tours/structure/add-stop.fn'
 import { removeStopFromTourFn } from '@valguide/core/features/tours/structure/remove-stop.fn'
@@ -29,21 +29,29 @@ export function TourEditorStopsProvider({ children }: TourEditorStopsProviderPro
   const isLoadingStops = !stopsQueryEnabled || structureQuery.isLoading
   const stopsError = structureQuery.error instanceof Error ? structureQuery.error : null
 
-  const addStop = useCallback(async () => {
-    if (!nanoId) return null
-    try {
+  const addStopMutation = useMutation({
+    mutationFn: async () => {
+      if (!nanoId) {
+        return null
+      }
+
       const newStop = await createStopFn({ data: { locale: activeLocale } })
       await addStopToTourFn({ data: { tourNanoId: nanoId, stopNanoId: newStop.nanoId } })
-      await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
-      const structureResult = await queryClient.fetchQuery(tourStructureDraftQueryOptions(nanoId, activeLocale))
-      const addedStop = structureResult?.stops.find((s) => s.stopNanoId === newStop.nanoId)
-      return addedStop ?? null
+      await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'], refetchType: 'none' })
+
+      return newStop.nanoId
+    },
+  })
+
+  const addStop = useCallback(async () => {
+    try {
+      return await addStopMutation.mutateAsync()
     } catch (error) {
       console.error('Failed to add stop:', error)
       toast.error(t('stops.actions.addError'))
       return null
     }
-  }, [nanoId, activeLocale, queryClient, t])
+  }, [addStopMutation, t])
 
   const removeStop = useCallback(
     async (stopNanoId: string) => {
@@ -82,6 +90,7 @@ export function TourEditorStopsProvider({ children }: TourEditorStopsProviderPro
     stops,
     isLoadingStops,
     stopsError,
+    isAddingStop: addStopMutation.isPending,
     addStop,
     removeStop,
     reorderStops,

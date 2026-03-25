@@ -87,6 +87,7 @@ export function MockTourEditorProvider({
     stops,
     isLoadingStops: false,
     stopsError: null,
+    isAddingStop: false,
     addStop: async () => {
       console.log('Mock: addStop')
       return null

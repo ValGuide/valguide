@@ -35,9 +35,16 @@ export async function getStopLocaleDraft(stopNanoId: string, locale: string): Pr
     .where(and(eq(stopLocaleDraft.stopId, foundStop.id), eq(stopLocaleDraft.locale, locale)))
     .limit(1)
 
-  // Return null if draft doesn't exist - caller should use ensureStopLocaleExists first
   if (!draft) {
-    return null
+    await db.insert(stopLocaleDraft).values({ stopId: foundStop.id, locale })
+
+    return {
+      locale,
+      title: null,
+      description: null,
+      transcription: null,
+      hasPublished: false,
+    }
   }
 
   // Check if published version exists by querying stopLocale

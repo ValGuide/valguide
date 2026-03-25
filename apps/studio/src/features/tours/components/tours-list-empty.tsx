@@ -28,7 +28,7 @@ export function ToursListEmpty({ onCreateTour, isCreatingTour = false }: ToursLi
         <EmptyDescription className="text-balance">{t('empty.heroDescription')}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button onClick={onCreateTour} size="lg" disabled={isCreatingTour}>
+        <Button onClick={onCreateTour} size="lg" data-testid="tours-create-button" disabled={isCreatingTour}>
           <Plus />
           {isCreatingTour ? t('empty.creatingButton') : t('empty.createButton')}
         </Button>

@@ -5,7 +5,8 @@ export interface TourEditorStopsContextValue {
   stops: StructureDraftStop[]
   isLoadingStops: boolean
   stopsError: Error | null
-  addStop: () => Promise<StructureDraftStop | null>
+  isAddingStop: boolean
+  addStop: () => Promise<string | null>
   removeStop: (stopNanoId: string) => Promise<void>
   reorderStops: (stopNanoIds: string[]) => Promise<void>
   refetchStops: () => Promise<void>

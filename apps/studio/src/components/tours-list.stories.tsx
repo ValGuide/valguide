@@ -95,8 +95,8 @@ export const WithCreateHandler: Story = {
     isLoading: false,
     error: null,
     onCreateTour: () => {
-      console.log('Navigate to create tour')
-      alert('Navigate to /tours/new')
+      console.log('Create tour via mutation')
+      alert('Create tour via mutation')
     },
   },
 }

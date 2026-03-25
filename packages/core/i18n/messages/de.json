@@ -475,6 +475,7 @@
   "stops": {
     "title": "Stops",
     "add": "Stop hinzufügen",
+    "adding": "Stop wird hinzugefügt...",
     "edit": "Bearbeiten",
     "untitled": "Unbenannter Stop",
     "unknownTitle": "Unbekannt",

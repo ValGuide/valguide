@@ -59,7 +59,12 @@ export function ToursList({
         description={t('description')}
         action={
           tours.length > 0 && (
-            <Button onClick={onCreateTour} className="group" disabled={isCreatingTour}>
+            <Button
+              onClick={onCreateTour}
+              className="group"
+              data-testid="tours-create-button"
+              disabled={isCreatingTour}
+            >
               <Plus className="transition-transform duration-200 group-hover:rotate-90" />
               {isCreatingTour ? t('empty.creatingButton') : t('empty.createNewButton')}
             </Button>

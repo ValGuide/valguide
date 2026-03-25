@@ -47,6 +47,7 @@ export type StopsListProps = {
   stops: StructureDraftStop[]
   isLoading?: boolean
   error?: Error | null
+  isAddingStop?: boolean
   onRetry?: () => void
   onReorder: (stopNanoIds: string[]) => void
   onEdit: (stopNanoId: string) => void
@@ -182,6 +183,7 @@ export function StopsList({
   stops,
   isLoading = false,
   error = null,
+  isAddingStop = false,
   onRetry,
   onReorder,
   onEdit,
@@ -247,9 +249,9 @@ export function StopsList({
           <EmptyDescription>{t('empty.description')}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button onClick={onAdd} size="lg" data-testid="tour-stops-add-button">
+          <Button onClick={onAdd} size="lg" data-testid="tour-stops-add-button" disabled={isAddingStop}>
             <Plus />
-            {t('add')}
+            {isAddingStop ? t('adding') : t('add')}
           </Button>
         </EmptyContent>
       </Empty>
@@ -283,9 +285,15 @@ export function StopsList({
             </Card>
           )
         })}
-        <Button onClick={onAdd} className="w-full" size="lg" data-testid="tour-stops-add-button">
+        <Button
+          onClick={onAdd}
+          className="w-full"
+          size="lg"
+          data-testid="tour-stops-add-button"
+          disabled={isAddingStop}
+        >
           <Plus />
-          {t('add')}
+          {isAddingStop ? t('adding') : t('add')}
         </Button>
         <RemoveStopDialog
           open={!!stopToRemove}
@@ -316,9 +324,9 @@ export function StopsList({
           </div>
         </SortableContext>
       </DndContext>
-      <Button onClick={onAdd} className="w-full" size="lg" data-testid="tour-stops-add-button">
+      <Button onClick={onAdd} className="w-full" size="lg" data-testid="tour-stops-add-button" disabled={isAddingStop}>
         <Plus />
-        {t('add')}
+        {isAddingStop ? t('adding') : t('add')}
       </Button>
       <RemoveStopDialog
         open={!!stopToRemove}

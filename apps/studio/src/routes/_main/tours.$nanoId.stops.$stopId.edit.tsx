@@ -1,6 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
-import { ensureAllStopLocalesForTourFn } from '@valguide/core/features/tours/stop/locale/ensure-all-stop-locales-for-tour.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { z } from 'zod'
 import { StopEditPageConnected } from '@/features/stops/components/stop-edit-page-connected'
@@ -37,14 +36,6 @@ export const Route = createFileRoute('/_main/tours/$nanoId/stops/$stopId/edit')(
         search: { locale: defaultLocale },
         replace: true,
       })
-    }
-
-    const ensureResult = await ensureAllStopLocalesForTourFn({
-      data: { tourNanoId: params.nanoId, stopNanoId: params.stopId },
-    })
-
-    if (ensureResult.createdLocales.length > 0) {
-      await context.queryClient.invalidateQueries({ queryKey: ['stop', params.stopId, 'detail'] })
     }
 
     await context.queryClient.ensureQueryData(stopLocaleDraftQueryOptions(params.stopId, requestedLocale))
