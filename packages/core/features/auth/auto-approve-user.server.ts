@@ -38,6 +38,7 @@ export async function autoApproveIfEligible(userId: string, email: string): Prom
       approvedAt: new Date(),
     })
     .where(and(eq(profiles.id, userId), eq(profiles.status, 'pending')))
+    .returning({ id: profiles.id })
 
   return result.length > 0
 }

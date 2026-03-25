@@ -42,7 +42,9 @@ export async function getOrCreateProfile(userId: string, email?: string): Promis
     if (approved) {
       profile = { ...profile, status: 'approved', approvedAt: new Date() }
     }
-    notifyNewSignup(email).catch((err) => console.error('Failed to send signup notification:', err))
+    if (profile.status === 'pending') {
+      notifyNewSignup(email).catch((err) => console.error('Failed to send signup notification:', err))
+    }
   }
 
   return profile
