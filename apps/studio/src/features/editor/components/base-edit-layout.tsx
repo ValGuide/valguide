@@ -252,13 +252,13 @@ export function BaseEditLayout({
           {/* Row 1: Back/breadcrumb left, actions right */}
           <div className="flex items-center justify-between gap-2 px-4 py-3">
             {breadcrumbContent ?? (
-              <Button variant="ghost" size="sm" onClick={onBack} className="-ml-2 shrink-0">
+              <Button variant="ghost" size="sm" onClick={onBack} className="-ml-2 min-w-0 shrink">
                 <ChevronLeft className="h-4 w-4" />
-                <span>{backLabel}</span>
+                <span className="truncate">{backLabel}</span>
               </Button>
             )}
 
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="flex min-w-0 shrink items-center justify-end gap-2">
               <MoreActionsMenu
                 canUnpublish={canUnpublish}
                 canDiscard={canDiscard}
@@ -270,6 +270,7 @@ export function BaseEditLayout({
                 locales={availableLocales}
                 onValueChange={onLocaleChange}
                 footer={localeSelectorFooter}
+                className="max-w-36 sm:max-w-none"
               />
             </div>
           </div>

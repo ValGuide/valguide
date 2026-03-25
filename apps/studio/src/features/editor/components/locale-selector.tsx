@@ -59,11 +59,11 @@ export function LocaleSelector({ value, locales, onValueChange, className, foote
           role="combobox"
           aria-expanded={open}
           aria-label={t('selectLanguage')}
-          className={cn('w-50 justify-between', className)}
+          className={cn('w-50 min-w-0 justify-between', className)}
         >
-          <span className="flex items-center gap-2">
-            <Globe className="h-4 w-4" />
-            {selectedLocaleName}
+          <span className="flex min-w-0 items-center gap-2">
+            <Globe className="h-4 w-4 shrink-0" />
+            <span className="truncate">{selectedLocaleName}</span>
           </span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
