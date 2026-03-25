@@ -36,8 +36,7 @@ function TourPage() {
   const orgSlug = currentTeam?.slug ?? ''
 
   const handleArchived = async () => {
-    await router.invalidate()
-    router.navigate({ to: '/' })
+    await router.navigate({ to: '/', viewTransition: false })
   }
 
   const handleAddLanguage = useCallback(
@@ -114,7 +113,7 @@ function TourPage() {
       nanoId={nanoId}
       preferredLocale={preferredLocale}
       appDomain={clientEnv.VITE_APP_DOMAIN}
-      onBack={() => router.navigate({ to: '/' })}
+      onBack={() => void router.navigate({ to: '/', viewTransition: false })}
       onArchived={handleArchived}
       onAddLanguage={handleAddLanguage}
       onRemoveLanguage={handleRemoveLanguage}

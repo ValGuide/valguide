@@ -1625,53 +1625,35 @@
 }
 
 /* ========================
-   VIEW TRANSITIONS
-   Smooth page transitions for TanStack Router
-   
-   Strategy: Only animate the main content area, keep sidebar stable.
-   - sidebar-inset gets its own view-transition-name for scoped animation
-   - sidebar and other stable elements get view-transition-name: none
+   STUDIO PAGE TRANSITIONS
+   Only routed page content animates; shell overlays stay visually stable.
    ======================== */
 
-/* Stable elements excluded from view transitions */
-[data-slot="sidebar"],
-[data-slot="sidebar-wrapper"],
-[data-slot="sidebar-container"],
-[data-slot="sidebar-inner"],
-[data-slot="sidebar-gap"],
-[data-slot="sidebar-trigger"],
-[data-slot="sidebar-rail"] {
+[data-persistent-overlay-host],
+[data-sonner-toaster],
+[data-upload-surface],
+[data-upload-drop-overlay] {
     view-transition-name: none;
 }
 
-/* Main content area participates in view transitions */
-[data-slot="sidebar-inset"] {
-    view-transition-name: main-content;
+.studio-page-transition {
+    animation: studio-page-enter 150ms ease-out;
 }
 
-/* Crossfade animation for main content only */
-::view-transition-old(main-content) {
-    animation: fade-out 150ms ease-out both;
+@keyframes studio-page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-::view-transition-new(main-content) {
-    animation: fade-in 150ms ease-out both;
-}
-
-::view-transition-group(main-content) {
-    animation-duration: 150ms;
-}
-
-/* Disable the default root transition (we're using scoped main-content instead) */
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation: none;
-}
-
-/* Disable animations for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    ::view-transition-old(main-content),
-    ::view-transition-new(main-content) {
+    .studio-page-transition {
         animation: none !important;
     }
 }

@@ -28,8 +28,8 @@ export const getRouter = () => {
     defaultPendingMinMs: 200,
     defaultErrorComponent: DefaultError,
     defaultNotFoundComponent: DefaultNotFound,
-    // Enable view transitions for smooth page changes (Chrome 111+)
-    defaultViewTransition: true,
+    // Keep navigation transitions in app-owned page content so global overlays stay stable.
+    defaultViewTransition: false,
   })
 
   setupRouterSsrQueryIntegration({

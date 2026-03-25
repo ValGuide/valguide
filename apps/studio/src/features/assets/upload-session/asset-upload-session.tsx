@@ -16,6 +16,7 @@ import {
   type AssetUploadItem,
   AssetUploadSessionContext,
   type AssetUploadSessionContextValue,
+  useAssetUploadSession,
 } from './asset-upload-session-context'
 import { AssetsGlobalDropOverlay } from './assets-global-drop-overlay'
 import { AssetsUploadSurface } from './assets-upload-surface'
@@ -458,8 +459,17 @@ export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
         className="sr-only"
         tabIndex={-1}
       />
+    </AssetUploadSessionContext.Provider>
+  )
+}
+
+export function AssetUploadSessionOverlays() {
+  const { isDragActive } = useAssetUploadSession()
+
+  return (
+    <>
       <AssetsGlobalDropOverlay open={isDragActive} />
       <AssetsUploadSurface />
-    </AssetUploadSessionContext.Provider>
+    </>
   )
 }

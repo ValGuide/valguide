@@ -13,16 +13,17 @@ type ProvidersProps = PropsWithChildren<{
   locale: SupportedLocale
   initialTheme: Theme
   setThemeFn: (args: { data: Theme }) => Promise<Theme>
+  includeToaster?: boolean
 }>
 
-export function Providers({ app, locale, initialTheme, setThemeFn, children }: ProvidersProps) {
+export function Providers({ app, locale, initialTheme, setThemeFn, includeToaster = true, children }: ProvidersProps) {
   const { data: messages } = useSuspenseQuery(messagesQueryOptions(locale))
   return (
     <PostHogProvider app={app}>
       <ThemeProvider initialTheme={initialTheme} setThemeFn={setThemeFn}>
         <IntlProvider locale={locale} messages={messages}>
           {children}
-          <Toaster />
+          {includeToaster ? <Toaster /> : null}
         </IntlProvider>
       </ThemeProvider>
     </PostHogProvider>

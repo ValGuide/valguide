@@ -206,7 +206,10 @@ export function AssetsUploadSurface() {
     return (
       <>
         {!isExpanded ? (
-          <div className="fixed inset-x-0 bottom-0 z-[70] border-t bg-background/98 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-[0_-16px_40px_rgba(15,23,42,0.08)] backdrop-blur">
+          <div
+            data-upload-surface
+            className="pointer-events-auto fixed inset-x-0 bottom-0 z-[70] border-t bg-background/98 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-[0_-16px_40px_rgba(15,23,42,0.08)] backdrop-blur"
+          >
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -255,7 +258,10 @@ export function AssetsUploadSurface() {
   }
 
   return (
-    <div className="fixed right-4 bottom-4 z-[70] w-[24rem] max-w-[calc(100vw-2rem)]">
+    <div
+      data-upload-surface
+      className="pointer-events-auto fixed right-4 bottom-4 z-[70] w-[24rem] max-w-[calc(100vw-2rem)]"
+    >
       <div className="overflow-hidden rounded-2xl border bg-background/98 shadow-2xl backdrop-blur">
         <div className="flex items-center gap-2 px-4 py-3">
           <div className="min-w-0">

@@ -13,7 +13,10 @@ export function AssetsGlobalDropOverlay({ open }: AssetsGlobalDropOverlayProps) 
   }
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[80] animate-in fade-in duration-200 bg-background/95">
+    <div
+      data-upload-drop-overlay
+      className="pointer-events-none fixed inset-0 z-[80] animate-in fade-in duration-200 bg-background/95"
+    >
       <div className="absolute inset-4 rounded-2xl ring-2 ring-primary/25 animate-in fade-in zoom-in-95 duration-300" />
       <div className="flex h-full w-full flex-col items-center justify-center px-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-300">
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary sm:mb-5 sm:h-14 sm:w-14">
