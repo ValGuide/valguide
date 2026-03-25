@@ -113,7 +113,8 @@ export function TranslationsManager({
         <CardContent>
           <div className="divide-y" data-testid="translations-manager">
             {locales.map((localeInfo) => {
-              const localeName = getLocalePresentation(localeInfo.locale, displayLocale).localizedName
+              const { localizedName, nativeName, localeCode } = getLocalePresentation(localeInfo.locale, displayLocale)
+              const localeName = nativeName
               const isCurrentlyPublishing = publishingLocale === localeInfo.locale
               const isCurrentlyUnpublishing = unpublishingLocale === localeInfo.locale
               const showUnpublish = localeInfo.hasPublished && !localeInfo.hasChanges && onUnpublish
@@ -125,8 +126,12 @@ export function TranslationsManager({
                   data-locale={localeInfo.locale}
                 >
                   <div className="flex min-w-0 items-center gap-2">
-                    <span className="truncate font-medium">{localeName}</span>
-                    <span className="shrink-0 text-xs text-muted-foreground">({localeInfo.locale})</span>
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">{nativeName}</span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {localizedName} ({localeCode})
+                      </span>
+                    </span>
                     <TourStatusBadge
                       status={localeInfo.hasPublished ? 'published' : 'unpublished'}
                       indicator={localeInfo.hasPublished && localeInfo.hasChanges ? 'changed' : null}
