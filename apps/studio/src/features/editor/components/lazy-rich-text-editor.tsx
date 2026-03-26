@@ -1,5 +1,5 @@
 import type { RichTextEditorProps } from '@valguide/ui/components/rich-text/rich-text-editor'
-import { Textarea } from '@valguide/ui/components/textarea'
+import { RichTextEditorLoadingShell } from '@valguide/ui/components/rich-text/rich-text-editor-loading-shell'
 import { lazy, Suspense } from 'react'
 
 const RichTextEditor = lazy(async () => {
@@ -8,14 +8,10 @@ const RichTextEditor = lazy(async () => {
 })
 
 export function LazyRichTextEditor(props: RichTextEditorProps) {
-  const { value, placeholder, readOnly } = props
+  const { readOnly } = props
 
   return (
-    <Suspense
-      fallback={
-        <Textarea value={value} placeholder={placeholder} disabled={readOnly} readOnly className="min-h-[154px]" />
-      }
-    >
+    <Suspense fallback={<RichTextEditorLoadingShell readOnly={readOnly} />}>
       <RichTextEditor {...props} />
     </Suspense>
   )

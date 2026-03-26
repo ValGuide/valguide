@@ -1,5 +1,7 @@
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { useState } from 'react'
+import { RichTextEditorLoadingShell } from './rich-text-editor-loading-shell'
 import { RichTextEditorToolbar } from './rich-text-editor-toolbar'
 import { SmallText } from './small-text-extension'
 
@@ -20,6 +22,8 @@ export function RichTextEditor({
   className,
   readOnly,
 }: RichTextEditorProps) {
+  const [isEmpty, setIsEmpty] = useState(!value)
+
   const editor = useEditor({
     immediatelyRender: false,
     editable: !readOnly,
@@ -40,7 +44,11 @@ export function RichTextEditor({
       SmallText,
     ],
     content: value ? parseEditorContent(value) : '',
+    onCreate: ({ editor }) => {
+      setIsEmpty(editor.isEmpty)
+    },
     onUpdate: ({ editor }) => {
+      setIsEmpty(editor.isEmpty)
       const json = editor.getJSON()
       onChange(JSON.stringify(json))
     },
@@ -49,17 +57,30 @@ export function RichTextEditor({
         ...(ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {}),
         class:
           'ProseMirror min-h-[120px] max-w-none rounded-b-md border-x border-b bg-card p-4 text-sm text-foreground caret-foreground focus:outline-none selection:bg-[var(--selection)] selection:text-[var(--selection-foreground)]',
-        placeholder: placeholder || '',
       },
     },
   })
 
   return (
     <div className={className}>
-      <div className="overflow-hidden rounded-md border bg-card text-card-foreground">
-        <RichTextEditorToolbar editor={editor} disabled={readOnly} />
-        <EditorContent editor={editor} />
-      </div>
+      {editor ? (
+        <div className="overflow-hidden rounded-md border bg-card text-card-foreground">
+          <RichTextEditorToolbar editor={editor} disabled={readOnly} />
+          <div className="relative">
+            <EditorContent editor={editor} />
+            {isEmpty && placeholder ? (
+              <div
+                className="pointer-events-none absolute inset-x-0 top-0 px-4 py-4 text-sm text-muted-foreground"
+                aria-hidden="true"
+              >
+                {placeholder}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : (
+        <RichTextEditorLoadingShell readOnly={readOnly} />
+      )}
     </div>
   )
 }
