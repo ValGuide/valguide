@@ -116,13 +116,11 @@ if [ "$needs_caddy" -eq 1 ]; then
   sh scripts/ensure-caddy.sh
 fi
 
-# ── Open browser tabs after a short delay ─────────────────────────────────
+# ── Open browser tabs once the apps are reachable ─────────────────────────
 if [ -n "$urls" ]; then
   (
-    sleep 5
-    for u in $urls; do
-      open "$u"
-    done
+    # shellcheck disable=SC2086
+    sh scripts/open-when-ready.sh $urls
   ) &
 fi
 
