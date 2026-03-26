@@ -249,7 +249,9 @@
       "created": "Erstellt",
       "updated": "Aktualisiert",
       "authorInfo": "Autorinformationen",
-      "addCoverImage": "Fügen Sie ein Bild hinzu, das diese Ausstellung einfängt",
+      "noCoverImage": "Kein Titelbild",
+      "addCoverImage": "Titelbild hinzufügen",
+      "addCoverImageHint": "Im Editor hinzufügen",
       "published": "Veröffentlicht",
       "unpublished": "Unveröffentlicht"
     },

@@ -249,7 +249,9 @@
       "created": "Created",
       "updated": "Updated",
       "authorInfo": "Author Information",
-      "addCoverImage": "Add an image that captures this exhibition",
+      "noCoverImage": "No cover image",
+      "addCoverImage": "Add cover image",
+      "addCoverImageHint": "Add one in the editor",
       "published": "Published",
       "unpublished": "Unpublished"
     },

@@ -249,7 +249,9 @@
       "created": "Creà",
       "updated": "Actualisà",
       "authorInfo": "Infurmaziuns davart l'autur",
-      "addCoverImage": "Agiuntai in maletg che representa questa exposiziun",
+      "noCoverImage": "Nagin maletg da front",
+      "addCoverImage": "Agiuntar maletg da front",
+      "addCoverImageHint": "Agiuntar en l'editur",
       "published": "Publitgà",
       "unpublished": "Betg publitgà"
     },

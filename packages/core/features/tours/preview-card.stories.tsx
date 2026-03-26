@@ -13,6 +13,13 @@ const meta: Meta<typeof TourPreviewCard> = {
   parameters: {
     layout: 'centered',
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[320px] max-w-full">
+        <Story />
+      </div>
+    ),
+  ],
   tags: ['autodocs'],
 }
 
@@ -82,7 +89,35 @@ export const NoImage: Story = {
       description: 'This visit does not have an image.',
       author: 'ValGuide User',
       createdAt: new Date('2023-12-20'),
+      updatedAt: new Date('2024-02-18'),
       tags: ['simple', 'no-image'],
+    },
+  },
+}
+
+export const NoImagePublished: Story = {
+  args: {
+    tour: {
+      id: '6',
+      nanoId: 'no-image-published-006',
+      title: 'Collection Highlights',
+      author: 'Curatorial Team',
+      createdAt: new Date('2024-01-05'),
+      updatedAt: new Date('2024-03-12'),
+      published: new Date('2024-03-10'),
+    },
+  },
+}
+
+export const NoImageLongTitle: Story = {
+  args: {
+    tour: {
+      id: '7',
+      nanoId: 'no-image-long-title-007',
+      title: 'A Long Exhibition Title That Still Needs To Feel Calm And Readable Without A Cover Image',
+      author: 'ValGuide User',
+      createdAt: new Date('2024-02-01'),
+      updatedAt: new Date('2024-03-18'),
     },
   },
 }

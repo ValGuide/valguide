@@ -112,11 +112,22 @@ export function TourPreviewCard({
             className="scale-100"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30">
-              <ImageIcon className="h-7 w-7 text-amber-600 dark:text-amber-400" />
+          <div className="relative h-full w-full overflow-hidden bg-linear-to-br from-amber-50 via-background to-stone-100 dark:from-amber-950/40 dark:via-background dark:to-stone-950/40">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.22),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(161,98,7,0.12),transparent_30%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(245,158,11,0.10),transparent_30%)]" />
+            <div className="absolute inset-x-5 top-5 flex items-center justify-between">
+              <span className="rounded-full border border-border/60 bg-background/80 px-2.5 py-1 text-[10px] font-medium tracking-[0.18em] text-muted-foreground uppercase backdrop-blur-sm">
+                {t('noCoverImage')}
+              </span>
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-200/80 bg-background/75 shadow-sm backdrop-blur-sm dark:border-amber-700/50 dark:bg-background/60">
+                <ImageIcon className="h-5 w-5 text-amber-700 dark:text-amber-400" />
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground/70">{t('addCoverImage')}</p>
+            <div className="absolute bottom-5 left-5 right-5">
+              <div className="max-w-40 rounded-2xl border border-border/60 bg-background/78 p-3 shadow-sm backdrop-blur-sm dark:bg-background/60">
+                <p className="text-sm font-medium text-foreground">{t('addCoverImage')}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t('addCoverImageHint')}</p>
+              </div>
+            </div>
           </div>
         )}
       </div>
