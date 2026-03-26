@@ -94,7 +94,7 @@ export function TourPreviewCard({
   return (
     <Card
       className={cn(
-        'group overflow-hidden flex flex-col h-full hover:-translate-y-0.5 hover:shadow-(--shadow-card-hover) hover:border-primary/20',
+        'group flex h-full flex-col overflow-hidden transition-[border-color,box-shadow] duration-200 hover:shadow-(--shadow-card-hover) hover:border-primary/20',
         className,
       )}
       {...props}
@@ -109,7 +109,7 @@ export function TourPreviewCard({
             width={800}
             height={176}
             priority={imagePriority}
-            className="group-hover:scale-105"
+            className="scale-100"
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 px-4">
