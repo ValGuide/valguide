@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { useRouterState } from '@tanstack/react-router'
 import { confirmAssetUploadFn } from '@valguide/core/features/assets/confirm-upload.fn'
 import {
   detectAssetType,
@@ -23,10 +24,18 @@ import { AssetsUploadSurface } from './assets-upload-surface'
 
 const MAX_CONCURRENT_UPLOADS = 2
 const AUTO_COLLAPSE_DELAY_MS = 2400
+const GLOBAL_UPLOAD_ALLOWED_ROOT_PATHS = new Set(['/analytics', '/assets', '/design', '/settings', '/stops', '/tours'])
+
+function isTourOverviewPath(pathname: string) {
+  return /^\/tours\/[^/]+\/?$/.test(pathname)
+}
 
 export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient()
   const t = useTranslations('assets')
+  const resolvedPathname = useRouterState({
+    select: (state) => state.resolvedLocation?.pathname ?? state.location.pathname,
+  })
   const [items, setItems] = React.useState<AssetUploadItem[]>([])
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [isHidden, setIsHidden] = React.useState(false)
@@ -36,6 +45,8 @@ export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
   const dragDepthRef = React.useRef(0)
   const autoCollapseTimeoutRef = React.useRef<number | null>(null)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const isGlobalDropEnabled =
+    GLOBAL_UPLOAD_ALLOWED_ROOT_PATHS.has(resolvedPathname) || isTourOverviewPath(resolvedPathname)
 
   React.useEffect(() => {
     itemsRef.current = items
@@ -353,6 +364,19 @@ export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
   }, [isHidden, items])
 
   React.useEffect(() => {
+    if (isGlobalDropEnabled) {
+      return
+    }
+
+    dragDepthRef.current = 0
+    setIsDragActive(false)
+  }, [isGlobalDropEnabled])
+
+  React.useEffect(() => {
+    if (!isGlobalDropEnabled) {
+      return
+    }
+
     const handleDragEnter = (event: DragEvent) => {
       if (!isFileDrag(event.dataTransfer?.types)) {
         return
@@ -417,7 +441,7 @@ export function AssetUploadSessionProvider({ children }: PropsWithChildren) {
       window.removeEventListener('drop', handleDrop)
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [addFiles, isDragActive])
+  }, [addFiles, isDragActive, isGlobalDropEnabled])
 
   const handleInputChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

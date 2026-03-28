@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { useLocation, useRouter, useSearch } from '@tanstack/react-router'
+import { useRouter, useSearch } from '@tanstack/react-router'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -79,8 +79,6 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
   prefetchOtherLocales = true,
 }: UseEditorBaseOptions): EditorBaseResult<TDetail, TLocaleDraft, TLocalePublished> {
   const router = useRouter()
-  const location = useLocation()
-  const pathname = location.pathname
   const searchParams = useSearch({ strict: false })
   const queryClient = useQueryClient()
 
@@ -150,9 +148,9 @@ export function useEditorBase<TDetail extends EntityDetail, TLocaleDraft, TLocal
         return
       }
       setActiveLocaleState(locale)
-      router.navigate({ to: pathname, search: { ...searchParams, [LOCALE_PARAM]: locale }, replace: true })
+      router.navigate({ to: '.', search: { ...searchParams, [LOCALE_PARAM]: locale }, replace: true })
     },
-    [pathname, router, searchParams, availableLocales],
+    [router, searchParams, availableLocales],
   )
 
   const registerFormDirty = useCallback((formId: string, formIsDirty: boolean, getValues?: FormValueGetter) => {
