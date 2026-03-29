@@ -13,6 +13,11 @@ const DB_ACTIONS = ['generate', 'migrate', 'studio']
 const SEED_ENVIRONMENTS = ['dev', 'prod']
 const VERIFY_TARGETS = ['studio']
 const REMOTE_DEV_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs']
+const OPEN_TARGETS = ['github', 'github-actions']
+const OPEN_URLS = {
+  github: 'https://github.com/valguide/valguide',
+  'github-actions': 'https://github.com/valguide/valguide/actions',
+}
 
 const TARGET_PACKAGE_NAMES = {
   admin: '@valguide/admin',
@@ -40,6 +45,7 @@ Commands:
   type-check [target]        Run type-checking for the repo or one target
   test [target]              Run tests for the repo or one supported target
   lint [fix]                 Run repo lint checks or apply lint fixes
+  open <target>              Open a common ValGuide URL in the browser
   db <action>                Run database action: generate | migrate | studio
   seed <env>                 Seed dev or prod data
   verify <target>            Run target verification
@@ -52,6 +58,7 @@ Examples:
   val deploy studio dev
   val type-check core
   val lint fix
+  val open github
   val db migrate
   val verify studio -- --ticket VG-85
 `
@@ -114,6 +121,11 @@ Notes:
   Lint currently runs at repo scope.
   Use "fix" or "--fix" to run the existing repo lint-fix command.
 `,
+  open: `Usage: val open <target>
+
+Targets:
+  ${OPEN_TARGETS.join(', ')}
+`,
   db: `Usage: val db <generate|migrate|studio>
 
 Notes:
@@ -146,6 +158,19 @@ function isFlag(value) {
 function fail(message) {
   console.error(`val: ${message}`)
   process.exit(1)
+}
+
+function quotedList(values) {
+  return values.map((value) => `"${value}"`).join(', ')
+}
+
+function failWithUsage(message, command) {
+  const help = COMMAND_HELP[command]
+  if (!help) {
+    fail(message)
+  }
+
+  fail(`${message}\n\n${help}`)
 }
 
 function printHelp(command) {
@@ -181,25 +206,30 @@ function printTargets() {
 
 function ensureNoExtraPositionals(positionals, command) {
   if (positionals.length > 0) {
-    fail(`unexpected argument "${positionals[0]}" for "${command}"`)
+    failWithUsage(`unexpected argument "${positionals[0]}" for "${command}"`, command)
   }
 }
 
 function ensureAllowedFlags(flags, allowedFlags, command) {
   for (const flag of flags) {
     if (!allowedFlags.includes(flag)) {
-      fail(`unsupported flag "${flag}" for "${command}"`)
+      const supportedFlags =
+        allowedFlags.length > 0 ? ` Supported flags: ${quotedList(allowedFlags)}.` : ' This command does not accept flags.'
+      failWithUsage(`unsupported flag "${flag}" for "${command}".${supportedFlags}`, command)
     }
   }
 }
 
 function ensureTarget(target, supportedTargets, command) {
   if (!target) {
-    fail(`missing target for "${command}"`)
+    failWithUsage(`missing target for "${command}". Supported targets: ${quotedList(supportedTargets)}.`, command)
   }
 
   if (!supportedTargets.includes(target)) {
-    fail(`unsupported target "${target}" for "${command}"`)
+    failWithUsage(
+      `unsupported target "${target}" for "${command}". Supported targets: ${quotedList(supportedTargets)}.`,
+      command,
+    )
   }
 }
 
@@ -253,6 +283,8 @@ function createInvocation(command, positionals, flags, passthrough) {
       return createTestInvocation(positionals, flags, passthrough)
     case 'lint':
       return createLintInvocation(positionals, flags, passthrough)
+    case 'open':
+      return createOpenInvocation(positionals, flags, passthrough)
     case 'db':
       return createDbInvocation(positionals, flags, passthrough)
     case 'seed':
@@ -260,14 +292,14 @@ function createInvocation(command, positionals, flags, passthrough) {
     case 'verify':
       return createVerifyInvocation(positionals, flags, passthrough)
     default:
-      fail(`unknown command "${command}"`)
+      fail(`unknown command "${command}". Run "val help" to see the available commands.`)
   }
 }
 
 function createDevInvocation(positionals, flags, passthrough) {
   ensureAllowedFlags(flags, ['--remote', '--worker'], 'dev')
   if (positionals.length === 0) {
-    fail('missing target for "dev"')
+    failWithUsage(`missing target for "dev". Supported targets: ${quotedList(DEV_TARGETS)}.`, 'dev')
   }
 
   const targets = uniqueValues(positionals)
@@ -276,24 +308,27 @@ function createDevInvocation(positionals, flags, passthrough) {
   }
 
   if (targets.includes('workspace') && targets.length > 1) {
-    fail('"workspace" cannot be combined with other dev targets')
+    failWithUsage('"workspace" cannot be combined with other dev targets.', 'dev')
   }
 
   if (flags.includes('--worker')) {
     if (targets.length !== 1 || targets[0] !== 'storybook') {
-      fail('--worker is supported only for target "storybook"')
+      failWithUsage('--worker is supported only for target "storybook".', 'dev')
     }
     return scriptInvocation('storybook:wrangler:dev', passthrough)
   }
 
   if (passthrough.length > 0) {
-    fail('passthrough args are not supported for dev')
+    failWithUsage('passthrough args are not supported for "dev".', 'dev')
   }
 
   if (flags.includes('--remote')) {
     for (const target of targets) {
       if (!REMOTE_DEV_TARGETS.includes(target)) {
-        fail(`--remote is not supported for target "${target}"`)
+        failWithUsage(
+          `--remote is not supported for target "${target}". Supported remote targets: ${quotedList(REMOTE_DEV_TARGETS)}.`,
+          'dev',
+        )
       }
     }
   }
@@ -309,7 +344,17 @@ function createBuildInvocation(positionals, flags, passthrough) {
 
   if (flags.includes('--analyse')) {
     if (!['admin', 'app', 'studio', 'www', 'links', 'docs'].includes(target)) {
-      fail(`--analyse is not supported for target "${target}"`)
+      failWithUsage(
+        `--analyse is not supported for target "${target}". Supported analyse targets: ${quotedList([
+          'admin',
+          'app',
+          'studio',
+          'www',
+          'links',
+          'docs',
+        ])}.`,
+        'build',
+      )
     }
     return scriptInvocation(`${target}:build:analyse`, passthrough)
   }
@@ -337,11 +382,11 @@ function createDeployInvocation(positionals, flags, passthrough) {
   ensureNoExtraPositionals(rest, 'deploy')
 
   if (!environment) {
-    fail('deploy requires an explicit environment: dev or prod')
+    failWithUsage('deploy requires an explicit environment: "dev" or "prod".', 'deploy')
   }
 
   if (!['dev', 'prod'].includes(environment)) {
-    fail(`unsupported deploy environment "${environment}"`)
+    failWithUsage(`unsupported deploy environment "${environment}". Supported environments: "dev", "prod".`, 'deploy')
   }
 
   if (environment === 'prod') {
@@ -392,7 +437,7 @@ function createLintInvocation(positionals, flags, passthrough) {
   ensureNoExtraPositionals(rest, 'lint')
 
   if (mode && mode !== 'fix') {
-    fail(`unsupported lint mode "${mode}"`)
+    failWithUsage(`unsupported lint mode "${mode}". Use "fix" or omit the mode.`, 'lint')
   }
 
   if (mode === 'fix' || flags.includes('--fix')) {
@@ -402,17 +447,30 @@ function createLintInvocation(positionals, flags, passthrough) {
   return scriptInvocation('lint', passthrough)
 }
 
+function createOpenInvocation(positionals, flags, passthrough) {
+  ensureAllowedFlags(flags, [], 'open')
+  const [target, ...rest] = positionals
+  ensureTarget(target, OPEN_TARGETS, 'open')
+  ensureNoExtraPositionals(rest, 'open')
+
+  if (passthrough.length > 0) {
+    failWithUsage('passthrough args are not supported for "open".', 'open')
+  }
+
+  return commandInvocation('open', [OPEN_URLS[target]])
+}
+
 function createDbInvocation(positionals, flags, passthrough) {
   ensureAllowedFlags(flags, [], 'db')
   const [action, ...rest] = positionals
   ensureNoExtraPositionals(rest, 'db')
 
   if (!action) {
-    fail(`missing action for "db"; supported actions: ${DB_ACTIONS.join(', ')}`)
+    failWithUsage(`missing action for "db". Supported actions: ${quotedList(DB_ACTIONS)}.`, 'db')
   }
 
   if (!DB_ACTIONS.includes(action)) {
-    fail(`unsupported db action "${action}"`)
+    failWithUsage(`unsupported db action "${action}". Supported actions: ${quotedList(DB_ACTIONS)}.`, 'db')
   }
 
   return scriptInvocation(`db:${action}`, passthrough)
@@ -424,11 +482,14 @@ function createSeedInvocation(positionals, flags, passthrough) {
   ensureNoExtraPositionals(rest, 'seed')
 
   if (!environment) {
-    fail(`missing environment for "seed"; supported environments: ${SEED_ENVIRONMENTS.join(', ')}`)
+    failWithUsage(`missing environment for "seed". Supported environments: ${quotedList(SEED_ENVIRONMENTS)}.`, 'seed')
   }
 
   if (!SEED_ENVIRONMENTS.includes(environment)) {
-    fail(`unsupported seed environment "${environment}"`)
+    failWithUsage(
+      `unsupported seed environment "${environment}". Supported environments: ${quotedList(SEED_ENVIRONMENTS)}.`,
+      'seed',
+    )
   }
 
   return scriptInvocation(`seed:${environment}`, passthrough)
