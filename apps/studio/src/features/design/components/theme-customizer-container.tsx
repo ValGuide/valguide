@@ -18,11 +18,14 @@ export interface ThemeCustomizerContainerProps {
   className?: string
 }
 
+type ThemeCustomizerView = 'customizer' | 'preview'
+
 export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainerProps) {
   const t = useTranslations('studio.themeCustomizer')
   const customizer = useThemeCustomizer('light')
   const { themes, isLoading, createTheme, updateTheme, deleteTheme } = useOrgThemes()
 
+  const [activeView, setActiveView] = useState<ThemeCustomizerView>('customizer')
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [themeToDelete, setThemeToDelete] = useState<Theme | null>(null)
@@ -119,11 +122,47 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ')
 
+  const editorPanel = (layout: 'workspace' | 'split') => (
+    <ThemeEditorPanel
+      customizer={customizer}
+      themes={themes}
+      isLoading={isLoading}
+      onSelectTheme={handleSelectTheme}
+      onStartFromPreset={handleStartFromPreset}
+      onDeleteTheme={handleOpenDeleteDialog}
+      onSave={() => setSaveDialogOpen(true)}
+      layout={layout}
+    />
+  )
+
+  const previewPanel = ({
+    previewClassName,
+    playerClassName,
+  }: {
+    previewClassName?: string
+    playerClassName?: string
+  }) => (
+    <div className="flex flex-col min-h-0">
+      <div className="flex items-center justify-between mb-4 gap-3">
+        <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
+        <span className="text-sm text-muted-foreground truncate">{currentThemeLabel}</span>
+      </div>
+      <ScrollArea className={cn('flex-1 rounded-xl border bg-muted/30 p-6 sm:p-8', previewClassName)}>
+        <div className="flex min-h-full items-start justify-center">
+          <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
+        </div>
+      </ScrollArea>
+    </div>
+  )
+
   return (
-    <div className={cn('flex flex-col lg:flex-row gap-6 w-full h-full', className)}>
-      {/* Mobile: Tabs layout */}
-      <div className="lg:hidden w-full">
-        <Tabs defaultValue="customizer" className="w-full">
+    <div className={cn('flex flex-col gap-6 w-full h-full', className)}>
+      <div className="2xl:hidden w-full">
+        <Tabs
+          value={activeView}
+          onValueChange={(value) => setActiveView(value as ThemeCustomizerView)}
+          className="w-full"
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="customizer" className="gap-2">
               <Palette className="size-4" />
@@ -135,52 +174,22 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
             </TabsTrigger>
           </TabsList>
           <TabsContent value="customizer" className="mt-4">
-            <ThemeEditorPanel
-              customizer={customizer}
-              themes={themes}
-              isLoading={isLoading}
-              onSelectTheme={handleSelectTheme}
-              onStartFromPreset={handleStartFromPreset}
-              onDeleteTheme={handleOpenDeleteDialog}
-              onSave={() => setSaveDialogOpen(true)}
-              className="border-0 shadow-none"
-            />
+            <div className="mx-auto w-full max-w-5xl">{editorPanel('workspace')}</div>
           </TabsContent>
           <TabsContent value="preview" className="mt-4">
-            <ScrollArea className="h-[calc(100vh-12rem)]">
-              <div className="p-1">
-                <PlayerPreview style={previewStyle} className="max-w-md mx-auto" />
-              </div>
-            </ScrollArea>
+            <div className="mx-auto w-full max-w-6xl">
+              {previewPanel({
+                previewClassName: 'h-[calc(100vh-12rem)]',
+                playerClassName: 'max-w-[28rem]',
+              })}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
 
-      {/* Desktop: Two column layout - Preview left, Editor right */}
-      <div className="hidden lg:grid lg:grid-cols-[minmax(0,1.4fr)_minmax(380px,0.8fr)] gap-6 w-full flex-1 min-h-0">
-        {/* Preview Panel - Left */}
-        <div className="flex flex-col min-h-0">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
-            <span className="text-sm text-muted-foreground">{currentThemeLabel}</span>
-          </div>
-          <ScrollArea className="flex-1 rounded-lg border bg-muted/30 p-6">
-            <div className="flex justify-center">
-              <PlayerPreview style={previewStyle} className="max-w-md w-full shadow-lg" />
-            </div>
-          </ScrollArea>
-        </div>
-
-        {/* Editor Panel - Right */}
-        <ThemeEditorPanel
-          customizer={customizer}
-          themes={themes}
-          isLoading={isLoading}
-          onSelectTheme={handleSelectTheme}
-          onStartFromPreset={handleStartFromPreset}
-          onDeleteTheme={handleOpenDeleteDialog}
-          onSave={() => setSaveDialogOpen(true)}
-        />
+      <div className="hidden 2xl:grid 2xl:grid-cols-[minmax(0,1.3fr)_minmax(440px,0.9fr)] gap-6 w-full flex-1 min-h-0">
+        {previewPanel({ playerClassName: 'max-w-md' })}
+        {editorPanel('split')}
       </div>
 
       <SaveThemeDialog

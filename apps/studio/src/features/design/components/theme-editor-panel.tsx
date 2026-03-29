@@ -22,6 +22,7 @@ export interface ThemeEditorPanelProps {
   onStartFromPreset: (preset: ThemePreset) => void
   onDeleteTheme: (theme: Theme) => void
   onSave: () => void
+  layout?: 'workspace' | 'split'
   className?: string
 }
 
@@ -33,6 +34,7 @@ export function ThemeEditorPanel({
   onStartFromPreset,
   onDeleteTheme,
   onSave,
+  layout = 'split',
   className,
 }: ThemeEditorPanelProps) {
   const t = useTranslations('studio.themeCustomizer')
@@ -46,10 +48,19 @@ export function ThemeEditorPanel({
     resetToPreset(config.basePreset)
   }
 
+  const isWorkspaceLayout = layout === 'workspace'
+
   return (
-    <Card className={cn('flex flex-col h-full', className)}>
-      <CardHeader className="pb-3 space-y-3">
-        <div className="flex items-center justify-between gap-2">
+    <Card className={cn('flex h-full flex-col', isWorkspaceLayout && 'shadow-sm', className)}>
+      <CardHeader className={cn('space-y-4 border-b', isWorkspaceLayout ? 'px-6 py-5 sm:px-8' : 'px-6 py-4')}>
+        <div
+          className={cn(
+            'flex gap-3',
+            isWorkspaceLayout
+              ? 'flex-col sm:flex-row sm:items-start sm:justify-between'
+              : 'items-center justify-between',
+          )}
+        >
           <div className="flex-1 min-w-0">
             <CardTitle className="text-lg">{t('title')}</CardTitle>
             {config.name && (
@@ -58,14 +69,14 @@ export function ThemeEditorPanel({
               </p>
             )}
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <Button variant="ghost" size="sm" onClick={handleReset} className="gap-1.5">
               <RotateCcw className="size-3.5" />
-              <span className="hidden sm:inline">{t('reset')}</span>
+              <span>{t('reset')}</span>
             </Button>
             <Button variant="default" size="sm" onClick={onSave} className="gap-1.5">
               <Save className="size-3.5" />
-              <span className="hidden sm:inline">{t('editor.saveTheme')}</span>
+              <span>{t('editor.saveTheme')}</span>
             </Button>
           </div>
         </div>
@@ -77,7 +88,7 @@ export function ThemeEditorPanel({
 
       <CardContent className="flex-1 p-0 min-h-0">
         <ScrollArea className="h-full">
-          <div className="space-y-4 px-6 pb-6">
+          <div className={cn('space-y-5 pb-6', isWorkspaceLayout ? 'px-6 pt-5 sm:px-8' : 'px-6 pt-4')}>
             <SavedThemesList
               themes={themes}
               isLoading={isLoading}
@@ -92,7 +103,7 @@ export function ThemeEditorPanel({
 
             <Separator />
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <ColorGroup
                 title={t('primaryColors')}
                 colorKeys={primaryColorKeys}
