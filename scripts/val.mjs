@@ -12,6 +12,7 @@ const TEST_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'core']
 const DB_ACTIONS = ['generate', 'migrate', 'studio']
 const SEED_ENVIRONMENTS = ['dev', 'prod']
 const VERIFY_TARGETS = ['studio']
+const REMOTE_DEV_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs']
 
 const TARGET_PACKAGE_NAMES = {
   admin: '@valguide/admin',
@@ -32,7 +33,7 @@ Usage:
 Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
-  dev <target> [--remote]    Start local development for a target
+  dev <target...> [--remote] Start local development for one or more targets
   build <target> [--analyse] Build a target
   preview <target>           Preview a target locally
   deploy <target> <env>      Deploy a target to dev or prod
@@ -55,7 +56,7 @@ Examples:
 `
 
 const COMMAND_HELP = {
-  dev: `Usage: pnpm val dev <target> [--remote] [--worker]
+  dev: `Usage: pnpm val dev <target...> [--remote] [--worker]
 
 Targets:
   ${DEV_TARGETS.join(', ')}
@@ -64,6 +65,7 @@ Notes:
   --remote is supported for admin, app, studio, www, links, and docs.
   --worker is supported only for storybook and starts the worker-backed dev flow.
   workspace currently supports only the default local dev mode.
+  Multiple targets are supported for dev, for example: pnpm val dev studio admin --remote
 `,
   build: `Usage: pnpm val build <target> [--analyse]
 
@@ -199,6 +201,17 @@ function ensureTarget(target, supportedTargets, command) {
   }
 }
 
+function uniqueValues(values) {
+  return [...new Set(values)]
+}
+
+function commandInvocation(command, args = []) {
+  return {
+    command,
+    args,
+  }
+}
+
 function scriptInvocation(scriptName, passthrough = []) {
   return {
     command: 'pnpm',
@@ -251,25 +264,39 @@ function createInvocation(command, positionals, flags, passthrough) {
 
 function createDevInvocation(positionals, flags, passthrough) {
   ensureAllowedFlags(flags, ['--remote', '--worker'], 'dev')
-  const [target, ...rest] = positionals
-  ensureTarget(target, DEV_TARGETS, 'dev')
-  ensureNoExtraPositionals(rest, 'dev')
+  if (positionals.length === 0) {
+    fail('missing target for "dev"')
+  }
 
-  if (flags.includes('--remote')) {
-    if (!['admin', 'app', 'studio', 'www', 'links', 'docs'].includes(target)) {
-      fail(`--remote is not supported for target "${target}"`)
-    }
-    return scriptInvocation(`${target}:dev:remote`, passthrough)
+  const targets = uniqueValues(positionals)
+  for (const target of targets) {
+    ensureTarget(target, DEV_TARGETS, 'dev')
+  }
+
+  if (targets.includes('workspace') && targets.length > 1) {
+    fail('"workspace" cannot be combined with other dev targets')
   }
 
   if (flags.includes('--worker')) {
-    if (target !== 'storybook') {
-      fail(`--worker is supported only for target "storybook"`)
+    if (targets.length !== 1 || targets[0] !== 'storybook') {
+      fail('--worker is supported only for target "storybook"')
     }
     return scriptInvocation('storybook:wrangler:dev', passthrough)
   }
 
-  return scriptInvocation(`${target}:dev`, passthrough)
+  if (passthrough.length > 0) {
+    fail('passthrough args are not supported for dev')
+  }
+
+  if (flags.includes('--remote')) {
+    for (const target of targets) {
+      if (!REMOTE_DEV_TARGETS.includes(target)) {
+        fail(`--remote is not supported for target "${target}"`)
+      }
+    }
+  }
+
+  return commandInvocation('sh', ['scripts/dev.sh', ...flags, ...targets])
 }
 
 function createBuildInvocation(positionals, flags, passthrough) {
@@ -405,12 +432,12 @@ function createVerifyInvocation(positionals, flags, passthrough) {
 }
 
 function runInvocation(invocation) {
-  const commandLine = [invocation.command, ...invocation.args].join(' ')
+  const commandLine = invocation.shell ? invocation.command : [invocation.command, ...invocation.args].join(' ')
   console.log(`> ${commandLine}`)
 
   const child = spawn(invocation.command, invocation.args, {
     stdio: 'inherit',
-    shell: false,
+    shell: invocation.shell ?? false,
   })
 
   child.on('exit', (code, signal) => {
