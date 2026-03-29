@@ -27,6 +27,7 @@ export interface FileDropzoneProps {
 }
 
 interface UploadedFile {
+  id: string
   file: File
   preview: string
   progress: number
@@ -106,6 +107,7 @@ export function FileDropzone({
 
         if (error) {
           newFiles.push({
+            id: `${file.name}-${file.lastModified}-${file.size}-${crypto.randomUUID()}`,
             file,
             preview: '',
             progress: 0,
@@ -114,6 +116,7 @@ export function FileDropzone({
           })
         } else {
           newFiles.push({
+            id: `${file.name}-${file.lastModified}-${file.size}-${crypto.randomUUID()}`,
             file,
             preview: URL.createObjectURL(file),
             progress: 0,
@@ -203,7 +206,7 @@ export function FileDropzone({
         }
       })
     }
-  }, [uploadedFiles.forEach])
+  }, [uploadedFiles])
 
   return (
     <div className={cn('w-full space-y-6', className)}>
@@ -283,7 +286,7 @@ export function FileDropzone({
           <div className="space-y-2">
             {uploadedFiles.map((uploadedFile, index) => (
               <div
-                key={`${uploadedFile.file.name}-${index}`}
+                key={uploadedFile.id}
                 className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg border border-border group hover:bg-muted transition-colors"
               >
                 {/* File Preview/Icon */}
