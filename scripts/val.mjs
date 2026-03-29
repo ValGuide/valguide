@@ -28,7 +28,7 @@ const TARGET_PACKAGE_NAMES = {
 const HELP_TEXT = `ValGuide CLI
 
 Usage:
-  pnpm val <command> [args] [-- passthrough]
+  val <command> [args] [-- passthrough]
 
 Commands:
   help [command]             Show general or command-specific help
@@ -39,24 +39,25 @@ Commands:
   deploy <target> <env>      Deploy a target to dev or prod
   type-check [target]        Run type-checking for the repo or one target
   test [target]              Run tests for the repo or one supported target
-  lint                       Run repo lint checks
+  lint [fix]                 Run repo lint checks or apply lint fixes
   db <action>                Run database action: generate | migrate | studio
   seed <env>                 Seed dev or prod data
   verify <target>            Run target verification
 
 Examples:
-  pnpm val dev studio
-  pnpm val dev studio --remote
-  pnpm val build app --analyse
-  pnpm val preview storybook
-  pnpm val deploy studio dev
-  pnpm val type-check core
-  pnpm val db migrate
-  pnpm val verify studio -- --ticket VG-85
+  val dev studio
+  val dev studio --remote
+  val build app --analyse
+  val preview storybook
+  val deploy studio dev
+  val type-check core
+  val lint fix
+  val db migrate
+  val verify studio -- --ticket VG-85
 `
 
 const COMMAND_HELP = {
-  dev: `Usage: pnpm val dev <target...> [--remote] [--worker]
+  dev: `Usage: val dev <target...> [--remote] [--worker]
 
 Targets:
   ${DEV_TARGETS.join(', ')}
@@ -65,9 +66,9 @@ Notes:
   --remote is supported for admin, app, studio, www, links, and docs.
   --worker is supported only for storybook and starts the worker-backed dev flow.
   workspace currently supports only the default local dev mode.
-  Multiple targets are supported for dev, for example: pnpm val dev studio admin --remote
+  Multiple targets are supported for dev, for example: val dev studio admin --remote
 `,
-  build: `Usage: pnpm val build <target> [--analyse]
+  build: `Usage: val build <target> [--analyse]
 
 Targets:
   ${BUILD_TARGETS.join(', ')}
@@ -75,7 +76,7 @@ Targets:
 Notes:
   --analyse is supported for admin, app, studio, www, links, and docs.
 `,
-  preview: `Usage: pnpm val preview <target>
+  preview: `Usage: val preview <target>
 
 Targets:
   ${PREVIEW_TARGETS.join(', ')}
@@ -83,7 +84,7 @@ Targets:
 Notes:
   storybook preview maps to the existing static serve workflow.
 `,
-  deploy: `Usage: pnpm val deploy <target> <dev|prod>
+  deploy: `Usage: val deploy <target> <dev|prod>
 
 Targets:
   ${DEPLOY_TARGETS.join(', ')}
@@ -91,7 +92,7 @@ Targets:
 Notes:
   Deploy always requires an explicit environment.
 `,
-  'type-check': `Usage: pnpm val type-check [target]
+  'type-check': `Usage: val type-check [target]
 
 Targets:
   ${TYPE_CHECK_TARGETS.join(', ')}
@@ -99,7 +100,7 @@ Targets:
 Notes:
   Omit the target to run the full repo type-check.
 `,
-  test: `Usage: pnpm val test [target]
+  test: `Usage: val test [target]
 
 Targets:
   ${TEST_TARGETS.join(', ')}
@@ -107,18 +108,19 @@ Targets:
 Notes:
   Omit the target to run the full repo test suite.
 `,
-  lint: `Usage: pnpm val lint
+  lint: `Usage: val lint [fix] [--fix]
 
 Notes:
   Lint currently runs at repo scope.
+  Use "fix" or "--fix" to run the existing repo lint-fix command.
 `,
-  db: `Usage: pnpm val db <generate|migrate|studio>
+  db: `Usage: val db <generate|migrate|studio>
 
 Notes:
   Use the existing migration-based workflow. Do not use db:push.
 `,
-  seed: `Usage: pnpm val seed <dev|prod>`,
-  verify: `Usage: pnpm val verify studio [-- passthrough]
+  seed: `Usage: val seed <dev|prod>`,
+  verify: `Usage: val verify studio [-- passthrough]
 
 Notes:
   verify currently supports studio and forwards passthrough args to the existing verification script.
@@ -385,8 +387,18 @@ function createTestInvocation(positionals, flags, passthrough) {
 }
 
 function createLintInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, [], 'lint')
-  ensureNoExtraPositionals(positionals, 'lint')
+  ensureAllowedFlags(flags, ['--fix'], 'lint')
+  const [mode, ...rest] = positionals
+  ensureNoExtraPositionals(rest, 'lint')
+
+  if (mode && mode !== 'fix') {
+    fail(`unsupported lint mode "${mode}"`)
+  }
+
+  if (mode === 'fix' || flags.includes('--fix')) {
+    return scriptInvocation('lint:fix', passthrough)
+  }
+
   return scriptInvocation('lint', passthrough)
 }
 
