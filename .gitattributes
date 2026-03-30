@@ -3,12 +3,5 @@ docs/reference/**/*.jpg filter=lfs diff=lfs merge=lfs -text
 docs/reference/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
 docs/reference/**/*.gif filter=lfs diff=lfs merge=lfs -text
 docs/reference/**/*.webp filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.mp3 filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.ogv filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.wav filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.webm filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.png filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.jpg filter=lfs diff=lfs merge=lfs -text
-assets/test-media/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+assets/test-media/** filter=lfs diff=lfs merge=lfs -text
 docs/reference/**/*.md filter=lfs diff=lfs merge=lfs -text
