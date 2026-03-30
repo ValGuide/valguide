@@ -49,7 +49,10 @@ export function getAssetImageUrl(asset: { storagePath: string }): string {
  * Images are optimized by the active provider.
  * Audio/video are served directly from R2.
  */
-export function getAssetDisplayUrl(asset: { storagePath: string; type: 'image' | 'audio' | 'video' }): string {
+export function getAssetDisplayUrl(asset: {
+  storagePath: string
+  type: 'image' | 'audio' | 'video' | 'document'
+}): string {
   if (asset.type === 'image') {
     return getAssetImageUrl(asset)
   }

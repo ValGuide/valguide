@@ -10,7 +10,7 @@ export type ConfirmUploadInput = {
   fileName: string
   fileSize: number
   mimeType: string
-  type: 'image' | 'audio' | 'video'
+  type: 'image' | 'audio' | 'video' | 'document'
   storagePath: string
   width?: number
   height?: number

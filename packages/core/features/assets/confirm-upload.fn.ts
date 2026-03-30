@@ -9,7 +9,7 @@ const confirmUploadSchema = z.object({
   fileName: z.string(),
   fileSize: z.number(),
   mimeType: z.string(),
-  type: z.enum(['image', 'audio', 'video']),
+  type: z.enum(['image', 'audio', 'video', 'document']),
   storagePath: z.string(),
   width: z.number().optional(),
   height: z.number().optional(),

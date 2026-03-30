@@ -15,7 +15,7 @@ import {
 import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { cn } from '@valguide/ui/lib/utils'
 import { format } from 'date-fns'
-import { Heart, MoreHorizontal, Music, Trash2, Video } from 'lucide-react'
+import { FileText, Heart, MoreHorizontal, Music, Trash2, Video } from 'lucide-react'
 import * as React from 'react'
 import type { DeleteAssetDialogComponent } from './asset-card'
 import { AssetVideoThumbnail } from './asset-video-thumbnail'
@@ -105,6 +105,8 @@ export function AssetListRow({
       <AssetVideoThumbnail storagePath={asset.storagePath} alt={asset.fileName} width={64} height={48} />
     ) : asset.type === 'audio' ? (
       <Music className="h-4 w-4 text-muted-foreground" />
+    ) : asset.type === 'document' ? (
+      <FileText className="h-4 w-4 text-muted-foreground" />
     ) : (
       <Video className="h-4 w-4 text-muted-foreground" />
     )

@@ -568,11 +568,11 @@
   },
   "assets": {
     "title": "Assets",
-    "description": "Administrar vossa biblioteca da medias",
+    "description": "Administrar vossa biblioteca d'assets",
     "loadingMore": "Chargiar ulteriurs assets...",
     "empty": {
       "title": "Anc nagins assets",
-      "description": "Chargiai si maletgs, audio e videos per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
+      "description": "Chargiai si maletgs, audio, videos e documents per utilisar en voss guids. Tut las datotecas èn memorisadas segiras e pon vegnir reutilisadas en plirs guids.",
       "uploadButton": "Chargiar si voss emprim asset",
       "dragHint": "Vus pudais era trair datotecas dapertut sin questa pagina."
     },
@@ -595,10 +595,10 @@
       "cta": "Chargiar si",
       "error": "Errur cun chargiar si",
       "dropzone": "Metter {type} qua u cliccar per tschertgar",
-      "dropzoneGeneric": "Metter maletg, audio u video qua u cliccar per tschertgar",
+      "dropzoneGeneric": "Metter maletgs, audio, videos u documents qua u cliccar per tschertgar",
       "addMore": "Agiuntar dapli datotecas",
-      "sizeLimits": "Maletgs fin 10MB, audio fin 50MB, video fin 500MB",
-      "unsupportedType": "Tip da datoteca betg sustegnì. Chargiai si per plaschair in maletg, audio u video.",
+      "sizeLimits": "Maletgs fin 10MB, audio fin 50MB, video fin 500MB, documents fin 25MB",
+      "unsupportedType": "Tip da datoteca betg sustegnì. Chargiai si per plaschair in maletg, audio, video u document.",
       "maxSize": "Grondezza maximala: {size}MB",
       "uploadComplete": "Chargiada si cumpletta!",
       "uploadCompleteBatch": "{count, plural, one {# datoteca chargiada si} other {# datotecas chargiadas si}}",
@@ -647,8 +647,8 @@
       },
       "overlay": {
         "title": "Laschai las datotecas per chargiar si",
-        "description": "Chargiai si maletgs, audio u video da mintga chantun dal Studio.",
-        "limits": "Maletgs fin 10MB, audio fin 50MB, video fin 500MB"
+        "description": "Chargiai si maletgs, audio, videos u documents da mintga chantun dal Studio.",
+        "limits": "Maletgs fin 10MB, audio fin 50MB, video fin 500MB, documents fin 25MB"
       }
     },
     "filter": {
@@ -656,6 +656,7 @@
       "image": "Maletgs",
       "audio": "Audio",
       "video": "Video",
+      "document": "Documents",
       "searchPlaceholder": "Tschertgar tenor num da datoteca...",
       "noResults": "Nagins assets chattads che correspundan a voss filters",
       "noResultsUsed": "Nagins assets utilisads chattads che correspundan a voss filters",
@@ -734,7 +735,8 @@
     "types": {
       "image": "maletg",
       "audio": "audio",
-      "video": "video"
+      "video": "video",
+      "document": "document"
     },
     "error": {
       "failedToLoad": "Errur cun chargiar ils assets",

@@ -5,7 +5,7 @@ import type { AssetUploadStatus } from './asset-upload-session.utils'
 export type AssetUploadItem = {
   id: string
   file: File
-  type: 'image' | 'audio' | 'video'
+  type: 'image' | 'audio' | 'video' | 'document'
   previewUrl: string | null
   status: AssetUploadStatus
   progress: number

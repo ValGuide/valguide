@@ -10,7 +10,7 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } f
 import { Input } from '@valguide/ui/components/input'
 import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { format } from 'date-fns'
-import { Clipboard, Music, Video } from 'lucide-react'
+import { Clipboard, FileText, Music, Video } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { AssetVideoThumbnail } from './asset-video-thumbnail'
@@ -109,6 +109,8 @@ export function AssetDetailsDrawer({ asset, open, onOpenChange, onRename }: Asse
                   <AssetVideoThumbnail storagePath={asset.storagePath} alt={asset.fileName} width={640} height={256} />
                 ) : asset.type === 'audio' ? (
                   <Music className="h-10 w-10 text-muted-foreground" />
+                ) : asset.type === 'document' ? (
+                  <FileText className="h-10 w-10 text-muted-foreground" />
                 ) : (
                   <Video className="h-10 w-10 text-muted-foreground" />
                 )}

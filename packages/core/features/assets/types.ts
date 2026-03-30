@@ -4,7 +4,7 @@
  * making them safe to import in browser/Storybook environments.
  */
 
-export type AssetType = 'image' | 'audio' | 'video'
+export type AssetType = 'image' | 'audio' | 'video' | 'document'
 
 export interface Asset {
   id: string

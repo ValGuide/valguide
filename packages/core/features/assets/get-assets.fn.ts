@@ -14,12 +14,12 @@ export type {
 } from './get-assets.server'
 
 const getAssetsSchema = z.object({
-  type: z.enum(['image', 'audio', 'video']).optional(),
+  type: z.enum(['image', 'audio', 'video', 'document']).optional(),
   usage: z.enum(['used', 'unused']).optional(),
 })
 
 const getAssetsPageSchema = z.object({
-  type: z.enum(['image', 'audio', 'video']).optional(),
+  type: z.enum(['image', 'audio', 'video', 'document']).optional(),
   usage: z.enum(['used', 'unused']).optional(),
   search: z.string().optional(),
   cursor: z.string().optional(),

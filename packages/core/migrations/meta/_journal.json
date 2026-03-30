@@ -8,6 +8,13 @@
       "when": 1772484739251,
       "tag": "0000_loving_blizzard",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1774860752049,
+      "tag": "0001_sleepy_living_mummy",
+      "breakpoints": true
     }
   ]
 }

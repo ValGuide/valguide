@@ -63,7 +63,11 @@ function decodeCursor(cursor: string): AssetCursorPayload {
     const isValidSortBy = parsed.sortBy === 'createdAt' || parsed.sortBy === 'name' || parsed.sortBy === 'usage'
     const isValidSortDirection = parsed.sortDirection === 'asc' || parsed.sortDirection === 'desc'
     const isValidType =
-      parsed.type === null || parsed.type === 'image' || parsed.type === 'audio' || parsed.type === 'video'
+      parsed.type === null ||
+      parsed.type === 'image' ||
+      parsed.type === 'audio' ||
+      parsed.type === 'video' ||
+      parsed.type === 'document'
     const isValidUsage = parsed.usage === null || parsed.usage === 'used' || parsed.usage === 'unused'
     const isValidSearch = parsed.search === null || typeof parsed.search === 'string'
     if (

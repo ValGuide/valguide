@@ -13,7 +13,7 @@ import { valguideId } from '@valguide/core/utils/nanoid'
 import { Button } from '@valguide/ui/components/button'
 import { Progress } from '@valguide/ui/components/progress'
 import { cn } from '@valguide/ui/lib/utils'
-import { CheckCircle2, FileWarning, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
+import { CheckCircle2, FileText, FileWarning, ImageIcon, Music, Upload, Video, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { uploadFile } from '../lib/upload'
 
@@ -74,6 +74,8 @@ export function AssetUploadInline({
         return <Music className="h-10 w-10 text-muted-foreground" />
       case 'video':
         return <Video className="h-10 w-10 text-muted-foreground" />
+      case 'document':
+        return <FileText className="h-10 w-10 text-muted-foreground" />
       default:
         return <Upload className="h-10 w-10 text-muted-foreground" />
     }

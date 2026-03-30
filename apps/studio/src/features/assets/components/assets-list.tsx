@@ -30,7 +30,7 @@ import { Input } from '@valguide/ui/components/input'
 import { PageTitle } from '@valguide/ui/components/page-title'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
-import { Filter, Image as ImageIcon, LayoutGrid, List, Search, Upload, X } from 'lucide-react'
+import { FileText, Filter, Image as ImageIcon, LayoutGrid, List, Search, Upload, X } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { AssetDetailsDrawer } from '@/features/assets/components/asset-details-drawer'
@@ -435,6 +435,7 @@ export function AssetsList({
             <SelectItem value="image">{t('filter.image')}</SelectItem>
             <SelectItem value="audio">{t('filter.audio')}</SelectItem>
             <SelectItem value="video">{t('filter.video')}</SelectItem>
+            <SelectItem value="document">{t('filter.document')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -686,6 +687,7 @@ export function AssetsList({
                     <SelectItem value="image">{t('filter.image')}</SelectItem>
                     <SelectItem value="audio">{t('filter.audio')}</SelectItem>
                     <SelectItem value="video">{t('filter.video')}</SelectItem>
+                    <SelectItem value="document">{t('filter.document')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -816,7 +818,7 @@ export function AssetsList({
           <Empty className="mt-6 border border-dashed">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <ImageIcon />
+                <FileText />
               </EmptyMedia>
               <EmptyTitle>
                 {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'

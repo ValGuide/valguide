@@ -15,7 +15,7 @@ import {
 } from '@valguide/ui/components/dropdown-menu'
 import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { formatDistanceToNow } from 'date-fns'
-import { Download, Image as ImageIcon, Info, MoreVertical, Music, Trash2, Video } from 'lucide-react'
+import { Download, FileText, Image as ImageIcon, Info, MoreVertical, Music, Trash2, Video } from 'lucide-react'
 import type { ComponentType, MouseEvent, TouchEvent } from 'react'
 import { useRef, useState } from 'react'
 import { AssetVideoThumbnail } from './asset-video-thumbnail'
@@ -104,6 +104,8 @@ export function AssetCard({
         return <Music className="h-12 w-12 text-muted-foreground" />
       case 'video':
         return <Video className="h-12 w-12 text-muted-foreground" />
+      case 'document':
+        return <FileText className="h-12 w-12 text-muted-foreground" />
       default:
         return null
     }

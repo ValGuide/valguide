@@ -568,11 +568,11 @@
   },
   "assets": {
     "title": "Assets",
-    "description": "Manage your media library",
+    "description": "Manage your asset library",
     "loadingMore": "Loading more assets...",
     "empty": {
       "title": "No assets yet",
-      "description": "Upload images, audio, and video files to use in your tours. All files are stored securely and can be reused across multiple tours.",
+      "description": "Upload images, audio, video, and document files to use across your tours. All files are stored securely and can be reused across multiple tours.",
       "uploadButton": "Upload your first asset",
       "dragHint": "You can also drag files anywhere onto this page."
     },
@@ -595,10 +595,10 @@
       "cta": "Upload",
       "error": "Upload failed",
       "dropzone": "Drop {type} here or click to browse",
-      "dropzoneGeneric": "Drop image, audio or video here, or click to browse",
+      "dropzoneGeneric": "Drop image, audio, video, or document files here, or click to browse",
       "addMore": "Add more files",
-      "sizeLimits": "Images up to 10MB, audio up to 50MB, video up to 500MB",
-      "unsupportedType": "Unsupported file type. Please upload an image, audio, or video file.",
+      "sizeLimits": "Images up to 10MB, audio up to 50MB, video up to 500MB, documents up to 25MB",
+      "unsupportedType": "Unsupported file type. Please upload an image, audio, video, or document file.",
       "maxSize": "Maximum size: {size}MB",
       "uploadComplete": "Upload Complete!",
       "uploadCompleteBatch": "{count, plural, one {# file uploaded} other {# files uploaded}}",
@@ -647,8 +647,8 @@
       },
       "overlay": {
         "title": "Drop files to upload",
-        "description": "Upload images, audio, or video files from anywhere in Studio.",
-        "limits": "Images up to 10MB, audio up to 50MB, video up to 500MB"
+        "description": "Upload image, audio, video, or document files from anywhere in Studio.",
+        "limits": "Images up to 10MB, audio up to 50MB, video up to 500MB, documents up to 25MB"
       }
     },
     "filter": {
@@ -656,6 +656,7 @@
       "image": "Images",
       "audio": "Audio",
       "video": "Video",
+      "document": "Documents",
       "searchPlaceholder": "Search by filename...",
       "noResults": "No assets found matching your filters",
       "noResultsUsed": "No used assets found matching your filters",
@@ -734,7 +735,8 @@
     "types": {
       "image": "image",
       "audio": "audio",
-      "video": "video"
+      "video": "video",
+      "document": "document"
     },
     "error": {
       "failedToLoad": "Failed to load assets",

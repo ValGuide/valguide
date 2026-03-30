@@ -255,6 +255,13 @@ function scriptInvocation(scriptName, passthrough = []) {
   }
 }
 
+function envLoadInvocation(environmentFlags, commandArgs, passthrough = []) {
+  return {
+    command: 'pnpm',
+    args: ['env:load', ...environmentFlags, ...commandArgs, ...passthrough],
+  }
+}
+
 function forwardedArgs(passthrough) {
   return passthrough.length > 0 ? ['--', ...passthrough] : []
 }
@@ -494,7 +501,7 @@ function createDbInvocation(positionals, flags, passthrough) {
       )
     }
 
-    return scriptInvocation('db:migrate', [`--db:${environment}`, ...passthrough])
+    return envLoadInvocation([`--db:${environment}`], ['turbo', 'run', 'db:migrate'], passthrough)
   }
 
   ensureNoExtraPositionals(rest, 'db')

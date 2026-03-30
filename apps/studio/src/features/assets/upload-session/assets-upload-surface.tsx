@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  FileText,
   Image as ImageIcon,
   LoaderCircle,
   Music,
@@ -38,6 +39,8 @@ function AssetUploadSurfaceRow({
       <ImageIcon className="h-4 w-4 text-muted-foreground" />
     ) : item.type === 'audio' ? (
       <Music className="h-4 w-4 text-muted-foreground" />
+    ) : item.type === 'document' ? (
+      <FileText className="h-4 w-4 text-muted-foreground" />
     ) : (
       <Video className="h-4 w-4 text-muted-foreground" />
     )

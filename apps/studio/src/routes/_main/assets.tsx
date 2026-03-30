@@ -12,7 +12,13 @@ import { assetsInfiniteQueryOptions } from '@/features/assets/query-options'
 
 const Root = getRouteApi('/_main')
 
-const assetTypeValues: readonly ['all', 'image', 'audio', 'video'] = ['all', 'image', 'audio', 'video']
+const assetTypeValues: readonly ['all', 'image', 'audio', 'video', 'document'] = [
+  'all',
+  'image',
+  'audio',
+  'video',
+  'document',
+]
 const usageFilterValues: readonly ['all', 'used', 'unused'] = ['all', 'used', 'unused']
 const sortByValues: readonly AssetSortBy[] = ['createdAt', 'name', 'usage']
 const sortDirectionValues: readonly AssetSortDirection[] = ['asc', 'desc']

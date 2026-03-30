@@ -36,7 +36,7 @@ const studioSchema = pgSchema('studio')
 // ASSET (Base Entity - Immutable File Record)
 // =============================================================================
 
-export const assetType = pgEnum('asset_type', ['image', 'audio', 'video'])
+export const assetType = pgEnum('asset_type', ['image', 'audio', 'video', 'document'])
 
 export const asset = studioSchema.table(
   'asset',
