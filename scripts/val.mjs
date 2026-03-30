@@ -10,6 +10,7 @@ const DEPLOY_TARGETS = [...APP_TARGETS]
 const TYPE_CHECK_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 'storybook', 'core']
 const TEST_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'core']
 const DB_ACTIONS = ['generate', 'migrate', 'studio']
+const DB_ENVIRONMENTS = ['dev', 'prod']
 const SEED_ENVIRONMENTS = ['dev', 'prod']
 const VERIFY_TARGETS = ['studio']
 const REMOTE_DEV_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs']
@@ -59,7 +60,7 @@ Examples:
   val type-check core
   val lint fix
   val open github
-  val db migrate
+  val db migrate dev
   val verify studio -- --ticket VG-85
 `
 
@@ -126,7 +127,10 @@ Notes:
 Targets:
   ${OPEN_TARGETS.join(', ')}
 `,
-  db: `Usage: val db <generate|migrate|studio>
+  db: `Usage:
+  val db generate
+  val db migrate <dev|prod>
+  val db studio
 
 Notes:
   Use the existing migration-based workflow. Do not use db:push.
@@ -463,7 +467,6 @@ function createOpenInvocation(positionals, flags, passthrough) {
 function createDbInvocation(positionals, flags, passthrough) {
   ensureAllowedFlags(flags, [], 'db')
   const [action, ...rest] = positionals
-  ensureNoExtraPositionals(rest, 'db')
 
   if (!action) {
     failWithUsage(`missing action for "db". Supported actions: ${quotedList(DB_ACTIONS)}.`, 'db')
@@ -473,6 +476,28 @@ function createDbInvocation(positionals, flags, passthrough) {
     failWithUsage(`unsupported db action "${action}". Supported actions: ${quotedList(DB_ACTIONS)}.`, 'db')
   }
 
+  if (action === 'migrate') {
+    const [environment, ...remainingPositionals] = rest
+    ensureNoExtraPositionals(remainingPositionals, 'db')
+
+    if (!environment) {
+      failWithUsage(
+        `db migrate requires an explicit environment: ${quotedList(DB_ENVIRONMENTS)}.`,
+        'db',
+      )
+    }
+
+    if (!DB_ENVIRONMENTS.includes(environment)) {
+      failWithUsage(
+        `unsupported database environment "${environment}". Supported environments: ${quotedList(DB_ENVIRONMENTS)}.`,
+        'db',
+      )
+    }
+
+    return scriptInvocation('db:migrate', [`--db:${environment}`, ...passthrough])
+  }
+
+  ensureNoExtraPositionals(rest, 'db')
   return scriptInvocation(`db:${action}`, passthrough)
 }
 
