@@ -1,14 +1,18 @@
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 import type { AssetSortBy, AssetSortDirection, AssetUsageFilter } from '@valguide/core/features/assets/get-assets.fn'
-import type { AssetType } from '@valguide/core/features/assets/types'
+import type { Asset, AssetType } from '@valguide/core/features/assets/types'
 import { useEffect, useState } from 'react'
 import { AssetCardConnected } from '@/features/assets/components/asset-card-connected.tsx'
 import { AssetListRowConnected } from '@/features/assets/components/asset-list-row-connected.tsx'
 import { AssetsList } from '@/features/assets/components/assets-list.tsx'
 import { AssetsListSkeleton } from '@/features/assets/components/assets-list-skeleton'
 import { BulkDeleteAssetsDialogConnected } from '@/features/assets/components/bulk-delete-assets-dialog-connected.tsx'
-import { assetsInfiniteQueryOptions } from '@/features/assets/query-options'
+import {
+  assetDetailsQueryKey,
+  assetDetailsQueryOptions,
+  assetsInfiniteQueryOptions,
+} from '@/features/assets/query-options'
 
 const Root = getRouteApi('/_main')
 
@@ -27,6 +31,7 @@ const viewModeValues: readonly ['grid', 'list'] = ['grid', 'list']
 type AssetViewMode = (typeof viewModeValues)[number]
 
 type AssetsSearchParams = {
+  asset?: string
   type?: AssetType | 'all'
   usage?: AssetUsageFilter | 'all'
   query?: string
@@ -63,8 +68,13 @@ const parseViewMode = (value: unknown): AssetViewMode | undefined => {
     : undefined
 }
 
+const parseSelectedAsset = (value: unknown): string | undefined => {
+  return typeof value === 'string' && value.trim().length > 0 ? value : undefined
+}
+
 export const Route = createFileRoute('/_main/assets')({
   validateSearch: (search: Record<string, unknown>): AssetsSearchParams => ({
+    asset: parseSelectedAsset(search.asset),
     type: parseAssetType(search.type),
     usage: parseUsageFilter(search.usage),
     query: typeof search.query === 'string' ? search.query : undefined,
@@ -74,7 +84,7 @@ export const Route = createFileRoute('/_main/assets')({
   }),
   loader: ({ context, location }) => {
     const search = location.search as AssetsSearchParams
-    return context.queryClient.ensureInfiniteQueryData(
+    const assetsQuery = context.queryClient.ensureInfiniteQueryData(
       assetsInfiniteQueryOptions({
         type: search.type === 'all' ? undefined : search.type,
         usage: search.usage === 'all' ? undefined : search.usage,
@@ -83,6 +93,12 @@ export const Route = createFileRoute('/_main/assets')({
         sortDirection: search.sortDirection ?? 'desc',
       }),
     )
+
+    if (!search.asset) {
+      return assetsQuery
+    }
+
+    return Promise.all([assetsQuery, context.queryClient.ensureQueryData(assetDetailsQueryOptions(search.asset))])
   },
   component: AssetsPage,
   pendingComponent: () => (
@@ -117,6 +133,7 @@ function AssetsContent() {
   const updateSearch = (nextSearch: AssetsSearchParams) => {
     const mergedSearch: AssetsSearchParams = {
       type: routeSearch.type,
+      asset: routeSearch.asset,
       query: routeSearch.query,
       usage: routeSearch.usage,
       sortBy: routeSearch.sortBy,
@@ -128,6 +145,7 @@ function AssetsContent() {
     void navigate({
       to: '/assets',
       search: {
+        asset: mergedSearch.asset,
         type: mergedSearch.type,
         query: mergedSearch.query,
         usage: mergedSearch.usage,
@@ -173,6 +191,14 @@ function AssetsContent() {
   })
 
   const assets = data?.pages.flatMap((page) => page.items) ?? []
+  const selectedAssetNanoId = routeSearch.asset
+  const selectedAssetFromList = assets.find((asset) => asset.nanoId === selectedAssetNanoId) ?? null
+  const { data: selectedAssetDetails } = useQuery({
+    ...assetDetailsQueryOptions(selectedAssetNanoId ?? ''),
+    enabled: Boolean(selectedAssetNanoId),
+    placeholderData: selectedAssetFromList ?? undefined,
+  })
+  const selectedAsset = selectedAssetDetails ?? selectedAssetFromList
 
   const handleAssetDeleted = async (_assetId: string) => {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
@@ -186,9 +212,18 @@ function AssetsContent() {
     await handleAssetDeleted('')
   }
 
-  const handleAssetRenamed = async (_assetId: string) => {
+  const handleAssetRenamed = async (renamedAsset: Asset) => {
     await queryClient.invalidateQueries({ queryKey: ['assets'] })
     await queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })
+    queryClient.setQueryData(assetDetailsQueryKey(renamedAsset.nanoId), (currentAsset) =>
+      currentAsset
+        ? {
+            ...currentAsset,
+            fileName: renamedAsset.fileName,
+            updatedAt: renamedAsset.updatedAt,
+          }
+        : currentAsset,
+    )
   }
 
   if (isPending && !data) {
@@ -207,6 +242,22 @@ function AssetsContent() {
       onAssetsDeleted={handleAssetsDeleted}
       onAssetRenamed={handleAssetRenamed}
       onRetry={() => queryClient.invalidateQueries({ queryKey: ['assets-infinite'] })}
+      selectedAsset={selectedAsset}
+      isDetailsOpen={Boolean(selectedAssetNanoId)}
+      onDetailsOpenChange={(open) => {
+        if (open) {
+          return
+        }
+
+        updateSearch({
+          asset: undefined,
+        })
+      }}
+      onOpenAssetDetails={(asset) =>
+        updateSearch({
+          asset: asset.nanoId,
+        })
+      }
       typeFilter={typeFilter}
       onTypeFilterChange={(nextTypeFilter) =>
         updateSearch({

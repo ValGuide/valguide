@@ -625,6 +625,7 @@
       "collapse": "Collapse upload panel",
       "close": "Close upload panel",
       "retry": "Retry",
+      "viewAsset": "View asset",
       "clearCompleted": "Clear completed",
       "uploadedToLibrary": "Uploaded to Assets",
       "progressLabel": "{progress}% uploaded",

@@ -1,4 +1,5 @@
 import { type InfiniteData, infiniteQueryOptions, queryOptions } from '@tanstack/react-query'
+import { type AssetDetails, getAssetDetailsFn } from '@valguide/core/features/assets/get-asset-details.fn'
 import type {
   AssetPage,
   AssetSortBy,
@@ -42,6 +43,17 @@ export const assetsQueryOptions = (options?: AssetsQueryOptions) =>
       })
       return { assets }
     },
+  })
+
+export const assetDetailsQueryKey = (nanoId: string) => ['asset-details', nanoId] as const
+
+export const assetDetailsQueryOptions = (nanoId: string) =>
+  queryOptions<AssetDetails>({
+    queryKey: assetDetailsQueryKey(nanoId),
+    queryFn: () =>
+      getAssetDetailsFn({
+        data: { nanoId },
+      }),
   })
 
 export const assetsInfiniteQueryKey = (options?: AssetsInfiniteQueryOptions) =>

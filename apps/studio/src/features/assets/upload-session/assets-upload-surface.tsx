@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
@@ -33,6 +34,7 @@ function AssetUploadSurfaceRow({
   onRetry: (itemId: string) => void
 }) {
   const t = useTranslations('assets.uploadSurface')
+  const navigate = useNavigate()
 
   const icon =
     item.type === 'image' ? (
@@ -62,6 +64,19 @@ function AssetUploadSurfaceRow({
       : item.status === 'queued'
         ? t('status.queued')
         : null
+
+  const handleViewAsset = () => {
+    if (!item.asset) {
+      return
+    }
+
+    void navigate({
+      to: '/assets',
+      search: {
+        asset: item.asset.nanoId,
+      },
+    })
+  }
 
   return (
     <div className="flex items-start gap-3 rounded-2xl border border-border/70 bg-background px-3 py-3 shadow-sm">
@@ -105,9 +120,16 @@ function AssetUploadSurfaceRow({
               </Button>
             </div>
           ) : isTerminalUploadStatus(item.status) ? (
-            <Button variant="ghost" size="icon" onClick={() => onDismiss(item.id)} className="h-8 w-8 rounded-lg">
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex shrink-0 items-center gap-1">
+              {item.status === 'complete' && item.asset ? (
+                <Button variant="ghost" size="sm" onClick={handleViewAsset} className="h-8 rounded-lg px-2">
+                  {t('viewAsset')}
+                </Button>
+              ) : null}
+              <Button variant="ghost" size="icon" onClick={() => onDismiss(item.id)} className="h-8 w-8 rounded-lg">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           ) : (
             <div className="mt-1 text-muted-foreground">
               {item.status === 'complete' ? (

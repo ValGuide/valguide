@@ -76,7 +76,7 @@ export type AssetsListProps = {
   error?: Error | null
   onAssetDeleted?: (assetId: string) => void
   onAssetsDeleted?: (assetIds: string[]) => Promise<void> | void
-  onAssetRenamed?: (assetId: string) => Promise<void> | void
+  onAssetRenamed?: (asset: Asset) => Promise<void> | void
   onLoadMore?: () => void
   onRetry?: () => void
   typeFilter?: AssetType | 'all'
@@ -95,6 +95,10 @@ export type AssetsListProps = {
   AssetListRow?: AssetListRowComponent
   BulkDeleteDialog?: BulkDeleteDialogComponent
   onRenameAssetAction?: (input: { assetId: string; fileName: string }) => Promise<Asset>
+  selectedAsset?: AssetWithUsage | null
+  isDetailsOpen?: boolean
+  onDetailsOpenChange?: (open: boolean) => void
+  onOpenAssetDetails?: (asset: AssetWithUsage) => void
 }
 
 export function AssetsList({
@@ -124,6 +128,10 @@ export function AssetsList({
   AssetListRow,
   BulkDeleteDialog,
   onRenameAssetAction,
+  selectedAsset: controlledSelectedAsset,
+  isDetailsOpen: controlledIsDetailsOpen,
+  onDetailsOpenChange,
+  onOpenAssetDetails,
 }: AssetsListProps) {
   const t = useTranslations('assets')
   const [internalTypeFilter, setInternalTypeFilter] = useState<AssetType | 'all'>('all')
@@ -133,8 +141,8 @@ export function AssetsList({
   const [internalUsageFilter, setInternalUsageFilter] = useState<AssetUsageFilter | 'all'>('all')
   const [internalViewMode, setInternalViewMode] = useState<AssetViewMode>('grid')
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const [selectedAsset, setSelectedAsset] = useState<AssetWithUsage | null>(null)
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [internalSelectedAsset, setInternalSelectedAsset] = useState<AssetWithUsage | null>(null)
+  const [internalIsDetailsOpen, setInternalIsDetailsOpen] = useState(false)
   const [selectedAssetIds, setSelectedAssetIds] = useState<Set<string>>(new Set())
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false)
   const resultsRootRef = useRef<HTMLDivElement | null>(null)
@@ -154,6 +162,8 @@ export function AssetsList({
   const sortDirection = controlledSortDirection ?? internalSortDirection
   const usageFilter = controlledUsageFilter ?? internalUsageFilter
   const viewMode = controlledViewMode ?? internalViewMode
+  const selectedAsset = controlledSelectedAsset ?? internalSelectedAsset
+  const isDetailsOpen = controlledIsDetailsOpen ?? internalIsDetailsOpen
 
   const setTypeFilter = (value: AssetType | 'all') => {
     if (!onTypeFilterChange) {
@@ -250,14 +260,25 @@ export function AssetsList({
   }, [displayedAssets])
 
   const openAssetDetails = (asset: AssetWithUsage) => {
-    setSelectedAsset(asset)
-    setIsDetailsOpen(true)
+    if (onOpenAssetDetails) {
+      onOpenAssetDetails(asset)
+      return
+    }
+
+    setInternalSelectedAsset(asset)
+    setInternalIsDetailsOpen(true)
   }
 
   const closeAssetDetails = (open: boolean) => {
-    setIsDetailsOpen(open)
+    onDetailsOpenChange?.(open)
+
+    if (controlledIsDetailsOpen !== undefined || controlledSelectedAsset !== undefined) {
+      return
+    }
+
+    setInternalIsDetailsOpen(open)
     if (!open) {
-      setSelectedAsset(null)
+      setInternalSelectedAsset(null)
     }
   }
 
@@ -268,8 +289,8 @@ export function AssetsList({
 
     const renamedAsset = await onRenameAssetAction({ assetId, fileName })
 
-    await onAssetRenamed?.(assetId)
-    setSelectedAsset((currentAsset) =>
+    await onAssetRenamed?.(renamedAsset)
+    setInternalSelectedAsset((currentAsset) =>
       currentAsset && currentAsset.id === renamedAsset.id
         ? {
             ...currentAsset,

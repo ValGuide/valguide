@@ -169,7 +169,7 @@ function getUsageCondition(usage?: AssetUsageFilter) {
   return and(noTourUsage, noDraftTourUsage, noStopUsage, noDraftStopUsage)
 }
 
-function getTourUsageCountExpression() {
+export function getTourUsageCountExpression() {
   return sql<number>`(
     SELECT COUNT(DISTINCT usage.tour_id)::int
     FROM (
@@ -181,7 +181,7 @@ function getTourUsageCountExpression() {
   )`
 }
 
-function getStopUsageCountExpression() {
+export function getStopUsageCountExpression() {
   return sql<number>`(
     SELECT COUNT(DISTINCT usage.stop_id)::int
     FROM (
@@ -197,14 +197,16 @@ function getUsageSortExpression() {
   return sql<number>`${getTourUsageCountExpression()} + ${getStopUsageCountExpression()}`
 }
 
+export function getAssetWithUsageSelectFields() {
+  return {
+    ...getTableColumns(asset),
+    tourCount: getTourUsageCountExpression().as('tour_count'),
+    stopCount: getStopUsageCountExpression().as('stop_count'),
+  }
+}
+
 function buildAssetSelectQuery(sortBy: AssetSortBy, sortDirection: AssetSortDirection) {
-  const query = db
-    .select({
-      ...getTableColumns(asset),
-      tourCount: getTourUsageCountExpression().as('tour_count'),
-      stopCount: getStopUsageCountExpression().as('stop_count'),
-    })
-    .from(asset)
+  const query = db.select(getAssetWithUsageSelectFields()).from(asset)
 
   if (sortBy === 'name') {
     return sortDirection === 'asc'
@@ -293,6 +295,16 @@ export async function getAssets(filters?: GetAssetsFilters): Promise<AssetWithUs
     return query
   }
   return query.where(and(...conditions))
+}
+
+export async function getAssetWithUsageByNanoId(nanoId: string): Promise<AssetWithUsage | undefined> {
+  const [assetWithUsage] = await db
+    .select(getAssetWithUsageSelectFields())
+    .from(asset)
+    .where(eq(asset.nanoId, nanoId))
+    .limit(1)
+
+  return assetWithUsage
 }
 
 export async function getAssetsPage(filters?: GetAssetsPageFilters): Promise<AssetPage> {

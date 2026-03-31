@@ -625,6 +625,7 @@
       "collapse": "Upload-Bereich einklappen",
       "close": "Upload-Bereich schließen",
       "retry": "Erneut versuchen",
+      "viewAsset": "Asset ansehen",
       "clearCompleted": "Abgeschlossene entfernen",
       "uploadedToLibrary": "In Assets hochgeladen",
       "progressLabel": "{progress}% hochgeladen",
