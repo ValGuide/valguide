@@ -1,5 +1,12 @@
 import { useTranslations } from '@valguide/core/i18n/client'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@valguide/ui/components/responsive-dialog'
 import { Link2 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -22,22 +29,24 @@ export function EditSlugDialog({ open, onOpenChange, tourNanoId, tourTitle, Slug
   const t = useTranslations('tours.editor.slug')
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
+      <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-lg">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle className="flex items-center gap-2">
             <Link2 className="size-4" />
             {t('title')}
-          </DialogTitle>
-          <DialogDescription>{t('dialogDescription')}</DialogDescription>
-        </DialogHeader>
-        <SlugSettings
-          tourNanoId={tourNanoId}
-          tourTitle={tourTitle}
-          variant="plain"
-          onSaved={() => onOpenChange(false)}
-        />
-      </DialogContent>
-    </Dialog>
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>{t('dialogDescription')}</ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody className="py-4">
+          <SlugSettings
+            tourNanoId={tourNanoId}
+            tourTitle={tourTitle}
+            variant="plain"
+            onSaved={() => onOpenChange(false)}
+          />
+        </ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

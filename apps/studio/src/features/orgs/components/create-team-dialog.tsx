@@ -1,17 +1,18 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@valguide/ui/components/dialog'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@valguide/ui/components/responsive-dialog'
 import { PlusCircle } from 'lucide-react'
 import * as React from 'react'
 
@@ -72,45 +73,47 @@ export function CreateTeamDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      {showTrigger && children && <DialogTrigger asChild>{children}</DialogTrigger>}
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="sheet">
+      {showTrigger && children && <ResponsiveDialogTrigger asChild>{children}</ResponsiveDialogTrigger>}
       {showTrigger && !children && (
-        <DialogTrigger asChild>
+        <ResponsiveDialogTrigger asChild>
           <Button>
             <PlusCircle className="mr-2 size-4" />
             {t('triggerButton')}
           </Button>
-        </DialogTrigger>
+        </ResponsiveDialogTrigger>
       )}
-      <DialogContent className="sm:max-w-106.25">
-        <DialogHeader>
-          <DialogTitle>{t('title')}</DialogTitle>
-          <DialogDescription>{t('description')}</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">{t('nameLabel')}</Label>
-              <Input
-                id="name"
-                placeholder={t('namePlaceholder')}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                disabled={isSubmitting}
-              />
+      <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-106.25">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>{t('description')}</ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+          <ResponsiveDialogBody className="py-4">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="name">{t('nameLabel')}</Label>
+                <Input
+                  id="name"
+                  placeholder={t('namePlaceholder')}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  disabled={isSubmitting}
+                />
+              </div>
             </div>
-          </div>
-          <DialogFooter>
+          </ResponsiveDialogBody>
+          <ResponsiveDialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isSubmitting}>
               {t('cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !name}>
               {isSubmitting ? t('submitting') : t('submit')}
             </Button>
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

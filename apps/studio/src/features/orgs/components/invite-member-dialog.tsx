@@ -1,17 +1,18 @@
 import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@valguide/ui/components/dialog'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@valguide/ui/components/responsive-dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Crown, Edit3, Eye, Palette, Shield, UserPlus } from 'lucide-react'
 import * as React from 'react'
@@ -123,74 +124,76 @@ export function InviteMemberDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="sheet">
+      {children && <ResponsiveDialogTrigger asChild>{children}</ResponsiveDialogTrigger>}
       {!children && (
-        <DialogTrigger asChild>
+        <ResponsiveDialogTrigger asChild>
           <Button>
             <UserPlus className="mr-2 size-4" />
             {t('inviteMember')}
           </Button>
-        </DialogTrigger>
+        </ResponsiveDialogTrigger>
       )}
-      <DialogContent className="max-w-[95vw] sm:max-w-125">
-        <DialogHeader>
-          <DialogTitle className="pr-8 text-left">{t('inviteMember')}</DialogTitle>
-          <DialogDescription className="text-left">{t('inviteDescription')}</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">{t('email')}</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="colleague@museum.ch"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={isSubmitting}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="role">{t('role')}</Label>
-              <Select value={role} onValueChange={(value) => setRole(value as OrgRole)} disabled={isSubmitting}>
-                <SelectTrigger id="role" className="w-full [&_.role-description]:hidden">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="max-w-[calc(100vw-2rem)]">
-                  {availableRoles.map((roleOption) => {
-                    const Icon = roleIcons[roleOption]
-                    return (
-                      <SelectItem key={roleOption} value={roleOption}>
-                        <div className="flex items-start gap-3">
-                          <Icon className="mt-0.5 size-4 shrink-0" />
-                          <div className="flex flex-col gap-0.5">
-                            <span className="font-medium">{roleLabels[roleOption]}</span>
-                            <span className="text-xs text-muted-foreground whitespace-normal text-left leading-snug role-description">
-                              {roleDescriptions[roleOption]}
-                            </span>
+      <ResponsiveDialogContent className="flex min-h-0 flex-col max-w-[95vw] sm:max-w-125">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle className="pr-8 text-left">{t('inviteMember')}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription className="text-left">{t('inviteDescription')}</ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+          <ResponsiveDialogBody className="py-4">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">{t('email')}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="colleague@museum.ch"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="role">{t('role')}</Label>
+                <Select value={role} onValueChange={(value) => setRole(value as OrgRole)} disabled={isSubmitting}>
+                  <SelectTrigger id="role" className="w-full [&_.role-description]:hidden">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-w-[calc(100vw-2rem)]">
+                    {availableRoles.map((roleOption) => {
+                      const Icon = roleIcons[roleOption]
+                      return (
+                        <SelectItem key={roleOption} value={roleOption}>
+                          <div className="flex items-start gap-3">
+                            <Icon className="mt-0.5 size-4 shrink-0" />
+                            <div className="flex flex-col gap-0.5">
+                              <span className="font-medium">{roleLabels[roleOption]}</span>
+                              <span className="text-xs text-muted-foreground whitespace-normal text-left leading-snug role-description">
+                                {roleDescriptions[roleOption]}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </SelectItem>
-                    )
-                  })}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground">{roleDescriptions[role]}</p>
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground">{roleDescriptions[role]}</p>
+              </div>
+              {error && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
             </div>
-            {error && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
-          </div>
-          <DialogFooter>
+          </ResponsiveDialogBody>
+          <ResponsiveDialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isSubmitting}>
               {t('cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !email}>
               {isSubmitting ? t('sending') : t('sendInvite')}
             </Button>
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

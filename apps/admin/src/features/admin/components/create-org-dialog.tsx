@@ -3,16 +3,17 @@ import { valguideId } from '@valguide/core/utils/nanoid'
 import { generateSlug } from '@valguide/core/utils/slug'
 import { Avatar, AvatarFallback, AvatarImage } from '@valguide/ui/components/avatar'
 import { Button } from '@valguide/ui/components/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@valguide/ui/components/dialog'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@valguide/ui/components/responsive-dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Building2, Plus, Trash2, Upload } from 'lucide-react'
 import { useRef, useState } from 'react'
@@ -115,14 +116,16 @@ export function CreateOrgDialog({ open, onOpenChange, isCreating, onConfirm }: C
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Create Organization</DialogTitle>
-          <DialogDescription>Create a new organization and optionally add initial members.</DialogDescription>
-        </DialogHeader>
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="full-height">
+      <ResponsiveDialogContent className="flex min-h-0 flex-col p-0 sm:max-h-[90vh] sm:max-w-lg sm:p-6">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Create Organization</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
+            Create a new organization and optionally add initial members.
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        <div className="space-y-4">
+        <ResponsiveDialogBody className="space-y-4">
           <div className="flex items-center gap-4">
             <Avatar className="size-16">
               {logoPreview ? (
@@ -222,17 +225,17 @@ export function CreateOrgDialog({ open, onOpenChange, isCreating, onConfirm }: C
               <p className="text-xs text-muted-foreground">No members. You can add them later.</p>
             )}
           </div>
-        </div>
+        </ResponsiveDialogBody>
 
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isCreating}>
             Cancel
           </Button>
           <Button onClick={handleConfirm} disabled={isCreating || !name.trim()}>
             {isCreating ? 'Creating...' : 'Create Organization'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

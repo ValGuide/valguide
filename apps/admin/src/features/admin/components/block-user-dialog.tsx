@@ -1,12 +1,13 @@
 import { Button } from '@valguide/ui/components/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@valguide/ui/components/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@valguide/ui/components/responsive-dialog'
 import { Textarea } from '@valguide/ui/components/textarea'
 import { useState } from 'react'
 
@@ -26,30 +27,40 @@ export function BlockUserDialog({ open, onOpenChange, userEmail, isBlocking, onC
     setReason('')
   }
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setReason('')
+    }
+    onOpenChange(nextOpen)
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Block User</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="full-height">
+      <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-md">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Block User</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Block {userEmail ?? 'this user'}? They will be signed out and unable to access the platform.
-          </DialogDescription>
-        </DialogHeader>
-        <Textarea
-          placeholder="Reason for blocking (optional)"
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          rows={3}
-        />
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isBlocking}>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody>
+          <Textarea
+            placeholder="Reason for blocking (optional)"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            rows={6}
+            className="min-h-40 resize-none"
+          />
+        </ResponsiveDialogBody>
+        <ResponsiveDialogFooter>
+          <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isBlocking}>
             Cancel
           </Button>
           <Button variant="destructive" onClick={handleConfirm} disabled={isBlocking}>
             {isBlocking ? 'Blocking...' : 'Block User'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

@@ -8,7 +8,14 @@ import {
   CommandItem,
   CommandList,
 } from '@valguide/ui/components/command'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@valguide/ui/components/responsive-dialog'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { AVAILABLE_LANGUAGES } from './unified-locale-selector'
@@ -41,48 +48,50 @@ export function AddLanguageDialog({ open, onOpenChange, existingLocales, onAddLa
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-[400px] gap-0 p-0 overflow-hidden"
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
+      <ResponsiveDialogContent
+        className="flex min-h-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-[400px]"
         data-testid="translations-add-language-dialog"
       >
-        <DialogHeader className="px-4 pt-4 pb-3">
-          <DialogTitle>{t('addLanguage')}</DialogTitle>
-          <DialogDescription className="sr-only">{t('searchLanguages')}</DialogDescription>
-        </DialogHeader>
-        <Command className="border-none">
-          <CommandInput placeholder={t('searchLanguages')} disabled={isLoading} />
-          <CommandList className="max-h-[300px]">
-            <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
-            <CommandGroup>
-              {availableLanguages.map((locale) => {
-                const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
+        <ResponsiveDialogHeader className="px-4 pt-4 pb-3">
+          <ResponsiveDialogTitle>{t('addLanguage')}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription className="sr-only">{t('searchLanguages')}</ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody className="overflow-hidden px-0 py-0">
+          <Command className="border-none">
+            <CommandInput placeholder={t('searchLanguages')} disabled={isLoading} />
+            <CommandList className="max-h-[300px]">
+              <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
+              <CommandGroup>
+                {availableLanguages.map((locale) => {
+                  const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
 
-                return (
-                  <CommandItem
-                    key={locale}
-                    value={`${nativeName} ${localizedName} ${localeCode}`}
-                    onSelect={() => handleAddLocale(locale)}
-                    disabled={isLoading}
-                    className="flex items-center gap-2 py-2.5"
-                    data-testid={`translations-add-language-option-${locale}`}
-                  >
-                    <span className="flex flex-col gap-0.5 min-w-0">
-                      <span className="font-medium truncate">{nativeName}</span>
-                      <span className="text-xs text-muted-foreground truncate">
-                        {localizedName} ({localeCode})
+                  return (
+                    <CommandItem
+                      key={locale}
+                      value={`${nativeName} ${localizedName} ${localeCode}`}
+                      onSelect={() => handleAddLocale(locale)}
+                      disabled={isLoading}
+                      className="flex items-center gap-2 py-2.5"
+                      data-testid={`translations-add-language-option-${locale}`}
+                    >
+                      <span className="flex flex-col gap-0.5 min-w-0">
+                        <span className="font-medium truncate">{nativeName}</span>
+                        <span className="text-xs text-muted-foreground truncate">
+                          {localizedName} ({localeCode})
+                        </span>
                       </span>
-                    </span>
-                    {loadingLocale === locale && (
-                      <Loader2 className="ml-auto h-4 w-4 animate-spin text-muted-foreground" />
-                    )}
-                  </CommandItem>
-                )
-              })}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </DialogContent>
-    </Dialog>
+                      {loadingLocale === locale && (
+                        <Loader2 className="ml-auto h-4 w-4 animate-spin text-muted-foreground" />
+                      )}
+                    </CommandItem>
+                  )
+                })}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

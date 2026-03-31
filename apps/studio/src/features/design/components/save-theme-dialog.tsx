@@ -1,16 +1,17 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@valguide/ui/components/dialog'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { RadioGroup, RadioGroupItem } from '@valguide/ui/components/radio-group'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@valguide/ui/components/responsive-dialog'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -62,52 +63,54 @@ export function SaveThemeDialog({
   const displayError = error ?? localError
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>{t('title')}</DialogTitle>
-            <DialogDescription className="sr-only">{t('title')}</DialogDescription>
-          </DialogHeader>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
+      <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-md">
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+            <ResponsiveDialogDescription className="sr-only">{t('title')}</ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
 
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="theme-name">{t('name')}</Label>
-              <Input
-                id="theme-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={t('namePlaceholder')}
-                disabled={isLoading}
-                autoFocus
-              />
+          <ResponsiveDialogBody className="py-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="theme-name">{t('name')}</Label>
+                <Input
+                  id="theme-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={t('namePlaceholder')}
+                  disabled={isLoading}
+                  autoFocus
+                />
+              </div>
+
+              {existingThemeId && (
+                <RadioGroup
+                  value={saveOption}
+                  onValueChange={(v) => setSaveOption(v as 'new' | 'update')}
+                  disabled={isLoading}
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="update" id="update" />
+                    <Label htmlFor="update" className="font-normal cursor-pointer">
+                      {t('updateExisting')}
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="new" id="new" />
+                    <Label htmlFor="new" className="font-normal cursor-pointer">
+                      {t('saveAsNew')}
+                    </Label>
+                  </div>
+                </RadioGroup>
+              )}
+
+              {displayError && <p className="text-sm text-destructive">{displayError}</p>}
             </div>
+          </ResponsiveDialogBody>
 
-            {existingThemeId && (
-              <RadioGroup
-                value={saveOption}
-                onValueChange={(v) => setSaveOption(v as 'new' | 'update')}
-                disabled={isLoading}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="update" id="update" />
-                  <Label htmlFor="update" className="font-normal cursor-pointer">
-                    {t('updateExisting')}
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="new" id="new" />
-                  <Label htmlFor="new" className="font-normal cursor-pointer">
-                    {t('saveAsNew')}
-                  </Label>
-                </div>
-              </RadioGroup>
-            )}
-
-            {displayError && <p className="text-sm text-destructive">{displayError}</p>}
-          </div>
-
-          <DialogFooter>
+          <ResponsiveDialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
               {t('cancel')}
             </Button>
@@ -115,9 +118,9 @@ export function SaveThemeDialog({
               {isLoading && <Loader2 className="size-4 mr-2 animate-spin" />}
               {t('save')}
             </Button>
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

@@ -6,9 +6,15 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Checkbox } from '@valguide/ui/components/checkbox'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@valguide/ui/components/dialog'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@valguide/ui/components/empty'
 import { Input } from '@valguide/ui/components/input'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@valguide/ui/components/responsive-dialog'
 import { RevealImage } from '@valguide/ui/components/reveal-image'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
@@ -235,15 +241,15 @@ export function AssetPickerModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="inset-0 h-dvh max-h-dvh w-screen max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-none border-0 p-4 sm:top-[50%] sm:left-[50%] sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl lg:max-w-4xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border sm:p-6">
-        <DialogHeader className="pr-8">
-          <DialogTitle>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
+      <ResponsiveDialogContent className="inset-0 grid h-dvh max-h-dvh w-screen max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-none border-0 p-4 sm:top-[50%] sm:left-[50%] sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl lg:max-w-4xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border sm:p-6">
+        <ResponsiveDialogHeader className="pr-8">
+          <ResponsiveDialogTitle>
             {locale
               ? t('titleWithLocale', { type: tTypes(type), locale: locale.toUpperCase() })
               : t('title', { type: tTypes(type) })}
-          </DialogTitle>
-        </DialogHeader>
+          </ResponsiveDialogTitle>
+        </ResponsiveDialogHeader>
 
         <Tabs
           value={activeTab}
@@ -320,7 +326,7 @@ export function AssetPickerModal({
           </TabsContent>
         </Tabs>
 
-        <DialogFooter className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-t bg-background/95 pt-3 backdrop-blur sm:flex sm:justify-end sm:gap-2 sm:border-0 sm:bg-transparent sm:pt-0">
+        <ResponsiveDialogFooter className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-t bg-background/95 pt-3 backdrop-blur sm:flex sm:justify-end sm:gap-2 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
           <Button variant="outline" onClick={handleCancel} className="h-11 rounded-xl px-4 sm:h-10 sm:rounded-md">
             {t('cancel')}
           </Button>
@@ -331,8 +337,8 @@ export function AssetPickerModal({
           >
             {t('select')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

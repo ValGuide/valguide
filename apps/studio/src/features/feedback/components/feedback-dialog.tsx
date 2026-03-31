@@ -1,13 +1,14 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@valguide/ui/components/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@valguide/ui/components/responsive-dialog'
 import { Textarea } from '@valguide/ui/components/textarea'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -69,15 +70,15 @@ export function FeedbackDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit} className="min-w-0">
-          <DialogHeader>
-            <DialogTitle>{t('title')}</DialogTitle>
-            <DialogDescription>{t('description')}</DialogDescription>
-          </DialogHeader>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="full-height">
+      <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-h-[90vh] sm:max-w-md">
+        <form onSubmit={handleSubmit} className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>{t('description')}</ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
 
-          <div className="space-y-4 py-4">
+          <ResponsiveDialogBody className="space-y-4 py-4">
             <Textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
@@ -98,9 +99,9 @@ export function FeedbackDialog({
             />
 
             {error && <p className="text-sm text-destructive">{error}</p>}
-          </div>
+          </ResponsiveDialogBody>
 
-          <DialogFooter>
+          <ResponsiveDialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
               {t('cancel')}
             </Button>
@@ -108,9 +109,9 @@ export function FeedbackDialog({
               {isLoading && <Loader2 className="size-4 mr-2 animate-spin" />}
               {t('submit')}
             </Button>
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }
