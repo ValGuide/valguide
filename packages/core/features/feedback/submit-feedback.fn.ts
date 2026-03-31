@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { createLinearIssue } from '@valguide/linear/create-issue'
 import { studioFeedbackIssue } from '@valguide/linear/messages/studio-feedback.issue'
 import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.message'
-import { postMessage } from '@valguide/slack/send-slack-message'
+import { sendSlackMessage } from '@valguide/slack/send-slack-message'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
@@ -128,7 +128,7 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
 
     // Send to Slack (includes Linear ticket link or failure notice)
     try {
-      await postMessage(
+      await sendSlackMessage(
         studioFeedbackMessage({
           feedback: data.feedback,
           userEmail: context.user.email ?? 'unknown',

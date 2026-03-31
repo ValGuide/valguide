@@ -6,6 +6,7 @@ import { requireAuthMiddleware } from '../../auth/middleware'
 import { getPublishedTourByNanoId } from '../public/get-published-tour'
 import { writeOrgSlugToKv, writeTourSlugToKv, writeTourToKv } from '../public/kv'
 import { serializeTourForKv } from '../public/kv-serializers'
+import { notifyTourPublished } from './notify-tour-published.server'
 import { publishTour } from './publish-tour.server'
 
 export type { PublishTourInput, PublishTourResult } from './publish-tour.server'
@@ -23,6 +24,15 @@ export const publishTourFn = createServerFn({ method: 'POST' })
     const result = await publishTour(data, context.user.id)
 
     if (result.success) {
+      notifyTourPublished({
+        actorEmail: context.user.email ?? null,
+        locale: data.locale,
+        publishedStopCount: result.publishedStopCount,
+        tourNanoId: data.nanoId,
+      }).catch((error) => {
+        console.error('Failed to send tour published notification to Slack:', error)
+      })
+
       // DB read must happen inline (before handler returns) because
       // runWithRequestDb closes the connection in `finally`.
       // waitUntil callbacks run after the response — only KV/HTTP work is safe there.

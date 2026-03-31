@@ -2,7 +2,7 @@ import { authSessions, authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
 import { profiles } from '@valguide/core/features/profiles/schema'
 import { userStatusChangedMessage } from '@valguide/core/slack/messages/user-status-changed.message'
-import { postMessage } from '@valguide/core/slack/send-slack-message'
+import { sendSlackMessage } from '@valguide/core/slack/send-slack-message'
 import { eq } from 'drizzle-orm'
 
 export type UpdateUserStatusInput = {
@@ -61,7 +61,7 @@ export async function updateUserStatus(dbClient: DB, input: UpdateUserStatusInpu
     const action = currentStatus === 'blocked' ? 'blocked' : previousStatus === 'blocked' ? 'unblocked' : 'approved'
 
     try {
-      await postMessage(
+      await sendSlackMessage(
         userStatusChangedMessage({
           action,
           actorEmail: actorEmail ?? null,

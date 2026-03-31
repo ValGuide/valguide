@@ -12,6 +12,10 @@ export function resolveAdminUsersUrl(): string {
   return `${resolveAdminBaseUrl()}/users`
 }
 
+export function resolveAdminOrgUrl(orgNanoId: string): string {
+  return `${resolveAdminBaseUrl()}/orgs/${orgNanoId}`
+}
+
 export function resolveAdminMaintenanceUrl(): string {
   return `${resolveAdminBaseUrl()}/maintenance`
 }

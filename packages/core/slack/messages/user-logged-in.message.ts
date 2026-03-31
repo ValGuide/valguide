@@ -1,5 +1,6 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
 import { resolveAdminUsersUrl } from './admin-url'
+import { formatSlackDate } from './slack-date'
 import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
@@ -13,11 +14,6 @@ function statusLabel(status: Props['status']): string {
   if (status === 'approved') return '✅ Approved'
   if (status === 'blocked') return '⛔ Blocked'
   return '⏳ Pending'
-}
-
-function formatSlackDate(timestampMs: number): string {
-  const timestampSeconds = Math.floor(timestampMs / 1000)
-  return `<!date^${timestampSeconds}^{date_short_pretty} at {time}|${new Date(timestampMs).toISOString()}>`
 }
 
 export const userLoggedInMessage = ({ email, userId, status, timestampMs }: Props): SlackMessage => ({

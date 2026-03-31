@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { requireOrgMember } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { createTour } from './create-tour.server'
+import { notifyTourCreated } from './notify-tour-created.server'
 
 export type { CreateTourInput, CreateTourResult } from './create-tour.server'
 
@@ -25,5 +26,16 @@ export const createTourFn = createServerFn({ method: 'POST' })
       throw new Error('No active organization')
     }
     await requireOrgMember(orgId, context.user.id)
-    return createTour(data, orgId, context.user.id)
+    const result = await createTour(data, orgId, context.user.id)
+
+    notifyTourCreated({
+      actorEmail: context.user.email ?? null,
+      locale: result.locale,
+      organizationId: orgId,
+      tourNanoId: result.nanoId,
+    }).catch((error) => {
+      console.error('Failed to send tour created notification to Slack:', error)
+    })
+
+    return result
   })

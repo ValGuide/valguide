@@ -1,14 +1,10 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { formatSlackDate } from './slack-date'
 import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
   email?: string
   timestampMs: number
-}
-
-function formatSlackDate(timestampMs: number): string {
-  const timestampSeconds = Math.floor(timestampMs / 1000)
-  return `<!date^${timestampSeconds}^{date_short_pretty} at {time}|${new Date(timestampMs).toISOString()}>`
 }
 
 export const userStartedLoginMessage = ({ email, timestampMs }: Props): SlackMessage => ({

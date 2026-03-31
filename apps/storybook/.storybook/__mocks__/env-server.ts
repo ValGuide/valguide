@@ -17,6 +17,7 @@ export const serverEnv: StringifyValues<ServerEnv> = {
   VALBOT_SLACK_TOKEN: 'mock-slack-token',
   MAINTENANCE_SLACK_CHANNEL: 'maintenance-mock',
   USERS_SLACK_CHANNEL: 'users-mock',
+  STUDIO_EVENTS_SLACK_CHANNEL: 'studio-events-mock',
   STUDIO_FEEDBACK_SLACK_CHANNEL: 'studio-feedback-mock',
   ADMIN_BASE_URL: 'https://ops.val.guide',
   VITE_ENV: 'dev',

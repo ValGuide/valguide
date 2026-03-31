@@ -36,6 +36,7 @@
   "vars": {
     "NODE_ENV": "production",
     "USERS_SLACK_CHANNEL": "users",
+    "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events",
     "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback",
     "APP_BASE_URL": "https://app.valguide.com",
     "ADMIN_BASE_URL": "https://ops.val.guide",
@@ -64,6 +65,7 @@
       "vars": {
         "NODE_ENV": "production",
         "USERS_SLACK_CHANNEL": "users-dev",
+        "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events-dev",
         "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback-dev",
         "APP_BASE_URL": "https://app.valguide.dev",
         "ADMIN_BASE_URL": "https://ops-dev.val.guide",

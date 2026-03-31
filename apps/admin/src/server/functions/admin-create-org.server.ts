@@ -7,6 +7,7 @@ import { SLUG_PATTERN } from '@valguide/core/utils/slug'
 import { eq } from 'drizzle-orm'
 
 export type AdminCreateOrgInput = {
+  actorEmail?: string | null
   name: string
   slug?: string
   members?: { email: string; role: 'owner' | 'admin' | 'curator' | 'editor' | 'viewer' }[]

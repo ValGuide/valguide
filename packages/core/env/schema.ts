@@ -17,6 +17,7 @@ export const serverEnvSchema = z.object({
   VALBOT_SLACK_TOKEN: z.string().optional(),
   MAINTENANCE_SLACK_CHANNEL: z.string().optional().default(''),
   USERS_SLACK_CHANNEL: z.string().optional().default(''),
+  STUDIO_EVENTS_SLACK_CHANNEL: z.string().optional().default(''),
   STUDIO_FEEDBACK_SLACK_CHANNEL: z.string().optional().default(''),
   ADMIN_BASE_URL: z.string().optional().default('https://ops.val.guide'),
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),

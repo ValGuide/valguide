@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
+import { notifyTeamCreated } from '@valguide/core/features/orgs/notify-team-created.server'
 import { z } from 'zod'
 import { adminMiddleware } from '../middleware'
 import { adminCreateOrg } from './admin-create-org.server'
@@ -22,6 +23,23 @@ export const adminCreateOrgFn = createServerFn({ method: 'POST' })
         .optional(),
     }),
   )
-  .handler(async ({ data }) => {
-    return adminCreateOrg(db, data)
+  .handler(async ({ context, data }) => {
+    const result = await adminCreateOrg(db, {
+      ...data,
+      actorEmail: context.user.email ?? null,
+    })
+
+    if (result.success && result.org) {
+      notifyTeamCreated({
+        actorEmail: context.user.email ?? null,
+        createdVia: 'admin',
+        orgName: result.org.name,
+        orgNanoId: result.org.nanoId,
+        orgSlug: result.org.slug,
+      }).catch((error) => {
+        console.error('Failed to send admin-created org notification to Slack:', error)
+      })
+    }
+
+    return result
   })

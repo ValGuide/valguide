@@ -3,7 +3,7 @@ import { serverEnv } from '../env/server'
 
 export type SendSlackMessage = (message: SlackMessage) => Promise<void>
 
-export const postMessage: SendSlackMessage = async (message) => {
+export const sendSlackMessage: SendSlackMessage = async (message) => {
   if (!serverEnv.VALBOT_SLACK_TOKEN) {
     console.warn('[Slack] VALBOT_SLACK_TOKEN is not set. Skipping Slack notification.')
     return

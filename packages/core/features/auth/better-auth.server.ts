@@ -259,12 +259,12 @@ export const auth = createAuthInstance({
   errorURL: '/auth/error',
   enableOrganizationPlugin: true,
   async onVerificationOtpSent({ email }) {
-    const [{ userStartedLoginMessage }, { postMessage }] = await Promise.all([
+    const [{ userStartedLoginMessage }, { sendSlackMessage }] = await Promise.all([
       import('../../slack/messages/user-started-login.message'),
       import('../../slack/send-slack-message'),
     ])
 
-    await postMessage(
+    await sendSlackMessage(
       userStartedLoginMessage({
         email,
         timestampMs: Date.now(),
@@ -272,14 +272,14 @@ export const auth = createAuthInstance({
     )
   },
   async onOtpSignIn({ email, userId }) {
-    const [{ getUserStatus }, { userLoggedInMessage }, { postMessage }] = await Promise.all([
+    const [{ getUserStatus }, { userLoggedInMessage }, { sendSlackMessage }] = await Promise.all([
       import('./get-user-status.server'),
       import('../../slack/messages/user-logged-in.message'),
       import('../../slack/send-slack-message'),
     ])
 
     const status = await getUserStatus(userId, email)
-    await postMessage(
+    await sendSlackMessage(
       userLoggedInMessage({
         email,
         userId,
@@ -305,6 +305,7 @@ export const auth = createAuthInstance({
   },
   async sendInvitationEmail({ email, organizationName, inviterEmail, invitationId }) {
     const { sendEmail } = await import('@valguide/email/send-email')
+    const { notifyMemberInvited } = await import('../orgs/notify-member-invited.server')
 
     await sendEmail({
       to: email,
@@ -318,6 +319,10 @@ export const auth = createAuthInstance({
           logoUrl: `${serverEnv.VITE_STUDIO_URL}/icon.png`,
         },
       },
+    })
+
+    notifyMemberInvited(invitationId).catch((error) => {
+      console.error('Failed to send member invited notification to Slack:', error)
     })
   },
 })
