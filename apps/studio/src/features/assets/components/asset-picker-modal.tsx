@@ -179,8 +179,8 @@ export function AssetPickerModal({
         role="button"
         tabIndex={0}
         key={asset.id}
-        className={`relative rounded-xl border-2 transition-all cursor-pointer hover:shadow-md text-left ${
-          isSelected ? 'border-primary shadow-sm' : 'border-border'
+        className={`relative cursor-pointer rounded-2xl border-2 text-left transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:shadow-md ${
+          isSelected ? 'border-primary shadow-sm ring-1 ring-primary/20' : 'border-border'
         }`}
         onClick={() => handleToggleAsset(asset.id)}
         onKeyDown={(e) => {
@@ -190,7 +190,7 @@ export function AssetPickerModal({
           }
         }}
       >
-        <div className="absolute right-2 top-2 z-10">
+        <div className="absolute right-2.5 top-2.5 z-10 sm:right-3 sm:top-3">
           <Checkbox
             checked={isSelected}
             onCheckedChange={() => handleToggleAsset(asset.id)}
@@ -201,7 +201,7 @@ export function AssetPickerModal({
 
         <div
           className={`flex items-center justify-center overflow-hidden bg-muted ${
-            isMobile ? 'h-28 rounded-t-xl' : 'h-40 rounded-t-xl'
+            isMobile ? 'h-40 rounded-t-2xl sm:h-32' : 'h-44 rounded-t-2xl lg:h-48'
           }`}
         >
           {asset.type === 'image' ? (
@@ -218,23 +218,25 @@ export function AssetPickerModal({
           )}
         </div>
 
-        <div className={isMobile ? 'space-y-1.5 p-2.5' : 'space-y-2 p-3'}>
+        <div className={isMobile ? 'space-y-2 p-3' : 'space-y-2.5 p-3.5 lg:p-4'}>
           <h4
-            className={isMobile ? 'line-clamp-2 text-xs leading-tight font-medium' : 'line-clamp-1 text-sm font-medium'}
+            className={
+              isMobile
+                ? 'line-clamp-2 text-sm leading-snug font-medium'
+                : 'line-clamp-2 text-sm leading-snug font-medium'
+            }
             title={asset.fileName}
           >
             {asset.fileName}
           </h4>
           <div className="flex flex-wrap gap-1">
-            <Badge variant="secondary" className={isMobile ? 'px-2 py-0 text-[11px]' : 'text-xs'}>
+            <Badge variant="secondary" className={isMobile ? 'px-2 py-0.5 text-[11px]' : 'text-xs'}>
               {formatFileSize(asset.fileSize)}
             </Badge>
           </div>
-          {!isMobile ? (
-            <div className="text-xs text-muted-foreground">
-              {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
-            </div>
-          ) : null}
+          <div className="text-xs text-muted-foreground">
+            {formatDistanceToNow(new Date(asset.createdAt), { addSuffix: true })}
+          </div>
         </div>
       </div>
     )
@@ -242,8 +244,8 @@ export function AssetPickerModal({
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
-      <ResponsiveDialogContent className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden p-4 sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl sm:rounded-lg sm:border sm:p-6 lg:max-w-4xl">
-        <ResponsiveDialogHeader className="pr-8">
+      <ResponsiveDialogContent className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden px-3 pb-3 pt-2 sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl sm:rounded-lg sm:border sm:p-5 lg:max-w-4xl lg:p-6">
+        <ResponsiveDialogHeader className="pr-8 pb-1 sm:pb-0">
           <ResponsiveDialogTitle>
             {locale
               ? t('titleWithLocale', { type: tTypes(type), locale: locale.toUpperCase() })
@@ -256,7 +258,7 @@ export function AssetPickerModal({
           onValueChange={(v) => setActiveTab(v as 'library' | 'upload')}
           className="flex-1 flex flex-col min-h-0"
         >
-          <TabsList className="grid h-12 w-full grid-cols-2 rounded-xl">
+          <TabsList className="grid h-11 w-full grid-cols-2 rounded-xl sm:h-12">
             <TabsTrigger value="library" className="rounded-lg text-sm font-medium">
               {t('tabs.library')}
             </TabsTrigger>
@@ -265,24 +267,24 @@ export function AssetPickerModal({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="library" className="flex-1 flex flex-col min-h-0 mt-4">
-            <div className="relative mb-4 shrink-0">
+          <TabsContent value="library" className="mt-3 flex min-h-0 flex-1 flex-col sm:mt-4">
+            <div className="relative mb-3 shrink-0 sm:mb-4">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={tFilter('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-12 rounded-xl pl-9 text-base sm:text-sm"
+                className="h-11 rounded-xl pl-9 text-base sm:h-12 sm:text-sm"
               />
             </div>
 
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               {isLoading ? (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-5">
                   {[...Array(6)].map((_, i) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items have no unique ID
                     <div key={i} className="space-y-3">
-                      <Skeleton className="h-40 w-full rounded-lg" />
+                      <Skeleton className="h-48 w-full rounded-xl sm:h-40 lg:h-44" />
                       <Skeleton className="h-4 w-3/4" />
                       <Skeleton className="h-4 w-1/2" />
                     </div>
@@ -326,7 +328,7 @@ export function AssetPickerModal({
           </TabsContent>
         </Tabs>
 
-        <ResponsiveDialogFooter className="!grid grid-cols-2 items-center gap-3 border-t bg-background/95 pt-3 backdrop-blur sm:flex sm:justify-end sm:gap-2 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
+        <ResponsiveDialogFooter className="!grid grid-cols-2 items-center gap-3 border-t border-border/70 bg-background/95 pt-2.5 backdrop-blur sm:flex sm:justify-end sm:gap-2 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
           <Button
             variant="outline"
             onClick={handleCancel}

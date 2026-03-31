@@ -2,13 +2,13 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import type { Asset } from '@valguide/core/features/assets/types'
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 
-const GRID_GAP = 16
 const LOADING_MORE_HEIGHT = 48
-const MOBILE_BOTTOM_PADDING = 144
+const MOBILE_BOTTOM_PADDING = 96
+const TABLET_BOTTOM_PADDING = 32
 const DESKTOP_BOTTOM_PADDING = 24
-const MOBILE_SINGLE_COLUMN_ROW_ESTIMATE = 232
-const MOBILE_MULTI_COLUMN_ROW_ESTIMATE = 172
-const DESKTOP_ROW_ESTIMATE = 308
+const MOBILE_SINGLE_COLUMN_ROW_ESTIMATE = 280
+const MOBILE_MULTI_COLUMN_ROW_ESTIMATE = 236
+const DESKTOP_ROW_ESTIMATE = 328
 
 type AssetPickerVirtualGridProps = {
   assets: Asset[]
@@ -25,11 +25,23 @@ function getGridColumnCount(viewportWidth: number) {
     return 3
   }
 
-  if (viewportWidth >= 360) {
+  if (viewportWidth >= 560) {
     return 2
   }
 
   return 1
+}
+
+function getGridGap(viewportWidth: number) {
+  if (viewportWidth >= 1024) {
+    return 20
+  }
+
+  if (viewportWidth >= 560) {
+    return 16
+  }
+
+  return 12
 }
 
 export function AssetPickerVirtualGrid({
@@ -44,6 +56,7 @@ export function AssetPickerVirtualGrid({
   const scrollElementRef = useRef<HTMLDivElement | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [columnCount, setColumnCount] = useState(1)
+  const [gridGap, setGridGap] = useState(12)
 
   useEffect(() => {
     const containerElement = containerRef.current
@@ -53,7 +66,9 @@ export function AssetPickerVirtualGrid({
     }
 
     const updateColumnCount = () => {
-      setColumnCount(getGridColumnCount(containerElement.clientWidth))
+      const width = containerElement.clientWidth
+      setColumnCount(getGridColumnCount(width))
+      setGridGap(getGridGap(width))
     }
 
     updateColumnCount()
@@ -77,7 +92,7 @@ export function AssetPickerVirtualGrid({
 
       return columnCount === 1 ? MOBILE_SINGLE_COLUMN_ROW_ESTIMATE : MOBILE_MULTI_COLUMN_ROW_ESTIMATE
     },
-    gap: GRID_GAP,
+    gap: gridGap,
     overscan: 3,
   })
 
@@ -101,7 +116,7 @@ export function AssetPickerVirtualGrid({
         <div
           className="relative w-full"
           style={{
-            height: `${rowVirtualizer.getTotalSize() + (isFetchingMore ? LOADING_MORE_HEIGHT : 0) + (isMobile ? MOBILE_BOTTOM_PADDING : DESKTOP_BOTTOM_PADDING)}px`,
+            height: `${rowVirtualizer.getTotalSize() + (isFetchingMore ? LOADING_MORE_HEIGHT : 0) + (isMobile ? MOBILE_BOTTOM_PADDING : columnCount === 2 ? TABLET_BOTTOM_PADDING : DESKTOP_BOTTOM_PADDING)}px`,
           }}
         >
           {virtualRows.map((virtualRow) => {
@@ -113,8 +128,9 @@ export function AssetPickerVirtualGrid({
                 key={virtualRow.key}
                 data-index={virtualRow.index}
                 className="absolute left-0 top-0 grid w-full"
+                ref={rowVirtualizer.measureElement}
                 style={{
-                  gap: `${GRID_GAP}px`,
+                  gap: `${gridGap}px`,
                   gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
