@@ -4,8 +4,11 @@ import { type ReactNode, useEffect, useRef, useState } from 'react'
 
 const GRID_GAP = 16
 const LOADING_MORE_HEIGHT = 48
-const MOBILE_BOTTOM_PADDING = 96
+const MOBILE_BOTTOM_PADDING = 144
 const DESKTOP_BOTTOM_PADDING = 24
+const MOBILE_SINGLE_COLUMN_ROW_ESTIMATE = 232
+const MOBILE_MULTI_COLUMN_ROW_ESTIMATE = 172
+const DESKTOP_ROW_ESTIMATE = 308
 
 type AssetPickerVirtualGridProps = {
   assets: Asset[]
@@ -67,7 +70,13 @@ export function AssetPickerVirtualGrid({
   const rowVirtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => scrollElementRef.current,
-    estimateSize: () => (isMobile ? 196 : 236),
+    estimateSize: () => {
+      if (!isMobile) {
+        return DESKTOP_ROW_ESTIMATE
+      }
+
+      return columnCount === 1 ? MOBILE_SINGLE_COLUMN_ROW_ESTIMATE : MOBILE_MULTI_COLUMN_ROW_ESTIMATE
+    },
     gap: GRID_GAP,
     overscan: 3,
   })

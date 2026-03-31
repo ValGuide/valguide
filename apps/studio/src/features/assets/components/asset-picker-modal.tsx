@@ -242,7 +242,7 @@ export function AssetPickerModal({
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
-      <ResponsiveDialogContent className="inset-0 grid h-dvh max-h-dvh w-screen max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-none border-0 p-4 sm:top-[50%] sm:left-[50%] sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl lg:max-w-4xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border sm:p-6">
+      <ResponsiveDialogContent className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden p-4 sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl sm:rounded-lg sm:border sm:p-6 lg:max-w-4xl">
         <ResponsiveDialogHeader className="pr-8">
           <ResponsiveDialogTitle>
             {locale
@@ -326,14 +326,18 @@ export function AssetPickerModal({
           </TabsContent>
         </Tabs>
 
-        <ResponsiveDialogFooter className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-t bg-background/95 pt-3 backdrop-blur sm:flex sm:justify-end sm:gap-2 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
-          <Button variant="outline" onClick={handleCancel} className="h-11 rounded-xl px-4 sm:h-10 sm:rounded-md">
+        <ResponsiveDialogFooter className="!grid grid-cols-2 items-center gap-3 border-t bg-background/95 pt-3 backdrop-blur sm:flex sm:justify-end sm:gap-2 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
+          <Button
+            variant="outline"
+            onClick={handleCancel}
+            className="h-11 w-full rounded-xl px-4 sm:h-10 sm:w-auto sm:rounded-md"
+          >
             {t('cancel')}
           </Button>
           <Button
             onClick={handleSelect}
             disabled={selected.size === 0}
-            className="h-11 rounded-xl px-5 font-medium sm:h-10 sm:rounded-md"
+            className="h-11 w-full rounded-xl px-5 font-medium sm:h-10 sm:w-auto sm:rounded-md"
           >
             {t('select')}
           </Button>

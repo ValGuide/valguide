@@ -70,7 +70,7 @@ export function FeedbackDialog({
   }
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="full-height">
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
       <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-h-[90vh] sm:max-w-md">
         <form onSubmit={handleSubmit} className="flex min-h-0 min-w-0 flex-1 flex-col">
           <ResponsiveDialogHeader>

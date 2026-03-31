@@ -1,7 +1,5 @@
 // @ts-nocheck - Storybook types only available in storybook package
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '@valguide/ui/components/button'
-import { useState } from 'react'
 import { mockAssets } from '../context/mock-assets-provider'
 import { AssetPickerModal, type UploadInlineComponentProps } from './asset-picker-modal'
 
@@ -37,22 +35,9 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-type PickerWrapperProps = React.ComponentProps<typeof AssetPickerModal>
-
-const PickerWrapper = (args: PickerWrapperProps) => {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <div>
-      <Button onClick={() => setOpen(true)}>Open Picker</Button>
-      <AssetPickerModal {...args} open={open} onOpenChange={setOpen} />
-    </div>
-  )
-}
-
 export const SingleSelectImage: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'image',
     organizationId: 'org-123',
     multiple: false,
@@ -61,8 +46,8 @@ export const SingleSelectImage: Story = {
 }
 
 export const MultiSelectImageGallery: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'image',
     organizationId: 'org-123',
     multiple: true,
@@ -71,8 +56,8 @@ export const MultiSelectImageGallery: Story = {
 }
 
 export const AudioPickerWithLocale: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'audio',
     locale: 'en',
     organizationId: 'org-123',
@@ -82,8 +67,8 @@ export const AudioPickerWithLocale: Story = {
 }
 
 export const VideoPickerWithLocale: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'video',
     locale: 'en',
     organizationId: 'org-123',
@@ -93,8 +78,8 @@ export const VideoPickerWithLocale: Story = {
 }
 
 export const EmptyLibrary: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'image',
     organizationId: 'org-123',
     multiple: false,
@@ -103,8 +88,8 @@ export const EmptyLibrary: Story = {
 }
 
 export const Loading: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'image',
     organizationId: 'org-123',
     multiple: false,
@@ -114,8 +99,8 @@ export const Loading: Story = {
 }
 
 export const ManyAssets: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'image',
     organizationId: 'org-123',
     multiple: true,
@@ -136,8 +121,8 @@ export const ManyAssets: Story = {
 }
 
 export const WithPreselectedAssets: Story = {
-  render: (args) => <PickerWrapper {...args} />,
   args: {
+    open: true,
     type: 'image',
     organizationId: 'org-123',
     multiple: true,

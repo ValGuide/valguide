@@ -35,7 +35,7 @@ export function BlockUserDialog({ open, onOpenChange, userEmail, isBlocking, onC
   }
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="full-height">
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="sheet">
       <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-md">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Block User</ResponsiveDialogTitle>

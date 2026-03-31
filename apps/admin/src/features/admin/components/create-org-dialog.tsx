@@ -116,7 +116,7 @@ export function CreateOrgDialog({ open, onOpenChange, isCreating, onConfirm }: C
   }
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="full-height">
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange} mobileVariant="sheet">
       <ResponsiveDialogContent className="flex min-h-0 flex-col p-0 sm:max-h-[90vh] sm:max-w-lg sm:p-6">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Create Organization</ResponsiveDialogTitle>
