@@ -17,8 +17,10 @@ export const Route = createFileRoute('/_main/tours/$nanoId/stops/$stopId/edit')(
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ locale: search.locale }),
   loader: async ({ params, context, deps }) => {
-    const tourDetail = await context.queryClient.ensureQueryData(tourDetailQueryOptions(params.nanoId))
-    const stopDetail = await context.queryClient.ensureQueryData(stopDetailQueryOptions(params.stopId))
+    const [tourDetail, stopDetail] = await Promise.all([
+      context.queryClient.ensureQueryData(tourDetailQueryOptions(params.nanoId)),
+      context.queryClient.ensureQueryData(stopDetailQueryOptions(params.stopId)),
+    ])
 
     if (!stopDetail) {
       throw notFound()
