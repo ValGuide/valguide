@@ -39,7 +39,7 @@ Usage:
 Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
-  dev <target...> [--remote] Start local development for one or more targets
+  dev <target...> [--no-remote] Start local development for one or more targets
   build <target> [--analyse] Build a target
   preview <target>           Preview a target locally
   deploy <target> <env>      Deploy a target to dev or prod
@@ -53,7 +53,7 @@ Commands:
 
 Examples:
   val dev studio
-  val dev studio --remote
+  val dev studio --no-remote
   val build app --analyse
   val preview storybook
   val deploy studio dev
@@ -65,16 +65,16 @@ Examples:
 `
 
 const COMMAND_HELP = {
-  dev: `Usage: val dev <target...> [--remote] [--worker]
+  dev: `Usage: val dev <target...> [--no-remote] [--worker]
 
 Targets:
   ${DEV_TARGETS.join(', ')}
 
 Notes:
-  --remote is supported for admin, app, studio, www, links, and docs.
+  Remote bindings are the default for admin, app, studio, www, links, and docs.
+  --no-remote switches those targets back to local bindings.
   --worker is supported only for storybook and starts the worker-backed dev flow.
-  workspace currently supports only the default local dev mode.
-  Multiple targets are supported for dev, for example: val dev studio admin --remote
+  Multiple targets are supported for dev, for example: val dev studio admin
 `,
   build: `Usage: val build <target> [--analyse]
 
@@ -308,7 +308,7 @@ function createInvocation(command, positionals, flags, passthrough) {
 }
 
 function createDevInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, ['--remote', '--worker'], 'dev')
+  ensureAllowedFlags(flags, ['--remote', '--no-remote', '--worker'], 'dev')
   if (positionals.length === 0) {
     failWithUsage(`missing target for "dev". Supported targets: ${quotedList(DEV_TARGETS)}.`, 'dev')
   }
@@ -320,6 +320,10 @@ function createDevInvocation(positionals, flags, passthrough) {
 
   if (targets.includes('workspace') && targets.length > 1) {
     failWithUsage('"workspace" cannot be combined with other dev targets.', 'dev')
+  }
+
+  if (flags.includes('--remote') && flags.includes('--no-remote')) {
+    failWithUsage('choose either "--remote" or "--no-remote", not both.', 'dev')
   }
 
   if (flags.includes('--worker')) {
@@ -337,14 +341,15 @@ function createDevInvocation(positionals, flags, passthrough) {
     for (const target of targets) {
       if (!REMOTE_DEV_TARGETS.includes(target)) {
         failWithUsage(
-          `--remote is not supported for target "${target}". Supported remote targets: ${quotedList(REMOTE_DEV_TARGETS)}.`,
+          `remote dev is not supported for target "${target}". Supported remote targets: ${quotedList(REMOTE_DEV_TARGETS)}.`,
           'dev',
         )
       }
     }
   }
 
-  return commandInvocation('sh', ['scripts/dev.sh', ...flags, ...targets])
+  const normalizedFlags = flags.filter((flag) => flag !== '--remote')
+  return commandInvocation('sh', ['scripts/dev.sh', ...normalizedFlags, ...targets])
 }
 
 function createBuildInvocation(positionals, flags, passthrough) {

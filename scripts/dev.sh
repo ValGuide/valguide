@@ -6,17 +6,17 @@ set -e
 #
 # Usage:
 #   pnpm dev:select <app> [<app> ...]
-#   pnpm dev:select --remote <app> [<app> ...]
+#   pnpm dev:select --no-remote <app> [<app> ...]
 #   pnpm dev:select --all
 #   pnpm dev:select --list
 #
 # Examples:
-#   pnpm dev:select studio              # just studio
-#   pnpm dev:select studio admin        # studio + admin
-#   pnpm dev:select api studio          # api + studio
-#   pnpm dev:select --remote studio     # studio with remote KV/D1
-#   pnpm dev:select --remote admin app  # admin + app with remote bindings
-#   pnpm dev:select --all               # everything (same as `pnpm dev`)
+#   pnpm dev:select studio                 # just studio, remote bindings by default
+#   pnpm dev:select studio admin           # studio + admin, remote bindings by default
+#   pnpm dev:select api studio             # api + studio, remote bindings by default
+#   pnpm dev:select --no-remote studio     # studio with local bindings
+#   pnpm dev:select --no-remote admin app  # admin + app with local bindings
+#   pnpm dev:select --all                  # everything (same as `pnpm dev`)
 #   pnpm dev:select --list              # show available apps
 # ---------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ url_for() {
 }
 
 ALL_APPS="admin api app docs links storybook studio www"
-USE_REMOTE=0
+USE_REMOTE=1
 
 # ── Expand comma-separated args (e.g. "studio,admin" → "studio admin") ────
 expanded=""
@@ -46,11 +46,13 @@ done
 # shellcheck disable=SC2086
 set -- $expanded
 
-# ── Extract --remote flag ─────────────────────────────────────────────────
+# ── Extract remote-mode flags ─────────────────────────────────────────────
 remaining=""
 for arg in "$@"; do
   if [ "$arg" = "--remote" ]; then
     USE_REMOTE=1
+  elif [ "$arg" = "--no-remote" ]; then
+    USE_REMOTE=0
   else
     remaining="$remaining $arg"
   fi
@@ -60,10 +62,10 @@ set -- $remaining
 
 # ── Handle flags ──────────────────────────────────────────────────────────
 if [ $# -eq 0 ]; then
-  echo "Usage: pnpm dev:select [--remote] <app> [<app> ...]"
+  echo "Usage: pnpm dev:select [--no-remote] <app> [<app> ...]"
   echo ""
   echo "Available apps: $ALL_APPS"
-  echo "Flags: --all (start all), --remote (use remote KV/D1 bindings), --list (show apps)"
+  echo "Flags: --all (start all), --no-remote (use local bindings), --list (show apps)"
   exit 1
 fi
 
@@ -129,7 +131,7 @@ if [ "$USE_REMOTE" -eq 1 ]; then
   echo "Starting (remote bindings): $*"
   export WRANGLER_REMOTE=true
 else
-  echo "Starting: $*"
+  echo "Starting (local bindings): $*"
 fi
 # shellcheck disable=SC2086
 exec pnpm env:load turbo run dev $filters
