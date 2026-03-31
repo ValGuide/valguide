@@ -6,6 +6,7 @@ import type { TeamInviteEmailProps } from './emails/team-invite-email'
 import { getTeamInviteConfig } from './emails/team-invite-template'
 import { env } from './env'
 import { resendTemplateIds } from './template-ids'
+import { getTeamInviteCopy } from './templates/copy'
 import { defaultEmailLocale, type EmailLocale, isEmailLocale } from './templates/locales'
 
 // Configurable sender
@@ -45,7 +46,7 @@ function normalizeLocale(locale: EmailLocale | string | undefined): EmailLocale 
   return defaultEmailLocale
 }
 
-function resolveSubject(template: EmailTemplate, locale: EmailLocale, subjectOverride?: string): string {
+export function resolveSubject(template: EmailTemplate, locale: EmailLocale, subjectOverride?: string): string {
   if (subjectOverride) {
     return subjectOverride
   }
@@ -54,7 +55,7 @@ function resolveSubject(template: EmailTemplate, locale: EmailLocale, subjectOve
     case 'otp-login':
       return getOtpLoginConfig(locale).subject
     case 'team-invite':
-      return getTeamInviteConfig(locale).subject
+      return getTeamInviteCopy(locale).subject(template.data.teamName)
     case 'account-approved':
       return getAccountApprovedConfig(locale).subject
     default:
