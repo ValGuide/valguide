@@ -924,6 +924,8 @@
   "sidebar": {
     "nav": {
       "brandKit": "Brand Kit",
+      "theme": "Theme",
+      "qrCode": "QR Code",
       "workspace": "Plaz da lavur",
       "tours": "Turas",
       "stops": "Stops",
@@ -950,7 +952,9 @@
     },
     "pages": {
       "design": {
-        "description": "Persunalisar l'apparientscha da vossas turas e da la signalisaziun QR."
+        "description": "Persunalisar l'apparientscha da vossas turas e da la signalisaziun QR.",
+        "themeDescription": "Administrar il design visual da vossas turas.",
+        "qrDescription": "Administrar il branding QR standard per quest workspace."
       },
       "analytics": {
         "description": "Vesair ed analisar las metrickas da prestaziun da vossas turas."

@@ -23,10 +23,11 @@ import {
   Image,
   MapPin,
   MessageSquare,
+  Palette,
   PanelLeftClose,
   PanelLeftOpen,
+  QrCode,
   Settings2,
-  SlidersHorizontal,
 } from 'lucide-react'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
@@ -112,10 +113,11 @@ export function AppSidebar({
 
   const libraryItems = createNavItems([{ title: t('assets'), path: '/assets', icon: Image }])
 
-  const settingsItems = createNavItems([
-    { title: t('brandKit'), path: '/design', icon: SlidersHorizontal },
-    { title: t('workspace'), path: '/settings', icon: Settings2 },
-  ])
+  const workspaceItem = createNavItems([{ title: t('workspace'), path: '/settings', icon: Settings2 }])[0]
+  const brandKitSection =
+    pathnameWithoutLocale === '/design' && typeof location.search.section === 'string'
+      ? location.search.section
+      : 'theme'
   const sidebarToggleLabel = isMobile || state === 'expanded' ? tSidebar('collapse') : tSidebar('expand')
 
   return (
@@ -237,27 +239,60 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
+            <SidebarGroupLabel className="px-2.5 uppercase">{t('brandKit')}</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={t('theme')}
+                  isActive={pathnameWithoutLocale === '/design' && brandKitSection !== 'qr'}
+                >
+                  <Link
+                    to="/design"
+                    search={{ section: 'theme' }}
+                    preload="intent"
+                    onClick={() => setOpenMobile(false)}
+                  >
+                    <Palette />
+                    <span>{t('theme')}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={t('qrCode')}
+                  isActive={pathnameWithoutLocale === '/design' && brandKitSection === 'qr'}
+                >
+                  <Link to="/design" search={{ section: 'qr' }} preload="intent" onClick={() => setOpenMobile(false)}>
+                    <QrCode />
+                    <span>{t('qrCode')}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+
+          <SidebarGroup>
             <SidebarGroupLabel className="px-2.5 uppercase">{tSections('settings')}</SidebarGroupLabel>
             <SidebarMenu>
-              {settingsItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                    <Link
-                      {...item.linkOptions}
-                      preload="intent"
-                      onClick={(event) => {
-                        if (isExactPath(item.linkOptions.to as string)) {
-                          event.preventDefault()
-                          setOpenMobile(false)
-                        }
-                      }}
-                    >
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={workspaceItem.title} isActive={workspaceItem.isActive}>
+                  <Link
+                    {...workspaceItem.linkOptions}
+                    preload="intent"
+                    onClick={(event) => {
+                      if (isExactPath(workspaceItem.linkOptions.to as string)) {
+                        event.preventDefault()
+                        setOpenMobile(false)
+                      }
+                    }}
+                  >
+                    <workspaceItem.icon />
+                    <span>{workspaceItem.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               {onFeedback && (
                 <SidebarMenuItem>
                   <SidebarMenuButton

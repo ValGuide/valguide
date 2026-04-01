@@ -924,6 +924,8 @@
   "sidebar": {
     "nav": {
       "brandKit": "Brand Kit",
+      "theme": "Theme",
+      "qrCode": "QR Code",
       "workspace": "Workspace",
       "tours": "Tours",
       "stops": "Stops",
@@ -950,7 +952,9 @@
     },
     "pages": {
       "design": {
-        "description": "Customize the look and feel of your tours and QR signage."
+        "description": "Customize the look and feel of your tours and QR signage.",
+        "themeDescription": "Manage the visual design of your tours.",
+        "qrDescription": "Manage the default QR branding for your workspace."
       },
       "analytics": {
         "description": "View and analyze your tour performance metrics."

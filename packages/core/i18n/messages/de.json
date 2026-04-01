@@ -924,6 +924,8 @@
   "sidebar": {
     "nav": {
       "brandKit": "Brand Kit",
+      "theme": "Theme",
+      "qrCode": "QR-Code",
       "workspace": "Arbeitsbereich",
       "tours": "Touren",
       "stops": "Stopps",
@@ -950,7 +952,9 @@
     },
     "pages": {
       "design": {
-        "description": "Passen Sie das Aussehen Ihrer Touren und QR-Beschilderung an."
+        "description": "Passen Sie das Aussehen Ihrer Touren und QR-Beschilderung an.",
+        "themeDescription": "Verwalten Sie das visuelle Design Ihrer Touren.",
+        "qrDescription": "Verwalten Sie das Standard-QR-Branding für Ihren Arbeitsbereich."
       },
       "analytics": {
         "description": "Zeigen Sie die Leistungsmetriken Ihrer Touren an und analysieren Sie diese."
