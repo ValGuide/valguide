@@ -110,7 +110,7 @@ function ResponsiveDialogContent({
         {...props}
       >
         {mobileVariant === 'full-height' && showCloseButton ? (
-          <DrawerClose className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-1/2 right-4 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-background/95 opacity-85 transition-[opacity,background-color] hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4.5">
+          <DrawerClose className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 z-10 flex size-9 items-center justify-center rounded-full bg-background/95 opacity-85 transition-[opacity,background-color] hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4.5">
             <XIcon />
             <span className="sr-only">Close</span>
           </DrawerClose>

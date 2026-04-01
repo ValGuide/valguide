@@ -5,6 +5,7 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardTitle } from '@valguide/ui/components/card'
 import { ExternalLink, Settings2 } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { getQrStyleProps } from '../branding'
 
 type QrSummaryCardProps = {
@@ -12,10 +13,11 @@ type QrSummaryCardProps = {
   description: string
   shortUrl: string
   branding: EffectiveQrBranding
-  onManage: () => void
+  onManage?: () => void
+  manageAction?: ReactNode
 }
 
-export function QrSummaryCard({ title, description, shortUrl, branding, onManage }: QrSummaryCardProps) {
+export function QrSummaryCard({ title, description, shortUrl, branding, onManage, manageAction }: QrSummaryCardProps) {
   const t = useTranslations('studio.qr')
   const styleProps = getQrStyleProps(branding.stylePreset)
 
@@ -65,10 +67,12 @@ export function QrSummaryCard({ title, description, shortUrl, branding, onManage
               {t('openLink')}
             </a>
           </Button>
-          <Button size="sm" onClick={onManage} className="gap-2 sm:ml-auto">
-            <Settings2 className="h-4 w-4" />
-            {t('manageQr')}
-          </Button>
+          {manageAction ?? (
+            <Button size="sm" onClick={onManage} className="gap-2 sm:ml-auto">
+              <Settings2 className="h-4 w-4" />
+              {t('manageQr')}
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
