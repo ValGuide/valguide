@@ -37,7 +37,7 @@ export const createTourFn = createServerFn({ method: 'POST' })
       },
     })
 
-    notifyTourCreated({
+    await notifyTourCreated({
       actorEmail: context.user.email ?? null,
       locale: result.locale,
       organizationId: orgId,

@@ -1,5 +1,6 @@
 import { getRequest, getRequestHeaders } from '@tanstack/react-start/server'
 import { createLogger } from '@valguide/logger'
+import { serverEnv } from '../env/server'
 
 const log = createLogger('performance')
 
@@ -62,6 +63,10 @@ function getRefererPath(headers: Headers): string | null {
 }
 
 function defaultShouldLogPerformance(context: PerformanceContext): boolean {
+  if (!serverEnv.STUDIO_PERFORMANCE_LOG_ENABLED) {
+    return false
+  }
+
   return (
     context.host === 'studio.valguide.com' ||
     context.host === 'studio.valguide.dev' ||

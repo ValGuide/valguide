@@ -19,6 +19,10 @@ export const serverEnvSchema = z.object({
   USERS_SLACK_CHANNEL: z.string().optional().default(''),
   STUDIO_EVENTS_SLACK_CHANNEL: z.string().optional().default(''),
   STUDIO_FEEDBACK_SLACK_CHANNEL: z.string().optional().default(''),
+  STUDIO_PERFORMANCE_LOG_ENABLED: z
+    .string()
+    .optional()
+    .transform((v) => v === 'true'),
   ADMIN_BASE_URL: z.string().optional().default('https://ops.val.guide'),
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
