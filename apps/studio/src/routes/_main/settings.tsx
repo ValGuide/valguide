@@ -9,7 +9,9 @@ import { teamQueryOptions } from '@/features/team/query-options'
 
 export const Route = createFileRoute('/_main/settings')({
   component: SettingsPage,
-  loader: ({ context }) => context.queryClient.ensureQueryData(teamQueryOptions()),
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(teamQueryOptions())
+  },
 })
 
 function SettingsPage() {

@@ -13,14 +13,14 @@ import type { ShortLink } from './schema'
 export async function buildPathFromShortLink(link: ShortLink): Promise<string | null> {
   switch (link.type) {
     case 'tour': {
-      if (!link.tourNanoId || !link.locale) return null
+      if (!link.tourNanoId) return null
       const slugs = await resolveTourSlugs(link.tourNanoId)
       if (!slugs) return null
       return `/${slugs.orgSlug}/${slugs.tourSlug}`
     }
 
     case 'stop': {
-      if (!link.tourNanoId || !link.stopNanoId || !link.locale) return null
+      if (!link.tourNanoId || !link.stopNanoId) return null
       const slugs = await resolveTourSlugs(link.tourNanoId)
       if (!slugs) return null
       return `/${slugs.orgSlug}/${slugs.tourSlug}/${link.stopNanoId}`

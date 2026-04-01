@@ -8,7 +8,7 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { ChevronLeft, Globe } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { BaseEditLayout, type StatusDisplay } from '@/features/editor/components/base-edit-layout'
 import { useAutoSave } from '@/features/editor/hooks/use-auto-save'
@@ -26,11 +26,12 @@ import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 export type StopEditPageProps = {
   MediaPicker: MediaPickerComponent
   onPublishAssets?: (nanoId: string, activeLocale: string) => Promise<void>
+  StopQrPanel?: ComponentType | null
   /** Query options for diff view - pass undefined for Storybook to skip the query */
   diffQueryOptions?: QueryObserverOptions<DiffResult>
 }
 
-export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }: StopEditPageProps) {
+export function StopEditPage({ MediaPicker, onPublishAssets, StopQrPanel, diffQueryOptions }: StopEditPageProps) {
   const router = useRouter()
   const t = useTranslations('tours')
   const tStops = useTranslations('stops')
@@ -289,6 +290,8 @@ export function StopEditPage({ MediaPicker, onPublishAssets, diffQueryOptions }:
             />
           </CardContent>
         </Card>
+
+        {StopQrPanel && <StopQrPanel />}
       </div>
     </BaseEditLayout>
   )

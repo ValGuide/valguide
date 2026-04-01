@@ -166,13 +166,16 @@
       "shortUrl": "Kurz-URL",
       "copyLink": "Link kopieren",
       "openLink": "Link öffnen",
+      "manageQr": "QR verwalten",
       "brandingSource": "Branding-Quelle",
+      "inlineOpenCount": "{count} Öffnungen",
+      "inlineNeverOpened": "Noch nicht geöffnet",
       "totalOpens": "Öffnungen gesamt",
       "lastOpened": "Zuletzt geöffnet",
       "neverOpened": "Noch nie geöffnet",
       "brandingTitle": "QR-Branding",
-      "orgBrandingDescription": "Definieren Sie das Standard-QR-Erscheinungsbild für diesen Arbeitsbereich. Das Workspace-Logo wird bei Aktivierung automatisch verwendet.",
-      "scopeBrandingDescription": "Überschreiben Sie das geerbte QR-Erscheinungsbild von {source}.",
+      "orgBrandingDescription": "Definieren Sie das Standard-QR-Erscheinungsbild für diesen Arbeitsbereich. Diese Standards leben im Brand Kit und verwenden bei Aktivierung automatisch das Workspace-Logo.",
+      "scopeBrandingDescription": "Überschreiben Sie das von {source} geerbte QR-Erscheinungsbild.",
       "foregroundColor": "Vordergrundfarbe",
       "backgroundColor": "Hintergrundfarbe",
       "stylePreset": "Stil-Preset",
@@ -188,20 +191,24 @@
       "saveBranding": "Branding speichern",
       "resetToDefault": "Auf Standard zurücksetzen",
       "resetToInherited": "Auf Vererbung zurücksetzen",
-      "workspaceTitle": "Workspace-QR-Branding",
-      "workspaceDescription": "Legen Sie das Standardbild für QR-Codes von Touren und Stopps in diesem Arbeitsbereich fest.",
+      "workspaceTitle": "QR-Branding",
+      "workspaceDescription": "Legen Sie den Standard-Look für QR-Codes von Touren und Stopps zusammen mit Ihrem Theme im Brand Kit fest.",
       "workspaceNote": "Tour- und Stopp-QR-Codes übernehmen diese Standards, bis Sie sie auf einem bestimmten Element überschreiben.",
+      "openBrandKit": "Brand Kit öffnen",
       "sourceDefault": "Systemstandard",
       "sourceOrganization": "Workspace-Standard",
       "sourceTour": "Tour-Überschreibung",
       "sourceStop": "Stopp-Überschreibung",
       "tourOverviewTitle": "Tour-QR-Code",
       "tourOverviewDescription": "Verwenden Sie diesen stabilen Kurzlink für gedruckte Beschilderung, Websites, Newsletter und andere Verteilungsflächen.",
+      "tourOverviewCompactDescription": "Stabiler Besucherzugang für Druck, Web und Beschilderung.",
       "liveTourNote": "Dieser QR-Code öffnet die Live-Tour für Besucher hinter einem stabilen Kurzlink.",
       "tourEditTitle": "Tour-QR-Verteilung",
       "tourEditDescription": "Verwalten Sie den kanonischen QR-Code für diese Tour und überschreiben Sie das Branding nur für diese Tour.",
+      "tourEditCompactDescription": "Stabiler Besucherzugang für diese Tour.",
       "stopEditTitle": "Stopp-QR-Code",
       "stopEditDescription": "Verwalten Sie den kanonischen QR-Code für diesen Stopp im aktuellen Tour-Kontext.",
+      "stopEditCompactDescription": "Stabiler Besucherzugang für diesen Stopp.",
       "liveStopNote": "Dieser QR-Code öffnet den Live-Stopp innerhalb dieser Tour hinter einem stabilen Kurzlink.",
       "qrCodeValue": "QR-Code-Wert",
       "qrCodeValuePlaceholder": "Wert für QR-Code eingeben",
@@ -943,7 +950,7 @@
     },
     "pages": {
       "design": {
-        "description": "Passen Sie das Aussehen Ihrer Touren an."
+        "description": "Passen Sie das Aussehen Ihrer Touren und QR-Beschilderung an."
       },
       "analytics": {
         "description": "Zeigen Sie die Leistungsmetriken Ihrer Touren an und analysieren Sie diese."
@@ -1044,7 +1051,6 @@
       "description": "Verwalten Sie Ihre Arbeitsbereich-Einstellungen, Teammitglieder und Berechtigungen.",
       "tabs": {
         "general": "Allgemein",
-        "qrCodes": "QR-Codes",
         "members": "Mitglieder"
       },
       "nameLabel": "Teamname",

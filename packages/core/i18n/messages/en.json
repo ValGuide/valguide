@@ -166,13 +166,16 @@
       "shortUrl": "Short URL",
       "copyLink": "Copy link",
       "openLink": "Open link",
+      "manageQr": "Manage QR",
       "brandingSource": "Branding source",
+      "inlineOpenCount": "{count} opens",
+      "inlineNeverOpened": "No opens yet",
       "totalOpens": "Total opens",
       "lastOpened": "Last opened",
       "neverOpened": "Never opened",
       "brandingTitle": "QR branding",
-      "orgBrandingDescription": "Define the default QR appearance for this workspace. The workspace logo is reused automatically when enabled.",
-      "scopeBrandingDescription": "Override the inherited QR appearance from {source}.",
+      "orgBrandingDescription": "Define the default QR appearance for this workspace. These defaults live in Brand Kit and reuse the workspace logo when enabled.",
+      "scopeBrandingDescription": "Override the QR appearance inherited from {source}.",
       "foregroundColor": "Foreground color",
       "backgroundColor": "Background color",
       "stylePreset": "Style preset",
@@ -188,20 +191,24 @@
       "saveBranding": "Save branding",
       "resetToDefault": "Reset to default",
       "resetToInherited": "Reset to inherited",
-      "workspaceTitle": "Workspace QR branding",
-      "workspaceDescription": "Set the default QR look for tours and stops across this workspace.",
+      "workspaceTitle": "QR Branding",
+      "workspaceDescription": "Set the default QR look for tours and stops alongside your theme in Brand Kit.",
       "workspaceNote": "Tour and stop QR codes inherit these defaults unless you override them on a specific item.",
+      "openBrandKit": "Open Brand Kit",
       "sourceDefault": "System default",
       "sourceOrganization": "Workspace default",
       "sourceTour": "Tour override",
       "sourceStop": "Stop override",
       "tourOverviewTitle": "Tour QR code",
       "tourOverviewDescription": "Use this stable short link for printed signage, websites, newsletters, and other distribution surfaces.",
+      "tourOverviewCompactDescription": "Stable visitor access for print, web, and signage.",
       "liveTourNote": "This QR code opens the live visitor tour behind a stable short link.",
       "tourEditTitle": "Tour QR distribution",
       "tourEditDescription": "Manage the canonical QR code for this tour and override its branding for this tour only.",
+      "tourEditCompactDescription": "Stable visitor access for this tour.",
       "stopEditTitle": "Stop QR code",
       "stopEditDescription": "Manage the canonical QR code for this stop within the current tour context.",
+      "stopEditCompactDescription": "Stable visitor access for this stop.",
       "liveStopNote": "This QR code opens the live visitor stop within this tour behind a stable short link.",
       "qrCodeValue": "QR code value",
       "qrCodeValuePlaceholder": "Enter value for QR code",
@@ -943,7 +950,7 @@
     },
     "pages": {
       "design": {
-        "description": "Customize the look and feel of your tours."
+        "description": "Customize the look and feel of your tours and QR signage."
       },
       "analytics": {
         "description": "View and analyze your tour performance metrics."
@@ -1044,7 +1051,6 @@
       "description": "Manage your workspace settings, team members, and permissions.",
       "tabs": {
         "general": "General",
-        "qrCodes": "QR codes",
         "members": "Members"
       },
       "nameLabel": "Team Name",

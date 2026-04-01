@@ -1,5 +1,6 @@
 import { publishStopAssetsFn } from '@valguide/core/features/tours/stop/asset/publish-stop-assets.fn'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
+import { StopQrPanelConnected } from '@/features/qr/components/stop-qr-panel-connected'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 import { stopLocaleDiffQueryOptions } from '@/features/tours/query-options'
 import { StopEditPage } from './stop-edit-page'
@@ -16,6 +17,7 @@ export function StopEditPageConnected() {
     <StopEditPage
       MediaPicker={MediaPickerConnected}
       onPublishAssets={handlePublishAssets}
+      StopQrPanel={StopQrPanelConnected}
       diffQueryOptions={stopLocaleDiffQueryOptions(nanoId, activeLocale)}
     />
   )

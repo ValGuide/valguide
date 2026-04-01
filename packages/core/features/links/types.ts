@@ -3,7 +3,6 @@ import type { ShortLinkTarget } from './schema'
 export type CreateTourShortLink = {
   type: 'tour'
   tourNanoId: string
-  locale: string
   target?: ShortLinkTarget
 }
 
@@ -11,7 +10,6 @@ export type CreateStopShortLink = {
   type: 'stop'
   tourNanoId: string
   stopNanoId: string
-  locale: string
   target?: ShortLinkTarget
 }
 

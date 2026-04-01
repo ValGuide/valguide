@@ -15,6 +15,13 @@
       "when": 1774860752049,
       "tag": "0001_sleepy_living_mummy",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775050573663,
+      "tag": "0002_glamorous_screwball",
+      "breakpoints": true
     }
   ]
 }

@@ -7,6 +7,8 @@ import { updateTourFn } from '@valguide/core/features/tours/tour/update-tour.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useCallback } from 'react'
+import { TourQrCardConnected } from '@/features/qr/components/tour-qr-card-connected'
+import { tourQrCodeQueryOptions } from '@/features/qr/query-options'
 import { ArchiveTourButton } from '@/features/tours/components/archive-tour-button'
 import { TourDetailSkeleton } from '@/features/tours/components/tour-detail-skeleton'
 import { TourDetailView } from '@/features/tours/components/tour-detail-view'
@@ -16,7 +18,10 @@ import { tourDetailQueryOptions } from '@/features/tours/query-options'
 
 export const Route = createFileRoute('/_main/tours/$nanoId/')({
   loader: async ({ params, context }) => {
-    await context.queryClient.ensureQueryData(tourDetailQueryOptions(params.nanoId))
+    await Promise.all([
+      context.queryClient.ensureQueryData(tourDetailQueryOptions(params.nanoId)),
+      context.queryClient.ensureQueryData(tourQrCodeQueryOptions(params.nanoId)),
+    ])
     return { nanoId: params.nanoId, preferredLocale: context.locale }
   },
   component: TourPage,
@@ -122,6 +127,7 @@ function TourPage() {
       ViewInAppButton={ViewInAppButton}
       ArchiveTourButton={ArchiveTourButton}
       SlugSettings={TourSlugSettingsConnected}
+      TourQrCard={TourQrCardConnected}
       orgSlug={orgSlug}
       currentSlug={tour.slug}
     />

@@ -41,6 +41,7 @@ export interface TourEditPageProps {
   MediaPicker: MediaPickerComponent
   /** Optional component for slug settings. Pass null to hide, undefined for Storybook default. */
   TourSlugSettings?: ComponentType<TourSlugSettingsComponentProps> | null
+  TourQrPanel?: ComponentType<{ tourNanoId: string }> | null
   /** Query options for diff view - pass undefined for Storybook to skip the query */
   diffQueryOptions?: QueryObserverOptions<DiffResult>
 }
@@ -53,6 +54,7 @@ export function TourEditPage({
   onShowStop,
   MediaPicker,
   TourSlugSettings,
+  TourQrPanel,
   diffQueryOptions,
 }: TourEditPageProps) {
   const router = useRouter()
@@ -313,6 +315,8 @@ export function TourEditPage({
               />
             </CardContent>
           </Card>
+
+          {TourQrPanel && <TourQrPanel tourNanoId={nanoId} />}
 
           {TourSlugSettings && <TourSlugSettings tourNanoId={nanoId} tourTitle={tourTitle} />}
 

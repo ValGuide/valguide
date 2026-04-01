@@ -30,6 +30,7 @@ export type TourDetailViewProps = {
   ViewInAppButton: React.ComponentType<{ orgSlug: string; tourSlug: string; published: boolean; appDomain: string }>
   ArchiveTourButton: React.ComponentType<{ tourNanoId: string; onArchived: () => void }>
   SlugSettings?: ComponentType<{ tourNanoId: string; tourTitle: string }>
+  TourQrCard?: ComponentType<{ tourNanoId: string }>
   orgSlug: string
   currentSlug: string
   headerActions?: ReactNode
@@ -49,6 +50,7 @@ export function TourDetailView({
   ViewInAppButton,
   ArchiveTourButton,
   SlugSettings,
+  TourQrCard,
   orgSlug,
   currentSlug,
   headerActions,
@@ -189,6 +191,8 @@ export function TourDetailView({
               </MetadataGrid>
             </CardContent>
           </Card>
+
+          {TourQrCard && <TourQrCard tourNanoId={nanoId} />}
 
           {/* Translations Management */}
           <TranslationsManager

@@ -42,6 +42,11 @@ async function createShortLink(input: CreateShortLinkInput): Promise<ShortLink> 
       if (!isUniqueViolation(err)) {
         throw err
       }
+
+      const existing = await findShortLinkByTarget(input)
+      if (existing) {
+        return existing
+      }
     }
   }
 
@@ -52,14 +57,10 @@ async function createShortLink(input: CreateShortLinkInput): Promise<ShortLink> 
 // CONVENIENCE WRAPPERS
 // =============================================================================
 
-export async function getOrCreateTourShortLink(tourNanoId: string, locale: string): Promise<ShortLink> {
-  return getOrCreateShortLink({ type: 'tour', tourNanoId, locale })
+export async function getOrCreateTourShortLink(tourNanoId: string): Promise<ShortLink> {
+  return getOrCreateShortLink({ type: 'tour', tourNanoId, target: { source: 'qr' } })
 }
 
-export async function getOrCreateStopShortLink(
-  tourNanoId: string,
-  stopNanoId: string,
-  locale: string,
-): Promise<ShortLink> {
-  return getOrCreateShortLink({ type: 'stop', tourNanoId, stopNanoId, locale })
+export async function getOrCreateStopShortLink(tourNanoId: string, stopNanoId: string): Promise<ShortLink> {
+  return getOrCreateShortLink({ type: 'stop', tourNanoId, stopNanoId, target: { source: 'qr' } })
 }

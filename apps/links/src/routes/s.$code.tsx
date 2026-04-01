@@ -4,6 +4,7 @@ import { serverEnv } from '@valguide/core/env/server'
 import { getShortLinkByCode } from '@valguide/core/features/links/get-short-link'
 import { getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/kv'
 import { buildPathFromShortLink, isAbsoluteUrl } from '@valguide/core/features/links/paths'
+import { trackShortLinkOpen } from '@valguide/core/features/links/track-short-link-open.server'
 import { z } from 'zod'
 
 const resolveShortLinkFn = createServerFn({ method: 'GET' })
@@ -11,21 +12,27 @@ const resolveShortLinkFn = createServerFn({ method: 'GET' })
   .handler(async ({ data: { code } }): Promise<{ redirectUrl: string } | { error: string; status: number }> => {
     const appBaseUrl = serverEnv.APP_BASE_URL
     const cacheKey = getLinkCacheKey(code)
+    const shortLink = await getShortLinkByCode(code)
+
+    if (!shortLink) {
+      return { error: 'Not found', status: 404 }
+    }
 
     let path = await getCache(cacheKey)
 
     if (!path) {
-      const shortLink = await getShortLinkByCode(code)
-      if (!shortLink) {
-        return { error: 'Not found', status: 404 }
-      }
-
       path = await buildPathFromShortLink(shortLink)
       if (!path) {
         return { error: 'Invalid link configuration', status: 500 }
       }
 
       await setCache(cacheKey, path)
+    }
+
+    try {
+      await trackShortLinkOpen(shortLink.id)
+    } catch (error) {
+      console.error('[links] failed to track short link open', { code, error })
     }
 
     const redirectUrl = isAbsoluteUrl(path) ? path : `${appBaseUrl}${path}`

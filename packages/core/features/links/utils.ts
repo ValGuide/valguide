@@ -12,9 +12,9 @@ export const MAX_RETRIES = 5
 export async function findShortLinkByTarget(input: CreateShortLinkInput) {
   switch (input.type) {
     case 'tour':
-      return findTourShortLink(input.tourNanoId, input.locale)
+      return findTourShortLink(input.tourNanoId)
     case 'stop':
-      return findStopShortLink(input.tourNanoId, input.stopNanoId, input.locale)
+      return findStopShortLink(input.tourNanoId, input.stopNanoId)
     case 'campaign':
       return findCampaignShortLink(input.campaignId)
     case 'external':
@@ -26,20 +26,19 @@ export async function findShortLinkByTarget(input: CreateShortLinkInput) {
   }
 }
 
-async function findTourShortLink(tourNanoId: string, locale: string) {
+async function findTourShortLink(tourNanoId: string) {
   const result = await db.query.short_links.findFirst({
-    where: and(eq(short_links.type, 'tour'), eq(short_links.tourNanoId, tourNanoId), eq(short_links.locale, locale)),
+    where: and(eq(short_links.type, 'tour'), eq(short_links.tourNanoId, tourNanoId)),
   })
   return result ?? null
 }
 
-async function findStopShortLink(tourNanoId: string, stopNanoId: string, locale: string) {
+async function findStopShortLink(tourNanoId: string, stopNanoId: string) {
   const result = await db.query.short_links.findFirst({
     where: and(
       eq(short_links.type, 'stop'),
       eq(short_links.tourNanoId, tourNanoId),
       eq(short_links.stopNanoId, stopNanoId),
-      eq(short_links.locale, locale),
     ),
   })
   return result ?? null
@@ -82,13 +81,13 @@ export function buildInsertValues(input: CreateShortLinkInput, code: string) {
 
   switch (input.type) {
     case 'tour':
-      return { ...base, tourNanoId: input.tourNanoId, locale: input.locale }
+      return { ...base, tourNanoId: input.tourNanoId, locale: null }
     case 'stop':
       return {
         ...base,
         tourNanoId: input.tourNanoId,
         stopNanoId: input.stopNanoId,
-        locale: input.locale,
+        locale: null,
       }
     case 'campaign':
       return { ...base, campaignId: input.campaignId }

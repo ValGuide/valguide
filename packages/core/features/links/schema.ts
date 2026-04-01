@@ -1,5 +1,20 @@
 import { sql } from 'drizzle-orm'
-import { index, jsonb, pgSchema, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
+import {
+  index,
+  integer,
+  jsonb,
+  pgSchema,
+  serial,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core'
+import { authUsers } from '../auth/schema'
+import { organization } from '../orgs/schema'
+import { stop, tour } from '../tours/schema'
+import type { QrBrandingOverride } from './qr/shared'
 
 const studioSchema = pgSchema('studio')
 
@@ -28,6 +43,8 @@ export const short_links = studioSchema.table(
 
     // Flexible per-type payload for extras (tracking, UTM, flags, etc.)
     target: jsonb('target').$type<ShortLinkTarget>().notNull().default({}),
+    openCount: integer('open_count').notNull().default(0),
+    lastOpenedAt: timestamp('last_opened_at', { withTimezone: true }),
 
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
@@ -39,11 +56,9 @@ export const short_links = studioSchema.table(
     uniqueIndex('short_links_code_uq').on(table.code),
 
     // Partial unique indexes per type (one link per target)
-    uniqueIndex('short_links_tour_target_uq')
-      .on(table.type, table.tourNanoId, table.locale)
-      .where(sql`${table.type} = 'tour'`),
+    uniqueIndex('short_links_tour_target_uq').on(table.type, table.tourNanoId).where(sql`${table.type} = 'tour'`),
     uniqueIndex('short_links_stop_target_uq')
-      .on(table.type, table.tourNanoId, table.stopNanoId, table.locale)
+      .on(table.type, table.tourNanoId, table.stopNanoId)
       .where(sql`${table.type} = 'stop'`),
     uniqueIndex('short_links_campaign_target_uq')
       .on(table.type, table.campaignId)
@@ -60,10 +75,86 @@ export const short_links = studioSchema.table(
   ],
 )
 
+export const short_link_daily_stats = studioSchema.table(
+  'short_link_daily_stats',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    shortLinkId: integer('short_link_id')
+      .notNull()
+      .references(() => short_links.id, { onDelete: 'cascade' }),
+    day: varchar('day', { length: 10 }).notNull(),
+    openCount: integer('open_count').notNull().default(0),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex('short_link_daily_stats_short_link_day_uq').on(table.shortLinkId, table.day),
+    index('short_link_daily_stats_short_link_idx').on(table.shortLinkId),
+    index('short_link_daily_stats_day_idx').on(table.day),
+  ],
+)
+
+export const organization_qr_branding = studioSchema.table(
+  'organization_qr_branding',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    overrides: jsonb('overrides').$type<QrBrandingOverride>().notNull().default({}),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+    updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
+  },
+  (table) => [uniqueIndex('organization_qr_branding_org_uq').on(table.organizationId)],
+)
+
+export const tour_qr_branding = studioSchema.table(
+  'tour_qr_branding',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    tourId: uuid('tour_id')
+      .notNull()
+      .references(() => tour.id, { onDelete: 'cascade' }),
+    overrides: jsonb('overrides').$type<QrBrandingOverride>().notNull().default({}),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+    updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
+  },
+  (table) => [uniqueIndex('tour_qr_branding_tour_uq').on(table.tourId)],
+)
+
+export const stop_qr_branding = studioSchema.table(
+  'stop_qr_branding',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    stopId: uuid('stop_id')
+      .notNull()
+      .references(() => stop.id, { onDelete: 'cascade' }),
+    overrides: jsonb('overrides').$type<QrBrandingOverride>().notNull().default({}),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+    updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
+  },
+  (table) => [uniqueIndex('stop_qr_branding_stop_uq').on(table.stopId)],
+)
+
 // Inferred types
 export type ShortLink = typeof short_links.$inferSelect
 export type ShortLinkInsert = typeof short_links.$inferInsert
 export type ShortLinkType = (typeof shortLinkTypeEnum.enumValues)[number]
+export type ShortLinkDailyStat = typeof short_link_daily_stats.$inferSelect
+export type OrganizationQrBranding = typeof organization_qr_branding.$inferSelect
+export type TourQrBranding = typeof tour_qr_branding.$inferSelect
+export type StopQrBranding = typeof stop_qr_branding.$inferSelect
 
 // Type-safe target payloads (stored in JSONB)
 export type ShortLinkTarget = {

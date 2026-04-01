@@ -2,6 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { z } from 'zod'
+import { stopQrCodeQueryOptions } from '@/features/qr/query-options'
 import { StopEditPageConnected } from '@/features/stops/components/stop-edit-page-connected'
 import { StopEditSkeleton } from '@/features/stops/components/stop-edit-skeleton'
 import { StopEditorProvider } from '@/features/stops/contexts/stop-editor-context'
@@ -40,7 +41,10 @@ export const Route = createFileRoute('/_main/tours/$nanoId/stops/$stopId/edit')(
       })
     }
 
-    await context.queryClient.ensureQueryData(stopLocaleDraftQueryOptions(params.stopId, requestedLocale))
+    await Promise.all([
+      context.queryClient.ensureQueryData(stopLocaleDraftQueryOptions(params.stopId, requestedLocale)),
+      context.queryClient.ensureQueryData(stopQrCodeQueryOptions(params.nanoId, params.stopId)),
+    ])
 
     return { tourNanoId: params.nanoId, stopNanoId: params.stopId, locale: requestedLocale }
   },
