@@ -257,7 +257,7 @@ export function QRCode({
 
   return (
     <div className="flex flex-col items-center space-y-6">
-      <div className="qr-code-container" ref={qrRef} />
+      <div className="qr-code-container flex items-center justify-center overflow-visible" ref={qrRef} />
 
       {showDownloadButtons && (
         <div className="flex space-x-4">

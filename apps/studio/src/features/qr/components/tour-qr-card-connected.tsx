@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { tourQrCodeQueryOptions } from '../query-options'
-import { getQrBrandingSourceLabel } from '../source-label'
 import { QrCompactSurface } from './qr-compact-surface'
 import { QrSummaryCardSkeleton } from './qr-summary-card-skeleton'
 
@@ -25,8 +24,6 @@ export function TourQrCardConnected({ tourNanoId }: TourQrCardConnectedProps) {
       manageDescription={t('tourOverviewDescription')}
       shortUrl={data.shortUrl}
       branding={data.effectiveBranding}
-      analytics={data.analytics}
-      sourceLabel={getQrBrandingSourceLabel(data.effectiveBranding.source, (key) => t(key))}
       note={t('liveTourNote')}
     />
   )

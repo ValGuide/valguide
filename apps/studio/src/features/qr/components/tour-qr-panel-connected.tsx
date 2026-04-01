@@ -8,6 +8,7 @@ import { updateTourQrBrandingFn } from '@valguide/core/features/links/qr/update-
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useEffect, useState } from 'react'
+import { sanitizeQrOverrideForCurrentUi } from '../branding'
 import { qrQueryKeys, tourQrCodeQueryOptions } from '../query-options'
 import { getQrBrandingSourceLabel } from '../source-label'
 import { QrBrandingActions, QrBrandingFields } from './qr-branding-fields'
@@ -26,7 +27,7 @@ export function TourQrPanelConnected({ tourNanoId }: TourQrPanelConnectedProps) 
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
-    setDraftOverride(data?.override ?? {})
+    setDraftOverride(data?.override ? sanitizeQrOverrideForCurrentUi(data.override) : {})
   }, [data])
 
   if (isLoading || !data) {
@@ -40,7 +41,9 @@ export function TourQrPanelConnected({ tourNanoId }: TourQrPanelConnectedProps) 
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      const result = await updateTourQrBrandingFn({ data: { tourNanoId, override: draftOverride } })
+      const result = await updateTourQrBrandingFn({
+        data: { tourNanoId, override: sanitizeQrOverrideForCurrentUi(draftOverride) },
+      })
       queryClient.setQueryData(qrQueryKeys.tourCode(tourNanoId), result)
       toast.success(t('brandingSaved'))
     } catch {
@@ -58,8 +61,6 @@ export function TourQrPanelConnected({ tourNanoId }: TourQrPanelConnectedProps) 
       manageDescription={t('tourEditDescription')}
       shortUrl={data.shortUrl}
       branding={previewBranding}
-      analytics={data.analytics}
-      sourceLabel={getQrBrandingSourceLabel(previewBranding.source, (key) => t(key))}
       note={t('liveTourNote')}
       footer={
         <QrBrandingActions

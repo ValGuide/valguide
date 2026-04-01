@@ -1,4 +1,4 @@
-import type { EffectiveQrBranding, QrAnalyticsSummary } from '@valguide/core/features/links/qr/shared'
+import type { EffectiveQrBranding } from '@valguide/core/features/links/qr/shared'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { QrManagementPanel } from './qr-management-panel'
@@ -11,8 +11,6 @@ type QrCompactSurfaceProps = {
   manageDescription: string
   shortUrl: string
   branding: EffectiveQrBranding
-  analytics?: QrAnalyticsSummary
-  sourceLabel?: string
   note?: string
   children?: ReactNode
   footer?: ReactNode
@@ -25,8 +23,6 @@ export function QrCompactSurface({
   manageDescription,
   shortUrl,
   branding,
-  analytics,
-  sourceLabel,
   note,
   children,
   footer,
@@ -40,8 +36,6 @@ export function QrCompactSurface({
         description={summaryDescription}
         shortUrl={shortUrl}
         branding={branding}
-        analytics={analytics}
-        sourceLabel={sourceLabel}
         onManage={() => setOpen(true)}
       />
       <QrManagementPanel
@@ -51,8 +45,6 @@ export function QrCompactSurface({
         description={manageDescription}
         shortUrl={shortUrl}
         branding={branding}
-        analytics={analytics}
-        sourceLabel={sourceLabel}
         note={note}
         footer={footer}
       >

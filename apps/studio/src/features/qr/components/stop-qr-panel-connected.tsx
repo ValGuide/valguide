@@ -10,6 +10,7 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { useEffect, useState } from 'react'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
+import { sanitizeQrOverrideForCurrentUi } from '../branding'
 import { qrQueryKeys, stopQrCodeQueryOptions } from '../query-options'
 import { getQrBrandingSourceLabel } from '../source-label'
 import { QrBrandingActions, QrBrandingFields } from './qr-branding-fields'
@@ -35,7 +36,7 @@ export function StopQrPanelConnected() {
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
-    setDraftOverride(data?.override ?? {})
+    setDraftOverride(data?.override ? sanitizeQrOverrideForCurrentUi(data.override) : {})
   }, [data])
 
   if (!tourNanoId) {
@@ -65,7 +66,9 @@ export function StopQrPanelConnected() {
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      const result = await updateStopQrBrandingFn({ data: { tourNanoId, stopNanoId, override: draftOverride } })
+      const result = await updateStopQrBrandingFn({
+        data: { tourNanoId, stopNanoId, override: sanitizeQrOverrideForCurrentUi(draftOverride) },
+      })
       queryClient.setQueryData(qrQueryKeys.stopCode(tourNanoId, stopNanoId), result)
       toast.success(t('brandingSaved'))
     } catch {
@@ -83,8 +86,6 @@ export function StopQrPanelConnected() {
       manageDescription={t('stopEditDescription')}
       shortUrl={data.shortUrl}
       branding={previewBranding}
-      analytics={data.analytics}
-      sourceLabel={getQrBrandingSourceLabel(previewBranding.source, (key) => t(key))}
       note={t('liveStopNote')}
       footer={
         <QrBrandingActions

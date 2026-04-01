@@ -11,6 +11,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useEffect, useState } from 'react'
+import { sanitizeQrOverrideForCurrentUi } from '../branding'
 import { orgQrBrandingQueryOptions, qrQueryKeys } from '../query-options'
 import { getQrBrandingSourceLabel } from '../source-label'
 import { QrBrandingActions, QrBrandingFields } from './qr-branding-fields'
@@ -24,7 +25,7 @@ export function WorkspaceQrBrandingSection() {
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
-    setDraftOverride(data?.override ?? {})
+    setDraftOverride(data?.override ? sanitizeQrOverrideForCurrentUi(data.override) : {})
   }, [data])
 
   if (isLoading || !data) {
@@ -39,7 +40,7 @@ export function WorkspaceQrBrandingSection() {
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      const result = await updateOrgQrBrandingFn({ data: draftOverride })
+      const result = await updateOrgQrBrandingFn({ data: sanitizeQrOverrideForCurrentUi(draftOverride) })
       queryClient.setQueryData(qrQueryKeys.organizationBranding(), result)
       toast.success(t('brandingSaved'))
     } catch {

@@ -2,12 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react'
 import {
   applyQrOverrideToBranding,
   type EffectiveQrBranding,
-  type QrAnalyticsSummary,
   type QrBrandingOverride,
   type QrBrandingSource,
 } from '@valguide/core/features/links/qr/shared'
-import { fn } from 'storybook/test'
 import { useState } from 'react'
+import { fn } from 'storybook/test'
 import { QrBrandingActions, QrBrandingFields } from './qr-branding-fields'
 import { QrManagementPanel } from './qr-management-panel'
 
@@ -21,16 +20,6 @@ const inheritedBranding: EffectiveQrBranding = {
   source: 'system',
   logoStoragePath: null,
   hasContrastWarning: false,
-}
-
-const analytics: QrAnalyticsSummary = {
-  openCount: 124,
-  lastOpenedAt: '2026-03-31T16:42:00.000Z',
-  dailyOpens: [
-    { day: '2026-03-29', openCount: 18 },
-    { day: '2026-03-30', openCount: 41 },
-    { day: '2026-03-31', openCount: 65 },
-  ],
 }
 
 function QrManagementPanelStory({
@@ -66,12 +55,9 @@ function QrManagementPanelStory({
         description={description}
         shortUrl={shortUrl}
         branding={branding}
-        analytics={analytics}
         sourceLabel="Systemstandard"
         note="Dieser QR-Code öffnet die Live-Tour für Besucher hinter einem stabilen Kurzlink."
-        footer={
-          <QrBrandingActions source={source} isSaving={isSaving} onSave={fn()} onReset={() => setOverride({})} />
-        }
+        footer={<QrBrandingActions source={source} isSaving={isSaving} onSave={fn()} onReset={() => setOverride({})} />}
       >
         <QrBrandingFields
           source={source}
@@ -143,7 +129,7 @@ export const DesktopWithUnsavedChanges: Story = {
   ),
 }
 
-export const MobileBottomSheet: Story = {
+export const MobileFullHeight: Story = {
   args: {},
   parameters: {
     viewport: {

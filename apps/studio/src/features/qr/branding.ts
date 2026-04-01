@@ -1,4 +1,4 @@
-import type { EffectiveQrBranding } from '@valguide/core/features/links/qr/shared'
+import type { EffectiveQrBranding, QrBrandingOverride } from '@valguide/core/features/links/qr/shared'
 
 export function getQrStyleProps(stylePreset: EffectiveQrBranding['stylePreset']) {
   switch (stylePreset) {
@@ -26,4 +26,9 @@ export function getQrStyleProps(stylePreset: EffectiveQrBranding['stylePreset'])
 
 export function getQrLogoWidth(size: number, ratio: number): number {
   return Math.round(size * ratio)
+}
+
+export function sanitizeQrOverrideForCurrentUi(override: QrBrandingOverride): QrBrandingOverride {
+  const { includeLogo: _includeLogo, logoSizeRatio: _logoSizeRatio, quietZone: _quietZone, ...rest } = override
+  return rest
 }

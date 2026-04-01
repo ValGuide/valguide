@@ -1,17 +1,16 @@
 import { Link } from '@tanstack/react-router'
-import type {
-  EffectiveQrBranding,
-  QrBrandingOverride,
-  QrBrandingSource,
-  QrStylePreset,
+import {
+  DEFAULT_QR_BRANDING,
+  type EffectiveQrBranding,
+  type QrBrandingOverride,
+  type QrBrandingSource,
+  type QrStylePreset,
 } from '@valguide/core/features/links/qr/shared'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
-import { Slider } from '@valguide/ui/components/slider'
-import { Switch } from '@valguide/ui/components/switch'
 
 type QrBrandingFieldsProps = {
   source: QrBrandingSource
@@ -20,8 +19,6 @@ type QrBrandingFieldsProps = {
   inheritedSourceLabel: string
   onChange: (override: QrBrandingOverride) => void
 }
-
-const quietZoneValues = [0, 12, 20] as const
 
 function updateOverride(
   current: QrBrandingOverride,
@@ -47,6 +44,9 @@ export function QrBrandingFields({
   onChange,
 }: QrBrandingFieldsProps) {
   const t = useTranslations('studio.qr')
+  const backgroundValue = override.bgColor ?? fallbackBranding.bgColor
+  const isTransparentBackground = backgroundValue === 'transparent'
+  const backgroundHexValue = isTransparentBackground ? DEFAULT_QR_BRANDING.bgColor : backgroundValue
 
   const handleColorChange = (key: 'fgColor' | 'bgColor', value: string) => {
     if (!value.trim()) {
@@ -59,6 +59,15 @@ export function QrBrandingFields({
 
   const handleStyleChange = (stylePreset: QrStylePreset) => {
     onChange(updateOverride(override, 'stylePreset', stylePreset))
+  }
+
+  const handleBackgroundModeChange = (mode: 'transparent' | 'solid') => {
+    if (mode === 'transparent') {
+      onChange(updateOverride(override, 'bgColor', 'transparent'))
+      return
+    }
+
+    onChange(updateOverride(override, 'bgColor', backgroundHexValue))
   }
 
   return (
@@ -100,25 +109,40 @@ export function QrBrandingFields({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={`qr-background-${source}`}>{t('backgroundColor')}</Label>
-          <div className="flex gap-2">
-            <Input
-              id={`qr-background-${source}`}
-              type="color"
-              value={override.bgColor ?? fallbackBranding.bgColor}
-              onChange={(event) => handleColorChange('bgColor', event.target.value)}
-              className="h-10 w-16 p-1"
-            />
-            <Input
-              value={override.bgColor ?? ''}
-              placeholder={fallbackBranding.bgColor}
-              onChange={(event) => handleColorChange('bgColor', event.target.value)}
-            />
-          </div>
+          <Label>{t('backgroundColor')}</Label>
+          <Select
+            value={isTransparentBackground ? 'transparent' : 'solid'}
+            onValueChange={(value) => handleBackgroundModeChange(value as 'transparent' | 'solid')}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="transparent">{t('backgroundTransparent')}</SelectItem>
+              <SelectItem value="solid">{t('backgroundSolid')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {!isTransparentBackground ? (
+            <div className="flex gap-2">
+              <Input
+                id={`qr-background-${source}`}
+                type="color"
+                value={backgroundHexValue}
+                onChange={(event) => handleColorChange('bgColor', event.target.value)}
+                className="h-10 w-16 p-1"
+              />
+              <Input
+                value={override.bgColor ?? ''}
+                placeholder={fallbackBranding.bgColor}
+                onChange={(event) => handleColorChange('bgColor', event.target.value)}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="space-y-2">
         <div className="space-y-2">
           <Label>{t('stylePreset')}</Label>
           <Select
@@ -134,58 +158,6 @@ export function QrBrandingFields({
               <SelectItem value="square">{t('styleSquare')}</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label>{t('quietZone')}</Label>
-          <Select
-            value={String(override.quietZone ?? fallbackBranding.quietZone)}
-            onValueChange={(value) => onChange(updateOverride(override, 'quietZone', Number(value)))}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {quietZoneValues.map((value) => (
-                <SelectItem key={value} value={String(value)}>
-                  {t('quietZoneValue', { value })}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex items-center justify-between gap-4 rounded-lg border bg-background p-3">
-          <div className="space-y-1">
-            <p className="text-sm font-medium">{t('useWorkspaceLogo')}</p>
-            <p className="text-sm text-muted-foreground">{t('useWorkspaceLogoDescription')}</p>
-          </div>
-          <Switch
-            checked={override.includeLogo ?? fallbackBranding.includeLogo}
-            onCheckedChange={(checked) => onChange(updateOverride(override, 'includeLogo', checked))}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between gap-4">
-            <Label>{t('logoSize')}</Label>
-            <span className="text-sm text-muted-foreground">
-              {Math.round((override.logoSizeRatio ?? fallbackBranding.logoSizeRatio) * 100)}%
-            </span>
-          </div>
-          <Slider
-            value={[Math.round((override.logoSizeRatio ?? fallbackBranding.logoSizeRatio) * 100)]}
-            min={12}
-            max={22}
-            step={1}
-            onValueChange={(value) =>
-              onChange(
-                updateOverride(override, 'logoSizeRatio', value[0] ? value[0] / 100 : fallbackBranding.logoSizeRatio),
-              )
-            }
-          />
         </div>
       </div>
     </div>
