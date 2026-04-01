@@ -31,7 +31,7 @@ export async function notifyTourPublished({
     .limit(1)
 
   if (!tourRecord) {
-    console.error('Tour not found for publish notification:', tourNanoId)
+    console.error(`[Slack][tour_published] Tour not found for notification: ${tourNanoId}`)
     return
   }
 
@@ -54,6 +54,6 @@ export async function notifyTourPublished({
       }),
     )
   } catch (error) {
-    console.error('Failed to send tour published notification to Slack:', error)
+    console.error(`[Slack][tour_published] Failed to send notification for tour ${tourNanoId}:`, error)
   }
 }

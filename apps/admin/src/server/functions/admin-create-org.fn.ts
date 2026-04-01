@@ -30,14 +30,12 @@ export const adminCreateOrgFn = createServerFn({ method: 'POST' })
     })
 
     if (result.success && result.org) {
-      notifyTeamCreated({
+      await notifyTeamCreated({
         actorEmail: context.user.email ?? null,
         createdVia: 'admin',
         orgName: result.org.name,
         orgNanoId: result.org.nanoId,
         orgSlug: result.org.slug,
-      }).catch((error) => {
-        console.error('Failed to send admin-created org notification to Slack:', error)
       })
     }
 

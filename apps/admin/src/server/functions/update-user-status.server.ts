@@ -1,9 +1,8 @@
 import { authSessions, authUsers } from '@valguide/core/features/auth/schema'
 import type { DB } from '@valguide/core/features/db'
 import { profiles } from '@valguide/core/features/profiles/schema'
-import { userStatusChangedMessage } from '@valguide/core/slack/messages/user-status-changed.message'
-import { sendSlackMessage } from '@valguide/core/slack/send-slack-message'
 import { eq } from 'drizzle-orm'
+import { notifyUserStatusChanged } from './notify-user-status-changed.server'
 
 export type UpdateUserStatusInput = {
   actorEmail?: string | null
@@ -60,22 +59,16 @@ export async function updateUserStatus(dbClient: DB, input: UpdateUserStatusInpu
   if (previousStatus !== currentStatus) {
     const action = currentStatus === 'blocked' ? 'blocked' : previousStatus === 'blocked' ? 'unblocked' : 'approved'
 
-    try {
-      await sendSlackMessage(
-        userStatusChangedMessage({
-          action,
-          actorEmail: actorEmail ?? null,
-          blockedReason: currentStatus === 'blocked' ? (blockedReason?.trim() ?? null) : null,
-          currentStatus,
-          previousStatus,
-          targetEmail: existingUser.email,
-          timestampMs: now.getTime(),
-          userId,
-        }),
-      )
-    } catch (error) {
-      console.error('Failed to send user status change notification to Slack:', error)
-    }
+    await notifyUserStatusChanged({
+      action,
+      actorEmail,
+      blockedReason: currentStatus === 'blocked' ? (blockedReason?.trim() ?? null) : null,
+      currentStatus,
+      previousStatus,
+      targetEmail: existingUser.email,
+      timestampMs: now.getTime(),
+      userId,
+    })
   }
 
   return { success: true }

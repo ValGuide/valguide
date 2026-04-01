@@ -42,8 +42,6 @@ export const createTourFn = createServerFn({ method: 'POST' })
       locale: result.locale,
       organizationId: orgId,
       tourNanoId: result.nanoId,
-    }).catch((error) => {
-      console.error('Failed to send tour created notification to Slack:', error)
     })
 
     return result

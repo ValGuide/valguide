@@ -27,14 +27,12 @@ export const createTeamFn = createServerFn({ method: 'POST' })
         organization_slug: orgSlug,
       },
     })
-    notifyTeamCreated({
+    await notifyTeamCreated({
       actorEmail: context.user.email ?? null,
       createdVia: 'studio',
       orgName: team.name,
       orgNanoId: team.nanoId,
       orgSlug,
-    }).catch((error) => {
-      console.error('Failed to send team created notification to Slack:', error)
     })
     return { success: true, team, orgSlug }
   })

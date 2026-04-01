@@ -1,11 +1,14 @@
 import { studioBlockedAccessMessage } from '@valguide/slack/messages/studio-blocked-access.message'
 import { sendSlackMessage } from '@valguide/slack/send-slack-message'
 
-export async function notifyStudioBlockedAccess(email: string): Promise<void> {
+type NotifyStudioBlockedAccessInput = {
+  email: string
+}
+
+export async function notifyStudioBlockedAccess({ email }: NotifyStudioBlockedAccessInput): Promise<void> {
   try {
     await sendSlackMessage(studioBlockedAccessMessage({ email }))
   } catch (error) {
-    // Log error but don't fail the request
-    console.error('Failed to send studio blocked access notification to Slack:', error)
+    console.error(`[Slack][studio_blocked_access] Failed to send notification for email ${email}:`, error)
   }
 }

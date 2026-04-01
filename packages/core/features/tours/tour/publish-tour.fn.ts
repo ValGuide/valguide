@@ -37,13 +37,11 @@ export const publishTourFn = createServerFn({ method: 'POST' })
         },
       })
 
-      notifyTourPublished({
+      await notifyTourPublished({
         actorEmail: context.user.email ?? null,
         locale: data.locale,
         publishedStopCount: result.publishedStopCount,
         tourNanoId: data.nanoId,
-      }).catch((error) => {
-        console.error('Failed to send tour published notification to Slack:', error)
       })
 
       // DB read must happen inline (before handler returns) because

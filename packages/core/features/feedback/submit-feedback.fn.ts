@@ -1,8 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { createLinearIssue } from '@valguide/linear/create-issue'
 import { studioFeedbackIssue } from '@valguide/linear/messages/studio-feedback.issue'
-import { studioFeedbackMessage } from '@valguide/slack/messages/studio-feedback.message'
-import { sendSlackMessage } from '@valguide/slack/send-slack-message'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { serverEnv } from '../../env/server'
@@ -10,6 +8,7 @@ import { getAssetUrl } from '../assets/image-url'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
 import { organization } from '../orgs/schema'
+import { notifyStudioFeedbackSubmitted } from './notify-studio-feedback-submitted.server'
 import { feedback } from './schema'
 
 // =============================================================================
@@ -84,7 +83,7 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
         message: data.feedback,
         screenshotUrl,
         screenshotPath: data.screenshotPath ?? null,
-        pageUrl: data.pageUrl || null, // Handle empty string
+        pageUrl: data.pageUrl ? data.pageUrl : null,
         teamId,
         userEmail: context.user.email ?? '',
         userName: data.userName ?? null,
@@ -126,25 +125,19 @@ export const submitFeedbackFn = createServerFn({ method: 'POST' })
       console.error('[Linear] Failed to create issue:', err)
     }
 
-    // Send to Slack (includes Linear ticket link or failure notice)
-    try {
-      await sendSlackMessage(
-        studioFeedbackMessage({
-          feedback: data.feedback,
-          userEmail: context.user.email ?? 'unknown',
-          userName: data.userName,
-          teamName: data.teamName,
-          teamNanoId: data.teamNanoId,
-          pageUrl: data.pageUrl || undefined,
-          screenshotUrl: screenshotUrl ?? undefined,
-          screenshotPath: data.screenshotPath,
-          linearTicket: linearTicket ?? undefined,
-          linearError,
-        }),
-      )
-    } catch (slackErr) {
-      console.error('[Slack] Failed to send feedback message:', slackErr)
-    }
+    await notifyStudioFeedbackSubmitted({
+      feedback: data.feedback,
+      feedbackId: record.id,
+      linearError,
+      linearTicket: linearTicket ?? undefined,
+      pageUrl: data.pageUrl ? data.pageUrl : undefined,
+      screenshotPath: data.screenshotPath,
+      screenshotUrl: screenshotUrl ?? undefined,
+      teamName: data.teamName,
+      teamNanoId: data.teamNanoId,
+      userEmail: context.user.email ?? 'unknown',
+      userName: data.userName,
+    })
 
     return { success: true, feedbackId: record.id }
   })

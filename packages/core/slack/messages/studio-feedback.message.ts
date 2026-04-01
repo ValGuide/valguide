@@ -3,15 +3,16 @@ import { serverEnv } from '../../env/server'
 
 type Props = {
   feedback: string
-  userEmail: string
-  userName?: string
+  linearError?: string
+  linearTicket?: { identifier: string; url: string }
+  pageUrl?: string
+  screenshotPath?: string
+  screenshotUrl?: string
   teamName?: string
   teamNanoId?: string
-  pageUrl?: string
-  screenshotUrl?: string
-  screenshotPath?: string
-  linearTicket?: { identifier: string; url: string }
-  linearError?: string
+  timestampMs: number
+  userEmail: string
+  userName?: string
 }
 
 export const studioFeedbackMessage = ({
@@ -25,6 +26,7 @@ export const studioFeedbackMessage = ({
   screenshotPath,
   linearTicket,
   linearError,
+  timestampMs,
 }: Props): SlackMessage => {
   const isDevEnv = serverEnv.VITE_ENV === 'dev' || serverEnv.VITE_ENV === 'local'
   const channel = serverEnv.STUDIO_FEEDBACK_SLACK_CHANNEL || (isDevEnv ? 'studio-feedback-dev' : 'studio-feedback')
@@ -145,7 +147,7 @@ export const studioFeedbackMessage = ({
         elements: [
           {
             type: 'mrkdwn',
-            text: `Submitted <!date^${Math.floor(Date.now() / 1000)}^{date_short_pretty} at {time}|${new Date().toISOString()}>`,
+            text: `Submitted <!date^${Math.floor(timestampMs / 1000)}^{date_short_pretty} at {time}|${new Date(timestampMs).toISOString()}>`,
           },
         ],
       },

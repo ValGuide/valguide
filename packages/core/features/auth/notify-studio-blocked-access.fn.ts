@@ -7,6 +7,6 @@ export const notifyStudioBlockedAccessFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(z.object({}))
   .handler(async ({ context }) => {
-    await notifyStudioBlockedAccess(context.user.email || '')
+    await notifyStudioBlockedAccess({ email: context.user.email ?? '' })
     return { success: true }
   })

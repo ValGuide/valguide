@@ -5,7 +5,11 @@ import { authUsers } from '../auth/schema'
 import { db } from '../db'
 import { invitation, organization } from './schema'
 
-export async function notifyMemberInvited(invitationId: string): Promise<void> {
+type NotifyMemberInvitedInput = {
+  invitationId: string
+}
+
+export async function notifyMemberInvited({ invitationId }: NotifyMemberInvitedInput): Promise<void> {
   const [invite] = await db
     .select({
       id: invitation.id,
@@ -22,7 +26,7 @@ export async function notifyMemberInvited(invitationId: string): Promise<void> {
     .limit(1)
 
   if (!invite) {
-    console.error('Invitation not found for member invite notification:', invitationId)
+    console.error(`[Slack][member_invited] Invitation not found for notification: ${invitationId}`)
     return
   }
 
@@ -38,6 +42,6 @@ export async function notifyMemberInvited(invitationId: string): Promise<void> {
       }),
     )
   } catch (error) {
-    console.error('Failed to send member invited notification to Slack:', error)
+    console.error(`[Slack][member_invited] Failed to send notification for invitation ${invitationId}:`, error)
   }
 }

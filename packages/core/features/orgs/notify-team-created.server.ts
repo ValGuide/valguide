@@ -28,6 +28,6 @@ export async function notifyTeamCreated({
       }),
     )
   } catch (error) {
-    console.error('Failed to send team created notification to Slack:', error)
+    console.error(`[Slack][team_created] Failed to send notification for org ${orgNanoId}:`, error)
   }
 }

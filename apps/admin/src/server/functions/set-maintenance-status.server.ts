@@ -4,8 +4,7 @@ import {
   getMaintenanceStatus,
 } from '@valguide/core/features/maintenance/state.server'
 import type { MaintenanceApp, MaintenanceStatus } from '@valguide/core/features/maintenance/types'
-import { maintenanceToggleMessage } from '@valguide/core/slack/messages/maintenance-toggle.message'
-import { sendSlackMessage } from '@valguide/core/slack/send-slack-message'
+import { notifyMaintenanceStatusChanged } from './notify-maintenance-status-changed.server'
 
 type SetMaintenanceStatusInput = {
   app: MaintenanceApp
@@ -45,15 +44,13 @@ export async function setMaintenanceStatus(input: SetMaintenanceStatusInput): Pr
   }
 
   if (previousStatus.enabled !== result.enabled) {
-    await sendSlackMessage(
-      maintenanceToggleMessage({
-        app: input.app,
-        enabled: result.enabled,
-        enabledBy: input.enabledBy,
-        message: result.message,
-        eta: result.eta,
-      }),
-    )
+    await notifyMaintenanceStatusChanged({
+      app: input.app,
+      enabled: result.enabled,
+      enabledBy: input.enabledBy,
+      eta: result.eta,
+      message: result.message,
+    })
   }
 
   return result

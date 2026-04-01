@@ -260,28 +260,19 @@ export const auth = createAuthInstance({
   errorURL: '/auth/error',
   enableOrganizationPlugin: true,
   async onVerificationOtpSent({ email }) {
-    const [{ userStartedLoginMessage }, { sendSlackMessage }] = await Promise.all([
-      import('../../slack/messages/user-started-login.message'),
-      import('../../slack/send-slack-message'),
-    ])
+    const { notifyUserStartedLogin } = await import('./notify-user-started-login.server')
 
     await captureStudioProductEvent({
       distinctId: email,
       event: 'auth.otp_requested',
     })
 
-    await sendSlackMessage(
-      userStartedLoginMessage({
-        email,
-        timestampMs: Date.now(),
-      }),
-    )
+    await notifyUserStartedLogin({ email })
   },
   async onOtpSignIn({ email, userId }) {
-    const [{ getUserStatus }, { userLoggedInMessage }, { sendSlackMessage }] = await Promise.all([
+    const [{ getUserStatus }, { notifyUserLoggedIn }] = await Promise.all([
       import('./get-user-status.server'),
-      import('../../slack/messages/user-logged-in.message'),
-      import('../../slack/send-slack-message'),
+      import('./notify-user-logged-in.server'),
     ])
 
     const status = await getUserStatus(userId, email)
@@ -292,14 +283,7 @@ export const auth = createAuthInstance({
         approved_status: status,
       },
     })
-    await sendSlackMessage(
-      userLoggedInMessage({
-        email,
-        userId,
-        status,
-        timestampMs: Date.now(),
-      }),
-    )
+    await notifyUserLoggedIn({ email, status, userId })
   },
   async sendVerificationOtp({ email, otp }) {
     const { sendEmail } = await import('@valguide/email/send-email')
@@ -334,9 +318,7 @@ export const auth = createAuthInstance({
       },
     })
 
-    notifyMemberInvited(invitationId).catch((error) => {
-      console.error('Failed to send member invited notification to Slack:', error)
-    })
+    await notifyMemberInvited({ invitationId })
   },
 })
 

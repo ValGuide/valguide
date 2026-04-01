@@ -34,7 +34,7 @@ export async function notifyTourCreated({
 
   const foundTour = tourRecord[0]
   if (!foundTour) {
-    console.error('Tour not found for creation notification:', tourNanoId)
+    console.error(`[Slack][tour_created] Tour not found for notification: ${tourNanoId}`)
     return
   }
 
@@ -52,6 +52,6 @@ export async function notifyTourCreated({
       }),
     )
   } catch (error) {
-    console.error('Failed to send tour created notification to Slack:', error)
+    console.error(`[Slack][tour_created] Failed to send notification for tour ${tourNanoId}:`, error)
   }
 }
