@@ -5,6 +5,14 @@ import type React from 'react'
 import { Suspense, useEffect } from 'react'
 import { clientEnv } from '../env/client'
 import { flushMissingMessageQueue } from '../i18n/use-missing-message-tracker'
+import {
+  buildStudioAnalyticsProperties,
+  buildStudioOrganizationProperties,
+  buildStudioPersonProperties,
+  POSTHOG_ORGANIZATION_GROUP,
+  STUDIO_POSTHOG_APP,
+  type StudioAnalyticsOrganization,
+} from './product-analytics'
 
 const isPostHogEnabled = clientEnv.VITE_POSTHOG_ENABLED
 
@@ -15,6 +23,34 @@ type PostHogProviderProps = {
 
 export function PostHogProvider({ app, children }: PostHogProviderProps) {
   return <ClientOnly>{isPostHogEnabled ? <Provider app={app}>{children}</Provider> : children}</ClientOnly>
+}
+
+export function identifyStudioUserAnalytics(input: {
+  distinctId: string
+  role?: string | null
+  approvedStatus?: string | null
+  organization?: StudioAnalyticsOrganization | null
+}): void {
+  if (!posthog.__loaded) return
+
+  registerAppProperty(STUDIO_POSTHOG_APP)
+  posthog.identify(input.distinctId, buildStudioPersonProperties(input))
+
+  if (input.organization) {
+    posthog.group(
+      POSTHOG_ORGANIZATION_GROUP,
+      input.organization.nanoId,
+      buildStudioOrganizationProperties(input.organization),
+    )
+    posthog.register(buildStudioAnalyticsProperties({}, input.organization))
+  } else {
+    posthog.register({ app: STUDIO_POSTHOG_APP })
+  }
+}
+
+export function resetStudioUserAnalytics(): void {
+  if (!posthog.__loaded) return
+  posthog.reset()
 }
 
 function registerAppProperty(app: string): void {

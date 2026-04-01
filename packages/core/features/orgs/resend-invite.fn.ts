@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { NotFoundError, requireOrgRole } from '../auth/authorization'
 import { auth } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -35,6 +36,16 @@ export const resendInviteFn = createServerFn({ method: 'POST' })
       body: {
         organizationId: data.teamId,
         email: invite.email,
+        role: invite.role,
+        resend: true,
+      },
+    })
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'org.invite_sent',
+      organizationNanoId: invite.organization.nanoId,
+      properties: {
         role: invite.role,
         resend: true,
       },

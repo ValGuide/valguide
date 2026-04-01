@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireStopAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { updateStopLocaleDraft } from './update-stop-locale-draft.server'
@@ -21,5 +22,14 @@ export const updateStopLocaleDraftFn = createServerFn({ method: 'POST' })
     await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
     const { nanoId, locale, ...input } = data
-    return updateStopLocaleDraft(nanoId, locale, input, context.user.id)
+    const result = await updateStopLocaleDraft(nanoId, locale, input, context.user.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'stop.saved',
+      properties: {
+        stop_nano_id: nanoId,
+        locale,
+      },
+    })
+    return result
   })

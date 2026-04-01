@@ -3,6 +3,7 @@ import { protectedSessionBootstrapQueryOptions } from '@valguide/features/auth/q
 import { Separator } from '@valguide/ui/components/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@valguide/ui/components/sidebar'
 import { StudioPageTransition } from '@/components/studio-page-transition'
+import { StudioProductAnalytics } from '@/components/studio-product-analytics'
 import { AppSidebarContainer } from '../components/app-sidebar-container'
 import { sidebarQueryOptions, sidebarStateQueryOptions } from '../features/sidebar/query-options'
 
@@ -51,6 +52,7 @@ function MainLayout() {
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
+      <StudioProductAnalytics />
       <AppSidebarContainer />
       <SidebarInset>
         {!isFocusMode && (

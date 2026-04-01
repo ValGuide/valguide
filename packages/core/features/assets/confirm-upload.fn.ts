@@ -1,5 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { getFileSizeBucket } from '../../posthog/product-analytics'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireAuthMiddleware } from '../auth/middleware'
 
 export type { ConfirmUploadInput, ConfirmUploadResult } from './confirm-upload.server'
@@ -30,5 +32,16 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
       throw new Error('No active organization')
     }
     await requireOrgMember(organizationId, context.user.id)
-    return confirmUpload(data, organizationId, context.user.id)
+    const asset = await confirmUpload(data, organizationId, context.user.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'asset.upload_completed',
+      properties: {
+        asset_nano_id: asset.nanoId,
+        asset_kind: asset.type,
+        file_size_bucket: getFileSizeBucket(asset.fileSize),
+        upload_source: 'studio',
+      },
+    })
+    return asset
   })

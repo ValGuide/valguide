@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { ForbiddenError, NotFoundError } from '../auth/authorization'
 import { auth, setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -41,5 +42,13 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
       },
     })
     await setActiveOrganizationForCurrentSession(invite.organizationId)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'org.joined',
+      organizationNanoId: invite.organization.nanoId,
+      properties: {
+        organization_slug: invite.organization.slug,
+      },
+    })
     return { success: true }
   })

@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireOrgMember } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { createTour } from './create-tour.server'
@@ -27,6 +28,14 @@ export const createTourFn = createServerFn({ method: 'POST' })
     }
     await requireOrgMember(orgId, context.user.id)
     const result = await createTour(data, orgId, context.user.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.created',
+      properties: {
+        tour_nano_id: result.nanoId,
+        locale: result.locale,
+      },
+    })
 
     notifyTourCreated({
       actorEmail: context.user.email ?? null,

@@ -1,5 +1,10 @@
 import { PostHog } from 'posthog-node'
 import { waitUntil } from '../utils/wait-until'
+import {
+  buildStudioAnalyticsProperties,
+  POSTHOG_ORGANIZATION_GROUP,
+  type StudioProductEventName,
+} from './product-analytics'
 
 let posthogServer: PostHog | null = null
 
@@ -55,4 +60,31 @@ export function flushPostHog() {
   if (!posthog) return
 
   waitUntil(posthog.shutdown())
+}
+
+export async function captureStudioProductEvent(input: {
+  distinctId: string
+  event: StudioProductEventName
+  organizationNanoId?: string | null
+  properties?: Record<string, unknown>
+}) {
+  const posthog = getPostHogServer()
+  if (!posthog) return
+
+  const organizationNanoId = input.organizationNanoId ?? null
+
+  await posthog.captureImmediate({
+    distinctId: input.distinctId,
+    event: input.event,
+    properties: {
+      ...buildStudioAnalyticsProperties(input.properties, organizationNanoId ? { nanoId: organizationNanoId } : null),
+      ...(organizationNanoId
+        ? {
+            $groups: {
+              [POSTHOG_ORGANIZATION_GROUP]: organizationNanoId,
+            },
+          }
+        : {}),
+    },
+  })
 }

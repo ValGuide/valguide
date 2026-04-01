@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { ForbiddenError, NotFoundError } from '../auth/authorization'
 import { setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -38,6 +39,11 @@ export const switchTeamFn = createServerFn({ method: 'POST' })
     }
 
     await setActiveOrganizationForCurrentSession(team.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'org.switched',
+      organizationNanoId: team.nanoId,
+    })
 
     return { success: true }
   })

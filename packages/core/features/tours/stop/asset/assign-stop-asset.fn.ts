@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireStopAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { assignStopAsset } from './assign-stop-asset.server'
@@ -20,10 +21,26 @@ export const assignStopAssetFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
-    return assignStopAsset(data.nanoId, {
+    const result = await assignStopAsset(data.nanoId, {
       assetId: data.assetId,
       channel: data.channel,
       locale: data.locale,
       position: data.position,
     })
+
+    if (result.assigned) {
+      await captureStudioProductEvent({
+        distinctId: context.user.id,
+        event: 'asset.attached',
+        properties: {
+          asset_nano_id: data.assetId,
+          target_type: 'stop',
+          target_nano_id: data.nanoId,
+          channel: data.channel,
+          locale: data.locale ?? null,
+        },
+      })
+    }
+
+    return result
   })

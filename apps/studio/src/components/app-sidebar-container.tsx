@@ -5,6 +5,7 @@ import { signOutFn } from '@valguide/core/features/auth/sign-out.fn'
 import { createTeamFn } from '@valguide/core/features/orgs/create-team.fn'
 import { switchTeamFn } from '@valguide/core/features/orgs/switch-team.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { resetStudioUserAnalytics } from '@valguide/core/posthog/PostHogProvider'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useEffect, useState } from 'react'
 import { FeedbackDialogContainer } from '../features/feedback/components/feedback-dialog-container'
@@ -42,6 +43,7 @@ export function AppSidebarContainer() {
 
   const handleLogout = async () => {
     await signOut({ data: { scope: 'global' } })
+    resetStudioUserAnalytics()
     queryClient.removeQueries({ queryKey: ['is-authenticated'] })
     queryClient.removeQueries({ queryKey: ['current-user'] })
     window.location.href = '/login'

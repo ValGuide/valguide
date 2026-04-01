@@ -8,6 +8,7 @@ import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { serverEnv } from '../../env/server'
 import { defaultLocale, type SupportedLocale } from '../../i18n/i18n.config'
 import { resolveLocaleFromHeaders } from '../../i18n/locale-resolution'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { db } from '../db'
 import { invitation, member, organization } from '../orgs/schema'
 import { orgAc, orgRoles } from './organization-permissions'
@@ -264,6 +265,11 @@ export const auth = createAuthInstance({
       import('../../slack/send-slack-message'),
     ])
 
+    await captureStudioProductEvent({
+      distinctId: email,
+      event: 'auth.otp_requested',
+    })
+
     await sendSlackMessage(
       userStartedLoginMessage({
         email,
@@ -279,6 +285,13 @@ export const auth = createAuthInstance({
     ])
 
     const status = await getUserStatus(userId, email)
+    await captureStudioProductEvent({
+      distinctId: userId,
+      event: 'auth.otp_verified',
+      properties: {
+        approved_status: status,
+      },
+    })
     await sendSlackMessage(
       userLoggedInMessage({
         email,

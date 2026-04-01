@@ -142,6 +142,7 @@
     "./posthog/rewrites": "./posthog/rewrites.ts",
     "./posthog/server": "./posthog/server.ts",
     "./posthog/PostHogProvider": "./posthog/PostHogProvider.tsx",
+    "./posthog/product-analytics": "./posthog/product-analytics.ts",
     "./env/server": "./env/server.ts",
     "./env/client": "./env/client.ts",
     "./env/schema": "./env/schema.ts",

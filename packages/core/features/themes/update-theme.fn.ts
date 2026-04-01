@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireThemeAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
@@ -34,5 +35,14 @@ export const updateThemeFn = createServerFn({ method: 'POST' })
     if (data.radius !== undefined) input.radius = data.radius
     if (data.fonts !== undefined) input.fonts = data.fonts as ThemeFonts
 
-    return updateTheme(input)
+    const updated = await updateTheme(input)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'theme.updated',
+      properties: {
+        theme_id: updated.id,
+        theme_preset: updated.basePreset,
+      },
+    })
+    return updated
   })

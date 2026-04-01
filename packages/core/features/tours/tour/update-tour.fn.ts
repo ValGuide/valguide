@@ -1,6 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireAuthMiddleware } from '../../auth/middleware'
+import { getTourByNanoId } from './get-tour.server'
 import { updateTour } from './update-tour.server'
 
 export type { UpdateTourInput, UpdateTourResult } from './update-tour.server'
@@ -20,5 +22,21 @@ export const updateTourFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateTourSchema)
   .handler(async ({ context, data }) => {
-    return updateTour(data, context.user.id)
+    const before = await getTourByNanoId(data.nanoId)
+    const result = await updateTour(data, context.user.id)
+    const previousLocales = before?.availableLocales ?? []
+    const addedLocales = result.availableLocales.filter((locale) => !previousLocales.includes(locale))
+
+    for (const locale of addedLocales) {
+      await captureStudioProductEvent({
+        distinctId: context.user.id,
+        event: 'tour.locale_added',
+        properties: {
+          tour_nano_id: data.nanoId,
+          locale,
+        },
+      })
+    }
+
+    return result
   })

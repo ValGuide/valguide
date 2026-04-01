@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { getPublishedTourByNanoId } from '../public/get-published-tour'
@@ -24,6 +25,18 @@ export const publishTourFn = createServerFn({ method: 'POST' })
     const result = await publishTour(data, context.user.id)
 
     if (result.success) {
+      await captureStudioProductEvent({
+        distinctId: context.user.id,
+        event: 'tour.published',
+        organizationNanoId: result.orgNanoId,
+        properties: {
+          tour_nano_id: data.nanoId,
+          locale: data.locale,
+          published_stop_count: result.publishedStopCount,
+          has_slug: !!result.tourSlug,
+        },
+      })
+
       notifyTourPublished({
         actorEmail: context.user.email ?? null,
         locale: data.locale,

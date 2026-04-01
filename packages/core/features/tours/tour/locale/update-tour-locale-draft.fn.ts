@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { updateTourLocaleDraft } from './update-tour-locale-draft.server'
@@ -20,5 +21,14 @@ export const updateTourLocaleDraftFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
     const { nanoId, locale, ...input } = data
-    return updateTourLocaleDraft(nanoId, locale, input, context.user.id)
+    const result = await updateTourLocaleDraft(nanoId, locale, input, context.user.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.saved',
+      properties: {
+        tour_nano_id: nanoId,
+        locale,
+      },
+    })
+    return result
   })

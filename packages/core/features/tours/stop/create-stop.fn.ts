@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireOrgMember } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { createStop } from './create-stop.server'
@@ -21,5 +22,14 @@ export const createStopFn = createServerFn({ method: 'POST' })
       throw new Error('No active organization')
     }
     await requireOrgMember(orgId, context.user.id)
-    return createStop(data, orgId, context.user.id)
+    const result = await createStop(data, orgId, context.user.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'stop.created',
+      properties: {
+        stop_nano_id: result.nanoId,
+        locale: result.locale,
+      },
+    })
+    return result
   })
