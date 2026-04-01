@@ -13,11 +13,20 @@ type QrSummaryCardProps = {
   description: string
   shortUrl: string
   branding: EffectiveQrBranding
+  downloadFileName?: string
   onManage?: () => void
   manageAction?: ReactNode
 }
 
-export function QrSummaryCard({ title, description, shortUrl, branding, onManage, manageAction }: QrSummaryCardProps) {
+export function QrSummaryCard({
+  title,
+  description,
+  shortUrl,
+  branding,
+  downloadFileName,
+  onManage,
+  manageAction,
+}: QrSummaryCardProps) {
   const t = useTranslations('studio.qr')
   const styleProps = getQrStyleProps(branding.stylePreset)
 
@@ -51,6 +60,7 @@ export function QrSummaryCard({ title, description, shortUrl, branding, onManage
                 fgColor={branding.fgColor}
                 bgColor={branding.bgColor}
                 margin={0}
+                downloadFileName={downloadFileName}
                 {...styleProps}
               />
             </div>

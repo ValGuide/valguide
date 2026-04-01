@@ -11,6 +11,7 @@ type QrCompactSurfaceProps = {
   manageDescription: string
   shortUrl: string
   branding: EffectiveQrBranding
+  downloadFileName?: string
   note?: string
   children?: ReactNode
   footer?: ReactNode
@@ -23,6 +24,7 @@ export function QrCompactSurface({
   manageDescription,
   shortUrl,
   branding,
+  downloadFileName,
   note,
   children,
   footer,
@@ -36,6 +38,7 @@ export function QrCompactSurface({
         description={summaryDescription}
         shortUrl={shortUrl}
         branding={branding}
+        downloadFileName={downloadFileName}
         onManage={() => setOpen(true)}
       />
       <QrManagementPanel
@@ -45,6 +48,7 @@ export function QrCompactSurface({
         description={manageDescription}
         shortUrl={shortUrl}
         branding={branding}
+        downloadFileName={downloadFileName}
         note={note}
         footer={footer}
       >

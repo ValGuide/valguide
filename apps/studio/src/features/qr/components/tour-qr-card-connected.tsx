@@ -9,9 +9,10 @@ import { QrSummaryCardSkeleton } from './qr-summary-card-skeleton'
 
 type TourQrCardConnectedProps = {
   tourNanoId: string
+  downloadFileName: string
 }
 
-export function TourQrCardConnected({ tourNanoId }: TourQrCardConnectedProps) {
+export function TourQrCardConnected({ tourNanoId, downloadFileName }: TourQrCardConnectedProps) {
   const t = useTranslations('studio.qr')
   const { data, isLoading } = useQuery(tourQrCodeQueryOptions(tourNanoId))
 
@@ -25,6 +26,7 @@ export function TourQrCardConnected({ tourNanoId }: TourQrCardConnectedProps) {
       description={t('tourOverviewCompactDescription')}
       shortUrl={data.shortUrl}
       branding={data.effectiveBranding}
+      downloadFileName={downloadFileName}
       manageAction={
         <Button size="sm" className="gap-2 sm:ml-auto" asChild>
           <Link to="/tours/$nanoId/edit" params={{ nanoId: tourNanoId }}>

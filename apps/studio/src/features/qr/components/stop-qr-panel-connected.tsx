@@ -21,7 +21,11 @@ function resolveTourNanoId(input: { routeTourNanoId?: string; fallbackTourNanoId
   return input.routeTourNanoId ?? input.fallbackTourNanoId ?? null
 }
 
-export function StopQrPanelConnected() {
+type StopQrPanelConnectedProps = {
+  downloadFileName: string
+}
+
+export function StopQrPanelConnected({ downloadFileName }: StopQrPanelConnectedProps) {
   const t = useTranslations('studio.qr')
   const queryClient = useQueryClient()
   const { nanoId: stopNanoId, navigation, tourUsage } = useStopEditor()
@@ -86,6 +90,7 @@ export function StopQrPanelConnected() {
       manageDescription={t('stopEditDescription')}
       shortUrl={data.shortUrl}
       branding={previewBranding}
+      downloadFileName={downloadFileName}
       note={t('liveStopNote')}
       footer={
         <QrBrandingActions

@@ -17,9 +17,10 @@ import { QrSummaryCardSkeleton } from './qr-summary-card-skeleton'
 
 type TourQrPanelConnectedProps = {
   tourNanoId: string
+  downloadFileName: string
 }
 
-export function TourQrPanelConnected({ tourNanoId }: TourQrPanelConnectedProps) {
+export function TourQrPanelConnected({ tourNanoId, downloadFileName }: TourQrPanelConnectedProps) {
   const t = useTranslations('studio.qr')
   const queryClient = useQueryClient()
   const { data, isLoading } = useQuery(tourQrCodeQueryOptions(tourNanoId))
@@ -61,6 +62,7 @@ export function TourQrPanelConnected({ tourNanoId }: TourQrPanelConnectedProps) 
       manageDescription={t('tourEditDescription')}
       shortUrl={data.shortUrl}
       branding={previewBranding}
+      downloadFileName={downloadFileName}
       note={t('liveTourNote')}
       footer={
         <QrBrandingActions

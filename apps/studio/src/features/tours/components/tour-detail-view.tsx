@@ -30,7 +30,7 @@ export type TourDetailViewProps = {
   ViewInAppButton: React.ComponentType<{ orgSlug: string; tourSlug: string; published: boolean; appDomain: string }>
   ArchiveTourButton: React.ComponentType<{ tourNanoId: string; onArchived: () => void }>
   SlugSettings?: ComponentType<{ tourNanoId: string; tourTitle: string }>
-  TourQrCard?: ComponentType<{ tourNanoId: string }>
+  TourQrCard?: ComponentType<{ tourNanoId: string; downloadFileName: string }>
   orgSlug: string
   currentSlug: string
   headerActions?: ReactNode
@@ -61,6 +61,7 @@ export function TourDetailView({
   // Compute display values from locales with fallback priority
   const bestLocale = pickBestLocale(preferredLocale, tour.locales)
   const displayTitle = bestLocale?.title?.trim() || t('untitledTour')
+  const qrDownloadFileName = bestLocale?.title?.trim() || nanoId
   const displayDescription = bestLocale?.description ?? null
   const coverImageUrl = tour.coverImage ? getAssetImageUrl(tour.coverImage) : null
 
@@ -192,7 +193,7 @@ export function TourDetailView({
             </CardContent>
           </Card>
 
-          {TourQrCard && <TourQrCard tourNanoId={nanoId} />}
+          {TourQrCard && <TourQrCard tourNanoId={nanoId} downloadFileName={qrDownloadFileName} />}
 
           {/* Translations Management */}
           <TranslationsManager

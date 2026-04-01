@@ -6,6 +6,7 @@ import { Slider } from '@valguide/ui/components/slider'
 import QRCodeStyling from 'qr-code-styling'
 import React, { useRef, useState } from 'react'
 import { useTranslations } from '../../i18n/client'
+import { generateSlug } from '../../utils/slug'
 
 export interface QRCodeProps {
   /**
@@ -72,6 +73,19 @@ export interface QRCodeProps {
    * Callback when QR code is downloaded
    */
   onDownload?: (format: 'svg' | 'png') => void
+  /**
+   * Base filename to use for downloads
+   */
+  downloadFileName?: string
+}
+
+function resolveDownloadFileName(fileName?: string): string {
+  const trimmedFileName = fileName?.trim()
+  if (!trimmedFileName) {
+    return 'qr'
+  }
+
+  return generateSlug(trimmedFileName) || 'qr'
 }
 
 /**
@@ -94,9 +108,11 @@ export function QRCode({
   margin = 12,
   showControls = false,
   onDownload,
+  downloadFileName,
 }: QRCodeProps) {
   const t = useTranslations('studio.qr')
   const qrRef = useRef<HTMLDivElement>(null)
+  const sanitizedDownloadFileName = resolveDownloadFileName(downloadFileName)
   const [qrCode] = useState<QRCodeStyling>(
     new QRCodeStyling({
       width,
@@ -243,6 +259,7 @@ export function QRCode({
   const downloadSVG = () => {
     qrCode.download({
       extension: 'svg',
+      name: sanitizedDownloadFileName,
     })
     onDownload?.('svg')
   }
@@ -251,6 +268,7 @@ export function QRCode({
   const downloadPNG = () => {
     qrCode.download({
       extension: 'png',
+      name: sanitizedDownloadFileName,
     })
     onDownload?.('png')
   }

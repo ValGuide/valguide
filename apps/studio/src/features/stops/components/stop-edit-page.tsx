@@ -26,7 +26,7 @@ import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 export type StopEditPageProps = {
   MediaPicker: MediaPickerComponent
   onPublishAssets?: (nanoId: string, activeLocale: string) => Promise<void>
-  StopQrPanel?: ComponentType | null
+  StopQrPanel?: ComponentType<{ downloadFileName: string }> | null
   /** Query options for diff view - pass undefined for Storybook to skip the query */
   diffQueryOptions?: QueryObserverOptions<DiffResult>
 }
@@ -92,6 +92,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, StopQrPanel, diffQu
   }, [localeDraft, tStops])
 
   const stopTitle = draftStopTitle
+  const qrDownloadFileName = localeDraft?.title?.trim() || nanoId
 
   const draftData = localeDraft
     ? {
@@ -291,7 +292,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, StopQrPanel, diffQu
           </CardContent>
         </Card>
 
-        {StopQrPanel && <StopQrPanel />}
+        {StopQrPanel && <StopQrPanel downloadFileName={qrDownloadFileName} />}
       </div>
     </BaseEditLayout>
   )

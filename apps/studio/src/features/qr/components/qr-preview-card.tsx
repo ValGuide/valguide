@@ -14,12 +14,14 @@ type QrPreviewCardProps = {
   description?: string
   shortUrl: string
   branding: EffectiveQrBranding
+  downloadFileName?: string
   sourceLabel?: string
   note?: string
   children?: ReactNode
   size?: number
   variant?: 'card' | 'plain'
   showHeader?: boolean
+  showDownloads?: boolean
   showShortUrl?: boolean
   showActions?: boolean
   showSourceLabel?: boolean
@@ -31,12 +33,14 @@ export function QrPreviewCard({
   description,
   shortUrl,
   branding,
+  downloadFileName,
   sourceLabel,
   note,
   children,
   size = 220,
   variant = 'card',
   showHeader = true,
+  showDownloads = true,
   showShortUrl = true,
   showActions = true,
   showSourceLabel = true,
@@ -62,7 +66,8 @@ export function QrPreviewCard({
             fgColor={branding.fgColor}
             bgColor={branding.bgColor}
             margin={branding.quietZone}
-            showDownloadButtons
+            showDownloadButtons={showDownloads}
+            downloadFileName={downloadFileName}
             {...styleProps}
           />
           {branding.hasContrastWarning && (
