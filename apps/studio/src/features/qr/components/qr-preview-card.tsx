@@ -22,6 +22,9 @@ type QrPreviewCardProps = {
   size?: number
   variant?: 'card' | 'plain'
   showHeader?: boolean
+  showSourceLabel?: boolean
+  showAnalytics?: boolean
+  showNote?: boolean
 }
 
 function formatLastOpened(value: string | null, fallback: string): string {
@@ -41,6 +44,9 @@ export function QrPreviewCard({
   size = 220,
   variant = 'card',
   showHeader = true,
+  showSourceLabel = true,
+  showAnalytics = true,
+  showNote = true,
 }: QrPreviewCardProps) {
   const t = useTranslations('studio.qr')
   const logoUrl = useMemo(
@@ -95,14 +101,14 @@ export function QrPreviewCard({
             </Button>
           </div>
 
-          {sourceLabel && (
+          {showSourceLabel && sourceLabel && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>{t('brandingSource')}</span>
               <Badge variant="secondary">{sourceLabel}</Badge>
             </div>
           )}
 
-          {analytics && (
+          {showAnalytics && analytics && (
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-lg border bg-muted/30 p-3">
                 <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">{t('totalOpens')}</p>
@@ -115,7 +121,7 @@ export function QrPreviewCard({
             </div>
           )}
 
-          {note && <p className="text-sm text-muted-foreground">{note}</p>}
+          {showNote && note && <p className="text-sm text-muted-foreground">{note}</p>}
         </div>
       </div>
 

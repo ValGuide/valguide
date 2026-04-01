@@ -13,7 +13,7 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useEffect, useState } from 'react'
 import { orgQrBrandingQueryOptions, qrQueryKeys } from '../query-options'
 import { getQrBrandingSourceLabel } from '../source-label'
-import { QrBrandingFields } from './qr-branding-fields'
+import { QrBrandingActions, QrBrandingFields } from './qr-branding-fields'
 import { QrPreviewCard } from './qr-preview-card'
 
 export function WorkspaceQrBrandingSection() {
@@ -63,8 +63,11 @@ export function WorkspaceQrBrandingSection() {
         override={draftOverride}
         fallbackBranding={data.inheritedBranding}
         inheritedSourceLabel={t('sourceDefault')}
-        isSaving={isSaving}
         onChange={setDraftOverride}
+      />
+      <QrBrandingActions
+        source="organization"
+        isSaving={isSaving}
         onSave={() => void handleSave()}
         onReset={() => setDraftOverride({})}
       />

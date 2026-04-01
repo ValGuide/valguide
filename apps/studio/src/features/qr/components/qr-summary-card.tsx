@@ -5,7 +5,9 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Card, CardContent, CardDescription, CardTitle } from '@valguide/ui/components/card'
+import { MetadataRow } from '@valguide/ui/components/metadata-row'
+import { Separator } from '@valguide/ui/components/separator'
 import { ExternalLink, Settings2 } from 'lucide-react'
 import { useMemo } from 'react'
 import { getQrLogoWidth, getQrStyleProps } from '../branding'
@@ -43,13 +45,60 @@ export function QrSummaryCard({
 
   return (
     <Card>
-      <CardHeader className="pb-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <CardContent className="grid gap-6 p-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+        <div className="space-y-5">
           <div className="space-y-1">
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </div>
-          <div className="self-start rounded-xl border bg-background p-2">
+
+          <div className="rounded-xl border bg-muted/20 p-4">
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('shortUrl')}</p>
+              <p className="break-all font-mono text-sm leading-6">{shortUrl}</p>
+            </div>
+
+            <Separator className="my-4" />
+
+            <dl className="grid gap-4 sm:grid-cols-2">
+              {sourceLabel ? (
+                <MetadataRow label={t('brandingSource')} value={<Badge variant="secondary">{sourceLabel}</Badge>} />
+              ) : null}
+              {analytics ? (
+                <MetadataRow
+                  label={t('totalOpens')}
+                  value={
+                    analytics.openCount > 0
+                      ? t('inlineOpenCount', { count: analytics.openCount })
+                      : t('inlineNeverOpened')
+                  }
+                />
+              ) : null}
+            </dl>
+          </div>
+
+          <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" onClick={() => void handleCopy()}>
+                {t('copyLink')}
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <a href={shortUrl} target="_blank" rel="noreferrer">
+                  <ExternalLink className="h-4 w-4" />
+                  {t('openLink')}
+                </a>
+              </Button>
+            </div>
+
+            <Button size="sm" onClick={onManage} className="sm:ml-auto">
+              <Settings2 className="h-4 w-4" />
+              {t('manageQr')}
+            </Button>
+          </div>
+        </div>
+
+        <div className="justify-self-start lg:justify-self-end">
+          <div className="rounded-xl border bg-background p-2 shadow-sm">
             <QRCode
               value={shortUrl}
               width={88}
@@ -62,44 +111,6 @@ export function QrSummaryCard({
               {...styleProps}
             />
           </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('shortUrl')}</p>
-          <div className="rounded-lg border bg-muted/40 p-3">
-            <p className="break-all font-mono text-sm">{shortUrl}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => void handleCopy()}>
-            {t('copyLink')}
-          </Button>
-          <Button variant="outline" size="sm" asChild>
-            <a href={shortUrl} target="_blank" rel="noreferrer">
-              <ExternalLink className="h-4 w-4" />
-              {t('openLink')}
-            </a>
-          </Button>
-          <Button size="sm" onClick={onManage}>
-            <Settings2 className="h-4 w-4" />
-            {t('manageQr')}
-          </Button>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-          {sourceLabel ? (
-            <>
-              <span>{t('brandingSource')}</span>
-              <Badge variant="secondary">{sourceLabel}</Badge>
-            </>
-          ) : null}
-          {analytics ? (
-            <span className="text-sm text-muted-foreground">
-              {analytics.openCount > 0 ? t('inlineOpenCount', { count: analytics.openCount }) : t('inlineNeverOpened')}
-            </span>
-          ) : null}
         </div>
       </CardContent>
     </Card>

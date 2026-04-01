@@ -18,10 +18,7 @@ type QrBrandingFieldsProps = {
   override: QrBrandingOverride
   fallbackBranding: EffectiveQrBranding
   inheritedSourceLabel: string
-  isSaving: boolean
   onChange: (override: QrBrandingOverride) => void
-  onSave: () => void
-  onReset: () => void
 }
 
 const quietZoneValues = [0, 12, 20] as const
@@ -47,10 +44,7 @@ export function QrBrandingFields({
   override,
   fallbackBranding,
   inheritedSourceLabel,
-  isSaving,
   onChange,
-  onSave,
-  onReset,
 }: QrBrandingFieldsProps) {
   const t = useTranslations('studio.qr')
 
@@ -194,15 +188,28 @@ export function QrBrandingFields({
           />
         </div>
       </div>
+    </div>
+  )
+}
 
-      <div className="flex flex-wrap gap-2">
-        <Button onClick={onSave} disabled={isSaving}>
-          {isSaving ? t('saving') : t('saveBranding')}
-        </Button>
-        <Button variant="outline" onClick={onReset} disabled={isSaving}>
-          {source === 'organization' ? t('resetToDefault') : t('resetToInherited')}
-        </Button>
-      </div>
+type QrBrandingActionsProps = {
+  source: QrBrandingSource
+  isSaving: boolean
+  onSave: () => void
+  onReset: () => void
+}
+
+export function QrBrandingActions({ source, isSaving, onSave, onReset }: QrBrandingActionsProps) {
+  const t = useTranslations('studio.qr')
+
+  return (
+    <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <Button variant="outline" onClick={onReset} disabled={isSaving}>
+        {source === 'organization' ? t('resetToDefault') : t('resetToInherited')}
+      </Button>
+      <Button onClick={onSave} disabled={isSaving}>
+        {isSaving ? t('saving') : t('saveBranding')}
+      </Button>
     </div>
   )
 }

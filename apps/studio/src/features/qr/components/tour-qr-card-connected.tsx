@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { Skeleton } from '@valguide/ui/components/skeleton'
 import { tourQrCodeQueryOptions } from '../query-options'
 import { getQrBrandingSourceLabel } from '../source-label'
 import { QrCompactSurface } from './qr-compact-surface'
+import { QrSummaryCardSkeleton } from './qr-summary-card-skeleton'
 
 type TourQrCardConnectedProps = {
   tourNanoId: string
@@ -14,7 +14,7 @@ export function TourQrCardConnected({ tourNanoId }: TourQrCardConnectedProps) {
   const { data, isLoading } = useQuery(tourQrCodeQueryOptions(tourNanoId))
 
   if (isLoading || !data) {
-    return <Skeleton className="h-[14rem] w-full rounded-xl" />
+    return <QrSummaryCardSkeleton />
   }
 
   return (

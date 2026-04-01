@@ -15,6 +15,7 @@ type QrCompactSurfaceProps = {
   sourceLabel?: string
   note?: string
   children?: ReactNode
+  footer?: ReactNode
 }
 
 export function QrCompactSurface({
@@ -28,6 +29,7 @@ export function QrCompactSurface({
   sourceLabel,
   note,
   children,
+  footer,
 }: QrCompactSurfaceProps) {
   const [open, setOpen] = useState(false)
 
@@ -52,6 +54,7 @@ export function QrCompactSurface({
         analytics={analytics}
         sourceLabel={sourceLabel}
         note={note}
+        footer={footer}
       >
         {children}
       </QrManagementPanel>

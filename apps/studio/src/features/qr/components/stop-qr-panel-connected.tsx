@@ -8,13 +8,13 @@ import { updateStopQrBrandingFn } from '@valguide/core/features/links/qr/update-
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useEffect, useState } from 'react'
 import { useStopEditor } from '@/features/stops/contexts/stop-editor-types'
 import { qrQueryKeys, stopQrCodeQueryOptions } from '../query-options'
 import { getQrBrandingSourceLabel } from '../source-label'
-import { QrBrandingFields } from './qr-branding-fields'
+import { QrBrandingActions, QrBrandingFields } from './qr-branding-fields'
 import { QrCompactSurface } from './qr-compact-surface'
+import { QrSummaryCardSkeleton } from './qr-summary-card-skeleton'
 
 function resolveTourNanoId(input: { routeTourNanoId?: string; fallbackTourNanoId?: string | null }): string | null {
   return input.routeTourNanoId ?? input.fallbackTourNanoId ?? null
@@ -55,7 +55,7 @@ export function StopQrPanelConnected() {
   }
 
   if (isLoading || !data) {
-    return <Skeleton className="h-[14rem] w-full rounded-xl" />
+    return <QrSummaryCardSkeleton />
   }
 
   const previewBranding = isQrBrandingOverrideEmpty(draftOverride)
@@ -86,16 +86,21 @@ export function StopQrPanelConnected() {
       analytics={data.analytics}
       sourceLabel={getQrBrandingSourceLabel(previewBranding.source, (key) => t(key))}
       note={t('liveStopNote')}
+      footer={
+        <QrBrandingActions
+          source="stop"
+          isSaving={isSaving}
+          onSave={() => void handleSave()}
+          onReset={() => setDraftOverride({})}
+        />
+      }
     >
       <QrBrandingFields
         source="stop"
         override={draftOverride}
         fallbackBranding={data.inheritedBranding}
         inheritedSourceLabel={getQrBrandingSourceLabel(data.inheritedBranding.source, (key) => t(key))}
-        isSaving={isSaving}
         onChange={setDraftOverride}
-        onSave={() => void handleSave()}
-        onReset={() => setDraftOverride({})}
       />
     </QrCompactSurface>
   )
