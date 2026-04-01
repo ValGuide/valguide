@@ -4,6 +4,7 @@ import { ErrorPage } from '@valguide/features/error/error-page'
 export function DefaultError({ error, reset }: ErrorComponentProps) {
   return (
     <ErrorPage
+      layout="container"
       i18n={{
         title: 'Something went wrong',
         description: 'An unexpected error occurred. Please try again or return to the home page.',

@@ -9,7 +9,7 @@ export function DefaultError({ error, reset }: ErrorComponentProps) {
 
   return (
     <ErrorPage
-      className="min-h-full py-4 sm:py-8"
+      layout="container"
       i18n={{
         title: 'Something went wrong',
         description: 'An unexpected error occurred. Please try again or return to the home page.',

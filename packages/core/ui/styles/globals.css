@@ -215,6 +215,11 @@
         background-color: var(--selection);
         color: var(--selection-foreground);
     }
+
+    html,
+    body {
+        min-height: 100%;
+    }
 }
 
 @layer components {
@@ -1594,7 +1599,7 @@
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply m-0 bg-background text-foreground;
     }
 
     /* needed to support multiple themes on same page */
@@ -1609,7 +1614,7 @@
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply m-0 bg-background text-foreground;
     }
 }
 

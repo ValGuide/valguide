@@ -118,9 +118,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="m-0 min-h-svh">
         <Providers locale={locale} initialTheme={theme}>
-          {children}
+          <div className="flex min-h-svh flex-col">{children}</div>
         </Providers>
         <TanStackAppDevtools />
         <Scripts />

@@ -10,16 +10,23 @@ export type ErrorPageProps = {
   }
   error?: Error
   reset?: () => void
+  layout?: 'viewport' | 'container'
   className?: string
 }
 
-export const ErrorPage = ({ i18n, error, reset, className }: ErrorPageProps) => {
+export const ErrorPage = ({ i18n, error, reset, layout = 'viewport', className }: ErrorPageProps) => {
   const [showDetails, setShowDetails] = useState(false)
   const hasError = Boolean(error?.message)
 
   return (
-    <div className={cn('min-h-svh flex flex-1 flex-col items-center justify-center px-4 py-8', className)}>
-      <div className="w-full max-w-md text-center">
+    <div
+      className={cn(
+        'flex flex-1 flex-col items-center justify-center px-4',
+        layout === 'viewport' ? 'min-h-svh' : 'h-full min-h-full',
+        className,
+      )}
+    >
+      <div className="w-full max-w-md py-8 text-center">
         <div className="flex items-center justify-center size-16 rounded-full bg-destructive/10 mx-auto mb-4">
           <svg
             aria-hidden="true"
