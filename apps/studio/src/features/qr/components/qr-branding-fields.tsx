@@ -11,6 +11,7 @@ import { Button } from '@valguide/ui/components/button'
 import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
+import { Switch } from '@valguide/ui/components/switch'
 
 type QrBrandingFieldsProps = {
   source: QrBrandingSource
@@ -61,8 +62,8 @@ export function QrBrandingFields({
     onChange(updateOverride(override, 'stylePreset', stylePreset))
   }
 
-  const handleBackgroundModeChange = (mode: 'transparent' | 'solid') => {
-    if (mode === 'transparent') {
+  const handleBackgroundTransparencyChange = (transparent: boolean) => {
+    if (transparent) {
       onChange(updateOverride(override, 'bgColor', 'transparent'))
       return
     }
@@ -109,36 +110,37 @@ export function QrBrandingFields({
         </div>
 
         <div className="space-y-2">
-          <Label>{t('backgroundColor')}</Label>
-          <Select
-            value={isTransparentBackground ? 'transparent' : 'solid'}
-            onValueChange={(value) => handleBackgroundModeChange(value as 'transparent' | 'solid')}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="transparent">{t('backgroundTransparent')}</SelectItem>
-              <SelectItem value="solid">{t('backgroundSolid')}</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {!isTransparentBackground ? (
-            <div className="flex gap-2">
-              <Input
-                id={`qr-background-${source}`}
-                type="color"
-                value={backgroundHexValue}
-                onChange={(event) => handleColorChange('bgColor', event.target.value)}
-                className="h-10 w-16 p-1"
-              />
-              <Input
-                value={override.bgColor ?? ''}
-                placeholder={fallbackBranding.bgColor}
-                onChange={(event) => handleColorChange('bgColor', event.target.value)}
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor={`qr-background-transparent-${source}`}>{t('backgroundColor')}</Label>
+            <div className="flex items-center gap-2">
+              <Label htmlFor={`qr-background-transparent-${source}`} className="text-sm text-muted-foreground">
+                {t('backgroundTransparent')}
+              </Label>
+              <Switch
+                id={`qr-background-transparent-${source}`}
+                checked={isTransparentBackground}
+                onCheckedChange={handleBackgroundTransparencyChange}
               />
             </div>
-          ) : null}
+          </div>
+
+          <div className="flex gap-2">
+            <Input
+              id={`qr-background-${source}`}
+              type="color"
+              value={backgroundHexValue}
+              onChange={(event) => handleColorChange('bgColor', event.target.value)}
+              className="h-10 w-16 p-1"
+              disabled={isTransparentBackground}
+            />
+            <Input
+              value={isTransparentBackground ? '' : (override.bgColor ?? '')}
+              placeholder={backgroundHexValue}
+              onChange={(event) => handleColorChange('bgColor', event.target.value)}
+              disabled={isTransparentBackground}
+              className={isTransparentBackground ? 'opacity-60' : undefined}
+            />
+          </div>
         </div>
       </div>
 

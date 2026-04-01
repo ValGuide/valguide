@@ -20,6 +20,7 @@ import {
 } from '@valguide/ui/components/drawer'
 import { useIsMobile } from '@valguide/ui/hooks/use-mobile'
 import { cn } from '@valguide/ui/lib/utils'
+import { XIcon } from 'lucide-react'
 import * as React from 'react'
 
 type ResponsiveDialogMobileVariant = 'sheet' | 'full-height'
@@ -98,6 +99,7 @@ function ResponsiveDialogContent({
   if (isMobile) {
     return (
       <DrawerContent
+        showHandle={mobileVariant !== 'full-height'}
         className={cn(
           className,
           '!w-full !max-w-none overflow-hidden border-0 bg-background p-0 sm:!w-full sm:!max-w-none',
@@ -107,6 +109,12 @@ function ResponsiveDialogContent({
         )}
         {...props}
       >
+        {mobileVariant === 'full-height' && showCloseButton ? (
+          <DrawerClose className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-1/2 right-4 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-background/95 opacity-85 transition-[opacity,background-color] hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4.5">
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DrawerClose>
+        ) : null}
         {children}
       </DrawerContent>
     )
@@ -120,10 +128,19 @@ function ResponsiveDialogContent({
 }
 
 function ResponsiveDialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
-  const { isMobile } = useResponsiveDialogContext()
+  const { isMobile, mobileVariant } = useResponsiveDialogContext()
 
   if (isMobile) {
-    return <DrawerHeader className={cn('border-b px-4 pb-4 text-left sm:text-left', className)} {...props} />
+    return (
+      <DrawerHeader
+        className={cn(
+          'border-b px-4 pb-4 text-left sm:text-left',
+          mobileVariant === 'full-height' && 'items-start px-4 pt-4 pr-14 pb-4 text-left',
+          className,
+        )}
+        {...props}
+      />
+    )
   }
 
   return <DialogHeader className={className} {...props} />

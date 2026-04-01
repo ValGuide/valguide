@@ -3,13 +3,12 @@ import {
   ResponsiveDialog,
   ResponsiveDialogBody,
   ResponsiveDialogContent,
-  ResponsiveDialogDescription,
   ResponsiveDialogFooter,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@valguide/core/ui/components/responsive-dialog'
 import { ScrollArea } from '@valguide/ui/components/scroll-area'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@valguide/ui/components/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@valguide/ui/components/sheet'
 import { useIsMobile } from '@valguide/ui/hooks/use-mobile'
 import type { ReactNode } from 'react'
 import { QrPreviewCard } from './qr-preview-card'
@@ -64,7 +63,6 @@ export function QrManagementPanel(props: QrManagementPanelProps) {
         <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-2xl">
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle>{props.title}</ResponsiveDialogTitle>
-            <ResponsiveDialogDescription>{props.description}</ResponsiveDialogDescription>
           </ResponsiveDialogHeader>
           <ResponsiveDialogBody className="min-h-0 px-0 py-0">
             <QrManagementPanelSections {...props} />
@@ -80,7 +78,6 @@ export function QrManagementPanel(props: QrManagementPanelProps) {
       <SheetContent className="flex h-full w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl">
         <SheetHeader className="border-b px-6 py-5 text-left">
           <SheetTitle>{props.title}</SheetTitle>
-          <SheetDescription>{props.description}</SheetDescription>
         </SheetHeader>
         <ScrollArea className="min-h-0 flex-1">
           <QrManagementPanelSections {...props} />
