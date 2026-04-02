@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { Theme } from '@valguide/core/features/themes/schema'
+import { useEffect } from 'react'
+import { fn } from 'storybook/test'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { ThemeEditorPanel } from './theme-editor-panel'
 
@@ -80,7 +82,7 @@ const meta: Meta<typeof ThemeEditorPanel> = {
   title: 'Studio/Design/ThemeEditorPanel',
   component: ThemeEditorPanel,
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
   },
   tags: ['autodocs'],
 }
@@ -88,18 +90,36 @@ const meta: Meta<typeof ThemeEditorPanel> = {
 export default meta
 type Story = StoryObj<typeof ThemeEditorPanel>
 
-function ThemeEditorPanelWrapper({ themes = [], isLoading = false }: { themes?: Theme[]; isLoading?: boolean }) {
+function ThemeEditorPanelWrapper({
+  themes = [],
+  isLoading = false,
+  layout = 'split',
+  dirty = false,
+}: {
+  themes?: Theme[]
+  isLoading?: boolean
+  layout?: 'workspace' | 'split' | 'mobile'
+  dirty?: boolean
+}) {
   const customizer = useThemeCustomizer('light')
+
+  useEffect(() => {
+    if (dirty && !customizer.config.isDirty) {
+      customizer.setColor('primary', '#0F766E')
+    }
+  }, [customizer, dirty])
+
   return (
-    <div className="w-100 h-175">
+    <div className={layout === 'mobile' ? 'mx-auto h-[44rem] w-full max-w-md' : 'h-[52rem] w-full max-w-[96rem]'}>
       <ThemeEditorPanel
         customizer={customizer}
         themes={themes}
         isLoading={isLoading}
-        onSelectTheme={() => {}}
-        onStartFromPreset={() => {}}
-        onDeleteTheme={() => {}}
-        onSave={() => {}}
+        onSelectTheme={fn()}
+        onStartFromPreset={fn()}
+        onDeleteTheme={fn()}
+        onSave={fn()}
+        layout={layout}
       />
     </div>
   )
@@ -115,4 +135,15 @@ export const WithSavedThemes: Story = {
 
 export const Loading: Story = {
   render: () => <ThemeEditorPanelWrapper isLoading />,
+}
+
+export const WorkspaceLayout: Story = {
+  render: () => <ThemeEditorPanelWrapper themes={mockThemes} layout="workspace" />,
+}
+
+export const MobileLayout: Story = {
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+  },
+  render: () => <ThemeEditorPanelWrapper themes={mockThemes} layout="mobile" dirty />,
 }

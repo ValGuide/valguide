@@ -2,29 +2,24 @@ import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { cn } from '@valguide/ui/lib/utils'
-import { Palette, Smartphone } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useOrgThemes } from '../hooks/use-org-themes'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { DeleteThemeDialog } from './delete-theme-dialog'
 import { PlayerPreview } from './player-preview'
 import { SaveThemeDialog } from './save-theme-dialog'
+import { ThemeCompactControls } from './theme-compact-controls'
 import { ThemeEditorPanel } from './theme-editor-panel'
 
 export interface ThemeCustomizerContainerProps {
   className?: string
 }
 
-type ThemeCustomizerView = 'customizer' | 'preview'
-
 export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainerProps) {
   const t = useTranslations('studio.themeCustomizer')
   const customizer = useThemeCustomizer('light')
   const { themes, isLoading, createTheme, updateTheme, deleteTheme } = useOrgThemes()
-
-  const [activeView, setActiveView] = useState<ThemeCustomizerView>('customizer')
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [themeToDelete, setThemeToDelete] = useState<Theme | null>(null)
@@ -121,7 +116,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ')
 
-  const editorPanel = (layout: 'workspace' | 'split') => (
+  const editorPanel = (layout: 'workspace' | 'split' | 'mobile') => (
     <ThemeEditorPanel
       customizer={customizer}
       themes={themes}
@@ -135,19 +130,21 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
   )
 
   const previewPanel = ({
+    containerClassName,
     previewClassName,
     playerClassName,
   }: {
+    containerClassName?: string
     previewClassName?: string
     playerClassName?: string
   }) => (
-    <div className="flex flex-col gap-4">
+    <div className={cn('flex flex-col gap-4', containerClassName)}>
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
         <span className="text-sm text-muted-foreground truncate">{currentThemeLabel}</span>
       </div>
       <div className={cn('rounded-xl border bg-muted/30 p-6 sm:p-8', previewClassName)}>
-        <div className="flex min-h-full items-start justify-center">
+        <div className="flex min-h-full items-start justify-center overflow-hidden">
           <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
         </div>
       </div>
@@ -156,37 +153,25 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
 
   return (
     <div className={cn('flex w-full flex-col gap-6', className)}>
-      <div className="2xl:hidden w-full">
-        <Tabs
-          value={activeView}
-          onValueChange={(value) => setActiveView(value as ThemeCustomizerView)}
-          className="w-full"
-        >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="customizer" className="gap-2">
-              <Palette className="size-4" />
-              <span className="hidden sm:inline">{t('customize')}</span>
-            </TabsTrigger>
-            <TabsTrigger value="preview" className="gap-2">
-              <Smartphone className="size-4" />
-              <span className="hidden sm:inline">{t('preview')}</span>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="customizer" className="mt-4">
-            <div className="mx-auto w-full max-w-5xl">{editorPanel('workspace')}</div>
-          </TabsContent>
-          <TabsContent value="preview" className="mt-4">
-            <div className="mx-auto w-full max-w-6xl">
-              {previewPanel({
-                previewClassName: 'min-h-[calc(100dvh-12rem)]',
-                playerClassName: 'max-w-[28rem]',
-              })}
-            </div>
-          </TabsContent>
-        </Tabs>
+      <div className="flex min-h-[calc(100dvh-12rem)] flex-col gap-4 xl:hidden">
+        {previewPanel({
+          containerClassName: 'min-h-0 flex-1',
+          previewClassName:
+            'flex-1 min-h-[clamp(16rem,42dvh,22rem)] px-4 py-4 md:min-h-[clamp(20rem,48dvh,30rem)] md:px-6 md:py-6',
+          playerClassName: 'max-w-[19rem] md:max-w-[24rem]',
+        })}
+        <ThemeCompactControls
+          customizer={customizer}
+          themes={themes}
+          isLoading={isLoading}
+          onSelectTheme={handleSelectTheme}
+          onStartFromPreset={handleStartFromPreset}
+          onDeleteTheme={handleOpenDeleteDialog}
+          onSave={() => setSaveDialogOpen(true)}
+        />
       </div>
 
-      <div className="hidden w-full gap-6 2xl:grid 2xl:grid-cols-[minmax(0,1.3fr)_minmax(440px,0.9fr)] 2xl:items-start">
+      <div className="hidden w-full gap-8 xl:grid xl:grid-cols-[minmax(0,1.45fr)_minmax(440px,0.9fr)] xl:items-start">
         {previewPanel({ playerClassName: 'max-w-md' })}
         {editorPanel('split')}
       </div>

@@ -21,7 +21,7 @@ export interface ThemeEditorPanelProps {
   onStartFromPreset: (preset: ThemePreset) => void
   onDeleteTheme: (theme: Theme) => void
   onSave: () => void
-  layout?: 'workspace' | 'split'
+  layout?: 'workspace' | 'split' | 'mobile'
   className?: string
 }
 
@@ -48,16 +48,24 @@ export function ThemeEditorPanel({
   }
 
   const isWorkspaceLayout = layout === 'workspace'
+  const isMobileLayout = layout === 'mobile'
 
   return (
-    <Card className={cn('flex flex-col', isWorkspaceLayout && 'shadow-sm', className)}>
-      <CardHeader className={cn('space-y-4 border-b', isWorkspaceLayout ? 'px-6 py-5 sm:px-8' : 'px-6 py-4')}>
+    <Card className={cn('flex min-h-0 flex-col', (isWorkspaceLayout || isMobileLayout) && 'shadow-sm', className)}>
+      <CardHeader
+        className={cn(
+          'space-y-4 border-b',
+          isMobileLayout ? 'px-4 py-4' : isWorkspaceLayout ? 'px-6 py-5 sm:px-8' : 'px-6 py-4',
+        )}
+      >
         <div
           className={cn(
             'flex gap-3',
-            isWorkspaceLayout
-              ? 'flex-col sm:flex-row sm:items-start sm:justify-between'
-              : 'items-center justify-between',
+            isMobileLayout
+              ? 'flex-col'
+              : isWorkspaceLayout
+                ? 'flex-col sm:flex-row sm:items-start sm:justify-between'
+                : 'items-center justify-between',
           )}
         >
           <div className="flex-1 min-w-0">
@@ -68,7 +76,7 @@ export function ThemeEditorPanel({
               </p>
             )}
           </div>
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className={cn('flex items-center gap-2 self-start', !isMobileLayout && 'sm:self-auto')}>
             <Button variant="ghost" size="sm" onClick={handleReset} className="gap-1.5">
               <RotateCcw className="size-3.5" />
               <span>{t('reset')}</span>
@@ -85,8 +93,13 @@ export function ThemeEditorPanel({
         <ThemePresetChips value={config.basePreset} onSelect={onStartFromPreset} />
       </CardHeader>
 
-      <CardContent className="p-0">
-        <div className={cn('space-y-5 pb-6', isWorkspaceLayout ? 'px-6 pt-5 sm:px-8' : 'px-6 pt-4')}>
+      <CardContent className={cn('min-h-0 flex-1 p-0', isMobileLayout && 'overflow-hidden')}>
+        <div
+          className={cn(
+            'space-y-5 pb-6',
+            isMobileLayout ? 'h-full overflow-y-auto px-4 pt-4' : isWorkspaceLayout ? 'px-6 pt-5 sm:px-8' : 'px-6 pt-4',
+          )}
+        >
           <SavedThemesList
             themes={themes}
             isLoading={isLoading}

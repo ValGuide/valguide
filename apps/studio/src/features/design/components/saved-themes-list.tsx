@@ -2,7 +2,6 @@ import type { Theme } from '@valguide/core/features/themes/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/ui/components/collapsible'
-import { Skeleton } from '@valguide/ui/components/skeleton'
 import { cn } from '@valguide/ui/lib/utils'
 import { ChevronDown, Trash2 } from 'lucide-react'
 import { useState } from 'react'
@@ -27,17 +26,7 @@ export function SavedThemesList({
   const t = useTranslations('studio.themeCustomizer')
   const [isOpen, setIsOpen] = useState(true)
 
-  if (isLoading) {
-    return (
-      <div className={cn('space-y-2', className)}>
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-      </div>
-    )
-  }
-
-  if (themes.length === 0) {
+  if (isLoading || themes.length === 0) {
     return null
   }
 

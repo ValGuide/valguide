@@ -152,6 +152,12 @@
         "unsavedChanges": "Ungespeicherte Änderungen",
         "saveTheme": "Design speichern"
       },
+      "compactControls": {
+        "themes": "Designs",
+        "colors": "Farben",
+        "ready": "Vorschau bleibt sichtbar",
+        "colorSummary": "Schneller Überblick"
+      },
       "toast": {
         "created": "Design erfolgreich erstellt",
         "updated": "Design erfolgreich aktualisiert",

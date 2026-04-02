@@ -152,6 +152,12 @@
         "unsavedChanges": "Unsaved changes",
         "saveTheme": "Save Theme"
       },
+      "compactControls": {
+        "themes": "Themes",
+        "colors": "Colors",
+        "ready": "Preview stays visible",
+        "colorSummary": "Quick overview"
+      },
       "toast": {
         "created": "Theme created successfully",
         "updated": "Theme updated successfully",

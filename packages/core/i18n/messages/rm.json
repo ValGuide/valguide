@@ -152,6 +152,12 @@
         "unsavedChanges": "Midadas betg memorisadas",
         "saveTheme": "Memorisar design"
       },
+      "compactControls": {
+        "themes": "Designs",
+        "colors": "Colurs",
+        "ready": "La prevista resta visibla",
+        "colorSummary": "Survista curta"
+      },
       "toast": {
         "created": "Design creà cun success",
         "updated": "Design actualisà cun success",
