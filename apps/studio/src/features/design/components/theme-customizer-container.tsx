@@ -153,7 +153,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
 
   return (
     <div className={cn('flex w-full flex-col gap-6', className)}>
-      <div className="flex min-h-[calc(100dvh-12rem)] flex-col gap-4 xl:hidden">
+      <div className="flex min-h-[calc(100dvh-12rem)] flex-col gap-4 min-[1180px]:hidden">
         {previewPanel({
           containerClassName: 'min-h-0 flex-1',
           previewClassName:
@@ -171,7 +171,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
         />
       </div>
 
-      <div className="hidden w-full gap-8 xl:grid xl:grid-cols-[minmax(0,1.45fr)_minmax(440px,0.9fr)] xl:items-start">
+      <div className="hidden w-full gap-6 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.9fr)] min-[1180px]:items-start xl:gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.92fr)]">
         {previewPanel({ playerClassName: 'max-w-md' })}
         {editorPanel('split')}
       </div>

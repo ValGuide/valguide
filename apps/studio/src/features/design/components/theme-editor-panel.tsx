@@ -65,18 +65,18 @@ export function ThemeEditorPanel({
               ? 'flex-col'
               : isWorkspaceLayout
                 ? 'flex-col sm:flex-row sm:items-start sm:justify-between'
-                : 'items-center justify-between',
+                : 'flex-col items-start 2xl:flex-row 2xl:items-center 2xl:justify-between',
           )}
         >
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg">{t('title')}</CardTitle>
+          <div className="min-w-0 flex-1">
+            <CardTitle className="text-lg whitespace-nowrap">{t('title')}</CardTitle>
             {config.name && (
               <p className="text-sm text-muted-foreground truncate mt-0.5">
                 {t('editor.editing', { name: config.name })}
               </p>
             )}
           </div>
-          <div className={cn('flex items-center gap-2 self-start', !isMobileLayout && 'sm:self-auto')}>
+          <div className={cn('flex shrink-0 items-center gap-2 self-start', !isMobileLayout && '2xl:self-auto')}>
             <Button variant="ghost" size="sm" onClick={handleReset} className="gap-1.5">
               <RotateCcw className="size-3.5" />
               <span>{t('reset')}</span>
