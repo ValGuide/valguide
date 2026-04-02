@@ -24,7 +24,16 @@ import { AssetsUploadSurface } from './assets-upload-surface'
 
 const MAX_CONCURRENT_UPLOADS = 2
 const AUTO_COLLAPSE_DELAY_MS = 2400
-const GLOBAL_UPLOAD_ALLOWED_ROOT_PATHS = new Set(['/analytics', '/assets', '/design', '/settings', '/stops', '/tours'])
+const GLOBAL_UPLOAD_ALLOWED_ROOT_PATHS = new Set([
+  '/analytics',
+  '/assets',
+  '/brand/qr',
+  '/brand/theme',
+  '/design',
+  '/settings',
+  '/stops',
+  '/tours',
+])
 
 function isTourOverviewPath(pathname: string) {
   return /^\/tours\/[^/]+\/?$/.test(pathname)

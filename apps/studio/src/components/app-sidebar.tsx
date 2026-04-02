@@ -114,10 +114,6 @@ export function AppSidebar({
   const libraryItems = createNavItems([{ title: t('assets'), path: '/assets', icon: Image }])
 
   const workspaceItem = createNavItems([{ title: t('workspace'), path: '/settings', icon: Settings2 }])[0]
-  const brandKitSection =
-    pathnameWithoutLocale === '/design' && typeof location.search.section === 'string'
-      ? location.search.section
-      : 'theme'
   const sidebarToggleLabel = isMobile || state === 'expanded' ? tSidebar('collapse') : tSidebar('expand')
 
   return (
@@ -242,29 +238,16 @@ export function AppSidebar({
             <SidebarGroupLabel className="px-2.5 uppercase">{t('brandKit')}</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  tooltip={t('theme')}
-                  isActive={pathnameWithoutLocale === '/design' && brandKitSection !== 'qr'}
-                >
-                  <Link
-                    to="/design"
-                    search={{ section: 'theme' }}
-                    preload="intent"
-                    onClick={() => setOpenMobile(false)}
-                  >
+                <SidebarMenuButton asChild tooltip={t('theme')} isActive={pathnameWithoutLocale === '/brand/theme'}>
+                  <Link to="/brand/theme" preload="intent" onClick={() => setOpenMobile(false)}>
                     <Palette />
                     <span>{t('theme')}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  tooltip={t('qrCode')}
-                  isActive={pathnameWithoutLocale === '/design' && brandKitSection === 'qr'}
-                >
-                  <Link to="/design" search={{ section: 'qr' }} preload="intent" onClick={() => setOpenMobile(false)}>
+                <SidebarMenuButton asChild tooltip={t('qrCode')} isActive={pathnameWithoutLocale === '/brand/qr'}>
+                  <Link to="/brand/qr" preload="intent" onClick={() => setOpenMobile(false)}>
                     <QrCode />
                     <span>{t('qrCode')}</span>
                   </Link>

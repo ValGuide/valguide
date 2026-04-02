@@ -98,7 +98,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const DesktopTourBranding: Story = {
+export const TourBranding: Story = {
   args: {},
   render: () => (
     <QrManagementPanelStory
@@ -110,7 +110,7 @@ export const DesktopTourBranding: Story = {
   ),
 }
 
-export const DesktopWithUnsavedChanges: Story = {
+export const WithUnsavedChanges: Story = {
   args: {},
   render: () => (
     <QrManagementPanelStory
@@ -124,27 +124,6 @@ export const DesktopWithUnsavedChanges: Story = {
         stylePreset: 'soft',
         quietZone: 20,
         includeLogo: false,
-      }}
-    />
-  ),
-}
-
-export const MobileFullHeight: Story = {
-  args: {},
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-  },
-  render: () => (
-    <QrManagementPanelStory
-      title="Tour-QR-Verteilung"
-      description="Verwalten Sie den kanonischen QR-Code für diese Tour und überschreiben Sie das Branding nur für diese Tour."
-      source="tour"
-      inheritedSourceLabel="Workspace-Standard"
-      initialOverride={{
-        fgColor: '#111827',
-        bgColor: '#FFFFFF',
       }}
     />
   ),

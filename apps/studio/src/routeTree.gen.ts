@@ -27,6 +27,7 @@ import { Route as MainSettingsRouteImport } from './routes/_main/settings'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
 import { Route as MainDesignRouteImport } from './routes/_main/design'
 import { Route as MainDashboardRouteImport } from './routes/_main/dashboard'
+import { Route as MainBrandRouteImport } from './routes/_main/brand'
 import { Route as MainAssetsRouteImport } from './routes/_main/assets'
 import { Route as MainArchivedRouteImport } from './routes/_main/archived'
 import { Route as MainAnalyticsRouteImport } from './routes/_main/analytics'
@@ -37,6 +38,8 @@ import { Route as MainStopsIndexRouteImport } from './routes/_main/stops.index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 import { Route as MainToursNanoIdRouteImport } from './routes/_main/tours.$nanoId'
 import { Route as MainStopsNanoIdRouteImport } from './routes/_main/stops.$nanoId'
+import { Route as MainBrandThemeRouteImport } from './routes/_main/brand.theme'
+import { Route as MainBrandQrRouteImport } from './routes/_main/brand.qr'
 import { Route as MainToursNanoIdIndexRouteImport } from './routes/_main/tours.$nanoId.index'
 import { Route as MainStopsNanoIdIndexRouteImport } from './routes/_main/stops.$nanoId.index'
 import { Route as MainToursNanoIdEditRouteImport } from './routes/_main/tours.$nanoId.edit'
@@ -131,6 +134,11 @@ const MainDashboardRoute = MainDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => MainRoute,
 } as any)
+const MainBrandRoute = MainBrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainAssetsRoute = MainAssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
@@ -181,6 +189,16 @@ const MainStopsNanoIdRoute = MainStopsNanoIdRouteImport.update({
   path: '/stops/$nanoId',
   getParentRoute: () => MainRoute,
 } as any)
+const MainBrandThemeRoute = MainBrandThemeRouteImport.update({
+  id: '/theme',
+  path: '/theme',
+  getParentRoute: () => MainBrandRoute,
+} as any)
+const MainBrandQrRoute = MainBrandQrRouteImport.update({
+  id: '/qr',
+  path: '/qr',
+  getParentRoute: () => MainBrandRoute,
+} as any)
 const MainToursNanoIdIndexRoute = MainToursNanoIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -222,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof MainAnalyticsRoute
   '/archived': typeof MainArchivedRoute
   '/assets': typeof MainAssetsRoute
+  '/brand': typeof MainBrandRouteWithChildren
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
   '/profile': typeof MainProfileRoute
@@ -230,6 +249,8 @@ export interface FileRoutesByFullPath {
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/auth/error': typeof AuthErrorRoute
+  '/brand/qr': typeof MainBrandQrRoute
+  '/brand/theme': typeof MainBrandThemeRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -255,6 +276,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof MainAnalyticsRoute
   '/archived': typeof MainArchivedRoute
   '/assets': typeof MainAssetsRoute
+  '/brand': typeof MainBrandRouteWithChildren
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
   '/profile': typeof MainProfileRoute
@@ -263,6 +285,8 @@ export interface FileRoutesByTo {
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/auth/error': typeof AuthErrorRoute
+  '/brand/qr': typeof MainBrandQrRoute
+  '/brand/theme': typeof MainBrandThemeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops': typeof MainStopsIndexRoute
   '/tours': typeof MainToursIndexRoute
@@ -289,6 +313,7 @@ export interface FileRoutesById {
   '/_main/analytics': typeof MainAnalyticsRoute
   '/_main/archived': typeof MainArchivedRoute
   '/_main/assets': typeof MainAssetsRoute
+  '/_main/brand': typeof MainBrandRouteWithChildren
   '/_main/dashboard': typeof MainDashboardRoute
   '/_main/design': typeof MainDesignRoute
   '/_main/profile': typeof MainProfileRoute
@@ -297,6 +322,8 @@ export interface FileRoutesById {
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/auth/error': typeof AuthErrorRoute
+  '/_main/brand/qr': typeof MainBrandQrRoute
+  '/_main/brand/theme': typeof MainBrandThemeRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -324,6 +351,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/archived'
     | '/assets'
+    | '/brand'
     | '/dashboard'
     | '/design'
     | '/profile'
@@ -332,6 +360,8 @@ export interface FileRouteTypes {
     | '/api/upload'
     | '/api/upload-part'
     | '/auth/error'
+    | '/brand/qr'
+    | '/brand/theme'
     | '/stops/$nanoId'
     | '/tours/$nanoId'
     | '/api/auth/$'
@@ -357,6 +387,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/archived'
     | '/assets'
+    | '/brand'
     | '/dashboard'
     | '/design'
     | '/profile'
@@ -365,6 +396,8 @@ export interface FileRouteTypes {
     | '/api/upload'
     | '/api/upload-part'
     | '/auth/error'
+    | '/brand/qr'
+    | '/brand/theme'
     | '/api/auth/$'
     | '/stops'
     | '/tours'
@@ -390,6 +423,7 @@ export interface FileRouteTypes {
     | '/_main/analytics'
     | '/_main/archived'
     | '/_main/assets'
+    | '/_main/brand'
     | '/_main/dashboard'
     | '/_main/design'
     | '/_main/profile'
@@ -398,6 +432,8 @@ export interface FileRouteTypes {
     | '/api/upload'
     | '/api/upload-part'
     | '/auth/error'
+    | '/_main/brand/qr'
+    | '/_main/brand/theme'
     | '/_main/stops/$nanoId'
     | '/_main/tours/$nanoId'
     | '/api/auth/$'
@@ -555,6 +591,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainDashboardRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/brand': {
+      id: '/_main/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof MainBrandRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/assets': {
       id: '/_main/assets'
       path: '/assets'
@@ -625,6 +668,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainStopsNanoIdRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/brand/theme': {
+      id: '/_main/brand/theme'
+      path: '/theme'
+      fullPath: '/brand/theme'
+      preLoaderRoute: typeof MainBrandThemeRouteImport
+      parentRoute: typeof MainBrandRoute
+    }
+    '/_main/brand/qr': {
+      id: '/_main/brand/qr'
+      path: '/qr'
+      fullPath: '/brand/qr'
+      preLoaderRoute: typeof MainBrandQrRouteImport
+      parentRoute: typeof MainBrandRoute
+    }
     '/_main/tours/$nanoId/': {
       id: '/_main/tours/$nanoId/'
       path: '/'
@@ -675,6 +732,20 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface MainBrandRouteChildren {
+  MainBrandQrRoute: typeof MainBrandQrRoute
+  MainBrandThemeRoute: typeof MainBrandThemeRoute
+}
+
+const MainBrandRouteChildren: MainBrandRouteChildren = {
+  MainBrandQrRoute: MainBrandQrRoute,
+  MainBrandThemeRoute: MainBrandThemeRoute,
+}
+
+const MainBrandRouteWithChildren = MainBrandRoute._addFileChildren(
+  MainBrandRouteChildren,
+)
+
 interface MainStopsNanoIdRouteChildren {
   MainStopsNanoIdEditRoute: typeof MainStopsNanoIdEditRoute
   MainStopsNanoIdIndexRoute: typeof MainStopsNanoIdIndexRoute
@@ -709,6 +780,7 @@ interface MainRouteChildren {
   MainAnalyticsRoute: typeof MainAnalyticsRoute
   MainArchivedRoute: typeof MainArchivedRoute
   MainAssetsRoute: typeof MainAssetsRoute
+  MainBrandRoute: typeof MainBrandRouteWithChildren
   MainDashboardRoute: typeof MainDashboardRoute
   MainDesignRoute: typeof MainDesignRoute
   MainProfileRoute: typeof MainProfileRoute
@@ -724,6 +796,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainAnalyticsRoute: MainAnalyticsRoute,
   MainArchivedRoute: MainArchivedRoute,
   MainAssetsRoute: MainAssetsRoute,
+  MainBrandRoute: MainBrandRouteWithChildren,
   MainDashboardRoute: MainDashboardRoute,
   MainDesignRoute: MainDesignRoute,
   MainProfileRoute: MainProfileRoute,

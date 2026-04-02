@@ -81,7 +81,7 @@ export function QrBrandingFields({
         </p>
         {source !== 'organization' && (
           <Link
-            to="/design"
+            to="/brand/qr"
             className="inline-flex text-sm font-medium text-primary underline-offset-4 transition-colors hover:underline"
           >
             {t('openBrandKit')}

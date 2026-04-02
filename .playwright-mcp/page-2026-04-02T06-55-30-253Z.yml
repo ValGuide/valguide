@@ -1,0 +1,47 @@
+- dialog "Select image" [ref=e4]:
+  - heading "Select image" [level=2] [ref=e6]
+  - generic [ref=e7]:
+    - tablist [ref=e8]:
+      - tab "Library" [active] [selected] [ref=e9] [cursor=pointer]
+      - tab "Upload" [ref=e10] [cursor=pointer]
+    - tabpanel "Library" [ref=e11]:
+      - generic [ref=e12]:
+        - img [ref=e13]
+        - textbox "Search by filename..." [ref=e16]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button "museum-entrance.jpg museum-entrance.jpg 1.95 MB about 1 year ago" [ref=e24] [cursor=pointer]:
+            - checkbox [ref=e26]
+            - img "museum-entrance.jpg" [ref=e29]
+            - generic [ref=e30]:
+              - heading "museum-entrance.jpg" [level=4] [ref=e31]
+              - generic [ref=e33]: 1.95 MB
+              - generic [ref=e34]: about 1 year ago
+          - button "artifact-display.jpg artifact-display.jpg 3 MB about 1 year ago" [ref=e36] [cursor=pointer]:
+            - checkbox [ref=e38]
+            - img "artifact-display.jpg" [ref=e41]
+            - generic [ref=e42]:
+              - heading "artifact-display.jpg" [level=4] [ref=e43]
+              - generic [ref=e45]: 3 MB
+              - generic [ref=e46]: about 1 year ago
+        - generic [ref=e47]:
+          - button "sculpture-closeup.jpg sculpture-closeup.jpg 4 MB about 1 year ago" [ref=e49] [cursor=pointer]:
+            - checkbox [ref=e51]
+            - img "sculpture-closeup.jpg" [ref=e54]
+            - generic [ref=e55]:
+              - heading "sculpture-closeup.jpg" [level=4] [ref=e56]
+              - generic [ref=e58]: 4 MB
+              - generic [ref=e59]: about 1 year ago
+          - button "gallery-view.jpg gallery-view.jpg 2.38 MB about 1 year ago" [ref=e61] [cursor=pointer]:
+            - checkbox [ref=e63]
+            - img "gallery-view.jpg" [ref=e66]
+            - generic [ref=e67]:
+              - heading "gallery-view.jpg" [level=4] [ref=e68]
+              - generic [ref=e70]: 2.38 MB
+              - generic [ref=e71]: about 1 year ago
+  - generic [ref=e72]:
+    - button "Cancel" [ref=e73] [cursor=pointer]
+    - button "Select" [disabled]
+  - button "Close" [ref=e74] [cursor=pointer]:
+    - img
+    - generic [ref=e75]: Close
