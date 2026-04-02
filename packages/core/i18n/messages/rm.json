@@ -178,7 +178,7 @@
       "brandingTitle": "QR branding",
       "brandingStatusTitle": "Branding status",
       "brandingStatusDescription": "This QR appearance shows the branding inheritance currently in effect for this QR code.",
-      "orgBrandingDescription": "Define the default QR appearance for this workspace. These defaults live in Brand Kit and reuse the workspace logo when enabled.",
+      "orgBrandingDescription": "These defaults apply to tour and stop QR codes and reuse the workspace logo when enabled.",
       "scopeBrandingDescription": "Override the QR appearance inherited from {source}.",
       "foregroundColor": "Foreground color",
       "backgroundColor": "Background color",
@@ -197,9 +197,6 @@
       "saveBranding": "Save branding",
       "resetToDefault": "Reset",
       "resetToInherited": "Reset",
-      "workspaceTitle": "QR Branding",
-      "workspaceDescription": "Set the default QR look for tours and stops alongside your theme in Brand Kit.",
-      "workspaceNote": "Tour and stop QR codes inherit these defaults unless you override them on a specific item.",
       "openBrandKit": "Open Brand Kit",
       "sourceDefault": "System default",
       "sourceOrganization": "Workspace default",
@@ -960,7 +957,7 @@
       "design": {
         "description": "Persunalisar l'apparientscha da vossas turas e da la signalisaziun QR.",
         "themeDescription": "Administrar il design visual da vossas turas.",
-        "qrDescription": "Administrar il branding QR standard per quest workspace."
+        "qrDescription": "Branding standard per codes QR en quest workspace."
       },
       "analytics": {
         "description": "Vesair ed analisar las metrickas da prestaziun da vossas turas."

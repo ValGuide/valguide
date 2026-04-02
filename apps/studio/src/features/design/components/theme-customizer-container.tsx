@@ -2,7 +2,6 @@ import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
-import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { cn } from '@valguide/ui/lib/utils'
 import { Palette, Smartphone } from 'lucide-react'
@@ -142,21 +141,21 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
     previewClassName?: string
     playerClassName?: string
   }) => (
-    <div className="flex flex-col min-h-0">
-      <div className="flex items-center justify-between mb-4 gap-3">
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
         <span className="text-sm text-muted-foreground truncate">{currentThemeLabel}</span>
       </div>
-      <ScrollArea className={cn('flex-1 rounded-xl border bg-muted/30 p-6 sm:p-8', previewClassName)}>
+      <div className={cn('rounded-xl border bg-muted/30 p-6 sm:p-8', previewClassName)}>
         <div className="flex min-h-full items-start justify-center">
           <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
         </div>
-      </ScrollArea>
+      </div>
     </div>
   )
 
   return (
-    <div className={cn('flex flex-col gap-6 w-full h-full', className)}>
+    <div className={cn('flex w-full flex-col gap-6', className)}>
       <div className="2xl:hidden w-full">
         <Tabs
           value={activeView}
@@ -179,7 +178,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
           <TabsContent value="preview" className="mt-4">
             <div className="mx-auto w-full max-w-6xl">
               {previewPanel({
-                previewClassName: 'h-[calc(100vh-12rem)]',
+                previewClassName: 'min-h-[calc(100dvh-12rem)]',
                 playerClassName: 'max-w-[28rem]',
               })}
             </div>
@@ -187,7 +186,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
         </Tabs>
       </div>
 
-      <div className="hidden 2xl:grid 2xl:grid-cols-[minmax(0,1.3fr)_minmax(440px,0.9fr)] gap-6 w-full flex-1 min-h-0">
+      <div className="hidden w-full gap-6 2xl:grid 2xl:grid-cols-[minmax(0,1.3fr)_minmax(440px,0.9fr)] 2xl:items-start">
         {previewPanel({ playerClassName: 'max-w-md' })}
         {editorPanel('split')}
       </div>

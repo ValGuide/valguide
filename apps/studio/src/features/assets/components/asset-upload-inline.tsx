@@ -315,7 +315,7 @@ export function AssetUploadInline({
   const activeUploadIndex = uploadingItem ? queue.filter((item) => item.status === 'complete').length + 1 : 0
 
   return (
-    <div className={cn('flex h-full min-h-0 flex-col gap-4', className)}>
+    <div className={cn('flex h-full min-h-0 flex-1 flex-col gap-4', className)}>
       {/* biome-ignore lint/a11y/useSemanticElements: button cannot support drag/drop events properly */}
       <div
         role="button"
@@ -328,7 +328,7 @@ export function AssetUploadInline({
           }
         }}
         className={cn(
-          'relative flex min-h-0 flex-1 items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-all sm:p-12',
+          'relative flex min-h-[12rem] flex-1 items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-all sm:min-h-0 sm:p-12',
           'border-border hover:border-primary/50 hover:bg-accent/50',
           uploading && 'pointer-events-none opacity-60',
         )}

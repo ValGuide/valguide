@@ -3,7 +3,6 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { Separator } from '@valguide/ui/components/separator'
 import { cn } from '@valguide/ui/lib/utils'
 import { RotateCcw, Save } from 'lucide-react'
@@ -51,7 +50,7 @@ export function ThemeEditorPanel({
   const isWorkspaceLayout = layout === 'workspace'
 
   return (
-    <Card className={cn('flex h-full flex-col', isWorkspaceLayout && 'shadow-sm', className)}>
+    <Card className={cn('flex flex-col', isWorkspaceLayout && 'shadow-sm', className)}>
       <CardHeader className={cn('space-y-4 border-b', isWorkspaceLayout ? 'px-6 py-5 sm:px-8' : 'px-6 py-4')}>
         <div
           className={cn(
@@ -86,48 +85,46 @@ export function ThemeEditorPanel({
         <ThemePresetChips value={config.basePreset} onSelect={onStartFromPreset} />
       </CardHeader>
 
-      <CardContent className="flex-1 p-0 min-h-0">
-        <ScrollArea className="h-full">
-          <div className={cn('space-y-5 pb-6', isWorkspaceLayout ? 'px-6 pt-5 sm:px-8' : 'px-6 pt-4')}>
-            <SavedThemesList
-              themes={themes}
-              isLoading={isLoading}
-              selectedThemeId={config.id}
-              onSelectTheme={onSelectTheme}
-              onDeleteTheme={onDeleteTheme}
+      <CardContent className="p-0">
+        <div className={cn('space-y-5 pb-6', isWorkspaceLayout ? 'px-6 pt-5 sm:px-8' : 'px-6 pt-4')}>
+          <SavedThemesList
+            themes={themes}
+            isLoading={isLoading}
+            selectedThemeId={config.id}
+            onSelectTheme={onSelectTheme}
+            onDeleteTheme={onDeleteTheme}
+          />
+
+          {themes.length > 0 && <Separator />}
+
+          <RadiusSelector value={config.radius} onValueChange={setRadius} />
+
+          <Separator />
+
+          <div className="space-y-2">
+            <ColorGroup
+              title={t('primaryColors')}
+              colorKeys={primaryColorKeys}
+              colors={config.colors}
+              onColorChange={handleColorChange}
+              defaultOpen
             />
 
-            {themes.length > 0 && <Separator />}
+            <ColorGroup
+              title={t('backgroundColors')}
+              colorKeys={backgroundColorKeys}
+              colors={config.colors}
+              onColorChange={handleColorChange}
+            />
 
-            <RadiusSelector value={config.radius} onValueChange={setRadius} />
-
-            <Separator />
-
-            <div className="space-y-2">
-              <ColorGroup
-                title={t('primaryColors')}
-                colorKeys={primaryColorKeys}
-                colors={config.colors}
-                onColorChange={handleColorChange}
-                defaultOpen
-              />
-
-              <ColorGroup
-                title={t('backgroundColors')}
-                colorKeys={backgroundColorKeys}
-                colors={config.colors}
-                onColorChange={handleColorChange}
-              />
-
-              <ColorGroup
-                title={t('otherColors')}
-                colorKeys={otherColorKeys}
-                colors={config.colors}
-                onColorChange={handleColorChange}
-              />
-            </div>
+            <ColorGroup
+              title={t('otherColors')}
+              colorKeys={otherColorKeys}
+              colors={config.colors}
+              onColorChange={handleColorChange}
+            />
           </div>
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   )

@@ -179,8 +179,8 @@ export function AssetPickerModal({
         role="button"
         tabIndex={0}
         key={asset.id}
-        className={`relative cursor-pointer rounded-2xl border-2 text-left transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:shadow-md ${
-          isSelected ? 'border-primary shadow-sm ring-1 ring-primary/20' : 'border-border'
+        className={`relative cursor-pointer rounded-2xl border-2 bg-background text-left shadow-sm shadow-black/5 transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:shadow-md ${
+          isSelected ? 'border-primary ring-1 ring-primary/20' : 'border-transparent'
         }`}
         onClick={() => handleToggleAsset(asset.id)}
         onKeyDown={(e) => {
@@ -244,7 +244,7 @@ export function AssetPickerModal({
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="sheet">
-      <ResponsiveDialogContent className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden px-3 pb-3 pt-2 sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl sm:rounded-lg sm:border sm:p-5 lg:max-w-4xl lg:p-6">
+      <ResponsiveDialogContent className="flex h-full min-h-0 flex-col overflow-hidden px-4 pb-3 pt-2 sm:h-[min(90vh,44rem)] sm:max-h-[90vh] sm:w-full sm:max-w-3xl sm:rounded-lg sm:border sm:p-5 lg:max-w-4xl lg:p-6">
         <ResponsiveDialogHeader className="pr-8 pb-1 sm:pb-0">
           <ResponsiveDialogTitle>
             {locale
@@ -256,9 +256,9 @@ export function AssetPickerModal({
         <Tabs
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as 'library' | 'upload')}
-          className="flex-1 flex flex-col min-h-0"
+          className="min-h-0 flex-1"
         >
-          <TabsList className="grid h-11 w-full grid-cols-2 rounded-xl sm:h-12">
+          <TabsList className="grid h-11 w-full shrink-0 grid-cols-2 rounded-xl sm:h-12">
             <TabsTrigger value="library" className="rounded-lg text-sm font-medium">
               {t('tabs.library')}
             </TabsTrigger>
@@ -267,7 +267,7 @@ export function AssetPickerModal({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="library" className="mt-3 flex min-h-0 flex-1 flex-col sm:mt-4">
+          <TabsContent value="library" className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden sm:mt-4">
             <div className="relative mb-3 shrink-0 sm:mb-4">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -314,7 +314,7 @@ export function AssetPickerModal({
             </div>
           </TabsContent>
 
-          <TabsContent value="upload" className="mt-4 flex min-h-0 flex-1 flex-col">
+          <TabsContent value="upload" className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden sm:mt-4">
             {UploadInline && (
               <div className="flex min-h-0 flex-1 flex-col">
                 <UploadInline

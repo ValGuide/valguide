@@ -13,7 +13,6 @@ import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useEffect, useState } from 'react'
 import { sanitizeQrOverrideForCurrentUi } from '../branding'
 import { orgQrBrandingQueryOptions, qrQueryKeys } from '../query-options'
-import { getQrBrandingSourceLabel } from '../source-label'
 import { QrBrandingActions, QrBrandingFields } from './qr-branding-fields'
 import { QrPreviewCard } from './qr-preview-card'
 
@@ -35,7 +34,6 @@ export function WorkspaceQrBrandingSection() {
   const previewBranding = isQrBrandingOverrideEmpty(draftOverride)
     ? data.effectiveBranding
     : applyQrOverrideToBranding(data.inheritedBranding, draftOverride, 'organization')
-  const sourceLabel = getQrBrandingSourceLabel(previewBranding.source, (key) => t(key))
 
   const handleSave = async () => {
     setIsSaving(true)
@@ -52,12 +50,14 @@ export function WorkspaceQrBrandingSection() {
 
   return (
     <QrPreviewCard
-      title={t('workspaceTitle')}
-      description={t('workspaceDescription')}
       shortUrl={`${getDefaultLinksBaseUrl(clientEnv.VITE_ENV)}/s/preview`}
       branding={previewBranding}
-      sourceLabel={sourceLabel}
-      note={t('workspaceNote')}
+      showHeader={false}
+      showDownloads={false}
+      showShortUrl={false}
+      showActions={false}
+      showSourceLabel={false}
+      showNote={false}
     >
       <QrBrandingFields
         source="organization"

@@ -126,12 +126,17 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
   const isEyeDropperAvailable = typeof window !== 'undefined' && 'EyeDropper' in window
 
   return (
-    <div className={cn('flex items-center gap-2', className)}>
+    <div
+      className={cn(
+        'flex items-center gap-3 rounded-lg border border-border/70 bg-muted/20 px-3 py-2 transition-colors hover:bg-muted/35',
+        className,
+      )}
+    >
       <Popover>
         <PopoverTrigger asChild>
           <button
             type="button"
-            className="size-8 rounded-md border border-input shadow-xs shrink-0 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="size-9 shrink-0 rounded-md border border-input shadow-xs transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             style={{ backgroundColor: hexInputValue }}
             aria-label={t('colorPicker.pickColor', { label })}
           />
@@ -245,7 +250,8 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
         </PopoverContent>
       </Popover>
       <div className="flex-1 min-w-0">
-        <span className="text-xs text-muted-foreground truncate block">{label}</span>
+        <span className="block truncate text-xs font-medium text-foreground">{label}</span>
+        <span className="block truncate font-mono text-[11px] text-muted-foreground">{hexInputValue}</span>
       </div>
     </div>
   )

@@ -32,12 +32,10 @@ function DesignPage() {
   const description = isQrSection ? t('pages.design.qrDescription') : t('pages.design.themeDescription')
 
   return (
-    <main className="flex flex-col flex-1 min-h-0 p-4 pt-0">
-      <div className="mx-auto flex w-full max-w-5xl flex-1 min-h-0 flex-col space-y-6">
+    <main className="flex flex-1 flex-col gap-6 p-4 pt-0">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 pb-6">
         <ListPageHeader title={title} description={description} />
-        <div className="flex-1 min-h-0 overflow-y-auto pb-6">
-          {isQrSection ? <WorkspaceQrBrandingSection /> : <ThemeCustomizerContainer />}
-        </div>
+        {isQrSection ? <WorkspaceQrBrandingSection /> : <ThemeCustomizerContainer />}
       </div>
     </main>
   )

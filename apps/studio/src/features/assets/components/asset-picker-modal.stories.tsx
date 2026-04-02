@@ -5,7 +5,7 @@ import { AssetPickerModal, type UploadInlineComponentProps } from './asset-picke
 
 function MockUploadInline({ allowedTypes, locale }: UploadInlineComponentProps) {
   return (
-    <div className="flex h-48 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50">
+    <div className="flex min-h-0 flex-1 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50">
       <p className="text-muted-foreground">
         Upload component (mocked) - Types: {allowedTypes?.join(', ')} {locale && `- Locale: ${locale}`}
       </p>

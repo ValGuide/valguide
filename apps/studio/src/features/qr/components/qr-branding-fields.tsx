@@ -74,7 +74,6 @@ export function QrBrandingFields({
   return (
     <div className="space-y-6 rounded-xl border bg-muted/20 p-4">
       <div className="space-y-1">
-        <h3 className="text-sm font-semibold">{t('brandingTitle')}</h3>
         <p className="text-sm text-muted-foreground">
           {source === 'organization'
             ? t('orgBrandingDescription')

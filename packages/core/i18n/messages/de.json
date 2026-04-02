@@ -178,7 +178,7 @@
       "brandingTitle": "QR-Branding",
       "brandingStatusTitle": "Brandingstatus",
       "brandingStatusDescription": "Dieses QR-Erscheinungsbild zeigt die aktuell wirksame Vererbung für diesen QR-Code.",
-      "orgBrandingDescription": "Definieren Sie das Standard-QR-Erscheinungsbild für diesen Arbeitsbereich. Diese Standards leben im Brand Kit und verwenden bei Aktivierung automatisch das Workspace-Logo.",
+      "orgBrandingDescription": "Diese Standards gelten für Tour- und Stopp-QR-Codes und verwenden bei Aktivierung automatisch das Workspace-Logo.",
       "scopeBrandingDescription": "Überschreiben Sie das von {source} geerbte QR-Erscheinungsbild.",
       "foregroundColor": "Vordergrundfarbe",
       "backgroundColor": "Hintergrundfarbe",
@@ -197,9 +197,6 @@
       "saveBranding": "Branding speichern",
       "resetToDefault": "Reset",
       "resetToInherited": "Reset",
-      "workspaceTitle": "QR-Branding",
-      "workspaceDescription": "Legen Sie den Standard-Look für QR-Codes von Touren und Stopps zusammen mit Ihrem Theme im Brand Kit fest.",
-      "workspaceNote": "Tour- und Stopp-QR-Codes übernehmen diese Standards, bis Sie sie auf einem bestimmten Element überschreiben.",
       "openBrandKit": "Brand Kit öffnen",
       "sourceDefault": "Systemstandard",
       "sourceOrganization": "Workspace-Standard",
@@ -960,7 +957,7 @@
       "design": {
         "description": "Passen Sie das Aussehen Ihrer Touren und QR-Beschilderung an.",
         "themeDescription": "Verwalten Sie das visuelle Design Ihrer Touren.",
-        "qrDescription": "Verwalten Sie das Standard-QR-Branding für Ihren Arbeitsbereich."
+        "qrDescription": "Standard-Branding für QR-Codes in Ihrem Arbeitsbereich."
       },
       "analytics": {
         "description": "Zeigen Sie die Leistungsmetriken Ihrer Touren an und analysieren Sie diese."
