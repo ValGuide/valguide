@@ -211,7 +211,8 @@ export function AssetPickerModal({
               layout="fullWidth"
               width={300}
               height={160}
-              className="h-full w-full object-cover"
+              containerClassName="bg-transparent"
+              className="block !h-full w-full object-cover"
             />
           ) : (
             getTypeIcon()
