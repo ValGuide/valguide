@@ -46,7 +46,7 @@ function QrManagementPanelSections({
   children,
 }: Omit<QrManagementPanelProps, 'open' | 'onOpenChange' | 'footer'>) {
   return (
-    <div className="space-y-6 p-4 sm:p-6">
+    <div className="min-w-0 space-y-6 overflow-x-hidden p-4 sm:p-6">
       <QrPreviewCard
         title={title}
         description={description}

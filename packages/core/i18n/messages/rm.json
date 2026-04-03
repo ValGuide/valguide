@@ -139,7 +139,9 @@
         "updateExisting": "Actualisar design existent",
         "save": "Memorisar design",
         "cancel": "Annullar",
-        "nameRequired": "Il num dal design è necessari"
+        "nameRequired": "Il num dal design è necessari",
+        "nameExists": "Igl exista gia in design cun quest num",
+        "saveFailed": "Betg reussì da memorisar il design"
       },
       "deleteDialog": {
         "title": "Stizzar design",

@@ -5,6 +5,7 @@ import { toast } from '@valguide/core/ui/components/sonner/state'
 import { cn } from '@valguide/ui/lib/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useOrgThemes } from '../hooks/use-org-themes'
+import { getThemeSaveErrorMessage } from '../theme-save-errors'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { DeleteThemeDialog } from './delete-theme-dialog'
 import { PlayerPreview } from './player-preview'
@@ -55,6 +56,23 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
       setSaveError(null)
 
       try {
+        const duplicateTheme = themes.find((theme) => {
+          if (theme.name !== name) {
+            return false
+          }
+
+          if (!saveAsNew && theme.id === customizer.config.id) {
+            return false
+          }
+
+          return true
+        })
+
+        if (duplicateTheme) {
+          setSaveError(t('saveDialog.nameExists'))
+          return
+        }
+
         const themeData = customizer.getThemeData()
 
         if (saveAsNew || !customizer.config.id) {
@@ -77,13 +95,13 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
 
         setSaveDialogOpen(false)
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Failed to save theme'
+        const message = getThemeSaveErrorMessage(error, t)
         setSaveError(message)
       } finally {
         setIsSaving(false)
       }
     },
-    [customizer, createTheme, updateTheme, t],
+    [customizer, createTheme, themes, updateTheme, t],
   )
 
   const handleDelete = useCallback(async () => {

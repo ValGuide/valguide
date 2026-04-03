@@ -139,7 +139,9 @@
         "updateExisting": "Bestehendes Design aktualisieren",
         "save": "Design speichern",
         "cancel": "Abbrechen",
-        "nameRequired": "Design-Name ist erforderlich"
+        "nameRequired": "Design-Name ist erforderlich",
+        "nameExists": "Ein Design mit diesem Namen existiert bereits",
+        "saveFailed": "Design konnte nicht gespeichert werden"
       },
       "deleteDialog": {
         "title": "Design löschen",

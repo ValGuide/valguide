@@ -139,7 +139,9 @@
         "updateExisting": "Update existing theme",
         "save": "Save Theme",
         "cancel": "Cancel",
-        "nameRequired": "Theme name is required"
+        "nameRequired": "Theme name is required",
+        "nameExists": "A theme with this name already exists",
+        "saveFailed": "Failed to save theme"
       },
       "deleteDialog": {
         "title": "Delete Theme",
