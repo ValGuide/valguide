@@ -769,6 +769,8 @@
       "noResults": "Keine Assets gefunden, die Ihren Filtern entsprechen",
       "noResultsUsed": "Keine verwendeten Assets gefunden, die Ihren Filtern entsprechen",
       "noResultsUnused": "Keine ungenutzten Assets gefunden, die Ihren Filtern entsprechen",
+      "emptyTitle": "Keine passenden Assets",
+      "emptyHint": "Suche oder Filter anpassen.",
       "sortBy": {
         "label": "Sortieren nach",
         "uploadedAt": "Hochgeladen",
@@ -794,7 +796,10 @@
       },
       "actions": {
         "filters": "Filter",
-        "clearAll": "Alle löschen"
+        "clearAll": "Filter zurücksetzen",
+        "resetFilters": "Filter zurücksetzen",
+        "clearSearch": "Suche löschen",
+        "resetSearchAndFilters": "Suche und Filter zurücksetzen"
       }
     },
     "view": {

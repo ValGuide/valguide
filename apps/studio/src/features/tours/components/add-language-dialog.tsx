@@ -57,10 +57,10 @@ export function AddLanguageDialog({ open, onOpenChange, existingLocales, onAddLa
           <ResponsiveDialogTitle>{t('addLanguage')}</ResponsiveDialogTitle>
           <ResponsiveDialogDescription className="sr-only">{t('searchLanguages')}</ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
-        <ResponsiveDialogBody className="overflow-hidden px-0 py-0">
-          <Command className="border-none">
+        <ResponsiveDialogBody className="flex min-h-0 flex-1 overflow-hidden px-0 py-0 sm:block sm:flex-none">
+          <Command className="flex min-h-0 flex-1 border-none sm:block sm:flex-none">
             <CommandInput placeholder={t('searchLanguages')} disabled={isLoading} />
-            <CommandList className="max-h-[300px]">
+            <CommandList className="flex-1 max-h-none sm:max-h-[300px]">
               <CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
               <CommandGroup>
                 {availableLanguages.map((locale) => {

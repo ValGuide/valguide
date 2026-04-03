@@ -769,6 +769,8 @@
       "noResults": "Nagins assets chattads che correspundan a voss filters",
       "noResultsUsed": "Nagins assets utilisads chattads che correspundan a voss filters",
       "noResultsUnused": "Nagins assets nunutilisads chattads che correspundan a voss filters",
+      "emptyTitle": "Nagins assets adattads",
+      "emptyHint": "Adattar la tschertga u ils filters.",
       "sortBy": {
         "label": "Sortir tenor",
         "uploadedAt": "Chargià si",
@@ -794,7 +796,10 @@
       },
       "actions": {
         "filters": "Filters",
-        "clearAll": "Stizzar tut"
+        "clearAll": "Reinizialisar filters",
+        "resetFilters": "Reinizialisar filters",
+        "clearSearch": "Stizzar tschertga",
+        "resetSearchAndFilters": "Reinizialisar tschertga e filters"
       }
     },
     "view": {

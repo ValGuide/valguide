@@ -207,10 +207,18 @@ export function AssetsList({
   }
 
   const isControlledMode = Boolean(onTypeFilterChange && onSearchQueryChange && onSortChange && onUsageFilterChange)
+  const hasSearchQuery = searchQuery.trim().length > 0
   const hasTypeFilter = typeFilter !== 'all'
   const hasUsageFilter = usageFilter !== 'all'
   const hasSortFilter = sortBy !== 'createdAt' || sortDirection !== 'desc'
   const activeFilterCount = Number(hasTypeFilter) + Number(hasUsageFilter) + Number(hasSortFilter)
+  const hasActiveEmptyStateFilters = hasSearchQuery || hasTypeFilter || hasUsageFilter
+  const emptyStateResetLabel =
+    hasSearchQuery && (hasTypeFilter || hasUsageFilter)
+      ? t('filter.actions.resetSearchAndFilters')
+      : hasSearchQuery
+        ? t('filter.actions.clearSearch')
+        : t('filter.actions.resetFilters')
 
   const displayedAssets = useMemo(() => {
     if (isControlledMode) {
@@ -306,6 +314,7 @@ export function AssetsList({
       onClearAllFilters()
       return
     }
+    setSearchQuery('')
     setTypeFilter('all')
     setUsageFilter('all')
     setSort('createdAt', 'desc')
@@ -836,31 +845,26 @@ export function AssetsList({
         </div>
 
         {displayedAssets.length === 0 ? (
-          <Empty className="mt-6 border border-dashed">
+          <Empty className="mt-6 border border-dashed bg-muted/10">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <FileText />
               </EmptyMedia>
-              <EmptyTitle>
-                {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
-                  ? usageFilter === 'unused'
-                    ? t('filter.noResultsUnused')
-                    : usageFilter === 'used'
-                      ? t('filter.noResultsUsed')
-                      : t('filter.noResults')
-                  : t('empty.title')}
+              <EmptyTitle className="text-xl">
+                {hasActiveEmptyStateFilters ? t('filter.emptyTitle') : t('empty.title')}
               </EmptyTitle>
-              <EmptyDescription>
-                {searchQuery || typeFilter !== 'all' || usageFilter !== 'all'
-                  ? usageFilter === 'unused'
-                    ? t('filter.noResultsUnused')
-                    : usageFilter === 'used'
-                      ? t('filter.noResultsUsed')
-                      : t('filter.noResults')
-                  : t('empty.description')}
+              <EmptyDescription className="text-balance">
+                {hasActiveEmptyStateFilters ? t('filter.emptyHint') : t('empty.description')}
               </EmptyDescription>
             </EmptyHeader>
-            {!searchQuery && typeFilter === 'all' && usageFilter === 'all' ? (
+            {hasActiveEmptyStateFilters ? (
+              <EmptyContent>
+                <Button type="button" variant="outline" onClick={clearAllFilters}>
+                  <X className="mr-2 h-4 w-4" />
+                  {emptyStateResetLabel}
+                </Button>
+              </EmptyContent>
+            ) : (
               <EmptyContent>
                 <div className="flex flex-col items-center gap-3">
                   <Button onClick={openFilePicker} size="lg">
@@ -870,7 +874,7 @@ export function AssetsList({
                   <p className="text-xs text-muted-foreground">{t('empty.dragHint')}</p>
                 </div>
               </EmptyContent>
-            ) : null}
+            )}
           </Empty>
         ) : (
           <div

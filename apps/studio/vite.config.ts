@@ -1,12 +1,12 @@
-import { getRemoteDevConfigPath } from '../../scripts/wrangler-remote-bindings'
-import { getBundleAnalyzerPlugin } from '../../scripts/vite-bundle-analyzer'
-import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
+import tailwindcss from '@tailwindcss/vite'
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { getBundleAnalyzerPlugin } from '../../scripts/vite-bundle-analyzer'
+import { getRemoteDevConfigPath } from '../../scripts/wrangler-remote-bindings'
 
 export default defineConfig(({ command }) => ({
   server: {

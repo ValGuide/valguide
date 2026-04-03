@@ -769,6 +769,8 @@
       "noResults": "No assets found matching your filters",
       "noResultsUsed": "No used assets found matching your filters",
       "noResultsUnused": "No unused assets found matching your filters",
+      "emptyTitle": "No matching assets",
+      "emptyHint": "Adjust your search or filters.",
       "sortBy": {
         "label": "Sort by",
         "uploadedAt": "Uploaded",
@@ -794,7 +796,10 @@
       },
       "actions": {
         "filters": "Filters",
-        "clearAll": "Clear all"
+        "clearAll": "Reset filters",
+        "resetFilters": "Reset filters",
+        "clearSearch": "Clear search",
+        "resetSearchAndFilters": "Reset search and filters"
       }
     },
     "view": {
