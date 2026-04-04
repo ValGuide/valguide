@@ -17,5 +17,6 @@ export const adminUpdateUserStatusFn = createServerFn({ method: 'POST' })
     return updateUserStatus(db, {
       ...data,
       actorEmail: context.user.email,
+      actorUserId: context.user.id,
     })
   })

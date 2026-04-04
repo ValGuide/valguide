@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm'
 import type { DB } from '../db'
 import { db } from '../db'
+import { logUserStatusEvent } from './log-user-status-event.server'
 import { profiles } from './schema'
 
 // =============================================================================
@@ -15,4 +16,15 @@ export async function deactivateAccount(userId: string, dbClient: DB = db): Prom
       updatedAt: new Date(),
     })
     .where(eq(profiles.id, userId))
+
+  await logUserStatusEvent(
+    {
+      userId,
+      previousStatus: 'approved',
+      newStatus: 'deactivated',
+      changedByUserId: userId,
+      source: 'self_service',
+    },
+    dbClient,
+  )
 }

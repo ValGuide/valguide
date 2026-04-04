@@ -1,6 +1,7 @@
 import { and, eq, gt, isNull, or, sql } from 'drizzle-orm'
 import { db } from '../db'
 import { invitation } from '../orgs/schema'
+import { logUserStatusEvent } from '../profiles/log-user-status-event.server'
 import { profiles } from '../profiles/schema'
 import { approvedDomain } from './schema'
 
@@ -39,6 +40,15 @@ export async function autoApproveIfEligible(userId: string, email: string): Prom
     })
     .where(and(eq(profiles.id, userId), eq(profiles.status, 'pending')))
     .returning({ id: profiles.id })
+
+  if (result.length > 0) {
+    await logUserStatusEvent({
+      userId,
+      previousStatus: 'pending',
+      newStatus: 'approved',
+      source: 'auto_approve',
+    })
+  }
 
   return result.length > 0
 }
