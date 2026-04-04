@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from 'storybook/test'
-import { DeleteAccountCard } from './delete-account-card'
+import { DeactivateAccountCard } from './deactivate-account-card'
 
-const meta: Meta<typeof DeleteAccountCard> = {
-  title: 'Studio/Features/Profile/DeleteAccountCard',
-  component: DeleteAccountCard,
+const meta: Meta<typeof DeactivateAccountCard> = {
+  title: 'Studio/Features/Profile/DeactivateAccountCard',
+  component: DeactivateAccountCard,
   parameters: {
     layout: 'centered',
   },
@@ -19,12 +19,12 @@ const meta: Meta<typeof DeleteAccountCard> = {
 
 export default meta
 
-type Story = StoryObj<typeof DeleteAccountCard>
+type Story = StoryObj<typeof DeactivateAccountCard>
 
 export const Default: Story = {
   args: {
     email: 'curator@museum.org',
-    onDelete: fn(async () => {
+    onDeactivate: fn(async () => {
       await new Promise((r) => setTimeout(r, 1500))
     }),
   },

@@ -54,6 +54,7 @@ export const usersColumns: ColumnDef<AdminUserListItem>[] = [
         { label: 'Pending', value: 'pending' },
         { label: 'Approved', value: 'approved' },
         { label: 'Blocked', value: 'blocked' },
+        { label: 'Deactivated', value: 'deactivated' },
       ],
     },
     header: 'Status',
@@ -118,6 +119,9 @@ export const usersColumns: ColumnDef<AdminUserListItem>[] = [
               )}
               {user.status === 'blocked' && (
                 <DropdownMenuItem onClick={() => meta.onUnblock(user.id)}>Unblock</DropdownMenuItem>
+              )}
+              {user.status === 'deactivated' && (
+                <DropdownMenuItem onClick={() => meta.onUnblock(user.id)}>Reactivate</DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

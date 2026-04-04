@@ -3,8 +3,8 @@ import { resolveAdminUsersUrl } from './admin-url'
 import { formatSlackDate } from './slack-date'
 import { resolveUsersSlackChannel } from './user-channel'
 
-type UserStatus = 'pending' | 'approved' | 'blocked'
-type UserStatusChangeAction = 'approved' | 'blocked' | 'unblocked'
+type UserStatus = 'pending' | 'approved' | 'blocked' | 'deactivated'
+type UserStatusChangeAction = 'approved' | 'blocked' | 'unblocked' | 'reactivated'
 
 type Props = {
   action: UserStatusChangeAction
@@ -20,12 +20,14 @@ type Props = {
 function actionTitle(action: UserStatusChangeAction): string {
   if (action === 'blocked') return '⛔ User blocked'
   if (action === 'unblocked') return '✅ User unblocked'
+  if (action === 'reactivated') return '✅ User reactivated'
   return '✅ User approved'
 }
 
 function statusLabel(status: UserStatus): string {
   if (status === 'approved') return '✅ Approved'
   if (status === 'blocked') return '⛔ Blocked'
+  if (status === 'deactivated') return '⏸️ Deactivated'
   return '⏳ Pending'
 }
 

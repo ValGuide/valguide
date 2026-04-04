@@ -9,7 +9,7 @@ export type AdminUserListItem = {
   email: string | null
   firstName: string | null
   lastName: string | null
-  status: 'pending' | 'approved' | 'blocked'
+  status: 'pending' | 'approved' | 'blocked' | 'deactivated'
   createdAt: Date
   approvedAt: Date | null
   blockedAt: Date | null
@@ -21,7 +21,7 @@ export type ListUsersInput = {
   page: number
   pageSize: number
   search?: string
-  status?: 'pending' | 'approved' | 'blocked'
+  status?: 'pending' | 'approved' | 'blocked' | 'deactivated'
   sortBy: 'email' | 'name' | 'status' | 'createdAt' | 'orgCount'
   sortOrder: 'asc' | 'desc'
 }

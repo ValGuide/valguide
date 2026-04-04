@@ -22,6 +22,7 @@ const statusOptions = [
   { label: 'Pending', value: 'pending' },
   { label: 'Approved', value: 'approved' },
   { label: 'Blocked', value: 'blocked' },
+  { label: 'Deactivated', value: 'deactivated' },
 ]
 
 type UsersDataTableProps = {

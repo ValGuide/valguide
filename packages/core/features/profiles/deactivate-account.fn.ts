@@ -5,18 +5,20 @@ import { auth } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { authSessions } from '../auth/schema'
 import { db } from '../db'
-import { deleteAccount } from './delete-account.server'
+import { deactivateAccount } from './deactivate-account.server'
 
 // =============================================================================
 // SERVER FUNCTION
 // =============================================================================
 
-export const deleteAccountFn = createServerFn({ method: 'POST' })
+export const deactivateAccountFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .handler(async ({ context }) => {
-    await deleteAccount(context.user.id)
+    await db.transaction(async (tx) => {
+      await deactivateAccount(context.user.id, tx)
+      await tx.delete(authSessions).where(eq(authSessions.userId, context.user.id))
+    })
 
-    await db.delete(authSessions).where(eq(authSessions.userId, context.user.id))
     await auth.api.signOut({ headers: getRequestHeaders() })
 
     return { success: true }

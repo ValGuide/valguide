@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { protectedSessionBootstrapQueryOptions } from '@valguide/features/auth/query-options'
-import { PendingApprovalContainer } from '@/features/auth/pending-approval-container'
+import { AccountStatusContainer } from '@/features/auth/account-status-container'
 
 export const Route = createFileRoute('/pending')({
   beforeLoad: async ({ context, location }) => {
@@ -18,9 +18,9 @@ export const Route = createFileRoute('/pending')({
       })
     }
 
-    if (bootstrap.status === 'blocked') {
+    if (bootstrap.status === 'blocked' || bootstrap.status === 'deactivated') {
       throw redirect({ to: '/blocked' })
     }
   },
-  component: () => <PendingApprovalContainer />,
+  component: () => <AccountStatusContainer />,
 })

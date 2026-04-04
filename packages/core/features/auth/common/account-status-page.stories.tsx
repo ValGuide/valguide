@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from 'storybook/test'
-import { PendingApprovalPage } from './pending-approval-page'
+import { AccountStatusPage } from './account-status-page'
 
-const meta: Meta<typeof PendingApprovalPage> = {
-  title: 'Auth/PendingApprovalPage',
-  component: PendingApprovalPage,
+const meta: Meta<typeof AccountStatusPage> = {
+  title: 'Auth/AccountStatusPage',
+  component: AccountStatusPage,
   parameters: {
     layout: 'fullscreen',
   },
   args: {
+    variant: 'pending',
     onSignOut: fn(),
     onCheckAgain: fn(),
     supportEmail: 'team@valguide.com',
@@ -24,5 +25,17 @@ export const Default: Story = {}
 export const Checking: Story = {
   args: {
     isChecking: true,
+  },
+}
+
+export const Blocked: Story = {
+  args: {
+    variant: 'blocked',
+  },
+}
+
+export const Deactivated: Story = {
+  args: {
+    variant: 'deactivated',
   },
 }

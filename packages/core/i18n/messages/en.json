@@ -330,6 +330,20 @@
       "signedInAs": "Signed in as {email}",
       "contactCta": "Email us",
       "signOut": "Sign out"
+    },
+    "blocked": {
+      "title": "Your access is blocked",
+      "description": "Your account cannot access ValGuide Studio right now. Reach out to us if you think this is a mistake.",
+      "signedInAs": "Signed in as {email}",
+      "contactCta": "Email us",
+      "signOut": "Sign out"
+    },
+    "deactivated": {
+      "title": "Your account is deactivated",
+      "description": "Your Studio access has been removed. Your workspace content stays with the workspace. Reach out to us if you need your account hard deleted.",
+      "signedInAs": "Signed in as {email}",
+      "contactCta": "Email us",
+      "signOut": "Sign out"
     }
   },
   "login": {
@@ -1159,15 +1173,17 @@
     },
     "phone": "Phone",
     "phoneHint": "Optional. Only for time-sensitive support if email isn't reaching you. No marketing. You can remove it anytime.",
-    "deleteAccount": {
-      "title": "Delete Account",
-      "description": "Permanently delete your account and all personal data. This cannot be undone.",
-      "confirmTitle": "Are you sure?",
-      "confirmDescription": "This will permanently delete your account, profile data, and remove you from all teams.",
-      "typeConfirm": "Type DELETE to confirm",
-      "confirm": "Delete Account",
-      "deleting": "Deleting...",
-      "error": "Failed to delete account"
+    "deactivateAccount": {
+      "title": "Deactivate Studio Access",
+      "description": "No longer working in ValGuide Studio? Deactivate your account to sign out and remove your Studio access.",
+      "contentRetained": "Your tours and other workspace content stay with your workspace.",
+      "hardDeleteHint": "Need permanent deletion instead? Contact us.",
+      "confirmTitle": "Deactivate access?",
+      "confirmDescription": "This will sign you out everywhere and remove your access to ValGuide Studio. Your tours and other workspace content will stay with your workspace.",
+      "typeConfirm": "Type DEACTIVATE to confirm",
+      "confirm": "Deactivate Access",
+      "deactivating": "Deactivating...",
+      "error": "Failed to deactivate account"
     }
   },
   "fileDropzone": {

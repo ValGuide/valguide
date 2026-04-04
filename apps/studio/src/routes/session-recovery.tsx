@@ -27,7 +27,7 @@ export const Route = createFileRoute('/session-recovery')({
       throw redirect({ to: '/pending' })
     }
 
-    if (bootstrap.status === 'blocked') {
+    if (bootstrap.status === 'blocked' || bootstrap.status === 'deactivated') {
       throw redirect({ to: '/blocked' })
     }
 

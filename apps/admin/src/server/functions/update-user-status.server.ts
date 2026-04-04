@@ -57,7 +57,14 @@ export async function updateUserStatus(dbClient: DB, input: UpdateUserStatusInpu
   const previousStatus = existingUser.status
   const currentStatus = status
   if (previousStatus !== currentStatus) {
-    const action = currentStatus === 'blocked' ? 'blocked' : previousStatus === 'blocked' ? 'unblocked' : 'approved'
+    const action =
+      currentStatus === 'blocked'
+        ? 'blocked'
+        : previousStatus === 'deactivated'
+          ? 'reactivated'
+          : previousStatus === 'blocked'
+            ? 'unblocked'
+            : 'approved'
 
     await notifyUserStatusChanged({
       action,

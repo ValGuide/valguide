@@ -330,6 +330,20 @@
       "signedInAs": "Annunzià sco {email}",
       "contactCta": "Scriva a nus",
       "signOut": "Sortir"
+    },
+    "blocked": {
+      "title": "Tes access è bloccà",
+      "description": "Tes conto n'ha ussa nagin access a ValGuide Studio. Contactescha nus sche ti crais che quai saja in sbagl.",
+      "signedInAs": "Annunzià sco {email}",
+      "contactCta": "Scriva a nus",
+      "signOut": "Sortir"
+    },
+    "deactivated": {
+      "title": "Tes conto è deactivà",
+      "description": "Tes access a Studio è vegnì removì. Tias novitads dal workspace restan tar il workspace. Contactescha nus sche tes conto duai vegnir stizzà cumplettamain.",
+      "signedInAs": "Annunzià sco {email}",
+      "contactCta": "Scriva a nus",
+      "signOut": "Sortir"
     }
   },
   "login": {
@@ -1159,15 +1173,17 @@
     },
     "phone": "Telefon",
     "phoneHint": "Opziunal. Mo per support urgent, sche nus na cuntanschin Vus per e-mail. Nagin marketing. Pudais allontanar da tut temp.",
-    "deleteAccount": {
-      "title": "Stizzar il conto",
-      "description": "Stizza definitiv Voss conto e tuttas las datas persunalas. Quai na po betg vegnir revocà.",
-      "confirmTitle": "Essas Vus segir?",
-      "confirmDescription": "Voss conto, datas da profil e tut las commembranzas en teams vegnan stizzadas definitivamain.",
-      "typeConfirm": "Tippar DELETE per confermar",
-      "confirm": "Stizzar il conto",
-      "deleting": "Vegn stizzà...",
-      "error": "Errur tar stizzar il conto"
+    "deactivateAccount": {
+      "title": "Deactivar l'access a Studio",
+      "description": "Na lavurais Vus betg pli en ValGuide Studio? Deactivescha Voss conto per As sortir e per remover Voss access a Studio.",
+      "contentRetained": "Vossas turas ed autercuntegn dal workspace restan en Voss workspace.",
+      "hardDeleteHint": "Sche Vus duvrais ina stizzada cumpletta, contactescha nus.",
+      "confirmTitle": "Deactivar l'access?",
+      "confirmDescription": "Quai As sorta dapertut e removescha Voss access a ValGuide Studio. Vossas turas ed autercuntegn dal workspace restan en Voss workspace.",
+      "typeConfirm": "Tippar DEACTIVATE per confermar",
+      "confirm": "Deactivar l'access",
+      "deactivating": "Vegn deactivà...",
+      "error": "Errur tar deactivar il conto"
     }
   },
   "fileDropzone": {

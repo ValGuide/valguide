@@ -1,3 +1,4 @@
+import { clientEnv } from '@valguide/core/env/client'
 import { useTranslations } from '@valguide/core/i18n/client'
 import {
   AlertDialog,
@@ -25,26 +26,27 @@ import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/component
 import { Input } from '@valguide/ui/components/input'
 import { useState } from 'react'
 
-export interface DeleteAccountCardProps {
+export interface DeactivateAccountCardProps {
   email?: string
-  onDelete: () => Promise<void>
+  onDeactivate: () => Promise<void>
 }
 
-export function DeleteAccountCard({ email, onDelete }: DeleteAccountCardProps) {
+export function DeactivateAccountCard({ email, onDeactivate }: DeactivateAccountCardProps) {
   const t = useTranslations('profile')
+  const supportEmail = clientEnv.VITE_STUDIO_SUPPORT_EMAIL
   const [confirmText, setConfirmText] = useState('')
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeactivating, setIsDeactivating] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const isMobile = useIsMobile()
 
-  const isConfirmed = confirmText === 'DELETE'
+  const isConfirmed = confirmText === 'DEACTIVATE'
 
-  const handleDelete = async () => {
-    setIsDeleting(true)
+  const handleDeactivate = async () => {
+    setIsDeactivating(true)
     try {
-      await onDelete()
+      await onDeactivate()
     } catch {
-      setIsDeleting(false)
+      setIsDeactivating(false)
     }
   }
 
@@ -58,39 +60,46 @@ export function DeleteAccountCard({ email, onDelete }: DeleteAccountCardProps) {
   return (
     <Card className="border-destructive/20">
       <CardHeader>
-        <CardTitle className="text-destructive">{t('deleteAccount.title')}</CardTitle>
+        <CardTitle className="text-destructive">{t('deactivateAccount.title')}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">{t('deleteAccount.description')}</p>
+        <div className="mb-4 space-y-2 text-sm text-muted-foreground">
+          <p>{t('deactivateAccount.description')}</p>
+          <p>{t('deactivateAccount.contentRetained')}</p>
+          <p>{t('deactivateAccount.hardDeleteHint')}</p>
+          <a href={`mailto:${supportEmail}`} className="inline-flex underline-offset-4 hover:underline">
+            {supportEmail}
+          </a>
+        </div>
         {isMobile ? (
           <>
             <Button variant="destructive" size="sm" onClick={() => handleOpenChange(true)}>
-              {t('deleteAccount.title')}
+              {t('deactivateAccount.title')}
             </Button>
             <ResponsiveDialog open={isOpen} onOpenChange={handleOpenChange} mobileVariant="full-height">
               <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-lg">
                 <ResponsiveDialogHeader>
-                  <ResponsiveDialogTitle>{t('deleteAccount.confirmTitle')}</ResponsiveDialogTitle>
+                  <ResponsiveDialogTitle>{t('deactivateAccount.confirmTitle')}</ResponsiveDialogTitle>
                   <ResponsiveDialogDescription>
-                    {t('deleteAccount.confirmDescription')}
+                    {t('deactivateAccount.confirmDescription')}
                     {email && <span className="mt-2 block font-medium text-foreground">{email}</span>}
                   </ResponsiveDialogDescription>
                 </ResponsiveDialogHeader>
                 <ResponsiveDialogBody className="space-y-2">
-                  <p className="mb-2 text-sm text-muted-foreground">{t('deleteAccount.typeConfirm')}</p>
+                  <p className="mb-2 text-sm text-muted-foreground">{t('deactivateAccount.typeConfirm')}</p>
                   <Input
                     value={confirmText}
                     onChange={(e) => setConfirmText(e.target.value)}
-                    placeholder="DELETE"
+                    placeholder="DEACTIVATE"
                     autoComplete="off"
                   />
                 </ResponsiveDialogBody>
                 <ResponsiveDialogFooter>
-                  <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isDeleting}>
+                  <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isDeactivating}>
                     {t('cancel')}
                   </Button>
-                  <Button variant="destructive" disabled={!isConfirmed || isDeleting} onClick={handleDelete}>
-                    {isDeleting ? t('deleteAccount.deleting') : t('deleteAccount.confirm')}
+                  <Button variant="destructive" disabled={!isConfirmed || isDeactivating} onClick={handleDeactivate}>
+                    {isDeactivating ? t('deactivateAccount.deactivating') : t('deactivateAccount.confirm')}
                   </Button>
                 </ResponsiveDialogFooter>
               </ResponsiveDialogContent>
@@ -100,37 +109,37 @@ export function DeleteAccountCard({ email, onDelete }: DeleteAccountCardProps) {
           <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm">
-                {t('deleteAccount.title')}
+                {t('deactivateAccount.title')}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t('deleteAccount.confirmTitle')}</AlertDialogTitle>
+                <AlertDialogTitle>{t('deactivateAccount.confirmTitle')}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  {t('deleteAccount.confirmDescription')}
+                  {t('deactivateAccount.confirmDescription')}
                   {email && <span className="mt-2 block font-medium text-foreground">{email}</span>}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="py-2">
-                <p className="text-sm text-muted-foreground mb-2">{t('deleteAccount.typeConfirm')}</p>
+                <p className="text-sm text-muted-foreground mb-2">{t('deactivateAccount.typeConfirm')}</p>
                 <Input
                   value={confirmText}
                   onChange={(e) => setConfirmText(e.target.value)}
-                  placeholder="DELETE"
+                  placeholder="DEACTIVATE"
                   autoComplete="off"
                 />
               </div>
               <AlertDialogFooter>
-                <AlertDialogCancel disabled={isDeleting}>{t('cancel')}</AlertDialogCancel>
+                <AlertDialogCancel disabled={isDeactivating}>{t('cancel')}</AlertDialogCancel>
                 <AlertDialogAction
                   variant="destructive"
-                  disabled={!isConfirmed || isDeleting}
+                  disabled={!isConfirmed || isDeactivating}
                   onClick={(e) => {
                     e.preventDefault()
-                    handleDelete()
+                    handleDeactivate()
                   }}
                 >
-                  {isDeleting ? t('deleteAccount.deleting') : t('deleteAccount.confirm')}
+                  {isDeactivating ? t('deactivateAccount.deactivating') : t('deactivateAccount.confirm')}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

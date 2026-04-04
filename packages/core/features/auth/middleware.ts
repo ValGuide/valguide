@@ -71,7 +71,7 @@ export const requireAuthMiddleware = createMiddleware({ type: 'function' })
     if (bootstrap.status === 'pending') {
       throw redirect({ to: '/pending' })
     }
-    if (bootstrap.status === 'blocked') {
+    if (bootstrap.status === 'blocked' || bootstrap.status === 'deactivated') {
       throw redirect({ to: '/blocked' })
     }
 

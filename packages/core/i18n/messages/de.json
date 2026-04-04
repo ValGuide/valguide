@@ -330,6 +330,20 @@
       "signedInAs": "Angemeldet als {email}",
       "contactCta": "Schreib uns",
       "signOut": "Abmelden"
+    },
+    "blocked": {
+      "title": "Dein Zugang ist blockiert",
+      "description": "Dein Konto hat derzeit keinen Zugriff auf ValGuide Studio. Melde dich bei uns, wenn du denkst, dass das ein Fehler ist.",
+      "signedInAs": "Angemeldet als {email}",
+      "contactCta": "Schreib uns",
+      "signOut": "Abmelden"
+    },
+    "deactivated": {
+      "title": "Dein Konto ist deaktiviert",
+      "description": "Dein Zugriff auf Studio wurde entfernt. Deine Workspace-Inhalte bleiben beim Workspace. Melde dich bei uns, wenn dein Konto vollständig gelöscht werden soll.",
+      "signedInAs": "Angemeldet als {email}",
+      "contactCta": "Schreib uns",
+      "signOut": "Abmelden"
     }
   },
   "login": {
@@ -1159,15 +1173,17 @@
     },
     "phone": "Telefon",
     "phoneHint": "Optional. Nur für dringende Supportfälle, falls wir Sie per E-Mail nicht erreichen. Kein Marketing. Jederzeit entfernbar.",
-    "deleteAccount": {
-      "title": "Konto löschen",
-      "description": "Löscht Ihr Konto und alle persönlichen Daten unwiderruflich.",
-      "confirmTitle": "Sind Sie sicher?",
-      "confirmDescription": "Ihr Konto, Profildaten und Teammitgliedschaften werden dauerhaft gelöscht.",
-      "typeConfirm": "Geben Sie DELETE ein, um zu bestätigen",
-      "confirm": "Konto löschen",
-      "deleting": "Wird gelöscht...",
-      "error": "Fehler beim Löschen des Kontos"
+    "deactivateAccount": {
+      "title": "Studio-Zugang deaktivieren",
+      "description": "Arbeiten Sie nicht mehr in ValGuide Studio? Deaktivieren Sie Ihr Konto, um sich abzumelden und Ihren Studio-Zugang zu entfernen.",
+      "contentRetained": "Ihre Touren und andere Workspace-Inhalte bleiben in Ihrem Workspace erhalten.",
+      "hardDeleteHint": "Möchten Sie stattdessen eine vollständige Löschung? Melden Sie sich bei uns.",
+      "confirmTitle": "Zugang deaktivieren?",
+      "confirmDescription": "Dadurch werden Sie überall abgemeldet und Ihr Zugriff auf ValGuide Studio entfernt. Ihre Touren und andere Workspace-Inhalte bleiben in Ihrem Workspace erhalten.",
+      "typeConfirm": "Geben Sie DEACTIVATE ein, um zu bestätigen",
+      "confirm": "Zugang deaktivieren",
+      "deactivating": "Wird deaktiviert...",
+      "error": "Fehler beim Deaktivieren des Kontos"
     }
   },
   "fileDropzone": {

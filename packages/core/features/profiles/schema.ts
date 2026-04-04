@@ -3,7 +3,7 @@ import { authUsers } from '../auth/schema'
 
 const studioSchema = pgSchema('studio')
 
-export const userStatus = studioSchema.enum('user_status', ['pending', 'approved', 'blocked'])
+export const userStatus = studioSchema.enum('user_status', ['pending', 'approved', 'blocked', 'deactivated'])
 
 export const profiles = studioSchema.table('profiles', {
   id: uuid('id')

@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { notifyStudioBlockedAccessFn } from '@valguide/core/features/auth/notify-studio-blocked-access.fn'
 import { protectedSessionBootstrapQueryOptions } from '@valguide/features/auth/query-options'
-import { PendingApprovalContainer } from '@/features/auth/pending-approval-container'
+import { AccountStatusContainer } from '@/features/auth/account-status-container'
 
 export const Route = createFileRoute('/blocked')({
   beforeLoad: async ({ context, location }) => {
@@ -27,13 +26,5 @@ export const Route = createFileRoute('/blocked')({
 })
 
 function BlockedPageRoute() {
-  const notifyTeam = () => {
-    const sessionKey = 'vg_blocked_notified_session'
-    if (!sessionStorage.getItem(sessionKey)) {
-      sessionStorage.setItem(sessionKey, '1')
-      notifyStudioBlockedAccessFn({ data: {} })
-    }
-  }
-
-  return <PendingApprovalContainer onMount={notifyTeam} />
+  return <AccountStatusContainer notifyBlockedAccess />
 }

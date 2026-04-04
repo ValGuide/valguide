@@ -2,11 +2,11 @@ import { userStatusChangedMessage } from '@valguide/core/slack/messages/user-sta
 import { sendSlackMessage } from '@valguide/core/slack/send-slack-message'
 
 type NotifyUserStatusChangedInput = {
-  action: 'approved' | 'blocked' | 'unblocked'
+  action: 'approved' | 'blocked' | 'unblocked' | 'reactivated'
   actorEmail?: string | null
   blockedReason?: string | null
-  currentStatus: 'approved' | 'blocked'
-  previousStatus: 'approved' | 'blocked' | 'pending'
+  currentStatus: 'approved' | 'blocked' | 'deactivated'
+  previousStatus: 'approved' | 'blocked' | 'deactivated' | 'pending'
   targetEmail?: string | null
   timestampMs: number
   userId: string

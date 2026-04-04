@@ -1,11 +1,11 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { currentUserQueryOptions } from '@valguide/core/features/auth/query-options'
-import { deleteAccountFn } from '@valguide/core/features/profiles/delete-account.fn'
+import { deactivateAccountFn } from '@valguide/core/features/profiles/deactivate-account.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { PageTitle } from '@valguide/ui/components/page-title'
-import { DeleteAccountCard } from '@/features/profile/components/delete-account-card'
+import { DeactivateAccountCard } from '@/features/profile/components/deactivate-account-card'
 import { ProfileFormConnected } from '@/features/profile/components/profile-form-connected'
 
 export const Route = createLazyFileRoute('/_main/profile')({
@@ -16,12 +16,12 @@ function ProfilePage() {
   const t = useTranslations('profile')
   const { data: user } = useSuspenseQuery(currentUserQueryOptions())
 
-  const handleDeleteAccount = async () => {
+  const handleDeactivateAccount = async () => {
     try {
-      await deleteAccountFn()
+      await deactivateAccountFn()
       window.location.href = '/login'
     } catch {
-      toast.error(t('deleteAccount.error'))
+      toast.error(t('deactivateAccount.error'))
     }
   }
 
@@ -32,7 +32,7 @@ function ProfilePage() {
           {t('title')}
         </PageTitle>
         <ProfileFormConnected />
-        <DeleteAccountCard email={user?.email} onDelete={handleDeleteAccount} />
+        <DeactivateAccountCard email={user?.email} onDeactivate={handleDeactivateAccount} />
       </div>
     </div>
   )

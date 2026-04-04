@@ -4,7 +4,7 @@ import { db } from '../db'
 import { getOrCreateProfile } from '../profiles/get-or-create-profile.server'
 import { profiles } from '../profiles/schema'
 
-export type UserStatus = 'pending' | 'approved' | 'blocked'
+export type UserStatus = 'pending' | 'approved' | 'blocked' | 'deactivated'
 
 export async function getUserStatus(userId: string, email?: string): Promise<UserStatus> {
   const result = await timePerformance(
@@ -19,6 +19,10 @@ export async function getUserStatus(userId: string, email?: string): Promise<Use
 
   if (result.length > 0 && result[0].status === 'blocked') {
     return 'blocked'
+  }
+
+  if (result.length > 0 && result[0].status === 'deactivated') {
+    return 'deactivated'
   }
 
   // Pending or missing: delegate to getOrCreateProfile (handles creation + auto-approve)

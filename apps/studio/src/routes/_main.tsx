@@ -22,7 +22,7 @@ export const Route = createFileRoute('/_main')({
       throw redirect({ to: '/pending' })
     }
 
-    if (bootstrap.status === 'blocked') {
+    if (bootstrap.status === 'blocked' || bootstrap.status === 'deactivated') {
       throw redirect({ to: '/blocked' })
     }
 

@@ -154,9 +154,9 @@ function UsersPage() {
     mutationFn: (mutationInput: { userId: string; status: 'approved' | 'blocked'; blockedReason?: string }) =>
       adminUpdateUserStatusFn({ data: mutationInput }),
     onMutate: ({ userId }) => setUpdatingUserId(userId),
-    onSuccess: (_, { status: newStatus }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
-      toast.success(newStatus === 'approved' ? 'User approved' : 'User blocked')
+      toast.success('User status updated')
       setBlockTarget(null)
     },
     onError: () => {

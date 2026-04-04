@@ -6,13 +6,14 @@ import { resolveUsersSlackChannel } from './user-channel'
 type Props = {
   email?: string
   userId: string
-  status: 'approved' | 'blocked' | 'pending'
+  status: 'approved' | 'blocked' | 'deactivated' | 'pending'
   timestampMs: number
 }
 
 function statusLabel(status: Props['status']): string {
   if (status === 'approved') return '✅ Approved'
   if (status === 'blocked') return '⛔ Blocked'
+  if (status === 'deactivated') return '⏸️ Deactivated'
   return '⏳ Pending'
 }
 
