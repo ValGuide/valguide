@@ -1,5 +1,4 @@
 import { createServerFn } from '@tanstack/react-start'
-import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../auth/authorization'
@@ -46,13 +45,12 @@ export const publishTourFn = createServerFn({ method: 'POST' })
 
       // DB read must happen inline (before handler returns) because
       // runWithRequestDb closes the connection in `finally`.
-      // waitUntil callbacks run after the response — only KV/HTTP work is safe there.
+      // Keep the KV refresh in-band as well so an immediate public page load
+      // cannot race against stale tour data that was cached before publish.
       const fullTour = await getPublishedTourByNanoId(data.nanoId)
       const tourKv = fullTour ? serializeTourForKv(fullTour, data.locale) : null
 
-      waitUntil(
-        writeKvAfterPublish(data.nanoId, data.locale, tourKv, result.tourSlug, result.orgSlug, result.orgNanoId),
-      )
+      await writeKvAfterPublish(data.nanoId, data.locale, tourKv, result.tourSlug, result.orgSlug, result.orgNanoId)
     }
 
     return result
