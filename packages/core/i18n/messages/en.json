@@ -93,22 +93,31 @@
   },
   "studio": {
     "themeCustomizer": {
-      "title": "Theme Customizer",
+      "title": "Branding",
       "reset": "Reset",
       "livePreview": "Live Preview",
+      "visitorPreview": "Visitor Preview",
       "themePreset": "Theme Preset",
       "radius": "Radius",
       "radiusSquare": "Square",
       "radiusDefault": "Default",
       "radiusRounded": "Rounded",
       "radiusExtra": "Extra",
+      "brandBasics": "Brand basics",
+      "brandBasicsHint": "Most tours only need a brand color and a calm background.",
+      "advanced": "Advanced",
+      "advancedHint": "Use these settings only when you need finer control over the interface.",
+      "supportingColors": "Supporting colors",
+      "surfaceColors": "Surface colors",
+      "interfaceColors": "Interface details",
       "primaryColors": "Primary Colors",
       "backgroundColors": "Background Colors",
       "otherColors": "Other Colors",
       "customize": "Customize",
       "preview": "Preview",
-      "startFromPreset": "Start from a preset",
-      "savedThemes": "Your Saved Themes ({count})",
+      "startFromPreset": "Choose a starting style",
+      "savedThemes": "Saved themes ({count})",
+      "previewNote": "Illustrative preview of the visitor player with your current brand colors.",
       "formElementsPreview": "Form Elements Preview",
       "inputField": "Input Field",
       "toggleSwitch": "Toggle Switch",
@@ -116,6 +125,12 @@
       "secondary": "Secondary",
       "outline": "Outline",
       "destructive": "Destructive",
+      "presetLabels": {
+        "neutral": "Neutral",
+        "warm": "Warm",
+        "editorial": "Editorial",
+        "institutional": "Institutional"
+      },
       "playerPreview": {
         "tourTitle": "City Walking Tour",
         "tourInfo": "12 stops • 2h 30min",
@@ -152,13 +167,18 @@
       "editor": {
         "editing": "Editing: {name}",
         "unsavedChanges": "Unsaved changes",
-        "saveTheme": "Save Theme"
+        "saveTheme": "Save Theme",
+        "description": "Adjust the visitor look without turning this into a full design tool."
       },
       "compactControls": {
         "themes": "Themes",
+        "styles": "Styles",
+        "brand": "Brand",
+        "advanced": "Advanced",
         "colors": "Colors",
         "ready": "Preview stays visible",
-        "colorSummary": "Quick overview"
+        "colorSummary": "Quick overview",
+        "brandSummary": "Core brand colors"
       },
       "toast": {
         "created": "Theme created successfully",
@@ -1014,7 +1034,7 @@
     "pages": {
       "design": {
         "description": "Customize the look and feel of your tours and QR signage.",
-        "themeDescription": "Manage the visual design of your tours.",
+        "themeDescription": "Set the visitor branding for your tours.",
         "qrDescription": "Default branding for QR codes in your workspace."
       },
       "analytics": {
@@ -1053,14 +1073,14 @@
   },
   "orgs": {
     "teamSwitcher": {
-      "teams": "Teams",
-      "createTeam": "Create team",
-      "teamSettings": "Workspace settings",
-      "error": "Failed to switch team"
+      "teams": "Workspaces",
+      "createTeam": "Create workspace",
+      "teamSettings": "Workspace",
+      "error": "Failed to switch workspace"
     },
     "members": {
-      "title": "Team & Members",
-      "description": "Manage your team members and their permissions.",
+      "title": "Members",
+      "description": "Manage who works in this workspace and which role each person has.",
       "member": "Member",
       "role": "Role",
       "joined": "Joined",
@@ -1075,7 +1095,7 @@
     },
     "inviteDialog": {
       "inviteMember": "Invite member",
-      "inviteDescription": "Send an invitation to join your team via email.",
+      "inviteDescription": "Send an invitation by email so someone can join this workspace.",
       "email": "Email address",
       "role": "Role",
       "cancel": "Cancel",
@@ -1101,36 +1121,36 @@
       "cancelError": "Failed to cancel invitation"
     },
     "createTeam": {
-      "title": "Create team",
-      "description": "Add a new team to manage your tours.",
-      "nameLabel": "Team Name",
+      "title": "Create workspace",
+      "description": "Give your new workspace a name. You can add a logo and invite members afterwards.",
+      "nameLabel": "Workspace name",
       "namePlaceholder": "Acme Museum",
       "cancel": "Cancel",
-      "submit": "Create Team",
+      "submit": "Create workspace",
       "submitting": "Creating...",
-      "error": "Failed to create team",
-      "triggerButton": "Create Team"
+      "error": "Failed to create workspace",
+      "triggerButton": "Create workspace"
     },
     "teamSettings": {
       "title": "Workspace",
-      "description": "Manage your workspace settings, team members, and permissions.",
+      "description": "Manage this workspace's name, appearance, and members.",
       "tabs": {
         "general": "General",
         "members": "Members"
       },
-      "nameLabel": "Team Name",
+      "nameLabel": "Workspace name",
       "namePlaceholder": "e.g. Acme Museum",
       "nameSave": "Save",
       "nameSaving": "Saving...",
-      "nameSaveSuccess": "Team name updated",
-      "nameSaveError": "Failed to update team name",
-      "profileSectionTitle": "Organization Profile",
-      "profileSectionDescription": "Your organization's name and avatar are visible to all team members.",
-      "avatarLabel": "Team Avatar",
+      "nameSaveSuccess": "Workspace name updated",
+      "nameSaveError": "Failed to update workspace name",
+      "profileSectionTitle": "Profile",
+      "profileSectionDescription": "This workspace's name and avatar are visible to all members.",
+      "avatarLabel": "Workspace avatar",
       "avatarSave": "Save",
       "avatarSaving": "Saving...",
-      "avatarSaveSuccess": "Team avatar updated",
-      "avatarSaveError": "Failed to update team avatar",
+      "avatarSaveSuccess": "Workspace avatar updated",
+      "avatarSaveError": "Failed to update workspace avatar",
       "avatarInvalidType": "Please upload a PNG, JPG, WebP, or GIF image",
       "avatarTooLarge": "Image must be smaller than 5MB",
       "avatarClickToUpload": "Click to upload"

@@ -1,5 +1,3 @@
-type TranslationFn = (key: string) => string
-
 const THEME_NAME_CONSTRAINT = 'theme_unique_name_per_org'
 
 function getErrorCode(error: unknown): string | undefined {
@@ -33,7 +31,10 @@ function isDuplicateThemeNameError(error: unknown): boolean {
   return message.includes(THEME_NAME_CONSTRAINT) || message.includes('duplicate key value violates unique constraint')
 }
 
-export function getThemeSaveErrorMessage(error: unknown, t: TranslationFn): string {
+export function getThemeSaveErrorMessage(
+  error: unknown,
+  t: (key: 'saveDialog.nameExists' | 'saveDialog.saveFailed') => string,
+): string {
   if (isDuplicateThemeNameError(error)) {
     return t('saveDialog.nameExists')
   }

@@ -17,14 +17,27 @@ import { cn } from '@valguide/ui/lib/utils'
 import { Layers2, Palette, RotateCcw, Save, SlidersHorizontal, SwatchBook } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { backgroundColorKeys, otherColorKeys, primaryColorKeys, type ThemeColors } from '../types'
+import type { ThemeColors } from '../types'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { ColorGroup } from './color-group'
 import { RadiusSelector } from './radius-selector'
 import { SavedThemesList } from './saved-themes-list'
 import { ThemePresetChips } from './theme-preset-chips'
 
-type CompactPanel = 'themes' | 'radius' | 'colors' | null
+const brandBasicsColorKeys: (keyof ThemeColors)[] = ['primary', 'primaryForeground', 'background', 'foreground']
+const supportingColorKeys: (keyof ThemeColors)[] = ['secondary', 'secondaryForeground', 'accent', 'accentForeground']
+const surfaceColorKeys: (keyof ThemeColors)[] = ['card', 'cardForeground', 'muted', 'mutedForeground']
+const interfaceColorKeys: (keyof ThemeColors)[] = [
+  'popover',
+  'popoverForeground',
+  'destructive',
+  'destructiveForeground',
+  'border',
+  'input',
+  'ring',
+]
+
+type CompactPanel = 'styles' | 'brand' | 'advanced' | null
 
 export interface ThemeCompactControlsProps {
   customizer: UseThemeCustomizerReturn
@@ -89,12 +102,12 @@ export function ThemeCompactControls({
   }
 
   const panelTitle =
-    activePanel === 'themes'
-      ? t('compactControls.themes')
-      : activePanel === 'radius'
-        ? t('radius')
-        : activePanel === 'colors'
-          ? t('compactControls.colors')
+    activePanel === 'styles'
+      ? t('compactControls.styles')
+      : activePanel === 'brand'
+        ? t('compactControls.brand')
+        : activePanel === 'advanced'
+          ? t('compactControls.advanced')
           : ''
 
   const closePanel = () => setActivePanel(null)
@@ -121,64 +134,76 @@ export function ThemeCompactControls({
     </div>
   )
 
-  const radiusPanelContent = (
-    <RadiusSelector
-      value={config.radius}
-      onValueChange={(value) => {
-        setRadius(value)
-        if (!isMobile) {
-          closePanel()
-        }
-      }}
-    />
-  )
-
-  const colorsPanelContent = (
+  const brandPanelContent = (
     <div className="space-y-3">
       <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
         <div className="mb-3 flex items-center gap-2 text-xs font-medium text-muted-foreground">
           <SwatchBook className="size-4" />
-          <span>{t('compactControls.colorSummary')}</span>
+          <span>{t('compactControls.brandSummary')}</span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {[config.colors.primary, config.colors.secondary, config.colors.accent, config.colors.background].map(
-            (color) => (
-              <div
-                key={color}
-                className="size-8 rounded-md border border-border/70 shadow-xs"
-                style={{ backgroundColor: color }}
-              />
-            ),
-          )}
+          {[
+            config.colors.primary,
+            config.colors.primaryForeground,
+            config.colors.background,
+            config.colors.foreground,
+          ].map((color) => (
+            <div
+              key={color}
+              className="size-8 rounded-md border border-border/70 shadow-xs"
+              style={{ backgroundColor: color }}
+            />
+          ))}
         </div>
       </div>
 
       <ColorGroup
-        title={t('primaryColors')}
-        colorKeys={primaryColorKeys}
+        title={t('brandBasics')}
+        colorKeys={brandBasicsColorKeys}
+        colors={config.colors}
+        onColorChange={handleColorChange}
+        defaultOpen
+      />
+      <p className="text-xs text-muted-foreground">{t('brandBasicsHint')}</p>
+    </div>
+  )
+
+  const advancedPanelContent = (
+    <div className="space-y-4">
+      <p className="text-xs text-muted-foreground">{t('advancedHint')}</p>
+      <RadiusSelector
+        value={config.radius}
+        onValueChange={(value) => {
+          setRadius(value)
+          if (!isMobile) {
+            closePanel()
+          }
+        }}
+      />
+      <ColorGroup
+        title={t('supportingColors')}
+        colorKeys={supportingColorKeys}
         colors={config.colors}
         onColorChange={handleColorChange}
         defaultOpen
       />
       <ColorGroup
-        title={t('backgroundColors')}
-        colorKeys={backgroundColorKeys}
+        title={t('surfaceColors')}
+        colorKeys={surfaceColorKeys}
         colors={config.colors}
         onColorChange={handleColorChange}
-        defaultOpen
       />
       <ColorGroup
-        title={t('otherColors')}
-        colorKeys={otherColorKeys}
+        title={t('interfaceColors')}
+        colorKeys={interfaceColorKeys}
         colors={config.colors}
         onColorChange={handleColorChange}
-        defaultOpen
       />
     </div>
   )
 
   const drawerHeightClass = isMobile
-    ? activePanel === 'colors'
+    ? activePanel === 'advanced'
       ? '!h-[min(76dvh,44rem)] !max-h-[76dvh]'
       : '!h-[min(42dvh,24rem)] !max-h-[42dvh]'
     : '!h-[min(60dvh,38rem)] !max-h-[60dvh]'
@@ -214,22 +239,22 @@ export function ThemeCompactControls({
 
         <div className="grid grid-cols-3 gap-2">
           {isMobile ? (
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setActivePanel('themes')}>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setActivePanel('styles')}>
               <Layers2 className="size-4" />
-              <span>{t('compactControls.themes')}</span>
+              <span>{t('compactControls.styles')}</span>
             </Button>
           ) : (
-            <Popover open={activePanel === 'themes'} onOpenChange={(open) => setActivePanel(open ? 'themes' : null)}>
+            <Popover open={activePanel === 'styles'} onOpenChange={(open) => setActivePanel(open ? 'styles' : null)}>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <Layers2 className="size-4" />
-                  <span>{t('compactControls.themes')}</span>
+                  <span>{t('compactControls.styles')}</span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="start" side="top" sideOffset={12} className="w-[min(30rem,calc(100vw-2rem))] p-4">
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm font-semibold">{t('compactControls.themes')}</p>
+                    <p className="text-sm font-semibold">{t('compactControls.styles')}</p>
                     <p className="text-xs text-muted-foreground">{currentThemeLabel}</p>
                   </div>
                   <div className="max-h-[min(52dvh,30rem)] overflow-y-auto pr-1">{themesPanelContent}</div>
@@ -239,48 +264,51 @@ export function ThemeCompactControls({
           )}
 
           {isMobile ? (
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setActivePanel('radius')}>
-              <SlidersHorizontal className="size-4" />
-              <span>{t('radius')}</span>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setActivePanel('brand')}>
+              <Palette className="size-4" />
+              <span>{t('compactControls.brand')}</span>
             </Button>
           ) : (
-            <Popover open={activePanel === 'radius'} onOpenChange={(open) => setActivePanel(open ? 'radius' : null)}>
+            <Popover open={activePanel === 'brand'} onOpenChange={(open) => setActivePanel(open ? 'brand' : null)}>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-1.5">
-                  <SlidersHorizontal className="size-4" />
-                  <span>{t('radius')}</span>
+                  <Palette className="size-4" />
+                  <span>{t('compactControls.brand')}</span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="center" side="top" sideOffset={12} className="w-[min(28rem,calc(100vw-2rem))] p-4">
                 <div className="space-y-3">
-                  <p className="text-sm font-semibold">{t('radius')}</p>
-                  {radiusPanelContent}
+                  <p className="text-sm font-semibold">{t('compactControls.brand')}</p>
+                  {brandPanelContent}
                 </div>
               </PopoverContent>
             </Popover>
           )}
 
           {isMobile ? (
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setActivePanel('colors')}>
-              <Palette className="size-4" />
-              <span>{t('compactControls.colors')}</span>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setActivePanel('advanced')}>
+              <SlidersHorizontal className="size-4" />
+              <span>{t('compactControls.advanced')}</span>
             </Button>
           ) : (
-            <Popover open={activePanel === 'colors'} onOpenChange={(open) => setActivePanel(open ? 'colors' : null)}>
+            <Popover
+              open={activePanel === 'advanced'}
+              onOpenChange={(open) => setActivePanel(open ? 'advanced' : null)}
+            >
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-1.5">
-                  <Palette className="size-4" />
-                  <span>{t('compactControls.colors')}</span>
+                  <SlidersHorizontal className="size-4" />
+                  <span>{t('compactControls.advanced')}</span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="end" side="top" sideOffset={12} className="w-[min(38rem,calc(100vw-2rem))] p-4">
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm font-semibold">{t('compactControls.colors')}</p>
+                    <p className="text-sm font-semibold">{t('compactControls.advanced')}</p>
                     <p className="text-xs text-muted-foreground">{currentThemeLabel}</p>
                   </div>
                   <ScrollArea className="h-[min(60dvh,36rem)]">
-                    <div className="pr-4">{colorsPanelContent}</div>
+                    <div className="pr-4">{advancedPanelContent}</div>
                   </ScrollArea>
                 </div>
               </PopoverContent>
@@ -299,9 +327,9 @@ export function ThemeCompactControls({
           </DrawerHeader>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
-            {activePanel === 'themes' ? themesPanelContent : null}
-            {activePanel === 'radius' ? radiusPanelContent : null}
-            {activePanel === 'colors' ? colorsPanelContent : null}
+            {activePanel === 'styles' ? themesPanelContent : null}
+            {activePanel === 'brand' ? brandPanelContent : null}
+            {activePanel === 'advanced' ? advancedPanelContent : null}
           </div>
 
           <DrawerFooter className="border-t bg-background px-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">

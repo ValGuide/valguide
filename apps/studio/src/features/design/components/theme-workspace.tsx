@@ -58,11 +58,11 @@ export function ThemeWorkspace({
   }) => (
     <div className={cn('flex flex-col gap-4', containerClassName)}>
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
+        <h2 className="text-lg font-semibold">{t('visitorPreview')}</h2>
         <span className="truncate text-sm text-muted-foreground">{currentThemeLabel}</span>
       </div>
       <div className={cn('rounded-xl border bg-muted/30 p-6 sm:p-8', previewClassName)}>
-        {previewDescription ? <div className="mb-4 text-sm text-muted-foreground">{previewDescription}</div> : null}
+        <div className="mb-4 text-sm text-muted-foreground">{previewDescription ?? t('previewNote')}</div>
         <div className="flex min-h-full items-start justify-center overflow-hidden">
           <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
         </div>

@@ -93,22 +93,31 @@
   },
   "studio": {
     "themeCustomizer": {
-      "title": "Design-Anpassung",
+      "title": "Branding",
       "reset": "Zurücksetzen",
       "livePreview": "Live-Vorschau",
+      "visitorPreview": "Besucher-Vorschau",
       "themePreset": "Design-Vorlage",
       "radius": "Rundung",
       "radiusSquare": "Eckig",
       "radiusDefault": "Standard",
       "radiusRounded": "Gerundet",
       "radiusExtra": "Extra",
+      "brandBasics": "Marken-Grundlagen",
+      "brandBasicsHint": "Für die meisten Touren reichen eine Markenfarbe und ein ruhiger Hintergrund.",
+      "advanced": "Erweitert",
+      "advancedHint": "Diese Einstellungen brauchen Sie nur, wenn Sie die Oberfläche feiner abstimmen möchten.",
+      "supportingColors": "Ergänzende Farben",
+      "surfaceColors": "Flächenfarben",
+      "interfaceColors": "Interface-Details",
       "primaryColors": "Primärfarben",
       "backgroundColors": "Hintergrundfarben",
       "otherColors": "Weitere Farben",
       "customize": "Anpassen",
       "preview": "Vorschau",
-      "startFromPreset": "Mit einer Vorlage beginnen",
-      "savedThemes": "Deine gespeicherten Designs ({count})",
+      "startFromPreset": "Mit einem Stil beginnen",
+      "savedThemes": "Gespeicherte Themes ({count})",
+      "previewNote": "Illustrative Vorschau des Visitor-Players mit Ihren aktuellen Markenfarben.",
       "formElementsPreview": "Formularelemente-Vorschau",
       "inputField": "Eingabefeld",
       "toggleSwitch": "Schalter",
@@ -116,6 +125,12 @@
       "secondary": "Sekundär",
       "outline": "Umriss",
       "destructive": "Destruktiv",
+      "presetLabels": {
+        "neutral": "Neutral",
+        "warm": "Warm",
+        "editorial": "Editorial",
+        "institutional": "Institutionell"
+      },
       "playerPreview": {
         "tourTitle": "Stadtführung",
         "tourInfo": "12 Stationen • 2h 30min",
@@ -152,13 +167,18 @@
       "editor": {
         "editing": "Bearbeiten: {name}",
         "unsavedChanges": "Ungespeicherte Änderungen",
-        "saveTheme": "Design speichern"
+        "saveTheme": "Theme speichern",
+        "description": "Passen Sie das Besuchererlebnis an, ohne aus dem Screen ein Design-Tool zu machen."
       },
       "compactControls": {
         "themes": "Designs",
+        "styles": "Stile",
+        "brand": "Marke",
+        "advanced": "Erweitert",
         "colors": "Farben",
         "ready": "Vorschau bleibt sichtbar",
-        "colorSummary": "Schneller Überblick"
+        "colorSummary": "Schneller Überblick",
+        "brandSummary": "Zentrale Markenfarben"
       },
       "toast": {
         "created": "Design erfolgreich erstellt",
@@ -1014,7 +1034,7 @@
     "pages": {
       "design": {
         "description": "Passen Sie das Aussehen Ihrer Touren und QR-Beschilderung an.",
-        "themeDescription": "Verwalten Sie das visuelle Design Ihrer Touren.",
+        "themeDescription": "Legen Sie das Besucher-Branding für Ihre Touren fest.",
         "qrDescription": "Standard-Branding für QR-Codes in Ihrem Arbeitsbereich."
       },
       "analytics": {
@@ -1053,14 +1073,14 @@
   },
   "orgs": {
     "teamSwitcher": {
-      "teams": "Teams",
-      "createTeam": "Team erstellen",
-      "teamSettings": "Arbeitsbereich-Einstellungen",
-      "error": "Fehler beim Wechseln des Teams"
+      "teams": "Arbeitsbereiche",
+      "createTeam": "Arbeitsbereich erstellen",
+      "teamSettings": "Arbeitsbereich",
+      "error": "Fehler beim Wechseln des Arbeitsbereichs"
     },
     "members": {
-      "title": "Team & Mitglieder",
-      "description": "Verwalten Sie Ihre Teammitglieder und deren Berechtigungen.",
+      "title": "Mitglieder",
+      "description": "Verwalten Sie, wer in diesem Arbeitsbereich mitarbeitet und welche Rolle jede Person hat.",
       "member": "Mitglied",
       "role": "Rolle",
       "joined": "Beigetreten",
@@ -1075,7 +1095,7 @@
     },
     "inviteDialog": {
       "inviteMember": "Mitglied einladen",
-      "inviteDescription": "Senden Sie eine Einladung zum Beitritt zu Ihrem Team per E-Mail.",
+      "inviteDescription": "Senden Sie eine Einladung per E-Mail, damit jemand diesem Arbeitsbereich beitreten kann.",
       "email": "E-Mail-Adresse",
       "role": "Rolle",
       "cancel": "Abbrechen",
@@ -1101,36 +1121,36 @@
       "cancelError": "Fehler beim Abbrechen der Einladung"
     },
     "createTeam": {
-      "title": "Team erstellen",
-      "description": "Fügen Sie ein neues Team hinzu, um Ihre Touren zu verwalten.",
-      "nameLabel": "Teamname",
+      "title": "Arbeitsbereich erstellen",
+      "description": "Geben Sie Ihrem neuen Arbeitsbereich einen Namen. Logo und Mitglieder können Sie danach hinzufügen.",
+      "nameLabel": "Name des Arbeitsbereichs",
       "namePlaceholder": "Acme Museum",
       "cancel": "Abbrechen",
-      "submit": "Team erstellen",
+      "submit": "Arbeitsbereich erstellen",
       "submitting": "Wird erstellt...",
-      "error": "Fehler beim Erstellen des Teams",
-      "triggerButton": "Team erstellen"
+      "error": "Fehler beim Erstellen des Arbeitsbereichs",
+      "triggerButton": "Arbeitsbereich erstellen"
     },
     "teamSettings": {
       "title": "Arbeitsbereich",
-      "description": "Verwalten Sie Ihre Arbeitsbereich-Einstellungen, Teammitglieder und Berechtigungen.",
+      "description": "Verwalten Sie Name, Erscheinungsbild und Mitglieder dieses Arbeitsbereichs.",
       "tabs": {
         "general": "Allgemein",
         "members": "Mitglieder"
       },
-      "nameLabel": "Teamname",
+      "nameLabel": "Name des Arbeitsbereichs",
       "namePlaceholder": "z.B. Acme Museum",
       "nameSave": "Speichern",
       "nameSaving": "Wird gespeichert...",
-      "nameSaveSuccess": "Teamname aktualisiert",
-      "nameSaveError": "Fehler beim Aktualisieren des Teamnamens",
-      "profileSectionTitle": "Organisationsprofil",
-      "profileSectionDescription": "Name und Avatar Ihrer Organisation sind für alle Teammitglieder sichtbar.",
-      "avatarLabel": "Team-Avatar",
+      "nameSaveSuccess": "Name des Arbeitsbereichs aktualisiert",
+      "nameSaveError": "Fehler beim Aktualisieren des Arbeitsbereichsnamens",
+      "profileSectionTitle": "Profil",
+      "profileSectionDescription": "Name und Avatar dieses Arbeitsbereichs sind für alle Mitglieder sichtbar.",
+      "avatarLabel": "Avatar des Arbeitsbereichs",
       "avatarSave": "Speichern",
       "avatarSaving": "Wird gespeichert...",
-      "avatarSaveSuccess": "Team-Avatar aktualisiert",
-      "avatarSaveError": "Fehler beim Aktualisieren des Team-Avatars",
+      "avatarSaveSuccess": "Avatar des Arbeitsbereichs aktualisiert",
+      "avatarSaveError": "Fehler beim Aktualisieren des Arbeitsbereich-Avatars",
       "avatarInvalidType": "Bitte laden Sie ein PNG-, JPG-, WebP- oder GIF-Bild hoch",
       "avatarTooLarge": "Das Bild darf nicht grösser als 5 MB sein",
       "avatarClickToUpload": "Klicken zum Hochladen"

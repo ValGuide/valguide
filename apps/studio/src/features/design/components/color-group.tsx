@@ -32,7 +32,7 @@ export function ColorGroup({
         <ChevronDown className={cn('size-4 transition-transform', isOpen && 'rotate-180')} />
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-2">
-        <div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 pt-1">
           {colorKeys.map((key) => (
             <ColorPicker
               key={key}

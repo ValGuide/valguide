@@ -250,8 +250,10 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
         </PopoverContent>
       </Popover>
       <div className="flex-1 min-w-0">
-        <span className="block truncate text-xs font-medium text-foreground">{label}</span>
-        <span className="block truncate font-mono text-[11px] text-muted-foreground">{hexInputValue}</span>
+        <span className="block text-xs font-medium leading-tight text-foreground">{label}</span>
+        <span className="mt-0.5 block break-all font-mono text-[11px] leading-tight text-muted-foreground">
+          {hexInputValue}
+        </span>
       </div>
     </div>
   )

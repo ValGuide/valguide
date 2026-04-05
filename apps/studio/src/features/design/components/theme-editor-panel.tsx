@@ -6,12 +6,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/component
 import { Separator } from '@valguide/ui/components/separator'
 import { cn } from '@valguide/ui/lib/utils'
 import { RotateCcw, Save } from 'lucide-react'
-import { backgroundColorKeys, otherColorKeys, primaryColorKeys, type ThemeColors } from '../types'
+import type { ThemeColors } from '../types'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { ColorGroup } from './color-group'
 import { RadiusSelector } from './radius-selector'
 import { SavedThemesList } from './saved-themes-list'
 import { ThemePresetChips } from './theme-preset-chips'
+
+const brandBasicsColorKeys: (keyof ThemeColors)[] = ['primary', 'primaryForeground', 'background', 'foreground']
+const supportingColorKeys: (keyof ThemeColors)[] = ['secondary', 'secondaryForeground', 'accent', 'accentForeground']
+const surfaceColorKeys: (keyof ThemeColors)[] = ['card', 'cardForeground', 'muted', 'mutedForeground']
+const interfaceColorKeys: (keyof ThemeColors)[] = [
+  'popover',
+  'popoverForeground',
+  'destructive',
+  'destructiveForeground',
+  'border',
+  'input',
+  'ring',
+]
 
 export interface ThemeEditorPanelProps {
   customizer: UseThemeCustomizerReturn
@@ -79,7 +92,7 @@ export function ThemeEditorPanel({
           <div className="min-w-0 flex-1">
             <CardTitle className="text-lg">{t('title')}</CardTitle>
             {config.name && (
-              <p className="text-sm text-muted-foreground truncate mt-0.5">
+              <p className="mt-1 truncate text-sm text-muted-foreground">
                 {t('editor.editing', { name: config.name })}
               </p>
             )}
@@ -121,29 +134,40 @@ export function ThemeEditorPanel({
 
           {themes.length > 0 && <Separator />}
 
-          <RadiusSelector value={config.radius} onValueChange={setRadius} />
-
-          <Separator />
-
           <div className="space-y-2">
             <ColorGroup
-              title={t('primaryColors')}
-              colorKeys={primaryColorKeys}
+              title={t('brandBasics')}
+              colorKeys={brandBasicsColorKeys}
               colors={config.colors}
               onColorChange={handleColorChange}
               defaultOpen
             />
+            <p className="text-xs text-muted-foreground">{t('brandBasicsHint')}</p>
+          </div>
 
+          <Separator />
+
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <h3 className="text-sm font-medium">{t('advanced')}</h3>
+              <p className="text-xs text-muted-foreground">{t('advancedHint')}</p>
+            </div>
+            <RadiusSelector value={config.radius} onValueChange={setRadius} />
             <ColorGroup
-              title={t('backgroundColors')}
-              colorKeys={backgroundColorKeys}
+              title={t('supportingColors')}
+              colorKeys={supportingColorKeys}
               colors={config.colors}
               onColorChange={handleColorChange}
             />
-
             <ColorGroup
-              title={t('otherColors')}
-              colorKeys={otherColorKeys}
+              title={t('surfaceColors')}
+              colorKeys={surfaceColorKeys}
+              colors={config.colors}
+              onColorChange={handleColorChange}
+            />
+            <ColorGroup
+              title={t('interfaceColors')}
+              colorKeys={interfaceColorKeys}
               colors={config.colors}
               onColorChange={handleColorChange}
             />
