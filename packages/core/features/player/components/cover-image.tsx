@@ -1,5 +1,6 @@
 import { RevealImage } from '@valguide/core/ui/components/reveal-image'
 import { Music } from 'lucide-react'
+import type { CSSProperties } from 'react'
 
 type CoverImageProps = {
   src?: string | null
@@ -8,10 +9,13 @@ type CoverImageProps = {
 }
 
 export function CoverImage({ src, alt, className = '' }: CoverImageProps) {
+  const coverStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
+
   if (!src) {
     return (
       <div
-        className={`aspect-square bg-muted rounded-lg flex items-center justify-center ${className}`}
+        className={`aspect-square bg-muted flex items-center justify-center ${className}`}
+        style={coverStyle}
         role="img"
         aria-label={alt}
       >
@@ -21,7 +25,7 @@ export function CoverImage({ src, alt, className = '' }: CoverImageProps) {
   }
 
   return (
-    <div className={`aspect-square rounded-lg overflow-hidden ${className}`}>
+    <div className={`aspect-square overflow-hidden ${className}`} style={coverStyle}>
       <RevealImage src={src} alt={alt} layout="fullWidth" className="w-full h-full object-cover" />
     </div>
   )

@@ -1,6 +1,7 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
 import { Pause, Play, RotateCcw, RotateCw, SkipBack, SkipForward } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import { useHasNext, useHasPrev, useIsPlaying, usePlayerActions } from '../store/use-player-store'
 import { DEFAULT_SKIP_SECONDS } from '../types'
 
@@ -14,6 +15,7 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
   const hasNext = useHasNext()
   const hasPrev = useHasPrev()
   const { togglePlay, skip, nextStop, prevStop } = usePlayerActions()
+  const transportButtonStyle = { borderRadius: 'calc(var(--radius) + 0.5rem)' } satisfies CSSProperties
 
   return (
     <fieldset
@@ -30,7 +32,8 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
         variant="default"
         size="icon"
         onClick={togglePlay}
-        className="h-14 w-14 rounded-full"
+        className="h-14 w-14"
+        style={transportButtonStyle}
         aria-label={isPlaying ? t('pause') : t('play')}
       >
         {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
@@ -54,13 +57,15 @@ type SkipButtonProps = {
 function SkipButton({ direction, label, onClick }: SkipButtonProps) {
   const Icon = direction === 'backward' ? RotateCcw : RotateCw
   const amountLabel = `${direction === 'backward' ? '-' : '+'}${DEFAULT_SKIP_SECONDS}`
+  const skipButtonStyle = { borderRadius: 'calc(var(--radius) + 0.5rem)' } satisfies CSSProperties
 
   return (
     <Button
       variant="ghost"
       onClick={onClick}
       aria-label={label}
-      className="h-12 min-w-14 rounded-full px-2 text-foreground"
+      className="h-12 min-w-14 px-2 text-foreground"
+      style={skipButtonStyle}
     >
       <span className={`flex items-center gap-1 ${direction === 'backward' ? 'flex-row' : 'flex-row-reverse'}`}>
         <Icon className="h-4 w-4 shrink-0" />

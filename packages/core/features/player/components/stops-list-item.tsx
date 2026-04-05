@@ -1,5 +1,6 @@
 import { RevealImage } from '@valguide/core/ui/components/reveal-image'
 import { Music, Pause, Play } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import type { PlayerStop } from '../types'
 
 function formatDuration(seconds?: number): string {
@@ -19,6 +20,8 @@ type StopsListItemProps = {
 
 export function StopsListItem({ stop, index, isPlaying, isCurrent, onSelect }: StopsListItemProps) {
   const stopNumber = index + 1
+  const itemStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
+  const imageStyle = { borderRadius: 'var(--radius)' } satisfies CSSProperties
 
   return (
     <button
@@ -27,8 +30,9 @@ export function StopsListItem({ stop, index, isPlaying, isCurrent, onSelect }: S
       className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${
         isCurrent ? 'bg-primary/10' : 'hover:bg-muted'
       }`}
+      style={itemStyle}
     >
-      <div className="relative h-12 w-12 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+      <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden bg-muted" style={imageStyle}>
         {stop.coverImageUrl ? (
           <RevealImage
             src={stop.coverImageUrl}

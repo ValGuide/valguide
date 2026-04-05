@@ -84,6 +84,7 @@ function PreviewSurface() {
   const tTheme = useTranslations('studio.themeCustomizer')
   const currentStop = useCurrentStop()
   const headerMeta = useMemo(() => tTheme('playerPreview.tourInfo'), [tTheme])
+  const panelStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
 
   return (
     <div className="mx-auto w-full max-w-lg space-y-6 px-4 py-6 sm:px-6 sm:py-8">
@@ -100,12 +101,12 @@ function PreviewSurface() {
 
         <PreviewFullPlayer />
 
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" style={panelStyle}>
           <ListMusic className="mr-2 h-4 w-4" />
           {tPlayer('viewAllStops')}
         </Button>
 
-        <div className="rounded-xl border bg-card p-4">
+        <div className="border bg-card p-4" style={panelStyle}>
           <StopsList showSearchBar={false} />
         </div>
 
