@@ -91,7 +91,7 @@
   },
   "studio": {
     "themeCustomizer": {
-      "title": "Branding",
+      "title": "Design",
       "reset": "Zurücksetzen",
       "livePreview": "Live-Vorschau",
       "visitorPreview": "Besucher-Vorschau",
@@ -101,7 +101,7 @@
       "radiusDefault": "Standard",
       "radiusRounded": "Gerundet",
       "radiusExtra": "Extra",
-      "brandBasics": "Marken-Grundlagen",
+      "brandBasics": "Grundfarben",
       "brandBasicsHint": "Für die meisten Touren reichen eine Markenfarbe und ein ruhiger Hintergrund.",
       "advanced": "Erweitert",
       "advancedHint": "Diese Einstellungen brauchen Sie nur, wenn Sie die Oberfläche feiner abstimmen möchten.",

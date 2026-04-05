@@ -78,11 +78,27 @@ export function ThemeEditorPanel({
           isMobileLayout ? 'px-4 py-4' : isWorkspaceLayout ? 'px-6 py-5 sm:px-8' : 'px-6 py-4',
         )}
       >
-        <CardTitle className="sr-only">{t('title')}</CardTitle>
+        {isMobileLayout ? (
+          <CardTitle className="sr-only">{t('title')}</CardTitle>
+        ) : (
+          <div className="flex w-full min-w-0 items-start justify-between gap-3">
+            <CardTitle className="text-base font-semibold">{t('title')}</CardTitle>
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+              <Button variant="ghost" size="sm" onClick={handleReset} className="gap-1.5">
+                <RotateCcw className="size-3.5" />
+                <span>{t('reset')}</span>
+              </Button>
+              <Button variant="default" size="sm" onClick={onSave} className="gap-1.5">
+                <Save className="size-3.5" />
+                <span>{t('editor.saveTheme')}</span>
+              </Button>
+            </div>
+          </div>
+        )}
         <div
           className={cn(
             'flex w-full shrink-0 flex-wrap items-center justify-end gap-2',
-            isMobileLayout && 'justify-stretch',
+            isMobileLayout ? 'justify-stretch' : 'hidden',
           )}
         >
           <Button variant="ghost" size="sm" onClick={handleReset} className="gap-1.5">
