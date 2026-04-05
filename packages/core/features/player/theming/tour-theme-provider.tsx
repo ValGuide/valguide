@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ThemeConfig } from '../../themes/types'
 import { themeToVars } from './theme-to-vars'
 
@@ -9,6 +9,7 @@ type TourThemeProviderProps = {
   allowedOrigins?: string[]
 }
 
+const TourThemePortalContainerContext = createContext<HTMLElement | null>(null)
 type PreviewMessage = { type: 'valguide.preview.theme'; theme: ThemeConfig } | { type: 'valguide.preview.theme.reset' }
 
 /**
@@ -21,6 +22,7 @@ export function TourThemeProvider({
   enablePreview = false,
   allowedOrigins = [],
 }: TourThemeProviderProps) {
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null)
   const [theme, setTheme] = useState<ThemeConfig | null>(initialTheme)
 
   const handleMessage = useCallback(
@@ -41,6 +43,10 @@ export function TourThemeProvider({
   )
 
   useEffect(() => {
+    setTheme(initialTheme)
+  }, [initialTheme])
+
+  useEffect(() => {
     if (!enablePreview) return
 
     window.addEventListener('message', handleMessage)
@@ -53,8 +59,18 @@ export function TourThemeProvider({
   }, [theme])
 
   return (
-    <div style={themeVars as React.CSSProperties} className="min-h-dvh bg-background text-foreground">
-      {children}
-    </div>
+    <TourThemePortalContainerContext.Provider value={portalContainer}>
+      <div
+        ref={setPortalContainer}
+        style={themeVars as React.CSSProperties}
+        className="min-h-dvh bg-background text-foreground"
+      >
+        {children}
+      </div>
+    </TourThemePortalContainerContext.Provider>
   )
+}
+
+export function useTourThemePortalContainer() {
+  return useContext(TourThemePortalContainerContext)
 }

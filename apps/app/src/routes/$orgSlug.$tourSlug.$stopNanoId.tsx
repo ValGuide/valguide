@@ -4,7 +4,10 @@ import { FullPlayer } from '@valguide/core/features/player/components/full-playe
 import { StopsList } from '@valguide/core/features/player/components/stops-list'
 import { PlayerProvider } from '@valguide/core/features/player/store/player-provider'
 import { useCurrentStopNanoId } from '@valguide/core/features/player/store/use-player-store'
-import { TourThemeProvider } from '@valguide/core/features/player/theming/tour-theme-provider'
+import {
+  TourThemeProvider,
+  useTourThemePortalContainer,
+} from '@valguide/core/features/player/theming/tour-theme-provider'
 import { toPlayerStops } from '@valguide/core/features/player/utils'
 import { getLocalizedTourText } from '@valguide/core/features/tours/public/localization-helpers'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -28,9 +31,24 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug/$stopNanoId')({
 })
 
 function StopPage() {
+  const { tour } = Route.useRouteContext()
+
+  return (
+    <TourThemeProvider
+      initialTheme={tour.theme}
+      enablePreview
+      allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
+    >
+      <StopPageContent />
+    </TourThemeProvider>
+  )
+}
+
+function StopPageContent() {
   const { tour, orgSlug, tourSlug, locale } = Route.useRouteContext()
   const { stopNanoId } = Route.useParams()
   const navigate = useNavigate()
+  const themedPortalContainer = useTourThemePortalContainer()
 
   const tourTitle = getLocalizedTourText(tour, 'title', locale as SupportedLocale)
   const playerStops = toPlayerStops(tour.stops, locale)
@@ -46,40 +64,34 @@ function StopPage() {
   }
 
   return (
-    <TourThemeProvider
-      initialTheme={tour.theme}
-      enablePreview
-      allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
-    >
-      <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
-        <SyncStopToUrl stopNanoId={stopNanoId} orgSlug={orgSlug} tourSlug={tourSlug} />
-        <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
-          <Link
-            to="/$orgSlug/$tourSlug"
-            params={{ orgSlug, tourSlug }}
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            {tourTitle}
-          </Link>
+    <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
+      <SyncStopToUrl stopNanoId={stopNanoId} orgSlug={orgSlug} tourSlug={tourSlug} />
+      <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
+        <Link
+          to="/$orgSlug/$tourSlug"
+          params={{ orgSlug, tourSlug }}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          {tourTitle}
+        </Link>
 
-          <FullPlayer />
+        <FullPlayer />
 
-          <ViewAllStopsButton onClick={() => setStopsSheetOpen(true)} />
+        <ViewAllStopsButton onClick={() => setStopsSheetOpen(true)} />
 
-          <Sheet open={stopsSheetOpen} onOpenChange={setStopsSheetOpen}>
-            <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto">
-              <SheetHeader>
-                <SheetTitle>{tourTitle}</SheetTitle>
-              </SheetHeader>
-              <div className="py-4">
-                <StopsList showSearchBar={false} onStopSelect={handleStopSelect} />
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </PlayerProvider>
-    </TourThemeProvider>
+        <Sheet open={stopsSheetOpen} onOpenChange={setStopsSheetOpen}>
+          <SheetContent side="bottom" container={themedPortalContainer} className="max-h-[80vh] overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>{tourTitle}</SheetTitle>
+            </SheetHeader>
+            <div className="py-4">
+              <StopsList showSearchBar={false} onStopSelect={handleStopSelect} />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </PlayerProvider>
   )
 }
 

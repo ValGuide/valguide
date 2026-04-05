@@ -20,18 +20,7 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
       className={`flex items-center justify-center gap-2 sm:gap-4 border-none p-0 ${className}`}
       aria-label={t('playerControls')}
     >
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => skip(-DEFAULT_SKIP_SECONDS)}
-        aria-label={t('rewind')}
-        className="relative"
-      >
-        <RotateCcw className="h-5 w-5" />
-        <span className="absolute text-[10px] font-medium" aria-hidden="true">
-          {DEFAULT_SKIP_SECONDS}
-        </span>
-      </Button>
+      <SkipButton direction="backward" onClick={() => skip(-DEFAULT_SKIP_SECONDS)} label={t('rewind')} />
 
       <Button variant="ghost" size="icon" onClick={prevStop} disabled={!hasPrev} aria-label={t('previous')}>
         <SkipBack className="h-5 w-5" />
@@ -51,18 +40,34 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
         <SkipForward className="h-5 w-5" />
       </Button>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => skip(DEFAULT_SKIP_SECONDS)}
-        aria-label={t('forward')}
-        className="relative"
-      >
-        <RotateCw className="h-5 w-5" />
-        <span className="absolute text-[10px] font-medium" aria-hidden="true">
-          {DEFAULT_SKIP_SECONDS}
-        </span>
-      </Button>
+      <SkipButton direction="forward" onClick={() => skip(DEFAULT_SKIP_SECONDS)} label={t('forward')} />
     </fieldset>
+  )
+}
+
+type SkipButtonProps = {
+  direction: 'backward' | 'forward'
+  label: string
+  onClick: () => void
+}
+
+function SkipButton({ direction, label, onClick }: SkipButtonProps) {
+  const Icon = direction === 'backward' ? RotateCcw : RotateCw
+  const amountLabel = `${direction === 'backward' ? '-' : '+'}${DEFAULT_SKIP_SECONDS}`
+
+  return (
+    <Button
+      variant="ghost"
+      onClick={onClick}
+      aria-label={label}
+      className="h-12 min-w-14 rounded-full px-2 text-foreground"
+    >
+      <span className={`flex items-center gap-1 ${direction === 'backward' ? 'flex-row' : 'flex-row-reverse'}`}>
+        <Icon className="h-4 w-4 shrink-0" />
+        <span className="text-sm font-semibold tabular-nums" aria-hidden="true">
+          {amountLabel}
+        </span>
+      </span>
+    </Button>
   )
 }

@@ -10,6 +10,7 @@ import {
 import { type IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { Camera, CameraOff } from 'lucide-react'
 import { useCallback, useState } from 'react'
+import { useTourThemePortalContainer } from '../theming/tour-theme-provider'
 
 type QrScannerModalProps = {
   open: boolean
@@ -21,6 +22,7 @@ type CameraErrorKey = 'cameraPermissionDenied' | 'cameraNotFound' | 'cameraError
 
 export function QrScannerModal({ open, onOpenChange, onScan }: QrScannerModalProps) {
   const t = useTranslations('player')
+  const portalContainer = useTourThemePortalContainer()
   // i18n-used-keys: player.cameraPermissionDenied, player.cameraNotFound, player.cameraError
   const [error, setError] = useState<CameraErrorKey | null>(null)
   const [paused, setPaused] = useState(false)
@@ -63,7 +65,7 @@ export function QrScannerModal({ open, onOpenChange, onScan }: QrScannerModalPro
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+      <DialogContent container={portalContainer} className="sm:max-w-md p-0 overflow-hidden">
         <DialogHeader className="p-4 pb-2">
           <DialogTitle>{t('scanQrCode')}</DialogTitle>
           <DialogDescription className="sr-only">{t('scanQrCode')}</DialogDescription>

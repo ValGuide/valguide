@@ -4,6 +4,7 @@ import { Label } from '@valguide/core/ui/components/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/core/ui/components/popover'
 import { Switch } from '@valguide/core/ui/components/switch'
 import { Accessibility, Minus, Plus } from 'lucide-react'
+import { useTourThemePortalContainer } from '../theming/tour-theme-provider'
 import { type TextSize, useAccessibilitySettings } from './use-accessibility-settings'
 
 type AccessibilityMenuProps = {
@@ -16,6 +17,7 @@ export function AccessibilityMenu({ className = '' }: AccessibilityMenuProps) {
   const t = useTranslations('player')
   const { highContrast, reducedMotion, textSize, toggleHighContrast, toggleReducedMotion, setTextSize } =
     useAccessibilitySettings()
+  const portalContainer = useTourThemePortalContainer()
 
   const currentSizeIndex = TEXT_SIZES.indexOf(textSize)
 
@@ -38,7 +40,7 @@ export function AccessibilityMenu({ className = '' }: AccessibilityMenuProps) {
           <Accessibility className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72" align="end">
+      <PopoverContent className="w-72" align="end" container={portalContainer}>
         <div className="space-y-4">
           <h3 className="font-medium text-sm">{t('accessibilitySettings')}</h3>
 
