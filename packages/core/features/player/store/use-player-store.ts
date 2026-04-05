@@ -60,7 +60,6 @@ export const usePlayerActions = () => {
       pause: s.pause,
       togglePlay: s.togglePlay,
       seek: s.seek,
-      skip: s.skip,
       setSpeed: s.setSpeed,
       nextStop: s.nextStop,
       prevStop: s.prevStop,

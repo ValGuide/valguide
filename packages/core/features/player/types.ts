@@ -29,7 +29,6 @@ export type PlayerActions = {
   pause: () => void
   togglePlay: () => void
   seek: (time: number) => void
-  skip: (seconds: number) => void
   setSpeed: (speed: number) => void
   nextStop: () => void
   prevStop: () => void
@@ -45,5 +44,3 @@ export type PlayerStore = PlayerState & PlayerActions
 
 export const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2] as const
 export type PlaybackSpeed = (typeof PLAYBACK_SPEEDS)[number]
-
-export const DEFAULT_SKIP_SECONDS = 10

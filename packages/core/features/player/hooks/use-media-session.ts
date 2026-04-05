@@ -4,7 +4,7 @@ import { useCurrentStop, useCurrentTime, useDuration, useIsPlaying } from '../st
 
 /**
  * Integrates with the Media Session API for lock screen controls.
- * Provides play/pause, seek, skip forward/backward, and next/previous controls.
+ * Provides play/pause, timeline seek, and next/previous controls.
  */
 export function useMediaSession() {
   const store = usePlayerStoreContext()
@@ -59,18 +59,12 @@ export function useMediaSession() {
   useEffect(() => {
     if (!('mediaSession' in navigator)) return
 
-    const { play, pause, skip, nextStop, prevStop, seek } = store.getState()
+    const { play, pause, nextStop, prevStop, seek } = store.getState()
 
     navigator.mediaSession.setActionHandler('play', () => play())
     navigator.mediaSession.setActionHandler('pause', () => pause())
     navigator.mediaSession.setActionHandler('previoustrack', () => prevStop())
     navigator.mediaSession.setActionHandler('nexttrack', () => nextStop())
-    navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-      skip(-(details.seekOffset ?? 10))
-    })
-    navigator.mediaSession.setActionHandler('seekforward', (details) => {
-      skip(details.seekOffset ?? 10)
-    })
     navigator.mediaSession.setActionHandler('seekto', (details) => {
       if (details.seekTime !== undefined) {
         seek(details.seekTime)
@@ -83,8 +77,6 @@ export function useMediaSession() {
       navigator.mediaSession.setActionHandler('pause', null)
       navigator.mediaSession.setActionHandler('previoustrack', null)
       navigator.mediaSession.setActionHandler('nexttrack', null)
-      navigator.mediaSession.setActionHandler('seekbackward', null)
-      navigator.mediaSession.setActionHandler('seekforward', null)
       navigator.mediaSession.setActionHandler('seekto', null)
     }
   }, [store])

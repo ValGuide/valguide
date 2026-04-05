@@ -6,8 +6,6 @@
     "next": "Weiter",
     "playerControls": "Audioplayer-Steuerung",
     "playbackSpeed": "Wiedergabegeschwindigkeit",
-    "rewind": "10 Sekunden zurück",
-    "forward": "10 Sekunden vor",
     "playbackProgress": "Wiedergabefortschritt",
     "transcript": "Transkript",
     "stopOf": "Stop {current} von {total}",

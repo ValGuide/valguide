@@ -1,9 +1,8 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/core/ui/components/button'
-import { Pause, Play, RotateCcw, RotateCw, SkipBack, SkipForward } from 'lucide-react'
+import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useHasNext, useHasPrev, useIsPlaying, usePlayerActions } from '../store/use-player-store'
-import { DEFAULT_SKIP_SECONDS } from '../types'
 
 type PlayerControlsProps = {
   className?: string
@@ -14,7 +13,7 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
   const isPlaying = useIsPlaying()
   const hasNext = useHasNext()
   const hasPrev = useHasPrev()
-  const { togglePlay, skip, nextStop, prevStop } = usePlayerActions()
+  const { togglePlay, nextStop, prevStop } = usePlayerActions()
   const transportButtonStyle = { borderRadius: 'calc(var(--radius) + 0.5rem)' } satisfies CSSProperties
 
   return (
@@ -22,8 +21,6 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
       className={`flex items-center justify-center gap-2 sm:gap-4 border-none p-0 ${className}`}
       aria-label={t('playerControls')}
     >
-      <SkipButton direction="backward" onClick={() => skip(-DEFAULT_SKIP_SECONDS)} label={t('rewind')} />
-
       <Button variant="ghost" size="icon" onClick={prevStop} disabled={!hasPrev} aria-label={t('previous')}>
         <SkipBack className="h-5 w-5" />
       </Button>
@@ -42,37 +39,6 @@ export function PlayerControls({ className = '' }: PlayerControlsProps) {
       <Button variant="ghost" size="icon" onClick={nextStop} disabled={!hasNext} aria-label={t('next')}>
         <SkipForward className="h-5 w-5" />
       </Button>
-
-      <SkipButton direction="forward" onClick={() => skip(DEFAULT_SKIP_SECONDS)} label={t('forward')} />
     </fieldset>
-  )
-}
-
-type SkipButtonProps = {
-  direction: 'backward' | 'forward'
-  label: string
-  onClick: () => void
-}
-
-function SkipButton({ direction, label, onClick }: SkipButtonProps) {
-  const Icon = direction === 'backward' ? RotateCcw : RotateCw
-  const amountLabel = `${direction === 'backward' ? '-' : '+'}${DEFAULT_SKIP_SECONDS}`
-  const skipButtonStyle = { borderRadius: 'calc(var(--radius) + 0.5rem)' } satisfies CSSProperties
-
-  return (
-    <Button
-      variant="ghost"
-      onClick={onClick}
-      aria-label={label}
-      className="h-12 min-w-14 px-2 text-foreground"
-      style={skipButtonStyle}
-    >
-      <span className={`flex items-center gap-1 ${direction === 'backward' ? 'flex-row' : 'flex-row-reverse'}`}>
-        <Icon className="h-4 w-4 shrink-0" />
-        <span className="text-sm font-semibold tabular-nums" aria-hidden="true">
-          {amountLabel}
-        </span>
-      </span>
-    </Button>
   )
 }

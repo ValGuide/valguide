@@ -31,12 +31,6 @@ export const createPlayerStore = () =>
           set({ currentTime: clampedTime })
         },
 
-        skip: (seconds: number) => {
-          const { currentTime, duration } = get()
-          const newTime = Math.max(0, Math.min(currentTime + seconds, duration))
-          set({ currentTime: newTime })
-        },
-
         setSpeed: (speed: number) => set({ speed }),
 
         nextStop: () => {
