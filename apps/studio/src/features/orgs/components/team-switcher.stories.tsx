@@ -6,15 +6,14 @@ const meta: Meta<typeof TeamSwitcher> = {
   title: 'Core/Orgs/TeamSwitcher',
   component: TeamSwitcher,
   args: {
-    onCreateTeam: () => console.log('Create team clicked'),
-    onTeamSettings: (teamId) => console.log('Team settings clicked', teamId),
+    onCreateTeam: () => console.log('Create workspace clicked'),
   },
   parameters: {
     layout: 'centered',
     docs: {
       description: {
         component:
-          'Team switcher dropdown for navigating between teams. Shows team logo/avatar, name, and user role. Supports creating new teams and accessing team settings.',
+          'Workspace switcher dropdown for navigating between workspaces. Shows workspace logo/avatar, name, and user role. Supports creating new workspaces.',
       },
     },
   },
@@ -210,22 +209,7 @@ export const WithoutCreateAction: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Team switcher without create team action (e.g., for viewers who cannot create teams).',
-      },
-    },
-  },
-}
-
-export const WithoutSettingsAction: Story = {
-  args: {
-    teams: mockTeams,
-    activeTeamId: 'geneva-natural-history',
-    onTeamSettings: undefined,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Team switcher without settings action.',
+        story: 'Workspace switcher without a create action.',
       },
     },
   },

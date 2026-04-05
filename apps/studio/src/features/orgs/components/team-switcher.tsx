@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@valguide/ui/components/sidebar'
-import { ChevronsUpDown, Plus, Settings } from 'lucide-react'
+import { ChevronsUpDown, Plus } from 'lucide-react'
 import * as React from 'react'
 
 export type { OrgRole }
@@ -28,7 +28,6 @@ export interface TeamSwitcherProps {
   activeTeamId?: string
   onTeamSwitch?: (teamId: string) => void
   onCreateTeam?: () => void
-  onTeamSettings?: (teamId: string) => void
 }
 
 const roleLabels: Record<OrgRole, string> = {
@@ -48,7 +47,7 @@ function getTeamInitials(name: string): string {
     .slice(0, 2)
 }
 
-export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, onTeamSettings }: TeamSwitcherProps) {
+export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam }: TeamSwitcherProps) {
   const { isMobile } = useSidebar()
   const t = useTranslations('orgs.teamSwitcher')
   const [isMounted, setIsMounted] = React.useState(false)
@@ -72,12 +71,6 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
   const handleCreateTeam = () => {
     if (onCreateTeam) {
       onCreateTeam()
-    }
-  }
-
-  const handleTeamSettings = () => {
-    if (onTeamSettings && activeTeam) {
-      onTeamSettings(activeTeam.id)
     }
   }
 
@@ -150,14 +143,6 @@ export function TeamSwitcher({ teams, activeTeamId, onTeamSwitch, onCreateTeam, 
                   <Plus className="size-4" />
                 </div>
                 <div className="font-medium text-muted-foreground">{t('createTeam')}</div>
-              </DropdownMenuItem>
-            )}
-            {onTeamSettings && (
-              <DropdownMenuItem onClick={handleTeamSettings} className="cursor-pointer gap-2 p-2">
-                <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                  <Settings className="size-4" />
-                </div>
-                <div className="font-medium text-muted-foreground">{t('teamSettings')}</div>
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>

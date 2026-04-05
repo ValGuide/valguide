@@ -6,6 +6,9 @@ import { resendInviteFn } from '@valguide/core/features/orgs/resend-invite.fn'
 import { updateMemberRoleFn } from '@valguide/core/features/orgs/update-member-role.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
+import { Button } from '@valguide/ui/components/button'
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { UserPlus } from 'lucide-react'
 import { InviteMemberDialog } from '@/features/orgs/components/invite-member-dialog'
 import { MembersTable, type OrgRole } from '@/features/orgs/components/members-table'
 import { PendingInvitesList } from '@/features/orgs/components/pending-invites-list'
@@ -77,19 +80,33 @@ export function WorkspaceMembersTab({ data, onRefetch }: WorkspaceMembersTabProp
 
   return (
     <div className="space-y-6">
-      {['owner', 'admin'].includes(data.currentUserRole) && (
-        <div className="flex justify-end">
-          <InviteMemberDialog currentUserRole={data.currentUserRole} onInvite={handleInvite} />
-        </div>
-      )}
-
-      <MembersTable
-        members={data.members}
-        currentUserRole={data.currentUserRole}
-        currentUserId={data.currentUserId}
-        onChangeRole={handleChangeRole}
-        onRemoveMember={handleRemoveMember}
-      />
+      <Card>
+        <CardHeader>
+          <div className="space-y-1">
+            <CardTitle>{t('title')}</CardTitle>
+            <CardDescription>{t('description')}</CardDescription>
+          </div>
+          {['owner', 'admin'].includes(data.currentUserRole) && (
+            <CardAction>
+              <InviteMemberDialog currentUserRole={data.currentUserRole} onInvite={handleInvite}>
+                <Button size="sm" className="w-full sm:w-auto">
+                  <UserPlus className="size-4" />
+                  {tInvite('inviteMember')}
+                </Button>
+              </InviteMemberDialog>
+            </CardAction>
+          )}
+        </CardHeader>
+        <CardContent>
+          <MembersTable
+            members={data.members}
+            currentUserRole={data.currentUserRole}
+            currentUserId={data.currentUserId}
+            onChangeRole={handleChangeRole}
+            onRemoveMember={handleRemoveMember}
+          />
+        </CardContent>
+      </Card>
 
       {data.pendingInvites.length > 0 && (
         <PendingInvitesList

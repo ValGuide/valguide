@@ -105,7 +105,7 @@ function ResponsiveDialogContent({
           '!w-full !max-w-none overflow-hidden border-0 bg-background p-0 sm:!w-full sm:!max-w-none',
           mobileVariant === 'full-height'
             ? '!mt-0 !h-dvh !max-h-dvh !rounded-none sm:!h-dvh sm:!max-h-dvh sm:!rounded-none'
-            : '!h-[min(90dvh,48rem)] !max-h-[90dvh] !rounded-t-[1.25rem] sm:!h-[min(90dvh,48rem)] sm:!max-h-[90dvh] sm:!rounded-t-[1.25rem]',
+            : '!h-auto !max-h-[90dvh] !rounded-t-[1.25rem] sm:!h-auto sm:!max-h-[90dvh] sm:!rounded-t-[1.25rem]',
         )}
         {...props}
       >

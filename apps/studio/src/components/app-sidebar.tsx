@@ -1,4 +1,4 @@
-import { Link, type LinkOptions, useLocation, useRouter } from '@tanstack/react-router'
+import { Link, type LinkOptions, useLocation } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { unlocalizedPathname } from '@valguide/core/i18n/route.utils'
 import { Button } from '@valguide/ui/components/button'
@@ -64,7 +64,6 @@ export function AppSidebar({
   const tSections = useTranslations('sidebar.sections')
   const location = useLocation()
   const pathnameFromRouter = location.pathname
-  const router = useRouter()
   const [createTeamOpen, setCreateTeamOpen] = React.useState(false)
 
   // Use prop if provided (e.g., in Storybook), otherwise use router pathname
@@ -151,11 +150,6 @@ export function AppSidebar({
             activeTeamId={currentTeam?.id}
             onTeamSwitch={onTeamSwitch}
             onCreateTeam={() => setCreateTeamOpen(true)}
-            onTeamSettings={() => {
-              if (!isActive('/settings')) {
-                router.navigate({ to: '/settings' })
-              }
-            }}
           />
         </SidebarHeader>
         <SidebarContent>

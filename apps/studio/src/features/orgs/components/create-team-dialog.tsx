@@ -61,8 +61,8 @@ export function CreateTeamDialog({
         toast.error(t('error'))
         return
       }
-      // Hard redirect to reload the app/sidebar with the new team
-      window.location.href = '/'
+      // Hard redirect to reload the app/sidebar with the new workspace selected.
+      window.location.href = '/settings'
       handleOpenChange(false)
     } catch (err) {
       console.error('Error creating team:', err)

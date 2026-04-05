@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { PageTitle } from '@valguide/ui/components/page-title'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@valguide/ui/components/tabs'
 import { WorkspaceGeneralTab } from '@/features/team/components/workspace-general-tab'
 import { WorkspaceMembersTab } from '@/features/team/components/workspace-members-tab'
 import { useTeam } from '@/features/team/hooks/use-team'
@@ -26,18 +25,10 @@ function SettingsPage() {
           <p className="text-sm text-muted-foreground">{t('description')}</p>
         </div>
 
-        <Tabs defaultValue="general">
-          <TabsList>
-            <TabsTrigger value="general">{t('tabs.general')}</TabsTrigger>
-            <TabsTrigger value="members">{t('tabs.members')}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="general">
-            <WorkspaceGeneralTab data={data} onRefetch={refetch} />
-          </TabsContent>
-          <TabsContent value="members">
-            <WorkspaceMembersTab data={data} onRefetch={refetch} />
-          </TabsContent>
-        </Tabs>
+        <div className="space-y-6">
+          <WorkspaceGeneralTab data={data} onRefetch={refetch} />
+          <WorkspaceMembersTab data={data} onRefetch={refetch} />
+        </div>
       </div>
     </main>
   )
