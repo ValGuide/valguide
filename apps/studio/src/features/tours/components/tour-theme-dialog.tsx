@@ -37,12 +37,15 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [isApplying, setIsApplying] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [isResetPreview, setIsResetPreview] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!open) {
       return
     }
+
+    setIsResetPreview(false)
 
     if (theme.effectiveTheme) {
       customizer.loadThemeConfig({
@@ -57,6 +60,7 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
   }, [customizer.loadThemeConfig, customizer.startNewTheme, open, theme.effectiveTheme])
 
   const currentSelectionMatchesLiveTheme =
+    !isResetPreview &&
     !customizer.config.isDirty &&
     customizer.config.id !== undefined &&
     customizer.config.id === theme.effectiveTheme?.id
@@ -89,6 +93,19 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
     },
     [invalidateThemeQueries, onOpenChange, t, tourNanoId],
   )
+
+  const previewWorkspaceDefault = useCallback(() => {
+    if (!theme.workspaceDefaultTheme) {
+      return
+    }
+
+    customizer.loadThemeConfig({
+      id: theme.workspaceDefaultTheme.id,
+      name: theme.workspaceDefaultTheme.name,
+      ...theme.workspaceDefaultTheme.config,
+    })
+    setIsResetPreview(true)
+  }, [customizer.loadThemeConfig, theme.workspaceDefaultTheme])
 
   const handleSave = useCallback(
     async (name: string) => {
@@ -124,32 +141,38 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
     [createTheme, customizer, invalidateThemeQueries, onOpenChange, t, tThemeCustomizer, tourNanoId],
   )
 
-  const primaryAction =
-    customizer.config.id && !customizer.config.isDirty ? (
-      <Button
-        onClick={() => void applyTheme(customizer.config.id ?? null)}
-        disabled={isApplying || currentSelectionMatchesLiveTheme}
-      >
-        {isApplying ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-        {t('apply')}
-      </Button>
-    ) : (
-      <Button onClick={() => setSaveDialogOpen(true)} disabled={isApplying}>
-        {t('saveAsNewAndApply')}
-      </Button>
-    )
+  const canApplyCurrentSelection = isResetPreview || (customizer.config.id && !customizer.config.isDirty)
+
+  const primaryAction = canApplyCurrentSelection ? (
+    <Button
+      onClick={() => void applyTheme(isResetPreview ? null : (customizer.config.id ?? null))}
+      disabled={isApplying || currentSelectionMatchesLiveTheme}
+    >
+      {isApplying ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
+      {t('apply')}
+    </Button>
+  ) : (
+    <Button onClick={() => setSaveDialogOpen(true)} disabled={isApplying}>
+      {t('saveAsNewAndApply')}
+    </Button>
+  )
 
   const compactFooter = (
     <div className="grid gap-2 sm:grid-cols-2">
       {theme.assignedThemeId ? (
-        <Button variant="outline" onClick={() => void applyTheme(null)} disabled={isApplying} className="w-full">
+        <Button
+          variant="outline"
+          onClick={previewWorkspaceDefault}
+          disabled={isApplying || isResetPreview}
+          className="w-full"
+        >
           {t('resetToDefault')}
         </Button>
       ) : null}
       <Button
         onClick={() => {
-          if (customizer.config.id && !customizer.config.isDirty) {
-            void applyTheme(customizer.config.id ?? null)
+          if (canApplyCurrentSelection) {
+            void applyTheme(isResetPreview ? null : (customizer.config.id ?? null))
             return
           }
 
@@ -159,7 +182,7 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
         className="w-full"
       >
         {isApplying ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-        {customizer.config.id && !customizer.config.isDirty ? t('apply') : t('saveAsNewAndApply')}
+        {canApplyCurrentSelection ? t('apply') : t('saveAsNewAndApply')}
       </Button>
     </div>
   )
@@ -180,8 +203,14 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
               customizer={customizer}
               themes={themes}
               isLoading={isLoading}
-              onSelectTheme={(selectedTheme) => customizer.loadTheme(selectedTheme)}
-              onStartFromPreset={(preset) => customizer.startNewTheme(preset)}
+              onSelectTheme={(selectedTheme) => {
+                setIsResetPreview(false)
+                customizer.loadTheme(selectedTheme)
+              }}
+              onStartFromPreset={(preset) => {
+                setIsResetPreview(false)
+                customizer.startNewTheme(preset)
+              }}
               onSave={() => setSaveDialogOpen(true)}
               showDeleteThemes={false}
               previewDescription={t('sharedThemeWarning')}
@@ -190,7 +219,7 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
           </ResponsiveDialogBody>
           <ResponsiveDialogFooter className="hidden gap-2 min-[1180px]:flex">
             {theme.assignedThemeId ? (
-              <Button variant="outline" onClick={() => void applyTheme(null)} disabled={isApplying}>
+              <Button variant="outline" onClick={previewWorkspaceDefault} disabled={isApplying || isResetPreview}>
                 {t('resetToDefault')}
               </Button>
             ) : null}

@@ -41,6 +41,7 @@ export type TourDetail = {
   theme: {
     assignedThemeId: string | null
     effectiveTheme: ResolvedThemeConfig | null
+    workspaceDefaultTheme: ResolvedThemeConfig | null
     publishedTheme: ResolvedThemeConfig | null
     hasChanges: boolean
   }
@@ -122,6 +123,10 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     organizationId: foundTour.organizationId,
     assignedThemeId: settings?.themeId ?? null,
   })
+  const workspaceDefaultTheme = await resolveEffectiveTheme({
+    organizationId: foundTour.organizationId,
+    assignedThemeId: null,
+  })
   const publishedTheme = await resolveEffectiveTheme({
     organizationId: foundTour.organizationId,
     assignedThemeId: publishedSettings?.themeId ?? null,
@@ -147,6 +152,7 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     theme: {
       assignedThemeId: settings?.themeId ?? null,
       effectiveTheme,
+      workspaceDefaultTheme,
       publishedTheme,
       hasChanges: guideIsPublished ? themeHasChanges : false,
     },

@@ -78,6 +78,7 @@ const createMockTourDetail = (overrides: Partial<TourDetail> = {}): TourDetail =
   theme: {
     assignedThemeId: null,
     effectiveTheme: null,
+    workspaceDefaultTheme: null,
     publishedTheme: null,
     hasChanges: false,
   },
