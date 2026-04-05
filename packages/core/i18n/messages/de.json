@@ -159,6 +159,21 @@
       "deleteDialog": {
         "title": "Design löschen",
         "message": "Möchtest du \"{name}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "warningTitle": "Design wird verwendet",
+        "loadingUsage": "Es wird geprüft, wo dieses Design verwendet wird...",
+        "usedByToursDescription": "\"{name}\" ist aktuell {count} Touren zugewiesen.",
+        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" ist aktuell {count} Touren zugewiesen und ist zugleich das Standard-Theme des Arbeitsbereichs.",
+        "workspaceDefaultDescription": "\"{name}\" ist aktuell als Standard-Theme des Arbeitsbereichs gesetzt.",
+        "fallbackDescriptionUsedOnly": "Nach dem Löschen verwenden betroffene Touren das aktuelle Standard-Theme des Arbeitsbereichs. Wenn kein Standard-Theme gesetzt ist, wird das ValGuide-Standard-Theme verwendet.",
+        "fallbackDescriptionUsedAndDefault": "Nach dem Löschen verwenden betroffene Touren das ValGuide-Standard-Theme, bis Sie ein neues Standard-Theme für den Arbeitsbereich festlegen.",
+        "fallbackDescriptionDefaultOnly": "Nach dem Löschen verwenden Touren ohne eigenes Theme das ValGuide-Standard-Theme, bis Sie ein neues Standard-Theme für den Arbeitsbereich festlegen.",
+        "usedBy": "Verwendet von",
+        "reviewWarning": "Prüfen Sie die betroffenen Touren vor dem Löschen, wenn Sie zuerst ein anderes Theme zuweisen möchten.",
+        "scope": {
+          "draft": "Entwurf",
+          "published": "publiziert",
+          "draftAndPublished": "Entwurf und publiziert"
+        },
         "confirm": "Löschen",
         "cancel": "Abbrechen"
       },

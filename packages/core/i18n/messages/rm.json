@@ -159,6 +159,21 @@
       "deleteDialog": {
         "title": "Stizzar design",
         "message": "Es ti segir che ti vuls stizzar \"{name}\"? Questa acziun na po betg vegnir revocada.",
+        "warningTitle": "Il design vegn duvrà",
+        "loadingUsage": "Verifitgar nua che quest design vegn duvrà...",
+        "usedByToursDescription": "\"{name}\" è actualmain attribuì a {count} turas.",
+        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" è actualmain attribuì a {count} turas ed è er il theme standard dal workspace.",
+        "workspaceDefaultDescription": "\"{name}\" è actualmain definì sco theme standard dal workspace.",
+        "fallbackDescriptionUsedOnly": "Suenter il stizzar dovran turas pertutgadas il theme standard actual dal workspace. Sche nagin theme standard è definì, vegn duvrà il theme standard da ValGuide.",
+        "fallbackDescriptionUsedAndDefault": "Suenter il stizzar dovran turas pertutgadas il theme standard da ValGuide fin che Vus tschernis in nov theme standard dal workspace.",
+        "fallbackDescriptionDefaultOnly": "Suenter il stizzar dovran turas senza agen theme il theme standard da ValGuide fin che Vus tschernis in nov theme standard dal workspace.",
+        "usedBy": "Duvrà da",
+        "reviewWarning": "Controllai las turas pertutgadas avant che stizzar, sche Vus vulais attribuir l'emprim in auter theme.",
+        "scope": {
+          "draft": "sboz",
+          "published": "publitgà",
+          "draftAndPublished": "sboz e publitgà"
+        },
         "confirm": "Stizzar",
         "cancel": "Annullar"
       },

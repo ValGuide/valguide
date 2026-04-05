@@ -1,3 +1,4 @@
+import { getThemeUsageDetailsFn } from '@valguide/core/features/themes/get-theme-usage.fn'
 import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
@@ -147,9 +148,11 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
       <DeleteThemeDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
+        themeId={themeToDelete?.id ?? ''}
         themeName={themeToDelete?.name ?? ''}
         onConfirm={handleDelete}
         isLoading={isDeleting}
+        onGetUsage={async (themeId) => getThemeUsageDetailsFn({ data: { themeId } })}
       />
     </div>
   )

@@ -159,6 +159,21 @@
       "deleteDialog": {
         "title": "Delete Theme",
         "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+        "warningTitle": "Theme is in use",
+        "loadingUsage": "Checking where this theme is used...",
+        "usedByToursDescription": "\"{name}\" is currently assigned to {count} tours.",
+        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" is currently assigned to {count} tours and is also your workspace default theme.",
+        "workspaceDefaultDescription": "\"{name}\" is currently set as the workspace default theme.",
+        "fallbackDescriptionUsedOnly": "After deletion, affected tours will use the current workspace default. If no workspace default is set, they will use ValGuide's default theme.",
+        "fallbackDescriptionUsedAndDefault": "After deletion, affected tours will use ValGuide's default theme until you choose a new workspace default.",
+        "fallbackDescriptionDefaultOnly": "After deletion, tours without an assigned theme will use ValGuide's default theme until you choose a new workspace default.",
+        "usedBy": "Used by",
+        "reviewWarning": "Review the affected tours before deleting if you want to assign a different theme first.",
+        "scope": {
+          "draft": "draft",
+          "published": "published",
+          "draftAndPublished": "draft and published"
+        },
         "confirm": "Delete",
         "cancel": "Cancel"
       },

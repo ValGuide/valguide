@@ -26,8 +26,9 @@ export function ThemeSwitcherDropdown({ isMobile, onOpenChange, open }: ThemeSwi
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const handleThemeChange = (newTheme: Theme) => {
+    onOpenChange(false)
     if (newTheme === theme) return
-    setTheme(newTheme)
+    void setTheme(newTheme)
   }
 
   const focusItem = (index: number) => {
