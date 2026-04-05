@@ -71,7 +71,7 @@ export function ThemeWorkspace({
   )
 
   return (
-    <div className={cn('flex w-full flex-col gap-6', className)}>
+    <div className={cn('flex min-w-0 w-full flex-col gap-6', className)}>
       <div className="flex min-h-0 flex-col gap-4 min-[1180px]:hidden">
         {previewPanel({
           containerClassName: 'min-h-0 flex-1',
@@ -92,7 +92,7 @@ export function ThemeWorkspace({
         />
       </div>
 
-      <div className="hidden w-full gap-6 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.9fr)] min-[1180px]:items-start xl:gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.92fr)]">
+      <div className="hidden w-full min-w-0 gap-6 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(0,24rem)] min-[1180px]:items-start xl:gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,27rem)]">
         {previewPanel({ playerClassName: 'max-w-md' })}
         <ThemeEditorPanel
           customizer={customizer}
@@ -104,6 +104,7 @@ export function ThemeWorkspace({
           onSave={onSave}
           showDeleteThemes={showDeleteThemes}
           layout="split"
+          className="min-w-0"
         />
       </div>
     </div>

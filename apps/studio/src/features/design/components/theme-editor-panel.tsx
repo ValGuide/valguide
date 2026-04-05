@@ -53,7 +53,13 @@ export function ThemeEditorPanel({
   const isMobileLayout = layout === 'mobile'
 
   return (
-    <Card className={cn('flex min-h-0 flex-col', (isWorkspaceLayout || isMobileLayout) && 'shadow-sm', className)}>
+    <Card
+      className={cn(
+        'flex min-h-0 min-w-0 w-full flex-col overflow-hidden',
+        (isWorkspaceLayout || isMobileLayout) && 'shadow-sm',
+        className,
+      )}
+    >
       <CardHeader
         className={cn(
           'space-y-4 border-b',
@@ -62,7 +68,7 @@ export function ThemeEditorPanel({
       >
         <div
           className={cn(
-            'flex gap-3',
+            'flex min-w-0 gap-3',
             isMobileLayout
               ? 'flex-col'
               : isWorkspaceLayout
@@ -71,14 +77,16 @@ export function ThemeEditorPanel({
           )}
         >
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-lg whitespace-nowrap">{t('title')}</CardTitle>
+            <CardTitle className="text-lg">{t('title')}</CardTitle>
             {config.name && (
               <p className="text-sm text-muted-foreground truncate mt-0.5">
                 {t('editor.editing', { name: config.name })}
               </p>
             )}
           </div>
-          <div className={cn('flex shrink-0 items-center gap-2 self-start', !isMobileLayout && '2xl:self-auto')}>
+          <div
+            className={cn('flex shrink-0 flex-wrap items-center gap-2 self-start', !isMobileLayout && '2xl:self-auto')}
+          >
             <Button variant="ghost" size="sm" onClick={handleReset} className="gap-1.5">
               <RotateCcw className="size-3.5" />
               <span>{t('reset')}</span>
