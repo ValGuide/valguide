@@ -1090,7 +1090,18 @@
       "changeRoleTo": "Ändern zu {role}",
       "resendInvite": "Einladung erneut senden",
       "removeMember": "Mitglied entfernen",
+      "removeSuccess": "Mitglied entfernt",
       "removeError": "Fehler beim Entfernen des Mitglieds",
+      "removeNotFoundError": "Dieses Mitglied wurde nicht mehr gefunden.",
+      "removeSelfError": "Sie können sich hier nicht selbst aus diesem Arbeitsbereich entfernen.",
+      "removeOwnerAsAdminError": "Admins können keine Owner entfernen.",
+      "removeLastOwnerError": "Dieser Arbeitsbereich muss mindestens einen Owner behalten.",
+      "removeDialogTitle": "Mitglied entfernen",
+      "removeDialogDescription": "{member} aus diesem Arbeitsbereich entfernen?",
+      "removeDialogWarning": "Die Person verliert sofort den Zugriff auf diesen Arbeitsbereich.",
+      "removeDialogCancel": "Abbrechen",
+      "removeDialogConfirm": "Mitglied entfernen",
+      "removeDialogRemoving": "Wird entfernt...",
       "roleUpdateError": "Fehler beim Aktualisieren der Rolle"
     },
     "inviteDialog": {

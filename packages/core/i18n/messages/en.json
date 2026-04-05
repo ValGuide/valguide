@@ -1090,7 +1090,18 @@
       "changeRoleTo": "Change to {role}",
       "resendInvite": "Resend invite",
       "removeMember": "Remove member",
+      "removeSuccess": "Member removed",
       "removeError": "Failed to remove member",
+      "removeNotFoundError": "This member could not be found anymore.",
+      "removeSelfError": "You cannot remove yourself from this workspace here.",
+      "removeOwnerAsAdminError": "Admins cannot remove owners.",
+      "removeLastOwnerError": "This workspace must keep at least one owner.",
+      "removeDialogTitle": "Remove member",
+      "removeDialogDescription": "Remove {member} from this workspace?",
+      "removeDialogWarning": "They will lose access to this workspace immediately.",
+      "removeDialogCancel": "Cancel",
+      "removeDialogConfirm": "Remove member",
+      "removeDialogRemoving": "Removing...",
       "roleUpdateError": "Failed to update role"
     },
     "inviteDialog": {

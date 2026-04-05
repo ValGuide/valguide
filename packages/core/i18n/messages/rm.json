@@ -1090,7 +1090,18 @@
       "changeRoleTo": "Midar a {role}",
       "resendInvite": "Trametter invitaziun danovamain",
       "removeMember": "Allontanar commember",
+      "removeSuccess": "Commember allontanà",
       "removeError": "Errur cun allontanar il commember",
+      "removeNotFoundError": "Quest commember n'è betg pli vegnì chattà.",
+      "removeSelfError": "Ti na pos betg t'allontanar sez da quest workspace qua.",
+      "removeOwnerAsAdminError": "Admins na pon betg allontanar owners.",
+      "removeLastOwnerError": "Quest workspace sto mantegnair almain in owner.",
+      "removeDialogTitle": "Allontanar commember",
+      "removeDialogDescription": "Allontanar {member} da quest workspace?",
+      "removeDialogWarning": "Quella persuna perda immediatamain l'access a quest workspace.",
+      "removeDialogCancel": "Interrumper",
+      "removeDialogConfirm": "Allontanar commember",
+      "removeDialogRemoving": "Vegn allontanà...",
       "roleUpdateError": "Errur cun actualisar la rolla"
     },
     "inviteDialog": {

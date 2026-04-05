@@ -22,7 +22,7 @@ export interface MembersTableProps {
   currentUserRole: OrgRole
   currentUserId?: string
   onChangeRole?: (memberId: string, newRole: OrgRole) => void
-  onRemoveMember?: (memberId: string) => void
+  onRemoveMember?: (member: TeamMember) => void
   onResendInvite?: (memberId: string) => void
 }
 
@@ -79,7 +79,12 @@ function canManageMember(currentUserRole: OrgRole, memberRole: OrgRole): boolean
   // Only admin and owner can manage members
   if (roleHierarchy[currentUserRole] < roleHierarchy.admin) return false
 
-  // Can't manage someone with equal or higher role
+  // Owners can manage other owners, but not themselves.
+  if (currentUserRole === 'owner' && memberRole === 'owner') {
+    return true
+  }
+
+  // Can't manage someone with equal or higher role otherwise.
   return roleHierarchy[currentUserRole] > roleHierarchy[memberRole]
 }
 
@@ -108,9 +113,9 @@ export function MembersTable({
     }
   }
 
-  const handleRemoveMember = (memberId: string) => {
+  const handleRemoveMember = (member: TeamMember) => {
     if (onRemoveMember) {
-      onRemoveMember(memberId)
+      onRemoveMember(member)
     }
   }
 
@@ -210,7 +215,7 @@ export function MembersTable({
                             )}
                             {onRemoveMember && (
                               <DropdownMenuItem
-                                onClick={() => handleRemoveMember(member.id)}
+                                onClick={() => handleRemoveMember(member)}
                                 className="text-destructive focus:text-destructive"
                               >
                                 <Trash2 className="mr-2 size-4" />
