@@ -53,6 +53,12 @@ export function ThemeEditorPanel({
 }: ThemeEditorPanelProps) {
   const t = useTranslations('studio.themeCustomizer')
   const { config, setColor, setRadius, resetToPreset } = customizer
+  const currentThemeLabel =
+    config.name ??
+    config.basePreset
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
 
   const handleColorChange = (key: keyof ThemeColors, value: string) => {
     setColor(key, value)
@@ -91,11 +97,9 @@ export function ThemeEditorPanel({
         >
           <div className="min-w-0 flex-1">
             <CardTitle className="text-lg">{t('title')}</CardTitle>
-            {config.name && (
-              <p className="mt-1 truncate text-sm text-muted-foreground">
-                {t('editor.editing', { name: config.name })}
-              </p>
-            )}
+            <p className="mt-1 break-words text-sm leading-tight text-muted-foreground">
+              {t('editor.editing', { name: currentThemeLabel })}
+            </p>
           </div>
           <div
             className={cn('flex shrink-0 flex-wrap items-center gap-2 self-start', !isMobileLayout && '2xl:self-auto')}
@@ -148,10 +152,6 @@ export function ThemeEditorPanel({
           <Separator />
 
           <div className="space-y-4">
-            <div className="space-y-1.5">
-              <h3 className="text-sm font-medium">{t('advanced')}</h3>
-              <p className="text-xs text-muted-foreground">{t('advancedHint')}</p>
-            </div>
             <RadiusSelector value={config.radius} onValueChange={setRadius} />
             <ColorGroup
               title={t('supportingColors')}
