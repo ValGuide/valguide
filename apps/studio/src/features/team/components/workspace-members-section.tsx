@@ -17,12 +17,12 @@ import { MembersTable, type OrgRole } from '@/features/orgs/components/members-t
 import { PendingInvitesList } from '@/features/orgs/components/pending-invites-list'
 import { RemoveMemberDialog } from '@/features/orgs/components/remove-member-dialog'
 
-interface WorkspaceMembersTabProps {
+interface WorkspaceMembersSectionProps {
   data: TeamData
   onRefetch: () => Promise<void>
 }
 
-export function WorkspaceMembersTab({ data, onRefetch }: WorkspaceMembersTabProps) {
+export function WorkspaceMembersSection({ data, onRefetch }: WorkspaceMembersSectionProps) {
   const t = useTranslations('orgs.members')
   const tInvite = useTranslations('orgs.inviteDialog')
   const tPending = useTranslations('orgs.pendingInvites')

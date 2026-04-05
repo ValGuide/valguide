@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
-import { WorkspaceGeneralTab } from './workspace-general-tab'
+import { WorkspaceGeneralSection } from './workspace-general-section'
 
 const queryClient = new QueryClient()
 
@@ -23,8 +23,8 @@ const mockData: TeamData = {
 }
 
 const meta = {
-  title: 'Features/Team/WorkspaceGeneralTab',
-  component: WorkspaceGeneralTab,
+  title: 'Features/Team/WorkspaceGeneralSection',
+  component: WorkspaceGeneralSection,
   parameters: {
     layout: 'padded',
   },
@@ -42,7 +42,7 @@ const meta = {
       </QueryClientProvider>
     ),
   ],
-} satisfies Meta<typeof WorkspaceGeneralTab>
+} satisfies Meta<typeof WorkspaceGeneralSection>
 
 export default meta
 

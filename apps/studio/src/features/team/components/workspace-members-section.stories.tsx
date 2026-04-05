@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
-import { WorkspaceMembersTab } from './workspace-members-tab'
+import { WorkspaceMembersSection } from './workspace-members-section'
 
 const mockData: TeamData = {
   team: {
@@ -60,8 +60,8 @@ const mockData: TeamData = {
 }
 
 const meta = {
-  title: 'Features/Team/WorkspaceMembersTab',
-  component: WorkspaceMembersTab,
+  title: 'Features/Team/WorkspaceMembersSection',
+  component: WorkspaceMembersSection,
   parameters: {
     layout: 'padded',
   },
@@ -77,7 +77,7 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof WorkspaceMembersTab>
+} satisfies Meta<typeof WorkspaceMembersSection>
 
 export default meta
 

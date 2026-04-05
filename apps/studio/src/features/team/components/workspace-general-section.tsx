@@ -10,12 +10,12 @@ import { uploadFile } from '@/features/assets/lib/upload'
 import { OrgAvatarForm } from './org-avatar-form'
 import { OrgNameForm } from './org-name-form'
 
-interface WorkspaceGeneralTabProps {
+interface WorkspaceGeneralSectionProps {
   data: TeamData
   onRefetch: () => Promise<void>
 }
 
-export function WorkspaceGeneralTab({ data, onRefetch }: WorkspaceGeneralTabProps) {
+export function WorkspaceGeneralSection({ data, onRefetch }: WorkspaceGeneralSectionProps) {
   const t = useTranslations('orgs.teamSettings')
   const queryClient = useQueryClient()
 
