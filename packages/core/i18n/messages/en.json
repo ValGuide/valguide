@@ -117,7 +117,7 @@
       "preview": "Preview",
       "startFromPreset": "Choose a starting style",
       "savedThemes": "Saved themes ({count})",
-      "previewNote": "Illustrative preview of the visitor player with your current brand colors.",
+      "previewNote": "Preview based on the real visitor player layout with sample content.",
       "formElementsPreview": "Form Elements Preview",
       "inputField": "Input Field",
       "toggleSwitch": "Toggle Switch",
