@@ -72,7 +72,7 @@ export function QrBrandingFields({
   }
 
   return (
-    <div className="space-y-6 rounded-xl border bg-muted/20 p-4">
+    <div className="space-y-5 rounded-xl border bg-muted/20 p-3 sm:space-y-6 sm:p-4">
       <div className="space-y-1">
         <p className="text-sm text-muted-foreground">
           {source === 'organization'
@@ -92,13 +92,13 @@ export function QrBrandingFields({
       <div className="grid gap-4 md:grid-cols-2">
         <div className="min-w-0 space-y-2">
           <Label htmlFor={`qr-foreground-${source}`}>{t('foregroundColor')}</Label>
-          <div className="flex min-w-0 gap-2">
+          <div className="flex min-w-0 flex-col gap-2 min-[360px]:flex-row">
             <Input
               id={`qr-foreground-${source}`}
               type="color"
               value={override.fgColor ?? fallbackBranding.fgColor}
               onChange={(event) => handleColorChange('fgColor', event.target.value)}
-              className="h-10 w-16 shrink-0 p-1"
+              className="h-10 w-full min-[360px]:w-16 min-[360px]:shrink-0 p-1"
             />
             <Input
               value={override.fgColor ?? ''}
@@ -110,11 +110,11 @@ export function QrBrandingFields({
         </div>
 
         <div className="min-w-0 space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-            <Label htmlFor={`qr-background-transparent-${source}`} className="min-w-0 flex-1">
+          <div className="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+            <Label htmlFor={`qr-background-transparent-${source}`} className="min-w-0">
               {t('backgroundColor')}
             </Label>
-            <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-border/70 bg-background/70 px-3 py-2 min-[420px]:justify-start min-[420px]:border-0 min-[420px]:bg-transparent min-[420px]:px-0 min-[420px]:py-0">
               <Label htmlFor={`qr-background-transparent-${source}`} className="text-sm text-muted-foreground">
                 {t('backgroundTransparent')}
               </Label>
@@ -126,13 +126,13 @@ export function QrBrandingFields({
             </div>
           </div>
 
-          <div className="flex min-w-0 gap-2">
+          <div className="flex min-w-0 flex-col gap-2 min-[360px]:flex-row">
             <Input
               id={`qr-background-${source}`}
               type="color"
               value={backgroundHexValue}
               onChange={(event) => handleColorChange('bgColor', event.target.value)}
-              className="h-10 w-16 shrink-0 p-1"
+              className="h-10 w-full min-[360px]:w-16 min-[360px]:shrink-0 p-1"
               disabled={isTransparentBackground}
             />
             <Input
@@ -153,7 +153,7 @@ export function QrBrandingFields({
             value={override.stylePreset ?? fallbackBranding.stylePreset}
             onValueChange={(value) => handleStyleChange(value as QrStylePreset)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

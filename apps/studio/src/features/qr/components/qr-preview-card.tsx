@@ -56,9 +56,9 @@ export function QrPreviewCard({
   }
 
   const content = (
-    <div className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-[auto,minmax(0,1fr)] lg:items-start">
-        <div className="flex flex-col items-center gap-4 rounded-2xl border bg-muted/20 p-5">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="grid gap-5 sm:gap-6 lg:grid-cols-[auto,minmax(0,1fr)] lg:items-start">
+        <div className="flex flex-col items-center gap-3 rounded-2xl border bg-muted/20 p-3 sm:gap-4 sm:p-5">
           <QRCode
             value={shortUrl}
             width={qrSize}
@@ -71,15 +71,15 @@ export function QrPreviewCard({
             {...styleProps}
           />
           {branding.hasContrastWarning && (
-            <p className="max-w-[18rem] text-center text-xs text-amber-700">{t('contrastWarning')}</p>
+            <p className="max-w-[18rem] text-center text-xs leading-5 text-amber-700">{t('contrastWarning')}</p>
           )}
         </div>
 
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-4 sm:space-y-5">
           {showShortUrl ? (
             <div className="space-y-2">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('shortUrl')}</p>
-              <p className="break-all font-mono text-sm leading-6 sm:text-base">{shortUrl}</p>
+              <p className="break-all font-mono text-sm leading-6 min-[360px]:text-base">{shortUrl}</p>
             </div>
           ) : null}
 
@@ -98,7 +98,7 @@ export function QrPreviewCard({
           ) : null}
 
           {showSourceLabel && sourceLabel && (
-            <div className="space-y-2 rounded-xl border bg-muted/20 p-4">
+            <div className="space-y-2 rounded-xl border bg-muted/20 p-3 sm:p-4">
               <p className="text-sm font-medium">{t('brandingSource')}</p>
               <Badge variant="secondary">{sourceLabel}</Badge>
               {showNote && note ? <p className="text-sm text-muted-foreground">{note}</p> : null}
@@ -135,7 +135,7 @@ export function QrPreviewCard({
           <CardDescription>{description}</CardDescription>
         </CardHeader>
       ) : null}
-      <CardContent className="space-y-6">{content}</CardContent>
+      <CardContent className="space-y-6 p-3 sm:p-6">{content}</CardContent>
     </Card>
   )
 }
