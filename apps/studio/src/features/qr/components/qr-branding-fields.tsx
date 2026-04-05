@@ -110,9 +110,11 @@ export function QrBrandingFields({
         </div>
 
         <div className="min-w-0 space-y-2">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-            <Label htmlFor={`qr-background-transparent-${source}`}>{t('backgroundColor')}</Label>
-            <div className="flex min-w-0 items-center gap-2 self-start sm:self-auto">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+            <Label htmlFor={`qr-background-transparent-${source}`} className="min-w-0 flex-1">
+              {t('backgroundColor')}
+            </Label>
+            <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
               <Label htmlFor={`qr-background-transparent-${source}`} className="text-sm text-muted-foreground">
                 {t('backgroundTransparent')}
               </Label>

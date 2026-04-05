@@ -38,6 +38,12 @@ const mockTour: TourDetail = {
     },
   ],
   settings: null,
+  theme: {
+    assignedThemeId: null,
+    effectiveTheme: null,
+    publishedTheme: null,
+    hasChanges: false,
+  },
   coverImage: null,
 }
 

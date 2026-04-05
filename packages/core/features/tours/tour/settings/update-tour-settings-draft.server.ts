@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm'
 import { NotFoundError } from '../../../auth/authorization'
 import { db } from '../../../db'
+import { validateThemeBelongsToOrganization } from '../../../themes/resolve-effective-theme.server'
 import { tour, tourSettingsDraft } from '../../schema'
 
 export type UpdateTourSettingsDraftInput = {
@@ -18,10 +19,21 @@ export async function updateTourSettingsDraft(
   input: UpdateTourSettingsDraftInput,
   userId: string,
 ): Promise<UpdateTourSettingsDraftResult> {
-  const [foundTour] = await db.select({ id: tour.id }).from(tour).where(eq(tour.nanoId, tourNanoId)).limit(1)
+  const [foundTour] = await db
+    .select({ id: tour.id, organizationId: tour.organizationId })
+    .from(tour)
+    .where(eq(tour.nanoId, tourNanoId))
+    .limit(1)
 
   if (!foundTour) {
     throw new NotFoundError('Tour')
+  }
+
+  if (input.themeId) {
+    await validateThemeBelongsToOrganization({
+      organizationId: foundTour.organizationId,
+      themeId: input.themeId,
+    })
   }
 
   const [updated] = await db

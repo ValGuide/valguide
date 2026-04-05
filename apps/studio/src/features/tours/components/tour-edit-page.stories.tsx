@@ -75,6 +75,12 @@ const createMockTourDetail = (overrides: Partial<TourDetail> = {}): TourDetail =
   locales: [],
   hasAnyChanges: false,
   settings: null,
+  theme: {
+    assignedThemeId: null,
+    effectiveTheme: null,
+    publishedTheme: null,
+    hasChanges: false,
+  },
   coverImage: null,
   ...overrides,
 })

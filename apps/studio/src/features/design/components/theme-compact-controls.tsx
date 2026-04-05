@@ -32,8 +32,10 @@ export interface ThemeCompactControlsProps {
   isLoading: boolean
   onSelectTheme: (theme: Theme) => void
   onStartFromPreset: (preset: ThemePreset) => void
-  onDeleteTheme: (theme: Theme) => void
+  onDeleteTheme?: (theme: Theme) => void
   onSave: () => void
+  showDeleteThemes?: boolean
+  footer?: React.ReactNode
   className?: string
 }
 
@@ -45,6 +47,8 @@ export function ThemeCompactControls({
   onStartFromPreset,
   onDeleteTheme,
   onSave,
+  showDeleteThemes = true,
+  footer,
   className,
 }: ThemeCompactControlsProps) {
   const t = useTranslations('studio.themeCustomizer')
@@ -110,6 +114,7 @@ export function ThemeCompactControls({
               closePanel()
             }}
             onDeleteTheme={onDeleteTheme}
+            showDelete={showDeleteThemes}
           />
         </>
       ) : null}
@@ -282,6 +287,8 @@ export function ThemeCompactControls({
             </Popover>
           )}
         </div>
+
+        {footer ? <div className="mt-3 border-t pt-3">{footer}</div> : null}
       </div>
 
       <Drawer open={isMobile && activePanel !== null} onOpenChange={(open) => !open && setActivePanel(null)}>

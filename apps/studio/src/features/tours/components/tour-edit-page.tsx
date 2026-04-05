@@ -24,6 +24,7 @@ import {
   TourMetadataFormWithDiff,
   type TourMetadataFormWithDiffRef,
 } from '@/features/tours/components/tour-metadata-form-with-diff'
+import { TourThemeCard } from '@/features/tours/components/tour-theme-card'
 import { useTourEditorStops } from '@/features/tours/contexts/tour-editor-stops-types'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 
@@ -316,6 +317,8 @@ export function TourEditPage({
               />
             </CardContent>
           </Card>
+
+          <TourThemeCard tourNanoId={nanoId} theme={tourDetail.theme} variant="compact" />
 
           {TourQrPanel && <TourQrPanel tourNanoId={nanoId} downloadFileName={qrDownloadFileName} />}
 

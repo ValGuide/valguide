@@ -3,15 +3,13 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { cn } from '@valguide/ui/lib/utils'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useOrgThemes } from '../hooks/use-org-themes'
 import { getThemeSaveErrorMessage } from '../theme-save-errors'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { DeleteThemeDialog } from './delete-theme-dialog'
-import { PlayerPreview } from './player-preview'
 import { SaveThemeDialog } from './save-theme-dialog'
-import { ThemeCompactControls } from './theme-compact-controls'
-import { ThemeEditorPanel } from './theme-editor-panel'
+import { ThemeWorkspace } from './theme-workspace'
 
 export interface ThemeCustomizerContainerProps {
   className?: string
@@ -27,9 +25,6 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
-
-  const cssVariables = customizer.getCSSVariables()
-  const previewStyle = useMemo(() => cssVariables as React.CSSProperties, [cssVariables])
 
   const handleSelectTheme = useCallback(
     (theme: Theme) => {
@@ -127,72 +122,17 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
     }
   }, [themeToDelete, deleteTheme, customizer, t])
 
-  const currentThemeLabel =
-    customizer.config.name ??
-    customizer.config.basePreset
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-
-  const editorPanel = (layout: 'workspace' | 'split' | 'mobile') => (
-    <ThemeEditorPanel
-      customizer={customizer}
-      themes={themes}
-      isLoading={isLoading}
-      onSelectTheme={handleSelectTheme}
-      onStartFromPreset={handleStartFromPreset}
-      onDeleteTheme={handleOpenDeleteDialog}
-      onSave={() => setSaveDialogOpen(true)}
-      layout={layout}
-    />
-  )
-
-  const previewPanel = ({
-    containerClassName,
-    previewClassName,
-    playerClassName,
-  }: {
-    containerClassName?: string
-    previewClassName?: string
-    playerClassName?: string
-  }) => (
-    <div className={cn('flex flex-col gap-4', containerClassName)}>
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
-        <span className="text-sm text-muted-foreground truncate">{currentThemeLabel}</span>
-      </div>
-      <div className={cn('rounded-xl border bg-muted/30 p-6 sm:p-8', previewClassName)}>
-        <div className="flex min-h-full items-start justify-center overflow-hidden">
-          <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
-        </div>
-      </div>
-    </div>
-  )
-
   return (
     <div className={cn('flex w-full flex-col gap-6', className)}>
-      <div className="flex min-h-[calc(100dvh-12rem)] flex-col gap-4 min-[1180px]:hidden">
-        {previewPanel({
-          containerClassName: 'min-h-0 flex-1',
-          previewClassName:
-            'flex-1 min-h-[clamp(16rem,42dvh,22rem)] px-4 py-4 md:min-h-[clamp(20rem,48dvh,30rem)] md:px-6 md:py-6',
-          playerClassName: 'max-w-[19rem] md:max-w-[24rem]',
-        })}
-        <ThemeCompactControls
-          customizer={customizer}
-          themes={themes}
-          isLoading={isLoading}
-          onSelectTheme={handleSelectTheme}
-          onStartFromPreset={handleStartFromPreset}
-          onDeleteTheme={handleOpenDeleteDialog}
-          onSave={() => setSaveDialogOpen(true)}
-        />
-      </div>
-
-      <div className="hidden w-full gap-6 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.9fr)] min-[1180px]:items-start xl:gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.92fr)]">
-        {previewPanel({ playerClassName: 'max-w-md' })}
-        {editorPanel('split')}
-      </div>
+      <ThemeWorkspace
+        customizer={customizer}
+        themes={themes}
+        isLoading={isLoading}
+        onSelectTheme={handleSelectTheme}
+        onStartFromPreset={handleStartFromPreset}
+        onDeleteTheme={handleOpenDeleteDialog}
+        onSave={() => setSaveDialogOpen(true)}
+      />
 
       <SaveThemeDialog
         open={saveDialogOpen}

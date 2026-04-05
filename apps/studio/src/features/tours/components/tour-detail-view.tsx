@@ -14,6 +14,7 @@ import { type ComponentType, type ReactNode, useState } from 'react'
 import { EditorHeader } from '@/features/editor/components/editor-header'
 import { TourStatusBadge } from '@/features/tours/components/tour-status-badge'
 import { EditSlugDialog } from './edit-slug-dialog'
+import { TourThemeCard } from './tour-theme-card'
 import { TranslationsManager } from './translations-manager'
 
 export type TourDetailViewProps = {
@@ -192,6 +193,8 @@ export function TourDetailView({
               </MetadataGrid>
             </CardContent>
           </Card>
+
+          <TourThemeCard tourNanoId={nanoId} theme={tour.theme} />
 
           {TourQrCard && <TourQrCard tourNanoId={nanoId} downloadFileName={qrDownloadFileName} />}
 

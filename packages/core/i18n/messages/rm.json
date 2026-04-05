@@ -572,6 +572,37 @@
       "translations": "Linguas",
       "addCoverImageHint": "Agiuntai in maletg da front en l'editur"
     },
+    "theme": {
+      "title": "Tema da la tura",
+      "description": "Vesair tge tema visitadras e visitaders survegnan actualmain per questa tura e midar quel directamain en il workflow da la tura.",
+      "compactTitle": "Tema",
+      "compactDescription": "Administrescha il look activ per questa tura.",
+      "sourceTour": "Tema da la tura",
+      "sourceOrgDefault": "Standard dal workspace",
+      "sourceDefault": "Tema standard",
+      "sourceNone": "Nagìn tema",
+      "draftChanges": "Midadas en il sboz",
+      "noTheme": "Anc nagin tema tschernì",
+      "noThemeDescription": "Questa tura n'ha actualmain nagin tema attribuì u ertà.",
+      "inheritsWorkspaceDefault": "Questa tura surpiglia actualmain il tema standard dal workspace.",
+      "inheritsBuiltInDefault": "Questa tura croda enavos sin il tema standard integrà.",
+      "appliesOnlyToTour": "Quest tema è attribuì directamain a questa tura.",
+      "publishedSummary": "Visitadras e visitaders vesan actualmain il tema publicà \"{name}\".",
+      "changeTheme": "Midar tema",
+      "apply": "Applitgar a la tura",
+      "saveAsNewAndApply": "Memorisar sco nov tema ed applitgar",
+      "resetToDefault": "Reset sin il standard dal workspace",
+      "dialogTitle": "Persunalisar il tema da la tura",
+      "dialogDescription": "Tscherna in tema existent dal workspace u derivescha il look actual en in nov tema per questa tura.",
+      "sharedThemeWarning": "Midadas en quest dialog èn segiras per default. Qua vegn creà in nov tema empè da surscriver in tema partì dal workspace.",
+      "cancel": "Interrumper",
+      "toast": {
+        "updated": "Tema da la tura actualisà",
+        "reset": "Tema da la tura resettà sin il standard dal workspace",
+        "createdAndApplied": "Nov tema da la tura creà ed applitgà",
+        "error": "Actualisar il tema da la tura n'è betg reussì"
+      }
+    },
     "localesManager": {
       "addLanguage": "Agiuntar lingua",
       "removeLanguage": "Allontanar {language}",

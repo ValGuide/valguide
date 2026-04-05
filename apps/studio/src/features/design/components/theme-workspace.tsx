@@ -1,0 +1,111 @@
+import type { Theme } from '@valguide/core/features/themes/schema'
+import type { ThemePreset } from '@valguide/core/features/themes/types'
+import { useTranslations } from '@valguide/core/i18n/client'
+import { cn } from '@valguide/ui/lib/utils'
+import { useMemo } from 'react'
+import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
+import { PlayerPreview } from './player-preview'
+import { ThemeCompactControls } from './theme-compact-controls'
+import { ThemeEditorPanel } from './theme-editor-panel'
+
+export interface ThemeWorkspaceProps {
+  customizer: UseThemeCustomizerReturn
+  themes: Theme[]
+  isLoading: boolean
+  onSelectTheme: (theme: Theme) => void
+  onStartFromPreset: (preset: ThemePreset) => void
+  onDeleteTheme?: (theme: Theme) => void
+  onSave: () => void
+  showDeleteThemes?: boolean
+  previewDescription?: React.ReactNode
+  compactFooter?: React.ReactNode
+  className?: string
+}
+
+export function ThemeWorkspace({
+  customizer,
+  themes,
+  isLoading,
+  onSelectTheme,
+  onStartFromPreset,
+  onDeleteTheme,
+  onSave,
+  showDeleteThemes = true,
+  previewDescription,
+  compactFooter,
+  className,
+}: ThemeWorkspaceProps) {
+  const t = useTranslations('studio.themeCustomizer')
+
+  const cssVariables = customizer.getCSSVariables()
+  const previewStyle = useMemo(() => cssVariables as React.CSSProperties, [cssVariables])
+
+  const currentThemeLabel =
+    customizer.config.name ??
+    customizer.config.basePreset
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+
+  const previewPanel = ({
+    containerClassName,
+    previewClassName,
+    playerClassName,
+  }: {
+    containerClassName?: string
+    previewClassName?: string
+    playerClassName?: string
+  }) => (
+    <div className={cn('flex flex-col gap-4', containerClassName)}>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{t('livePreview')}</h2>
+        <span className="truncate text-sm text-muted-foreground">{currentThemeLabel}</span>
+      </div>
+      <div className={cn('rounded-xl border bg-muted/30 p-6 sm:p-8', previewClassName)}>
+        {previewDescription ? <div className="mb-4 text-sm text-muted-foreground">{previewDescription}</div> : null}
+        <div className="flex min-h-full items-start justify-center overflow-hidden">
+          <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
+        </div>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className={cn('flex w-full flex-col gap-6', className)}>
+      <div className="flex min-h-0 flex-col gap-4 min-[1180px]:hidden">
+        {previewPanel({
+          containerClassName: 'min-h-0 flex-1',
+          previewClassName:
+            'flex-1 min-h-[clamp(16rem,42dvh,22rem)] px-4 py-4 md:min-h-[clamp(20rem,48dvh,30rem)] md:px-6 md:py-6',
+          playerClassName: 'max-w-[19rem] md:max-w-[24rem]',
+        })}
+        <ThemeCompactControls
+          customizer={customizer}
+          themes={themes}
+          isLoading={isLoading}
+          onSelectTheme={onSelectTheme}
+          onStartFromPreset={onStartFromPreset}
+          onDeleteTheme={onDeleteTheme}
+          onSave={onSave}
+          showDeleteThemes={showDeleteThemes}
+          footer={compactFooter}
+        />
+      </div>
+
+      <div className="hidden w-full gap-6 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.9fr)] min-[1180px]:items-start xl:gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.92fr)]">
+        {previewPanel({ playerClassName: 'max-w-md' })}
+        <ThemeEditorPanel
+          customizer={customizer}
+          themes={themes}
+          isLoading={isLoading}
+          onSelectTheme={onSelectTheme}
+          onStartFromPreset={onStartFromPreset}
+          onDeleteTheme={onDeleteTheme}
+          onSave={onSave}
+          showDeleteThemes={showDeleteThemes}
+          layout="split"
+        />
+      </div>
+    </div>
+  )
+}

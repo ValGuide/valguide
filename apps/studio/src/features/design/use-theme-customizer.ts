@@ -65,19 +65,43 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
     originalConfigRef.current = null
   }, [])
 
-  const loadTheme = useCallback((theme: Theme) => {
-    const newConfig: EditorThemeConfig = {
-      basePreset: theme.basePreset,
-      colors: theme.colors,
-      radius: Number(theme.radius),
-      fonts: theme.fonts,
-      id: theme.id,
-      name: theme.name,
-      isDirty: false,
-    }
-    setConfig(newConfig)
-    originalConfigRef.current = newConfig
-  }, [])
+  const loadThemeConfig = useCallback(
+    ({
+      id,
+      name,
+      basePreset,
+      colors,
+      radius,
+      fonts,
+    }: Pick<EditorThemeConfig, 'id' | 'name' | 'basePreset' | 'colors' | 'radius' | 'fonts'>) => {
+      const newConfig: EditorThemeConfig = {
+        basePreset,
+        colors,
+        radius,
+        fonts,
+        id,
+        name,
+        isDirty: false,
+      }
+      setConfig(newConfig)
+      originalConfigRef.current = newConfig
+    },
+    [],
+  )
+
+  const loadTheme = useCallback(
+    (theme: Theme) => {
+      loadThemeConfig({
+        basePreset: theme.basePreset,
+        colors: theme.colors,
+        radius: Number(theme.radius),
+        fonts: theme.fonts,
+        id: theme.id,
+        name: theme.name,
+      })
+    },
+    [loadThemeConfig],
+  )
 
   const startNewTheme = useCallback((preset: ThemePreset) => {
     setConfig({
@@ -165,6 +189,7 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
     setRadius,
     setFonts,
     resetToPreset,
+    loadThemeConfig,
     loadTheme,
     startNewTheme,
     markClean,

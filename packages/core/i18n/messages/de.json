@@ -572,6 +572,37 @@
       "translations": "Sprachen",
       "addCoverImageHint": "Fügen Sie ein Titelbild im Editor hinzu"
     },
+    "theme": {
+      "title": "Tour-Theme",
+      "description": "Sehen Sie, welches Theme Besucherinnen und Besucher aktuell für diese Tour erhalten, und ändern Sie es direkt im Tour-Workflow.",
+      "compactTitle": "Theme",
+      "compactDescription": "Verwalten Sie das aktive Erscheinungsbild dieser Tour.",
+      "sourceTour": "Tour-Theme",
+      "sourceOrgDefault": "Workspace-Standard",
+      "sourceDefault": "Standard-Theme",
+      "sourceNone": "Kein Theme",
+      "draftChanges": "Entwurfsänderungen",
+      "noTheme": "Noch kein Theme ausgewählt",
+      "noThemeDescription": "Für diese Tour ist aktuell kein eigenes oder geerbtes Theme aktiv.",
+      "inheritsWorkspaceDefault": "Diese Tour übernimmt aktuell das Workspace-Standard-Theme.",
+      "inheritsBuiltInDefault": "Diese Tour fällt auf das integrierte Standard-Theme zurück.",
+      "appliesOnlyToTour": "Dieses Theme ist direkt dieser Tour zugewiesen.",
+      "publishedSummary": "Besucherinnen und Besucher sehen aktuell das veröffentlichte Theme „{name}“.",
+      "changeTheme": "Theme ändern",
+      "apply": "Auf Tour anwenden",
+      "saveAsNewAndApply": "Als neues Theme speichern und anwenden",
+      "resetToDefault": "Auf Workspace-Standard zurücksetzen",
+      "dialogTitle": "Tour-Theme anpassen",
+      "dialogDescription": "Wählen Sie ein vorhandenes Workspace-Theme oder verzweigen Sie das aktuelle Erscheinungsbild in ein neues Theme für diese Tour.",
+      "sharedThemeWarning": "Änderungen hier sind standardmässig sicher. In diesem Dialog wird ein neues Theme erstellt, statt ein geteiltes Workspace-Theme zu überschreiben.",
+      "cancel": "Abbrechen",
+      "toast": {
+        "updated": "Tour-Theme aktualisiert",
+        "reset": "Tour-Theme auf Workspace-Standard zurückgesetzt",
+        "createdAndApplied": "Neues Tour-Theme erstellt und angewendet",
+        "error": "Tour-Theme konnte nicht aktualisiert werden"
+      }
+    },
     "localesManager": {
       "addLanguage": "Sprache hinzufügen",
       "removeLanguage": "{language} entfernen",

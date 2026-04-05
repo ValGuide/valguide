@@ -1,7 +1,9 @@
 import { and, eq, isNull } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { tour, tourAssetDraft, tourLocale, tourLocaleDraft, tourSettingsDraft } from '../schema'
+import type { ResolvedThemeConfig } from '../../themes/resolve-effective-theme.server'
+import { resolveEffectiveTheme } from '../../themes/resolve-effective-theme.server'
+import { tour, tourAssetDraft, tourLocale, tourLocaleDraft, tourSettings, tourSettingsDraft } from '../schema'
 import { getTourHasAnyChanges } from './get-tour-has-any-changes.server'
 
 // =============================================================================
@@ -36,6 +38,12 @@ export type TourDetail = {
     themeId: string | null
     settingsJson: string | null
   } | null
+  theme: {
+    assignedThemeId: string | null
+    effectiveTheme: ResolvedThemeConfig | null
+    publishedTheme: ResolvedThemeConfig | null
+    hasChanges: boolean
+  }
   coverImage: TourCoverImage | null
 }
 
@@ -92,6 +100,14 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     .where(eq(tourSettingsDraft.tourId, foundTour.id))
     .limit(1)
 
+  const [publishedSettings] = await db
+    .select({
+      themeId: tourSettings.themeId,
+    })
+    .from(tourSettings)
+    .where(eq(tourSettings.tourId, foundTour.id))
+    .limit(1)
+
   const [coverImageRow] = await db
     .select({
       storagePath: asset.storagePath,
@@ -102,6 +118,18 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     .limit(1)
 
   const hasAnyChanges = guideIsPublished ? await getTourHasAnyChanges(foundTour.id) : false
+  const effectiveTheme = await resolveEffectiveTheme({
+    organizationId: foundTour.organizationId,
+    assignedThemeId: settings?.themeId ?? null,
+  })
+  const publishedTheme = await resolveEffectiveTheme({
+    organizationId: foundTour.organizationId,
+    assignedThemeId: publishedSettings?.themeId ?? null,
+  })
+  const themeHasChanges =
+    (settings?.themeId ?? null) !== (publishedSettings?.themeId ?? null) ||
+    effectiveTheme?.id !== publishedTheme?.id ||
+    effectiveTheme?.source !== publishedTheme?.source
 
   return {
     id: foundTour.id,
@@ -116,6 +144,12 @@ export async function getTourDetail(nanoId: string): Promise<TourDetail | null> 
     locales,
     hasAnyChanges,
     settings: settings ?? null,
+    theme: {
+      assignedThemeId: settings?.themeId ?? null,
+      effectiveTheme,
+      publishedTheme,
+      hasChanges: guideIsPublished ? themeHasChanges : false,
+    },
     coverImage: coverImageRow ?? null,
   }
 }

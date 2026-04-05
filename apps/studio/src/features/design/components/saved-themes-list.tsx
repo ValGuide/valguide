@@ -11,7 +11,8 @@ export interface SavedThemesListProps {
   isLoading: boolean
   selectedThemeId?: string
   onSelectTheme: (theme: Theme) => void
-  onDeleteTheme: (theme: Theme) => void
+  onDeleteTheme?: (theme: Theme) => void
+  showDelete?: boolean
   className?: string
 }
 
@@ -21,6 +22,7 @@ export function SavedThemesList({
   selectedThemeId,
   onSelectTheme,
   onDeleteTheme,
+  showDelete = true,
   className,
 }: SavedThemesListProps) {
   const t = useTranslations('studio.themeCustomizer')
@@ -62,15 +64,17 @@ export function SavedThemesList({
                   <span className="flex-1 text-sm font-medium truncate">{theme.name}</span>
                 </button>
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-6 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
-                  onClick={() => onDeleteTheme(theme)}
-                  aria-label={t('themeLibrary.delete')}
-                >
-                  <Trash2 className="size-3.5" />
-                </Button>
+                {showDelete && onDeleteTheme ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-6 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+                    onClick={() => onDeleteTheme(theme)}
+                    aria-label={t('themeLibrary.delete')}
+                  >
+                    <Trash2 className="size-3.5" />
+                  </Button>
+                ) : null}
               </div>
             )
           })}

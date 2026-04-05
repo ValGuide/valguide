@@ -19,8 +19,9 @@ export interface ThemeEditorPanelProps {
   isLoading: boolean
   onSelectTheme: (theme: Theme) => void
   onStartFromPreset: (preset: ThemePreset) => void
-  onDeleteTheme: (theme: Theme) => void
+  onDeleteTheme?: (theme: Theme) => void
   onSave: () => void
+  showDeleteThemes?: boolean
   layout?: 'workspace' | 'split' | 'mobile'
   className?: string
 }
@@ -33,6 +34,7 @@ export function ThemeEditorPanel({
   onStartFromPreset,
   onDeleteTheme,
   onSave,
+  showDeleteThemes = true,
   layout = 'split',
   className,
 }: ThemeEditorPanelProps) {
@@ -106,6 +108,7 @@ export function ThemeEditorPanel({
             selectedThemeId={config.id}
             onSelectTheme={onSelectTheme}
             onDeleteTheme={onDeleteTheme}
+            showDelete={showDeleteThemes}
           />
 
           {themes.length > 0 && <Separator />}

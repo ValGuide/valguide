@@ -7,7 +7,7 @@
 import { and, asc, eq, inArray, isNull } from 'drizzle-orm'
 import { asset } from '../../assets/schema'
 import { db } from '../../db'
-import { theme as themeTable } from '../../themes/schema'
+import { resolveEffectiveTheme } from '../../themes/resolve-effective-theme.server'
 import type { ThemeConfig } from '../../themes/types'
 import {
   stop,
@@ -213,27 +213,16 @@ export async function getDraftTourByNanoId(nanoId: string): Promise<TourWithStop
   const availableLocales = tourRow.availableLocales.filter((locale) => draftLocales.includes(locale))
 
   // 10. Get draft theme — fall back to published settings
-  let themeConfig: ThemeConfig | null = null
   const draftSettings = await db.query.tourSettingsDraft.findFirst({
     where: eq(tourSettingsDraft.tourId, tourRow.id),
   })
 
   const themeId = draftSettings?.themeId ?? (await getPublishedThemeId(tourRow.id))
-
-  if (themeId) {
-    const themeRow = await db.query.theme.findFirst({
-      where: eq(themeTable.id, themeId),
-    })
-
-    if (themeRow) {
-      themeConfig = {
-        basePreset: themeRow.basePreset,
-        colors: themeRow.colors,
-        radius: Number(themeRow.radius),
-        fonts: themeRow.fonts,
-      }
-    }
-  }
+  const resolvedTheme = await resolveEffectiveTheme({
+    organizationId: tourRow.organizationId,
+    assignedThemeId: themeId,
+  })
+  const themeConfig: ThemeConfig | null = resolvedTheme?.config ?? null
 
   return {
     id: tourRow.id,
