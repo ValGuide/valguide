@@ -128,6 +128,19 @@ export const UsedAsWorkspaceDefault: Story = {
   },
 }
 
+export const UsedByToursAndDefaultTheme: Story = {
+  args: {
+    open: true,
+    themeName: 'Museum House Style',
+    onGetUsage: fn(
+      async (): Promise<ThemeUsageDetails> => ({
+        isWorkspaceDefault: true,
+        tours: [{ id: 'tour-1', nanoId: 'tourNano1', name: 'Main Collection Highlights', scope: 'draftAndPublished' }],
+      }),
+    ),
+  },
+}
+
 export const Closed: Story = {
   args: {
     open: false,

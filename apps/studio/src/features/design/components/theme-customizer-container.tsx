@@ -19,7 +19,17 @@ export interface ThemeCustomizerContainerProps {
 export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainerProps) {
   const t = useTranslations('studio.themeCustomizer')
   const customizer = useThemeCustomizer('light')
-  const { themes, isLoading, createTheme, updateTheme, deleteTheme } = useOrgThemes()
+  const {
+    themes,
+    defaultThemeId,
+    currentUserRole,
+    isLoading,
+    createTheme,
+    updateTheme,
+    deleteTheme,
+    setDefaultTheme,
+    clearDefaultTheme,
+  } = useOrgThemes()
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [themeToDelete, setThemeToDelete] = useState<Theme | null>(null)
@@ -45,6 +55,31 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
     setThemeToDelete(theme)
     setDeleteDialogOpen(true)
   }, [])
+
+  const handleSetDefaultTheme = useCallback(
+    async (theme: Theme) => {
+      try {
+        await setDefaultTheme(theme.id)
+        toast.success(t('toast.defaultSet', { name: theme.name }))
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t('toast.defaultError')
+        toast.error(message)
+        throw error
+      }
+    },
+    [setDefaultTheme, t],
+  )
+
+  const handleClearDefaultTheme = useCallback(async () => {
+    try {
+      await clearDefaultTheme()
+      toast.success(t('toast.defaultCleared'))
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t('toast.defaultError')
+      toast.error(message)
+      throw error
+    }
+  }, [clearDefaultTheme, t])
 
   const handleSave = useCallback(
     async (name: string, saveAsNew: boolean) => {
@@ -128,10 +163,14 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
       <ThemeWorkspace
         customizer={customizer}
         themes={themes}
+        defaultThemeId={defaultThemeId}
+        canManageDefaultTheme={currentUserRole === 'owner' || currentUserRole === 'admin'}
         isLoading={isLoading}
         onSelectTheme={handleSelectTheme}
         onStartFromPreset={handleStartFromPreset}
         onDeleteTheme={handleOpenDeleteDialog}
+        onSetDefaultTheme={handleSetDefaultTheme}
+        onClearDefaultTheme={handleClearDefaultTheme}
         onSave={() => setSaveDialogOpen(true)}
       />
 

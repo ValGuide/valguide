@@ -42,10 +42,14 @@ type CompactPanel = 'styles' | 'brand' | 'advanced' | null
 export interface ThemeCompactControlsProps {
   customizer: UseThemeCustomizerReturn
   themes: Theme[]
+  defaultThemeId?: string | null
+  canManageDefaultTheme?: boolean
   isLoading: boolean
   onSelectTheme: (theme: Theme) => void
   onStartFromPreset: (preset: ThemePreset) => void
   onDeleteTheme?: (theme: Theme) => void
+  onSetDefaultTheme?: (theme: Theme) => Promise<void>
+  onClearDefaultTheme?: () => Promise<void>
   onSave: () => void
   showDeleteThemes?: boolean
   footer?: React.ReactNode
@@ -55,10 +59,14 @@ export interface ThemeCompactControlsProps {
 export function ThemeCompactControls({
   customizer,
   themes,
+  defaultThemeId,
+  canManageDefaultTheme = false,
   isLoading,
   onSelectTheme,
   onStartFromPreset,
   onDeleteTheme,
+  onSetDefaultTheme,
+  onClearDefaultTheme,
   onSave,
   showDeleteThemes = true,
   footer,
@@ -122,11 +130,15 @@ export function ThemeCompactControls({
             themes={themes}
             isLoading={isLoading}
             selectedThemeId={config.id}
+            defaultThemeId={defaultThemeId}
+            canManageDefaultTheme={canManageDefaultTheme}
             onSelectTheme={(theme) => {
               onSelectTheme(theme)
               closePanel()
             }}
             onDeleteTheme={onDeleteTheme}
+            onSetDefaultTheme={onSetDefaultTheme}
+            onClearDefaultTheme={onClearDefaultTheme}
             showDelete={showDeleteThemes}
           />
         </>

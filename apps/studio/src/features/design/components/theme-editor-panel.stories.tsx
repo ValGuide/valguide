@@ -92,11 +92,15 @@ type Story = StoryObj<typeof ThemeEditorPanel>
 
 function ThemeEditorPanelWrapper({
   themes = [],
+  defaultThemeId = '1',
+  canManageDefaultTheme = true,
   isLoading = false,
   layout = 'split',
   dirty = false,
 }: {
   themes?: Theme[]
+  defaultThemeId?: string | null
+  canManageDefaultTheme?: boolean
   isLoading?: boolean
   layout?: 'workspace' | 'split' | 'mobile'
   dirty?: boolean
@@ -114,10 +118,14 @@ function ThemeEditorPanelWrapper({
       <ThemeEditorPanel
         customizer={customizer}
         themes={themes}
+        defaultThemeId={defaultThemeId}
+        canManageDefaultTheme={canManageDefaultTheme}
         isLoading={isLoading}
         onSelectTheme={fn()}
         onStartFromPreset={fn()}
         onDeleteTheme={fn()}
+        onSetDefaultTheme={fn(async () => {})}
+        onClearDefaultTheme={fn(async () => {})}
         onSave={fn()}
         layout={layout}
       />
@@ -139,6 +147,10 @@ export const Loading: Story = {
 
 export const WorkspaceLayout: Story = {
   render: () => <ThemeEditorPanelWrapper themes={mockThemes} layout="workspace" />,
+}
+
+export const WithoutDefaultTheme: Story = {
+  render: () => <ThemeEditorPanelWrapper themes={mockThemes} defaultThemeId={null} />,
 }
 
 export const MobileLayout: Story = {

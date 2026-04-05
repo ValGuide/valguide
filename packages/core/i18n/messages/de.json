@@ -142,7 +142,12 @@
         "eyeDropper": "Farbe vom Bildschirm auswählen"
       },
       "themeLibrary": {
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "defaultTheme": "Standard-Theme",
+        "defaultBadge": "Standard",
+        "setAsDefaultTheme": "Als Standard setzen",
+        "settingDefaultTheme": "Wird gesetzt...",
+        "resetToValGuideDefault": "Auf ValGuide-Standard zurücksetzen"
       },
       "saveDialog": {
         "title": "Design speichern",
@@ -162,11 +167,11 @@
         "warningTitle": "Design wird verwendet",
         "loadingUsage": "Es wird geprüft, wo dieses Design verwendet wird...",
         "usedByToursDescription": "\"{name}\" ist aktuell {count} Touren zugewiesen.",
-        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" ist aktuell {count} Touren zugewiesen und ist zugleich das Standard-Theme des Arbeitsbereichs.",
-        "workspaceDefaultDescription": "\"{name}\" ist aktuell als Standard-Theme des Arbeitsbereichs gesetzt.",
-        "fallbackDescriptionUsedOnly": "Nach dem Löschen verwenden betroffene Touren das aktuelle Standard-Theme des Arbeitsbereichs. Wenn kein Standard-Theme gesetzt ist, wird das ValGuide-Standard-Theme verwendet.",
-        "fallbackDescriptionUsedAndDefault": "Nach dem Löschen verwenden betroffene Touren das ValGuide-Standard-Theme, bis Sie ein neues Standard-Theme für den Arbeitsbereich festlegen.",
-        "fallbackDescriptionDefaultOnly": "Nach dem Löschen verwenden Touren ohne eigenes Theme das ValGuide-Standard-Theme, bis Sie ein neues Standard-Theme für den Arbeitsbereich festlegen.",
+        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" ist {count} Touren zugewiesen und zugleich das Standard-Theme.",
+        "workspaceDefaultDescription": "\"{name}\" ist aktuell das Standard-Theme.",
+        "fallbackDescriptionUsedOnly": "Nach dem Löschen verwenden betroffene Touren das aktuelle Standard-Theme. Wenn keines gesetzt ist, wird der ValGuide-Standard verwendet.",
+        "fallbackDescriptionUsedAndDefault": "Nach dem Löschen verwenden betroffene Touren den ValGuide-Standard, bis Sie ein neues Standard-Theme wählen.",
+        "fallbackDescriptionDefaultOnly": "Nach dem Löschen verwenden Touren ohne eigenes Theme den ValGuide-Standard, bis Sie ein neues Standard-Theme wählen.",
         "usedBy": "Verwendet von",
         "reviewWarning": "Prüfen Sie die betroffenen Touren vor dem Löschen, wenn Sie zuerst ein anderes Theme zuweisen möchten.",
         "scope": {
@@ -196,7 +201,10 @@
       "toast": {
         "created": "Design erfolgreich erstellt",
         "updated": "Design erfolgreich aktualisiert",
-        "deleted": "Design erfolgreich gelöscht"
+        "deleted": "Design erfolgreich gelöscht",
+        "defaultSet": "\"{name}\" ist jetzt das Standard-Theme",
+        "defaultCleared": "Standard-Theme entfernt",
+        "defaultError": "Standard-Theme konnte nicht aktualisiert werden"
       }
     },
     "qr": {

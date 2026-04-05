@@ -11,10 +11,14 @@ import { ThemeEditorPanel } from './theme-editor-panel'
 export interface ThemeWorkspaceProps {
   customizer: UseThemeCustomizerReturn
   themes: Theme[]
+  defaultThemeId?: string | null
+  canManageDefaultTheme?: boolean
   isLoading: boolean
   onSelectTheme: (theme: Theme) => void
   onStartFromPreset: (preset: ThemePreset) => void
   onDeleteTheme?: (theme: Theme) => void
+  onSetDefaultTheme?: (theme: Theme) => Promise<void>
+  onClearDefaultTheme?: () => Promise<void>
   onSave: () => void
   showDeleteThemes?: boolean
   previewDescription?: React.ReactNode
@@ -25,10 +29,14 @@ export interface ThemeWorkspaceProps {
 export function ThemeWorkspace({
   customizer,
   themes,
+  defaultThemeId,
+  canManageDefaultTheme = false,
   isLoading,
   onSelectTheme,
   onStartFromPreset,
   onDeleteTheme,
+  onSetDefaultTheme,
+  onClearDefaultTheme,
   onSave,
   showDeleteThemes = true,
   previewDescription,
@@ -82,10 +90,14 @@ export function ThemeWorkspace({
         <ThemeCompactControls
           customizer={customizer}
           themes={themes}
+          defaultThemeId={defaultThemeId}
+          canManageDefaultTheme={canManageDefaultTheme}
           isLoading={isLoading}
           onSelectTheme={onSelectTheme}
           onStartFromPreset={onStartFromPreset}
           onDeleteTheme={onDeleteTheme}
+          onSetDefaultTheme={onSetDefaultTheme}
+          onClearDefaultTheme={onClearDefaultTheme}
           onSave={onSave}
           showDeleteThemes={showDeleteThemes}
           footer={compactFooter}
@@ -97,10 +109,14 @@ export function ThemeWorkspace({
         <ThemeEditorPanel
           customizer={customizer}
           themes={themes}
+          defaultThemeId={defaultThemeId}
+          canManageDefaultTheme={canManageDefaultTheme}
           isLoading={isLoading}
           onSelectTheme={onSelectTheme}
           onStartFromPreset={onStartFromPreset}
           onDeleteTheme={onDeleteTheme}
+          onSetDefaultTheme={onSetDefaultTheme}
+          onClearDefaultTheme={onClearDefaultTheme}
           onSave={onSave}
           showDeleteThemes={showDeleteThemes}
           layout="split"

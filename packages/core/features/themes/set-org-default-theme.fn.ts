@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { requireOrgMember } from '../auth/authorization'
+import { requireOrgRole } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { setOrgDefaultTheme } from './set-org-default-theme.server'
 
@@ -19,6 +19,6 @@ export const setOrgDefaultThemeFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(setOrgDefaultThemeSchema)
   .handler(async ({ context, data }) => {
-    await requireOrgMember(data.organizationId, context.user.id)
+    await requireOrgRole(data.organizationId, context.user.id, 'admin')
     return setOrgDefaultTheme(data.organizationId, data.themeId)
   })

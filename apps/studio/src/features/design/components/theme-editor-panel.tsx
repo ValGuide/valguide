@@ -28,10 +28,14 @@ const interfaceColorKeys: (keyof ThemeColors)[] = [
 export interface ThemeEditorPanelProps {
   customizer: UseThemeCustomizerReturn
   themes: Theme[]
+  defaultThemeId?: string | null
+  canManageDefaultTheme?: boolean
   isLoading: boolean
   onSelectTheme: (theme: Theme) => void
   onStartFromPreset: (preset: ThemePreset) => void
   onDeleteTheme?: (theme: Theme) => void
+  onSetDefaultTheme?: (theme: Theme) => Promise<void>
+  onClearDefaultTheme?: () => Promise<void>
   onSave: () => void
   showDeleteThemes?: boolean
   layout?: 'workspace' | 'split' | 'mobile'
@@ -41,10 +45,14 @@ export interface ThemeEditorPanelProps {
 export function ThemeEditorPanel({
   customizer,
   themes,
+  defaultThemeId,
+  canManageDefaultTheme = false,
   isLoading,
   onSelectTheme,
   onStartFromPreset,
   onDeleteTheme,
+  onSetDefaultTheme,
+  onClearDefaultTheme,
   onSave,
   showDeleteThemes = true,
   layout = 'split',
@@ -128,8 +136,12 @@ export function ThemeEditorPanel({
               themes={themes}
               isLoading={isLoading}
               selectedThemeId={config.id}
+              defaultThemeId={defaultThemeId}
+              canManageDefaultTheme={canManageDefaultTheme}
               onSelectTheme={onSelectTheme}
               onDeleteTheme={onDeleteTheme}
+              onSetDefaultTheme={onSetDefaultTheme}
+              onClearDefaultTheme={onClearDefaultTheme}
               showDelete={showDeleteThemes}
             />
           </div>

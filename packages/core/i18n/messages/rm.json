@@ -142,7 +142,12 @@
         "eyeDropper": "Tscherner colur dal visur"
       },
       "themeLibrary": {
-        "delete": "Stizzar"
+        "delete": "Stizzar",
+        "defaultTheme": "Tema standard",
+        "defaultBadge": "Standard",
+        "setAsDefaultTheme": "Definir sco standard",
+        "settingDefaultTheme": "Vegn definì...",
+        "resetToValGuideDefault": "Reset sin il standard da ValGuide"
       },
       "saveDialog": {
         "title": "Memorisar design",
@@ -162,11 +167,11 @@
         "warningTitle": "Il design vegn duvrà",
         "loadingUsage": "Verifitgar nua che quest design vegn duvrà...",
         "usedByToursDescription": "\"{name}\" è actualmain attribuì a {count} turas.",
-        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" è actualmain attribuì a {count} turas ed è er il theme standard dal workspace.",
-        "workspaceDefaultDescription": "\"{name}\" è actualmain definì sco theme standard dal workspace.",
-        "fallbackDescriptionUsedOnly": "Suenter il stizzar dovran turas pertutgadas il theme standard actual dal workspace. Sche nagin theme standard è definì, vegn duvrà il theme standard da ValGuide.",
-        "fallbackDescriptionUsedAndDefault": "Suenter il stizzar dovran turas pertutgadas il theme standard da ValGuide fin che Vus tschernis in nov theme standard dal workspace.",
-        "fallbackDescriptionDefaultOnly": "Suenter il stizzar dovran turas senza agen theme il theme standard da ValGuide fin che Vus tschernis in nov theme standard dal workspace.",
+        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" è attribuì a {count} turas ed è er il tema standard.",
+        "workspaceDefaultDescription": "\"{name}\" è actualmain il tema standard.",
+        "fallbackDescriptionUsedOnly": "Suenter il stizzar dovran turas pertutgadas il tema standard actual. Sche nagin è definì, vegn duvrà il standard da ValGuide.",
+        "fallbackDescriptionUsedAndDefault": "Suenter il stizzar dovran turas pertutgadas il standard da ValGuide fin che Vus tschernis in nov tema standard.",
+        "fallbackDescriptionDefaultOnly": "Suenter il stizzar dovran turas senza agen tema il standard da ValGuide fin che Vus tschernis in nov tema standard.",
         "usedBy": "Duvrà da",
         "reviewWarning": "Controllai las turas pertutgadas avant che stizzar, sche Vus vulais attribuir l'emprim in auter theme.",
         "scope": {
@@ -196,7 +201,10 @@
       "toast": {
         "created": "Design creà cun success",
         "updated": "Design actualisà cun success",
-        "deleted": "Design stizzà cun success"
+        "deleted": "Design stizzà cun success",
+        "defaultSet": "\"{name}\" è ussa il tema standard",
+        "defaultCleared": "Tema standard allontanà",
+        "defaultError": "Il tema standard n'ha betg pudì vegnir actualisà"
       }
     },
     "qr": {

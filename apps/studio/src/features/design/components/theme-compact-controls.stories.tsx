@@ -80,10 +80,14 @@ const mockThemes: Theme[] = [
 
 function ThemeCompactControlsStory({
   themes = mockThemes,
+  defaultThemeId = '1',
+  canManageDefaultTheme = true,
   isLoading = false,
   dirty = false,
 }: {
   themes?: Theme[]
+  defaultThemeId?: string | null
+  canManageDefaultTheme?: boolean
   isLoading?: boolean
   dirty?: boolean
 }) {
@@ -101,10 +105,14 @@ function ThemeCompactControlsStory({
         <ThemeCompactControls
           customizer={customizer}
           themes={themes}
+          defaultThemeId={defaultThemeId}
+          canManageDefaultTheme={canManageDefaultTheme}
           isLoading={isLoading}
           onSelectTheme={fn()}
           onStartFromPreset={fn()}
           onDeleteTheme={fn()}
+          onSetDefaultTheme={fn(async () => {})}
+          onClearDefaultTheme={fn(async () => {})}
           onSave={fn()}
         />
       </div>
@@ -149,4 +157,8 @@ export const WithUnsavedChanges: Story = {
 
 export const WithoutSavedThemes: Story = {
   render: () => <ThemeCompactControlsStory themes={[]} />,
+}
+
+export const WithoutDefaultTheme: Story = {
+  render: () => <ThemeCompactControlsStory defaultThemeId={null} />,
 }

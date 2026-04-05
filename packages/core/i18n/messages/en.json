@@ -142,7 +142,12 @@
         "eyeDropper": "Pick color from screen"
       },
       "themeLibrary": {
-        "delete": "Delete"
+        "delete": "Delete",
+        "defaultTheme": "Default theme",
+        "defaultBadge": "Default",
+        "setAsDefaultTheme": "Set as default",
+        "settingDefaultTheme": "Setting...",
+        "resetToValGuideDefault": "Reset to ValGuide default"
       },
       "saveDialog": {
         "title": "Save Theme",
@@ -162,11 +167,11 @@
         "warningTitle": "Theme is in use",
         "loadingUsage": "Checking where this theme is used...",
         "usedByToursDescription": "\"{name}\" is currently assigned to {count} tours.",
-        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" is currently assigned to {count} tours and is also your workspace default theme.",
-        "workspaceDefaultDescription": "\"{name}\" is currently set as the workspace default theme.",
-        "fallbackDescriptionUsedOnly": "After deletion, affected tours will use the current workspace default. If no workspace default is set, they will use ValGuide's default theme.",
-        "fallbackDescriptionUsedAndDefault": "After deletion, affected tours will use ValGuide's default theme until you choose a new workspace default.",
-        "fallbackDescriptionDefaultOnly": "After deletion, tours without an assigned theme will use ValGuide's default theme until you choose a new workspace default.",
+        "usedByToursAndWorkspaceDefaultDescription": "\"{name}\" is assigned to {count} tours and is also the default theme.",
+        "workspaceDefaultDescription": "\"{name}\" is currently the default theme.",
+        "fallbackDescriptionUsedOnly": "After deletion, affected tours will use the current default theme. If none is set, they will use ValGuide's default.",
+        "fallbackDescriptionUsedAndDefault": "After deletion, affected tours will use ValGuide's default until you choose a new default theme.",
+        "fallbackDescriptionDefaultOnly": "After deletion, tours without their own theme will use ValGuide's default until you choose a new default theme.",
         "usedBy": "Used by",
         "reviewWarning": "Review the affected tours before deleting if you want to assign a different theme first.",
         "scope": {
@@ -196,7 +201,10 @@
       "toast": {
         "created": "Theme created successfully",
         "updated": "Theme updated successfully",
-        "deleted": "Theme deleted successfully"
+        "deleted": "Theme deleted successfully",
+        "defaultSet": "\"{name}\" is now the default theme",
+        "defaultCleared": "Default theme cleared",
+        "defaultError": "Failed to update the default theme"
       }
     },
     "qr": {

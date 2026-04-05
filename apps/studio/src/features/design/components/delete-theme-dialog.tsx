@@ -79,9 +79,11 @@ export function DeleteThemeDialog({
     await onConfirm()
   }
 
-  const hasUsage = Boolean(usage && usage.tours.length > 0)
-  const hasWarning = Boolean(usage && (usage.tours.length > 0 || usage.isWorkspaceDefault))
-  const fallbackMessage = usage?.isWorkspaceDefault
+  const tours = usage?.tours ?? []
+  const isDefaultTheme = usage?.isWorkspaceDefault ?? false
+  const hasUsage = tours.length > 0
+  const hasWarning = hasUsage || isDefaultTheme
+  const fallbackMessage = isDefaultTheme
     ? hasUsage
       ? t('fallbackDescriptionUsedAndDefault')
       : t('fallbackDescriptionDefaultOnly')
@@ -107,24 +109,20 @@ export function DeleteThemeDialog({
                 </div>
               ) : hasWarning ? (
                 <>
-                  {hasUsage && usage?.isWorkspaceDefault ? (
-                    <p>
-                      {t('usedByToursAndWorkspaceDefaultDescription', { name: themeName, count: usage.tours.length })}
-                    </p>
+                  {hasUsage && isDefaultTheme ? (
+                    <p>{t('usedByToursAndWorkspaceDefaultDescription', { name: themeName, count: tours.length })}</p>
                   ) : null}
-                  {hasUsage && !usage?.isWorkspaceDefault ? (
-                    <p>{t('usedByToursDescription', { name: themeName, count: usage.tours.length })}</p>
+                  {hasUsage && !isDefaultTheme ? (
+                    <p>{t('usedByToursDescription', { name: themeName, count: tours.length })}</p>
                   ) : null}
-                  {!hasUsage && usage?.isWorkspaceDefault ? (
-                    <p>{t('workspaceDefaultDescription', { name: themeName })}</p>
-                  ) : null}
+                  {!hasUsage && isDefaultTheme ? <p>{t('workspaceDefaultDescription', { name: themeName })}</p> : null}
                   <p className="text-foreground">{fallbackMessage}</p>
 
                   {hasUsage ? (
                     <div>
                       <p className="font-medium text-foreground">{t('usedBy')}</p>
                       <ul className="mt-1 list-inside list-disc space-y-1 text-sm">
-                        {usage?.tours.map((tour) => (
+                        {tours.map((tour) => (
                           <li key={tour.id}>
                             <Link
                               to="/tours/$nanoId/edit"

@@ -1,7 +1,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { createThemeFn } from '@valguide/core/features/themes/create-theme.fn'
 import { deleteThemeFn } from '@valguide/core/features/themes/delete-theme.fn'
-import type { Theme } from '@valguide/core/features/themes/schema'
+import type { Theme } from '@valguide/core/features/themes/get-brand-theme-settings.fn'
+import { setOrgDefaultThemeFn } from '@valguide/core/features/themes/set-org-default-theme.fn'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
 import { updateThemeFn } from '@valguide/core/features/themes/update-theme.fn'
 import { themesQueryKey, themesQueryOptions } from '../query-options'
@@ -27,13 +29,19 @@ interface UseOrgThemesOptions {
 }
 
 interface UseOrgThemesReturn {
+  organizationId: string | null
   themes: Theme[]
+  defaultThemeId: string | null
+  defaultThemeName: string | null
+  currentUserRole: OrgRole | null
   isLoading: boolean
   error: Error | null
   refetch: () => Promise<Theme[]>
   createTheme: (data: CreateThemeData) => Promise<Theme>
   updateTheme: (id: string, data: UpdateThemeData) => Promise<Theme>
   deleteTheme: (id: string) => Promise<void>
+  setDefaultTheme: (id: string) => Promise<void>
+  clearDefaultTheme: () => Promise<void>
 }
 
 export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesReturn {
@@ -47,6 +55,8 @@ export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesRet
 
   const invalidateThemes = async () => {
     await queryClient.invalidateQueries({ queryKey: themesQueryKey() })
+    await queryClient.invalidateQueries({ queryKey: ['tour'] })
+    await queryClient.invalidateQueries({ queryKey: ['tours'] })
   }
 
   const createTheme = async (themeData: Omit<CreateThemeData, 'organizationId'>): Promise<Theme> => {
@@ -80,16 +90,52 @@ export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesRet
     await invalidateThemes()
   }
 
+  const setDefaultTheme = async (id: string): Promise<void> => {
+    if (!data?.organizationId) {
+      throw new Error('No active organization')
+    }
+
+    await setOrgDefaultThemeFn({
+      data: {
+        organizationId: data.organizationId,
+        themeId: id,
+      },
+    })
+
+    await invalidateThemes()
+  }
+
+  const clearDefaultTheme = async (): Promise<void> => {
+    if (!data?.organizationId) {
+      throw new Error('No active organization')
+    }
+
+    await setOrgDefaultThemeFn({
+      data: {
+        organizationId: data.organizationId,
+        themeId: null,
+      },
+    })
+
+    await invalidateThemes()
+  }
+
   return {
-    themes: data ?? [],
+    organizationId: data?.organizationId ?? null,
+    themes: data?.themes ?? [],
+    defaultThemeId: data?.defaultThemeId ?? null,
+    defaultThemeName: data?.defaultThemeName ?? null,
+    currentUserRole: data?.currentUserRole ?? null,
     isLoading,
     error: error ?? null,
     refetch: async () => {
       const result = await refetch()
-      return result.data ?? []
+      return result.data?.themes ?? []
     },
     createTheme,
     updateTheme,
     deleteTheme,
+    setDefaultTheme,
+    clearDefaultTheme,
   }
 }
