@@ -40,6 +40,7 @@ Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
   dev <target...> [--no-remote] Start local development for one or more targets
+  kill                       Stop common local dev processes
   build <target> [--analyse] Build a target
   preview <target>           Preview a target locally
   deploy <target> <env>      Deploy a target to dev or prod
@@ -122,6 +123,12 @@ Notes:
 Notes:
   Lint currently runs at repo scope.
   Use "fix" or "--fix" to run the existing repo lint-fix command.
+`,
+  kill: `Usage: val kill
+
+Notes:
+  Stops common local development processes by running:
+    killall node && killall caffeinate
 `,
   open: `Usage: val open <target>
 
@@ -306,6 +313,8 @@ function createInvocation(command, positionals, flags, passthrough) {
       return createTestInvocation(positionals, flags, passthrough)
     case 'lint':
       return createLintInvocation(positionals, flags, passthrough)
+    case 'kill':
+      return createKillInvocation(positionals, flags, passthrough)
     case 'open':
       return createOpenInvocation(positionals, flags, passthrough)
     case 'promote':
@@ -475,6 +484,20 @@ function createLintInvocation(positionals, flags, passthrough) {
   }
 
   return scriptInvocation('lint', passthrough)
+}
+
+function createKillInvocation(positionals, flags, passthrough) {
+  ensureAllowedFlags(flags, [], 'kill')
+  ensureNoExtraPositionals(positionals, 'kill')
+
+  if (passthrough.length > 0) {
+    failWithUsage('passthrough args are not supported for "kill".', 'kill')
+  }
+
+  return {
+    command: 'sh',
+    args: ['-c', 'killall node && killall caffeinate'],
+  }
 }
 
 function createOpenInvocation(positionals, flags, passthrough) {
