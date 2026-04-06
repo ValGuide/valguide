@@ -13,6 +13,7 @@ import { Button } from '@valguide/core/ui/components/button'
 import { Play, QrCode } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { TourHero } from '@/components/tours/tour-hero'
+import { TourLanguageControl } from '@/components/tours/tour-language-control'
 import { TourMetadata } from '@/components/tours/tour-metadata'
 
 export const Route = createFileRoute('/$orgSlug/$tourSlug/')({
@@ -20,7 +21,7 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug/')({
 })
 
 function TourPage() {
-  const { tour, orgSlug, tourSlug, locale } = Route.useRouteContext()
+  const { tour, orgSlug, tourSlug, locale, tourLocaleState } = Route.useRouteContext()
 
   const title = getLocalizedTourText(tour, 'title', locale as SupportedLocale)
   const description = getLocalizedTourText(tour, 'description', locale as SupportedLocale)
@@ -36,6 +37,9 @@ function TourPage() {
     >
       <PlayerProvider stops={playerStops}>
         <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
+          <div className="flex justify-end">
+            <TourLanguageControl {...tourLocaleState} />
+          </div>
           <TourHero title={title} description={description} coverImage={coverImageUrl} assets={tour.assets} />
           <TourMetadata stopCount={tour.stops.length} createdAt={tour.createdAt} locale={locale} />
           <TourActions orgSlug={orgSlug} tourSlug={tourSlug} />

@@ -1,5 +1,5 @@
 import { defaultLocale } from './i18n.config'
-import { resolveLocaleFromHeaders } from './locale-resolution'
+import { resolveLocaleFromHeaders, resolveLocaleStateFromHeaders } from './locale-resolution'
 
 describe('resolveLocaleFromHeaders', () => {
   it('prefers locale cookie over accept-language', () => {
@@ -35,5 +35,32 @@ describe('resolveLocaleFromHeaders', () => {
     })
 
     expect(resolveLocaleFromHeaders(headers)).toBe(defaultLocale)
+  })
+})
+
+describe('resolveLocaleStateFromHeaders', () => {
+  it('marks cookie-backed locale selections as persisted', () => {
+    const headers = new Headers({
+      cookie: 'foo=bar; valguide-locale=rm',
+      'accept-language': 'de-CH,de;q=0.9,en;q=0.8',
+    })
+
+    expect(resolveLocaleStateFromHeaders(headers)).toEqual({
+      locale: 'rm',
+      hasLocaleCookie: true,
+      source: 'cookie',
+    })
+  })
+
+  it('marks accept-language derived locales as not persisted', () => {
+    const headers = new Headers({
+      'accept-language': 'de-CH,de;q=0.9,en;q=0.8',
+    })
+
+    expect(resolveLocaleStateFromHeaders(headers)).toEqual({
+      locale: 'de',
+      hasLocaleCookie: false,
+      source: 'accept-language',
+    })
   })
 })

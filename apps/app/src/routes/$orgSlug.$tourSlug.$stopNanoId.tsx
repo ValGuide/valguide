@@ -16,6 +16,7 @@ import { Button } from '@valguide/core/ui/components/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@valguide/core/ui/components/sheet'
 import { ChevronLeft, ListMusic } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { TourLanguageControl } from '@/components/tours/tour-language-control'
 
 export const Route = createFileRoute('/$orgSlug/$tourSlug/$stopNanoId')({
   beforeLoad: ({ params, context }) => {
@@ -45,7 +46,7 @@ function StopPage() {
 }
 
 function StopPageContent() {
-  const { tour, orgSlug, tourSlug, locale } = Route.useRouteContext()
+  const { tour, orgSlug, tourSlug, locale, tourLocaleState } = Route.useRouteContext()
   const { stopNanoId } = Route.useParams()
   const navigate = useNavigate()
   const themedPortalContainer = useTourThemePortalContainer()
@@ -67,14 +68,17 @@ function StopPageContent() {
     <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
       <SyncStopToUrl stopNanoId={stopNanoId} orgSlug={orgSlug} tourSlug={tourSlug} />
       <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
-        <Link
-          to="/$orgSlug/$tourSlug"
-          params={{ orgSlug, tourSlug }}
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          {tourTitle}
-        </Link>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Link
+            to="/$orgSlug/$tourSlug"
+            params={{ orgSlug, tourSlug }}
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            {tourTitle}
+          </Link>
+          <TourLanguageControl {...tourLocaleState} />
+        </div>
 
         <FullPlayer />
 

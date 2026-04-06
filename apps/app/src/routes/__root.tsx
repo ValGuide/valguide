@@ -2,7 +2,7 @@ import type { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router'
 import { generateThemeScript, resolveTheme } from '@valguide/core/features/themes/defaults'
 import { defaultLocale } from '@valguide/core/i18n/i18n.config'
-import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
+import { localeQueryOptions, localeStateQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { TanStackAppDevtools } from '@valguide/core/ui/components/tanstack-devtools'
 import { getPrefixedTitle } from '@valguide/core/utils/page-title'
 import { NotFoundPage } from '@valguide/features/404/not-found-page'
@@ -14,8 +14,9 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   beforeLoad: async ({ context }) => {
-    const [locale, theme] = await Promise.all([
+    const [locale, localeState, theme] = await Promise.all([
       context.queryClient.ensureQueryData(localeQueryOptions()),
+      context.queryClient.ensureQueryData(localeStateQueryOptions()),
       context.queryClient.ensureQueryData(themeQueryOptions()),
     ])
     const messages = await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
@@ -23,7 +24,7 @@ export const Route = createRootRouteWithContext<{
       title: messages?.app?.metadata?.title ?? 'ValGuide',
       description: messages?.app?.metadata?.description ?? 'Explore tours',
     }
-    return { locale, theme, messages, metadata }
+    return { locale, localeState, theme, messages, metadata }
   },
   notFoundComponent: () => {
     const { messages } = Route.useRouteContext()

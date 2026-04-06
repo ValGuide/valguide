@@ -34,6 +34,15 @@
     "close": "Schliessen",
     "startTour": "Tour starten",
     "viewAllStops": "Alle Stops anzeigen",
+    "languageSwitcher": {
+      "buttonLabel": "Sprache",
+      "title": "Sprache wählen",
+      "changeTitle": "Sprache ändern",
+      "firstVisitDescription": "Wir haben anhand Ihres Browsers {language} vorausgewählt. Bestätigen Sie diese Sprache oder wählen Sie eine andere für diese Tour.",
+      "unsupportedTitle": "Verfügbare Sprache wählen",
+      "unsupportedDescription": "Diese Tour ist nicht in {language} verfügbar. Wählen Sie eine der verfügbaren Sprachen, um fortzufahren.",
+      "changeDescription": "Wählen Sie die Sprache, die Sie für diese Tour verwenden möchten."
+    },
     "feedback": {
       "rateExperience": "Bewerten Sie Ihr Erlebnis",
       "commentLabel": "Zusätzliche Kommentare (optional)",
@@ -630,6 +639,8 @@
       "appliesOnlyToTour": "Dieses Theme ist direkt dieser Tour zugewiesen.",
       "publishedSummary": "Besucherinnen und Besucher sehen aktuell das veröffentlichte Theme „{name}“.",
       "changeTheme": "Theme ändern",
+      "publishTheme": "Theme veröffentlichen",
+      "publishingTheme": "Veröffentlicht...",
       "apply": "Auf Tour anwenden",
       "saveAsNewAndApply": "Als neues Theme speichern und anwenden",
       "resetToDefault": "Auf Workspace-Standard zurücksetzen",
@@ -641,7 +652,9 @@
         "updated": "Tour-Theme aktualisiert",
         "reset": "Tour-Theme auf Workspace-Standard zurückgesetzt",
         "createdAndApplied": "Neues Tour-Theme erstellt und angewendet",
-        "error": "Tour-Theme konnte nicht aktualisiert werden"
+        "error": "Tour-Theme konnte nicht aktualisiert werden",
+        "published": "Tour-Theme veröffentlicht",
+        "publishError": "Tour-Theme konnte nicht veröffentlicht werden"
       }
     },
     "localesManager": {

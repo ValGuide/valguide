@@ -3,6 +3,12 @@ import Negotiator from 'negotiator'
 import { defaultLocale, type SupportedLocale, supportedLocales } from './i18n.config'
 
 export const LOCALE_COOKIE_NAME = 'valguide-locale'
+export type LocaleSource = 'cookie' | 'accept-language' | 'default'
+export type ResolvedLocaleState = {
+  locale: SupportedLocale
+  hasLocaleCookie: boolean
+  source: LocaleSource
+}
 
 export const isSupportedLocale = (locale: string | undefined | null): locale is SupportedLocale =>
   supportedLocales.includes(locale as SupportedLocale)
@@ -40,17 +46,33 @@ export const getAcceptLanguageLocale = (acceptLanguage: string | null): Supporte
   }
 }
 
-export const resolveLocaleFromHeaders = (headers: Headers | null | undefined): SupportedLocale => {
+export const resolveLocaleStateFromHeaders = (headers: Headers | null | undefined): ResolvedLocaleState => {
   const cookieLocale = getCookieValue(headers?.get('cookie') ?? null, LOCALE_COOKIE_NAME)
   if (isSupportedLocale(cookieLocale)) {
-    return cookieLocale
+    return {
+      locale: cookieLocale,
+      hasLocaleCookie: true,
+      source: 'cookie',
+    }
   }
 
   const acceptLanguage = headers?.get('accept-language') ?? null
   const acceptLocale = getAcceptLanguageLocale(acceptLanguage)
   if (acceptLocale) {
-    return acceptLocale
+    return {
+      locale: acceptLocale,
+      hasLocaleCookie: false,
+      source: 'accept-language',
+    }
   }
 
-  return defaultLocale
+  return {
+    locale: defaultLocale,
+    hasLocaleCookie: false,
+    source: 'default',
+  }
+}
+
+export const resolveLocaleFromHeaders = (headers: Headers | null | undefined): SupportedLocale => {
+  return resolveLocaleStateFromHeaders(headers).locale
 }

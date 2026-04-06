@@ -8,15 +8,21 @@ import { useRef } from 'react'
 export interface LocalePickerListProps {
   currentLocale: SupportedLocale
   disabled?: boolean
+  locales?: readonly SupportedLocale[]
   onSelectLocale: (locale: SupportedLocale) => void
 }
 
-export function LocalePickerList({ currentLocale, disabled = false, onSelectLocale }: LocalePickerListProps) {
+export function LocalePickerList({
+  currentLocale,
+  disabled = false,
+  locales = supportedLocales,
+  onSelectLocale,
+}: LocalePickerListProps) {
   const displayLocale = useLocale()
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const focusItem = (index: number) => {
-    const clampedIndex = Math.max(0, Math.min(index, supportedLocales.length - 1))
+    const clampedIndex = Math.max(0, Math.min(index, locales.length - 1))
     itemRefs.current[clampedIndex]?.focus()
   }
 
@@ -41,15 +47,15 @@ export function LocalePickerList({ currentLocale, disabled = false, onSelectLoca
 
     if (event.key === 'End') {
       event.preventDefault()
-      focusItem(supportedLocales.length - 1)
+      focusItem(locales.length - 1)
     }
   }
 
-  const selectedIndex = supportedLocales.indexOf(currentLocale)
+  const selectedIndex = locales.indexOf(currentLocale)
 
   return (
     <div role="listbox" aria-label="Language" className="max-h-[300px] overflow-y-auto p-1">
-      {supportedLocales.map((locale, index) => {
+      {locales.map((locale, index) => {
         const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
         const isSelected = locale === currentLocale
 

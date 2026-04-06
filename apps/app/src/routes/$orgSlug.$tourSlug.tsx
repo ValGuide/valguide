@@ -7,20 +7,25 @@ import { getDraftTourByNanoId } from '@valguide/core/features/tours/public/get-d
 import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-tour'
 import {
   readTourFromKv,
+  readTourSharedFromKv,
   resolveOrgSlugFromKv,
   resolveTourSlugFromKv,
   writeOrgSlugToKv,
+  writeTourSharedToKv,
   writeTourSlugToKv,
   writeTourToKv,
 } from '@valguide/core/features/tours/public/kv'
-import { serializeTourForKv, tourKvDataToTourWithStops } from '@valguide/core/features/tours/public/kv-serializers'
+import {
+  serializeTourForKv,
+  serializeTourSharedForKv,
+  tourKvDataToTourWithStops,
+} from '@valguide/core/features/tours/public/kv-serializers'
 import { resolveTourByIdOrSlug } from '@valguide/core/features/tours/tour/slug/resolve-tour.server'
-import { useTranslations } from '@valguide/core/i18n/client'
-import { toast } from '@valguide/core/ui/components/sonner/state'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { useEffect, useRef } from 'react'
 import { z } from 'zod'
 import { PreviewBanner } from '@/components/preview-banner'
+import { resolveTourLocaleState } from '@/features/i18n/tour-locale-state'
 import { notifyServiceWorker } from '@/sw'
 
 const tourSearchSchema = z.object({
@@ -57,11 +62,14 @@ const resolveTourFn = createServerFn({ method: 'GET' })
           }
         }
 
-        const tourKvData = await readTourFromKv(tourKv.tourNanoId, locale)
-        if (tourKvData) {
+        const [tourKvData, sharedTourKvData] = await Promise.all([
+          readTourFromKv(tourKv.tourNanoId, locale),
+          readTourSharedFromKv(tourKv.tourNanoId),
+        ])
+        if (tourKvData && (sharedTourKvData || tourKvData.theme !== undefined)) {
           return {
             redirect: false as const,
-            tour: tourKvDataToTourWithStops(tourKvData),
+            tour: tourKvDataToTourWithStops(tourKvData, sharedTourKvData),
             orgSlug: orgKv.primarySlug,
             tourSlug: tourKv.primarySlug,
             isPreviewMode: false,
@@ -72,7 +80,12 @@ const resolveTourFn = createServerFn({ method: 'GET' })
         const tour = await getPublishedTourByNanoId(tourKv.tourNanoId)
         if (!tour) return null
 
-        waitUntil(writeTourToKv(tourKv.tourNanoId, locale, serializeTourForKv(tour, locale)))
+        waitUntil(
+          Promise.all([
+            writeTourToKv(tourKv.tourNanoId, locale, serializeTourForKv(tour, locale)),
+            writeTourSharedToKv(tourKv.tourNanoId, serializeTourSharedForKv(tour)),
+          ]),
+        )
 
         return {
           redirect: false as const,
@@ -153,6 +166,10 @@ const resolveTourFn = createServerFn({ method: 'GET' })
             locale,
             serializeTourForKv(tour as Parameters<typeof serializeTourForKv>[0], locale),
           ),
+          writeTourSharedToKv(
+            tourResolved.tourNanoId,
+            serializeTourSharedForKv(tour as Parameters<typeof serializeTourSharedForKv>[0]),
+          ),
         ]),
       )
     }
@@ -186,11 +203,18 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug')({
       })
     }
 
+    const tourLocaleState = resolveTourLocaleState({
+      currentLocale: context.locale,
+      hasLocaleCookie: context.localeState.hasLocaleCookie,
+      availableLocales: result.tour.availableLocales,
+    })
+
     return {
       tour: result.tour,
       orgSlug: result.orgSlug,
       tourSlug: result.tourSlug,
       isPreviewMode: result.isPreviewMode,
+      tourLocaleState,
     }
   },
   component: TourLayout,
@@ -198,7 +222,6 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug')({
 
 function TourLayout() {
   const { tour, isPreviewMode, locale } = Route.useRouteContext()
-  const t = useTranslations('player')
   const offlineShownRef = useRef(false)
 
   useEffect(() => {
@@ -225,13 +248,15 @@ function TourLayout() {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'TOUR_READY_OFFLINE' && event.data.tourKey === tour.nanoId && !offlineShownRef.current) {
         offlineShownRef.current = true
-        toast.success(t('offlineReady'), { duration: 4000 })
+        console.log('[offline-debug] Tour ready offline', {
+          tourKey: event.data.tourKey,
+        })
       }
     }
 
     sw.addEventListener('message', handleMessage)
     return () => sw.removeEventListener('message', handleMessage)
-  }, [tour.nanoId, isPreviewMode, t])
+  }, [tour.nanoId, isPreviewMode])
 
   return (
     <>

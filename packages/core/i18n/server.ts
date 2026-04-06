@@ -5,9 +5,16 @@ import {
   isSupportedLocale,
   LOCALE_COOKIE_NAME,
   resolveLocaleFromHeaders,
+  resolveLocaleStateFromHeaders,
 } from './locale-resolution'
 
-export { LOCALE_COOKIE_NAME, getAcceptLanguageLocale, isSupportedLocale, resolveLocaleFromHeaders }
+export {
+  LOCALE_COOKIE_NAME,
+  getAcceptLanguageLocale,
+  isSupportedLocale,
+  resolveLocaleFromHeaders,
+  resolveLocaleStateFromHeaders,
+}
 
 export const resolveServerLocale = (request?: Request): SupportedLocale => {
   const cookieLocale = getCookie(LOCALE_COOKIE_NAME)
@@ -23,6 +30,31 @@ export const resolveServerLocale = (request?: Request): SupportedLocale => {
     return resolveLocaleFromHeaders(getRequestHeaders())
   } catch {
     return defaultLocale
+  }
+}
+
+export const resolveServerLocaleState = (request?: Request) => {
+  const cookieLocale = getCookie(LOCALE_COOKIE_NAME)
+  if (isSupportedLocale(cookieLocale)) {
+    return {
+      locale: cookieLocale,
+      hasLocaleCookie: true,
+      source: 'cookie' as const,
+    }
+  }
+
+  if (request) {
+    return resolveLocaleStateFromHeaders(request.headers)
+  }
+
+  try {
+    return resolveLocaleStateFromHeaders(getRequestHeaders())
+  } catch {
+    return {
+      locale: defaultLocale,
+      hasLocaleCookie: false,
+      source: 'default' as const,
+    }
   }
 }
 

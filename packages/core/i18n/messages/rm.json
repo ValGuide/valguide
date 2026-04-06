@@ -34,6 +34,15 @@
     "close": "Serrar",
     "startTour": "Cumenzar la tura",
     "viewAllStops": "Mussar tut ils stops",
+    "languageSwitcher": {
+      "buttonLabel": "Lingua",
+      "title": "Tscherner Vossa lingua",
+      "changeTitle": "Midar lingua",
+      "firstVisitDescription": "Nus avain preselecziunà {language} tenor Voss browser. Confermai questa lingua u tschernais in'autra lingua per questa tura.",
+      "unsupportedTitle": "Tscherner ina lingua disponibla",
+      "unsupportedDescription": "Questa tura n'è betg disponibla en {language}. Tschernais ina da las linguas disponiblas per cuntinuar.",
+      "changeDescription": "Tschernais la lingua che Vus vulais duvrar per questa tura."
+    },
     "feedback": {
       "rateExperience": "Valitar Vossa experientscha",
       "commentLabel": "Commentaris supplementars (opziunal)",
@@ -630,6 +639,8 @@
       "appliesOnlyToTour": "Quest tema è attribuì directamain a questa tura.",
       "publishedSummary": "Visitadras e visitaders vesan actualmain il tema publicà \"{name}\".",
       "changeTheme": "Midar tema",
+      "publishTheme": "Publitgar tema",
+      "publishingTheme": "Publitgescha...",
       "apply": "Applitgar a la tura",
       "saveAsNewAndApply": "Memorisar sco nov tema ed applitgar",
       "resetToDefault": "Reset sin il standard dal workspace",
@@ -641,7 +652,9 @@
         "updated": "Tema da la tura actualisà",
         "reset": "Tema da la tura resettà sin il standard dal workspace",
         "createdAndApplied": "Nov tema da la tura creà ed applitgà",
-        "error": "Actualisar il tema da la tura n'è betg reussì"
+        "error": "Actualisar il tema da la tura n'è betg reussì",
+        "published": "Tema da la tura publitgà",
+        "publishError": "Publitgar il tema da la tura n'è betg reussì"
       }
     },
     "localesManager": {

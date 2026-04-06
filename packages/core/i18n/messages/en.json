@@ -34,6 +34,15 @@
     "close": "Close",
     "startTour": "Start Tour",
     "viewAllStops": "View All Stops",
+    "languageSwitcher": {
+      "buttonLabel": "Language",
+      "title": "Choose your language",
+      "changeTitle": "Change language",
+      "firstVisitDescription": "We selected {language} based on your browser. Confirm it or choose another language for this tour.",
+      "unsupportedTitle": "Choose an available language",
+      "unsupportedDescription": "This tour is not available in {language}. Choose one of the available languages to continue.",
+      "changeDescription": "Choose the language you want to use for this tour."
+    },
     "feedback": {
       "rateExperience": "Rate your experience",
       "commentLabel": "Additional comments (optional)",
@@ -630,6 +639,8 @@
       "appliesOnlyToTour": "This theme is assigned directly to this tour.",
       "publishedSummary": "Visitors currently see the published theme \"{name}\".",
       "changeTheme": "Change theme",
+      "publishTheme": "Publish theme",
+      "publishingTheme": "Publishing...",
       "apply": "Apply to tour",
       "saveAsNewAndApply": "Save as new and apply",
       "resetToDefault": "Reset to workspace default",
@@ -641,7 +652,9 @@
         "updated": "Tour theme updated",
         "reset": "Tour theme reset to workspace default",
         "createdAndApplied": "New tour theme created and applied",
-        "error": "Failed to update the tour theme"
+        "error": "Failed to update the tour theme",
+        "published": "Tour theme published",
+        "publishError": "Failed to publish the tour theme"
       }
     },
     "localesManager": {

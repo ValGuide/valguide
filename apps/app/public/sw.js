@@ -12,7 +12,7 @@
 // One tour cached at a time — opening a new tour evicts the previous tour's
 // data and media caches, then prefetches all audio for the new tour.
 
-const CACHE_VERSION = 1
+const CACHE_VERSION = 2
 const SHELL_CACHE = `vg-shell-v${CACHE_VERSION}`
 const STATIC_CACHE = `vg-static-v${CACHE_VERSION}`
 const DATA_CACHE = `vg-data-v${CACHE_VERSION}`
@@ -54,9 +54,12 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // Server functions (tour data) → network-first
+  // Server function reads (tour data) → network-first
+  // Never intercept mutations like locale changes with offline cache fallback.
   if (url.origin === self.location.origin && url.pathname.startsWith('/_serverFn/')) {
-    event.respondWith(networkFirst(request, DATA_CACHE))
+    if (request.method === 'GET') {
+      event.respondWith(networkFirst(request, DATA_CACHE))
+    }
     return
   }
 
