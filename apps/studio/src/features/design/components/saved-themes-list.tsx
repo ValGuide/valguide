@@ -79,10 +79,12 @@ export function SavedThemesList({
       <CollapsibleContent>
         <div className="space-y-1.5 pt-1">
           {defaultTheme ? (
-            <div className="flex items-center justify-between gap-3 rounded-md border bg-muted/20 px-3 py-2">
-              <div className="min-w-0">
-                <p className="text-xs font-medium text-muted-foreground">{t('themeLibrary.defaultTheme')}</p>
-                <p className="truncate text-sm font-medium">{defaultTheme.name}</p>
+            <div className="flex items-center gap-3 rounded-md border bg-muted/20 px-3 py-2">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                  <span className="text-xs font-medium text-muted-foreground">{t('themeLibrary.defaultTheme')}</span>
+                  <span className="truncate text-sm font-medium">{defaultTheme.name}</span>
+                </div>
               </div>
               {canManageDefaultTheme && onClearDefaultTheme ? (
                 <Button
@@ -90,7 +92,7 @@ export function SavedThemesList({
                   size="sm"
                   onClick={() => void handleClearDefaultTheme()}
                   disabled={pendingDefaultThemeId !== null}
-                  className="shrink-0"
+                  className="h-7 shrink-0 px-2 text-xs"
                 >
                   {t('themeLibrary.resetToValGuideDefault')}
                 </Button>
@@ -122,14 +124,13 @@ export function SavedThemesList({
                     <div className="size-5 rounded-r border" style={{ backgroundColor: theme.colors.accent }} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex min-w-0 items-center gap-2">
-                      <span className="truncate text-sm font-medium">{theme.name}</span>
-                      {isDefault ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
-                    </div>
+                    <span className="truncate text-sm font-medium">{theme.name}</span>
                   </div>
                 </button>
 
                 <div className="flex shrink-0 items-center gap-1">
+                  {isDefault ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
+
                   {canManageDefaultTheme && onSetDefaultTheme && !isDefault ? (
                     <Button
                       variant="ghost"
