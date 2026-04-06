@@ -95,6 +95,8 @@ jobs:
               echo "VITE_POSTHOG_KEY=$PH_KEY" >> $GITHUB_ENV
               echo "VITE_POSTHOG_HOST=https://e.valguide.${DS}" >> $GITHUB_ENV
               echo "VITE_APP_DOMAIN=app.valguide.${DS}" >> $GITHUB_ENV
+              echo "VITE_PRIVACY_POLICY_URL=https://www.valguide.${DS}/privacy-policy" >> $GITHUB_ENV
+              echo "VITE_TERMS_OF_SERVICE_URL=https://www.valguide.${DS}/terms-of-service" >> $GITHUB_ENV
               ;;
           esac
 
