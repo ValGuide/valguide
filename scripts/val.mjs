@@ -47,6 +47,7 @@ Commands:
   test [target]              Run tests for the repo or one supported target
   lint [fix]                 Run repo lint checks or apply lint fixes
   open <target>              Open a common ValGuide URL in the browser
+  promote                    Merge local dev into main, push main, then switch back to dev
   db <action>                Run database action: generate | migrate | studio
   seed <env>                 Seed dev or prod data
   verify <target>            Run target verification
@@ -126,6 +127,17 @@ Notes:
 
 Targets:
   ${OPEN_TARGETS.join(', ')}
+`,
+  promote: `Usage: val promote
+
+Notes:
+  Promotes local dev to main by running:
+    1. git switch main
+    2. git merge dev
+    3. git push origin main
+    4. git switch dev
+
+  The command requires a clean git worktree and stops on merge or push failures.
 `,
   db: `Usage:
   val db generate
@@ -296,6 +308,8 @@ function createInvocation(command, positionals, flags, passthrough) {
       return createLintInvocation(positionals, flags, passthrough)
     case 'open':
       return createOpenInvocation(positionals, flags, passthrough)
+    case 'promote':
+      return createPromoteInvocation(positionals, flags, passthrough)
     case 'db':
       return createDbInvocation(positionals, flags, passthrough)
     case 'seed':
@@ -474,6 +488,17 @@ function createOpenInvocation(positionals, flags, passthrough) {
   }
 
   return commandInvocation('open', [OPEN_URLS[target]])
+}
+
+function createPromoteInvocation(positionals, flags, passthrough) {
+  ensureAllowedFlags(flags, [], 'promote')
+  ensureNoExtraPositionals(positionals, 'promote')
+
+  if (passthrough.length > 0) {
+    failWithUsage('passthrough args are not supported for "promote".', 'promote')
+  }
+
+  return commandInvocation('sh', ['scripts/promote-dev-to-main.sh'])
 }
 
 function createDbInvocation(positionals, flags, passthrough) {
