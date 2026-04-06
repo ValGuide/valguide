@@ -1,15 +1,15 @@
 import { useTranslations } from '@valguide/core/i18n/client'
 import { LegalPageShell } from './legal-page-shell'
 
-export function TermsOfServicePage() {
+export function CookiePolicyPage() {
   const t = useTranslations('www.legal')
-  // i18n-used-keys: www.legal.privacyPolicy.title, www.legal.termsOfService.title, www.legal.termsOfService.body
+  // i18n-used-keys: www.legal.cookiePolicy.title, www.legal.cookiePolicy.body, www.legal.policies.title, www.legal.privacyPolicy.title, www.legal.termsOfService.title
 
   return (
     <LegalPageShell
-      currentPath="/terms-of-service"
-      title={t('termsOfService.title')}
-      body={t('termsOfService.body')}
+      currentPath="/cookie-policy"
+      title={t('cookiePolicy.title')}
+      body={t('cookiePolicy.body')}
       policiesLabel={t('policies.title')}
       privacyLabel={t('privacyPolicy.title')}
       termsLabel={t('termsOfService.title')}

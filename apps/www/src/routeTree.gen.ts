@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PoliciesRouteImport } from './routes/policies'
+import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
@@ -29,6 +30,11 @@ const PoliciesRoute = PoliciesRouteImport.update({
   path: '/policies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CookiePolicyRoute = CookiePolicyRouteImport.update({
+  id: '/cookie-policy',
+  path: '/cookie-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cookie-policy': typeof CookiePolicyRoute
   '/policies': typeof PoliciesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cookie-policy': typeof CookiePolicyRoute
   '/policies': typeof PoliciesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
@@ -50,20 +58,38 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cookie-policy': typeof CookiePolicyRoute
   '/policies': typeof PoliciesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/policies' | '/privacy-policy' | '/terms-of-service'
+  fullPaths:
+    | '/'
+    | '/cookie-policy'
+    | '/policies'
+    | '/privacy-policy'
+    | '/terms-of-service'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/policies' | '/privacy-policy' | '/terms-of-service'
-  id: '__root__' | '/' | '/policies' | '/privacy-policy' | '/terms-of-service'
+  to:
+    | '/'
+    | '/cookie-policy'
+    | '/policies'
+    | '/privacy-policy'
+    | '/terms-of-service'
+  id:
+    | '__root__'
+    | '/'
+    | '/cookie-policy'
+    | '/policies'
+    | '/privacy-policy'
+    | '/terms-of-service'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CookiePolicyRoute: typeof CookiePolicyRoute
   PoliciesRoute: typeof PoliciesRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
@@ -92,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PoliciesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cookie-policy': {
+      id: '/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/cookie-policy'
+      preLoaderRoute: typeof CookiePolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CookiePolicyRoute: CookiePolicyRoute,
   PoliciesRoute: PoliciesRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,

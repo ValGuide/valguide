@@ -13,6 +13,7 @@ export function PrivacyPolicyPage() {
       policiesLabel={t('policies.title')}
       privacyLabel={t('privacyPolicy.title')}
       termsLabel={t('termsOfService.title')}
+      cookieLabel={t('cookiePolicy.title')}
     />
   )
 }

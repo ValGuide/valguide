@@ -2,12 +2,13 @@ import { Link } from '@tanstack/react-router'
 import { cn } from '@valguide/ui/lib/utils'
 
 type LegalPageShellProps = {
-  currentPath: '/policies' | '/privacy-policy' | '/terms-of-service'
+  currentPath: '/policies' | '/privacy-policy' | '/terms-of-service' | '/cookie-policy'
   title: string
   body: string
   policiesLabel: string
   privacyLabel: string
   termsLabel: string
+  cookieLabel: string
 }
 
 export function LegalPageShell({
@@ -17,6 +18,7 @@ export function LegalPageShell({
   policiesLabel,
   privacyLabel,
   termsLabel,
+  cookieLabel,
 }: LegalPageShellProps) {
   return (
     <main className="min-h-svh bg-background px-4 py-12 text-foreground sm:px-6 lg:px-8">
@@ -54,6 +56,17 @@ export function LegalPageShell({
             )}
           >
             {termsLabel}
+          </Link>
+          <Link
+            to="/cookie-policy"
+            className={cn(
+              'rounded-full border px-4 py-2 text-sm transition',
+              currentPath === '/cookie-policy'
+                ? 'border-foreground bg-foreground text-background'
+                : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground',
+            )}
+          >
+            {cookieLabel}
           </Link>
         </nav>
         <div className="mt-6 rounded-[2rem] border border-border bg-card p-8 shadow-sm sm:p-10">

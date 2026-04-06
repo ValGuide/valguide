@@ -7,6 +7,7 @@ type LegalNotFoundPageProps = {
   policiesLabel: string
   privacyLabel: string
   termsLabel: string
+  cookieLabel: string
 }
 
 export function LegalNotFoundPage({
@@ -15,6 +16,7 @@ export function LegalNotFoundPage({
   policiesLabel,
   privacyLabel,
   termsLabel,
+  cookieLabel,
 }: LegalNotFoundPageProps) {
   return (
     <main className="flex min-h-svh items-center px-4 py-12 sm:px-6 lg:px-8">
@@ -39,6 +41,12 @@ export function LegalNotFoundPage({
             className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition hover:border-foreground hover:text-foreground"
           >
             {termsLabel}
+          </Link>
+          <Link
+            to="/cookie-policy"
+            className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition hover:border-foreground hover:text-foreground"
+          >
+            {cookieLabel}
           </Link>
         </div>
       </div>

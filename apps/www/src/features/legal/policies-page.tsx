@@ -3,7 +3,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 
 export function PoliciesPage() {
   const t = useTranslations('www.legal')
-  // i18n-used-keys: www.legal.policies.title, www.legal.policies.introPrimary, www.legal.policies.introSecondary, www.legal.policies.dataProcessingAgreement, www.legal.privacyPolicy.title, www.legal.privacyPolicy.summary, www.legal.termsOfService.title, www.legal.termsOfService.summary
+  // i18n-used-keys: www.legal.policies.title, www.legal.policies.introPrimary, www.legal.policies.introSecondary, www.legal.policies.dataProcessingAgreement, www.legal.privacyPolicy.title, www.legal.privacyPolicy.summary, www.legal.termsOfService.title, www.legal.termsOfService.summary, www.legal.cookiePolicy.title, www.legal.cookiePolicy.summary
 
   return (
     <main className="min-h-svh bg-background px-4 py-12 text-foreground sm:px-6 sm:py-16 lg:px-8 lg:py-20">
@@ -36,6 +36,15 @@ export function PoliciesPage() {
               {t('privacyPolicy.title')}
             </Link>
             <p className="mt-1 text-base leading-7 text-muted-foreground">{t('privacyPolicy.summary')}</p>
+          </li>
+          <li>
+            <Link
+              to="/cookie-policy"
+              className="underline decoration-1 underline-offset-4 transition hover:text-foreground/70"
+            >
+              {t('cookiePolicy.title')}
+            </Link>
+            <p className="mt-1 text-base leading-7 text-muted-foreground">{t('cookiePolicy.summary')}</p>
           </li>
         </ul>
 

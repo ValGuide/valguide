@@ -34,7 +34,7 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: () => {
     const { wwwMessages } = Route.useRouteContext()
-    // i18n-used-keys: www.notFound.title, www.notFound.description, www.legal.policies.title, www.legal.privacyPolicy.title, www.legal.termsOfService.title
+    // i18n-used-keys: www.notFound.title, www.notFound.description, www.legal.policies.title, www.legal.privacyPolicy.title, www.legal.termsOfService.title, www.legal.cookiePolicy.title
     return (
       <LegalNotFoundPage
         title={wwwMessages?.www?.notFound?.title ?? 'Page not found'}
@@ -42,6 +42,7 @@ export const Route = createRootRouteWithContext<{
         policiesLabel={wwwMessages?.www?.legal?.policies?.title ?? 'Policies'}
         privacyLabel={wwwMessages?.www?.legal?.privacyPolicy?.title ?? 'Privacy Policy'}
         termsLabel={wwwMessages?.www?.legal?.termsOfService?.title ?? 'Terms of Service'}
+        cookieLabel={wwwMessages?.www?.legal?.cookiePolicy?.title ?? 'Cookie Policy'}
       />
     )
   },
