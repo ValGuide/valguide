@@ -11,8 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
-import { ScrollArea } from '@valguide/ui/components/scroll-area'
-import { AlertTriangle, Loader2 } from 'lucide-react'
+import { AlertTriangle, ExternalLink, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export interface DeleteThemeDialogProps {
@@ -125,24 +124,28 @@ export function DeleteThemeDialog({
                   {hasUsage ? (
                     <div>
                       <p className="font-medium text-foreground">{t('usedBy')}</p>
-                      <ScrollArea className="mt-2 max-h-[min(40dvh,20rem)] rounded-md border bg-muted/10">
-                        <ul className="list-inside list-disc space-y-1 p-3 text-sm">
+                      <div className="mt-2 max-h-[min(40dvh,20rem)] overflow-y-auto rounded-md border bg-muted/10 p-3">
+                        <ul className="space-y-2 text-sm">
                           {tours.map((tour) => (
                             <li key={tour.id}>
                               <Link
-                                to="/tours/$nanoId/edit"
+                                to="/tours/$nanoId"
                                 params={{ nanoId: tour.nanoId }}
                                 preload="intent"
-                                className="text-primary hover:underline"
-                                onClick={() => onOpenChange(false)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="group flex min-w-0 items-start justify-between gap-3 rounded-md border bg-background px-3 py-2 text-foreground transition-colors hover:border-primary/40 hover:bg-accent/40"
                               >
-                                {tour.name}
+                                <div className="min-w-0 flex-1">
+                                  <div className="break-words font-medium leading-tight text-primary">{tour.name}</div>
+                                  <div className="text-xs text-muted-foreground">{scopeLabel(tour.scope)}</div>
+                                </div>
+                                <ExternalLink className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                               </Link>
-                              <span className="text-muted-foreground"> ({scopeLabel(tour.scope)})</span>
                             </li>
                           ))}
                         </ul>
-                      </ScrollArea>
+                      </div>
                     </div>
                   ) : null}
 
