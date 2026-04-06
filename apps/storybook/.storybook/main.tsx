@@ -9,7 +9,8 @@ import { serverEnv } from './__mocks__/env-server.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const storybookMocksDir = path.resolve(__dirname, './__mocks__')
-const coreDbModulePath = path.resolve(__dirname, '../../packages/core/features/db.ts')
+const storybookDbMockPath = path.resolve(storybookMocksDir, 'db.ts')
+const coreDbModulePath = path.resolve(__dirname, '../../../packages/core/features/db.ts')
 const sharedFontsDir = path.resolve(__dirname, '../../studio/public/fonts')
 
 function generateMockEnvDefines() {
@@ -58,6 +59,24 @@ const config: StorybookConfig = {
 
   async viteFinal(config) {
     config.plugins?.push(
+      {
+        name: 'storybook-mock-core-db',
+        resolveId(source, importer) {
+          if (source === '@valguide/core/features/db') {
+            return storybookDbMockPath
+          }
+
+          if (source === coreDbModulePath || /\/packages\/core\/features\/db\.ts$/.test(source)) {
+            return storybookDbMockPath
+          }
+
+          if (importer?.includes('/packages/core/features/') && /^(\.\.\/)+db$/.test(source)) {
+            return storybookDbMockPath
+          }
+
+          return null
+        },
+      },
       /** @see https://github.com/aleclarson/vite-tsconfig-paths */
       tsconfigPaths({
         loose: true,
@@ -100,6 +119,22 @@ const config: StorybookConfig = {
             find: '@tanstack/react-start',
             replacement: path.resolve(storybookMocksDir, 'tanstack-react-start.ts'),
           },
+          {
+            find: 'cloudflare:workers',
+            replacement: path.resolve(storybookMocksDir, 'cloudflare-workers.ts'),
+          },
+          {
+            find: 'node:async_hooks',
+            replacement: path.resolve(storybookMocksDir, 'node-async-hooks.ts'),
+          },
+          {
+            find: 'drizzle-orm/postgres-js',
+            replacement: path.resolve(storybookMocksDir, 'drizzle-postgres-js.ts'),
+          },
+          {
+            find: 'posthog-node',
+            replacement: path.resolve(storybookMocksDir, 'posthog-node.ts'),
+          },
           // Mock environment variables
           { find: '@valguide/core/env/server', replacement: path.resolve(storybookMocksDir, 'env-server.ts') },
           { find: '@valguide/core/env/client', replacement: path.resolve(storybookMocksDir, 'env-client.ts') },
@@ -118,8 +153,12 @@ const config: StorybookConfig = {
             replacement: path.resolve(storybookMocksDir, 'org-actions.ts'),
           },
 
-          { find: /^@valguide\/core\/features\/db$/, replacement: path.resolve(storybookMocksDir, 'db.ts') },
-          { find: coreDbModulePath, replacement: path.resolve(storybookMocksDir, 'db.ts') },
+          { find: /^@valguide\/core\/features\/db$/, replacement: storybookDbMockPath },
+          { find: coreDbModulePath, replacement: storybookDbMockPath },
+          {
+            find: /\/packages\/core\/features\/db\.ts$/,
+            replacement: storybookDbMockPath,
+          },
           {
             find: '@valguide/core/i18n/resolve-locale.fn',
             replacement: path.resolve(storybookMocksDir, 'i18n-resolve-locale.ts'),
