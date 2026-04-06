@@ -1,7 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { ComingSoonPage } from '@/features/home/coming-soon-page'
 
 export const Route = createFileRoute('/')({
-  beforeLoad: () => {
-    throw redirect({ to: '/policies' })
-  },
+  component: ComingSoonPage,
 })
