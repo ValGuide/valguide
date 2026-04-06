@@ -3,21 +3,9 @@ import { getUserDisplayName } from '../profiles/utils'
 import { getPendingInvitations } from './get-pending-invitations.server'
 import { getTeamById } from './get-team.server'
 import { getTeamMembers } from './get-team-members.server'
-import { isOrgRole, type OrgRole } from './schema'
-import type { Organization, PendingInvitation, TeamMember } from './types'
+import { isOrgRole } from './schema'
+import type { PendingInvitation, TeamData, TeamMember } from './types'
 import { getUserRole } from './utils'
-
-// =============================================================================
-// TYPES
-// =============================================================================
-
-export interface TeamData {
-  team: Organization
-  members: TeamMember[]
-  pendingInvites: PendingInvitation[]
-  currentUserRole: OrgRole
-  currentUserId: string
-}
 
 // =============================================================================
 // INTERNAL FUNCTION

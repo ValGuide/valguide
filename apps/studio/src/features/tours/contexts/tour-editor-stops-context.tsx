@@ -1,21 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createStopFn } from '@valguide/core/features/tours/stop/create-stop.fn'
-import { addStopToTourFn } from '@valguide/core/features/tours/structure/add-stop.fn'
-import { removeStopFromTourFn } from '@valguide/core/features/tours/structure/remove-stop.fn'
-import { reorderStopsFn } from '@valguide/core/features/tours/structure/reorder-stops.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { type ReactNode, useCallback } from 'react'
 import { useEnableAfterMount } from '@/features/editor/hooks/use-enable-after-mount'
 import { tourStructureDraftQueryOptions } from '../query-options'
+import type { TourEditorStopsActions } from './tour-editor-actions'
 import { TourEditorStopsContext, type TourEditorStopsContextValue } from './tour-editor-stops-types'
 import { useTourEditor } from './tour-editor-types'
 
 interface TourEditorStopsProviderProps {
   children: ReactNode
+  actions: TourEditorStopsActions
 }
 
-export function TourEditorStopsProvider({ children }: TourEditorStopsProviderProps) {
+export function TourEditorStopsProvider({ children, actions }: TourEditorStopsProviderProps) {
   const { nanoId, activeLocale } = useTourEditor()
   const queryClient = useQueryClient()
   const t = useTranslations()
@@ -35,8 +33,8 @@ export function TourEditorStopsProvider({ children }: TourEditorStopsProviderPro
         return null
       }
 
-      const newStop = await createStopFn({ data: { locale: activeLocale } })
-      await addStopToTourFn({ data: { tourNanoId: nanoId, stopNanoId: newStop.nanoId } })
+      const newStop = await actions.createStop({ locale: activeLocale })
+      await actions.addStopToTour({ tourNanoId: nanoId, stopNanoId: newStop.nanoId })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'], refetchType: 'none' })
 
       return newStop.nanoId
@@ -57,7 +55,7 @@ export function TourEditorStopsProvider({ children }: TourEditorStopsProviderPro
     async (stopNanoId: string) => {
       if (!nanoId) return
       try {
-        await removeStopFromTourFn({ data: { tourNanoId: nanoId, stopNanoId } })
+        await actions.removeStopFromTour({ tourNanoId: nanoId, stopNanoId })
         await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
         toast.success(t('stops.actions.removeSuccess'))
       } catch (error) {
@@ -72,14 +70,14 @@ export function TourEditorStopsProvider({ children }: TourEditorStopsProviderPro
     async (stopOrder: string[]) => {
       if (!nanoId) return
       try {
-        await reorderStopsFn({ data: { tourNanoId: nanoId, stopNanoIds: stopOrder } })
+        await actions.reorderStops({ tourNanoId: nanoId, stopNanoIds: stopOrder })
         await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
       } catch (error) {
         console.error('Failed to reorder stops:', error)
         toast.error(t('stops.actions.reorderError'))
       }
     },
-    [nanoId, queryClient, t],
+    [actions, nanoId, queryClient, t],
   )
 
   const refetchStops = useCallback(async () => {

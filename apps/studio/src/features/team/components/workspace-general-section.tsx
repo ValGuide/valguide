@@ -1,50 +1,18 @@
-import { useQueryClient } from '@tanstack/react-query'
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
-import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
-import { updateOrgLogoFn } from '@valguide/core/features/orgs/update-org-logo.fn'
-import { updateOrgNameFn } from '@valguide/core/features/orgs/update-org-name.fn'
+import type { TeamData } from '@valguide/core/features/orgs/types'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { valguideId } from '@valguide/core/utils/nanoid'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
-import { uploadFile } from '@/features/assets/lib/upload'
 import { OrgAvatarForm } from './org-avatar-form'
 import { OrgNameForm } from './org-name-form'
 
 interface WorkspaceGeneralSectionProps {
   data: TeamData
-  onRefetch: () => Promise<void>
+  onUpdateName: (organizationId: string, newName: string) => Promise<void>
+  onUploadAndSaveLogo: (file: File) => Promise<void>
 }
 
-export function WorkspaceGeneralSection({ data, onRefetch }: WorkspaceGeneralSectionProps) {
+export function WorkspaceGeneralSection({ data, onUpdateName, onUploadAndSaveLogo }: WorkspaceGeneralSectionProps) {
   const t = useTranslations('orgs.teamSettings')
-  const queryClient = useQueryClient()
-
-  const invalidateAfterOrgUpdate = async () => {
-    await onRefetch()
-    await queryClient.invalidateQueries({ queryKey: ['sidebar'] })
-  }
-
-  const handleUpdateName = async (organizationId: string, newName: string) => {
-    await updateOrgNameFn({ data: { organizationId, newName } })
-    await invalidateAfterOrgUpdate()
-  }
-
-  const handleUploadAndSaveLogo = async (file: File) => {
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'png'
-    const fileId = valguideId()
-    const storagePath = `orgs/${data.team.nanoId}/logos/${fileId}.${ext}`
-
-    await uploadFile({
-      key: storagePath,
-      file,
-    })
-
-    await updateOrgLogoFn({
-      data: { organizationId: data.team.id, storagePath },
-    })
-
-    await invalidateAfterOrgUpdate()
-  }
 
   return (
     <div className="space-y-6 pt-4">
@@ -59,10 +27,10 @@ export function WorkspaceGeneralSection({ data, onRefetch }: WorkspaceGeneralSec
               data.team.logoStoragePath ? getAssetImageUrl({ storagePath: data.team.logoStoragePath }) : null
             }
             orgName={data.team.name}
-            onUploadAndSave={handleUploadAndSaveLogo}
+            onUploadAndSave={onUploadAndSaveLogo}
           />
           <div className="border-t pt-4">
-            <OrgNameForm organizationId={data.team.id} currentName={data.team.name} onUpdateName={handleUpdateName} />
+            <OrgNameForm organizationId={data.team.id} currentName={data.team.name} onUpdateName={onUpdateName} />
           </div>
         </CardContent>
       </Card>

@@ -8,7 +8,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { resetStudioUserAnalytics } from '@valguide/core/posthog/PostHogProvider'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useEffect, useState } from 'react'
-import { FeedbackDialogContainer } from '../features/feedback/components/feedback-dialog-container'
+import { FeedbackDialogConnected } from '../features/feedback/components/feedback-dialog-connected'
 import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
 import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
@@ -68,7 +68,7 @@ export function AppSidebarContainer() {
         onCreateTeam={async (name: string) => createTeamFn({ data: { name } })}
         onFeedback={() => setFeedbackOpen(true)}
       />
-      <FeedbackDialogContainer
+      <FeedbackDialogConnected
         open={feedbackOpen}
         onOpenChange={setFeedbackOpen}
         userName={data.user.name}

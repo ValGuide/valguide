@@ -1,10 +1,5 @@
-import { cancelInviteFn } from '@valguide/core/features/orgs/cancel-invite.fn'
-import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
-import { inviteMemberFn } from '@valguide/core/features/orgs/invite-member.fn'
 import { REMOVE_MEMBER_ERROR } from '@valguide/core/features/orgs/remove-member.errors'
-import { removeMemberFn } from '@valguide/core/features/orgs/remove-member.fn'
-import { resendInviteFn } from '@valguide/core/features/orgs/resend-invite.fn'
-import { updateMemberRoleFn } from '@valguide/core/features/orgs/update-member-role.fn'
+import type { TeamData } from '@valguide/core/features/orgs/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import type { TeamMember } from '@valguide/features/orgs/types.ts'
@@ -19,10 +14,21 @@ import { RemoveMemberDialog } from '@/features/orgs/components/remove-member-dia
 
 interface WorkspaceMembersSectionProps {
   data: TeamData
-  onRefetch: () => Promise<void>
+  onInvite: (email: string, role: OrgRole) => Promise<void>
+  onRemoveMember: (memberId: string) => Promise<void>
+  onChangeRole: (memberId: string, newRole: OrgRole) => Promise<void>
+  onResendInvite: (inviteId: string) => Promise<void>
+  onCancelInvite: (inviteId: string) => Promise<void>
 }
 
-export function WorkspaceMembersSection({ data, onRefetch }: WorkspaceMembersSectionProps) {
+export function WorkspaceMembersSection({
+  data,
+  onInvite,
+  onRemoveMember,
+  onChangeRole,
+  onResendInvite,
+  onCancelInvite,
+}: WorkspaceMembersSectionProps) {
   const t = useTranslations('orgs.members')
   const tInvite = useTranslations('orgs.inviteDialog')
   const tPending = useTranslations('orgs.pendingInvites')
@@ -50,9 +56,8 @@ export function WorkspaceMembersSection({ data, onRefetch }: WorkspaceMembersSec
 
   const handleInvite = async (email: string, role: OrgRole) => {
     try {
-      await inviteMemberFn({ data: { teamId: data.team.id, email, role } })
+      await onInvite(email, role)
       toast.success(tInvite('success'))
-      await onRefetch()
     } catch (error) {
       console.error('Error inviting member:', error)
       toast.error(tInvite('inviteError'))
@@ -67,10 +72,9 @@ export function WorkspaceMembersSection({ data, onRefetch }: WorkspaceMembersSec
 
     setIsRemoving(true)
     try {
-      await removeMemberFn({ data: { memberId: memberToRemove.id, teamId: data.team.id } })
+      await onRemoveMember(memberToRemove.id)
       toast.success(t('removeSuccess'))
       setMemberToRemove(null)
-      await onRefetch()
     } catch (error) {
       console.error('Error removing member:', error)
       toast.error(getRemoveErrorMessage(error))
@@ -81,10 +85,7 @@ export function WorkspaceMembersSection({ data, onRefetch }: WorkspaceMembersSec
 
   const handleChangeRole = async (memberId: string, newRole: OrgRole) => {
     try {
-      await updateMemberRoleFn({
-        data: { memberId, teamId: data.team.id, newRole },
-      })
-      await onRefetch()
+      await onChangeRole(memberId, newRole)
     } catch (error) {
       console.error('Error updating member role:', error)
       toast.error(t('roleUpdateError'))
@@ -93,9 +94,8 @@ export function WorkspaceMembersSection({ data, onRefetch }: WorkspaceMembersSec
 
   const handleResendInvite = async (inviteId: string) => {
     try {
-      await resendInviteFn({ data: { inviteId, teamId: data.team.id } })
+      await onResendInvite(inviteId)
       toast.success(tPending('resendSuccess'))
-      await onRefetch()
     } catch (error) {
       console.error('Error resending invite:', error)
       toast.error(tPending('resendError'))
@@ -104,8 +104,7 @@ export function WorkspaceMembersSection({ data, onRefetch }: WorkspaceMembersSec
 
   const handleCancelInvite = async (inviteId: string) => {
     try {
-      await cancelInviteFn({ data: { inviteId, teamId: data.team.id } })
-      await onRefetch()
+      await onCancelInvite(inviteId)
     } catch (error) {
       console.error('Error canceling invite:', error)
       toast.error(tPending('cancelError'))

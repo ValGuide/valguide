@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { PageTitle } from '@valguide/ui/components/page-title'
-import { WorkspaceGeneralSection } from '@/features/team/components/workspace-general-section'
-import { WorkspaceMembersSection } from '@/features/team/components/workspace-members-section'
+import { WorkspaceGeneralSectionConnected } from '@/features/team/components/workspace-general-section-connected'
+import { WorkspaceMembersSectionConnected } from '@/features/team/components/workspace-members-section-connected'
 import { useTeam } from '@/features/team/hooks/use-team'
 import { teamQueryOptions } from '@/features/team/query-options'
 
@@ -26,8 +26,8 @@ function SettingsPage() {
         </div>
 
         <div className="space-y-6">
-          <WorkspaceGeneralSection data={data} onRefetch={refetch} />
-          <WorkspaceMembersSection data={data} onRefetch={refetch} />
+          <WorkspaceGeneralSectionConnected data={data} onRefetch={refetch} />
+          <WorkspaceMembersSectionConnected data={data} onRefetch={refetch} />
         </div>
       </div>
     </main>

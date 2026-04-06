@@ -43,8 +43,10 @@
     "STUDIO_PERFORMANCE_LOG_ENABLED": "false",
     "APP_BASE_URL": "https://app.valguide.com",
     "ADMIN_BASE_URL": "https://ops.val.guide",
+    "VITE_PRIVACY_POLICY_URL": "https://www.valguide.com/privacy-policy",
     // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
     "VITE_STUDIO_URL": "https://studio.valguide.com",
+    "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.com/terms-of-service",
     "BETTER_AUTH_URL": "https://studio.valguide.com",
     "BETTER_AUTH_TRUSTED_ORIGINS": "https://studio.valguide.com,https://app.valguide.com",
     "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
@@ -75,8 +77,10 @@
         "STUDIO_PERFORMANCE_LOG_ENABLED": "false",
         "APP_BASE_URL": "https://app.valguide.dev",
         "ADMIN_BASE_URL": "https://ops-dev.val.guide",
+        "VITE_PRIVACY_POLICY_URL": "https://www.valguide.dev/privacy-policy",
         // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
         "VITE_STUDIO_URL": "https://studio.valguide.dev",
+        "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.dev/terms-of-service",
         "BETTER_AUTH_URL": "https://studio.valguide.dev",
         "BETTER_AUTH_TRUSTED_ORIGINS": "https://studio.valguide.dev,https://app.valguide.dev",
         "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",

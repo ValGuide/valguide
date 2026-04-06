@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { clientEnv } from '@valguide/core/env/client'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { FieldDescription } from '@valguide/ui/components/field'
 
@@ -8,14 +8,24 @@ export const Consent = () => {
     <FieldDescription className="text-center">
       {commonT.rich('consentMessage', {
         termsLink: (chunks) => (
-          <Link to="/terms-of-service" preload="intent" className="hover:underline">
+          <a
+            href={clientEnv.VITE_TERMS_OF_SERVICE_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="hover:underline"
+          >
             {chunks}
-          </Link>
+          </a>
         ),
         privacyLink: (chunks) => (
-          <Link to="/privacy-policy" preload="intent" className="hover:underline">
+          <a
+            href={clientEnv.VITE_PRIVACY_POLICY_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="hover:underline"
+          >
             {chunks}
-          </Link>
+          </a>
         ),
       })}
     </FieldDescription>

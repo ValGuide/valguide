@@ -15,6 +15,7 @@ export type MessageSet = {
 export const MESSAGE_SETS: MessageSet[] = [
   { dir: 'packages/core/i18n/messages', localeFiles: ['en.json', 'de.json', 'rm.json'] },
   { dir: 'apps/admin/src/i18n/messages', localeFiles: ['en.json'] },
+  { dir: 'apps/www/src/i18n/messages', localeFiles: ['en.json', 'de.json', 'rm.json'] },
 ]
 
 export const BASE_LOCALE = 'en.json'

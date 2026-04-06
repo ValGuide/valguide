@@ -46,3 +46,11 @@ export interface PendingInvitation {
   invitedAt: string
   expiresAt: string
 }
+
+export interface TeamData {
+  team: Organization
+  members: TeamMember[]
+  pendingInvites: PendingInvitation[]
+  currentUserRole: OrgRole
+  currentUserId: string
+}

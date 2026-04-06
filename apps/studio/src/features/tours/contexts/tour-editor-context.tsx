@@ -1,13 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Asset } from '@valguide/core/features/assets/types'
-import { assignTourAssetFn } from '@valguide/core/features/tours/tour/asset/assign-tour-asset.fn'
-import { removeTourAssetFn } from '@valguide/core/features/tours/tour/asset/remove-tour-asset.fn'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
 import type { TourLocaleDraftResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-draft.fn'
 import type { TourLocalePublishedResult } from '@valguide/core/features/tours/tour/locale/get-tour-locale-published.fn'
-import { updateTourLocaleDraftFn } from '@valguide/core/features/tours/tour/locale/update-tour-locale-draft.fn'
-import { publishTourFn } from '@valguide/core/features/tours/tour/publish-tour.fn'
-import { updateTourFn } from '@valguide/core/features/tours/tour/update-tour.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
@@ -21,6 +16,7 @@ import {
   tourLocaleDraftQueryOptions,
   tourLocalePublishedQueryOptions,
 } from '../query-options'
+import type { TourEditorActions, TourEditorStopsActions } from './tour-editor-actions'
 import { TourEditorStopsProvider } from './tour-editor-stops-context'
 import { TourEditorContext, type TourEditorContextValue } from './tour-editor-types'
 
@@ -32,9 +28,18 @@ interface TourEditorProviderProps {
     backPath: string
     backLabel: string
   }
+  actions: TourEditorActions
+  stopsActions: TourEditorStopsActions
 }
 
-export function TourEditorProvider({ children, nanoId, initialLocale, navigation }: TourEditorProviderProps) {
+export function TourEditorProvider({
+  children,
+  nanoId,
+  initialLocale,
+  navigation,
+  actions,
+  stopsActions,
+}: TourEditorProviderProps) {
   const t = useTranslations()
   const secondaryQueriesEnabled = useEnableAfterMount()
 
@@ -93,7 +98,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     async (locales: string[]) => {
       if (!nanoId) return
       try {
-        await updateTourFn({ data: { nanoId, availableLocales: locales } })
+        await actions.updateAvailableLocales({ nanoId, locales })
         await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'detail'] })
 
         if (!locales.includes(activeLocale)) {
@@ -104,7 +109,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
         toast.error(t('tours.locales.updateError'))
       }
     },
-    [nanoId, queryClient, activeLocale, setActiveLocale, t],
+    [actions, nanoId, queryClient, activeLocale, setActiveLocale, t],
   )
 
   // Tour asset operations (immediate server calls)
@@ -115,14 +120,21 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
       try {
         const existingCovers = tourAssets.filter((a) => a.channel === 'images.hero')
         for (const cover of existingCovers) {
-          await removeTourAssetFn({
-            data: { nanoId, assetId: cover.asset.id, channel: 'images.hero', locale: null },
+          await actions.removeTourAsset({
+            nanoId,
+            assetId: cover.asset.id,
+            channel: 'images.hero',
+            locale: null,
           })
         }
 
         if (asset) {
-          await assignTourAssetFn({
-            data: { nanoId, assetId: asset.id, channel: 'images.hero', locale: null, position: 0 },
+          await actions.assignTourAsset({
+            nanoId,
+            assetId: asset.id,
+            channel: 'images.hero',
+            locale: null,
+            position: 0,
           })
         }
 
@@ -132,7 +144,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
         toast.error(t('tours.assets.updateError'))
       }
     },
-    [nanoId, tourAssets, queryClient, t],
+    [actions, nanoId, tourAssets, queryClient, t],
   )
 
   // Save orchestration - only handles tour translation forms
@@ -148,13 +160,11 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
         const values = registration.getValues()
 
         if (formId.startsWith('tour-translation-')) {
-          await updateTourLocaleDraftFn({
-            data: {
-              nanoId,
-              locale: activeLocale,
-              title: (values.title as string) ?? '',
-              description: (values.description as string) ?? '',
-            },
+          await actions.updateTourLocaleDraft({
+            nanoId,
+            locale: activeLocale,
+            title: (values.title as string) ?? '',
+            description: (values.description as string) ?? '',
           })
         }
       }
@@ -171,7 +181,18 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     } finally {
       setIsSaving(false)
     }
-  }, [isDirty, nanoId, activeLocale, queryClient, resetAllFormsAfterSave, getFormValues, setIsSaving, setLastSaved, t])
+  }, [
+    actions,
+    isDirty,
+    nanoId,
+    activeLocale,
+    queryClient,
+    resetAllFormsAfterSave,
+    getFormValues,
+    setIsSaving,
+    setLastSaved,
+    t,
+  ])
 
   // Publish tour (locale, structure, settings, assets, and all stop translations)
   const publish = useCallback(async () => {
@@ -179,7 +200,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
     if (!nanoId) return
 
     try {
-      await publishTourFn({ data: { nanoId, locale: activeLocale } })
+      await actions.publishTour({ nanoId, locale: activeLocale })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId] })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'structure'] })
       await queryClient.invalidateQueries({ queryKey: ['tour', nanoId, 'assets'] })
@@ -188,7 +209,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
       console.error('Failed to publish:', error)
       toast.error(t('tours.publish.tourPublishError'))
     }
-  }, [nanoId, activeLocale, queryClient, save, t])
+  }, [actions, nanoId, activeLocale, queryClient, save, t])
 
   // Refetch
   const refetch = useCallback(async () => {
@@ -230,7 +251,7 @@ export function TourEditorProvider({ children, nanoId, initialLocale, navigation
 
   return (
     <TourEditorContext.Provider value={value}>
-      <TourEditorStopsProvider>{children}</TourEditorStopsProvider>
+      <TourEditorStopsProvider actions={stopsActions}>{children}</TourEditorStopsProvider>
     </TourEditorContext.Provider>
   )
 }

@@ -37,7 +37,9 @@
     "BETTER_AUTH_URL": "https://app.valguide.com",
     "BETTER_AUTH_TRUSTED_ORIGINS": "https://app.valguide.com,https://studio.valguide.com",
     "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
-    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth"
+    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth",
+    "VITE_PRIVACY_POLICY_URL": "https://www.valguide.com/privacy-policy",
+    "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.com/terms-of-service"
   },
 
   // Dev environment (app.valguide.dev)
@@ -59,6 +61,8 @@
         "BETTER_AUTH_TRUSTED_ORIGINS": "https://app.valguide.dev,https://studio.valguide.dev",
         "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",
         "BETTER_AUTH_COOKIE_PREFIX": "valguide-dev-auth",
+        "VITE_PRIVACY_POLICY_URL": "https://www.valguide.dev/privacy-policy",
+        "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.dev/terms-of-service",
         "BLOCK_ROBOTS": "true"
       }
     }

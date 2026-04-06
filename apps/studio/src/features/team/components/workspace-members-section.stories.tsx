@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import type { TeamData } from '@valguide/core/features/orgs/get-team-data.fn'
+import type { TeamData } from '@valguide/core/features/orgs/types'
 import { WorkspaceMembersSection } from './workspace-members-section'
 
 const mockData: TeamData = {
@@ -68,7 +68,11 @@ const meta = {
   tags: ['autodocs'],
   args: {
     data: mockData,
-    onRefetch: async () => {},
+    onInvite: async () => {},
+    onRemoveMember: async () => {},
+    onChangeRole: async () => {},
+    onResendInvite: async () => {},
+    onCancelInvite: async () => {},
   },
   decorators: [
     (Story) => (

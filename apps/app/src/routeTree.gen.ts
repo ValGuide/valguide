@@ -9,27 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrgSlugTourSlugRouteImport } from './routes/$orgSlug.$tourSlug'
 import { Route as OrgSlugTourSlugIndexRouteImport } from './routes/$orgSlug.$tourSlug.index'
 import { Route as OrgSlugTourSlugStopNanoIdRouteImport } from './routes/$orgSlug.$tourSlug.$stopNanoId'
 
-const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
-  id: '/terms-of-service',
-  path: '/terms-of-service',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -56,27 +44,21 @@ const OrgSlugTourSlugStopNanoIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/terms-of-service': typeof TermsOfServiceRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
   '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/terms-of-service': typeof TermsOfServiceRoute
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/terms-of-service': typeof TermsOfServiceRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
   '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
@@ -85,26 +67,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/privacy-policy'
     | '/robots.txt'
-    | '/terms-of-service'
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
     | '/$orgSlug/$tourSlug/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/privacy-policy'
     | '/robots.txt'
-    | '/terms-of-service'
     | '/$orgSlug/$tourSlug/$stopNanoId'
     | '/$orgSlug/$tourSlug'
   id:
     | '__root__'
     | '/'
-    | '/privacy-policy'
     | '/robots.txt'
-    | '/terms-of-service'
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
     | '/$orgSlug/$tourSlug/'
@@ -112,33 +88,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
-  TermsOfServiceRoute: typeof TermsOfServiceRoute
   OrgSlugTourSlugRoute: typeof OrgSlugTourSlugRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms-of-service': {
-      id: '/terms-of-service'
-      path: '/terms-of-service'
-      fullPath: '/terms-of-service'
-      preLoaderRoute: typeof TermsOfServiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy-policy': {
-      id: '/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -188,9 +148,7 @@ const OrgSlugTourSlugRouteWithChildren = OrgSlugTourSlugRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PrivacyPolicyRoute: PrivacyPolicyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
-  TermsOfServiceRoute: TermsOfServiceRoute,
   OrgSlugTourSlugRoute: OrgSlugTourSlugRouteWithChildren,
 }
 export const routeTree = rootRouteImport

@@ -43,6 +43,8 @@
     "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops.val.guide",
     "ADMIN_COOKIE_DOMAIN": "ops.val.guide",
     "ADMIN_BASE_URL": "https://ops.val.guide",
+    "VITE_PRIVACY_POLICY_URL": "https://www.valguide.com/privacy-policy",
+    "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.com/terms-of-service",
     "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example"
   },
 
@@ -68,6 +70,8 @@
         "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops-dev.val.guide",
         "ADMIN_COOKIE_DOMAIN": "ops-dev.val.guide",
         "ADMIN_BASE_URL": "https://ops-dev.val.guide",
+        "VITE_PRIVACY_POLICY_URL": "https://www.valguide.dev/privacy-policy",
+        "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.dev/terms-of-service",
         "ADMIN_ALLOWED_EMAILS": "curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example",
         "BLOCK_ROBOTS": "true"
       }

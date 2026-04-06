@@ -9,10 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as SessionRecoveryRouteImport } from './routes/session-recovery'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PendingRouteImport } from './routes/pending'
 import { Route as JoinTeamRouteImport } from './routes/join-team'
 import { Route as BlockedRouteImport } from './routes/blocked'
@@ -46,11 +44,6 @@ import { Route as MainToursNanoIdEditRouteImport } from './routes/_main/tours.$n
 import { Route as MainStopsNanoIdEditRouteImport } from './routes/_main/stops.$nanoId.edit'
 import { Route as MainToursNanoIdStopsStopIdEditRouteImport } from './routes/_main/tours.$nanoId.stops.$stopId.edit'
 
-const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
-  id: '/terms-of-service',
-  path: '/terms-of-service',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SessionRecoveryRoute = SessionRecoveryRouteImport.update({
   id: '/session-recovery',
   path: '/session-recovery',
@@ -59,11 +52,6 @@ const SessionRecoveryRoute = SessionRecoveryRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PendingRoute = PendingRouteImport.update({
@@ -231,10 +219,8 @@ export interface FileRoutesByFullPath {
   '/blocked': typeof BlockedRoute
   '/join-team': typeof JoinTeamRoute
   '/pending': typeof PendingRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/session-recovery': typeof SessionRecoveryRoute
-  '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/analytics': typeof MainAnalyticsRoute
@@ -267,10 +253,8 @@ export interface FileRoutesByTo {
   '/blocked': typeof BlockedRoute
   '/join-team': typeof JoinTeamRoute
   '/pending': typeof PendingRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/session-recovery': typeof SessionRecoveryRoute
-  '/terms-of-service': typeof TermsOfServiceRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/analytics': typeof MainAnalyticsRoute
@@ -304,10 +288,8 @@ export interface FileRoutesById {
   '/blocked': typeof BlockedRoute
   '/join-team': typeof JoinTeamRoute
   '/pending': typeof PendingRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/session-recovery': typeof SessionRecoveryRoute
-  '/terms-of-service': typeof TermsOfServiceRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_main/analytics': typeof MainAnalyticsRoute
@@ -342,10 +324,8 @@ export interface FileRouteTypes {
     | '/blocked'
     | '/join-team'
     | '/pending'
-    | '/privacy-policy'
     | '/robots.txt'
     | '/session-recovery'
-    | '/terms-of-service'
     | '/login'
     | '/signup'
     | '/analytics'
@@ -378,10 +358,8 @@ export interface FileRouteTypes {
     | '/blocked'
     | '/join-team'
     | '/pending'
-    | '/privacy-policy'
     | '/robots.txt'
     | '/session-recovery'
-    | '/terms-of-service'
     | '/login'
     | '/signup'
     | '/analytics'
@@ -414,10 +392,8 @@ export interface FileRouteTypes {
     | '/blocked'
     | '/join-team'
     | '/pending'
-    | '/privacy-policy'
     | '/robots.txt'
     | '/session-recovery'
-    | '/terms-of-service'
     | '/_auth/login'
     | '/_auth/signup'
     | '/_main/analytics'
@@ -453,10 +429,8 @@ export interface RootRouteChildren {
   BlockedRoute: typeof BlockedRoute
   JoinTeamRoute: typeof JoinTeamRoute
   PendingRoute: typeof PendingRoute
-  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SessionRecoveryRoute: typeof SessionRecoveryRoute
-  TermsOfServiceRoute: typeof TermsOfServiceRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ApiUploadPartRoute: typeof ApiUploadPartRoute
   AuthErrorRoute: typeof AuthErrorRoute
@@ -465,13 +439,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms-of-service': {
-      id: '/terms-of-service'
-      path: '/terms-of-service'
-      fullPath: '/terms-of-service'
-      preLoaderRoute: typeof TermsOfServiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/session-recovery': {
       id: '/session-recovery'
       path: '/session-recovery'
@@ -484,13 +451,6 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy-policy': {
-      id: '/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pending': {
@@ -817,10 +777,8 @@ const rootRouteChildren: RootRouteChildren = {
   BlockedRoute: BlockedRoute,
   JoinTeamRoute: JoinTeamRoute,
   PendingRoute: PendingRoute,
-  PrivacyPolicyRoute: PrivacyPolicyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SessionRecoveryRoute: SessionRecoveryRoute,
-  TermsOfServiceRoute: TermsOfServiceRoute,
   ApiUploadRoute: ApiUploadRoute,
   ApiUploadPartRoute: ApiUploadPartRoute,
   AuthErrorRoute: AuthErrorRoute,

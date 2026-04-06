@@ -9,7 +9,7 @@ import { tourQrCodeQueryOptions } from '@/features/qr/query-options'
 import { TourEditPage } from '@/features/tours/components/tour-edit-page'
 import { TourEditSkeleton } from '@/features/tours/components/tour-edit-skeleton'
 import { TourNotFound } from '@/features/tours/components/tour-not-found'
-import { TourEditorProvider } from '@/features/tours/contexts/tour-editor-context'
+import { TourEditorConnectedProvider } from '@/features/tours/contexts/tour-editor-connected-provider'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 import {
   tourDetailQueryOptions,
@@ -65,9 +65,9 @@ function TourEditRoute() {
   const { nanoId, locale } = Route.useLoaderData()
 
   return (
-    <TourEditorProvider nanoId={nanoId} initialLocale={locale}>
+    <TourEditorConnectedProvider nanoId={nanoId} initialLocale={locale}>
       <TourEditPageContent />
-    </TourEditorProvider>
+    </TourEditorConnectedProvider>
   )
 }
 
