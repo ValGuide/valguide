@@ -10,6 +10,11 @@ import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
 import { themeQueryOptions } from '@/features/theme/query-options'
 
+const neutralShellStyle = {
+  backgroundColor: 'hsl(0 0% 100%)',
+  color: 'hsl(240 10% 3.9%)',
+}
+
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
@@ -105,11 +110,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const resolvedTheme = resolveTheme(theme)
 
   return (
-    <html lang={locale} data-theme={resolvedTheme} suppressHydrationWarning>
+    <html lang={locale} data-theme={resolvedTheme} suppressHydrationWarning style={neutralShellStyle}>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body style={neutralShellStyle}>
         <Providers locale={locale} initialTheme={theme}>
           {children}
         </Providers>

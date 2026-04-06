@@ -1,3 +1,4 @@
+import { useRouter } from '@tanstack/react-router'
 import { useTourThemePortalContainer } from '@valguide/core/features/player/theming/tour-theme-provider'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { LocalePickerList } from '@valguide/core/i18n/components/locale-picker-list'
@@ -34,6 +35,7 @@ export function TourLanguageControl({
   shouldForceSelection,
   shouldPromptInitialSelection,
 }: TourLanguageControlProps) {
+  const router = useRouter()
   const t = useTranslations('player.languageSwitcher')
   const portalContainer = useTourThemePortalContainer()
   const isMobile = useIsMobile()
@@ -73,7 +75,8 @@ export function TourLanguageControl({
       if (!requiresSelection) {
         setOpen(false)
       }
-      window.location.reload()
+      await router.invalidate()
+      setIsSwitching(false)
     } catch {
       setSelectedLocale(preferredSelectionLocale)
       setIsSwitching(false)

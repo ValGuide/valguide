@@ -66,7 +66,7 @@ const resolveTourFn = createServerFn({ method: 'GET' })
           readTourFromKv(tourKv.tourNanoId, locale),
           readTourSharedFromKv(tourKv.tourNanoId),
         ])
-        if (tourKvData && (sharedTourKvData || tourKvData.theme !== undefined)) {
+        if (tourKvData) {
           return {
             redirect: false as const,
             tour: tourKvDataToTourWithStops(tourKvData, sharedTourKvData),
