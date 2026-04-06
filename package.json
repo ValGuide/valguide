@@ -53,6 +53,7 @@
     "studio:build:preview": "pnpm studio:build && pnpm studio:preview",
     "studio:agent:start": "node scripts/studio-agent/start.mjs",
     "studio:agent:verify": "node scripts/studio-agent/verify.mjs",
+    "studio:agent:flow-snapshot": "node scripts/studio-agent/repros/studio-flow-snapshot.mjs",
     "studio:agent:vg-85": "node scripts/studio-agent/repros/vg-85.mjs",
     "studio:type-check": "pnpm turbo run type-check --filter ./apps/studio",
     "www:dev": "./val dev www",
