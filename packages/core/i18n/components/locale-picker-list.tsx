@@ -54,7 +54,7 @@ export function LocalePickerList({
   const selectedIndex = locales.indexOf(currentLocale)
 
   return (
-    <div role="listbox" aria-label="Language" className="max-h-[300px] overflow-y-auto p-1">
+    <div role="listbox" aria-label="Language" className="max-h-75 overflow-y-auto p-1">
       {locales.map((locale, index) => {
         const { localizedName, nativeName, localeCode } = getLocalePresentation(locale, displayLocale)
         const isSelected = locale === currentLocale
