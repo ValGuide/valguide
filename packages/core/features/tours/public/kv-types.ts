@@ -28,11 +28,6 @@ export interface TourKvData {
   availableLocales: string[]
   stops: StopKvItem[]
   assets: AssetItem[]
-  /**
-   * Legacy field kept optional during the KV split rollout.
-   * New writes store shared theme state in TourSharedKvData instead.
-   */
-  theme?: ThemeConfig | null
   publishedAt: string
 }
 

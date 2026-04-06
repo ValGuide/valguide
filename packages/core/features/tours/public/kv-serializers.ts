@@ -80,7 +80,7 @@ export function tourKvDataToTourWithStops(
       ],
       assets: reviveAssetDates(stop.assets),
     })),
-    theme: sharedData?.theme ?? kvData.theme ?? null,
+    theme: sharedData?.theme ?? null,
   }
 }
 
