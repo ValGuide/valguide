@@ -11,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@valguide/ui/components/alert-dialog'
+import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -94,13 +95,16 @@ export function DeleteThemeDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
+      <AlertDialogContent className="max-h-[min(90dvh,48rem)] overflow-hidden p-0 sm:max-w-2xl">
+        <AlertDialogHeader className="px-6 pt-6">
           <AlertDialogTitle className="flex items-center gap-2">
             {hasWarning ? <AlertTriangle className="size-5 text-destructive" /> : null}
             {hasWarning ? t('warningTitle') : t('title')}
           </AlertDialogTitle>
-          <AlertDialogDescription asChild>
+        </AlertDialogHeader>
+
+        <AlertDialogDescription asChild>
+          <div className="min-h-0 flex-1 px-6 pb-4">
             <div className="space-y-4">
               {isLoadingUsage ? (
                 <div className="flex items-center gap-2 text-muted-foreground">
@@ -121,22 +125,24 @@ export function DeleteThemeDialog({
                   {hasUsage ? (
                     <div>
                       <p className="font-medium text-foreground">{t('usedBy')}</p>
-                      <ul className="mt-1 list-inside list-disc space-y-1 text-sm">
-                        {tours.map((tour) => (
-                          <li key={tour.id}>
-                            <Link
-                              to="/tours/$nanoId/edit"
-                              params={{ nanoId: tour.nanoId }}
-                              preload="intent"
-                              className="text-primary hover:underline"
-                              onClick={() => onOpenChange(false)}
-                            >
-                              {tour.name}
-                            </Link>
-                            <span className="text-muted-foreground"> ({scopeLabel(tour.scope)})</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <ScrollArea className="mt-2 max-h-[min(40dvh,20rem)] rounded-md border bg-muted/10">
+                        <ul className="list-inside list-disc space-y-1 p-3 text-sm">
+                          {tours.map((tour) => (
+                            <li key={tour.id}>
+                              <Link
+                                to="/tours/$nanoId/edit"
+                                params={{ nanoId: tour.nanoId }}
+                                preload="intent"
+                                className="text-primary hover:underline"
+                                onClick={() => onOpenChange(false)}
+                              >
+                                {tour.name}
+                              </Link>
+                              <span className="text-muted-foreground"> ({scopeLabel(tour.scope)})</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </ScrollArea>
                     </div>
                   ) : null}
 
@@ -146,9 +152,10 @@ export function DeleteThemeDialog({
                 <p>{t('message', { name: themeName })}</p>
               )}
             </div>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
+          </div>
+        </AlertDialogDescription>
+
+        <AlertDialogFooter className="border-t px-6 pb-6 pt-4">
           <AlertDialogCancel disabled={isLoading}>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
