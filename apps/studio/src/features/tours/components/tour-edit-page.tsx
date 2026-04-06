@@ -24,7 +24,6 @@ import {
   TourMetadataFormWithDiff,
   type TourMetadataFormWithDiffRef,
 } from '@/features/tours/components/tour-metadata-form-with-diff'
-import { TourThemeCard } from '@/features/tours/components/tour-theme-card'
 import { useTourEditorStops } from '@/features/tours/contexts/tour-editor-stops-types'
 import { useTourEditor } from '@/features/tours/contexts/tour-editor-types'
 
@@ -42,7 +41,6 @@ export interface TourEditPageProps {
   MediaPicker: MediaPickerComponent
   /** Optional component for slug settings. Pass null to hide, undefined for Storybook default. */
   TourSlugSettings?: ComponentType<TourSlugSettingsComponentProps> | null
-  TourQrPanel?: ComponentType<{ tourNanoId: string; downloadFileName: string }> | null
   /** Query options for diff view - pass undefined for Storybook to skip the query */
   diffQueryOptions?: QueryObserverOptions<DiffResult>
 }
@@ -55,7 +53,6 @@ export function TourEditPage({
   onShowStop,
   MediaPicker,
   TourSlugSettings,
-  TourQrPanel,
   diffQueryOptions,
 }: TourEditPageProps) {
   const router = useRouter()
@@ -109,7 +106,6 @@ export function TourEditPage({
     const title = localeDraft?.title
     return title?.trim() ? title : t('unknownTitle')
   }, [localeDraft, t])
-  const qrDownloadFileName = localeDraft?.title?.trim() || nanoId
 
   const computedStatusDisplay: StatusDisplay = useMemo(() => {
     const hasAnyChanges = tourDetail?.hasAnyChanges ?? changedCount > 0
@@ -317,10 +313,6 @@ export function TourEditPage({
               />
             </CardContent>
           </Card>
-
-          <TourThemeCard tourNanoId={nanoId} theme={tourDetail.theme} variant="compact" />
-
-          {TourQrPanel && <TourQrPanel tourNanoId={nanoId} downloadFileName={qrDownloadFileName} />}
 
           {TourSlugSettings && <TourSlugSettings tourNanoId={nanoId} tourTitle={tourTitle} />}
 

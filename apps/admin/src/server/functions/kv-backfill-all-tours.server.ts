@@ -1,7 +1,12 @@
 import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-tour'
-import { writeOrgSlugToKv, writeTourSlugToKv, writeTourToKv } from '@valguide/core/features/tours/public/kv'
+import {
+  writeOrgSlugToKv,
+  writeTourSharedToKv,
+  writeTourSlugToKv,
+  writeTourToKv,
+} from '@valguide/core/features/tours/public/kv'
 import { getAllPublishedTourSummaries } from '@valguide/core/features/tours/public/kv-backfill.server'
-import { serializeTourForKv } from '@valguide/core/features/tours/public/kv-serializers'
+import { serializeTourForKv, serializeTourSharedForKv } from '@valguide/core/features/tours/public/kv-serializers'
 
 export type BackfillAllToursResult = {
   toursProcessed: number
@@ -21,6 +26,9 @@ export async function backfillAllTours(): Promise<BackfillAllToursResult> {
         errors.push(`Tour ${summary.nanoId}: not found after summary query`)
         continue
       }
+
+      await writeTourSharedToKv(summary.nanoId, serializeTourSharedForKv(fullTour))
+      kvEntriesWritten++
 
       for (const locale of fullTour.availableLocales) {
         const kvData = serializeTourForKv(fullTour, locale)

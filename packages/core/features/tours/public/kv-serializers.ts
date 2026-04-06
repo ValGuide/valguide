@@ -1,11 +1,12 @@
 /**
  * Serializers for converting between Postgres types and KV JSON shapes.
  *
- * serializeTourForKv  — TourWithStopsAndAssets → TourKvData (extract single locale)
- * tourKvDataToTourWithStops — TourKvData → TourWithStopsAndAssets (reconstruct Postgres-compatible shape)
+ * serializeTourForKv         — TourWithStopsAndAssets → TourKvData (extract single locale)
+ * serializeTourSharedForKv   — TourWithStopsAndAssets → TourSharedKvData
+ * tourKvDataToTourWithStops  — KV blobs → TourWithStopsAndAssets
  */
 
-import type { TourKvData } from './kv-types'
+import type { TourKvData, TourSharedKvData } from './kv-types'
 import type { AssetItem, TourWithStopsAndAssets } from './types'
 
 export function serializeTourForKv(tour: TourWithStopsAndAssets, locale: string): TourKvData {
@@ -29,12 +30,22 @@ export function serializeTourForKv(tour: TourWithStopsAndAssets, locale: string)
       }
     }),
     assets: tour.assets,
+    publishedAt: new Date().toISOString(),
+  }
+}
+
+export function serializeTourSharedForKv(tour: TourWithStopsAndAssets): TourSharedKvData {
+  return {
+    nanoId: tour.nanoId,
     theme: tour.theme,
     publishedAt: new Date().toISOString(),
   }
 }
 
-export function tourKvDataToTourWithStops(kvData: TourKvData): TourWithStopsAndAssets {
+export function tourKvDataToTourWithStops(
+  kvData: TourKvData,
+  sharedData: TourSharedKvData | null = null,
+): TourWithStopsAndAssets {
   const publishedAt = new Date(kvData.publishedAt)
 
   return {
@@ -69,7 +80,7 @@ export function tourKvDataToTourWithStops(kvData: TourKvData): TourWithStopsAndA
       ],
       assets: reviveAssetDates(stop.assets),
     })),
-    theme: kvData.theme,
+    theme: sharedData?.theme ?? kvData.theme ?? null,
   }
 }
 

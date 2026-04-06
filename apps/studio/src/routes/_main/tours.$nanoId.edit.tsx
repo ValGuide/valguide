@@ -4,8 +4,6 @@ import { discardAllTourChangesFn } from '@valguide/core/features/tours/tour/disc
 import { unpublishTourLocaleFn } from '@valguide/core/features/tours/tour/locale/unpublish-tour-locale.fn'
 import { publishTourFn } from '@valguide/core/features/tours/tour/publish-tour.fn'
 import { MediaPickerConnected } from '@/features/assets/components/media-picker/media-picker-connected'
-import { TourQrPanelConnected } from '@/features/qr/components/tour-qr-panel-connected'
-import { tourQrCodeQueryOptions } from '@/features/qr/query-options'
 import { TourEditPage } from '@/features/tours/components/tour-edit-page'
 import { TourEditSkeleton } from '@/features/tours/components/tour-edit-skeleton'
 import { TourNotFound } from '@/features/tours/components/tour-not-found'
@@ -49,10 +47,7 @@ export const Route = createFileRoute('/_main/tours/$nanoId/edit')({
       })
     }
 
-    await Promise.all([
-      context.queryClient.ensureQueryData(tourLocaleDraftQueryOptions(params.nanoId, requestedLocale)),
-      context.queryClient.ensureQueryData(tourQrCodeQueryOptions(params.nanoId)),
-    ])
+    await context.queryClient.ensureQueryData(tourLocaleDraftQueryOptions(params.nanoId, requestedLocale))
 
     return { nanoId: params.nanoId, locale: requestedLocale }
   },
@@ -75,7 +70,7 @@ function TourEditPageContent() {
   const { nanoId, activeLocale } = useTourEditor()
 
   const handlePublish = async (_tourId: string, locale: string) => {
-    // Unified publish: tour locale + structure + settings + assets + all stop translations
+    // Locale publish updates locale text plus shared structure/assets for the tour.
     await publishTourFn({ data: { nanoId, locale } })
   }
 
@@ -91,7 +86,6 @@ function TourEditPageContent() {
         updateStopVisibilityFn({ data: { tourNanoId: nanoId, stopNanoId, visible: true } })
       }
       MediaPicker={MediaPickerConnected}
-      TourQrPanel={TourQrPanelConnected}
       diffQueryOptions={tourLocaleDiffQueryOptions(nanoId, activeLocale)}
     />
   )

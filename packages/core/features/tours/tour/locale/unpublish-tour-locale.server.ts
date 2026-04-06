@@ -5,6 +5,7 @@ import { tour, tourLocale } from '../../schema'
 
 export type UnpublishTourLocaleResult = {
   success: boolean
+  hasPublishedLocalesRemaining: boolean
 }
 
 export async function unpublishTourLocale(tourNanoId: string, locale: string): Promise<UnpublishTourLocaleResult> {
@@ -33,5 +34,5 @@ export async function unpublishTourLocale(tourNanoId: string, locale: string): P
     await db.update(tour).set({ publishedAt: null }).where(eq(tour.id, foundTour.id))
   }
 
-  return { success: true }
+  return { success: true, hasPublishedLocalesRemaining: remaining.length > 0 }
 }

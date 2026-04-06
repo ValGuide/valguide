@@ -19,7 +19,7 @@ export interface StopKvItem {
   assets: AssetItem[]
 }
 
-/** Full tour KV blob — locale-scoped, with all stops embedded. */
+/** Full tour locale KV blob — locale-scoped, with all stops embedded. */
 export interface TourKvData {
   nanoId: string
   locale: string
@@ -28,6 +28,17 @@ export interface TourKvData {
   availableLocales: string[]
   stops: StopKvItem[]
   assets: AssetItem[]
+  /**
+   * Legacy field kept optional during the KV split rollout.
+   * New writes store shared theme state in TourSharedKvData instead.
+   */
+  theme?: ThemeConfig | null
+  publishedAt: string
+}
+
+/** Shared published tour data stored once per tour. */
+export interface TourSharedKvData {
+  nanoId: string
   theme: ThemeConfig | null
   publishedAt: string
 }

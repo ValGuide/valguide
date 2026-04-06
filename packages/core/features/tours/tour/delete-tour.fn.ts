@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
 import { requireAuthMiddleware } from '../../auth/middleware'
-import { deleteTourAllLocalesFromKv, deleteTourSlugFromKv } from '../public/kv'
+import { deleteTourAllLocalesFromKv, deleteTourSharedFromKv, deleteTourSlugFromKv } from '../public/kv'
 import { deleteTour, permanentlyDeleteTour } from './delete-tour.server'
 
 export type { DeleteTourResult } from './delete-tour.server'
@@ -35,6 +35,7 @@ async function deleteKvAfterTourRemoval(
 ): Promise<void> {
   try {
     await deleteTourAllLocalesFromKv(tourNanoId, publishedLocales)
+    await deleteTourSharedFromKv(tourNanoId)
     if (orgSlug && tourSlug) {
       await deleteTourSlugFromKv(orgSlug, tourSlug)
     }

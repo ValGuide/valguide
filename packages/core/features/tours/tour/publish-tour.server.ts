@@ -66,7 +66,7 @@ async function publishTourLocaleTx(tx: Tx, tourId: string, locale: string, userI
     })
 }
 
-async function publishTourSettingsTx(tx: Tx, tourId: string, userId: string): Promise<void> {
+export async function publishTourSettingsTx(tx: Tx, tourId: string, userId: string): Promise<void> {
   const [draft] = await tx
     .select({
       themeId: tourSettingsDraft.themeId,
@@ -232,8 +232,6 @@ export async function publishTour(input: PublishTourInput, userId: string): Prom
     await publishTourLocaleTx(tx, foundTour.id, input.locale, userId)
 
     const stopIds = await publishTourStructureTx(tx, foundTour.id)
-
-    await publishTourSettingsTx(tx, foundTour.id, userId)
 
     await publishTourAssetsTx(tx, foundTour.id)
 

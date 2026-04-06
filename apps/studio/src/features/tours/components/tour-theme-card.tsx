@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query'
 import type { TourDetail } from '@valguide/core/features/tours/tour/get-tour-detail.fn'
+import { publishTourSettingsFn } from '@valguide/core/features/tours/tour/settings/publish-tour-settings.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
@@ -31,6 +34,8 @@ function ThemeSwatches({ theme }: { theme: NonNullable<TourDetail['theme']['effe
 export function TourThemeCard({ tourNanoId, theme, variant = 'detail', className }: TourThemeCardProps) {
   const t = useTranslations('tours.theme')
   const [open, setOpen] = useState(false)
+  const [isPublishing, setIsPublishing] = useState(false)
+  const queryClient = useQueryClient()
   const isCompact = variant === 'compact'
   const effectiveTheme = theme.effectiveTheme
   const sourceLabel =
@@ -41,6 +46,22 @@ export function TourThemeCard({ tourNanoId, theme, variant = 'detail', className
         : effectiveTheme?.source === 'default'
           ? t('sourceDefault')
           : t('sourceNone')
+
+  const handlePublish = async () => {
+    setIsPublishing(true)
+
+    try {
+      await publishTourSettingsFn({ data: { nanoId: tourNanoId } })
+      await queryClient.invalidateQueries({ queryKey: ['tour', tourNanoId] })
+      await queryClient.invalidateQueries({ queryKey: ['tours'] })
+      toast.success(t('toast.published'))
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t('toast.publishError')
+      toast.error(message)
+    } finally {
+      setIsPublishing(false)
+    }
+  }
 
   return (
     <>
@@ -80,6 +101,11 @@ export function TourThemeCard({ tourNanoId, theme, variant = 'detail', className
 
           <div className="flex flex-wrap gap-2">
             <Button onClick={() => setOpen(true)}>{t('changeTheme')}</Button>
+            {theme.hasChanges ? (
+              <Button variant="outline" onClick={() => void handlePublish()} disabled={isPublishing}>
+                {t(isPublishing ? 'publishingTheme' : 'publishTheme')}
+              </Button>
+            ) : null}
           </div>
         </CardContent>
       </Card>

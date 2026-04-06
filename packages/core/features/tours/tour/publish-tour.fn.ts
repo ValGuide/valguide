@@ -48,9 +48,16 @@ export const publishTourFn = createServerFn({ method: 'POST' })
       // Keep the KV refresh in-band as well so an immediate public page load
       // cannot race against stale tour data that was cached before publish.
       const fullTour = await getPublishedTourByNanoId(data.nanoId)
-      const tourKv = fullTour ? serializeTourForKv(fullTour, data.locale) : null
+      const localeTourKv = fullTour ? serializeTourForKv(fullTour, data.locale) : null
 
-      await writeKvAfterPublish(data.nanoId, data.locale, tourKv, result.tourSlug, result.orgSlug, result.orgNanoId)
+      await writeKvAfterPublish(
+        data.nanoId,
+        data.locale,
+        localeTourKv,
+        result.tourSlug,
+        result.orgSlug,
+        result.orgNanoId,
+      )
     }
 
     return result
@@ -59,14 +66,14 @@ export const publishTourFn = createServerFn({ method: 'POST' })
 async function writeKvAfterPublish(
   tourNanoId: string,
   locale: string,
-  tourKv: Parameters<typeof writeTourToKv>[2] | null,
+  localeTourKv: Parameters<typeof writeTourToKv>[2] | null,
   tourSlug: string | null,
   orgSlug: string | null,
   orgNanoId: string | null,
 ): Promise<void> {
   try {
-    if (tourKv) {
-      await writeTourToKv(tourNanoId, locale, tourKv)
+    if (localeTourKv) {
+      await writeTourToKv(tourNanoId, locale, localeTourKv)
     }
 
     if (orgSlug && orgNanoId) {
