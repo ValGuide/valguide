@@ -135,7 +135,7 @@ function AuthLocaleSwitcher() {
         </Drawer>
       ) : (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="max-w-[380px] gap-0 p-0 overflow-hidden">
+          <DialogContent className="max-w-95 gap-0 p-0 overflow-hidden">
             <DialogHeader className="px-4 pt-4 pb-3">
               <DialogTitle>{title}</DialogTitle>
               <DialogDescription className="sr-only">{title}</DialogDescription>
