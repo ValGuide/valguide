@@ -35,7 +35,7 @@ export function ArchiveTourButton({ tourNanoId, onArchived }: ArchiveTourButtonP
     <>
       <Button variant="outline" onClick={() => setIsOpen(true)}>
         <Archive className="h-4 w-4" />
-        Archive
+        <span className="hidden sm:inline">Archive</span>
       </Button>
       <ArchiveTourDialog open={isOpen} onOpenChange={setIsOpen} isArchiving={isArchiving} onConfirm={handleArchive} />
     </>

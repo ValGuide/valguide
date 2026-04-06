@@ -90,15 +90,15 @@ export function TourDetailView({
   )
 
   return (
-    <main className="flex flex-1 flex-col bg-background" data-testid="tour-detail-page">
+    <main className="flex min-w-0 flex-1 flex-col bg-background" data-testid="tour-detail-page">
       {/* Mobile Header */}
       <div className="sticky top-0 z-10 border-b bg-background sm:hidden">
         <div className="flex items-center justify-between gap-2 px-4 py-3">
-          <Button variant="ghost" size="sm" onClick={onBack} className="-ml-2 shrink-0">
+          <Button variant="ghost" size="sm" onClick={onBack} className="-ml-2 min-w-0">
             <ChevronLeft className="h-4 w-4" />
-            <span>{t('title')}</span>
+            <span className="truncate">{t('title')}</span>
           </Button>
-          <div className="flex shrink-0 items-center gap-2">{actions}</div>
+          <div className="flex items-center gap-2">{actions}</div>
         </div>
         <div className="px-4 pb-3">
           <h1 className="min-w-0 truncate text-lg font-semibold">{displayTitle}</h1>
@@ -119,8 +119,8 @@ export function TourDetailView({
       </div>
 
       {/* Content */}
-      <div className="flex-1 bg-muted/30 dark:bg-background">
-        <div className="mx-auto max-w-5xl p-6 sm:p-8 space-y-6">
+      <div className="min-w-0 flex-1 bg-muted/30 dark:bg-background">
+        <div className="mx-auto max-w-5xl space-y-6 p-4 sm:p-8">
           {/* Hero Card with Cover Image */}
           <Card className="overflow-hidden shadow-(--shadow-md)">
             <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted/30">
