@@ -10,8 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as PoliciesRouteImport } from './routes/policies'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
@@ -19,14 +19,14 @@ const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
   path: '/terms-of-service',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliciesRoute = PoliciesRouteImport.update({
+  id: '/policies',
+  path: '/policies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,35 +37,35 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/policies': typeof PoliciesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/robots.txt': typeof RobotsDottxtRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/policies': typeof PoliciesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/robots.txt': typeof RobotsDottxtRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/policies': typeof PoliciesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/robots.txt': typeof RobotsDottxtRoute
   '/terms-of-service': typeof TermsOfServiceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/privacy-policy' | '/robots.txt' | '/terms-of-service'
+  fullPaths: '/' | '/policies' | '/privacy-policy' | '/terms-of-service'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/privacy-policy' | '/robots.txt' | '/terms-of-service'
-  id: '__root__' | '/' | '/privacy-policy' | '/robots.txt' | '/terms-of-service'
+  to: '/' | '/policies' | '/privacy-policy' | '/terms-of-service'
+  id: '__root__' | '/' | '/policies' | '/privacy-policy' | '/terms-of-service'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PoliciesRoute: typeof PoliciesRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
-  RobotsDottxtRoute: typeof RobotsDottxtRoute
   TermsOfServiceRoute: typeof TermsOfServiceRoute
 }
 
@@ -78,18 +78,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsOfServiceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy-policy': {
       id: '/privacy-policy'
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/policies': {
+      id: '/policies'
+      path: '/policies'
+      fullPath: '/policies'
+      preLoaderRoute: typeof PoliciesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,8 +104,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PoliciesRoute: PoliciesRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
-  RobotsDottxtRoute: RobotsDottxtRoute,
   TermsOfServiceRoute: TermsOfServiceRoute,
 }
 export const routeTree = rootRouteImport

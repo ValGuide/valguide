@@ -1,0 +1,279 @@
+{
+  "www": {
+    "metadata": {
+      "title": "ValGuide",
+      "description": "Guidas digitalas per exposiziuns, museums e turas publicas."
+    },
+    "notFound": {
+      "title": "Pagina betg chattada",
+      "description": "La pagina tschertgada n'è betg vegnida chattada. Ella è forsa vegnida spustada u na exista betg pli.",
+      "homeButton": "Enavos a la pagina principala"
+    },
+    "nav": {
+      "tagline": "Guidas digitalas per museums",
+      "product": "Product",
+      "workflow": "Workflow",
+      "useCases": "Cas d'applicaziun",
+      "pricing": "Pretsch",
+      "primaryCta": "Reservar ina demo"
+    },
+    "hero": {
+      "eyebrow": "Guidas digitalas orientadas al browser",
+      "title": "Il workflow da Studio per guidas da museum.",
+      "description": "ValGuide gida teams culturals a publitgar guidas audio e da text plurilinguas en il web, senza fricziun d'app store, apparats da locaziun u redesigns d'agentura.",
+      "primaryCta": "Reservar ina demo",
+      "secondaryCta": "Cumenzar in pilot",
+      "diagramMuseum": "Workflow dal team",
+      "diagramMuseumValue": "Cuntegn, medias, novitadsziuns",
+      "diagramPhone": "Access per visitaders",
+      "diagramPhoneValue": "In link u code QR",
+      "diagramGuide": "Resultat publitgà",
+      "diagramGuideValue": "Cun branding, accessibel, pluriling",
+      "proofEyebrow": "In product real, betg ina folia da concept",
+      "proofTitle": "In workflow da publicaziun da la setup da tura fin al launch.",
+      "proofBody": "Il product cumpiglia gia la redacziun da cuntegn, novitadsziuns, branding, distribuziun da codes QR e lavur practica da rollout en in Studio.",
+      "proofAlt": "ValGuide Studio cun cuntegn specific per lingua, medias e controlla dal theme"
+    },
+    "stats": {
+      "speedLabel": "Sveltezza dal start",
+      "speedValue": "Dis enstagl da mais",
+      "operationsLabel": "Operaziun",
+      "operationsValue": "Nagina flotta d'apparats",
+      "accessibilityLabel": "Access",
+      "accessibilityValue": "Basà sin il web per standard"
+    },
+    "screenshots": {
+      "eyebrow": "Screenshots dal product",
+      "title": "Il sistem para sco in product real perquai ch'el è in product real.",
+      "description": "En cumparegliaziun cun microsites d'agentura, plattafurmas cuminaivlas u apps nativas grevas, ValGuide resta concentrà sin in ferm workflow da publicaziun.",
+      "tours": {
+        "label": "Survista da turas",
+        "title": "Vesair tut las guidas en ina survista operativa.",
+        "body": "Teams pon lantschar, controllar e manaschar pliras turas senza transfurmar la publicaziun quotidiana en management da projects.",
+        "alt": "ValGuide Studio cun ina glista da turas e pliras novitads da guida"
+      },
+      "editor": {
+        "label": "Workflow editorial",
+        "title": "Rediger cuntegn specific per lingua là nua che la lavur capita.",
+        "body": "Structura da tura, texts, medias e novitadsziuns restan en in lieu, uschia che novitads na siglian betg tranter tools.",
+        "alt": "ValGuide Studio editor per cuntegn da tura specific per lingua"
+      },
+      "brand": {
+        "label": "Controlla dal branding",
+        "title": "Applitgar l'identitad visuala da Vossa instituziun senza in nov project da design.",
+        "body": "Teams pon ajustar colurs, surfatschas e preschentaziun directamain en il Studio enstagl da cumenzar in nov redesign.",
+        "alt": "ValGuide Studio customizer dal branding cun presets da theme e controllas da colur"
+      }
+    },
+    "problem": {
+      "eyebrow": "Pertge che teams midan",
+      "title": "La gronda part da las alternativas creescha lavur enturn la guida empè da meglierar la guida sezza.",
+      "description": "Il martgà da concurrenza è grond, ma ils problems sa repetan: memia blera hardware, memia bler overhead da project e memia pauc controlla editoriala.",
+      "apps": {
+        "title": "Apps nativas pretendan overhead da release",
+        "body": "Review da l'app store, tests sin apparats e mantegniment da novitadsziuns retardeschan lantschaments che duain restar simpels."
+      },
+      "hardware": {
+        "title": "Frottas d'apparats creeschan logistica",
+        "body": "Chargiar, nettegiar, magazinar e remplazzar finascha tar ils teams dal museum enstagl dal cuntegn."
+      },
+      "content": {
+        "title": "Actualisaziuns dependan da persunas externas",
+        "body": "Pitschnas novitads editorialas daventan svelt tickets, coordinaziuns u nov scope da project."
+      },
+      "accessibility": {
+        "title": "L'accessibilitad vegn tractada memia tard",
+        "body": "Memia bleras soluziuns tractan l'accessibilitad sco accessori enstagl sco part dal flow principal per visitaders."
+      },
+      "budget": {
+        "title": "Il budget svanescha en la realisaziun",
+        "body": "Daners van en infrastructura e management da project enstagl en la qualitad e la ristga dal cuntegn."
+      },
+      "temporary": {
+        "title": "Er exposiziuns temporaras dovran ina buna soluziun",
+        "body": "Curtas duradas na giustifitgeschan savens nagin rollout grev, er sch'ils visitaders han cler basegn da guidanza."
+      }
+    },
+    "solution": {
+      "eyebrow": "In workflow pli precis",
+      "title": "ValGuide concentrescha la valur sin tempo da publicaziun, controlla e access per visitaders.",
+      "description": "Enstagl da sparpagliar la lavur sin apps, agenturas ed apparats, la creaziun, localisaziun, branding e launch vegnan manads en in workflow.",
+      "web": {
+        "title": "Distribuziun orientada al browser",
+        "body": "Visitaders avran la guida directamain sin lur agen telefon. Nagin download, nagina installaziun e nagina dependenza da l'app store."
+      },
+      "brand": {
+        "title": "Branding per l'instituziun",
+        "body": "L'identitad visuala vegn tgirada en il product empè da vegnir reconstruida sco project separà."
+      },
+      "ai": {
+        "title": "L'IA sustegna il lavur editoriala",
+        "body": "Duvrai l'IA là nua che ella spargna temp da curaziun, ma las decisiuns finalas restan tar persunas."
+      },
+      "languages": {
+        "title": "Las novitadsziuns restan en il workflow",
+        "body": "Variants da lingua stattan sper il cuntegn principal, uschia che la publicaziun plurilingua resta manischabla."
+      },
+      "accessibility": {
+        "title": "L'accessibilitad resta visibla",
+        "body": "Layouts legibels, audio edaziuns e novitads d'assistenza restan part da l'experientscha standard."
+      },
+      "analytics": {
+        "title": "Controlla pratica dal rollout",
+        "body": "Publicaziun, distribuziun da QR ed iteraziun restan en in sistem che teams pon propi manaschar."
+      },
+      "howItWorksEyebrow": "Co funcziuna quai",
+      "step1": {
+        "title": "Metter si la guida ina giada",
+        "body": "Tgirar stops, texts, medias e novitadsziuns en in lieu."
+      },
+      "step2": {
+        "title": "Publitgar in access stabil per visitaders",
+        "body": "Duvrar in weblink u code QR per signaletica, stampats e campagnas."
+      },
+      "step3": {
+        "title": "Meglierar senza reconstruir",
+        "body": "Actualisar la guida live cura che l'exposiziun sa mida, senza nov project d'app u d'agentura."
+      }
+    },
+    "why": {
+      "eyebrow": "Posiziunament",
+      "title": "Ina meglra soluziun che apparats da locaziun, plattafurmas cuminaivlas u anc in custom build.",
+      "description": "Il focus dal product è stretg intenziunadamain: in workflow white-label ed orientà al browser per instituziuns che vulan controlla senza ballast operativ.",
+      "audio": {
+        "title": "En cumparegliaziun cun guidas basadas sin hardware",
+        "point1": "Nagina flotta d'apparats da gestir, chargiar, nettegiar u remplazzar.",
+        "point2": "Visitaders dovran ils telefons che han gia cun sai.",
+        "point3": "Er exposiziuns temporaras restan economicas senza logistica da locaziun."
+      },
+      "apps": {
+        "title": "En cumparegliaziun cun apps nativas per visitaders",
+        "point1": "Pli svelt live perquai che il browser è gia avant maun.",
+        "point2": "Nagina fricziun d'app store per visitaders sin il lieu.",
+        "point3": "In scope pli pitschen munta damain parts moviblas en il manaschi."
+      },
+      "agencies": {
+        "title": "En cumparegliaziun cun builds d'agentura",
+        "point1": "L'instituziun mantegna la controlla suenter il launch.",
+        "point2": "Actualisaziuns na daventan betg mintga giada in nov scope.",
+        "point3": "Il workflow resta tar il team cun la responsabladad da cuntegn."
+      }
+    },
+    "useCases": {
+      "eyebrow": "Cas d'applicaziun",
+      "title": "Concepì per formats che dovran tempo senza compromiss.",
+      "description": "La pli ferma adattaziun exista là nua che access via browser, publicaziun plurilingua e manaschi schlanc valan dapli che ballast da plattafurma.",
+      "permanent": {
+        "title": "Exposiziuns permanentas",
+        "body": "Tegnir viva ina stgessa da guida stabila e svilupparla vinavant senza replatforming."
+      },
+      "temporary": {
+        "title": "Exposiziuns temporaras",
+        "body": "Lantschar svelt senza stuair giustifitgar ina app atgna u ina flotta d'apparats per ina curta durada."
+      },
+      "multilingual": {
+        "title": "Publics plurilings",
+        "body": "Porscher pliras linguas senza sparpagliar il workflow sin documents e prestaders."
+      },
+      "accessibility": {
+        "title": "Mediaziun orientada a l'accessibilitad",
+        "body": "Sustegnair visitaders cun layouts legibels, audio ed access facil davent da l'entschatta."
+      },
+      "education": {
+        "title": "Formats educativs e guidaziuns",
+        "body": "Reutilisai la medema basa da publicaziun per turas, gruppas da scola e formats da storytelling."
+      },
+      "tourism": {
+        "title": "Turas publicas",
+        "body": "Publitgai guidas per citads u spassegiadas cun il medem model orientà al web sco en instituziuns."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Pretsch",
+      "title": "Pretschaziuns tenor la realitad dal rollout.",
+      "description": "Nus calculain tenor grondezza da l'exposiziun, cumplexitad da publicaziun e sustegn che Voss team dovra propi.",
+      "philosophy": "L'intenziun n'è betg il pli grond pachet. L'intenziun è in workflow da guida che Voss team po lantschar e manar vinavant.",
+      "starter": {
+        "label": "Starter",
+        "price": "A partir d'in pilot",
+        "description": "Per instituziuns pli pitschnas u emprims launches per validar il workflow.",
+        "point1": "In launch focalisà",
+        "point2": "Workflow central da publicaziun",
+        "point3": "Setup cun pauca fricziun"
+      },
+      "professional": {
+        "label": "Professional",
+        "price": "Per programs activs",
+        "description": "Per instituziuns cun pliras guidas ed novitads recurrentas.",
+        "point1": "Operaziuns cun pliras guidas",
+        "point2": "Workflow editorial pli ferm",
+        "point3": "Sustegn per iteraziun permanenta"
+      },
+      "enterprise": {
+        "label": "Enterprise",
+        "price": "Per rollouts cumplexs",
+        "description": "Per organisaziuns pli grondas cun dapli coordinaziun e planisaziun da rollout.",
+        "point1": "Implementaziun tranter plirs teams",
+        "point2": "Sustegn avanzà per rollout",
+        "point3": "Planisaziun a nivel d'instituziun"
+      },
+      "offsetTitle": "Duvrais Vus ina offerta concreta?",
+      "offsetBody": "Nus calculain tenor Voss format, Vossas linguas e restricziuns operativas enstagl d'in calculatur da pretschs fictiv.",
+      "cta": "Dumandar il pretsch"
+    },
+    "pilot": {
+      "eyebrow": "Process da pilot",
+      "title": "Cumenzar cun in pilot avant che scalar.",
+      "description": "In pilot è la via la pli svelta per examinar la fitgira, alliniar persunas involvidas e testar la configuraziun en in context real.",
+      "step1": {
+        "title": "Tscherner ina exposiziun u ruta",
+        "body": "Tschernei in cas limità cun valur reala per visitaders e scope supportabel."
+      },
+      "step2": {
+        "title": "Publitgar l'emprima experientscha per visitaders",
+        "body": "Lantschai la guida cun structura da basa, branding e flow d'access."
+      },
+      "step3": {
+        "title": "Evaluar utilisaziun e feedback editorial",
+        "body": "Controllai tge che vegn duvrà e nua che il team ha basegn d'adattaziuns."
+      },
+      "step4": {
+        "title": "Extender cun fidanza",
+        "body": "Duvrai ils emprendissadis dal pilot per scalar ad autras turas, linguas u lieus."
+      }
+    },
+    "trust": {
+      "eyebrow": "Construì per il manaschi real",
+      "title": "ValGuide è concepì enturn il lavur da publicaziun, betg enturn teater da novitads.",
+      "body": "Il focus dal product è simpel: gidar teams culturals da metter live guidanza digitala per visitaders cun damain fricziun, responsabladad pli clera e damain parts moviblas.",
+      "trustPanelEyebrow": "Tge che quai vul dir en pratica",
+      "trustPoint1": "Nagina dependenza da l'app store per visitaders.",
+      "trustPoint2": "Nagina flotta d'apparats per il team.",
+      "trustPoint3": "In lieu unic per novitads e novitadsziuns.",
+      "trustPoint4": "In setup che surviva il manaschi real d'in museum."
+    },
+    "footer": {
+      "description": "Guidas digitalas per visitaders en museums, exposiziuns e turas publicas.",
+      "privacy": "Declaraziun da protecziun da datas",
+      "terms": "Cundiziuns d'utilisaziun"
+    },
+    "legal": {
+      "policies": {
+        "title": "Directivas & cunvegnas",
+        "introPrimary": "Qua chattais Vus ils documents legals e las policies las pli impurtantas en connex cun ValGuide.",
+        "introSecondary": "Nus empruvain da formular nossas cunvegnas e directivas uschè cler e chapibel sco pussaivel.",
+        "dataProcessingAgreement": "In contract da tractament da datas è disponibel sin dumonda."
+      },
+      "privacyPolicy": {
+        "title": "Declaraziun da protecziun da datas",
+        "body": "Nossa decleraziun da protecziun da datas vegn actualmain finalisada. Sche Vus duvrais il sboz actual u avais ina dumonda da compliance, scrivai a support@valguide.com.",
+        "summary": "Co che nus tractain novitads persunalas e novitadsziuns da protecziun da datas."
+      },
+      "termsOfService": {
+        "title": "Cundiziuns d'utilisaziun",
+        "body": "Nossas cundiziuns d'utilisaziun vegnan actualmain finalisadas. Sche Vus duvrais il sboz actual u avais ina dumonda davart la procuraziun, scrivai a support@valguide.com.",
+        "summary": "Las cundiziuns contractualas centralas per utilisar ValGuide."
+      }
+    }
+  }
+}

@@ -1,0 +1,279 @@
+{
+  "www": {
+    "metadata": {
+      "title": "ValGuide",
+      "description": "Digitale Guides für Ausstellungen, Museen und öffentliche Touren."
+    },
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "description": "Die gesuchte Seite konnte nicht gefunden werden. Sie wurde möglicherweise verschoben oder existiert nicht mehr.",
+      "homeButton": "Zur Startseite"
+    },
+    "nav": {
+      "tagline": "Digitale Guides für Museen",
+      "product": "Produkt",
+      "workflow": "Workflow",
+      "useCases": "Einsatzfelder",
+      "pricing": "Preise",
+      "primaryCta": "Demo anfragen"
+    },
+    "hero": {
+      "eyebrow": "Browserbasierte digitale Guides",
+      "title": "Der Studio-Workflow für Museums-Guides.",
+      "description": "ValGuide hilft Kulturteams, mehrsprachige Audio- und Textguides im Web zu publizieren, ohne App-Store-Hürden, Mietgeräte oder Agentur-Redesigns.",
+      "primaryCta": "Demo anfragen",
+      "secondaryCta": "Pilot starten",
+      "diagramMuseum": "Team-Workflow",
+      "diagramMuseumValue": "Inhalte, Medien, Übersetzungen",
+      "diagramPhone": "Besucherzugang",
+      "diagramPhoneValue": "Ein Link oder QR-Code",
+      "diagramGuide": "Publiziertes Ergebnis",
+      "diagramGuideValue": "Gebrandet, barrierefrei, mehrsprachig",
+      "proofEyebrow": "Reales Produkt statt Konzeptfolie",
+      "proofTitle": "Ein Publikations-Workflow von der Tour-Erstellung bis zum Launch.",
+      "proofBody": "Das Produkt deckt bereits Content-Bearbeitung, Übersetzungen, Branding, QR-Verteilung und praktische Rollout-Arbeit in einem Studio ab.",
+      "proofAlt": "ValGuide Studio mit sprachspezifischer Tour-Bearbeitung, Medien und Theme-Steuerung"
+    },
+    "stats": {
+      "speedLabel": "Startgeschwindigkeit",
+      "speedValue": "Tage statt Monate",
+      "operationsLabel": "Betrieb",
+      "operationsValue": "Keine Geräteflotte",
+      "accessibilityLabel": "Zugang",
+      "accessibilityValue": "Von Haus aus webbasiert"
+    },
+    "screenshots": {
+      "eyebrow": "Produktscreenshots",
+      "title": "Das System wirkt wie ein echtes Produkt, weil es eines ist.",
+      "description": "Im Vergleich zu Agentur-Microsites, geteilten Besucherplattformen oder schweren nativen Apps bleibt ValGuide auf einen starken Publikations-Workflow fokussiert.",
+      "tours": {
+        "label": "Tourenübersicht",
+        "title": "Alle Guides in einer operativen Übersicht.",
+        "body": "Teams können mehrere Touren starten, prüfen und verwalten, ohne dass tägliche Publikation zu Projektmanagement wird.",
+        "alt": "ValGuide Studio Tourenübersicht mit mehreren Guide-Karten"
+      },
+      "editor": {
+        "label": "Redaktioneller Workflow",
+        "title": "Sprachspezifische Inhalte dort bearbeiten, wo die Arbeit passiert.",
+        "body": "Tourstruktur, Texte, Medien und Übersetzungen bleiben an einem Ort, damit Updates nicht zwischen Tools springen.",
+        "alt": "ValGuide Studio Editor für sprachspezifische Tour-Inhalte"
+      },
+      "brand": {
+        "label": "Branding-Kontrolle",
+        "title": "Die visuelle Identität Ihrer Institution anwenden, ohne ein neues Designprojekt.",
+        "body": "Teams können Farben, Flächen und Darstellung direkt im Studio steuern statt ein neues Redesign zu beauftragen.",
+        "alt": "ValGuide Studio Brand-Customizer mit Theme-Presets und Farbsteuerung"
+      }
+    },
+    "problem": {
+      "eyebrow": "Warum Teams wechseln",
+      "title": "Die meisten Alternativen erzeugen Arbeit rund um den Guide statt Mehrwert im Guide selbst.",
+      "description": "Der Wettbewerbsmarkt ist voll, aber die Probleme wiederholen sich: zu viel Hardware, zu viel Projektaufwand und zu wenig redaktionelle Kontrolle.",
+      "apps": {
+        "title": "Native Apps bringen Release-Aufwand",
+        "body": "App-Store-Review, Gerätetests und Versionspflege bremsen Launches, die eigentlich schlank bleiben sollten."
+      },
+      "hardware": {
+        "title": "Geräteflotten erzeugen Logistik",
+        "body": "Laden, Reinigen, Lagern und Ersetzen landen beim Museumsteam statt beim Inhalt."
+      },
+      "content": {
+        "title": "Updates hängen von externen Helfern ab",
+        "body": "Kleine redaktionelle Änderungen werden schnell zu Tickets, Abstimmungen oder neuem Projektumfang."
+      },
+      "accessibility": {
+        "title": "Barrierefreiheit kommt zu spät",
+        "body": "Zu viele Lösungen behandeln Barrierefreiheit als Zusatz statt als Teil des Kernablaufs für Besucher."
+      },
+      "budget": {
+        "title": "Budgets verschwinden in der Umsetzung",
+        "body": "Geld geht in Infrastruktur und Projektsteuerung statt in Inhaltsqualität und Reichweite."
+      },
+      "temporary": {
+        "title": "Auch temporäre Ausstellungen brauchen eine gute Lösung",
+        "body": "Kurze Laufzeiten rechtfertigen oft keinen schweren Rollout, obwohl Besucherinnen und Besucher klare Orientierung brauchen."
+      }
+    },
+    "solution": {
+      "eyebrow": "Ein präziserer Workflow",
+      "title": "ValGuide legt den Wert auf Publikationstempo, Kontrolle und Besucherzugang.",
+      "description": "Statt Arbeit über Apps, Agenturen und Geräte zu verteilen, läuft Erstellung, Lokalisierung, Branding und Launch in einem Workflow.",
+      "web": {
+        "title": "Browserbasierte Auslieferung",
+        "body": "Besucher öffnen den Guide sofort auf dem eigenen Smartphone. Kein Download, keine Installation, keine App-Store-Abhängigkeit."
+      },
+      "brand": {
+        "title": "Branding für die Institution",
+        "body": "Die visuelle Identität wird im Produkt gepflegt statt bei jedem Launch als Sonderprojekt gebaut."
+      },
+      "ai": {
+        "title": "KI unterstützt die Redaktionsarbeit",
+        "body": "Nutzen Sie KI dort, wo sie Kurationszeit spart, während Prüfung und Entscheidung beim Menschen bleiben."
+      },
+      "languages": {
+        "title": "Übersetzungen bleiben im Workflow",
+        "body": "Sprachvarianten liegen direkt neben dem Kerninhalt, damit mehrsprachige Publikation beherrschbar bleibt."
+      },
+      "accessibility": {
+        "title": "Barrierefreiheit bleibt sichtbar",
+        "body": "Lesbare Layouts, Audio-Unterstützung und Assistenzfunktionen sind Teil des Standarderlebnisses."
+      },
+      "analytics": {
+        "title": "Praktische Rollout-Kontrolle",
+        "body": "Publikation, QR-Verteilung und Iteration bleiben in einem System, das Teams wirklich betreiben können."
+      },
+      "howItWorksEyebrow": "So funktioniert es",
+      "step1": {
+        "title": "Guide einmal sauber aufsetzen",
+        "body": "Stops, Texte, Medien und Übersetzungen an einem Ort pflegen."
+      },
+      "step2": {
+        "title": "Einen stabilen Besuchereinstieg publizieren",
+        "body": "Einen Weblink oder QR-Code für Signaletik, Druck und Kampagnen verwenden."
+      },
+      "step3": {
+        "title": "Ohne Neuaufbau weiterentwickeln",
+        "body": "Den Live-Guide aktualisieren, wenn sich die Ausstellung verändert, ohne neues App- oder Agenturprojekt."
+      }
+    },
+    "why": {
+      "eyebrow": "Positionierung",
+      "title": "Eine bessere Passung als Mietgeräte, geteilte Museumsplattformen oder ein weiterer Custom Build.",
+      "description": "Der Produktfokus ist bewusst eng: ein White-Label-, browserbasierter Guide-Workflow für Institutionen, die Kontrolle ohne operative Last wollen.",
+      "audio": {
+        "title": "Im Vergleich zu hardwarebasierten Guides",
+        "point1": "Keine Geräteflotte zum Verwalten, Laden, Reinigen oder Ersetzen.",
+        "point2": "Besucher nutzen die Smartphones, die sie bereits dabeihaben.",
+        "point3": "Auch temporäre Ausstellungen bleiben ohne Mietlogistik wirtschaftlich."
+      },
+      "apps": {
+        "title": "Im Vergleich zu nativen Besucher-Apps",
+        "point1": "Schneller live, weil der Browser schon vorhanden ist.",
+        "point2": "Keine App-Store-Hürde für Besucher vor Ort.",
+        "point3": "Kleinerer Scope bedeutet weniger bewegliche Teile im Betrieb."
+      },
+      "agencies": {
+        "title": "Im Vergleich zu Agentur-Builds",
+        "point1": "Die Institution behält die Hoheit nach dem Launch.",
+        "point2": "Updates werden nicht jedes Mal zu einem neuen Scope.",
+        "point3": "Der Workflow bleibt beim Team mit der inhaltlichen Verantwortung."
+      }
+    },
+    "useCases": {
+      "eyebrow": "Einsatzfelder",
+      "title": "Entwickelt für Formate, die Tempo ohne Qualitätsverlust brauchen.",
+      "description": "Die stärkste Passung entsteht überall dort, wo Browser-Zugang, mehrsprachige Publikation und schlanker Betrieb wichtiger sind als Plattform-Ballast.",
+      "permanent": {
+        "title": "Dauerausstellungen",
+        "body": "Eine stabile Guide-Ebene live halten und ohne Replatforming weiterentwickeln."
+      },
+      "temporary": {
+        "title": "Temporäre Ausstellungen",
+        "body": "Schnell starten, ohne für eine kurze Laufzeit eine eigene App oder Geräteflotte zu rechtfertigen."
+      },
+      "multilingual": {
+        "title": "Mehrsprachige Zielgruppen",
+        "body": "Mehrere Sprachen anbieten, ohne den Workflow über Dokumente und Dienstleister zu verteilen."
+      },
+      "accessibility": {
+        "title": "Barrierefreie Vermittlung",
+        "body": "Besucher mit lesbaren Layouts, Audio und niedrigschwelligem Zugang von Anfang an unterstützen."
+      },
+      "education": {
+        "title": "Bildungs- und Führungsformate",
+        "body": "Nutzen Sie denselben Publikationskern für Touren, Schulgruppen und erzählerische Vermittlungsformate."
+      },
+      "tourism": {
+        "title": "Öffentliche Rundgänge",
+        "body": "Publizieren Sie Stadt- oder Outdoor-Guides mit demselben webbasierten Modell wie im Museum."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Preise",
+      "title": "Preise entlang der Rollout-Realität.",
+      "description": "Wir kalkulieren nach Ausstellungsgrösse, Publikationskomplexität und dem Support, den Ihr Team wirklich braucht.",
+      "philosophy": "Das Ziel ist nicht das grösste Paket. Das Ziel ist ein Guide-Workflow, den Ihr Team starten und tragen kann.",
+      "starter": {
+        "label": "Starter",
+        "price": "Ab Pilotumfang",
+        "description": "Für kleinere Institutionen oder erste Launches zur Validierung des Workflows.",
+        "point1": "Ein fokussierter Launch",
+        "point2": "Kern-Workflow für Publikation",
+        "point3": "Schnelles Setup"
+      },
+      "professional": {
+        "label": "Professional",
+        "price": "Für aktive Programme",
+        "description": "Für Institutionen mit mehreren Guides und wiederkehrenden Updates.",
+        "point1": "Betrieb mehrerer Guides",
+        "point2": "Stärkerer Redaktionsworkflow",
+        "point3": "Unterstützung für laufende Weiterentwicklung"
+      },
+      "enterprise": {
+        "label": "Enterprise",
+        "price": "Für komplexe Rollouts",
+        "description": "Für grössere Organisationen mit engerer Abstimmung und komplexerer Rollout-Planung.",
+        "point1": "Umsetzung über mehrere Teams",
+        "point2": "Erweiterte Rollout-Begleitung",
+        "point3": "Planung auf Institutionsebene"
+      },
+      "offsetTitle": "Brauchen Sie ein konkretes Angebot?",
+      "offsetBody": "Wir kalkulieren entlang Ihres Formats, Ihrer Sprachen und operativen Einschränkungen statt über einen künstlichen Preisrechner.",
+      "cta": "Preise anfragen"
+    },
+    "pilot": {
+      "eyebrow": "Pilotprozess",
+      "title": "Mit einem Pilot starten, bevor skaliert wird.",
+      "description": "Ein Pilot ist der schnellste Weg, Passung zu prüfen, Stakeholder auszurichten und den Aufbau im echten Ausstellungskontext zu testen.",
+      "step1": {
+        "title": "Eine Ausstellung oder Route auswählen",
+        "body": "Wählen Sie einen klar begrenzten Fall mit echtem Besucherwert und überschaubarem Umfang."
+      },
+      "step2": {
+        "title": "Das erste Besuchererlebnis publizieren",
+        "body": "Starten Sie den Guide mit Grundstruktur, Branding und Zugangskonzept."
+      },
+      "step3": {
+        "title": "Nutzung und Redaktion auswerten",
+        "body": "Prüfen Sie, was genutzt wird und wo das Team Anpassungen braucht."
+      },
+      "step4": {
+        "title": "Mit Sicherheit ausbauen",
+        "body": "Nutzen Sie die Erkenntnisse aus dem Pilot, um auf weitere Touren, Sprachen oder Standorte auszuweiten."
+      }
+    },
+    "trust": {
+      "eyebrow": "Für den realen Betrieb gebaut",
+      "title": "ValGuide ist um Publikationsarbeit herum gestaltet, nicht um Feature-Theater.",
+      "body": "Der Fokus ist bewusst eng: Kulturteams sollen digitale Besucherführung mit weniger Reibung, klarerer Verantwortung und weniger beweglichen Teilen live bringen.",
+      "trustPanelEyebrow": "Was das praktisch bedeutet",
+      "trustPoint1": "Keine App-Store-Abhängigkeit für Besucher.",
+      "trustPoint2": "Keine Geräteflotte für das Team.",
+      "trustPoint3": "Ein Ort für Inhalte und Übersetzungen.",
+      "trustPoint4": "Ein Setup, das echten Museumsbetrieb übersteht."
+    },
+    "footer": {
+      "description": "Digitale Besucherguides für Museen, Ausstellungen und öffentliche Touren.",
+      "privacy": "Datenschutzerklärung",
+      "terms": "Nutzungsbedingungen"
+    },
+    "legal": {
+      "policies": {
+        "title": "Richtlinien & Vereinbarungen",
+        "introPrimary": "Hier finden Sie alle wichtigen Policies und rechtlichen Dokumente im Zusammenhang mit ValGuide.",
+        "introSecondary": "Wir geben unser Bestes, unsere Vereinbarungen und Richtlinien möglichst klar und verständlich zu gestalten.",
+        "dataProcessingAgreement": "Ein Auftragsverarbeitungsvertrag ist auf Anfrage erhältlich."
+      },
+      "privacyPolicy": {
+        "title": "Datenschutzerklärung",
+        "body": "Unsere Datenschutzerklärung wird derzeit finalisiert. Wenn Sie den aktuellen Entwurf benötigen oder eine Compliance-Frage haben, schreiben Sie an support@valguide.com.",
+        "summary": "Wie wir personenbezogene Daten und Datenschutzpflichten handhaben."
+      },
+      "termsOfService": {
+        "title": "Nutzungsbedingungen",
+        "body": "Unsere Nutzungsbedingungen werden derzeit finalisiert. Wenn Sie den aktuellen Entwurf benötigen oder eine Beschaffungsfrage haben, schreiben Sie an support@valguide.com.",
+        "summary": "Die zentralen vertraglichen Bedingungen für die Nutzung von ValGuide."
+      }
+    }
+  }
+}

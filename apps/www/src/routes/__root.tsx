@@ -5,11 +5,12 @@ import { defaultLocale } from '@valguide/core/i18n/i18n.config'
 import { localeQueryOptions, messagesQueryOptions } from '@valguide/core/i18n/query-options'
 import { TanStackAppDevtools } from '@valguide/core/ui/components/tanstack-devtools'
 import { getPrefixedTitle } from '@valguide/core/utils/page-title'
-import { NotFoundPage } from '@valguide/features/404/not-found-page'
 import appCss from '@valguide/ui/styles/globals.css?url'
 import { Providers } from '@/components/providers'
 import { currentUserQueryOptions } from '@/features/auth/query-options'
+import { LegalNotFoundPage } from '@/features/legal/legal-not-found-page'
 import { themeQueryOptions } from '@/features/theme/query-options'
+import { wwwMessagesQueryOptions } from '@/i18n/query-options'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -20,25 +21,27 @@ export const Route = createRootRouteWithContext<{
       context.queryClient.ensureQueryData(localeQueryOptions()),
       context.queryClient.ensureQueryData(themeQueryOptions()),
     ])
-    const messages = await context.queryClient.ensureQueryData(messagesQueryOptions(locale))
+    const [messages, wwwMessages] = await Promise.all([
+      context.queryClient.ensureQueryData(messagesQueryOptions(locale)),
+      context.queryClient.ensureQueryData(wwwMessagesQueryOptions(locale)),
+    ])
+    // i18n-used-keys: www.metadata.title, www.metadata.description
     const metadata = {
-      title: messages?.www?.metadata?.title ?? 'ValGuide',
-      description: messages?.www?.metadata?.description ?? 'Your digital guide companion',
+      title: wwwMessages?.www?.metadata?.title ?? 'ValGuide',
+      description: wwwMessages?.www?.metadata?.description ?? 'Digital guides for exhibitions and tours',
     }
-    return { user, locale, theme, messages, metadata }
+    return { user, locale, theme, messages, wwwMessages, metadata }
   },
   notFoundComponent: () => {
-    const { messages } = Route.useRouteContext()
-    // i18n-used-keys: notFound.title, notFound.description, notFound.homeButton
+    const { wwwMessages } = Route.useRouteContext()
+    // i18n-used-keys: www.notFound.title, www.notFound.description, www.legal.policies.title, www.legal.privacyPolicy.title, www.legal.termsOfService.title
     return (
-      <NotFoundPage
-        i18n={{
-          title: messages?.notFound?.title ?? 'Page not found',
-          description:
-            messages?.notFound?.description ??
-            "We couldn't find the page you're looking for. It may have been moved or no longer exists.",
-          homeButton: messages?.notFound?.homeButton ?? 'Back to Home',
-        }}
+      <LegalNotFoundPage
+        title={wwwMessages?.www?.notFound?.title ?? 'Page not found'}
+        description={wwwMessages?.www?.notFound?.description ?? "We couldn't find the page you were looking for."}
+        policiesLabel={wwwMessages?.www?.legal?.policies?.title ?? 'Policies'}
+        privacyLabel={wwwMessages?.www?.legal?.privacyPolicy?.title ?? 'Privacy Policy'}
+        termsLabel={wwwMessages?.www?.legal?.termsOfService?.title ?? 'Terms of Service'}
       />
     )
   },
@@ -56,7 +59,7 @@ export const Route = createRootRouteWithContext<{
       },
       {
         name: 'description',
-        content: match.context.metadata?.description ?? 'Your digital guide companion',
+        content: match.context.metadata?.description ?? 'Digital guides for exhibitions and tours',
       },
     ],
     links: [

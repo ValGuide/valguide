@@ -1,0 +1,279 @@
+{
+  "www": {
+    "metadata": {
+      "title": "ValGuide",
+      "description": "Digital guides for exhibitions, museums, and public tours."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "description": "We couldn't find the page you were looking for. It may have moved or no longer exist.",
+      "homeButton": "Back to homepage"
+    },
+    "nav": {
+      "tagline": "Digital guides for museums",
+      "product": "Product",
+      "workflow": "Workflow",
+      "useCases": "Use cases",
+      "pricing": "Pricing",
+      "primaryCta": "Book a demo"
+    },
+    "hero": {
+      "eyebrow": "Browser-first digital guides",
+      "title": "The Studio-style workflow for museum guides.",
+      "description": "ValGuide lets cultural teams publish multilingual audio and text guides on the web, without app-store friction, rented devices, or agency-style rebuilds.",
+      "primaryCta": "Book a demo",
+      "secondaryCta": "Start a pilot",
+      "diagramMuseum": "Team workflow",
+      "diagramMuseumValue": "Content, media, translations",
+      "diagramPhone": "Visitor access",
+      "diagramPhoneValue": "One link or QR code",
+      "diagramGuide": "Published result",
+      "diagramGuideValue": "Branded, accessible, multilingual",
+      "proofEyebrow": "Real product, not a concept deck",
+      "proofTitle": "One publishing workflow from tour setup to launch.",
+      "proofBody": "The product already covers content editing, translations, branding, QR distribution, and practical rollout work inside one Studio.",
+      "proofAlt": "ValGuide Studio tour editor with language-specific content, media, and theme controls"
+    },
+    "stats": {
+      "speedLabel": "Launch speed",
+      "speedValue": "Days, not months",
+      "operationsLabel": "Operations",
+      "operationsValue": "No hardware fleet",
+      "accessibilityLabel": "Access",
+      "accessibilityValue": "Web-based by default"
+    },
+    "screenshots": {
+      "eyebrow": "Product screenshots",
+      "title": "The system already looks like a working product because it is one.",
+      "description": "Compared with agency microsites, shared visitor platforms, or heavyweight native apps, ValGuide stays focused on one strong publishing workflow.",
+      "tours": {
+        "label": "Tours overview",
+        "title": "See every guide in one operational view.",
+        "body": "Teams can launch, review, and manage multiple tours without turning daily publishing into project management.",
+        "alt": "ValGuide Studio tours list showing multiple museum guide cards"
+      },
+      "editor": {
+        "label": "Editorial workflow",
+        "title": "Edit language-specific content where the work happens.",
+        "body": "Tour structure, copy, media, and translations stay in one place so updates do not bounce between tools.",
+        "alt": "ValGuide Studio editor for language-specific tour content"
+      },
+      "brand": {
+        "label": "Brand control",
+        "title": "Apply your institution's visual identity without a custom rebuild.",
+        "body": "Teams can tune colors, surfaces, and presentation directly in the Studio instead of opening a new design project.",
+        "alt": "ValGuide Studio brand customizer with theme presets and color controls"
+      }
+    },
+    "problem": {
+      "eyebrow": "Why teams switch",
+      "title": "Most alternatives create work around the guide instead of improving the guide itself.",
+      "description": "The competitor landscape is crowded, but the operational pain repeats: too much hardware, too much project overhead, and too little editorial control.",
+      "apps": {
+        "title": "Native apps add release overhead",
+        "body": "App-store review, device testing, and version maintenance slow down launches that should stay simple."
+      },
+      "hardware": {
+        "title": "Hardware fleets create logistics",
+        "body": "Charging, cleaning, storage, and replacement work lands on museum teams instead of staying with the content."
+      },
+      "content": {
+        "title": "Updates depend on outside help",
+        "body": "Small editorial changes often turn into tickets, partner handoffs, or new project scope."
+      },
+      "accessibility": {
+        "title": "Accessibility gets bolted on late",
+        "body": "Too many solutions treat accessibility as an add-on instead of part of the core visitor flow."
+      },
+      "budget": {
+        "title": "Budgets disappear into setup work",
+        "body": "Money goes into infrastructure and project management instead of content quality and reach."
+      },
+      "temporary": {
+        "title": "Temporary shows still need a good solution",
+        "body": "Short exhibitions often cannot justify a heavy rollout, even when visitors clearly need guidance."
+      }
+    },
+    "solution": {
+      "eyebrow": "A sharper workflow",
+      "title": "ValGuide keeps the value in publishing speed, control, and visitor access.",
+      "description": "Instead of spreading work across apps, agencies, and devices, teams run one workflow for creation, localization, brand control, and launch.",
+      "web": {
+        "title": "Browser-first delivery",
+        "body": "Visitors open the guide instantly on their own phones. No download, no install, no app-store dependency."
+      },
+      "brand": {
+        "title": "Institution-ready branding",
+        "body": "Apply your visual identity inside the product instead of paying for a custom visual layer every time."
+      },
+      "ai": {
+        "title": "AI supports editing work",
+        "body": "Use AI where it saves curator time, while keeping review and final decisions human."
+      },
+      "languages": {
+        "title": "Translations stay in the workflow",
+        "body": "Language variants live next to the core content, so multilingual publishing stays operationally sane."
+      },
+      "accessibility": {
+        "title": "Accessibility stays visible",
+        "body": "Readable layouts, audio support, and assistive features stay part of the default experience."
+      },
+      "analytics": {
+        "title": "Practical rollout control",
+        "body": "Publishing, QR distribution, and iteration stay inside one system that teams can actually operate."
+      },
+      "howItWorksEyebrow": "How it works",
+      "step1": {
+        "title": "Set up the guide once",
+        "body": "Build stops, copy, media, and translations in one place."
+      },
+      "step2": {
+        "title": "Publish one stable visitor entry point",
+        "body": "Use a web link or QR code across signage, print, and campaigns."
+      },
+      "step3": {
+        "title": "Improve without rebuilding",
+        "body": "Update the live guide as exhibitions change, without starting another app or agency project."
+      }
+    },
+    "why": {
+      "eyebrow": "Positioning",
+      "title": "A better fit than rented hardware, shared museum platforms, or another custom build.",
+      "description": "The product is deliberately narrow: a white-label, browser-first guide workflow for institutions that want control without operational drag.",
+      "audio": {
+        "title": "Compared with hardware-based guides",
+        "point1": "No device fleet to manage, charge, clean, or replace.",
+        "point2": "Visitors use the phones they already carry.",
+        "point3": "Temporary exhibitions stay viable without rental logistics."
+      },
+      "apps": {
+        "title": "Compared with native visitor apps",
+        "point1": "Faster to launch because the browser is already installed.",
+        "point2": "No app-store friction for visitors on-site.",
+        "point3": "Smaller scope means fewer moving parts to support."
+      },
+      "agencies": {
+        "title": "Compared with agency-led builds",
+        "point1": "The institution keeps ownership after launch.",
+        "point2": "Updates do not become a new scoped project each time.",
+        "point3": "The workflow stays with the team that knows the content."
+      }
+    },
+    "useCases": {
+      "eyebrow": "Use cases",
+      "title": "Designed for formats that need speed without compromise.",
+      "description": "The strongest fit is any guide format where browser access, multilingual publishing, and lean operations matter more than platform sprawl.",
+      "permanent": {
+        "title": "Permanent collections",
+        "body": "Keep one stable guide layer live and improve it over time without re-platforming."
+      },
+      "temporary": {
+        "title": "Temporary exhibitions",
+        "body": "Launch quickly for a limited run without justifying a custom app or device fleet."
+      },
+      "multilingual": {
+        "title": "Multilingual audiences",
+        "body": "Offer multiple languages without splitting the workflow across documents and vendors."
+      },
+      "accessibility": {
+        "title": "Accessibility-led interpretation",
+        "body": "Support visitors with readable layouts, audio, and lower-friction access from the start."
+      },
+      "education": {
+        "title": "Educational and guided formats",
+        "body": "Reuse the same publishing foundation for tours, school groups, and interpretive storytelling."
+      },
+      "tourism": {
+        "title": "Public walking tours",
+        "body": "Publish outdoor or city guides with the same web-first model used inside institutions."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "Pricing shaped around rollout reality.",
+      "description": "We scope pricing around exhibition scale, publishing complexity, and the support your team actually needs.",
+      "philosophy": "The goal is not the biggest package. The goal is a guide workflow your team can launch and keep running.",
+      "starter": {
+        "label": "Starter",
+        "price": "From pilot scope",
+        "description": "For smaller institutions or first launches validating the workflow.",
+        "point1": "One focused launch",
+        "point2": "Core publishing workflow",
+        "point3": "Low-friction setup"
+      },
+      "professional": {
+        "label": "Professional",
+        "price": "For active programs",
+        "description": "For institutions running multiple guides and recurring updates.",
+        "point1": "Multi-guide operations",
+        "point2": "Stronger editorial workflow",
+        "point3": "Support for ongoing iteration"
+      },
+      "enterprise": {
+        "label": "Enterprise",
+        "price": "For complex rollouts",
+        "description": "For larger organizations with tighter coordination and rollout planning needs.",
+        "point1": "Cross-team implementation",
+        "point2": "Advanced rollout support",
+        "point3": "Institution-level planning"
+      },
+      "offsetTitle": "Need a concrete quote?",
+      "offsetBody": "We scope against your exhibition format, languages, and operational constraints instead of forcing you through a fake pricing calculator.",
+      "cta": "Request pricing"
+    },
+    "pilot": {
+      "eyebrow": "Pilot process",
+      "title": "Start with a pilot that proves the visitor flow before scaling.",
+      "description": "A pilot is the fastest way to validate fit, align stakeholders, and check the setup in a real exhibition context.",
+      "step1": {
+        "title": "Pick one exhibition or route",
+        "body": "Choose a contained case with real visitor value and manageable scope."
+      },
+      "step2": {
+        "title": "Publish the first visitor experience",
+        "body": "Launch the guide with the core structure, branding, and access flow in place."
+      },
+      "step3": {
+        "title": "Review usage and editorial feedback",
+        "body": "Check what visitors use and where the team needs adjustments."
+      },
+      "step4": {
+        "title": "Expand with confidence",
+        "body": "Use the pilot learnings to scale to additional tours, languages, or venues."
+      }
+    },
+    "trust": {
+      "eyebrow": "Built for real operations",
+      "title": "ValGuide is designed around publishing work, not feature theater.",
+      "body": "The product focus is simple: help cultural teams get digital visitor guidance live with less friction, stronger ownership, and fewer moving parts.",
+      "trustPanelEyebrow": "What that means in practice",
+      "trustPoint1": "No app-store dependency for visitors.",
+      "trustPoint2": "No hardware fleet for staff to manage.",
+      "trustPoint3": "One place to update content and translations.",
+      "trustPoint4": "A setup that can survive real museum operations."
+    },
+    "footer": {
+      "description": "Digital visitor guides for museums, exhibitions, and public tours.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "legal": {
+      "policies": {
+        "title": "Policies & Agreements",
+        "introPrimary": "Here you can find the key policies and legal documents related to ValGuide.",
+        "introSecondary": "We try to keep our agreements and policies as clear and understandable as possible.",
+        "dataProcessingAgreement": "A data processing agreement is available on request."
+      },
+      "privacyPolicy": {
+        "title": "Privacy Policy",
+        "body": "Our privacy policy is currently being finalized. If you need the current draft or have a compliance question, contact support@valguide.com.",
+        "summary": "How we handle personal data and privacy-related obligations."
+      },
+      "termsOfService": {
+        "title": "Terms of Service",
+        "body": "Our terms of service are currently being finalized. If you need the current draft or have a procurement question, contact support@valguide.com.",
+        "summary": "The core contractual terms for using ValGuide."
+      }
+    }
+  }
+}
