@@ -12,7 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@valguide/core/ui/components/dialog'
-import { Languages } from 'lucide-react'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@valguide/core/ui/components/sheet'
+import { useIsMobile } from '@valguide/core/ui/hooks/use-mobile'
+import { ChevronDown, Languages } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 type TourLanguageControlProps = {
@@ -34,6 +36,7 @@ export function TourLanguageControl({
 }: TourLanguageControlProps) {
   const t = useTranslations('player.languageSwitcher')
   const portalContainer = useTourThemePortalContainer()
+  const isMobile = useIsMobile()
   const [open, setOpen] = useState(shouldForceSelection || shouldPromptInitialSelection)
   const [isSwitching, setIsSwitching] = useState(false)
   const [selectedLocale, setSelectedLocale] = useState(preferredSelectionLocale)
@@ -49,6 +52,7 @@ export function TourLanguageControl({
   }, [shouldForceSelection, shouldPromptInitialSelection])
 
   const requiresSelection = shouldForceSelection || shouldPromptInitialSelection
+  const useSheetPicker = isMobile && !requiresSelection
   const currentDisplayLocale = availableLocales.includes(currentLocale) ? currentLocale : preferredSelectionLocale
 
   async function handleLocaleSelect(nextLocale: SupportedLocale) {
@@ -88,57 +92,100 @@ export function TourLanguageControl({
             language: getLocaleNativeName(currentLocale),
           })
       : t('changeDescription')
+  const currentLocaleCode = currentDisplayLocale.toUpperCase()
+  const trigger = (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      disabled={isSwitching || availableLocales.length === 0}
+      onClick={() => setOpen(true)}
+      className="h-9 rounded-full border border-border/70 bg-background/85 px-3 text-xs font-semibold tracking-[0.14em] text-foreground shadow-xs backdrop-blur-sm hover:bg-background"
+      aria-label={`${t('buttonLabel')}: ${getLocaleNativeName(currentDisplayLocale)}`}
+    >
+      <Languages className="h-3.5 w-3.5" />
+      <span>{currentLocaleCode}</span>
+      <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+    </Button>
+  )
 
   return (
     <>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        disabled={isSwitching || availableLocales.length === 0}
-        onClick={() => setOpen(true)}
-        className="w-full justify-center sm:w-auto"
-      >
-        <Languages className="h-4 w-4" />
-        <span>{t('buttonLabel')}</span>
-        <span className="text-muted-foreground">{getLocaleNativeName(currentDisplayLocale)}</span>
-      </Button>
+      {trigger}
 
-      <Dialog
-        open={open}
-        onOpenChange={(nextOpen) => {
-          if (!requiresSelection) {
-            setOpen(nextOpen)
-          }
-        }}
-      >
-        <DialogContent
-          container={portalContainer}
-          showCloseButton={!requiresSelection}
-          onEscapeKeyDown={(event) => {
-            if (requiresSelection) {
-              event.preventDefault()
+      {useSheetPicker ? (
+        <Sheet
+          open={open}
+          onOpenChange={(nextOpen) => {
+            if (!requiresSelection) {
+              setOpen(nextOpen)
             }
           }}
-          onPointerDownOutside={(event) => {
-            if (requiresSelection) {
-              event.preventDefault()
-            }
-          }}
-          className="gap-0 overflow-hidden p-0 sm:max-w-md"
         >
-          <DialogHeader className="px-4 pt-4 pb-3">
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
-          </DialogHeader>
-          <LocalePickerList
-            currentLocale={selectedLocale}
-            locales={availableLocales}
-            disabled={isSwitching}
-            onSelectLocale={(locale) => void handleLocaleSelect(locale)}
-          />
-        </DialogContent>
-      </Dialog>
+          <SheetContent
+            side="bottom"
+            container={portalContainer}
+            onEscapeKeyDown={(event) => {
+              if (requiresSelection) {
+                event.preventDefault()
+              }
+            }}
+            onPointerDownOutside={(event) => {
+              if (requiresSelection) {
+                event.preventDefault()
+              }
+            }}
+            className="gap-0 rounded-t-3xl pb-4"
+          >
+            <SheetHeader className="border-b pb-4 pr-14">
+              <SheetTitle>{title}</SheetTitle>
+              <SheetDescription>{description}</SheetDescription>
+            </SheetHeader>
+            <LocalePickerList
+              currentLocale={selectedLocale}
+              locales={availableLocales}
+              disabled={isSwitching}
+              onSelectLocale={(locale) => void handleLocaleSelect(locale)}
+            />
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <Dialog
+          open={open}
+          onOpenChange={(nextOpen) => {
+            if (!requiresSelection) {
+              setOpen(nextOpen)
+            }
+          }}
+        >
+          <DialogContent
+            container={portalContainer}
+            showCloseButton={!requiresSelection}
+            onEscapeKeyDown={(event) => {
+              if (requiresSelection) {
+                event.preventDefault()
+              }
+            }}
+            onPointerDownOutside={(event) => {
+              if (requiresSelection) {
+                event.preventDefault()
+              }
+            }}
+            className="gap-0 overflow-hidden p-0 sm:max-w-md"
+          >
+            <DialogHeader className="px-4 pt-4 pb-3">
+              <DialogTitle>{title}</DialogTitle>
+              <DialogDescription>{description}</DialogDescription>
+            </DialogHeader>
+            <LocalePickerList
+              currentLocale={selectedLocale}
+              locales={availableLocales}
+              disabled={isSwitching}
+              onSelectLocale={(locale) => void handleLocaleSelect(locale)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   )
 }

@@ -36,8 +36,8 @@ function TourPage() {
       allowedOrigins={[clientEnv.VITE_STUDIO_URL].filter(Boolean) as string[]}
     >
       <PlayerProvider stops={playerStops}>
-        <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
-          <div className="flex justify-end">
+        <div className="mx-auto max-w-lg space-y-6 px-4 py-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
+          <div className="flex items-center justify-end">
             <TourLanguageControl {...tourLocaleState} />
           </div>
           <TourHero title={title} description={description} coverImage={coverImageUrl} assets={tour.assets} />

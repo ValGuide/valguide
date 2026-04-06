@@ -67,15 +67,15 @@ function StopPageContent() {
   return (
     <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
       <SyncStopToUrl stopNanoId={stopNanoId} orgSlug={orgSlug} tourSlug={tourSlug} />
-      <div className="mx-auto max-w-lg px-4 py-6 space-y-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto max-w-lg space-y-6 px-4 py-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
+        <div className="flex items-center justify-between gap-3">
           <Link
             to="/$orgSlug/$tourSlug"
             params={{ orgSlug, tourSlug }}
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex min-w-0 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            <ChevronLeft className="h-4 w-4" />
-            {tourTitle}
+            <ChevronLeft className="h-4 w-4 shrink-0" />
+            <span className="truncate">{tourTitle}</span>
           </Link>
           <TourLanguageControl {...tourLocaleState} />
         </div>
