@@ -24,6 +24,7 @@ export const serverEnvSchema = z.object({
     .optional()
     .transform((v) => v === 'true'),
   ADMIN_BASE_URL: z.string().optional().default('https://ops.val.guide'),
+  LINKS_BASE_URL: z.string().optional().default('https://links.valguide.com'),
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_BASE_URL: z.string().optional().default('https://app.valguide.com'),

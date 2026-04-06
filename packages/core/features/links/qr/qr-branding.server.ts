@@ -6,7 +6,7 @@ import { organization } from '../../orgs/schema'
 import { stop, tour, tourStop, tourStopDraft } from '../../tours/schema'
 import { getOrCreateStopShortLink, getOrCreateTourShortLink } from '../get-or-create-short-link'
 import { getShortLinkAnalytics } from '../get-short-link-analytics.server'
-import { buildShortLinkUrl, getDefaultLinksBaseUrl } from '../public-url'
+import { buildShortLinkUrl } from '../public-url'
 import { organization_qr_branding, stop_qr_branding, tour_qr_branding } from '../schema'
 import {
   type EffectiveQrBranding,
@@ -40,6 +40,7 @@ type StopQrContext = {
 
 export type OrganizationQrBrandingSettings = {
   organization: OrganizationQrContext
+  linksBaseUrl: string
   override: QrBrandingOverride
   inheritedBranding: EffectiveQrBranding
   effectiveBranding: EffectiveQrBranding
@@ -66,7 +67,7 @@ export type StopQrCodePayload = QrCodePayloadBase & {
 }
 
 function getLinksBaseUrl(): string {
-  return getDefaultLinksBaseUrl(serverEnv.VITE_ENV)
+  return serverEnv.LINKS_BASE_URL
 }
 
 async function getOrganizationQrContext(organizationId: string): Promise<OrganizationQrContext> {
@@ -261,6 +262,7 @@ export async function getOrganizationQrBrandingSettings(
 
   return {
     organization: orgContext,
+    linksBaseUrl: getLinksBaseUrl(),
     override,
     inheritedBranding,
     effectiveBranding,

@@ -1,6 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { clientEnv } from '@valguide/core/env/client'
-import { getDefaultLinksBaseUrl } from '@valguide/core/features/links/public-url'
 import {
   applyQrOverrideToBranding,
   isQrBrandingOverrideEmpty,
@@ -50,7 +48,7 @@ export function WorkspaceQrBrandingSection() {
 
   return (
     <QrPreviewCard
-      shortUrl={`${getDefaultLinksBaseUrl(clientEnv.VITE_ENV)}/s/preview`}
+      shortUrl={`${data.linksBaseUrl}/s/preview`}
       branding={previewBranding}
       showHeader={false}
       showDownloads={false}

@@ -9,7 +9,3 @@ export function buildShortLinkUrl(linksBaseUrl: string, code: string): string {
   const base = linksBaseUrl.replace(/\/+$/, '')
   return `${base}/s/${code}`
 }
-
-export function getDefaultLinksBaseUrl(environment: 'local' | 'dev' | 'prod'): string {
-  return environment === 'prod' ? 'https://links.valguide.com' : 'https://links.valguide.dev'
-}

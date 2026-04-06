@@ -35,6 +35,8 @@
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
     "NODE_ENV": "production",
+    "VITE_ENV": "prod",
+    "LINKS_BASE_URL": "https://links.valguide.com",
     "USERS_SLACK_CHANNEL": "users",
     "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events",
     "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback",
@@ -65,6 +67,8 @@
       ],
       "vars": {
         "NODE_ENV": "production",
+        "VITE_ENV": "dev",
+        "LINKS_BASE_URL": "https://links.valguide.dev",
         "USERS_SLACK_CHANNEL": "users-dev",
         "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events-dev",
         "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback-dev",
