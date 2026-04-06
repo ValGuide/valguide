@@ -12,7 +12,6 @@
   ],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@valguide/app/*": ["../apps/guide/*"],
       "@valguide/studio/*": ["../apps/studio/*"],

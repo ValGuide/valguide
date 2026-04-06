@@ -2,11 +2,10 @@
   "extends": "@valguide/typescript-config/start.json",
   "compilerOptions": {
     "types": ["vite/client"],
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@valguide/core/*": ["../../packages/core/*"],
-      "fumadocs-mdx:collections/*": [".source/*"]
+      "fumadocs-mdx:collections/*": ["./.source/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "worker-configuration.d.ts"],

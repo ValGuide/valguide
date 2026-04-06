@@ -1,11 +1,10 @@
 {
   "extends": "@valguide/typescript-config/base.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
-      "@valguide/core/*": ["packages/core/*"]
+      "@valguide/core/*": ["./packages/core/*"]
     }
   },
   "include": ["scripts/**/*.ts"],

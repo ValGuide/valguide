@@ -1,7 +1,6 @@
 {
   "extends": "@valguide/typescript-config/start.json",
   "compilerOptions": {
-    "baseUrl": "./",
     "types": ["vite/client", "jest"],
     "paths": {
       "@valguide/core/*": ["./*"],
