@@ -6,7 +6,6 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { RadioGroup, RadioGroupItem } from '@valguide/ui/components/radio-group'
 import {
   ResponsiveDialog,
@@ -19,7 +18,7 @@ import {
 } from '@valguide/ui/components/responsive-dialog'
 import { cn } from '@valguide/ui/lib/utils'
 import { ExternalLink, Loader2, Palette } from 'lucide-react'
-import { type ReactNode, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useOrgThemes } from '@/features/design/hooks/use-org-themes'
 
 type TourThemeDialogProps = {
@@ -51,7 +50,7 @@ function ThemeOptionRow({
   value: string
   title: string
   badge?: string
-  swatches?: ReactNode
+  swatches?: React.ReactNode
   disabled?: boolean
 }) {
   return (
@@ -118,16 +117,9 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
   }, [invalidateThemeQueries, onOpenChange, selectedValue, t, tourNanoId])
 
   const selectionMatchesLiveTheme = (theme.assignedThemeId ?? 'workspace-default') === selectedValue
-  const effectiveTheme = theme.effectiveTheme
   const workspaceDefaultTheme = theme.workspaceDefaultTheme
-  const currentThemeDescription =
-    effectiveTheme?.source === 'tour'
-      ? t('appliesOnlyToTour')
-      : effectiveTheme?.source === 'org-default'
-        ? t('inheritsWorkspaceDefault')
-        : effectiveTheme?.source === 'default'
-          ? t('inheritsBuiltInDefault')
-          : t('noThemeDescription')
+  const defaultOptionTitle = defaultThemeId ? t('workspaceDefaultTitle') : t('sourceDefault')
+  const defaultOptionBadge = defaultThemeId ? t('sourceOrgDefault') : t('builtInBadge')
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="full-height">
@@ -141,40 +133,15 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="min-h-0 flex-1 space-y-6 overflow-y-auto px-4 py-4 sm:px-6">
-          <Card variant="outline">
-            <CardHeader className="space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <CardTitle>{t('currentThemeTitle')}</CardTitle>
-                <Badge variant={effectiveTheme?.source === 'tour' ? 'default' : 'secondary'}>
-                  {effectiveTheme?.source === 'tour'
-                    ? t('sourceTour')
-                    : effectiveTheme?.source === 'org-default'
-                      ? t('sourceOrgDefault')
-                      : effectiveTheme?.source === 'default'
-                        ? t('sourceDefault')
-                        : t('sourceNone')}
-                </Badge>
-              </div>
-              <CardDescription>{currentThemeDescription}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-wrap items-center gap-3 pt-0">
-              {effectiveTheme ? <ThemeSwatches theme={effectiveTheme} /> : null}
-              <span className="text-sm font-medium">{effectiveTheme?.name ?? t('noTheme')}</span>
-            </CardContent>
-          </Card>
-
           <div className="space-y-3">
-            <div className="space-y-1">
-              <h3 className="text-sm font-semibold">{t('pickerTitle')}</h3>
-              <p className="text-sm text-muted-foreground">{t('pickerDescription')}</p>
-            </div>
+            <h3 className="text-sm font-semibold">{t('pickerTitle')}</h3>
 
             <RadioGroup value={selectedValue} onValueChange={setSelectedValue}>
               <ThemeOptionRow
                 checked={selectedValue === 'workspace-default'}
                 value="workspace-default"
-                title={t('workspaceDefaultTitle')}
-                badge={defaultThemeId ? t('sourceOrgDefault') : undefined}
+                title={defaultOptionTitle}
+                badge={defaultOptionBadge}
                 swatches={workspaceDefaultTheme ? <ThemeSwatches theme={workspaceDefaultTheme} /> : null}
               />
 
@@ -201,27 +168,30 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
                   />
                 ))
               ) : (
-                <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                  {t('emptyThemes')}
+                <div className="rounded-lg border border-dashed p-5">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">{t('emptyThemesTitle')}</p>
+                    <p className="text-sm text-muted-foreground">{t('emptyThemesDescription')}</p>
+                  </div>
+                  <Button variant="link" className="mt-3 h-auto p-0 text-sm" asChild>
+                    <Link to="/brand/theme" target="_blank" rel="noreferrer">
+                      {t('manageThemesAction')}
+                      <ExternalLink className="size-4" />
+                    </Link>
+                  </Button>
                 </div>
               )}
             </RadioGroup>
           </div>
 
-          <Card variant="ghost" className="border border-dashed">
-            <CardHeader>
-              <CardTitle>{t('manageThemesTitle')}</CardTitle>
-              <CardDescription>{t('manageThemesDescription')}</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <Button variant="outline" asChild>
-                <Link to="/brand/theme" target="_blank" rel="noreferrer">
-                  {t('manageThemesAction')}
-                  <ExternalLink className="size-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          {themes.length > 0 ? (
+            <Button variant="link" className="h-auto w-fit p-0 text-sm" asChild>
+              <Link to="/brand/theme" target="_blank" rel="noreferrer">
+                {t('manageMoreThemesAction')}
+                <ExternalLink className="size-4" />
+              </Link>
+            </Button>
+          ) : null}
         </ResponsiveDialogBody>
 
         <ResponsiveDialogFooter className="gap-2">
@@ -230,7 +200,7 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
           </Button>
           <Button onClick={() => void applyTheme()} disabled={isApplying || selectionMatchesLiveTheme}>
             {isApplying ? <Loader2 className="size-4 animate-spin" /> : null}
-            {selectedValue === 'workspace-default' ? t('useWorkspaceDefault') : t('apply')}
+            {t('apply')}
           </Button>
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>

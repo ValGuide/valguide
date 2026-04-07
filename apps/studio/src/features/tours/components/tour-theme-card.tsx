@@ -18,7 +18,7 @@ type TourThemeCardProps = {
   className?: string
 }
 
-function ThemeSwatches({ theme }: { theme: NonNullable<TourDetail['theme']['effectiveTheme']> }) {
+function ThemeSwatches({ theme, label }: { theme: NonNullable<TourDetail['theme']['effectiveTheme']>; label: string }) {
   return (
     <div className="flex items-center gap-2">
       <div className="flex overflow-hidden rounded-full border">
@@ -26,7 +26,7 @@ function ThemeSwatches({ theme }: { theme: NonNullable<TourDetail['theme']['effe
         <span className="size-5 border-r" style={{ backgroundColor: theme.config.colors.primary }} />
         <span className="size-5" style={{ backgroundColor: theme.config.colors.accent }} />
       </div>
-      <span className="text-sm text-muted-foreground truncate">{theme.name}</span>
+      <span className="text-sm text-muted-foreground truncate">{label}</span>
     </div>
   )
 }
@@ -38,14 +38,12 @@ export function TourThemeCard({ tourNanoId, theme, variant = 'detail', className
   const queryClient = useQueryClient()
   const isCompact = variant === 'compact'
   const effectiveTheme = theme.effectiveTheme
-  const sourceLabel =
-    effectiveTheme?.source === 'tour'
-      ? t('sourceTour')
-      : effectiveTheme?.source === 'org-default'
-        ? t('sourceOrgDefault')
-        : effectiveTheme?.source === 'default'
-          ? t('sourceDefault')
-          : t('sourceNone')
+  const activeThemeLabel =
+    effectiveTheme?.source === 'org-default'
+      ? t('workspaceDefaultTitle')
+      : effectiveTheme?.source === 'default'
+        ? t('builtInBadge')
+        : (effectiveTheme?.name ?? t('noTheme'))
 
   const handlePublish = async () => {
     setIsPublishing(true)
@@ -71,32 +69,15 @@ export function TourThemeCard({ tourNanoId, theme, variant = 'detail', className
             <Paintbrush2 className="size-4" />
             {t(isCompact ? 'compactTitle' : 'title')}
           </CardTitle>
-          <CardDescription>{t(isCompact ? 'compactDescription' : 'description')}</CardDescription>
+          <CardDescription>{t('currentCardDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant={effectiveTheme?.source === 'tour' ? 'default' : 'secondary'}>{sourceLabel}</Badge>
-            {theme.hasChanges ? <Badge variant="outline">{t('draftChanges')}</Badge> : null}
-          </div>
+          {theme.hasChanges ? <Badge variant="outline">{t('draftChanges')}</Badge> : null}
 
           {effectiveTheme ? (
-            <ThemeSwatches theme={effectiveTheme} />
+            <ThemeSwatches theme={effectiveTheme} label={activeThemeLabel} />
           ) : (
             <p className="text-sm text-muted-foreground">{t('noTheme')}</p>
-          )}
-
-          {theme.hasChanges && theme.publishedTheme ? (
-            <p className="text-sm text-muted-foreground">
-              {t('publishedSummary', { name: theme.publishedTheme.name })}
-            </p>
-          ) : effectiveTheme?.source === 'org-default' ? (
-            <p className="text-sm text-muted-foreground">{t('inheritsWorkspaceDefault')}</p>
-          ) : effectiveTheme?.source === 'default' ? (
-            <p className="text-sm text-muted-foreground">{t('inheritsBuiltInDefault')}</p>
-          ) : theme.assignedThemeId ? (
-            <p className="text-sm text-muted-foreground">{t('appliesOnlyToTour')}</p>
-          ) : (
-            <p className="text-sm text-muted-foreground">{t('noThemeDescription')}</p>
           )}
 
           <div className="flex flex-wrap gap-2">
