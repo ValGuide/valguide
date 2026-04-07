@@ -2,7 +2,6 @@ import type { EffectiveQrBranding } from '@valguide/core/features/links/qr/share
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
-  ResponsiveDialogClose,
   ResponsiveDialogContent,
   ResponsiveDialogFooter,
   ResponsiveDialogHeader,
@@ -72,16 +71,10 @@ export function QrManagementPanel(props: QrManagementPanelProps) {
 
   if (isMobile) {
     return (
-      <ResponsiveDialog open={props.open} onOpenChange={props.onOpenChange} mobileVariant="full-height">
-        <ResponsiveDialogContent showCloseButton={false} className="flex min-h-0 flex-col sm:max-w-2xl">
+      <ResponsiveDialog open={props.open} onOpenChange={props.onOpenChange}>
+        <ResponsiveDialogContent className="flex min-h-0 flex-col sm:max-w-2xl">
           <ResponsiveDialogHeader>
-            <div className="flex items-center justify-between gap-4">
-              <ResponsiveDialogTitle>{props.title}</ResponsiveDialogTitle>
-              <ResponsiveDialogClose className={panelCloseButtonClassName}>
-                <XIcon />
-                <span className="sr-only">Close</span>
-              </ResponsiveDialogClose>
-            </div>
+            <ResponsiveDialogTitle>{props.title}</ResponsiveDialogTitle>
           </ResponsiveDialogHeader>
           <ResponsiveDialogBody className="min-h-0 px-0 py-0">
             <QrManagementPanelSections {...props} />

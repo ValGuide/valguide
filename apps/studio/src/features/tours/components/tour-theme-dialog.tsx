@@ -122,7 +122,7 @@ export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourT
   const defaultOptionBadge = defaultThemeId ? t('sourceOrgDefault') : t('builtInBadge')
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={onOpenChange} mobileVariant="full-height">
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent className="flex min-h-0 flex-col overflow-hidden sm:max-h-[min(90dvh,48rem)] sm:max-w-2xl">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2">
