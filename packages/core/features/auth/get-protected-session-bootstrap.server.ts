@@ -1,4 +1,5 @@
 import { logPerformance, timePerformance } from '../../utils/performance'
+import { reconcilePendingInvitationsForUser } from '../orgs/reconcile-pending-invitations.server'
 import { resolveFirstOrgId } from '../orgs/resolve-active-org.server'
 import { getOrgMembership } from './authorization'
 import { getAuthSession, setActiveOrganizationForCurrentSession } from './better-auth.server'
@@ -79,6 +80,22 @@ export async function getProtectedSessionBootstrap(stage: string): Promise<Prote
       activeOrgId = null
       activeOrgSource = 'missing'
       await setActiveOrganizationForCurrentSession(null)
+    }
+  }
+
+  if (!activeOrgId) {
+    const reconciledInvites = await timePerformance(
+      'auth.reconcilePendingInvitations',
+      async () => reconcilePendingInvitationsForUser(user.id, user.email),
+      {
+        stage,
+        userId: user.id,
+      },
+    )
+
+    if (reconciledInvites.activeOrganizationId) {
+      activeOrgId = reconciledInvites.activeOrganizationId
+      activeOrgSource = 'resolved'
     }
   }
 

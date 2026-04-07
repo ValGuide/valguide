@@ -1,5 +1,5 @@
 import type { DB } from '@valguide/core/features/db'
-import { and, eq, gt } from 'drizzle-orm'
+import { and, asc, eq, gt, isNull, or, sql } from 'drizzle-orm'
 import { invitation, member } from './schema'
 
 // =============================================================================
@@ -24,6 +24,25 @@ export async function getInvitationById(db: DB, id: string) {
 export async function getPendingInvitationById(db: DB, id: string) {
   return db.query.invitation.findFirst({
     where: and(eq(invitation.id, id), eq(invitation.status, 'pending'), gt(invitation.expiresAt, new Date())),
+    with: {
+      organization: true,
+    },
+  })
+}
+
+/**
+ * Get all valid pending invitations for an email address in stable creation order.
+ */
+export async function getPendingInvitationsByEmail(db: DB, email: string) {
+  const emailNorm = email.trim().toLowerCase()
+
+  return db.query.invitation.findMany({
+    where: and(
+      eq(sql`lower(${invitation.email})`, emailNorm),
+      eq(invitation.status, 'pending'),
+      or(isNull(invitation.expiresAt), gt(invitation.expiresAt, new Date())),
+    ),
+    orderBy: [asc(invitation.createdAt), asc(invitation.id)],
     with: {
       organization: true,
     },
