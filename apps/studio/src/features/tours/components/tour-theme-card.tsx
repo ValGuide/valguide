@@ -100,7 +100,7 @@ export function TourThemeCard({ tourNanoId, theme, variant = 'detail', className
           )}
 
           <div className="flex flex-wrap gap-2">
-            <Button onClick={() => setOpen(true)}>{t('changeTheme')}</Button>
+            <Button onClick={() => setOpen(true)}>{t('chooseTheme')}</Button>
             {theme.hasChanges ? (
               <Button variant="outline" onClick={() => void handlePublish()} disabled={isPublishing}>
                 {t(isPublishing ? 'publishingTheme' : 'publishTheme')}
