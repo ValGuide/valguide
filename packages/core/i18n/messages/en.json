@@ -116,6 +116,29 @@
       "brandBasicsHint": "Most tours only need a brand color and a calm background.",
       "advanced": "Advanced",
       "advancedHint": "Use these settings only when you need finer control over the interface.",
+      "fonts": {
+        "primaryLabel": "Primary font",
+        "primaryHint": "Used for the main visitor typography across the player.",
+        "overrideTitle": "Font overrides",
+        "overrideHint": "Only set overrides when headings, body copy, or labels need a different tone.",
+        "headingLabel": "Headings",
+        "bodyLabel": "Body text",
+        "captionLabel": "Labels and buttons",
+        "inheritance": "Inheritance",
+        "sameAsPrimary": "Same as primary font",
+        "sameAsPrimaryHint": "Uses the primary font until you choose a specific override.",
+        "search": "Search fonts",
+        "empty": "No font found",
+        "sources": {
+          "hosted": "Hosted",
+          "device": "Device"
+        },
+        "categories": {
+          "sans": "Sans-serif",
+          "serif": "Serif",
+          "mono": "Monospace"
+        }
+      },
       "supportingColors": "Supporting colors",
       "surfaceColors": "Surface colors",
       "interfaceColors": "Interface details",

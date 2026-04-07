@@ -77,7 +77,7 @@ function ThemeOptionRow({
 export function TourThemeDialog({ open, onOpenChange, tourNanoId, theme }: TourThemeDialogProps) {
   const t = useTranslations('tours.theme')
   const queryClient = useQueryClient()
-  const { themes, defaultThemeId, defaultThemeName, isLoading } = useOrgThemes({ enabled: open })
+  const { themes, defaultThemeId, isLoading } = useOrgThemes({ enabled: open })
   const [selectedValue, setSelectedValue] = useState<string>('workspace-default')
   const [isApplying, setIsApplying] = useState(false)
 

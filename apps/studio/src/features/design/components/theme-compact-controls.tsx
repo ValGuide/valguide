@@ -20,6 +20,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import type { ThemeColors } from '../types'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { ColorGroup } from './color-group'
+import { FontControls } from './font-controls'
 import { RadiusSelector } from './radius-selector'
 import { SavedThemesList } from './saved-themes-list'
 import { ThemePresetChips } from './theme-preset-chips'
@@ -75,7 +76,7 @@ export function ThemeCompactControls({
   const t = useTranslations('studio.themeCustomizer')
   const isMobile = useIsMobile()
   const [activePanel, setActivePanel] = useState<CompactPanel>(null)
-  const { config, setColor, setRadius, resetToPreset } = customizer
+  const { config, setColor, setRadius, setFonts, resetToPreset } = customizer
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1180px)')
@@ -177,6 +178,7 @@ export function ThemeCompactControls({
         defaultOpen
       />
       <p className="text-xs text-muted-foreground">{t('brandBasicsHint')}</p>
+      <FontControls fonts={config.fonts} onChange={setFonts} />
     </div>
   )
 

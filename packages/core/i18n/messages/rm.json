@@ -116,6 +116,29 @@
       "brandBasicsHint": "Per la gronda part da las turas bastan ina colur da marca ed in fund ruassaivel.",
       "advanced": "Avanzà",
       "advancedHint": "Duvrar questas novitads mo sche Vus avais basegn d'ina controlla pli fina da l'interfatscha.",
+      "fonts": {
+        "primaryLabel": "Scrittira principala",
+        "primaryHint": "Vegn duvrada per la tipografia principala dals visitaders en il player.",
+        "overrideTitle": "Overrides da scrittira",
+        "overrideHint": "Definir mo sche titels, text principal u labels duain avair in auter tun.",
+        "headingLabel": "Titels",
+        "bodyLabel": "Text principal",
+        "captionLabel": "Labels e buttuns",
+        "inheritance": "Ereditar",
+        "sameAsPrimary": "Sco la scrittira principala",
+        "sameAsPrimaryHint": "Dovra la scrittira principala fin che Vus tschernis in override specific.",
+        "search": "Tschertgar scrittiras",
+        "empty": "Nagina scrittira chattada",
+        "sources": {
+          "hosted": "Hosted",
+          "device": "Apparat"
+        },
+        "categories": {
+          "sans": "Sans-Serif",
+          "serif": "Serif",
+          "mono": "Monospace"
+        }
+      },
       "supportingColors": "Colurs supplementaras",
       "surfaceColors": "Colurs da surfatscha",
       "interfaceColors": "Detagls da l'interfatscha",

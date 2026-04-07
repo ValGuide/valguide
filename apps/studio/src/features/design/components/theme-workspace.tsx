@@ -2,7 +2,8 @@ import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { ensureThemeFontsLoaded } from '../font-loader'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { PlayerPreview } from './player-preview'
 import { ThemeCompactControls } from './theme-compact-controls'
@@ -47,6 +48,10 @@ export function ThemeWorkspace({
 
   const cssVariables = customizer.getCSSVariables()
   const previewStyle = useMemo(() => cssVariables as React.CSSProperties, [cssVariables])
+
+  useEffect(() => {
+    void ensureThemeFontsLoaded(customizer.config.fonts)
+  }, [customizer.config.fonts])
 
   const currentThemeLabel =
     customizer.config.name ??

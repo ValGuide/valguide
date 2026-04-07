@@ -116,6 +116,29 @@
       "brandBasicsHint": "Für die meisten Touren reichen eine Markenfarbe und ein ruhiger Hintergrund.",
       "advanced": "Erweitert",
       "advancedHint": "Diese Einstellungen brauchen Sie nur, wenn Sie die Oberfläche feiner abstimmen möchten.",
+      "fonts": {
+        "primaryLabel": "Primäre Schrift",
+        "primaryHint": "Wird für die zentrale Besuchertypografie im Player verwendet.",
+        "overrideTitle": "Schrift-Overrides",
+        "overrideHint": "Nur setzen, wenn Überschriften, Fliesstext oder Labels bewusst anders wirken sollen.",
+        "headingLabel": "Überschriften",
+        "bodyLabel": "Fliesstext",
+        "captionLabel": "Labels und Buttons",
+        "inheritance": "Vererbung",
+        "sameAsPrimary": "Wie primäre Schrift",
+        "sameAsPrimaryHint": "Verwendet die primäre Schrift, bis Sie einen Override wählen.",
+        "search": "Schriften suchen",
+        "empty": "Keine Schrift gefunden",
+        "sources": {
+          "hosted": "Gehostet",
+          "device": "Gerät"
+        },
+        "categories": {
+          "sans": "Sans-Serif",
+          "serif": "Serif",
+          "mono": "Monospace"
+        }
+      },
       "supportingColors": "Ergänzende Farben",
       "surfaceColors": "Flächenfarben",
       "interfaceColors": "Interface-Details",

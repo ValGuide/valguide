@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type CreateThemeInput, createTheme } from './create-theme.server'
+import { normalizeThemeFonts } from './fonts'
 
 export type { Theme } from './create-theme.server'
 
@@ -36,7 +37,7 @@ export const createThemeFn = createServerFn({ method: 'POST' })
       basePreset: data.basePreset as ThemePreset,
       colors: data.colors as ThemeColors,
       radius: data.radius,
-      fonts: data.fonts as ThemeFonts,
+      fonts: normalizeThemeFonts(data.fonts as ThemeFonts, { strict: true }),
       createdBy: context.user.id,
     }
 

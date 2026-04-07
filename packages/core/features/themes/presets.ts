@@ -1,3 +1,4 @@
+import { createThemeFont } from './fonts'
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
 
 export const themeColorPresets: Record<ThemePreset, ThemeColors> = {
@@ -554,9 +555,5 @@ export const themeColorPresets: Record<ThemePreset, ThemeColors> = {
 export const defaultRadius = 0.5
 
 export const defaultFonts: ThemeFonts = {
-  primary: {
-    source: 'system',
-    family: 'Inter',
-    fallback: 'ui-sans-serif, system-ui, sans-serif',
-  },
+  primary: createThemeFont('noto-sans'),
 }

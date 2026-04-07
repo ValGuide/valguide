@@ -8,6 +8,7 @@ import { RotateCcw, Save } from 'lucide-react'
 import type { ThemeColors } from '../types'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { ColorGroup } from './color-group'
+import { FontControls } from './font-controls'
 import { RadiusSelector } from './radius-selector'
 import { SavedThemesList } from './saved-themes-list'
 import { ThemePresetChips } from './theme-preset-chips'
@@ -59,7 +60,7 @@ export function ThemeEditorPanel({
   className,
 }: ThemeEditorPanelProps) {
   const t = useTranslations('studio.themeCustomizer')
-  const { config, setColor, setRadius, resetToPreset } = customizer
+  const { config, setColor, setRadius, setFonts, resetToPreset } = customizer
 
   const handleColorChange = (key: keyof ThemeColors, value: string) => {
     setColor(key, value)
@@ -155,6 +156,7 @@ export function ThemeEditorPanel({
               defaultOpen
             />
             <p className="text-xs text-muted-foreground">{t('brandBasicsHint')}</p>
+            <FontControls fonts={config.fonts} onChange={setFonts} />
           </div>
 
           <div className="space-y-4 border-t border-border/70 pt-5">

@@ -124,7 +124,11 @@ export function PlayerPreview({ style, className }: PlayerPreviewProps) {
   const shellStyle = { ...style, borderRadius: 'calc(var(--radius) + 0.375rem)' } satisfies CSSProperties
 
   return (
-    <div className={cn('overflow-hidden border bg-background text-foreground', className)} style={shellStyle}>
+    <div
+      className={cn('overflow-hidden border bg-background text-foreground', className)}
+      style={shellStyle}
+      data-tour-theme
+    >
       <PlayerProvider stops={previewStops} initialStopNanoId={previewStops[0].nanoId}>
         <PreviewSeedState />
         <PreviewSurface />

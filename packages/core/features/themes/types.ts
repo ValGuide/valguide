@@ -31,7 +31,7 @@ export type ThemePreset = (typeof themePresets)[number]
 
 export type Theme = ThemePreset
 
-export const fontSources = ['system', 'google', 'custom'] as const
+export const fontSources = ['system', 'self-hosted', 'google', 'custom'] as const
 
 export type FontSource = (typeof fontSources)[number]
 
@@ -58,6 +58,7 @@ export interface ThemeColors {
 }
 
 export interface ThemeFont {
+  id?: string
   source: FontSource
   family: string
   fallback?: string

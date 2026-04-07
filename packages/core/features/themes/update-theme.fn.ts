@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { captureStudioProductEvent } from '../../posthog/server'
 import { requireThemeAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
+import { normalizeThemeFonts } from './fonts'
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
 import { type UpdateThemeInput, updateTheme } from './update-theme.server'
 
@@ -33,7 +34,7 @@ export const updateThemeFn = createServerFn({ method: 'POST' })
     if (data.basePreset !== undefined) input.basePreset = data.basePreset as ThemePreset
     if (data.colors !== undefined) input.colors = data.colors as ThemeColors
     if (data.radius !== undefined) input.radius = data.radius
-    if (data.fonts !== undefined) input.fonts = data.fonts as ThemeFonts
+    if (data.fonts !== undefined) input.fonts = normalizeThemeFonts(data.fonts as ThemeFonts, { strict: true })
 
     const updated = await updateTheme(input)
     await captureStudioProductEvent({

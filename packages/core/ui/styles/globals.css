@@ -223,6 +223,18 @@
 }
 
 @layer components {
+    [data-tour-theme] {
+        font-family: var(--font-body, var(--font-primary, var(--font-sans)));
+    }
+
+    [data-tour-theme] :where(h1, h2, h3, h4, h5, h6) {
+        font-family: var(--font-heading, var(--font-primary, var(--font-sans)));
+    }
+
+    [data-tour-theme] :where(button, input, select, textarea, label) {
+        font-family: var(--font-caption, var(--font-body, var(--font-primary, var(--font-sans))));
+    }
+
     .ProseMirror {
         color: var(--foreground);
         background-color: var(--card);

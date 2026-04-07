@@ -3,6 +3,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { getAssetUrl } from '@valguide/core/features/assets/image-url'
 import { db } from '@valguide/core/features/db'
 import { resolveOrgByIdOrSlug } from '@valguide/core/features/orgs/resolve-org.server'
+import { buildThemeFontPreloadLinks, buildThemeFontStylesheetLinks } from '@valguide/core/features/themes/fonts'
 import { getDraftTourByNanoId } from '@valguide/core/features/tours/public/get-draft-tour'
 import { getPublishedTourByNanoId } from '@valguide/core/features/tours/public/get-published-tour'
 import {
@@ -217,6 +218,14 @@ export const Route = createFileRoute('/$orgSlug/$tourSlug')({
       tourLocaleState,
     }
   },
+  head: ({ match }) => ({
+    links: match.context.tour?.theme
+      ? [
+          ...buildThemeFontPreloadLinks(match.context.tour.theme.fonts),
+          ...buildThemeFontStylesheetLinks(match.context.tour.theme.fonts),
+        ]
+      : [],
+  }),
   component: TourLayout,
 })
 

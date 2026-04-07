@@ -1,3 +1,4 @@
+import { buildFontFamilyCss, normalizeThemeFonts } from '@valguide/core/features/themes/fonts'
 import type { Theme } from '@valguide/core/features/themes/schema'
 import { useCallback, useRef, useState } from 'react'
 import { defaultFonts, defaultRadius, themeColorPresets } from './theme-presets'
@@ -91,11 +92,12 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
 
   const loadTheme = useCallback(
     (theme: Theme) => {
+      const normalizedFonts = normalizeThemeFonts(theme.fonts)
       loadThemeConfig({
         basePreset: theme.basePreset,
         colors: theme.colors,
         radius: Number(theme.radius),
-        fonts: theme.fonts,
+        fonts: { primary: normalizedFonts.primary },
         id: theme.id,
         name: theme.name,
       })
@@ -132,18 +134,8 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
   }, [])
 
   const getCSSVariables = useCallback((): Record<string, string> => {
-    const { colors, radius, fonts } = config
-
-    const primaryFont = `"${fonts.primary.family}", ${fonts.primary.fallback ?? 'sans-serif'}`
-    const headingFont = fonts.overrides?.heading
-      ? `"${fonts.overrides.heading.family}", ${fonts.overrides.heading.fallback ?? 'sans-serif'}`
-      : primaryFont
-    const bodyFont = fonts.overrides?.body
-      ? `"${fonts.overrides.body.family}", ${fonts.overrides.body.fallback ?? 'sans-serif'}`
-      : primaryFont
-    const captionFont = fonts.overrides?.caption
-      ? `"${fonts.overrides.caption.family}", ${fonts.overrides.caption.fallback ?? 'sans-serif'}`
-      : primaryFont
+    const { colors, radius } = config
+    const primaryFont = buildFontFamilyCss(normalizeThemeFonts(config.fonts).primary)
 
     return {
       '--background': colors.background,
@@ -167,18 +159,19 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
       '--ring': colors.ring,
       '--radius': `${radius}rem`,
       '--font-primary': primaryFont,
-      '--font-heading': headingFont,
-      '--font-body': bodyFont,
-      '--font-caption': captionFont,
+      '--font-heading': primaryFont,
+      '--font-body': primaryFont,
+      '--font-caption': primaryFont,
     }
   }, [config])
 
   const getThemeData = useCallback(() => {
+    const normalizedFonts = normalizeThemeFonts(config.fonts)
     return {
       basePreset: config.basePreset,
       colors: config.colors,
       radius: config.radius,
-      fonts: config.fonts,
+      fonts: { primary: normalizedFonts.primary },
     }
   }, [config])
 

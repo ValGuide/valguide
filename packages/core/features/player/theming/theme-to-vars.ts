@@ -1,12 +1,5 @@
-import type { ThemeColors, ThemeConfig, ThemeFont } from '../../themes/types'
-
-/**
- * Convert a ThemeFont to a CSS font-family string.
- */
-function fontToCSS(font: ThemeFont): string {
-  const fallback = font.fallback ?? 'system-ui, sans-serif'
-  return `${font.family}, ${fallback}`
-}
+import { buildFontFamilyCss, normalizeThemeFonts } from '../../themes/fonts'
+import type { ThemeColors, ThemeConfig } from '../../themes/types'
 
 /**
  * CSS variable name mapping for color keys.
@@ -39,6 +32,8 @@ const colorVariableMap: Record<keyof ThemeColors, string> = {
  */
 export function themeToVars(theme: ThemeConfig): Record<string, string> {
   const vars: Record<string, string> = {}
+  const normalizedFonts = normalizeThemeFonts(theme.fonts)
+  const primaryFont = buildFontFamilyCss(normalizedFonts.primary)
 
   // Apply colors
   for (const [key, cssVar] of Object.entries(colorVariableMap)) {
@@ -52,16 +47,10 @@ export function themeToVars(theme: ThemeConfig): Record<string, string> {
   vars['--radius'] = `${theme.radius}rem`
 
   // Apply fonts
-  vars['--font-primary'] = fontToCSS(theme.fonts.primary)
-  if (theme.fonts.overrides?.heading) {
-    vars['--font-heading'] = fontToCSS(theme.fonts.overrides.heading)
-  }
-  if (theme.fonts.overrides?.body) {
-    vars['--font-body'] = fontToCSS(theme.fonts.overrides.body)
-  }
-  if (theme.fonts.overrides?.caption) {
-    vars['--font-caption'] = fontToCSS(theme.fonts.overrides.caption)
-  }
+  vars['--font-primary'] = primaryFont
+  vars['--font-heading'] = primaryFont
+  vars['--font-body'] = primaryFont
+  vars['--font-caption'] = primaryFont
 
   return vars
 }

@@ -63,6 +63,7 @@ export function TourThemeProvider({
       <div
         ref={setPortalContainer}
         style={themeVars as React.CSSProperties}
+        data-tour-theme
         className="min-h-dvh bg-background text-foreground"
       >
         {children}
