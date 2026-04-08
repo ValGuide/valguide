@@ -4,7 +4,7 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { cn } from '@valguide/ui/lib/utils'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useOrgThemes } from '../hooks/use-org-themes'
 import { getThemeSaveErrorMessage } from '../theme-save-errors'
 import { useThemeCustomizer } from '../use-theme-customizer'
@@ -36,6 +36,17 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (customizer.config.id || customizer.config.isDirty || !defaultThemeId) {
+      return
+    }
+
+    const defaultTheme = themes.find((theme) => theme.id === defaultThemeId)
+    if (defaultTheme) {
+      customizer.loadTheme(defaultTheme)
+    }
+  }, [customizer, defaultThemeId, themes])
 
   const handleSelectTheme = useCallback(
     (theme: Theme) => {

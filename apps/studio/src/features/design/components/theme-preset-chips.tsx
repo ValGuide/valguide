@@ -1,29 +1,25 @@
 import { themeColorPresets } from '@valguide/core/features/themes/presets'
-import { type ThemePreset, themePresets } from '@valguide/core/features/themes/types'
+import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
+import { formatThemePresetLabel, themePresets } from '../theme-display'
 
 export interface ThemePresetChipsProps {
   value: ThemePreset
   onSelect: (preset: ThemePreset) => void
+  limit?: number
   className?: string
 }
 
-export function ThemePresetChips({ value, onSelect, className }: ThemePresetChipsProps) {
+export function ThemePresetChips({ value, onSelect, limit, className }: ThemePresetChipsProps) {
   const t = useTranslations('studio.themeCustomizer')
-
-  const formatLabel = (preset: ThemePreset) => {
-    return preset
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-  }
+  const presets = limit ? themePresets.slice(0, limit) : themePresets
 
   return (
     <div className={cn('space-y-2', className)}>
       <p className="text-xs text-muted-foreground">{t('startFromPreset')}</p>
-      <div className="flex flex-wrap gap-1.5">
-        {themePresets.map((preset) => {
+      <div className="grid gap-2 sm:grid-cols-2">
+        {presets.map((preset) => {
           const colors = themeColorPresets[preset]
           const isSelected = preset === value
           return (
@@ -32,16 +28,24 @@ export function ThemePresetChips({ value, onSelect, className }: ThemePresetChip
               type="button"
               onClick={() => onSelect(preset)}
               className={cn(
-                'flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md border transition-all',
-                'hover:bg-accent hover:border-accent-foreground/20',
-                isSelected && 'ring-2 ring-primary ring-offset-1 bg-accent',
+                'rounded-xl border p-3 text-left transition-all',
+                'hover:border-primary/30 hover:bg-accent/40',
+                isSelected && 'border-primary bg-accent/40 ring-2 ring-primary/20',
               )}
             >
-              <div
-                className="size-3 rounded-full border border-foreground/20"
-                style={{ backgroundColor: colors.primary }}
-              />
-              {formatLabel(preset)}
+              <div className="mb-3 flex gap-1">
+                {[colors.background, colors.primary, colors.accent].map((color) => (
+                  <div
+                    key={`${preset}-${color}`}
+                    className="h-8 flex-1 rounded-md border border-border/70 shadow-xs"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-medium">{formatThemePresetLabel(preset)}</span>
+                {isSelected ? <span className="text-xs text-primary">{t('themeLibrary.selectedBadge')}</span> : null}
+              </div>
             </button>
           )
         })}

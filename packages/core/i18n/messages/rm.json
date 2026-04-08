@@ -147,6 +147,10 @@
       "otherColors": "Autras colurs",
       "customize": "Persunalisar",
       "preview": "Prevista",
+      "currentThemeTitle": "Theme actual",
+      "currentThemeDescription": "Tschernais in theme memorisà u cumenzai cun ina presettaziun e raffinais lura la basa dal branding pli engiu.",
+      "chooseThemeTitle": "Tscherner in punct da partenza",
+      "chooseThemeDescription": "Tschernais in theme memorisà per in start spert u cumenzai cun ina presettaziun curada.",
       "startFromPreset": "Cumenzar cun in stil",
       "savedThemes": "Themes memorisads ({count})",
       "previewNote": "Prevista basada sin il layout real dal player per visitaders cun cuntegns d'exempel.",
@@ -176,9 +180,18 @@
         "eyeDropper": "Tscherner colur dal visur"
       },
       "themeLibrary": {
+        "description": "Themes memorisads dal workspace pon vegnir reutilisads en pliras turas.",
         "delete": "Stizzar",
+        "actions": "Acziuns dal theme",
         "defaultTheme": "Tema standard",
         "defaultBadge": "Standard",
+        "emptyTitle": "Anc nagins themes memorisads",
+        "emptyDescription": "Cumenzai pli engiu cun ina presettaziun e memorisai il resultat cur che il branding correspunda.",
+        "openPicker": "Tscherner theme",
+        "savedBadge": "Memorisà",
+        "selectedBadge": "Tschernì",
+        "selectHint": "Applitgar quest theme a la prevista e, sche necessari, cuntinuar cun adattaziuns.",
+        "starterBadge": "Presettaziun",
         "setAsDefaultTheme": "Definir sco standard",
         "settingDefaultTheme": "Vegn definì...",
         "resetToValGuideDefault": "Reset sin il standard da ValGuide"
@@ -220,7 +233,7 @@
         "editing": "Modifitgar: {name}",
         "unsavedChanges": "Midadas betg memorisadas",
         "saveTheme": "Memorisar theme",
-        "description": "Adattar il maletg per visitaders senza far ord quai in instrument da design cumplett."
+        "description": "Tschernais l'emprim ina direcziun e midai suenter mo ils detagls da branding che fan propi differenza."
       },
       "compactControls": {
         "themes": "Designs",

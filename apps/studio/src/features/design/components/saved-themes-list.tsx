@@ -2,9 +2,14 @@ import type { Theme } from '@valguide/core/features/themes/schema'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/ui/components/collapsible'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@valguide/ui/components/dropdown-menu'
 import { cn } from '@valguide/ui/lib/utils'
-import { ChevronDown, Trash2 } from 'lucide-react'
+import { Check, MoreHorizontal, Star, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
 export interface SavedThemesListProps {
@@ -35,7 +40,6 @@ export function SavedThemesList({
   className,
 }: SavedThemesListProps) {
   const t = useTranslations('studio.themeCustomizer')
-  const [isOpen, setIsOpen] = useState(true)
   const [pendingDefaultThemeId, setPendingDefaultThemeId] = useState<string | null>(null)
 
   if (isLoading || themes.length === 0) {
@@ -68,98 +72,112 @@ export function SavedThemesList({
     }
   }
 
-  const defaultTheme = themes.find((theme) => theme.id === defaultThemeId) ?? null
-
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className={className}>
-      <CollapsibleTrigger className="flex w-full items-center justify-between py-2 text-sm font-medium hover:underline">
-        {t('savedThemes', { count: themes.length })}
-        <ChevronDown className={cn('size-4 transition-transform', isOpen && 'rotate-180')} />
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="space-y-1.5 pt-1">
-          {defaultTheme ? (
-            <div className="flex items-center gap-3 rounded-md border bg-muted/20 px-3 py-2">
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                  <span className="text-xs font-medium text-muted-foreground">{t('themeLibrary.defaultTheme')}</span>
-                  <span className="truncate text-sm font-medium">{defaultTheme.name}</span>
-                </div>
-              </div>
-              {canManageDefaultTheme && onClearDefaultTheme ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => void handleClearDefaultTheme()}
-                  disabled={pendingDefaultThemeId !== null}
-                  className="h-7 shrink-0 px-2 text-xs"
-                >
-                  {t('themeLibrary.resetToValGuideDefault')}
-                </Button>
-              ) : null}
-            </div>
-          ) : null}
+    <div className={cn('space-y-3', className)}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-medium">{t('savedThemes', { count: themes.length })}</p>
+          <p className="text-xs text-muted-foreground">{t('themeLibrary.description')}</p>
+        </div>
+        {canManageDefaultTheme && defaultThemeId && onClearDefaultTheme ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => void handleClearDefaultTheme()}
+            disabled={pendingDefaultThemeId !== null}
+            className="h-8 shrink-0 px-2 text-xs"
+          >
+            {t('themeLibrary.resetToValGuideDefault')}
+          </Button>
+        ) : null}
+      </div>
 
-          {themes.map((theme) => {
-            const isSelected = theme.id === selectedThemeId
-            const isDefault = theme.id === defaultThemeId
-            const isSettingDefault = pendingDefaultThemeId === theme.id
-            return (
-              <div
-                key={theme.id}
-                className={cn(
-                  'group relative flex w-full items-center gap-2 p-2 rounded-md border transition-all',
-                  'hover:bg-accent/50',
-                  isSelected && 'ring-2 ring-primary border-primary bg-accent/30',
-                )}
-              >
+      <div className="space-y-2">
+        {themes.map((theme) => {
+          const isSelected = theme.id === selectedThemeId
+          const isDefault = theme.id === defaultThemeId
+          const isSettingDefault = pendingDefaultThemeId === theme.id
+          const canOpenMenu =
+            (canManageDefaultTheme && onSetDefaultTheme && !isDefault) || (showDelete && onDeleteTheme)
+          const swatches = [
+            { key: 'background', color: theme.colors.background },
+            { key: 'primary', color: theme.colors.primary },
+            { key: 'accent', color: theme.colors.accent },
+          ]
+
+          return (
+            <div
+              key={theme.id}
+              className={cn(
+                'group relative rounded-xl border bg-background transition-all',
+                'hover:border-primary/20 hover:bg-accent/20',
+                isSelected && 'border-primary bg-accent/25 ring-2 ring-primary/15',
+              )}
+            >
+              <div className="flex items-start gap-3 p-3">
                 <button
                   type="button"
                   onClick={() => onSelectTheme(theme)}
-                  className="flex flex-1 items-center gap-2 text-left min-w-0"
+                  className="flex min-w-0 flex-1 items-start gap-3 text-left"
                 >
-                  <div className="flex gap-px shrink-0">
-                    <div className="size-5 rounded-l border" style={{ backgroundColor: theme.colors.background }} />
-                    <div className="size-5 border-y" style={{ backgroundColor: theme.colors.primary }} />
-                    <div className="size-5 rounded-r border" style={{ backgroundColor: theme.colors.accent }} />
+                  <div className="flex w-16 shrink-0 gap-1 sm:w-20">
+                    {swatches.map((swatch) => (
+                      <div
+                        key={`${theme.id}-${swatch.key}`}
+                        className="h-12 flex-1 rounded-md border border-border/70 shadow-xs"
+                        style={{ backgroundColor: swatch.color }}
+                      />
+                    ))}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="truncate text-sm font-medium">{theme.name}</span>
+
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="truncate text-sm font-medium">{theme.name}</span>
+                      {isSelected ? <Badge variant="secondary">{t('themeLibrary.selectedBadge')}</Badge> : null}
+                      {isDefault ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
+                    </div>
+                    <p className="text-xs text-muted-foreground">{t('themeLibrary.selectHint')}</p>
                   </div>
                 </button>
 
                 <div className="flex shrink-0 items-center gap-1">
-                  {isDefault ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
+                  {isSelected ? <Check className="mt-1 size-4 text-primary" aria-hidden="true" /> : null}
 
-                  {canManageDefaultTheme && onSetDefaultTheme && !isDefault ? (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 px-2 text-xs"
-                      onClick={() => void handleSetDefaultTheme(theme)}
-                      disabled={pendingDefaultThemeId !== null}
-                    >
-                      {isSettingDefault ? t('themeLibrary.settingDefaultTheme') : t('themeLibrary.setAsDefaultTheme')}
-                    </Button>
-                  ) : null}
-
-                  {showDelete && onDeleteTheme ? (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="size-6 opacity-100 min-[1180px]:opacity-0 min-[1180px]:group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
-                      onClick={() => onDeleteTheme(theme)}
-                      aria-label={t('themeLibrary.delete')}
-                    >
-                      <Trash2 className="size-3.5" />
-                    </Button>
+                  {canOpenMenu ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-8">
+                          <MoreHorizontal className="size-4" />
+                          <span className="sr-only">{t('themeLibrary.actions')}</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {canManageDefaultTheme && onSetDefaultTheme && !isDefault ? (
+                          <DropdownMenuItem
+                            onClick={() => void handleSetDefaultTheme(theme)}
+                            disabled={pendingDefaultThemeId !== null}
+                          >
+                            <Star className="size-4" />
+                            {isSettingDefault
+                              ? t('themeLibrary.settingDefaultTheme')
+                              : t('themeLibrary.setAsDefaultTheme')}
+                          </DropdownMenuItem>
+                        ) : null}
+                        {showDelete && onDeleteTheme ? (
+                          <DropdownMenuItem variant="destructive" onClick={() => onDeleteTheme(theme)}>
+                            <Trash2 className="size-4" />
+                            {t('themeLibrary.delete')}
+                          </DropdownMenuItem>
+                        ) : null}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   ) : null}
                 </div>
               </div>
-            )
-          })}
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 }

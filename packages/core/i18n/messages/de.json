@@ -147,6 +147,10 @@
       "otherColors": "Weitere Farben",
       "customize": "Anpassen",
       "preview": "Vorschau",
+      "currentThemeTitle": "Aktuelles Theme",
+      "currentThemeDescription": "Wählen Sie ein gespeichertes Theme oder starten Sie mit einer Vorlage und verfeinern Sie danach die Grundfarben.",
+      "chooseThemeTitle": "Ausgangspunkt wählen",
+      "chooseThemeDescription": "Nehmen Sie ein gespeichertes Theme für einen schnellen Start oder beginnen Sie mit einer kuratierten Vorlage.",
       "startFromPreset": "Mit einem Stil beginnen",
       "savedThemes": "Gespeicherte Themes ({count})",
       "previewNote": "Vorschau auf Basis des echten Visitor-Player-Layouts mit Beispielinhalten.",
@@ -176,9 +180,18 @@
         "eyeDropper": "Farbe vom Bildschirm auswählen"
       },
       "themeLibrary": {
+        "description": "Gespeicherte Workspace-Themes lassen sich in mehreren Touren wiederverwenden.",
         "delete": "Löschen",
+        "actions": "Theme-Aktionen",
         "defaultTheme": "Standard-Theme",
         "defaultBadge": "Standard",
+        "emptyTitle": "Noch keine gespeicherten Themes",
+        "emptyDescription": "Beginnen Sie unten mit einer Vorlage und speichern Sie das Ergebnis, sobald das Branding stimmt.",
+        "openPicker": "Theme wählen",
+        "savedBadge": "Gespeichert",
+        "selectedBadge": "Ausgewählt",
+        "selectHint": "Dieses Theme auf die Vorschau anwenden und bei Bedarf weiter anpassen.",
+        "starterBadge": "Vorlage",
         "setAsDefaultTheme": "Als Standard setzen",
         "settingDefaultTheme": "Wird gesetzt...",
         "resetToValGuideDefault": "Auf ValGuide-Standard zurücksetzen"
@@ -220,7 +233,7 @@
         "editing": "Bearbeiten: {name}",
         "unsavedChanges": "Ungespeicherte Änderungen",
         "saveTheme": "Theme speichern",
-        "description": "Passen Sie das Besuchererlebnis an, ohne aus dem Screen ein Design-Tool zu machen."
+        "description": "Wählen Sie zuerst eine Richtung und passen Sie danach nur die Branding-Details an, die wirklich relevant sind."
       },
       "compactControls": {
         "themes": "Designs",

@@ -147,6 +147,10 @@
       "otherColors": "Other Colors",
       "customize": "Customize",
       "preview": "Preview",
+      "currentThemeTitle": "Current theme",
+      "currentThemeDescription": "Choose a saved theme or start from a preset, then refine the brand basics below.",
+      "chooseThemeTitle": "Choose a starting point",
+      "chooseThemeDescription": "Pick a saved theme for a quick handoff, or start from a curated preset.",
       "startFromPreset": "Choose a starting style",
       "savedThemes": "Saved themes ({count})",
       "previewNote": "Preview based on the real visitor player layout with sample content.",
@@ -176,9 +180,18 @@
         "eyeDropper": "Pick color from screen"
       },
       "themeLibrary": {
+        "description": "Saved workspace themes stay reusable across tours.",
         "delete": "Delete",
+        "actions": "Theme actions",
         "defaultTheme": "Default theme",
         "defaultBadge": "Default",
+        "emptyTitle": "No saved themes yet",
+        "emptyDescription": "Start from a preset below and save it once the core branding feels right.",
+        "openPicker": "Choose theme",
+        "savedBadge": "Saved",
+        "selectedBadge": "Selected",
+        "selectHint": "Apply this theme to the preview and continue editing if needed.",
+        "starterBadge": "Starter",
         "setAsDefaultTheme": "Set as default",
         "settingDefaultTheme": "Setting...",
         "resetToValGuideDefault": "Reset to ValGuide default"
@@ -220,7 +233,7 @@
         "editing": "Editing: {name}",
         "unsavedChanges": "Unsaved changes",
         "saveTheme": "Save Theme",
-        "description": "Adjust the visitor look without turning this into a full design tool."
+        "description": "Pick a direction first, then adjust only the brand details that matter."
       },
       "compactControls": {
         "themes": "Themes",

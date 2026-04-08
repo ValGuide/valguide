@@ -4,10 +4,11 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
 import { useEffect, useMemo } from 'react'
 import { ensureThemeFontsLoaded } from '../font-loader'
+import { formatThemePresetLabel } from '../theme-display'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { PlayerPreview } from './player-preview'
-import { ThemeCompactControls } from './theme-compact-controls'
 import { ThemeEditorPanel } from './theme-editor-panel'
+import { ThemeMobileDock } from './theme-mobile-dock'
 
 export interface ThemeWorkspaceProps {
   customizer: UseThemeCustomizerReturn
@@ -53,12 +54,7 @@ export function ThemeWorkspace({
     void ensureThemeFontsLoaded(customizer.config.fonts)
   }, [customizer.config.fonts])
 
-  const currentThemeLabel =
-    customizer.config.name ??
-    customizer.config.basePreset
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
+  const currentThemeLabel = customizer.config.name ?? formatThemePresetLabel(customizer.config.basePreset)
 
   const previewPanel = ({
     containerClassName,
@@ -89,10 +85,10 @@ export function ThemeWorkspace({
         {previewPanel({
           containerClassName: 'min-h-0 flex-1',
           previewClassName:
-            'flex-1 min-h-[clamp(16rem,42dvh,22rem)] px-4 py-4 md:min-h-[clamp(20rem,48dvh,30rem)] md:px-6 md:py-6',
-          playerClassName: 'max-w-[19rem] md:max-w-[24rem]',
+            'flex-1 min-h-[clamp(18rem,48dvh,32rem)] px-4 py-4 pb-40 md:min-h-[clamp(24rem,58dvh,40rem)] md:px-6 md:py-6 md:pb-44',
+          playerClassName: 'max-w-[20rem] sm:max-w-[24rem] md:max-w-[28rem]',
         })}
-        <ThemeCompactControls
+        <ThemeMobileDock
           customizer={customizer}
           themes={themes}
           defaultThemeId={defaultThemeId}
@@ -105,8 +101,8 @@ export function ThemeWorkspace({
           onClearDefaultTheme={onClearDefaultTheme}
           onSave={onSave}
           showDeleteThemes={showDeleteThemes}
-          footer={compactFooter}
         />
+        {compactFooter ? <div>{compactFooter}</div> : null}
       </div>
 
       <div className="hidden w-full min-w-0 gap-6 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(0,24rem)] min-[1180px]:items-start xl:gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,27rem)]">
