@@ -1,10 +1,8 @@
 import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemePreset } from '@valguide/core/features/themes/types'
-import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
 import { useEffect, useMemo } from 'react'
 import { ensureThemeFontsLoaded } from '../font-loader'
-import { formatThemePresetLabel } from '../theme-display'
 import type { UseThemeCustomizerReturn } from '../use-theme-customizer'
 import { PlayerPreview } from './player-preview'
 import { ThemeEditorPanel } from './theme-editor-panel'
@@ -23,7 +21,6 @@ export interface ThemeWorkspaceProps {
   onClearDefaultTheme?: () => Promise<void>
   onSave: () => void
   showDeleteThemes?: boolean
-  previewDescription?: React.ReactNode
   compactFooter?: React.ReactNode
   className?: string
 }
@@ -41,11 +38,9 @@ export function ThemeWorkspace({
   onClearDefaultTheme,
   onSave,
   showDeleteThemes = true,
-  previewDescription,
   compactFooter,
   className,
 }: ThemeWorkspaceProps) {
-  const t = useTranslations('studio.themeCustomizer')
   const cssVariables = customizer.getCSSVariables()
   const previewStyle = useMemo(() => cssVariables as React.CSSProperties, [cssVariables])
 
@@ -53,35 +48,34 @@ export function ThemeWorkspace({
     void ensureThemeFontsLoaded(customizer.config.fonts)
   }, [customizer.config.fonts])
 
-  const currentThemeLabel = customizer.config.name ?? formatThemePresetLabel(customizer.config.basePreset)
-
   const previewPanel = ({
     containerClassName,
     previewClassName,
+    previewInnerClassName,
     playerClassName,
     previewFooterClassName,
+    playerVariant,
   }: {
     containerClassName?: string
     previewClassName?: string
+    previewInnerClassName?: string
     playerClassName?: string
     previewFooterClassName?: string
+    playerVariant?: 'default' | 'storyboard'
   }) => (
     <div className={cn('flex flex-col gap-4', containerClassName)}>
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">{t('visitorPreview')}</h2>
-        <span className="truncate text-sm text-muted-foreground">{currentThemeLabel}</span>
-      </div>
       <div
         className={cn(
-          'rounded-xl border bg-muted/30 px-[clamp(1rem,3vw,2rem)] py-[clamp(1rem,3vw,2rem)]',
+          'flex min-h-0 flex-col rounded-xl border bg-muted/30 px-[clamp(1rem,3vw,2rem)] py-[clamp(1rem,3vw,2rem)]',
           previewClassName,
         )}
       >
-        <div className="mb-[clamp(0.75rem,2vw,1rem)] text-sm text-muted-foreground">
-          {previewDescription ?? t('previewNote')}
-        </div>
-        <div className="flex min-h-full items-start justify-center overflow-hidden">
-          <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
+        <div className={cn('flex min-h-full items-start justify-center', previewInnerClassName)}>
+          <PlayerPreview
+            style={previewStyle}
+            variant={playerVariant}
+            className={cn('w-full shadow-xl', playerClassName)}
+          />
         </div>
         <div aria-hidden="true" className={previewFooterClassName} />
       </div>
@@ -118,8 +112,12 @@ export function ThemeWorkspace({
         {previewPanel({
           containerClassName:
             'min-h-0 overflow-y-auto pr-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
-          playerClassName: 'max-w-[clamp(18rem,42vw,32rem)]',
+          previewClassName: 'h-full overflow-hidden px-0 py-0',
+          previewInnerClassName:
+            'min-h-0 flex-1 justify-center overflow-x-auto overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
+          playerClassName: 'mx-auto min-w-fit max-w-none shadow-none',
           previewFooterClassName: 'hidden',
+          playerVariant: 'storyboard',
         })}
         <ThemeEditorPanel
           customizer={customizer}

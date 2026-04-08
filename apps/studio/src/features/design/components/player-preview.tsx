@@ -17,6 +17,7 @@ import { useEffect, useMemo } from 'react'
 export interface PlayerPreviewProps {
   style?: CSSProperties
   className?: string
+  variant?: 'default' | 'storyboard'
 }
 
 const previewStops: PlayerStop[] = [
@@ -79,6 +80,72 @@ function PreviewFullPlayer() {
   )
 }
 
+function PreviewStartTourCard() {
+  const tPlayer = useTranslations('player')
+  const tTheme = useTranslations('studio.themeCustomizer')
+  const panelStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
+
+  return (
+    <div className="flex h-full min-w-0 flex-col gap-4 overflow-hidden border bg-card/95 p-5 shadow-sm" style={panelStyle}>
+      <CoverImage src={null} alt={tTheme('playerPreview.tourTitle')} className="w-full" />
+      <div className="space-y-2">
+        <div className="space-y-1">
+          <p className="text-base font-semibold">{tTheme('playerPreview.tourTitle')}</p>
+          <p className="text-sm text-muted-foreground">{tTheme('playerPreview.tourInfo')}</p>
+        </div>
+        <p className="text-sm text-muted-foreground">{tTheme('playerPreview.stopDescription')}</p>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <span className="rounded-full border px-2 py-1">{tPlayer('offlineReady')}</span>
+        <span className="rounded-full border px-2 py-1">{tPlayer('stopsCount', { count: previewStops.length })}</span>
+      </div>
+      <Button className="w-full" style={panelStyle}>
+        {tPlayer('startTour')}
+      </Button>
+    </div>
+  )
+}
+
+function PreviewTrackListCard() {
+  const panelStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
+
+  return (
+    <div
+      className="flex h-full min-h-0 min-w-0 flex-col gap-4 overflow-hidden border bg-card/95 p-5 shadow-sm"
+      style={panelStyle}
+    >
+      <div className="min-h-0 flex-1">
+        <StopsList showSearchBar={false} />
+      </div>
+    </div>
+  )
+}
+
+function PreviewDesktopStoryboard() {
+  const tTheme = useTranslations('studio.themeCustomizer')
+
+  return (
+    <div className="w-max min-w-fit px-[clamp(1rem,2vw,1.5rem)] py-[clamp(1rem,2vw,1.5rem)]">
+      <div className="grid grid-cols-[18rem_24rem] items-start gap-4 xl:grid-cols-[19rem_27rem] xl:gap-5">
+        <div className="flex w-[18rem] min-w-0 flex-col gap-4 xl:w-[19rem]">
+          <PreviewStartTourCard />
+          <PreviewTrackListCard />
+        </div>
+        <div
+          className="flex h-full flex-col gap-5 border bg-card/95 p-[clamp(1.25rem,2vw,1.75rem)] shadow-md"
+          style={{ borderRadius: 'calc(var(--radius) + 0.375rem)' }}
+        >
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-muted-foreground">{tTheme('playerPreview.tourTitle')}</p>
+            <p className="text-sm text-muted-foreground">{tTheme('playerPreview.tourInfo')}</p>
+          </div>
+          <PreviewFullPlayer />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function PreviewSurface() {
   const tPlayer = useTranslations('player')
   const tTheme = useTranslations('studio.themeCustomizer')
@@ -87,7 +154,7 @@ function PreviewSurface() {
   const panelStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
 
   return (
-    <div className="mx-auto w-full max-w-none space-y-[clamp(1rem,3vw,1.5rem)] px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1.25rem,4vw,2rem)]">
+    <div className="mx-auto bg-background w-full max-w-none space-y-[clamp(1rem,3vw,1.5rem)] px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1.25rem,4vw,2rem)]">
       <div className="inline-flex items-center gap-1 text-sm text-muted-foreground">
         <ChevronLeft className="h-4 w-4" />
         <span>{tTheme('playerPreview.tourTitle')}</span>
@@ -120,18 +187,18 @@ function PreviewSurface() {
   )
 }
 
-export function PlayerPreview({ style, className }: PlayerPreviewProps) {
+export function PlayerPreview({ style, className, variant = 'default' }: PlayerPreviewProps) {
   const shellStyle = { ...style, borderRadius: 'calc(var(--radius) + 0.375rem)' } satisfies CSSProperties
 
   return (
     <div
-      className={cn('overflow-hidden border bg-background text-foreground', className)}
+      className={cn('overflow-hidden text-foreground', className)}
       style={shellStyle}
       data-tour-theme
     >
       <PlayerProvider stops={previewStops} initialStopNanoId={previewStops[0].nanoId}>
         <PreviewSeedState />
-        <PreviewSurface />
+        {variant === 'storyboard' ? <PreviewDesktopStoryboard /> : <PreviewSurface />}
       </PlayerProvider>
     </div>
   )

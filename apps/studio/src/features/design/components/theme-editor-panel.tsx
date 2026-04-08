@@ -136,11 +136,11 @@ export function ThemeEditorPanel({
     >
       <CardHeader
         className={cn(
-          'space-y-4 border-b',
-          isMobileLayout ? 'px-4 py-4' : isWorkspaceLayout ? 'px-6 py-5 sm:px-8' : 'px-6 py-4',
+          'space-y-4 border-b !pb-3',
+          isMobileLayout ? 'px-4 py-4' : isWorkspaceLayout ? 'px-6 py-5 sm:px-8' : 'px-6 pt-4 pb-0',
         )}
       >
-        <div className="flex w-full min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex w-full min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <CardTitle className="text-base font-semibold">{t('title')}</CardTitle>
           </div>
