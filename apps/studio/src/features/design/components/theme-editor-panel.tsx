@@ -163,7 +163,7 @@ export function ThemeEditorPanel({
           className={cn(
             'space-y-4 pb-6',
             isMobileLayout
-              ? 'h-full overflow-y-auto px-4 pt-4'
+              ? 'h-full overflow-y-auto px-4 pt-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
               : isWorkspaceLayout
                 ? 'px-6 pt-4 sm:px-8'
                 : isSplitLayout

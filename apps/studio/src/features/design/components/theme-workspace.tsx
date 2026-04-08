@@ -46,7 +46,6 @@ export function ThemeWorkspace({
   className,
 }: ThemeWorkspaceProps) {
   const t = useTranslations('studio.themeCustomizer')
-
   const cssVariables = customizer.getCSSVariables()
   const previewStyle = useMemo(() => cssVariables as React.CSSProperties, [cssVariables])
 
@@ -60,10 +59,12 @@ export function ThemeWorkspace({
     containerClassName,
     previewClassName,
     playerClassName,
+    previewFooterClassName,
   }: {
     containerClassName?: string
     previewClassName?: string
     playerClassName?: string
+    previewFooterClassName?: string
   }) => (
     <div className={cn('flex flex-col gap-4', containerClassName)}>
       <div className="flex items-center justify-between gap-3">
@@ -82,18 +83,19 @@ export function ThemeWorkspace({
         <div className="flex min-h-full items-start justify-center overflow-hidden">
           <PlayerPreview style={previewStyle} className={cn('w-full shadow-xl', playerClassName)} />
         </div>
+        <div aria-hidden="true" className={previewFooterClassName} />
       </div>
     </div>
   )
 
   return (
     <div className={cn('flex min-h-0 min-w-0 w-full flex-1 flex-col gap-6', className)}>
-      <div className="relative flex min-h-0 flex-col gap-4 overflow-y-auto pb-4 lg:hidden">
+      <div className="relative flex min-h-0 flex-col gap-4 overflow-y-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:hidden">
         {previewPanel({
           containerClassName: 'min-h-0 flex-1',
-          previewClassName:
-            'flex-1 min-h-[clamp(18rem,48dvh,32rem)] pb-[clamp(16rem,34vw,18rem)] md:min-h-[clamp(24rem,58dvh,40rem)] md:pb-[clamp(16.5rem,28vw,18.5rem)]',
+          previewClassName: 'flex-1 min-h-[clamp(18rem,48dvh,32rem)] md:min-h-[clamp(24rem,58dvh,40rem)]',
           playerClassName: 'max-w-[clamp(16rem,78vw,30rem)]',
+          previewFooterClassName: 'h-[clamp(11rem,28vw,14rem)] md:h-[clamp(12rem,24vw,15rem)]',
         })}
         <ThemeMobileDock
           customizer={customizer}
@@ -114,8 +116,10 @@ export function ThemeWorkspace({
 
       <div className="hidden min-h-0 w-full min-w-0 flex-1 overflow-hidden lg:grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,24rem)] lg:gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,27rem)] xl:gap-8">
         {previewPanel({
-          containerClassName: 'min-h-0 overflow-y-auto pr-2',
+          containerClassName:
+            'min-h-0 overflow-y-auto pr-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
           playerClassName: 'max-w-[clamp(18rem,42vw,32rem)]',
+          previewFooterClassName: 'hidden',
         })}
         <ThemeEditorPanel
           customizer={customizer}
