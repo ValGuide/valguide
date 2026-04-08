@@ -119,6 +119,7 @@
       "expandAdvanced": "More options",
       "collapseAdvanced": "Fewer options",
       "fonts": {
+        "title": "Font",
         "primaryLabel": "Primary font",
         "primaryHint": "Used for the main visitor typography across the player.",
         "overrideTitle": "Font overrides",

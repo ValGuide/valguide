@@ -119,6 +119,7 @@
       "expandAdvanced": "Dapli novitads",
       "collapseAdvanced": "Damain novitads",
       "fonts": {
+        "title": "Scrittira",
         "primaryLabel": "Scrittira principala",
         "primaryHint": "Vegn duvrada per la tipografia principala dals visitaders en il player.",
         "overrideTitle": "Overrides da scrittira",

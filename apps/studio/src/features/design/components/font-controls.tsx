@@ -7,10 +7,20 @@ import { FontPicker } from './font-picker'
 export interface FontControlsProps {
   fonts: ThemeFonts
   onChange: (fonts: ThemeFonts) => void
+  label?: string
+  showLabel?: boolean
+  showHint?: boolean
   className?: string
 }
 
-export function FontControls({ fonts, onChange, className }: FontControlsProps) {
+export function FontControls({
+  fonts,
+  onChange,
+  label,
+  showLabel = true,
+  showHint = true,
+  className,
+}: FontControlsProps) {
   const t = useTranslations('studio.themeCustomizer')
   const normalizedFonts = normalizeThemeFonts(fonts)
 
@@ -18,7 +28,8 @@ export function FontControls({ fonts, onChange, className }: FontControlsProps) 
     <div className={cn('space-y-4', className)}>
       <div className="space-y-1.5">
         <FontPicker
-          label={t('fonts.primaryLabel')}
+          label={label ?? t('fonts.primaryLabel')}
+          showLabel={showLabel}
           value={normalizedFonts.primary}
           onValueChange={(font) => {
             if (!font) {
@@ -29,7 +40,7 @@ export function FontControls({ fonts, onChange, className }: FontControlsProps) 
             })
           }}
         />
-        <p className="text-xs text-muted-foreground">{t('fonts.primaryHint')}</p>
+        {showHint ? <p className="text-xs text-muted-foreground">{t('fonts.primaryHint')}</p> : null}
       </div>
     </div>
   )

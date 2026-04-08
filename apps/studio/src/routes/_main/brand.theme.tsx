@@ -1,8 +1,9 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { DesignPageSkeleton } from '@/features/design/components/design-page-skeleton'
 import { ThemeCustomizerContainer } from '@/features/design/components/theme-customizer-container'
 import { EditorHeader } from '@/features/editor/components/editor-header'
+import { useFocusBackNavigation } from '@/hooks/use-focus-back-navigation'
 
 export const Route = createFileRoute('/_main/brand/theme')({
   staticData: {
@@ -14,17 +15,8 @@ export const Route = createFileRoute('/_main/brand/theme')({
 })
 
 function ThemeBrandPage() {
-  const router = useRouter()
   const t = useTranslations('sidebar')
-
-  const handleBack = () => {
-    if (window.history.length > 1) {
-      router.history.back()
-      return
-    }
-
-    void router.navigate({ to: '/tours', viewTransition: false })
-  }
+  const handleBack = useFocusBackNavigation({ fallbackTo: '/tours' })
 
   return (
     <main className="flex min-h-0 flex-1 flex-col bg-background">

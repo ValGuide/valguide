@@ -4,7 +4,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
-import { Palette, RotateCcw, Save, SlidersHorizontal, SwatchBook } from 'lucide-react'
+import { Palette, RotateCcw, Save, SlidersHorizontal, SwatchBook, Type } from 'lucide-react'
 import { useState } from 'react'
 import { formatThemePresetLabel } from '../theme-display'
 import type { ThemeColors } from '../types'
@@ -28,7 +28,7 @@ const interfaceColorKeys: (keyof ThemeColors)[] = [
   'ring',
 ]
 
-type DockPanel = 'theme' | 'brand' | 'advanced' | null
+type DockPanel = 'theme' | 'brand' | 'fonts' | 'advanced' | null
 
 export interface ThemeMobileDockProps {
   customizer: UseThemeCustomizerReturn
@@ -139,9 +139,18 @@ export function ThemeMobileDock({
         defaultOpen
         showTitle={false}
       />
-      <div className="rounded-xl border p-4">
-        <FontControls fonts={config.fonts} onChange={setFonts} />
-      </div>
+    </div>
+  )
+
+  const fontContent = (
+    <div className="rounded-xl border p-4">
+      <FontControls
+        fonts={config.fonts}
+        onChange={setFonts}
+        label={t('fonts.title')}
+        showLabel={false}
+        showHint={false}
+      />
     </div>
   )
 
@@ -228,6 +237,30 @@ export function ThemeMobileDock({
                   <p className="text-xs text-muted-foreground">{t('brandBasicsHint')}</p>
                 </div>
                 <div className="max-h-[min(58dvh,32rem)] overflow-y-auto pr-1">{brandContent}</div>
+              </PopoverContent>
+            </Popover>
+
+            <Popover open={activePanel === 'fonts'} onOpenChange={(open) => setActivePanel(open ? 'fonts' : null)}>
+              <PopoverTrigger asChild>
+                <button type="button" className={dockItemClass}>
+                  <span className="text-xs text-muted-foreground">{t('fonts.title')}</span>
+                  <span className="flex items-center gap-1.5 text-sm font-medium">
+                    <Type className="size-4" />
+                    <span>{t('fonts.title')}</span>
+                  </span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                side="top"
+                align="center"
+                sideOffset={12}
+                className="w-[min(26rem,calc(100vw-1.5rem))] rounded-[1.4rem] border-border/60 bg-background/90 p-4 shadow-2xl backdrop-blur-xl"
+              >
+                <div className="mb-3">
+                  <p className="text-sm font-semibold">{t('fonts.title')}</p>
+                  <p className="text-xs text-muted-foreground">{t('fonts.primaryHint')}</p>
+                </div>
+                {fontContent}
               </PopoverContent>
             </Popover>
 

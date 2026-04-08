@@ -119,6 +119,7 @@
       "expandAdvanced": "Mehr Optionen",
       "collapseAdvanced": "Weniger Optionen",
       "fonts": {
+        "title": "Schrift",
         "primaryLabel": "Primäre Schrift",
         "primaryHint": "Wird für die zentrale Besuchertypografie im Player verwendet.",
         "overrideTitle": "Schrift-Overrides",

@@ -23,6 +23,7 @@ export interface FontPickerProps {
   value?: ThemeFont
   inheritedValue?: ThemeFont
   allowInherit?: boolean
+  showLabel?: boolean
   onValueChange: (font: ThemeFont | undefined) => void
   className?: string
 }
@@ -38,6 +39,7 @@ export function FontPicker({
   value,
   inheritedValue,
   allowInherit = false,
+  showLabel = true,
   onValueChange,
   className,
 }: FontPickerProps) {
@@ -71,7 +73,7 @@ export function FontPicker({
 
   return (
     <div className={cn('space-y-2', className)}>
-      <p className="text-sm font-medium">{label}</p>
+      {showLabel ? <p className="text-sm font-medium">{label}</p> : null}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
