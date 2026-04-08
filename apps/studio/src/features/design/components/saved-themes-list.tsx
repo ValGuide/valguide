@@ -133,7 +133,6 @@ export function SavedThemesList({
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span className="truncate text-sm font-medium">{theme.name}</span>
-                      {isSelected ? <Badge variant="secondary">{t('themeLibrary.selectedBadge')}</Badge> : null}
                       {isDefault ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
                     </div>
                     <p className="text-xs text-muted-foreground">{t('themeLibrary.selectHint')}</p>

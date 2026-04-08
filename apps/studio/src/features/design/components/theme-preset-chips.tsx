@@ -44,7 +44,6 @@ export function ThemePresetChips({ value, onSelect, limit, className }: ThemePre
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-medium">{formatThemePresetLabel(preset)}</span>
-                {isSelected ? <span className="text-xs text-primary">{t('themeLibrary.selectedBadge')}</span> : null}
               </div>
             </button>
           )

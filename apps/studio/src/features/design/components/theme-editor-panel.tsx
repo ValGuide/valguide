@@ -81,7 +81,6 @@ export function ThemeEditorPanel({
   const isSplitLayout = layout === 'split'
   const currentThemeLabel = config.name ?? formatThemePresetLabel(config.basePreset)
   const isDefaultTheme = config.id != null && config.id === defaultThemeId
-  const currentThemeStatusLabel = config.id ? t('themeLibrary.savedBadge') : t('themeLibrary.starterBadge')
   const currentThemeSwatches = [
     { key: 'background', color: config.colors.background },
     { key: 'primary', color: config.colors.primary },
@@ -176,13 +175,11 @@ export function ThemeEditorPanel({
               <div className="min-w-0 space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-sm font-medium">{t('currentThemeTitle')}</p>
-                  <Badge variant="secondary">{currentThemeStatusLabel}</Badge>
                   {isDefaultTheme ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
                   {config.isDirty ? <Badge variant="outline">{t('editor.unsavedChanges')}</Badge> : null}
                 </div>
                 <div>
                   <p className="truncate text-lg font-semibold">{currentThemeLabel}</p>
-                  <p className="text-sm text-muted-foreground">{t('currentThemeDescription')}</p>
                 </div>
               </div>
 
@@ -198,7 +195,7 @@ export function ThemeEditorPanel({
             </div>
           </section>
 
-          <section className="rounded-2xl border bg-background p-4">
+          <section className="rounded-2xl border p-4">
             <div className="mb-4 space-y-1">
               <p className="text-sm font-medium">{t('chooseThemeTitle')}</p>
               <p className="text-sm text-muted-foreground">{t('chooseThemeDescription')}</p>
@@ -235,7 +232,7 @@ export function ThemeEditorPanel({
             )}
           </section>
 
-          <section className="rounded-2xl border bg-background p-4">
+          <section className="rounded-2xl border p-4">
             <div className="mb-4 space-y-1">
               <p className="text-sm font-medium">{t('brandBasics')}</p>
               <p className="text-sm text-muted-foreground">{t('brandBasicsHint')}</p>
@@ -255,7 +252,7 @@ export function ThemeEditorPanel({
           </section>
 
           <Collapsible defaultOpen={false}>
-            <section className="rounded-2xl border bg-background">
+            <section className="rounded-2xl border">
               <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 p-4 text-left">
                 <div className="space-y-1">
                   <p className="text-sm font-medium">{t('advanced')}</p>

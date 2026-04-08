@@ -81,7 +81,7 @@ export function ThemeWorkspace({
 
   return (
     <div className={cn('flex min-h-0 min-w-0 w-full flex-1 flex-col gap-6', className)}>
-      <div className="relative flex min-h-0 flex-col gap-4 min-[1180px]:hidden">
+      <div className="relative flex min-h-0 flex-col gap-4 overflow-y-auto pb-4 min-[1180px]:hidden">
         {previewPanel({
           containerClassName: 'min-h-0 flex-1',
           previewClassName:
