@@ -3,7 +3,6 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
-import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { cn } from '@valguide/ui/lib/utils'
 import { Palette, RotateCcw, Save, SlidersHorizontal, SwatchBook } from 'lucide-react'
 import { useState } from 'react'
@@ -176,8 +175,8 @@ export function ThemeMobileDock({
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-[clamp(0.75rem,2.4vw,1.5rem)] pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:pb-4">
       <div className="pointer-events-auto mx-auto w-full max-w-4xl rounded-[clamp(1.25rem,2.8vw,1.6rem)] border border-border/50 bg-background/72 p-[clamp(0.625rem,1.8vw,0.75rem)] shadow-[0_-18px_48px_rgba(0,0,0,0.28)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/58 lg:max-w-[72rem]">
-        <ScrollArea className="w-full whitespace-nowrap">
-          <div className="flex gap-2 pb-2">
+        <div className="w-full overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex w-max min-w-full gap-2 whitespace-nowrap">
             <Popover open={activePanel === 'theme'} onOpenChange={(open) => setActivePanel(open ? 'theme' : null)}>
               <PopoverTrigger asChild>
                 <button type="button" className={dockItemClass}>
@@ -259,7 +258,7 @@ export function ThemeMobileDock({
               </PopoverContent>
             </Popover>
           </div>
-        </ScrollArea>
+        </div>
 
         <div className="mt-1 flex items-center gap-2">
           <Button

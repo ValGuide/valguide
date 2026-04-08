@@ -116,6 +116,8 @@
       "brandBasicsHint": "Most tours only need a brand color and a calm background.",
       "advanced": "Advanced",
       "advancedHint": "Use these settings only when you need finer control over the interface.",
+      "expandAdvanced": "More options",
+      "collapseAdvanced": "Fewer options",
       "fonts": {
         "primaryLabel": "Primary font",
         "primaryHint": "Used for the main visitor typography across the player.",

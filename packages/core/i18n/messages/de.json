@@ -116,6 +116,8 @@
       "brandBasicsHint": "Für die meisten Touren reichen eine Markenfarbe und ein ruhiger Hintergrund.",
       "advanced": "Erweitert",
       "advancedHint": "Diese Einstellungen brauchen Sie nur, wenn Sie die Oberfläche feiner abstimmen möchten.",
+      "expandAdvanced": "Mehr Optionen",
+      "collapseAdvanced": "Weniger Optionen",
       "fonts": {
         "primaryLabel": "Primäre Schrift",
         "primaryHint": "Wird für die zentrale Besuchertypografie im Player verwendet.",

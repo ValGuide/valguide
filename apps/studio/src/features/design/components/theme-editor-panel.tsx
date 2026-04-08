@@ -67,6 +67,7 @@ export function ThemeEditorPanel({
   const t = useTranslations('studio.themeCustomizer')
   const { config, setColor, setRadius, setFonts, resetToPreset } = customizer
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false)
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
 
   const handleColorChange = (key: keyof ThemeColors, value: string) => {
     setColor(key, value)
@@ -252,14 +253,19 @@ export function ThemeEditorPanel({
             <FontControls fonts={config.fonts} onChange={setFonts} />
           </section>
 
-          <Collapsible defaultOpen={false}>
+          <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
             <section className="rounded-2xl border">
-              <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 p-4 text-left">
+              <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-muted/25">
                 <div className="space-y-1">
                   <p className="text-sm font-medium">{t('advanced')}</p>
                   <p className="text-sm text-muted-foreground">{t('advancedHint')}</p>
                 </div>
-                <ChevronDown className="size-4 text-muted-foreground" />
+                <div className="flex items-center gap-2 rounded-full border border-border/70 bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-xs">
+                  <span>{isAdvancedOpen ? t('collapseAdvanced') : t('expandAdvanced')}</span>
+                  <ChevronDown
+                    className={cn('size-4 transition-transform', isAdvancedOpen && 'rotate-180', 'text-foreground')}
+                  />
+                </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div className="space-y-4 border-t px-4 pb-4 pt-4">

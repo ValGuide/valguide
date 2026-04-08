@@ -116,6 +116,8 @@
       "brandBasicsHint": "Per la gronda part da las turas bastan ina colur da marca ed in fund ruassaivel.",
       "advanced": "Avanzà",
       "advancedHint": "Duvrar questas novitads mo sche Vus avais basegn d'ina controlla pli fina da l'interfatscha.",
+      "expandAdvanced": "Dapli novitads",
+      "collapseAdvanced": "Damain novitads",
       "fonts": {
         "primaryLabel": "Scrittira principala",
         "primaryHint": "Vegn duvrada per la tipografia principala dals visitaders en il player.",
