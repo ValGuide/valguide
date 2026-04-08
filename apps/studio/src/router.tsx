@@ -3,6 +3,7 @@ import { createRouter } from '@tanstack/react-router'
 declare module '@tanstack/react-router' {
   interface StaticDataRouteOption {
     focusMode?: boolean
+    hideSidebar?: boolean
   }
 }
 

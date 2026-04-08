@@ -69,8 +69,8 @@ function PreviewFullPlayer() {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-6">
-      <CoverImage src={currentStop.coverImageUrl} alt={currentStop.title} className="w-full max-w-sm" />
+    <div className="flex flex-col items-center gap-[clamp(1rem,3vw,1.5rem)]">
+      <CoverImage src={currentStop.coverImageUrl} alt={currentStop.title} className="w-full max-w-[min(100%,20rem)]" />
       <StopInfo />
       <ProgressBar className="w-full" />
       <PlayerControls />
@@ -87,13 +87,13 @@ function PreviewSurface() {
   const panelStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
 
   return (
-    <div className="mx-auto w-full max-w-lg space-y-6 px-4 py-6 sm:px-6 sm:py-8">
+    <div className="mx-auto w-full max-w-none space-y-[clamp(1rem,3vw,1.5rem)] px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1.25rem,4vw,2rem)]">
       <div className="inline-flex items-center gap-1 text-sm text-muted-foreground">
         <ChevronLeft className="h-4 w-4" />
         <span>{tTheme('playerPreview.tourTitle')}</span>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-[clamp(1rem,3vw,1.5rem)]">
         <div className="space-y-1">
           <p className="text-sm font-medium">{tTheme('playerPreview.tourTitle')}</p>
           <p className="text-sm text-muted-foreground">{headerMeta}</p>
@@ -106,7 +106,7 @@ function PreviewSurface() {
           {tPlayer('viewAllStops')}
         </Button>
 
-        <div className="border bg-card p-4" style={panelStyle}>
+        <div className="border bg-card p-[clamp(0.75rem,2.5vw,1rem)]" style={panelStyle}>
           <StopsList showSearchBar={false} />
         </div>
 

@@ -49,11 +49,12 @@ function MainLayout() {
 
   // Hide top header on focus mode routes - they have their own header
   const isFocusMode = matches.some((match) => match.staticData?.focusMode)
+  const hideSidebar = matches.some((match) => match.staticData?.hideSidebar)
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <StudioProductAnalytics />
-      <AppSidebarContainer />
+      {!hideSidebar ? <AppSidebarContainer /> : null}
       <SidebarInset>
         {!isFocusMode && (
           <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
