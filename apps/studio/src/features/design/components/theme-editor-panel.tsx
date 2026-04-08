@@ -244,6 +244,7 @@ export function ThemeEditorPanel({
               colors={config.colors}
               onColorChange={handleColorChange}
               defaultOpen
+              showTitle={false}
             />
 
             <div className="mt-4 border-t pt-4">

@@ -3,7 +3,7 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
-import { ScrollArea, ScrollBar } from '@valguide/ui/components/scroll-area'
+import { ScrollArea } from '@valguide/ui/components/scroll-area'
 import { cn } from '@valguide/ui/lib/utils'
 import { Palette, RotateCcw, Save, SlidersHorizontal, SwatchBook } from 'lucide-react'
 import { useState } from 'react'
@@ -138,8 +138,11 @@ export function ThemeMobileDock({
         colors={config.colors}
         onColorChange={handleColorChange}
         defaultOpen
+        showTitle={false}
       />
-      <FontControls fonts={config.fonts} onChange={setFonts} />
+      <div className="border-t pt-4">
+        <FontControls fonts={config.fonts} onChange={setFonts} />
+      </div>
     </div>
   )
 
@@ -256,7 +259,6 @@ export function ThemeMobileDock({
               </PopoverContent>
             </Popover>
           </div>
-          <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
         <div className="mt-1 flex items-center gap-2">
