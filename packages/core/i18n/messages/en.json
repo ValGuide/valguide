@@ -231,7 +231,7 @@
       "editor": {
         "editing": "Editing: {name}",
         "unsavedChanges": "Unsaved changes",
-        "saveTheme": "Save Theme",
+        "saveTheme": "Save",
         "description": "Pick a direction first, then adjust only the brand details that matter."
       },
       "compactControls": {

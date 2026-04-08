@@ -140,7 +140,7 @@ export function ThemeMobileDock({
         defaultOpen
         showTitle={false}
       />
-      <div className="border-t pt-4">
+      <div className="rounded-xl border p-4">
         <FontControls fonts={config.fonts} onChange={setFonts} />
       </div>
     </div>

@@ -246,10 +246,10 @@ export function ThemeEditorPanel({
               defaultOpen
               showTitle={false}
             />
+          </section>
 
-            <div className="mt-4 border-t pt-4">
-              <FontControls fonts={config.fonts} onChange={setFonts} />
-            </div>
+          <section className="rounded-2xl border p-4">
+            <FontControls fonts={config.fonts} onChange={setFonts} />
           </section>
 
           <Collapsible defaultOpen={false}>

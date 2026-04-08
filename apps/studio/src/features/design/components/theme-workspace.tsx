@@ -92,7 +92,7 @@ export function ThemeWorkspace({
         {previewPanel({
           containerClassName: 'min-h-0 flex-1',
           previewClassName:
-            'flex-1 min-h-[clamp(18rem,48dvh,32rem)] pb-[clamp(14rem,28vw,15rem)] md:min-h-[clamp(24rem,58dvh,40rem)] md:pb-[clamp(14.5rem,24vw,16rem)]',
+            'flex-1 min-h-[clamp(18rem,48dvh,32rem)] pb-[clamp(16rem,34vw,18rem)] md:min-h-[clamp(24rem,58dvh,40rem)] md:pb-[clamp(16.5rem,28vw,18.5rem)]',
           playerClassName: 'max-w-[clamp(16rem,78vw,30rem)]',
         })}
         <ThemeMobileDock
