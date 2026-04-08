@@ -15,6 +15,7 @@ set -e
 #   pnpm dev:select studio admin           # studio + admin, remote bindings by default
 #   pnpm dev:select api studio             # api + studio, remote bindings by default
 #   pnpm dev:select --no-remote studio     # studio with local bindings
+#   pnpm dev:select --no-open studio       # studio without opening browser tabs
 #   pnpm dev:select --no-remote admin app  # admin + app with local bindings
 #   pnpm dev:select --all                  # everything (same as `pnpm dev`)
 #   pnpm dev:select --list              # show available apps
@@ -37,6 +38,7 @@ url_for() {
 
 ALL_APPS="admin api app docs links storybook studio www"
 USE_REMOTE=1
+OPEN_BROWSER=1
 
 # ── Expand comma-separated args (e.g. "studio,admin" → "studio admin") ────
 expanded=""
@@ -46,13 +48,15 @@ done
 # shellcheck disable=SC2086
 set -- $expanded
 
-# ── Extract remote-mode flags ─────────────────────────────────────────────
+# ── Extract flags ─────────────────────────────────────────────────────────
 remaining=""
 for arg in "$@"; do
   if [ "$arg" = "--remote" ]; then
     USE_REMOTE=1
   elif [ "$arg" = "--no-remote" ]; then
     USE_REMOTE=0
+  elif [ "$arg" = "--no-open" ] || [ "$arg" = "-n" ]; then
+    OPEN_BROWSER=0
   else
     remaining="$remaining $arg"
   fi
@@ -62,10 +66,10 @@ set -- $remaining
 
 # ── Handle flags ──────────────────────────────────────────────────────────
 if [ $# -eq 0 ]; then
-  echo "Usage: pnpm dev:select [--no-remote] <app> [<app> ...]"
+  echo "Usage: pnpm dev:select [--no-remote] [--no-open|-n] <app> [<app> ...]"
   echo ""
   echo "Available apps: $ALL_APPS"
-  echo "Flags: --all (start all), --no-remote (use local bindings), --list (show apps)"
+  echo "Flags: --all (start all), --no-remote (use local bindings), --no-open/-n (skip browser open), --list (show apps)"
   exit 1
 fi
 
@@ -119,7 +123,7 @@ if [ "$needs_caddy" -eq 1 ]; then
 fi
 
 # ── Open browser tabs once the apps are reachable ─────────────────────────
-if [ -n "$urls" ]; then
+if [ "$OPEN_BROWSER" -eq 1 ] && [ -n "$urls" ]; then
   (
     # shellcheck disable=SC2086
     sh scripts/open-when-ready.sh $urls

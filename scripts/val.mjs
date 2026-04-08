@@ -39,7 +39,7 @@ Usage:
 Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
-  dev <target...> [--no-remote] Start local development for one or more targets
+  dev <target...> [--no-remote] [--no-open|-n] Start local development for one or more targets
   kill                       Stop common local dev processes
   build <target> [--analyse] Build a target
   preview <target>           Preview a target locally
@@ -56,6 +56,8 @@ Commands:
 Examples:
   val dev studio
   val dev studio --no-remote
+  val dev studio --no-open
+  val dev studio -n
   val build app --analyse
   val preview storybook
   val deploy studio dev
@@ -67,7 +69,7 @@ Examples:
 `
 
 const COMMAND_HELP = {
-  dev: `Usage: val dev <target...> [--no-remote] [--worker]
+  dev: `Usage: val dev <target...> [--no-remote] [--no-open|-n] [--worker]
 
 Targets:
   ${DEV_TARGETS.join(', ')}
@@ -75,6 +77,7 @@ Targets:
 Notes:
   Remote bindings are the default for admin, app, studio, www, links, and docs.
   --no-remote switches those targets back to local bindings.
+  --no-open (or -n) skips opening local dev URLs in the browser.
   --worker is supported only for storybook and starts the worker-backed dev flow.
   Multiple targets are supported for dev, for example: val dev studio admin
 `,
@@ -175,7 +178,17 @@ function splitPassthrough(argv) {
 }
 
 function isFlag(value) {
-  return value.startsWith('--')
+  return value.startsWith('-')
+}
+
+function normalizeFlags(flags) {
+  return flags.map((flag) => {
+    if (flag === '-n') {
+      return '--no-open'
+    }
+
+    return flag
+  })
 }
 
 function fail(message) {
@@ -331,7 +344,8 @@ function createInvocation(command, positionals, flags, passthrough) {
 }
 
 function createDevInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, ['--remote', '--no-remote', '--worker'], 'dev')
+  const normalizedFlags = normalizeFlags(flags)
+  ensureAllowedFlags(normalizedFlags, ['--remote', '--no-remote', '--no-open', '--worker'], 'dev')
   if (positionals.length === 0) {
     failWithUsage(`missing target for "dev". Supported targets: ${quotedList(DEV_TARGETS)}.`, 'dev')
   }
@@ -345,11 +359,11 @@ function createDevInvocation(positionals, flags, passthrough) {
     failWithUsage('"workspace" cannot be combined with other dev targets.', 'dev')
   }
 
-  if (flags.includes('--remote') && flags.includes('--no-remote')) {
+  if (normalizedFlags.includes('--remote') && normalizedFlags.includes('--no-remote')) {
     failWithUsage('choose either "--remote" or "--no-remote", not both.', 'dev')
   }
 
-  if (flags.includes('--worker')) {
+  if (normalizedFlags.includes('--worker')) {
     if (targets.length !== 1 || targets[0] !== 'storybook') {
       failWithUsage('--worker is supported only for target "storybook".', 'dev')
     }
@@ -360,7 +374,7 @@ function createDevInvocation(positionals, flags, passthrough) {
     failWithUsage('passthrough args are not supported for "dev".', 'dev')
   }
 
-  if (flags.includes('--remote')) {
+  if (normalizedFlags.includes('--remote')) {
     for (const target of targets) {
       if (!REMOTE_DEV_TARGETS.includes(target)) {
         failWithUsage(
@@ -371,8 +385,8 @@ function createDevInvocation(positionals, flags, passthrough) {
     }
   }
 
-  const normalizedFlags = flags.filter((flag) => flag !== '--remote')
-  return commandInvocation('sh', ['scripts/dev.sh', ...normalizedFlags, ...targets])
+  const forwardedFlags = normalizedFlags.filter((flag) => flag !== '--remote')
+  return commandInvocation('sh', ['scripts/dev.sh', ...forwardedFlags, ...targets])
 }
 
 function createBuildInvocation(positionals, flags, passthrough) {
