@@ -13,8 +13,8 @@ function ThemeBrandPage() {
   const t = useTranslations('sidebar')
 
   return (
-    <main className="flex flex-1 flex-col gap-6 p-4 pt-0">
-      <div className="mx-auto flex w-full max-w-[96rem] flex-col gap-6 pb-6">
+    <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-hidden p-4 pt-0">
+      <div className="mx-auto flex min-h-0 w-full max-w-[96rem] flex-1 flex-col gap-6 pb-6">
         <ListPageHeader title={t('nav.theme')} description={t('pages.design.themeDescription')} />
         <ThemeCustomizerContainer />
       </div>

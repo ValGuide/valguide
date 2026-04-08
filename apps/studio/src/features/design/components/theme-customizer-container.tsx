@@ -170,7 +170,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
   }, [themeToDelete, deleteTheme, customizer, t])
 
   return (
-    <div className={cn('flex w-full flex-col gap-6', className)}>
+    <div className={cn('flex min-h-0 w-full flex-1 flex-col gap-6', className)}>
       <ThemeWorkspace
         customizer={customizer}
         themes={themes}

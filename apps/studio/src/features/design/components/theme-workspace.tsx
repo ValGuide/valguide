@@ -80,8 +80,8 @@ export function ThemeWorkspace({
   )
 
   return (
-    <div className={cn('flex min-w-0 w-full flex-col gap-6', className)}>
-      <div className="flex min-h-0 flex-col gap-4 min-[1180px]:hidden">
+    <div className={cn('flex min-h-0 min-w-0 w-full flex-1 flex-col gap-6', className)}>
+      <div className="relative flex min-h-0 flex-col gap-4 min-[1180px]:hidden">
         {previewPanel({
           containerClassName: 'min-h-0 flex-1',
           previewClassName:
@@ -105,8 +105,11 @@ export function ThemeWorkspace({
         {compactFooter ? <div>{compactFooter}</div> : null}
       </div>
 
-      <div className="hidden w-full min-w-0 gap-6 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(0,24rem)] min-[1180px]:items-start xl:gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,27rem)]">
-        {previewPanel({ playerClassName: 'max-w-md' })}
+      <div className="hidden min-h-0 w-full min-w-0 flex-1 overflow-hidden min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1.45fr)_minmax(0,24rem)] min-[1180px]:gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,27rem)] xl:gap-8">
+        {previewPanel({
+          containerClassName: 'min-h-0 overflow-y-auto pr-2',
+          playerClassName: 'max-w-md',
+        })}
         <ThemeEditorPanel
           customizer={customizer}
           themes={themes}
@@ -121,7 +124,7 @@ export function ThemeWorkspace({
           onSave={onSave}
           showDeleteThemes={showDeleteThemes}
           layout="split"
-          className="min-w-0"
+          className="min-h-0 h-full min-w-0"
         />
       </div>
     </div>

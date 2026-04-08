@@ -3,7 +3,7 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/components/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/ui/components/collapsible'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@valguide/ui/components/drawer'
 import { cn } from '@valguide/ui/lib/utils'
@@ -78,6 +78,7 @@ export function ThemeEditorPanel({
 
   const isWorkspaceLayout = layout === 'workspace'
   const isMobileLayout = layout === 'mobile'
+  const isSplitLayout = layout === 'split'
   const currentThemeLabel = config.name ?? formatThemePresetLabel(config.basePreset)
   const isDefaultTheme = config.id != null && config.id === defaultThemeId
   const currentThemeStatusLabel = config.id ? t('themeLibrary.savedBadge') : t('themeLibrary.starterBadge')
@@ -142,7 +143,6 @@ export function ThemeEditorPanel({
         <div className="flex w-full min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
             <CardTitle className="text-base font-semibold">{t('title')}</CardTitle>
-            <CardDescription>{t('editor.description')}</CardDescription>
           </div>
 
           <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -158,11 +158,17 @@ export function ThemeEditorPanel({
         </div>
       </CardHeader>
 
-      <CardContent className={cn('min-h-0 flex-1 p-0', isMobileLayout && 'overflow-hidden')}>
+      <CardContent className={cn('min-h-0 flex-1 p-0', (isMobileLayout || isSplitLayout) && 'overflow-hidden')}>
         <div
           className={cn(
             'space-y-4 pb-6',
-            isMobileLayout ? 'h-full overflow-y-auto px-4 pt-4' : isWorkspaceLayout ? 'px-6 pt-4 sm:px-8' : 'px-6 pt-4',
+            isMobileLayout
+              ? 'h-full overflow-y-auto px-4 pt-4'
+              : isWorkspaceLayout
+                ? 'px-6 pt-4 sm:px-8'
+                : isSplitLayout
+                  ? 'h-full overflow-y-auto px-6 pt-4'
+                  : 'px-6 pt-4',
           )}
         >
           <section className="rounded-2xl border bg-muted/15 p-4">

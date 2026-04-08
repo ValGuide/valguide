@@ -171,8 +171,8 @@ export function ThemeMobileDock({
     'flex min-w-[8.75rem] flex-col items-start gap-1 rounded-[1.05rem] border border-border/45 bg-background/28 px-3 py-2.5 text-left text-foreground/95 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm transition-colors hover:border-border/70 hover:bg-background/36'
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:px-4">
-      <div className="pointer-events-auto mx-auto w-full max-w-3xl rounded-[1.45rem] border border-border/50 bg-background/72 p-2.5 shadow-[0_-18px_48px_rgba(0,0,0,0.28)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/58 md:p-3">
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:absolute md:inset-x-0 md:bottom-0 md:px-0 md:pb-0">
+      <div className="pointer-events-auto mx-auto w-full max-w-3xl rounded-[1.45rem] border border-border/50 bg-background/72 p-2.5 shadow-[0_-18px_48px_rgba(0,0,0,0.28)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/58 md:max-w-none md:rounded-[1.6rem] md:p-3">
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex gap-2 pb-2">
             <Popover open={activePanel === 'theme'} onOpenChange={(open) => setActivePanel(open ? 'theme' : null)}>
