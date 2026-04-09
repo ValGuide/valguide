@@ -48,49 +48,20 @@ export function ThemeWorkspace({
     void ensureThemeFontsLoaded(customizer.config.fonts)
   }, [customizer.config.fonts])
 
-  const previewPanel = ({
-    containerClassName,
-    previewClassName,
-    previewInnerClassName,
-    playerClassName,
-    previewFooterClassName,
-    playerVariant,
-  }: {
-    containerClassName?: string
-    previewClassName?: string
-    previewInnerClassName?: string
-    playerClassName?: string
-    previewFooterClassName?: string
-    playerVariant?: 'default' | 'storyboard'
-  }) => (
-    <div className={cn('flex flex-col gap-4', containerClassName)}>
-      <div
-        className={cn(
-          'flex min-h-0 flex-col rounded-xl border bg-muted/30 px-[clamp(1rem,3vw,2rem)] py-[clamp(1rem,3vw,2rem)]',
-          previewClassName,
-        )}
-      >
-        <div className={cn('flex min-h-full items-start justify-center', previewInnerClassName)}>
-          <PlayerPreview
-            style={previewStyle}
-            variant={playerVariant}
-            className={cn('w-full shadow-xl', playerClassName)}
-          />
-        </div>
-        <div aria-hidden="true" className={previewFooterClassName} />
-      </div>
-    </div>
-  )
-
   return (
     <div className={cn('flex min-h-0 min-w-0 w-full flex-1 flex-col gap-6', className)}>
       <div className="relative flex min-h-0 flex-col gap-4 overflow-y-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:hidden">
-        {previewPanel({
-          containerClassName: 'min-h-0 flex-1',
-          previewClassName: 'flex-1 min-h-[clamp(18rem,48dvh,32rem)] md:min-h-[clamp(24rem,58dvh,40rem)]',
-          playerClassName: 'max-w-[clamp(16rem,78vw,30rem)]',
-          previewFooterClassName: 'h-[clamp(11rem,28vw,14rem)] md:h-[clamp(12rem,24vw,15rem)]',
-        })}
+        <div className="flex flex-col">
+          <div className="rounded-xl border bg-muted/30 px-[clamp(1rem,3vw,2rem)] py-[clamp(1rem,3vw,2rem)]">
+            <div className="flex w-full justify-center">
+              <PlayerPreview
+                style={previewStyle}
+                className="mx-auto w-full max-w-[clamp(16rem,78vw,30rem)] shadow-xl"
+              />
+            </div>
+          </div>
+          <div aria-hidden="true" className="h-[clamp(13rem,34vw,16rem)] md:h-[clamp(14rem,28vw,17rem)]" />
+        </div>
         <ThemeMobileDock
           customizer={customizer}
           themes={themes}
@@ -109,16 +80,19 @@ export function ThemeWorkspace({
       </div>
 
       <div className="hidden min-h-0 w-full min-w-0 flex-1 overflow-hidden lg:grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,24rem)] lg:gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,27rem)] xl:gap-8">
-        {previewPanel({
-          containerClassName:
-            'min-h-0 overflow-y-auto pr-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
-          previewClassName: 'h-full overflow-hidden px-0 py-0',
-          previewInnerClassName:
-            'min-h-0 flex-1 justify-center overflow-x-auto overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
-          playerClassName: 'mx-auto min-w-fit max-w-none shadow-none',
-          previewFooterClassName: 'hidden',
-          playerVariant: 'storyboard',
-        })}
+        <div className="flex h-full min-h-0 flex-col overflow-hidden pr-2">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border bg-muted/30">
+            <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex min-h-full justify-center overflow-x-auto">
+                <PlayerPreview
+                  style={previewStyle}
+                  variant="storyboard"
+                  className="mx-auto min-w-fit max-w-none shadow-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <ThemeEditorPanel
           customizer={customizer}
           themes={themes}

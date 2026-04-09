@@ -66,3 +66,4 @@ error.log
 
 
 tmp/*
+.playwright-mcp
