@@ -19,7 +19,6 @@ export interface ThemeCustomizerContainerProps {
 
 export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustomizerContainerProps) {
   const t = useTranslations('studio.themeCustomizer')
-  const customizer = useThemeCustomizer('light')
   const {
     themes,
     defaultThemeId,
@@ -31,6 +30,8 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
     setDefaultTheme,
     clearDefaultTheme,
   } = useOrgThemes()
+  const defaultTheme = defaultThemeId ? (themes.find((theme) => theme.id === defaultThemeId) ?? null) : null
+  const customizer = useThemeCustomizer(defaultTheme ?? 'light')
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [themeToDelete, setThemeToDelete] = useState<Theme | null>(null)

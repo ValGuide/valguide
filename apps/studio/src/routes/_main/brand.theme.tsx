@@ -2,18 +2,22 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
-import { DesignPageSkeleton } from '@/features/design/components/design-page-skeleton'
+import { ThemeBrandPageSkeleton } from '@/features/design/components/theme-brand-page-skeleton'
 import { ThemeCustomizerContainer } from '@/features/design/components/theme-customizer-container'
+import { themesQueryOptions } from '@/features/design/query-options'
 import { EditorHeader } from '@/features/editor/components/editor-header'
 import { useFocusBackNavigation } from '@/hooks/use-focus-back-navigation'
 
 export const Route = createFileRoute('/_main/brand/theme')({
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(themesQueryOptions())
+  },
   staticData: {
     focusMode: true,
     hideSidebar: true,
   },
   component: ThemeBrandPage,
-  pendingComponent: DesignPageSkeleton,
+  pendingComponent: ThemeBrandPageSkeleton,
 })
 
 function ThemeBrandPage() {
@@ -21,7 +25,7 @@ function ThemeBrandPage() {
   const handleBack = useFocusBackNavigation({ fallbackTo: '/tours' })
 
   return (
-    <main className="flex min-h-0 flex-1 flex-col bg-background">
+    <main className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 flex min-h-0 flex-1 flex-col bg-background">
       <div className="sticky top-0 z-10 border-b bg-background sm:hidden">
         <div className="relative flex h-14 items-center px-4">
           <Button variant="ghost" size="icon" onClick={handleBack} aria-label={t('appName')} className="-ml-2 h-9 w-9">

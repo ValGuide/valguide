@@ -4,16 +4,36 @@ import { useCallback, useRef, useState } from 'react'
 import { defaultFonts, defaultRadius, themeColorPresets } from './theme-presets'
 import type { EditorThemeConfig, ThemeColors, ThemeFonts, ThemePreset } from './types'
 
-export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
-  const [config, setConfig] = useState<EditorThemeConfig>({
-    basePreset: initialPreset,
-    colors: themeColorPresets[initialPreset],
+function createPresetConfig(preset: ThemePreset): EditorThemeConfig {
+  return {
+    basePreset: preset,
+    colors: themeColorPresets[preset],
     radius: defaultRadius,
     fonts: defaultFonts,
     id: undefined,
     name: undefined,
     isDirty: false,
-  })
+  }
+}
+
+function createThemeConfig(theme: Theme): EditorThemeConfig {
+  return {
+    basePreset: theme.basePreset,
+    colors: theme.colors,
+    radius: Number(theme.radius),
+    fonts: { primary: normalizeThemeFonts(theme.fonts).primary },
+    id: theme.id,
+    name: theme.name,
+    isDirty: false,
+  }
+}
+
+export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = 'light') {
+  const [config, setConfig] = useState<EditorThemeConfig>(() =>
+    typeof initialThemeOrPreset === 'string'
+      ? createPresetConfig(initialThemeOrPreset)
+      : createThemeConfig(initialThemeOrPreset),
+  )
 
   const originalConfigRef = useRef<EditorThemeConfig | null>(null)
 
@@ -54,15 +74,7 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
   }, [])
 
   const resetToPreset = useCallback((preset: ThemePreset) => {
-    setConfig({
-      basePreset: preset,
-      colors: themeColorPresets[preset],
-      radius: defaultRadius,
-      fonts: defaultFonts,
-      id: undefined,
-      name: undefined,
-      isDirty: false,
-    })
+    setConfig(createPresetConfig(preset))
     originalConfigRef.current = null
   }, [])
 
@@ -75,15 +87,7 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
       radius,
       fonts,
     }: Pick<EditorThemeConfig, 'id' | 'name' | 'basePreset' | 'colors' | 'radius' | 'fonts'>) => {
-      const newConfig: EditorThemeConfig = {
-        basePreset,
-        colors,
-        radius,
-        fonts,
-        id,
-        name,
-        isDirty: false,
-      }
+      const newConfig: EditorThemeConfig = { basePreset, colors, radius, fonts, id, name, isDirty: false }
       setConfig(newConfig)
       originalConfigRef.current = newConfig
     },
@@ -92,29 +96,14 @@ export function useThemeCustomizer(initialPreset: ThemePreset = 'light') {
 
   const loadTheme = useCallback(
     (theme: Theme) => {
-      const normalizedFonts = normalizeThemeFonts(theme.fonts)
-      loadThemeConfig({
-        basePreset: theme.basePreset,
-        colors: theme.colors,
-        radius: Number(theme.radius),
-        fonts: { primary: normalizedFonts.primary },
-        id: theme.id,
-        name: theme.name,
-      })
+      const themeConfig = createThemeConfig(theme)
+      loadThemeConfig(themeConfig)
     },
     [loadThemeConfig],
   )
 
   const startNewTheme = useCallback((preset: ThemePreset) => {
-    setConfig({
-      basePreset: preset,
-      colors: themeColorPresets[preset],
-      radius: defaultRadius,
-      fonts: defaultFonts,
-      id: undefined,
-      name: undefined,
-      isDirty: false,
-    })
+    setConfig(createPresetConfig(preset))
     originalConfigRef.current = null
   }, [])
 
