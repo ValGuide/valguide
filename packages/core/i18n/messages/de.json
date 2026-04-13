@@ -232,7 +232,7 @@
       "editor": {
         "editing": "Bearbeiten: {name}",
         "unsavedChanges": "Ungespeicherte Änderungen",
-        "saveTheme": "Design speichern",
+        "saveTheme": "Speichern",
         "description": "Wählen Sie zuerst eine Richtung und passen Sie danach nur die Branding-Details an, die wirklich relevant sind."
       },
       "compactControls": {
