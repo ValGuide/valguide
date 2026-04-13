@@ -5,7 +5,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { cn } from '@valguide/ui/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
-import { useOrgThemes } from '../hooks/use-org-themes'
+import { useOrgThemesSuspense } from '../hooks/use-org-themes'
 import { getThemeSaveErrorMessage } from '../theme-save-errors'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { DeleteThemeDialog } from './delete-theme-dialog'
@@ -29,7 +29,7 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
     deleteTheme,
     setDefaultTheme,
     clearDefaultTheme,
-  } = useOrgThemes()
+  } = useOrgThemesSuspense()
   const defaultTheme = defaultThemeId ? (themes.find((theme) => theme.id === defaultThemeId) ?? null) : null
   const customizer = useThemeCustomizer(defaultTheme ?? 'light')
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)

@@ -1,8 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import type { OrgRole } from '@valguide/core/features/orgs/schema'
 import { createThemeFn } from '@valguide/core/features/themes/create-theme.fn'
 import { deleteThemeFn } from '@valguide/core/features/themes/delete-theme.fn'
-import type { Theme } from '@valguide/core/features/themes/get-brand-theme-settings.fn'
+import type { BrandThemeSettings, Theme } from '@valguide/core/features/themes/get-brand-theme-settings.fn'
 import { setOrgDefaultThemeFn } from '@valguide/core/features/themes/set-org-default-theme.fn'
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
 import { updateThemeFn } from '@valguide/core/features/themes/update-theme.fn'
@@ -44,14 +44,33 @@ interface UseOrgThemesReturn {
   clearDefaultTheme: () => Promise<void>
 }
 
-export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesReturn {
-  const { enabled = true } = options
-  const queryClient = useQueryClient()
+type ThemeActions = Pick<
+  UseOrgThemesReturn,
+  'createTheme' | 'updateTheme' | 'deleteTheme' | 'setDefaultTheme' | 'clearDefaultTheme'
+>
 
-  const { data, error, isLoading, refetch } = useQuery({
-    ...themesQueryOptions(),
-    enabled: enabled,
-  })
+function buildOrgThemesReturn(
+  data: BrandThemeSettings | undefined,
+  error: Error | null,
+  isLoading: boolean,
+  refetchThemes: () => Promise<Theme[]>,
+  actions: ThemeActions,
+): UseOrgThemesReturn {
+  return {
+    organizationId: data?.organizationId ?? null,
+    themes: data?.themes ?? [],
+    defaultThemeId: data?.defaultThemeId ?? null,
+    defaultThemeName: data?.defaultThemeName ?? null,
+    currentUserRole: data?.currentUserRole ?? null,
+    isLoading,
+    error,
+    refetch: refetchThemes,
+    ...actions,
+  }
+}
+
+function useThemeActions(data: BrandThemeSettings | undefined): ThemeActions {
+  const queryClient = useQueryClient()
 
   const invalidateThemes = async () => {
     await queryClient.invalidateQueries({ queryKey: themesQueryKey() })
@@ -121,21 +140,47 @@ export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesRet
   }
 
   return {
-    organizationId: data?.organizationId ?? null,
-    themes: data?.themes ?? [],
-    defaultThemeId: data?.defaultThemeId ?? null,
-    defaultThemeName: data?.defaultThemeName ?? null,
-    currentUserRole: data?.currentUserRole ?? null,
-    isLoading,
-    error: error ?? null,
-    refetch: async () => {
-      const result = await refetch()
-      return result.data?.themes ?? []
-    },
     createTheme,
     updateTheme,
     deleteTheme,
     setDefaultTheme,
     clearDefaultTheme,
   }
+}
+
+export function useOrgThemes(options: UseOrgThemesOptions = {}): UseOrgThemesReturn {
+  const { enabled = true } = options
+
+  const { data, error, isLoading, refetch } = useQuery({
+    ...themesQueryOptions(),
+    enabled,
+  })
+  const actions = useThemeActions(data)
+
+  return buildOrgThemesReturn(
+    data,
+    error ?? null,
+    isLoading,
+    async () => {
+      const result = await refetch()
+      return result.data?.themes ?? []
+    },
+    actions,
+  )
+}
+
+export function useOrgThemesSuspense(): UseOrgThemesReturn {
+  const { data, refetch } = useSuspenseQuery(themesQueryOptions())
+  const actions = useThemeActions(data)
+
+  return buildOrgThemesReturn(
+    data,
+    null,
+    false,
+    async () => {
+      const result = await refetch()
+      return result.data.themes
+    },
+    actions,
+  )
 }

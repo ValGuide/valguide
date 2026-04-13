@@ -9,9 +9,7 @@ import { EditorHeader } from '@/features/editor/components/editor-header'
 import { useFocusBackNavigation } from '@/hooks/use-focus-back-navigation'
 
 export const Route = createFileRoute('/_main/brand/theme')({
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(themesQueryOptions())
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(themesQueryOptions()),
   staticData: {
     focusMode: true,
     hideSidebar: true,
