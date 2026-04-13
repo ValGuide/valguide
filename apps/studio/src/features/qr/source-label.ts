@@ -10,7 +10,6 @@ export function getQrBrandingSourceLabel(source: QrBrandingSource, t: (key: QrSo
       return t('sourceTour')
     case 'stop':
       return t('sourceStop')
-    case 'system':
     default:
       return t('sourceDefault')
   }

@@ -254,6 +254,50 @@
         "defaultError": "Standard-Design konnte nicht aktualisiert werden"
       }
     },
+    "aiTheme": {
+      "badge": "MVP",
+      "generateAction": "Theme-Entwurf erzeugen",
+      "generateLoading": "Entwurf wird erzeugt...",
+      "generationSuccess": "Theme-Entwurf erstellt",
+      "saveAction": "Als Theme speichern",
+      "saveSuccess": "Theme erfolgreich gespeichert",
+      "generatedThemeFallback": "Generiertes Theme",
+      "workspaceIntro": "Der KI-Entwurf öffnet sich im gleichen Theme-Workspace wie das manuelle Branding.",
+      "sourceCard": {
+        "title": "Inspirationsquellen",
+        "description": "Fügen Sie eine Museums-Website ein, ergänzen Sie eine kurze Notiz und laden Sie Referenzbilder hoch."
+      },
+      "fields": {
+        "urlLabel": "Website-URL",
+        "urlPlaceholder": "https://museum.example",
+        "notesLabel": "Notizen",
+        "notesPlaceholder": "Beschreiben Sie Atmosphäre, Institutionstyp oder was sich besonders anfühlen soll.",
+        "imagesLabel": "Referenzbilder",
+        "imagesHint": "Laden Sie Logos, Poster, Screenshots oder Raumfotos hoch. Bis zu 4 Bilder, je 10 MB.",
+        "imagesDropzone": "Bilder hier ablegen oder klicken zum Durchsuchen",
+        "imagesLimit": "PNG, JPG, WebP oder GIF"
+      },
+      "recentRuns": {
+        "title": "Letzte Generierungen",
+        "description": "Gespeicherte Läufe helfen beim Prüfen der Ergebnisse und bei späteren Ausbauschritten.",
+        "empty": "Noch keine KI-Theme-Generierungen.",
+        "pendingLabel": "Generierungslauf",
+        "meta": "{sourceImageCount} Bilder • Preset {basePreset} • Schrift {fontLabel}",
+        "status": {
+          "pending": "Ausstehend",
+          "completed": "Abgeschlossen",
+          "failed": "Fehlgeschlagen"
+        }
+      },
+      "resultCard": {
+        "placeholder": "Erzeugen Sie einen Entwurf, um Zusammenfassung, Begründung und eine vorausgefüllte Vorschau zu erhalten.",
+        "emptyState": "Die wichtigsten abgeleiteten Hinweise erscheinen hier, sobald der Entwurf bereit ist."
+      },
+      "saveDialog": {
+        "nameExists": "Ein Theme mit diesem Namen existiert bereits",
+        "saveFailed": "Theme konnte nicht gespeichert werden"
+      }
+    },
     "qr": {
       "downloadSvg": "SVG herunterladen",
       "downloadPng": "PNG herunterladen",
@@ -1094,6 +1138,7 @@
   "sidebar": {
     "nav": {
       "brandKit": "Brand Kit",
+      "aiTheme": "AI Theme",
       "theme": "Design",
       "qrCode": "QR-Code",
       "workspace": "Arbeitsbereich",
@@ -1123,6 +1168,7 @@
     "pages": {
       "design": {
         "description": "Passen Sie das Aussehen Ihrer Touren und QR-Beschilderung an.",
+        "aiDescription": "Erstellen Sie einen ersten Theme-Entwurf aus Website, Notizen oder hochgeladenen Bildern.",
         "themeDescription": "Legen Sie das Besucher-Branding für Ihre Touren fest.",
         "qrDescription": "Standard-Branding für QR-Codes in Ihrem Arbeitsbereich."
       },

@@ -1,5 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
-import { getBrandThemeSettingsFn, type BrandThemeSettings } from '@valguide/core/features/themes/get-brand-theme-settings.fn'
+import {
+  type BrandThemeSettings,
+  getBrandThemeSettingsFn,
+} from '@valguide/core/features/themes/get-brand-theme-settings.fn'
 
 export const themesQueryKey = () => ['themes'] as const
 

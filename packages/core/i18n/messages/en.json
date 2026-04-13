@@ -254,6 +254,50 @@
         "defaultError": "Failed to update the default theme"
       }
     },
+    "aiTheme": {
+      "badge": "MVP",
+      "generateAction": "Generate Theme Draft",
+      "generateLoading": "Generating draft...",
+      "generationSuccess": "Theme draft generated",
+      "saveAction": "Save as Theme",
+      "saveSuccess": "Theme saved successfully",
+      "generatedThemeFallback": "Generated Theme",
+      "workspaceIntro": "The AI draft opens inside the same theme workspace you already know.",
+      "sourceCard": {
+        "title": "Inspiration Sources",
+        "description": "Paste a museum URL, add a short note, and upload a few reference images. Use whatever you have."
+      },
+      "fields": {
+        "urlLabel": "Website URL",
+        "urlPlaceholder": "https://museum.example",
+        "notesLabel": "Notes",
+        "notesPlaceholder": "Describe the atmosphere, institution type, or what should feel distinctive.",
+        "imagesLabel": "Reference images",
+        "imagesHint": "Upload logos, posters, screenshots, or space photography. Up to 4 images, 10 MB each.",
+        "imagesDropzone": "Drop images here or click to browse",
+        "imagesLimit": "PNG, JPG, WebP, or GIF"
+      },
+      "recentRuns": {
+        "title": "Recent generations",
+        "description": "Stored runs make it easier to inspect outputs now and extend this flow later.",
+        "empty": "No AI theme generations yet.",
+        "pendingLabel": "Generation run",
+        "meta": "{sourceImageCount} images • preset {basePreset} • font {fontLabel}",
+        "status": {
+          "pending": "Pending",
+          "completed": "Completed",
+          "failed": "Failed"
+        }
+      },
+      "resultCard": {
+        "placeholder": "Generate a draft to get a summary, rationale, and a prefilled theme preview.",
+        "emptyState": "Your generated highlights will appear here once the draft is ready."
+      },
+      "saveDialog": {
+        "nameExists": "A theme with this name already exists",
+        "saveFailed": "Failed to save theme"
+      }
+    },
     "qr": {
       "downloadSvg": "Download SVG",
       "downloadPng": "Download PNG",
@@ -1094,6 +1138,7 @@
   "sidebar": {
     "nav": {
       "brandKit": "Brand Kit",
+      "aiTheme": "AI Theme",
       "theme": "Theme",
       "qrCode": "QR Code",
       "workspace": "Workspace",
@@ -1123,6 +1168,7 @@
     "pages": {
       "design": {
         "description": "Customize the look and feel of your tours and QR signage.",
+        "aiDescription": "Generate a first brand theme draft from a website, notes, or uploaded images.",
         "themeDescription": "Set the visitor branding for your tours.",
         "qrDescription": "Default branding for QR codes in your workspace."
       },

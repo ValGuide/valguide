@@ -28,6 +28,7 @@ import {
   PanelLeftOpen,
   QrCode,
   Settings2,
+  Sparkles,
 } from 'lucide-react'
 import * as React from 'react'
 import { NavUser } from '@/components/nav-user'
@@ -231,6 +232,14 @@ export function AppSidebar({
           <SidebarGroup>
             <SidebarGroupLabel className="px-2.5 uppercase">{t('brandKit')}</SidebarGroupLabel>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={t('aiTheme')} isActive={pathnameWithoutLocale === '/brand/ai'}>
+                  <Link to="/brand/ai" preload="intent" onClick={() => setOpenMobile(false)}>
+                    <Sparkles />
+                    <span>{t('aiTheme')}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip={t('theme')} isActive={pathnameWithoutLocale === '/brand/theme'}>
                   <Link to="/brand/theme" preload="intent" onClick={() => setOpenMobile(false)}>

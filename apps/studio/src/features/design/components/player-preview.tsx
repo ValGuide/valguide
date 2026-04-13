@@ -86,7 +86,10 @@ function PreviewStartTourCard() {
   const panelStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
 
   return (
-    <div className="flex h-full min-w-0 flex-col gap-4 overflow-hidden border bg-card/95 p-5 shadow-sm" style={panelStyle}>
+    <div
+      className="flex h-full min-w-0 flex-col gap-4 overflow-hidden border bg-card/95 p-5 shadow-sm"
+      style={panelStyle}
+    >
       <CoverImage src={null} alt={tTheme('playerPreview.tourTitle')} className="w-full" />
       <div className="space-y-2">
         <div className="space-y-1">
@@ -191,11 +194,7 @@ export function PlayerPreview({ style, className, variant = 'default' }: PlayerP
   const shellStyle = { ...style, borderRadius: 'calc(var(--radius) + 0.375rem)' } satisfies CSSProperties
 
   return (
-    <div
-      className={cn('overflow-hidden text-foreground', className)}
-      style={shellStyle}
-      data-tour-theme
-    >
+    <div className={cn('overflow-hidden text-foreground', className)} style={shellStyle} data-tour-theme>
       <PlayerProvider stops={previewStops} initialStopNanoId={previewStops[0].nanoId}>
         <PreviewSeedState />
         {variant === 'storyboard' ? <PreviewDesktopStoryboard /> : <PreviewSurface />}
