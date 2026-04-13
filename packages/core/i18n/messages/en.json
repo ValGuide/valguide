@@ -1127,7 +1127,57 @@
         "qrDescription": "Default branding for QR codes in your workspace."
       },
       "analytics": {
-        "description": "View and analyze your tour performance metrics."
+        "title": "Guide Analytics",
+        "description": "Track how visitors move through your published tours with privacy-friendly event data stored inside your workspace.",
+        "kpis": {
+          "uniqueVisitors": {
+            "title": "Unique visitors",
+            "description": "Distinct anonymous visitors across all tracked tour activity."
+          },
+          "tourOpens": {
+            "title": "Tour opens",
+            "description": "How often visitors opened a tour page or entered a tour directly."
+          },
+          "stopOpens": {
+            "title": "Stop opens",
+            "description": "How often visitors opened a stop inside the player."
+          },
+          "audioPlays": {
+            "title": "Audio plays",
+            "description": "How often visitors started audio playback on a stop."
+          }
+        },
+        "recentActivity": {
+          "title": "Recent activity",
+          "description": "Daily engagement for the last 14 days."
+        },
+        "eventMix": {
+          "title": "Event mix",
+          "description": "Compare the main visitor actions being tracked."
+        },
+        "eventLabels": {
+          "tourOpens": "Tour opens",
+          "stopOpens": "Stop opens",
+          "audioPlays": "Audio plays",
+          "events": "Events"
+        },
+        "tourBreakdown": {
+          "title": "Tour breakdown",
+          "description": "See how each tour performs based on visitors, opens, and plays."
+        },
+        "table": {
+          "tour": "Tour",
+          "visitors": "Visitors",
+          "tourOpens": "Tour opens",
+          "stopOpens": "Stop opens",
+          "audioPlays": "Audio plays",
+          "lastActivity": "Last activity",
+          "noActivity": "No activity yet"
+        },
+        "empty": {
+          "title": "No analytics yet",
+          "description": "As soon as visitors open a tour or play audio, the first metrics will appear here."
+        }
       },
       "support": {
         "description": "Get help and support for your questions."

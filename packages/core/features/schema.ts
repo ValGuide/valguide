@@ -1,3 +1,4 @@
+export * from './analytics/schema'
 export * from './assets/schema'
 export * from './auth/schema'
 export * from './feedback/schema'

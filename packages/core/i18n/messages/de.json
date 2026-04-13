@@ -1127,7 +1127,57 @@
         "qrDescription": "Standard-Branding für QR-Codes in Ihrem Arbeitsbereich."
       },
       "analytics": {
-        "description": "Zeigen Sie die Leistungsmetriken Ihrer Touren an und analysieren Sie diese."
+        "title": "Guide Analytics",
+        "description": "Verfolge, wie Besuchende sich durch deine veröffentlichten Touren bewegen, mit datenschutzfreundlichen Ereignisdaten aus deinem Workspace.",
+        "kpis": {
+          "uniqueVisitors": {
+            "title": "Eindeutige Besuchende",
+            "description": "Anonyme, eindeutige Besuchende über alle erfassten Tour-Aktivitäten hinweg."
+          },
+          "tourOpens": {
+            "title": "Tour-Aufrufe",
+            "description": "Wie oft Besuchende eine Tour-Seite geöffnet oder eine Tour direkt betreten haben."
+          },
+          "stopOpens": {
+            "title": "Stop-Aufrufe",
+            "description": "Wie oft Besuchende einen Stop im Player geöffnet haben."
+          },
+          "audioPlays": {
+            "title": "Audio-Starts",
+            "description": "Wie oft Besuchende die Audio-Wiedergabe eines Stops gestartet haben."
+          }
+        },
+        "recentActivity": {
+          "title": "Aktuelle Aktivität",
+          "description": "Tägliche Nutzung der letzten 14 Tage."
+        },
+        "eventMix": {
+          "title": "Ereignis-Verteilung",
+          "description": "Vergleiche die wichtigsten erfassten Besucheraktionen."
+        },
+        "eventLabels": {
+          "tourOpens": "Tour-Aufrufe",
+          "stopOpens": "Stop-Aufrufe",
+          "audioPlays": "Audio-Starts",
+          "events": "Ereignisse"
+        },
+        "tourBreakdown": {
+          "title": "Tour-Aufschlüsselung",
+          "description": "Sieh, wie jede Tour bei Besuchenden, Aufrufen und Audio-Starts performt."
+        },
+        "table": {
+          "tour": "Tour",
+          "visitors": "Besuchende",
+          "tourOpens": "Tour-Aufrufe",
+          "stopOpens": "Stop-Aufrufe",
+          "audioPlays": "Audio-Starts",
+          "lastActivity": "Letzte Aktivität",
+          "noActivity": "Noch keine Aktivität"
+        },
+        "empty": {
+          "title": "Noch keine Analytics",
+          "description": "Sobald Besuchende eine Tour öffnen oder Audio abspielen, erscheinen die ersten Kennzahlen hier."
+        }
       },
       "support": {
         "description": "Erhalten Sie Hilfe und Unterstützung für Ihre Fragen."

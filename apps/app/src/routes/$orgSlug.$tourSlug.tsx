@@ -26,6 +26,7 @@ import { waitUntil } from '@valguide/core/utils/wait-until'
 import { useEffect, useRef } from 'react'
 import { z } from 'zod'
 import { PreviewBanner } from '@/components/preview-banner'
+import { TourAnalyticsTracker } from '@/features/analytics/guide-analytics'
 import { resolveTourLocaleState } from '@/features/i18n/tour-locale-state'
 import { notifyServiceWorker } from '@/sw'
 
@@ -269,6 +270,7 @@ function TourLayout() {
 
   return (
     <>
+      <TourAnalyticsTracker tourNanoId={tour.nanoId} locale={locale} disabled={isPreviewMode} />
       {isPreviewMode && <PreviewBanner locale={locale} />}
       <Outlet />
     </>

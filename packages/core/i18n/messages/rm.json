@@ -1127,7 +1127,57 @@
         "qrDescription": "Branding standard per codes QR en quest workspace."
       },
       "analytics": {
-        "description": "Vesair ed analisar las metrickas da prestaziun da vossas turas."
+        "title": "Guide Analytics",
+        "description": "Observa co persunas visitantas sa movan tras tias tours publitgadas cun novitads da datas respectusas da la protecziun da datas.",
+        "kpis": {
+          "uniqueVisitors": {
+            "title": "Visitaders unics",
+            "description": "Visitaders anonims e distincts sur tuttas activitads da tour registradas."
+          },
+          "tourOpens": {
+            "title": "Averturas da tours",
+            "description": "Quant savens persunas visitantas han avert ina pagina da tour u èn entrads directamain en ina tour."
+          },
+          "stopOpens": {
+            "title": "Averturas da stops",
+            "description": "Quant savens persunas visitantas han avert in stop en il player."
+          },
+          "audioPlays": {
+            "title": "Starts d'audio",
+            "description": "Quant savens persunas visitantas han cumenzà la reproducziun audio d'in stop."
+          }
+        },
+        "recentActivity": {
+          "title": "Activitad recenta",
+          "description": "Utilisaziun diaria dals ultims 14 dis."
+        },
+        "eventMix": {
+          "title": "Mischaditsch d'eveniments",
+          "description": "Cumpareglia las principalas novitads d'acziuns da persunas visitantas."
+        },
+        "eventLabels": {
+          "tourOpens": "Averturas da tours",
+          "stopOpens": "Averturas da stops",
+          "audioPlays": "Starts d'audio",
+          "events": "Eveniments"
+        },
+        "tourBreakdown": {
+          "title": "Detaglaziuns da tours",
+          "description": "Guarda co mintga tour funcziunescha tenor visitaders, averturas e starts audio."
+        },
+        "table": {
+          "tour": "Tour",
+          "visitors": "Visitaders",
+          "tourOpens": "Averturas da tours",
+          "stopOpens": "Averturas da stops",
+          "audioPlays": "Starts d'audio",
+          "lastActivity": "Davos'activitad",
+          "noActivity": "Anc nagina activitad"
+        },
+        "empty": {
+          "title": "Anc naginas analytics",
+          "description": "Uschespert che persunas visitantas avran ina tour u fan ir audio, cumparan las emprimas cifras qua."
+        }
       },
       "support": {
         "description": "Survegnir agid e support per vossas dumondas."

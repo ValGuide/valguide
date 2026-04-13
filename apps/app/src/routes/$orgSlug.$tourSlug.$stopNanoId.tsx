@@ -17,6 +17,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@valguide/core/ui/
 import { ChevronLeft, ListMusic } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { TourLanguageControl } from '@/components/tours/tour-language-control'
+import { StopAnalyticsTracker } from '@/features/analytics/guide-analytics'
 
 export const Route = createFileRoute('/$orgSlug/$tourSlug/$stopNanoId')({
   beforeLoad: ({ params, context }) => {
@@ -46,7 +47,7 @@ function StopPage() {
 }
 
 function StopPageContent() {
-  const { tour, orgSlug, tourSlug, locale, tourLocaleState } = Route.useRouteContext()
+  const { tour, orgSlug, tourSlug, locale, tourLocaleState, isPreviewMode } = Route.useRouteContext()
   const { stopNanoId } = Route.useParams()
   const navigate = useNavigate()
   const themedPortalContainer = useTourThemePortalContainer()
@@ -66,6 +67,7 @@ function StopPageContent() {
 
   return (
     <PlayerProvider stops={playerStops} initialStopNanoId={stopNanoId}>
+      <StopAnalyticsTracker tourNanoId={tour.nanoId} stopNanoId={stopNanoId} locale={locale} disabled={isPreviewMode} />
       <SyncStopToUrl stopNanoId={stopNanoId} orgSlug={orgSlug} tourSlug={tourSlug} />
       <div className="mx-auto max-w-lg space-y-6 px-4 py-6 sm:max-w-xl sm:px-6 sm:py-10 md:max-w-2xl lg:px-8">
         <div className="flex items-center justify-between gap-3">
