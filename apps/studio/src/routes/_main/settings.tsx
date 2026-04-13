@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { PageTitle } from '@valguide/ui/components/page-title'
+import { SettingsPageSkeleton } from '@/features/team/components/settings-page-skeleton'
 import { WorkspaceGeneralSectionConnected } from '@/features/team/components/workspace-general-section-connected'
 import { WorkspaceMembersSectionConnected } from '@/features/team/components/workspace-members-section-connected'
 import { useTeam } from '@/features/team/hooks/use-team'
@@ -8,9 +9,8 @@ import { teamQueryOptions } from '@/features/team/query-options'
 
 export const Route = createFileRoute('/_main/settings')({
   component: SettingsPage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(teamQueryOptions())
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(teamQueryOptions()),
+  pendingComponent: SettingsPageSkeleton,
 })
 
 function SettingsPage() {

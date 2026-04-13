@@ -7,20 +7,20 @@ type StudioPageTransitionProps = PropsWithChildren<{
 }>
 
 export function StudioPageTransition({ className, children }: StudioPageTransitionProps) {
-  const resolvedPathname = useRouterState({
-    select: (state) => state.resolvedLocation?.pathname ?? state.location.pathname,
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
   })
   const [animationCycle, setAnimationCycle] = useState(0)
-  const previousResolvedPathnameRef = useRef(resolvedPathname)
+  const previousPathnameRef = useRef(pathname)
 
   useEffect(() => {
-    if (previousResolvedPathnameRef.current === resolvedPathname) {
+    if (previousPathnameRef.current === pathname) {
       return
     }
 
-    previousResolvedPathnameRef.current = resolvedPathname
+    previousPathnameRef.current = pathname
     setAnimationCycle((currentCycle) => currentCycle + 1)
-  }, [resolvedPathname])
+  }, [pathname])
 
   const transitionStyle = {
     animationName: animationCycle % 2 === 0 ? 'studio-page-enter-a' : 'studio-page-enter-b',
