@@ -14,9 +14,10 @@ import { ThemeWorkspace } from './theme-workspace'
 
 export interface ThemeCustomizerContainerProps {
   className?: string
+  mobileIntro?: React.ReactNode
 }
 
-export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainerProps) {
+export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustomizerContainerProps) {
   const t = useTranslations('studio.themeCustomizer')
   const customizer = useThemeCustomizer('light')
   const {
@@ -183,6 +184,7 @@ export function ThemeCustomizerContainer({ className }: ThemeCustomizerContainer
         onSetDefaultTheme={handleSetDefaultTheme}
         onClearDefaultTheme={handleClearDefaultTheme}
         onSave={() => setSaveDialogOpen(true)}
+        mobileIntro={mobileIntro}
       />
 
       <SaveThemeDialog

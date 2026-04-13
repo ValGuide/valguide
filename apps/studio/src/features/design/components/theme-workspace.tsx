@@ -22,6 +22,7 @@ export interface ThemeWorkspaceProps {
   onSave: () => void
   showDeleteThemes?: boolean
   compactFooter?: React.ReactNode
+  mobileIntro?: React.ReactNode
   className?: string
 }
 
@@ -39,6 +40,7 @@ export function ThemeWorkspace({
   onSave,
   showDeleteThemes = true,
   compactFooter,
+  mobileIntro,
   className,
 }: ThemeWorkspaceProps) {
   const cssVariables = customizer.getCSSVariables()
@@ -51,6 +53,7 @@ export function ThemeWorkspace({
   return (
     <div className={cn('flex min-h-0 min-w-0 w-full flex-1 flex-col gap-6', className)}>
       <div className="relative flex min-h-0 flex-col gap-4 overflow-y-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:hidden">
+        {mobileIntro ? <div className="sm:hidden">{mobileIntro}</div> : null}
         <div className="flex flex-col">
           <div className="rounded-xl border bg-muted/30 px-[clamp(1rem,3vw,2rem)] py-[clamp(1rem,3vw,2rem)]">
             <div className="flex w-full justify-center">
