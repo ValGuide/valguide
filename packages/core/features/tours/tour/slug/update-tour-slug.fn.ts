@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { slugSchema } from '../../../../utils/slug'
 import { waitUntil } from '../../../../utils/wait-until'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
@@ -23,6 +24,15 @@ export const updateTourSlugFn = createServerFn({ method: 'POST' })
     const result = await updateTourSlug(db, tourId, organizationId, data.newSlug)
 
     if (result.success) {
+      await captureStudioProductEvent({
+        distinctId: context.user.id,
+        event: 'tour.slug_updated',
+        properties: {
+          tour_nano_id: result.tourNanoId,
+          new_slug: data.newSlug,
+        },
+      })
+
       const kvEntry = {
         tourNanoId: result.tourNanoId,
         primarySlug: data.newSlug,

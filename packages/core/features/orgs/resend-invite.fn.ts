@@ -43,11 +43,10 @@ export const resendInviteFn = createServerFn({ method: 'POST' })
 
     await captureStudioProductEvent({
       distinctId: context.user.id,
-      event: 'org.invite_sent',
+      event: 'org.invite_resent',
       organizationNanoId: invite.organization.nanoId,
       properties: {
         role: invite.role,
-        resend: true,
       },
     })
   })

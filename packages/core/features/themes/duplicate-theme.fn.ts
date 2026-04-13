@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireThemeAccess } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { duplicateTheme } from './duplicate-theme.server'
@@ -20,5 +21,15 @@ export const duplicateThemeFn = createServerFn({ method: 'POST' })
   .inputValidator(duplicateThemeSchema)
   .handler(async ({ context, data }) => {
     await requireThemeAccess(data.themeId, context.user.id)
-    return duplicateTheme(data.themeId, data.newName, context.user.id)
+    const duplicated = await duplicateTheme(data.themeId, data.newName, context.user.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'theme.duplicated',
+      properties: {
+        theme_id: duplicated.id,
+        source_theme_id: data.themeId,
+        theme_preset: duplicated.basePreset,
+      },
+    })
+    return duplicated
   })

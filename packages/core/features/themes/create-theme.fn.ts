@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type CreateThemeInput, createTheme } from './create-theme.server'
@@ -41,5 +42,14 @@ export const createThemeFn = createServerFn({ method: 'POST' })
       createdBy: context.user.id,
     }
 
-    return createTheme(input)
+    const created = await createTheme(input)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'theme.created',
+      properties: {
+        theme_id: created.id,
+        theme_preset: created.basePreset,
+      },
+    })
+    return created
   })

@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { removeTourAsset } from './remove-tour-asset.server'
@@ -19,9 +20,24 @@ export const removeTourAssetFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
-    return removeTourAsset(data.nanoId, {
+    const result = await removeTourAsset(data.nanoId, {
       assetId: data.assetId,
       channel: data.channel,
       locale: data.locale,
     })
+
+    if (result.removed) {
+      await captureStudioProductEvent({
+        distinctId: context.user.id,
+        event: 'tour.asset_removed',
+        properties: {
+          tour_nano_id: data.nanoId,
+          asset_nano_id: data.assetId,
+          channel: data.channel,
+          locale: data.locale ?? null,
+        },
+      })
+    }
+
+    return result
   })

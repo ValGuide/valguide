@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireOrgRole } from '../auth/authorization'
 import { auth } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -45,6 +46,16 @@ export const removeMemberFn = createServerFn({ method: 'POST' })
       body: {
         organizationId: data.teamId,
         memberIdOrEmail: data.memberId,
+      },
+    })
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'org.member_removed',
+      properties: {
+        organization_id: data.teamId,
+        member_id: data.memberId,
+        removed_role: targetMember.role,
       },
     })
   })

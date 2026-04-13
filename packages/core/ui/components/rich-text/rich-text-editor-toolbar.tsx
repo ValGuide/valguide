@@ -18,6 +18,7 @@ import {
   Strikethrough,
   Undo,
 } from 'lucide-react'
+import { captureStudioClientEvent } from '../../../posthog/PostHogProvider'
 
 export interface EditorToolbarProps {
   editor: Editor | null
@@ -26,6 +27,10 @@ export interface EditorToolbarProps {
 
 export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) {
   const t = useTranslations('richTextEditor')
+
+  const captureFormat = (format: string) => {
+    captureStudioClientEvent('editor.format_applied', { format })
+  }
 
   const editorState = useEditorState({
     editor,
@@ -67,7 +72,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isBold ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleBold().run()}
+        onClick={() => {
+          editor.chain().focus().toggleBold().run()
+          captureFormat('bold')
+        }}
         disabled={disabled || !editorState.canBold}
         aria-label={t('bold')}
         title={t('bold')}
@@ -78,7 +86,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isItalic ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        onClick={() => {
+          editor.chain().focus().toggleItalic().run()
+          captureFormat('italic')
+        }}
         disabled={disabled || !editorState.canItalic}
         aria-label={t('italic')}
         title={t('italic')}
@@ -89,7 +100,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isStrike ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleStrike().run()}
+        onClick={() => {
+          editor.chain().focus().toggleStrike().run()
+          captureFormat('strikethrough')
+        }}
         disabled={disabled || !editorState.canStrike}
         aria-label={t('strikethrough')}
         title={t('strikethrough')}
@@ -103,7 +117,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isHeading1 ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        onClick={() => {
+          editor.chain().focus().toggleHeading({ level: 1 }).run()
+          captureFormat('heading_1')
+        }}
         disabled={disabled || !editorState.canHeading1}
         aria-label={t('heading1')}
         title={t('heading1')}
@@ -114,7 +131,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isHeading2 ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        onClick={() => {
+          editor.chain().focus().toggleHeading({ level: 2 }).run()
+          captureFormat('heading_2')
+        }}
         disabled={disabled || !editorState.canHeading2}
         aria-label={t('heading2')}
         title={t('heading2')}
@@ -125,7 +145,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isHeading3 ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        onClick={() => {
+          editor.chain().focus().toggleHeading({ level: 3 }).run()
+          captureFormat('heading_3')
+        }}
         disabled={disabled || !editorState.canHeading3}
         aria-label={t('heading3')}
         title={t('heading3')}
@@ -136,7 +159,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isHeading4 ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
+        onClick={() => {
+          editor.chain().focus().toggleHeading({ level: 4 }).run()
+          captureFormat('heading_4')
+        }}
         disabled={disabled || !editorState.canHeading4}
         aria-label={t('heading4')}
         title={t('heading4')}
@@ -147,7 +173,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isSmall ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleMark('small').run()}
+        onClick={() => {
+          editor.chain().focus().toggleMark('small').run()
+          captureFormat('small_text')
+        }}
         disabled={disabled || !editorState.canSmall}
         aria-label={t('smallText')}
         title={t('smallText')}
@@ -161,7 +190,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isBulletList ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        onClick={() => {
+          editor.chain().focus().toggleBulletList().run()
+          captureFormat('bullet_list')
+        }}
         disabled={disabled || !editorState.canBulletList}
         aria-label={t('bulletList')}
         title={t('bulletList')}
@@ -172,7 +204,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isOrderedList ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        onClick={() => {
+          editor.chain().focus().toggleOrderedList().run()
+          captureFormat('ordered_list')
+        }}
         disabled={disabled || !editorState.canOrderedList}
         aria-label={t('orderedList')}
         title={t('orderedList')}
@@ -186,7 +221,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant={editorState.isBlockquote ? 'secondary' : 'ghost'}
         size="sm"
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        onClick={() => {
+          editor.chain().focus().toggleBlockquote().run()
+          captureFormat('blockquote')
+        }}
         disabled={disabled || !editorState.canBlockquote}
         aria-label={t('blockquote')}
         title={t('blockquote')}
@@ -200,7 +238,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant="ghost"
         size="sm"
-        onClick={() => editor.chain().focus().undo().run()}
+        onClick={() => {
+          editor.chain().focus().undo().run()
+          captureStudioClientEvent('editor.undo')
+        }}
         disabled={disabled || !editorState.canUndo}
         aria-label={t('undo')}
         title={t('undo')}
@@ -211,7 +252,10 @@ export function RichTextEditorToolbar({ editor, disabled }: EditorToolbarProps) 
         type="button"
         variant="ghost"
         size="sm"
-        onClick={() => editor.chain().focus().redo().run()}
+        onClick={() => {
+          editor.chain().focus().redo().run()
+          captureStudioClientEvent('editor.redo')
+        }}
         disabled={disabled || !editorState.canRedo}
         aria-label={t('redo')}
         title={t('redo')}

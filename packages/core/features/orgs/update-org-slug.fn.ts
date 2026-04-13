@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { waitUntil } from '../../utils/wait-until'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -22,6 +23,15 @@ export const updateOrgSlugFn = createServerFn({ method: 'POST' })
     const result = await updateOrgSlug(db, data.organizationId, data.newSlug)
 
     if (result.success) {
+      await captureStudioProductEvent({
+        distinctId: context.user.id,
+        event: 'org.slug_updated',
+        organizationNanoId: result.nanoId,
+        properties: {
+          new_slug: data.newSlug,
+        },
+      })
+
       const kvEntry = { nanoId: result.nanoId, primarySlug: data.newSlug }
       waitUntil(
         Promise.all([

@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireStopAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { deleteStop } from './delete-stop.server'
@@ -16,5 +17,13 @@ export const deleteStopFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     const { stopId } = await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
-    return deleteStop(stopId, context.user.id)
+    const result = await deleteStop(stopId, context.user.id)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'stop.deleted',
+      properties: {
+        stop_nano_id: result.nanoId,
+      },
+    })
+    return result
   })
