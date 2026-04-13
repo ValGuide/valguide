@@ -3,7 +3,6 @@ import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { ToursList } from '@/features/tours/components/tours-list'
-import { ToursListSkeleton } from '@/features/tours/components/tours-list-skeleton'
 import { useTours } from '@/features/tours/hooks/use-tours'
 import { toursListQueryOptions } from '@/features/tours/query-options'
 
@@ -12,6 +11,8 @@ export const Route = createFileRoute('/_main/tours/')({
     const locale = context.locale
     const options = toursListQueryOptions(locale)
     const cachedData = context.queryClient.getQueryData(options.queryKey)
+
+    // Keep the tours index continuity-first: cached content stays visible while the query refreshes.
     if (cachedData) {
       context.queryClient.invalidateQueries({ queryKey: options.queryKey })
       return cachedData
@@ -19,7 +20,6 @@ export const Route = createFileRoute('/_main/tours/')({
     return context.queryClient.ensureQueryData(options)
   },
   component: ToursPage,
-  pendingComponent: ToursListSkeleton,
 })
 
 function ToursPage() {

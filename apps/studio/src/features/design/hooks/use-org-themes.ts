@@ -179,7 +179,7 @@ export function useOrgThemesSuspense(): UseOrgThemesReturn {
     false,
     async () => {
       const result = await refetch()
-      return result.data.themes
+      return result.data?.themes ?? data.themes
     },
     actions,
   )

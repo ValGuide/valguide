@@ -6,9 +6,7 @@ import { WorkspaceQrBrandingSection } from '@/features/qr/components/workspace-q
 import { orgQrBrandingQueryOptions } from '@/features/qr/query-options'
 
 export const Route = createFileRoute('/_main/brand/qr')({
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(orgQrBrandingQueryOptions())
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(orgQrBrandingQueryOptions()),
   component: QrBrandPage,
   pendingComponent: DesignPageSkeleton,
 })

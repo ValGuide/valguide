@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import {
   applyQrOverrideToBranding,
   isQrBrandingOverrideEmpty,
@@ -7,7 +7,6 @@ import {
 import { updateOrgQrBrandingFn } from '@valguide/core/features/links/qr/update-org-qr-branding.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
-import { Skeleton } from '@valguide/ui/components/skeleton'
 import { useEffect, useState } from 'react'
 import { sanitizeQrOverrideForCurrentUi } from '../branding'
 import { orgQrBrandingQueryOptions, qrQueryKeys } from '../query-options'
@@ -17,17 +16,13 @@ import { QrPreviewCard } from './qr-preview-card'
 export function WorkspaceQrBrandingSection() {
   const t = useTranslations('studio.qr')
   const queryClient = useQueryClient()
-  const { data, isLoading } = useQuery(orgQrBrandingQueryOptions())
+  const { data } = useSuspenseQuery(orgQrBrandingQueryOptions())
   const [draftOverride, setDraftOverride] = useState<QrBrandingOverride>({})
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     setDraftOverride(data?.override ? sanitizeQrOverrideForCurrentUi(data.override) : {})
   }, [data])
-
-  if (isLoading || !data) {
-    return <Skeleton className="h-[28rem] w-full rounded-xl" />
-  }
 
   const previewBranding = isQrBrandingOverrideEmpty(draftOverride)
     ? data.effectiveBranding
