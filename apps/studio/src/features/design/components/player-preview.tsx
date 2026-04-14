@@ -157,7 +157,7 @@ function PreviewSurface() {
   const panelStyle = { borderRadius: 'calc(var(--radius) + 0.25rem)' } satisfies CSSProperties
 
   return (
-    <div className="mx-auto bg-background w-full max-w-none space-y-[clamp(1rem,3vw,1.5rem)] px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1.25rem,4vw,2rem)]">
+    <div className="mx-auto w-full max-w-none space-y-[clamp(1rem,3vw,1.5rem)] border bg-card/95 px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1.25rem,4vw,2rem)] shadow-md">
       <div className="inline-flex items-center gap-1 text-sm text-muted-foreground">
         <ChevronLeft className="h-4 w-4" />
         <span>{tTheme('playerPreview.tourTitle')}</span>
