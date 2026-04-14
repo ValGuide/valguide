@@ -181,6 +181,7 @@
       },
       "themeLibrary": {
         "description": "Themes memorisads dal workspace pon vegnir reutilisads en pliras turas.",
+        "descriptionTooltipLabel": "Dapli novitads davart themes memorisads",
         "delete": "Stizzar",
         "actions": "Acziuns dal theme",
         "defaultTheme": "Tema standard",
@@ -252,12 +253,23 @@
         "defaultSet": "\"{name}\" è ussa il tema standard",
         "defaultCleared": "Tema standard allontanà",
         "defaultError": "Il tema standard n'ha betg pudì vegnir actualisà"
+      },
+      "aiAssistant": {
+        "action": "Cumenzar cun AI",
+        "mobileLabel": "AI",
+        "badge": "Sboz AI",
+        "starterTitle": "Generar ord website u novitads da referenza",
+        "starterDescription": "Duvrai ina website, novitads u maletgs sco punct da partenza spert per in nov theme.",
+        "editSources": "Modifitgar funtaunas",
+        "discard": "Renunziar al sboz AI",
+        "discardedToast": "Sboz AI renunzià"
       }
     },
     "aiTheme": {
       "badge": "MVP",
       "generateAction": "Generar sboz da theme",
       "generateLoading": "Generescha il sboz...",
+      "cancelAction": "Interrumper",
       "generationSuccess": "Sboz da theme generà",
       "saveAction": "Memorisar sco theme",
       "saveSuccess": "Theme memorisà cun success",

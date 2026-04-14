@@ -181,6 +181,7 @@
       },
       "themeLibrary": {
         "description": "Gespeicherte Workspace-Designs lassen sich in mehreren Touren wiederverwenden.",
+        "descriptionTooltipLabel": "Mehr Informationen zu gespeicherten Designs",
         "delete": "Löschen",
         "actions": "Design-Aktionen",
         "defaultTheme": "Standard-Design",
@@ -252,12 +253,23 @@
         "defaultSet": "\"{name}\" ist jetzt das Standard-Design",
         "defaultCleared": "Standard-Design entfernt",
         "defaultError": "Standard-Design konnte nicht aktualisiert werden"
+      },
+      "aiAssistant": {
+        "action": "Mit KI starten",
+        "mobileLabel": "KI",
+        "badge": "KI-Entwurf",
+        "starterTitle": "Von Website oder Referenzen ableiten",
+        "starterDescription": "Nutzen Sie Website, Notizen oder Bilder als schnellen Ausgangspunkt für ein neues Design.",
+        "editSources": "Quellen bearbeiten",
+        "discard": "KI-Entwurf verwerfen",
+        "discardedToast": "KI-Entwurf verworfen"
       }
     },
     "aiTheme": {
       "badge": "MVP",
       "generateAction": "Theme-Entwurf erzeugen",
       "generateLoading": "Entwurf wird erzeugt...",
+      "cancelAction": "Abbrechen",
       "generationSuccess": "Theme-Entwurf erstellt",
       "saveAction": "Als Theme speichern",
       "saveSuccess": "Theme erfolgreich gespeichert",

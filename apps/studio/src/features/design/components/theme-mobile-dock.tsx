@@ -4,7 +4,7 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@valguide/ui/components/popover'
 import { cn } from '@valguide/ui/lib/utils'
-import { Palette, RotateCcw, Save, SlidersHorizontal, SwatchBook, Type } from 'lucide-react'
+import { Palette, RotateCcw, Save, SlidersHorizontal, Sparkles, SwatchBook, Type } from 'lucide-react'
 import { useState } from 'react'
 import { formatThemePresetLabel } from '../theme-display'
 import type { ThemeColors } from '../types'
@@ -42,6 +42,7 @@ export interface ThemeMobileDockProps {
   onSetDefaultTheme?: (theme: Theme) => Promise<void>
   onClearDefaultTheme?: () => Promise<void>
   onSave: () => void
+  onOpenAiAssistant?: () => void
   showDeleteThemes?: boolean
 }
 
@@ -57,6 +58,7 @@ export function ThemeMobileDock({
   onSetDefaultTheme,
   onClearDefaultTheme,
   onSave,
+  onOpenAiAssistant,
   showDeleteThemes = true,
 }: ThemeMobileDockProps) {
   const t = useTranslations('studio.themeCustomizer')
@@ -212,7 +214,7 @@ export function ThemeMobileDock({
                   <p className="text-sm font-semibold">{t('chooseThemeTitle')}</p>
                   <p className="text-xs text-muted-foreground">{t('chooseThemeDescription')}</p>
                 </div>
-                <div className="max-h-[min(60dvh,34rem)] overflow-y-auto pr-1">{pickerContent}</div>
+                <div className="max-h-[min(60dvh,34rem)] overflow-y-auto px-1">{pickerContent}</div>
               </PopoverContent>
             </Popover>
 
@@ -239,6 +241,16 @@ export function ThemeMobileDock({
                 <div className="max-h-[min(58dvh,32rem)] overflow-y-auto pr-1">{brandContent}</div>
               </PopoverContent>
             </Popover>
+
+            {onOpenAiAssistant ? (
+              <button type="button" className={dockItemClass} onClick={onOpenAiAssistant}>
+                <span className="text-xs text-muted-foreground">{t('aiAssistant.mobileLabel')}</span>
+                <span className="flex items-center gap-1.5 text-sm font-medium">
+                  <Sparkles className="size-4" />
+                  <span>{t('aiAssistant.action')}</span>
+                </span>
+              </button>
+            ) : null}
 
             <Popover open={activePanel === 'fonts'} onOpenChange={(open) => setActivePanel(open ? 'fonts' : null)}>
               <PopoverTrigger asChild>

@@ -8,8 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@valguide/ui/components/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@valguide/ui/components/tooltip'
 import { cn } from '@valguide/ui/lib/utils'
-import { Check, MoreHorizontal, Star, Trash2 } from 'lucide-react'
+import { Check, CircleHelp, MoreHorizontal, Star, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
 export interface SavedThemesListProps {
@@ -74,10 +75,20 @@ export function SavedThemesList({
 
   return (
     <div className={cn('space-y-3', className)}>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-center gap-1.5">
           <p className="text-sm font-medium">{t('savedThemes', { count: themes.length })}</p>
-          <p className="text-xs text-muted-foreground">{t('themeLibrary.description')}</p>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex size-7 shrink-0 cursor-help items-center justify-center rounded-lg leading-none text-muted-foreground">
+                <CircleHelp className="size-3.5" />
+                <span className="sr-only">{t('themeLibrary.descriptionTooltipLabel')}</span>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-64 text-xs">
+              {t('themeLibrary.description')}
+            </TooltipContent>
+          </Tooltip>
         </div>
         {canManageDefaultTheme && defaultThemeId && onClearDefaultTheme ? (
           <Button

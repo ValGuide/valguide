@@ -2,13 +2,19 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
+import { z } from 'zod'
 import { ThemeBrandPageSkeleton } from '@/features/design/components/theme-brand-page-skeleton'
 import { ThemeCustomizerContainer } from '@/features/design/components/theme-customizer-container'
 import { themesQueryOptions } from '@/features/design/query-options'
 import { EditorHeader } from '@/features/editor/components/editor-header'
 import { useFocusBackNavigation } from '@/hooks/use-focus-back-navigation'
 
+const searchSchema = z.object({
+  assistant: z.enum(['ai']).optional(),
+})
+
 export const Route = createFileRoute('/_main/brand/theme')({
+  validateSearch: searchSchema,
   loader: ({ context }) => context.queryClient.ensureQueryData(themesQueryOptions()),
   staticData: {
     focusMode: true,
@@ -21,6 +27,8 @@ export const Route = createFileRoute('/_main/brand/theme')({
 function ThemeBrandPage() {
   const t = useTranslations('sidebar')
   const handleBack = useFocusBackNavigation({ fallbackTo: '/tours' })
+  const search = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   return (
     <main className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 flex min-h-0 flex-1 flex-col bg-background">
@@ -42,13 +50,23 @@ function ThemeBrandPage() {
             <p className="text-sm text-muted-foreground">{t('pages.design.themeDescription')}</p>
           </div>
           <Button variant="outline" asChild>
-            <Link to="/brand/ai">{t('nav.aiTheme')}</Link>
+            <Link to="/brand/theme" search={{ assistant: 'ai' }}>
+              {t('nav.aiTheme')}
+            </Link>
           </Button>
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-hidden px-4 py-3 sm:px-6 sm:py-6">
         <div className="mx-auto flex min-h-0 h-full w-full max-w-[96rem] flex-col">
           <ThemeCustomizerContainer
+            openAiAssistantSignal={search.assistant === 'ai'}
+            onAiAssistantSignalHandled={() => {
+              navigate({
+                to: '/brand/theme',
+                search: {},
+                replace: true,
+              })
+            }}
             mobileIntro={
               <p className="text-center text-sm text-muted-foreground">{t('pages.design.themeDescription')}</p>
             }

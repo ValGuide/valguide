@@ -181,6 +181,26 @@ function buildFontPrompt(): string {
   ].join('\n')
 }
 
+function extractJsonObjectFromAiResponse(rawResponse: string): string {
+  const trimmedResponse = rawResponse.trim()
+
+  if (trimmedResponse.startsWith('```')) {
+    const fencedMatch = trimmedResponse.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i)
+    if (fencedMatch?.[1]) {
+      return fencedMatch[1].trim()
+    }
+  }
+
+  const firstBraceIndex = trimmedResponse.indexOf('{')
+  const lastBraceIndex = trimmedResponse.lastIndexOf('}')
+
+  if (firstBraceIndex !== -1 && lastBraceIndex !== -1 && lastBraceIndex > firstBraceIndex) {
+    return trimmedResponse.slice(firstBraceIndex, lastBraceIndex + 1)
+  }
+
+  return trimmedResponse
+}
+
 async function generateSuggestedTheme(params: {
   sourceUrl?: string
   notes?: string
@@ -260,7 +280,16 @@ async function generateSuggestedTheme(params: {
     throw new Error('Workers AI did not return a theme suggestion')
   }
 
-  return normalizeThemeAiSuggestion(JSON.parse(rawResponse))
+  const jsonResponse = extractJsonObjectFromAiResponse(rawResponse)
+
+  try {
+    return normalizeThemeAiSuggestion(JSON.parse(jsonResponse))
+  } catch (error) {
+    const preview = jsonResponse.slice(0, 300)
+    throw new Error(
+      `Workers AI returned invalid theme JSON: ${error instanceof Error ? error.message : 'Unknown parse error'}. Response preview: ${preview}`,
+    )
+  }
 }
 
 export async function generateThemeAi(

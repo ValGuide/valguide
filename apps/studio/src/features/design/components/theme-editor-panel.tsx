@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@valguide/ui/component
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@valguide/ui/components/collapsible'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@valguide/ui/components/drawer'
 import { cn } from '@valguide/ui/lib/utils'
-import { ChevronDown, RotateCcw, Save } from 'lucide-react'
+import { ChevronDown, RotateCcw, Save, Sparkles, Undo2 } from 'lucide-react'
 import { useState } from 'react'
 import { formatThemePresetLabel } from '../theme-display'
 import type { ThemeColors } from '../types'
@@ -43,6 +43,11 @@ export interface ThemeEditorPanelProps {
   onSetDefaultTheme?: (theme: Theme) => Promise<void>
   onClearDefaultTheme?: () => Promise<void>
   onSave: () => void
+  onOpenAiAssistant?: () => void
+  onDiscardAiDraft?: () => void
+  aiDraftSummary?: string | null
+  aiDraftMoodKeywords?: string[]
+  aiDraftSourceHighlights?: string[]
   showDeleteThemes?: boolean
   layout?: 'workspace' | 'split' | 'mobile'
   className?: string
@@ -60,6 +65,11 @@ export function ThemeEditorPanel({
   onSetDefaultTheme,
   onClearDefaultTheme,
   onSave,
+  onOpenAiAssistant,
+  onDiscardAiDraft,
+  aiDraftSummary,
+  aiDraftMoodKeywords = [],
+  aiDraftSourceHighlights = [],
   showDeleteThemes = true,
   layout = 'split',
   className,
@@ -182,6 +192,45 @@ export function ThemeEditorPanel({
                 <div>
                   <p className="truncate text-lg font-semibold">{currentThemeLabel}</p>
                 </div>
+                {aiDraftSummary ? (
+                  <div className="space-y-3 pt-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="secondary">{t('aiAssistant.badge')}</Badge>
+                      {aiDraftMoodKeywords.slice(0, 3).map((keyword) => (
+                        <Badge key={keyword} variant="outline">
+                          {keyword}
+                        </Badge>
+                      ))}
+                    </div>
+                    <p className="text-sm text-muted-foreground">{aiDraftSummary}</p>
+                    {aiDraftSourceHighlights.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {aiDraftSourceHighlights.slice(0, 2).map((highlight) => (
+                          <div
+                            key={highlight}
+                            className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground"
+                          >
+                            {highlight}
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                    <div className="flex flex-wrap gap-2">
+                      {onOpenAiAssistant ? (
+                        <Button variant="outline" size="sm" onClick={onOpenAiAssistant} className="gap-1.5">
+                          <Sparkles className="size-3.5" />
+                          <span>{t('aiAssistant.editSources')}</span>
+                        </Button>
+                      ) : null}
+                      {onDiscardAiDraft ? (
+                        <Button variant="ghost" size="sm" onClick={onDiscardAiDraft} className="gap-1.5">
+                          <Undo2 className="size-3.5" />
+                          <span>{t('aiAssistant.discard')}</span>
+                        </Button>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               <div className="flex gap-2">
@@ -201,6 +250,22 @@ export function ThemeEditorPanel({
               <p className="text-sm font-medium">{t('chooseThemeTitle')}</p>
               <p className="text-sm text-muted-foreground">{t('chooseThemeDescription')}</p>
             </div>
+
+            {onOpenAiAssistant ? (
+              <button
+                type="button"
+                onClick={onOpenAiAssistant}
+                className="mb-4 flex w-full items-start justify-between gap-4 rounded-xl border border-dashed bg-muted/15 p-4 text-left transition-colors hover:border-primary/40 hover:bg-muted/25"
+              >
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">{t('aiAssistant.starterTitle')}</p>
+                  <p className="text-sm text-muted-foreground">{t('aiAssistant.starterDescription')}</p>
+                </div>
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background">
+                  <Sparkles className="size-4" />
+                </div>
+              </button>
+            ) : null}
 
             {isMobileLayout ? (
               <>
@@ -255,16 +320,14 @@ export function ThemeEditorPanel({
 
           <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
             <section className="rounded-2xl border">
-              <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-muted/25">
-                <div className="space-y-1">
+              <CollapsibleTrigger className="flex w-full flex-col gap-3 p-4 text-left transition-colors hover:bg-muted/25 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0 space-y-1">
                   <p className="text-sm font-medium">{t('advanced')}</p>
                   <p className="text-sm text-muted-foreground">{t('advancedHint')}</p>
                 </div>
-                <div className="flex items-center gap-2 rounded-full border border-border/70 bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-xs">
+                <div className="flex items-center gap-2 self-start text-sm font-medium text-muted-foreground sm:self-center">
                   <span>{isAdvancedOpen ? t('collapseAdvanced') : t('expandAdvanced')}</span>
-                  <ChevronDown
-                    className={cn('size-4 transition-transform', isAdvancedOpen && 'rotate-180', 'text-foreground')}
-                  />
+                  <ChevronDown className={cn('size-4 transition-transform', isAdvancedOpen && 'rotate-180')} />
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
