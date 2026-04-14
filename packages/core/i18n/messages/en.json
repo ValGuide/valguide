@@ -292,7 +292,7 @@
         "imagesLabel": "Reference images",
         "imagesHint": "Upload logos, posters, screenshots, or space photography. Up to 4 images, 10 MB each.",
         "imagesDropzone": "Drop images here or click to browse",
-        "imagesLimit": "PNG, JPG, WebP, or GIF"
+        "imagesLimit": "Paste, upload, or drop. PNG, JPG, WebP, or GIF"
       },
       "recentRuns": {
         "title": "Recent generations",

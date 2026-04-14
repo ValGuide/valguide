@@ -292,7 +292,7 @@
         "imagesLabel": "Referenzbilder",
         "imagesHint": "Laden Sie Logos, Poster, Screenshots oder Raumfotos hoch. Bis zu 4 Bilder, je 10 MB.",
         "imagesDropzone": "Bilder hier ablegen oder klicken zum Durchsuchen",
-        "imagesLimit": "PNG, JPG, WebP oder GIF"
+        "imagesLimit": "Einfügen, hochladen oder ablegen. PNG, JPG, WebP oder GIF"
       },
       "recentRuns": {
         "title": "Letzte Generierungen",

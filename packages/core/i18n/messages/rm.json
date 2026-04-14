@@ -292,7 +292,7 @@
         "imagesLabel": "Maletgs da referenza",
         "imagesHint": "Chargiai si logos, posters, screenshots u fotos da spazis. Fin a 4 maletgs, mintgin 10 MB.",
         "imagesDropzone": "Deponer maletgs qua u cliccar per tschertgar",
-        "imagesLimit": "PNG, JPG, WebP u GIF"
+        "imagesLimit": "Encollar, chargiar si u deponer. PNG, JPG, WebP u GIF"
       },
       "recentRuns": {
         "title": "Generaziuns recentas",

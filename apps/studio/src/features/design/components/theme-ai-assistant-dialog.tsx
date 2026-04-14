@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@valguide/ui/components/textarea'
 import { cn } from '@valguide/ui/lib/utils'
 import { ImagePlus, Loader2, Sparkles, Trash2, WandSparkles } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { uploadFile } from '@/features/assets/lib/upload'
 import { themesQueryKey } from '../query-options'
 import { themeAiWorkspaceQueryKey, themeAiWorkspaceQueryOptions } from '../theme-ai-query-options'
@@ -62,6 +62,14 @@ function revokePreviews(inspirations: InspirationDraft[]) {
   inspirations.forEach((inspiration) => {
     URL.revokeObjectURL(inspiration.previewUrl)
   })
+}
+
+function createInspirationDraft(file: File): InspirationDraft {
+  return {
+    id: valguideId(),
+    file,
+    previewUrl: URL.createObjectURL(file),
+  }
 }
 
 export function ThemeAiAssistantDialog({
@@ -161,22 +169,64 @@ export function ThemeAiAssistantDialog({
   const canGenerate =
     Boolean(sourceUrl.trim() || notes.trim() || inspirations.length > 0) && !generateMutation.isPending
 
-  const handleFilesSelected = (files: FileList | null) => {
-    if (!files) {
+  const addInspirationFiles = useCallback(
+    (files: File[]) => {
+      if (files.length === 0) {
+        return
+      }
+
+      const nextFiles = files
+        .filter((file) => file.type.startsWith('image/'))
+        .slice(0, Math.max(0, 4 - inspirations.length))
+        .map(createInspirationDraft)
+
+      setInspirations((current) => [...current, ...nextFiles].slice(0, 4))
+    },
+    [inspirations.length],
+  )
+
+  const handleFilesSelected = useCallback(
+    (files: FileList | null) => {
+      if (!files) {
+        return
+      }
+
+      addInspirationFiles(Array.from(files))
+    },
+    [addInspirationFiles],
+  )
+
+  const handlePaste = useCallback(
+    (event: ClipboardEvent) => {
+      if (!open || generateMutation.isPending || inspirations.length >= 4) {
+        return
+      }
+
+      const pastedImages = Array.from(event.clipboardData?.items ?? [])
+        .filter((item) => item.type.startsWith('image/'))
+        .map((item) => item.getAsFile())
+        .filter((file): file is File => file !== null)
+
+      if (pastedImages.length === 0) {
+        return
+      }
+
+      event.preventDefault()
+      addInspirationFiles(pastedImages)
+    },
+    [addInspirationFiles, generateMutation.isPending, inspirations.length, open],
+  )
+
+  useEffect(() => {
+    if (!open) {
       return
     }
 
-    const nextFiles = Array.from(files)
-      .filter((file) => file.type.startsWith('image/'))
-      .slice(0, Math.max(0, 4 - inspirations.length))
-      .map((file) => ({
-        id: valguideId(),
-        file,
-        previewUrl: URL.createObjectURL(file),
-      }))
-
-    setInspirations((current) => [...current, ...nextFiles].slice(0, 4))
-  }
+    document.addEventListener('paste', handlePaste)
+    return () => {
+      document.removeEventListener('paste', handlePaste)
+    }
+  }, [handlePaste, open])
 
   const handleRemoveInspiration = (id: string) => {
     setInspirations((current) => {
