@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireStopAccessByNanoId, requireTourAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { addStopToTour } from './add-stop.server'
@@ -20,5 +21,15 @@ export const addStopToTourFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
     await requireStopAccessByNanoId(data.stopNanoId, context.user.id)
 
-    return addStopToTour(data)
+    const result = await addStopToTour(data)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.stop_added',
+      properties: {
+        tour_nano_id: data.tourNanoId,
+        stop_nano_id: data.stopNanoId,
+        position: data.position ?? null,
+      },
+    })
+    return result
   })

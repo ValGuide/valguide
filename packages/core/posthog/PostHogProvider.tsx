@@ -12,6 +12,8 @@ import {
   POSTHOG_ORGANIZATION_GROUP,
   STUDIO_POSTHOG_APP,
   type StudioAnalyticsOrganization,
+  type StudioAnalyticsProperties,
+  type StudioProductEventName,
 } from './product-analytics'
 
 const isPostHogEnabled = clientEnv.VITE_POSTHOG_ENABLED
@@ -51,6 +53,12 @@ export function identifyStudioUserAnalytics(input: {
 export function resetStudioUserAnalytics(): void {
   if (!posthog.__loaded) return
   posthog.reset()
+}
+
+export function captureStudioClientEvent(event: StudioProductEventName, properties?: StudioAnalyticsProperties): void {
+  if (!posthog.__loaded) return
+
+  posthog.capture(event, buildStudioAnalyticsProperties(properties))
 }
 
 function registerAppProperty(app: string): void {

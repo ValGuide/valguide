@@ -4,20 +4,49 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { cn } from '@valguide/ui/lib/utils'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useOrgThemesSuspense } from '../hooks/use-org-themes'
 import { getThemeSaveErrorMessage } from '../theme-save-errors'
+import type { EditorThemeConfig } from '../types'
 import { useThemeCustomizer } from '../use-theme-customizer'
 import { DeleteThemeDialog } from './delete-theme-dialog'
 import { SaveThemeDialog } from './save-theme-dialog'
+import { ThemeAiAssistantDialog, type ThemeAiAssistantResult } from './theme-ai-assistant-dialog'
 import { ThemeWorkspace } from './theme-workspace'
 
 export interface ThemeCustomizerContainerProps {
   className?: string
   mobileIntro?: React.ReactNode
+  openAiAssistantSignal?: boolean
+  onAiAssistantSignalHandled?: () => void
 }
 
-export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustomizerContainerProps) {
+interface AiDraftState {
+  sourceUrl?: string
+  notes?: string
+  sourceImageCount: number
+  summary: string | null
+  moodKeywords: string[]
+  sourceHighlights: string[]
+}
+
+function cloneThemeConfig(config: EditorThemeConfig): EditorThemeConfig {
+  return {
+    ...config,
+    colors: { ...config.colors },
+    fonts: {
+      ...config.fonts,
+      primary: { ...config.fonts.primary },
+    },
+  }
+}
+
+export function ThemeCustomizerContainer({
+  className,
+  mobileIntro,
+  openAiAssistantSignal = false,
+  onAiAssistantSignalHandled,
+}: ThemeCustomizerContainerProps) {
   const t = useTranslations('studio.themeCustomizer')
   const {
     themes,
@@ -38,9 +67,13 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false)
+  const [aiDraft, setAiDraft] = useState<AiDraftState | null>(null)
+  const [aiBaselineConfig, setAiBaselineConfig] = useState<EditorThemeConfig | null>(null)
+  const hasExplicitSelectionRef = useRef(false)
 
   useEffect(() => {
-    if (customizer.config.id || customizer.config.isDirty || !defaultThemeId) {
+    if (hasExplicitSelectionRef.current || customizer.config.id || customizer.config.isDirty || !defaultThemeId) {
       return
     }
 
@@ -50,18 +83,33 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
     }
   }, [customizer, defaultThemeId, themes])
 
+  useEffect(() => {
+    if (openAiAssistantSignal) {
+      setAiAssistantOpen(true)
+    }
+  }, [openAiAssistantSignal])
+
+  const clearAiDraftState = useCallback(() => {
+    setAiBaselineConfig(null)
+    setAiDraft(null)
+  }, [])
+
   const handleSelectTheme = useCallback(
     (theme: Theme) => {
+      hasExplicitSelectionRef.current = true
+      clearAiDraftState()
       customizer.loadTheme(theme)
     },
-    [customizer],
+    [clearAiDraftState, customizer],
   )
 
   const handleStartFromPreset = useCallback(
     (preset: ThemePreset) => {
-      customizer.startNewTheme(preset)
+      hasExplicitSelectionRef.current = true
+      clearAiDraftState()
+      customizer.startNewTheme(preset, { isDirty: true })
     },
-    [customizer],
+    [clearAiDraftState, customizer],
   )
 
   const handleOpenDeleteDialog = useCallback((theme: Theme) => {
@@ -137,6 +185,7 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
           toast.success(t('toast.updated'))
         }
 
+        setAiBaselineConfig(null)
         setSaveDialogOpen(false)
       } catch (error) {
         const message = getThemeSaveErrorMessage(error, t)
@@ -157,7 +206,8 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
       await deleteTheme(themeToDelete.id)
 
       if (customizer.config.id === themeToDelete.id) {
-        customizer.startNewTheme('light')
+        clearAiDraftState()
+        customizer.startNewTheme('light', { isDirty: false })
       }
 
       toast.success(t('toast.deleted'))
@@ -169,7 +219,50 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
     } finally {
       setIsDeleting(false)
     }
-  }, [themeToDelete, deleteTheme, customizer, t])
+  }, [themeToDelete, deleteTheme, customizer, clearAiDraftState, t])
+
+  const handleAiAssistantOpenChange = useCallback(
+    (open: boolean) => {
+      setAiAssistantOpen(open)
+
+      if (!open && openAiAssistantSignal) {
+        onAiAssistantSignalHandled?.()
+      }
+    },
+    [onAiAssistantSignalHandled, openAiAssistantSignal],
+  )
+
+  const handleAiGenerated = useCallback(
+    (result: ThemeAiAssistantResult) => {
+      if (!aiDraft) {
+        setAiBaselineConfig(cloneThemeConfig(customizer.config))
+      }
+
+      customizer.loadTheme(result.createdTheme)
+
+      setAiDraft({
+        sourceUrl: result.sourceUrl,
+        notes: result.notes,
+        sourceImageCount: result.sourceImageCount,
+        summary: result.suggestion.summary,
+        moodKeywords: result.suggestion.moodKeywords,
+        sourceHighlights: result.suggestion.sourceHighlights,
+      })
+    },
+    [aiDraft, customizer],
+  )
+
+  const handleDiscardAiDraft = useCallback(() => {
+    if (!aiBaselineConfig) {
+      setAiDraft(null)
+      return
+    }
+
+    customizer.loadThemeConfig(aiBaselineConfig)
+    setAiBaselineConfig(null)
+    setAiDraft(null)
+    toast.success(t('aiAssistant.discardedToast'))
+  }, [aiBaselineConfig, customizer, t])
 
   return (
     <div className={cn('flex min-h-0 w-full flex-1 flex-col gap-6', className)}>
@@ -185,6 +278,11 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
         onSetDefaultTheme={handleSetDefaultTheme}
         onClearDefaultTheme={handleClearDefaultTheme}
         onSave={() => setSaveDialogOpen(true)}
+        onOpenAiAssistant={() => handleAiAssistantOpenChange(true)}
+        onDiscardAiDraft={aiBaselineConfig ? handleDiscardAiDraft : undefined}
+        aiDraftSummary={aiDraft?.summary}
+        aiDraftMoodKeywords={aiDraft?.moodKeywords}
+        aiDraftSourceHighlights={aiDraft?.sourceHighlights}
         mobileIntro={mobileIntro}
       />
 
@@ -206,6 +304,14 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
         onConfirm={handleDelete}
         isLoading={isDeleting}
         onGetUsage={async (themeId) => getThemeUsageDetailsFn({ data: { themeId } })}
+      />
+
+      <ThemeAiAssistantDialog
+        open={aiAssistantOpen}
+        onOpenChange={handleAiAssistantOpenChange}
+        initialSourceUrl={aiDraft?.sourceUrl}
+        initialNotes={aiDraft?.notes}
+        onGenerated={handleAiGenerated}
       />
     </div>
   )

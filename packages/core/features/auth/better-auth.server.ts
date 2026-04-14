@@ -1,4 +1,5 @@
 import { getRequestHeaders } from '@tanstack/react-start/server'
+import { createLogger } from '@valguide/logger'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { createAuthMiddleware } from 'better-auth/api'
 import { betterAuth } from 'better-auth/minimal'
@@ -25,6 +26,8 @@ const regularTrustedOrigins = [serverEnv.APP_BASE_URL, serverEnv.VITE_STUDIO_URL
 const regularCookieDomain = serverEnv.BETTER_AUTH_COOKIE_DOMAIN || undefined
 const otpSendLimit = isProduction ? 3 : 4
 const otpVerifyLimit = isProduction ? 5 : 6
+const authSideEffectTimeoutMs = 2000
+const log = createLogger('better-auth')
 
 function normalizeEmail(value: unknown): string | null {
   if (typeof value !== 'string') {
@@ -40,6 +43,21 @@ function resolveCurrentRequestEmailLocale(): SupportedLocale {
     return resolveLocaleFromHeaders(getRequestHeaders())
   } catch {
     return defaultLocale
+  }
+}
+
+async function runAuthSideEffect(label: string, effect: () => Promise<void>) {
+  try {
+    await Promise.race([
+      effect(),
+      new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error(`${label} timed out after ${authSideEffectTimeoutMs}ms`))
+        }, authSideEffectTimeoutMs)
+      }),
+    ])
+  } catch (error) {
+    log.error(`Auth side effect failed: ${label}`, error)
   }
 }
 
@@ -260,30 +278,39 @@ export const auth = createAuthInstance({
   errorURL: '/auth/error',
   enableOrganizationPlugin: true,
   async onVerificationOtpSent({ email }) {
-    const { notifyUserStartedLogin } = await import('./notify-user-started-login.server')
-
-    await captureStudioProductEvent({
-      distinctId: email,
-      event: 'auth.otp_requested',
-    })
-
-    await notifyUserStartedLogin({ email })
+    await Promise.all([
+      runAuthSideEffect('capture auth.otp_requested event', async () => {
+        await captureStudioProductEvent({
+          distinctId: email,
+          event: 'auth.otp_requested',
+        })
+      }),
+      runAuthSideEffect('notify user started login', async () => {
+        const { notifyUserStartedLogin } = await import('./notify-user-started-login.server')
+        await notifyUserStartedLogin({ email })
+      }),
+    ])
   },
   async onOtpSignIn({ email, userId }) {
-    const [{ getUserStatus }, { notifyUserLoggedIn }] = await Promise.all([
-      import('./get-user-status.server'),
-      import('./notify-user-logged-in.server'),
-    ])
+    await runAuthSideEffect('post OTP sign-in side effects', async () => {
+      const [{ getUserStatus }, { notifyUserLoggedIn }] = await Promise.all([
+        import('./get-user-status.server'),
+        import('./notify-user-logged-in.server'),
+      ])
 
-    const status = await getUserStatus(userId, email)
-    await captureStudioProductEvent({
-      distinctId: userId,
-      event: 'auth.otp_verified',
-      properties: {
-        approved_status: status,
-      },
+      const status = await getUserStatus(userId, email)
+
+      await Promise.all([
+        captureStudioProductEvent({
+          distinctId: userId,
+          event: 'auth.otp_verified',
+          properties: {
+            approved_status: status,
+          },
+        }),
+        notifyUserLoggedIn({ email, status, userId }),
+      ])
     })
-    await notifyUserLoggedIn({ email, status, userId })
   },
   async sendVerificationOtp({ email, otp }) {
     const { sendEmail } = await import('@valguide/email/send-email')

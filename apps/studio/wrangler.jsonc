@@ -18,6 +18,7 @@
 
   // Native R2 binding — no S3 API keys needed
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod", "jurisdiction": "eu" }],
+  "ai": { "binding": "AI" },
 
   // KV namespaces:
   // - TOUR_DATA for published tour edge cache
@@ -63,6 +64,7 @@
     "dev": {
       "routes": [{ "pattern": "studio.valguide.dev", "custom_domain": true }],
       "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev", "jurisdiction": "eu" }],
+      "ai": { "binding": "AI" },
       "kv_namespaces": [
         { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" },
         { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_DEV" }

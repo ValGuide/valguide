@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { updateTourSettingsDraft } from './update-tour-settings-draft.server'
@@ -21,7 +22,7 @@ export const updateTourSettingsDraftFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
-    return updateTourSettingsDraft(
+    const result = await updateTourSettingsDraft(
       data.nanoId,
       {
         themeId: data.themeId,
@@ -29,4 +30,16 @@ export const updateTourSettingsDraftFn = createServerFn({ method: 'POST' })
       },
       context.user.id,
     )
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.settings_updated',
+      properties: {
+        tour_nano_id: data.nanoId,
+        has_theme_id: data.themeId !== undefined,
+        has_settings_json: data.settingsJson !== undefined,
+      },
+    })
+
+    return result
   })

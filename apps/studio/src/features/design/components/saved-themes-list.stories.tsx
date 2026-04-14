@@ -35,6 +35,7 @@ const mockThemes: Theme[] = [
     fonts: {
       primary: { source: 'system', family: 'Inter' },
     },
+    metadata: null,
     createdAt: new Date(),
     updatedAt: new Date(),
     createdBy: 'user-1',
@@ -70,6 +71,7 @@ const mockThemes: Theme[] = [
     fonts: {
       primary: { source: 'system', family: 'Inter' },
     },
+    metadata: null,
     createdAt: new Date(),
     updatedAt: new Date(),
     createdBy: 'user-1',

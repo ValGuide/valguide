@@ -1,6 +1,7 @@
 import type { EffectiveQrBranding } from '@valguide/core/features/links/qr/shared'
 import { QRCode } from '@valguide/core/features/qrcodes'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { captureStudioClientEvent } from '@valguide/core/posthog/PostHogProvider'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Badge } from '@valguide/ui/components/badge'
 import { Button } from '@valguide/ui/components/button'
@@ -52,6 +53,9 @@ export function QrPreviewCard({
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shortUrl)
+    captureStudioClientEvent('qr.link_copied', {
+      qr_source_label: sourceLabel ?? null,
+    })
     toast.success(t('linkCopied'))
   }
 
@@ -68,6 +72,12 @@ export function QrPreviewCard({
             margin={branding.quietZone}
             showDownloadButtons={showDownloads}
             downloadFileName={downloadFileName}
+            onDownload={(format) =>
+              captureStudioClientEvent('qr.downloaded', {
+                qr_source_label: sourceLabel ?? null,
+                format,
+              })
+            }
             {...styleProps}
           />
           {branding.hasContrastWarning && (
@@ -89,7 +99,16 @@ export function QrPreviewCard({
                 {t('copyLink')}
               </Button>
               <Button variant="outline" asChild>
-                <a href={shortUrl} target="_blank" rel="noreferrer">
+                <a
+                  href={shortUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() =>
+                    captureStudioClientEvent('qr.link_opened', {
+                      qr_source_label: sourceLabel ?? null,
+                    })
+                  }
+                >
                   <ExternalLink className="h-4 w-4" />
                   {t('openLink')}
                 </a>

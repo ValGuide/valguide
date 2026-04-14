@@ -38,6 +38,7 @@ import { Route as MainToursNanoIdRouteImport } from './routes/_main/tours.$nanoI
 import { Route as MainStopsNanoIdRouteImport } from './routes/_main/stops.$nanoId'
 import { Route as MainBrandThemeRouteImport } from './routes/_main/brand.theme'
 import { Route as MainBrandQrRouteImport } from './routes/_main/brand.qr'
+import { Route as MainBrandAiRouteImport } from './routes/_main/brand.ai'
 import { Route as MainToursNanoIdIndexRouteImport } from './routes/_main/tours.$nanoId.index'
 import { Route as MainStopsNanoIdIndexRouteImport } from './routes/_main/stops.$nanoId.index'
 import { Route as MainToursNanoIdEditRouteImport } from './routes/_main/tours.$nanoId.edit'
@@ -187,6 +188,11 @@ const MainBrandQrRoute = MainBrandQrRouteImport.update({
   path: '/qr',
   getParentRoute: () => MainBrandRoute,
 } as any)
+const MainBrandAiRoute = MainBrandAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => MainBrandRoute,
+} as any)
 const MainToursNanoIdIndexRoute = MainToursNanoIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -235,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/auth/error': typeof AuthErrorRoute
+  '/brand/ai': typeof MainBrandAiRoute
   '/brand/qr': typeof MainBrandQrRoute
   '/brand/theme': typeof MainBrandThemeRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/auth/error': typeof AuthErrorRoute
+  '/brand/ai': typeof MainBrandAiRoute
   '/brand/qr': typeof MainBrandQrRoute
   '/brand/theme': typeof MainBrandThemeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -304,6 +312,7 @@ export interface FileRoutesById {
   '/api/upload': typeof ApiUploadRoute
   '/api/upload-part': typeof ApiUploadPartRoute
   '/auth/error': typeof AuthErrorRoute
+  '/_main/brand/ai': typeof MainBrandAiRoute
   '/_main/brand/qr': typeof MainBrandQrRoute
   '/_main/brand/theme': typeof MainBrandThemeRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
@@ -340,6 +349,7 @@ export interface FileRouteTypes {
     | '/api/upload'
     | '/api/upload-part'
     | '/auth/error'
+    | '/brand/ai'
     | '/brand/qr'
     | '/brand/theme'
     | '/stops/$nanoId'
@@ -374,6 +384,7 @@ export interface FileRouteTypes {
     | '/api/upload'
     | '/api/upload-part'
     | '/auth/error'
+    | '/brand/ai'
     | '/brand/qr'
     | '/brand/theme'
     | '/api/auth/$'
@@ -408,6 +419,7 @@ export interface FileRouteTypes {
     | '/api/upload'
     | '/api/upload-part'
     | '/auth/error'
+    | '/_main/brand/ai'
     | '/_main/brand/qr'
     | '/_main/brand/theme'
     | '/_main/stops/$nanoId'
@@ -642,6 +654,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainBrandQrRouteImport
       parentRoute: typeof MainBrandRoute
     }
+    '/_main/brand/ai': {
+      id: '/_main/brand/ai'
+      path: '/ai'
+      fullPath: '/brand/ai'
+      preLoaderRoute: typeof MainBrandAiRouteImport
+      parentRoute: typeof MainBrandRoute
+    }
     '/_main/tours/$nanoId/': {
       id: '/_main/tours/$nanoId/'
       path: '/'
@@ -693,11 +712,13 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface MainBrandRouteChildren {
+  MainBrandAiRoute: typeof MainBrandAiRoute
   MainBrandQrRoute: typeof MainBrandQrRoute
   MainBrandThemeRoute: typeof MainBrandThemeRoute
 }
 
 const MainBrandRouteChildren: MainBrandRouteChildren = {
+  MainBrandAiRoute: MainBrandAiRoute,
   MainBrandQrRoute: MainBrandQrRoute,
   MainBrandThemeRoute: MainBrandThemeRoute,
 }

@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { updateProfileAvatar } from './update-profile-avatar.server'
 
@@ -17,5 +18,9 @@ export const updateProfileAvatarFn = createServerFn({ method: 'POST' })
     }
 
     await updateProfileAvatar(context.user.id, data.storagePath)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'profile.avatar_updated',
+    })
     return { storagePath: data.storagePath }
   })

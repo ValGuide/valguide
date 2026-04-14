@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireOrgRole } from '../auth/authorization'
 import { auth } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -24,6 +25,16 @@ export const updateMemberRoleFn = createServerFn({ method: 'POST' })
         memberId: data.memberId,
         organizationId: data.teamId,
         role: data.newRole,
+      },
+    })
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'org.member_role_updated',
+      properties: {
+        organization_id: data.teamId,
+        member_id: data.memberId,
+        new_role: data.newRole,
       },
     })
   })

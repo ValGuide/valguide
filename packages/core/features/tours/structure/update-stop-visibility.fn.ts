@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireStopAccessByNanoId, requireTourAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { updateStopVisibility } from './update-stop-visibility.server'
@@ -19,5 +20,14 @@ export const updateStopVisibilityFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
     await requireStopAccessByNanoId(data.stopNanoId, context.user.id)
 
-    return updateStopVisibility(data)
+    const result = await updateStopVisibility(data)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: data.visible ? 'tour.stop_shown' : 'tour.stop_hidden',
+      properties: {
+        tour_nano_id: data.tourNanoId,
+        stop_nano_id: data.stopNanoId,
+      },
+    })
+    return result
   })

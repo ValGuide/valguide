@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { type CreateThemeInput, createTheme } from './create-theme.server'
@@ -19,6 +20,13 @@ const createThemeSchema = z.object({
   colors: z.any(),
   radius: z.number(),
   fonts: z.any(),
+  metadata: z
+    .object({
+      origin: z.literal('ai'),
+      aiGenerationNanoId: z.string().min(10).max(21),
+    })
+    .nullable()
+    .optional(),
 })
 
 export const createThemeFn = createServerFn({ method: 'POST' })
@@ -38,8 +46,18 @@ export const createThemeFn = createServerFn({ method: 'POST' })
       colors: data.colors as ThemeColors,
       radius: data.radius,
       fonts: normalizeThemeFonts(data.fonts as ThemeFonts, { strict: true }),
+      metadata: data.metadata ?? null,
       createdBy: context.user.id,
     }
 
-    return createTheme(input)
+    const created = await createTheme(input)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'theme.created',
+      properties: {
+        theme_id: created.id,
+        theme_preset: created.basePreset,
+      },
+    })
+    return created
   })

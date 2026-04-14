@@ -4,6 +4,7 @@ import type { Asset } from '@valguide/core/features/assets/types'
 import { getStopTranslationStatusDisplay } from '@valguide/core/features/tours/status-utils'
 import type { StopAssetDraftItem } from '@valguide/core/features/tours/stop/asset/get-stop-assets-draft.fn'
 import { useTranslations } from '@valguide/core/i18n/client'
+import { captureStudioClientEvent } from '@valguide/core/posthog/PostHogProvider'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { Button } from '@valguide/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
@@ -222,6 +223,19 @@ export function StopEditPage({ MediaPicker, onPublishAssets, StopQrPanel, diffQu
     }
   }, [discard, activeLocale, refetch])
 
+  const handleDiffToggle = useCallback(
+    (enabled: boolean) => {
+      captureStudioClientEvent('editor.diff_toggled', {
+        content_type: 'stop',
+        entity_nano_id: nanoId,
+        locale: activeLocale,
+        enabled,
+      })
+      setDiffEnabled(enabled)
+    },
+    [activeLocale, nanoId, setDiffEnabled],
+  )
+
   const breadcrumbContent = (
     <Button variant="ghost" size="sm" onClick={handleBack} className="-ml-2">
       <ChevronLeft className="h-4 w-4" />
@@ -268,7 +282,7 @@ export function StopEditPage({ MediaPicker, onPublishAssets, StopQrPanel, diffQu
           onAudioChange={handleAudioChange}
           MediaPicker={MediaPicker}
           diffEnabled={diffEnabled}
-          onDiffToggle={setDiffEnabled}
+          onDiffToggle={handleDiffToggle}
           changedCount={changedCount}
           getFieldDiff={getFieldDiff}
         />
