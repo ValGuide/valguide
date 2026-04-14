@@ -1190,24 +1190,24 @@
         "qrDescription": "Standard-Branding für QR-Codes in Ihrem Arbeitsbereich."
       },
       "analytics": {
-        "title": "Guide Analytics",
+        "title": "Analytics",
         "description": "Verfolge, wie Besuchende sich durch deine veröffentlichten Touren bewegen, mit datenschutzfreundlichen Ereignisdaten aus deinem Workspace.",
         "kpis": {
           "uniqueVisitors": {
             "title": "Eindeutige Besuchende",
-            "description": "Anonyme, eindeutige Besuchende über alle erfassten Tour-Aktivitäten hinweg."
+            "description": "Anonyme Einzelbesuchende."
           },
           "tourOpens": {
             "title": "Tour-Aufrufe",
-            "description": "Wie oft Besuchende eine Tour-Seite geöffnet oder eine Tour direkt betreten haben."
+            "description": "Aufrufe von Tour-Seiten."
           },
           "stopOpens": {
             "title": "Stop-Aufrufe",
-            "description": "Wie oft Besuchende einen Stop im Player geöffnet haben."
+            "description": "Geöffnete Stops im Player."
           },
           "audioPlays": {
             "title": "Audio-Starts",
-            "description": "Wie oft Besuchende die Audio-Wiedergabe eines Stops gestartet haben."
+            "description": "Gestartete Audio-Wiedergaben."
           }
         },
         "recentActivity": {

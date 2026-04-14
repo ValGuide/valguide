@@ -1190,24 +1190,24 @@
         "qrDescription": "Branding standard per codes QR en quest workspace."
       },
       "analytics": {
-        "title": "Guide Analytics",
+        "title": "Analytics",
         "description": "Observa co persunas visitantas sa movan tras tias tours publitgadas cun novitads da datas respectusas da la protecziun da datas.",
         "kpis": {
           "uniqueVisitors": {
             "title": "Visitaders unics",
-            "description": "Visitaders anonims e distincts sur tuttas activitads da tour registradas."
+            "description": "Visitaders anonims e distincts."
           },
           "tourOpens": {
             "title": "Averturas da tours",
-            "description": "Quant savens persunas visitantas han avert ina pagina da tour u èn entrads directamain en ina tour."
+            "description": "Tours avertas."
           },
           "stopOpens": {
             "title": "Averturas da stops",
-            "description": "Quant savens persunas visitantas han avert in stop en il player."
+            "description": "Stops averts en il player."
           },
           "audioPlays": {
             "title": "Starts d'audio",
-            "description": "Quant savens persunas visitantas han cumenzà la reproducziun audio d'in stop."
+            "description": "Reproducziuns audio cumenzadas."
           }
         },
         "recentActivity": {

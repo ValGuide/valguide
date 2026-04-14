@@ -39,16 +39,23 @@ export function AnalyticsActivityChart({
   } satisfies ChartConfig
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="rounded-3xl border-border/80 shadow-none">
+      <CardHeader className="px-4 pt-4 sm:px-6 sm:pt-6">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[320px] w-full">
+      <CardContent className="px-2 pb-3 sm:px-6 sm:pb-6">
+        <ChartContainer config={chartConfig} className="h-[220px] w-full sm:h-[320px]">
           <Recharts.AreaChart accessibilityLayer data={data} margin={{ left: 12, right: 12 }}>
             <Recharts.CartesianGrid vertical={false} />
-            <Recharts.XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} minTickGap={24} />
+            <Recharts.XAxis
+              dataKey="label"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              minTickGap={32}
+              tick={{ fontSize: 11 }}
+            />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
             <Recharts.Area
               dataKey="tourOpens"

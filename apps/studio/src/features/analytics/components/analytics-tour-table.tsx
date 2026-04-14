@@ -33,12 +33,12 @@ export function AnalyticsTourTable({
   title: string
 }) {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="rounded-3xl border-border/80 shadow-none">
+      <CardHeader className="px-4 pt-4 sm:px-6 sm:pt-6">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
         <Table>
           <TableHeader>
             <TableRow>

@@ -1190,24 +1190,24 @@
         "qrDescription": "Default branding for QR codes in your workspace."
       },
       "analytics": {
-        "title": "Guide Analytics",
+        "title": "Analytics",
         "description": "Track how visitors move through your published tours with privacy-friendly event data stored inside your workspace.",
         "kpis": {
           "uniqueVisitors": {
             "title": "Unique visitors",
-            "description": "Distinct anonymous visitors across all tracked tour activity."
+            "description": "Distinct anonymous visitors."
           },
           "tourOpens": {
             "title": "Tour opens",
-            "description": "How often visitors opened a tour page or entered a tour directly."
+            "description": "Tour page opens."
           },
           "stopOpens": {
             "title": "Stop opens",
-            "description": "How often visitors opened a stop inside the player."
+            "description": "Stops opened in the player."
           },
           "audioPlays": {
             "title": "Audio plays",
-            "description": "How often visitors started audio playback on a stop."
+            "description": "Started audio playback."
           }
         },
         "recentActivity": {
