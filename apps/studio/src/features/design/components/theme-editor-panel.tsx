@@ -136,6 +136,24 @@ export function ThemeEditorPanel({
     </>
   )
 
+  const aiAssistantStarter = onOpenAiAssistant ? (
+    <section className="rounded-2xl border border-dashed bg-muted/15 p-4">
+      <button
+        type="button"
+        onClick={onOpenAiAssistant}
+        className="flex w-full items-start justify-between gap-4 text-left transition-colors hover:text-foreground"
+      >
+        <div className="space-y-1">
+          <p className="text-sm font-medium">{t('aiAssistant.starterTitle')}</p>
+          <p className="text-sm text-muted-foreground">{t('aiAssistant.starterDescription')}</p>
+        </div>
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background">
+          <Sparkles className="size-4" />
+        </div>
+      </button>
+    </section>
+  ) : null
+
   return (
     <Card
       className={cn(
@@ -245,27 +263,13 @@ export function ThemeEditorPanel({
             </div>
           </section>
 
+          {!isMobileLayout ? aiAssistantStarter : null}
+
           <section className="rounded-2xl border p-4">
             <div className="mb-4 space-y-1">
               <p className="text-sm font-medium">{t('chooseThemeTitle')}</p>
               <p className="text-sm text-muted-foreground">{t('chooseThemeDescription')}</p>
             </div>
-
-            {onOpenAiAssistant ? (
-              <button
-                type="button"
-                onClick={onOpenAiAssistant}
-                className="mb-4 flex w-full items-start justify-between gap-4 rounded-xl border border-dashed bg-muted/15 p-4 text-left transition-colors hover:border-primary/40 hover:bg-muted/25"
-              >
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">{t('aiAssistant.starterTitle')}</p>
-                  <p className="text-sm text-muted-foreground">{t('aiAssistant.starterDescription')}</p>
-                </div>
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background">
-                  <Sparkles className="size-4" />
-                </div>
-              </button>
-            ) : null}
 
             {isMobileLayout ? (
               <>

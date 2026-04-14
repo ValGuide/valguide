@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
 import { ChevronLeft } from 'lucide-react'
@@ -49,11 +49,6 @@ function ThemeBrandPage() {
             <h1 className="text-2xl font-semibold tracking-tight">{t('nav.theme')}</h1>
             <p className="text-sm text-muted-foreground">{t('pages.design.themeDescription')}</p>
           </div>
-          <Button variant="outline" asChild>
-            <Link to="/brand/theme" search={{ assistant: 'ai' }}>
-              {t('nav.aiTheme')}
-            </Link>
-          </Button>
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-hidden px-4 py-3 sm:px-6 sm:py-6">
