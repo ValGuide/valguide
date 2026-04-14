@@ -60,7 +60,7 @@ export function ThemeMobileDock({
   showDeleteThemes = true,
 }: ThemeMobileDockProps) {
   const t = useTranslations('studio.themeCustomizer')
-  const { config, setColor, setRadius, setFonts, resetToPreset } = customizer
+  const { config, setColor, setRadius, setFonts, reset } = customizer
   const [activePanel, setActivePanel] = useState<DockPanel>(null)
 
   const currentThemeLabel = config.name ?? formatThemePresetLabel(config.basePreset)
@@ -297,7 +297,7 @@ export function ThemeMobileDock({
           <Button
             variant="outline"
             className="h-11 flex-1 rounded-[1rem] border-border/55 bg-background/24 gap-1.5 backdrop-blur-sm"
-            onClick={() => resetToPreset(config.basePreset)}
+            onClick={reset}
           >
             <RotateCcw className="size-3.5" />
             <span>{t('reset')}</span>

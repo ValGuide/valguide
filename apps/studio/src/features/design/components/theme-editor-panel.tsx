@@ -65,7 +65,7 @@ export function ThemeEditorPanel({
   className,
 }: ThemeEditorPanelProps) {
   const t = useTranslations('studio.themeCustomizer')
-  const { config, setColor, setRadius, setFonts, resetToPreset } = customizer
+  const { config, setColor, setRadius, setFonts, reset } = customizer
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false)
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
 
@@ -74,7 +74,7 @@ export function ThemeEditorPanel({
   }
 
   const handleReset = () => {
-    resetToPreset(config.basePreset)
+    reset()
   }
 
   const isWorkspaceLayout = layout === 'workspace'
