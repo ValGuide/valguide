@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from 'react'
 import { defaultFonts, defaultRadius, themeColorPresets } from './theme-presets'
 import type { EditorThemeConfig, ThemeColors, ThemeFonts, ThemePreset } from './types'
 
-function createPresetConfig(preset: ThemePreset): EditorThemeConfig {
+function createPresetConfig(preset: ThemePreset, isDirty = false): EditorThemeConfig {
   return {
     basePreset: preset,
     colors: themeColorPresets[preset],
@@ -12,7 +12,7 @@ function createPresetConfig(preset: ThemePreset): EditorThemeConfig {
     fonts: defaultFonts,
     id: undefined,
     name: undefined,
-    isDirty: false,
+    isDirty,
   }
 }
 
@@ -102,8 +102,8 @@ export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = '
     [loadThemeConfig],
   )
 
-  const startNewTheme = useCallback((preset: ThemePreset) => {
-    setConfig(createPresetConfig(preset))
+  const startNewTheme = useCallback((preset: ThemePreset, options?: { isDirty?: boolean }) => {
+    setConfig(createPresetConfig(preset, options?.isDirty ?? false))
     originalConfigRef.current = null
   }, [])
 
