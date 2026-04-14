@@ -28,14 +28,13 @@ function createThemeConfig(theme: Theme): EditorThemeConfig {
   }
 }
 
-export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = 'light') {
-  const [config, setConfig] = useState<EditorThemeConfig>(() =>
-    typeof initialThemeOrPreset === 'string'
-      ? createPresetConfig(initialThemeOrPreset)
-      : createThemeConfig(initialThemeOrPreset),
-  )
+function createOriginalConfig(input: Theme | ThemePreset): EditorThemeConfig {
+  return typeof input === 'string' ? createPresetConfig(input) : createThemeConfig(input)
+}
 
-  const originalConfigRef = useRef<EditorThemeConfig | null>(null)
+export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = 'light') {
+  const [config, setConfig] = useState<EditorThemeConfig>(() => createOriginalConfig(initialThemeOrPreset))
+  const originalConfigRef = useRef<EditorThemeConfig>(createOriginalConfig(initialThemeOrPreset))
 
   const setPreset = useCallback((preset: ThemePreset) => {
     setConfig((prev) => ({
@@ -73,9 +72,11 @@ export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = '
     }))
   }, [])
 
-  const resetToPreset = useCallback((preset: ThemePreset) => {
-    setConfig(createPresetConfig(preset))
-    originalConfigRef.current = null
+  const reset = useCallback(() => {
+    setConfig({
+      ...originalConfigRef.current,
+      isDirty: false,
+    })
   }, [])
 
   const loadThemeConfig = useCallback(
@@ -103,8 +104,8 @@ export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = '
   )
 
   const startNewTheme = useCallback((preset: ThemePreset, options?: { isDirty?: boolean }) => {
+    originalConfigRef.current = createPresetConfig(preset)
     setConfig(createPresetConfig(preset, options?.isDirty ?? false))
-    originalConfigRef.current = null
   }, [])
 
   const markClean = useCallback(() => {
@@ -170,7 +171,7 @@ export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = '
     setColor,
     setRadius,
     setFonts,
-    resetToPreset,
+    reset,
     loadThemeConfig,
     loadTheme,
     startNewTheme,
