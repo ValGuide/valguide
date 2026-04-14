@@ -19,7 +19,7 @@ export const publishStopLocaleFn = createServerFn({ method: 'POST' })
     await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await publishStopLocale(data.nanoId, data.locale, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'stop.published',
       properties: {

@@ -18,7 +18,7 @@ export const archiveStopFn = createServerFn({ method: 'POST' })
     const { stopId } = await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await archiveStop(stopId, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'stop.archived',
       properties: {

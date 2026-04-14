@@ -27,7 +27,7 @@ export const removeTourAssetFn = createServerFn({ method: 'POST' })
     })
 
     if (result.removed) {
-      await captureStudioProductEvent({
+      captureStudioProductEvent({
         distinctId: context.user.id,
         event: 'tour.asset_removed',
         properties: {

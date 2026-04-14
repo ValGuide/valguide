@@ -24,7 +24,7 @@ export const updateTourSlugFn = createServerFn({ method: 'POST' })
     const result = await updateTourSlug(db, tourId, organizationId, data.newSlug)
 
     if (result.success) {
-      await captureStudioProductEvent({
+      captureStudioProductEvent({
         distinctId: context.user.id,
         event: 'tour.slug_updated',
         properties: {

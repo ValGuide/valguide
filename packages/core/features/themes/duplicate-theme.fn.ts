@@ -22,7 +22,7 @@ export const duplicateThemeFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireThemeAccess(data.themeId, context.user.id)
     const duplicated = await duplicateTheme(data.themeId, data.newName, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'theme.duplicated',
       properties: {

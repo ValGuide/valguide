@@ -21,7 +21,7 @@ export const updateStopQrBrandingFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
     await requireStopAccessByNanoId(data.stopNanoId, context.user.id)
     const result = await updateStopQrBrandingSettings(data.tourNanoId, data.stopNanoId, context.user.id, data.override)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'qr.stop_branding_updated',
       properties: {

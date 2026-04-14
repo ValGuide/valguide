@@ -31,7 +31,7 @@ export const updateTourSettingsDraftFn = createServerFn({ method: 'POST' })
       context.user.id,
     )
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.settings_updated',
       properties: {

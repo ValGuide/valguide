@@ -29,7 +29,7 @@ export const updateTourFn = createServerFn({ method: 'POST' })
     const removedLocales = previousLocales.filter((locale) => !result.availableLocales.includes(locale))
 
     for (const locale of addedLocales) {
-      await captureStudioProductEvent({
+      captureStudioProductEvent({
         distinctId: context.user.id,
         event: 'tour.locale_added',
         properties: {
@@ -40,7 +40,7 @@ export const updateTourFn = createServerFn({ method: 'POST' })
     }
 
     for (const locale of removedLocales) {
-      await captureStudioProductEvent({
+      captureStudioProductEvent({
         distinctId: context.user.id,
         event: 'tour.locale_removed',
         properties: {

@@ -23,7 +23,7 @@ export const updateProfileFn = createServerFn({ method: 'POST' })
   .inputValidator(updateProfileSchema)
   .handler(async ({ context, data }) => {
     const result = await updateProfile(context.user.id, data)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'profile.updated',
       properties: {

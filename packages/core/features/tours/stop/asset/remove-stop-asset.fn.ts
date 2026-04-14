@@ -27,7 +27,7 @@ export const removeStopAssetFn = createServerFn({ method: 'POST' })
     })
 
     if (result.removed) {
-      await captureStudioProductEvent({
+      captureStudioProductEvent({
         distinctId: context.user.id,
         event: 'stop.asset_removed',
         properties: {

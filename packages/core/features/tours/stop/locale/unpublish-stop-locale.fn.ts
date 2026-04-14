@@ -22,7 +22,7 @@ export const unpublishStopLocaleFn = createServerFn({ method: 'POST' })
 
     const result = await unpublishStopLocale(data.nanoId, data.locale)
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'stop.unpublished',
       properties: {

@@ -31,7 +31,7 @@ export const inviteMemberFn = createServerFn({ method: 'POST' })
       },
     })
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.invite_sent',
       organizationNanoId: team?.nanoId ?? null,

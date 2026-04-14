@@ -23,7 +23,7 @@ export const createStopFn = createServerFn({ method: 'POST' })
     }
     await requireOrgMember(orgId, context.user.id)
     const result = await createStop(data, orgId, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'stop.created',
       properties: {

@@ -42,7 +42,7 @@ export const joinTeamFn = createServerFn({ method: 'POST' })
       },
     })
     await setActiveOrganizationForCurrentSession(invite.organizationId)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.joined',
       organizationNanoId: invite.organization.nanoId,

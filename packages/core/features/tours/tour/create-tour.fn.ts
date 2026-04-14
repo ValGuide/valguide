@@ -28,7 +28,7 @@ export const createTourFn = createServerFn({ method: 'POST' })
     }
     await requireOrgMember(orgId, context.user.id)
     const result = await createTour(data, orgId, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.created',
       properties: {

@@ -23,7 +23,7 @@ export const updateOrgSlugFn = createServerFn({ method: 'POST' })
     const result = await updateOrgSlug(db, data.organizationId, data.newSlug)
 
     if (result.success) {
-      await captureStudioProductEvent({
+      captureStudioProductEvent({
         distinctId: context.user.id,
         event: 'org.slug_updated',
         organizationNanoId: result.nanoId,

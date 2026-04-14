@@ -29,7 +29,7 @@ export const assignStopAssetFn = createServerFn({ method: 'POST' })
     })
 
     if (result.assigned) {
-      await captureStudioProductEvent({
+      captureStudioProductEvent({
         distinctId: context.user.id,
         event: 'asset.attached',
         properties: {

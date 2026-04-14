@@ -22,7 +22,7 @@ export const updateTourLocaleDraftFn = createServerFn({ method: 'POST' })
 
     const { nanoId, locale, ...input } = data
     const result = await updateTourLocaleDraft(nanoId, locale, input, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.saved',
       properties: {

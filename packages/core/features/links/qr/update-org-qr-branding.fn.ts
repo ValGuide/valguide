@@ -18,7 +18,7 @@ export const updateOrgQrBrandingFn = createServerFn({ method: 'POST' })
 
     await requireOrgMember(organizationId, context.user.id)
     const result = await updateOrganizationQrBrandingSettings(organizationId, context.user.id, data)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'qr.organization_branding_updated',
       properties: {

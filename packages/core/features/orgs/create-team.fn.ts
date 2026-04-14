@@ -19,7 +19,7 @@ export const createTeamFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }): Promise<CreateTeamResult> => {
     const { team, orgSlug } = await createTeam(db, data.name, context.user.id)
     await setActiveOrganizationForCurrentSession(team.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.created',
       organizationNanoId: team.nanoId,

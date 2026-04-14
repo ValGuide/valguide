@@ -23,7 +23,7 @@ export const updateStopLocaleDraftFn = createServerFn({ method: 'POST' })
 
     const { nanoId, locale, ...input } = data
     const result = await updateStopLocaleDraft(nanoId, locale, input, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'stop.saved',
       properties: {

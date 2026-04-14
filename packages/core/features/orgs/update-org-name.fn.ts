@@ -17,7 +17,7 @@ export const updateOrgNameFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireOrgMember(data.organizationId, context.user.id)
     await updateOrgName(db, data.organizationId, data.newName)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.name_updated',
       properties: {

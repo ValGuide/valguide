@@ -280,7 +280,7 @@ export const auth = createAuthInstance({
   async onVerificationOtpSent({ email }) {
     await Promise.all([
       runAuthSideEffect('capture auth.otp_requested event', async () => {
-        await captureStudioProductEvent({
+        captureStudioProductEvent({
           distinctId: email,
           event: 'auth.otp_requested',
         })

@@ -27,7 +27,7 @@ export const deleteAssetsFn = createServerFn({ method: 'POST' })
     await requireOrgMember(organizationId, context.user.id)
 
     const result = await deleteAssets(data.assetIds, organizationId)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'asset.bulk_deleted',
       properties: {

@@ -22,7 +22,7 @@ export const unpublishTourLocaleFn = createServerFn({ method: 'POST' })
 
     const result = await unpublishTourLocale(data.nanoId, data.locale)
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.unpublished',
       properties: {

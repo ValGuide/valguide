@@ -33,7 +33,7 @@ export const confirmAssetUploadFn = createServerFn({ method: 'POST' })
     }
     await requireOrgMember(organizationId, context.user.id)
     const asset = await confirmUpload(data, organizationId, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'asset.upload_completed',
       properties: {

@@ -20,7 +20,7 @@ export const deleteAssetFn = createServerFn({ method: 'POST' })
 
     await requireAssetAccess(data.assetId, context.user.id)
     const result = await deleteAsset(data.assetId)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'asset.deleted',
       properties: {

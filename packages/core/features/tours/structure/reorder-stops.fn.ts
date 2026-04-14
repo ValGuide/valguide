@@ -19,7 +19,7 @@ export const reorderStopsFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
 
     const result = await reorderStops(data)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.stops_reordered',
       properties: {

@@ -21,7 +21,7 @@ export const updateStopVisibilityFn = createServerFn({ method: 'POST' })
     await requireStopAccessByNanoId(data.stopNanoId, context.user.id)
 
     const result = await updateStopVisibility(data)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: data.visible ? 'tour.stop_shown' : 'tour.stop_hidden',
       properties: {

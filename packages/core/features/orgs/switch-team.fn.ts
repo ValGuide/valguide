@@ -39,7 +39,7 @@ export const switchTeamFn = createServerFn({ method: 'POST' })
     }
 
     await setActiveOrganizationForCurrentSession(team.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.switched',
       organizationNanoId: team.nanoId,

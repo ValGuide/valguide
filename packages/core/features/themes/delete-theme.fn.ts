@@ -21,7 +21,7 @@ export const deleteThemeFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireThemeAccess(data.id, context.user.id)
     await deleteTheme(data.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'theme.deleted',
       properties: {

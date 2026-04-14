@@ -22,7 +22,7 @@ export const setTourThemeFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireTourAccess(data.tourId, context.user.id)
     const result = await setTourTheme(data.tourId, data.themeId)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: data.themeId ? 'theme.assigned_to_tour' : 'theme.unassigned_from_tour',
       properties: {

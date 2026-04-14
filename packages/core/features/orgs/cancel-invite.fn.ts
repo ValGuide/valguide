@@ -24,7 +24,7 @@ export const cancelInviteFn = createServerFn({ method: 'POST' })
       },
     })
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.invite_canceled',
       properties: {

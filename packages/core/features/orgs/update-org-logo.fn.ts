@@ -22,7 +22,7 @@ export const updateOrgLogoFn = createServerFn({ method: 'POST' })
     }
 
     await updateOrgLogo(db, data.organizationId, data.storagePath)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.logo_updated',
       properties: {

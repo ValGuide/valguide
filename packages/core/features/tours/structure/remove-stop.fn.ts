@@ -19,7 +19,7 @@ export const removeStopFromTourFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
 
     const result = await removeStopFromTour(data)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.stop_removed',
       properties: {

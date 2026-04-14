@@ -17,7 +17,7 @@ export const discardAllStopChangesFn = createServerFn({ method: 'POST' })
     await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await discardAllStopChanges(data.nanoId, data.locale)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'stop.discarded',
       properties: {

@@ -19,7 +19,7 @@ export const updateTourQrBrandingFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireTourAccessByNanoId(data.tourNanoId, context.user.id)
     const result = await updateTourQrBrandingSettings(data.tourNanoId, context.user.id, data.override)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'qr.tour_branding_updated',
       properties: {

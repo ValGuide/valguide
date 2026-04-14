@@ -21,7 +21,7 @@ export const deleteTourFn = createServerFn({ method: 'POST' })
       ? await permanentlyDeleteTour(data.nanoId, context.user.id)
       : await deleteTour(data.nanoId, context.user.id)
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.deleted',
       properties: {

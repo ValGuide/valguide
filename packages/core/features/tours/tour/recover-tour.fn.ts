@@ -19,7 +19,7 @@ export const recoverTourFn = createServerFn({ method: 'POST' })
   .inputValidator(recoverTourSchema)
   .handler(async ({ context, data }) => {
     const result = await recoverTour(data.nanoId, context.user.id)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.recovered',
       properties: {

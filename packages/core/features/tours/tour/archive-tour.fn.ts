@@ -19,7 +19,7 @@ export const archiveTourFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     const result = await archiveTour(data.nanoId, context.user.id)
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.archived',
       properties: {

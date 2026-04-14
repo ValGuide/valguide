@@ -28,7 +28,7 @@ export const renameAssetFn = createServerFn({ method: 'POST' })
       throw new NotFoundError('Asset')
     }
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'asset.renamed',
       properties: {

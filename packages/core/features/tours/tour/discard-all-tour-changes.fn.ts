@@ -17,7 +17,7 @@ export const discardAllTourChangesFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await discardAllTourChanges(data.nanoId, data.locale)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.discarded',
       properties: {

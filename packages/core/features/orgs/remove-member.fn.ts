@@ -49,7 +49,7 @@ export const removeMemberFn = createServerFn({ method: 'POST' })
       },
     })
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.member_removed',
       properties: {

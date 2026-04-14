@@ -22,7 +22,7 @@ export const publishTourSettingsFn = createServerFn({ method: 'POST' })
 
     const result = await publishTourSettings(data.nanoId, context.user.id)
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'tour.settings_published',
       properties: {

@@ -28,7 +28,7 @@ export const updateMemberRoleFn = createServerFn({ method: 'POST' })
       },
     })
 
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'org.member_role_updated',
       properties: {

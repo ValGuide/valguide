@@ -19,7 +19,7 @@ export const reorderStopAssetsFn = createServerFn({ method: 'POST' })
     await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await reorderStopAssets(data.nanoId, { orderedIds: data.orderedIds })
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'stop.asset_reordered',
       properties: {

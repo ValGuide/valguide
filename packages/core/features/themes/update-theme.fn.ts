@@ -37,7 +37,7 @@ export const updateThemeFn = createServerFn({ method: 'POST' })
     if (data.fonts !== undefined) input.fonts = normalizeThemeFonts(data.fonts as ThemeFonts, { strict: true })
 
     const updated = await updateTheme(input)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'theme.updated',
       properties: {

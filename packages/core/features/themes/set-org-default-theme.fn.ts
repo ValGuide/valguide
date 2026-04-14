@@ -22,7 +22,7 @@ export const setOrgDefaultThemeFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireOrgRole(data.organizationId, context.user.id, 'admin')
     const result = await setOrgDefaultTheme(data.organizationId, data.themeId)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: data.themeId ? 'theme.default_set' : 'theme.default_cleared',
       properties: {

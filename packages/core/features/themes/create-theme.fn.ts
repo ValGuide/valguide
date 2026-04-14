@@ -51,7 +51,7 @@ export const createThemeFn = createServerFn({ method: 'POST' })
     }
 
     const created = await createTheme(input)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'theme.created',
       properties: {

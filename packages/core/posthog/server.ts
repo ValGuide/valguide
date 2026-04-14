@@ -1,3 +1,4 @@
+import { createLogger } from '@valguide/logger'
 import { PostHog } from 'posthog-node'
 import { waitUntil } from '../utils/wait-until'
 import {
@@ -7,8 +8,17 @@ import {
 } from './product-analytics'
 
 let posthogServer: PostHog | null = null
+const log = createLogger('posthog-server')
 
 const POSTHOG_KEY = process.env.VITE_POSTHOG_KEY
+
+function deferPostHog(label: string, effect: Promise<void>) {
+  waitUntil(
+    effect.catch((error) => {
+      log.error(`PostHog ${label} failed`, error)
+    }),
+  )
+}
 
 export function getPostHogServer(): PostHog | null {
   if (!POSTHOG_KEY) {
@@ -32,23 +42,25 @@ export function getPostHogServer(): PostHog | null {
  * Manually capture an exception on the server.
  * Use in try/catch blocks within server functions.
  */
-export async function captureServerException(error: Error, distinctId?: string, properties?: Record<string, unknown>) {
+export function captureServerException(error: Error, distinctId?: string, properties?: Record<string, unknown>) {
   const posthog = getPostHogServer()
   if (!posthog) return
 
-  // Use captureImmediate to guarantee HTTP request completes before function continues
-  await posthog.captureImmediate({
-    distinctId: distinctId ?? 'anonymous',
-    event: '$exception',
-    properties: {
-      ...properties,
-      $exception_message: error.message,
-      $exception_type: error.name,
-      $exception_stack_trace_raw: error.stack,
-      $lib: 'posthog-node',
-      environment: process.env.NODE_ENV,
-    },
-  })
+  deferPostHog(
+    'exception capture',
+    posthog.captureImmediate({
+      distinctId: distinctId ?? 'anonymous',
+      event: '$exception',
+      properties: {
+        ...properties,
+        $exception_message: error.message,
+        $exception_type: error.name,
+        $exception_stack_trace_raw: error.stack,
+        $lib: 'posthog-node',
+        environment: process.env.NODE_ENV,
+      },
+    }),
+  )
 }
 
 /**
@@ -62,7 +74,7 @@ export function flushPostHog() {
   waitUntil(posthog.shutdown())
 }
 
-export async function captureStudioProductEvent(input: {
+export function captureStudioProductEvent(input: {
   distinctId: string
   event: StudioProductEventName
   organizationNanoId?: string | null
@@ -73,18 +85,21 @@ export async function captureStudioProductEvent(input: {
 
   const organizationNanoId = input.organizationNanoId ?? null
 
-  await posthog.captureImmediate({
-    distinctId: input.distinctId,
-    event: input.event,
-    properties: {
-      ...buildStudioAnalyticsProperties(input.properties, organizationNanoId ? { nanoId: organizationNanoId } : null),
-      ...(organizationNanoId
-        ? {
-            $groups: {
-              [POSTHOG_ORGANIZATION_GROUP]: organizationNanoId,
-            },
-          }
-        : {}),
-    },
-  })
+  deferPostHog(
+    `event capture (${input.event})`,
+    posthog.captureImmediate({
+      distinctId: input.distinctId,
+      event: input.event,
+      properties: {
+        ...buildStudioAnalyticsProperties(input.properties, organizationNanoId ? { nanoId: organizationNanoId } : null),
+        ...(organizationNanoId
+          ? {
+              $groups: {
+                [POSTHOG_ORGANIZATION_GROUP]: organizationNanoId,
+              },
+            }
+          : {}),
+      },
+    }),
+  )
 }

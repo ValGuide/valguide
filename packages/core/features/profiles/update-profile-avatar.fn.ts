@@ -18,7 +18,7 @@ export const updateProfileAvatarFn = createServerFn({ method: 'POST' })
     }
 
     await updateProfileAvatar(context.user.id, data.storagePath)
-    await captureStudioProductEvent({
+    captureStudioProductEvent({
       distinctId: context.user.id,
       event: 'profile.avatar_updated',
     })
