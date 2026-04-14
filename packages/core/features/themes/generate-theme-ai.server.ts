@@ -4,7 +4,8 @@ import { eq } from 'drizzle-orm'
 import { db } from '../db'
 import { organization } from '../orgs/schema'
 import { getR2Bucket } from '../storage/r2'
-import { themeAiGeneration } from './schema'
+import { createTheme } from './create-theme.server'
+import { themeAiGeneration, theme as themeTable } from './schema'
 import type { GenerateThemeAiInput, ThemeAiGeneratedTheme, ThemeAiWebsiteContext } from './theme-ai.shared'
 import { normalizeThemeAiSuggestion } from './theme-ai.shared'
 
@@ -15,6 +16,7 @@ type ThemeAiGenerationResult = {
     status: 'completed'
   }
   suggestion: ThemeAiGeneratedTheme
+  createdTheme: typeof themeTable.$inferSelect
 }
 
 type AiBinding = {
@@ -201,6 +203,28 @@ function extractJsonObjectFromAiResponse(rawResponse: string): string {
   return trimmedResponse
 }
 
+async function resolveUniqueThemeName(organizationId: string, preferredName: string): Promise<string> {
+  const existingThemes = await db.query.theme.findMany({
+    where: eq(themeTable.organizationId, organizationId),
+    columns: {
+      name: true,
+    },
+  })
+  const existingNames = new Set(existingThemes.map((theme) => theme.name))
+  const trimmedPreferredName = preferredName.trim() || 'Generated Theme'
+
+  if (!existingNames.has(trimmedPreferredName)) {
+    return trimmedPreferredName
+  }
+
+  let suffix = 2
+  while (existingNames.has(`${trimmedPreferredName} ${suffix}`)) {
+    suffix += 1
+  }
+
+  return `${trimmedPreferredName} ${suffix}`
+}
+
 async function generateSuggestedTheme(params: {
   sourceUrl?: string
   notes?: string
@@ -336,6 +360,23 @@ export async function generateThemeAi(
       websiteContext,
       visualAnalysis,
     })
+    const createdTheme = await createTheme({
+      organizationId,
+      name: await resolveUniqueThemeName(organizationId, suggestion.name),
+      basePreset: suggestion.basePreset,
+      colors: suggestion.colors,
+      radius: suggestion.radius,
+      fonts: suggestion.fonts,
+      metadata: {
+        origin: 'ai',
+        aiGenerationNanoId: input.runNanoId,
+      },
+      createdBy: userId,
+    })
+    const savedSuggestion = {
+      ...suggestion,
+      name: createdTheme.name,
+    }
 
     await db
       .update(themeAiGeneration)
@@ -343,7 +384,7 @@ export async function generateThemeAi(
         status: 'completed',
         websiteContext,
         visualAnalysis,
-        generatedTheme: suggestion,
+        generatedTheme: savedSuggestion,
         errorMessage: null,
       })
       .where(eq(themeAiGeneration.nanoId, input.runNanoId))
@@ -354,7 +395,8 @@ export async function generateThemeAi(
         createdAt: createdRun.createdAt,
         status: 'completed',
       },
-      suggestion,
+      suggestion: savedSuggestion,
+      createdTheme,
     }
   } catch (error) {
     await db

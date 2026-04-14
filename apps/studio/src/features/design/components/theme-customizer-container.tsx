@@ -238,13 +238,7 @@ export function ThemeCustomizerContainer({
         setAiBaselineConfig(cloneThemeConfig(customizer.config))
       }
 
-      customizer.loadDraftThemeConfig({
-        name: result.suggestion.name,
-        basePreset: result.suggestion.basePreset,
-        colors: result.suggestion.colors,
-        radius: result.suggestion.radius,
-        fonts: result.suggestion.fonts,
-      })
+      customizer.loadTheme(result.createdTheme)
 
       setAiDraft({
         sourceUrl: result.sourceUrl,

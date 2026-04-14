@@ -180,7 +180,7 @@
         "eyeDropper": "Farbe vom Bildschirm auswählen"
       },
       "themeLibrary": {
-        "description": "Gespeicherte Workspace-Designs lassen sich in mehreren Touren wiederverwenden.",
+        "description": "Gespeicherte Arbeitsbereichs-Designs lassen sich in mehreren Touren wiederverwenden.",
         "descriptionTooltipLabel": "Mehr Informationen zu gespeicherten Designs",
         "delete": "Löschen",
         "actions": "Design-Aktionen",
@@ -260,6 +260,11 @@
         "badge": "KI-Entwurf",
         "starterTitle": "Von Website oder Referenzen ableiten",
         "starterDescription": "Nutzen Sie Website, Notizen oder Bilder als schnellen Ausgangspunkt für ein neues Design.",
+        "generatedThemesTitle": "Mit KI erstellte Designs ({count})",
+        "generatedThemesDescription": "Erfolgreiche KI-Generierungen werden hier als gespeicherte Arbeitsbereichs-Designs abgelegt.",
+        "generatedThemesTooltipLabel": "Weitere Informationen zu KI-Designs",
+        "generatedThemesEmptyTitle": "Noch keine KI-Designs",
+        "generatedThemesEmptyDescription": "Sobald eine Generierung gelingt, erscheint das Ergebnis hier als wiederverwendbares Design.",
         "editSources": "Quellen bearbeiten",
         "discard": "KI-Entwurf verwerfen",
         "discardedToast": "KI-Entwurf verworfen"
@@ -270,7 +275,7 @@
       "generateAction": "Theme-Entwurf erzeugen",
       "generateLoading": "Entwurf wird erzeugt...",
       "cancelAction": "Abbrechen",
-      "generationSuccess": "Theme-Entwurf erstellt",
+      "generationSuccess": "KI-Design erstellt",
       "saveAction": "Als Theme speichern",
       "saveSuccess": "Theme erfolgreich gespeichert",
       "generatedThemeFallback": "Generiertes Theme",
@@ -748,7 +753,7 @@
       "workspaceDefaultTitle": "Workspace-Standard",
       "workspaceDefaultDescription": "Verwenden Sie für diese Tour das aktuelle Workspace-Standard-Design.",
       "workspaceDefaultDescriptionWithName": "Verwenden Sie für diese Tour das aktuelle Workspace-Standard-Design „{name}“.",
-      "savedThemeDescription": "Wenden Sie dieses gespeicherte Workspace-Design auf diese Tour an.",
+      "savedThemeDescription": "Wenden Sie dieses gespeicherte Arbeitsbereichs-Design auf diese Tour an.",
       "defaultBadge": "Standard",
       "builtInBadge": "ValGuide-Standard",
       "loadingThemes": "Gespeicherte Designs werden geladen...",

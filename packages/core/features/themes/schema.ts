@@ -14,6 +14,11 @@ export const themeAiGenerationStatusEnum = studioSchema.enum('theme_ai_generatio
   'failed',
 ])
 
+export type ThemeMetadata = {
+  origin: 'ai'
+  aiGenerationNanoId: string
+} | null
+
 export const theme = studioSchema.table(
   'theme',
   {
@@ -27,6 +32,7 @@ export const theme = studioSchema.table(
     colors: jsonb('colors').$type<ThemeColors>().notNull(),
     radius: numeric('radius', { precision: 3, scale: 1 }).notNull(),
     fonts: jsonb('fonts').$type<ThemeFonts>().notNull(),
+    metadata: jsonb('metadata').$type<ThemeMetadata>(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()

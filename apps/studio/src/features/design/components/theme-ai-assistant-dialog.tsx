@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { generateThemeAiFn } from '@valguide/core/features/themes/generate-theme-ai.fn'
+import type { Theme } from '@valguide/core/features/themes/schema'
 import type { ThemeAiGeneratedTheme } from '@valguide/core/features/themes/theme-ai.shared'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
@@ -22,6 +23,7 @@ import { cn } from '@valguide/ui/lib/utils'
 import { ImagePlus, Loader2, Sparkles, Trash2, WandSparkles } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { uploadFile } from '@/features/assets/lib/upload'
+import { themesQueryKey } from '../query-options'
 import { themeAiWorkspaceQueryKey, themeAiWorkspaceQueryOptions } from '../theme-ai-query-options'
 
 interface InspirationDraft {
@@ -35,6 +37,7 @@ export interface ThemeAiAssistantResult {
   notes?: string
   sourceImageCount: number
   suggestion: ThemeAiGeneratedTheme
+  createdTheme: Theme
 }
 
 export interface ThemeAiAssistantDialogProps {
@@ -143,11 +146,13 @@ export function ThemeAiAssistantDialog({
         notes: trimmedNotes,
         sourceImageCount: uploadedImages.length,
         suggestion: result.suggestion,
+        createdTheme: result.createdTheme,
       } satisfies ThemeAiAssistantResult
     },
     onSuccess: (result) => {
       toast.success(t('generationSuccess'))
       void queryClient.invalidateQueries({ queryKey: themeAiWorkspaceQueryKey() })
+      void queryClient.invalidateQueries({ queryKey: themesQueryKey() })
       onGenerated(result)
       onOpenChange(false)
     },

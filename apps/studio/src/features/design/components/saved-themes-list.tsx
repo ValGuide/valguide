@@ -16,6 +16,11 @@ import { useState } from 'react'
 export interface SavedThemesListProps {
   themes: Theme[]
   isLoading: boolean
+  title?: string
+  descriptionTooltip?: string
+  descriptionTooltipLabel?: string
+  emptyTitle?: string
+  emptyDescription?: string
   selectedThemeId?: string
   defaultThemeId?: string | null
   canManageDefaultTheme?: boolean
@@ -30,6 +35,11 @@ export interface SavedThemesListProps {
 export function SavedThemesList({
   themes,
   isLoading,
+  title,
+  descriptionTooltip,
+  descriptionTooltipLabel,
+  emptyTitle,
+  emptyDescription,
   selectedThemeId,
   defaultThemeId,
   canManageDefaultTheme = false,
@@ -43,7 +53,7 @@ export function SavedThemesList({
   const t = useTranslations('studio.themeCustomizer')
   const [pendingDefaultThemeId, setPendingDefaultThemeId] = useState<string | null>(null)
 
-  if (isLoading || themes.length === 0) {
+  if (isLoading) {
     return null
   }
 
@@ -77,18 +87,22 @@ export function SavedThemesList({
     <div className={cn('space-y-3', className)}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-center gap-1.5">
-          <p className="text-sm font-medium">{t('savedThemes', { count: themes.length })}</p>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="flex size-7 shrink-0 cursor-help items-center justify-center rounded-lg leading-none text-muted-foreground">
-                <CircleHelp className="size-3.5" />
-                <span className="sr-only">{t('themeLibrary.descriptionTooltipLabel')}</span>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-64 text-xs">
-              {t('themeLibrary.description')}
-            </TooltipContent>
-          </Tooltip>
+          <p className="text-sm font-medium">{title ?? t('savedThemes', { count: themes.length })}</p>
+          {!title || descriptionTooltip ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="flex size-7 shrink-0 cursor-help items-center justify-center rounded-lg leading-none text-muted-foreground">
+                  <CircleHelp className="size-3.5" />
+                  <span className="sr-only">
+                    {descriptionTooltipLabel ?? t('themeLibrary.descriptionTooltipLabel')}
+                  </span>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-64 text-xs">
+                {descriptionTooltip ?? t('themeLibrary.description')}
+              </TooltipContent>
+            </Tooltip>
+          ) : null}
         </div>
         {canManageDefaultTheme && defaultThemeId && onClearDefaultTheme ? (
           <Button
@@ -103,91 +117,100 @@ export function SavedThemesList({
         ) : null}
       </div>
 
-      <div className="space-y-2">
-        {themes.map((theme) => {
-          const isSelected = theme.id === selectedThemeId
-          const isDefault = theme.id === defaultThemeId
-          const isSettingDefault = pendingDefaultThemeId === theme.id
-          const canOpenMenu =
-            (canManageDefaultTheme && onSetDefaultTheme && !isDefault) || (showDelete && onDeleteTheme)
-          const swatches = [
-            { key: 'background', color: theme.colors.background },
-            { key: 'primary', color: theme.colors.primary },
-            { key: 'accent', color: theme.colors.accent },
-          ]
+      {themes.length === 0 ? (
+        <div className="rounded-xl border border-dashed bg-muted/20 p-4 text-sm text-muted-foreground">
+          <p className="font-medium text-foreground">{emptyTitle ?? t('themeLibrary.emptyTitle')}</p>
+          <p className="mt-1">{emptyDescription ?? t('themeLibrary.emptyDescription')}</p>
+        </div>
+      ) : null}
 
-          return (
-            <div
-              key={theme.id}
-              className={cn(
-                'group relative rounded-xl border bg-background transition-all',
-                'hover:border-primary/20 hover:bg-accent/20',
-                isSelected && 'border-primary bg-accent/25 ring-2 ring-primary/15',
-              )}
-            >
-              <div className="flex items-start gap-3 p-3">
-                <button
-                  type="button"
-                  onClick={() => onSelectTheme(theme)}
-                  className="flex min-w-0 flex-1 items-start gap-3 text-left"
-                >
-                  <div className="flex w-16 shrink-0 gap-1 sm:w-20">
-                    {swatches.map((swatch) => (
-                      <div
-                        key={`${theme.id}-${swatch.key}`}
-                        className="h-12 flex-1 rounded-md border border-border/70 shadow-xs"
-                        style={{ backgroundColor: swatch.color }}
-                      />
-                    ))}
-                  </div>
+      {themes.length > 0 ? (
+        <div className="space-y-2">
+          {themes.map((theme) => {
+            const isSelected = theme.id === selectedThemeId
+            const isDefault = theme.id === defaultThemeId
+            const isSettingDefault = pendingDefaultThemeId === theme.id
+            const canOpenMenu =
+              (canManageDefaultTheme && onSetDefaultTheme && !isDefault) || (showDelete && onDeleteTheme)
+            const swatches = [
+              { key: 'background', color: theme.colors.background },
+              { key: 'primary', color: theme.colors.primary },
+              { key: 'accent', color: theme.colors.accent },
+            ]
 
-                  <div className="min-w-0 flex-1 space-y-1">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="truncate text-sm font-medium">{theme.name}</span>
-                      {isDefault ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
+            return (
+              <div
+                key={theme.id}
+                className={cn(
+                  'group relative rounded-xl border bg-background transition-all',
+                  'hover:border-primary/20 hover:bg-accent/20',
+                  isSelected && 'border-primary bg-accent/25 ring-2 ring-primary/15',
+                )}
+              >
+                <div className="flex items-start gap-3 p-3">
+                  <button
+                    type="button"
+                    onClick={() => onSelectTheme(theme)}
+                    className="flex min-w-0 flex-1 items-start gap-3 text-left"
+                  >
+                    <div className="flex w-16 shrink-0 gap-1 sm:w-20">
+                      {swatches.map((swatch) => (
+                        <div
+                          key={`${theme.id}-${swatch.key}`}
+                          className="h-12 flex-1 rounded-md border border-border/70 shadow-xs"
+                          style={{ backgroundColor: swatch.color }}
+                        />
+                      ))}
                     </div>
-                    <p className="text-xs text-muted-foreground">{t('themeLibrary.selectHint')}</p>
+
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="truncate text-sm font-medium">{theme.name}</span>
+                        {isDefault ? <Badge variant="outline">{t('themeLibrary.defaultBadge')}</Badge> : null}
+                      </div>
+                      <p className="text-xs text-muted-foreground">{t('themeLibrary.selectHint')}</p>
+                    </div>
+                  </button>
+
+                  <div className="flex shrink-0 items-center gap-1">
+                    {isSelected ? <Check className="mt-1 size-4 text-primary" aria-hidden="true" /> : null}
+
+                    {canOpenMenu ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="size-8">
+                            <MoreHorizontal className="size-4" />
+                            <span className="sr-only">{t('themeLibrary.actions')}</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {canManageDefaultTheme && onSetDefaultTheme && !isDefault ? (
+                            <DropdownMenuItem
+                              onClick={() => void handleSetDefaultTheme(theme)}
+                              disabled={pendingDefaultThemeId !== null}
+                            >
+                              <Star className="size-4" />
+                              {isSettingDefault
+                                ? t('themeLibrary.settingDefaultTheme')
+                                : t('themeLibrary.setAsDefaultTheme')}
+                            </DropdownMenuItem>
+                          ) : null}
+                          {showDelete && onDeleteTheme ? (
+                            <DropdownMenuItem variant="destructive" onClick={() => onDeleteTheme(theme)}>
+                              <Trash2 className="size-4" />
+                              {t('themeLibrary.delete')}
+                            </DropdownMenuItem>
+                          ) : null}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : null}
                   </div>
-                </button>
-
-                <div className="flex shrink-0 items-center gap-1">
-                  {isSelected ? <Check className="mt-1 size-4 text-primary" aria-hidden="true" /> : null}
-
-                  {canOpenMenu ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="size-8">
-                          <MoreHorizontal className="size-4" />
-                          <span className="sr-only">{t('themeLibrary.actions')}</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        {canManageDefaultTheme && onSetDefaultTheme && !isDefault ? (
-                          <DropdownMenuItem
-                            onClick={() => void handleSetDefaultTheme(theme)}
-                            disabled={pendingDefaultThemeId !== null}
-                          >
-                            <Star className="size-4" />
-                            {isSettingDefault
-                              ? t('themeLibrary.settingDefaultTheme')
-                              : t('themeLibrary.setAsDefaultTheme')}
-                          </DropdownMenuItem>
-                        ) : null}
-                        {showDelete && onDeleteTheme ? (
-                          <DropdownMenuItem variant="destructive" onClick={() => onDeleteTheme(theme)}>
-                            <Trash2 className="size-4" />
-                            {t('themeLibrary.delete')}
-                          </DropdownMenuItem>
-                        ) : null}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  ) : null}
                 </div>
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      ) : null}
     </div>
   )
 }

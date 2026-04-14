@@ -1,6 +1,6 @@
 import { valguideId } from '../../utils/nanoid'
 import { db } from '../db'
-import { type NewTheme, theme as themeTable } from './schema'
+import { type NewTheme, type ThemeMetadata, theme as themeTable } from './schema'
 import type { ThemeColors, ThemeFonts, ThemePreset } from './types'
 
 // =============================================================================
@@ -16,6 +16,7 @@ export interface CreateThemeInput {
   colors: ThemeColors
   radius: number
   fonts: ThemeFonts
+  metadata?: ThemeMetadata
   createdBy?: string
 }
 
@@ -34,6 +35,7 @@ export async function createTheme(input: CreateThemeInput): Promise<Theme> {
       colors: input.colors,
       radius: String(input.radius),
       fonts: input.fonts,
+      metadata: input.metadata ?? null,
       createdBy: input.createdBy,
     } satisfies NewTheme)
     .returning()

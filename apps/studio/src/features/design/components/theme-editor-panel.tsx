@@ -98,33 +98,30 @@ export function ThemeEditorPanel({
     { key: 'accent', color: config.colors.accent },
     { key: 'foreground', color: config.colors.foreground },
   ]
+  const aiGeneratedThemes = themes.filter((theme) => theme.metadata?.origin === 'ai')
+  const manualThemes = themes.filter((theme) => theme.metadata?.origin !== 'ai')
 
   const pickerContent = (
     <>
-      <SavedThemesList
-        themes={themes}
-        isLoading={isLoading}
-        selectedThemeId={config.id}
-        defaultThemeId={defaultThemeId}
-        canManageDefaultTheme={canManageDefaultTheme}
-        onSelectTheme={(theme) => {
-          onSelectTheme(theme)
-          setIsThemePickerOpen(false)
-        }}
-        onDeleteTheme={onDeleteTheme}
-        onSetDefaultTheme={onSetDefaultTheme}
-        onClearDefaultTheme={onClearDefaultTheme}
-        showDelete={showDeleteThemes}
-      />
-
-      {themes.length === 0 ? (
-        <div className="rounded-xl border border-dashed bg-muted/20 p-4 text-sm text-muted-foreground">
-          <p className="font-medium text-foreground">{t('themeLibrary.emptyTitle')}</p>
-          <p className="mt-1">{t('themeLibrary.emptyDescription')}</p>
-        </div>
+      {manualThemes.length > 0 ? (
+        <SavedThemesList
+          themes={manualThemes}
+          isLoading={isLoading}
+          selectedThemeId={config.id}
+          defaultThemeId={defaultThemeId}
+          canManageDefaultTheme={canManageDefaultTheme}
+          onSelectTheme={(theme) => {
+            onSelectTheme(theme)
+            setIsThemePickerOpen(false)
+          }}
+          onDeleteTheme={onDeleteTheme}
+          onSetDefaultTheme={onSetDefaultTheme}
+          onClearDefaultTheme={onClearDefaultTheme}
+          showDelete={showDeleteThemes}
+        />
       ) : null}
 
-      <div className={cn(themes.length > 0 && 'mt-4 border-t pt-4')}>
+      <div className={cn(manualThemes.length > 0 && 'mt-4 border-t pt-4')}>
         <ThemePresetChips
           value={config.basePreset}
           onSelect={(preset) => {
@@ -138,19 +135,37 @@ export function ThemeEditorPanel({
 
   const aiAssistantStarter = onOpenAiAssistant ? (
     <section className="rounded-2xl border border-dashed bg-muted/15 p-4">
-      <button
-        type="button"
-        onClick={onOpenAiAssistant}
-        className="flex w-full items-start justify-between gap-4 text-left transition-colors hover:text-foreground"
-      >
-        <div className="space-y-1">
-          <p className="text-sm font-medium">{t('aiAssistant.starterTitle')}</p>
-          <p className="text-sm text-muted-foreground">{t('aiAssistant.starterDescription')}</p>
-        </div>
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background">
-          <Sparkles className="size-4" />
-        </div>
-      </button>
+      <div className="space-y-4">
+        <button
+          type="button"
+          onClick={onOpenAiAssistant}
+          className="flex w-full items-start justify-between gap-4 text-left transition-colors hover:text-foreground"
+        >
+          <div className="space-y-1">
+            <p className="text-sm font-medium">{t('aiAssistant.starterTitle')}</p>
+            <p className="text-sm text-muted-foreground">{t('aiAssistant.starterDescription')}</p>
+          </div>
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background">
+            <Sparkles className="size-4" />
+          </div>
+        </button>
+
+        {aiGeneratedThemes.length > 0 ? (
+          <SavedThemesList
+            themes={aiGeneratedThemes}
+            isLoading={isLoading}
+            title={t('aiAssistant.generatedThemesTitle', { count: aiGeneratedThemes.length })}
+            descriptionTooltip={t('aiAssistant.generatedThemesDescription')}
+            descriptionTooltipLabel={t('aiAssistant.generatedThemesTooltipLabel')}
+            selectedThemeId={config.id}
+            defaultThemeId={defaultThemeId}
+            canManageDefaultTheme={false}
+            onSelectTheme={onSelectTheme}
+            onDeleteTheme={onDeleteTheme}
+            showDelete={showDeleteThemes}
+          />
+        ) : null}
+      </div>
     </section>
   ) : null
 
