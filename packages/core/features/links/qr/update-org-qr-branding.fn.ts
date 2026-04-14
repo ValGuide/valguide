@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { ForbiddenError, requireOrgMember } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { updateOrganizationQrBrandingSettings } from './qr-branding.server'
@@ -16,5 +17,14 @@ export const updateOrgQrBrandingFn = createServerFn({ method: 'POST' })
     }
 
     await requireOrgMember(organizationId, context.user.id)
-    return updateOrganizationQrBrandingSettings(organizationId, context.user.id, data)
+    const result = await updateOrganizationQrBrandingSettings(organizationId, context.user.id, data)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'qr.organization_branding_updated',
+      properties: {
+        qr_action: Object.keys(data).length === 0 ? 'reset' : 'update',
+        style_preset: data.stylePreset ?? null,
+      },
+    })
+    return result
   })

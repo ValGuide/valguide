@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { updateProfile } from './update-profile.server'
 
@@ -21,5 +22,13 @@ export const updateProfileFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(updateProfileSchema)
   .handler(async ({ context, data }) => {
-    return updateProfile(context.user.id, data)
+    const result = await updateProfile(context.user.id, data)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'profile.updated',
+      properties: {
+        updated_fields: Object.keys(data),
+      },
+    })
+    return result
   })

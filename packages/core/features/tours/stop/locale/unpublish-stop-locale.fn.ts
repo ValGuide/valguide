@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireStopAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { deleteTourFromKv } from '../../public/kv'
@@ -20,6 +21,16 @@ export const unpublishStopLocaleFn = createServerFn({ method: 'POST' })
     await requireStopAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await unpublishStopLocale(data.nanoId, data.locale)
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'stop.unpublished',
+      properties: {
+        stop_nano_id: data.nanoId,
+        locale: data.locale,
+        affected_tour_count: result.tourNanoIds.length,
+      },
+    })
 
     if (result.tourNanoIds.length > 0) {
       waitUntil(

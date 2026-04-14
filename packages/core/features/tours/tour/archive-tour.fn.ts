@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { deleteTourAllLocalesFromKv, deleteTourSharedFromKv, deleteTourSlugFromKv } from '../public/kv'
 import { archiveTour } from './archive-tour.server'
@@ -17,6 +18,15 @@ export const archiveTourFn = createServerFn({ method: 'POST' })
   .inputValidator(archiveTourSchema)
   .handler(async ({ context, data }) => {
     const result = await archiveTour(data.nanoId, context.user.id)
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.archived',
+      properties: {
+        tour_nano_id: result.nanoId,
+        published_locale_count: result.publishedLocales.length,
+      },
+    })
 
     await notifyTourArchived({
       actorEmail: context.user.email ?? null,

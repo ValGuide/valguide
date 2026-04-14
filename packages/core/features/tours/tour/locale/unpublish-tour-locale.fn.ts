@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { deleteTourFromKv, deleteTourSharedFromKv } from '../../public/kv'
@@ -20,6 +21,16 @@ export const unpublishTourLocaleFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await unpublishTourLocale(data.nanoId, data.locale)
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.unpublished',
+      properties: {
+        tour_nano_id: data.nanoId,
+        locale: data.locale,
+        has_published_locales_remaining: result.hasPublishedLocalesRemaining,
+      },
+    })
 
     waitUntil(
       Promise.all([

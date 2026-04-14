@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireAuthMiddleware } from '../auth/middleware'
 
 const renameAssetSchema = z.object({
@@ -26,6 +27,14 @@ export const renameAssetFn = createServerFn({ method: 'POST' })
     if (!renamedAsset) {
       throw new NotFoundError('Asset')
     }
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'asset.renamed',
+      properties: {
+        asset_nano_id: data.assetId,
+      },
+    })
 
     return renamedAsset
   })
