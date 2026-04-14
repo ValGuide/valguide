@@ -20,6 +20,13 @@ const createThemeSchema = z.object({
   colors: z.any(),
   radius: z.number(),
   fonts: z.any(),
+  metadata: z
+    .object({
+      origin: z.literal('ai'),
+      aiGenerationNanoId: z.string().min(10).max(21),
+    })
+    .nullable()
+    .optional(),
 })
 
 export const createThemeFn = createServerFn({ method: 'POST' })
@@ -39,6 +46,7 @@ export const createThemeFn = createServerFn({ method: 'POST' })
       colors: data.colors as ThemeColors,
       radius: data.radius,
       fonts: normalizeThemeFonts(data.fonts as ThemeFonts, { strict: true }),
+      metadata: data.metadata ?? null,
       createdBy: context.user.id,
     }
 

@@ -36,6 +36,7 @@ async function getOrgDefaultTheme(organizationId: string): Promise<ThemeRow | nu
       colors: theme.colors,
       radius: theme.radius,
       fonts: theme.fonts,
+      metadata: theme.metadata,
       createdAt: theme.createdAt,
       updatedAt: theme.updatedAt,
       createdBy: theme.createdBy,

@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
 import { useRouter } from '@tanstack/react-router'
+import { useCallback } from 'react'
 
 type UseFocusBackNavigationOptions = {
   fallbackTo: '/tours' | '/stops' | '/assets' | '/brand/theme'
@@ -15,10 +15,7 @@ export function useFocusBackNavigation({ fallbackTo }: UseFocusBackNavigationOpt
       try {
         const referrerUrl = new URL(referrer)
 
-        if (
-          referrerUrl.origin === window.location.origin &&
-          referrerUrl.pathname !== window.location.pathname
-        ) {
+        if (referrerUrl.origin === window.location.origin && referrerUrl.pathname !== window.location.pathname) {
           router.history.back()
           return
         }

@@ -14,7 +14,6 @@ export function getQrStyleProps(stylePreset: EffectiveQrBranding['stylePreset'])
         cornersSquareType: 'extra-rounded' as const,
         cornersDotType: 'dot' as const,
       }
-    case 'rounded':
     default:
       return {
         dotsType: 'rounded' as const,

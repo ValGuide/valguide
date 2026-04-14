@@ -180,7 +180,8 @@
         "eyeDropper": "Farbe vom Bildschirm auswählen"
       },
       "themeLibrary": {
-        "description": "Gespeicherte Workspace-Designs lassen sich in mehreren Touren wiederverwenden.",
+        "description": "Gespeicherte Arbeitsbereichs-Designs lassen sich in mehreren Touren wiederverwenden.",
+        "descriptionTooltipLabel": "Mehr Informationen zu gespeicherten Designs",
         "delete": "Löschen",
         "actions": "Design-Aktionen",
         "defaultTheme": "Standard-Design",
@@ -252,6 +253,66 @@
         "defaultSet": "\"{name}\" ist jetzt das Standard-Design",
         "defaultCleared": "Standard-Design entfernt",
         "defaultError": "Standard-Design konnte nicht aktualisiert werden"
+      },
+      "aiAssistant": {
+        "action": "Mit KI starten",
+        "mobileLabel": "KI",
+        "badge": "KI-Entwurf",
+        "starterTitle": "Von Website oder Referenzen ableiten",
+        "starterDescription": "Nutzen Sie Website, Notizen oder Bilder als schnellen Ausgangspunkt für ein neues Design.",
+        "generatedThemesTitle": "Mit KI erstellte Designs ({count})",
+        "generatedThemesDescription": "Erfolgreiche KI-Generierungen werden hier als gespeicherte Arbeitsbereichs-Designs abgelegt.",
+        "generatedThemesTooltipLabel": "Weitere Informationen zu KI-Designs",
+        "generatedThemesEmptyTitle": "Noch keine KI-Designs",
+        "generatedThemesEmptyDescription": "Sobald eine Generierung gelingt, erscheint das Ergebnis hier als wiederverwendbares Design.",
+        "editSources": "Quellen bearbeiten",
+        "discard": "KI-Entwurf verwerfen",
+        "discardedToast": "KI-Entwurf verworfen"
+      }
+    },
+    "aiTheme": {
+      "badge": "MVP",
+      "generateAction": "Theme-Entwurf erzeugen",
+      "generateLoading": "Entwurf wird erzeugt...",
+      "cancelAction": "Abbrechen",
+      "generationSuccess": "KI-Design erstellt",
+      "saveAction": "Als Theme speichern",
+      "saveSuccess": "Theme erfolgreich gespeichert",
+      "generatedThemeFallback": "Generiertes Theme",
+      "workspaceIntro": "Der KI-Entwurf öffnet sich im gleichen Theme-Workspace wie das manuelle Branding.",
+      "sourceCard": {
+        "title": "Inspirationsquellen",
+        "description": "Fügen Sie eine Museums-Website ein, ergänzen Sie eine kurze Notiz und laden Sie Referenzbilder hoch."
+      },
+      "fields": {
+        "urlLabel": "Website-URL",
+        "urlPlaceholder": "https://museum.example",
+        "notesLabel": "Notizen",
+        "notesPlaceholder": "Beschreiben Sie Atmosphäre, Institutionstyp oder was sich besonders anfühlen soll.",
+        "imagesLabel": "Referenzbilder",
+        "imagesHint": "Laden Sie Logos, Poster, Screenshots oder Raumfotos hoch. Bis zu 4 Bilder, je 10 MB.",
+        "imagesDropzone": "Bilder hier ablegen oder klicken zum Durchsuchen",
+        "imagesLimit": "Einfügen, hochladen oder ablegen. PNG, JPG, WebP oder GIF"
+      },
+      "recentRuns": {
+        "title": "Letzte Generierungen",
+        "description": "Gespeicherte Läufe helfen beim Prüfen der Ergebnisse und bei späteren Ausbauschritten.",
+        "empty": "Noch keine KI-Theme-Generierungen.",
+        "pendingLabel": "Generierungslauf",
+        "meta": "{sourceImageCount} Bilder • Preset {basePreset} • Schrift {fontLabel}",
+        "status": {
+          "pending": "Ausstehend",
+          "completed": "Abgeschlossen",
+          "failed": "Fehlgeschlagen"
+        }
+      },
+      "resultCard": {
+        "placeholder": "Erzeugen Sie einen Entwurf, um Zusammenfassung, Begründung und eine vorausgefüllte Vorschau zu erhalten.",
+        "emptyState": "Die wichtigsten abgeleiteten Hinweise erscheinen hier, sobald der Entwurf bereit ist."
+      },
+      "saveDialog": {
+        "nameExists": "Ein Theme mit diesem Namen existiert bereits",
+        "saveFailed": "Theme konnte nicht gespeichert werden"
       }
     },
     "qr": {
@@ -692,7 +753,7 @@
       "workspaceDefaultTitle": "Workspace-Standard",
       "workspaceDefaultDescription": "Verwenden Sie für diese Tour das aktuelle Workspace-Standard-Design.",
       "workspaceDefaultDescriptionWithName": "Verwenden Sie für diese Tour das aktuelle Workspace-Standard-Design „{name}“.",
-      "savedThemeDescription": "Wenden Sie dieses gespeicherte Workspace-Design auf diese Tour an.",
+      "savedThemeDescription": "Wenden Sie dieses gespeicherte Arbeitsbereichs-Design auf diese Tour an.",
       "defaultBadge": "Standard",
       "builtInBadge": "ValGuide-Standard",
       "loadingThemes": "Gespeicherte Designs werden geladen...",
@@ -1094,6 +1155,7 @@
   "sidebar": {
     "nav": {
       "brandKit": "Brand Kit",
+      "aiTheme": "AI Theme",
       "theme": "Design",
       "qrCode": "QR-Code",
       "workspace": "Arbeitsbereich",
@@ -1123,6 +1185,7 @@
     "pages": {
       "design": {
         "description": "Passen Sie das Aussehen Ihrer Touren und QR-Beschilderung an.",
+        "aiDescription": "Erstellen Sie einen ersten Theme-Entwurf aus Website, Notizen oder hochgeladenen Bildern.",
         "themeDescription": "Legen Sie das Besucher-Branding für Ihre Touren fest.",
         "qrDescription": "Standard-Branding für QR-Codes in Ihrem Arbeitsbereich."
       },

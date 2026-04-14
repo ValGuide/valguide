@@ -13,6 +13,9 @@ const DB_ACTIONS = ['generate', 'migrate', 'studio']
 const DB_ENVIRONMENTS = ['dev', 'prod']
 const SEED_ENVIRONMENTS = ['dev', 'prod']
 const VERIFY_TARGETS = ['studio']
+const AI_ACTIONS = ['agree-meta-license']
+const AI_ENVIRONMENTS = ['dev', 'prod']
+const META_LICENSE_MODELS = ['all', '@cf/meta/llama-3.2-11b-vision-instruct', '@cf/meta/llama-3.3-70b-instruct-fp8-fast']
 const REMOTE_DEV_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs']
 const OPEN_TARGETS = ['github', 'github-actions']
 const OPEN_URLS = {
@@ -52,6 +55,7 @@ Commands:
   db <action>                Run database action: generate | migrate | studio
   seed <env>                 Seed dev or prod data
   verify <target>            Run target verification
+  ai <action>                Run AI-related setup actions
 
 Examples:
   val dev studio
@@ -66,6 +70,7 @@ Examples:
   val open github
   val db migrate dev
   val verify studio -- --ticket VG-85
+  val ai agree-meta-license dev
 `
 
 const COMMAND_HELP = {
@@ -162,6 +167,18 @@ Notes:
 
 Notes:
   verify currently supports studio and forwards passthrough args to the existing verification script.
+`,
+  ai: `Usage:
+  val ai agree-meta-license <dev|prod> [all|model]
+
+Actions:
+  agree-meta-license
+
+Supported models:
+  ${META_LICENSE_MODELS.slice(1).join('\n  ')}
+
+Notes:
+  The default model target is "all", which agrees to the Meta license for the current Workers AI models used by theme generation.
 `,
 }
 
@@ -338,6 +355,8 @@ function createInvocation(command, positionals, flags, passthrough) {
       return createSeedInvocation(positionals, flags, passthrough)
     case 'verify':
       return createVerifyInvocation(positionals, flags, passthrough)
+    case 'ai':
+      return createAiInvocation(positionals, flags, passthrough)
     default:
       fail(`unknown command "${command}". Run "val help" to see the available commands.`)
   }
@@ -601,6 +620,48 @@ function createVerifyInvocation(positionals, flags, passthrough) {
   ensureNoExtraPositionals(rest, 'verify')
 
   return scriptInvocation('studio:agent:verify', passthrough)
+}
+
+function createAiInvocation(positionals, flags, passthrough) {
+  ensureAllowedFlags(flags, [], 'ai')
+  const [action, environment, model = 'all', ...rest] = positionals
+
+  if (!action) {
+    failWithUsage(`missing action for "ai". Supported actions: ${quotedList(AI_ACTIONS)}.`, 'ai')
+  }
+
+  if (!AI_ACTIONS.includes(action)) {
+    failWithUsage(`unsupported ai action "${action}". Supported actions: ${quotedList(AI_ACTIONS)}.`, 'ai')
+  }
+
+  if (!environment) {
+    failWithUsage(
+      `ai ${action} requires an explicit environment: ${quotedList(AI_ENVIRONMENTS)}.`,
+      'ai',
+    )
+  }
+
+  if (!AI_ENVIRONMENTS.includes(environment)) {
+    failWithUsage(
+      `unsupported ai environment "${environment}". Supported environments: ${quotedList(AI_ENVIRONMENTS)}.`,
+      'ai',
+    )
+  }
+
+  if (!META_LICENSE_MODELS.includes(model)) {
+    failWithUsage(
+      `unsupported model "${model}". Supported values: ${quotedList(META_LICENSE_MODELS)}.`,
+      'ai',
+    )
+  }
+
+  ensureNoExtraPositionals(rest, 'ai')
+
+  return envLoadInvocation(
+    [`--cf:${environment}`],
+    ['node', 'scripts/agree-meta-license.ts', model],
+    passthrough,
+  )
 }
 
 function runInvocation(invocation) {

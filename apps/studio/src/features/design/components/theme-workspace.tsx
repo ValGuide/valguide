@@ -20,6 +20,11 @@ export interface ThemeWorkspaceProps {
   onSetDefaultTheme?: (theme: Theme) => Promise<void>
   onClearDefaultTheme?: () => Promise<void>
   onSave: () => void
+  onOpenAiAssistant?: () => void
+  onDiscardAiDraft?: () => void
+  aiDraftSummary?: string | null
+  aiDraftMoodKeywords?: string[]
+  aiDraftSourceHighlights?: string[]
   showDeleteThemes?: boolean
   compactFooter?: React.ReactNode
   mobileIntro?: React.ReactNode
@@ -38,6 +43,11 @@ export function ThemeWorkspace({
   onSetDefaultTheme,
   onClearDefaultTheme,
   onSave,
+  onOpenAiAssistant,
+  onDiscardAiDraft,
+  aiDraftSummary,
+  aiDraftMoodKeywords,
+  aiDraftSourceHighlights,
   showDeleteThemes = true,
   compactFooter,
   mobileIntro,
@@ -77,6 +87,7 @@ export function ThemeWorkspace({
           onSetDefaultTheme={onSetDefaultTheme}
           onClearDefaultTheme={onClearDefaultTheme}
           onSave={onSave}
+          onOpenAiAssistant={onOpenAiAssistant}
           showDeleteThemes={showDeleteThemes}
         />
         {compactFooter ? <div>{compactFooter}</div> : null}
@@ -108,6 +119,11 @@ export function ThemeWorkspace({
           onSetDefaultTheme={onSetDefaultTheme}
           onClearDefaultTheme={onClearDefaultTheme}
           onSave={onSave}
+          onOpenAiAssistant={onOpenAiAssistant}
+          onDiscardAiDraft={onDiscardAiDraft}
+          aiDraftSummary={aiDraftSummary}
+          aiDraftMoodKeywords={aiDraftMoodKeywords}
+          aiDraftSourceHighlights={aiDraftSourceHighlights}
           showDeleteThemes={showDeleteThemes}
           layout="split"
           className="min-h-0 h-full min-w-0"

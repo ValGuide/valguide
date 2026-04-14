@@ -103,6 +103,33 @@ export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = '
     [loadThemeConfig],
   )
 
+  const loadDraftThemeConfig = useCallback(
+    ({
+      name,
+      basePreset,
+      colors,
+      radius,
+      fonts,
+    }: Pick<EditorThemeConfig, 'name' | 'basePreset' | 'colors' | 'radius' | 'fonts'>) => {
+      const draftConfig: EditorThemeConfig = {
+        id: undefined,
+        name,
+        basePreset,
+        colors,
+        radius,
+        fonts,
+        isDirty: false,
+      }
+
+      originalConfigRef.current = draftConfig
+      setConfig({
+        ...draftConfig,
+        isDirty: true,
+      })
+    },
+    [],
+  )
+
   const startNewTheme = useCallback((preset: ThemePreset, options?: { isDirty?: boolean }) => {
     originalConfigRef.current = createPresetConfig(preset)
     setConfig(createPresetConfig(preset, options?.isDirty ?? false))
@@ -174,6 +201,7 @@ export function useThemeCustomizer(initialThemeOrPreset: Theme | ThemePreset = '
     reset,
     loadThemeConfig,
     loadTheme,
+    loadDraftThemeConfig,
     startNewTheme,
     markClean,
     setThemeMetadata,

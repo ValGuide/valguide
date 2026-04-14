@@ -181,6 +181,7 @@
       },
       "themeLibrary": {
         "description": "Themes memorisads dal workspace pon vegnir reutilisads en pliras turas.",
+        "descriptionTooltipLabel": "Dapli novitads davart themes memorisads",
         "delete": "Stizzar",
         "actions": "Acziuns dal theme",
         "defaultTheme": "Tema standard",
@@ -252,6 +253,66 @@
         "defaultSet": "\"{name}\" è ussa il tema standard",
         "defaultCleared": "Tema standard allontanà",
         "defaultError": "Il tema standard n'ha betg pudì vegnir actualisà"
+      },
+      "aiAssistant": {
+        "action": "Cumenzar cun AI",
+        "mobileLabel": "AI",
+        "badge": "Sboz AI",
+        "starterTitle": "Generar ord website u novitads da referenza",
+        "starterDescription": "Duvrai ina website, novitads u maletgs sco punct da partenza spert per in nov theme.",
+        "generatedThemesTitle": "Themes creads cun AI ({count})",
+        "generatedThemesDescription": "Generaziuns d'AI reussidas vegnan memorisadas qua sco themes reutilisabels da l'organisaziun.",
+        "generatedThemesTooltipLabel": "Dapli novitads davart themes creads cun AI",
+        "generatedThemesEmptyTitle": "Anc nagins themes d'AI",
+        "generatedThemesEmptyDescription": "Uschespert che ina generaziun reussescha, cumpara il resultat qua sco theme reutilisabel.",
+        "editSources": "Modifitgar funtaunas",
+        "discard": "Renunziar al sboz AI",
+        "discardedToast": "Sboz AI renunzià"
+      }
+    },
+    "aiTheme": {
+      "badge": "MVP",
+      "generateAction": "Generar sboz da theme",
+      "generateLoading": "Generescha il sboz...",
+      "cancelAction": "Interrumper",
+      "generationSuccess": "Theme d'AI creà",
+      "saveAction": "Memorisar sco theme",
+      "saveSuccess": "Theme memorisà cun success",
+      "generatedThemeFallback": "Theme generà",
+      "workspaceIntro": "Il sboz da l'AI sa avra en il medem workspace da theme sco il branding manual.",
+      "sourceCard": {
+        "title": "Funtaunas d'inspiraziun",
+        "description": "Enserrai ina website dal museum, agiuntai ina curta novitads e chargiai si maletgs da referenza."
+      },
+      "fields": {
+        "urlLabel": "URL da website",
+        "urlPlaceholder": "https://museum.example",
+        "notesLabel": "Novitads",
+        "notesPlaceholder": "Descrivai l'atmosfera, il tip d'instituziun u tge che duai vegnir resenti sco distinctiv.",
+        "imagesLabel": "Maletgs da referenza",
+        "imagesHint": "Chargiai si logos, posters, screenshots u fotos da spazis. Fin a 4 maletgs, mintgin 10 MB.",
+        "imagesDropzone": "Deponer maletgs qua u cliccar per tschertgar",
+        "imagesLimit": "Encollar, chargiar si u deponer. PNG, JPG, WebP u GIF"
+      },
+      "recentRuns": {
+        "title": "Generaziuns recentas",
+        "description": "Runs memorisads gidan a controllar ils resultats ed a sviluppar pli tard quest flow.",
+        "empty": "Anc naginas generaziuns AI da themes.",
+        "pendingLabel": "Run da generaziun",
+        "meta": "{sourceImageCount} maletgs • preset {basePreset} • scrittira {fontLabel}",
+        "status": {
+          "pending": "Pendent",
+          "completed": "Terminà",
+          "failed": "Betg reussì"
+        }
+      },
+      "resultCard": {
+        "placeholder": "Generai in sboz per survegnir ina resumaziun, ina motivaziun ed ina prevista gia emplenida.",
+        "emptyState": "Ils indizis ils pli impurtants cumparan qua uschespert che il sboz è pront."
+      },
+      "saveDialog": {
+        "nameExists": "Igl exista gia in theme cun quest num",
+        "saveFailed": "Il theme n'ha betg pudì vegnir memorisà"
       }
     },
     "qr": {
@@ -1094,6 +1155,7 @@
   "sidebar": {
     "nav": {
       "brandKit": "Brand Kit",
+      "aiTheme": "AI Theme",
       "theme": "Theme",
       "qrCode": "QR Code",
       "workspace": "Plaz da lavur",
@@ -1123,6 +1185,7 @@
     "pages": {
       "design": {
         "description": "Persunalisar l'apparientscha da vossas turas e da la signalisaziun QR.",
+        "aiDescription": "Crear in emprim sboz da theme ord ina website, novitadsziuns u maletgs chargiads si.",
         "themeDescription": "Definir il branding per visitaders da Vossas turas.",
         "qrDescription": "Branding standard per codes QR en quest workspace."
       },
