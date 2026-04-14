@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireAuthMiddleware } from '../auth/middleware'
 import type { DeleteAssetsResult } from './delete-assets.server'
 
@@ -25,5 +26,13 @@ export const deleteAssetsFn = createServerFn({ method: 'POST' })
 
     await requireOrgMember(organizationId, context.user.id)
 
-    return deleteAssets(data.assetIds, organizationId)
+    const result = await deleteAssets(data.assetIds, organizationId)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'asset.bulk_deleted',
+      properties: {
+        asset_count: data.assetIds.length,
+      },
+    })
+    return result
   })

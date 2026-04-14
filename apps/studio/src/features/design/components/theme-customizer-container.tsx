@@ -4,7 +4,7 @@ import type { ThemePreset } from '@valguide/core/features/themes/types'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { cn } from '@valguide/ui/lib/utils'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useOrgThemesSuspense } from '../hooks/use-org-themes'
 import { getThemeSaveErrorMessage } from '../theme-save-errors'
 import { useThemeCustomizer } from '../use-theme-customizer'
@@ -38,9 +38,10 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const hasExplicitSelectionRef = useRef(false)
 
   useEffect(() => {
-    if (customizer.config.id || customizer.config.isDirty || !defaultThemeId) {
+    if (hasExplicitSelectionRef.current || customizer.config.id || customizer.config.isDirty || !defaultThemeId) {
       return
     }
 
@@ -52,6 +53,7 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
 
   const handleSelectTheme = useCallback(
     (theme: Theme) => {
+      hasExplicitSelectionRef.current = true
       customizer.loadTheme(theme)
     },
     [customizer],
@@ -59,7 +61,8 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
 
   const handleStartFromPreset = useCallback(
     (preset: ThemePreset) => {
-      customizer.startNewTheme(preset)
+      hasExplicitSelectionRef.current = true
+      customizer.startNewTheme(preset, { isDirty: true })
     },
     [customizer],
   )
@@ -157,7 +160,7 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
       await deleteTheme(themeToDelete.id)
 
       if (customizer.config.id === themeToDelete.id) {
-        customizer.startNewTheme('light')
+        customizer.startNewTheme('light', { isDirty: false })
       }
 
       toast.success(t('toast.deleted'))

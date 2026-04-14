@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { waitUntil } from '@valguide/core/utils/wait-until'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { deleteTourAllLocalesFromKv, deleteTourSharedFromKv, deleteTourSlugFromKv } from '../public/kv'
 import { deleteTour, permanentlyDeleteTour } from './delete-tour.server'
@@ -19,6 +20,16 @@ export const deleteTourFn = createServerFn({ method: 'POST' })
     const result = data.permanent
       ? await permanentlyDeleteTour(data.nanoId, context.user.id)
       : await deleteTour(data.nanoId, context.user.id)
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.deleted',
+      properties: {
+        tour_nano_id: result.nanoId,
+        delete_mode: data.permanent ? 'permanent' : 'soft',
+        published_locale_count: result.publishedLocales.length,
+      },
+    })
 
     if (result.publishedLocales.length > 0 || result.tourSlug) {
       waitUntil(deleteKvAfterTourRemoval(data.nanoId, result.publishedLocales, result.tourSlug, result.orgSlug))

@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireOrgRole } from '../auth/authorization'
 import { auth } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
@@ -20,6 +21,15 @@ export const cancelInviteFn = createServerFn({ method: 'POST' })
       headers: getRequestHeaders(),
       body: {
         invitationId: data.inviteId,
+      },
+    })
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'org.invite_canceled',
+      properties: {
+        organization_id: data.teamId,
+        invite_id: data.inviteId,
       },
     })
   })

@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../posthog/server'
 import { requireOrgMember } from '../auth/authorization'
 import { requireAuthMiddleware } from '../auth/middleware'
 import { db } from '../db'
@@ -21,5 +22,12 @@ export const updateOrgLogoFn = createServerFn({ method: 'POST' })
     }
 
     await updateOrgLogo(db, data.organizationId, data.storagePath)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'org.logo_updated',
+      properties: {
+        organization_id: data.organizationId,
+      },
+    })
     return { storagePath: data.storagePath }
   })

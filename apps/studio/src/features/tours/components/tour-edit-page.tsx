@@ -4,6 +4,7 @@ import type { Asset } from '@valguide/core/features/assets/types'
 import { getTourStatusDisplay } from '@valguide/core/features/tours/status-utils'
 import { useLocale, useTranslations } from '@valguide/core/i18n/client'
 import { getLocaleDisplayName } from '@valguide/core/i18n/locale-display-names'
+import { captureStudioClientEvent } from '@valguide/core/posthog/PostHogProvider'
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { defaultLocale } from '@valguide/i18n/i18n.config'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valguide/ui/components/card'
@@ -152,6 +153,19 @@ export function TourEditPage({
     })
   }
 
+  const handleDiffToggle = useCallback(
+    (enabled: boolean) => {
+      captureStudioClientEvent('editor.diff_toggled', {
+        content_type: 'tour',
+        entity_nano_id: nanoId,
+        locale: activeLocale,
+        enabled,
+      })
+      setDiffEnabled(enabled)
+    },
+    [activeLocale, nanoId, setDiffEnabled],
+  )
+
   const handleNavigateToTour = () => {
     confirmIfDirty(() => router.navigate({ to: '/tours/$nanoId', params: { nanoId } }))
   }
@@ -290,7 +304,7 @@ export function TourEditPage({
             onDirtyChange={handleDirtyChange}
             onSave={save}
             diffEnabled={diffEnabled}
-            onDiffToggle={setDiffEnabled}
+            onDiffToggle={handleDiffToggle}
             changedCount={changedCount}
             getFieldDiff={getFieldDiff}
           />

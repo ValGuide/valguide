@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../../auth/authorization'
 import { requireAuthMiddleware } from '../../../auth/middleware'
 import { getPublishedTourByNanoId } from '../../public/get-published-tour'
@@ -20,6 +21,14 @@ export const publishTourSettingsFn = createServerFn({ method: 'POST' })
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
     const result = await publishTourSettings(data.nanoId, context.user.id)
+
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.settings_published',
+      properties: {
+        tour_nano_id: data.nanoId,
+      },
+    })
 
     const fullTour = await getPublishedTourByNanoId(data.nanoId)
     const sharedTourKv = fullTour ? serializeTourSharedForKv(fullTour) : null

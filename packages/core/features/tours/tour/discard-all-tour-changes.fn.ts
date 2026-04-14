@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireTourAccessByNanoId } from '../../auth/authorization'
 import { requireAuthMiddleware } from '../../auth/middleware'
 import { discardAllTourChanges } from './discard-all-tour-changes.server'
@@ -15,5 +16,16 @@ export const discardAllTourChangesFn = createServerFn({ method: 'POST' })
   .handler(async ({ context, data }) => {
     await requireTourAccessByNanoId(data.nanoId, context.user.id)
 
-    return discardAllTourChanges(data.nanoId, data.locale)
+    const result = await discardAllTourChanges(data.nanoId, data.locale)
+    await captureStudioProductEvent({
+      distinctId: context.user.id,
+      event: 'tour.discarded',
+      properties: {
+        tour_nano_id: data.nanoId,
+        locale: data.locale,
+        discard_scope: 'all_changes',
+      },
+    })
+
+    return result
   })
