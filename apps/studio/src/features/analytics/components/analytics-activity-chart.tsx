@@ -39,12 +39,12 @@ export function AnalyticsActivityChart({
   } satisfies ChartConfig
 
   return (
-    <Card className="rounded-3xl border-border/80 shadow-none">
+    <Card className="min-w-0 overflow-hidden rounded-3xl border-border/80 shadow-none">
       <CardHeader className="px-4 pt-4 sm:px-6 sm:pt-6">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="px-2 pb-3 sm:px-6 sm:pb-6">
+      <CardContent className="px-1 pb-3 sm:px-6 sm:pb-6">
         <ChartContainer config={chartConfig} className="h-[220px] w-full sm:h-[320px]">
           <Recharts.AreaChart accessibilityLayer data={data} margin={{ left: 12, right: 12 }}>
             <Recharts.CartesianGrid vertical={false} />

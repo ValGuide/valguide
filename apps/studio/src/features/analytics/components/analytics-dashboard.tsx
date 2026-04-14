@@ -72,8 +72,8 @@ export function AnalyticsDashboard({
   const hasEvents = data.eventMix.some((entry) => entry.count > 0)
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <div className="mx-auto w-full max-w-5xl space-y-6" data-testid="analytics-page">
+    <main className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="mx-auto min-w-0 w-full max-w-5xl space-y-6" data-testid="analytics-page">
         <ListPageHeader title={title} description={description} />
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -101,7 +101,7 @@ export function AnalyticsDashboard({
 
         {hasEvents ? (
           <>
-            <div className="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)]">
+            <div className="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)] [&>*]:min-w-0">
               <AnalyticsActivityChart
                 data={data.recentActivity}
                 title={recentActivityTitle}
