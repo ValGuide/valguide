@@ -59,7 +59,7 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
 
   const handleStartFromPreset = useCallback(
     (preset: ThemePreset) => {
-      customizer.startNewTheme(preset)
+      customizer.startNewTheme(preset, { isDirty: true })
     },
     [customizer],
   )
@@ -157,7 +157,7 @@ export function ThemeCustomizerContainer({ className, mobileIntro }: ThemeCustom
       await deleteTheme(themeToDelete.id)
 
       if (customizer.config.id === themeToDelete.id) {
-        customizer.startNewTheme('light')
+        customizer.startNewTheme('light', { isDirty: false })
       }
 
       toast.success(t('toast.deleted'))
