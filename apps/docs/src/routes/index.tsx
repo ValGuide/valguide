@@ -14,7 +14,7 @@ function Home() {
         <p className="text-fd-muted-foreground mb-6">Architecture, patterns, and guides for the ValGuide platform.</p>
         <Link
           to="/docs/$"
-          params={{ _splat: 'product-north-star' }}
+          params={{ _splat: '' }}
           className="px-4 py-2 rounded-lg bg-fd-primary text-fd-primary-foreground font-medium text-sm mx-auto"
         >
           Browse Documentation

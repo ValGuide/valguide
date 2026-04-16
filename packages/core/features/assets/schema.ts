@@ -27,7 +27,7 @@ import {
  * Assets are immutable file records.
  * Locale is on the assignment tables (tour_asset_draft, stop_asset_draft), not on the asset.
  *
- * See: docs/tour-stop-asset/target-schema.md
+ * See: docs/engineering/content-model/tour-stop-asset/target-schema.md
  */
 
 const studioSchema = pgSchema('studio')

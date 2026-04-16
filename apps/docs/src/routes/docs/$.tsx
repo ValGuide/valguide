@@ -14,8 +14,9 @@ export const Route = createFileRoute('/docs/$')({
   loader: async ({ params }) => {
     const slugs = params._splat?.split('/').filter(Boolean) ?? []
     if (slugs.length === 0) {
-      throw redirect({ to: '/docs/$', params: { _splat: 'product-north-star' } })
+      throw redirect({ to: '/docs/$', params: { _splat: 'overview' } })
     }
+
     const data = await serverLoader({ data: slugs })
     await clientLoader.preload(data.path)
     return data

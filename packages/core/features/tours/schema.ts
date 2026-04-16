@@ -11,7 +11,7 @@ import { organization } from '../orgs/schema'
  * - Publish = upsert from draft to live
  * - 17 tables total (removed 2 version tables)
  *
- * See: docs/tour-stop-asset/target-schema.md
+ * See: docs/engineering/content-model/tour-stop-asset/target-schema.md
  */
 
 const studioSchema = pgSchema('studio')

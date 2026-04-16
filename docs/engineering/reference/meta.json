@@ -1,0 +1,16 @@
+{
+  "title": "Engineering Reference",
+  "pages": [
+    "server-function-architecture",
+    "environment-variables",
+    "env-variables-reference",
+    "i18n-tooling",
+    "images",
+    "fonts",
+    "hyperdrive-neon-db-routing",
+    "session-cookie-caching",
+    "dev-auth-playwright",
+    "cascade-deletion-map",
+    "git-lfs"
+  ]
+}
