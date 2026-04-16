@@ -4,6 +4,16 @@ title: "Better Auth Native OTP Rate Limiting"
 
 This document defines ValGuide's OTP authentication architecture after moving to Better Auth native client-initiated flows.
 
+## Secondary storage
+
+Better Auth now uses a shared Cloudflare KV namespace as `secondaryStorage` for hot auth-path records:
+
+1. Session reads resolve from KV instead of the primary database.
+2. Verification tokens are written to KV with Better Auth TTLs, so expired OTP material ages out without DB cleanup work.
+3. Route-level rate-limit counters use KV as well.
+
+The KV adapter scopes keys by auth cookie prefix, so the shared curator auth instance (`valguide-auth`) and the isolated admin auth instance (`valguide-admin-auth`) do not collide even though they share one namespace.
+
 Scope:
 1. Studio OTP login flow.
 2. Route-level OTP abuse protection.
@@ -60,6 +70,7 @@ Client-side display:
 Policy notes:
 1. Rate limiting must remain enabled for client-facing auth routes.
 2. OTP limits are enforced at Better Auth route layer, not in app-level server functions.
+3. Cloudflare KV is eventually consistent across regions, so OTP rate-limit counters can briefly lag during cross-region bursts. This is acceptable for the current OTP flow, but it is not a guarantee of globally strict throttling.
 
 ## Hooks and Side Effects
 
