@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { createLogger } from '@valguide/logger'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
@@ -14,6 +15,7 @@ import { db } from '../db'
 import { invitation, member, organization } from '../orgs/schema'
 import { orgAc, orgRoles } from './organization-permissions'
 import { authAccounts, authSessions, authUsers, authVerifications } from './schema'
+import { createSecondaryStorage } from './secondary-storage'
 
 const cookieSecure = serverEnv.NODE_ENV === 'production'
 const isProduction = serverEnv.NODE_ENV === 'production'
@@ -61,6 +63,15 @@ async function runAuthSideEffect(label: string, effect: () => Promise<void>) {
   }
 }
 
+function resolveAuthKvBinding(): KVNamespace | null {
+  try {
+    return env.AUTH_KV ?? null
+  } catch (error) {
+    log.error('[auth-kv] AUTH_KV binding is unavailable', error)
+    return null
+  }
+}
+
 export function createAuthInstance(options: {
   baseURL?: string
   cookiePrefix: string
@@ -103,6 +114,15 @@ export function createAuthInstance(options: {
         maxAge: number
       }
 }) {
+  const authKv = resolveAuthKvBinding()
+  const secondaryStorage = authKv
+    ? createSecondaryStorage({
+        kv: authKv,
+        scope: options.cookiePrefix,
+        logger: log,
+      })
+    : undefined
+
   const authHooks =
     options.onVerificationOtpSent || options.onOtpSignIn
       ? {
@@ -152,12 +172,29 @@ export function createAuthInstance(options: {
       },
     }),
     ...(options.socialProviders ? { socialProviders: options.socialProviders } : {}),
-    ...(options.sessionCookieCache ? { session: { cookieCache: options.sessionCookieCache } } : {}),
+    ...(secondaryStorage ? { secondaryStorage } : {}),
+    session: {
+      ...(secondaryStorage
+        ? {
+            preserveSessionInDatabase: false,
+            storeSessionInDatabase: false,
+          }
+        : {}),
+      ...(options.sessionCookieCache ? { cookieCache: options.sessionCookieCache } : {}),
+    },
+    ...(secondaryStorage
+      ? {
+          verification: {
+            storeInDatabase: false,
+          },
+        }
+      : {}),
     ...(authHooks ? { hooks: authHooks } : {}),
     rateLimit: {
       enabled: true,
       window: 60,
       max: isProduction ? 100 : 1000,
+      storage: secondaryStorage ? 'secondary-storage' : 'memory',
       customRules: {
         '/email-otp/send-verification-otp': { window: 60, max: otpSendLimit },
         '/api/auth/email-otp/send-verification-otp': { window: 60, max: otpSendLimit },

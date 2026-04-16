@@ -19,6 +19,10 @@
   // Production custom domain
   "routes": [{ "pattern": "www.valguide.com", "custom_domain": true }],
 
+  // KV namespaces:
+  // - AUTH_KV for Better Auth secondary storage (sessions, verifications, rate limits)
+  "kv_namespaces": [{ "binding": "AUTH_KV", "id": "TODO_PROD_AUTH_KV_ID" }],
+
   // Production vars (www.valguide.com)
   // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
   // Secrets set via: wrangler secret put <NAME>
@@ -41,6 +45,7 @@
   "env": {
     "dev": {
       "routes": [{ "pattern": "www.valguide.dev", "custom_domain": true }],
+      "kv_namespaces": [{ "binding": "AUTH_KV", "id": "TODO_DEV_AUTH_KV_ID" }],
       "vars": {
         "NODE_ENV": "production",
         "USERS_SLACK_CHANNEL": "users-dev",

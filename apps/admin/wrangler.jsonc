@@ -20,9 +20,11 @@
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod", "jurisdiction": "eu" }],
 
   // KV namespaces:
+  // - AUTH_KV for Better Auth secondary storage (sessions, verifications, rate limits)
   // - TOUR_DATA for published tour edge cache operations
   // - MAINTENANCE for maintenance mode state shared with app and studio
   "kv_namespaces": [
+    { "binding": "AUTH_KV", "id": "TODO_PROD_AUTH_KV_ID" },
     { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" },
     { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_PROD" }
   ],
@@ -57,6 +59,7 @@
       "routes": [{ "pattern": "ops-dev.val.guide", "custom_domain": true }],
       "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev", "jurisdiction": "eu" }],
       "kv_namespaces": [
+        { "binding": "AUTH_KV", "id": "TODO_DEV_AUTH_KV_ID" },
         { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" },
         { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_DEV" }
       ],

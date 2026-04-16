@@ -7,6 +7,7 @@
 declare module 'cloudflare:workers' {
   const env: {
     R2_BUCKET: R2Bucket
+    AUTH_KV: KVNamespace
     LINKS_KV: KVNamespace
     TOUR_DATA: KVNamespace
     [key: string]: unknown

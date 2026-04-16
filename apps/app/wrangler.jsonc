@@ -20,9 +20,11 @@
   "routes": [{ "pattern": "app.valguide.com", "custom_domain": true }],
 
   // KV namespaces:
+  // - AUTH_KV for Better Auth secondary storage (sessions, verifications, rate limits)
   // - TOUR_DATA for published tour edge cache
   // - MAINTENANCE for global maintenance mode state
   "kv_namespaces": [
+    { "binding": "AUTH_KV", "id": "TODO_PROD_AUTH_KV_ID" },
     { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" },
     { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_PROD" }
   ],
@@ -50,6 +52,7 @@
     "dev": {
       "routes": [{ "pattern": "app.valguide.dev", "custom_domain": true }],
       "kv_namespaces": [
+        { "binding": "AUTH_KV", "id": "TODO_DEV_AUTH_KV_ID" },
         { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" },
         { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_DEV" }
       ],
