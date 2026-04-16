@@ -2,33 +2,36 @@ import { useTranslations } from '@valguide/core/i18n/client'
 import { cn } from '@valguide/ui/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-const visibilityBadgeVariants = cva('inline-flex items-center gap-1.5 rounded-full font-medium transition-colors', {
-  variants: {
-    status: {
-      published: 'bg-success text-success-foreground',
-      unpublished: 'border border-primary text-primary bg-transparent',
-      archived: 'bg-muted text-muted-foreground',
+const visibilityBadgeVariants = cva(
+  'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full font-medium leading-none transition-colors',
+  {
+    variants: {
+      status: {
+        published: 'bg-success text-success-foreground',
+        unpublished: 'border border-primary text-primary bg-transparent',
+        archived: 'bg-muted text-muted-foreground',
+      },
+      size: {
+        sm: 'min-h-5 px-2 py-1 text-xs',
+        md: 'min-h-6 px-2.5 py-1 text-xs',
+        lg: 'min-h-7 px-3 py-1.5 text-sm',
+      },
     },
-    size: {
-      sm: 'px-2 py-0.5 text-xs',
-      md: 'px-2.5 py-0.5 text-xs',
-      lg: 'px-3 py-1 text-sm',
+    defaultVariants: {
+      status: 'unpublished',
+      size: 'md',
     },
   },
-  defaultVariants: {
-    status: 'unpublished',
-    size: 'md',
-  },
-})
+)
 
 const changesBadgeVariants = cva(
-  'inline-flex items-center rounded-full border border-border text-muted-foreground bg-transparent font-medium',
+  'inline-flex items-center whitespace-nowrap rounded-full border border-border bg-transparent font-medium leading-none text-muted-foreground',
   {
     variants: {
       size: {
-        sm: 'px-2 py-0.5 text-xs',
-        md: 'px-2 py-0.5 text-xs',
-        lg: 'px-2.5 py-1 text-sm',
+        sm: 'min-h-5 px-2 py-1 text-xs',
+        md: 'min-h-6 px-2 py-1 text-xs',
+        lg: 'min-h-7 px-2.5 py-1.5 text-sm',
       },
     },
     defaultVariants: {
@@ -75,7 +78,7 @@ export function TourStatusBadge({ status, indicator, size = 'md', className }: T
   const sizeKey = size ?? 'md'
 
   return (
-    <span className={cn('inline-flex items-center gap-2', className)}>
+    <span className={cn('inline-flex flex-wrap items-center gap-2', className)}>
       <span className={visibilityBadgeVariants({ status, size })}>
         <span aria-hidden="true" className={cn('inline-block rounded-full', dotSize[sizeKey], dotColor[status])} />
         <span>{visibilityLabel}</span>
