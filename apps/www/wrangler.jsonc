@@ -21,7 +21,7 @@
 
   // KV namespaces:
   // - AUTH_KV for Better Auth secondary storage (sessions, verifications, rate limits)
-  "kv_namespaces": [{ "binding": "AUTH_KV", "id": "TODO_PROD_AUTH_KV_ID" }],
+  "kv_namespaces": [{ "binding": "AUTH_KV", "id": "REPLACE_WITH_AUTH_KV_ID_PROD" }],
 
   // Production vars (www.valguide.com)
   // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
@@ -45,7 +45,7 @@
   "env": {
     "dev": {
       "routes": [{ "pattern": "www.valguide.dev", "custom_domain": true }],
-      "kv_namespaces": [{ "binding": "AUTH_KV", "id": "TODO_DEV_AUTH_KV_ID" }],
+      "kv_namespaces": [{ "binding": "AUTH_KV", "id": "REPLACE_WITH_AUTH_KV_ID_DEV" }],
       "vars": {
         "NODE_ENV": "production",
         "USERS_SLACK_CHANNEL": "users-dev",

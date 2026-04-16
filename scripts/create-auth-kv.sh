@@ -11,56 +11,95 @@ WRANGLER_CONFIGS=(
   "apps/admin/wrangler.jsonc"
   "apps/www/wrangler.jsonc"
 )
+PROD_PLACEHOLDER="TODO_PROD_AUTH_KV_ID"
+DEV_PLACEHOLDER="TODO_DEV_AUTH_KV_ID"
 
-echo "==> Creating AUTH_KV namespace (production)..."
-set +e
-PROD_OUTPUT=$($WRANGLER kv namespace create AUTH_KV 2>&1)
-PROD_STATUS=$?
-set -e
-echo "$PROD_OUTPUT"
-if [ "$PROD_STATUS" -ne 0 ]; then
-  exit "$PROD_STATUS"
-fi
-PROD_ID=$(echo "$PROD_OUTPUT" | grep -o '"id": "[^"]*"' | head -1 | cut -d'"' -f4)
+require_cloudflare_auth() {
+  if [[ -n "${CLOUDFLARE_API_TOKEN:-}" ]]; then
+    return 0
+  fi
 
-if [ -z "$PROD_ID" ]; then
-  echo "ERROR: Failed to extract production KV namespace ID"
+  echo "ERROR: CLOUDFLARE_API_TOKEN is not set."
+  echo "Set a Cloudflare API token with KV namespace permissions, then rerun this script."
   exit 1
-fi
-echo "    Production ID: $PROD_ID"
+}
+
+extract_namespace_id() {
+  local output="$1"
+  echo "$output" | sed -n 's/.*"id": "\([^"]*\)".*/\1/p' | head -1
+}
+
+create_namespace() {
+  local env_name="$1"
+  local env_flag=""
+
+  if [[ "$env_name" == "dev" ]]; then
+    env_flag="--env dev"
+  fi
+
+  echo "==> Creating AUTH_KV namespace (${env_name})..." >&2
+
+  set +e
+  local output
+  output=$($WRANGLER kv namespace create AUTH_KV $env_flag 2>&1)
+  local status=$?
+  set -e
+
+  echo "$output" >&2
+
+  if [[ "$status" -ne 0 ]]; then
+    exit "$status"
+  fi
+
+  local id
+  id=$(extract_namespace_id "$output")
+
+  if [[ -z "$id" ]]; then
+    echo "ERROR: Failed to extract ${env_name} KV namespace ID"
+    exit 1
+  fi
+
+  echo "    ${env_name} ID: $id" >&2
+  echo "$id"
+}
+
+replace_placeholder() {
+  local file="$1"
+  local placeholder="$2"
+  local value="$3"
+
+  if ! grep -q "$placeholder" "$file"; then
+    echo "ERROR: Placeholder $placeholder not found in $file"
+    echo "This usually means the file was already updated or the placeholder changed."
+    exit 1
+  fi
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' "s/$placeholder/$value/g" "$file"
+  else
+    sed -i "s/$placeholder/$value/g" "$file"
+  fi
+}
+
+require_cloudflare_auth
+
+PROD_ID=$(create_namespace "production")
 
 echo ""
-echo "==> Creating AUTH_KV namespace (dev)..."
-set +e
-DEV_OUTPUT=$($WRANGLER kv namespace create AUTH_KV --env dev 2>&1)
-DEV_STATUS=$?
-set -e
-echo "$DEV_OUTPUT"
-if [ "$DEV_STATUS" -ne 0 ]; then
-  exit "$DEV_STATUS"
-fi
-DEV_ID=$(echo "$DEV_OUTPUT" | grep -o '"id": "[^"]*"' | head -1 | cut -d'"' -f4)
-
-if [ -z "$DEV_ID" ]; then
-  echo "ERROR: Failed to extract dev KV namespace ID"
-  exit 1
-fi
-echo "    Dev ID: $DEV_ID"
+DEV_ID=$(create_namespace "dev")
 
 echo ""
 echo "==> Updating Wrangler configs..."
 for config in "${WRANGLER_CONFIGS[@]}"; do
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i '' "s/TODO_PROD_AUTH_KV_ID/$PROD_ID/g" "$config"
-    sed -i '' "s/TODO_DEV_AUTH_KV_ID/$DEV_ID/g" "$config"
-  else
-    sed -i "s/TODO_PROD_AUTH_KV_ID/$PROD_ID/g" "$config"
-    sed -i "s/TODO_DEV_AUTH_KV_ID/$DEV_ID/g" "$config"
-  fi
+  replace_placeholder "$config" "$PROD_PLACEHOLDER" "$PROD_ID"
+  replace_placeholder "$config" "$DEV_PLACEHOLDER" "$DEV_ID"
   echo "    Updated $config"
 done
 
 echo ""
 echo "==> Next steps:"
-echo "    1. Run app/studio/admin/www worker type generation if you want regenerated Wrangler types"
-echo "    2. Commit the updated bindings and type files"
+echo "    1. Run 'pnpm --filter @valguide/app cf-typegen'"
+echo "    2. Run 'pnpm --filter @valguide/studio cf-typegen'"
+echo "    3. Run 'pnpm --filter @valguide/admin cf-typegen'"
+echo "    4. Run 'pnpm --filter @valguide/www cf-typegen'"
+echo "    5. Commit the updated bindings and type files"
