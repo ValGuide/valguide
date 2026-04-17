@@ -16,6 +16,8 @@
     }
   },
 
+  // Shared Cloudflare resources are managed in infra/cloudflare.
+  // Keep these binding IDs aligned with OpenTofu outputs instead of ad hoc setup steps.
   // Native KV binding — replaces Upstash Redis for short link caching
   "kv_namespaces": [{ "binding": "LINKS_KV", "id": "REPLACE_WITH_LINKS_KV_ID_PROD" }],
 

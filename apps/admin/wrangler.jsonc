@@ -16,6 +16,8 @@
     }
   },
 
+  // Shared Cloudflare resources are managed in infra/cloudflare.
+  // Keep these bucket names and binding IDs aligned with OpenTofu outputs instead of one-off setup scripts.
   // Native R2 binding — for org logo uploads
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod", "jurisdiction": "eu" }],
 
