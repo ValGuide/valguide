@@ -18,6 +18,7 @@ export function resolveTourLocaleState(input: {
   const availableLocales = input.availableLocales.filter((locale): locale is SupportedLocale =>
     supportedLocales.includes(locale as SupportedLocale),
   )
+  const hasMultipleAvailableLocales = availableLocales.length > 1
 
   const fallbackLocale =
     availableLocales[0] ?? (supportedLocales.includes(input.currentLocale) ? input.currentLocale : defaultLocale)
@@ -29,7 +30,7 @@ export function resolveTourLocaleState(input: {
     hasLocaleCookie: input.hasLocaleCookie,
     isCurrentLocaleSupported,
     shouldForceSelection: input.hasLocaleCookie && !isCurrentLocaleSupported,
-    shouldPromptInitialSelection: !input.hasLocaleCookie,
+    shouldPromptInitialSelection: !input.hasLocaleCookie && hasMultipleAvailableLocales,
     preferredSelectionLocale: isCurrentLocaleSupported ? input.currentLocale : fallbackLocale,
   }
 }
