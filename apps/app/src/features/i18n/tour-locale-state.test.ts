@@ -36,4 +36,22 @@ describe('resolveTourLocaleState', () => {
       preferredSelectionLocale: 'de',
     })
   })
+
+  it('does not prompt when the tour only has one available locale', () => {
+    expect(
+      resolveTourLocaleState({
+        currentLocale: 'de',
+        hasLocaleCookie: false,
+        availableLocales: ['de'],
+      }),
+    ).toEqual({
+      currentLocale: 'de',
+      availableLocales: ['de'],
+      hasLocaleCookie: false,
+      isCurrentLocaleSupported: true,
+      shouldForceSelection: false,
+      shouldPromptInitialSelection: false,
+      preferredSelectionLocale: 'de',
+    })
+  })
 })
