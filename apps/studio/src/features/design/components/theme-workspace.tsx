@@ -96,13 +96,9 @@ export function ThemeWorkspace({
       <div className="hidden min-h-0 w-full min-w-0 flex-1 overflow-hidden lg:grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,24rem)] lg:gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,27rem)] xl:gap-8">
         <div className="flex h-full min-h-0 flex-col overflow-hidden pr-2">
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border bg-muted/30">
-            <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex min-h-full justify-center overflow-x-auto">
-                <PlayerPreview
-                  style={previewStyle}
-                  variant="storyboard"
-                  className="mx-auto min-w-fit max-w-none shadow-none"
-                />
+            <div className="min-h-0 flex-1 overflow-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex min-h-full min-w-full w-fit justify-center">
+                <PlayerPreview style={previewStyle} variant="storyboard" className="min-w-fit max-w-none shadow-none" />
               </div>
             </div>
           </div>
