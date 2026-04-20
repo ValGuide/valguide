@@ -42,10 +42,10 @@ Usage:
 Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
-  dev <target...> [--no-remote] [--no-open|-n] Start local development for one or more targets
+  dev <target...> [--no-remote] [--no-open|-n] [--db:<env>] Start local development for one or more targets
   kill                       Stop common local dev processes
   build <target> [--analyse] Build a target
-  preview <target>           Preview a target locally
+  preview <target> [--db:<env>] Preview a target locally
   deploy <target> <env>      Deploy a target to dev or prod
   type-check [target]        Run type-checking for the repo or one target
   test [target]              Run tests for the repo or one supported target
@@ -61,9 +61,11 @@ Examples:
   val dev studio
   val dev studio --no-remote
   val dev studio --no-open
+  val dev studio --db:prod
   val dev studio -n
   val build app --analyse
   val preview storybook
+  val preview studio --db:prod
   val deploy studio dev
   val type-check core
   val lint fix
@@ -74,7 +76,7 @@ Examples:
 `
 
 const COMMAND_HELP = {
-  dev: `Usage: val dev <target...> [--no-remote] [--no-open|-n] [--worker]
+  dev: `Usage: val dev <target...> [--no-remote] [--no-open|-n] [--db:<local|dev|prod>] [--worker]
 
 Targets:
   ${DEV_TARGETS.join(', ')}
@@ -83,6 +85,7 @@ Notes:
   Remote bindings are the default for admin, app, studio, www, links, and docs.
   --no-remote switches those targets back to local bindings.
   --no-open (or -n) skips opening local dev URLs in the browser.
+  --db:<local|dev|prod> selects the database environment for local dev. The default is --db:dev.
   --worker is supported only for storybook and starts the worker-backed dev flow.
   Multiple targets are supported for dev, for example: val dev studio admin
 `,
@@ -94,12 +97,13 @@ Targets:
 Notes:
   --analyse is supported for admin, app, studio, www, links, and docs.
 `,
-  preview: `Usage: val preview <target>
+  preview: `Usage: val preview <target> [--db:<local|dev|prod>]
 
 Targets:
   ${PREVIEW_TARGETS.join(', ')}
 
 Notes:
+  --db:<local|dev|prod> selects the database environment for preview. The default is --db:dev.
   storybook preview maps to the existing static serve workflow.
 `,
   deploy: `Usage: val deploy <target> <dev|prod>
@@ -290,6 +294,31 @@ function uniqueValues(values) {
   return [...new Set(values)]
 }
 
+function extractEnvironmentFlag(flags, prefix, values, fallback, command) {
+  const matchingFlags = flags.filter((flag) => flag.startsWith(prefix))
+  if (matchingFlags.length === 0) {
+    return { selectedValue: fallback, remainingFlags: flags }
+  }
+
+  if (matchingFlags.length > 1) {
+    failWithUsage(`choose only one ${prefix}<value> flag for "${command}".`, command)
+  }
+
+  const selectedFlag = matchingFlags[0]
+  const selectedValue = selectedFlag.slice(prefix.length)
+  if (!values.includes(selectedValue)) {
+    failWithUsage(
+      `unsupported value "${selectedValue}" for "${prefix}". Supported values: ${quotedList(values)}.`,
+      command,
+    )
+  }
+
+  return {
+    selectedValue,
+    remainingFlags: flags.filter((flag) => flag !== selectedFlag),
+  }
+}
+
 function commandInvocation(command, args = []) {
   return {
     command,
@@ -364,7 +393,14 @@ function createInvocation(command, positionals, flags, passthrough) {
 
 function createDevInvocation(positionals, flags, passthrough) {
   const normalizedFlags = normalizeFlags(flags)
-  ensureAllowedFlags(normalizedFlags, ['--remote', '--no-remote', '--no-open', '--worker'], 'dev')
+  const { selectedValue: databaseEnvironment, remainingFlags: devFlags } = extractEnvironmentFlag(
+    normalizedFlags,
+    '--db:',
+    ['local', 'dev', 'prod'],
+    'dev',
+    'dev',
+  )
+  ensureAllowedFlags(devFlags, ['--remote', '--no-remote', '--no-open', '--worker'], 'dev')
   if (positionals.length === 0) {
     failWithUsage(`missing target for "dev". Supported targets: ${quotedList(DEV_TARGETS)}.`, 'dev')
   }
@@ -378,11 +414,11 @@ function createDevInvocation(positionals, flags, passthrough) {
     failWithUsage('"workspace" cannot be combined with other dev targets.', 'dev')
   }
 
-  if (normalizedFlags.includes('--remote') && normalizedFlags.includes('--no-remote')) {
+  if (devFlags.includes('--remote') && devFlags.includes('--no-remote')) {
     failWithUsage('choose either "--remote" or "--no-remote", not both.', 'dev')
   }
 
-  if (normalizedFlags.includes('--worker')) {
+  if (devFlags.includes('--worker')) {
     if (targets.length !== 1 || targets[0] !== 'storybook') {
       failWithUsage('--worker is supported only for target "storybook".', 'dev')
     }
@@ -393,7 +429,7 @@ function createDevInvocation(positionals, flags, passthrough) {
     failWithUsage('passthrough args are not supported for "dev".', 'dev')
   }
 
-  if (normalizedFlags.includes('--remote')) {
+  if (devFlags.includes('--remote')) {
     for (const target of targets) {
       if (!REMOTE_DEV_TARGETS.includes(target)) {
         failWithUsage(
@@ -404,8 +440,8 @@ function createDevInvocation(positionals, flags, passthrough) {
     }
   }
 
-  const forwardedFlags = normalizedFlags.filter((flag) => flag !== '--remote')
-  return commandInvocation('sh', ['scripts/dev.sh', ...forwardedFlags, ...targets])
+  const forwardedFlags = devFlags.filter((flag) => flag !== '--remote')
+  return commandInvocation('sh', ['scripts/dev.sh', `--db:${databaseEnvironment}`, ...forwardedFlags, ...targets])
 }
 
 function createBuildInvocation(positionals, flags, passthrough) {
@@ -435,7 +471,14 @@ function createBuildInvocation(positionals, flags, passthrough) {
 }
 
 function createPreviewInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, [], 'preview')
+  const { selectedValue: databaseEnvironment, remainingFlags: previewFlags } = extractEnvironmentFlag(
+    flags,
+    '--db:',
+    ['local', 'dev', 'prod'],
+    'dev',
+    'preview',
+  )
+  ensureAllowedFlags(previewFlags, [], 'preview')
   const [target, ...rest] = positionals
   ensureTarget(target, PREVIEW_TARGETS, 'preview')
   ensureNoExtraPositionals(rest, 'preview')
@@ -444,7 +487,11 @@ function createPreviewInvocation(positionals, flags, passthrough) {
     return scriptInvocation('storybook:serve', passthrough)
   }
 
-  return scriptInvocation(`${target}:preview`, passthrough)
+  if (passthrough.length > 0) {
+    failWithUsage('passthrough args are not supported for "preview".', 'preview')
+  }
+
+  return commandInvocation('sh', ['scripts/preview.sh', `--db:${databaseEnvironment}`, target])
 }
 
 function createDeployInvocation(positionals, flags, passthrough) {
