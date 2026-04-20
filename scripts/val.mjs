@@ -12,6 +12,7 @@ const TEST_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'core']
 const DB_ACTIONS = ['generate', 'migrate', 'studio']
 const DB_ENVIRONMENTS = ['dev', 'prod']
 const SEED_ENVIRONMENTS = ['dev', 'prod']
+const SECRETS_ACTIONS = ['hide', 'show']
 const VERIFY_TARGETS = ['studio']
 const AI_ACTIONS = ['agree-meta-license']
 const AI_ENVIRONMENTS = ['dev', 'prod']
@@ -54,6 +55,7 @@ Commands:
   promote                    Merge local dev into main, push main, then switch back to dev
   db <action>                Run database action: generate | migrate | studio
   seed <env>                 Seed dev or prod data
+  secrets <action>           Encrypt or decrypt tracked secrets files
   verify <target>            Run target verification
   ai <action>                Run AI-related setup actions
 
@@ -71,6 +73,7 @@ Examples:
   val lint fix
   val open github
   val db migrate dev
+  val secrets hide
   val verify studio -- --ticket VG-85
   val ai agree-meta-license dev
 `
@@ -165,6 +168,14 @@ Notes:
 
 Notes:
   Use the existing migration-based workflow. Do not use db:push.
+`,
+  secrets: `Usage:
+  val secrets hide
+  val secrets show
+
+Actions:
+  hide   Encrypt tracked secrets files into *.secret
+  show   Decrypt tracked secrets files from *.secret
 `,
   seed: `Usage: val seed <dev|prod>`,
   verify: `Usage: val verify studio [-- passthrough]
@@ -382,6 +393,8 @@ function createInvocation(command, positionals, flags, passthrough) {
       return createDbInvocation(positionals, flags, passthrough)
     case 'seed':
       return createSeedInvocation(positionals, flags, passthrough)
+    case 'secrets':
+      return createSecretsInvocation(positionals, flags, passthrough)
     case 'verify':
       return createVerifyInvocation(positionals, flags, passthrough)
     case 'ai':
@@ -658,6 +671,30 @@ function createSeedInvocation(positionals, flags, passthrough) {
   }
 
   return scriptInvocation(`seed:${environment}`, passthrough)
+}
+
+function createSecretsInvocation(positionals, flags, passthrough) {
+  ensureAllowedFlags(flags, [], 'secrets')
+  const [action, ...rest] = positionals
+
+  if (!action) {
+    failWithUsage(`missing action for "secrets". Supported actions: ${quotedList(SECRETS_ACTIONS)}.`, 'secrets')
+  }
+
+  if (!SECRETS_ACTIONS.includes(action)) {
+    failWithUsage(
+      `unsupported secrets action "${action}". Supported actions: ${quotedList(SECRETS_ACTIONS)}.`,
+      'secrets',
+    )
+  }
+
+  ensureNoExtraPositionals(rest, 'secrets')
+
+  if (passthrough.length > 0) {
+    failWithUsage('passthrough args are not supported for "secrets".', 'secrets')
+  }
+
+  return scriptInvocation(`secrets:${action}`)
 }
 
 function createVerifyInvocation(positionals, flags, passthrough) {
