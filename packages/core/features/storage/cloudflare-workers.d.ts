@@ -10,6 +10,7 @@ declare module 'cloudflare:workers' {
     AUTH_KV: KVNamespace
     LINKS_KV: KVNamespace
     TOUR_DATA: KVNamespace
+    MAINTENANCE: KVNamespace
     [key: string]: unknown
   }
   function waitUntil(promise: Promise<unknown>): void

@@ -4,23 +4,25 @@ title: "Image Handling"
 
 > For the full system architecture (R2 → Worker Guard → edge caching → browser), see [Image Delivery Architecture](../architecture/image-delivery.md).
 
-## Image Provider
+## Image Delivery Provider
 
-The active image provider is controlled by the `VITE_IMAGE_PROVIDER` env var:
+The active image delivery provider is controlled by `VITE_IMAGE_DELIVERY_PROVIDER` when set, with fallback to the legacy `VITE_IMAGE_PROVIDER` env var:
 
 | Value | Behavior |
 |-------|----------|
-| `imagekit` (default) | Images served via ImageKit CDN (`ik.imagekit.io/valguide/...`) |
-| `cloudflare` | Images served via Image Guard Worker (`/i/w-640/...`) with Cloudflare edge transforms |
+| `imagekit` | Images served via ImageKit CDN (`ik.imagekit.io/valguide/...`) |
+| `cloudflare` (legacy fallback default) | Images served via Image Guard Worker (`/i/w-640/...`) with Cloudflare edge transforms |
+| `origin` | Images served directly from the asset origin with no transform layer |
 
-Switching providers requires only an env var change + redeploy — no code changes. ImageKit remains available as a fallback if Cloudflare Image Transformations need to be disabled.
+Switching providers requires only an env var change + redeploy. The `origin` provider exists as a portability fallback for environments without Cloudflare or ImageKit.
 
 ## `<Image>` Component
 
-The custom `Image` component provides automatic responsive images, lazy loading, and content layout shift prevention. It wraps `@unpic/react/base` and selects a transformer based on `VITE_IMAGE_PROVIDER`:
+The custom `Image` component provides automatic responsive images, lazy loading, and content layout shift prevention. It wraps `@unpic/react/base` and selects a transformer through the shared image delivery provider contract:
 
 - **Cloudflare mode**: Custom transformer generating `/i/` URLs for the Image Guard Worker. Breakpoints are restricted to `320, 640, 960, 1280, 1920` to match the Worker's allowed widths.
-- **ImageKit mode**: Uses `unpic/providers/imagekit` transformer (default unpic behavior).
+- **ImageKit mode**: Uses `unpic/providers/imagekit` transformer.
+- **Origin mode**: Uses the direct asset origin without transform URLs.
 
 ```typescript
 // In apps (studio, app, admin):
@@ -114,10 +116,11 @@ All image URL construction goes through `@valguide/core/features/assets/image-ur
 
 | Function | Use Case | Output |
 |----------|----------|--------|
-| `getAssetUrl(storagePath)` | Direct R2 URL (audio/video, or image source for `<Image>`) | `${VITE_R2_PUBLIC_URL}/${path}` |
+| `getAssetUrl(storagePath)` | Direct asset URL (audio/video, or image source for `<Image>`) | `${VITE_ASSET_BASE_URL || VITE_R2_PUBLIC_URL}/${path}` |
 | `getImageKitUrl(storagePath)` | ImageKit-optimized URL (used internally when provider is `imagekit`) | `${VITE_IMAGEKIT_URL}/${path}` |
-| `getAssetImageUrl(asset)` | Optimized image URL for `<Image>` component (provider-aware) | Cloudflare → R2 URL (transformer adds `/i/`), ImageKit → ImageKit URL |
-| `getAssetDisplayUrl(asset)` | Auto-selects by asset type | Images → `getAssetImageUrl`, audio/video → direct R2 |
+| `getAssetImageUrl(asset)` | Optimized image URL for `<Image>` component (provider-aware) | Cloudflare → direct asset URL transformed to `/i/...`, ImageKit → ImageKit URL, Origin → direct asset URL |
+| `getAssetDisplayUrl(asset)` | Auto-selects by asset type | Images → `getAssetImageUrl`, audio/video → direct asset origin |
+| `getAssetVideoThumbnailUrl(storagePath, options)` | Provider-managed video thumbnail URL when supported | Cloudflare → `/v/...`, ImageKit/Origin → `null` |
 
 ```typescript
 import { getAssetImageUrl } from '@valguide/core/features/assets/image-url'
@@ -135,7 +138,7 @@ The image component lives in `@valguide/core` and wraps:
 | Package | Purpose |
 |---------|---------|
 | `@unpic/react` (`^1.0.2`) | Base `<Image>` component with responsive rendering (uses `@unpic/react/base`) |
-| `unpic` | ImageKit transformer (`unpic/providers/imagekit`) — used when `VITE_IMAGE_PROVIDER=imagekit` |
+| `unpic` | ImageKit transformer (`unpic/providers/imagekit`) — used when `VITE_IMAGE_DELIVERY_PROVIDER=imagekit` |
 
 The Cloudflare transformer is a custom function in `image.tsx` — no additional dependency needed.
 

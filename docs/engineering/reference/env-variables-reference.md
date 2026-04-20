@@ -93,8 +93,10 @@ Set via GitHub Actions `env` (CI builds) or local `.env` files. Baked into JS bu
 | `VITE_APP_DOMAIN` | Visitor app domain (used for link generation) | `app.valguide.com` |
 | `VITE_IMAGEKIT_URL` | ImageKit CDN base URL for image transforms | `https://ik.imagekit.io/valguide` |
 | `VITE_STUDIO_SUPPORT_EMAIL` | Support email shown in studio UI | `support@valguide.com` |
-| `VITE_R2_PUBLIC_URL` | Public URL for R2 asset storage | `https://assets.valguide.com` |
-| `VITE_IMAGE_PROVIDER` | Image CDN provider (`cloudflare` or `imagekit`) | `imagekit` |
+| `VITE_ASSET_BASE_URL` | Preferred public base URL for asset delivery | `""` |
+| `VITE_R2_PUBLIC_URL` | Legacy fallback public URL for asset delivery | `https://assets.valguide.com` |
+| `VITE_IMAGE_DELIVERY_PROVIDER` | Preferred image delivery provider (`cloudflare`, `imagekit`, `origin`) | — |
+| `VITE_IMAGE_PROVIDER` | Legacy image delivery provider fallback (`cloudflare` or `imagekit`) | `cloudflare` |
 
 ## Cloudflare Worker Bindings
 

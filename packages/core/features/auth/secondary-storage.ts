@@ -1,4 +1,5 @@
 import type { SecondaryStorage } from 'better-auth/db'
+import type { KeyValueStore } from '../platform/key-value-store'
 
 const authKvKeyPrefix = 'better-auth'
 
@@ -19,13 +20,17 @@ function buildStorageKey(scope: string, key: string): string {
   return `${authKvKeyPrefix}:${scope}:${key}`
 }
 
-export function createSecondaryStorage(options: { kv: KVNamespace; scope: string; logger?: Logger }): SecondaryStorage {
+export function createSecondaryStorage(options: {
+  store: KeyValueStore
+  scope: string
+  logger?: Logger
+}): SecondaryStorage {
   const logger = options.logger ?? console
 
   return {
     async get(key) {
       try {
-        return await options.kv.get(buildStorageKey(options.scope, key))
+        return await options.store.get(buildStorageKey(options.scope, key))
       } catch (error) {
         logger.error('[auth-kv] Failed to read secondary storage key', key, error)
         return null
@@ -33,15 +38,14 @@ export function createSecondaryStorage(options: { kv: KVNamespace; scope: string
     },
     async set(key, value, ttl) {
       try {
-        const expirationTtl = normalizeTtl(ttl)
-        await options.kv.put(buildStorageKey(options.scope, key), value, expirationTtl ? { expirationTtl } : undefined)
+        await options.store.set(buildStorageKey(options.scope, key), value, { ttl: normalizeTtl(ttl) })
       } catch (error) {
         logger.error('[auth-kv] Failed to write secondary storage key', key, error)
       }
     },
     async delete(key) {
       try {
-        await options.kv.delete(buildStorageKey(options.scope, key))
+        await options.store.delete(buildStorageKey(options.scope, key))
       } catch (error) {
         logger.error('[auth-kv] Failed to delete secondary storage key', key, error)
       }

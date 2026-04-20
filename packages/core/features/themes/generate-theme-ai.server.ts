@@ -3,7 +3,7 @@ import { Buffer } from 'node:buffer'
 import { eq } from 'drizzle-orm'
 import { db } from '../db'
 import { organization } from '../orgs/schema'
-import { getR2Bucket } from '../storage/r2'
+import { getObject } from '../storage/upload.server'
 import { createTheme } from './create-theme.server'
 import { themeAiGeneration, theme as themeTable } from './schema'
 import type { GenerateThemeAiInput, ThemeAiGeneratedTheme, ThemeAiWebsiteContext } from './theme-ai.shared'
@@ -95,14 +95,13 @@ async function extractWebsiteContext(sourceUrl: string): Promise<ThemeAiWebsiteC
 }
 
 async function readImageAsDataUri(storagePath: string): Promise<string> {
-  const bucket = getR2Bucket()
-  const object = await bucket.get(storagePath)
+  const object = await getObject(storagePath)
 
   if (!object) {
     throw new Error(`Inspiration image not found in storage: ${storagePath}`)
   }
 
-  const contentType = object.httpMetadata?.contentType ?? 'application/octet-stream'
+  const contentType = object.contentType ?? 'application/octet-stream'
   const bytes = await object.arrayBuffer()
   return `data:${contentType};base64,${Buffer.from(bytes).toString('base64')}`
 }

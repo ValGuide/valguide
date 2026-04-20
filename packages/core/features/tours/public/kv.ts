@@ -11,17 +11,10 @@
  * (e.g. local dev without Cloudflare bindings).
  */
 
-import { env } from 'cloudflare:workers'
+import { createOptionalKvNamespace } from '../../platform/kv-namespace.server'
 import type { OrgSlugKvEntry, TourKvData, TourSharedKvData, TourSlugKvEntry } from './kv-types'
 
-function getKv(): KVNamespace | null {
-  try {
-    return env.TOUR_DATA ?? null
-  } catch {
-    console.error('[tour-kv] KV binding TOUR_DATA not available')
-    return null
-  }
-}
+const tourDataKv = createOptionalKvNamespace('TOUR_DATA', { logPrefix: '[tour-kv]' })
 
 // ── Key builders ─────────────────────────────────────────────────
 
@@ -44,133 +37,49 @@ function tourSlugKey(orgSlug: string, tourSlug: string): string {
 // ── Read helpers ─────────────────────────────────────────────────
 
 export async function readTourFromKv(tourNanoId: string, locale: string): Promise<TourKvData | null> {
-  const kv = getKv()
-  if (!kv) return null
-  try {
-    const data = await kv.get(tourDataKey(tourNanoId, locale), { type: 'json' })
-    return (data as TourKvData) ?? null
-  } catch (err) {
-    console.error('[tour-kv] Failed to read tour', tourNanoId, locale, err)
-    return null
-  }
+  return tourDataKv.readJson<TourKvData>(tourDataKey(tourNanoId, locale))
 }
 
 export async function resolveOrgSlugFromKv(orgSlug: string): Promise<OrgSlugKvEntry | null> {
-  const kv = getKv()
-  if (!kv) return null
-  try {
-    const data = await kv.get(orgSlugKey(orgSlug), { type: 'json' })
-    return (data as OrgSlugKvEntry) ?? null
-  } catch (err) {
-    console.error('[tour-kv] Failed to resolve org slug', orgSlug, err)
-    return null
-  }
+  return tourDataKv.readJson<OrgSlugKvEntry>(orgSlugKey(orgSlug))
 }
 
 export async function readTourSharedFromKv(tourNanoId: string): Promise<TourSharedKvData | null> {
-  const kv = getKv()
-  if (!kv) return null
-  try {
-    const data = await kv.get(tourSharedKey(tourNanoId), { type: 'json' })
-    return (data as TourSharedKvData) ?? null
-  } catch (err) {
-    console.error('[tour-kv] Failed to read shared tour data', tourNanoId, err)
-    return null
-  }
+  return tourDataKv.readJson<TourSharedKvData>(tourSharedKey(tourNanoId))
 }
 
 export async function resolveTourSlugFromKv(orgSlug: string, tourSlug: string): Promise<TourSlugKvEntry | null> {
-  const kv = getKv()
-  if (!kv) return null
-  try {
-    const data = await kv.get(tourSlugKey(orgSlug, tourSlug), { type: 'json' })
-    return (data as TourSlugKvEntry) ?? null
-  } catch (err) {
-    console.error('[tour-kv] Failed to resolve tour slug', orgSlug, tourSlug, err)
-    return null
-  }
+  return tourDataKv.readJson<TourSlugKvEntry>(tourSlugKey(orgSlug, tourSlug))
 }
 
-// ── Write helpers ────────────────────────────────────────────────
-
 export async function writeTourToKv(tourNanoId: string, locale: string, data: TourKvData): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await kv.put(tourDataKey(tourNanoId, locale), JSON.stringify(data))
-  } catch (err) {
-    console.error('[tour-kv] Failed to write tour', tourNanoId, locale, err)
-  }
+  await tourDataKv.writeJson(tourDataKey(tourNanoId, locale), data)
 }
 
 export async function writeTourSharedToKv(tourNanoId: string, data: TourSharedKvData): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await kv.put(tourSharedKey(tourNanoId), JSON.stringify(data))
-  } catch (err) {
-    console.error('[tour-kv] Failed to write shared tour data', tourNanoId, err)
-  }
+  await tourDataKv.writeJson(tourSharedKey(tourNanoId), data)
 }
 
 export async function writeOrgSlugToKv(slug: string, data: OrgSlugKvEntry): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await kv.put(orgSlugKey(slug), JSON.stringify(data))
-  } catch (err) {
-    console.error('[tour-kv] Failed to write org slug', slug, err)
-  }
+  await tourDataKv.writeJson(orgSlugKey(slug), data)
 }
 
 export async function writeTourSlugToKv(orgSlug: string, tourSlug: string, data: TourSlugKvEntry): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await kv.put(tourSlugKey(orgSlug, tourSlug), JSON.stringify(data))
-  } catch (err) {
-    console.error('[tour-kv] Failed to write tour slug', orgSlug, tourSlug, err)
-  }
+  await tourDataKv.writeJson(tourSlugKey(orgSlug, tourSlug), data)
 }
 
-// ── Delete helpers ───────────────────────────────────────────────
-
 export async function deleteTourFromKv(tourNanoId: string, locale: string): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await kv.delete(tourDataKey(tourNanoId, locale))
-  } catch (err) {
-    console.error('[tour-kv] Failed to delete tour', tourNanoId, locale, err)
-  }
+  await tourDataKv.delete(tourDataKey(tourNanoId, locale))
 }
 
 export async function deleteTourSharedFromKv(tourNanoId: string): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await kv.delete(tourSharedKey(tourNanoId))
-  } catch (err) {
-    console.error('[tour-kv] Failed to delete shared tour data', tourNanoId, err)
-  }
+  await tourDataKv.delete(tourSharedKey(tourNanoId))
 }
 
 export async function deleteTourAllLocalesFromKv(tourNanoId: string, locales: string[]): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await Promise.all(locales.map((locale) => kv.delete(tourDataKey(tourNanoId, locale))))
-  } catch (err) {
-    console.error('[tour-kv] Failed to delete tour locales', tourNanoId, locales, err)
-  }
+  await tourDataKv.deleteMany(locales.map((locale) => tourDataKey(tourNanoId, locale)))
 }
 
 export async function deleteTourSlugFromKv(orgSlug: string, tourSlug: string): Promise<void> {
-  const kv = getKv()
-  if (!kv) return
-  try {
-    await kv.delete(tourSlugKey(orgSlug, tourSlug))
-  } catch (err) {
-    console.error('[tour-kv] Failed to delete tour slug', orgSlug, tourSlug, err)
-  }
+  await tourDataKv.delete(tourSlugKey(orgSlug, tourSlug))
 }

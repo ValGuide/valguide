@@ -1,17 +1,11 @@
-import { env } from 'cloudflare:workers'
+import type { KeyValueStore } from '../platform/key-value-store'
+import { getRequiredKeyValueStore } from '../platform/key-value-store.server'
 import type { EnableMaintenanceInput, MaintenanceApp, MaintenanceState, MaintenanceStatus } from './types'
 
 const MAINTENANCE_KEY_PREFIX = 'ops:maintenance:'
 
-function getMaintenanceKv(): KVNamespace {
-  const bindings = env as unknown as Record<string, KVNamespace | undefined>
-  const kv = bindings.MAINTENANCE
-  if (!kv) {
-    throw new Error(
-      '[maintenance-kv] KV binding MAINTENANCE is not available — check wrangler.jsonc kv_namespaces config',
-    )
-  }
-  return kv
+function getMaintenanceStore(): KeyValueStore {
+  return getRequiredKeyValueStore('MAINTENANCE', { logPrefix: '[maintenance-kv]' })
 }
 
 function toNullableString(value: unknown): string | null {
@@ -58,8 +52,8 @@ export function getMaintenanceKey(app: MaintenanceApp): string {
 }
 
 export async function getMaintenanceState(app: MaintenanceApp): Promise<MaintenanceState | null> {
-  const kv = getMaintenanceKv()
-  const raw = await kv.get(getMaintenanceKey(app), { type: 'json' })
+  const store = getMaintenanceStore()
+  const raw = await store.getJson(getMaintenanceKey(app))
   return parseMaintenanceState(raw)
 }
 
@@ -100,7 +94,7 @@ export async function enableMaintenance(
   app: MaintenanceApp,
   input: EnableMaintenanceInput = {},
 ): Promise<MaintenanceStatus> {
-  const kv = getMaintenanceKv()
+  const store = getMaintenanceStore()
 
   const state: MaintenanceState = {
     enabled: true,
@@ -110,7 +104,7 @@ export async function enableMaintenance(
     enabledBy: normalizeOptionalValue(input.enabledBy),
   }
 
-  await kv.put(getMaintenanceKey(app), JSON.stringify(state))
+  await store.setJson(getMaintenanceKey(app), state)
 
   return {
     app,
@@ -123,7 +117,7 @@ export async function enableMaintenance(
 }
 
 export async function disableMaintenance(app: MaintenanceApp): Promise<MaintenanceStatus> {
-  const kv = getMaintenanceKv()
-  await kv.delete(getMaintenanceKey(app))
+  const store = getMaintenanceStore()
+  await store.delete(getMaintenanceKey(app))
   return buildDisabledStatus(app)
 }

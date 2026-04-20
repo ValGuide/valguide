@@ -1,62 +1,56 @@
-import { getR2Bucket } from './r2'
+import { getCloudflareR2ObjectStorageProvider } from './cloudflare-r2.server'
+import type { CompletedMultipartUploadPart, RetrievedStorageObject, StorageObjectBody } from './object-storage'
 
 export const MULTIPART_THRESHOLD = 50 * 1024 * 1024 // 50 MB
 export const PART_SIZE = 10 * 1024 * 1024 // 10 MB per part
 
+function getObjectStorageProvider() {
+  return getCloudflareR2ObjectStorageProvider()
+}
+
 // ── Simple PUT ──────────────────────────────────────────────────────
 
-export async function putObject(
-  key: string,
-  body: ReadableStream | ArrayBuffer | ArrayBufferView | string | Blob,
-  contentType: string,
-): Promise<void> {
-  const bucket = await getR2Bucket()
-  await bucket.put(key, body, {
-    httpMetadata: { contentType },
-  })
+export async function putObject(key: string, body: StorageObjectBody, contentType: string): Promise<void> {
+  await getObjectStorageProvider().putObject(key, body, contentType)
 }
 
 // ── Delete ──────────────────────────────────────────────────────────
 
 export async function deleteObject(key: string): Promise<void> {
-  const bucket = await getR2Bucket()
-  await bucket.delete(key)
+  await getObjectStorageProvider().deleteObject(key)
 }
 
 // ── Head ────────────────────────────────────────────────────────────
 
 export async function headObject(key: string): Promise<{ size: number; etag: string } | null> {
-  const bucket = await getR2Bucket()
-  const obj = await bucket.head(key)
-  if (!obj) return null
-  return { size: obj.size, etag: obj.etag }
+  return getObjectStorageProvider().headObject(key)
+}
+
+export async function getObject(key: string): Promise<RetrievedStorageObject | null> {
+  return getObjectStorageProvider().getObject(key)
 }
 
 // ── Multipart ───────────────────────────────────────────────────────
 
 export async function initMultipartUpload(key: string, contentType: string) {
-  const bucket = await getR2Bucket()
-  const upload = await bucket.createMultipartUpload(key, {
-    httpMetadata: { contentType },
-  })
-  return { uploadId: upload.uploadId, key }
+  return getObjectStorageProvider().initMultipartUpload(key, contentType)
 }
 
 export async function uploadPart(
   key: string,
   uploadId: string,
   partNumber: number,
-  body: ReadableStream | ArrayBuffer | ArrayBufferView | string | Blob,
-): Promise<R2UploadedPart> {
-  const bucket = await getR2Bucket()
-  const upload = bucket.resumeMultipartUpload(key, uploadId)
-  return upload.uploadPart(partNumber, body)
+  body: StorageObjectBody,
+): Promise<CompletedMultipartUploadPart> {
+  return getObjectStorageProvider().uploadPart(key, uploadId, partNumber, body)
 }
 
-export async function completeMultipartUpload(key: string, uploadId: string, parts: R2UploadedPart[]): Promise<void> {
-  const bucket = await getR2Bucket()
-  const upload = bucket.resumeMultipartUpload(key, uploadId)
-  await upload.complete(parts)
+export async function completeMultipartUpload(
+  key: string,
+  uploadId: string,
+  parts: CompletedMultipartUploadPart[],
+): Promise<void> {
+  await getObjectStorageProvider().completeMultipartUpload(key, uploadId, parts)
 }
 
 // ── Verify ──────────────────────────────────────────────────────────

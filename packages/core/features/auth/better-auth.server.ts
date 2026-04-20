@@ -1,4 +1,3 @@
-import { env } from 'cloudflare:workers'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { createLogger } from '@valguide/logger'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
@@ -13,6 +12,7 @@ import { resolveLocaleFromHeaders } from '../../i18n/locale-resolution'
 import { captureStudioProductEvent } from '../../posthog/server'
 import { db } from '../db'
 import { invitation, member, organization } from '../orgs/schema'
+import { getOptionalKeyValueStore } from '../platform/key-value-store.server'
 import { orgAc, orgRoles } from './organization-permissions'
 import { authAccounts, authSessions, authUsers, authVerifications } from './schema'
 import { createSecondaryStorage } from './secondary-storage'
@@ -63,15 +63,6 @@ async function runAuthSideEffect(label: string, effect: () => Promise<void>) {
   }
 }
 
-function resolveAuthKvBinding(): KVNamespace | null {
-  try {
-    return env.AUTH_KV ?? null
-  } catch (error) {
-    log.error('[auth-kv] AUTH_KV binding is unavailable', error)
-    return null
-  }
-}
-
 export function createAuthInstance(options: {
   baseURL?: string
   cookiePrefix: string
@@ -114,10 +105,10 @@ export function createAuthInstance(options: {
         maxAge: number
       }
 }) {
-  const authKv = resolveAuthKvBinding()
-  const secondaryStorage = authKv
+  const authKvStore = getOptionalKeyValueStore('AUTH_KV', { logPrefix: '[auth-kv]' })
+  const secondaryStorage = authKvStore
     ? createSecondaryStorage({
-        kv: authKv,
+        store: authKvStore,
         scope: options.cookiePrefix,
         logger: log,
       })
