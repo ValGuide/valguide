@@ -161,7 +161,8 @@ Configured as native R2 bindings in `wrangler.jsonc` — no API keys needed.
 
 | Variable | Where | Description |
 |----------|-------|-------------|
-| `VITE_R2_PUBLIC_URL` | Client | Public base URL for assets |
+| `VITE_ASSET_BASE_URL` | Client | Preferred public base URL for assets |
+| `VITE_R2_PUBLIC_URL` | Client | Legacy fallback public base URL for assets |
 
 R2 access uses native Worker bindings configured in `wrangler.jsonc`. No `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, or `R2_ENDPOINT` needed.
 

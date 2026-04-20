@@ -8,9 +8,11 @@ title: "Image Delivery"
 
 ValGuide stores all media (images, audio, video) in **Cloudflare R2**. Images are transformed on the fly — resized, format-converted, and quality-optimized — before reaching the browser. Audio and video are served directly from R2 without transformation.
 
-The active image provider is controlled by `VITE_IMAGE_PROVIDER` (`cloudflare` or `imagekit`, default: `imagekit`). Both providers remain functional; switching requires only an env var change + redeploy. ImageKit serves as a fallback if Cloudflare Image Transformations need to be disabled.
+The active image delivery provider is controlled by `VITE_IMAGE_DELIVERY_PROVIDER` when set, with fallback to the legacy `VITE_IMAGE_PROVIDER`. Supported providers are `cloudflare`, `imagekit`, and `origin`.
 
-### Cloudflare mode (`VITE_IMAGE_PROVIDER=cloudflare`)
+The schema-level fallback default remains `cloudflare` until deployment envs are switched explicitly.
+
+### Cloudflare mode (`VITE_IMAGE_DELIVERY_PROVIDER=cloudflare`)
 
 ```
 ┌─────────────┐     ┌──────────────────────┐     ┌───────────────┐     ┌─────────┐
@@ -26,7 +28,7 @@ The active image provider is controlled by `VITE_IMAGE_PROVIDER` (`cloudflare` o
                     })
 ```
 
-### ImageKit mode (`VITE_IMAGE_PROVIDER=imagekit`)
+### ImageKit mode (`VITE_IMAGE_DELIVERY_PROVIDER=imagekit`)
 
 ```
 ┌─────────────┐     ┌──────────────────────┐     ┌─────────┐
@@ -157,11 +159,12 @@ This exists for three reasons:
 | Component | File |
 |-----------|------|
 | `<Image>` component + transformer | `packages/core/ui/components/image.tsx` |
+| Image delivery provider contract | `packages/core/features/assets/image-delivery.ts` |
 | URL helpers (`getAssetImageUrl`, etc.) | `packages/core/features/assets/image-url.ts` |
 | Image Guard Worker | `workers/image-guard/src/index.ts` |
 | Worker config | `workers/image-guard/wrangler.jsonc` |
 | Service worker caching | `apps/app/public/sw.js` |
-| R2 public URL env var | `VITE_R2_PUBLIC_URL` in `packages/core/env/schema.ts` |
+| Asset base URL env vars | `VITE_ASSET_BASE_URL` with fallback to `VITE_R2_PUBLIC_URL` in `packages/core/env/schema.ts` |
 
 ## Using the `<Image>` Component
 

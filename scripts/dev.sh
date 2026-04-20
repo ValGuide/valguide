@@ -14,6 +14,7 @@ set -e
 #   pnpm dev:select studio                 # just studio, remote bindings by default
 #   pnpm dev:select studio admin           # studio + admin, remote bindings by default
 #   pnpm dev:select api studio             # api + studio, remote bindings by default
+#   pnpm dev:select --db:prod studio       # studio against prod DB
 #   pnpm dev:select --no-remote studio     # studio with local bindings
 #   pnpm dev:select --no-open studio       # studio without opening browser tabs
 #   pnpm dev:select --no-remote admin app  # admin + app with local bindings
@@ -39,6 +40,7 @@ url_for() {
 ALL_APPS="admin api app docs links storybook studio www"
 USE_REMOTE=1
 OPEN_BROWSER=1
+DB_ENV="dev"
 
 # ── Expand comma-separated args (e.g. "studio,admin" → "studio admin") ────
 expanded=""
@@ -57,6 +59,8 @@ for arg in "$@"; do
     USE_REMOTE=0
   elif [ "$arg" = "--no-open" ] || [ "$arg" = "-n" ]; then
     OPEN_BROWSER=0
+  elif [ "${arg#--db:}" != "$arg" ]; then
+    DB_ENV=${arg#--db:}
   else
     remaining="$remaining $arg"
   fi
@@ -89,6 +93,15 @@ fi
 if [ "$1" = "--all" ]; then
   set -- $ALL_APPS
 fi
+
+case "$DB_ENV" in
+  local|dev|prod) ;;
+  *)
+    echo "Error: unsupported database environment '$DB_ENV'"
+    echo "Supported database environments: local, dev, prod"
+    exit 1
+    ;;
+esac
 
 # ── Validate app names ───────────────────────────────────────────────────
 for app in "$@"; do
@@ -132,10 +145,10 @@ fi
 
 # ── Start dev servers ────────────────────────────────────────────────────
 if [ "$USE_REMOTE" -eq 1 ]; then
-  echo "Starting (remote bindings): $*"
+  echo "Starting (remote bindings, DB: $DB_ENV): $*"
   export WRANGLER_REMOTE=true
 else
-  echo "Starting (local bindings): $*"
+  echo "Starting (local bindings, DB: $DB_ENV): $*"
 fi
 # shellcheck disable=SC2086
-exec pnpm env:load turbo run dev $filters
+exec pnpm env:load --db:$DB_ENV turbo run dev $filters

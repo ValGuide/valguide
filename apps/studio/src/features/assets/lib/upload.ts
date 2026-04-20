@@ -9,7 +9,7 @@ export type UploadOptions = {
 }
 
 /**
- * Upload a file to R2 via native Worker binding.
+ * Upload a file to the active object storage provider.
  * Small files (< 50MB) use a single PUT through the /api/upload route.
  * Large files (≥ 50MB) use multipart upload with 10MB parts through /api/upload-part.
  */

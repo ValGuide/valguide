@@ -56,7 +56,8 @@ These are client-side variables baked into the JS bundle at build time:
 
 - `VITE_POSTHOG_ENABLED`, `VITE_POSTHOG_KEY`, `VITE_POSTHOG_HOST`
 - `VITE_STUDIO_URL`, `VITE_APP_DOMAIN`, `VITE_ENV`
-- `VITE_R2_PUBLIC_URL`, `VITE_IMAGEKIT_URL`
+- `VITE_ASSET_BASE_URL`, `VITE_R2_PUBLIC_URL`, `VITE_IMAGEKIT_URL`
+- `VITE_IMAGE_DELIVERY_PROVIDER`, `VITE_IMAGE_PROVIDER`
 
 **Do NOT put these in wrangler `vars`** unless they are also read server-side (see exception below).
 

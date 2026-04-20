@@ -8,6 +8,10 @@ interface ImportMetaEnv {
   readonly VITE_STUDIO_URL: string | undefined
   readonly VITE_TERMS_OF_SERVICE_URL: string | undefined
   readonly VITE_APP_DOMAIN: string | undefined
+  readonly VITE_ASSET_BASE_URL: string | undefined
+  readonly VITE_IMAGEKIT_URL: string | undefined
+  readonly VITE_IMAGE_DELIVERY_PROVIDER: 'cloudflare' | 'imagekit' | 'origin' | undefined
+  readonly VITE_IMAGE_PROVIDER: 'cloudflare' | 'imagekit' | undefined
 }
 
 interface ImportMeta {

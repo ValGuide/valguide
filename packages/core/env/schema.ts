@@ -48,7 +48,9 @@ export const clientEnvSchema = z.object({
   VITE_IMAGEKIT_URL: z.string().optional().default('https://ik.imagekit.io/valguide'),
   VITE_ENV: z.enum(['local', 'dev', 'prod']).optional().default('prod'),
   VITE_STUDIO_SUPPORT_EMAIL: z.string().optional().default('support@valguide.com'),
+  VITE_ASSET_BASE_URL: z.string().optional().default(''),
   VITE_R2_PUBLIC_URL: z.string().optional().default('https://assets.valguide.com'),
+  VITE_IMAGE_DELIVERY_PROVIDER: z.enum(['cloudflare', 'imagekit', 'origin']).optional(),
   VITE_IMAGE_PROVIDER: z.enum(['cloudflare', 'imagekit']).optional().default('cloudflare'),
 })
 
