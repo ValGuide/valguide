@@ -9,18 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ApiAnalyticsEventsRouteImport } from './routes/api.analytics.events'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrgSlugTourSlugRouteImport } from './routes/$orgSlug.$tourSlug'
 import { Route as OrgSlugTourSlugIndexRouteImport } from './routes/$orgSlug.$tourSlug.index'
+import { Route as ApiAnalyticsEventsRouteImport } from './routes/api.analytics.events'
 import { Route as OrgSlugTourSlugStopNanoIdRouteImport } from './routes/$orgSlug.$tourSlug.$stopNanoId'
 
-const ApiAnalyticsEventsRoute = ApiAnalyticsEventsRouteImport.update({
-  id: '/api/analytics/events',
-  path: '/api/analytics/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
@@ -41,6 +36,11 @@ const OrgSlugTourSlugIndexRoute = OrgSlugTourSlugIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OrgSlugTourSlugRoute,
 } as any)
+const ApiAnalyticsEventsRoute = ApiAnalyticsEventsRouteImport.update({
+  id: '/api/analytics/events',
+  path: '/api/analytics/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrgSlugTourSlugStopNanoIdRoute =
   OrgSlugTourSlugStopNanoIdRouteImport.update({
     id: '/$stopNanoId',
@@ -50,59 +50,59 @@ const OrgSlugTourSlugStopNanoIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/analytics/events': typeof ApiAnalyticsEventsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
+  '/api/analytics/events': typeof ApiAnalyticsEventsRoute
   '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/analytics/events': typeof ApiAnalyticsEventsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
+  '/api/analytics/events': typeof ApiAnalyticsEventsRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/analytics/events': typeof ApiAnalyticsEventsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
+  '/api/analytics/events': typeof ApiAnalyticsEventsRoute
   '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/api/analytics/events'
     | '/robots.txt'
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
+    | '/api/analytics/events'
     | '/$orgSlug/$tourSlug/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/api/analytics/events'
     | '/robots.txt'
     | '/$orgSlug/$tourSlug/$stopNanoId'
+    | '/api/analytics/events'
     | '/$orgSlug/$tourSlug'
   id:
     | '__root__'
     | '/'
-    | '/api/analytics/events'
     | '/robots.txt'
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
+    | '/api/analytics/events'
     | '/$orgSlug/$tourSlug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  ApiAnalyticsEventsRoute: typeof ApiAnalyticsEventsRoute
   IndexRoute: typeof IndexRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   OrgSlugTourSlugRoute: typeof OrgSlugTourSlugRouteWithChildren
+  ApiAnalyticsEventsRoute: typeof ApiAnalyticsEventsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -121,13 +121,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/analytics/events': {
-      id: '/api/analytics/events'
-      path: '/api/analytics/events'
-      fullPath: '/api/analytics/events'
-      preLoaderRoute: typeof ApiAnalyticsEventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/$orgSlug/$tourSlug': {
       id: '/$orgSlug/$tourSlug'
       path: '/$orgSlug/$tourSlug'
@@ -141,6 +134,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$orgSlug/$tourSlug/'
       preLoaderRoute: typeof OrgSlugTourSlugIndexRouteImport
       parentRoute: typeof OrgSlugTourSlugRoute
+    }
+    '/api/analytics/events': {
+      id: '/api/analytics/events'
+      path: '/api/analytics/events'
+      fullPath: '/api/analytics/events'
+      preLoaderRoute: typeof ApiAnalyticsEventsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/$orgSlug/$tourSlug/$stopNanoId': {
       id: '/$orgSlug/$tourSlug/$stopNanoId'
@@ -167,10 +167,10 @@ const OrgSlugTourSlugRouteWithChildren = OrgSlugTourSlugRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  ApiAnalyticsEventsRoute: ApiAnalyticsEventsRoute,
   IndexRoute: IndexRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   OrgSlugTourSlugRoute: OrgSlugTourSlugRouteWithChildren,
+  ApiAnalyticsEventsRoute: ApiAnalyticsEventsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
