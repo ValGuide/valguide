@@ -4,7 +4,7 @@ import {
   getImageDeliveryProvider,
   getImageKitAssetUrl,
   type VideoThumbnailOptions,
-} from './image-delivery'
+} from '../../platform/images/image-delivery'
 
 export { canGenerateAssetVideoThumbnail }
 

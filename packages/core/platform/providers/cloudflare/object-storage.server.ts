@@ -6,7 +6,7 @@ import type {
   ObjectStorageProvider,
   RetrievedStorageObject,
   StorageObjectBody,
-} from './object-storage'
+} from '../../storage/object-storage'
 
 function getR2BucketBinding(): R2Bucket {
   const bucket = env.R2_BUCKET

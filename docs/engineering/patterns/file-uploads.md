@@ -81,7 +81,7 @@ const result = await uploadFile({
 ### `initUploadFn` — Initialize upload
 
 ```ts
-import { initUploadFn } from '@valguide/core/features/storage/init-upload.fn'
+import { initUploadFn } from '@valguide/core/features/assets/init-upload.fn'
 
 const result = await initUploadFn({
   data: { key: 'assets/abc/xyz.mp3', contentType: 'audio/mpeg', fileSize: 1024000 }
@@ -93,7 +93,7 @@ const result = await initUploadFn({
 ### `completeUploadFn` — Complete multipart upload
 
 ```ts
-import { completeUploadFn } from '@valguide/core/features/storage/complete-upload.fn'
+import { completeUploadFn } from '@valguide/core/features/assets/complete-upload.fn'
 
 await completeUploadFn({
   data: { key, uploadId, parts: [{ etag: '...', partNumber: 1 }] }
@@ -171,7 +171,7 @@ R2 access uses native Worker bindings configured in `wrangler.jsonc`. No `R2_ACC
 For server-side uploads (e.g., admin logo upload from base64):
 
 ```ts
-import { putObject } from '@valguide/core/features/storage/upload.server'
+import { putObject } from '@valguide/core/platform/storage/object-storage.server'
 
 await putObject(storagePath, buffer, contentType)
 ```
@@ -179,14 +179,15 @@ await putObject(storagePath, buffer, contentType)
 ## File Structure
 
 ```
-packages/core/features/storage/
-├── cloudflare-workers.d.ts    # Cloudflare Workers type declarations (R2, KV)
-├── r2.ts                     # R2Bucket accessor via cloudflare:workers binding
-├── upload.server.ts           # put, delete, head, multipart (native R2 API)
-├── init-upload.fn.ts          # Server function: decides PUT vs multipart
-└── complete-upload.fn.ts      # Server function: completes multipart
+packages/core/platform/
+├── providers/cloudflare/workers.d.ts  # Cloudflare Workers type declarations (R2, KV)
+├── providers/cloudflare/object-storage.server.ts
+├── storage/object-storage.ts
+└── storage/object-storage.server.ts    # put, delete, head, multipart
 
 packages/core/features/assets/
+├── init-upload.fn.ts          # Server function: decides PUT vs multipart
+├── complete-upload.fn.ts      # Server function: completes multipart
 ├── image-url.ts               # getAssetUrl, getImageKitUrl, getAssetDisplayUrl
 ├── confirm-upload.server.ts   # Creates asset DB record
 ├── confirm-upload.fn.ts       # Server function wrapper

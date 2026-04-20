@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
+import { deleteObject } from '../../platform/storage/object-storage.server'
 import { NotFoundError } from '../auth/authorization'
 import { db } from '../db'
-import { deleteObject } from '../storage/upload.server'
 import { getAssetDeletionEligibility } from './asset-deletion-eligibility.server'
 import { ASSET_IN_USE_ERROR_CODE } from './delete-asset-errors'
 import { asset } from './schema'

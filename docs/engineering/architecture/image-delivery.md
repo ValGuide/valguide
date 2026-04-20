@@ -159,12 +159,12 @@ This exists for three reasons:
 | Component | File |
 |-----------|------|
 | `<Image>` component + transformer | `packages/core/ui/components/image.tsx` |
-| Image delivery provider contract | `packages/core/features/assets/image-delivery.ts` |
+| Image delivery provider contract | `packages/core/platform/images/image-delivery.ts` |
 | URL helpers (`getAssetImageUrl`, etc.) | `packages/core/features/assets/image-url.ts` |
 | Image Guard Worker | `workers/image-guard/src/index.ts` |
 | Worker config | `workers/image-guard/wrangler.jsonc` |
 | Service worker caching | `apps/app/public/sw.js` |
-| Asset base URL env vars | `VITE_ASSET_BASE_URL` with fallback to `VITE_R2_PUBLIC_URL` in `packages/core/env/schema.ts` |
+| Asset base URL env vars | `VITE_ASSET_BASE_URL` with fallback to `VITE_R2_PUBLIC_URL` in `packages/core/platform/images/asset-base-url.ts` |
 
 ## Using the `<Image>` Component
 

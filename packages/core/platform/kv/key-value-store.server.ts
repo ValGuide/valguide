@@ -1,4 +1,4 @@
-import { getCloudflareKeyValueStore } from './cloudflare-key-value-store.server'
+import { getCloudflareKeyValueStore } from '../providers/cloudflare/key-value-store.server'
 import type { KeyValueStore } from './key-value-store'
 
 export function getOptionalKeyValueStore(bindingName: string, options?: { logPrefix?: string }): KeyValueStore | null {

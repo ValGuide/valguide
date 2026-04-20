@@ -1,4 +1,4 @@
-import { createOptionalKvNamespace } from '../platform/kv-namespace.server'
+import { createOptionalKvNamespace } from '../../platform/kv/kv-namespace.server'
 
 const linksKv = createOptionalKvNamespace('LINKS_KV', { logPrefix: '[links-kv]' })
 

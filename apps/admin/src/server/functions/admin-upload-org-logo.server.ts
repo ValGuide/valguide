@@ -1,6 +1,6 @@
 import type { DB } from '@valguide/core/features/db'
 import { organization } from '@valguide/core/features/orgs/schema'
-import { putObject } from '@valguide/core/features/storage/upload.server'
+import { putObject } from '@valguide/core/platform/storage/object-storage.server'
 import { valguideId } from '@valguide/core/utils/nanoid'
 import { eq } from 'drizzle-orm'
 

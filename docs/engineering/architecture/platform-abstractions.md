@@ -10,9 +10,9 @@ Product code and feature code must depend on provider-neutral interfaces. Vendor
 
 ## Current Boundaries
 
-- KV access goes through the shared key-value abstractions in `packages/core/features/platform/`
-- Object storage goes through the shared storage abstractions in `packages/core/features/storage/`
-- Image delivery and asset URL generation go through the shared asset abstractions in `packages/core/features/assets/`
+- KV access goes through the shared key-value abstractions in `packages/core/platform/kv/`
+- Object storage goes through the shared storage abstractions in `packages/core/platform/storage/`
+- Image delivery and asset URL generation go through the shared abstractions in `packages/core/platform/images/`
 
 ## What To Avoid
 

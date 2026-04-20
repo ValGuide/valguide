@@ -1,5 +1,5 @@
 import { env } from 'cloudflare:workers'
-import type { KeyValueStore, KeyValueStoreOptions } from './key-value-store'
+import type { KeyValueStore, KeyValueStoreOptions } from '../../kv/key-value-store'
 
 function normalizeTtl(ttl?: number): number | undefined {
   if (typeof ttl !== 'number' || !Number.isFinite(ttl)) {

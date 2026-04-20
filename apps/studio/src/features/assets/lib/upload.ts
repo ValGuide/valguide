@@ -1,5 +1,5 @@
-import { completeUploadFn } from '@valguide/core/features/storage/complete-upload.fn'
-import { initUploadFn } from '@valguide/core/features/storage/init-upload.fn'
+import { completeUploadFn } from '@valguide/core/features/assets/complete-upload.fn'
+import { initUploadFn } from '@valguide/core/features/assets/init-upload.fn'
 
 export type UploadOptions = {
   key: string

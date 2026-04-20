@@ -1,6 +1,6 @@
 import { transform as imagekitTransform } from 'unpic/providers/imagekit'
-import { getAssetBaseUrl } from '../../env/asset-base-url'
 import { clientEnv } from '../../env/client'
+import { getAssetBaseUrl } from './asset-base-url'
 
 export type ImageDeliveryProviderId = 'cloudflare' | 'imagekit' | 'origin'
 

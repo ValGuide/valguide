@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { waitUntil } from '@valguide/core/utils/wait-until'
+import { waitUntil } from '@valguide/core/platform/runtime/wait-until'
 import { z } from 'zod'
 import { captureStudioProductEvent } from '../../../posthog/server'
 import { requireAuthMiddleware } from '../../auth/middleware'

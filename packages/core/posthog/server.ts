@@ -1,6 +1,6 @@
 import { createLogger } from '@valguide/logger'
 import { PostHog } from 'posthog-node'
-import { waitUntil } from '../utils/wait-until'
+import { waitUntil } from '../platform/runtime/wait-until'
 import {
   buildStudioAnalyticsProperties,
   POSTHOG_ORGANIZATION_GROUP,

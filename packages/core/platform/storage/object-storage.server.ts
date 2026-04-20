@@ -1,4 +1,4 @@
-import { getCloudflareR2ObjectStorageProvider } from './cloudflare-r2.server'
+import { getCloudflareR2ObjectStorageProvider } from '../providers/cloudflare/object-storage.server'
 import type { CompletedMultipartUploadPart, RetrievedStorageObject, StorageObjectBody } from './object-storage'
 
 export const MULTIPART_THRESHOLD = 50 * 1024 * 1024 // 50 MB

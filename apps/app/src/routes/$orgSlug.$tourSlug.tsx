@@ -22,7 +22,7 @@ import {
   tourKvDataToTourWithStops,
 } from '@valguide/core/features/tours/public/kv-serializers'
 import { resolveTourByIdOrSlug } from '@valguide/core/features/tours/tour/slug/resolve-tour.server'
-import { waitUntil } from '@valguide/core/utils/wait-until'
+import { waitUntil } from '@valguide/core/platform/runtime/wait-until'
 import { useEffect, useRef } from 'react'
 import { z } from 'zod'
 import { PreviewBanner } from '@/components/preview-banner'

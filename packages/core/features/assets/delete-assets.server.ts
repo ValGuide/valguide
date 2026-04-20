@@ -1,6 +1,6 @@
 import { inArray } from 'drizzle-orm'
+import { deleteObject } from '../../platform/storage/object-storage.server'
 import { db } from '../db'
-import { deleteObject } from '../storage/upload.server'
 import { type AssetDeletionEligibility, getAssetDeletionEligibility } from './asset-deletion-eligibility.server'
 import { asset } from './schema'
 

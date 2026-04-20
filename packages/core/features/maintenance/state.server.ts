@@ -1,5 +1,5 @@
-import type { KeyValueStore } from '../platform/key-value-store'
-import { getRequiredKeyValueStore } from '../platform/key-value-store.server'
+import type { KeyValueStore } from '../../platform/kv/key-value-store'
+import { getRequiredKeyValueStore } from '../../platform/kv/key-value-store.server'
 import type { EnableMaintenanceInput, MaintenanceApp, MaintenanceState, MaintenanceStatus } from './types'
 
 const MAINTENANCE_KEY_PREFIX = 'ops:maintenance:'

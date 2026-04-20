@@ -1,5 +1,5 @@
 import { Image as UnpicImage } from '@unpic/react/base'
-import { getImageComponentConfig } from '../../features/assets/image-delivery'
+import { getImageComponentConfig } from '../../platform/images/image-delivery'
 
 type ImageProps = Omit<React.ComponentProps<typeof UnpicImage>, 'transformer'>
 

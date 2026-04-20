@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { initMultipartUpload, MULTIPART_THRESHOLD, PART_SIZE } from '../../platform/storage/object-storage.server'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { initMultipartUpload, MULTIPART_THRESHOLD, PART_SIZE } from './upload.server'
 
 const initUploadSchema = z.object({
   key: z.string(),

@@ -11,7 +11,7 @@
  * (e.g. local dev without Cloudflare bindings).
  */
 
-import { createOptionalKvNamespace } from '../../platform/kv-namespace.server'
+import { createOptionalKvNamespace } from '../../../platform/kv/kv-namespace.server'
 import type { OrgSlugKvEntry, TourKvData, TourSharedKvData, TourSlugKvEntry } from './kv-types'
 
 const tourDataKv = createOptionalKvNamespace('TOUR_DATA', { logPrefix: '[tour-kv]' })

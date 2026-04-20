@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getAuthSession } from '@valguide/core/features/auth/better-auth.server'
-import { uploadPart } from '@valguide/core/features/storage/upload.server'
+import { uploadPart } from '@valguide/core/platform/storage/object-storage.server'
 
 export const Route = createFileRoute('/api/upload-part')({
   server: {
