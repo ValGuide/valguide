@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "val": "node scripts/val.mjs",
-    "env:load": "pnpm dlx tsx ./scripts/load-env.ts",
+    "env:load": "node ./scripts/load-env.mjs",
     "env:merge": "pnpm dlx tsx ./scripts/merge-env.ts",
     "env:push:cf": "pnpm dlx tsx ./scripts/push-to-cloudflare.ts",
     "cloudflare:infra:init": "cd infra/cloudflare && tofu init",

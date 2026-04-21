@@ -43,10 +43,10 @@ Usage:
 Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
-  dev <target...> [--no-remote] [--no-open|-n] [--db:<env>] Start local development for one or more targets
+  dev <target...> [--no-remote] [--no-open|-n] [--db:<env>] [--offline] Start local development for one or more targets
   kill                       Stop common local dev processes
   build <target> [--analyse] Build a target
-  preview <target> [--db:<env>] Preview a target locally
+  preview <target> [--db:<env>] [--offline] Preview a target locally
   deploy <target> <env>      Deploy a target to dev or prod
   type-check [target]        Run type-checking for the repo or one target
   test [target]              Run tests for the repo or one supported target
@@ -62,6 +62,7 @@ Commands:
 Examples:
   val dev studio
   val dev studio --no-remote
+  val dev studio --offline
   val dev studio --no-open
   val dev studio --db:prod
   val dev studio -n
@@ -79,7 +80,7 @@ Examples:
 `
 
 const COMMAND_HELP = {
-  dev: `Usage: val dev <target...> [--no-remote] [--no-open|-n] [--db:<local|dev|prod>] [--worker]
+  dev: `Usage: val dev <target...> [--no-remote] [--no-open|-n] [--db:<local|dev|prod>] [--offline] [--worker]
 
 Targets:
   ${DEV_TARGETS.join(', ')}
@@ -89,6 +90,7 @@ Notes:
   --no-remote switches those targets back to local bindings.
   --no-open (or -n) skips opening local dev URLs in the browser.
   --db:<local|dev|prod> selects the database environment for local dev. The default is --db:dev.
+  --offline is shorthand for --db:local --no-remote.
   --worker is supported only for storybook and starts the worker-backed dev flow.
   Multiple targets are supported for dev, for example: val dev studio admin
 `,
@@ -100,13 +102,14 @@ Targets:
 Notes:
   --analyse is supported for admin, app, studio, www, links, and docs.
 `,
-  preview: `Usage: val preview <target> [--db:<local|dev|prod>]
+  preview: `Usage: val preview <target> [--db:<local|dev|prod>] [--offline]
 
 Targets:
   ${PREVIEW_TARGETS.join(', ')}
 
 Notes:
   --db:<local|dev|prod> selects the database environment for preview. The default is --db:dev.
+  --offline is shorthand for --db:local.
   storybook preview maps to the existing static serve workflow.
 `,
   deploy: `Usage: val deploy <target> <dev|prod>
@@ -413,7 +416,7 @@ function createDevInvocation(positionals, flags, passthrough) {
     'dev',
     'dev',
   )
-  ensureAllowedFlags(devFlags, ['--remote', '--no-remote', '--no-open', '--worker'], 'dev')
+  ensureAllowedFlags(devFlags, ['--remote', '--no-remote', '--no-open', '--offline', '--worker'], 'dev')
   if (positionals.length === 0) {
     failWithUsage(`missing target for "dev". Supported targets: ${quotedList(DEV_TARGETS)}.`, 'dev')
   }
@@ -425,6 +428,16 @@ function createDevInvocation(positionals, flags, passthrough) {
 
   if (targets.includes('workspace') && targets.length > 1) {
     failWithUsage('"workspace" cannot be combined with other dev targets.', 'dev')
+  }
+
+  if (devFlags.includes('--offline')) {
+    if (databaseEnvironment !== 'dev') {
+      failWithUsage('--offline cannot be combined with an explicit --db:<env> flag.', 'dev')
+    }
+
+    if (devFlags.includes('--remote')) {
+      failWithUsage('--offline cannot be combined with --remote.', 'dev')
+    }
   }
 
   if (devFlags.includes('--remote') && devFlags.includes('--no-remote')) {
@@ -453,8 +466,15 @@ function createDevInvocation(positionals, flags, passthrough) {
     }
   }
 
-  const forwardedFlags = devFlags.filter((flag) => flag !== '--remote')
-  return commandInvocation('sh', ['scripts/dev.sh', `--db:${databaseEnvironment}`, ...forwardedFlags, ...targets])
+  const offlineMode = devFlags.includes('--offline')
+  const forwardedFlags = devFlags.filter((flag) => flag !== '--remote' && flag !== '--offline')
+  return commandInvocation('sh', [
+    'scripts/dev.sh',
+    `--db:${offlineMode ? 'local' : databaseEnvironment}`,
+    ...(offlineMode ? ['--no-remote'] : []),
+    ...forwardedFlags,
+    ...targets,
+  ])
 }
 
 function createBuildInvocation(positionals, flags, passthrough) {
@@ -491,7 +511,7 @@ function createPreviewInvocation(positionals, flags, passthrough) {
     'dev',
     'preview',
   )
-  ensureAllowedFlags(previewFlags, [], 'preview')
+  ensureAllowedFlags(previewFlags, ['--offline'], 'preview')
   const [target, ...rest] = positionals
   ensureTarget(target, PREVIEW_TARGETS, 'preview')
   ensureNoExtraPositionals(rest, 'preview')
@@ -504,7 +524,12 @@ function createPreviewInvocation(positionals, flags, passthrough) {
     failWithUsage('passthrough args are not supported for "preview".', 'preview')
   }
 
-  return commandInvocation('sh', ['scripts/preview.sh', `--db:${databaseEnvironment}`, target])
+  const offlineMode = previewFlags.includes('--offline')
+  if (offlineMode && databaseEnvironment !== 'dev') {
+    failWithUsage('--offline cannot be combined with an explicit --db:<env> flag.', 'preview')
+  }
+
+  return commandInvocation('sh', ['scripts/preview.sh', `--db:${offlineMode ? 'local' : databaseEnvironment}`, target])
 }
 
 function createDeployInvocation(positionals, flags, passthrough) {

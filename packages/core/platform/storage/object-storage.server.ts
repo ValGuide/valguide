@@ -1,39 +1,50 @@
-import { getCloudflareR2ObjectStorageProvider } from '../providers/cloudflare/object-storage.server'
+import { isLocalRuntime } from '../runtime/runtime-mode.server'
 import type { CompletedMultipartUploadPart, RetrievedStorageObject, StorageObjectBody } from './object-storage'
 
 export const MULTIPART_THRESHOLD = 50 * 1024 * 1024 // 50 MB
 export const PART_SIZE = 10 * 1024 * 1024 // 10 MB per part
 
-function getObjectStorageProvider() {
+async function getObjectStorageProvider() {
+  if (isLocalRuntime()) {
+    const { getLocalObjectStorageProvider } = await import('../providers/local/object-storage.server')
+    return getLocalObjectStorageProvider()
+  }
+
+  const { getCloudflareR2ObjectStorageProvider } = await import('../providers/cloudflare/object-storage.server')
   return getCloudflareR2ObjectStorageProvider()
 }
 
 // ── Simple PUT ──────────────────────────────────────────────────────
 
 export async function putObject(key: string, body: StorageObjectBody, contentType: string): Promise<void> {
-  await getObjectStorageProvider().putObject(key, body, contentType)
+  const provider = await getObjectStorageProvider()
+  await provider.putObject(key, body, contentType)
 }
 
 // ── Delete ──────────────────────────────────────────────────────────
 
 export async function deleteObject(key: string): Promise<void> {
-  await getObjectStorageProvider().deleteObject(key)
+  const provider = await getObjectStorageProvider()
+  await provider.deleteObject(key)
 }
 
 // ── Head ────────────────────────────────────────────────────────────
 
 export async function headObject(key: string): Promise<{ size: number; etag: string } | null> {
-  return getObjectStorageProvider().headObject(key)
+  const provider = await getObjectStorageProvider()
+  return provider.headObject(key)
 }
 
 export async function getObject(key: string): Promise<RetrievedStorageObject | null> {
-  return getObjectStorageProvider().getObject(key)
+  const provider = await getObjectStorageProvider()
+  return provider.getObject(key)
 }
 
 // ── Multipart ───────────────────────────────────────────────────────
 
 export async function initMultipartUpload(key: string, contentType: string) {
-  return getObjectStorageProvider().initMultipartUpload(key, contentType)
+  const provider = await getObjectStorageProvider()
+  return provider.initMultipartUpload(key, contentType)
 }
 
 export async function uploadPart(
@@ -42,7 +53,8 @@ export async function uploadPart(
   partNumber: number,
   body: StorageObjectBody,
 ): Promise<CompletedMultipartUploadPart> {
-  return getObjectStorageProvider().uploadPart(key, uploadId, partNumber, body)
+  const provider = await getObjectStorageProvider()
+  return provider.uploadPart(key, uploadId, partNumber, body)
 }
 
 export async function completeMultipartUpload(
@@ -50,7 +62,8 @@ export async function completeMultipartUpload(
   uploadId: string,
   parts: CompletedMultipartUploadPart[],
 ): Promise<void> {
-  await getObjectStorageProvider().completeMultipartUpload(key, uploadId, parts)
+  const provider = await getObjectStorageProvider()
+  await provider.completeMultipartUpload(key, uploadId, parts)
 }
 
 // ── Verify ──────────────────────────────────────────────────────────

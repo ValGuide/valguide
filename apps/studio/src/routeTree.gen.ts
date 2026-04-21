@@ -34,6 +34,7 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainToursIndexRouteImport } from './routes/_main/tours.index'
 import { Route as MainStopsIndexRouteImport } from './routes/_main/stops.index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
+import { Route as ApiAssetsSplatRouteImport } from './routes/api.assets.$'
 import { Route as MainToursNanoIdRouteImport } from './routes/_main/tours.$nanoId'
 import { Route as MainStopsNanoIdRouteImport } from './routes/_main/stops.$nanoId'
 import { Route as MainBrandThemeRouteImport } from './routes/_main/brand.theme'
@@ -168,6 +169,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAssetsSplatRoute = ApiAssetsSplatRouteImport.update({
+  id: '/api/assets/$',
+  path: '/api/assets/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MainToursNanoIdRoute = MainToursNanoIdRouteImport.update({
   id: '/tours/$nanoId',
   path: '/tours/$nanoId',
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/brand/theme': typeof MainBrandThemeRoute
   '/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
+  '/api/assets/$': typeof ApiAssetsSplatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops/': typeof MainStopsIndexRoute
   '/tours/': typeof MainToursIndexRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/brand/ai': typeof MainBrandAiRoute
   '/brand/qr': typeof MainBrandQrRoute
   '/brand/theme': typeof MainBrandThemeRoute
+  '/api/assets/$': typeof ApiAssetsSplatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/stops': typeof MainStopsIndexRoute
   '/tours': typeof MainToursIndexRoute
@@ -317,6 +325,7 @@ export interface FileRoutesById {
   '/_main/brand/theme': typeof MainBrandThemeRoute
   '/_main/stops/$nanoId': typeof MainStopsNanoIdRouteWithChildren
   '/_main/tours/$nanoId': typeof MainToursNanoIdRouteWithChildren
+  '/api/assets/$': typeof ApiAssetsSplatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_main/stops/': typeof MainStopsIndexRoute
   '/_main/tours/': typeof MainToursIndexRoute
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/brand/theme'
     | '/stops/$nanoId'
     | '/tours/$nanoId'
+    | '/api/assets/$'
     | '/api/auth/$'
     | '/stops/'
     | '/tours/'
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/brand/ai'
     | '/brand/qr'
     | '/brand/theme'
+    | '/api/assets/$'
     | '/api/auth/$'
     | '/stops'
     | '/tours'
@@ -424,6 +435,7 @@ export interface FileRouteTypes {
     | '/_main/brand/theme'
     | '/_main/stops/$nanoId'
     | '/_main/tours/$nanoId'
+    | '/api/assets/$'
     | '/api/auth/$'
     | '/_main/stops/'
     | '/_main/tours/'
@@ -446,6 +458,7 @@ export interface RootRouteChildren {
   ApiUploadRoute: typeof ApiUploadRoute
   ApiUploadPartRoute: typeof ApiUploadPartRoute
   AuthErrorRoute: typeof AuthErrorRoute
+  ApiAssetsSplatRoute: typeof ApiAssetsSplatRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -626,6 +639,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/assets/$': {
+      id: '/api/assets/$'
+      path: '/api/assets/$'
+      fullPath: '/api/assets/$'
+      preLoaderRoute: typeof ApiAssetsSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/tours/$nanoId': {
       id: '/_main/tours/$nanoId'
       path: '/tours/$nanoId'
@@ -803,6 +823,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiUploadRoute: ApiUploadRoute,
   ApiUploadPartRoute: ApiUploadPartRoute,
   AuthErrorRoute: AuthErrorRoute,
+  ApiAssetsSplatRoute: ApiAssetsSplatRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

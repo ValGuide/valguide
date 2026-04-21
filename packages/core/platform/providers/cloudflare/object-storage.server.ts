@@ -9,7 +9,7 @@ import type {
 } from '../../storage/object-storage'
 
 function getR2BucketBinding(): R2Bucket {
-  const bucket = env.R2_BUCKET
+  const bucket = (env as unknown as Record<string, R2Bucket | undefined>).R2_BUCKET
 
   if (!bucket) {
     throw new Error('R2 bucket binding is unavailable')

@@ -125,6 +125,10 @@ function getOriginImageDeliveryProvider(): ImageDeliveryProvider {
 }
 
 export function getImageDeliveryProviderId(): ImageDeliveryProviderId {
+  if (clientEnv.VITE_ENV === 'local' && !clientEnv.VITE_IMAGE_DELIVERY_PROVIDER) {
+    return 'origin'
+  }
+
   return clientEnv.VITE_IMAGE_DELIVERY_PROVIDER ?? clientEnv.VITE_IMAGE_PROVIDER
 }
 

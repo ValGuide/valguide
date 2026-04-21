@@ -7,6 +7,7 @@ set -e
 # Usage:
 #   pnpm dev:select <app> [<app> ...]
 #   pnpm dev:select --no-remote <app> [<app> ...]
+#   pnpm dev:select --offline <app> [<app> ...]
 #   pnpm dev:select --all
 #   pnpm dev:select --list
 #
@@ -16,6 +17,7 @@ set -e
 #   pnpm dev:select api studio             # api + studio, remote bindings by default
 #   pnpm dev:select --db:prod studio       # studio against prod DB
 #   pnpm dev:select --no-remote studio     # studio with local bindings
+#   pnpm dev:select --offline studio       # studio fully offline (local DB + local bindings)
 #   pnpm dev:select --no-open studio       # studio without opening browser tabs
 #   pnpm dev:select --no-remote admin app  # admin + app with local bindings
 #   pnpm dev:select --all                  # everything (same as `pnpm dev`)
@@ -57,6 +59,9 @@ for arg in "$@"; do
     USE_REMOTE=1
   elif [ "$arg" = "--no-remote" ]; then
     USE_REMOTE=0
+  elif [ "$arg" = "--offline" ]; then
+    USE_REMOTE=0
+    DB_ENV="local"
   elif [ "$arg" = "--no-open" ] || [ "$arg" = "-n" ]; then
     OPEN_BROWSER=0
   elif [ "${arg#--db:}" != "$arg" ]; then
@@ -70,10 +75,10 @@ set -- $remaining
 
 # ── Handle flags ──────────────────────────────────────────────────────────
 if [ $# -eq 0 ]; then
-  echo "Usage: pnpm dev:select [--no-remote] [--no-open|-n] <app> [<app> ...]"
+  echo "Usage: pnpm dev:select [--no-remote] [--offline] [--no-open|-n] <app> [<app> ...]"
   echo ""
   echo "Available apps: $ALL_APPS"
-  echo "Flags: --all (start all), --no-remote (use local bindings), --no-open/-n (skip browser open), --list (show apps)"
+  echo "Flags: --all (start all), --no-remote (use local bindings), --offline (use local DB and local bindings), --no-open/-n (skip browser open), --list (show apps)"
   exit 1
 fi
 
