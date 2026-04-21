@@ -87,6 +87,8 @@
     "db:generate": "turbo run db:generate --",
     "db:migrate": "turbo run db:migrate --",
     "db:studio": "turbo run db:studio --",
+    "db:setup-local": "sh scripts/setup-local-postgres.sh",
+    "db:status-local": "sh scripts/status-local-postgres.sh",
     "storybook:clean": "pnpm --filter @valguide/storybook clean",
     "storybook:build": "pnpm --filter @valguide/storybook build",
     "storybook:serve": "pnpm --filter @valguide/storybook serve",

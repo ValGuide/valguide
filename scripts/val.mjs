@@ -9,8 +9,8 @@ const PREVIEW_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 'stor
 const DEPLOY_TARGETS = [...APP_TARGETS]
 const TYPE_CHECK_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 'storybook', 'core']
 const TEST_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'core']
-const DB_ACTIONS = ['generate', 'migrate', 'studio']
-const DB_ENVIRONMENTS = ['dev', 'prod']
+const DB_ACTIONS = ['generate', 'migrate', 'studio', 'setup', 'status']
+const DB_ENVIRONMENTS = ['local', 'dev', 'prod']
 const SEED_ENVIRONMENTS = ['dev', 'prod']
 const SECRETS_ACTIONS = ['hide', 'show']
 const VERIFY_TARGETS = ['studio']
@@ -53,7 +53,7 @@ Commands:
   lint [fix]                 Run repo lint checks or apply lint fixes
   open <target>              Open a common ValGuide URL in the browser
   promote                    Merge local dev into main, push main, then switch back to dev
-  db <action>                Run database action: generate | migrate | studio
+  db <action>                Run database action: generate | migrate | studio | setup local | status local
   seed <env>                 Seed dev or prod data
   secrets <action>           Encrypt or decrypt tracked secrets files
   verify <target>            Run target verification
@@ -73,6 +73,8 @@ Examples:
   val type-check core
   val lint fix
   val open github
+  val db setup local
+  val db status local
   val db migrate dev
   val secrets hide
   val verify studio -- --ticket VG-85
@@ -166,11 +168,15 @@ Notes:
 `,
   db: `Usage:
   val db generate
-  val db migrate <dev|prod>
+  val db setup local
+  val db status local
+  val db migrate <local|dev|prod>
   val db studio
 
 Notes:
   Use the existing migration-based workflow. Do not use db:push.
+  setup local bootstraps Homebrew PostgreSQL on macOS, provisions the local role/database, and runs local migrations.
+  status local checks whether the local PostgreSQL instance configured by .env.db.local is reachable.
 `,
   secrets: `Usage:
   val secrets hide
@@ -644,7 +650,7 @@ function createPromoteInvocation(positionals, flags, passthrough) {
 
 function createDbInvocation(positionals, flags, passthrough) {
   ensureAllowedFlags(flags, [], 'db')
-  const [action, ...rest] = positionals
+  const [action, subaction, ...rest] = positionals
 
   if (!action) {
     failWithUsage(`missing action for "db". Supported actions: ${quotedList(DB_ACTIONS)}.`, 'db')
@@ -654,8 +660,17 @@ function createDbInvocation(positionals, flags, passthrough) {
     failWithUsage(`unsupported db action "${action}". Supported actions: ${quotedList(DB_ACTIONS)}.`, 'db')
   }
 
+  if (action === 'setup' || action === 'status') {
+    if (subaction !== 'local') {
+      failWithUsage(`db ${action} requires subaction "local".`, 'db')
+    }
+
+    ensureNoExtraPositionals(rest, 'db')
+    return scriptInvocation(`db:${action}-local`, passthrough)
+  }
+
   if (action === 'migrate') {
-    const [environment, ...remainingPositionals] = rest
+    const [environment, ...remainingPositionals] = [subaction, ...rest]
     ensureNoExtraPositionals(remainingPositionals, 'db')
 
     if (!environment) {
@@ -672,10 +687,17 @@ function createDbInvocation(positionals, flags, passthrough) {
       )
     }
 
-    return envLoadInvocation([`--db:${environment}`], ['turbo', 'run', 'db:migrate'], passthrough)
+    return envLoadInvocation(
+      [`--db:${environment}`],
+      ['pnpm', '--dir', 'packages/core', 'exec', 'drizzle-kit', 'migrate'],
+      passthrough,
+    )
   }
 
-  ensureNoExtraPositionals(rest, 'db')
+  if (subaction) {
+    failWithUsage(`unexpected argument "${subaction}" for "db".`, 'db')
+  }
+
   return scriptInvocation(`db:${action}`, passthrough)
 }
 
