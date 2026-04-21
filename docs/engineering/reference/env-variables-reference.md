@@ -125,13 +125,13 @@ Which secrets are pushed to Cloudflare Workers via `scripts/push-to-cloudflare.t
 
 ## Local Development
 
-Secrets are loaded from `.secrets/` directory via `scripts/load-env.ts`:
+Secrets are loaded from `.secrets/` directory via `scripts/load-env.mjs`:
 
 | File | Purpose | CLI flag |
 |------|---------|----------|
-| `.secrets/.env.neon.local` | Local Neon DB connection | `--db:local` |
-| `.secrets/.env.neon.dev` | Dev Neon DB connection | `--db:dev` (default) |
-| `.secrets/.env.neon.prod` | Prod Neon DB connection | `--db:prod` |
+| `.secrets/.env.db.local` | Local database connection | `--db:local` |
+| `.secrets/.env.db.dev` | Dev database connection | `--db:dev` (default) |
+| `.secrets/.env.db.prod` | Prod database connection | `--db:prod` |
 | `.secrets/.env.resend.dev` | Dev Resend API key | `--rs:dev` (default) |
 | `.secrets/.env.resend.prod` | Prod Resend API key | `--rs:prod` |
 | `.secrets/.env.cloudflare.dev` | Dev Cloudflare credentials | `--cf:dev` (default) |

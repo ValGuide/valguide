@@ -21,9 +21,9 @@ const databaseOptions = {
   values: ['dev', 'local', 'prod'],
   defaultValue: 'dev',
   envFiles: {
-    local: '.env.neon.local',
-    dev: '.env.neon.dev',
-    prod: '.env.neon.prod',
+    local: '.env.db.local',
+    dev: '.env.db.dev',
+    prod: '.env.db.prod',
   },
 }
 
