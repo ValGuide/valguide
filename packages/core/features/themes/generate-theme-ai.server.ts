@@ -1,6 +1,6 @@
-import { env } from 'cloudflare:workers'
 import { Buffer } from 'node:buffer'
 import { eq } from 'drizzle-orm'
+import { generateText } from '../../platform/ai/text-generation.server'
 import { getObject } from '../../platform/storage/object-storage.server'
 import { db } from '../db'
 import { organization } from '../orgs/schema'
@@ -17,18 +17,6 @@ type ThemeAiGenerationResult = {
   }
   suggestion: ThemeAiGeneratedTheme
   createdTheme: typeof themeTable.$inferSelect
-}
-
-type AiBinding = {
-  run: (model: string, inputs: unknown) => Promise<unknown>
-}
-
-function getAiBinding(): AiBinding {
-  const ai = (env as unknown as { AI?: AiBinding }).AI
-  if (!ai) {
-    throw new Error('Workers AI binding is unavailable')
-  }
-  return ai
 }
 
 function extractMetaContent(html: string, name: string): string | undefined {
@@ -111,31 +99,29 @@ async function describeVisualReferences(imagePaths: string[]): Promise<string | 
     return null
   }
 
-  const ai = getAiBinding()
   const imageUrls = await Promise.all(imagePaths.slice(0, 3).map((storagePath) => readImageAsDataUri(storagePath)))
-  const content: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
-    {
-      type: 'text',
-      text: 'Analyze these museum brand reference images. Describe color palette, mood, typography direction, contrast, materials, and visitor-facing design cues in one compact paragraph.',
-    },
-    ...imageUrls.map((url) => ({
-      type: 'image_url',
-      image_url: { url },
-    })),
-  ]
-
-  const response = (await ai.run('@cf/meta/llama-3.2-11b-vision-instruct', {
+  const response = await generateText({
+    model: '@cf/meta/llama-3.2-11b-vision-instruct',
     messages: [
       {
         role: 'user',
-        content,
+        content: [
+          {
+            type: 'text',
+            text: 'Analyze these museum brand reference images. Describe color palette, mood, typography direction, contrast, materials, and visitor-facing design cues in one compact paragraph.',
+          },
+          ...imageUrls.map((url) => ({
+            type: 'image' as const,
+            url,
+          })),
+        ],
       },
     ],
-    max_tokens: 350,
+    maxTokens: 350,
     temperature: 0.2,
-  })) as { response?: string }
+  })
 
-  return response.response?.trim() ?? null
+  return response || null
 }
 
 function buildPresetPrompt(): string {
@@ -230,8 +216,8 @@ async function generateSuggestedTheme(params: {
   websiteContext?: ThemeAiWebsiteContext | null
   visualAnalysis?: string | null
 }): Promise<ThemeAiGeneratedTheme> {
-  const ai = getAiBinding()
-  const response = await ai.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+  const rawResponse = await generateText({
+    model: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
     messages: [
       {
         role: 'system',
@@ -285,20 +271,11 @@ async function generateSuggestedTheme(params: {
         }),
       },
     ],
-    response_format: { type: 'json_object' },
-    max_tokens: 1200,
+    responseFormat: { type: 'json_object' },
+    maxTokens: 1200,
     temperature: 0.3,
   })
 
-  const rawResponse =
-    typeof response === 'string'
-      ? response.trim()
-      : typeof response === 'object' &&
-          response !== null &&
-          'response' in response &&
-          typeof response.response === 'string'
-        ? response.response.trim()
-        : ''
   if (!rawResponse) {
     throw new Error('Workers AI did not return a theme suggestion')
   }
