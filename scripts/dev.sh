@@ -14,7 +14,6 @@ set -e
 # Examples:
 #   pnpm dev:select studio                 # just studio, remote bindings by default
 #   pnpm dev:select studio admin           # studio + admin, remote bindings by default
-#   pnpm dev:select api studio             # api + studio, remote bindings by default
 #   pnpm dev:select --db:prod studio       # studio against prod DB
 #   pnpm dev:select --no-remote studio     # studio with local bindings
 #   pnpm dev:select --offline studio       # studio fully offline (local DB + local bindings)
@@ -34,12 +33,11 @@ url_for() {
     links)     echo "https://links.local.dev" ;;
     www)       echo "https://www.local.dev" ;;
     docs)      echo "https://docs.local.dev" ;;
-    api)       echo "" ;; # no browser needed
     *)         echo "" ;;
   esac
 }
 
-ALL_APPS="admin api app docs links storybook studio www"
+ALL_APPS="admin app docs links storybook studio www"
 USE_REMOTE=1
 OPEN_BROWSER=1
 DB_ENV="dev"
@@ -121,13 +119,20 @@ for app in "$@"; do
   fi
 done
 
-# ── Build turbo filter flags ─────────────────────────────────────────────
-filters=""
+# ── Build Nx project selectors ───────────────────────────────────────────
+projects=""
+target="dev"
 urls=""
 needs_caddy=0
 
 for app in "$@"; do
-  filters="$filters --filter ./apps/$app"
+  project_name="@valguide/$app"
+  if [ -n "$projects" ]; then
+    projects="$projects,$project_name"
+  else
+    projects="$project_name"
+  fi
+
   url=$(url_for "$app")
   if [ -n "$url" ]; then
     urls="$urls $url"
@@ -152,8 +157,9 @@ fi
 if [ "$USE_REMOTE" -eq 1 ]; then
   echo "Starting (remote bindings, DB: $DB_ENV): $*"
   export WRANGLER_REMOTE=true
+  target="dev:remote"
 else
   echo "Starting (local bindings, DB: $DB_ENV): $*"
 fi
-# shellcheck disable=SC2086
-exec pnpm env:load --db:$DB_ENV turbo run dev $filters
+
+exec pnpm env:load --db:$DB_ENV nx run-many -t "$target" --projects="$projects"

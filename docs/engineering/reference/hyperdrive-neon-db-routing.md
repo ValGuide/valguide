@@ -40,7 +40,7 @@ or
 - `apps/app/wrangler.jsonc` — dev Hyperdrive binding scaffold
 - `apps/studio/wrangler.jsonc` — dev Hyperdrive binding scaffold
 - `apps/admin/wrangler.jsonc` — dev Hyperdrive binding scaffold
-- `turbo.json` — adds `DB_CONNECTION_MODE` to `globalEnv`
+- `nx.json` — adds `DB_CONNECTION_MODE` to `namedInputs.sharedGlobals`
 
 ## Cloudflare Setup
 

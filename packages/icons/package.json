@@ -7,9 +7,24 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "clean": "rm -rf src dist node_modules .turbo",
+    "clean": "rm -rf src dist node_modules",
     "clean:vite": "rm -rf node_modules/.vite",
     "build": "svgr --icon --title-prop --typescript --no-dimensions --filename-case kebab --no-index -d dist -- assets"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      },
+      "clean": {
+        "cache": false
+      },
+      "clean:vite": {
+        "cache": false
+      }
+    }
   },
   "dependencies": {
     "@svgr/cli": "^8.1.0"

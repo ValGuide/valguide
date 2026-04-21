@@ -14,13 +14,54 @@
     "cf-typegen": "wrangler types",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .turbo .output",
+    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .output",
     "clean:vite": "rm -rf node_modules/.vite",
     "type-check": "tsc --noEmit",
     "test": "jest",
     "ngrok": "ngrok http 3001",
     "tail": "wrangler tail",
     "tail:dev": "wrangler tail --env dev"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/.output"
+        ]
+      },
+      "build:analyse": {
+        "cache": false,
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/.output"
+        ]
+      },
+      "dev": {
+        "continuous": true,
+        "cache": false
+      },
+      "dev:remote": {
+        "continuous": true,
+        "cache": false
+      },
+      "preview": {
+        "continuous": true,
+        "cache": false
+      },
+      "type-check": {
+        "cache": false
+      },
+      "test": {
+        "cache": false
+      },
+      "clean": {
+        "cache": false
+      },
+      "clean:vite": {
+        "cache": false
+      }
+    }
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",

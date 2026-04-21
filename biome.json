@@ -147,7 +147,6 @@
       "!**/.history",
       "!**/.idea",
       "!**/.next",
-      "!**/.turbo",
       "!**/.vercel",
       "!**/dist",
       "!**/node_modules",

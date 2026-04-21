@@ -11,8 +11,34 @@
     "worker:dev": "wrangler dev",
     "serve": "serve storybook-static",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml storybook-static .turbo",
+    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml storybook-static",
     "clean:vite": "rm -rf node_modules/.vite"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/storybook-static"
+        ]
+      },
+      "dev": {
+        "continuous": true,
+        "cache": false
+      },
+      "type-check": {
+        "cache": false
+      },
+      "serve": {
+        "continuous": true,
+        "outputs": []
+      },
+      "clean": {
+        "cache": false
+      },
+      "clean:vite": {
+        "cache": false
+      }
+    }
   },
   "dependencies": {
     "@tanstack/react-form": "^1.28.4",

@@ -13,6 +13,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrgSlugTourSlugRouteImport } from './routes/$orgSlug.$tourSlug'
 import { Route as OrgSlugTourSlugIndexRouteImport } from './routes/$orgSlug.$tourSlug.index'
+import { Route as ApiAssetsSplatRouteImport } from './routes/api.assets.$'
 import { Route as ApiAnalyticsEventsRouteImport } from './routes/api.analytics.events'
 import { Route as OrgSlugTourSlugStopNanoIdRouteImport } from './routes/$orgSlug.$tourSlug.$stopNanoId'
 
@@ -36,6 +37,11 @@ const OrgSlugTourSlugIndexRoute = OrgSlugTourSlugIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OrgSlugTourSlugRoute,
 } as any)
+const ApiAssetsSplatRoute = ApiAssetsSplatRouteImport.update({
+  id: '/api/assets/$',
+  path: '/api/assets/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAnalyticsEventsRoute = ApiAnalyticsEventsRouteImport.update({
   id: '/api/analytics/events',
   path: '/api/analytics/events',
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
   '/api/analytics/events': typeof ApiAnalyticsEventsRoute
+  '/api/assets/$': typeof ApiAssetsSplatRoute
   '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
   '/api/analytics/events': typeof ApiAnalyticsEventsRoute
+  '/api/assets/$': typeof ApiAssetsSplatRoute
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/$orgSlug/$tourSlug': typeof OrgSlugTourSlugRouteWithChildren
   '/$orgSlug/$tourSlug/$stopNanoId': typeof OrgSlugTourSlugStopNanoIdRoute
   '/api/analytics/events': typeof ApiAnalyticsEventsRoute
+  '/api/assets/$': typeof ApiAssetsSplatRoute
   '/$orgSlug/$tourSlug/': typeof OrgSlugTourSlugIndexRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
     | '/api/analytics/events'
+    | '/api/assets/$'
     | '/$orgSlug/$tourSlug/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/$orgSlug/$tourSlug/$stopNanoId'
     | '/api/analytics/events'
+    | '/api/assets/$'
     | '/$orgSlug/$tourSlug'
   id:
     | '__root__'
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/$orgSlug/$tourSlug'
     | '/$orgSlug/$tourSlug/$stopNanoId'
     | '/api/analytics/events'
+    | '/api/assets/$'
     | '/$orgSlug/$tourSlug/'
   fileRoutesById: FileRoutesById
 }
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   OrgSlugTourSlugRoute: typeof OrgSlugTourSlugRouteWithChildren
   ApiAnalyticsEventsRoute: typeof ApiAnalyticsEventsRoute
+  ApiAssetsSplatRoute: typeof ApiAssetsSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -134,6 +147,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$orgSlug/$tourSlug/'
       preLoaderRoute: typeof OrgSlugTourSlugIndexRouteImport
       parentRoute: typeof OrgSlugTourSlugRoute
+    }
+    '/api/assets/$': {
+      id: '/api/assets/$'
+      path: '/api/assets/$'
+      fullPath: '/api/assets/$'
+      preLoaderRoute: typeof ApiAssetsSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/analytics/events': {
       id: '/api/analytics/events'
@@ -171,6 +191,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   OrgSlugTourSlugRoute: OrgSlugTourSlugRouteWithChildren,
   ApiAnalyticsEventsRoute: ApiAnalyticsEventsRoute,
+  ApiAssetsSplatRoute: ApiAssetsSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

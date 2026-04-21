@@ -53,4 +53,4 @@ sh scripts/ensure-caddy.sh
 (sh scripts/open-when-ready.sh "$URL") &
 
 echo "Starting preview (DB: $DB_ENV): $TARGET"
-exec pnpm env:load --db:$DB_ENV turbo run preview --filter ./apps/$TARGET
+exec pnpm env:load --db:$DB_ENV nx run "@valguide/$TARGET:preview"

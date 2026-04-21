@@ -116,7 +116,7 @@ function logEnvs(...resolvedEnvs) {
 
 console.info(`\n${borderBox(...logEnvs(...envs))}\n`)
 
-const envCommand = `dotenvx run ${envs.map(({ file }) => `--env-file=${__dirname}/../.secrets/${file}`).join(' ')} -- `
+const envCommand = `dotenvx run --quiet ${envs.map(({ file }) => `--env-file=${__dirname}/../.secrets/${file}`).join(' ')} -- `
 const optionPrefixes = options.map((option) => option.prefix)
 const runCommand = args
   .filter((arg) => arg !== PRINT_ENV_FLAG && !optionPrefixes.some((prefix) => arg.startsWith(prefix)))
@@ -126,8 +126,6 @@ if (!runCommand) {
   console.error(chalk.redBright('No command provided to run after loading environment variables'))
   process.exit(1)
 }
-
-const command = `${envCommand}${runCommand}`
 
 if (printEnv) {
   const envOutput = execSync(`${envCommand}env`, { encoding: 'utf-8' })
@@ -140,5 +138,4 @@ if (printEnv) {
   console.info()
 }
 
-console.info(chalk.yellow(`Running command '${command}'`))
-execSync(command, { stdio: 'inherit' })
+execSync(`${envCommand}${runCommand}`, { stdio: 'inherit' })

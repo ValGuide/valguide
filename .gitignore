@@ -31,9 +31,6 @@ yarn-error.log*
 .env.prod
 .env.dev
 
-# turbo
-.turbo
-
 # ui
 dist/
 
@@ -71,3 +68,5 @@ error.log
 
 tmp/*
 .playwright-mcp
+.nx/cache
+.nx/workspace-data

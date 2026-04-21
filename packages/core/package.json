@@ -17,8 +17,36 @@
     "db:up": "pnpm env:load drizzle-kit up",
     "db:studio": "pnpm env:load drizzle-kit studio",
     "test": "jest",
-    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml .turbo",
+    "clean": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml",
     "clean:vite": "rm -rf node_modules/.vite"
+  },
+  "nx": {
+    "targets": {
+      "type-check": {
+        "cache": false
+      },
+      "i18n:check": {
+        "cache": true
+      },
+      "db:generate": {
+        "cache": false
+      },
+      "db:migrate": {
+        "cache": false
+      },
+      "db:studio": {
+        "cache": false
+      },
+      "test": {
+        "cache": false
+      },
+      "clean": {
+        "cache": false
+      },
+      "clean:vite": {
+        "cache": false
+      }
+    }
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
@@ -109,7 +137,6 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.1",
-    "@turbo/gen": "^2.8.14",
     "@types/jest": "^29.5.14",
     "@types/negotiator": "^0.6.3",
     "@types/node": "^22.13.1",

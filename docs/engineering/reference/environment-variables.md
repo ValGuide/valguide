@@ -99,6 +99,6 @@ If a required variable is missing, the app will throw an error at startup with d
    - Non-`VITE_*` → `apps/*/wrangler.jsonc` `vars` (prod + dev sections)
    - Secrets → `wrangler secret put <NAME>` (never commit these)
 
-4. **Add to `turbo.json`** in the `globalEnv` array (Turborepo needs this to pass env vars to tasks)
+4. **Add to `nx.json`** in the `namedInputs.sharedGlobals` list so Nx includes the env var in task hashing
 
 5. **Restart dev server** after adding new env vars
