@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { mkdir, writeFile } from 'node:fs/promises'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
 import { spawn } from 'node:child_process'
 
 const APP_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 'storybook']
@@ -16,6 +19,7 @@ const SECRETS_ACTIONS = ['hide', 'show']
 const VERIFY_TARGETS = ['studio']
 const AI_ACTIONS = ['agree-meta-license']
 const AI_ENVIRONMENTS = ['dev', 'prod']
+const COMPLETION_SHELLS = ['zsh']
 const META_LICENSE_MODELS = [
   'all',
   '@cf/meta/llama-3.2-11b-vision-instruct',
@@ -47,6 +51,8 @@ Usage:
 Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
+  completion <shell>         Print shell completion script
+  completion install <shell> Install shell completion script
   dev <target...> [--no-remote] [--no-open|-n] [--db:<env>] [--offline] Start local development for one or more targets
   kill                       Stop common local dev processes
   build <target> [--analyse] Build a target
@@ -73,6 +79,8 @@ Examples:
   val build app --analyse
   val preview storybook
   val preview studio --db:prod
+  eval "$(val completion zsh)"
+  val completion install zsh
   val deploy studio dev
   val type-check core
   val lint fix
@@ -99,6 +107,18 @@ Notes:
   --offline is shorthand for --db:local --no-remote.
   --worker is supported only for storybook and starts the worker-backed dev flow.
   Multiple targets are supported for dev, for example: val dev studio admin
+`,
+  completion: `Usage:
+  val completion <zsh>
+  val completion install <zsh>
+
+Supported shells:
+  ${COMPLETION_SHELLS.join(', ')}
+
+Examples:
+  eval "$(val completion zsh)"
+  val completion zsh > ~/.zsh/completions/_val
+  val completion install zsh
 `,
   build: `Usage: val build <target> [--analyse]
 
@@ -254,6 +274,60 @@ function failWithUsage(message, command) {
   fail(`${message}\n\n${help}`)
 }
 
+function ensureCompletionShell(shell) {
+  if (!shell) {
+    failWithUsage(`missing shell for "completion". Supported shells: ${quotedList(COMPLETION_SHELLS)}.`, 'completion')
+  }
+
+  if (!COMPLETION_SHELLS.includes(shell)) {
+    failWithUsage(`unsupported shell "${shell}". Supported shells: ${quotedList(COMPLETION_SHELLS)}.`, 'completion')
+  }
+}
+
+function getCompletionScript(shell) {
+  ensureCompletionShell(shell)
+
+  if (shell === 'zsh') {
+    return zshCompletionScript()
+  }
+
+  failWithUsage(`unsupported shell "${shell}". Supported shells: ${quotedList(COMPLETION_SHELLS)}.`, 'completion')
+}
+
+async function installCompletion(shell) {
+  const script = getCompletionScript(shell)
+
+  if (shell === 'zsh') {
+    const completionDirectory = join(homedir(), '.zsh', 'completions')
+    const completionFile = join(completionDirectory, '_val')
+
+    await mkdir(completionDirectory, { recursive: true })
+    await writeFile(completionFile, `${script}\n`)
+
+    console.log(`Installed zsh completion to ${completionFile}`)
+    console.log('Add this to ~/.zshrc if it is not already present:')
+    console.log('  fpath=(~/.zsh/completions $fpath)')
+    console.log('  autoload -Uz compinit')
+    console.log('  compinit')
+    return
+  }
+
+  failWithUsage(`unsupported shell "${shell}". Supported shells: ${quotedList(COMPLETION_SHELLS)}.`, 'completion')
+}
+
+async function handleCompletion(args) {
+  const [actionOrShell, maybeShell, ...extraArgs] = args
+
+  if (actionOrShell === 'install') {
+    ensureNoExtraPositionals(extraArgs, 'completion')
+    await installCompletion(maybeShell)
+    return
+  }
+
+  ensureNoExtraPositionals([maybeShell, ...extraArgs].filter(Boolean), 'completion')
+  console.log(getCompletionScript(actionOrShell))
+}
+
 function printHelp(command) {
   if (!command) {
     console.log(HELP_TEXT)
@@ -283,6 +357,52 @@ function printTargets() {
   for (const [command, targets] of sections) {
     console.log(`  ${command}: ${targets.join(', ')}`)
   }
+}
+
+function shellWords(values) {
+  return values.map((value) => `'${value.replaceAll("'", "'\\''")}'`).join(' ')
+}
+
+function zshCompletionScript() {
+  const commands = [
+    'help:Show general or command-specific help',
+    'targets:List supported targets',
+    'completion:Print shell completion script',
+    'dev:Start local development',
+    'kill:Stop common local dev processes',
+    'build:Build a target',
+    'preview:Preview a target locally',
+    'deploy:Deploy a target',
+    'type-check:Run type-checking',
+    'test:Run tests',
+    'lint:Run lint checks',
+    'open:Open a common ValGuide URL',
+    'promote:Promote local dev into main',
+    'db:Run a database action',
+    'seed:Seed environment data',
+    'secrets:Encrypt or decrypt tracked secrets files',
+    'verify:Run target verification',
+    'ai:Run AI-related setup actions',
+  ]
+
+  return `#compdef val
+
+local context state line
+typeset -A opt_args
+local -a commands
+
+commands=(${shellWords(commands)})
+
+_arguments -C \
+  '1:command:->command' \
+  '*::args:'
+
+case $state in
+  command)
+    _describe -t commands 'val command' commands
+    ;;
+esac
+`
 }
 
 function ensureNoExtraPositionals(positionals, command) {
@@ -384,6 +504,8 @@ function packageScriptInvocation(target, scriptName, passthrough = []) {
 
 function createInvocation(command, positionals, flags, passthrough) {
   switch (command) {
+    case 'completion':
+      fail('the "completion" command does not run a child process and should be handled before invocation creation')
     case 'dev':
       return createDevInvocation(positionals, flags, passthrough)
     case 'build':
@@ -807,7 +929,7 @@ function runInvocation(invocation) {
   })
 }
 
-function main() {
+async function main() {
   const { args, passthrough } = splitPassthrough(process.argv.slice(2))
 
   if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
@@ -827,10 +949,15 @@ function main() {
     return
   }
 
+  if (command === 'completion') {
+    await handleCompletion(rest)
+    return
+  }
+
   const flags = rest.filter(isFlag)
   const positionals = rest.filter((value) => !isFlag(value))
   const invocation = createInvocation(command, positionals, flags, passthrough)
   runInvocation(invocation)
 }
 
-main()
+await main()
