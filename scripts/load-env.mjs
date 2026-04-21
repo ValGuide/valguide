@@ -50,6 +50,18 @@ const cloudflareOptions = {
   },
 }
 
+const slackOptions = {
+  name: 'slack',
+  prefix: '--slack:',
+  values: ['local', 'dev', 'prod'],
+  defaultValue: 'dev',
+  envFiles: {
+    local: '.env.slack.local',
+    dev: '.env.slack.dev',
+    prod: '.env.slack.prod',
+  },
+}
+
 const authOptions = {
   name: 'auth',
   prefix: '--auth:',
@@ -84,7 +96,7 @@ const defaultOptions = {
   },
 }
 
-const options = [databaseOptions, resendOptions, cloudflareOptions, authOptions, posthogOptions, defaultOptions]
+const options = [databaseOptions, resendOptions, cloudflareOptions, slackOptions, authOptions, posthogOptions, defaultOptions]
 const PRINT_ENV_FLAG = '--print-env'
 const args = process.argv.slice(2)
 const printEnv = args.includes(PRINT_ENV_FLAG)
@@ -104,6 +116,10 @@ const envs = options.map((option) => {
   }
 
   if (option.name === 'cloudflare') {
+    return extractEnv(option, databaseEnv.env === 'local' ? 'local' : undefined)
+  }
+
+  if (option.name === 'slack') {
     return extractEnv(option, databaseEnv.env === 'local' ? 'local' : undefined)
   }
 
