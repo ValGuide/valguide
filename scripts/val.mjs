@@ -16,7 +16,11 @@ const SECRETS_ACTIONS = ['hide', 'show']
 const VERIFY_TARGETS = ['studio']
 const AI_ACTIONS = ['agree-meta-license']
 const AI_ENVIRONMENTS = ['dev', 'prod']
-const META_LICENSE_MODELS = ['all', '@cf/meta/llama-3.2-11b-vision-instruct', '@cf/meta/llama-3.3-70b-instruct-fp8-fast']
+const META_LICENSE_MODELS = [
+  'all',
+  '@cf/meta/llama-3.2-11b-vision-instruct',
+  '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+]
 const REMOTE_DEV_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs']
 const OPEN_TARGETS = ['github', 'github-actions']
 const OPEN_URLS = {
@@ -291,7 +295,9 @@ function ensureAllowedFlags(flags, allowedFlags, command) {
   for (const flag of flags) {
     if (!allowedFlags.includes(flag)) {
       const supportedFlags =
-        allowedFlags.length > 0 ? ` Supported flags: ${quotedList(allowedFlags)}.` : ' This command does not accept flags.'
+        allowedFlags.length > 0
+          ? ` Supported flags: ${quotedList(allowedFlags)}.`
+          : ' This command does not accept flags.'
       failWithUsage(`unsupported flag "${flag}" for "${command}".${supportedFlags}`, command)
     }
   }
@@ -674,10 +680,7 @@ function createDbInvocation(positionals, flags, passthrough) {
     ensureNoExtraPositionals(remainingPositionals, 'db')
 
     if (!environment) {
-      failWithUsage(
-        `db migrate requires an explicit environment: ${quotedList(DB_ENVIRONMENTS)}.`,
-        'db',
-      )
+      failWithUsage(`db migrate requires an explicit environment: ${quotedList(DB_ENVIRONMENTS)}.`, 'db')
     }
 
     if (!DB_ENVIRONMENTS.includes(environment)) {
@@ -766,10 +769,7 @@ function createAiInvocation(positionals, flags, passthrough) {
   }
 
   if (!environment) {
-    failWithUsage(
-      `ai ${action} requires an explicit environment: ${quotedList(AI_ENVIRONMENTS)}.`,
-      'ai',
-    )
+    failWithUsage(`ai ${action} requires an explicit environment: ${quotedList(AI_ENVIRONMENTS)}.`, 'ai')
   }
 
   if (!AI_ENVIRONMENTS.includes(environment)) {
@@ -780,19 +780,12 @@ function createAiInvocation(positionals, flags, passthrough) {
   }
 
   if (!META_LICENSE_MODELS.includes(model)) {
-    failWithUsage(
-      `unsupported model "${model}". Supported values: ${quotedList(META_LICENSE_MODELS)}.`,
-      'ai',
-    )
+    failWithUsage(`unsupported model "${model}". Supported values: ${quotedList(META_LICENSE_MODELS)}.`, 'ai')
   }
 
   ensureNoExtraPositionals(rest, 'ai')
 
-  return envLoadInvocation(
-    [`--cf:${environment}`],
-    ['node', 'scripts/agree-meta-license.ts', model],
-    passthrough,
-  )
+  return envLoadInvocation([`--cf:${environment}`], ['node', 'scripts/agree-meta-license.ts', model], passthrough)
 }
 
 function runInvocation(invocation) {

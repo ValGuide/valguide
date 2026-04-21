@@ -1,4 +1,4 @@
-import { resolveSubject, type EmailTemplate } from './send-email'
+import { type EmailTemplate, resolveSubject } from './send-email'
 
 describe('resolveSubject', () => {
   it('resolves the team invite subject with the actual team name', () => {

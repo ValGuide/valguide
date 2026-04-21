@@ -909,8 +909,8 @@ function Hero() {
           UI Component Overview
         </PageTitle>
         <CardDescription className="max-w-3xl text-sm md:text-base">
-          A single 2D-scrollable canvas showing every core primitive. Scroll horizontally and vertically — the canvas
-          is wider than the viewport on purpose.
+          A single 2D-scrollable canvas showing every core primitive. Scroll horizontally and vertically — the canvas is
+          wider than the viewport on purpose.
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0">

@@ -1,8 +1,8 @@
 import { execSync } from 'node:child_process'
-import boxen from 'boxen'
-import chalk from 'chalk'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import boxen from 'boxen'
+import chalk from 'chalk'
 
 function borderBox(...lines) {
   return boxen(chalk.blueBright(lines.join('\n')), {
