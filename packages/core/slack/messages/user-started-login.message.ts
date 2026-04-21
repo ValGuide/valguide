@@ -1,6 +1,6 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import { formatSlackDate } from './slack-date'
-import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
   email?: string
@@ -8,7 +8,7 @@ type Props = {
 }
 
 export const userStartedLoginMessage = ({ email, timestampMs }: Props): SlackMessage => ({
-  channel: resolveUsersSlackChannel(),
+  channel: serverEnv.USERS_SLACK_CHANNEL,
   text: '👀 User login started',
   blocks: [
     {

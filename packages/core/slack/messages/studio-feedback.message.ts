@@ -28,8 +28,7 @@ export const studioFeedbackMessage = ({
   linearError,
   timestampMs,
 }: Props): SlackMessage => {
-  const isDevEnv = serverEnv.VITE_ENV === 'dev' || serverEnv.VITE_ENV === 'local'
-  const channel = serverEnv.STUDIO_FEEDBACK_SLACK_CHANNEL || (isDevEnv ? 'studio-feedback-dev' : 'studio-feedback')
+  const channel = serverEnv.STUDIO_FEEDBACK_SLACK_CHANNEL
 
   return {
     channel,

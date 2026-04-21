@@ -1,6 +1,6 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import { formatSlackDate } from './slack-date'
-import { resolveStudioEventsSlackChannel } from './studio-events-channel'
 import { resolveStudioTourEditUrl } from './studio-url'
 
 type Props = {
@@ -22,7 +22,7 @@ export const tourArchivedMessage = ({
   tourTitle,
   wasPublished,
 }: Props): SlackMessage => ({
-  channel: resolveStudioEventsSlackChannel(),
+  channel: serverEnv.STUDIO_EVENTS_SLACK_CHANNEL,
   text: `🗄️ Tour Archived: ${tourTitle ?? 'Untitled tour'}`,
   blocks: [
     {

@@ -1,7 +1,7 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import { resolveAdminUsersUrl } from './admin-url'
 import { formatSlackDate } from './slack-date'
-import { resolveUsersSlackChannel } from './user-channel'
 
 type UserStatus = 'pending' | 'approved' | 'blocked' | 'deactivated'
 type UserStatusChangeAction = 'approved' | 'blocked' | 'unblocked' | 'reactivated'
@@ -45,7 +45,7 @@ export const userStatusChangedMessage = ({
   timestampMs,
   userId,
 }: Props): SlackMessage => ({
-  channel: resolveUsersSlackChannel(),
+  channel: serverEnv.USERS_SLACK_CHANNEL,
   text: `${actionTitle(action)}${targetEmail ? `: ${targetEmail}` : ''}`,
   blocks: [
     {

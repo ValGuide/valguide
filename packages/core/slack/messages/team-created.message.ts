@@ -1,7 +1,7 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import { resolveAdminOrgUrl } from './admin-url'
 import { formatSlackDate } from './slack-date'
-import { resolveStudioEventsSlackChannel } from './studio-events-channel'
 
 type Props = {
   actorEmail: string | null
@@ -24,7 +24,7 @@ export const teamCreatedMessage = ({
   orgSlug,
   timestampMs,
 }: Props): SlackMessage => ({
-  channel: resolveStudioEventsSlackChannel(),
+  channel: serverEnv.STUDIO_EVENTS_SLACK_CHANNEL,
   text: `🏢 New team created: ${orgName}`,
   blocks: [
     {

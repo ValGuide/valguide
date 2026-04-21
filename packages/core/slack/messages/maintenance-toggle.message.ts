@@ -22,8 +22,7 @@ export const maintenanceToggleMessage = ({
   message,
   eta,
 }: MaintenanceToggleMessageInput): SlackMessage => {
-  const isDevEnv = serverEnv.VITE_ENV === 'dev'
-  const channel = serverEnv.MAINTENANCE_SLACK_CHANNEL || (isDevEnv ? 'maintenance-dev' : 'maintenance')
+  const channel = serverEnv.MAINTENANCE_SLACK_CHANNEL
   const title = enabled ? '🛠️ Maintenance enabled' : '✅ Maintenance disabled'
   const details = [
     `*Target* ${appLabel(app)}`,

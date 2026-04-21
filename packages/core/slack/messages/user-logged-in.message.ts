@@ -1,7 +1,7 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import { resolveAdminUsersUrl } from './admin-url'
 import { formatSlackDate } from './slack-date'
-import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
   email?: string
@@ -18,7 +18,7 @@ function statusLabel(status: Props['status']): string {
 }
 
 export const userLoggedInMessage = ({ email, userId, status, timestampMs }: Props): SlackMessage => ({
-  channel: resolveUsersSlackChannel(),
+  channel: serverEnv.USERS_SLACK_CHANNEL,
   text: `👋 User login completed (${status})`,
   blocks: [
     {

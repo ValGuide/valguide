@@ -1,6 +1,6 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import { formatSlackDate } from './slack-date'
-import { resolveStudioEventsSlackChannel } from './studio-events-channel'
 import { resolveStudioSettingsUrl } from './studio-url'
 
 type Props = {
@@ -20,7 +20,7 @@ export const memberInvitedMessage = ({
   role,
   timestampMs,
 }: Props): SlackMessage => ({
-  channel: resolveStudioEventsSlackChannel(),
+  channel: serverEnv.STUDIO_EVENTS_SLACK_CHANNEL,
   text: `📨 Team member invited: ${invitedEmail}`,
   blocks: [
     {

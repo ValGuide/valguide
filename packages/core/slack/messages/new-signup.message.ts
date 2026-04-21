@@ -1,13 +1,13 @@
 import type { SlackMessage } from '@valguide/slack/slack-message'
+import { serverEnv } from '../../env/server'
 import { resolveAdminUsersUrl } from './admin-url'
-import { resolveUsersSlackChannel } from './user-channel'
 
 type Props = {
   email: string
 }
 
 export const newSignupMessage = ({ email }: Props): SlackMessage => ({
-  channel: resolveUsersSlackChannel(),
+  channel: serverEnv.USERS_SLACK_CHANNEL,
   text: `🆕 New signup awaiting approval: ${email}`,
   blocks: [
     {

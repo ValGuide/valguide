@@ -15,10 +15,10 @@ export const serverEnvSchema = z.object({
   RESEND_SENDING_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().optional().default('ValGuide <noreply@valguide.com>'),
   VALBOT_SLACK_TOKEN: z.string().optional(),
-  MAINTENANCE_SLACK_CHANNEL: z.string().optional().default(''),
-  USERS_SLACK_CHANNEL: z.string().optional().default(''),
-  STUDIO_EVENTS_SLACK_CHANNEL: z.string().optional().default(''),
-  STUDIO_FEEDBACK_SLACK_CHANNEL: z.string().optional().default(''),
+  MAINTENANCE_SLACK_CHANNEL: z.string().min(1, 'Maintenance Slack channel is required'),
+  USERS_SLACK_CHANNEL: z.string().min(1, 'Users Slack channel is required'),
+  STUDIO_EVENTS_SLACK_CHANNEL: z.string().min(1, 'Studio events Slack channel is required'),
+  STUDIO_FEEDBACK_SLACK_CHANNEL: z.string().min(1, 'Studio feedback Slack channel is required'),
   STUDIO_PERFORMANCE_LOG_ENABLED: z
     .string()
     .optional()
