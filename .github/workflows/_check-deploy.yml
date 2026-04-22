@@ -5,6 +5,15 @@ name: _check-deploy
 
 on:
   workflow_call:
+    inputs:
+      manual_environment:
+        required: false
+        type: string
+        default: ''
+      manual_scope:
+        required: false
+        type: string
+        default: ''
     outputs:
       environment:
         value: ${{ jobs.check.outputs.environment }}
@@ -53,47 +62,6 @@ jobs:
         id: check
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
-        run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "environment=prod" >> $GITHUB_OUTPUT
-          else
-            echo "environment=dev" >> $GITHUB_OUTPUT
-          fi
-
-          APPS="app studio admin docs links storybook www workers"
-          ANY=false
-
-          if echo "$COMMIT_MSG" | grep -qF '[build all]'; then
-            echo "✅ [build all] found — deploying everything"
-            for app in $APPS; do
-              echo "deploy-${app}=true" >> $GITHUB_OUTPUT
-            done
-            ANY=true
-          elif echo "$COMMIT_MSG" | grep -qF '[build apps]'; then
-            echo "✅ [build apps] found — deploying all apps except workers"
-            for app in $APPS; do
-              if [ "$app" = "workers" ]; then
-                echo "deploy-${app}=false" >> $GITHUB_OUTPUT
-              else
-                echo "deploy-${app}=true" >> $GITHUB_OUTPUT
-              fi
-            done
-            ANY=true
-          else
-            SCOPES=$(echo "$COMMIT_MSG" | grep -oE '\[build [^]]+' | sed 's/\[build //' | tr ' ,' '\n' | tr -s '\n')
-            if [ -n "$SCOPES" ]; then
-              echo "Found scoped build request: $(echo $SCOPES | tr '\n' ' ')"
-            else
-              echo "No [build] tag found — nothing to deploy"
-            fi
-            for app in $APPS; do
-              if echo "$SCOPES" | grep -qx "$app"; then
-                echo "deploy-${app}=true" >> $GITHUB_OUTPUT
-                ANY=true
-              else
-                echo "deploy-${app}=false" >> $GITHUB_OUTPUT
-              fi
-            done
-          fi
-
-          echo "any-deploy=$ANY" >> $GITHUB_OUTPUT
+          MANUAL_ENVIRONMENT: ${{ inputs.manual_environment }}
+          MANUAL_SCOPE: ${{ inputs.manual_scope }}
+        run: bash .github/scripts/check-deploy.sh

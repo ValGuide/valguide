@@ -50,78 +50,16 @@ jobs:
 
       - name: Configure environment
         id: config
-        run: |
-          APP="${{ inputs.app-name }}"
-          ENV="${{ inputs.environment }}"
-
-          # Deploy URL (used for output only — environment.url can't reference step outputs)
-          case "${APP}-${ENV}" in
-            app-prod)       URL="https://app.valguide.com" ;;
-            app-dev)        URL="https://app.valguide.dev" ;;
-            studio-prod)    URL="https://studio.valguide.com" ;;
-            studio-dev)     URL="https://studio.valguide.dev" ;;
-            admin-prod)     URL="https://ops.val.guide" ;;
-            admin-dev)      URL="https://ops-dev.val.guide" ;;
-            docs-prod)      URL="https://docs.val.guide" ;;
-            docs-dev)       URL="https://docs-dev.val.guide" ;;
-            links-prod)     URL="https://links.valguide.com" ;;
-            links-dev)      URL="https://links.valguide.dev" ;;
-            storybook-prod) URL="https://sb.val.guide" ;;
-            storybook-dev)  URL="https://sb-dev.val.guide" ;;
-            www-prod)       URL="https://www.valguide.com" ;;
-            www-dev)        URL="https://www.valguide.dev" ;;
-          esac
-          echo "url=$URL" >> $GITHUB_OUTPUT
-
-          # Domain suffix for VITE_* URLs
-          if [ "$ENV" = "prod" ]; then DS="com"; else DS="dev"; fi
-
-          # PostHog (all apps except docs and storybook)
-          case "$APP" in
-            app|studio|admin|links|www)
-              echo "VITE_POSTHOG_ENABLED=true" >> $GITHUB_ENV
-
-              if [ "$ENV" = "prod" ]; then
-                PH_KEY="$POSTHOG_PROJECT_KEY_PROD"
-              else
-                PH_KEY="$POSTHOG_PROJECT_KEY_DEV"
-              fi
-
-              if [ -z "$PH_KEY" ]; then
-                echo "Missing PostHog key for ${APP}-${ENV}. Set POSTHOG_PROJECT_KEY_${ENV^^} as a GitHub Variable." >&2
-                exit 1
-              fi
-
-              echo "VITE_POSTHOG_KEY=$PH_KEY" >> $GITHUB_ENV
-              echo "VITE_POSTHOG_HOST=https://e.valguide.${DS}" >> $GITHUB_ENV
-              echo "VITE_APP_DOMAIN=app.valguide.${DS}" >> $GITHUB_ENV
-              echo "VITE_PRIVACY_POLICY_URL=https://www.valguide.${DS}/privacy-policy" >> $GITHUB_ENV
-              echo "VITE_TERMS_OF_SERVICE_URL=https://www.valguide.${DS}/terms-of-service" >> $GITHUB_ENV
-              ;;
-          esac
-
-          # Studio URL and R2 (app, studio, admin)
-          case "$APP" in
-            app|studio|admin)
-              echo "VITE_STUDIO_URL=https://studio.valguide.${DS}" >> $GITHUB_ENV
-              echo "VITE_R2_PUBLIC_URL=https://assets.valguide.${DS}" >> $GITHUB_ENV
-              ;;
-          esac
-
-          # VITE_ENV (all except storybook)
-          case "$APP" in
-            app|studio|admin|docs|links|www)
-              echo "VITE_ENV=${ENV}" >> $GITHUB_ENV
-              ;;
-          esac
+        env:
+          APP_NAME: ${{ inputs.app-name }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+        run: bash .github/scripts/configure-app-deploy.sh
 
       - name: Build & Deploy
-        run: |
-          if [ "${{ inputs.environment }}" = "prod" ]; then
-            pnpm --filter "@valguide/${{ inputs.app-name }}" run deploy
-          else
-            pnpm --filter "@valguide/${{ inputs.app-name }}" run deploy:dev
-          fi
+        env:
+          APP_NAME: ${{ inputs.app-name }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+        run: bash .github/scripts/deploy-app.sh
 
       - uses: ./.github/actions/create-app-tag
         with:

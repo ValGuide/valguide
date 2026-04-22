@@ -86,30 +86,21 @@ jobs:
 
       - name: Determine previous tag
         id: prev
-        run: |
-          TAG_PREFIX="deploy-${{ inputs.environment }}-"
-          PREV_TAG=$(git tag -l "${TAG_PREFIX}*" --sort=-creatordate | head -1)
-          if [ -n "$PREV_TAG" ]; then
-            echo "Found previous tag: $PREV_TAG"
-            echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
-          else
-            echo "No previous tag found — this is the first consolidated release"
-            echo "tag=" >> $GITHUB_OUTPUT
-          fi
+        env:
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+        run: bash .github/scripts/release-find-previous-tag.sh
 
       - name: Create tag
         id: tag
-        run: |
-          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-          TAG="deploy-${{ inputs.environment }}-${{ inputs.timestamp }}-${SHORT_SHA}"
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-          git tag "$TAG"
-          git push origin "$TAG"
+        env:
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+          DEPLOY_TIMESTAMP: ${{ inputs.timestamp }}
+        run: bash .github/scripts/release-create-tag.sh
 
       - name: Build apps deployed section
         id: apps
         env:
-          ENV: ${{ inputs.environment }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
           DEPLOY_APP: ${{ inputs.deploy-app }}
           DEPLOY_STUDIO: ${{ inputs.deploy-studio }}
           DEPLOY_ADMIN: ${{ inputs.deploy-admin }}
@@ -126,88 +117,13 @@ jobs:
           RESULT_STORYBOOK: ${{ inputs.result-storybook }}
           RESULT_WWW: ${{ inputs.result-www }}
           RESULT_WORKERS: ${{ inputs.result-workers }}
-        run: |
-          url_for() {
-            case "$1" in
-              app-prod)       echo "https://app.valguide.com" ;;
-              app-dev)        echo "https://app.valguide.dev" ;;
-              studio-prod)    echo "https://studio.valguide.com" ;;
-              studio-dev)     echo "https://studio.valguide.dev" ;;
-              admin-prod)     echo "https://ops.val.guide" ;;
-              admin-dev)      echo "https://ops-dev.val.guide" ;;
-              docs-prod)      echo "https://docs.val.guide" ;;
-              docs-dev)       echo "https://docs-dev.val.guide" ;;
-              links-prod)     echo "https://links.valguide.com" ;;
-              links-dev)      echo "https://links.valguide.dev" ;;
-              storybook-prod) echo "https://sb.val.guide" ;;
-              storybook-dev)  echo "https://sb-dev.val.guide" ;;
-              www-prod)       echo "https://www.valguide.com" ;;
-              www-dev)        echo "https://www.valguide.dev" ;;
-            esac
-          }
-
-          display_for() {
-            case "$1" in
-              app) echo "App" ;;
-              studio) echo "Studio" ;;
-              admin) echo "Admin" ;;
-              docs) echo "Docs" ;;
-              links) echo "Links" ;;
-              storybook) echo "Storybook" ;;
-              www) echo "www" ;;
-              workers) echo "Workers" ;;
-            esac
-          }
-
-          SECTION=""
-          add_app() {
-            local should=$1 result=$2 name=$3
-            if [ "$should" != "true" ]; then return; fi
-            local url display
-            url=$(url_for "${name}-${ENV}")
-            display=$(display_for "$name")
-            local suffix=""
-            if [ -n "$url" ]; then suffix=" — ${url}"; fi
-            if [ "$result" = "success" ]; then
-              SECTION="${SECTION}- ✅ ${display}${suffix}\n"
-            else
-              SECTION="${SECTION}- ❌ ${display}${suffix}\n"
-            fi
-          }
-
-          add_app "$DEPLOY_APP"       "$RESULT_APP"       "app"
-          add_app "$DEPLOY_STUDIO"    "$RESULT_STUDIO"    "studio"
-          add_app "$DEPLOY_ADMIN"     "$RESULT_ADMIN"     "admin"
-          add_app "$DEPLOY_DOCS"      "$RESULT_DOCS"      "docs"
-          add_app "$DEPLOY_LINKS"     "$RESULT_LINKS"     "links"
-          add_app "$DEPLOY_STORYBOOK" "$RESULT_STORYBOOK" "storybook"
-          add_app "$DEPLOY_WWW"       "$RESULT_WWW"       "www"
-          add_app "$DEPLOY_WORKERS"   "$RESULT_WORKERS"   "workers"
-
-          {
-            echo "body<<EOF"
-            echo -e "$SECTION"
-            echo "EOF"
-          } >> $GITHUB_OUTPUT
+        run: bash .github/scripts/release-build-apps-section.sh
 
       - name: Generate changelog
         id: changelog
-        run: |
-          if [ -n "${{ steps.prev.outputs.tag }}" ]; then
-            RANGE="${{ steps.prev.outputs.tag }}..HEAD"
-          else
-            echo "body=🎉 First release — no previous tag to diff against." >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          BODY=$(git log --pretty=format:"%s ([%h](${{ github.server_url }}/${{ github.repository }}/commit/%H))" $RANGE \
-            | bash .github/scripts/generate-changelog.sh)
-
-          {
-            echo "body<<EOF"
-            echo -e "$BODY"
-            echo "EOF"
-          } >> $GITHUB_OUTPUT
+        env:
+          PREVIOUS_TAG: ${{ steps.prev.outputs.tag }}
+        run: bash .github/scripts/release-generate-changelog.sh
 
       - name: Create GitHub Release
         id: create-release

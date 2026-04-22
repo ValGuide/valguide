@@ -40,17 +40,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Deploy all workers
-        run: |
-          for dir in workers/*/; do
-            WORKER=$(basename "$dir")
-            echo "::group::Deploying ${WORKER}"
-            if [ "${{ inputs.environment }}" = "prod" ]; then
-              pnpm --filter "@valguide/${WORKER}" run deploy
-            else
-              pnpm --filter "@valguide/${WORKER}" run deploy:dev
-            fi
-            echo "::endgroup::"
-          done
+        env:
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+        run: bash .github/scripts/deploy-workers.sh
 
       - uses: ./.github/actions/create-app-tag
         with:

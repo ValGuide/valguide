@@ -14,9 +14,23 @@ name: Deploy
 on:
   push:
     branches: [main, dev]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+      scope:
+        description: Deploy scope. Supports all, apps, or app names like "studio app" / "studio,app"
+        required: true
+        type: string
+        default: all
 
 concurrency:
-  group: deploy-${{ github.workflow }}-${{ github.ref_name }}
+  group: deploy-${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.ref_name, inputs.environment) || github.ref_name }}
   cancel-in-progress: false
 
 permissions:
@@ -26,6 +40,9 @@ jobs:
   # ── Check which apps to deploy ──────────────────────────────────────
   check:
     uses: ./.github/workflows/_check-deploy.yml
+    with:
+      manual_environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || '' }}
+      manual_scope: ${{ github.event_name == 'workflow_dispatch' && inputs.scope || '' }}
 
   # ── Deploy jobs (parallel) ──────────────────────────────────────────
   deploy-app:
