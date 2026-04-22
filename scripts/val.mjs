@@ -26,7 +26,16 @@ const META_LICENSE_MODELS = [
   '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
 ]
 const REMOTE_DEV_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs']
+const OPEN_TARGET_ALIASES = {
+  github: 'github',
+  gh: 'github',
+  'github-actions': 'github-actions',
+  'github actions': 'github-actions',
+  'gh-actions': 'github-actions',
+  'gh actions': 'github-actions',
+}
 const OPEN_TARGETS = ['github', 'github-actions']
+const OPEN_TARGET_DISPLAY = ['github', 'gh', 'github actions', 'gh actions']
 const OPEN_URLS = {
   github: 'https://github.com/valguide/valguide',
   'github-actions': 'https://github.com/valguide/valguide/actions',
@@ -85,6 +94,9 @@ Examples:
   val type-check core
   val lint fix
   val open github
+  val open gh
+  val open github actions
+  val open gh actions
   val db setup local
   val db status local
   val db migrate dev
@@ -177,7 +189,7 @@ Notes:
   open: `Usage: val open <target>
 
 Targets:
-  ${OPEN_TARGETS.join(', ')}
+  ${OPEN_TARGET_DISPLAY.join(', ')}
 `,
   promote: `Usage: val promote
 
@@ -754,15 +766,22 @@ function createKillInvocation(positionals, flags, passthrough) {
 
 function createOpenInvocation(positionals, flags, passthrough) {
   ensureAllowedFlags(flags, [], 'open')
-  const [target, ...rest] = positionals
-  ensureTarget(target, OPEN_TARGETS, 'open')
-  ensureNoExtraPositionals(rest, 'open')
+  const target = positionals.join(' ')
+  const normalizedTarget = OPEN_TARGET_ALIASES[target]
+
+  if (!normalizedTarget) {
+    if (positionals.length === 0) {
+      failWithUsage(`missing target for "open". Supported targets: ${quotedList(OPEN_TARGET_DISPLAY)}.`, 'open')
+    }
+
+    failWithUsage(`unsupported target "${target}" for "open". Supported targets: ${quotedList(OPEN_TARGET_DISPLAY)}.`, 'open')
+  }
 
   if (passthrough.length > 0) {
     failWithUsage('passthrough args are not supported for "open".', 'open')
   }
 
-  return commandInvocation('open', [OPEN_URLS[target]])
+  return commandInvocation('open', [OPEN_URLS[normalizedTarget]])
 }
 
 function createPromoteInvocation(positionals, flags, passthrough) {
