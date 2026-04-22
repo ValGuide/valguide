@@ -1,0 +1,14 @@
+{
+  "name": "@valguide/github",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "root": ".github",
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash .github/scripts/run-all-tests.sh"
+      },
+      "cache": false
+    }
+  }
+}
