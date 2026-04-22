@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
+import { spawn } from 'node:child_process'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { spawn } from 'node:child_process'
 
 const APP_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 'storybook']
 const DEV_TARGETS = [...APP_TARGETS, 'workspace']
@@ -34,7 +34,6 @@ const OPEN_TARGET_ALIASES = {
   'gh-actions': 'github-actions',
   'gh actions': 'github-actions',
 }
-const OPEN_TARGETS = ['github', 'github-actions']
 const OPEN_TARGET_DISPLAY = ['github', 'gh', 'github actions', 'gh actions']
 const OPEN_URLS = {
   github: 'https://github.com/valguide/valguide',
@@ -517,7 +516,9 @@ function packageScriptInvocation(target, scriptName, passthrough = []) {
 function createInvocation(command, positionals, flags, passthrough) {
   switch (command) {
     case 'completion':
-      fail('the "completion" command does not run a child process and should be handled before invocation creation')
+      return fail(
+        'the "completion" command does not run a child process and should be handled before invocation creation',
+      )
     case 'dev':
       return createDevInvocation(positionals, flags, passthrough)
     case 'build':
@@ -774,7 +775,10 @@ function createOpenInvocation(positionals, flags, passthrough) {
       failWithUsage(`missing target for "open". Supported targets: ${quotedList(OPEN_TARGET_DISPLAY)}.`, 'open')
     }
 
-    failWithUsage(`unsupported target "${target}" for "open". Supported targets: ${quotedList(OPEN_TARGET_DISPLAY)}.`, 'open')
+    failWithUsage(
+      `unsupported target "${target}" for "open". Supported targets: ${quotedList(OPEN_TARGET_DISPLAY)}.`,
+      'open',
+    )
   }
 
   if (passthrough.length > 0) {

@@ -54,6 +54,8 @@ jobs:
       any-deploy: ${{ steps.check.outputs.any-deploy }}
       timestamp: ${{ steps.ts.outputs.timestamp }}
     steps:
+      - uses: actions/checkout@v4
+
       - name: Generate deploy timestamp
         id: ts
         run: echo "timestamp=$(date -u +%Y-%m-%dT%H%M%S)" >> $GITHUB_OUTPUT

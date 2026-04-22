@@ -74,6 +74,8 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Build and send Slack summary
         env:
           SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
