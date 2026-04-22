@@ -96,7 +96,15 @@ const defaultOptions = {
   },
 }
 
-const options = [databaseOptions, resendOptions, cloudflareOptions, slackOptions, authOptions, posthogOptions, defaultOptions]
+const options = [
+  databaseOptions,
+  resendOptions,
+  cloudflareOptions,
+  slackOptions,
+  authOptions,
+  posthogOptions,
+  defaultOptions,
+]
 const PRINT_ENV_FLAG = '--print-env'
 const args = process.argv.slice(2)
 const printEnv = args.includes(PRINT_ENV_FLAG)
