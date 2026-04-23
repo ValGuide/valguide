@@ -5,7 +5,7 @@ const adminEnvSchema = serverEnvSchema.extend({
   ADMIN_ALLOWED_EMAILS: z
     .string()
     .optional()
-    .default('curator@museum-zurich.example,curator@museum-zurich.example,ops@museum-zurich.example'),
+    .default('admin@valguide.com'),
   ADMIN_COOKIE_DOMAIN: z.string().optional().default('val.guide'),
   ADMIN_BASE_URL: z.string().optional().default('https://ops.val.guide'),
   SLACK_CLIENT_ID: z.string().optional().default(''),
