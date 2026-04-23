@@ -139,7 +139,7 @@ The `getTourHasAnyChanges(tourId)` function runs a single SQL query with `EXISTS
 
 This is called by `getTourDetail()` and returned as `hasAnyChanges: boolean`. Only runs when `tour.publishedAt !== null` (unpublished tours skip the query).
 
-**⚠️ Schema migration risk:** This function uses raw SQL (not Drizzle's type-safe query builder). If any of the referenced tables or columns are renamed/added/removed, the raw SQL must be updated manually. See `features/AGENTS.md` for the full list of referenced tables.
+**⚠️ Schema migration risk:** This function uses raw SQL (not Drizzle's type-safe query builder). If any of the referenced tables or columns are renamed or removed, the raw SQL must be updated manually to match the schema.
 
 ### Per-Locale Text Change Detection
 

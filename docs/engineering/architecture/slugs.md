@@ -22,9 +22,9 @@ ValGuide uses **organization-scoped slugs** for tours rather than globally uniqu
 ```
 
 Examples:
-- `/de/kunsthaus-zurich/giacometti`
-- `/en/kunsthaus-zurich/giacometti`
-- `/fr/kunsthaus-zurich/giacometti`
+- `/de/museum-zurich/giacometti`
+- `/en/museum-zurich/giacometti`
+- `/fr/museum-zurich/giacometti`
 
 Note: Same slugs across all locales. The locale affects the **content language**, not the URL structure.
 
@@ -36,7 +36,7 @@ Slugs are **stable technical identifiers**, not translated content:
 
 | Entity | Slug | Display Name (varies by locale) |
 |--------|------|--------------------------------|
-| Organization | `kunsthaus-zurich` | EN: "Kunsthaus Zürich", DE: "Kunsthaus Zürich", FR: "Kunsthaus de Zurich" |
+| Organization | `museum-zurich` | EN: "Museum Zurich", DE: "Museum Zurich", FR: "Museum Zurich" |
 | Tour | `giacometti` | EN: "Giacometti Exhibition", DE: "Giacometti Ausstellung" |
 
 **Why?** 
@@ -58,7 +58,7 @@ Slugs are **not part of the draft/publish cycle**. When a curator changes a slug
 The current slug lives directly on the entity table as a NOT NULL column:
 
 ```
-organization.slug  →  "kunsthaus-zurich"   (globally unique)
+organization.slug  →  "museum-zurich"   (globally unique)
 tour.slug          →  "giacometti"          (unique per organization)
 ```
 
@@ -310,7 +310,7 @@ export function generateSlug(text: string): string {
     .replace(/^-+|-+$/g, '')         // Trim hyphens
 }
 
-// "Kunsthaus Zürich"   → "kunsthaus-zuerich"
+// "Museum Zurich"   → "museum-zurich"
 // "Highlights-Führung" → "highlights-fuehrung"
 // "Musée d'Orsay"      → "musee-dorsay"
 // "En–dash em—dash"    → "en-dash-em-dash"
@@ -345,7 +345,7 @@ const RESERVED_SLUGS = [
 Since slugs are not localized, language switching is simple:
 
 ```
-/en/kunsthaus-zurich/giacometti  →  /de/kunsthaus-zurich/giacometti
+/en/museum-zurich/giacometti  →  /de/museum-zurich/giacometti
 ```
 
 Just change the locale segment. The slug stays the same, only the content language changes.

@@ -28,7 +28,7 @@ const GERMAN_MAP: Record<string, string> = {
  * - Output: lowercase alphanumeric with hyphens only
  *
  * @example
- * generateSlug("Kunsthaus Zürich")        → "kunsthaus-zuerich"
+ * generateSlug("Museum Zurich")          → "museum-zurich"
  * generateSlug("Highlights-Führung")      → "highlights-fuehrung"
  * generateSlug("Große Ausstellung")       → "grosse-ausstellung"
  * generateSlug("La Chaux-de-Fonds")       → "la-chaux-de-fonds"

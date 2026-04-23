@@ -33,7 +33,7 @@ describe('generateSlug', () => {
     })
 
     it('handles combined German examples', () => {
-      expect(generateSlug('Kunsthaus Zürich')).toBe('kunsthaus-zuerich')
+      expect(generateSlug('Museum Zurich')).toBe('museum-zurich')
       expect(generateSlug('Highlights-Führung')).toBe('highlights-fuehrung')
       expect(generateSlug('Große Ausstellung')).toBe('grosse-ausstellung')
     })
@@ -149,8 +149,8 @@ describe('generateSlug', () => {
   })
 
   describe('real-world museum examples', () => {
-    it('handles Kunsthaus Zürich', () => {
-      expect(generateSlug('Kunsthaus Zürich')).toBe('kunsthaus-zuerich')
+    it('handles Museum Zurich', () => {
+      expect(generateSlug('Museum Zurich')).toBe('museum-zurich')
     })
 
     it('handles Giacometti Exhibition', () => {
@@ -169,7 +169,7 @@ describe('slugSchema', () => {
       'hello',
       'hello-world',
       'my-awesome-tour',
-      'kunsthaus-zuerich',
+      'museum-zurich',
       'tour-2024',
       '123-test',
       'a1b2c3',
@@ -241,7 +241,7 @@ describe('slugSchema', () => {
 describe('isValidSlug', () => {
   it('returns true for valid slugs', () => {
     expect(isValidSlug('hello-world')).toBe(true)
-    expect(isValidSlug('kunsthaus-zuerich')).toBe(true)
+    expect(isValidSlug('museum-zurich')).toBe(true)
   })
 
   it('returns false for invalid slugs', () => {

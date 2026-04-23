@@ -2,7 +2,7 @@
  * Utilities for detecting and differentiating between nanoIds and slugs.
  *
  * NanoIds: 10-character base62 alphanumeric (0-9, A-Z, a-z)
- * Slugs: lowercase alphanumeric with hyphens (e.g., "kunsthaus-zurich")
+ * Slugs: lowercase alphanumeric with hyphens (e.g., "museum-zurich")
  */
 
 /**
@@ -13,7 +13,7 @@ export const NANO_ID_PATTERN = /^[0-9A-Za-z]{10}$/
 
 /**
  * Slug pattern: lowercase alphanumeric with hyphens, no leading/trailing hyphens.
- * Example: "kunsthaus-zurich", "my-tour-2024"
+ * Example: "museum-zurich", "my-tour-2024"
  */
 export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 

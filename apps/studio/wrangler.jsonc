@@ -16,7 +16,7 @@
     }
   },
 
-  // Shared Cloudflare resources are managed in infra/cloudflare.
+  // Shared Cloudflare resources are managed outside this public repo.
   // Keep these bucket names and binding IDs aligned with OpenTofu outputs instead of one-off setup scripts.
   // Native R2 binding — no S3 API keys needed
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod", "jurisdiction": "eu" }],
@@ -47,7 +47,7 @@
     "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback",
     "STUDIO_PERFORMANCE_LOG_ENABLED": "false",
     "APP_BASE_URL": "https://app.valguide.com",
-    "ADMIN_BASE_URL": "https://ops.val.guide",
+    "ADMIN_BASE_URL": "https://admin.example.com",
     "VITE_PRIVACY_POLICY_URL": "https://www.valguide.com/privacy-policy",
     // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
     "VITE_STUDIO_URL": "https://studio.valguide.com",
@@ -83,7 +83,7 @@
         "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback-dev",
         "STUDIO_PERFORMANCE_LOG_ENABLED": "false",
         "APP_BASE_URL": "https://app.valguide.dev",
-        "ADMIN_BASE_URL": "https://ops-dev.val.guide",
+        "ADMIN_BASE_URL": "https://admin-dev.example.com",
         "VITE_PRIVACY_POLICY_URL": "https://www.valguide.dev/privacy-policy",
         // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
         "VITE_STUDIO_URL": "https://studio.valguide.dev",

@@ -19,7 +19,7 @@
   // Production custom domain
   "routes": [{ "pattern": "www.valguide.com", "custom_domain": true }],
 
-  // Shared Cloudflare resources are managed in infra/cloudflare.
+  // Shared Cloudflare resources are managed outside this public repo.
   // Keep these binding IDs aligned with OpenTofu outputs instead of one-off setup scripts.
   // KV namespaces:
   // - AUTH_KV for Better Auth secondary storage (sessions, verifications, rate limits)

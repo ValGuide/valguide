@@ -20,7 +20,7 @@
     "required": ["ADMIN_ALLOWED_EMAILS"]
   },
 
-  // Shared Cloudflare resources are managed in infra/cloudflare.
+  // Shared Cloudflare resources are managed outside this public repo.
   // Keep these bucket names and binding IDs aligned with OpenTofu outputs instead of one-off setup scripts.
   // Native R2 binding — for org logo uploads
   "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod", "jurisdiction": "eu" }],
@@ -36,9 +36,9 @@
   ],
 
   // Production custom domain
-  "routes": [{ "pattern": "ops.val.guide", "custom_domain": true }],
+  "routes": [{ "pattern": "admin.example.com", "custom_domain": true }],
 
-  // Production vars (ops.val.guide)
+  // Production vars (admin.example.com)
   // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
   // Secrets set via: wrangler secret put <NAME>
   "vars": {
@@ -47,21 +47,21 @@
     "MAINTENANCE_SLACK_CHANNEL": "maintenance",
     "USERS_SLACK_CHANNEL": "users",
     "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events",
-    "BETTER_AUTH_URL": "https://ops.val.guide",
-    "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops.val.guide",
-    "ADMIN_COOKIE_DOMAIN": "ops.val.guide",
-    "ADMIN_BASE_URL": "https://ops.val.guide",
+    "BETTER_AUTH_URL": "https://admin.example.com",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://admin.example.com",
+    "ADMIN_COOKIE_DOMAIN": "admin.example.com",
+    "ADMIN_BASE_URL": "https://admin.example.com",
     "VITE_PRIVACY_POLICY_URL": "https://www.valguide.com/privacy-policy",
     "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.com/terms-of-service"
   },
 
-  // Dev environment (ops-dev.val.guide)
+  // Dev environment (admin-dev.example.com)
   // Build with: CLOUDFLARE_ENV=dev vite build
   // Deploy with: wrangler deploy (after building with CLOUDFLARE_ENV=dev)
   // Set secrets with: wrangler secret put <NAME> --env dev
   "env": {
     "dev": {
-      "routes": [{ "pattern": "ops-dev.val.guide", "custom_domain": true }],
+      "routes": [{ "pattern": "admin-dev.example.com", "custom_domain": true }],
       "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev", "jurisdiction": "eu" }],
       "kv_namespaces": [
         { "binding": "AUTH_KV", "id": "REPLACE_WITH_AUTH_KV_ID_DEV" },
@@ -77,10 +77,10 @@
         "MAINTENANCE_SLACK_CHANNEL": "maintenance-dev",
         "USERS_SLACK_CHANNEL": "users-dev",
         "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events-dev",
-        "BETTER_AUTH_URL": "https://ops-dev.val.guide",
-        "BETTER_AUTH_TRUSTED_ORIGINS": "https://ops-dev.val.guide",
-        "ADMIN_COOKIE_DOMAIN": "ops-dev.val.guide",
-        "ADMIN_BASE_URL": "https://ops-dev.val.guide",
+        "BETTER_AUTH_URL": "https://admin-dev.example.com",
+        "BETTER_AUTH_TRUSTED_ORIGINS": "https://admin-dev.example.com",
+        "ADMIN_COOKIE_DOMAIN": "admin-dev.example.com",
+        "ADMIN_BASE_URL": "https://admin-dev.example.com",
         "VITE_PRIVACY_POLICY_URL": "https://www.valguide.dev/privacy-policy",
         "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.dev/terms-of-service",
         "BLOCK_ROBOTS": "true"

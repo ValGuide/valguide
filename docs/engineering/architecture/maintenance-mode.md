@@ -7,7 +7,7 @@ This document describes how maintenance mode works across ValGuide runtime apps.
 Scope:
 1. `app` runtime (`app.valguide.com` / `app.valguide.dev`)
 2. `studio` runtime (`studio.valguide.com` / `studio.valguide.dev`)
-3. Admin control plane (`ops.val.guide` / `ops-dev.val.guide`)
+3. Admin control plane
 
 ## Goals
 

@@ -28,8 +28,27 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.defaults
+.env.auth.dev
+.env.auth.local
+.env.auth.prod
+.env.cloudflare.dev
+.env.cloudflare.local
+.env.cloudflare.prod
+.env.db.dev
+.env.db.local
+.env.db.prod
+.env.posthog.dev
+.env.posthog.local
+.env.posthog.prod
+.env.resend.dev
+.env.resend.prod
+.env.slack.dev
+.env.slack.local
+.env.slack.prod
 .env.prod
 .env.dev
+.env-merged/
 
 # ui
 dist/

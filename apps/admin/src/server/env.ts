@@ -3,8 +3,8 @@ import { z } from 'zod'
 
 const adminEnvSchema = serverEnvSchema.extend({
   ADMIN_ALLOWED_EMAILS: z.string().optional().default(''),
-  ADMIN_COOKIE_DOMAIN: z.string().optional().default('val.guide'),
-  ADMIN_BASE_URL: z.string().optional().default('https://ops.val.guide'),
+  ADMIN_COOKIE_DOMAIN: z.string().optional().default(''),
+  ADMIN_BASE_URL: z.string().optional().default(''),
   SLACK_CLIENT_ID: z.string().optional().default(''),
   SLACK_CLIENT_SECRET: z.string().optional().default(''),
   SLACK_TEAM_ID: z.string().optional().default(''),

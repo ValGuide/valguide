@@ -1,13 +1,6 @@
 #!/bin/sh
 set -eu
 
-ENV_FILE=".secrets/.env.db.local"
-
-if [ ! -f "$ENV_FILE" ]; then
-  echo "Missing $ENV_FILE"
-  exit 1
-fi
-
 if ! command -v psql >/dev/null 2>&1; then
   echo "psql is not installed or not on PATH."
   exit 1
@@ -18,14 +11,7 @@ if ! command -v pg_isready >/dev/null 2>&1; then
   exit 1
 fi
 
-set -a
-. "$ENV_FILE"
-set +a
-
-if [ -z "${DATABASE_URL:-}" ]; then
-  echo "DATABASE_URL is missing in $ENV_FILE"
-  exit 1
-fi
+DATABASE_URL="${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/valguide_local}"
 
 echo "Checking local PostgreSQL..."
 echo "Connection: $DATABASE_URL"

@@ -2,11 +2,11 @@ import { pickUniqueSlug } from './generate-unique-org-slug.server'
 
 describe('pickUniqueSlug', () => {
   it('returns the slug as-is when no conflicts', () => {
-    expect(pickUniqueSlug('kunsthaus-zuerich', [])).toBe('kunsthaus-zuerich')
+    expect(pickUniqueSlug('museum-zurich', [])).toBe('museum-zurich')
   })
 
   it('returns the slug when taken slugs are unrelated', () => {
-    expect(pickUniqueSlug('kunsthaus-zuerich', ['some-other-org', 'another-org'])).toBe('kunsthaus-zuerich')
+    expect(pickUniqueSlug('museum-zurich', ['some-other-org', 'another-org'])).toBe('museum-zurich')
   })
 
   it('appends -2 when the base slug is taken', () => {

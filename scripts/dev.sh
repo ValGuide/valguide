@@ -162,4 +162,6 @@ else
   echo "Starting (local bindings, DB: $DB_ENV): $*"
 fi
 
-exec pnpm env:load --db:$DB_ENV nx run-many -t "$target" --projects="$projects"
+export VALGUIDE_DB_ENV="$DB_ENV"
+
+exec nx run-many -t "$target" --projects="$projects"

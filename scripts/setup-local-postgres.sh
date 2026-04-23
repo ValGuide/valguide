@@ -98,7 +98,8 @@ GRANT ALL PRIVILEGES ON DATABASE $LOCAL_DB_NAME TO postgres;
 SQL
 
 echo "Running local migrations..."
-pnpm env:load --db:local pnpm --dir packages/core exec drizzle-kit migrate
+export DATABASE_URL="${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/$LOCAL_DB_NAME}"
+pnpm --dir packages/core exec drizzle-kit migrate
 
 echo
 echo "Local PostgreSQL is ready."

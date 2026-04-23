@@ -161,8 +161,7 @@
       "!**/routeTree.gen.ts",
       "!**/worker-configuration.d.ts",
       "!apps/storybook/.storybook/__mocks__",
-      "!apps/docs/.source",
-      "!**/vibes"
+      "!apps/docs/.source"
     ]
   }
 }

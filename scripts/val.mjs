@@ -6,7 +6,7 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 
 const APP_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 'storybook']
-const DEV_TARGETS = [...APP_TARGETS, 'workspace']
+const DEV_TARGETS = [...APP_TARGETS]
 const BUILD_TARGETS = [...APP_TARGETS, 'icons']
 const PREVIEW_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 'storybook']
 const DEPLOY_TARGETS = [...APP_TARGETS]
@@ -14,17 +14,7 @@ const TYPE_CHECK_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs', 's
 const TEST_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'core']
 const DB_ACTIONS = ['generate', 'migrate', 'studio', 'setup', 'status']
 const DB_ENVIRONMENTS = ['local', 'dev', 'prod']
-const SEED_ENVIRONMENTS = ['dev', 'prod']
-const SECRETS_ACTIONS = ['hide', 'show']
-const VERIFY_TARGETS = ['studio']
-const AI_ACTIONS = ['agree-meta-license']
-const AI_ENVIRONMENTS = ['dev', 'prod']
 const COMPLETION_SHELLS = ['zsh']
-const META_LICENSE_MODELS = [
-  'all',
-  '@cf/meta/llama-3.2-11b-vision-instruct',
-  '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
-]
 const REMOTE_DEV_TARGETS = ['admin', 'app', 'studio', 'www', 'links', 'docs']
 const OPEN_TARGET_ALIASES = {
   github: 'github',
@@ -72,10 +62,6 @@ Commands:
   open <target>              Open a common ValGuide URL in the browser
   promote                    Merge local dev into main, push main, then switch back to dev
   db <action>                Run database action: generate | migrate | studio | setup local | status local
-  seed <env>                 Seed dev or prod data
-  secrets <action>           Encrypt or decrypt tracked secrets files
-  verify <target>            Run target verification
-  ai <action>                Run AI-related setup actions
 
 Examples:
   val dev studio
@@ -99,9 +85,6 @@ Examples:
   val db setup local
   val db status local
   val db migrate dev
-  val secrets hide
-  val verify studio -- --ticket VG-85
-  val ai agree-meta-license dev
 `
 
 const COMMAND_HELP = {
@@ -114,7 +97,7 @@ Notes:
   Remote bindings are the default for admin, app, studio, www, links, and docs.
   --no-remote switches those targets back to local bindings.
   --no-open (or -n) skips opening local dev URLs in the browser.
-  --db:<local|dev|prod> selects the database environment for local dev. The default is --db:dev.
+  --db:<local|dev|prod> is forwarded as VALGUIDE_DB_ENV for external env management. The default is --db:dev.
   --offline is shorthand for --db:local --no-remote.
   --worker is supported only for storybook and starts the worker-backed dev flow.
   Multiple targets are supported for dev, for example: val dev studio admin
@@ -145,7 +128,7 @@ Targets:
   ${PREVIEW_TARGETS.join(', ')}
 
 Notes:
-  --db:<local|dev|prod> selects the database environment for preview. The default is --db:dev.
+  --db:<local|dev|prod> is forwarded as VALGUIDE_DB_ENV for external env management. The default is --db:dev.
   --offline is shorthand for --db:local.
   storybook preview maps to the existing static serve workflow.
 `,
@@ -211,33 +194,7 @@ Notes:
 Notes:
   Use the existing migration-based workflow. Do not use db:push.
   setup local bootstraps Homebrew PostgreSQL on macOS, provisions the local role/database, and runs local migrations.
-  status local checks whether the local PostgreSQL instance configured by .env.db.local is reachable.
-`,
-  secrets: `Usage:
-  val secrets hide
-  val secrets show
-
-Actions:
-  hide   Encrypt tracked secrets files into *.secret
-  show   Decrypt tracked secrets files from *.secret
-`,
-  seed: `Usage: val seed <dev|prod>`,
-  verify: `Usage: val verify studio [-- passthrough]
-
-Notes:
-  verify currently supports studio and forwards passthrough args to the existing verification script.
-`,
-  ai: `Usage:
-  val ai agree-meta-license <dev|prod> [all|model]
-
-Actions:
-  agree-meta-license
-
-Supported models:
-  ${META_LICENSE_MODELS.slice(1).join('\n  ')}
-
-Notes:
-  The default model target is "all", which agrees to the Meta license for the current Workers AI models used by theme generation.
+  status local checks whether the local PostgreSQL instance at DATABASE_URL (or the built-in local default) is reachable.
 `,
 }
 
@@ -361,7 +318,6 @@ function printTargets() {
     ['deploy', DEPLOY_TARGETS],
     ['type-check', TYPE_CHECK_TARGETS],
     ['test', TEST_TARGETS],
-    ['verify', VERIFY_TARGETS],
   ]
 
   console.log('Supported targets:')
@@ -390,10 +346,6 @@ function zshCompletionScript() {
     'open:Open a common ValGuide URL',
     'promote:Promote local dev into main',
     'db:Run a database action',
-    'seed:Seed environment data',
-    'secrets:Encrypt or decrypt tracked secrets files',
-    'verify:Run target verification',
-    'ai:Run AI-related setup actions',
   ]
 
   return `#compdef val
@@ -490,13 +442,6 @@ function scriptInvocation(scriptName, passthrough = []) {
   }
 }
 
-function envLoadInvocation(environmentFlags, commandArgs, passthrough = []) {
-  return {
-    command: 'pnpm',
-    args: ['env:load', ...environmentFlags, ...commandArgs, ...passthrough],
-  }
-}
-
 function forwardedArgs(passthrough) {
   return passthrough.length > 0 ? ['--', ...passthrough] : []
 }
@@ -541,14 +486,6 @@ function createInvocation(command, positionals, flags, passthrough) {
       return createPromoteInvocation(positionals, flags, passthrough)
     case 'db':
       return createDbInvocation(positionals, flags, passthrough)
-    case 'seed':
-      return createSeedInvocation(positionals, flags, passthrough)
-    case 'secrets':
-      return createSecretsInvocation(positionals, flags, passthrough)
-    case 'verify':
-      return createVerifyInvocation(positionals, flags, passthrough)
-    case 'ai':
-      return createAiInvocation(positionals, flags, passthrough)
     default:
       fail(`unknown command "${command}". Run "val help" to see the available commands.`)
   }
@@ -571,10 +508,6 @@ function createDevInvocation(positionals, flags, passthrough) {
   const targets = uniqueValues(positionals)
   for (const target of targets) {
     ensureTarget(target, DEV_TARGETS, 'dev')
-  }
-
-  if (targets.includes('workspace') && targets.length > 1) {
-    failWithUsage('"workspace" cannot be combined with other dev targets.', 'dev')
   }
 
   if (devFlags.includes('--offline')) {
@@ -835,11 +768,7 @@ function createDbInvocation(positionals, flags, passthrough) {
       )
     }
 
-    return envLoadInvocation(
-      [`--db:${environment}`],
-      ['pnpm', '--dir', 'packages/core', 'exec', 'drizzle-kit', 'migrate'],
-      passthrough,
-    )
+    return scriptInvocation('db:migrate', passthrough)
   }
 
   if (subaction) {
@@ -847,90 +776,6 @@ function createDbInvocation(positionals, flags, passthrough) {
   }
 
   return scriptInvocation(`db:${action}`, passthrough)
-}
-
-function createSeedInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, [], 'seed')
-  const [environment, ...rest] = positionals
-  ensureNoExtraPositionals(rest, 'seed')
-
-  if (!environment) {
-    failWithUsage(`missing environment for "seed". Supported environments: ${quotedList(SEED_ENVIRONMENTS)}.`, 'seed')
-  }
-
-  if (!SEED_ENVIRONMENTS.includes(environment)) {
-    failWithUsage(
-      `unsupported seed environment "${environment}". Supported environments: ${quotedList(SEED_ENVIRONMENTS)}.`,
-      'seed',
-    )
-  }
-
-  return scriptInvocation(`seed:${environment}`, passthrough)
-}
-
-function createSecretsInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, [], 'secrets')
-  const [action, ...rest] = positionals
-
-  if (!action) {
-    failWithUsage(`missing action for "secrets". Supported actions: ${quotedList(SECRETS_ACTIONS)}.`, 'secrets')
-  }
-
-  if (!SECRETS_ACTIONS.includes(action)) {
-    failWithUsage(
-      `unsupported secrets action "${action}". Supported actions: ${quotedList(SECRETS_ACTIONS)}.`,
-      'secrets',
-    )
-  }
-
-  ensureNoExtraPositionals(rest, 'secrets')
-
-  if (passthrough.length > 0) {
-    failWithUsage('passthrough args are not supported for "secrets".', 'secrets')
-  }
-
-  return scriptInvocation(`secrets:${action}`)
-}
-
-function createVerifyInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, [], 'verify')
-  const [target, ...rest] = positionals
-  ensureTarget(target, VERIFY_TARGETS, 'verify')
-  ensureNoExtraPositionals(rest, 'verify')
-
-  return scriptInvocation('studio:agent:verify', passthrough)
-}
-
-function createAiInvocation(positionals, flags, passthrough) {
-  ensureAllowedFlags(flags, [], 'ai')
-  const [action, environment, model = 'all', ...rest] = positionals
-
-  if (!action) {
-    failWithUsage(`missing action for "ai". Supported actions: ${quotedList(AI_ACTIONS)}.`, 'ai')
-  }
-
-  if (!AI_ACTIONS.includes(action)) {
-    failWithUsage(`unsupported ai action "${action}". Supported actions: ${quotedList(AI_ACTIONS)}.`, 'ai')
-  }
-
-  if (!environment) {
-    failWithUsage(`ai ${action} requires an explicit environment: ${quotedList(AI_ENVIRONMENTS)}.`, 'ai')
-  }
-
-  if (!AI_ENVIRONMENTS.includes(environment)) {
-    failWithUsage(
-      `unsupported ai environment "${environment}". Supported environments: ${quotedList(AI_ENVIRONMENTS)}.`,
-      'ai',
-    )
-  }
-
-  if (!META_LICENSE_MODELS.includes(model)) {
-    failWithUsage(`unsupported model "${model}". Supported values: ${quotedList(META_LICENSE_MODELS)}.`, 'ai')
-  }
-
-  ensureNoExtraPositionals(rest, 'ai')
-
-  return envLoadInvocation([`--cf:${environment}`], ['node', 'scripts/agree-meta-license.ts', model], passthrough)
 }
 
 function runInvocation(invocation) {

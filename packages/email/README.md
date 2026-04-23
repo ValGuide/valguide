@@ -25,8 +25,10 @@ We cannot directly use the OTP email template as it messes up the edge middlewar
 Sync localized templates to Resend:
 
 ```shell
-pnpm env:load pnpm --filter @valguide/email sync-templates
+pnpm --filter @valguide/email sync-templates
 ```
+
+Provide the required Resend env vars from your shell or external dotenv tooling before running the sync.
 
 Run a dry-run without publishing:
 

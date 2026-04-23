@@ -2,10 +2,8 @@ import { serverEnv } from '../../env/server'
 
 export function resolveAdminBaseUrl(): string {
   const isDevEnv = serverEnv.VITE_ENV === 'dev' || serverEnv.VITE_ENV === 'local'
-  return (serverEnv.ADMIN_BASE_URL || (isDevEnv ? 'https://ops-dev.val.guide' : 'https://ops.val.guide')).replace(
-    /\/$/,
-    '',
-  )
+  const fallback = isDevEnv ? 'https://admin-dev.example.com' : 'https://admin.example.com'
+  return (serverEnv.ADMIN_BASE_URL || fallback).replace(/\/$/, '')
 }
 
 export function resolveAdminUsersUrl(): string {
