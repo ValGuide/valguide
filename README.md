@@ -16,7 +16,7 @@ ValGuide is a monorepo for web-first museum guides.
 
 ## 📝 License
 
-A public license has not been finalized yet, so no `LICENSE` file is included in this draft state
+ValGuide is licensed under `AGPL-3.0-only`. See [LICENSE](./LICENSE).
 
 ---
 
