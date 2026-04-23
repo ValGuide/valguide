@@ -44,7 +44,7 @@ const TARGET_PACKAGE_NAMES = {
 const HELP_TEXT = `ValGuide CLI
 
 Usage:
-  val <command> [args] [-- passthrough]
+  val <command|target> [args] [-- passthrough]
 
 Commands:
   help [command]             Show general or command-specific help
@@ -63,7 +63,11 @@ Commands:
   promote                    Merge local dev into main, push main, then switch back to dev
   db <action>                Run database action: generate | migrate | studio | setup local | status local
 
+Shorthand:
+  val <dev-target> [...]     Equivalent to "val dev <dev-target> [...]"
+
 Examples:
+  val studio
   val dev studio
   val dev studio --no-remote
   val dev studio --offline
@@ -95,6 +99,7 @@ Targets:
 
 Notes:
   Remote bindings are the default for admin, app, studio, www, links, and docs.
+  Any dev target can be used as a top-level shorthand, for example: val studio == val dev studio
   --no-remote switches those targets back to local bindings.
   --no-open (or -n) skips opening local dev URLs in the browser.
   --db:<local|dev|prod> is forwarded as VALGUIDE_DB_ENV for external env management. The default is --db:dev.
@@ -299,6 +304,11 @@ async function handleCompletion(args) {
 function printHelp(command) {
   if (!command) {
     console.log(HELP_TEXT)
+    return
+  }
+
+  if (DEV_TARGETS.includes(command)) {
+    console.log(COMMAND_HELP.dev)
     return
   }
 
@@ -805,7 +815,7 @@ async function main() {
     return
   }
 
-  const [command, ...rest] = args
+  let [command, ...rest] = args
 
   if (command === 'help') {
     printHelp(rest[0])
@@ -820,6 +830,11 @@ async function main() {
   if (command === 'completion') {
     await handleCompletion(rest)
     return
+  }
+
+  if (DEV_TARGETS.includes(command)) {
+    rest = [command, ...rest]
+    command = 'dev'
   }
 
   const flags = rest.filter(isFlag)

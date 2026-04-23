@@ -13,13 +13,13 @@ ValGuide uses Nx for workspace orchestration on top of `pnpm` workspaces.
 
 ## Where the config lives
 
-- Root config: [`nx.json`](/workspace/valguide/nx.json)
+- Root config: [`nx.json`](../../../nx.json)
 - Project target metadata: each app/package `package.json` under the `nx.targets` key
-- Human-friendly command surface: [`scripts/val.mjs`](/workspace/valguide/scripts/val.mjs)
+- Human-friendly command surface: [`scripts/val.mjs`](../../../scripts/val.mjs)
 
 ## Environment variables
 
-When you add a new environment variable that changes task behavior, update [`nx.json`](/workspace/valguide/nx.json) in `namedInputs.sharedGlobals`.
+When you add a new environment variable that changes task behavior, update [`nx.json`](../../../nx.json) in `namedInputs.sharedGlobals`.
 
 That keeps Nx task hashing aligned with env-sensitive builds and prevents stale cache results.
 

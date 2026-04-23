@@ -209,8 +209,6 @@ Common verbs: `create`, `get`, `list`, `update`, `delete`, `archive`, `recover`,
 
 ## Slack Notifiers
 
-> **Full documentation:** See [`docs/slack-notification-architecture.md`](/workspace/valguide/docs/slack-notification-architecture.md)
-
 When a server action sends a Slack notification, use the notifier pattern:
 - callers `await notify...(...)`
 - notifier helpers catch and log internally

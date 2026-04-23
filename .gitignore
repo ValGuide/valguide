@@ -55,6 +55,7 @@ dist/
 
 # secrets
 key.txt
+*.secret
 
 # IntelliJ IDEA
 .idea/*
