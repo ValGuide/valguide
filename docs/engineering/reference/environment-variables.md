@@ -46,7 +46,7 @@ wrangler.jsonc vars
    process.env.BETTER_AUTH_URL → serverEnv.BETTER_AUTH_URL
 ```
 
-Secrets (like `DATABASE_URL`, `BETTER_AUTH_SECRET`) are set separately via `wrangler secret put <NAME>` and also appear in `process.env` at runtime.
+Secrets (like `DATABASE_URL`, `BETTER_AUTH_SECRET`, `ADMIN_ALLOWED_EMAILS`) are set separately via `wrangler secret put <NAME>` and also appear in `process.env` at runtime.
 
 ## Rules
 
@@ -67,7 +67,15 @@ These are server-side runtime variables:
 
 - `NODE_ENV`, `BETTER_AUTH_URL`, `BETTER_AUTH_TRUSTED_ORIGINS`
 - `BETTER_AUTH_COOKIE_DOMAIN`, `BETTER_AUTH_COOKIE_PREFIX`, `APP_BASE_URL`
-- `ADMIN_COOKIE_DOMAIN`, `ADMIN_BASE_URL`, `ADMIN_ALLOWED_EMAILS`
+- `ADMIN_COOKIE_DOMAIN`, `ADMIN_BASE_URL`
+
+### Secrets → Wrangler secrets
+
+These are server-side runtime values that must not be committed in `wrangler.jsonc`:
+
+- `DATABASE_URL`, `BETTER_AUTH_SECRET`
+- `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_TEAM_ID`
+- `ADMIN_ALLOWED_EMAILS`
 
 ### Exception: `VITE_STUDIO_URL` in studio's wrangler
 

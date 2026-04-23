@@ -37,7 +37,7 @@ Validated by `adminEnvSchema` in `apps/admin/src/server/env.ts` (extends base `s
 | `SLACK_CLIENT_ID` | ❌ | ✅ | Slack OAuth app client ID for admin login | `""` |
 | `SLACK_CLIENT_SECRET` | ❌ | ✅ | Slack OAuth app client secret | `""` |
 | `SLACK_TEAM_ID` | ❌ | ✅ | Slack workspace ID for team verification on admin login | `""` |
-| `ADMIN_ALLOWED_EMAILS` | ❌ | ❌ | Comma-separated list of superadmin email addresses | `curator@museum-zurich.example,...` |
+| `ADMIN_ALLOWED_EMAILS` | ❌ | ✅ | Comma-separated list of superadmin email addresses | `""` |
 | `ADMIN_COOKIE_DOMAIN` | ❌ | ❌ | Cookie domain for admin auth (e.g., `ops.val.guide`) | — |
 | `ADMIN_BASE_URL` | ❌ | ❌ | Base URL for admin app (used for OAuth callbacks) | `https://ops.val.guide` |
 
