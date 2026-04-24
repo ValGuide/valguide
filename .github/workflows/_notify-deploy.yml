@@ -68,7 +68,7 @@ on:
         default: ''
     secrets:
       VALBOT_SLACK_TOKEN:
-        required: true
+        required: false
 
 jobs:
   notify:
@@ -100,6 +100,11 @@ jobs:
           RESULT_WORKERS: ${{ inputs.result-workers }}
         run: |
           set -euo pipefail
+
+          if [ -z "${SLACK_TOKEN:-}" ]; then
+            echo "VALBOT_SLACK_TOKEN is not configured; skipping Slack deploy notification."
+            exit 0
+          fi
 
           deploy_url_for() {
             case "$1" in
@@ -236,4 +241,7 @@ jobs:
             }' | curl -sf -X POST https://slack.com/api/chat.postMessage \
               -H "Authorization: Bearer ${SLACK_TOKEN:?SLACK_TOKEN is required}" \
               -H "Content-Type: application/json" \
-              -d @-
+              -d @- || {
+                echo "Slack deploy notification failed; continuing because deploy already completed."
+                exit 0
+              }
