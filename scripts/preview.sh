@@ -54,4 +54,4 @@ sh scripts/ensure-caddy.sh
 
 echo "Starting preview (DB: $DB_ENV): $TARGET"
 export VALGUIDE_DB_ENV="$DB_ENV"
-exec nx run "@valguide/$TARGET:preview"
+exec pnpm exec nx run "@valguide/$TARGET:preview"

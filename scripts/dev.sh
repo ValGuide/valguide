@@ -164,4 +164,4 @@ fi
 
 export VALGUIDE_DB_ENV="$DB_ENV"
 
-exec nx run-many -t "$target" --projects="$projects"
+exec pnpm exec nx run-many -t "$target" --projects="$projects"
