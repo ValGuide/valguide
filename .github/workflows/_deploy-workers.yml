@@ -30,6 +30,10 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      IMAGE_GUARD_WORKER_NAME: ${{ vars.IMAGE_GUARD_WORKER_NAME }}
+      IMAGE_GUARD_ROUTES: ${{ vars.IMAGE_GUARD_ROUTES }}
+      POSTHOG_PROXY_WORKER_NAME: ${{ vars.POSTHOG_PROXY_WORKER_NAME }}
+      POSTHOG_PROXY_ROUTES: ${{ vars.POSTHOG_PROXY_ROUTES }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

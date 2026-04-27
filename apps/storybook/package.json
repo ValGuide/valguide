@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "storybook dev -p 6006 --host 0.0.0.0 --no-open",
     "build": "storybook build",
-    "deploy": "pnpm build && wrangler deploy",
-    "deploy:dev": "pnpm build && wrangler deploy --env dev",
+    "deploy": "pnpm --dir ../.. wrangler-config generate storybook --target-env prod && pnpm build && wrangler deploy --config wrangler.generated.jsonc",
+    "deploy:dev": "pnpm --dir ../.. wrangler-config generate storybook --target-env dev && pnpm build && wrangler deploy --config wrangler.generated.jsonc",
     "worker:dev": "wrangler dev",
     "serve": "serve storybook-static",
     "type-check": "tsc --noEmit",

@@ -5,10 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --env=\"\"",
-    "deploy:dev": "wrangler deploy --env dev",
-    "cf:deploy": "wrangler deploy --env=\"\"",
-    "cf:deploy:dev": "wrangler deploy --env dev"
+    "deploy": "pnpm --dir ../.. wrangler-config generate worker:posthog-proxy --target-env prod && wrangler deploy --config wrangler.generated.jsonc",
+    "deploy:dev": "pnpm --dir ../.. wrangler-config generate worker:posthog-proxy --target-env dev && wrangler deploy --config wrangler.generated.jsonc",
+    "cf:deploy": "pnpm deploy",
+    "cf:deploy:dev": "pnpm deploy:dev"
   },
   "devDependencies": {
     "wrangler": "^4.71.0"

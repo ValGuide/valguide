@@ -1,26 +1,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "valguide-image-guard",
+  "name": "valguide-image-guard-local",
   "compatibility_date": "2025-09-24",
   "main": "src/index.ts",
+  "workers_dev": false,
   "placement": {
-    // Bias Worker execution toward Frankfurt-adjacent infrastructure.
     "region": "aws:eu-central-1"
-  },
-
-  // Production: assets.valguide.com/{i,v}/*
-  "routes": [
-    { "pattern": "assets.valguide.com/i/*", "zone_name": "valguide.com" },
-    { "pattern": "assets.valguide.com/v/*", "zone_name": "valguide.com" }
-  ],
-
-  // Dev environment: assets.valguide.dev/{i,v}/*
-  "env": {
-    "dev": {
-      "routes": [
-        { "pattern": "assets.valguide.dev/i/*", "zone_name": "valguide.dev" },
-        { "pattern": "assets.valguide.dev/v/*", "zone_name": "valguide.dev" }
-      ]
-    }
   }
 }

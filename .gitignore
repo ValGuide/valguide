@@ -79,6 +79,9 @@ count.txt
 .output
 .wrangler
 .wrangler.dev-remote.json
+wrangler.generated.jsonc
+**/wrangler.generated.jsonc
+**/.wrangler.*.jsonc
 error.log
 .terraform/
 *.tfstate

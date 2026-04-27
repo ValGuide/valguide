@@ -1,29 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "valguide-storybook",
+  "name": "valguide-storybook-local",
   "compatibility_date": "2025-09-24",
   "main": "src/index.ts",
+  "workers_dev": false,
   "placement": {
-    // Bias Worker execution toward Frankfurt-adjacent infrastructure.
     "region": "aws:eu-central-1"
   },
-  "secrets": {
-    "required": ["STORYBOOK_PASSWORD"]
-  },
   "assets": { "directory": "storybook-static", "binding": "ASSETS", "run_worker_first": true },
-  "routes": [{ "pattern": "sb.val.guide", "custom_domain": true }],
-
-  // Dev environment (sb-dev.val.guide)
-  "env": {
-    "dev": {
-      "routes": [{ "pattern": "sb-dev.val.guide", "custom_domain": true }],
-      "secrets": {
-        "required": ["STORYBOOK_PASSWORD"]
-      },
-      "vars": {
-        "BLOCK_ROBOTS": "true",
-        "DEV_PROXY": "127.0.0.1:6006"
-      }
-    }
+  "vars": {
+    "BLOCK_ROBOTS": "true",
+    "DEV_PROXY": "127.0.0.1:6006"
   }
 }

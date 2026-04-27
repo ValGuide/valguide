@@ -1,44 +1,21 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "valguide-docs",
+  "name": "valguide-docs-local",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "workers_dev": false,
   "placement": {
-    // Bias Worker execution toward Frankfurt-adjacent infrastructure.
     "region": "aws:eu-central-1"
   },
-
   "observability": {
     "logs": {
       "enabled": true,
       "invocation_logs": true
     }
   },
-
-  // Production custom domains
-  "routes": [
-    { "pattern": "docs.val.guide", "custom_domain": true },
-    { "pattern": "docs.valguide.com", "custom_domain": true }
-  ],
-
-  // Production vars
-  // Secrets (DOCS_PASSWORD) set via: wrangler secret put DOCS_PASSWORD
   "vars": {
-    "NODE_ENV": "production"
-  },
-
-  // Dev environment (docs-dev.val.guide)
-  "env": {
-    "dev": {
-      "routes": [
-        { "pattern": "docs-dev.val.guide", "custom_domain": true },
-        { "pattern": "docs.valguide.dev", "custom_domain": true }
-      ],
-      "vars": {
-        "NODE_ENV": "production",
-        "BLOCK_ROBOTS": "true"
-      }
-    }
+    "NODE_ENV": "development",
+    "BLOCK_ROBOTS": "true"
   }
 }

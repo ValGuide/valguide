@@ -35,7 +35,7 @@ strip_meta() {
 }
 
 echo "Test 1: App prod config writes full env"
-RESULT=$(run_configure env APP_NAME=app DEPLOY_ENVIRONMENT=prod POSTHOG_PROJECT_KEY_PROD=ph-prod POSTHOG_PROJECT_KEY_DEV=ph-dev)
+RESULT=$(run_configure env APP_NAME=app DEPLOY_ENVIRONMENT=prod POSTHOG_PROJECT_KEY=ph-prod VITE_POSTHOG_HOST=https://e.example.com VITE_APP_DOMAIN=app.example.com VITE_PRIVACY_POLICY_URL=https://www.example.com/privacy VITE_TERMS_OF_SERVICE_URL=https://www.example.com/terms VITE_STUDIO_URL=https://studio.example.com VITE_R2_PUBLIC_URL=https://assets.example.com)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 ENVFILE=$(extract_field "$RESULT" "__ENV_FILE__")
@@ -43,12 +43,12 @@ assert_exit_code "success" "$STATUS" "0"
 assert_file_contains "url output" "$OUTFILE" "url=https://app.valguide.com"
 assert_file_contains "posthog enabled" "$ENVFILE" "VITE_POSTHOG_ENABLED=true"
 assert_file_contains "prod key" "$ENVFILE" "VITE_POSTHOG_KEY=ph-prod"
-assert_file_contains "studio url" "$ENVFILE" "VITE_STUDIO_URL=https://studio.valguide.com"
+assert_file_contains "studio url" "$ENVFILE" "VITE_STUDIO_URL=https://studio.example.com"
 assert_file_contains "vite env" "$ENVFILE" "VITE_ENV=prod"
 echo ""
 
 echo "Test 2: Docs dev config skips PostHog"
-RESULT=$(run_configure env APP_NAME=docs DEPLOY_ENVIRONMENT=dev POSTHOG_PROJECT_KEY_PROD=ph-prod POSTHOG_PROJECT_KEY_DEV=ph-dev)
+RESULT=$(run_configure env APP_NAME=docs DEPLOY_ENVIRONMENT=dev POSTHOG_PROJECT_KEY=ph-dev)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 ENVFILE=$(extract_field "$RESULT" "__ENV_FILE__")
@@ -60,7 +60,7 @@ assert_file_contains "dev env only" "$ENVFILE" "VITE_ENV=dev"
 echo ""
 
 echo "Test 3: Missing PostHog key fails for app"
-RESULT=$(run_configure env APP_NAME=app DEPLOY_ENVIRONMENT=dev POSTHOG_PROJECT_KEY_PROD=ph-prod)
+RESULT=$(run_configure env APP_NAME=app DEPLOY_ENVIRONMENT=dev VITE_POSTHOG_HOST=https://e.example.com VITE_APP_DOMAIN=app.example.com VITE_PRIVACY_POLICY_URL=https://www.example.com/privacy VITE_TERMS_OF_SERVICE_URL=https://www.example.com/terms VITE_STUDIO_URL=https://studio.example.com VITE_R2_PUBLIC_URL=https://assets.example.com)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 LOG=$(strip_meta "$RESULT")
 assert_exit_code "failure" "$STATUS" "1"

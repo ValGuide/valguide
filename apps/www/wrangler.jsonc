@@ -1,65 +1,30 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "valguide-www",
+  "name": "valguide-www-local",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "workers_dev": false,
   "placement": {
-    // Bias Worker execution toward Frankfurt-adjacent infrastructure.
     "region": "aws:eu-central-1"
   },
-
   "observability": {
     "logs": {
       "enabled": true,
       "invocation_logs": true
     }
   },
-
-  // Production custom domain
-  "routes": [{ "pattern": "www.valguide.com", "custom_domain": true }],
-
-  // Shared Cloudflare resources are managed outside this public repo.
-  // Keep these binding IDs aligned with OpenTofu outputs instead of one-off setup scripts.
-  // KV namespaces:
-  // - AUTH_KV for Better Auth secondary storage (sessions, verifications, rate limits)
-  "kv_namespaces": [{ "binding": "AUTH_KV", "id": "REPLACE_WITH_AUTH_KV_ID_PROD" }],
-
-  // Production vars (www.valguide.com)
-  // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
-  // Secrets set via: wrangler secret put <NAME>
+  "kv_namespaces": [{ "binding": "AUTH_KV", "id": "00000000000000000000000000000000" }],
   "vars": {
-    "NODE_ENV": "production",
-    "USERS_SLACK_CHANNEL": "users",
-    "APP_BASE_URL": "https://www.valguide.com",
-    "BETTER_AUTH_URL": "https://www.valguide.com",
-    "BETTER_AUTH_TRUSTED_ORIGINS": "https://www.valguide.com",
-    "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
-    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth",
-    "VITE_PRIVACY_POLICY_URL": "https://www.valguide.com/privacy-policy",
-    "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.com/terms-of-service"
-  },
-
-  // Dev environment (www.valguide.dev)
-  // Build with: CLOUDFLARE_ENV=dev vite build
-  // Deploy with: wrangler deploy (after building with CLOUDFLARE_ENV=dev)
-  // Set secrets with: wrangler secret put <NAME> --env dev
-  "env": {
-    "dev": {
-      "routes": [{ "pattern": "www.valguide.dev", "custom_domain": true }],
-      "kv_namespaces": [{ "binding": "AUTH_KV", "id": "REPLACE_WITH_AUTH_KV_ID_DEV" }],
-      "vars": {
-        "NODE_ENV": "production",
-        "USERS_SLACK_CHANNEL": "users-dev",
-        "APP_BASE_URL": "https://www.valguide.dev",
-        "BETTER_AUTH_URL": "https://www.valguide.dev",
-        "BETTER_AUTH_TRUSTED_ORIGINS": "https://www.valguide.dev",
-        "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",
-        "BETTER_AUTH_COOKIE_PREFIX": "valguide-dev-auth",
-        "VITE_PRIVACY_POLICY_URL": "https://www.valguide.dev/privacy-policy",
-        "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.dev/terms-of-service",
-        "BLOCK_ROBOTS": "true"
-      }
-    }
+    "NODE_ENV": "development",
+    "USERS_SLACK_CHANNEL": "users-local",
+    "APP_BASE_URL": "https://www.local.dev",
+    "BETTER_AUTH_URL": "https://www.local.dev",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://www.local.dev",
+    "BETTER_AUTH_COOKIE_DOMAIN": ".local.dev",
+    "BETTER_AUTH_COOKIE_PREFIX": "valguide-local-auth",
+    "VITE_PRIVACY_POLICY_URL": "https://www.local.dev/privacy-policy",
+    "VITE_TERMS_OF_SERVICE_URL": "https://www.local.dev/terms-of-service",
+    "BLOCK_ROBOTS": "true"
   }
 }

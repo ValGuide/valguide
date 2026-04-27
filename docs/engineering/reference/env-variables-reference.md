@@ -10,12 +10,12 @@ For loading rules and source boundaries, see [Environment Variables](./environme
 |----------|---------|------------|
 | `DATABASE_URL` | Postgres connection string | local `.env.db.*` or provider secret |
 | `BETTER_AUTH_SECRET` | auth signing secret | local `.env.auth.*` or provider secret |
-| `BETTER_AUTH_URL` | auth base URL | local env or `wrangler.jsonc` |
-| `BETTER_AUTH_TRUSTED_ORIGINS` | auth allowed origins | local env or `wrangler.jsonc` |
-| `BETTER_AUTH_COOKIE_DOMAIN` | auth cookie domain | local env or `wrangler.jsonc` |
-| `BETTER_AUTH_COOKIE_PREFIX` | auth cookie prefix | local env or `wrangler.jsonc` |
-| `ADMIN_BASE_URL` | admin base URL for generated links | local env or `wrangler.jsonc` |
-| `ADMIN_COOKIE_DOMAIN` | admin cookie domain | local env or `wrangler.jsonc` |
+| `BETTER_AUTH_URL` | auth base URL | local env or generated Wrangler config |
+| `BETTER_AUTH_TRUSTED_ORIGINS` | auth allowed origins | local env or generated Wrangler config |
+| `BETTER_AUTH_COOKIE_DOMAIN` | auth cookie domain | local env or generated Wrangler config |
+| `BETTER_AUTH_COOKIE_PREFIX` | auth cookie prefix | local env or generated Wrangler config |
+| `ADMIN_BASE_URL` | admin base URL for generated links | local env or generated Wrangler config |
+| `ADMIN_COOKIE_DOMAIN` | admin cookie domain | local env or generated Wrangler config |
 | `ADMIN_ALLOWED_EMAILS` | admin allowlist | provider secret |
 | `RESEND_SENDING_API_KEY` | transactional email | local env or provider secret |
 | `VALBOT_SLACK_TOKEN` | Slack bot integration | local env or provider secret |
@@ -50,6 +50,8 @@ For loading rules and source boundaries, see [Environment Variables](./environme
 Tracked examples:
 
 - `.env.defaults.example`
+- `.env.local.example`
+- `.env.selfhost.example`
 - `.env.auth.local.example`
 - `.env.db.dev.example`
 - `.env.db.local.example`
@@ -58,3 +60,5 @@ Tracked examples:
 - `.env.resend.dev.example`
 
 Local real files should use the same names without the `.example` suffix and stay untracked. The public repo does not auto-load those files; provide them from your shell, `direnv`, or your preferred dotenv workflow.
+
+For deploy config generation and secret sync, see [Deployment Configuration](./deployment-configuration.md).

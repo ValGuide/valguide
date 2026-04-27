@@ -1,16 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "valguide-posthog-proxy",
+  "name": "valguide-posthog-proxy-local",
   "compatibility_date": "2025-09-24",
   "main": "src/index.ts",
-
-  // Production: e.valguide.com
-  "routes": [{ "pattern": "e.valguide.com", "custom_domain": true }],
-
-  // Dev environment: e.valguide.dev
-  "env": {
-    "dev": {
-      "routes": [{ "pattern": "e.valguide.dev", "custom_domain": true }]
-    }
-  }
+  "workers_dev": false
 }

@@ -1,101 +1,43 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "valguide-studio",
+  "name": "valguide-studio-local",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "workers_dev": false,
   "placement": {
-    // Neon is in Frankfurt, so bias Worker execution toward AWS eu-central-1.
     "region": "aws:eu-central-1"
   },
-
   "observability": {
     "logs": {
       "enabled": true,
       "invocation_logs": true
     }
   },
-
-  // Shared Cloudflare resources are managed outside this public repo.
-  // Keep these bucket names and binding IDs aligned with OpenTofu outputs instead of one-off setup scripts.
-  // Native R2 binding — no S3 API keys needed
-  "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-prod", "jurisdiction": "eu" }],
+  "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-local", "jurisdiction": "eu" }],
   "ai": { "binding": "AI" },
-
-  // KV namespaces:
-  // - AUTH_KV for Better Auth secondary storage (sessions, verifications, rate limits)
-  // - TOUR_DATA for published tour edge cache
-  // - MAINTENANCE for global maintenance mode state
   "kv_namespaces": [
-    { "binding": "AUTH_KV", "id": "REPLACE_WITH_AUTH_KV_ID_PROD" },
-    { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_PROD" },
-    { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_PROD" }
+    { "binding": "AUTH_KV", "id": "00000000000000000000000000000000" },
+    { "binding": "TOUR_DATA", "id": "00000000000000000000000000000000" },
+    { "binding": "MAINTENANCE", "id": "00000000000000000000000000000000" }
   ],
-
-  // Production custom domain
-  "routes": [{ "pattern": "studio.valguide.com", "custom_domain": true }],
-
-  // Production vars (studio.valguide.com)
-  // process.env is auto-populated from vars+secrets (nodejs_compat + compat_date >= 2025-04-01)
-  // Secrets set via: wrangler secret put <NAME>
   "vars": {
-    "NODE_ENV": "production",
-    "VITE_ENV": "prod",
-    "LINKS_BASE_URL": "https://links.valguide.com",
-    "USERS_SLACK_CHANNEL": "users",
-    "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events",
-    "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback",
+    "NODE_ENV": "development",
+    "VITE_ENV": "local",
+    "LINKS_BASE_URL": "https://links.local.dev",
+    "USERS_SLACK_CHANNEL": "users-local",
+    "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events-local",
+    "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback-local",
     "STUDIO_PERFORMANCE_LOG_ENABLED": "false",
-    "APP_BASE_URL": "https://app.valguide.com",
-    "ADMIN_BASE_URL": "https://admin.example.com",
-    "VITE_PRIVACY_POLICY_URL": "https://www.valguide.com/privacy-policy",
-    // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
-    "VITE_STUDIO_URL": "https://studio.valguide.com",
-    "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.com/terms-of-service",
-    "BETTER_AUTH_URL": "https://studio.valguide.com",
-    "BETTER_AUTH_TRUSTED_ORIGINS": "https://studio.valguide.com,https://app.valguide.com",
-    "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.com",
-    "BETTER_AUTH_COOKIE_PREFIX": "valguide-auth",
-    "LINEAR_FEEDBACK_TEAM_ID": "REPLACE_WITH_LINEAR_FEEDBACK_TEAM_ID",
-    "LINEAR_FEEDBACK_LABEL_ID": "REPLACE_WITH_LINEAR_FEEDBACK_LABEL_ID"
-  },
-
-  // Dev environment (studio.valguide.dev)
-  // Build with: CLOUDFLARE_ENV=dev vite build
-  // Deploy with: wrangler deploy (after building with CLOUDFLARE_ENV=dev)
-  // Set secrets with: wrangler secret put <NAME> --env dev
-  "env": {
-    "dev": {
-      "routes": [{ "pattern": "studio.valguide.dev", "custom_domain": true }],
-      "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "valguide-dev", "jurisdiction": "eu" }],
-      "ai": { "binding": "AI" },
-      "kv_namespaces": [
-        { "binding": "AUTH_KV", "id": "REPLACE_WITH_AUTH_KV_ID_DEV" },
-        { "binding": "TOUR_DATA", "id": "REPLACE_WITH_TOUR_DATA_KV_ID_DEV" },
-        { "binding": "MAINTENANCE", "id": "REPLACE_WITH_MAINTENANCE_KV_ID_DEV" }
-      ],
-      "vars": {
-        "NODE_ENV": "production",
-        "VITE_ENV": "dev",
-        "LINKS_BASE_URL": "https://links.valguide.dev",
-        "USERS_SLACK_CHANNEL": "users-dev",
-        "STUDIO_EVENTS_SLACK_CHANNEL": "studio-events-dev",
-        "STUDIO_FEEDBACK_SLACK_CHANNEL": "studio-feedback-dev",
-        "STUDIO_PERFORMANCE_LOG_ENABLED": "false",
-        "APP_BASE_URL": "https://app.valguide.dev",
-        "ADMIN_BASE_URL": "https://admin-dev.example.com",
-        "VITE_PRIVACY_POLICY_URL": "https://www.valguide.dev/privacy-policy",
-        // Also needed at runtime by server functions (invite emails use serverEnv.VITE_STUDIO_URL)
-        "VITE_STUDIO_URL": "https://studio.valguide.dev",
-        "VITE_TERMS_OF_SERVICE_URL": "https://www.valguide.dev/terms-of-service",
-        "BETTER_AUTH_URL": "https://studio.valguide.dev",
-        "BETTER_AUTH_TRUSTED_ORIGINS": "https://studio.valguide.dev,https://app.valguide.dev",
-        "BETTER_AUTH_COOKIE_DOMAIN": ".valguide.dev",
-        "BETTER_AUTH_COOKIE_PREFIX": "valguide-dev-auth",
-        "BLOCK_ROBOTS": "true",
-        "LINEAR_FEEDBACK_TEAM_ID": "REPLACE_WITH_LINEAR_FEEDBACK_TEAM_ID",
-        "LINEAR_FEEDBACK_LABEL_ID": "REPLACE_WITH_LINEAR_FEEDBACK_LABEL_ID"
-      }
-    }
+    "APP_BASE_URL": "https://app.local.dev",
+    "ADMIN_BASE_URL": "https://admin-local.dev",
+    "VITE_PRIVACY_POLICY_URL": "https://www.local.dev/privacy-policy",
+    "VITE_STUDIO_URL": "https://studio.local.dev",
+    "VITE_TERMS_OF_SERVICE_URL": "https://www.local.dev/terms-of-service",
+    "BETTER_AUTH_URL": "https://studio.local.dev",
+    "BETTER_AUTH_TRUSTED_ORIGINS": "https://studio.local.dev,https://app.local.dev",
+    "BETTER_AUTH_COOKIE_DOMAIN": ".local.dev",
+    "BETTER_AUTH_COOKIE_PREFIX": "valguide-local-auth",
+    "BLOCK_ROBOTS": "true"
   }
 }
