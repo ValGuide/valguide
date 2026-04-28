@@ -2,6 +2,7 @@ import { serverEnvSchema } from '@valguide/core/env/schema'
 import { z } from 'zod'
 
 const adminEnvSchema = serverEnvSchema.extend({
+  ADMIN_AUTH_MODE: z.string().optional().default(''),
   ADMIN_ALLOWED_EMAILS: z.string().optional().default(''),
   ADMIN_COOKIE_DOMAIN: z.string().optional().default(''),
   ADMIN_BASE_URL: z.string().optional().default(''),

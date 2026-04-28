@@ -28,7 +28,7 @@ The public repo does not include a built-in secret loader. Provide local env val
 
 - `VITE_*` variables are build-time values baked into the browser bundle.
 - non-`VITE_*` variables are server/runtime values read through `process.env`.
-- sensitive values such as `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `ADMIN_ALLOWED_EMAILS` should come from provider-side secret stores, not from tracked files.
+- sensitive values such as `DATABASE_URL`, `BETTER_AUTH_SECRET`, `ADMIN_ALLOWED_EMAILS`, and raw admin bootstrap passwords should come from provider-side secret stores or one-shot shell input, not from tracked files.
 
 ## Wrangler Config
 

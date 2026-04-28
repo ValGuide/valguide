@@ -52,9 +52,28 @@ pnpm cloudflare-secrets push all --target-env prod --env-file .env.selfhost --dr
 
 The helper prints secret names and status only. It does not print secret values.
 
+## Self-Hosted Admin Login
+
+Self-hosted admin deployments should use `ADMIN_AUTH_MODE=credentials` unless they intentionally configure their own Slack OAuth app. `ADMIN_ALLOWED_EMAILS` remains the superadmin allowlist in both modes.
+
+After database migrations have run, bootstrap or rotate the admin credential from an environment that can reach the database:
+
+```sh
+export DATABASE_URL='postgres://<user>:<password>@<host>:5432/<database>'
+export ADMIN_ALLOWED_EMAILS='admin@example.com'
+read -s ADMIN_PASSWORD
+export ADMIN_PASSWORD
+pnpm --filter @valguide/core admin:bootstrap -- --email admin@example.com
+unset ADMIN_PASSWORD
+```
+
+The bootstrap command stores a Better Auth password hash in the auth tables. Do not commit, log, or keep the raw admin password in tracked env files.
+
 ## Hosted ValGuide
 
 Hosted deployments run through GitHub Actions with GitHub Environments such as `app-dev`, `app-prod`, and `workers-prod`.
+
+Hosted ValGuide can keep `ADMIN_AUTH_MODE=slack` with Slack credentials managed as provider-side secrets.
 
 Use environment-scoped variable names without `DEV` or `PROD` suffixes:
 
@@ -68,4 +87,3 @@ Use environment-scoped variable names without `DEV` or `PROD` suffixes:
 - `<TARGET>_ROUTES`
 
 Cloudflare resource IDs are mirrored from private infra outputs into GitHub environment variables by workspace operator scripts. Cloudflare Worker runtime secrets remain in Cloudflare Worker secrets and are pushed by an explicit rotation/setup step, not by normal deploy jobs.
-

@@ -15,13 +15,14 @@ For loading rules and source boundaries, see [Environment Variables](./environme
 | `BETTER_AUTH_COOKIE_DOMAIN` | auth cookie domain | local env or generated Wrangler config |
 | `BETTER_AUTH_COOKIE_PREFIX` | auth cookie prefix | local env or generated Wrangler config |
 | `ADMIN_BASE_URL` | admin base URL for generated links | local env or generated Wrangler config |
+| `ADMIN_AUTH_MODE` | admin login provider: `credentials`, `slack`, or `both` | local env or generated Wrangler config |
 | `ADMIN_COOKIE_DOMAIN` | admin cookie domain | local env or generated Wrangler config |
 | `ADMIN_ALLOWED_EMAILS` | admin allowlist | provider secret |
 | `RESEND_SENDING_API_KEY` | transactional email | local env or provider secret |
 | `VALBOT_SLACK_TOKEN` | Slack bot integration | local env or provider secret |
-| `SLACK_CLIENT_ID` | admin Slack auth | local env or provider secret |
-| `SLACK_CLIENT_SECRET` | admin Slack auth | local env or provider secret |
-| `SLACK_TEAM_ID` | admin Slack auth | local env or provider secret |
+| `SLACK_CLIENT_ID` | optional admin Slack auth | local env or provider secret |
+| `SLACK_CLIENT_SECRET` | optional admin Slack auth | local env or provider secret |
+| `SLACK_TEAM_ID` | optional admin Slack auth workspace restriction | local env or provider secret |
 | `LINEAR_API_KEY` | optional Linear integration | local env or provider secret |
 | `LINEAR_FEEDBACK_TEAM_ID` | optional Linear feedback routing | local env or provider config |
 | `LINEAR_FEEDBACK_LABEL_ID` | optional Linear feedback routing | local env or provider config |

@@ -85,6 +85,12 @@ export function createAuthInstance(options: {
       } | null>
     }
   }
+  emailAndPassword?: {
+    enabled: boolean
+    disableSignUp?: boolean
+    minPasswordLength?: number
+    maxPasswordLength?: number
+  }
   enableOrganizationPlugin?: boolean
   errorURL?: string
   onVerificationOtpSent?: (input: { email: string }) => Promise<void>
@@ -163,6 +169,7 @@ export function createAuthInstance(options: {
       },
     }),
     ...(options.socialProviders ? { socialProviders: options.socialProviders } : {}),
+    ...(options.emailAndPassword ? { emailAndPassword: options.emailAndPassword } : {}),
     ...(secondaryStorage ? { secondaryStorage } : {}),
     session: {
       ...(secondaryStorage
@@ -191,6 +198,8 @@ export function createAuthInstance(options: {
         '/api/auth/email-otp/send-verification-otp': { window: 60, max: otpSendLimit },
         '/sign-in/email-otp': { window: 60, max: otpVerifyLimit },
         '/api/auth/sign-in/email-otp': { window: 60, max: otpVerifyLimit },
+        '/sign-in/email': { window: 60, max: otpVerifyLimit },
+        '/api/auth/sign-in/email': { window: 60, max: otpVerifyLimit },
         '/email-otp/check-verification-otp': { window: 60, max: otpVerifyLimit },
         '/api/auth/email-otp/check-verification-otp': { window: 60, max: otpVerifyLimit },
       },

@@ -51,6 +51,7 @@ export const targets = {
       ...appCommonVars,
       { name: 'MAINTENANCE_SLACK_CHANNEL', defaultValue: 'maintenance' },
       { name: 'STUDIO_EVENTS_SLACK_CHANNEL', defaultValue: 'studio-events' },
+      { name: 'ADMIN_AUTH_MODE', optional: true },
       { name: 'ADMIN_COOKIE_DOMAIN', required: true },
       { name: 'ADMIN_BASE_URL', required: true },
       ...policyVars,
