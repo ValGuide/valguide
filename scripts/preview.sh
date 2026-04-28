@@ -13,6 +13,18 @@ url_for() {
   esac
 }
 
+health_url_for() {
+  case "$1" in
+    admin) echo "http://localhost:3001" ;;
+    app) echo "http://localhost:3000" ;;
+    studio) echo "http://localhost:3002" ;;
+    links) echo "http://localhost:3003" ;;
+    www) echo "http://localhost:3004" ;;
+    docs) echo "http://localhost:3006" ;;
+    *) echo "" ;;
+  esac
+}
+
 DB_ENV="dev"
 remaining=""
 
@@ -43,14 +55,19 @@ fi
 
 TARGET=$1
 URL=$(url_for "$TARGET")
+HEALTH_URL=$(health_url_for "$TARGET")
 
 if [ -z "$URL" ]; then
   echo "Error: preview launcher does not support target '$TARGET'"
   exit 1
 fi
 
-sh scripts/ensure-caddy.sh
-(sh scripts/open-when-ready.sh "$URL") &
+pnpm exec nx run @valguide/local-proxy:preview
+if [ -n "$HEALTH_URL" ]; then
+  (sh scripts/open-when-ready.sh "$URL=$HEALTH_URL") &
+else
+  (sh scripts/open-when-ready.sh "$URL") &
+fi
 
 echo "Starting preview (DB: $DB_ENV): $TARGET"
 export VALGUIDE_DB_ENV="$DB_ENV"

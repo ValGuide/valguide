@@ -1,5 +1,16 @@
 #!/bin/sh
-# Start Caddy in daemon mode if not already running with Caddyfile.local
-if ! pgrep -f "caddy.*Caddyfile.local" > /dev/null 2>&1; then
-  caddy start --config Caddyfile.local
+set -eu
+
+# Start or refresh Caddy in daemon mode without streaming its local proxy logs
+# into the app dev console.
+log_file="${TMPDIR:-/tmp}/valguide-caddy-start.log"
+
+if pgrep -f "caddy.*Caddyfile.local" > /dev/null 2>&1; then
+  caddy reload --config Caddyfile.local > "$log_file" 2>&1 || true
+  exit 0
+fi
+
+if ! caddy start --config Caddyfile.local > "$log_file" 2>&1; then
+  cat "$log_file" >&2
+  exit 1
 fi

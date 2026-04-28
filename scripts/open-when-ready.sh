@@ -23,13 +23,33 @@ is_ready() {
   return 0
 }
 
-wait_and_open() {
+open_target() {
   url="$1"
+
+  if command -v open >/dev/null 2>&1; then
+    open -u "$url" 2>/dev/null || open "$url"
+  elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$url"
+  else
+    printf 'Ready: %s\n' "$url"
+  fi
+}
+
+wait_and_open() {
+  open_url="$1"
+  health_url="$1"
   attempt=1
 
+  case "$open_url" in
+    *=*)
+      health_url=${open_url#*=}
+      open_url=${open_url%%=*}
+      ;;
+  esac
+
   while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
-    if is_ready "$url"; then
-      open "$url"
+    if is_ready "$health_url"; then
+      open_target "$open_url"
       return 0
     fi
 
@@ -37,11 +57,11 @@ wait_and_open() {
     attempt=$((attempt + 1))
   done
 
-  open "$url"
+  open_target "$open_url"
 }
 
-for url in "$@"; do
-  wait_and_open "$url" &
+for entry in "$@"; do
+  wait_and_open "$entry" &
 done
 
 wait

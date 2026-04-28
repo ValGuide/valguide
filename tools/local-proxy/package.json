@@ -1,0 +1,26 @@
+{
+  "name": "@valguide/local-proxy",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd ../.. && sh scripts/ensure-caddy.sh",
+    "dev:remote": "cd ../.. && sh scripts/ensure-caddy.sh",
+    "preview": "cd ../.. && sh scripts/ensure-caddy.sh"
+  },
+  "nx": {
+    "targets": {
+      "dev": {
+        "cache": false,
+        "continuous": false
+      },
+      "dev:remote": {
+        "cache": false,
+        "continuous": false
+      },
+      "preview": {
+        "cache": false,
+        "continuous": false
+      }
+    }
+  }
+}

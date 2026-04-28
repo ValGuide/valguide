@@ -12,8 +12,9 @@ set -e
 #   pnpm dev:select --list
 #
 # Examples:
-#   pnpm dev:select studio                 # just studio, remote bindings by default
-#   pnpm dev:select studio admin           # studio + admin, remote bindings by default
+#   pnpm dev:select studio                 # just studio, local bindings by default
+#   pnpm dev:select studio admin           # studio + admin, local bindings by default
+#   pnpm dev:select --remote studio        # studio with remote Cloudflare bindings
 #   pnpm dev:select --db:prod studio       # studio against prod DB
 #   pnpm dev:select --no-remote studio     # studio with local bindings
 #   pnpm dev:select --offline studio       # studio fully offline (local DB + local bindings)
@@ -37,10 +38,24 @@ url_for() {
   esac
 }
 
+# Map app name -> direct backend URL used only for readiness checks.
+health_url_for() {
+  case "$1" in
+    admin)     echo "http://localhost:3001" ;;
+    app)       echo "http://localhost:3000" ;;
+    studio)    echo "http://localhost:3002" ;;
+    storybook) echo "http://localhost:6006" ;;
+    links)     echo "http://localhost:3003" ;;
+    www)       echo "http://localhost:3004" ;;
+    docs)      echo "http://localhost:3006" ;;
+    *)         echo "" ;;
+  esac
+}
+
 ALL_APPS="admin app docs links storybook studio www"
-USE_REMOTE=1
+USE_REMOTE=0
 OPEN_BROWSER=1
-DB_ENV="dev"
+DB_ENV="local"
 
 # ── Expand comma-separated args (e.g. "studio,admin" → "studio admin") ────
 expanded=""
@@ -73,10 +88,10 @@ set -- $remaining
 
 # ── Handle flags ──────────────────────────────────────────────────────────
 if [ $# -eq 0 ]; then
-  echo "Usage: pnpm dev:select [--no-remote] [--offline] [--no-open|-n] <app> [<app> ...]"
+  echo "Usage: pnpm dev:select [--remote|--no-remote] [--offline] [--no-open|-n] <app> [<app> ...]"
   echo ""
   echo "Available apps: $ALL_APPS"
-  echo "Flags: --all (start all), --no-remote (use local bindings), --offline (use local DB and local bindings), --no-open/-n (skip browser open), --list (show apps)"
+  echo "Flags: --all (start all), --remote (use remote Cloudflare bindings), --no-remote (use local bindings), --offline (use local DB and local bindings), --no-open/-n (skip browser open), --list (show apps)"
   exit 1
 fi
 
@@ -135,14 +150,19 @@ for app in "$@"; do
 
   url=$(url_for "$app")
   if [ -n "$url" ]; then
-    urls="$urls $url"
+    health_url=$(health_url_for "$app")
+    if [ -n "$health_url" ]; then
+      urls="$urls $url=$health_url"
+    else
+      urls="$urls $url"
+    fi
     needs_caddy=1
   fi
 done
 
-# ── Ensure Caddy is running (if any app needs HTTPS) ─────────────────────
+# ── Include the local HTTPS proxy as a first-class Nx task ────────────────
 if [ "$needs_caddy" -eq 1 ]; then
-  sh scripts/ensure-caddy.sh
+  projects="@valguide/local-proxy,$projects"
 fi
 
 # ── Open browser tabs once the apps are reachable ─────────────────────────

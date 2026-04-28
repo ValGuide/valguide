@@ -65,6 +65,7 @@ export function registerValGuideCommands(cli) {
     'val dev studio --no-remote',
     'val dev studio --offline',
     'val dev studio --no-open',
+    'val dev --all --no-open',
     'val dev studio --db:prod',
     'val dev studio -n',
     'val build app --analyse',
@@ -91,19 +92,24 @@ function commands() {
       name: 'dev',
       usage: 'dev <target...>',
       summary: 'Start local development for one or more targets',
-      help: `Usage: val dev <target...> [--no-remote] [--no-open|-n] [--db:<local|dev|prod>] [--offline] [--worker]
+      help: `Usage: val dev <target...> [--remote|--no-remote] [--no-open|-n] [--db:<local|dev|prod>] [--offline] [--worker]
+       val dev --all [--no-open|-n] [--db:<local|dev|prod>] [--offline]
+       val dev --list
 
 Targets:
   ${DEV_TARGETS.join(', ')}
 
 Notes:
-  Remote bindings are the default for admin, app, studio, www, links, and docs.
+  Local bindings and the local database are the default for all dev targets.
   Any dev target can be used as a top-level shorthand, for example: val studio == val dev studio
-  --no-remote switches those targets back to local bindings.
+  --remote switches supported targets to Cloudflare remote bindings and defaults the database to dev. It requires real Cloudflare binding IDs in Wrangler config.
+  --no-remote keeps local bindings when combined with an explicit --db:<env>.
   --no-open (or -n) skips opening local dev URLs in the browser.
-  --db:<local|dev|prod> is forwarded as VALGUIDE_DB_ENV for external env management. The default is --db:dev.
+  --db:<local|dev|prod> is forwarded as VALGUIDE_DB_ENV for external env management. The default is --db:local.
   --offline is shorthand for --db:local --no-remote.
   --worker is supported only for storybook and starts the worker-backed dev flow.
+  --all starts all dev targets.
+  --list shows the available dev targets and URLs.
   Multiple targets are supported for dev, for example: val dev studio admin
 `,
       createInvocation: createDevInvocation,
@@ -274,20 +280,44 @@ function packageScriptInvocation(target, scriptName, passthrough = []) {
 
 function createDevInvocation({ positionals, flags, passthrough, failWithUsage }) {
   const normalizedFlags = normalizeFlags(flags)
+  const hasExplicitDatabaseEnvironment = normalizedFlags.some((flag) => flag.startsWith('--db:'))
   const { selectedValue: databaseEnvironment, remainingFlags: devFlags } = extractEnvironmentFlag(
     normalizedFlags,
     '--db:',
     ['local', 'dev', 'prod'],
-    'dev',
+    'local',
     'dev',
     failWithUsage,
   )
-  ensureAllowedFlags(devFlags, ['--remote', '--no-remote', '--no-open', '--offline', '--worker'], 'dev', failWithUsage)
-  if (positionals.length === 0) {
+  ensureAllowedFlags(
+    devFlags,
+    ['--remote', '--no-remote', '--no-open', '--offline', '--worker', '--all', '--list'],
+    'dev',
+    failWithUsage,
+  )
+
+  if (devFlags.includes('--list')) {
+    if (positionals.length > 0) {
+      failWithUsage('dev --list does not accept target arguments.', 'dev')
+    }
+
+    if (devFlags.length > 1) {
+      failWithUsage('dev --list cannot be combined with other dev flags.', 'dev')
+    }
+
+    return commandInvocation('sh', ['scripts/dev.sh', '--list'])
+  }
+
+  const allMode = devFlags.includes('--all')
+  if (allMode && positionals.length > 0) {
+    failWithUsage('dev --all does not accept target arguments.', 'dev')
+  }
+
+  if (!allMode && positionals.length === 0) {
     failWithUsage(`missing target for "dev". Supported targets: ${quotedList(DEV_TARGETS)}.`, 'dev')
   }
 
-  const targets = uniqueValues(positionals)
+  const targets = allMode ? DEV_TARGETS : uniqueValues(positionals)
   for (const target of targets) {
     ensureTarget(target, DEV_TARGETS, 'dev', failWithUsage)
   }
@@ -329,10 +359,12 @@ function createDevInvocation({ positionals, flags, passthrough, failWithUsage })
   }
 
   const offlineMode = devFlags.includes('--offline')
-  const forwardedFlags = devFlags.filter((flag) => flag !== '--remote' && flag !== '--offline')
+  const remoteMode = devFlags.includes('--remote')
+  const selectedDatabaseEnvironment = remoteMode && !hasExplicitDatabaseEnvironment ? 'dev' : databaseEnvironment
+  const forwardedFlags = devFlags.filter((flag) => flag !== '--all' && flag !== '--offline')
   return commandInvocation('sh', [
     'scripts/dev.sh',
-    `--db:${offlineMode ? 'local' : databaseEnvironment}`,
+    `--db:${offlineMode ? 'local' : selectedDatabaseEnvironment}`,
     ...(offlineMode ? ['--no-remote'] : []),
     ...forwardedFlags,
     ...targets,

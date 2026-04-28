@@ -1,3 +1,9 @@
+{
+	log {
+		output discard
+	}
+}
+
 studio.local.dev {
 	reverse_proxy localhost:3002
 	tls internal
