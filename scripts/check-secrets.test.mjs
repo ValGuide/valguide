@@ -1,15 +1,23 @@
 import assert from 'node:assert/strict'
-import { spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { execFileSync, spawnSync } from 'node:child_process'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const repoRoot = process.cwd()
+const scannerPath = join(repoRoot, 'scripts/check-secrets.mjs')
 const tmp = mkdtempSync(join(tmpdir(), 'valguide-secret-scan-'))
 
 function runSecretScan(filePath) {
-  return spawnSync(process.execPath, ['scripts/check-secrets.mjs', '--files', filePath], {
+  return spawnSync(process.execPath, [scannerPath, '--files', filePath], {
     cwd: repoRoot,
+    encoding: 'utf8',
+  })
+}
+
+function runStagedSecretScan(cwd) {
+  return spawnSync(process.execPath, [scannerPath, '--staged'], {
+    cwd,
     encoding: 'utf8',
   })
 }
@@ -37,6 +45,17 @@ try {
   const allowedFixtureFile = join(tmp, 'fixture.env')
   writeFileSync(allowedFixtureFile, `GITHUB_TOKEN=${fakeGitHubToken} # secret-scan: allow\n`)
   assert.equal(runSecretScan(allowedFixtureFile).status, 0)
+
+  const stagedRepo = join(tmp, 'staged-repo')
+  mkdirSync(stagedRepo)
+  execFileSync('git', ['init'], { cwd: stagedRepo, stdio: 'ignore' })
+  const stagedFile = join(stagedRepo, 'staged.env')
+  writeFileSync(stagedFile, `GITHUB_TOKEN=${fakeGitHubToken}\n`)
+  execFileSync('git', ['add', 'staged.env'], { cwd: stagedRepo, stdio: 'ignore' })
+  writeFileSync(stagedFile, 'GITHUB_TOKEN=replace-with-local-token\n')
+  const stagedResult = runStagedSecretScan(stagedRepo)
+  assert.equal(stagedResult.status, 1)
+  assert.match(stagedResult.stderr, /GitHub token/)
 } finally {
   rmSync(tmp, { recursive: true, force: true })
 }

@@ -106,11 +106,17 @@ function parseArgs(argv) {
   }
 
   if (argv.length === 0) {
-    return gitFiles(['ls-files', '-z', '--cached', '--others', '--exclude-standard'])
+    return {
+      files: gitFiles(['ls-files', '-z', '--cached', '--others', '--exclude-standard']),
+      source: 'worktree',
+    }
   }
 
   if (argv.length === 1 && argv[0] === '--staged') {
-    return gitFiles(['diff', '--cached', '--name-only', '--diff-filter=ACMR', '-z'])
+    return {
+      files: gitFiles(['diff', '--cached', '--name-only', '--diff-filter=ACMR', '-z']),
+      source: 'index',
+    }
   }
 
   if (argv[0] === '--files') {
@@ -118,7 +124,7 @@ function parseArgs(argv) {
     if (files.length === 0) {
       fail('missing file path after --files')
     }
-    return files
+    return { files, source: 'worktree' }
   }
 
   fail(`unsupported arguments: ${argv.join(' ')}`)
@@ -288,17 +294,37 @@ function scanLine(filePath, line, lineNumber) {
   return findings
 }
 
-function scanFile(filePath) {
-  if (!existsSync(filePath) || shouldSkipPath(filePath)) {
-    return []
+function readIndexFile(filePath) {
+  try {
+    return execFileSync('git', ['show', `:${filePath}`], { encoding: 'buffer' })
+  } catch {
+    return null
+  }
+}
+
+function readWorktreeFile(filePath) {
+  if (!existsSync(filePath)) {
+    return null
   }
 
   const stat = statSync(filePath)
-  if (!stat.isFile() || stat.size > MAX_TEXT_BYTES) {
+  if (!stat.isFile()) {
+    return null
+  }
+
+  return readFileSync(filePath)
+}
+
+function scanFile(filePath, source) {
+  if (shouldSkipPath(filePath)) {
     return []
   }
 
-  const buffer = readFileSync(filePath)
+  const buffer = source === 'index' ? readIndexFile(filePath) : readWorktreeFile(filePath)
+  if (!buffer || buffer.length > MAX_TEXT_BYTES) {
+    return []
+  }
+
   if (isBinary(buffer)) {
     return []
   }
@@ -313,8 +339,8 @@ function scanFile(filePath) {
 }
 
 function main() {
-  const files = parseArgs(process.argv.slice(2))
-  const findings = files.flatMap(scanFile)
+  const { files, source } = parseArgs(process.argv.slice(2))
+  const findings = files.flatMap((filePath) => scanFile(filePath, source))
 
   if (findings.length === 0) {
     console.log(`Secret scan passed for ${files.length} file${files.length === 1 ? '' : 's'}.`)

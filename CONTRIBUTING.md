@@ -4,7 +4,7 @@ ValGuide is being prepared for its first public release. Until the initial
 public commit is finalized, treat the repo as review-in-progress, but make
 contributions as if this were a normal public open-source repository.
 
-You do not need `valguide-workspace`, private runbooks, private env files, or
+You do not need untracked local files, private runbooks, private env files, or
 ValGuide-owned provider accounts to contribute product code, docs, tests, or
 design-system work in this repository.
 
