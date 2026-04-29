@@ -12,5 +12,5 @@ This documentation tree only contains material intended to stay with the public 
 
 ## Rules Of Thumb
 
-- Private ops, infra state, and market research belong in `valguide-workspace`, not here.
+- Private ops, infra state, and market research belong outside this public repository.
 - Keep public docs focused on architecture, setup, and contributor-facing behavior.

@@ -8,6 +8,8 @@
     "dev": "nx run-many -t dev",
     "dev:select": "sh scripts/dev.sh",
     "dev:select:local": "sh scripts/dev.sh --no-remote",
+    "secrets:check": "node -- scripts/check-secrets.mjs",
+    "secrets:test": "node -- scripts/check-secrets.test.mjs",
     "lint": "biome check .",
     "lint:error": "biome check . --diagnostic-level=error",
     "lint:fix": "biome check --write .",

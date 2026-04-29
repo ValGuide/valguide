@@ -1,2 +1,3 @@
+pnpm secrets:check --staged
 pnpm dlx lint-staged
 pnpm run test

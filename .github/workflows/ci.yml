@@ -26,6 +26,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Check for committed secrets
+        run: pnpm secrets:check
+
       - name: Resolve Nx affected SHAs
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
