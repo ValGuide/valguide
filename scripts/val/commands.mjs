@@ -323,7 +323,7 @@ function createDevInvocation({ positionals, flags, passthrough, failWithUsage })
   }
 
   if (devFlags.includes('--offline')) {
-    if (databaseEnvironment !== 'dev') {
+    if (hasExplicitDatabaseEnvironment) {
       failWithUsage('--offline cannot be combined with an explicit --db:<env> flag.', 'dev')
     }
 
@@ -398,6 +398,7 @@ function createBuildInvocation({ positionals, flags, passthrough, failWithUsage 
 }
 
 function createPreviewInvocation({ positionals, flags, passthrough, failWithUsage }) {
+  const hasExplicitDatabaseEnvironment = flags.some((flag) => flag.startsWith('--db:'))
   const { selectedValue: databaseEnvironment, remainingFlags: previewFlags } = extractEnvironmentFlag(
     flags,
     '--db:',
@@ -420,7 +421,7 @@ function createPreviewInvocation({ positionals, flags, passthrough, failWithUsag
   }
 
   const offlineMode = previewFlags.includes('--offline')
-  if (offlineMode && databaseEnvironment !== 'dev') {
+  if (offlineMode && hasExplicitDatabaseEnvironment) {
     failWithUsage('--offline cannot be combined with an explicit --db:<env> flag.', 'preview')
   }
 
