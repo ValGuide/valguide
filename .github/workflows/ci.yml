@@ -31,13 +31,37 @@ jobs:
 
       - name: Resolve Nx affected SHAs
         run: |
+          set -euo pipefail
+
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "NX_BASE=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
-            echo "NX_HEAD=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_ENV"
+            nx_base="${{ github.event.pull_request.base.sha }}"
+            nx_head="${{ github.event.pull_request.head.sha }}"
+            fallback_ref="origin/${{ github.event.pull_request.base.ref }}"
+
+            git fetch --no-tags origin "${{ github.event.pull_request.base.ref }}" || true
           else
-            echo "NX_BASE=${{ github.event.before }}" >> "$GITHUB_ENV"
-            echo "NX_HEAD=${{ github.sha }}" >> "$GITHUB_ENV"
+            nx_base="${{ github.event.before }}"
+            nx_head="${{ github.sha }}"
+            fallback_ref="origin/${{ github.ref_name }}"
+
+            git fetch --no-tags origin "${{ github.ref_name }}" || true
           fi
+
+          if ! git cat-file -e "$nx_head^{commit}" 2>/dev/null; then
+            nx_head="HEAD"
+          fi
+
+          if ! git cat-file -e "$nx_base^{commit}" 2>/dev/null; then
+            echo "NX base $nx_base is not available; falling back to merge-base with $fallback_ref."
+            if [ "${{ github.event_name }}" != "pull_request" ] && git rev-parse "$nx_head^" >/dev/null 2>&1; then
+              nx_base="$(git rev-parse "$nx_head^")"
+            else
+              nx_base="$(git merge-base "$fallback_ref" "$nx_head")"
+            fi
+          fi
+
+          echo "NX_BASE=$nx_base" >> "$GITHUB_ENV"
+          echo "NX_HEAD=$nx_head" >> "$GITHUB_ENV"
 
       - name: Lint repo
         run: pnpm lint:error
