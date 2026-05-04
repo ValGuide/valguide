@@ -1,7 +1,7 @@
 # Unified deploy orchestrator.
 #
 # Parses commit message tags like [build app], [build app,studio], [build workers], [build apps], [build all],
-# deploys matching apps in parallel via reusable sub-workflows, sends ONE
+# deploys matching targets in parallel via a matrix, sends ONE
 # consolidated Slack notification, and creates GitHub Releases on success.
 #
 # Required GitHub Secrets:
@@ -45,134 +45,132 @@ jobs:
       manual_scope: ${{ github.event_name == 'workflow_dispatch' && inputs.scope || '' }}
 
   # ── Deploy jobs (parallel) ──────────────────────────────────────────
-  deploy-app:
+  deploy-targets:
     needs: check
-    if: needs.check.outputs.deploy-app == 'true'
+    if: needs.check.outputs.any-deploy == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJson(needs.check.outputs.targets-json) }}
     uses: ./.github/workflows/_deploy.yml
     with:
-      app-name: app
+      app-name: ${{ matrix.target }}
       environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
     secrets: inherit
 
-  deploy-studio:
-    needs: check
-    if: needs.check.outputs.deploy-studio == 'true'
-    uses: ./.github/workflows/_deploy.yml
-    with:
-      app-name: studio
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-    secrets: inherit
+  # ── Aggregate matrix results ────────────────────────────────────────
+  aggregate:
+    needs: [check, deploy-targets]
+    if: always() && !cancelled() && needs.check.outputs.any-deploy == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      manifest: ${{ steps.manifest.outputs.manifest }}
+      failed-count: ${{ steps.manifest.outputs.failed-count }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: deploy-result-*
+          path: deploy-results
+          merge-multiple: true
 
-  deploy-admin:
-    needs: check
-    if: needs.check.outputs.deploy-admin == 'true'
-    uses: ./.github/workflows/_deploy.yml
-    with:
-      app-name: admin
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-    secrets: inherit
+      - name: Build deploy manifest
+        id: manifest
+        env:
+          DEPLOY_ENVIRONMENT: ${{ needs.check.outputs.environment }}
+          DEPLOY_TIMESTAMP: ${{ needs.check.outputs.timestamp }}
+          TARGETS_JSON: ${{ needs.check.outputs.targets-json }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
 
-  deploy-docs:
-    needs: check
-    if: needs.check.outputs.deploy-docs == 'true'
-    uses: ./.github/workflows/_deploy.yml
-    with:
-      app-name: docs
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-    secrets: inherit
+          missing=""
+          for target in $(echo "$TARGETS_JSON" | jq -r '.[]'); do
+            if [ ! -f "deploy-results/${target}.json" ]; then
+              missing="${missing} ${target}"
+            fi
+          done
 
-  deploy-links:
-    needs: check
-    if: needs.check.outputs.deploy-links == 'true'
-    uses: ./.github/workflows/_deploy.yml
-    with:
-      app-name: links
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-    secrets: inherit
+          if [ -n "$missing" ]; then
+            echo "::error::Missing deploy result artifact(s):${missing}"
+            exit 1
+          fi
 
-  deploy-storybook:
-    needs: check
-    if: needs.check.outputs.deploy-storybook == 'true'
-    uses: ./.github/workflows/_deploy.yml
-    with:
-      app-name: storybook
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-    secrets: inherit
+          manifest=$(jq -c -n \
+            --arg environment "$DEPLOY_ENVIRONMENT" \
+            --arg timestamp "$DEPLOY_TIMESTAMP" \
+            --arg actor "${{ github.actor }}" \
+            --arg sha "${{ github.sha }}" \
+            --arg run_url "$RUN_URL" \
+            --argjson requested "$TARGETS_JSON" \
+            --slurpfile targets <(jq -s '
+              . as $items
+              | $requested
+              | map(. as $name | $items[] | select(.name == $name))
+            ' --argjson requested "$TARGETS_JSON" deploy-results/*.json) \
+            '{
+              environment: $environment,
+              timestamp: $timestamp,
+              actor: $actor,
+              sha: $sha,
+              run_url: $run_url,
+              targets: $targets[0],
+              failed: ($targets[0] | map(select(.result != "success") | .name)),
+              failed_count: ($targets[0] | map(select(.result != "success")) | length)
+            }')
 
-  deploy-www:
-    needs: check
-    if: needs.check.outputs.deploy-www == 'true'
-    uses: ./.github/workflows/_deploy.yml
-    with:
-      app-name: www
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-    secrets: inherit
+          failed_count=$(echo "$manifest" | jq -r '.failed_count')
 
-  deploy-workers:
-    needs: check
-    if: needs.check.outputs.deploy-workers == 'true'
-    uses: ./.github/workflows/_deploy-workers.yml
-    with:
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-    secrets: inherit
+          {
+            echo "manifest<<EOF"
+            echo "$manifest"
+            echo "EOF"
+            echo "failed-count=${failed_count}"
+          } >> "$GITHUB_OUTPUT"
 
   # ── Consolidated GitHub Release ─────────────────────────────────────
   release:
-    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www, deploy-workers]
-    if: "!cancelled() && needs.check.outputs.any-deploy == 'true'"
+    needs: [check, aggregate]
+    if: "!cancelled() && needs.check.outputs.any-deploy == 'true' && needs.aggregate.result == 'success'"
     uses: ./.github/workflows/release.yml
     with:
-      environment: ${{ needs.check.outputs.environment }}
-      timestamp: ${{ needs.check.outputs.timestamp }}
-      deploy-app: ${{ needs.check.outputs.deploy-app }}
-      deploy-studio: ${{ needs.check.outputs.deploy-studio }}
-      deploy-admin: ${{ needs.check.outputs.deploy-admin }}
-      deploy-docs: ${{ needs.check.outputs.deploy-docs }}
-      deploy-links: ${{ needs.check.outputs.deploy-links }}
-      deploy-storybook: ${{ needs.check.outputs.deploy-storybook }}
-      deploy-www: ${{ needs.check.outputs.deploy-www }}
-      deploy-workers: ${{ needs.check.outputs.deploy-workers }}
-      result-app: ${{ needs.deploy-app.result }}
-      result-studio: ${{ needs.deploy-studio.result }}
-      result-admin: ${{ needs.deploy-admin.result }}
-      result-docs: ${{ needs.deploy-docs.result }}
-      result-links: ${{ needs.deploy-links.result }}
-      result-storybook: ${{ needs.deploy-storybook.result }}
-      result-www: ${{ needs.deploy-www.result }}
-      result-workers: ${{ needs.deploy-workers.result }}
+      manifest: ${{ needs.aggregate.outputs.manifest }}
 
   # ── Consolidated Slack notification ─────────────────────────────────
   notify:
-    needs: [check, deploy-app, deploy-studio, deploy-admin, deploy-docs, deploy-links, deploy-storybook, deploy-www, deploy-workers, release]
-    if: "!cancelled() && needs.check.outputs.any-deploy == 'true'"
+    needs: [check, aggregate, release]
+    if: always() && !cancelled() && needs.check.outputs.any-deploy == 'true' && needs.aggregate.result == 'success'
     uses: ./.github/workflows/_notify-deploy.yml
     with:
-      environment: ${{ needs.check.outputs.environment }}
-      deploy-app: ${{ needs.check.outputs.deploy-app }}
-      deploy-studio: ${{ needs.check.outputs.deploy-studio }}
-      deploy-admin: ${{ needs.check.outputs.deploy-admin }}
-      deploy-docs: ${{ needs.check.outputs.deploy-docs }}
-      deploy-links: ${{ needs.check.outputs.deploy-links }}
-      deploy-storybook: ${{ needs.check.outputs.deploy-storybook }}
-      deploy-www: ${{ needs.check.outputs.deploy-www }}
-      deploy-workers: ${{ needs.check.outputs.deploy-workers }}
-      result-app: ${{ needs.deploy-app.result }}
-      result-studio: ${{ needs.deploy-studio.result }}
-      result-admin: ${{ needs.deploy-admin.result }}
-      result-docs: ${{ needs.deploy-docs.result }}
-      result-links: ${{ needs.deploy-links.result }}
-      result-storybook: ${{ needs.deploy-storybook.result }}
-      result-www: ${{ needs.deploy-www.result }}
-      result-workers: ${{ needs.deploy-workers.result }}
+      manifest: ${{ needs.aggregate.outputs.manifest }}
       release-url: ${{ needs.release.outputs.release-url }}
       changelog: ${{ needs.release.outputs.changelog }}
     secrets:
       VALBOT_SLACK_TOKEN: ${{ secrets.VALBOT_SLACK_TOKEN }}
+
+  complete:
+    needs: [check, aggregate, release, notify]
+    if: always() && !cancelled() && needs.check.outputs.any-deploy == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deploy result
+        env:
+          FAILED_COUNT: ${{ needs.aggregate.outputs.failed-count }}
+          RELEASE_RESULT: ${{ needs.release.result }}
+          NOTIFY_RESULT: ${{ needs.notify.result }}
+        run: |
+          set -euo pipefail
+
+          if [ "$RELEASE_RESULT" != "success" ]; then
+            echo "::error::Release job finished with result: ${RELEASE_RESULT}"
+            exit 1
+          fi
+
+          if [ "$NOTIFY_RESULT" != "success" ]; then
+            echo "::error::Notify job finished with result: ${NOTIFY_RESULT}"
+            exit 1
+          fi
+
+          if [ "${FAILED_COUNT:-0}" -gt 0 ]; then
+            echo "::error::${FAILED_COUNT} deploy target(s) failed."
+            exit 1
+          fi

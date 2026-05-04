@@ -17,22 +17,8 @@ on:
     outputs:
       environment:
         value: ${{ jobs.check.outputs.environment }}
-      deploy-app:
-        value: ${{ jobs.check.outputs.deploy-app }}
-      deploy-studio:
-        value: ${{ jobs.check.outputs.deploy-studio }}
-      deploy-admin:
-        value: ${{ jobs.check.outputs.deploy-admin }}
-      deploy-docs:
-        value: ${{ jobs.check.outputs.deploy-docs }}
-      deploy-links:
-        value: ${{ jobs.check.outputs.deploy-links }}
-      deploy-storybook:
-        value: ${{ jobs.check.outputs.deploy-storybook }}
-      deploy-www:
-        value: ${{ jobs.check.outputs.deploy-www }}
-      deploy-workers:
-        value: ${{ jobs.check.outputs.deploy-workers }}
+      targets-json:
+        value: ${{ jobs.check.outputs.targets-json }}
       any-deploy:
         value: ${{ jobs.check.outputs.any-deploy }}
       timestamp:
@@ -43,14 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.check.outputs.environment }}
-      deploy-app: ${{ steps.check.outputs.deploy-app }}
-      deploy-studio: ${{ steps.check.outputs.deploy-studio }}
-      deploy-admin: ${{ steps.check.outputs.deploy-admin }}
-      deploy-docs: ${{ steps.check.outputs.deploy-docs }}
-      deploy-links: ${{ steps.check.outputs.deploy-links }}
-      deploy-storybook: ${{ steps.check.outputs.deploy-storybook }}
-      deploy-www: ${{ steps.check.outputs.deploy-www }}
-      deploy-workers: ${{ steps.check.outputs.deploy-workers }}
+      targets-json: ${{ steps.check.outputs.targets-json }}
       any-deploy: ${{ steps.check.outputs.any-deploy }}
       timestamp: ${{ steps.ts.outputs.timestamp }}
     steps:
@@ -71,20 +50,34 @@ jobs:
           ANY=false
           APP_LIST=$(echo "$APPS" | tr ' ' '\n')
 
+          write_targets_json() {
+            local scopes="${1:-}"
+            local json="["
+            local separator=""
+
+            for app in $APPS; do
+              if printf '%s\n' "$scopes" | grep -qx "$app"; then
+                json="${json}${separator}\"${app}\""
+                separator=","
+              fi
+            done
+
+            json="${json}]"
+            echo "targets-json=${json}" >> "$GITHUB_OUTPUT"
+          }
+
           set_outputs_from_scopes() {
             local scopes="${1:-}"
             local any=false
 
             for app in $APPS; do
-              if echo "$scopes" | grep -qx "$app"; then
-                echo "deploy-${app}=true" >> "$GITHUB_OUTPUT"
+              if printf '%s\n' "$scopes" | grep -qx "$app"; then
                 any=true
-              else
-                echo "deploy-${app}=false" >> "$GITHUB_OUTPUT"
               fi
             done
 
             ANY=$any
+            write_targets_json "$scopes"
           }
 
           if [ -n "${MANUAL_ENVIRONMENT:-}" ]; then
@@ -100,20 +93,10 @@ jobs:
 
             if [ "$normalized_scope" = "all" ]; then
               echo "✅ Manual deploy requested for all apps"
-              for app in $APPS; do
-                echo "deploy-${app}=true" >> "$GITHUB_OUTPUT"
-              done
-              ANY=true
+              set_outputs_from_scopes "$(printf '%s\n' $APPS)"
             elif [ "$normalized_scope" = "apps" ]; then
               echo "✅ Manual deploy requested for all apps except workers"
-              for app in $APPS; do
-                if [ "$app" = "workers" ]; then
-                  echo "deploy-${app}=false" >> "$GITHUB_OUTPUT"
-                else
-                  echo "deploy-${app}=true" >> "$GITHUB_OUTPUT"
-                fi
-              done
-              ANY=true
+              set_outputs_from_scopes "$(printf '%s\n' app studio admin docs links storybook www)"
             else
               scopes=$(printf '%s' "$normalized_scope" | tr ' ,' '\n' | tr -s '\n' | sed '/^$/d')
               unknown=$(printf '%s\n' "$scopes" | while read -r scope; do
@@ -140,20 +123,10 @@ jobs:
 
             if echo "${COMMIT_MSG:-}" | grep -qF '[build all]'; then
               echo "✅ [build all] found — deploying everything"
-              for app in $APPS; do
-                echo "deploy-${app}=true" >> "$GITHUB_OUTPUT"
-              done
-              ANY=true
+              set_outputs_from_scopes "$(printf '%s\n' $APPS)"
             elif echo "${COMMIT_MSG:-}" | grep -qF '[build apps]'; then
               echo "✅ [build apps] found — deploying all apps except workers"
-              for app in $APPS; do
-                if [ "$app" = "workers" ]; then
-                  echo "deploy-${app}=false" >> "$GITHUB_OUTPUT"
-                else
-                  echo "deploy-${app}=true" >> "$GITHUB_OUTPUT"
-                fi
-              done
-              ANY=true
+              set_outputs_from_scopes "$(printf '%s\n' app studio admin docs links storybook www)"
             else
               scopes=$(echo "${COMMIT_MSG:-}" | grep -oE '\[build [^]]+' | sed 's/\[build //' | tr ' ,' '\n' | tr -s '\n' || true)
               if [ -n "$scopes" ]; then

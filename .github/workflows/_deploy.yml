@@ -1,8 +1,8 @@
-# Reusable workflow: build and deploy a single app to Cloudflare Workers.
+# Reusable workflow: build and deploy a single deploy target to Cloudflare Workers.
 #
 # Handles environment-specific configuration (URLs, env vars, PostHog)
-# internally based on app-name + environment. Creates a per-app git tag
-# on success via the create-app-tag composite action.
+# internally based on app-name + environment, then uploads a JSON result
+# artifact consumed by the release and notification jobs.
 
 name: _deploy
 
@@ -12,26 +12,17 @@ on:
       app-name:
         required: true
         type: string
-        description: "Lowercase app name (app, studio, admin, docs, links, storybook, www)"
+        description: "Lowercase target name (app, studio, admin, docs, links, storybook, www, workers)"
       environment:
         required: true
         type: string
         description: "Environment (dev or prod)"
-      timestamp:
-        required: true
-        type: string
-        description: "Deploy timestamp (shared across all jobs)"
-    outputs:
-      url:
-        value: ${{ jobs.deploy.outputs.url }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    outputs:
-      url: ${{ steps.config.outputs.url }}
     environment:
       name: ${{ inputs.app-name }}-${{ inputs.environment }}
     env:
@@ -52,6 +43,10 @@ jobs:
       DOCS_ROUTES: ${{ vars.DOCS_ROUTES }}
       STORYBOOK_WORKER_NAME: ${{ vars.STORYBOOK_WORKER_NAME }}
       STORYBOOK_ROUTES: ${{ vars.STORYBOOK_ROUTES }}
+      IMAGE_GUARD_WORKER_NAME: ${{ vars.IMAGE_GUARD_WORKER_NAME }}
+      IMAGE_GUARD_ROUTES: ${{ vars.IMAGE_GUARD_ROUTES }}
+      POSTHOG_PROXY_WORKER_NAME: ${{ vars.POSTHOG_PROXY_WORKER_NAME }}
+      POSTHOG_PROXY_ROUTES: ${{ vars.POSTHOG_PROXY_ROUTES }}
       CF_AUTH_KV_ID: ${{ vars.CF_AUTH_KV_ID }}
       CF_TOUR_DATA_KV_ID: ${{ vars.CF_TOUR_DATA_KV_ID }}
       CF_MAINTENANCE_KV_ID: ${{ vars.CF_MAINTENANCE_KV_ID }}
@@ -87,23 +82,81 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - id: install
+        continue-on-error: true
+        run: pnpm install --frozen-lockfile
 
       - name: Configure environment
         id: config
+        if: inputs.app-name != 'workers' && steps.install.outcome == 'success'
+        continue-on-error: true
         env:
           APP_NAME: ${{ inputs.app-name }}
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
         run: bash .github/scripts/configure-app-deploy.sh
 
-      - name: Build & Deploy
+      - name: Deploy app
+        id: deploy-app
+        if: inputs.app-name != 'workers' && steps.config.outcome == 'success'
+        continue-on-error: true
         env:
           APP_NAME: ${{ inputs.app-name }}
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
         run: bash .github/scripts/deploy-app.sh
 
-      - uses: ./.github/actions/create-app-tag
+      - name: Deploy workers
+        id: deploy-workers
+        if: inputs.app-name == 'workers' && steps.install.outcome == 'success'
+        continue-on-error: true
+        env:
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+        run: bash .github/scripts/deploy-workers.sh
+
+      - name: Record deploy result
+        id: result
+        if: always()
+        env:
+          APP_NAME: ${{ inputs.app-name }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+          INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          CONFIG_OUTCOME: ${{ steps.config.outcome }}
+          DEPLOY_APP_OUTCOME: ${{ steps.deploy-app.outcome }}
+          DEPLOY_WORKERS_OUTCOME: ${{ steps.deploy-workers.outcome }}
+        run: |
+          set -euo pipefail
+
+          source .github/scripts/deploy-targets.sh
+
+          result="failure"
+          if [ "${INSTALL_OUTCOME:-}" != "success" ]; then
+            result="failure"
+          elif [ "$APP_NAME" = "workers" ]; then
+            if [ "${DEPLOY_WORKERS_OUTCOME:-}" = "success" ]; then
+              result="success"
+            fi
+          elif [ "${CONFIG_OUTCOME:-}" = "success" ] && [ "${DEPLOY_APP_OUTCOME:-}" = "success" ]; then
+            result="success"
+          fi
+
+          mkdir -p deploy-result
+          jq -n \
+            --arg name "$APP_NAME" \
+            --arg display "$(deploy_display_for "$APP_NAME")" \
+            --arg url "$(deploy_url_for "${APP_NAME}-${DEPLOY_ENVIRONMENT}")" \
+            --arg result "$result" \
+            '{ name: $name, display: $display, url: $url, result: $result }' \
+            > "deploy-result/${APP_NAME}.json"
+
+          echo "result=${result}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload deploy result
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          app-name: ${{ inputs.app-name }}
-          environment: ${{ inputs.environment }}
-          timestamp: ${{ inputs.timestamp }}
+          name: deploy-result-${{ inputs.app-name }}
+          path: deploy-result/${{ inputs.app-name }}.json
+          if-no-files-found: error
+
+      - name: Fail failed deploy target
+        if: always() && steps.result.outputs.result == 'failure'
+        run: exit 1
