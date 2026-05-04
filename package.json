@@ -14,7 +14,7 @@
     "lint:error": "biome check . --diagnostic-level=error",
     "lint:fix": "biome check --write .",
     "test": "nx run-many -p @valguide/core,@valguide/studio,@valguide/admin,@valguide/links,@valguide/app,@valguide/www -t test --parallel=6",
-    "type-check": "pnpm exec tsc --noEmit -p tsconfig.json && nx run-many -t type-check",
+    "type-check": "pnpm exec tsc --noEmit -p tsconfig.json && nx run-many -t type-check --exclude=valguide",
     "i18n:check": "pnpm dlx tsx scripts/validate-locales.ts",
     "i18n:unused": "pnpm dlx tsx scripts/find-unused-i18n-keys.ts",
     "i18n:prune": "pnpm dlx tsx scripts/remove-unused-i18n-keys.ts",
