@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { resolveTargetName, targets } from '../wrangler-config/targets.mjs'
 
 const targetOrder = Object.keys(targets)
@@ -67,9 +67,21 @@ function missingSecretsFor(targetName, inputEnv) {
   return targets[targetName].requiredSecrets.filter((secretName) => !inputEnv[secretName])
 }
 
+function secretsFor(targetName, inputEnv) {
+  const target = targets[targetName]
+  const required = target.requiredSecrets
+  const optional = target.optionalSecrets ?? []
+  return {
+    required,
+    optionalPresent: optional.filter((secretName) => inputEnv[secretName]),
+    optionalMissing: optional.filter((secretName) => !inputEnv[secretName]),
+  }
+}
+
 function pushSecret(targetName, secretName, inputEnv) {
   const target = targets[targetName]
-  execFileSync('wrangler', ['secret', 'put', secretName, '--config', `${target.root}/wrangler.generated.jsonc`], {
+  const wranglerBin = join(target.root, 'node_modules', '.bin', 'wrangler')
+  execFileSync(wranglerBin, ['secret', 'put', secretName, '--config', `${target.root}/wrangler.generated.jsonc`], {
     cwd: process.cwd(),
     input: inputEnv[secretName],
     stdio: ['pipe', 'inherit', 'inherit'],
@@ -98,6 +110,11 @@ function main() {
       if (missing.length > 0) {
         throw new Error(`Missing required ${targetName} secret values: ${missing.join(', ')}`)
       }
+      const { required, optionalPresent, optionalMissing } = secretsFor(targetName, inputEnv)
+      const secretNames = [...required, ...optionalPresent]
+      if (optionalMissing.length > 0) {
+        console.log(`${targetName}: skipping optional secrets not present: ${optionalMissing.join(', ')}`)
+      }
 
       execFileSync(
         'node',
@@ -118,7 +135,7 @@ function main() {
         },
       )
 
-      for (const secretName of targets[targetName].requiredSecrets) {
+      for (const secretName of secretNames) {
         if (dryRun) {
           console.log(`[dry-run] ${targetName}: would push ${secretName}`)
         } else {

@@ -3,6 +3,7 @@ const euPlacement = { region: 'aws:eu-central-1' }
 const observability = { logs: { enabled: true, invocation_logs: true } }
 
 const appSecrets = ['DATABASE_URL', 'BETTER_AUTH_SECRET', 'RESEND_SENDING_API_KEY']
+const appOptionalSecrets = ['VALBOT_SLACK_TOKEN']
 
 const authVars = [
   { name: 'BETTER_AUTH_URL', required: true },
@@ -57,6 +58,7 @@ export const targets = {
       ...policyVars,
     ],
     requiredSecrets: [...appSecrets, 'ADMIN_ALLOWED_EMAILS'],
+    optionalSecrets: [...appOptionalSecrets, 'SLACK_CLIENT_ID', 'SLACK_CLIENT_SECRET', 'SLACK_TEAM_ID'],
   },
   app: {
     root: 'apps/app',
@@ -75,6 +77,7 @@ export const targets = {
       ...policyVars,
     ],
     requiredSecrets: appSecrets,
+    optionalSecrets: appOptionalSecrets,
   },
   docs: {
     root: 'apps/docs',
@@ -107,6 +110,7 @@ export const targets = {
       { name: 'BLOCK_ROBOTS', optional: true },
     ],
     requiredSecrets: appSecrets,
+    optionalSecrets: appOptionalSecrets,
   },
   storybook: {
     root: 'apps/storybook',
@@ -147,6 +151,7 @@ export const targets = {
       { name: 'BLOCK_ROBOTS', optional: true },
     ],
     requiredSecrets: appSecrets,
+    optionalSecrets: [...appOptionalSecrets, 'LINEAR_API_KEY'],
   },
   www: {
     root: 'apps/www',
@@ -166,6 +171,7 @@ export const targets = {
       { name: 'BLOCK_ROBOTS', optional: true },
     ],
     requiredSecrets: appSecrets,
+    optionalSecrets: appOptionalSecrets,
   },
   'worker:image-guard': {
     root: 'workers/image-guard',
