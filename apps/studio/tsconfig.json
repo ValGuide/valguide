@@ -15,6 +15,12 @@
       "@valguide/logger": ["../../packages/logger"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "../../packages/core/i18n/global.d.ts", "worker-configuration.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../../packages/core/i18n/global.d.ts",
+    "../../packages/core/platform/providers/cloudflare/workers.d.ts",
+    "worker-configuration.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

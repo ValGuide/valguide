@@ -11,6 +11,10 @@ declare module 'cloudflare:workers' {
     LINKS_KV: KVNamespace
     TOUR_DATA: KVNamespace
     MAINTENANCE: KVNamespace
+    STORYBOOK_PASSWORD?: string
+    BLOCK_ROBOTS?: string
+    DEV_PROXY?: string
+    ASSETS?: { fetch(request: Request): Promise<Response> }
     [key: string]: unknown
   }
   function waitUntil(promise: Promise<unknown>): void
