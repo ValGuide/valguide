@@ -22,7 +22,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       contents: write
     environment:
       name: ${{ inputs.app-name }}-${{ inputs.environment }}
@@ -31,10 +30,55 @@ jobs:
       - id: deploy-env
         uses: ./.github/actions/write-deploy-env
         with:
-          github-token: ${{ github.token }}
-          environment-name: ${{ inputs.app-name }}-${{ inputs.environment }}
           cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           cloudflare-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          posthog-project-key: ${{ secrets.POSTHOG_PROJECT_KEY }}
+          app-worker-name: ${{ secrets.APP_WORKER_NAME }}
+          app-routes: ${{ secrets.APP_ROUTES }}
+          studio-worker-name: ${{ secrets.STUDIO_WORKER_NAME }}
+          studio-routes: ${{ secrets.STUDIO_ROUTES }}
+          admin-worker-name: ${{ secrets.ADMIN_WORKER_NAME }}
+          admin-routes: ${{ secrets.ADMIN_ROUTES }}
+          links-worker-name: ${{ secrets.LINKS_WORKER_NAME }}
+          links-routes: ${{ secrets.LINKS_ROUTES }}
+          www-worker-name: ${{ secrets.WWW_WORKER_NAME }}
+          www-routes: ${{ secrets.WWW_ROUTES }}
+          docs-worker-name: ${{ secrets.DOCS_WORKER_NAME }}
+          docs-routes: ${{ secrets.DOCS_ROUTES }}
+          storybook-worker-name: ${{ secrets.STORYBOOK_WORKER_NAME }}
+          storybook-routes: ${{ secrets.STORYBOOK_ROUTES }}
+          image-guard-worker-name: ${{ secrets.IMAGE_GUARD_WORKER_NAME }}
+          image-guard-routes: ${{ secrets.IMAGE_GUARD_ROUTES }}
+          posthog-proxy-worker-name: ${{ secrets.POSTHOG_PROXY_WORKER_NAME }}
+          posthog-proxy-routes: ${{ secrets.POSTHOG_PROXY_ROUTES }}
+          cf-auth-kv-id: ${{ secrets.CF_AUTH_KV_ID }}
+          cf-tour-data-kv-id: ${{ secrets.CF_TOUR_DATA_KV_ID }}
+          cf-maintenance-kv-id: ${{ secrets.CF_MAINTENANCE_KV_ID }}
+          cf-links-kv-id: ${{ secrets.CF_LINKS_KV_ID }}
+          cf-r2-bucket-name: ${{ secrets.CF_R2_BUCKET_NAME }}
+          cf-r2-jurisdiction: ${{ secrets.CF_R2_JURISDICTION }}
+          app-base-url: ${{ secrets.APP_BASE_URL }}
+          links-base-url: ${{ secrets.LINKS_BASE_URL }}
+          admin-base-url: ${{ secrets.ADMIN_BASE_URL }}
+          admin-cookie-domain: ${{ secrets.ADMIN_COOKIE_DOMAIN }}
+          vite-studio-url: ${{ secrets.VITE_STUDIO_URL }}
+          vite-app-domain: ${{ secrets.VITE_APP_DOMAIN }}
+          vite-privacy-policy-url: ${{ secrets.VITE_PRIVACY_POLICY_URL }}
+          vite-terms-of-service-url: ${{ secrets.VITE_TERMS_OF_SERVICE_URL }}
+          vite-r2-public-url: ${{ secrets.VITE_R2_PUBLIC_URL }}
+          vite-posthog-host: ${{ secrets.VITE_POSTHOG_HOST }}
+          better-auth-url: ${{ secrets.BETTER_AUTH_URL }}
+          better-auth-trusted-origins: ${{ secrets.BETTER_AUTH_TRUSTED_ORIGINS }}
+          better-auth-cookie-domain: ${{ secrets.BETTER_AUTH_COOKIE_DOMAIN }}
+          better-auth-cookie-prefix: ${{ secrets.BETTER_AUTH_COOKIE_PREFIX }}
+          maintenance-slack-channel: ${{ secrets.MAINTENANCE_SLACK_CHANNEL }}
+          users-slack-channel: ${{ secrets.USERS_SLACK_CHANNEL }}
+          studio-events-slack-channel: ${{ secrets.STUDIO_EVENTS_SLACK_CHANNEL }}
+          studio-feedback-slack-channel: ${{ secrets.STUDIO_FEEDBACK_SLACK_CHANNEL }}
+          studio-performance-log-enabled: ${{ secrets.STUDIO_PERFORMANCE_LOG_ENABLED }}
+          linear-feedback-team-id: ${{ secrets.LINEAR_FEEDBACK_TEAM_ID }}
+          linear-feedback-label-id: ${{ secrets.LINEAR_FEEDBACK_LABEL_ID }}
+          block-robots: ${{ secrets.BLOCK_ROBOTS }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:

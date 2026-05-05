@@ -22,7 +22,9 @@ WORKFLOW_CONTENT=$(cat "$WORKFLOW")
 echo "Test 2: Hosted deploy config is routed through action inputs"
 assert_contains "write env action" "$WORKFLOW_CONTENT" "uses: ./.github/actions/write-deploy-env"
 assert_contains "deploy env file path" "$WORKFLOW_CONTENT" "DEPLOY_ENV_FILE: \${{ steps.deploy-env.outputs.env-file }}"
+assert_contains "deploy config uses secrets" "$WORKFLOW_CONTENT" "\${{ secrets.APP_WORKER_NAME }}"
 assert_not_contains "no vars context in deploy workflow" "$WORKFLOW_CONTENT" "\${{ vars."
+assert_not_contains "no GitHub variable API token" "$WORKFLOW_CONTENT" "github-token:"
 echo ""
 
 print_results
