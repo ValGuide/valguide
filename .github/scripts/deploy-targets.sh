@@ -12,8 +12,8 @@ deploy_url_for() {
     docs-dev) echo "https://docs-dev.val.guide" ;;
     links-prod) echo "https://links.valguide.com" ;;
     links-dev) echo "https://links.valguide.dev" ;;
-    storybook-prod) echo "https://sb.val.guide" ;;
-    storybook-dev) echo "https://sb-dev.val.guide" ;;
+    storybook-prod) echo "https://storybook.valguide.com" ;;
+    storybook-dev) echo "https://storybook.valguide.dev" ;;
     www-prod) echo "https://www.valguide.com" ;;
     www-dev) echo "https://www.valguide.dev" ;;
     *) echo "" ;;

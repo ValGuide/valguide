@@ -123,7 +123,7 @@ export const targets = {
       { name: 'BLOCK_ROBOTS', optional: true },
       { name: 'DEV_PROXY', optional: true },
     ],
-    requiredSecrets: ['STORYBOOK_PASSWORD'],
+    requiredSecrets: [],
   },
   studio: {
     root: 'apps/studio',

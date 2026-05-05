@@ -15,12 +15,17 @@ OUTPUT=$(deploy_url_for "studio-dev")
 assert_equals "studio dev url" "$OUTPUT" "https://studio.valguide.dev"
 echo ""
 
-echo "Test 3: Unknown URL returns empty"
+echo "Test 3: Storybook URLs"
+assert_equals "storybook prod url" "$(deploy_url_for "storybook-prod")" "https://storybook.valguide.com"
+assert_equals "storybook dev url" "$(deploy_url_for "storybook-dev")" "https://storybook.valguide.dev"
+echo ""
+
+echo "Test 4: Unknown URL returns empty"
 OUTPUT=$(deploy_url_for "workers-prod")
 assert_equals "workers has no url" "$OUTPUT" ""
 echo ""
 
-echo "Test 4: Display labels"
+echo "Test 5: Display labels"
 assert_equals "app display" "$(deploy_display_for "app")" "App"
 assert_equals "workers display" "$(deploy_display_for "workers")" "Workers"
 assert_equals "unknown display passthrough" "$(deploy_display_for "custom")" "custom"

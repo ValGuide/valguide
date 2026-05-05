@@ -37,7 +37,7 @@ than replacing curatorial judgment.
 - `apps/www`: public website
 - `apps/links`: QR and short-link handler
 - `apps/docs`: documentation site
-- `apps/storybook`: component sandbox
+- `apps/storybook`: interactive component documentation and visual review workspace
 - `packages/core`: shared product, data, and platform code
 - `packages/email`: email templates and delivery helpers
 - `packages/icons`: icon build tooling
@@ -79,6 +79,7 @@ Start with:
 - [Environment variables](./docs/engineering/reference/environment-variables.md)
 - [Deployment configuration](./docs/engineering/reference/deployment-configuration.md)
 - [Documentation overview](./docs/overview.md)
+- [Storybook](https://storybook.valguide.com)
 
 ## Self-Hosting
 
