@@ -11,10 +11,9 @@ LOG_FILE="$TMP_DIR/action.log"
 
 GITHUB_OUTPUT="$OUTPUT_FILE" \
 RUNNER_TEMP="$TMP_DIR" \
+DEPLOY_VARS_JSON='{"APP_WORKER_NAME":"fake-worker","APP_ROUTES":"app.example.com"}' \
 env \
   'INPUT_CLOUDFLARE-API-TOKEN=fake-token' \
-  'INPUT_APP-WORKER-NAME=fake-worker' \
-  'INPUT_APP-ROUTES=app.example.com' \
   node "$ACTION" >"$LOG_FILE"
 
 ENV_FILE=$(awk -F= '$1=="env-file" {print $2}' "$OUTPUT_FILE")

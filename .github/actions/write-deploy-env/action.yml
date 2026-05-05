@@ -1,103 +1,13 @@
 name: Write deploy env
 description: Write hosted deploy inputs to a masked temporary env file.
 inputs:
+  github-token:
+    required: true
+  environment-name:
+    required: true
   cloudflare-api-token:
     required: false
   cloudflare-account-id:
-    required: false
-  posthog-project-key:
-    required: false
-  app-worker-name:
-    required: false
-  app-routes:
-    required: false
-  studio-worker-name:
-    required: false
-  studio-routes:
-    required: false
-  admin-worker-name:
-    required: false
-  admin-routes:
-    required: false
-  links-worker-name:
-    required: false
-  links-routes:
-    required: false
-  www-worker-name:
-    required: false
-  www-routes:
-    required: false
-  docs-worker-name:
-    required: false
-  docs-routes:
-    required: false
-  storybook-worker-name:
-    required: false
-  storybook-routes:
-    required: false
-  image-guard-worker-name:
-    required: false
-  image-guard-routes:
-    required: false
-  posthog-proxy-worker-name:
-    required: false
-  posthog-proxy-routes:
-    required: false
-  cf-auth-kv-id:
-    required: false
-  cf-tour-data-kv-id:
-    required: false
-  cf-maintenance-kv-id:
-    required: false
-  cf-links-kv-id:
-    required: false
-  cf-r2-bucket-name:
-    required: false
-  cf-r2-jurisdiction:
-    required: false
-  app-base-url:
-    required: false
-  links-base-url:
-    required: false
-  admin-base-url:
-    required: false
-  admin-cookie-domain:
-    required: false
-  vite-studio-url:
-    required: false
-  vite-app-domain:
-    required: false
-  vite-privacy-policy-url:
-    required: false
-  vite-terms-of-service-url:
-    required: false
-  vite-r2-public-url:
-    required: false
-  vite-posthog-host:
-    required: false
-  better-auth-url:
-    required: false
-  better-auth-trusted-origins:
-    required: false
-  better-auth-cookie-domain:
-    required: false
-  better-auth-cookie-prefix:
-    required: false
-  maintenance-slack-channel:
-    required: false
-  users-slack-channel:
-    required: false
-  studio-events-slack-channel:
-    required: false
-  studio-feedback-slack-channel:
-    required: false
-  studio-performance-log-enabled:
-    required: false
-  linear-feedback-team-id:
-    required: false
-  linear-feedback-label-id:
-    required: false
-  block-robots:
     required: false
 outputs:
   env-file:
