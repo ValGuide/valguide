@@ -78,6 +78,7 @@ Start with:
 
 - [Environment variables](./docs/engineering/reference/environment-variables.md)
 - [Deployment configuration](./docs/engineering/reference/deployment-configuration.md)
+- [Release process](./docs/engineering/reference/release-process.md)
 - [Documentation overview](./docs/overview.md)
 - [Storybook](https://storybook.valguide.com)
 

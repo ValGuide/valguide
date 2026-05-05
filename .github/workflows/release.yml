@@ -1,56 +1,76 @@
-# Reusable workflow: create ONE consolidated GitHub Release per deploy.
-#
-# Creates a single git tag (deploy-{env}-{TS}-{sha}) and a GitHub Release
-# with a conventional-commits changelog showing commits since the last
-# consolidated deploy of the same environment.
-#
-# Called by deploy.yml after all deploy jobs complete.
-
 name: Release
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      manifest:
+      version:
+        description: Semver release version, with or without a leading v.
         required: true
         type: string
-    outputs:
-      release-url:
-        value: ${{ jobs.release.outputs.release-url }}
-      changelog:
-        value: ${{ jobs.release.outputs.changelog }}
+      target_ref:
+        description: Branch, tag, or SHA to release.
+        required: true
+        default: main
+        type: string
+      prerelease:
+        description: Mark the GitHub Release as a prerelease.
+        required: true
+        default: false
+        type: boolean
+      draft:
+        description: Create the GitHub Release as a draft.
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
+      actions: read
       contents: write
-    outputs:
-      release-url: ${{ steps.create-release.outputs.url }}
-      changelog: ${{ steps.changelog.outputs.body }}
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.target_ref }}
           fetch-depth: 0
+
+      - name: Validate release version
+        id: version
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: bash .github/scripts/release-validate-version.sh
+
+      - name: Resolve target SHA
+        id: target
+        run: |
+          set -euo pipefail
+          sha="$(git rev-parse HEAD)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "Releasing $sha from ${{ inputs.target_ref }}"
+
+      - name: Check release tag does not exist
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if git rev-parse "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "::error::Release tag already exists: $RELEASE_TAG"
+            exit 1
+          fi
+
+      - name: Verify public CI passed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+          REQUIRED_WORKFLOW: CI
+        run: bash .github/scripts/release-verify-ci.sh
 
       - name: Determine previous tag
         id: prev
         env:
-          DEPLOY_ENVIRONMENT: ${{ fromJson(inputs.manifest).environment }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: bash .github/scripts/release-find-previous-tag.sh
-
-      - name: Create tag
-        id: tag
-        env:
-          DEPLOY_ENVIRONMENT: ${{ fromJson(inputs.manifest).environment }}
-          DEPLOY_TIMESTAMP: ${{ fromJson(inputs.manifest).timestamp }}
-        run: bash .github/scripts/release-create-tag.sh
-
-      - name: Build apps deployed section
-        id: apps
-        env:
-          DEPLOY_MANIFEST: ${{ inputs.manifest }}
-        run: bash .github/scripts/release-build-apps-section.sh
 
       - name: Generate changelog
         id: changelog
@@ -58,24 +78,56 @@ jobs:
           PREVIOUS_TAG: ${{ steps.prev.outputs.tag }}
         run: bash .github/scripts/release-generate-changelog.sh
 
+      - name: Write release notes
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          PREVIOUS_TAG: ${{ steps.prev.outputs.tag }}
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+          CHANGELOG_BODY: ${{ steps.changelog.outputs.body }}
+        run: |
+          set -euo pipefail
+
+          {
+            printf '## Release %s\n\n' "$RELEASE_TAG"
+            printf -- '- **Target SHA:** [`%s`](%s/%s/commit/%s)\n' "$TARGET_SHA" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$TARGET_SHA"
+            if [ -n "$PREVIOUS_TAG" ]; then
+              printf -- '- **Previous release:** [`%s`](%s/%s/releases/tag/%s)\n' "$PREVIOUS_TAG" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$PREVIOUS_TAG"
+              printf -- '- **Full diff:** [%s...%s](%s/%s/compare/%s...%s)\n' "$PREVIOUS_TAG" "$RELEASE_TAG" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$PREVIOUS_TAG" "$RELEASE_TAG"
+            else
+              printf -- '- **Previous release:** none\n'
+            fi
+            printf '\n## Changes\n\n'
+            if [ -n "$CHANGELOG_BODY" ]; then
+              printf '%s\n' "$CHANGELOG_BODY"
+            else
+              printf 'No commit changes found for this release.\n'
+            fi
+          } > release-notes.md
+
+      - name: Create tag
+        id: tag
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: bash .github/scripts/release-create-tag.sh
+
       - name: Create GitHub Release
-        id: create-release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          name: "🚀 Deploy → ${{ fromJson(inputs.manifest).environment }} (${{ fromJson(inputs.manifest).timestamp }})"
-          body: |
-            ## 📦 Deployment Summary
-            - **Environment:** ${{ fromJson(inputs.manifest).environment }}
-            - **Triggered by:** @${{ fromJson(inputs.manifest).actor }}
-            - **Commit:** [`${{ fromJson(inputs.manifest).sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ fromJson(inputs.manifest).sha }})
-            ${{ steps.prev.outputs.tag && format('- **Previous release:** [`{0}`]({1}/{2}/releases/tag/{0})', steps.prev.outputs.tag, github.server_url, github.repository) || '- 🎉 **First consolidated release for this environment!**' }}
-            ${{ steps.prev.outputs.tag && format('- **Full diff:** [{0} → {1}]({2}/{3}/compare/{0}...{4})', steps.prev.outputs.tag, steps.tag.outputs.tag, github.server_url, github.repository, steps.tag.outputs.tag) || '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_NAME: ${{ steps.version.outputs.tag }}
+          IS_DRAFT: ${{ inputs.draft }}
+          IS_PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
 
-            ## 📦 Applications
-            ${{ steps.apps.outputs.body }}
+          args=(release create "$RELEASE_TAG" --title "$RELEASE_NAME" --notes-file release-notes.md)
+          if [ "$IS_DRAFT" = "true" ]; then
+            args+=(--draft)
+          fi
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            args+=(--prerelease --latest=false)
+          else
+            args+=(--latest)
+          fi
 
-            ## 🛠 Changes
-            ${{ steps.changelog.outputs.body }}
-          prerelease: ${{ fromJson(inputs.manifest).environment == 'dev' }}
-          make_latest: ${{ fromJson(inputs.manifest).environment == 'prod' }}
+          gh "${args[@]}"

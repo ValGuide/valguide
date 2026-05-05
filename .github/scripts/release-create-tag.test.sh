@@ -33,16 +33,16 @@ extract_field() {
   echo "$1" | awk -F= -v key="$2" '$1==key {print $2}'
 }
 
-echo "Test 1: Creates and pushes expected tag"
-RESULT=$(run_with_git_stub env DEPLOY_ENVIRONMENT=prod DEPLOY_TIMESTAMP=2026-04-22T120000 GITHUB_SHA=abcdef1234567890)
+echo "Test 1: Creates and pushes expected semver tag"
+RESULT=$(run_with_git_stub env RELEASE_TAG=v1.2.3)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 LOGFILE=$(extract_field "$RESULT" "__LOG_FILE__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 LOG=$(cat "$LOGFILE")
 assert_exit_code "success" "$STATUS" "0"
-assert_contains "tag output" "$(cat "$OUTFILE")" "tag=deploy-prod-2026-04-22T120000-abcdef1"
-assert_contains "git tag call" "$LOG" "tag deploy-prod-2026-04-22T120000-abcdef1"
-assert_contains "git push call" "$LOG" "push origin deploy-prod-2026-04-22T120000-abcdef1"
+assert_contains "tag output" "$(cat "$OUTFILE")" "tag=v1.2.3"
+assert_contains "git tag call" "$LOG" "tag -a v1.2.3 -m Release v1.2.3"
+assert_contains "git push call" "$LOG" "push origin v1.2.3"
 echo ""
 
 print_results

@@ -15,7 +15,7 @@ run_changelog() {
   cat >"$stub_dir/git" <<'EOF'
 #!/usr/bin/env bash
 if [ "$1" = "log" ]; then
-  printf 'feat: add deploy button ([abc1234](https://example.com/commit/abc))\nfix: patch deploy ([def5678](https://example.com/commit/def))\n'
+  printf 'feat: add release button ([abc1234](https://example.com/commit/abc))\nfix: patch release notes ([def5678](https://example.com/commit/def))\n'
 else
   exit 1
 fi
@@ -46,19 +46,19 @@ RESULT=$(run_changelog env GITHUB_REPOSITORY=openai/test GITHUB_SERVER_URL=https
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 assert_exit_code "success" "$STATUS" "0"
-assert_file_contains "first release message" "$OUTFILE" "body=🎉 First release — no previous tag to diff against."
+assert_file_contains "first release message" "$OUTFILE" "body=First release; no previous semver tag to diff against."
 echo ""
 
 echo "Test 2: Previous tag builds categorized changelog"
-RESULT=$(run_changelog env PREVIOUS_TAG=deploy-dev-2026-01-01 GITHUB_REPOSITORY=openai/test GITHUB_SERVER_URL=https://github.com)
+RESULT=$(run_changelog env PREVIOUS_TAG=v1.0.0 GITHUB_REPOSITORY=openai/test GITHUB_SERVER_URL=https://github.com)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 OUT=$(cat "$OUTFILE")
 assert_exit_code "success" "$STATUS" "0"
 assert_contains "features heading" "$OUT" "### ✨ Features"
 assert_contains "fixes heading" "$OUT" "### 🐛 Fixes"
-assert_contains "feat item" "$OUT" "add deploy button"
-assert_contains "fix item" "$OUT" "patch deploy"
+assert_contains "feat item" "$OUT" "add release button"
+assert_contains "fix item" "$OUT" "patch release notes"
 echo ""
 
 print_results

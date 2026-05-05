@@ -4,6 +4,8 @@
     "server-function-architecture",
     "environment-variables",
     "env-variables-reference",
+    "deployment-configuration",
+    "release-process",
     "i18n-tooling",
     "images",
     "fonts",

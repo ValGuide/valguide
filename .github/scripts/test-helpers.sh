@@ -64,7 +64,7 @@ assert_exit_code() {
 }
 
 make_temp_dir() {
-  mktemp -d "${TMPDIR:-/tmp}/deploy-script-tests.XXXXXX"
+  mktemp -d "${TMPDIR:-/tmp}/github-script-tests.XXXXXX"
 }
 
 print_results() {

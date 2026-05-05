@@ -18,12 +18,12 @@ run_in_repo() {
     touch file
     git add file
     GIT_AUTHOR_DATE='2026-01-01T00:00:00Z' GIT_COMMITTER_DATE='2026-01-01T00:00:00Z' git commit -m "init" >/dev/null 2>&1
-    git tag deploy-dev-2026-01-01T000000-aaaaaaa
+    git tag v1.0.0
     echo "next" > file
     git add file
     GIT_AUTHOR_DATE='2026-02-01T00:00:00Z' GIT_COMMITTER_DATE='2026-02-01T00:00:00Z' git commit -m "next" >/dev/null 2>&1
-    git tag deploy-dev-2026-02-01T000000-bbbbbbb
-    git tag deploy-prod-2026-03-01T000000-ccccccc
+    git tag v1.1.0
+    git tag v1.2.0-rc.1
   )
   status=0
   if ! (
@@ -41,24 +41,24 @@ extract_field() {
   echo "$1" | awk -F= -v key="$2" '$1==key {print $2}'
 }
 
-echo "Test 1: Finds latest matching environment tag"
-RESULT=$(run_in_repo env DEPLOY_ENVIRONMENT=dev)
+echo "Test 1: Finds latest semver tag"
+RESULT=$(run_in_repo env RELEASE_TAG=v1.3.0)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 LOGFILE=$(extract_field "$RESULT" "__LOG_FILE__")
 assert_exit_code "success" "$STATUS" "0"
-assert_file_contains "writes previous tag" "$OUTFILE" "tag=deploy-dev-2026-02-01T000000-bbbbbbb"
-assert_file_contains "logs previous tag" "$LOGFILE" "Found previous tag: deploy-dev-2026-02-01T000000-bbbbbbb"
+assert_file_contains "writes previous tag" "$OUTFILE" "tag=v1.2.0-rc.1"
+assert_file_contains "logs previous tag" "$LOGFILE" "Found previous tag: v1.2.0-rc.1"
 echo ""
 
-echo "Test 2: Missing environment tag writes empty tag"
-RESULT=$(run_in_repo env DEPLOY_ENVIRONMENT=stage)
+echo "Test 2: Current tag is excluded"
+RESULT=$(run_in_repo env RELEASE_TAG=v1.2.0-rc.1)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 LOGFILE=$(extract_field "$RESULT" "__LOG_FILE__")
 assert_exit_code "success" "$STATUS" "0"
-assert_file_contains "empty tag output" "$OUTFILE" "tag="
-assert_file_contains "logs first release" "$LOGFILE" "No previous tag found"
+assert_file_contains "writes previous tag" "$OUTFILE" "tag=v1.1.0"
+assert_file_contains "logs previous tag" "$LOGFILE" "Found previous tag: v1.1.0"
 echo ""
 
 print_results

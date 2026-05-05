@@ -71,19 +71,12 @@ The bootstrap command stores a Better Auth password hash in the auth tables. Do 
 
 ## Hosted ValGuide
 
-Hosted deployments run through GitHub Actions with GitHub Environments such as `app-dev`, `app-prod`, and `workers-prod`.
+Hosted ValGuide deployments are intentionally not run from this public
+repository. Public GitHub Actions validate code and may create release tags,
+but hosted Cloudflare deployment, hosted environment variables, provider
+credentials, and Slack notifications live in private ValGuide deployment
+orchestration.
 
-Hosted ValGuide can keep `ADMIN_AUTH_MODE=slack` with Slack credentials managed as provider-side secrets.
-
-Use environment-scoped variable names without `DEV` or `PROD` suffixes:
-
-- `POSTHOG_PROJECT_KEY`
-- `CF_AUTH_KV_ID`
-- `CF_TOUR_DATA_KV_ID`
-- `CF_MAINTENANCE_KV_ID`
-- `CF_LINKS_KV_ID`
-- `CF_R2_BUCKET_NAME`
-- `<TARGET>_WORKER_NAME`
-- `<TARGET>_ROUTES`
-
-Cloudflare resource IDs are mirrored from private infra outputs into GitHub environment variables by workspace operator scripts. Cloudflare Worker runtime secrets remain in Cloudflare Worker secrets and are pushed by an explicit rotation/setup step, not by normal deploy jobs.
+This keeps public workflow logs free of hosted deployment configuration. The
+public repo can still be self-hosted with generated Wrangler configuration and
+operator-provided secrets as described above.
