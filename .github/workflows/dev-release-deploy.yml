@@ -1,0 +1,135 @@
+name: Dev Release Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [dev]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: dev-release-deploy-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+env:
+  DEPLOY_REPOSITORY: ${{ vars.DEPLOY_REPOSITORY || 'ValGuide/valguide-deploy' }}
+
+jobs:
+  release-and-dispatch:
+    if: github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Parse build marker
+        id: build
+        run: |
+          set -euo pipefail
+          commit_message="$(git log -1 --format=%B "${{ github.event.workflow_run.head_sha }}")"
+          COMMIT_MESSAGE="$commit_message" bash .github/scripts/parse-build-command.sh
+
+      - name: Skip unmarked commit
+        if: steps.build.outputs.should_build != 'true'
+        run: echo "No [build ...] marker found; skipping dev release and deploy."
+
+      - name: Resolve dev release plan
+        id: release_plan
+        if: steps.build.outputs.should_build == 'true'
+        run: bash .github/scripts/resolve-dev-release-plan.sh
+
+      - name: Generate changelog
+        id: changelog
+        if: steps.build.outputs.should_build == 'true'
+        env:
+          PREVIOUS_TAG: ${{ steps.release_plan.outputs.previous_stable_tag }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+        run: bash .github/scripts/release-generate-changelog.sh
+
+      - name: Write release notes
+        if: steps.build.outputs.should_build == 'true'
+        env:
+          RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
+          NEXT_STABLE_TAG: ${{ steps.release_plan.outputs.next_stable_tag }}
+          PREVIOUS_STABLE_TAG: ${{ steps.release_plan.outputs.previous_stable_tag }}
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
+          BUILD_SCOPE: ${{ steps.build.outputs.scope }}
+          CHANGELOG_BODY: ${{ steps.changelog.outputs.body }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+        run: bash .github/scripts/generate-dev-release-notes.sh
+
+      - name: Configure git author
+        if: steps.build.outputs.should_build == 'true'
+        run: |
+          git config user.name "Valerius"
+          git config user.email "valerius@valguide.com"
+
+      - name: Create tag
+        if: steps.build.outputs.should_build == 'true'
+        env:
+          RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
+        run: bash .github/scripts/release-create-tag.sh
+
+      - name: Create GitHub prerelease
+        if: steps.build.outputs.should_build == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" \
+            --target "${{ github.event.workflow_run.head_sha }}" \
+            --title "$RELEASE_TAG" \
+            --notes-file release-notes.md \
+            --prerelease \
+            --latest=false
+
+      - name: Dispatch private deploy
+        if: steps.build.outputs.should_build == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.VALGUIDE_DEPLOY_DISPATCH_TOKEN }}
+          DEPLOY_REPOSITORY: ${{ env.DEPLOY_REPOSITORY }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
+          BUILD_SCOPE: ${{ steps.build.outputs.scope }}
+          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ steps.release_plan.outputs.release_tag }}
+          PUBLIC_RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::VALGUIDE_DEPLOY_DISPATCH_TOKEN is required to dispatch private deployments."
+            exit 1
+          fi
+
+          payload="$(mktemp)"
+          jq -n \
+            --arg source_repository "$SOURCE_REPOSITORY" \
+            --arg source_sha "$SOURCE_SHA" \
+            --arg release_tag "$RELEASE_TAG" \
+            --arg environment "dev" \
+            --arg scope "$BUILD_SCOPE" \
+            --arg release_url "$RELEASE_URL" \
+            --arg public_run_url "$PUBLIC_RUN_URL" \
+            '{
+              event_type: "dev_build",
+              client_payload: {
+                source_repository: $source_repository,
+                source_sha: $source_sha,
+                release_tag: $release_tag,
+                environment: $environment,
+                scope: $scope,
+                release_url: $release_url,
+                public_run_url: $public_run_url
+              }
+            }' > "$payload"
+
+          gh api "repos/${DEPLOY_REPOSITORY}/dispatches" --method POST --input "$payload"
