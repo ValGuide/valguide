@@ -6,11 +6,13 @@ SCRIPT="$REPO_ROOT/.github/scripts/deploy-workers.sh"
 source "$REPO_ROOT/.github/scripts/test-helpers.sh"
 
 run_workers() {
-  local tmp_dir stub_dir log_file status
+  local tmp_dir stub_dir log_file env_file status
   tmp_dir=$(make_temp_dir)
   mkdir -p "$tmp_dir/workers/alpha" "$tmp_dir/workers/beta" "$tmp_dir/bin"
   stub_dir="$tmp_dir/bin"
   log_file="$tmp_dir/pnpm.log"
+  env_file="$tmp_dir/deploy-env.sh"
+  : >"$env_file"
 
   cat >"$stub_dir/pnpm" <<EOF
 #!/usr/bin/env bash
@@ -18,13 +20,13 @@ echo "\$*" >> "$log_file"
 EOF
   chmod +x "$stub_dir/pnpm"
 
-  status=0
-  if ! (
+  set +e
+  (
     cd "$tmp_dir"
-    PATH="$stub_dir:$PATH" "$@" bash "$SCRIPT"
-  ) >/dev/null 2>&1; then
-    status=$?
-  fi
+    PATH="$stub_dir:$PATH" DEPLOY_ENV_FILE="$env_file" "$@" bash "$SCRIPT"
+  ) >/dev/null 2>&1
+  status=$?
+  set -e
 
   echo "__STATUS__=$status"
   echo "__LOG_FILE__=$log_file"

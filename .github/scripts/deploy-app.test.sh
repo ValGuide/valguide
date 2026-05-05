@@ -6,21 +6,31 @@ SCRIPT="$REPO_ROOT/.github/scripts/deploy-app.sh"
 source "$REPO_ROOT/.github/scripts/test-helpers.sh"
 
 run_with_stub() {
-  local tmp_dir stub_dir log_file status
+  local tmp_dir stub_dir log_file env_file status
   tmp_dir=$(make_temp_dir)
   stub_dir="$tmp_dir/bin"
   mkdir -p "$stub_dir"
   log_file="$tmp_dir/pnpm.log"
+  env_file="$tmp_dir/deploy-env.sh"
+  cat >"$env_file" <<'EOF'
+POSTHOG_PROJECT_KEY='ph-test'
+VITE_POSTHOG_HOST='https://e.example.com'
+VITE_APP_DOMAIN='app.example.com'
+VITE_PRIVACY_POLICY_URL='https://www.example.com/privacy'
+VITE_TERMS_OF_SERVICE_URL='https://www.example.com/terms'
+VITE_STUDIO_URL='https://studio.example.com'
+VITE_R2_PUBLIC_URL='https://assets.example.com'
+EOF
   cat >"$stub_dir/pnpm" <<EOF
 #!/usr/bin/env bash
 echo "\$*" >> "$log_file"
 EOF
   chmod +x "$stub_dir/pnpm"
 
-  status=0
-  if ! PATH="$stub_dir:$PATH" "$@" bash "$SCRIPT" >/dev/null 2>&1; then
-    status=$?
-  fi
+  set +e
+  PATH="$stub_dir:$PATH" DEPLOY_ENV_FILE="$env_file" "$@" bash "$SCRIPT" >/dev/null 2>&1
+  status=$?
+  set -e
 
   echo "__STATUS__=$status"
   echo "__LOG_FILE__=$log_file"

@@ -25,58 +25,60 @@ jobs:
       contents: write
     environment:
       name: ${{ inputs.app-name }}-${{ inputs.environment }}
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      POSTHOG_PROJECT_KEY: ${{ vars.POSTHOG_PROJECT_KEY }}
-      APP_WORKER_NAME: ${{ vars.APP_WORKER_NAME }}
-      APP_ROUTES: ${{ vars.APP_ROUTES }}
-      STUDIO_WORKER_NAME: ${{ vars.STUDIO_WORKER_NAME }}
-      STUDIO_ROUTES: ${{ vars.STUDIO_ROUTES }}
-      ADMIN_WORKER_NAME: ${{ vars.ADMIN_WORKER_NAME }}
-      ADMIN_ROUTES: ${{ vars.ADMIN_ROUTES }}
-      LINKS_WORKER_NAME: ${{ vars.LINKS_WORKER_NAME }}
-      LINKS_ROUTES: ${{ vars.LINKS_ROUTES }}
-      WWW_WORKER_NAME: ${{ vars.WWW_WORKER_NAME }}
-      WWW_ROUTES: ${{ vars.WWW_ROUTES }}
-      DOCS_WORKER_NAME: ${{ vars.DOCS_WORKER_NAME }}
-      DOCS_ROUTES: ${{ vars.DOCS_ROUTES }}
-      STORYBOOK_WORKER_NAME: ${{ vars.STORYBOOK_WORKER_NAME }}
-      STORYBOOK_ROUTES: ${{ vars.STORYBOOK_ROUTES }}
-      IMAGE_GUARD_WORKER_NAME: ${{ vars.IMAGE_GUARD_WORKER_NAME }}
-      IMAGE_GUARD_ROUTES: ${{ vars.IMAGE_GUARD_ROUTES }}
-      POSTHOG_PROXY_WORKER_NAME: ${{ vars.POSTHOG_PROXY_WORKER_NAME }}
-      POSTHOG_PROXY_ROUTES: ${{ vars.POSTHOG_PROXY_ROUTES }}
-      CF_AUTH_KV_ID: ${{ vars.CF_AUTH_KV_ID }}
-      CF_TOUR_DATA_KV_ID: ${{ vars.CF_TOUR_DATA_KV_ID }}
-      CF_MAINTENANCE_KV_ID: ${{ vars.CF_MAINTENANCE_KV_ID }}
-      CF_LINKS_KV_ID: ${{ vars.CF_LINKS_KV_ID }}
-      CF_R2_BUCKET_NAME: ${{ vars.CF_R2_BUCKET_NAME }}
-      CF_R2_JURISDICTION: ${{ vars.CF_R2_JURISDICTION }}
-      APP_BASE_URL: ${{ vars.APP_BASE_URL }}
-      LINKS_BASE_URL: ${{ vars.LINKS_BASE_URL }}
-      ADMIN_BASE_URL: ${{ vars.ADMIN_BASE_URL }}
-      ADMIN_COOKIE_DOMAIN: ${{ vars.ADMIN_COOKIE_DOMAIN }}
-      VITE_STUDIO_URL: ${{ vars.VITE_STUDIO_URL }}
-      VITE_APP_DOMAIN: ${{ vars.VITE_APP_DOMAIN }}
-      VITE_PRIVACY_POLICY_URL: ${{ vars.VITE_PRIVACY_POLICY_URL }}
-      VITE_TERMS_OF_SERVICE_URL: ${{ vars.VITE_TERMS_OF_SERVICE_URL }}
-      VITE_R2_PUBLIC_URL: ${{ vars.VITE_R2_PUBLIC_URL }}
-      VITE_POSTHOG_HOST: ${{ vars.VITE_POSTHOG_HOST }}
-      BETTER_AUTH_URL: ${{ vars.BETTER_AUTH_URL }}
-      BETTER_AUTH_TRUSTED_ORIGINS: ${{ vars.BETTER_AUTH_TRUSTED_ORIGINS }}
-      BETTER_AUTH_COOKIE_DOMAIN: ${{ vars.BETTER_AUTH_COOKIE_DOMAIN }}
-      BETTER_AUTH_COOKIE_PREFIX: ${{ vars.BETTER_AUTH_COOKIE_PREFIX }}
-      MAINTENANCE_SLACK_CHANNEL: ${{ vars.MAINTENANCE_SLACK_CHANNEL }}
-      USERS_SLACK_CHANNEL: ${{ vars.USERS_SLACK_CHANNEL }}
-      STUDIO_EVENTS_SLACK_CHANNEL: ${{ vars.STUDIO_EVENTS_SLACK_CHANNEL }}
-      STUDIO_FEEDBACK_SLACK_CHANNEL: ${{ vars.STUDIO_FEEDBACK_SLACK_CHANNEL }}
-      STUDIO_PERFORMANCE_LOG_ENABLED: ${{ vars.STUDIO_PERFORMANCE_LOG_ENABLED }}
-      LINEAR_FEEDBACK_TEAM_ID: ${{ vars.LINEAR_FEEDBACK_TEAM_ID }}
-      LINEAR_FEEDBACK_LABEL_ID: ${{ vars.LINEAR_FEEDBACK_LABEL_ID }}
-      BLOCK_ROBOTS: ${{ vars.BLOCK_ROBOTS }}
     steps:
       - uses: actions/checkout@v4
+      - id: deploy-env
+        uses: ./.github/actions/write-deploy-env
+        with:
+          cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          cloudflare-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          posthog-project-key: ${{ vars.POSTHOG_PROJECT_KEY }}
+          app-worker-name: ${{ vars.APP_WORKER_NAME }}
+          app-routes: ${{ vars.APP_ROUTES }}
+          studio-worker-name: ${{ vars.STUDIO_WORKER_NAME }}
+          studio-routes: ${{ vars.STUDIO_ROUTES }}
+          admin-worker-name: ${{ vars.ADMIN_WORKER_NAME }}
+          admin-routes: ${{ vars.ADMIN_ROUTES }}
+          links-worker-name: ${{ vars.LINKS_WORKER_NAME }}
+          links-routes: ${{ vars.LINKS_ROUTES }}
+          www-worker-name: ${{ vars.WWW_WORKER_NAME }}
+          www-routes: ${{ vars.WWW_ROUTES }}
+          docs-worker-name: ${{ vars.DOCS_WORKER_NAME }}
+          docs-routes: ${{ vars.DOCS_ROUTES }}
+          storybook-worker-name: ${{ vars.STORYBOOK_WORKER_NAME }}
+          storybook-routes: ${{ vars.STORYBOOK_ROUTES }}
+          image-guard-worker-name: ${{ vars.IMAGE_GUARD_WORKER_NAME }}
+          image-guard-routes: ${{ vars.IMAGE_GUARD_ROUTES }}
+          posthog-proxy-worker-name: ${{ vars.POSTHOG_PROXY_WORKER_NAME }}
+          posthog-proxy-routes: ${{ vars.POSTHOG_PROXY_ROUTES }}
+          cf-auth-kv-id: ${{ vars.CF_AUTH_KV_ID }}
+          cf-tour-data-kv-id: ${{ vars.CF_TOUR_DATA_KV_ID }}
+          cf-maintenance-kv-id: ${{ vars.CF_MAINTENANCE_KV_ID }}
+          cf-links-kv-id: ${{ vars.CF_LINKS_KV_ID }}
+          cf-r2-bucket-name: ${{ vars.CF_R2_BUCKET_NAME }}
+          cf-r2-jurisdiction: ${{ vars.CF_R2_JURISDICTION }}
+          app-base-url: ${{ vars.APP_BASE_URL }}
+          links-base-url: ${{ vars.LINKS_BASE_URL }}
+          admin-base-url: ${{ vars.ADMIN_BASE_URL }}
+          admin-cookie-domain: ${{ vars.ADMIN_COOKIE_DOMAIN }}
+          vite-studio-url: ${{ vars.VITE_STUDIO_URL }}
+          vite-app-domain: ${{ vars.VITE_APP_DOMAIN }}
+          vite-privacy-policy-url: ${{ vars.VITE_PRIVACY_POLICY_URL }}
+          vite-terms-of-service-url: ${{ vars.VITE_TERMS_OF_SERVICE_URL }}
+          vite-r2-public-url: ${{ vars.VITE_R2_PUBLIC_URL }}
+          vite-posthog-host: ${{ vars.VITE_POSTHOG_HOST }}
+          better-auth-url: ${{ vars.BETTER_AUTH_URL }}
+          better-auth-trusted-origins: ${{ vars.BETTER_AUTH_TRUSTED_ORIGINS }}
+          better-auth-cookie-domain: ${{ vars.BETTER_AUTH_COOKIE_DOMAIN }}
+          better-auth-cookie-prefix: ${{ vars.BETTER_AUTH_COOKIE_PREFIX }}
+          maintenance-slack-channel: ${{ vars.MAINTENANCE_SLACK_CHANNEL }}
+          users-slack-channel: ${{ vars.USERS_SLACK_CHANNEL }}
+          studio-events-slack-channel: ${{ vars.STUDIO_EVENTS_SLACK_CHANNEL }}
+          studio-feedback-slack-channel: ${{ vars.STUDIO_FEEDBACK_SLACK_CHANNEL }}
+          studio-performance-log-enabled: ${{ vars.STUDIO_PERFORMANCE_LOG_ENABLED }}
+          linear-feedback-team-id: ${{ vars.LINEAR_FEEDBACK_TEAM_ID }}
+          linear-feedback-label-id: ${{ vars.LINEAR_FEEDBACK_LABEL_ID }}
+          block-robots: ${{ vars.BLOCK_ROBOTS }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -93,6 +95,7 @@ jobs:
         env:
           APP_NAME: ${{ inputs.app-name }}
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+          DEPLOY_ENV_FILE: ${{ steps.deploy-env.outputs.env-file }}
         run: bash .github/scripts/configure-app-deploy.sh
 
       - name: Deploy app
@@ -102,6 +105,7 @@ jobs:
         env:
           APP_NAME: ${{ inputs.app-name }}
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+          DEPLOY_ENV_FILE: ${{ steps.deploy-env.outputs.env-file }}
         run: bash .github/scripts/deploy-app.sh
 
       - name: Deploy workers
@@ -110,6 +114,7 @@ jobs:
         continue-on-error: true
         env:
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+          DEPLOY_ENV_FILE: ${{ steps.deploy-env.outputs.env-file }}
         run: bash .github/scripts/deploy-workers.sh
 
       - name: Record deploy result

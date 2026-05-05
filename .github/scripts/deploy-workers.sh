@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$SCRIPT_DIR/deploy-env.sh"
+
 environment="${DEPLOY_ENVIRONMENT:?DEPLOY_ENVIRONMENT is required}"
+
+load_deploy_env
 
 for dir in workers/*/; do
   worker=$(basename "$dir")
