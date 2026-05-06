@@ -2,6 +2,16 @@
 set -euo pipefail
 
 output_file="${GITHUB_OUTPUT:-/dev/stdout}"
+release_kind="${RELEASE_KIND:-dev}"
+
+case "$release_kind" in
+  dev|stable)
+    ;;
+  *)
+    echo "::error::Unsupported release kind: ${release_kind}." >&2
+    exit 1
+    ;;
+esac
 
 latest_stable_tag="$(
   git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname \
@@ -74,19 +84,28 @@ case "$bump" in
 esac
 
 next_stable_tag="v${major}.${minor}.${patch}"
-latest_dev_number="$(
-  git tag -l "${next_stable_tag}-dev.*" \
-    | sed -nE "s/^${next_stable_tag//./\\.}-dev\\.([0-9]+)$/\\1/p" \
-    | sort -n \
-    | tail -n 1
-)"
-next_dev_number=$(( ${latest_dev_number:-0} + 1 ))
-release_tag="${next_stable_tag}-dev.${next_dev_number}"
+if [ "$release_kind" = "dev" ]; then
+  latest_dev_number="$(
+    git tag -l "${next_stable_tag}-dev.*" \
+      | sed -nE "s/^${next_stable_tag//./\\.}-dev\\.([0-9]+)$/\\1/p" \
+      | sort -n \
+      | tail -n 1
+  )"
+  next_dev_number=$(( ${latest_dev_number:-0} + 1 ))
+  release_tag="${next_stable_tag}-dev.${next_dev_number}"
+else
+  release_tag="$next_stable_tag"
+  if git rev-parse "$release_tag" >/dev/null 2>&1; then
+    echo "::error::Stable release tag already exists: ${release_tag}" >&2
+    exit 1
+  fi
+fi
 
 {
   echo "previous_stable_tag=$latest_stable_tag"
   echo "range=$range"
   echo "bump=$bump"
+  echo "release_kind=$release_kind"
   echo "next_stable_tag=$next_stable_tag"
   echo "release_tag=$release_tag"
 } >> "$output_file"

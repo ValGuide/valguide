@@ -29,6 +29,9 @@ assert_output_contains "$output" "scope="
 output="$(run_parser "feat(app): map polish [build all]")"
 assert_output_contains "$output" "should_build=true"
 assert_output_contains "$output" "command=build"
+assert_output_contains "$output" "environment=dev"
+assert_output_contains "$output" "release_kind=dev"
+assert_output_contains "$output" "dispatch_event_type=dev_build"
 assert_output_contains "$output" "scope=all"
 
 output="$(run_parser "fix: release selected apps [BUILD app, studio docs]")"
@@ -37,7 +40,15 @@ assert_output_contains "$output" "scope=app studio docs"
 
 output="$(run_parser $'feat: ship docs\n\n[deploy docs]')"
 assert_output_contains "$output" "command=deploy"
+assert_output_contains "$output" "environment=dev"
 assert_output_contains "$output" "scope=docs"
+
+output="$(run_parser "feat: promote prod [release apps]")"
+assert_output_contains "$output" "command=release"
+assert_output_contains "$output" "environment=prod"
+assert_output_contains "$output" "release_kind=stable"
+assert_output_contains "$output" "dispatch_event_type=prod_release"
+assert_output_contains "$output" "scope=apps"
 
 if COMMIT_MESSAGE="feat: bad [build search]" GITHUB_OUTPUT="$(mktemp)" bash "$SCRIPT_DIR/parse-build-command.sh" >/tmp/parse-build-command.out 2>/tmp/parse-build-command.err; then
   echo "Expected unsupported target to fail" >&2

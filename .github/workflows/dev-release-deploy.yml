@@ -1,4 +1,4 @@
-name: Dev Release Deploy
+name: Commit Release Deploy
 
 on:
   workflow_run:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: dev-release-deploy-${{ github.event.workflow_run.head_branch }}
+  group: commit-release-deploy-${{ github.event.workflow_run.head_branch }}
   cancel-in-progress: false
 
 env:
@@ -36,11 +36,13 @@ jobs:
 
       - name: Skip unmarked commit
         if: steps.build.outputs.should_build != 'true'
-        run: echo "No [build ...] marker found; skipping dev release and deploy."
+        run: echo "No [build ...] or [release ...] marker found; skipping release and deploy."
 
-      - name: Resolve dev release plan
+      - name: Resolve release plan
         id: release_plan
         if: steps.build.outputs.should_build == 'true'
+        env:
+          RELEASE_KIND: ${{ steps.build.outputs.release_kind }}
         run: bash .github/scripts/resolve-dev-release-plan.sh
 
       - name: Generate changelog
@@ -56,6 +58,7 @@ jobs:
         if: steps.build.outputs.should_build == 'true'
         env:
           RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
+          RELEASE_KIND: ${{ steps.release_plan.outputs.release_kind }}
           NEXT_STABLE_TAG: ${{ steps.release_plan.outputs.next_stable_tag }}
           PREVIOUS_STABLE_TAG: ${{ steps.release_plan.outputs.previous_stable_tag }}
           TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
@@ -77,19 +80,27 @@ jobs:
           RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
         run: bash .github/scripts/release-create-tag.sh
 
-      - name: Create GitHub prerelease
+      - name: Create GitHub Release
         if: steps.build.outputs.should_build == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
+          RELEASE_KIND: ${{ steps.release_plan.outputs.release_kind }}
         run: |
           set -euo pipefail
-          gh release create "$RELEASE_TAG" \
+
+          args=(release create "$RELEASE_TAG" \
             --target "${{ github.event.workflow_run.head_sha }}" \
             --title "$RELEASE_TAG" \
-            --notes-file release-notes.md \
-            --prerelease \
-            --latest=false
+            --notes-file release-notes.md)
+
+          if [ "$RELEASE_KIND" = "stable" ]; then
+            args+=(--latest)
+          else
+            args+=(--prerelease --latest=false)
+          fi
+
+          gh "${args[@]}"
 
       - name: Dispatch private deploy
         if: steps.build.outputs.should_build == 'true'
@@ -100,6 +111,8 @@ jobs:
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
           RELEASE_TAG: ${{ steps.release_plan.outputs.release_tag }}
           BUILD_SCOPE: ${{ steps.build.outputs.scope }}
+          DEPLOY_ENVIRONMENT: ${{ steps.build.outputs.environment }}
+          DISPATCH_EVENT_TYPE: ${{ steps.build.outputs.dispatch_event_type }}
           RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ steps.release_plan.outputs.release_tag }}
           PUBLIC_RUN_URL: ${{ github.event.workflow_run.html_url }}
         run: |
@@ -115,12 +128,13 @@ jobs:
             --arg source_repository "$SOURCE_REPOSITORY" \
             --arg source_sha "$SOURCE_SHA" \
             --arg release_tag "$RELEASE_TAG" \
-            --arg environment "dev" \
+            --arg environment "$DEPLOY_ENVIRONMENT" \
             --arg scope "$BUILD_SCOPE" \
             --arg release_url "$RELEASE_URL" \
             --arg public_run_url "$PUBLIC_RUN_URL" \
+            --arg event_type "$DISPATCH_EVENT_TYPE" \
             '{
-              event_type: "dev_build",
+              event_type: $event_type,
               client_payload: {
                 source_repository: $source_repository,
                 source_sha: $source_sha,

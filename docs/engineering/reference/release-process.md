@@ -21,7 +21,7 @@ only when the head commit message includes an explicit build marker:
 `[deploy ...]` is accepted as a backwards-compatible alias. No marker means no
 release and no deploy.
 
-After successful `CI`, the `Dev Release Deploy` workflow:
+After successful `CI`, the `Commit Release Deploy` workflow:
 
 1. parses the build marker from the exact head commit
 2. calculates the next semantic prerelease tag, such as `v1.4.0-dev.7`
@@ -31,6 +31,22 @@ After successful `CI`, the `Dev Release Deploy` workflow:
 5. the private deploy repository verifies public CI for the exact source, runs
    the deploy, sends Slack notification, and writes public GitHub Deployment
    status back to this repository
+
+## Production Release And Deploy
+
+Production releases also start from `dev`; there is no separate production
+branch. Add an explicit release marker to the head commit message:
+
+- `[release all]`
+- `[release apps]`
+- `[release app studio]`
+- `[release docs]`
+- `[release workers]`
+
+After successful `CI`, the workflow calculates the next stable semantic version
+from conventional commits, creates the stable `vMAJOR.MINOR.PATCH` GitHub
+Release, dispatches the private deploy repository with environment `prod`, and
+the private repository deploys the requested scope from that exact release tag.
 
 ## Versioning
 
@@ -49,16 +65,16 @@ If a build marker is present but the commit range contains no releasable
 conventional commits, the workflow fails clearly instead of inventing a
 version.
 
-## Stable Release Flow
+## Manual Stable Release Flow
 
-Stable releases are still explicit. Use the `Release` GitHub Actions workflow
-when promoting a tested release identity to a stable semver release.
+The `Release` GitHub Actions workflow remains available as an escape hatch when
+creating a release without commit-message dispatch.
 
 1. Ensure the target commit has a successful `CI` workflow run.
 2. Open the `Release` workflow in GitHub Actions.
 3. Run the workflow manually with:
    - `version`: semver version such as `1.2.3` or `v1.2.3`.
-   - `target_ref`: branch, tag, or commit SHA to release. Use `main` for the
+   - `target_ref`: branch, tag, or commit SHA to release. Use `dev` for the
      normal stable release path.
    - `prerelease`: `true` for prerelease tags such as `v1.2.3-rc.1`.
    - `draft`: `true` when the release notes need review before publication.
@@ -71,15 +87,15 @@ when promoting a tested release identity to a stable semver release.
   `vX.Y.Z-dev.7` or `vX.Y.Z-rc.1`.
 - Public workflows refuse to release or deploy when the required `CI` workflow
   has not passed for the exact target SHA.
-- The public dev dispatch workflow needs only `VALGUIDE_DEPLOY_DISPATCH_TOKEN`,
-  a narrow token that can create `repository_dispatch` events in the private
-  deploy repository.
+- The public commit dispatch workflow needs only
+  `VALGUIDE_DEPLOY_DISPATCH_TOKEN`, a narrow token that can create
+  `repository_dispatch` events in the private deploy repository.
 - Hosted deployment credentials and hosted deployment variables do not belong in
   this public repo.
 
 ## Production Promotion
 
 Private deployment automation treats public releases as production deployment
-inputs. A production deploy should check out the exact release tag, verify the
-same public CI gate for the tag's commit, and then deploy from private
+inputs. A production deploy checks out the exact release tag, verifies the same
+public CI gate for the tag's commit, and then deploys from private
 infrastructure with private secrets and variables.

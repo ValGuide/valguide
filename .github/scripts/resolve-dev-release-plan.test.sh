@@ -23,9 +23,10 @@ commit_file() {
 
 run_plan() {
   local repo="$1"
+  local release_kind="${2:-dev}"
   local output
   output="$(mktemp)"
-  (cd "$repo" && GITHUB_OUTPUT="$output" bash "$SCRIPT_DIR/resolve-dev-release-plan.sh")
+  (cd "$repo" && RELEASE_KIND="$release_kind" GITHUB_OUTPUT="$output" bash "$SCRIPT_DIR/resolve-dev-release-plan.sh")
   cat "$output"
 }
 
@@ -44,6 +45,7 @@ git_init "$repo"
 commit_file "$repo" "feat(app): first release" "feature.txt"
 output="$(run_plan "$repo")"
 assert_output_contains "$output" "bump=minor"
+assert_output_contains "$output" "release_kind=dev"
 assert_output_contains "$output" "next_stable_tag=v0.1.0"
 assert_output_contains "$output" "release_tag=v0.1.0-dev.1"
 
@@ -61,6 +63,21 @@ output="$(run_plan "$repo")"
 assert_output_contains "$output" "bump=major"
 assert_output_contains "$output" "next_stable_tag=v1.0.0"
 assert_output_contains "$output" "release_tag=v1.0.0-dev.1"
+
+repo_stable="$(mktemp -d)"
+git_init "$repo_stable"
+commit_file "$repo_stable" "feat(app): stable release" "stable.txt"
+output="$(run_plan "$repo_stable" stable)"
+assert_output_contains "$output" "release_kind=stable"
+assert_output_contains "$output" "next_stable_tag=v0.1.0"
+assert_output_contains "$output" "release_tag=v0.1.0"
+
+git -C "$repo_stable" tag v0.1.0
+commit_file "$repo_stable" "fix(app): next stable release" "stable-fix.txt"
+output="$(run_plan "$repo_stable" stable)"
+assert_output_contains "$output" "previous_stable_tag=v0.1.0"
+assert_output_contains "$output" "next_stable_tag=v0.1.1"
+assert_output_contains "$output" "release_tag=v0.1.1"
 
 repo_no_release="$(mktemp -d)"
 git_init "$repo_no_release"
