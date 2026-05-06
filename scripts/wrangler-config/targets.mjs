@@ -1,4 +1,7 @@
 const reactStartMain = '@tanstack/react-start/server-entry'
+const reactStartDeployMain = 'dist/server/index.js'
+const reactStartDeployAssets = { directory: 'dist/client' }
+const reactStartDeployRules = [{ type: 'ESModule', globs: ['**/*.js', '**/*.mjs'] }]
 const euPlacement = { region: 'aws:eu-central-1' }
 const observability = { logs: { enabled: true, invocation_logs: true } }
 
@@ -83,15 +86,18 @@ export const targets = {
     root: 'apps/docs',
     nameEnvVar: 'DOCS_WORKER_NAME',
     routesEnvVar: 'DOCS_ROUTES',
-    main: reactStartMain,
+    main: reactStartDeployMain,
     compatibilityFlags: ['nodejs_compat'],
+    rules: reactStartDeployRules,
     placement: euPlacement,
     observability,
+    assets: reactStartDeployAssets,
+    noBundle: true,
     vars: [
       { name: 'NODE_ENV', defaultValue: 'production' },
       { name: 'BLOCK_ROBOTS', optional: true },
     ],
-    requiredSecrets: ['DOCS_PASSWORD'],
+    requiredSecrets: [],
   },
   links: {
     root: 'apps/links',

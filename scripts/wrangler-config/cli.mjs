@@ -128,8 +128,10 @@ function buildConfig(targetName, targetEnv, inputEnv) {
   }
 
   if (target.compatibilityFlags) config.compatibility_flags = target.compatibilityFlags
+  if (target.rules) config.rules = target.rules
   if (target.placement) config.placement = target.placement
   if (target.observability) config.observability = target.observability
+  if (target.noBundle) config.no_bundle = true
   if (target.assets) config.assets = target.assets
   if (target.ai) config.ai = target.ai
   if (routeValue) config.routes = parseRoutes(routeValue)

@@ -94,8 +94,8 @@
     "www:deploy:dev": "pnpm --filter @valguide/www deploy:dev",
     "links:deploy": "pnpm --filter @valguide/links deploy",
     "links:deploy:dev": "pnpm --filter @valguide/links deploy:dev",
-    "docs:deploy": "pnpm --filter @valguide/docs deploy",
-    "docs:deploy:dev": "pnpm --filter @valguide/docs deploy:dev",
+    "docs:deploy": "pnpm --filter @valguide/docs run deploy",
+    "docs:deploy:dev": "pnpm --filter @valguide/docs run deploy:dev",
     "storybook:deploy": "pnpm --filter @valguide/storybook deploy",
     "storybook:deploy:dev": "pnpm --filter @valguide/storybook deploy:dev",
     "gh:actions": "open https://github.com/valguide/valguide/actions"
