@@ -74,13 +74,14 @@ This public repository does not include real secrets. For local setup, copy the
 example env files you need and provide private values through your shell,
 dotenv tooling, CI, or provider secret stores.
 
-Start with:
+Useful project resources:
 
 - [Environment variables](./docs/engineering/reference/environment-variables.md)
 - [Deployment configuration](./docs/engineering/reference/deployment-configuration.md)
 - [Release process](./docs/engineering/reference/release-process.md)
 - [Documentation overview](./docs/overview.md)
-- [Storybook](https://storybook.valguide.com)
+- [Storybook](https://storybook.valguide.com): interactive component documentation
+  and visual review workspace
 
 ## Self-Hosting
 
