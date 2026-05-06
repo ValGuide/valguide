@@ -9,12 +9,14 @@ import { Suspense } from 'react'
 import { baseOptions } from '@/lib/layout.shared'
 import { source } from '@/lib/source'
 
+const defaultDocsPath = import.meta.env.VALGUIDE_DOCS_MODE === 'workspace' ? 'workspace/onboarding' : 'overview'
+
 export const Route = createFileRoute('/docs/$')({
   component: Page,
   loader: async ({ params }) => {
     const slugs = params._splat?.split('/').filter(Boolean) ?? []
     if (slugs.length === 0) {
-      throw redirect({ to: '/docs/$', params: { _splat: 'overview' } })
+      throw redirect({ to: '/docs/$', params: { _splat: defaultDocsPath } })
     }
 
     const data = await serverLoader({ data: slugs })
@@ -29,7 +31,15 @@ const serverLoader = createServerFn({
   .inputValidator((slugs: string[]) => slugs)
   .handler(async ({ data: slugs }) => {
     const page = source.getPage(slugs)
-    if (!page) throw notFound()
+    if (!page) {
+      const workspacePublicOverview =
+        slugs.length === 1 && slugs[0] === 'overview' && source.getPage(['valguide', 'overview'])
+      if (workspacePublicOverview) {
+        throw redirect({ to: '/docs/$', params: { _splat: 'valguide/overview' } })
+      }
+
+      throw notFound()
+    }
 
     return {
       path: page.path,

@@ -6,6 +6,8 @@ export const Route = createFileRoute('/')({
   component: Home,
 })
 
+const defaultDocsPath = import.meta.env.VALGUIDE_DOCS_MODE === 'workspace' ? 'workspace/onboarding' : 'overview'
+
 function Home() {
   return (
     <HomeLayout {...baseOptions()}>
@@ -14,7 +16,7 @@ function Home() {
         <p className="text-fd-muted-foreground mb-6">Architecture, patterns, and guides for the ValGuide platform.</p>
         <Link
           to="/docs/$"
-          params={{ _splat: '' }}
+          params={{ _splat: defaultDocsPath }}
           className="px-4 py-2 rounded-lg bg-fd-primary text-fd-primary-foreground font-medium text-sm mx-auto"
         >
           Browse Documentation
