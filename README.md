@@ -97,12 +97,13 @@ configuration.
 
 ## Contributing
 
-ValGuide is being prepared for its first public release. Read
-[CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request, and keep
-changes small enough to review.
+ValGuide is open source and welcomes focused contributions. Read
+[CONTRIBUTING.md](./CONTRIBUTING.md) before opening an issue or pull request,
+and keep changes small enough to review.
 
-Security issues and sensitive reports should not be opened as public issues.
-Send them to [support@valguide.com](mailto:support@valguide.com).
+Security issues, leaked credentials, conduct reports, and other sensitive
+reports should not be opened as public issues. Email
+[support@valguide.com](mailto:support@valguide.com).
 
 ## License
 
