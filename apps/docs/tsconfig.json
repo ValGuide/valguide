@@ -8,6 +8,11 @@
       "fumadocs-mdx:collections/*": ["./.source/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "worker-configuration.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../../packages/core/platform/providers/cloudflare/workers.d.ts",
+    "worker-configuration.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
