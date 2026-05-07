@@ -41,16 +41,13 @@ extract_field() {
   echo "$1" | awk -F= -v key="$2" '$1==key {print $2}'
 }
 
-echo "Test 1: No previous tag builds categorized changelog from all commits"
+echo "Test 1: No previous tag writes compact first-release note"
 RESULT=$(run_changelog env GITHUB_REPOSITORY=openai/test GITHUB_SERVER_URL=https://github.com)
 STATUS=$(extract_field "$RESULT" "__STATUS__")
 OUTFILE=$(extract_field "$RESULT" "__OUTPUT_FILE__")
 OUT=$(cat "$OUTFILE")
 assert_exit_code "success" "$STATUS" "0"
-assert_contains "features heading" "$OUT" "### ✨ Features"
-assert_contains "fixes heading" "$OUT" "### 🐛 Fixes"
-assert_contains "feat item" "$OUT" "add release button"
-assert_contains "fix item" "$OUT" "patch release notes"
+assert_contains "first release note" "$OUT" "First release; no previous semver tag to diff against."
 echo ""
 
 echo "Test 2: Previous tag builds categorized changelog"
