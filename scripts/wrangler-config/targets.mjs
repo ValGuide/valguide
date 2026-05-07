@@ -1,7 +1,12 @@
-const reactStartMain = '@tanstack/react-start/server-entry'
 const reactStartDeployMain = 'dist/server/index.js'
 const reactStartDeployAssets = { directory: 'dist/client' }
 const reactStartDeployRules = [{ type: 'ESModule', globs: ['**/*.js', '**/*.mjs'] }]
+const reactStartDeployConfig = {
+  main: reactStartDeployMain,
+  rules: reactStartDeployRules,
+  assets: reactStartDeployAssets,
+  noBundle: true,
+}
 const euPlacement = { region: 'aws:eu-central-1' }
 const observability = { logs: { enabled: true, invocation_logs: true } }
 
@@ -45,7 +50,7 @@ export const targets = {
     root: 'apps/admin',
     nameEnvVar: 'ADMIN_WORKER_NAME',
     routesEnvVar: 'ADMIN_ROUTES',
-    main: reactStartMain,
+    ...reactStartDeployConfig,
     compatibilityFlags: ['nodejs_compat'],
     placement: euPlacement,
     observability,
@@ -67,7 +72,7 @@ export const targets = {
     root: 'apps/app',
     nameEnvVar: 'APP_WORKER_NAME',
     routesEnvVar: 'APP_ROUTES',
-    main: reactStartMain,
+    ...reactStartDeployConfig,
     compatibilityFlags: ['nodejs_compat'],
     placement: euPlacement,
     observability,
@@ -86,13 +91,10 @@ export const targets = {
     root: 'apps/docs',
     nameEnvVar: 'DOCS_WORKER_NAME',
     routesEnvVar: 'DOCS_ROUTES',
-    main: reactStartDeployMain,
+    ...reactStartDeployConfig,
     compatibilityFlags: ['nodejs_compat'],
-    rules: reactStartDeployRules,
     placement: euPlacement,
     observability,
-    assets: reactStartDeployAssets,
-    noBundle: true,
     vars: [
       { name: 'NODE_ENV', defaultValue: 'production' },
       { name: 'BLOCK_ROBOTS', optional: true },
@@ -103,7 +105,7 @@ export const targets = {
     root: 'apps/links',
     nameEnvVar: 'LINKS_WORKER_NAME',
     routesEnvVar: 'LINKS_ROUTES',
-    main: reactStartMain,
+    ...reactStartDeployConfig,
     compatibilityFlags: ['nodejs_compat'],
     placement: euPlacement,
     observability,
@@ -135,7 +137,7 @@ export const targets = {
     root: 'apps/studio',
     nameEnvVar: 'STUDIO_WORKER_NAME',
     routesEnvVar: 'STUDIO_ROUTES',
-    main: reactStartMain,
+    ...reactStartDeployConfig,
     compatibilityFlags: ['nodejs_compat'],
     placement: euPlacement,
     observability,
@@ -163,7 +165,7 @@ export const targets = {
     root: 'apps/www',
     nameEnvVar: 'WWW_WORKER_NAME',
     routesEnvVar: 'WWW_ROUTES',
-    main: reactStartMain,
+    ...reactStartDeployConfig,
     compatibilityFlags: ['nodejs_compat'],
     placement: euPlacement,
     observability,
