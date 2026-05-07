@@ -4,7 +4,7 @@ title: "Schema Redesign: Target Schema Definitions"
 
 **Status:** Reference Document  
 **Date:** February 2026  
-**Based On:** [decisions-locked.md](./decisions-locked.md), [architecture.md](./architecture.md)
+**Based On:** [architecture.md](./architecture.md)
 
 This document contains exact Drizzle ORM schema definitions for all tables in the simplified 15-table architecture.
 
