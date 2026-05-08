@@ -50,15 +50,8 @@ For loading rules and source boundaries, see [Environment Variables](./environme
 
 Tracked examples:
 
-- `.env.defaults.example`
 - `.env.local.example`
 - `.env.selfhost.example`
-- `.env.auth.local.example`
-- `.env.db.dev.example`
-- `.env.db.local.example`
-- `.env.cloudflare.dev.example`
-- `.env.posthog.local.example`
-- `.env.resend.dev.example`
 
 Local real files should use the same names without the `.example` suffix and stay untracked. The public repo does not auto-load those files; provide them from your shell, `direnv`, or your preferred dotenv workflow.
 

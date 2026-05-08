@@ -11,7 +11,7 @@ Generated configs are target-specific and environment-specific. They are ignored
 
 ## Local Development
 
-For a fresh checkout, copy `.env.local.example` to `.env.local` and edit the values you need. The modular `.env.*.example` files are still available when you prefer service-specific files.
+For a fresh checkout, copy `.env.local.example` to `.env.local` and edit the values you need.
 
 The committed `apps/*/wrangler.jsonc` and `workers/*/wrangler.jsonc` files intentionally use local names, local domains, and dummy binding IDs. They should not contain hosted ValGuide routes or private resource IDs.
 
