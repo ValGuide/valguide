@@ -9,6 +9,8 @@ publishing workflows, QR and short-link entry points, analytics-ready product
 surfaces, and deployment scaffolding. Digital tours and audio guides are an
 important part of the platform, but they are not the whole system.
 
+ValGuide has been in active development since April 2025.
+
 ## What ValGuide Is For
 
 - Web-first visitor guides, tours, and interpretive experiences
