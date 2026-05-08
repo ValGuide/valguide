@@ -12,15 +12,7 @@ ValGuide uses three env sources:
 
 ## Local Development
 
-This public repo does not ship real secrets. For local work, copy the example files at repo root:
-
-- `.env.defaults.example` → `.env.defaults`
-- `.env.auth.local.example` → `.env.auth.local`
-- `.env.db.dev.example` → `.env.db.dev`
-- `.env.db.local.example` → `.env.db.local`
-- `.env.cloudflare.dev.example` → `.env.cloudflare.dev`
-- `.env.posthog.local.example` → `.env.posthog.local`
-- `.env.resend.dev.example` → `.env.resend.dev`
+This public repo does not ship real secrets. For local work, copy `.env.local.example` to `.env.local` and edit the values you need.
 
 The public repo does not include a built-in secret loader. Provide local env values via your shell, `direnv`, your preferred dotenv tool, or CI/platform configuration.
 
@@ -38,5 +30,5 @@ The checked-in `wrangler.jsonc` files are public-safe examples plus app structur
 
 1. Add it to `packages/core/env/schema.ts`.
 2. Decide whether it is build-time (`VITE_*`) or runtime.
-3. Document a local example value in the relevant `*.example` file if contributors need it.
+3. Document a local example value in `.env.local.example` or `.env.selfhost.example` if contributors need it.
 4. Add CI or provider-side secret configuration for deploys.
