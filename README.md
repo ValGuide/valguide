@@ -82,7 +82,7 @@ Useful project resources:
 - [Deployment configuration](./docs/engineering/reference/deployment-configuration.md)
 - [Release process](./docs/engineering/reference/release-process.md)
 - [Documentation overview](./docs/overview.md)
-- [Storybook](https://storybook.valguide.com): interactive component documentation
+- [Storybook](https://storybook.valguide.dev): interactive component documentation
   and visual review workspace
 
 ## Self-Hosting
