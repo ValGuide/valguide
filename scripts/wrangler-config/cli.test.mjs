@@ -55,6 +55,11 @@ try {
   assert.deepEqual(generated.assets, { directory: 'dist/client' })
   assert.equal(generated.routes[0].pattern, 'app.example.com')
   assert.equal(generated.vars.BLOCK_ROBOTS, undefined)
+  assert.equal(generated.vars.VITE_ENV, 'dev')
+  assert.equal(generated.vars.MAINTENANCE_SLACK_CHANNEL, 'maintenance')
+  assert.equal(generated.vars.USERS_SLACK_CHANNEL, 'users')
+  assert.equal(generated.vars.STUDIO_EVENTS_SLACK_CHANNEL, 'studio-events')
+  assert.equal(generated.vars.STUDIO_FEEDBACK_SLACK_CHANNEL, 'studio-feedback')
   assert.equal(generated.kv_namespaces.length, 3)
 
   const output = execFileSync(

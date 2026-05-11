@@ -25,10 +25,17 @@ const policyVars = [
   { name: 'VITE_TERMS_OF_SERVICE_URL', required: true },
 ]
 
+const slackChannelVars = [
+  { name: 'MAINTENANCE_SLACK_CHANNEL', defaultValue: 'maintenance' },
+  { name: 'USERS_SLACK_CHANNEL', defaultValue: 'users' },
+  { name: 'STUDIO_EVENTS_SLACK_CHANNEL', defaultValue: 'studio-events' },
+  { name: 'STUDIO_FEEDBACK_SLACK_CHANNEL', defaultValue: 'studio-feedback' },
+]
+
 const appCommonVars = [
   { name: 'NODE_ENV', defaultValue: 'production' },
   { name: 'VITE_ENV', fromTargetEnv: true },
-  { name: 'USERS_SLACK_CHANNEL', defaultValue: 'users' },
+  ...slackChannelVars,
   ...authVars,
 ]
 
@@ -58,8 +65,6 @@ export const targets = {
     kvNamespaces: sharedKvBindings,
     vars: [
       ...appCommonVars,
-      { name: 'MAINTENANCE_SLACK_CHANNEL', defaultValue: 'maintenance' },
-      { name: 'STUDIO_EVENTS_SLACK_CHANNEL', defaultValue: 'studio-events' },
       { name: 'ADMIN_AUTH_MODE', optional: true },
       { name: 'ADMIN_COOKIE_DOMAIN', required: true },
       { name: 'ADMIN_BASE_URL', required: true },
@@ -78,10 +83,8 @@ export const targets = {
     observability,
     kvNamespaces: sharedKvBindings,
     vars: [
-      { name: 'NODE_ENV', defaultValue: 'production' },
-      { name: 'USERS_SLACK_CHANNEL', defaultValue: 'users' },
+      ...appCommonVars,
       { name: 'APP_BASE_URL', required: true },
-      ...authVars,
       ...policyVars,
     ],
     requiredSecrets: appSecrets,
@@ -111,10 +114,8 @@ export const targets = {
     observability,
     kvNamespaces: [{ binding: 'LINKS_KV', envVar: 'CF_LINKS_KV_ID' }],
     vars: [
-      { name: 'NODE_ENV', defaultValue: 'production' },
-      { name: 'USERS_SLACK_CHANNEL', defaultValue: 'users' },
+      ...appCommonVars,
       { name: 'APP_BASE_URL', required: true },
-      ...authVars,
       { name: 'BLOCK_ROBOTS', optional: true },
     ],
     requiredSecrets: appSecrets,
@@ -147,8 +148,6 @@ export const targets = {
     vars: [
       ...appCommonVars,
       { name: 'LINKS_BASE_URL', required: true },
-      { name: 'STUDIO_EVENTS_SLACK_CHANNEL', defaultValue: 'studio-events' },
-      { name: 'STUDIO_FEEDBACK_SLACK_CHANNEL', defaultValue: 'studio-feedback' },
       { name: 'STUDIO_PERFORMANCE_LOG_ENABLED', defaultValue: 'false' },
       { name: 'APP_BASE_URL', required: true },
       { name: 'ADMIN_BASE_URL', required: true },
@@ -171,10 +170,8 @@ export const targets = {
     observability,
     kvNamespaces: [{ binding: 'AUTH_KV', envVar: 'CF_AUTH_KV_ID' }],
     vars: [
-      { name: 'NODE_ENV', defaultValue: 'production' },
-      { name: 'USERS_SLACK_CHANNEL', defaultValue: 'users' },
+      ...appCommonVars,
       { name: 'APP_BASE_URL', required: true },
-      ...authVars,
       ...policyVars,
       { name: 'BLOCK_ROBOTS', optional: true },
     ],
