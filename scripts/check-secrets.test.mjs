@@ -1,12 +1,11 @@
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const repoRoot = process.cwd()
 const scannerPath = join(repoRoot, 'scripts/check-secrets.mjs')
-const tmp = mkdtempSync(join(tmpdir(), 'valguide-secret-scan-'))
+const tmp = mkdtempSync(join(repoRoot, '.secret-scan-test-'))
 
 function runSecretScan(filePath) {
   return spawnSync(process.execPath, [scannerPath, '--files', filePath], {
