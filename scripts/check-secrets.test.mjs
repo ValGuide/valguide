@@ -28,7 +28,7 @@ try {
   assert.equal(runSecretScan(cleanFile).status, 0)
 
   const tokenFile = join(tmp, 'token.env')
-  const fakeGitHubToken = `ghp_${'a'.repeat(36)}`
+  const fakeGitHubToken = `ghp_${'AbC123_'.repeat(6)}`
   writeFileSync(tokenFile, `GITHUB_TOKEN=${fakeGitHubToken}\n`)
   const tokenResult = runSecretScan(tokenFile)
   assert.equal(tokenResult.status, 1)
