@@ -28,12 +28,12 @@ try {
   assert.equal(runSecretScan(cleanFile).status, 0)
 
   const tokenFile = join(tmp, 'token.env')
-  const fakeGitHubToken = `ghp_${'AbC123_'.repeat(6)}`
-  writeFileSync(tokenFile, `GITHUB_TOKEN=${fakeGitHubToken}\n`)
+  const fakeAccessKey = 'AKIAIOSFODNN7EXAMPLE' // secret-scan: allow
+  writeFileSync(tokenFile, `AWS_ACCESS_KEY_ID=${fakeAccessKey}\n`)
   const tokenResult = runSecretScan(tokenFile)
   assert.equal(tokenResult.status, 1)
-  assert.match(tokenResult.stderr, /GitHub token/)
-  assert.doesNotMatch(tokenResult.stderr, new RegExp(fakeGitHubToken))
+  assert.match(tokenResult.stderr, /AWS access key id/)
+  assert.doesNotMatch(tokenResult.stderr, new RegExp(fakeAccessKey))
 
   const assignedSecretFile = join(tmp, 'assigned.env')
   const assignedSecretValue = ['aBcD1234', 'secret', 'Value', 'With', 'Length'].join('_')
@@ -43,19 +43,19 @@ try {
   assert.match(assignedSecretResult.stderr, /sensitive assignment/)
 
   const allowedFixtureFile = join(tmp, 'fixture.env')
-  writeFileSync(allowedFixtureFile, `GITHUB_TOKEN=${fakeGitHubToken} # secret-scan: allow\n`)
+  writeFileSync(allowedFixtureFile, `AWS_ACCESS_KEY_ID=${fakeAccessKey} # secret-scan: allow\n`)
   assert.equal(runSecretScan(allowedFixtureFile).status, 0)
 
   const stagedRepo = join(tmp, 'staged-repo')
   mkdirSync(stagedRepo)
   execFileSync('git', ['init'], { cwd: stagedRepo, stdio: 'ignore' })
   const stagedFile = join(stagedRepo, 'staged.env')
-  writeFileSync(stagedFile, `GITHUB_TOKEN=${fakeGitHubToken}\n`)
+  writeFileSync(stagedFile, `AWS_ACCESS_KEY_ID=${fakeAccessKey}\n`)
   execFileSync('git', ['add', 'staged.env'], { cwd: stagedRepo, stdio: 'ignore' })
-  writeFileSync(stagedFile, 'GITHUB_TOKEN=replace-with-local-token\n')
+  writeFileSync(stagedFile, 'AWS_ACCESS_KEY_ID=replace-with-local-token\n')
   const stagedResult = runStagedSecretScan(stagedRepo)
   assert.equal(stagedResult.status, 1)
-  assert.match(stagedResult.stderr, /GitHub token/)
+  assert.match(stagedResult.stderr, /AWS access key id/)
 } finally {
   rmSync(tmp, { recursive: true, force: true })
 }
