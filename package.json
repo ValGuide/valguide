@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "val": "node scripts/val.mjs",
+    "val:setup": "node scripts/setup-val.mjs",
     "prepare": "husky",
     "build": "nx run-many -t build",
     "dev": "nx run-many -t dev",
