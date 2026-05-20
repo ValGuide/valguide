@@ -95,7 +95,8 @@ generated config and secrets supplied outside Git.
 For self-hosting, see
 [Deployment configuration](./docs/engineering/reference/deployment-configuration.md)
 and copy `.env.selfhost.example` to `.env.selfhost` before generating deploy
-configuration.
+configuration. Self-hosted operators own their Cloudflare account, database,
+email provider, analytics setup, backups, uptime, and secret rotation.
 
 ## Contributing
 

@@ -19,6 +19,14 @@ The committed `apps/*/wrangler.jsonc` and `workers/*/wrangler.jsonc` files inten
 
 Copy `.env.selfhost.example` to `.env.selfhost` and replace the placeholders with values from your own Cloudflare account and runtime providers.
 
+Self-hosted operators are responsible for provisioning and maintaining:
+
+- Cloudflare account, Workers, routes, KV namespaces, R2 buckets, and API tokens
+- PostgreSQL database, migrations, backups, and restores
+- transactional email provider and sender reputation
+- optional analytics and integration providers
+- runtime secrets, rotations, incident response, and uptime monitoring
+
 Generate a deploy config for one target:
 
 ```sh
