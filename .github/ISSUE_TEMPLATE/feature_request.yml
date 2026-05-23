@@ -1,0 +1,60 @@
+name: Feature request
+description: Propose a focused product, documentation, or developer-experience improvement.
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for public, non-sensitive proposals. Do not include private
+        customer data, provider account identifiers, tokens, cookies, private
+        URLs, or operational runbook details.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user or contributor problem should this solve?
+      placeholder: Describe the workflow, limitation, or confusion.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What change do you want?
+      placeholder: Describe the smallest useful version.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional context about other approaches.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - App
+        - Studio
+        - Admin
+        - Docs
+        - CLI
+        - CI/CD
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Success criteria
+      description: How would maintainers know this is done?
+      placeholder: List observable outcomes, checks, or docs that should exist.
+  - type: checkboxes
+    id: public-safety
+    attributes:
+      label: Public safety
+      options:
+        - label: This request does not include secrets, tokens, cookies, private URLs, customer data, provider account identifiers, or operator-only details.
+          required: true

@@ -1,0 +1,71 @@
+name: Bug report
+description: Report a reproducible problem in ValGuide.
+title: "fix: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Do not include secrets, private URLs,
+        customer data, provider account identifiers, tokens, cookies, or local
+        private file paths.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+      placeholder: Describe the bug and the affected app or package.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reproducible flow.
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. Click ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include public-safe environment details only.
+      placeholder: |
+        - OS:
+        - Node.js:
+        - pnpm:
+        - Browser:
+        - ValGuide commit:
+  - type: textarea
+    id: checks
+    attributes:
+      label: Checks run
+      description: List commands you ran and their result.
+      placeholder: |
+        - pnpm secrets:check
+        - ./val type-check
+  - type: checkboxes
+    id: public-safety
+    attributes:
+      label: Public safety
+      options:
+        - label: I removed secrets, tokens, cookies, private URLs, customer data, provider account identifiers, and local private paths.
+          required: true

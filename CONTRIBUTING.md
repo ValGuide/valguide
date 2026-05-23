@@ -1,8 +1,8 @@
 # Contributing
 
-ValGuide is being prepared for its first public release. Until the initial
-public commit is finalized, treat the repo as review-in-progress, but make
-contributions as if this were a normal public open-source repository.
+ValGuide is a public open-source repository. Treat issues, pull requests,
+examples, logs, screenshots, and generated artifacts as visible to contributors
+and downstream users.
 
 You do not need untracked local files, private runbooks, private env files, or
 ValGuide-owned provider accounts to contribute product code, docs, tests, or
@@ -58,8 +58,7 @@ Cloudflare bindings or hosted databases require your own provider configuration.
 ## Branches, Issues, And Commits
 
 - Open an issue before larger work so maintainers can confirm scope.
-- Branch from the active development branch. During launch preparation, that is
-  `dev`.
+- Branch from the active development branch, currently `dev`.
 - Use short, descriptive branch names such as `vg-331-update-contributing` or
   `fix-login-redirect`.
 - Keep each pull request focused on one behavior change, docs update, or
