@@ -6,6 +6,7 @@
     "env-variables-reference",
     "deployment-configuration",
     "release-process",
+    "install-dev-telemetry",
     "i18n-tooling",
     "images",
     "fonts",

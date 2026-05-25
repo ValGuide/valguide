@@ -118,7 +118,8 @@
     "playwright": "^1.58.0",
     "postgres": "^3.4.8",
     "rollup-plugin-visualizer": "^7.0.1",
-    "ts-morph": "^27.0.2"
+    "ts-morph": "^27.0.2",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=24"

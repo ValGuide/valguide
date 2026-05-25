@@ -110,6 +110,7 @@ Notes:
   --worker is supported only for storybook and starts the worker-backed dev flow.
   --all starts all dev targets.
   --list shows the available dev targets and URLs.
+  Anonymous CLI telemetry records the target count and mode unless disabled with val telemetry disable or VALGUIDE_TELEMETRY_DISABLED=1.
   Multiple targets are supported for dev, for example: val dev studio admin
 `,
       createInvocation: createDevInvocation,
@@ -362,13 +363,28 @@ function createDevInvocation({ positionals, flags, passthrough, failWithUsage })
   const remoteMode = devFlags.includes('--remote')
   const selectedDatabaseEnvironment = remoteMode && !hasExplicitDatabaseEnvironment ? 'dev' : databaseEnvironment
   const forwardedFlags = devFlags.filter((flag) => flag !== '--all' && flag !== '--offline')
-  return commandInvocation('sh', [
-    'scripts/dev.sh',
-    `--db:${offlineMode ? 'local' : selectedDatabaseEnvironment}`,
-    ...(offlineMode ? ['--no-remote'] : []),
-    ...forwardedFlags,
-    ...targets,
-  ])
+  return commandInvocation(
+    'sh',
+    [
+      'scripts/dev.sh',
+      `--db:${offlineMode ? 'local' : selectedDatabaseEnvironment}`,
+      ...(offlineMode ? ['--no-remote'] : []),
+      ...forwardedFlags,
+      ...targets,
+    ],
+    {
+      telemetry: {
+        event: 'val.dev.started',
+        properties: {
+          target_count: targets.length,
+          all_mode: allMode,
+          remote_mode: remoteMode,
+          offline_mode: offlineMode,
+          database_environment: offlineMode ? 'local' : selectedDatabaseEnvironment,
+        },
+      },
+    },
+  )
 }
 
 function createBuildInvocation({ positionals, flags, passthrough, failWithUsage }) {

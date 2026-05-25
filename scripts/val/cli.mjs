@@ -3,6 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { fail, isFlag, quotedList, shellWords, splitPassthrough } from './helpers.mjs'
+import { handleTelemetryCommand, TELEMETRY_HELP, trackValTelemetry } from './telemetry.mjs'
 
 const COMPLETION_SHELLS = ['zsh']
 const COMPLETION_HELP = `Usage:
@@ -63,6 +64,10 @@ export function createValCli({ name = 'ValGuide CLI', cwd = process.cwd() } = {}
       return COMPLETION_HELP
     }
 
+    if (commandName === 'telemetry') {
+      return TELEMETRY_HELP
+    }
+
     const command = commands.get(commandName)
     return command?.help
   }
@@ -105,6 +110,7 @@ Usage:
 Commands:
   help [command]             Show general or command-specific help
   targets                    List supported targets
+  telemetry <action>         Show or change anonymous CLI telemetry settings
   completion <shell>         Print shell completion script
   completion install <shell> Install shell completion script
 ${commandLines}
@@ -140,6 +146,7 @@ ${examples.map((example) => `  ${example}`).join('\n')}
     const completionCommands = [
       'help:Show general or command-specific help',
       'targets:List supported targets',
+      'telemetry:Show or change anonymous CLI telemetry settings',
       'completion:Print shell completion script',
       ...[...commands.values()].map((command) => `${command.name}:${command.summary}`),
       ...[...shortcuts.keys()].map((shortcut) => `${shortcut}:Start local development`),
@@ -220,6 +227,10 @@ esac
     const commandLine = invocation.shell ? invocation.command : [invocation.command, ...invocation.args].join(' ')
     console.log(`> ${commandLine}`)
 
+    if (invocation.telemetry) {
+      trackValTelemetry(invocation.telemetry.event, invocation.telemetry.properties).catch(() => {})
+    }
+
     const child = spawn(invocation.command, invocation.args, {
       cwd: invocation.cwd ?? cwd,
       stdio: 'inherit',
@@ -253,6 +264,11 @@ esac
 
     if (commandName === 'targets') {
       printTargets()
+      return
+    }
+
+    if (commandName === 'telemetry') {
+      await handleTelemetryCommand(rest, failWithUsage)
       return
     }
 
