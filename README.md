@@ -81,6 +81,11 @@ pnpm val:setup
 This creates or updates a `val` symlink in `~/.local/bin`. If that directory is
 not on `PATH`, add it to your shell profile and open a new terminal.
 
+ValGuide can record anonymous install and local-dev CLI telemetry when a public
+PostHog project key is configured. It does not send command arguments, paths,
+environment values, project data, or secrets. Run `val telemetry disable` or set
+`VALGUIDE_TELEMETRY_DISABLED=1` to opt out.
+
 This public repository does not include real secrets. For local setup, copy the
 example env files you need and provide private values through your shell,
 dotenv tooling, CI, or provider secret stores.

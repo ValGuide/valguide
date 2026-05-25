@@ -68,6 +68,9 @@ importers:
       ts-morph:
         specifier: ^27.0.2
         version: 27.0.2
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   apps/admin:
     dependencies:
@@ -1206,7 +1209,7 @@ importers:
     devDependencies:
       '@react-email/preview-server':
         specifier: 5.2.9
-        version: 5.2.9(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 5.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/react':
         specifier: 19.2.2
         version: 19.2.2
@@ -1225,6 +1228,8 @@ importers:
       '@valguide/typescript-config':
         specifier: workspace:*
         version: link:../configs/typescript
+
+  tools/local-proxy: {}
 
   workers/image-guard:
     devDependencies:
@@ -12041,7 +12046,7 @@ snapshots:
       marked: 15.0.12
       react: 19.2.4
 
-  '@react-email/preview-server@5.2.9(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@react-email/preview-server@5.2.9(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       esbuild: 0.25.10
       next: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

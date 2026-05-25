@@ -26,6 +26,10 @@ For loading rules and source boundaries, see [Environment Variables](./environme
 | `LINEAR_API_KEY` | optional Linear integration | yes | Linear API access | local shell or provider secret |
 | `LINEAR_FEEDBACK_TEAM_ID` | optional Linear feedback routing | no | Linear feedback team | local env or generated Wrangler config |
 | `LINEAR_FEEDBACK_LABEL_ID` | optional Linear feedback routing | no | Linear feedback label | local env or generated Wrangler config |
+| `VALGUIDE_TELEMETRY_DISABLED` | optional local CLI telemetry opt-out | no | disables anonymous install/dev CLI telemetry when set to `1` | local shell or CI |
+| `VALGUIDE_TELEMETRY_ENABLED` | optional local CLI telemetry opt-out | no | disables anonymous install/dev CLI telemetry when set to `0` | local shell or CI |
+| `VALGUIDE_TELEMETRY_KEY` | optional local CLI telemetry | no | public PostHog project key for anonymous install/dev CLI telemetry | local shell or CI |
+| `POSTHOG_PROJECT_KEY` | optional analytics | no | public PostHog project key fallback for CLI telemetry and deploy tooling | local env or generated Wrangler config |
 
 ## Client Variables
 

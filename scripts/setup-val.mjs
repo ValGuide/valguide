@@ -3,6 +3,7 @@
 import { chmod, lstat, mkdir, readlink, symlink, unlink } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { delimiter, resolve } from 'node:path'
+import { trackValTelemetry } from './val/telemetry.mjs'
 
 const repoRoot = resolve(import.meta.dirname, '..')
 const launcherPath = resolve(repoRoot, 'val')
@@ -49,6 +50,10 @@ try {
     console.warn(`Warning: ${binDirectory} is not on PATH for this shell.`)
     console.warn('Add it to your shell profile, then open a new terminal before running bare "val".')
   }
+
+  await trackValTelemetry('val.install.completed', {
+    path_on_shell: pathIncludes(binDirectory),
+  })
 } catch (error) {
   console.error(`val:setup: ${error.message}`)
   process.exit(1)
