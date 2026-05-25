@@ -11,6 +11,17 @@ important part of the platform, but they are not the whole system.
 
 ValGuide has been in active development since April 2025.
 
+## Official Hosted Resources
+
+The canonical ValGuide-hosted surfaces are:
+
+- [Website](https://valguide.com)
+- [Visitor app](https://app.valguide.com)
+- [Studio](https://studio.valguide.com)
+- [Short links](https://links.valguide.com)
+- [Documentation](https://docs.valguide.com)
+- [Storybook](https://storybook.valguide.com)
+
 ## What ValGuide Is For
 
 - Web-first visitor guides, tours, and interpretive experiences
@@ -96,8 +107,6 @@ Useful project resources:
 - [Deployment configuration](./docs/engineering/reference/deployment-configuration.md)
 - [Release process](./docs/engineering/reference/release-process.md)
 - [Documentation overview](./docs/overview.md)
-- [Storybook](https://storybook.valguide.dev): interactive component documentation
-  and visual review workspace
 
 ## Self-Hosting
 
