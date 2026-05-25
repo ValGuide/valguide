@@ -212,6 +212,10 @@ function hasMixedSecretShape(value) {
   )
 }
 
+function isPublicPostHogProjectToken(value) {
+  return /^phc_[A-Za-z0-9]{40,}$/.test(value)
+}
+
 function isLocalHost(hostname) {
   return (
     hostname === 'localhost' ||
@@ -240,6 +244,10 @@ function isSensitiveUrl(value) {
 function isSuspiciousAssignedValue(value) {
   const cleanedValue = value.trim().replace(/[),;\]}]+$/g, '')
   if (isPlaceholderValue(cleanedValue)) {
+    return false
+  }
+
+  if (isPublicPostHogProjectToken(cleanedValue)) {
     return false
   }
 

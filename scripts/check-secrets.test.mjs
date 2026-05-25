@@ -41,6 +41,10 @@ try {
   assert.equal(assignedSecretResult.status, 1)
   assert.match(assignedSecretResult.stderr, /sensitive assignment/)
 
+  const posthogProjectTokenFile = join(tmp, 'posthog.env')
+  writeFileSync(posthogProjectTokenFile, 'POSTHOG_PROJECT_KEY=phc_xHD27kdfBk6N9BJDYJjgE8kiZqGw5MZHLNjRcCCNjBys\n')
+  assert.equal(runSecretScan(posthogProjectTokenFile).status, 0)
+
   const allowedFixtureFile = join(tmp, 'fixture.env')
   writeFileSync(allowedFixtureFile, `AWS_ACCESS_KEY_ID=${fakeAccessKey} # secret-scan: allow\n`)
   assert.equal(runSecretScan(allowedFixtureFile).status, 0)

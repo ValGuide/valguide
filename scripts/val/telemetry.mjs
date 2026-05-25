@@ -6,6 +6,7 @@ import { join } from 'node:path'
 const CONFIG_DIRECTORY = join(homedir(), '.config', 'valguide')
 const CONFIG_FILE = join(CONFIG_DIRECTORY, 'telemetry.json')
 const POSTHOG_CAPTURE_URL = 'https://eu.i.posthog.com/capture/'
+const DEFAULT_TELEMETRY_PROJECT_KEY = 'phc_xHD27kdfBk6N9BJDYJjgE8kiZqGw5MZHLNjRcCCNjBys'
 const REQUEST_TIMEOUT_MS = 750
 
 const TRUE_VALUES = new Set(['1', 'true', 'yes', 'on'])
@@ -17,7 +18,7 @@ export const TELEMETRY_HELP = `Usage:
   val telemetry disable
 
 Notes:
-  ValGuide CLI telemetry records anonymous install and dev command usage when a PostHog key is configured.
+  ValGuide CLI telemetry records anonymous install and dev command usage.
   It never sends command arguments, file paths, environment values, or project data.
   Set VALGUIDE_TELEMETRY_DISABLED=1 to opt out for a shell or CI job.
 `
@@ -32,8 +33,20 @@ function parseBoolean(value) {
   return null
 }
 
-function telemetryKey() {
-  return process.env.VALGUIDE_TELEMETRY_KEY || process.env.POSTHOG_PROJECT_KEY || process.env.VITE_POSTHOG_KEY || ''
+function telemetryProjectKey() {
+  if (process.env.VALGUIDE_TELEMETRY_KEY) {
+    return { key: process.env.VALGUIDE_TELEMETRY_KEY, source: 'VALGUIDE_TELEMETRY_KEY' }
+  }
+
+  if (process.env.POSTHOG_PROJECT_KEY) {
+    return { key: process.env.POSTHOG_PROJECT_KEY, source: 'POSTHOG_PROJECT_KEY' }
+  }
+
+  if (process.env.VITE_POSTHOG_KEY) {
+    return { key: process.env.VITE_POSTHOG_KEY, source: 'VITE_POSTHOG_KEY' }
+  }
+
+  return { key: DEFAULT_TELEMETRY_PROJECT_KEY, source: 'built-in ValGuide CLI telemetry project' }
 }
 
 function isCi() {
@@ -93,12 +106,12 @@ async function getTelemetryState() {
     return { enabled: false, reason: `${CONFIG_FILE} opt-out`, config }
   }
 
-  const key = telemetryKey()
+  const { key, source: keySource } = telemetryProjectKey()
   if (!key) {
     return { enabled: false, reason: 'no telemetry key configured', config }
   }
 
-  return { enabled: true, key, config }
+  return { enabled: true, key, keySource, config }
 }
 
 export async function trackValTelemetry(event, properties = {}) {
@@ -147,6 +160,7 @@ export async function handleTelemetryCommand(args, failWithUsage) {
     const state = await getTelemetryState()
     if (state.enabled) {
       console.log('ValGuide CLI telemetry is enabled.')
+      console.log(`Project key source: ${state.keySource}.`)
     } else {
       console.log(`ValGuide CLI telemetry is disabled: ${state.reason}.`)
     }
@@ -158,6 +172,7 @@ export async function handleTelemetryCommand(args, failWithUsage) {
     const config = await readTelemetryConfig()
     await writeTelemetryConfig({ ...config, enabled: true })
     console.log(`ValGuide CLI telemetry enabled in ${CONFIG_FILE}`)
+    console.log('Run "val telemetry status" to confirm the active project key source.')
     return
   }
 

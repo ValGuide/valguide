@@ -4,7 +4,8 @@ title: "Install And Dev Telemetry"
 
 ValGuide tracks anonymous usage signals so maintainers can understand whether
 contributors install the local CLI, start development targets, and run hosted
-deployments with analytics enabled.
+deployments with analytics enabled. Local CLI telemetry uses a dedicated public
+PostHog project token by default.
 
 ## Signals
 
@@ -38,12 +39,14 @@ automatically.
 
 ## Configuration
 
-CLI telemetry is active only when one of these public PostHog project-key
-variables is present:
+CLI telemetry uses the built-in ValGuide CLI telemetry project by default. Use
+one of these public PostHog project-key variables only when overriding the
+destination:
 
 - `VALGUIDE_TELEMETRY_KEY`
 - `POSTHOG_PROJECT_KEY`
 - `VITE_POSTHOG_KEY`
 
-The endpoint is PostHog EU capture. Network failures are ignored and never fail
-the developer command.
+`val telemetry status` reports whether the active project key comes from the
+built-in default or from an environment override. The endpoint is PostHog EU
+capture. Network failures are ignored and never fail the developer command.
