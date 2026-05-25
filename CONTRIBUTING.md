@@ -58,7 +58,7 @@ Cloudflare bindings or hosted databases require your own provider configuration.
 ## Branches, Issues, And Commits
 
 - Open an issue before larger work so maintainers can confirm scope.
-- Branch from the active development branch, currently `dev`.
+- Branch feature work from `dev`. Production releases are cut from `main`.
 - Use short, descriptive branch names such as `vg-331-update-contributing` or
   `fix-login-redirect`.
 - Keep each pull request focused on one behavior change, docs update, or

@@ -7,10 +7,18 @@ public GitHub Deployment history. Hosted deployment config, Cloudflare
 credentials, Slack credentials, and actual deployment execution live in private
 deployment orchestration.
 
+## Branch Model
+
+`dev` is the integration branch and source for hosted dev deploys. `main` is the
+stable branch and source for production releases.
+
+Both branches run public CI. Release/deploy automation runs only after CI passes
+and only when the exact head commit message includes an explicit marker.
+
 ## Dev Prerelease And Deploy
 
-Pushes to `dev` always run public CI. They create a dev prerelease and deploy
-only when the head commit message includes an explicit build marker:
+Pushes to `dev` create a dev prerelease and deploy only when the head commit
+message includes an explicit build marker:
 
 - `[build all]`
 - `[build apps]`
@@ -34,8 +42,8 @@ After successful `CI`, the `Commit Release Deploy` workflow:
 
 ## Production Release And Deploy
 
-Production releases also start from `dev`; there is no separate production
-branch. Add an explicit release marker to the head commit message:
+Production releases start from `main`. Add an explicit release marker to the
+head commit message on `main`:
 
 - `[release all]`
 - `[release apps]`
@@ -44,9 +52,13 @@ branch. Add an explicit release marker to the head commit message:
 - `[release workers]`
 
 After successful `CI`, the workflow calculates the next stable semantic version
-from conventional commits, creates the stable `vMAJOR.MINOR.PATCH` GitHub
-Release, dispatches the private deploy repository with environment `prod`, and
-the private repository deploys the requested scope from that exact release tag.
+from conventional commits since the latest stable tag, creates the stable
+`vMAJOR.MINOR.PATCH` GitHub Release, dispatches the private deploy repository
+with environment `prod`, and the private repository deploys the requested scope
+from that exact release tag.
+
+`[release ...]` markers on `dev` are rejected. `[build ...]` and `[deploy ...]`
+markers on `main` are rejected.
 
 ## Versioning
 
@@ -74,7 +86,7 @@ creating a release without commit-message dispatch.
 2. Open the `Release` workflow in GitHub Actions.
 3. Run the workflow manually with:
    - `version`: semver version such as `1.2.3` or `v1.2.3`.
-   - `target_ref`: branch, tag, or commit SHA to release. Use `dev` for the
+   - `target_ref`: branch, tag, or commit SHA to release. Use `main` for the
      normal stable release path.
    - `prerelease`: `true` for prerelease tags such as `v1.2.3-rc.1`.
    - `draft`: `true` when the release notes need review before publication.

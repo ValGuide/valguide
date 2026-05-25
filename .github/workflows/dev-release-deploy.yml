@@ -3,7 +3,7 @@ name: Commit Release Deploy
 on:
   workflow_run:
     workflows: [CI]
-    branches: [dev]
+    branches: [dev, main]
     types: [completed]
 
 permissions:
@@ -37,6 +37,33 @@ jobs:
       - name: Skip unmarked commit
         if: steps.build.outputs.should_build != 'true'
         run: echo "No [build ...] or [release ...] marker found; skipping release and deploy."
+
+      - name: Validate release branch
+        if: steps.build.outputs.should_build == 'true'
+        env:
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          BUILD_COMMAND: ${{ steps.build.outputs.command }}
+        run: |
+          set -euo pipefail
+
+          case "${HEAD_BRANCH}:${BUILD_COMMAND}" in
+            dev:build|dev:deploy)
+              ;;
+            main:release)
+              ;;
+            dev:release)
+              echo "::error::Production release markers must be pushed from main, not dev."
+              exit 1
+              ;;
+            main:build|main:deploy)
+              echo "::error::Dev deploy markers must be pushed from dev, not main."
+              exit 1
+              ;;
+            *)
+              echo "::error::Unsupported release branch/command combination: ${HEAD_BRANCH}:${BUILD_COMMAND}."
+              exit 1
+              ;;
+          esac
 
       - name: Resolve release plan
         id: release_plan

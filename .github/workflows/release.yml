@@ -10,7 +10,7 @@ on:
       target_ref:
         description: Branch, tag, or SHA to release.
         required: true
-        default: dev
+        default: main
         type: string
       prerelease:
         description: Mark the GitHub Release as a prerelease.
