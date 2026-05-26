@@ -74,8 +74,15 @@ async function findLandingPageShortLink(pageSlug: string, locale: string) {
  */
 export function buildInsertValues(input: CreateShortLinkInput, code: string) {
   const base = {
+    organizationId: input.organizationId ?? null,
     code,
     type: input.type,
+    title: input.title ?? null,
+    description: input.description ?? null,
+    context: input.context ?? null,
+    expiresAt: input.expiresAt ?? null,
+    createdBy: input.createdBy ?? null,
+    updatedBy: input.updatedBy ?? null,
     target: input.target ?? {},
   }
 

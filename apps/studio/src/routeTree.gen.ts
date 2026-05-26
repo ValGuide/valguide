@@ -23,6 +23,7 @@ import { Route as ApiUploadRouteImport } from './routes/api.upload'
 import { Route as MainSupportRouteImport } from './routes/_main/support'
 import { Route as MainSettingsRouteImport } from './routes/_main/settings'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
+import { Route as MainLinksRouteImport } from './routes/_main/links'
 import { Route as MainDesignRouteImport } from './routes/_main/design'
 import { Route as MainDashboardRouteImport } from './routes/_main/dashboard'
 import { Route as MainBrandRouteImport } from './routes/_main/brand'
@@ -114,6 +115,11 @@ const MainProfileRoute = MainProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => MainRoute,
 } as any).lazy(() => import('./routes/_main/profile.lazy').then((d) => d.Route))
+const MainLinksRoute = MainLinksRouteImport.update({
+  id: '/links',
+  path: '/links',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainDesignRoute = MainDesignRouteImport.update({
   id: '/design',
   path: '/design',
@@ -241,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/brand': typeof MainBrandRouteWithChildren
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
+  '/links': typeof MainLinksRoute
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
@@ -277,6 +284,7 @@ export interface FileRoutesByTo {
   '/brand': typeof MainBrandRouteWithChildren
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
+  '/links': typeof MainLinksRoute
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
   '/support': typeof MainSupportRoute
@@ -314,6 +322,7 @@ export interface FileRoutesById {
   '/_main/brand': typeof MainBrandRouteWithChildren
   '/_main/dashboard': typeof MainDashboardRoute
   '/_main/design': typeof MainDesignRoute
+  '/_main/links': typeof MainLinksRoute
   '/_main/profile': typeof MainProfileRoute
   '/_main/settings': typeof MainSettingsRoute
   '/_main/support': typeof MainSupportRoute
@@ -352,6 +361,7 @@ export interface FileRouteTypes {
     | '/brand'
     | '/dashboard'
     | '/design'
+    | '/links'
     | '/profile'
     | '/settings'
     | '/support'
@@ -388,6 +398,7 @@ export interface FileRouteTypes {
     | '/brand'
     | '/dashboard'
     | '/design'
+    | '/links'
     | '/profile'
     | '/settings'
     | '/support'
@@ -424,6 +435,7 @@ export interface FileRouteTypes {
     | '/_main/brand'
     | '/_main/dashboard'
     | '/_main/design'
+    | '/_main/links'
     | '/_main/profile'
     | '/_main/settings'
     | '/_main/support'
@@ -560,6 +572,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof MainProfileRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/links': {
+      id: '/_main/links'
+      path: '/links'
+      fullPath: '/links'
+      preLoaderRoute: typeof MainLinksRouteImport
       parentRoute: typeof MainRoute
     }
     '/_main/design': {
@@ -784,6 +803,7 @@ interface MainRouteChildren {
   MainBrandRoute: typeof MainBrandRouteWithChildren
   MainDashboardRoute: typeof MainDashboardRoute
   MainDesignRoute: typeof MainDesignRoute
+  MainLinksRoute: typeof MainLinksRoute
   MainProfileRoute: typeof MainProfileRoute
   MainSettingsRoute: typeof MainSettingsRoute
   MainSupportRoute: typeof MainSupportRoute
@@ -800,6 +820,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainBrandRoute: MainBrandRouteWithChildren,
   MainDashboardRoute: MainDashboardRoute,
   MainDesignRoute: MainDesignRoute,
+  MainLinksRoute: MainLinksRoute,
   MainProfileRoute: MainProfileRoute,
   MainSettingsRoute: MainSettingsRoute,
   MainSupportRoute: MainSupportRoute,

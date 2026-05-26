@@ -57,10 +57,45 @@ async function createShortLink(input: CreateShortLinkInput): Promise<ShortLink> 
 // CONVENIENCE WRAPPERS
 // =============================================================================
 
-export async function getOrCreateTourShortLink(tourNanoId: string): Promise<ShortLink> {
-  return getOrCreateShortLink({ type: 'tour', tourNanoId, target: { source: 'qr' } })
+export async function getOrCreateTourShortLink(tourNanoId: string, organizationId?: string): Promise<ShortLink> {
+  const resolvedOrganizationId = organizationId ?? (await getTourOrganizationId(tourNanoId))
+  return getOrCreateShortLink({
+    type: 'tour',
+    tourNanoId,
+    organizationId: resolvedOrganizationId,
+    title: 'Tour QR',
+    target: { source: 'qr' },
+  })
 }
 
-export async function getOrCreateStopShortLink(tourNanoId: string, stopNanoId: string): Promise<ShortLink> {
-  return getOrCreateShortLink({ type: 'stop', tourNanoId, stopNanoId, target: { source: 'qr' } })
+export async function getOrCreateStopShortLink(
+  tourNanoId: string,
+  stopNanoId: string,
+  organizationId?: string,
+): Promise<ShortLink> {
+  const resolvedOrganizationId = organizationId ?? (await getStopOrganizationId(stopNanoId))
+  return getOrCreateShortLink({
+    type: 'stop',
+    tourNanoId,
+    stopNanoId,
+    organizationId: resolvedOrganizationId,
+    title: 'Stop QR',
+    target: { source: 'qr' },
+  })
+}
+
+async function getTourOrganizationId(tourNanoId: string): Promise<string | null> {
+  const row = await db.query.tour.findFirst({
+    columns: { organizationId: true },
+    where: (fields, { eq }) => eq(fields.nanoId, tourNanoId),
+  })
+  return row?.organizationId ?? null
+}
+
+async function getStopOrganizationId(stopNanoId: string): Promise<string | null> {
+  const row = await db.query.stop.findFirst({
+    columns: { organizationId: true },
+    where: (fields, { eq }) => eq(fields.nanoId, stopNanoId),
+  })
+  return row?.organizationId ?? null
 }

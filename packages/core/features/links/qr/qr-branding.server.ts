@@ -304,7 +304,7 @@ export async function updateStopQrBrandingSettings(
 export async function getOrCreateTourQrCode(tourNanoId: string): Promise<TourQrCodePayload> {
   const tourContext = await getTourQrContext(tourNanoId)
   const [shortLink, orgOverride, tourOverride] = await Promise.all([
-    getOrCreateTourShortLink(tourNanoId),
+    getOrCreateTourShortLink(tourNanoId, tourContext.organizationId),
     getOrgQrOverride(tourContext.organizationId),
     getTourQrOverrideByTourId(tourContext.id),
   ])
@@ -337,7 +337,7 @@ export async function getOrCreateStopQrCode(tourNanoId: string, stopNanoId: stri
   await assertStopBelongsToTour(tourContext.id, stopContext.id)
 
   const [shortLink, orgOverride, tourOverride, stopOverride] = await Promise.all([
-    getOrCreateStopShortLink(tourNanoId, stopNanoId),
+    getOrCreateStopShortLink(tourNanoId, stopNanoId, tourContext.organizationId),
     getOrgQrOverride(tourContext.organizationId),
     getTourQrOverrideByTourId(tourContext.id),
     getStopQrOverrideByStopId(stopContext.id),

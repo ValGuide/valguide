@@ -57,6 +57,13 @@
       "when": 1776101430916,
       "tag": "0007_nasty_mathemanic",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1779818400000,
+      "tag": "0008_stable_entrypoints",
+      "breakpoints": true
     }
   ]
 }

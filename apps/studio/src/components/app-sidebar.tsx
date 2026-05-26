@@ -21,6 +21,7 @@ import {
   BarChart3,
   BookOpen,
   Image,
+  Link2,
   MapPin,
   MessageSquare,
   Palette,
@@ -110,7 +111,10 @@ export function AppSidebar({
 
   const performanceItems = createNavItems([{ title: t('analytics'), path: '/analytics', icon: BarChart3 }])
 
-  const libraryItems = createNavItems([{ title: t('assets'), path: '/assets', icon: Image }])
+  const libraryItems = createNavItems([
+    { title: t('assets'), path: '/assets', icon: Image },
+    { title: t('links'), path: '/links', icon: Link2 },
+  ])
 
   const workspaceItem = createNavItems([{ title: t('workspace'), path: '/settings', icon: Settings2 }])[0]
   const sidebarToggleLabel = isMobile || state === 'expanded' ? tSidebar('collapse') : tSidebar('expand')

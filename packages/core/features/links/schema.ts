@@ -30,8 +30,13 @@ export const short_links = studioSchema.table(
   'short_links',
   {
     id: serial('id').primaryKey(),
+    organizationId: uuid('organization_id').references(() => organization.id, { onDelete: 'cascade' }),
     code: text('code').notNull(),
     type: shortLinkTypeEnum('type').notNull(),
+    title: text('title'),
+    description: text('description'),
+    context: text('context'),
+    status: text('status').$type<ShortLinkStatus>().notNull().default('active'),
     locale: text('locale'),
 
     // Type-specific columns (nullable, used based on type)
@@ -45,32 +50,37 @@ export const short_links = studioSchema.table(
     target: jsonb('target').$type<ShortLinkTarget>().notNull().default({}),
     openCount: integer('open_count').notNull().default(0),
     lastOpenedAt: timestamp('last_opened_at', { withTimezone: true }),
+    expiresAt: timestamp('expires_at', { withTimezone: true }),
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
 
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
       .$onUpdate(() => new Date()),
+    createdBy: uuid('created_by').references(() => authUsers.id, { onDelete: 'set null' }),
+    updatedBy: uuid('updated_by').references(() => authUsers.id, { onDelete: 'set null' }),
   },
   (table) => [
     // Global unique on code
     uniqueIndex('short_links_code_uq').on(table.code),
 
     // Partial unique indexes per type (one link per target)
-    uniqueIndex('short_links_tour_target_uq').on(table.type, table.tourNanoId).where(sql`${table.type} = 'tour'`),
+    uniqueIndex('short_links_tour_target_uq')
+      .on(table.organizationId, table.type, table.tourNanoId)
+      .where(sql`${table.type} = 'tour'`),
     uniqueIndex('short_links_stop_target_uq')
-      .on(table.type, table.tourNanoId, table.stopNanoId)
+      .on(table.organizationId, table.type, table.tourNanoId, table.stopNanoId)
       .where(sql`${table.type} = 'stop'`),
     uniqueIndex('short_links_campaign_target_uq')
-      .on(table.type, table.campaignId)
+      .on(table.organizationId, table.type, table.campaignId)
       .where(sql`${table.type} = 'campaign'`),
-    uniqueIndex('short_links_external_target_uq')
-      .on(table.type, table.externalUrl)
-      .where(sql`${table.type} = 'external'`),
     uniqueIndex('short_links_landing_target_uq')
-      .on(table.type, table.pageSlug, table.locale)
+      .on(table.organizationId, table.type, table.pageSlug, table.locale)
       .where(sql`${table.type} = 'landing_page'`),
 
     // Index for querying by tour
+    index('short_links_org_idx').on(table.organizationId),
+    index('short_links_org_status_idx').on(table.organizationId, table.status),
     index('short_links_tour_idx').on(table.tourNanoId),
   ],
 )
@@ -151,6 +161,7 @@ export const stop_qr_branding = studioSchema.table(
 export type ShortLink = typeof short_links.$inferSelect
 export type ShortLinkInsert = typeof short_links.$inferInsert
 export type ShortLinkType = (typeof shortLinkTypeEnum.enumValues)[number]
+export type ShortLinkStatus = 'active' | 'archived'
 export type ShortLinkDailyStat = typeof short_link_daily_stats.$inferSelect
 export type OrganizationQrBranding = typeof organization_qr_branding.$inferSelect
 export type TourQrBranding = typeof tour_qr_branding.$inferSelect

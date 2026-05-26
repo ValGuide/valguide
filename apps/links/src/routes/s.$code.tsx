@@ -4,6 +4,7 @@ import { serverEnv } from '@valguide/core/env/server'
 import { getShortLinkByCode } from '@valguide/core/features/links/get-short-link'
 import { getCache, getLinkCacheKey, setCache } from '@valguide/core/features/links/kv'
 import { buildPathFromShortLink, isAbsoluteUrl } from '@valguide/core/features/links/paths'
+import { isShortLinkRedirectable } from '@valguide/core/features/links/redirectability'
 import { trackShortLinkOpen } from '@valguide/core/features/links/track-short-link-open.server'
 import { z } from 'zod'
 
@@ -16,6 +17,10 @@ const resolveShortLinkFn = createServerFn({ method: 'GET' })
 
     if (!shortLink) {
       return { error: 'Not found', status: 404 }
+    }
+
+    if (!isShortLinkRedirectable(shortLink)) {
+      return { error: 'Link is not active', status: 410 }
     }
 
     let path = await getCache(cacheKey)
