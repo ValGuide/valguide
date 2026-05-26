@@ -270,87 +270,120 @@ export function LinksManagementPage() {
           </Select>
         </div>
 
-        <div className="overflow-hidden rounded-lg border bg-background">
+        <div>
           {filteredLinks.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Link</TableHead>
-                  <TableHead>Destination</TableHead>
-                  <TableHead>Context</TableHead>
-                  <TableHead className="text-right">Opens</TableHead>
-                  <TableHead>Last opened</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-[220px] text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              <div className="grid gap-3 lg:hidden">
                 {filteredLinks.map((link) => (
-                  <TableRow key={link.id}>
-                    <TableCell className="max-w-[280px] whitespace-normal">
-                      <div className="min-w-0 space-y-1">
-                        <p className="truncate font-medium">{link.title}</p>
-                        <p className="break-all font-mono text-xs text-muted-foreground">{link.shortUrl}</p>
+                  <article key={link.id} className="rounded-lg border bg-background p-3">
+                    <div className="flex min-w-0 items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h2 className="truncate font-medium">{link.title}</h2>
+                        <p className="truncate font-mono text-xs text-muted-foreground" title={link.shortUrl}>
+                          {link.shortUrl}
+                        </p>
                       </div>
-                    </TableCell>
-                    <TableCell className="max-w-[260px] whitespace-normal">
-                      <div className="space-y-1">
-                        <Badge variant="outline">{destinationTypeLabel(link.type)}</Badge>
-                        <p className="break-all text-sm text-muted-foreground">{link.destinationLabel}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>{link.context ? <Badge variant="secondary">{link.context}</Badge> : '-'}</TableCell>
-                    <TableCell className="text-right tabular-nums">{link.openCount.toLocaleString()}</TableCell>
-                    <TableCell>{formatDate(link.lastOpenedAt)}</TableCell>
-                    <TableCell>
                       <Badge variant={statusVariant(link.status)}>{link.status}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          aria-label="Copy short link"
-                          onClick={() => void handleCopy(link.shortUrl)}
-                        >
-                          <Copy className="size-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" aria-label="Show QR code" onClick={() => setQrLink(link)}>
-                          <QrCode className="size-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" aria-label="Open short link" asChild>
-                          <a href={link.shortUrl} target="_blank" rel="noreferrer">
-                            <ExternalLink className="size-4" />
-                          </a>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          aria-label="Edit link"
-                          onClick={() => {
-                            setEditingLink(link)
-                            setFormOpen(true)
-                          }}
-                        >
-                          <Pencil className="size-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          aria-label="Archive link"
-                          disabled={link.status === 'archived' || archiveMutation.isPending}
-                          onClick={() => archiveMutation.mutate(link.id)}
-                        >
-                          <Archive className="size-4" />
-                        </Button>
+                    </div>
+
+                    <div className="mt-3 flex min-w-0 flex-wrap items-center gap-2">
+                      <Badge variant="outline">{destinationTypeLabel(link.type)}</Badge>
+                      {link.context ? <Badge variant="secondary">{link.context}</Badge> : null}
+                      <p
+                        className="min-w-0 flex-1 truncate text-sm text-muted-foreground"
+                        title={link.destinationLabel}
+                      >
+                        {link.destinationLabel}
+                      </p>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <div className="min-w-0 text-xs text-muted-foreground">
+                        <span className="font-medium tabular-nums text-foreground">
+                          {link.openCount.toLocaleString()}
+                        </span>{' '}
+                        opens
+                        <span className="mx-2">·</span>
+                        <span className="truncate">{formatDate(link.lastOpenedAt)}</span>
                       </div>
-                    </TableCell>
-                  </TableRow>
+
+                      <LinkActions
+                        link={link}
+                        archivePending={archiveMutation.isPending}
+                        density="compact"
+                        onArchive={(id) => archiveMutation.mutate(id)}
+                        onCopy={handleCopy}
+                        onEdit={(nextLink) => {
+                          setEditingLink(nextLink)
+                          setFormOpen(true)
+                        }}
+                        onShowQr={setQrLink}
+                      />
+                    </div>
+                  </article>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+
+              <div className="hidden overflow-hidden rounded-lg border bg-background lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Link</TableHead>
+                      <TableHead>Destination</TableHead>
+                      <TableHead>Context</TableHead>
+                      <TableHead className="text-right">Opens</TableHead>
+                      <TableHead>Last opened</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="w-[220px] text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredLinks.map((link) => (
+                      <TableRow key={link.id}>
+                        <TableCell className="max-w-[280px] whitespace-normal">
+                          <div className="min-w-0 space-y-1">
+                            <p className="truncate font-medium">{link.title}</p>
+                            <p className="truncate font-mono text-xs text-muted-foreground" title={link.shortUrl}>
+                              {link.shortUrl}
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-[260px] whitespace-normal">
+                          <div className="space-y-1">
+                            <Badge variant="outline">{destinationTypeLabel(link.type)}</Badge>
+                            <p className="truncate text-sm text-muted-foreground" title={link.destinationLabel}>
+                              {link.destinationLabel}
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell>{link.context ? <Badge variant="secondary">{link.context}</Badge> : '-'}</TableCell>
+                        <TableCell className="text-right tabular-nums">{link.openCount.toLocaleString()}</TableCell>
+                        <TableCell>{formatDate(link.lastOpenedAt)}</TableCell>
+                        <TableCell>
+                          <Badge variant={statusVariant(link.status)}>{link.status}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <LinkActions
+                            link={link}
+                            archivePending={archiveMutation.isPending}
+                            onArchive={(id) => archiveMutation.mutate(id)}
+                            onCopy={handleCopy}
+                            onEdit={(nextLink) => {
+                              setEditingLink(nextLink)
+                              setFormOpen(true)
+                            }}
+                            onShowQr={setQrLink}
+                            align="end"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           ) : (
-            <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
+            <div className="flex flex-col items-center gap-3 rounded-lg border bg-background px-6 py-16 text-center">
               <QrCode className="size-8 text-muted-foreground" />
               <div className="space-y-1">
                 <h2 className="font-medium">No links found</h2>
@@ -401,6 +434,75 @@ export function LinksManagementPage() {
         </DialogContent>
       </Dialog>
     </main>
+  )
+}
+
+function LinkActions({
+  link,
+  archivePending,
+  align = 'start',
+  density = 'normal',
+  onArchive,
+  onCopy,
+  onEdit,
+  onShowQr,
+}: {
+  link: ManagedLinkListItem
+  archivePending: boolean
+  align?: 'start' | 'end'
+  density?: 'normal' | 'compact'
+  onArchive: (id: number) => void
+  onCopy: (shortUrl: string) => Promise<void>
+  onEdit: (link: ManagedLinkListItem) => void
+  onShowQr: (link: ManagedLinkListItem) => void
+}) {
+  const buttonClassName = density === 'compact' ? 'size-8' : undefined
+
+  return (
+    <div className={`flex shrink-0 gap-0.5 ${align === 'end' ? 'justify-end' : 'justify-start'}`}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className={buttonClassName}
+        aria-label="Copy short link"
+        onClick={() => void onCopy(link.shortUrl)}
+      >
+        <Copy className="size-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className={buttonClassName}
+        aria-label="Show QR code"
+        onClick={() => onShowQr(link)}
+      >
+        <QrCode className="size-4" />
+      </Button>
+      <Button variant="ghost" size="icon" className={buttonClassName} aria-label="Open short link" asChild>
+        <a href={link.shortUrl} target="_blank" rel="noreferrer">
+          <ExternalLink className="size-4" />
+        </a>
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className={buttonClassName}
+        aria-label="Edit link"
+        onClick={() => onEdit(link)}
+      >
+        <Pencil className="size-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className={buttonClassName}
+        aria-label="Archive link"
+        disabled={link.status === 'archived' || archivePending}
+        onClick={() => onArchive(link.id)}
+      >
+        <Archive className="size-4" />
+      </Button>
+    </div>
   )
 }
 
