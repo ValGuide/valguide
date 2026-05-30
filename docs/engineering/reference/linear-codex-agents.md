@@ -6,6 +6,38 @@ ValGuide's Linear-triggered Codex agents create branches and pull requests from
 the GitHub identity configured on the agent host. The expected public GitHub
 account for these automated pull requests is `codex-valguide`.
 
+## Linear Triggers
+
+The agent host should enqueue a VPS Codex run from either of these Linear
+events:
+
+- An issue is in the configured in-progress state and has the `codex:auto`
+  label.
+- A new Linear comment on an issue mentions `@codex-valguide`.
+
+The comment trigger is intended for follow-up work on an existing ticket. The
+Linear webhook must include `Comment` creation events, not only issue create or
+issue update events. The service should ignore edited comments, deleted
+comments, and comments that do not mention one of the configured handles.
+
+Configure the accepted handles with `LINEAR_COMMENT_MENTION_HANDLES` as a
+comma-separated list. Leave it unset to use the default `@codex-valguide`.
+
+When a comment starts a run, the worker passes the issue context and triggering
+comment to Codex:
+
+```sh
+LINEAR_ISSUE_ID
+LINEAR_ISSUE_IDENTIFIER
+LINEAR_ISSUE_TITLE
+LINEAR_ISSUE_DESCRIPTION
+LINEAR_TRIGGER_COMMENT_BODY
+```
+
+If Linear sends a comment payload without complete issue details, the service
+needs `LINEAR_API_KEY` so it can resolve the commented issue before deciding
+whether to enqueue the job.
+
 ## Pull Request Identity
 
 The agent host must authenticate GitHub CLI and git push operations as
