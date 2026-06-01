@@ -18,6 +18,7 @@ const config: Config = {
     'node_modules/(?!(\\.pnpm/(nanoid|uuidv7)@|(nanoid|uuidv7)/))',
   ],
   moduleNameMapper: {
+    '^cloudflare:workers$': '<rootDir>/packages/core/test/cloudflare-workers.mock.ts',
     '@/(.*)': '<rootDir>/apps/app/$1',
     '@valguide/core/(.*)': '<rootDir>/packages/core/$1',
     '@valguide/features/(.*)': '<rootDir>/packages/core/features/$1',

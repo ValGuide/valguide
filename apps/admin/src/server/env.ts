@@ -1,3 +1,4 @@
+import { env as cloudflareEnv } from 'cloudflare:workers'
 import { serverEnvSchema } from '@valguide/core/env/schema'
 import { z } from 'zod'
 
@@ -18,7 +19,10 @@ let _adminEnv: AdminEnv | null = null
 function getAdminEnv(): AdminEnv {
   if (_adminEnv) return _adminEnv
 
-  const parsed = adminEnvSchema.safeParse(process.env)
+  const parsed = adminEnvSchema.safeParse({
+    ...toStringEnv(cloudflareEnv),
+    ...process.env,
+  })
 
   if (!parsed.success) {
     console.error('❌ Invalid admin environment variables:')
@@ -35,3 +39,15 @@ export const adminEnv: AdminEnv = new Proxy({} as AdminEnv, {
     return getAdminEnv()[prop as keyof AdminEnv]
   },
 })
+
+function toStringEnv(env: Record<string, unknown>): Record<string, string> {
+  const result: Record<string, string> = {}
+
+  for (const [key, value] of Object.entries(env)) {
+    if (typeof value === 'string') {
+      result[key] = value
+    }
+  }
+
+  return result
+}
