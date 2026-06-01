@@ -1,6 +1,6 @@
 import { createMiddleware } from '@tanstack/react-start'
 import { defaultLocale } from '@valguide/core/i18n/i18n.config'
-import { getAcceptLanguageLocale } from '@valguide/core/i18n/server'
+import { getAcceptLanguageLocale } from '@valguide/core/i18n/locale-resolution'
 import { getMaintenancePageI18n } from './i18n'
 import { renderMaintenanceDocument } from './maintenance-page.server'
 import { getMaintenanceStatus } from './state.server'

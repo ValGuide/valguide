@@ -1,29 +1,22 @@
 import { getCookie, getRequestHeaders, setCookie } from '@tanstack/react-start/server'
 import { defaultLocale, type SupportedLocale } from './i18n.config'
 import {
-  getAcceptLanguageLocale,
   isSupportedLocale,
   LOCALE_COOKIE_NAME,
   resolveLocaleFromHeaders,
+  resolveLocaleFromRequest,
   resolveLocaleStateFromHeaders,
+  resolveLocaleStateFromRequest,
 } from './locale-resolution'
 
-export {
-  LOCALE_COOKIE_NAME,
-  getAcceptLanguageLocale,
-  isSupportedLocale,
-  resolveLocaleFromHeaders,
-  resolveLocaleStateFromHeaders,
-}
-
 export const resolveServerLocale = (request?: Request): SupportedLocale => {
+  if (request) {
+    return resolveLocaleFromRequest(request)
+  }
+
   const cookieLocale = getCookie(LOCALE_COOKIE_NAME)
   if (isSupportedLocale(cookieLocale)) {
     return cookieLocale
-  }
-
-  if (request) {
-    return resolveLocaleFromHeaders(request.headers)
   }
 
   try {
@@ -34,6 +27,10 @@ export const resolveServerLocale = (request?: Request): SupportedLocale => {
 }
 
 export const resolveServerLocaleState = (request?: Request) => {
+  if (request) {
+    return resolveLocaleStateFromRequest(request)
+  }
+
   const cookieLocale = getCookie(LOCALE_COOKIE_NAME)
   if (isSupportedLocale(cookieLocale)) {
     return {
@@ -41,10 +38,6 @@ export const resolveServerLocaleState = (request?: Request) => {
       hasLocaleCookie: true,
       source: 'cookie' as const,
     }
-  }
-
-  if (request) {
-    return resolveLocaleStateFromHeaders(request.headers)
   }
 
   try {

@@ -1,5 +1,10 @@
 import { defaultLocale } from './i18n.config'
-import { resolveLocaleFromHeaders, resolveLocaleStateFromHeaders } from './locale-resolution'
+import {
+  resolveLocaleFromHeaders,
+  resolveLocaleFromHeadersAndUrl,
+  resolveLocaleStateFromHeaders,
+  resolveLocaleStateFromHeadersAndUrl,
+} from './locale-resolution'
 
 describe('resolveLocaleFromHeaders', () => {
   it('prefers locale cookie over accept-language', () => {
@@ -36,6 +41,24 @@ describe('resolveLocaleFromHeaders', () => {
 
     expect(resolveLocaleFromHeaders(headers)).toBe(defaultLocale)
   })
+
+  it('prefers supported hl query param over cookie and accept-language', () => {
+    const headers = new Headers({
+      cookie: 'foo=bar; valguide-locale=rm',
+      'accept-language': 'en-US,en;q=0.9',
+    })
+
+    expect(resolveLocaleFromHeadersAndUrl(headers, '/?hl=de')).toBe('de')
+  })
+
+  it('ignores unsupported hl query param and falls back to cookie', () => {
+    const headers = new Headers({
+      cookie: 'valguide-locale=rm',
+      'accept-language': 'de-CH,de;q=0.9',
+    })
+
+    expect(resolveLocaleFromHeadersAndUrl(headers, '/?hl=fr')).toBe('rm')
+  })
 })
 
 describe('resolveLocaleStateFromHeaders', () => {
@@ -61,6 +84,19 @@ describe('resolveLocaleStateFromHeaders', () => {
       locale: 'de',
       hasLocaleCookie: false,
       source: 'accept-language',
+    })
+  })
+
+  it('marks query-param derived locales as explicit URL selections', () => {
+    const headers = new Headers({
+      cookie: 'foo=bar; valguide-locale=rm',
+      'accept-language': 'en-US,en;q=0.9',
+    })
+
+    expect(resolveLocaleStateFromHeadersAndUrl(headers, 'https://studio.valguide.com/tours?hl=de')).toEqual({
+      locale: 'de',
+      hasLocaleCookie: true,
+      source: 'query-param',
     })
   })
 })
