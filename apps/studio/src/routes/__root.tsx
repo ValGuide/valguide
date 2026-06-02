@@ -14,9 +14,9 @@ import { themeQueryOptions } from '@/features/theme/query-options'
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async ({ context, location }) => {
     const [locale, theme] = await Promise.all([
-      context.queryClient.ensureQueryData(localeQueryOptions()),
+      context.queryClient.ensureQueryData(localeQueryOptions(location.href)),
       context.queryClient.ensureQueryData(themeQueryOptions()),
     ])
     const messages = await context.queryClient.ensureQueryData(messagesQueryOptions(locale))

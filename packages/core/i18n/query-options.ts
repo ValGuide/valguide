@@ -5,10 +5,22 @@ import type { ResolvedLocaleState } from './locale-resolution'
 import { resolveLocaleFn } from './resolve-locale.fn'
 import { resolveLocaleStateFn } from './resolve-locale-state.fn'
 
-export const localeQueryOptions = () =>
+function getLocaleQueryParam(url: string | undefined): string | null {
+  if (!url) {
+    return null
+  }
+
+  try {
+    return new URL(url, 'https://valguide.local').searchParams.get('hl')
+  } catch {
+    return null
+  }
+}
+
+export const localeQueryOptions = (href?: string) =>
   queryOptions<SupportedLocale>({
-    queryKey: ['locale'],
-    queryFn: () => resolveLocaleFn(),
+    queryKey: ['locale', getLocaleQueryParam(href)],
+    queryFn: () => resolveLocaleFn({ data: { href } }),
     staleTime: 5 * 60 * 1000, // 5 minutes - locale rarely changes during a session
     retry: false, // fail fast in beforeLoad — retries would brick the app
   })
