@@ -1,4 +1,5 @@
 import { useForm, useStore } from '@tanstack/react-form'
+import { clientEnv } from '@valguide/core/env/client'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Field, FieldError, FieldLabel } from '@valguide/core/ui/components/field'
 import { Button } from '@valguide/ui/components/button'
@@ -35,6 +36,7 @@ export interface ProfileFormProps {
 
 export function ProfileForm({ profile, email, onSubmit }: ProfileFormProps) {
   const t = useTranslations('profile')
+  const supportEmail = clientEnv.VITE_STUDIO_SUPPORT_EMAIL
   const [isPending, startTransition] = useTransition()
   const [saveState, setSaveState] = useState<'idle' | 'saved'>('idle')
 
@@ -154,7 +156,16 @@ export function ProfileForm({ profile, email, onSubmit }: ProfileFormProps) {
             disabled
             className="bg-muted text-muted-foreground cursor-not-allowed"
           />
-          <p className="text-xs text-muted-foreground">{t('emailChangeHint')}</p>
+          <p className="text-xs text-muted-foreground">
+            {t.rich('emailChangeHint', {
+              supportEmail,
+              support: (chunks) => (
+                <a href={`mailto:${supportEmail}`} className="font-medium underline-offset-4 hover:underline">
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
         </Field>
         <form.Field name="phone">
           {(field) => (

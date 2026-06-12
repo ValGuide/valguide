@@ -1243,7 +1243,8 @@
         }
       },
       "support": {
-        "description": "Get help and support for your questions."
+        "description": "Need help with ValGuide Studio? Email us at {supportEmail} and we will help you from there.",
+        "emailLabel": "Support email"
       }
     },
     "feedback": {
@@ -1414,7 +1415,7 @@
     "title": "Profile",
     "avatar": "Avatar",
     "email": "Email",
-    "emailChangeHint": "Contact support to change",
+    "emailChangeHint": "Contact <support>{supportEmail}</support> to change",
     "username": "Username",
     "firstName": "First Name",
     "lastName": "Last Name",
