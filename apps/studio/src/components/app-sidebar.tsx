@@ -21,6 +21,7 @@ import {
   BarChart3,
   BookOpen,
   Image,
+  LifeBuoy,
   MapPin,
   MessageSquare,
   Palette,
@@ -113,6 +114,7 @@ export function AppSidebar({
   const libraryItems = createNavItems([{ title: t('assets'), path: '/assets', icon: Image }])
 
   const workspaceItem = createNavItems([{ title: t('workspace'), path: '/settings', icon: Settings2 }])[0]
+  const supportItem = createNavItems([{ title: t('support'), path: '/support', icon: LifeBuoy }])[0]
   const sidebarToggleLabel = isMobile || state === 'expanded' ? tSidebar('collapse') : tSidebar('expand')
 
   return (
@@ -284,6 +286,23 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={supportItem.title} isActive={supportItem.isActive}>
+                  <Link
+                    {...supportItem.linkOptions}
+                    preload="intent"
+                    onClick={(event) => {
+                      if (isExactPath(supportItem.linkOptions.to as string)) {
+                        event.preventDefault()
+                        setOpenMobile(false)
+                      }
+                    }}
+                  >
+                    <supportItem.icon />
+                    <span>{supportItem.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
