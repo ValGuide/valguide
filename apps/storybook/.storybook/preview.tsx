@@ -97,6 +97,41 @@ const preview: Preview = {
     previewTabs: {
       'storybook/docs/panel': { index: -1 },
     },
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: [
+          'Admin',
+          ['Dialogs'],
+          'Studio',
+          [
+            'Shell',
+            'Tours',
+            ['Pages', 'Dialogs'],
+            'Stops',
+            ['Pages'],
+            'Assets',
+            ['Upload', 'Dialogs'],
+            'Editor',
+            ['Dialogs'],
+            'Design',
+            ['Dialogs'],
+            'QR',
+            'Organizations',
+            'Workspace',
+            'Profile',
+            'Feedback',
+            'Join Team',
+          ],
+          'Visitor App',
+          ['Player', ['Feedback'], 'Tours'],
+          'Auth',
+          'Shared UI',
+          ['Overview', 'Button', 'Inputs', 'Rich Text'],
+          'System',
+        ],
+      },
+    },
   },
   decorators: [
     (Story, { globals: { locale } }) => (

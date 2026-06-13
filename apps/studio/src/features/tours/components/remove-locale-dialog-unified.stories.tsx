@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { RemoveLocaleDialogUnified } from './remove-locale-dialog-unified'
 
 const meta = {
-  title: 'Tours/Dialogs/RemoveLocaleDialogUnified',
+  title: 'Studio/Tours/Dialogs/RemoveLocaleDialogUnified',
   component: RemoveLocaleDialogUnified,
   parameters: {
     layout: 'centered',

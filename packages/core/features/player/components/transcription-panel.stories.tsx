@@ -10,7 +10,7 @@ The swirling patterns in the sky have become one of the most recognizable images
 Notice how the cypress tree in the foreground reaches toward the sky, creating a visual bridge between earth and the heavens. The sleeping village below provides a peaceful contrast to the turbulent sky above.`
 
 const meta = {
-  title: 'Player/TranscriptionPanel',
+  title: 'Visitor App/Player/TranscriptionPanel',
   component: TranscriptionPanel,
   parameters: {
     layout: 'padded',

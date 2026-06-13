@@ -14,7 +14,7 @@ function MockUploadInline({ allowedTypes, locale }: UploadInlineComponentProps) 
 }
 
 const meta = {
-  title: 'Assets/AssetPickerModal',
+  title: 'Studio/Assets/AssetPickerModal',
   component: AssetPickerModal,
   parameters: {
     layout: 'centered',

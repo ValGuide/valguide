@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { CoverImage } from './cover-image'
 
 const meta = {
-  title: 'Player/CoverImage',
+  title: 'Visitor App/Player/CoverImage',
   component: CoverImage,
   parameters: {
     layout: 'centered',

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { RichTextDisplay } from './rich-text-display'
 
 const meta: Meta<typeof RichTextDisplay> = {
-  title: 'Tours/RichTextDisplay',
+  title: 'Shared UI/Rich Text/Display',
   component: RichTextDisplay,
   parameters: {
     layout: 'padded',

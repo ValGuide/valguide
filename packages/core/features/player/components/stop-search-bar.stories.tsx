@@ -30,7 +30,7 @@ const museumStops: PlayerStop[] = [
 ]
 
 const meta = {
-  title: 'Player/StopSearchBar',
+  title: 'Visitor App/Player/StopSearchBar',
   component: StopSearchBar,
   parameters: {
     layout: 'centered',

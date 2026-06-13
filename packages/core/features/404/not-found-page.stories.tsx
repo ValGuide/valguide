@@ -8,7 +8,7 @@ function NotFoundPageWithTranslations() {
 }
 
 const meta: Meta<typeof NotFoundPageWithTranslations> = {
-  title: 'Core/404/NotFoundPage',
+  title: 'System/Errors/NotFoundPage',
   component: NotFoundPageWithTranslations,
   parameters: {
     layout: 'fullscreen',

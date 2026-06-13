@@ -10,7 +10,7 @@ const mockOnCreateTeam = async (name: string) => {
 }
 
 const meta = {
-  title: 'Features/Orgs/CreateTeamDialog',
+  title: 'Studio/Organizations/CreateTeamDialog',
   component: CreateTeamDialog,
   parameters: {
     layout: 'centered',

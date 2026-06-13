@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { ChangesSummary } from './changes-summary'
 
 const meta: Meta<typeof ChangesSummary> = {
-  title: 'Editor/ChangesSummary',
+  title: 'Studio/Editor/ChangesSummary',
   component: ChangesSummary,
   parameters: {
     layout: 'centered',

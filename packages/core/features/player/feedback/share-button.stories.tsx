@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { ShareButton } from './share-button'
 
 const meta = {
-  title: 'Player/Feedback/ShareButton',
+  title: 'Visitor App/Player/Feedback/ShareButton',
   component: ShareButton,
   parameters: {
     layout: 'centered',

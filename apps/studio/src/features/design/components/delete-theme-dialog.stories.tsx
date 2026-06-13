@@ -17,7 +17,7 @@ const unusedThemeUsage: ThemeUsageDetails = {
 }
 
 const meta = {
-  title: 'Design/Dialogs/DeleteThemeDialog',
+  title: 'Studio/Design/Dialogs/DeleteThemeDialog',
   component: DeleteThemeDialog,
   parameters: {
     layout: 'centered',

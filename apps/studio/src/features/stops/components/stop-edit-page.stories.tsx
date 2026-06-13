@@ -154,7 +154,7 @@ const createMockAssets = (count: number): StopAssetDraftItem[] =>
   }))
 
 const meta: Meta<typeof StopEditPage> = {
-  title: 'Studio/Pages/Stops/Edit/StopEditPage',
+  title: 'Studio/Stops/Pages/Edit/StopEditPage',
   component: StopEditPage,
   parameters: {
     layout: 'fullscreen',

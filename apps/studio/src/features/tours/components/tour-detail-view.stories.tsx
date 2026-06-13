@@ -65,7 +65,7 @@ function MockArchiveButton({ onArchived }: { onArchived: () => void }) {
 }
 
 const meta = {
-  title: 'Studio/Pages/Tours/Detail/TourDetailView',
+  title: 'Studio/Tours/Pages/Detail/TourDetailView',
   component: TourDetailView,
   parameters: {
     layout: 'fullscreen',

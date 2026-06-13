@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { TourComplete } from './tour-complete'
 
 const meta = {
-  title: 'Player/Feedback/TourComplete',
+  title: 'Visitor App/Player/Feedback/TourComplete',
   component: TourComplete,
   parameters: {
     layout: 'centered',

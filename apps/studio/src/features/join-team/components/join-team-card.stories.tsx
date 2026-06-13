@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { JoinTeamCard } from './join-team-card'
 
 const meta = {
-  title: 'Features/JoinTeam/JoinTeamCard',
+  title: 'Studio/Join Team/JoinTeamCard',
   component: JoinTeamCard,
   tags: ['autodocs'],
   parameters: {

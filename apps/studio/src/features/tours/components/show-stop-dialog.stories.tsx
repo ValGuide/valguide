@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { ShowStopDialog } from './show-stop-dialog'
 
 const meta = {
-  title: 'Tours/Dialogs/ShowStopDialog',
+  title: 'Studio/Tours/Dialogs/ShowStopDialog',
   component: ShowStopDialog,
   parameters: {
     layout: 'centered',

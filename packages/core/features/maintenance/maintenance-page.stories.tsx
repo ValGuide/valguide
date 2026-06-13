@@ -3,7 +3,7 @@ import { getMaintenancePageI18n } from './i18n'
 import { MaintenancePage } from './maintenance-page'
 
 const meta: Meta<typeof MaintenancePage> = {
-  title: 'Maintenance/MaintenancePage',
+  title: 'System/Maintenance/MaintenancePage',
   component: MaintenancePage,
   parameters: {
     layout: 'fullscreen',

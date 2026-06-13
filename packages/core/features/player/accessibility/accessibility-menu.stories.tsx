@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { AccessibilityMenu } from './accessibility-menu'
 
 const meta = {
-  title: 'Player/AccessibilityMenu',
+  title: 'Visitor App/Player/AccessibilityMenu',
   component: AccessibilityMenu,
   parameters: {
     layout: 'centered',

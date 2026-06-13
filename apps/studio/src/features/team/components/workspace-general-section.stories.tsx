@@ -20,7 +20,7 @@ const mockData: TeamData = {
 }
 
 const meta = {
-  title: 'Features/Team/WorkspaceGeneralSection',
+  title: 'Studio/Workspace/WorkspaceGeneralSection',
   component: WorkspaceGeneralSection,
   parameters: {
     layout: 'padded',

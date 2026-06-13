@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { DeactivateAccountCard } from './deactivate-account-card'
 
 const meta: Meta<typeof DeactivateAccountCard> = {
-  title: 'Studio/Features/Profile/DeactivateAccountCard',
+  title: 'Studio/Profile/DeactivateAccountCard',
   component: DeactivateAccountCard,
   parameters: {
     layout: 'centered',

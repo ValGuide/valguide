@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { VisitorFeedbackForm } from './visitor-feedback-form'
 
 const meta = {
-  title: 'Player/Feedback/VisitorFeedbackForm',
+  title: 'Visitor App/Player/Feedback/VisitorFeedbackForm',
   component: VisitorFeedbackForm,
   parameters: {
     layout: 'centered',

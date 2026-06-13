@@ -78,7 +78,7 @@ function MockAssetCard({ asset, onDelete }: AssetCardComponentProps) {
 }
 
 const meta = {
-  title: 'Assets/AssetsList',
+  title: 'Studio/Assets/AssetsList',
   component: AssetsList,
   parameters: {
     layout: 'padded',

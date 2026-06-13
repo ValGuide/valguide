@@ -124,7 +124,7 @@ type StoryContextData = {
 }
 
 const meta = {
-  title: 'Studio/Pages/Tours/Edit/TourEditPage',
+  title: 'Studio/Tours/Pages/Edit/TourEditPage',
   component: TourEditPage,
   parameters: {
     layout: 'fullscreen',

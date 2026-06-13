@@ -20,7 +20,7 @@ const mockOnUpload = async (_file: File, onProgress: (p: number) => void) => {
 }
 
 const meta = {
-  title: 'Assets/MediaPicker',
+  title: 'Studio/Assets/MediaPicker',
   component: MediaPicker,
   parameters: {
     nextjs: {

@@ -62,7 +62,7 @@ const QRCodeExample = () => {
 }
 
 const meta: Meta = {
-  title: 'Features/QRCode',
+  title: 'Shared UI/QRCode',
   component: QRCodeExample,
   parameters: {
     layout: 'padded',

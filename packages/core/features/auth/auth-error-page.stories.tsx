@@ -19,7 +19,7 @@ function AuthErrorPageWithTranslations({ errorCode }: Pick<AuthErrorPageProps, '
 }
 
 const meta: Meta<typeof AuthErrorPageWithTranslations> = {
-  title: 'Core/Auth/AuthErrorPage',
+  title: 'Auth/AuthErrorPage',
   component: AuthErrorPageWithTranslations,
   parameters: {
     layout: 'fullscreen',

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { TourEditSkeleton } from './tour-edit-skeleton'
 
 const meta = {
-  title: 'Studio/Pages/Tours/Edit/TourEditSkeleton',
+  title: 'Studio/Tours/Pages/Edit/TourEditSkeleton',
   component: TourEditSkeleton,
   parameters: {
     layout: 'fullscreen',

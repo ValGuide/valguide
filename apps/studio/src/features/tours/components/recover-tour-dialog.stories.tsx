@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { RecoverTourDialog } from './recover-tour-dialog'
 
 const meta = {
-  title: 'Tours/Dialogs/RecoverTourDialog',
+  title: 'Studio/Tours/Dialogs/RecoverTourDialog',
   component: RecoverTourDialog,
   parameters: {
     layout: 'centered',

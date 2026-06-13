@@ -8,7 +8,7 @@ const mockOnSubmit = async () => {
 }
 
 const meta: Meta<typeof ProfileForm> = {
-  title: 'Studio/Features/Profile/ProfileForm',
+  title: 'Studio/Profile/ProfileForm',
   component: ProfileForm,
   parameters: {
     layout: 'centered',

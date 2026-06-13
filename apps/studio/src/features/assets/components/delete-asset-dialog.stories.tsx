@@ -4,7 +4,7 @@ import { fn } from 'storybook/test'
 import { DeleteAssetDialog } from './delete-asset-dialog'
 
 const meta = {
-  title: 'Assets/Dialogs/DeleteAssetDialog',
+  title: 'Studio/Assets/Dialogs/DeleteAssetDialog',
   component: DeleteAssetDialog,
   parameters: {
     layout: 'centered',

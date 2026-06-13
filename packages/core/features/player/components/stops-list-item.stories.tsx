@@ -21,7 +21,7 @@ const mockStopNoCover: PlayerStop = {
 }
 
 const meta = {
-  title: 'Player/StopsListItem',
+  title: 'Visitor App/Player/StopsListItem',
   component: StopsListItem,
   parameters: {
     layout: 'centered',

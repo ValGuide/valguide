@@ -63,7 +63,7 @@ function StopsListWithState({ isPlaying }: { isPlaying: boolean }) {
 }
 
 const meta = {
-  title: 'Player/StopsList',
+  title: 'Visitor App/Player/StopsList',
   component: StopsList,
   parameters: {
     layout: 'centered',

@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { ErrorPage } from './error-page'
 
 const meta: Meta<typeof ErrorPage> = {
-  title: 'Core/Error/ErrorPage',
+  title: 'System/Errors/ErrorPage',
   component: ErrorPage,
   parameters: {
     layout: 'fullscreen',

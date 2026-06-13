@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { AddLanguageDialog } from './add-language-dialog'
 
 const meta = {
-  title: 'Tours/Dialogs/AddLanguageDialog',
+  title: 'Studio/Tours/Dialogs/AddLanguageDialog',
   component: AddLanguageDialog,
   parameters: {
     layout: 'centered',

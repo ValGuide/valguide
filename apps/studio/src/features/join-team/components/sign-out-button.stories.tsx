@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { SignOutButton } from './sign-out-button'
 
 const meta = {
-  title: 'Features/JoinTeam/SignOutButton',
+  title: 'Studio/Join Team/SignOutButton',
   component: SignOutButton,
   tags: ['autodocs'],
   parameters: {

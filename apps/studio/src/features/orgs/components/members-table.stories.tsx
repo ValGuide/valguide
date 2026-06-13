@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { MembersTable } from './members-table'
 
 const meta: Meta<typeof MembersTable> = {
-  title: 'Core/Orgs/MembersTable',
+  title: 'Studio/Organizations/MembersTable',
   component: MembersTable,
   parameters: {
     layout: 'padded',

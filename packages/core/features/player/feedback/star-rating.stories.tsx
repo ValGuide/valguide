@@ -4,7 +4,7 @@ import { fn } from 'storybook/test'
 import { StarRating } from './star-rating'
 
 const meta = {
-  title: 'Player/Feedback/StarRating',
+  title: 'Visitor App/Player/Feedback/StarRating',
   component: StarRating,
   parameters: {
     layout: 'centered',

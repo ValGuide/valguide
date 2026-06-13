@@ -24,7 +24,7 @@ const MockSlugSettings = ({
 )
 
 const meta = {
-  title: 'Tours/Dialogs/EditSlugDialog',
+  title: 'Studio/Tours/Dialogs/EditSlugDialog',
   component: EditSlugDialog,
   parameters: {
     layout: 'centered',

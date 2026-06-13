@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { FeedbackDialog } from './feedback-dialog'
 
 const meta = {
-  title: 'Features/Feedback/FeedbackDialog',
+  title: 'Studio/Feedback/FeedbackDialog',
   component: FeedbackDialog,
   parameters: {
     layout: 'centered',

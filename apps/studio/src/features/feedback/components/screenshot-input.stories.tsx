@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { ScreenshotInput } from './screenshot-input'
 
 const meta = {
-  title: 'Features/Feedback/ScreenshotInput',
+  title: 'Studio/Feedback/ScreenshotInput',
   component: ScreenshotInput,
   parameters: {
     layout: 'centered',

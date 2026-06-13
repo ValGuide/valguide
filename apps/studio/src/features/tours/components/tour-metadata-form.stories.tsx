@@ -6,7 +6,7 @@ import { fn } from 'storybook/test'
 import { TourMetadataForm } from './tour-metadata-form'
 
 const meta = {
-  title: 'Tours/TourMetadataForm',
+  title: 'Studio/Tours/TourMetadataForm',
   component: TourMetadataForm,
   parameters: {
     nextjs: {

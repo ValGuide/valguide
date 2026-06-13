@@ -76,7 +76,7 @@ const AuthPageExample = () => {
 }
 
 const meta: Meta = {
-  title: 'Auth/AuthPage',
+  title: 'Auth/LoginPage',
   component: AuthPageExample,
   parameters: {
     layout: 'fullscreen',

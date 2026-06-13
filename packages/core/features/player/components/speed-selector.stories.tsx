@@ -22,7 +22,7 @@ function SpeedSelectorWithState({ speed }: { speed: number }) {
 }
 
 const meta = {
-  title: 'Player/SpeedSelector',
+  title: 'Visitor App/Player/SpeedSelector',
   component: SpeedSelector,
   parameters: {
     layout: 'centered',

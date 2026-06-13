@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { AssetsGlobalDropOverlay } from './assets-global-drop-overlay'
 
 const meta = {
-  title: 'Assets/Upload/GlobalDropOverlay',
+  title: 'Studio/Assets/Upload/GlobalDropOverlay',
   component: AssetsGlobalDropOverlay,
   parameters: {
     layout: 'fullscreen',

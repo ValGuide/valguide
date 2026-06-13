@@ -5,7 +5,7 @@ import { fn } from 'storybook/test'
 import { LocaleTabs } from './locale-tabs'
 
 const meta = {
-  title: 'Tours/LocaleTabs',
+  title: 'Studio/Tours/LocaleTabs',
   component: LocaleTabs,
   parameters: {
     layout: 'centered',

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { ChangeSummaryBanner } from './change-summary-banner'
 
 const meta: Meta<typeof ChangeSummaryBanner> = {
-  title: 'Editor/ChangeSummaryBanner',
+  title: 'Studio/Editor/ChangeSummaryBanner',
   component: ChangeSummaryBanner,
   parameters: {
     layout: 'padded',

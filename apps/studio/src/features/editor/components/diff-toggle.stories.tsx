@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { DiffToggle } from './diff-toggle'
 
 const meta: Meta<typeof DiffToggle> = {
-  title: 'Editor/DiffToggle',
+  title: 'Studio/Editor/DiffToggle',
   component: DiffToggle,
   parameters: {
     layout: 'centered',

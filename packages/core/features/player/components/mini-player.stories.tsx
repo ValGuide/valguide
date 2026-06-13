@@ -49,7 +49,7 @@ function MiniPlayerWithState({
 }
 
 const meta = {
-  title: 'Player/MiniPlayer',
+  title: 'Visitor App/Player/MiniPlayer',
   component: MiniPlayer,
   parameters: {
     layout: 'fullscreen',

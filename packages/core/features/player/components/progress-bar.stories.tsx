@@ -22,7 +22,7 @@ function ProgressBarWithState({ currentTime, duration }: { currentTime: number; 
 }
 
 const meta = {
-  title: 'Player/ProgressBar',
+  title: 'Visitor App/Player/ProgressBar',
   component: ProgressBar,
   parameters: {
     layout: 'centered',

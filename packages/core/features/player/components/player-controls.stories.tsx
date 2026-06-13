@@ -27,7 +27,7 @@ function PlayerControlsWithState({ isPlaying }: { isPlaying: boolean }) {
 }
 
 const meta = {
-  title: 'Player/PlayerControls',
+  title: 'Visitor App/Player/PlayerControls',
   component: PlayerControls,
   parameters: {
     layout: 'centered',

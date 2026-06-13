@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { PendingInvitesList } from './pending-invites-list'
 
 const meta: Meta<typeof PendingInvitesList> = {
-  title: 'Core/Orgs/PendingInvitesList',
+  title: 'Studio/Organizations/PendingInvitesList',
   component: PendingInvitesList,
   parameters: {
     layout: 'padded',

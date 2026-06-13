@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { RichTextEditor } from './rich-text-editor'
 
 const meta: Meta<typeof RichTextEditor> = {
-  title: 'Tours/RichTextEditor',
+  title: 'Shared UI/Rich Text/Editor',
   component: RichTextEditor,
   parameters: {
     layout: 'padded',

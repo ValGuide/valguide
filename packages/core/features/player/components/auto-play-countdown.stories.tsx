@@ -40,7 +40,7 @@ function AutoPlayCountdownWithState({ hasEnded }: { hasEnded: boolean }) {
 }
 
 const meta = {
-  title: 'Player/AutoPlayCountdown',
+  title: 'Visitor App/Player/AutoPlayCountdown',
   component: AutoPlayCountdown,
   parameters: {
     layout: 'centered',

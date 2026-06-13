@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { ChangedFieldIndicator } from './changed-field-indicator'
 
 const meta: Meta<typeof ChangedFieldIndicator> = {
-  title: 'Editor/ChangedFieldIndicator',
+  title: 'Studio/Editor/ChangedFieldIndicator',
   component: ChangedFieldIndicator,
   parameters: {
     layout: 'centered',

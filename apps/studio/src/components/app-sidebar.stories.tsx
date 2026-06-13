@@ -34,7 +34,7 @@ const mockTeams: Team[] = [
 ]
 
 const meta: Meta<typeof AppSidebar> = {
-  title: 'Studio/Dashboard/Sidebar',
+  title: 'Studio/Shell/Sidebar',
   component: AppSidebar,
   parameters: {
     nextjs: {

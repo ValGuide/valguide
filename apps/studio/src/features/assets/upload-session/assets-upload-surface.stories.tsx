@@ -85,7 +85,7 @@ function UploadSurfaceStory({ contextValue }: UploadSurfaceStoryProps) {
 }
 
 const meta = {
-  title: 'Assets/Upload/UploadSurface',
+  title: 'Studio/Assets/Upload/UploadSurface',
   component: UploadSurfaceStory,
   parameters: {
     layout: 'fullscreen',

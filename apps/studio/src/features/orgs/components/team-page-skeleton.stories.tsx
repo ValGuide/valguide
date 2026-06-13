@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { TeamPageSkeleton } from './team-page-skeleton'
 
 const meta: Meta<typeof TeamPageSkeleton> = {
-  title: 'Features/Orgs/TeamPageSkeleton',
+  title: 'Studio/Organizations/TeamPageSkeleton',
   component: TeamPageSkeleton,
   parameters: {
     layout: 'fullscreen',

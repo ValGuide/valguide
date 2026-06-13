@@ -8,7 +8,7 @@ const mockExpertCreationImageUrl = faker.image.urlLoremFlickr({ width: 1200, hei
 const mockMinimalTourImageUrl = faker.image.urlLoremFlickr({ width: 1200, height: 800, category: 'art' })
 
 const meta: Meta<typeof TourPreviewCard> = {
-  title: 'Tour/PreviewCard',
+  title: 'Visitor App/Tours/PreviewCard',
   component: TourPreviewCard,
   parameters: {
     layout: 'centered',

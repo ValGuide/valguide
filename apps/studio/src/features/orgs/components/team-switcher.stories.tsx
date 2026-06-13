@@ -3,7 +3,7 @@ import { SidebarProvider } from '@valguide/ui/components/sidebar'
 import { TeamSwitcher } from './team-switcher'
 
 const meta: Meta<typeof TeamSwitcher> = {
-  title: 'Core/Orgs/TeamSwitcher',
+  title: 'Studio/Organizations/TeamSwitcher',
   component: TeamSwitcher,
   args: {
     onCreateTeam: () => console.log('Create workspace clicked'),

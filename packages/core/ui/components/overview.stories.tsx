@@ -149,7 +149,7 @@ import { ToggleGroup, ToggleGroupItem } from './toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
 
 const meta = {
-  title: 'Common/Overview',
+  title: 'Shared UI/Overview',
   component: UiComponentsOverview,
   parameters: {
     layout: 'fullscreen',

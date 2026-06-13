@@ -3,7 +3,7 @@ import { themes } from '@valguide/features/themes/types.ts'
 import { Button } from './button'
 
 const meta: Meta<typeof Button> = {
-  title: 'Common/Button',
+  title: 'Shared UI/Button',
   component: Button,
 }
 

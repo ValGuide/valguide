@@ -60,7 +60,7 @@ const mockData: TeamData = {
 }
 
 const meta = {
-  title: 'Features/Team/WorkspaceMembersSection',
+  title: 'Studio/Workspace/WorkspaceMembersSection',
   component: WorkspaceMembersSection,
   parameters: {
     layout: 'padded',

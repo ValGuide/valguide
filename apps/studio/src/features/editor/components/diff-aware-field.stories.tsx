@@ -3,7 +3,7 @@ import { Input } from '@valguide/ui/components/input'
 import { DiffAwareField, DiffFieldLabel, DiffTextDisplay } from './diff-aware-field'
 
 const meta: Meta<typeof DiffAwareField> = {
-  title: 'Editor/DiffAwareField',
+  title: 'Studio/Editor/DiffAwareField',
   component: DiffAwareField,
   parameters: {
     layout: 'centered',

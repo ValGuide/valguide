@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { InlineDiff } from './inline-diff'
 
 const meta: Meta<typeof InlineDiff> = {
-  title: 'Editor/InlineDiff',
+  title: 'Studio/Editor/InlineDiff',
   component: InlineDiff,
   parameters: {
     layout: 'centered',

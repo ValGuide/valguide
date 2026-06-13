@@ -4,7 +4,7 @@ import { UserPlus } from 'lucide-react'
 import { InviteMemberDialog } from './invite-member-dialog'
 
 const meta: Meta<typeof InviteMemberDialog> = {
-  title: 'Core/Orgs/InviteMemberDialog',
+  title: 'Studio/Organizations/InviteMemberDialog',
   component: InviteMemberDialog,
   parameters: {
     layout: 'centered',

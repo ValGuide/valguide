@@ -4,7 +4,7 @@ import { Toaster } from '../sonner'
 import { toast } from './state'
 
 const meta: Meta<typeof Toaster> = {
-  title: 'Common/Sonner',
+  title: 'Shared UI/Sonner',
   component: Toaster,
   decorators: [
     (Story) => (

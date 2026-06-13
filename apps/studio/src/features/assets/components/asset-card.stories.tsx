@@ -14,7 +14,7 @@ function MockDeleteDialog(props: DeleteAssetDialogComponentProps) {
 }
 
 const meta = {
-  title: 'Assets/AssetCard',
+  title: 'Studio/Assets/AssetCard',
   component: AssetCard,
   parameters: {
     layout: 'centered',

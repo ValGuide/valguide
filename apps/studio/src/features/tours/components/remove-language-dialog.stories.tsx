@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { RemoveLanguageDialog } from './remove-language-dialog'
 
 const meta = {
-  title: 'Tours/Dialogs/RemoveLanguageDialog',
+  title: 'Studio/Tours/Dialogs/RemoveLanguageDialog',
   component: RemoveLanguageDialog,
   parameters: {
     layout: 'centered',

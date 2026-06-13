@@ -64,7 +64,7 @@ function FullPlayerWithState({
 }
 
 const meta = {
-  title: 'Player/FullPlayer',
+  title: 'Visitor App/Player/FullPlayer',
   component: FullPlayer,
   parameters: {
     layout: 'centered',

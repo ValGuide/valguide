@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import { SaveThemeDialog } from './save-theme-dialog'
 
 const meta = {
-  title: 'Design/Dialogs/SaveThemeDialog',
+  title: 'Studio/Design/Dialogs/SaveThemeDialog',
   component: SaveThemeDialog,
   parameters: {
     layout: 'centered',

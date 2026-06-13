@@ -17,7 +17,7 @@ const mockStops = createMockStops(5)
 mockStops[0].title = 'The Starry Night'
 
 const meta = {
-  title: 'Player/StopInfo',
+  title: 'Visitor App/Player/StopInfo',
   component: StopInfo,
   parameters: {
     layout: 'centered',

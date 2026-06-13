@@ -4,7 +4,7 @@ import { fn } from 'storybook/test'
 import { FullscreenImage } from './fullscreen-image'
 
 const meta = {
-  title: 'Player/FullscreenImage',
+  title: 'Visitor App/Player/FullscreenImage',
   component: FullscreenImage,
   parameters: {
     layout: 'fullscreen',

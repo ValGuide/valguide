@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { TranslationStatusBadge } from './translation-status-badge'
 
 const meta = {
-  title: 'Features/Tours/TranslationStatusBadge',
+  title: 'Studio/Tours/TranslationStatusBadge',
   component: TranslationStatusBadge,
   parameters: {
     layout: 'centered',
