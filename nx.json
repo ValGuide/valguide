@@ -29,7 +29,6 @@
       { "env": "VITE_STUDIO_URL" },
       { "env": "VITE_TERMS_OF_SERVICE_URL" },
       { "env": "VITE_APP_DOMAIN" },
-      { "env": "DOCS_PASSWORD" },
       { "env": "ADMIN_ALLOWED_EMAILS" },
       { "env": "ADMIN_COOKIE_DOMAIN" },
       { "env": "ADMIN_BASE_URL" },
