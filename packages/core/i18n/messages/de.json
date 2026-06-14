@@ -427,14 +427,13 @@
     "description": "Bleib gespannt! Wir starten bald 🚀"
   },
   "auth": {
-    "title": "ValGuide",
-    "subtitle": "Melden Sie sich an, um Ihre Touren zu verwalten",
+    "title": "ValGuide Studio",
     "languageLabel": "Sprache",
     "emailLabel": "E-Mail-Adresse",
     "emailPlaceholder": "kurator@museum.org",
     "sendCode": "Login-Code senden",
     "sending": "Wird gesendet…",
-    "loginCodeNote": "Kein Passwort nötig — wir senden Ihnen einen sicheren Login-Code",
+    "loginCodeNote": "Wir senden Ihnen einen einmaligen Anmeldecode per E-Mail.",
     "otpTitle": "Prüfen Sie Ihre E-Mails",
     "otpSubtitle": "Wir haben einen 6-stelligen Code an {email} gesendet",
     "otpPlaceholder": "Geben Sie den 6-stelligen Code ein",
@@ -1244,7 +1243,8 @@
         }
       },
       "support": {
-        "description": "Erhalten Sie Hilfe und Unterstützung für Ihre Fragen."
+        "description": "Benötigen Sie Hilfe mit ValGuide Studio? Schreiben Sie uns an {supportEmail}; wir helfen Ihnen von dort aus weiter.",
+        "emailLabel": "Support-E-Mail"
       }
     },
     "feedback": {
@@ -1415,7 +1415,7 @@
     "title": "Profil",
     "avatar": "Avatar",
     "email": "E-Mail",
-    "emailChangeHint": "Support kontaktieren, um sie zu ändern",
+    "emailChangeHint": "<support>{supportEmail}</support> kontaktieren, um sie zu ändern",
     "username": "Benutzername",
     "firstName": "Vorname",
     "lastName": "Nachname",

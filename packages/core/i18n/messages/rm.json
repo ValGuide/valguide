@@ -427,14 +427,13 @@
     "description": "Restei attents. Nus lantschein prest 🚀"
   },
   "auth": {
-    "title": "ValGuide",
-    "subtitle": "S'annunziai per administrar vossas turas",
+    "title": "ValGuide Studio",
     "languageLabel": "Lingua",
     "emailLabel": "Adressa d'e-mail",
     "emailPlaceholder": "custos@museum.org",
     "sendCode": "Trametter code d'annunzia",
     "sending": "Tramettend…",
-    "loginCodeNote": "Nagin pled-clav necessari — nus As tramettain in code d'annunzia segir",
+    "loginCodeNote": "Nus As tramettain in code d'annunzia unic per e-mail.",
     "otpTitle": "Controllei voss e-mail",
     "otpSubtitle": "Nus avain tramess in code da 6 cifras a {email}",
     "otpPlaceholder": "Endatei il code da 6 cifras",
@@ -1244,7 +1243,8 @@
         }
       },
       "support": {
-        "description": "Survegnir agid e support per vossas dumondas."
+        "description": "Duvrais agid cun ValGuide Studio? Scrivai a {supportEmail}; nus As gidain lura vinavant.",
+        "emailLabel": "E-mail da support"
       }
     },
     "feedback": {
@@ -1415,7 +1415,7 @@
     "title": "Profil",
     "avatar": "Avatar",
     "email": "E-mail",
-    "emailChangeHint": "Contactescha il support per midar",
+    "emailChangeHint": "Contactai <support>{supportEmail}</support> per midar",
     "username": "Num d'utilisader",
     "firstName": "Prenum",
     "lastName": "Num da famiglia",
