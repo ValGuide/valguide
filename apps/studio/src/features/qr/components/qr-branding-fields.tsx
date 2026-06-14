@@ -8,10 +8,11 @@ import {
 } from '@valguide/core/features/links/qr/shared'
 import { useTranslations } from '@valguide/core/i18n/client'
 import { Button } from '@valguide/ui/components/button'
-import { Input } from '@valguide/ui/components/input'
 import { Label } from '@valguide/ui/components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@valguide/ui/components/select'
 import { Switch } from '@valguide/ui/components/switch'
+import { cn } from '@valguide/ui/lib/utils'
+import { ColorPicker } from '@/features/design/components/color-picker'
 
 type QrBrandingFieldsProps = {
   source: QrBrandingSource
@@ -91,22 +92,13 @@ export function QrBrandingFields({
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="min-w-0 space-y-2">
-          <Label htmlFor={`qr-foreground-${source}`}>{t('foregroundColor')}</Label>
-          <div className="flex min-w-0 flex-col gap-2 min-[360px]:flex-row">
-            <Input
-              id={`qr-foreground-${source}`}
-              type="color"
-              value={override.fgColor ?? fallbackBranding.fgColor}
-              onChange={(event) => handleColorChange('fgColor', event.target.value)}
-              className="h-10 w-full min-[360px]:w-16 min-[360px]:shrink-0 p-1"
-            />
-            <Input
-              value={override.fgColor ?? ''}
-              placeholder={fallbackBranding.fgColor}
-              onChange={(event) => handleColorChange('fgColor', event.target.value)}
-              className="min-w-0 flex-1"
-            />
-          </div>
+          <Label>{t('foregroundColor')}</Label>
+          <ColorPicker
+            label={t('foregroundColor')}
+            value={override.fgColor ?? fallbackBranding.fgColor}
+            onChange={(value) => handleColorChange('fgColor', value)}
+            allowAlpha={false}
+          />
         </div>
 
         <div className="min-w-0 space-y-2">
@@ -126,21 +118,12 @@ export function QrBrandingFields({
             </div>
           </div>
 
-          <div className="flex min-w-0 flex-col gap-2 min-[360px]:flex-row">
-            <Input
-              id={`qr-background-${source}`}
-              type="color"
+          <div className={cn(isTransparentBackground && 'pointer-events-none opacity-60')}>
+            <ColorPicker
+              label={t('backgroundColor')}
               value={backgroundHexValue}
-              onChange={(event) => handleColorChange('bgColor', event.target.value)}
-              className="h-10 w-full min-[360px]:w-16 min-[360px]:shrink-0 p-1"
-              disabled={isTransparentBackground}
-            />
-            <Input
-              value={isTransparentBackground ? '' : (override.bgColor ?? '')}
-              placeholder={backgroundHexValue}
-              onChange={(event) => handleColorChange('bgColor', event.target.value)}
-              disabled={isTransparentBackground}
-              className={isTransparentBackground ? 'min-w-0 flex-1 opacity-60' : 'min-w-0 flex-1'}
+              onChange={(value) => handleColorChange('bgColor', value)}
+              allowAlpha={false}
             />
           </div>
         </div>
