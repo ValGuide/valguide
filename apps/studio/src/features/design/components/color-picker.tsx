@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@valguide/ui/lib/utils'
 import { Pipette } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { HexAlphaColorPicker } from 'react-colorful'
+import { HexAlphaColorPicker, HexColorPicker } from 'react-colorful'
 import { hexToRgba, hslaToRgba, rgbaToHex, rgbaToHsla } from '../color-converter'
 
 export interface ColorPickerProps {
@@ -15,9 +15,10 @@ export interface ColorPickerProps {
   value: string
   onChange: (value: string) => void
   className?: string
+  allowAlpha?: boolean
 }
 
-type ColorFormat = 'HEXA' | 'RGBA' | 'HSLA'
+type ColorFormat = 'HEX' | 'HEXA' | 'RGB' | 'RGBA' | 'HSL' | 'HSLA'
 
 interface ColorValues {
   hex: string
@@ -25,23 +26,33 @@ interface ColorValues {
   hsla: { h: number; s: number; l: number; a: number }
 }
 
-export function ColorPicker({ label, value, onChange, className }: ColorPickerProps) {
+function normalizeColorValue(value: string, allowAlpha: boolean) {
+  const upperValue = value.toUpperCase()
+  return allowAlpha ? upperValue : upperValue.slice(0, 7)
+}
+
+export function ColorPicker({ label, value, onChange, className, allowAlpha = true }: ColorPickerProps) {
   const t = useTranslations('studio.themeCustomizer')
-  const [colorFormat, setColorFormat] = useState<ColorFormat>('HEXA')
-  const [hexInputValue, setHexInputValue] = useState(value.toUpperCase())
+  const [colorFormat, setColorFormat] = useState<ColorFormat>(allowAlpha ? 'HEXA' : 'HEX')
+  const [hexInputValue, setHexInputValue] = useState(normalizeColorValue(value, allowAlpha))
 
   const [colorValues, setColorValues] = useState<ColorValues>(() => {
-    const rgba = hexToRgba(value)
+    const normalizedValue = normalizeColorValue(value, allowAlpha)
+    const rgba = hexToRgba(normalizedValue)
     const hsla = rgbaToHsla(rgba.r, rgba.g, rgba.b, rgba.a)
-    return { hex: value, rgba, hsla }
+    return { hex: normalizedValue.slice(0, 7), rgba, hsla }
   })
 
-  const updateColorValues = useCallback((newColor: string) => {
-    const rgba = hexToRgba(newColor)
-    const hsla = rgbaToHsla(rgba.r, rgba.g, rgba.b, rgba.a)
-    setColorValues({ hex: newColor.slice(0, 7), rgba, hsla })
-    setHexInputValue(newColor.toUpperCase())
-  }, [])
+  const updateColorValues = useCallback(
+    (newColor: string) => {
+      const normalizedColor = normalizeColorValue(newColor, allowAlpha)
+      const rgba = hexToRgba(normalizedColor)
+      const hsla = rgbaToHsla(rgba.r, rgba.g, rgba.b, rgba.a)
+      setColorValues({ hex: normalizedColor.slice(0, 7), rgba, hsla })
+      setHexInputValue(normalizedColor)
+    },
+    [allowAlpha],
+  )
 
   useEffect(() => {
     updateColorValues(value)
@@ -49,10 +60,11 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
 
   const handlePickerChange = useCallback(
     (newColor: string) => {
-      updateColorValues(newColor)
-      onChange(newColor)
+      const normalizedColor = normalizeColorValue(newColor, allowAlpha)
+      updateColorValues(normalizedColor)
+      onChange(normalizedColor)
     },
-    [onChange, updateColorValues],
+    [allowAlpha, onChange, updateColorValues],
   )
 
   const handleHexChange = useCallback(
@@ -61,15 +73,16 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
       if (!formatted.startsWith('#')) {
         formatted = `#${formatted}`
       }
-      if (formatted.length <= 9 && /^#[0-9A-F]*$/.test(formatted)) {
+      const maxLength = allowAlpha ? 9 : 7
+      if (formatted.length <= maxLength && /^#[0-9A-F]*$/.test(formatted)) {
         setHexInputValue(formatted)
-        if (formatted.length === 7 || formatted.length === 9) {
+        if (formatted.length === 7 || (allowAlpha && formatted.length === 9)) {
           updateColorValues(formatted)
           onChange(formatted)
         }
       }
     },
-    [onChange, updateColorValues],
+    [allowAlpha, onChange, updateColorValues],
   )
 
   const handleRgbaChange = useCallback(
@@ -78,13 +91,13 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
       const clampedValue =
         component === 'a' ? Math.max(0, Math.min(1, numValue)) : Math.max(0, Math.min(255, Math.floor(numValue)))
       const newRgba = { ...colorValues.rgba, [component]: clampedValue }
-      const hex = rgbaToHex(newRgba.r, newRgba.g, newRgba.b, newRgba.a)
+      const hex = normalizeColorValue(rgbaToHex(newRgba.r, newRgba.g, newRgba.b, newRgba.a), allowAlpha)
       const hsla = rgbaToHsla(newRgba.r, newRgba.g, newRgba.b, newRgba.a)
       setColorValues({ hex: hex.slice(0, 7), rgba: newRgba, hsla })
       setHexInputValue(hex)
       onChange(hex)
     },
-    [colorValues.rgba, onChange],
+    [allowAlpha, colorValues.rgba, onChange],
   )
 
   const handleHslaChange = useCallback(
@@ -100,12 +113,12 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
       }
       const newHsla = { ...colorValues.hsla, [component]: clampedValue }
       const rgba = hslaToRgba(newHsla.h, newHsla.s, newHsla.l, newHsla.a)
-      const hex = rgbaToHex(rgba.r, rgba.g, rgba.b, rgba.a)
+      const hex = normalizeColorValue(rgbaToHex(rgba.r, rgba.g, rgba.b, rgba.a), allowAlpha)
       setColorValues({ hex: hex.slice(0, 7), rgba, hsla: newHsla })
       setHexInputValue(hex)
       onChange(hex)
     },
-    [colorValues.hsla, onChange],
+    [allowAlpha, colorValues.hsla, onChange],
   )
 
   const handleEyeDropper = useCallback(async () => {
@@ -116,12 +129,13 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
       // @ts-expect-error EyeDropper API not in TypeScript yet
       const eyeDropper = new window.EyeDropper()
       const result = await eyeDropper.open()
-      updateColorValues(result.sRGBHex)
-      onChange(result.sRGBHex)
+      const normalizedColor = normalizeColorValue(result.sRGBHex, allowAlpha)
+      updateColorValues(normalizedColor)
+      onChange(normalizedColor)
     } catch {
       // User canceled
     }
-  }, [onChange, updateColorValues])
+  }, [allowAlpha, onChange, updateColorValues])
 
   const isEyeDropperAvailable = typeof window !== 'undefined' && 'EyeDropper' in window
 
@@ -159,11 +173,15 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
               )}
             </div>
 
-            <HexAlphaColorPicker
-              color={hexInputValue.length === 9 ? hexInputValue : `${colorValues.hex}FF`}
-              onChange={handlePickerChange}
-              style={{ width: '100%' }}
-            />
+            {allowAlpha ? (
+              <HexAlphaColorPicker
+                color={hexInputValue.length === 9 ? hexInputValue : `${colorValues.hex}FF`}
+                onChange={handlePickerChange}
+                style={{ width: '100%' }}
+              />
+            ) : (
+              <HexColorPicker color={colorValues.hex} onChange={handlePickerChange} style={{ width: '100%' }} />
+            )}
 
             <div className="flex items-center gap-2">
               <Select value={colorFormat} onValueChange={(v) => setColorFormat(v as ColorFormat)}>
@@ -171,24 +189,24 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="HEXA">HEXA</SelectItem>
-                  <SelectItem value="RGBA">RGBA</SelectItem>
-                  <SelectItem value="HSLA">HSLA</SelectItem>
+                  <SelectItem value={allowAlpha ? 'HEXA' : 'HEX'}>{allowAlpha ? 'HEXA' : 'HEX'}</SelectItem>
+                  <SelectItem value={allowAlpha ? 'RGBA' : 'RGB'}>{allowAlpha ? 'RGBA' : 'RGB'}</SelectItem>
+                  <SelectItem value={allowAlpha ? 'HSLA' : 'HSL'}>{allowAlpha ? 'HSLA' : 'HSL'}</SelectItem>
                 </SelectContent>
               </Select>
 
-              {colorFormat === 'HEXA' && (
+              {(colorFormat === 'HEX' || colorFormat === 'HEXA') && (
                 <Input
                   value={hexInputValue}
                   onChange={(e) => handleHexChange(e.target.value)}
-                  placeholder="#000000FF"
-                  maxLength={9}
+                  placeholder={allowAlpha ? '#000000FF' : '#000000'}
+                  maxLength={allowAlpha ? 9 : 7}
                   className="h-8 flex-1 text-xs font-mono"
                   aria-label={t('colorPicker.hexInput', { label })}
                 />
               )}
 
-              {colorFormat === 'RGBA' && (
+              {(colorFormat === 'RGB' || colorFormat === 'RGBA') && (
                 <div className="flex flex-1">
                   <Input
                     value={colorValues.rgba.r}
@@ -205,19 +223,24 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
                   <Input
                     value={colorValues.rgba.b}
                     onChange={(e) => handleRgbaChange('b', e.target.value)}
-                    className="h-8 w-10 rounded-none border-r-0 text-center text-xs px-1"
+                    className={cn(
+                      'h-8 w-10 text-center text-xs px-1',
+                      allowAlpha ? 'rounded-none border-r-0' : 'rounded-l-none',
+                    )}
                     maxLength={3}
                   />
-                  <Input
-                    value={colorValues.rgba.a.toFixed(2)}
-                    onChange={(e) => handleRgbaChange('a', e.target.value)}
-                    className="h-8 w-12 rounded-l-none text-center text-xs px-1"
-                    maxLength={4}
-                  />
+                  {allowAlpha && (
+                    <Input
+                      value={colorValues.rgba.a.toFixed(2)}
+                      onChange={(e) => handleRgbaChange('a', e.target.value)}
+                      className="h-8 w-12 rounded-l-none text-center text-xs px-1"
+                      maxLength={4}
+                    />
+                  )}
                 </div>
               )}
 
-              {colorFormat === 'HSLA' && (
+              {(colorFormat === 'HSL' || colorFormat === 'HSLA') && (
                 <div className="flex flex-1">
                   <Input
                     value={colorValues.hsla.h}
@@ -234,15 +257,20 @@ export function ColorPicker({ label, value, onChange, className }: ColorPickerPr
                   <Input
                     value={colorValues.hsla.l}
                     onChange={(e) => handleHslaChange('l', e.target.value)}
-                    className="h-8 w-10 rounded-none border-r-0 text-center text-xs px-1"
+                    className={cn(
+                      'h-8 w-10 text-center text-xs px-1',
+                      allowAlpha ? 'rounded-none border-r-0' : 'rounded-l-none',
+                    )}
                     maxLength={3}
                   />
-                  <Input
-                    value={colorValues.hsla.a.toFixed(2)}
-                    onChange={(e) => handleHslaChange('a', e.target.value)}
-                    className="h-8 w-12 rounded-l-none text-center text-xs px-1"
-                    maxLength={4}
-                  />
+                  {allowAlpha && (
+                    <Input
+                      value={colorValues.hsla.a.toFixed(2)}
+                      onChange={(e) => handleHslaChange('a', e.target.value)}
+                      className="h-8 w-12 rounded-l-none text-center text-xs px-1"
+                      maxLength={4}
+                    />
+                  )}
                 </div>
               )}
             </div>
