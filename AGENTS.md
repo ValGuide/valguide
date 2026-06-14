@@ -4,6 +4,12 @@ ValGuide is an open-source, public repository. Treat every committed file,
 comment, screenshot, log excerpt, fixture, and generated artifact as visible to
 contributors and downstream users.
 
+## Automation Labels
+
+Do not add the `codex:auto` label to GitHub or Linear work items unless the
+user explicitly asks for the Hetzner Codex runner to execute the ticket. That
+label is an execution trigger, not a normal classification label.
+
 ## Public Boundaries
 
 - Do not commit real secrets, access tokens, passwords, private keys, customer
