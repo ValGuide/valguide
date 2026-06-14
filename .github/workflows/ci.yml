@@ -67,6 +67,9 @@ jobs:
       - name: Lint repo
         run: pnpm lint:error
 
+      - name: Check dead code and package hygiene
+        run: pnpm knip:ci
+
       - name: Type-check root TypeScript config
         run: pnpm exec tsc --noEmit -p tsconfig.json
 
