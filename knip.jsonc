@@ -1,229 +1,12 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
-  "entry": [
-    "package.json",
-    "project.json",
-    "nx.json",
-    "biome.json",
-    "jest.config.ts",
-    ".github/project.json",
-    ".github/scripts/**/*.sh",
-    "scripts/**/*.{js,mjs,ts}"
-  ],
-  "project": [
-    "*.{js,mjs,ts,json,jsonc}",
-    ".github/**/*.{js,mjs,ts,sh,yml,yaml,json}",
-    "scripts/**/*.{js,mjs,ts}",
-    "apps/**/*.{js,mjs,ts,tsx,json,jsonc}",
-    "packages/**/*.{js,mjs,ts,tsx,json,jsonc}",
-    "tools/**/*.{js,mjs,ts,json,jsonc}",
-    "workers/**/*.{js,mjs,ts,json,jsonc}"
-  ],
-  "ignore": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/.output/**",
-    "**/.wrangler/**",
-    "**/storybook-static/**",
-    "**/wrangler.generated.jsonc"
-  ],
-  "ignoreFiles": [
-    "**/routeTree.gen.ts",
-    "**/public/fonts/theme/*.css",
-    "**/public/mockServiceWorker.js",
-    "**/public/sw.js",
-    "packages/icons/types.d.ts"
-  ],
+  // Cloudflare Workers expose the `cloudflare:workers` virtual module at runtime.
+  // The jsdom environment is selected by Jest docblocks in tests.
+  "ignoreDependencies": ["cloudflare", "jest-environment-jsdom"],
+  // These binaries are provided by operator tooling or invoked through generated/local scripts.
   "ignoreBinaries": ["caddy", "lsof", "ngrok", "open", "tsx", "wrangler-config"],
-  "ignoreDependencies": [
-    "@dnd-kit/core",
-    "@dnd-kit/sortable",
-    "@dnd-kit/utilities",
-    "@faker-js/faker",
-    "@fontsource-variable/jetbrains-mono",
-    "@fontsource-variable/noto-sans",
-    "@fontsource-variable/vollkorn",
-    "@fontsource/geist-mono",
-    "@fontsource/geist-sans",
-    "@fontsource/noto-sans",
-    "@formatjs/intl-localematcher",
-    "@posthog/react",
-    "@react-email/components",
-    "@react-email/render",
-    "@storybook/react",
-    "@svgr/cli",
-    "@tailwindcss/postcss",
-    "@tailwindcss/vite",
-    "@tanstack/react-devtools",
-    "@tanstack/react-form",
-    "@tanstack/react-query",
-    "@tanstack/react-query-devtools",
-    "@tanstack/react-router",
-    "@tanstack/react-router-devtools",
-    "@tanstack/react-router-ssr-query",
-    "@tanstack/react-start",
-    "@tanstack/react-table",
-    "@tanstack/react-virtual",
-    "@testing-library/dom",
-    "@testing-library/jest-dom",
-    "@testing-library/react",
-    "@testing-library/user-event",
-    "@types/leaflet",
-    "@types/ws",
-    "@valguide/app",
-    "@valguide/core",
-    "@valguide/email",
-    "@valguide/icons",
-    "@valguide/studio",
-    "@valguide/test-config",
-    "@valguide/www",
-    "@vitejs/plugin-react",
-    "@yudiel/react-qr-scanner",
-    "attr-accept",
-    "baseline-browser-mapping",
-    "better-auth",
-    "bufferutil",
-    "class-variance-authority",
-    "cloudflare",
-    "date-fns",
-    "diff",
-    "framer-motion",
-    "fumadocs-core",
-    "fumadocs-mdx",
-    "fumadocs-ui",
-    "jest",
-    "jest-environment-jsdom",
-    "leaflet",
-    "leaflet-defaulticon-compatibility",
-    "lucide-react",
-    "msw",
-    "msw-storybook-addon",
-    "nanoid",
-    "negotiator",
-    "openai",
-    "playwright",
-    "qr-code-styling",
-    "react",
-    "react-colorful",
-    "react-dom",
-    "react-email",
-    "react-leaflet",
-    "resend",
-    "storybook",
-    "tailwindcss",
-    "ts-node",
-    "unpic",
-    "use-intl",
-    "usehooks-ts",
-    "uuid",
-    "vite-tsconfig-paths",
-    "ws",
-    "zod",
-    "zustand"
-  ],
-  "ignoreUnresolved": ["babel-jest", "cloudflare", "jest-environment-jsdom"],
-  "ignoreIssues": {
-    "apps/admin/src/features/admin/components/org-detail-header.tsx": ["types"],
-    "apps/admin/src/features/admin/components/role-badge.tsx": ["files"],
-    "apps/admin/src/server/admin-auth-options.ts": ["exports", "types"],
-    "apps/admin/src/server/functions/admin-add-member.fn.ts": ["types"],
-    "apps/admin/src/server/functions/admin-create-org.fn.ts": ["types"],
-    "apps/admin/src/server/functions/admin-upload-org-logo.fn.ts": ["types"],
-    "apps/admin/src/server/functions/get-user-teams.fn.ts": ["files"],
-    "apps/admin/src/server/functions/kv-backfill-all-slugs-for-org.fn.ts": ["types"],
-    "apps/admin/src/server/functions/kv-backfill-all-tours.fn.ts": ["types"],
-    "apps/admin/src/server/functions/kv-backfill-org-slugs.fn.ts": ["types"],
-    "apps/admin/src/server/functions/kv-backfill-tour-slugs.fn.ts": ["types"],
-    "apps/admin/src/server/functions/kv-backfill-tour.fn.ts": ["types"],
-    "apps/admin/src/server/functions/list-orgs.fn.ts": ["types"],
-    "apps/admin/src/server/functions/list-tours.fn.ts": ["types"],
-    "apps/admin/src/server/functions/list-users.fn.ts": ["types"],
-    "apps/docs/src/components/not-found.tsx": ["files"],
-    "apps/studio/src/components/default-pending.tsx": ["files"],
-    "apps/studio/src/components/nav-main.tsx": ["files"],
-    "apps/studio/src/components/nav-projects.tsx": ["files"],
-    "apps/studio/src/components/nav-secondary.tsx": ["files"],
-    "apps/studio/src/features/assets/components/asset-picker-modal.tsx": ["types"],
-    "apps/studio/src/features/assets/components/assets-list-connected.tsx": ["files"],
-    "apps/studio/src/features/assets/components/assets-list.tsx": ["types"],
-    "apps/studio/src/features/assets/context/assets-context.tsx": ["exports"],
-    "apps/studio/src/features/assets/context/assets-provider.tsx": ["files"],
-    "apps/studio/src/features/assets/hooks/use-assets.ts": ["files"],
-    "apps/studio/src/features/assets/query-options.ts": ["exports", "types"],
-    "apps/studio/src/features/design/color-converter.ts": ["exports"],
-    "apps/studio/src/features/design/hooks/use-org-themes.ts": ["types"],
-    "apps/studio/src/features/design/types.ts": ["exports", "types"],
-    "apps/studio/src/features/editor/components/publish-status-banner.tsx": ["types"],
-    "apps/studio/src/features/editor/hooks/use-diff-view.ts": ["types"],
-    "apps/studio/src/features/editor/hooks/use-editor-base.ts": ["types"],
-    "apps/studio/src/features/join-team/components/join-team-card-wrapper.tsx": ["files"],
-    "apps/studio/src/features/orgs/components/inline-invite-form.tsx": ["files"],
-    "apps/studio/src/features/orgs/components/member-list.tsx": ["files"],
-    "apps/studio/src/features/orgs/components/team-switcher.tsx": ["types"],
-    "apps/studio/src/features/profile/hooks/use-profile.ts": ["files"],
-    "apps/studio/src/features/profile/index.ts": ["files"],
-    "apps/studio/src/features/profile/schemas.ts": ["exports"],
-    "apps/studio/src/features/qr/branding.ts": ["exports"],
-    "apps/studio/src/features/qr/components/tour-qr-panel-connected.tsx": ["files"],
-    "apps/studio/src/features/stops/components/stop-locale-editor.tsx": ["files"],
-    "apps/studio/src/features/stops/contexts/stop-editor-context.tsx": ["exports"],
-    "apps/studio/src/features/stops/contexts/stop-editor-types.ts": ["exports", "types"],
-    "apps/studio/src/features/stops/hooks/use-stop-edit-adapter.ts": ["files"],
-    "apps/studio/src/features/team/components/team-members-client.tsx": ["files"],
-    "apps/studio/src/features/tours/components/tour-edit-page.tsx": ["types"],
-    "apps/studio/src/features/tours/components/tour-locales-manager.tsx": ["files"],
-    "apps/studio/src/features/tours/components/tour-metadata-form-with-diff.tsx": ["types"],
-    "apps/studio/src/features/tours/components/tour-metadata-form.tsx": ["types"],
-    "apps/studio/src/features/tours/components/tour-slug-settings.tsx": ["types"],
-    "apps/studio/src/features/tours/components/tours-list-skeleton.tsx": ["files"],
-    "apps/studio/src/features/tours/components/translation-status-inline.tsx": ["files"],
-    "apps/studio/src/features/tours/components/unified-locale-selector.tsx": ["exports", "types"],
-    "apps/studio/src/features/tours/contexts/tour-editor-context.tsx": ["exports"],
-    "apps/studio/src/features/tours/contexts/tour-editor-types.ts": ["exports", "types"],
-    "apps/studio/src/features/tours/schemas/tour-form.ts": ["exports", "types"],
-    "apps/studio/src/features/tours/utils/translation-status.ts": ["exports"],
-    "packages/core/features/app-theme/types.ts": ["types"],
-    "packages/core/features/assets/image-url.ts": ["exports"],
-    "packages/core/features/assets/utils.ts": ["exports"],
-    "packages/core/features/auth/authorization.ts": ["exports", "types"],
-    "packages/core/features/auth/middleware.ts": ["types"],
-    "packages/core/features/auth/query-options.ts": ["types"],
-    "packages/core/features/links/get-or-create-short-link.ts": ["exports", "types"],
-    "packages/core/features/links/get-short-link.ts": ["types"],
-    "packages/core/features/links/get-tour-short-links.ts": ["files"],
-    "packages/core/features/links/qr/shared.ts": ["exports"],
-    "packages/core/features/links/types.ts": ["types"],
-    "packages/core/features/orgs/permissions.ts": ["files"],
-    "packages/core/features/orgs/query-options.ts": ["files"],
-    "packages/core/features/orgs/remove-member.errors.ts": ["types"],
-    "packages/core/features/orgs/types.ts": ["types"],
-    "packages/core/features/player/accessibility/use-accessibility-settings.ts": ["exports"],
-    "packages/core/features/player/hooks/use-position-persistence.ts": ["exports"],
-    "packages/core/features/player/store/use-player-store.ts": ["exports"],
-    "packages/core/features/player/types.ts": ["types"],
-    "packages/core/features/player/utils.ts": ["exports"],
-    "packages/core/features/profiles/types.ts": ["files"],
-    "packages/core/features/themes/fonts.ts": ["exports"],
-    "packages/core/features/themes/theme-ai.shared.ts": ["exports"],
-    "packages/core/features/themes/types.ts": ["duplicates", "exports", "types"],
-    "packages/core/features/tours/public/get-published-stop.ts": ["files"],
-    "packages/core/features/tours/public/get-tour-by-stop.ts": ["files"],
-    "packages/core/features/tours/public/kv-types.ts": ["types"],
-    "packages/core/features/tours/status-utils.ts": ["types"],
-    "packages/core/features/tours/tour/locale/types.ts": ["files"],
-    "packages/core/features/utils/delay.ts": ["files"],
-    "packages/core/i18n/components/locale-switcher-connected.tsx": ["files"],
-    "packages/core/i18n/components/locale-switcher.tsx": ["files"],
-    "packages/core/platform/ai/text-generation.ts": ["types"],
-    "packages/core/platform/images/image-delivery.ts": ["exports", "types"],
-    "packages/core/platform/providers/cloudflare/key-value-store.server.ts": ["exports"],
-    "packages/core/platform/storage/object-storage.server.ts": ["exports"],
-    "packages/core/slack/messages/admin-url.ts": ["exports"],
-    "packages/core/slack/messages/studio-url.ts": ["exports"],
-    "packages/core/slack/slack-message.ts": ["types"],
-    "packages/email/env.ts": ["exports"],
-    "packages/email/templates/types.ts": ["types"]
-  },
+  // Jest transforms are inherited from the shared test configuration.
+  "ignoreUnresolved": ["babel-jest"],
   "workspaces": {
     ".": {
       "entry": [
@@ -231,109 +14,44 @@
         "project.json",
         "nx.json",
         "biome.json",
-        "jest.config.ts",
         ".github/project.json",
         ".github/scripts/**/*.sh",
         "scripts/**/*.{js,mjs,ts}"
       ],
-      "project": ["*.{js,mjs,ts,json,jsonc}", ".github/**/*.{js,mjs,ts,sh,yml,yaml,json}", "scripts/**/*.{js,mjs,ts}"]
+      "project": ["*.{js,mjs,ts}", "scripts/**/*.{js,mjs,ts}"]
     },
     "apps/admin": {
-      "entry": [
-        "src/start.ts",
-        "src/router.tsx",
-        "src/routes/**/*.tsx",
-        "src/routes/**/*.ts",
-        "src/routeTree.gen.ts",
-        "vite.config.ts",
-        "jest.config.ts",
-        "wrangler.jsonc"
-      ],
-      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs,json,jsonc}"]
+      "entry": ["src/start.ts", "src/router.tsx"],
+      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs}"]
     },
     "apps/app": {
-      "entry": [
-        "src/start.ts",
-        "src/router.tsx",
-        "src/routes/**/*.tsx",
-        "src/routes/**/*.ts",
-        "src/sw.ts",
-        "src/routeTree.gen.ts",
-        "vite.config.ts",
-        "jest.config.ts",
-        "wrangler.jsonc"
-      ],
-      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs,json,jsonc}"]
+      "entry": ["src/start.ts", "src/router.tsx", "src/sw.ts"],
+      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs}"]
     },
     "apps/docs": {
-      "entry": [
-        "src/start.ts",
-        "src/router.tsx",
-        "src/routes/**/*.tsx",
-        "src/routes/**/*.ts",
-        "src/routeTree.gen.ts",
-        "source.config.ts",
-        "vite.config.ts",
-        "wrangler.jsonc"
-      ],
-      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs,json,jsonc}"]
+      "entry": ["src/start.ts", "src/router.tsx", "source.config.ts"],
+      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs}"],
+      // @tailwindcss/vite resolves this from src/styles/app.css during the docs build.
+      "ignoreDependencies": ["tailwindcss"]
     },
     "apps/links": {
-      "entry": [
-        "src/start.ts",
-        "src/router.tsx",
-        "src/routes/**/*.tsx",
-        "src/routes/**/*.ts",
-        "src/routeTree.gen.ts",
-        "vite.config.ts",
-        "jest.config.ts",
-        "wrangler.jsonc"
-      ],
-      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs,json,jsonc}"]
+      "entry": ["src/start.ts", "src/router.tsx"],
+      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs}"]
     },
     "apps/storybook": {
-      "entry": [
-        "src/index.ts",
-        ".storybook/main.tsx",
-        ".storybook/preview.tsx",
-        ".storybook/**/*.ts",
-        ".storybook/**/*.tsx",
-        "vite.config.ts",
-        "wrangler.jsonc"
-      ],
-      "project": ["src/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}", "*.{ts,mjs,json,jsonc}"],
-      "ignoreFiles": ["public/fonts/theme/*.css"]
+      "entry": [".storybook/main.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
+      "project": ["src/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}", "*.{ts,mjs}"]
     },
     "apps/studio": {
-      "entry": [
-        "src/start.ts",
-        "src/router.tsx",
-        "src/routes/**/*.tsx",
-        "src/routes/**/*.ts",
-        "src/routeTree.gen.ts",
-        "vite.config.ts",
-        "jest.config.ts",
-        "wrangler.jsonc"
-      ],
-      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs,json,jsonc}"]
+      "entry": ["src/start.ts", "src/router.tsx"],
+      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs}"]
     },
     "apps/www": {
-      "entry": [
-        "src/start.ts",
-        "src/router.tsx",
-        "src/routes/**/*.tsx",
-        "src/routes/**/*.ts",
-        "src/routeTree.gen.ts",
-        "vite.config.ts",
-        "jest.config.ts",
-        "wrangler.jsonc"
-      ],
-      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs,json,jsonc}"]
+      "entry": ["src/start.ts", "src/router.tsx"],
+      "project": ["src/**/*.{ts,tsx}", "*.{ts,mjs}"]
     },
     "packages/core": {
       "entry": [
-        "drizzle.config.ts",
-        "jest.config.ts",
         "scripts/**/*.mjs",
         "i18n/scripts/**/*.ts",
         "features/**/index.ts",
@@ -347,32 +65,12 @@
         "posthog/*.tsx",
         "utils/*.ts"
       ],
-      "project": ["**/*.{ts,tsx,mjs,json,jsonc}"],
+      "project": ["**/*.{ts,tsx,mjs}"],
       "ignoreDependencies": ["cloudflare"]
     },
     "packages/email": {
-      "entry": ["send-email.tsx", "templates/**/*.tsx", "scripts/**/*.ts", "jest.config.ts"],
-      "project": ["**/*.{ts,tsx,json}"]
-    },
-    "packages/icons": {
-      "entry": ["assets/**/*.svg"],
-      "project": ["assets/**/*.svg", "*.json"]
-    },
-    "packages/logger": {
-      "entry": ["index.ts", "jest.config.ts"],
-      "project": ["**/*.{ts,json}"]
-    },
-    "tools/local-proxy": {
-      "entry": ["package.json"],
-      "project": ["package.json"]
-    },
-    "workers/image-guard": {
-      "entry": ["src/index.ts", "wrangler.jsonc"],
-      "project": ["src/**/*.ts", "*.{json,jsonc}"]
-    },
-    "workers/posthog-proxy": {
-      "entry": ["src/index.ts", "wrangler.jsonc"],
-      "project": ["src/**/*.ts", "*.{json,jsonc}"]
+      "entry": ["emails/**/*.tsx", "scripts/**/*.ts"],
+      "project": ["**/*.{ts,tsx}"]
     }
   }
 }
