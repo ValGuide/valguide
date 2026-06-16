@@ -5,7 +5,7 @@ import type { Preview } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createMemoryHistory, createRootRoute, createRoute, createRouter, RouterProvider } from '@tanstack/react-router'
 import { defaultThemes } from '@valguide/features/themes/defaults.ts'
-import { themes } from '@valguide/features/themes/types.ts'
+import { themePresets } from '@valguide/features/themes/types.ts'
 import type { SupportedLocale } from '@valguide/i18n/i18n.config'
 import de from '@valguide/i18n/messages/de.json'
 import en from '@valguide/i18n/messages/en.json'
@@ -81,7 +81,7 @@ const preview: Preview = {
       toolbar: {
         title: 'Theme',
         icon: 'circlehollow',
-        items: themes.map((theme) => ({ value: theme, title: theme.charAt(0).toUpperCase() + theme.slice(1) })),
+        items: themePresets.map((theme) => ({ value: theme, title: theme.charAt(0).toUpperCase() + theme.slice(1) })),
         dynamicTitle: true,
       },
     },
@@ -146,7 +146,7 @@ const preview: Preview = {
       </QueryClientProvider>
     ),
     withThemeByDataAttribute({
-      themes: Object.fromEntries(themes.map((theme) => [theme, theme])),
+      themes: Object.fromEntries(themePresets.map((theme) => [theme, theme])),
       defaultTheme: defaultThemes.light,
       attributeName: 'data-theme',
     }),

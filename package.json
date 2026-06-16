@@ -19,6 +19,17 @@
     "i18n:check": "pnpm dlx tsx scripts/validate-locales.ts",
     "i18n:unused": "pnpm dlx tsx scripts/find-unused-i18n-keys.ts",
     "i18n:prune": "pnpm dlx tsx scripts/remove-unused-i18n-keys.ts",
+    "knip": "knip",
+    "knip:ci": "knip --production --include dependencies,unlisted,binaries,unresolved,duplicates --reporter compact --max-issues 0",
+    "knip:production": "knip --production",
+    "knip:strict": "knip --strict",
+    "knip:manual": "knip --include files,dependencies,unlisted,unresolved,exports,types,duplicates",
+    "knip:deps": "knip --dependencies",
+    "knip:files": "knip --files",
+    "knip:exports": "knip --exports",
+    "knip:debug": "knip --debug --trace",
+    "knip:fix": "knip --fix --fix-type dependencies,exports,types --format",
+    "knip:fix:files": "knip --fix --fix-type files --allow-remove-files --format",
     "clean": "nx run-many -t clean --parallel=3 && rm -rf node_modules pnpm-lock.yaml .nx",
     "clean:vite": "nx run-many -t clean-vite --parallel=3",
     "clean:install": "pnpm clean && pnpm install",
@@ -103,19 +114,16 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
-    "@faker-js/faker": "^9.9.0",
     "@types/node": "^22.13.1",
-    "@valguide/test-config": "workspace:*",
     "@valguide/typescript-config": "workspace:*",
-    "baseline-browser-mapping": "^2.10.0",
     "boxen": "^8.0.1",
     "chalk": "^5.4.1",
     "drizzle-orm": "^0.45.1",
     "husky": "^9.1.6",
     "jest": "^29.7.0",
+    "knip": "^6.16.1",
     "lint-staged": "^15.2.10",
     "nx": "22.6.5",
-    "playwright": "^1.58.0",
     "postgres": "^3.4.8",
     "rollup-plugin-visualizer": "^7.0.1",
     "ts-morph": "^27.0.2",
@@ -139,8 +147,5 @@
   },
   "wallaby": {
     "trace": true
-  },
-  "dependencies": {
-    "@tanstack/react-form": "^1.28.4"
   }
 }

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  // Cloudflare Workers expose the `cloudflare:workers` virtual module at runtime.
+  // The jsdom environment is selected by Jest docblocks in tests.
+  "ignoreDependencies": ["cloudflare", "jest-environment-jsdom"],
+  // These binaries are provided by operator tooling or invoked through generated/local scripts.
+  "ignoreBinaries": ["caddy", "lsof", "ngrok", "open", "tsx", "wrangler-config"],
+  // Jest transforms are inherited from the shared test configuration.
+  "ignoreUnresolved": ["babel-jest"],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "package.json!",
+        "project.json!",
+        "nx.json!",
+        "biome.json!",
+        ".github/project.json!",
+        ".github/scripts/**/*.sh!",
+        "scripts/**/*.{js,mjs,ts}!"
+      ],
+      "project": ["*.{js,mjs,ts}!", "scripts/**/*.{js,mjs,ts}!"]
+    },
+    "apps/admin": {
+      "entry": ["src/start.ts!", "src/router.tsx!"],
+      "project": ["src/**/*.{ts,tsx}!", "!src/**/*.stories.{ts,tsx}!", "!src/**/*.{spec,test}.{ts,tsx}!", "*.{ts,mjs}!"]
+    },
+    "apps/app": {
+      "entry": ["src/start.ts!", "src/router.tsx!", "src/sw.ts!"],
+      "project": ["src/**/*.{ts,tsx}!", "!src/**/*.stories.{ts,tsx}!", "!src/**/*.{spec,test}.{ts,tsx}!", "*.{ts,mjs}!"]
+    },
+    "apps/docs": {
+      "entry": ["src/start.ts!", "src/router.tsx!", "source.config.ts!"],
+      "project": [
+        "src/**/*.{ts,tsx}!",
+        "!src/**/*.stories.{ts,tsx}!",
+        "!src/**/*.{spec,test}.{ts,tsx}!",
+        "*.{ts,mjs}!"
+      ],
+      // @tailwindcss/vite resolves this from src/styles/app.css during the docs build.
+      "ignoreDependencies": ["tailwindcss"]
+    },
+    "apps/links": {
+      "entry": ["src/start.ts!", "src/router.tsx!"],
+      "project": ["src/**/*.{ts,tsx}!", "!src/**/*.stories.{ts,tsx}!", "!src/**/*.{spec,test}.{ts,tsx}!", "*.{ts,mjs}!"]
+    },
+    "apps/storybook": {
+      "entry": [".storybook/main.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
+      "project": ["src/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}", "*.{ts,mjs}"]
+    },
+    "apps/studio": {
+      "entry": ["src/start.ts!", "src/router.tsx!"],
+      "project": ["src/**/*.{ts,tsx}!", "!src/**/*.stories.{ts,tsx}!", "!src/**/*.{spec,test}.{ts,tsx}!", "*.{ts,mjs}!"]
+    },
+    "apps/www": {
+      "entry": ["src/start.ts!", "src/router.tsx!"],
+      "project": ["src/**/*.{ts,tsx}!", "!src/**/*.stories.{ts,tsx}!", "!src/**/*.{spec,test}.{ts,tsx}!", "*.{ts,mjs}!"]
+    },
+    "packages/core": {
+      "entry": [
+        "scripts/**/*.mjs!",
+        "i18n/scripts/**/*.ts!",
+        "features/**/index.ts!",
+        "features/**/*.fn.ts!",
+        "features/**/*.server.ts!",
+        "features/**/*.tsx!",
+        "ui/**/*.{ts,tsx}!",
+        "env/*.ts!",
+        "i18n/*.ts!",
+        "posthog/*.ts!",
+        "posthog/*.tsx!",
+        "utils/*.ts!"
+      ],
+      "project": ["**/*.{ts,tsx,mjs}!", "!**/*.stories.{ts,tsx}!", "!**/*.{spec,test}.{ts,tsx}!"],
+      "ignoreDependencies": ["cloudflare"]
+    },
+    "packages/email": {
+      "entry": ["send-email.tsx!", "emails/**/*.tsx!", "scripts/**/*.ts!"],
+      "project": ["**/*.{ts,tsx}!"]
+    },
+    "packages/icons": {
+      "entry": ["assets/**/*.svg!", "types.d.ts!"],
+      "project": ["types.d.ts!"]
+    }
+  }
+}
