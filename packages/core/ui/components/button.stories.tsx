@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { themes } from '@valguide/features/themes/types.ts'
+import { themePresets } from '@valguide/features/themes/types.ts'
 import { Button } from './button'
 
 const meta: Meta<typeof Button> = {
@@ -12,7 +12,7 @@ export default meta
 export const All: StoryObj = {
   render: () => (
     <div className="flex flex-col gap-6">
-      {themes.map((theme) => (
+      {themePresets.map((theme) => (
         <div className="flex flex-col gap-2 p-4" data-theme={theme} key={theme}>
           <h1>{theme}</h1>
           <div className="flex flex-wrap gap-4">
