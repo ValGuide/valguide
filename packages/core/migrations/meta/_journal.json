@@ -64,6 +64,13 @@
       "when": 1779818400000,
       "tag": "0008_stable_entrypoints",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1781596800000,
+      "tag": "0009_move_short_links_to_links_schema",
+      "breakpoints": true
     }
   ]
 }
