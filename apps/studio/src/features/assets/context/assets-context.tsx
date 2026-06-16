@@ -10,14 +10,6 @@ export type AssetsContextValue = {
 
 export const AssetsContext = createContext<AssetsContextValue | null>(null)
 
-export function useAssetsContext(): AssetsContextValue {
-  const context = useContext(AssetsContext)
-  if (!context) {
-    throw new Error('useAssetsContext must be used within an AssetsProvider')
-  }
-  return context
-}
-
 export function useAssetsContextOptional(): AssetsContextValue | null {
   return useContext(AssetsContext)
 }

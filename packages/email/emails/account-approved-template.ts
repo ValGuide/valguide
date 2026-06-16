@@ -18,12 +18,3 @@ export function getAccountApprovedConfig(locale: EmailLocale): ResendTemplateCon
     ],
   }
 }
-
-export function getAccountApprovedText(locale: EmailLocale): string {
-  const copy = getAccountApprovedCopy(locale)
-  return `${copy.heading}
-
-${copy.body}
-
-${copy.cta}: {{{STUDIO_URL}}}`
-}

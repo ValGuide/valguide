@@ -23,7 +23,6 @@
     "knip:ci": "knip --production --reporter compact --max-issues 0",
     "knip:production": "knip --production",
     "knip:strict": "knip --strict",
-    "knip:manual": "knip --include files,dependencies,unlisted,unresolved,exports,types,duplicates",
     "knip:deps": "knip --dependencies",
     "knip:files": "knip --files",
     "knip:exports": "knip --exports",

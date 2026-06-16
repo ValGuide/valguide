@@ -131,19 +131,19 @@ Body: <part bytes>
 Asset URLs are derived at read time from `storagePath` — never stored:
 
 ```ts
-import { getAssetUrl, getImageKitUrl, getAssetDisplayUrl } from '@valguide/core/features/assets/image-url'
+import { getAssetImageUrl, getAssetUrl } from '@valguide/core/features/assets/image-url'
 
 // Direct R2 URL (audio/video — served via Cloudflare CDN, $0 egress)
 getAssetUrl('assets/abc/xyz.mp3')
 // → https://assets.valguide.com/assets/abc/xyz.mp3
 
-// ImageKit URL (images — transforms + CDN optimization)
-getImageKitUrl('assets/abc/xyz.jpg')
-// → https://ik.imagekit.io/valguide/assets/abc/xyz.jpg
+// Provider-aware image URL (images — transforms + CDN optimization)
+getAssetImageUrl({ storagePath: 'assets/abc/xyz.jpg' })
+// → https://assets.valguide.com/assets/abc/xyz.jpg
 
-// Auto-pick based on asset type
-getAssetDisplayUrl({ storagePath: '...', type: 'image' })  // → ImageKit
-getAssetDisplayUrl({ storagePath: '...', type: 'audio' })  // → R2 direct
+// Pick the helper explicitly by asset type:
+// image assets use getAssetImageUrl({ storagePath })
+// audio/video/document assets use getAssetUrl(storagePath)
 ```
 
 ## R2 Infrastructure
@@ -188,7 +188,7 @@ packages/core/platform/
 packages/core/features/assets/
 ├── init-upload.fn.ts          # Server function: decides PUT vs multipart
 ├── complete-upload.fn.ts      # Server function: completes multipart
-├── image-url.ts               # getAssetUrl, getImageKitUrl, getAssetDisplayUrl
+├── image-url.ts               # getAssetUrl, getAssetImageUrl, getAssetVideoThumbnailUrl
 ├── confirm-upload.server.ts   # Creates asset DB record
 ├── confirm-upload.fn.ts       # Server function wrapper
 └── delete-asset.server.ts     # Deletes from R2 + DB
@@ -208,4 +208,4 @@ apps/studio/src/
 3. Use `valguideId()` for per-file uniqueness (`fileId`)
 4. Call `uploadFile({ key, file, onProgress })` from the client
 5. After upload, persist `storagePath` to the database via a server function
-6. Derive display URLs at read time using `getAssetUrl()` or `getAssetDisplayUrl()`
+6. Derive display URLs at read time using `getAssetImageUrl()` for images and `getAssetUrl()` for audio, video, and documents

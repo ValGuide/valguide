@@ -52,11 +52,3 @@ export function createSecondaryStorage(options: {
     },
   }
 }
-
-export function getSecondaryStorageKey(scope: string, key: string): string {
-  return buildStorageKey(scope, key)
-}
-
-export function getSecondaryStorageTtl(ttl?: number): number | undefined {
-  return normalizeTtl(ttl)
-}

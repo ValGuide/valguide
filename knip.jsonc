@@ -5,6 +5,10 @@
   "ignoreDependencies": ["cloudflare", "jest-environment-jsdom"],
   // These binaries are provided by operator tooling or invoked through generated/local scripts.
   "ignoreBinaries": ["caddy", "lsof", "ngrok", "open", "tsx", "wrangler-config"],
+
+  // Don't report exports used only in the same file. These are often used in union types or as discriminated unions.
+  "ignoreExportsUsedInFile": true,
+
   // Jest transforms are inherited from the shared test configuration.
   "ignoreUnresolved": ["babel-jest"],
   "workspaces": {
@@ -45,7 +49,9 @@
     },
     "apps/storybook": {
       "entry": [".storybook/main.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
-      "project": ["src/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}", "*.{ts,mjs}"]
+      "project": ["src/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}", "*.{ts,mjs}"],
+      // Storybook builds stories from apps/studio, whose form stories/components import this package.
+      "ignoreDependencies": ["@tanstack/react-form"]
     },
     "apps/studio": {
       "entry": ["src/start.ts!", "src/router.tsx!"],
@@ -63,6 +69,7 @@
         "features/**/*.fn.ts!",
         "features/**/*.server.ts!",
         "features/**/*.tsx!",
+        "test/cloudflare-workers.mock.ts!",
         "ui/**/*.{ts,tsx}!",
         "env/*.ts!",
         "i18n/*.ts!",

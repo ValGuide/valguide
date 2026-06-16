@@ -27,8 +27,6 @@ export const themePresets = [
 
 export type ThemePreset = (typeof themePresets)[number]
 
-export type Theme = ThemePreset
-
 export const fontSources = ['system', 'self-hosted', 'google', 'custom'] as const
 
 export type FontSource = (typeof fontSources)[number]
@@ -99,31 +97,3 @@ export const colorVariableLabels: Record<keyof ThemeColors, string> = {
   input: 'Input',
   ring: 'Ring',
 }
-
-export const primaryColorKeys: (keyof ThemeColors)[] = [
-  'primary',
-  'primaryForeground',
-  'secondary',
-  'secondaryForeground',
-  'accent',
-  'accentForeground',
-]
-
-export const backgroundColorKeys: (keyof ThemeColors)[] = [
-  'background',
-  'foreground',
-  'card',
-  'cardForeground',
-  'muted',
-  'mutedForeground',
-]
-
-export const otherColorKeys: (keyof ThemeColors)[] = [
-  'popover',
-  'popoverForeground',
-  'destructive',
-  'destructiveForeground',
-  'border',
-  'input',
-  'ring',
-]

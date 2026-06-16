@@ -333,13 +333,13 @@ export const myFn = createServerFn({ method: 'POST' })
 After middleware, call an access check helper to verify org membership:
 
 ```typescript
-import { requireTourAccess, requireOrgMember } from '@valguide/core/features/auth/authorization'
+import { requireTourAccess, requireStopAccessByNanoId, requireOrgRole } from '@valguide/core/features/auth/authorization'
 
 // Check user can access a specific tour
 await requireTourAccess(tourId, context.user.id)
 
 // Check user can access a specific stop
-await requireStopAccess(stopId, context.user.id)
+await requireStopAccessByNanoId(stopNanoId, context.user.id)
 
 // For role-based actions (publishing requires curator+)
 await requireOrgRole(organizationId, context.user.id, 'curator')
@@ -353,8 +353,7 @@ await requireOrgRole(organizationId, context.user.id, 'curator')
 | `requireOrgRole(orgId, userId, minRole)` | Verify minimum role (owner > admin > curator > editor > viewer) |
 | `requireTourAccess(tourId, userId)` | Verify access via tour's org |
 | `requireTourAccessByNanoId(nanoId, userId)` | Same, by nanoId |
-| `requireStopAccess(stopId, userId)` | Verify access via stop's org |
-| `requireStopAccessByNanoId(nanoId, userId)` | Same, by nanoId |
+| `requireStopAccessByNanoId(nanoId, userId)` | Verify access via stop's org |
 | `requireAssetAccess(assetId, userId)` | Verify access via asset's org |
 | `requireThemeAccess(themeId, userId)` | Verify access via theme's org |
 
@@ -363,7 +362,6 @@ await requireOrgRole(organizationId, context.user.id, 'curator')
 All access functions throw typed errors:
 
 ```typescript
-class UnauthenticatedError  // 401 - Not logged in
 class ForbiddenError        // 403 - Logged in but no access
 class NotFoundError         // 404 - Entity doesn't exist
 ```

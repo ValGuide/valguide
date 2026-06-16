@@ -6,7 +6,6 @@ import { themePresets } from './types'
 
 const hexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/)
 
-export const themeAiRadiusOptions = [0, 0.5, 1.5, 2] as const
 const themeAiRadiusSchema = z.union([z.literal(0), z.literal(0.5), z.literal(1.5), z.literal(2)])
 
 export const themeAiSourceImageSchema = z.object({

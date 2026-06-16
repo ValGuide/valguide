@@ -19,13 +19,6 @@ export class AuthError extends Error {
     this.name = 'AuthError'
   }
 }
-
-export class UnauthenticatedError extends AuthError {
-  constructor(message = 'Authentication required') {
-    super(message, 'UNAUTHENTICATED')
-  }
-}
-
 export class ForbiddenError extends AuthError {
   constructor(message = 'You do not have access to this resource') {
     super(message, 'FORBIDDEN')
@@ -143,27 +136,6 @@ export async function requireTourAccessByNanoId(
 
   const result = await requireOrgMember(foundTour.organizationId, userId)
   return { ...result, tourId: foundTour.id }
-}
-
-// ============================================================================
-// Entity Access - Stop
-// ============================================================================
-
-/**
- * Require access to a stop by its UUID.
- */
-export async function requireStopAccess(stopId: string, userId: string): Promise<AuthResult> {
-  const [foundStop] = await db
-    .select({ organizationId: stop.organizationId })
-    .from(stop)
-    .where(eq(stop.id, stopId))
-    .limit(1)
-
-  if (!foundStop) {
-    throw new NotFoundError('Stop')
-  }
-
-  return requireOrgMember(foundStop.organizationId, userId)
 }
 
 /**

@@ -1,17 +1,10 @@
-import type { invitation, member, OrgRole, organization } from './schema'
+import type { OrgRole, organization } from './schema'
 
 // =============================================================================
 // BASE TYPES (inferred from schema)
 // =============================================================================
 
 export type Organization = typeof organization.$inferSelect
-export type NewOrganization = typeof organization.$inferInsert
-
-export type OrganizationMember = typeof member.$inferSelect
-export type NewOrganizationMember = typeof member.$inferInsert
-
-export type OrganizationInvitation = typeof invitation.$inferSelect
-export type NewOrganizationInvitation = typeof invitation.$inferInsert
 
 // =============================================================================
 // COMPOSITE TYPES

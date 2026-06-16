@@ -18,7 +18,7 @@ import {
 } from '@valguide/ui/components/responsive-dialog'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
-import { AVAILABLE_LANGUAGES } from './unified-locale-selector'
+import { AVAILABLE_LANGUAGES } from './available-locales'
 
 export type AddLanguageDialogProps = {
   open: boolean

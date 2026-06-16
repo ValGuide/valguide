@@ -1,9 +1,4 @@
-import {
-  getAggregateUploadProgress,
-  getUploadCounts,
-  isFileDrag,
-  isTerminalUploadStatus,
-} from './asset-upload-session.utils'
+import { getUploadCounts, isFileDrag, isTerminalUploadStatus } from './asset-upload-session.utils'
 
 describe('asset upload session utils', () => {
   it('detects file drags', () => {
@@ -16,16 +11,6 @@ describe('asset upload session utils', () => {
     expect(isTerminalUploadStatus('complete')).toBe(true)
     expect(isTerminalUploadStatus('error')).toBe(true)
     expect(isTerminalUploadStatus('uploading')).toBe(false)
-  })
-
-  it('aggregates progress across items', () => {
-    expect(
-      getAggregateUploadProgress([
-        { status: 'uploading', progress: 50, type: 'image' },
-        { status: 'complete', progress: 100, type: 'image' },
-        { status: 'queued', progress: 0, type: 'video' },
-      ]),
-    ).toBe(50)
   })
 
   it('counts upload states', () => {

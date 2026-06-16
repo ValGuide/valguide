@@ -26,26 +26,6 @@ export function isTerminalUploadStatus(status: AssetUploadStatus): boolean {
   return status === 'complete' || status === 'error'
 }
 
-export function getAggregateUploadProgress(items: AssetUploadListItem[]): number {
-  if (items.length === 0) {
-    return 0
-  }
-
-  const totalProgress = items.reduce((sum, item) => {
-    if (item.status === 'complete') {
-      return sum + 100
-    }
-
-    if (item.status === 'confirming') {
-      return sum + 100
-    }
-
-    return sum + Math.max(0, Math.min(100, item.progress))
-  }, 0)
-
-  return Math.round(totalProgress / items.length)
-}
-
 export function getUploadCounts(items: AssetUploadListItem[]) {
   return items.reduce(
     (counts, item) => {

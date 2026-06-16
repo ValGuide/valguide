@@ -1,10 +1,7 @@
 import type { ThemeColors, ThemeFonts, ThemePreset } from '@valguide/core/features/themes/types'
 
 export {
-  backgroundColorKeys,
   colorVariableLabels,
-  otherColorKeys,
-  primaryColorKeys,
   type ThemeColors,
   type ThemeConfig,
   type ThemeFonts,

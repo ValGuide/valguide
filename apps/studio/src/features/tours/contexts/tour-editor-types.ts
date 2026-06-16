@@ -75,7 +75,3 @@ export function useTourEditor() {
   }
   return context
 }
-
-export function useTourEditorOptional() {
-  return useContext(TourEditorContext)
-}

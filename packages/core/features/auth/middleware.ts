@@ -12,16 +12,6 @@ export type AuthUser = {
   metadata?: unknown
 }
 
-export type AuthContext = {
-  user: AuthUser | null
-  activeOrgId: string | null
-}
-
-export type RequiredAuthContext = {
-  user: AuthUser
-  activeOrgId: string | null
-}
-
 // ============================================================================
 // Base Middleware - Extracts auth context (doesn't throw)
 // ============================================================================

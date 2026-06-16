@@ -1,17 +1,3 @@
-export function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  if (!result) return { r: 0, g: 0, b: 0 }
-  return {
-    r: Number.parseInt(result[1] ?? '0', 16),
-    g: Number.parseInt(result[2] ?? '0', 16),
-    b: Number.parseInt(result[3] ?? '0', 16),
-  }
-}
-
-export function rgbToHex(r: number, g: number, b: number): string {
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`
-}
-
 export function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
   r /= 255
   g /= 255

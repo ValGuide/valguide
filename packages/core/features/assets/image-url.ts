@@ -2,7 +2,6 @@ import {
   canGenerateAssetVideoThumbnail,
   getDirectAssetUrl,
   getImageDeliveryProvider,
-  getImageKitAssetUrl,
   type VideoThumbnailOptions,
 } from '../../platform/images/image-delivery'
 
@@ -17,33 +16,10 @@ export function getAssetUrl(storagePath: string): string {
 }
 
 /**
- * Get an ImageKit-optimized URL for image assets.
- * Delegates to ImageKit when it is used as the image delivery provider.
- */
-export function getImageKitUrl(storagePath: string): string {
-  return getImageKitAssetUrl(storagePath)
-}
-
-/**
  * Get the optimized image URL for an asset.
  */
 export function getAssetImageUrl(asset: { storagePath: string }): string {
   return getImageDeliveryProvider().getImageUrl(asset.storagePath)
-}
-
-/**
- * Get the best URL for an asset based on type.
- * Images are optimized by the active provider.
- * Audio/video/documents are served from the direct asset origin.
- */
-export function getAssetDisplayUrl(asset: {
-  storagePath: string
-  type: 'image' | 'audio' | 'video' | 'document'
-}): string {
-  if (asset.type === 'image') {
-    return getAssetImageUrl(asset)
-  }
-  return getAssetUrl(asset.storagePath)
 }
 
 /**

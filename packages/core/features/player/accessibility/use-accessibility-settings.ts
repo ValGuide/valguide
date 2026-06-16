@@ -60,10 +60,3 @@ export const TEXT_SIZE_CLASSES: Record<TextSize, string> = {
   large: 'text-lg',
   xlarge: 'text-xl',
 }
-
-export const TEXT_SIZE_SCALE: Record<TextSize, number> = {
-  small: 0.875,
-  medium: 1,
-  large: 1.125,
-  xlarge: 1.25,
-}

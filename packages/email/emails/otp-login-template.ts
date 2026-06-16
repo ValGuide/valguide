@@ -17,14 +17,3 @@ export function getOtpLoginConfig(locale: EmailLocale): ResendTemplateConfig {
     ],
   }
 }
-
-export function getOtpLoginText(locale: EmailLocale): string {
-  const copy = getOtpLoginCopy(locale)
-  return `${copy.heading}
-
-{{{CODE}}}
-
-${copy.expires('{{{MAX_VALID_MINUTES}}}')}
-
-${copy.ignore}`
-}

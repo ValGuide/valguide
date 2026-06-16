@@ -57,13 +57,6 @@ export function detectAssetType(file: File): AssetType | null {
   return null
 }
 
-export function validateFile(fileName: string) {
-  const sanitizedName = fileName
-    .replace(/\s+/g, '') // Remove all whitespace
-    .replace(/[^a-zA-Z0-9._-]/g, '-') // Replace other special chars with dash
-  return { sanitizedName }
-}
-
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 B'
   const k = 1024

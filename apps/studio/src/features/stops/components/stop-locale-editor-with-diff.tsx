@@ -9,13 +9,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@valg
 import { Input } from '@valguide/ui/components/input'
 import { Mic } from 'lucide-react'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { z } from 'zod'
 import type { MediaPickerComponent } from '@/features/assets/components/media-picker/types'
 import { DiffFieldLabel } from '@/features/editor/components/diff-aware-field'
 import { DiffToggle } from '@/features/editor/components/diff-toggle'
 import { InlineDiff } from '@/features/editor/components/inline-diff'
 import { LazyRichTextEditor } from '@/features/editor/components/lazy-rich-text-editor'
 import { RichTextInlineDiff } from '@/features/editor/components/rich-text-inline-diff'
-import { type StopTranslationFormData, stopTranslationFormSchema } from '@/features/tours/schemas/tour-form'
+
+export const stopTranslationFormSchema = z.object({
+  title: z.string().min(1),
+  description: z.string(),
+  transcription: z.string(),
+})
+
+export type StopTranslationFormData = z.infer<typeof stopTranslationFormSchema>
 
 export type StopLocaleEditorWithDiffProps = {
   locale: string

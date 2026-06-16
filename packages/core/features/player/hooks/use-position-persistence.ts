@@ -56,21 +56,3 @@ export function usePositionPersistence() {
     }
   }, [currentStopNanoId, currentTime])
 }
-
-/**
- * Clears saved position for a specific stop.
- * Call this when the user finishes listening to a stop.
- */
-export function clearSavedPosition(stopNanoId: string) {
-  localStorage.removeItem(`${STORAGE_KEY_PREFIX}${stopNanoId}`)
-}
-
-/**
- * Gets the saved position for a specific stop.
- */
-export function getSavedPosition(stopNanoId: string): number | null {
-  const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}${stopNanoId}`)
-  if (!saved) return null
-  const position = Number.parseFloat(saved)
-  return Number.isFinite(position) ? position : null
-}

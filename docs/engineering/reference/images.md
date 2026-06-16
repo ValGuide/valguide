@@ -117,9 +117,7 @@ All image URL construction goes through `@valguide/core/features/assets/image-ur
 | Function | Use Case | Output |
 |----------|----------|--------|
 | `getAssetUrl(storagePath)` | Direct asset URL (audio/video, or image source for `<Image>`) | `${VITE_ASSET_BASE_URL || VITE_R2_PUBLIC_URL}/${path}` |
-| `getImageKitUrl(storagePath)` | ImageKit-optimized URL (used internally when provider is `imagekit`) | `${VITE_IMAGEKIT_URL}/${path}` |
 | `getAssetImageUrl(asset)` | Optimized image URL for `<Image>` component (provider-aware) | Cloudflare → direct asset URL transformed to `/i/...`, ImageKit → ImageKit URL, Origin → direct asset URL |
-| `getAssetDisplayUrl(asset)` | Auto-selects by asset type | Images → `getAssetImageUrl`, audio/video → direct asset origin |
 | `getAssetVideoThumbnailUrl(storagePath, options)` | Provider-managed video thumbnail URL when supported | Cloudflare → `/v/...`, ImageKit/Origin → `null` |
 
 ```typescript

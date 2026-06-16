@@ -19,14 +19,3 @@ export function getTeamInviteConfig(locale: EmailLocale): ResendTemplateConfig {
     ],
   }
 }
-
-export function getTeamInviteText(locale: EmailLocale): string {
-  const copy = getTeamInviteCopy(locale)
-  return `${copy.heading('{{{TEAM_NAME}}}')}
-
-${copy.greeting}
-
-${copy.invitedBy('{{{INVITER_NAME}}}', '{{{TEAM_NAME}}}')}
-
-${copy.cta}: {{{INVITE_LINK}}}`
-}

@@ -93,7 +93,3 @@ export function useStopEditor() {
   }
   return context
 }
-
-export function useStopEditorOptional() {
-  return useContext(StopEditorContext)
-}

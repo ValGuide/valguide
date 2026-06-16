@@ -5,15 +5,9 @@ import type {
   AssetSortBy,
   AssetSortDirection,
   AssetUsageFilter,
-  AssetWithUsage,
 } from '@valguide/core/features/assets/get-assets.fn'
-import { getAssetsFn, getAssetsPageFn } from '@valguide/core/features/assets/get-assets.fn'
+import { getAssetsPageFn } from '@valguide/core/features/assets/get-assets.fn'
 import type { AssetType } from '@valguide/core/features/assets/types'
-
-export type AssetsQueryOptions = {
-  type?: AssetType
-  usage?: AssetUsageFilter
-}
 
 export type AssetsInfiniteQueryOptions = {
   type?: AssetType
@@ -23,27 +17,6 @@ export type AssetsInfiniteQueryOptions = {
   sortBy?: AssetSortBy
   sortDirection?: AssetSortDirection
 }
-
-export type AssetsResponse = {
-  assets: AssetWithUsage[]
-}
-
-export const assetsQueryKey = (options?: AssetsQueryOptions) =>
-  ['assets', { type: options?.type, usage: options?.usage ?? null }] as const
-
-export const assetsQueryOptions = (options?: AssetsQueryOptions) =>
-  queryOptions<AssetsResponse>({
-    queryKey: assetsQueryKey(options),
-    queryFn: async () => {
-      const assets = await getAssetsFn({
-        data: {
-          type: options?.type,
-          usage: options?.usage,
-        },
-      })
-      return { assets }
-    },
-  })
 
 export const assetDetailsQueryKey = (nanoId: string) => ['asset-details', nanoId] as const
 

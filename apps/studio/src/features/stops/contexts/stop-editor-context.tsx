@@ -349,4 +349,4 @@ export function StopEditorProvider({
   return <StopEditorContext.Provider value={value}>{children}</StopEditorContext.Provider>
 }
 
-export { useStopEditor, useStopEditorOptional } from './stop-editor-types'
+export { useStopEditor } from './stop-editor-types'

@@ -52,8 +52,7 @@ Each language row shows:
 ### Locale Selector (trigger button)
 
 - **Globe icon** — a neutral, universally understood symbol for "language"
-- **English language name** as the label
-- **Status badge** (Published / Draft / Empty) when applicable
+- **Localized language name** as the label, shown in the current UI locale
 
 ## What Best-in-Class Apps Do
 
@@ -78,9 +77,12 @@ Flags are fine when the selection is explicitly about a **country or region**, n
 
 ## Implementation
 
-- `getLocaleDisplayName(locale)` — returns English name (e.g., "French")
+- `AVAILABLE_LANGUAGES` — the Studio add-language catalogue, defined in `apps/studio/src/features/tours/components/available-locales.tsx`
+- `LocaleSelector` — the active-language picker, defined in `apps/studio/src/features/editor/components/locale-selector.tsx`
+- `getLocaleDisplayName(locale, displayLocale)` — returns the language name for the current UI locale (e.g., "French")
 - `getLocaleNativeName(locale)` — returns native name (e.g., "Français")
-- Both live in `apps/studio/src/features/tours/components/unified-locale-selector.tsx`
+- `getLocalePresentation(locale, displayLocale)` — returns `{ localeCode, localizedName, nativeName }` for selector rows
+- Locale display-name helpers live in `packages/core/i18n/locale-display-names.ts`
 
 ## References
 

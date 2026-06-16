@@ -14,33 +14,20 @@ async function getObjectStorageProvider() {
   return getCloudflareR2ObjectStorageProvider()
 }
 
-// ── Simple PUT ──────────────────────────────────────────────────────
-
 export async function putObject(key: string, body: StorageObjectBody, contentType: string): Promise<void> {
   const provider = await getObjectStorageProvider()
   await provider.putObject(key, body, contentType)
 }
-
-// ── Delete ──────────────────────────────────────────────────────────
 
 export async function deleteObject(key: string): Promise<void> {
   const provider = await getObjectStorageProvider()
   await provider.deleteObject(key)
 }
 
-// ── Head ────────────────────────────────────────────────────────────
-
-export async function headObject(key: string): Promise<{ size: number; etag: string } | null> {
-  const provider = await getObjectStorageProvider()
-  return provider.headObject(key)
-}
-
 export async function getObject(key: string): Promise<RetrievedStorageObject | null> {
   const provider = await getObjectStorageProvider()
   return provider.getObject(key)
 }
-
-// ── Multipart ───────────────────────────────────────────────────────
 
 export async function initMultipartUpload(key: string, contentType: string) {
   const provider = await getObjectStorageProvider()
@@ -64,12 +51,4 @@ export async function completeMultipartUpload(
 ): Promise<void> {
   const provider = await getObjectStorageProvider()
   await provider.completeMultipartUpload(key, uploadId, parts)
-}
-
-// ── Verify ──────────────────────────────────────────────────────────
-
-export async function verifyUpload(key: string, expectedSize: number): Promise<boolean> {
-  const obj = await headObject(key)
-  if (!obj) return false
-  return obj.size === expectedSize
 }

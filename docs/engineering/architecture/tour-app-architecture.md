@@ -170,7 +170,7 @@ R2 path structure:
   users/{userNanoId}/avatars/{fileNanoId}.{ext} (user avatars)
 ```
 
-KV blobs include asset `storagePath` fields. The visitor app resolves display URLs at render time via `getAssetDisplayUrl()`: images route through ImageKit CDN (R2 as origin) for on-the-fly transforms, while audio/video fetches directly from R2 via the public bucket URL (`assets.valguide.com` in prod, `assets.valguide.dev` in dev). No Worker compute needed for media serving.
+KV blobs include asset `storagePath` fields. The visitor app resolves display URLs at render time from `storagePath`: images use `getAssetImageUrl()` for provider-aware optimization, while audio/video fetches through `getAssetUrl()` from the public bucket URL (`assets.valguide.com` in prod, `assets.valguide.dev` in dev). No Worker compute needed for media serving.
 
 ### Postgres — Source of Truth
 

@@ -6,12 +6,6 @@ import type { CreateShortLinkInput } from './types'
 import { buildInsertValues, findShortLinkByTarget, isUniqueViolation, MAX_RETRIES } from './utils'
 
 // =============================================================================
-// TYPES
-// =============================================================================
-
-export type GetOrCreateShortLinkResult = ShortLink
-
-// =============================================================================
 // INTERNAL FUNCTION
 // =============================================================================
 

@@ -1,4 +1,4 @@
-import { createSecondaryStorage, getSecondaryStorageKey, getSecondaryStorageTtl } from './secondary-storage'
+import { createSecondaryStorage } from './secondary-storage'
 
 describe('secondary storage', () => {
   it('prefixes keys with the auth scope', async () => {
@@ -64,12 +64,5 @@ describe('secondary storage', () => {
 
     expect(set).toHaveBeenNthCalledWith(1, 'better-auth:valguide-auth:session:token', 'payload', { ttl: undefined })
     expect(set).toHaveBeenNthCalledWith(2, 'better-auth:valguide-auth:session:token', 'payload', { ttl: undefined })
-  })
-
-  it('exposes helpers for deterministic key and TTL normalization', () => {
-    expect(getSecondaryStorageKey('scope', 'key')).toBe('better-auth:scope:key')
-    expect(getSecondaryStorageTtl(60.1)).toBe(61)
-    expect(getSecondaryStorageTtl(0)).toBeUndefined()
-    expect(getSecondaryStorageTtl(Number.NaN)).toBeUndefined()
   })
 })

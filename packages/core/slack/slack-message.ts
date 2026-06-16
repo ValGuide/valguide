@@ -9,8 +9,6 @@ export type SlackPlainText = {
   emoji?: boolean
 }
 
-export type SlackTextObject = SlackMrkdwnText | SlackPlainText
-
 export type SlackButtonElement = {
   type: 'button'
   text: SlackPlainText
