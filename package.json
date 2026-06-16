@@ -20,7 +20,7 @@
     "i18n:unused": "pnpm dlx tsx scripts/find-unused-i18n-keys.ts",
     "i18n:prune": "pnpm dlx tsx scripts/remove-unused-i18n-keys.ts",
     "knip": "knip",
-    "knip:ci": "knip --production --reporter compact --max-issues 0",
+    "knip:ci": "knip --production --include dependencies,unlisted,binaries,unresolved,duplicates --reporter compact --max-issues 0",
     "knip:production": "knip --production",
     "knip:strict": "knip --strict",
     "knip:manual": "knip --include files,dependencies,unlisted,unresolved,exports,types,duplicates",
@@ -147,8 +147,5 @@
   },
   "wallaby": {
     "trace": true
-  },
-  "dependencies": {
-    "@tanstack/react-form": "^1.28.4"
   }
 }

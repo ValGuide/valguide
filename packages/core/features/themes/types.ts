@@ -25,8 +25,6 @@ export const themePresets = [
   'claude-dark',
 ] as const
 
-export const themes = themePresets
-
 export type ThemePreset = (typeof themePresets)[number]
 
 export type Theme = ThemePreset

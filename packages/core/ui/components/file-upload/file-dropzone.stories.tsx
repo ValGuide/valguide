@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useTranslations } from '@valguide/core/i18n/client'
-import { themes } from '@valguide/features/themes/types.ts'
+import { themePresets } from '@valguide/features/themes/types.ts'
 import { FileDropzone } from './file-dropzone'
 
 const meta: Meta<typeof FileDropzone> = {
@@ -141,7 +141,7 @@ export const AllThemes: Story = {
 
     return (
       <div className="flex flex-col gap-8">
-        {themes.map((theme) => (
+        {themePresets.map((theme) => (
           <div className="flex flex-col gap-4 p-6 border rounded-lg" data-theme={theme} key={theme}>
             <h2 className="text-xl font-bold capitalize">{theme}</h2>
             <FileDropzone
