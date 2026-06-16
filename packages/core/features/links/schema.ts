@@ -17,8 +17,9 @@ import { stop, tour } from '../tours/schema'
 import type { QrBrandingOverride } from './qr/shared'
 
 const studioSchema = pgSchema('studio')
+const linksSchema = pgSchema('links')
 
-export const shortLinkTypeEnum = studioSchema.enum('short_link_type', [
+export const shortLinkTypeEnum = linksSchema.enum('short_link_type', [
   'tour',
   'stop',
   'campaign',
@@ -26,7 +27,7 @@ export const shortLinkTypeEnum = studioSchema.enum('short_link_type', [
   'landing_page',
 ])
 
-export const short_links = studioSchema.table(
+export const short_links = linksSchema.table(
   'short_links',
   {
     id: serial('id').primaryKey(),
@@ -85,7 +86,7 @@ export const short_links = studioSchema.table(
   ],
 )
 
-export const short_link_daily_stats = studioSchema.table(
+export const short_link_daily_stats = linksSchema.table(
   'short_link_daily_stats',
   {
     id: uuid('id').defaultRandom().primaryKey(),
