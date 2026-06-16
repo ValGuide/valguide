@@ -74,12 +74,11 @@
       "ignoreDependencies": ["cloudflare"]
     },
     "packages/email": {
-      "entry": ["send-email.tsx!", "emails/**/*.tsx!", "scripts/**/*.ts!"],
+      "entry": ["emails/**/*.tsx!", "scripts/**/*.ts!"],
       "project": ["**/*.{ts,tsx}!"]
     },
     "packages/icons": {
-      "entry": ["assets/**/*.svg!", "types.d.ts!"],
-      "project": ["types.d.ts!"]
+      "entry": ["assets/**/*.svg!", "types.d.ts!"]
     }
   }
 }

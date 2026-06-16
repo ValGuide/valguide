@@ -10,7 +10,7 @@ Run the default report locally:
 pnpm knip
 ```
 
-Run the same production dependency and duplicate-export check used by CI:
+Run the same full production report used by CI:
 
 ```bash
 pnpm knip:ci
@@ -37,7 +37,7 @@ pnpm knip -- --trace-dependency react
 
 `knip.jsonc` is workspace-aware and keeps framework conventions explicit: TanStack Router generated route trees, public service workers, static font theme files, Storybook setup, worker entrypoints, and root maintenance scripts are configured as entrypoints or narrow ignores.
 
-CI intentionally gates the production dependency graph, unresolved imports, binary usage, and duplicate exports. Full unused-file and unused-export reports remain manual cleanup workflows through `pnpm knip`, `pnpm knip:files`, and `pnpm knip:exports` until those broader baselines have been reviewed.
+CI gates Knip's full default production report, including unused files, dependencies, unlisted dependencies, unresolved imports, unused exports, unused exported types, duplicate exports, binaries, and related issue types. Dev-only files and dependencies remain outside the CI gate through `--production`; use `pnpm knip` or the focused commands below when reviewing the entire workspace.
 
 When Knip reports a new issue, prefer fixing the code or package manifest. If the report is a framework convention or another confirmed false positive, add the narrowest possible config entry:
 
