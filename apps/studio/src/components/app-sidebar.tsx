@@ -10,6 +10,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
@@ -21,6 +22,7 @@ import {
   BarChart3,
   BookOpen,
   Image,
+  Inbox,
   LifeBuoy,
   Link2,
   MapPin,
@@ -45,6 +47,7 @@ export function AppSidebar({
   onLogout,
   onCreateTeam,
   onFeedback,
+  pendingInvitationsCount = 0,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   pathname?: string
@@ -59,6 +62,7 @@ export function AppSidebar({
   onLogout?: () => void
   onCreateTeam?: (name: string) => Promise<CreateTeamResult>
   onFeedback?: () => void
+  pendingInvitationsCount?: number
 }) {
   const { setOpenMobile, toggleSidebar, state, isMobile } = useSidebar()
   const t = useTranslations('sidebar.nav')
@@ -118,6 +122,7 @@ export function AppSidebar({
   ])
 
   const workspaceItem = createNavItems([{ title: t('workspace'), path: '/settings', icon: Settings2 }])[0]
+  const invitesItem = createNavItems([{ title: t('invites'), path: '/invites', icon: Inbox }])[0]
   const supportItem = createNavItems([{ title: t('support'), path: '/support', icon: LifeBuoy }])[0]
   const sidebarToggleLabel = isMobile || state === 'expanded' ? tSidebar('collapse') : tSidebar('expand')
 
@@ -311,6 +316,28 @@ export function AppSidebar({
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
+          {pendingInvitationsCount > 0 ? (
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={invitesItem.title} isActive={invitesItem.isActive}>
+                  <Link
+                    {...invitesItem.linkOptions}
+                    preload="intent"
+                    onClick={(event) => {
+                      if (isExactPath(invitesItem.linkOptions.to as string)) {
+                        event.preventDefault()
+                        setOpenMobile(false)
+                      }
+                    }}
+                  >
+                    <invitesItem.icon />
+                    <span>{invitesItem.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+                <SidebarMenuBadge>{pendingInvitationsCount}</SidebarMenuBadge>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          ) : null}
           <NavUser user={user} onLogout={handleLogout} />
         </SidebarFooter>
         <SidebarRail />

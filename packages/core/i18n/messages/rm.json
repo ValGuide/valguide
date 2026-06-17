@@ -1158,6 +1158,7 @@
       "theme": "Theme",
       "qrCode": "QR Code",
       "workspace": "Plaz da lavur",
+      "invites": "Invitaziuns",
       "tours": "Turas",
       "stops": "Stops",
       "archived": "Archivà",
@@ -1368,6 +1369,34 @@
       "avatarInvalidType": "Chargiai si in maletg PNG, JPG, WebP u GIF",
       "avatarTooLarge": "Il maletg sto esser pli pitschen che 5 MB",
       "avatarClickToUpload": "Cliccar per chargiar"
+    }
+  },
+  "invites": {
+    "pageTitle": "Invitaziuns",
+    "pageDescription": "Controllescha invitaziuns pendentas per tes conto.",
+    "modalTitle": "Invitaziuns a plazs da lavur",
+    "modalDescription": "Ti has invitaziuns pendentas per novs plazs da lavur.",
+    "viewAll": "Mussar tut las invitaziuns",
+    "accept": "Acceptar",
+    "decline": "Refusar",
+    "invitedBy": "Envida da {name}",
+    "unknownInviter": "in admin dal plaz da lavur",
+    "emptyTitle": "Naginas invitaziuns pendentas",
+    "emptyDescription": "Novas invitaziuns per tes conto vegnan mussadas qua.",
+    "loadError": "Betg reussi da chargiar las invitaziuns.",
+    "retry": "Empruvar anc ina giada",
+    "acceptSuccess": "Ti es entra en {teamName}",
+    "acceptError": "Betg reussi d'acceptar l'invitaziun",
+    "declineSuccess": "Invitaziun refusada",
+    "declineError": "Betg reussi da refusar l'invitaziun",
+    "switchWorkspace": "Midar plaz da lavur",
+    "switchError": "Betg reussi da midar plaz da lavur",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "curator": "Curator",
+      "editor": "Editor",
+      "viewer": "Viewer"
     }
   },
   "joinTeam": {

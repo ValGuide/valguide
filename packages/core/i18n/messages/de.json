@@ -1158,6 +1158,7 @@
       "theme": "Design",
       "qrCode": "QR-Code",
       "workspace": "Arbeitsbereich",
+      "invites": "Einladungen",
       "tours": "Touren",
       "stops": "Stopps",
       "archived": "Archiviert",
@@ -1368,6 +1369,34 @@
       "avatarInvalidType": "Bitte laden Sie ein PNG-, JPG-, WebP- oder GIF-Bild hoch",
       "avatarTooLarge": "Das Bild darf nicht grösser als 5 MB sein",
       "avatarClickToUpload": "Klicken zum Hochladen"
+    }
+  },
+  "invites": {
+    "pageTitle": "Einladungen",
+    "pageDescription": "Prüfen Sie ausstehende Arbeitsbereich-Einladungen für Ihr Konto.",
+    "modalTitle": "Arbeitsbereich-Einladungen",
+    "modalDescription": "Sie haben ausstehende Einladungen zu neuen Arbeitsbereichen.",
+    "viewAll": "Alle Einladungen anzeigen",
+    "accept": "Annehmen",
+    "decline": "Ablehnen",
+    "invitedBy": "Eingeladen von {name}",
+    "unknownInviter": "einem Arbeitsbereich-Admin",
+    "emptyTitle": "Keine ausstehenden Einladungen",
+    "emptyDescription": "Neue Arbeitsbereich-Einladungen für Ihr Konto erscheinen hier.",
+    "loadError": "Einladungen konnten nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "acceptSuccess": "Sie sind {teamName} beigetreten",
+    "acceptError": "Einladung konnte nicht angenommen werden",
+    "declineSuccess": "Einladung abgelehnt",
+    "declineError": "Einladung konnte nicht abgelehnt werden",
+    "switchWorkspace": "Arbeitsbereich wechseln",
+    "switchError": "Arbeitsbereich konnte nicht gewechselt werden",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "curator": "Curator",
+      "editor": "Editor",
+      "viewer": "Viewer"
     }
   },
   "joinTeam": {

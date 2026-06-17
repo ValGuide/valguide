@@ -47,3 +47,25 @@ pnpm test
 For narrow changes, use the closest package or target-specific check when the
 full suite is not practical. The secret scan is intentionally cheap and should
 run before commits and pull requests.
+
+## Storybook Coverage
+
+User-facing UI work is incomplete without relevant Storybook coverage.
+
+- Add or update stories for every materially changed reusable component.
+- Cover important visual states that apply to the component, including default,
+  empty, loading, error, disabled or busy, and long-content states.
+- Do not create dedicated mobile or viewport-only stories when the only
+  difference is Storybook viewport configuration. Components are expected to
+  be responsive; use Storybook's viewport dropdown for manual visual testing.
+- Add a mobile-specific story only when mobile renders materially different
+  content, state, or interaction behavior beyond responsive layout.
+- Prefer stories for presentational boundaries. Keep server functions, live
+  queries, and router wiring in thin connected wrappers rather than duplicating
+  application infrastructure inside Storybook.
+- When a connected component cannot reasonably render in Storybook, document
+  the reason and add coverage for its nearest reusable presentational component.
+- Update existing parent-shell stories when a feature changes visible shell
+  state such as navigation items, badges, banners, or dialogs.
+- Run `pnpm --filter @valguide/storybook type-check` and, when practical,
+  `pnpm storybook:build` before handing back UI changes.
