@@ -139,6 +139,34 @@ export const SettingsActive: Story = {
   },
 }
 
+export const InvitesActive: Story = {
+  args: {
+    pathname: '/en/invites',
+    pendingInvitationsCount: 2,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar with the Invites page active and two pending workspace invitations.',
+      },
+    },
+  },
+}
+
+export const PendingInvitesBadge: Story = {
+  args: {
+    pathname: '/en',
+    pendingInvitationsCount: 3,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sidebar footer showing the pending invitation count above the user card.',
+      },
+    },
+  },
+}
+
 export const SupportActive: Story = {
   args: {
     pathname: '/en/support',
