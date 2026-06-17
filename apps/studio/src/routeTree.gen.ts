@@ -24,6 +24,7 @@ import { Route as MainSupportRouteImport } from './routes/_main/support'
 import { Route as MainSettingsRouteImport } from './routes/_main/settings'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
 import { Route as MainLinksRouteImport } from './routes/_main/links'
+import { Route as MainInvitesRouteImport } from './routes/_main/invites'
 import { Route as MainDesignRouteImport } from './routes/_main/design'
 import { Route as MainDashboardRouteImport } from './routes/_main/dashboard'
 import { Route as MainBrandRouteImport } from './routes/_main/brand'
@@ -118,6 +119,11 @@ const MainProfileRoute = MainProfileRouteImport.update({
 const MainLinksRoute = MainLinksRouteImport.update({
   id: '/links',
   path: '/links',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainInvitesRoute = MainInvitesRouteImport.update({
+  id: '/invites',
+  path: '/invites',
   getParentRoute: () => MainRoute,
 } as any)
 const MainDesignRoute = MainDesignRouteImport.update({
@@ -247,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/brand': typeof MainBrandRouteWithChildren
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
+  '/invites': typeof MainInvitesRoute
   '/links': typeof MainLinksRoute
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
@@ -284,6 +291,7 @@ export interface FileRoutesByTo {
   '/brand': typeof MainBrandRouteWithChildren
   '/dashboard': typeof MainDashboardRoute
   '/design': typeof MainDesignRoute
+  '/invites': typeof MainInvitesRoute
   '/links': typeof MainLinksRoute
   '/profile': typeof MainProfileRoute
   '/settings': typeof MainSettingsRoute
@@ -322,6 +330,7 @@ export interface FileRoutesById {
   '/_main/brand': typeof MainBrandRouteWithChildren
   '/_main/dashboard': typeof MainDashboardRoute
   '/_main/design': typeof MainDesignRoute
+  '/_main/invites': typeof MainInvitesRoute
   '/_main/links': typeof MainLinksRoute
   '/_main/profile': typeof MainProfileRoute
   '/_main/settings': typeof MainSettingsRoute
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/brand'
     | '/dashboard'
     | '/design'
+    | '/invites'
     | '/links'
     | '/profile'
     | '/settings'
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/brand'
     | '/dashboard'
     | '/design'
+    | '/invites'
     | '/links'
     | '/profile'
     | '/settings'
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/_main/brand'
     | '/_main/dashboard'
     | '/_main/design'
+    | '/_main/invites'
     | '/_main/links'
     | '/_main/profile'
     | '/_main/settings'
@@ -579,6 +591,13 @@ declare module '@tanstack/react-router' {
       path: '/links'
       fullPath: '/links'
       preLoaderRoute: typeof MainLinksRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/invites': {
+      id: '/_main/invites'
+      path: '/invites'
+      fullPath: '/invites'
+      preLoaderRoute: typeof MainInvitesRouteImport
       parentRoute: typeof MainRoute
     }
     '/_main/design': {
@@ -803,6 +822,7 @@ interface MainRouteChildren {
   MainBrandRoute: typeof MainBrandRouteWithChildren
   MainDashboardRoute: typeof MainDashboardRoute
   MainDesignRoute: typeof MainDesignRoute
+  MainInvitesRoute: typeof MainInvitesRoute
   MainLinksRoute: typeof MainLinksRoute
   MainProfileRoute: typeof MainProfileRoute
   MainSettingsRoute: typeof MainSettingsRoute
@@ -820,6 +840,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainBrandRoute: MainBrandRouteWithChildren,
   MainDashboardRoute: MainDashboardRoute,
   MainDesignRoute: MainDesignRoute,
+  MainInvitesRoute: MainInvitesRoute,
   MainLinksRoute: MainLinksRoute,
   MainProfileRoute: MainProfileRoute,
   MainSettingsRoute: MainSettingsRoute,

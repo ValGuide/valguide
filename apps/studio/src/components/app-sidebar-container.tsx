@@ -9,6 +9,8 @@ import { resetStudioUserAnalytics } from '@valguide/core/posthog/PostHogProvider
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useEffect, useState } from 'react'
 import { FeedbackDialogConnected } from '../features/feedback/components/feedback-dialog-connected'
+import { PendingInvitesModal } from '../features/invites/components/pending-invites-modal'
+import { useCurrentUserInvitations } from '../features/invites/hooks/use-current-user-invitations'
 import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
 import { AppSidebar } from './app-sidebar'
 import { AppSidebarSkeleton } from './app-sidebar-skeleton'
@@ -19,6 +21,7 @@ export function AppSidebarContainer() {
   const t = useTranslations('orgs.teamSwitcher')
 
   const { data, isLoading } = useSidebarData()
+  const { data: invitations = [] } = useCurrentUserInvitations()
   const signOut = useServerFn(signOutFn)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
 
@@ -67,7 +70,9 @@ export function AppSidebarContainer() {
         onLogout={handleLogout}
         onCreateTeam={async (name: string) => createTeamFn({ data: { name } })}
         onFeedback={() => setFeedbackOpen(true)}
+        pendingInvitationsCount={invitations.length}
       />
+      <PendingInvitesModal />
       <FeedbackDialogConnected
         open={feedbackOpen}
         onOpenChange={setFeedbackOpen}

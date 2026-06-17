@@ -1,54 +1,27 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getRequestHeaders } from '@tanstack/react-start/server'
-import { db } from '@valguide/core/features/db'
 import { z } from 'zod'
-import { captureStudioProductEvent } from '../../posthog/server'
-import { ForbiddenError, NotFoundError } from '../auth/authorization'
-import { auth, setActiveOrganizationForCurrentSession } from '../auth/better-auth.server'
 import { requireAuthMiddleware } from '../auth/middleware'
-import { getPendingInvitationById, isTeamMember } from './utils'
+import { acceptInvitationForUser } from './accept-invitation.server'
 
 export type JoinTeamResult = {
   success: true
+  organizationId: string
+  organizationName: string
 }
 
 const joinTeamSchema = z.object({
   invitationId: z.string(),
+  switchToOrganization: z.boolean().optional(),
 })
 
 export const joinTeamFn = createServerFn({ method: 'POST' })
   .middleware([requireAuthMiddleware])
   .inputValidator(joinTeamSchema)
   .handler(async ({ context, data }): Promise<JoinTeamResult> => {
-    const invite = await getPendingInvitationById(db, data.invitationId)
-
-    if (!invite) {
-      throw new NotFoundError('Invitation')
-    }
-
-    const isMember = await isTeamMember(db, invite.organizationId, context.user.id)
-    if (isMember) {
-      return { success: true }
-    }
-
-    if (invite.email.toLowerCase() !== (context.user.email || '').toLowerCase()) {
-      throw new ForbiddenError('This invitation was sent to a different email address')
-    }
-
-    await auth.api.acceptInvitation({
-      headers: getRequestHeaders(),
-      body: {
-        invitationId: invite.id,
-      },
+    return acceptInvitationForUser({
+      invitationId: data.invitationId,
+      userId: context.user.id,
+      userEmail: context.user.email,
+      switchToOrganization: data.switchToOrganization ?? true,
     })
-    await setActiveOrganizationForCurrentSession(invite.organizationId)
-    captureStudioProductEvent({
-      distinctId: context.user.id,
-      event: 'org.joined',
-      organizationNanoId: invite.organization.nanoId,
-      properties: {
-        organization_slug: invite.organization.slug,
-      },
-    })
-    return { success: true }
   })

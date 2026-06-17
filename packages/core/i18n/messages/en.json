@@ -1158,6 +1158,7 @@
       "theme": "Theme",
       "qrCode": "QR Code",
       "workspace": "Workspace",
+      "invites": "Invites",
       "tours": "Tours",
       "stops": "Stops",
       "archived": "Archived",
@@ -1368,6 +1369,34 @@
       "avatarInvalidType": "Please upload a PNG, JPG, WebP, or GIF image",
       "avatarTooLarge": "Image must be smaller than 5MB",
       "avatarClickToUpload": "Click to upload"
+    }
+  },
+  "invites": {
+    "pageTitle": "Invites",
+    "pageDescription": "Review pending workspace invitations for your account.",
+    "modalTitle": "Workspace invitations",
+    "modalDescription": "You have pending invitations to join new workspaces.",
+    "viewAll": "View all invites",
+    "accept": "Accept",
+    "decline": "Decline",
+    "invitedBy": "Invited by {name}",
+    "unknownInviter": "a workspace admin",
+    "emptyTitle": "No pending invites",
+    "emptyDescription": "New workspace invitations for your account will appear here.",
+    "loadError": "Failed to load invites.",
+    "retry": "Try again",
+    "acceptSuccess": "You joined {teamName}",
+    "acceptError": "Failed to accept invitation",
+    "declineSuccess": "Invitation declined",
+    "declineError": "Failed to decline invitation",
+    "switchWorkspace": "Switch workspace",
+    "switchError": "Failed to switch workspace",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "curator": "Curator",
+      "editor": "Editor",
+      "viewer": "Viewer"
     }
   },
   "joinTeam": {

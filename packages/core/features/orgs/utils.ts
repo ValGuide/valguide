@@ -23,7 +23,11 @@ export async function getInvitationById(db: DB, id: string) {
  */
 export async function getPendingInvitationById(db: DB, id: string) {
   return db.query.invitation.findFirst({
-    where: and(eq(invitation.id, id), eq(invitation.status, 'pending'), gt(invitation.expiresAt, new Date())),
+    where: and(
+      eq(invitation.id, id),
+      eq(invitation.status, 'pending'),
+      or(isNull(invitation.expiresAt), gt(invitation.expiresAt, new Date())),
+    ),
     with: {
       organization: true,
     },
