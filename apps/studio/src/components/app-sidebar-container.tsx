@@ -9,7 +9,7 @@ import { resetStudioUserAnalytics } from '@valguide/core/posthog/PostHogProvider
 import { toast } from '@valguide/core/ui/components/sonner/state'
 import { useEffect, useState } from 'react'
 import { FeedbackDialogConnected } from '../features/feedback/components/feedback-dialog-connected'
-import { PendingInvitesModal } from '../features/invites/components/pending-invites-modal'
+import { PendingInvitesDialogConnected } from '../features/invites/components/pending-invites-dialog-connected'
 import { useCurrentUserInvitations } from '../features/invites/hooks/use-current-user-invitations'
 import { useSidebarData } from '../features/sidebar/hooks/use-sidebar-data'
 import { AppSidebar } from './app-sidebar'
@@ -72,7 +72,7 @@ export function AppSidebarContainer() {
         onFeedback={() => setFeedbackOpen(true)}
         pendingInvitationsCount={invitations.length}
       />
-      <PendingInvitesModal />
+      <PendingInvitesDialogConnected />
       <FeedbackDialogConnected
         open={feedbackOpen}
         onOpenChange={setFeedbackOpen}

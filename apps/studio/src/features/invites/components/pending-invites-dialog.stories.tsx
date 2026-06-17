@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { CurrentUserInvitation } from '@valguide/core/features/orgs/list-current-user-invitations.fn'
 import { expect, fn, userEvent, within } from 'storybook/test'
-import { PendingInvitesDialog } from './pending-invites-modal'
+import { PendingInvitesDialog } from './pending-invites-dialog'
 
 const invitations: CurrentUserInvitation[] = [
   {
@@ -35,7 +35,7 @@ const invitations: CurrentUserInvitation[] = [
 ]
 
 const meta = {
-  title: 'Studio/Invites/PendingInvitesModal',
+  title: 'Studio/Invites/PendingInvitesDialog',
   component: PendingInvitesDialog,
   tags: ['autodocs'],
   parameters: {

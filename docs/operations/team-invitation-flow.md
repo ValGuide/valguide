@@ -182,11 +182,11 @@ All invitee surfaces use the React Query key:
 
 The query has a 60-second stale time. It is deliberately not part of protected route bootstrap data.
 
-### Pending-invitations modal
+### Pending-invitations dialog
 
-`PendingInvitesModal` is mounted with the authenticated sidebar container.
+`PendingInvitesDialogConnected` is mounted with the authenticated sidebar container.
 
-The modal:
+The dialog:
 
 - opens when one or more pending invitations are returned;
 - does not open while the user is already on `/invites`;
@@ -304,7 +304,8 @@ The email-link flow separately invalidates authentication status queries before 
 | Invitee pending list | `packages/core/features/orgs/list-current-user-invitations.fn.ts` |
 | Invitee decline function | `packages/core/features/orgs/decline-current-user-invitation.fn.ts` |
 | Shared invite query | `apps/studio/src/features/invites/query-options.ts` |
-| Modal | `apps/studio/src/features/invites/components/pending-invites-modal.tsx` |
+| Dialog | `apps/studio/src/features/invites/components/pending-invites-dialog.tsx` |
+| Connected dialog | `apps/studio/src/features/invites/components/pending-invites-dialog-connected.tsx` |
 | Invites page | `apps/studio/src/features/invites/components/invites-page.tsx` |
 | Shared invite actions | `apps/studio/src/features/invites/components/invites-actions.ts` |
 | Sidebar integration | `apps/studio/src/components/app-sidebar-container.tsx` |
