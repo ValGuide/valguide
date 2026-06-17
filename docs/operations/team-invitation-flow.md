@@ -199,11 +199,15 @@ Dismissal is client-memory state, keyed by the current ordered invitation IDs. I
 
 ### Sidebar item and badge
 
-The sidebar footer contains an **Invites** item above the user card.
+The sidebar footer shows an **Invites** item above the user card only while the user has pending invitations.
 
-- It always links to `/invites`.
-- A badge is shown only when the pending count is greater than zero.
+- It links to `/invites`.
+- Its badge shows the current pending count.
 - The badge uses the same current-user invitation query as the modal and page.
+- The entire item disappears after the final invitation is accepted or declined.
+- Users with no pending invitations do not spend permanent sidebar space on this transient workflow.
+
+The `/invites` route remains available through direct navigation, bookmarks, and stale open tabs. Its empty state therefore remains valid even though it is not linked from the sidebar when the count is zero.
 
 ### `/invites` page
 
@@ -376,7 +380,7 @@ Use a fresh invitation for each destructive scenario. Do not reuse an invitation
 4. Confirm the pending-invitations modal opens outside `/invites`.
 5. Confirm the invitation card shows workspace **A**, inviter, and assigned role.
 6. Dismiss the modal without acting.
-7. Confirm the sidebar **Invites** item shows badge `1`.
+7. Confirm the sidebar **Invites** item appears and shows badge `1`.
 8. Navigate around Studio and confirm the dismissed modal does not repeatedly reopen for the unchanged invite set.
 9. Open **Invites** from the sidebar.
 10. Confirm `/invites` displays the same invitation and the modal does not open over that page.
@@ -388,7 +392,7 @@ Use a fresh invitation for each destructive scenario. Do not reuse an invitation
 2. Accept the invitation from either the modal or `/invites`.
 3. Confirm a success toast names workspace **A**.
 4. Confirm the invitation disappears from the list.
-5. Confirm the sidebar badge decrements or disappears.
+5. Confirm the sidebar badge decrements, or the entire Invites item disappears when the count reaches zero.
 6. Confirm the user is now a member of workspace **A** with the invited role.
 7. Confirm workspace **B** remains active.
 8. Confirm workspace **A** is available in the workspace switcher.
@@ -455,6 +459,6 @@ Using request interception or a controlled failing environment:
 3. Confirm Accept and Decline are disabled while an action is in progress.
 4. Confirm English, German, and Romansh pages render without missing translation keys.
 5. Confirm direct navigation to localized and unlocalized `/invites` routes works.
-6. Confirm a user with zero invitations sees no badge, no modal, and the `/invites` empty state.
+6. Confirm a user with zero invitations sees no Invites sidebar item, no modal, and the `/invites` empty state when navigating directly.
 7. Confirm existing workspace switching, logout, and member-management behavior still works.
 8. For a newly registered pending profile, confirm a valid invitation permits profile auto-approval but membership is not present until acceptance or no-active-workspace reconciliation runs.

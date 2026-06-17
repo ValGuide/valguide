@@ -89,12 +89,13 @@ type Story = StoryObj<typeof AppSidebar>
 export const Default: Story = {
   args: {
     pathname: '/en',
+    pendingInvitationsCount: 0,
   },
   parameters: {
     docs: {
       description: {
         story:
-          'Default sidebar with Guides (home) active. Top-level navigation items: Guides, Analytics, Team & Members, Settings, Team Switcher in header, and user menu with My Profile and Logout in footer.',
+          'Default sidebar with no pending invitations. The transient Invites item is hidden until action is required.',
       },
     },
   },
@@ -161,7 +162,7 @@ export const PendingInvitesBadge: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Sidebar footer showing the pending invitation count above the user card.',
+        story: 'Sidebar footer showing the transient Invites item and pending count above the user card.',
       },
     },
   },

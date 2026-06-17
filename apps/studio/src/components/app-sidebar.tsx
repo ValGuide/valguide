@@ -316,26 +316,28 @@ export function AppSidebar({
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={invitesItem.title} isActive={invitesItem.isActive}>
-                <Link
-                  {...invitesItem.linkOptions}
-                  preload="intent"
-                  onClick={(event) => {
-                    if (isExactPath(invitesItem.linkOptions.to as string)) {
-                      event.preventDefault()
-                      setOpenMobile(false)
-                    }
-                  }}
-                >
-                  <invitesItem.icon />
-                  <span>{invitesItem.title}</span>
-                </Link>
-              </SidebarMenuButton>
-              {pendingInvitationsCount > 0 ? <SidebarMenuBadge>{pendingInvitationsCount}</SidebarMenuBadge> : null}
-            </SidebarMenuItem>
-          </SidebarMenu>
+          {pendingInvitationsCount > 0 ? (
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={invitesItem.title} isActive={invitesItem.isActive}>
+                  <Link
+                    {...invitesItem.linkOptions}
+                    preload="intent"
+                    onClick={(event) => {
+                      if (isExactPath(invitesItem.linkOptions.to as string)) {
+                        event.preventDefault()
+                        setOpenMobile(false)
+                      }
+                    }}
+                  >
+                    <invitesItem.icon />
+                    <span>{invitesItem.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+                <SidebarMenuBadge>{pendingInvitationsCount}</SidebarMenuBadge>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          ) : null}
           <NavUser user={user} onLogout={handleLogout} />
         </SidebarFooter>
         <SidebarRail />
