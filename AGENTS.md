@@ -54,7 +54,12 @@ User-facing UI work is incomplete without relevant Storybook coverage.
 
 - Add or update stories for every materially changed reusable component.
 - Cover important visual states that apply to the component, including default,
-  empty, loading, error, disabled or busy, long-content, and responsive states.
+  empty, loading, error, disabled or busy, and long-content states.
+- Do not create dedicated mobile or viewport-only stories when the only
+  difference is Storybook viewport configuration. Components are expected to
+  be responsive; use Storybook's viewport dropdown for manual visual testing.
+- Add a mobile-specific story only when mobile renders materially different
+  content, state, or interaction behavior beyond responsive layout.
 - Prefer stories for presentational boundaries. Keep server functions, live
   queries, and router wiring in thin connected wrappers rather than duplicating
   application infrastructure inside Storybook.

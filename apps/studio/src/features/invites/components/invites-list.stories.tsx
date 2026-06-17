@@ -72,14 +72,6 @@ export const Busy: Story = {
   },
 }
 
-export const Mobile: Story = {
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-  },
-}
-
 export const Actions: Story = {
   args: {
     invitations: [invitations[0]!],
