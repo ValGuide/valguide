@@ -590,11 +590,18 @@
       }
     },
     "empty": {
-      "title": "No tours yet",
-      "heroDescription": "Your visitors deserve more than a brochure. Create immersive audio tours that bring your exhibitions to life.",
-      "createButton": "Start creating",
+      "eyebrow": "Your first visitor experience",
+      "title": "Create your first tour",
+      "heroDescription": "Build your multimedia tour at your own pace. Add stops, stories, and media, then publish when everything feels ready.",
+      "features": {
+        "media": "Combine audio, images, and text",
+        "stops": "Guide visitors stop by stop",
+        "draft": "Keep it private until you publish"
+      },
+      "createButton": "Create first tour",
       "creatingButton": "Creating tour...",
-      "createNewButton": "Create new tour"
+      "createNewButton": "Create new tour",
+      "draftHint": "You can change everything before visitors see it."
     },
     "editTour": "Edit Tour",
     "viewInApp": "View in App",

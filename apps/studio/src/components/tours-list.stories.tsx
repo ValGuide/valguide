@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { TourListItem } from '@valguide/core/features/tours/tour/list-tours.fn'
+import { fn } from 'storybook/test'
 import { ToursList } from '@/features/tours/components/tours-list'
 
 const meta: Meta<typeof ToursList> = {
@@ -18,6 +19,11 @@ const meta: Meta<typeof ToursList> = {
     },
   },
   tags: ['autodocs'],
+  args: {
+    onCreateTour: fn(),
+    onViewTour: fn(),
+    onRetry: fn(),
+  },
 }
 
 export default meta
@@ -65,6 +71,15 @@ export const Loading: Story = {
   },
 }
 
+export const CreatingFirstTour: Story = {
+  args: {
+    tours: [],
+    isLoading: false,
+    error: null,
+    isCreatingTour: true,
+  },
+}
+
 export const ErrorState: Story = {
   args: {
     tours: [],
@@ -86,17 +101,5 @@ export const SingleTour: Story = {
     tours: sampleTours.slice(0, 1),
     isLoading: false,
     error: null,
-  },
-}
-
-export const WithCreateHandler: Story = {
-  args: {
-    tours: [],
-    isLoading: false,
-    error: null,
-    onCreateTour: () => {
-      console.log('Create tour via mutation')
-      alert('Create tour via mutation')
-    },
   },
 }

@@ -590,11 +590,18 @@
       }
     },
     "empty": {
-      "title": "Noch keine Touren",
-      "heroDescription": "Ihre Besucher verdienen mehr als eine Broschüre. Erstellen Sie immersive Audio-Touren, die Ihre Ausstellungen zum Leben erwecken.",
-      "createButton": "Jetzt starten",
+      "eyebrow": "Ihr erstes Besuchserlebnis",
+      "title": "Erstellen Sie Ihre erste Tour",
+      "heroDescription": "Gestalten Sie Ihre multimediale Tour in Ihrem eigenen Tempo. Fügen Sie Stopps, Geschichten und Medien hinzu und veröffentlichen Sie sie erst, wenn alles bereit ist.",
+      "features": {
+        "media": "Audio, Bilder und Text kombinieren",
+        "stops": "Besucher Schritt für Schritt führen",
+        "draft": "Bis zur Veröffentlichung bleibt alles privat"
+      },
+      "createButton": "Erste Tour erstellen",
       "creatingButton": "Tour wird erstellt...",
-      "createNewButton": "Neue Tour erstellen"
+      "createNewButton": "Neue Tour erstellen",
+      "draftHint": "Sie können alles ändern, bevor Besucher es sehen."
     },
     "editTour": "Tour bearbeiten",
     "viewInApp": "In App anzeigen",

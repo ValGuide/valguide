@@ -590,11 +590,18 @@
       }
     },
     "empty": {
-      "title": "Anc naginas turas",
-      "heroDescription": "Voss visitaders meritan dapli che ina broschiura. Creai audio-turas immersivsas che dattan vita a vossas exposiziuns.",
-      "createButton": "Cumenzar",
+      "eyebrow": "Vossa emprima experientscha per visitaders",
+      "title": "Creai vossa emprima tura",
+      "heroDescription": "Creai vossa tura multimediala en voss agen tempo. Agiuntai stops, istorgias e medias e publitgai ella pir cura che tut è pront.",
+      "features": {
+        "media": "Cumbinar audio, maletgs e text",
+        "stops": "Guidar ils visitaders da stop a stop",
+        "draft": "Tut resta privat fin la publicaziun"
+      },
+      "createButton": "Crear l'emprima tura",
       "creatingButton": "La tura vegn creada...",
-      "createNewButton": "Crear nova tura"
+      "createNewButton": "Crear nova tura",
+      "draftHint": "Vus pudais midar tut avant ch'ils visitaders vesan insatge."
     },
     "editTour": "Modifitgar la tura",
     "viewInApp": "Mussar en app",
